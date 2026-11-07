@@ -61,20 +61,43 @@ RANK_FIELDS = {
 }
 
 
-def load_candidate_context(root: Path, target: str):
-    manifest = load_target_manifests(root)[target]
+def load_candidate_context(
+    root: Path,
+    target: str,
+    *,
+    manifests: dict[str, Any] | None = None,
+    sdk_cache: dict[str, frozenset[int]] | None = None,
+):
+    """Load one target's exclusion context, reusing caller-owned shared state.
+
+    ``load_target_manifests`` revalidates every target claim on each call, so a
+    whole-corpus ranking must pass one manifest load down to every target. The
+    returned context carries the binary path and size instead of the image bytes
+    so each boundary read touches only its own slice.
+    """
+
+    if manifests is None:
+        manifests = load_target_manifests(root)
+    manifest = manifests[target]
     binary = root / manifest.binary
     if not binary.is_file():
-        return manifest, None, None, frozenset()
-    return (
-        manifest,
-        binary.read_bytes(),
-        parse_splat_layout(root / manifest.splat, manifest.load_address),
-        frozenset(
+        return manifest, None, None, frozenset(), None
+    if sdk_cache is None:
+        sdk_cache = {}
+    sdk_addresses = sdk_cache.get(manifest.psyq_space)
+    if sdk_addresses is None:
+        sdk_addresses = frozenset(
             symbol.address
             for symbol in load_map(sdk_map_path(root, manifest.psyq_space))
             if not symbol.is_raw
-        ),
+        )
+        sdk_cache[manifest.psyq_space] = sdk_addresses
+    return (
+        manifest,
+        binary.stat().st_size,
+        parse_splat_layout(root / manifest.splat, manifest.load_address),
+        sdk_addresses,
+        binary,
     )
 
 
@@ -88,18 +111,21 @@ def candidate_exclusion(root: Path, row: dict[str, Any], *, context=None) -> str
     address = int(str(row["address"]), 0)
     if context is None:
         context = load_candidate_context(root, row["target"])
-    manifest, image, layout, sdk_addresses = context
+    manifest, image_size, layout, sdk_addresses, binary = context
     if manifest.id.value != row["target"]:
         raise ValueError("candidate context belongs to a different target")
-    if image is None:
+    if image_size is None:
         return "missing_binary"
     assert layout is not None
+    assert binary is not None
     boundary = layout.find_boundary_at(address)
     if boundary is None or not boundary.is_function:
         return "not_reviewed_code_boundary"
     offset = address - manifest.load_address
     size = row["size"]
-    payload = image[offset : offset + size]
+    with binary.open("rb") as handle:
+        handle.seek(offset)
+        payload = handle.read(size)
     if len(payload) != size:
         return "boundary_outside_binary"
     printable = sum(byte == 0 or 0x20 <= byte < 0x7F for byte in payload)
@@ -109,7 +135,7 @@ def candidate_exclusion(root: Path, row: dict[str, Any], *, context=None) -> str
         int.from_bytes(payload[index : index + 4], "little")
         for index in range(0, len(payload) - 3, 4)
     ]
-    binary_end = manifest.load_address + len(image)
+    binary_end = manifest.load_address + image_size
     if len(words) >= 2 and all(
         manifest.load_address <= word < binary_end for word in words
     ):
@@ -147,8 +173,12 @@ def priority_rows(
 
     payload = function_metrics(connection, target)
     if root is not None:
+        manifests = load_target_manifests(root)
+        sdk_cache: dict[str, frozenset[int]] = {}
         contexts = {
-            owner: load_candidate_context(root, owner)
+            owner: load_candidate_context(
+                root, owner, manifests=manifests, sdk_cache=sdk_cache
+            )
             for owner in dict.fromkeys(row["target"] for row in payload)
         }
         exclusion_rows = [
