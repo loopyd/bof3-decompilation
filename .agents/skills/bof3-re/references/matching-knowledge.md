@@ -110,15 +110,23 @@ original as well: the arm the function falls into is the `if` body, and the arm 
 branch jumps to is the `else` or the block after an early return. Reversed arms that
 each end in their own return keep frame and size and only invert the test and its
 target, so a `bnez` where the build emits `beqz` is this ordering choice, not a later
-rung. When two arms rejoin a common tail instead, the inverse order is not
-size-neutral: skipping the arm written first needs its own `j`, which cost one
-instruction and four bytes at an unchanged frame. A result local live across
+rung. Arms that both end in the same constant return are that case with the shared
+constant as the only tell: choose the written order from the arm the branch enters,
+because ordering by which arm does more work instead inverts the test and hoists that
+constant above the other arm's stores at unchanged size and count. When two arms
+rejoin a common tail instead, the inverse order is not size-neutral: skipping the arm
+written first needs its own `j`, which cost one instruction and four bytes at an
+unchanged frame. A result local live across
 the calls cost a saved register and frame bytes, and an early `return B;` before the
 block relocated that return out of line instead - `.text` size stayed equal and only the
 branch shape differed (`bne` to a trailing `move $v0,$zero`).
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
+Hoisting also reorders whatever sits beside it: a mask the body re-derives from an
+argument each iteration belongs at that use, because assigning it once above the loop
+moved the neighbouring entry-block masks and rotated the temporary pool at the same
+size.
 When the original's entry branch carries the loop index's zeroing in its delay slot,
 put the `index = 0;` statement before an explicit `if (count != 0)` guard and keep the
 body as `do`/`while`: the count is an unrestricted byte, so the guard is required, and
@@ -402,7 +410,13 @@ overshot that body by eight bytes, while a word-wide `s32` local restored the
 original's single `lb` at the original size. Read an `lbu`-plus-widen pair as that
 accumulator width rather than the cell's signedness, and set the width by where the
 original converts: truncation at the store takes the cell's width, widening at the
-multiply takes the wider local.
+multiply takes the wider local. A loop-carried accumulator takes the narrow width too,
+with the pack written as one truncating assignment (`packed = (u16)((packed << 5) |
+component);`) so the copy back into it stays a real `move`. A wide accumulator emits
+the same body but lets the CSE pass after loop optimisation substitute the product
+word for its later uses, which rotates the temporary pool at equal size; read that
+rotation as this width rather than an allocation residual, and keep the width on the
+accumulator, since a second narrow product local measured worse.
 
 A narrow value built from a difference wants that split one step further: assign the
 base constant, subtract in place, then truncate with a self-assignment

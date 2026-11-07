@@ -239,8 +239,10 @@ segments:
     - '@source: src/bof3/scenario/tickCountdownAdvanceWorkWord8AndClearByte0ScenarioScena0800_801F8D4C.c'
     - '@behavior: Overlay per-frame handler entry 28 of the 51-entry handler run at 0x801FE894: it decrements the unsigned countdown byte at offset 2 of the work object it receives in $a0 and re-stores it, advances the object byte at offset 3 by 6, adds the fixed-point step 0x40000 to the object word at offset 8, folds the resulting word at offset 8 into the object word at offset 0x14, and only when the decremented countdown reads zero clears the object byte at offset 0. It reads and writes no other memory, makes no call, keeps no register and has no frame.'
   - - 8600
-    - asm
-    - func_801F8D98
+    - c
+    - advanceTrailProjectPointsFillHeadingsAndAverageAnglesScenarioScena0800_801F8D98
+    - '@source: src/bof3/scenario/advanceTrailProjectPointsFillHeadingsAndAverageAnglesScenarioScena0800_801F8D98.c'
+    - '@behavior: Overlay trail rebuild driven from the scratchpad work object published at pointer slot 0x1F800044: it shifts the 0x20 records of the 0x18-byte-stride trail buffer up by one, seeds record 0 from the work cursor words 0x34/0x38/0x3C, fills the 0x20-byte projection scratch and projects all 0x20 records through func_801AFF04, converting the pair taken from the last heading halfword into each record size halfword through func_801AFFD8. It then stores the signed direction of each of the 0x1F consecutive point deltas through func_8017A138 with 0x1000 as the degenerate-delta sentinel, fills every sentinel heading with the next valid heading or else the first valid heading behind it or else 0, and finally averages each heading with its predecessor through average12BitValuesScenarioScena0800_801F9420 into the record heading halfwords, seeding record 0 with heading 0 and record 0x1F with heading 0x1E. Takes the trail buffer pointer in a0 and returns nothing. Its only call site is the work-byte-2 dispatcher at 0x801F7AD0, which passes the buffer at 0x800E48E0; the 0x330 bytes differ from the copy at 0x801F88B8 in emi/scenario/scena07/00 only in the five jump encodings their own positions force.'
   - - 9416
     - asm
     - func_801F90C8

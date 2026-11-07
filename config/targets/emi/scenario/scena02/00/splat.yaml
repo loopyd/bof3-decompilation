@@ -201,8 +201,8 @@ segments:
     - c
     - noopHandlerScenarioScena0200_801FD15C
   - - 25956
-    - asm
-    - func_801FD164
+    - c
+    - waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate5ScenarioScena0200_801FD164
   - - 26076
     - asm
     - func_801FD1DC

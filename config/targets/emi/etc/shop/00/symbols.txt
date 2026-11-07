@@ -116,6 +116,7 @@ retreatShopPanelRowThenAdvanceUiSubstep = 0x801D3C9C;
 drawShopPanelsThenDecrementUiSubstep = 0x801D3FD4;
 func_801D408C = 0x801D408C;
 func_801D41B0 = 0x801D41B0;
+drawShopPanelStripThenPublishRowFlagsOnTimerExpiry = 0x801D41EC;
 appendDimTileOrRedrawPanelStrip = 0x801D430C;
 func_801D43A4 = 0x801D43A4;
 tickPhaseTimerThenAdvanceUiSubstep = 0x801D43F0;

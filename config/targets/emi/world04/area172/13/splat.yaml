@@ -148,8 +148,10 @@ segments:
     - '@source: src/bof3/world/dispatchWorkByte4Table6778World04Area17213_801F471C.c'
     - '@behavior: Calls the local handler selected by the work byte at offset 0x04 of the record published at the scratchpad pointer cell 0x1F800044; the unchecked handler table based at 0x801F6778 holds the routines at 0x801F4760 and 0x801F47F0. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 7008
-    - asm
-    - func_801F4760
+    - c
+    - armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_801F4760
+    - '@source: src/bof3/world/armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_801F4760.c'
+    - '@behavior: Arms the scratch work record published through the pointer cell at 0x1F800044 like its neighbour: sets flag bit 0x20 of record byte 0, then clears flag bit 0x40, writes 1 into the 0x5C marker byte, and writes -0x80 into the signed level bytes 0x5F, 0x5E and 0x5D through one load of the cell. It then calls the advance handler at 0x801F47F0 on the same record and writes 1 into the handler byte at 0x04 that the local dispatcher indexes its table with. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and the $s0 that holds the shared 1 constant.'
   - - 7152
     - c
     - advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0

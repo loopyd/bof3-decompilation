@@ -195,8 +195,8 @@ segments:
     - asm
     - func_801FD788
   - - 27724
-    - asm
-    - func_801FD84C
+    - c
+    - setRecordByte1MirrorWorkFacingThenRequestPrimaryState0DSubstate10ScenarioScena0100_801FD84C
   - - 27896
     - c
     - setScenarioScena0100_801FD8F8

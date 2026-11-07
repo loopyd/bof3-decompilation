@@ -168,8 +168,10 @@ segments:
     - c
     - noopHandlerScenarioScena1200_801FC638
   - - 23104
-    - asm
-    - func_801FC640
+    - c
+    - setSubstate14ClearSharedStateBytesAndRequestPrimaryState4ScenarioScena1200_801FC640
+    - '@source: src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState4ScenarioScena1200_801FC640.c'
+    - '@behavior: Overlay per-record callback and entry 9 (the word at 0x801FD210) of the 15-word record-callback run at 0x801FD1EC that dispatchRecordCallbackByByte7AScenarioScena1200_801FC574 selects with the record unsigned byte at offset 0x7A: it runs the shared front-end startup helper func_8015C088, requests secondary sub-state 0x14 in the shared sub-state byte D_80146875, clears the shared bytes 0x80146865, 0x80146866 and 0x80146867, and requests primary scene state 4 in the shared state byte D_80146874. It takes no arguments, ignores the record pointer and second argument its dispatcher passes, reads no other state and writes nothing else; the 0x18-byte frame only keeps $ra across the call, the constant 0x14 is materialised once in $v0 to feed its store and the constant 4 once in $v0 to feed the last sb. The 80 bytes are the same helper-and-sub-state shape as the exact sibling setSubstate1EClearSharedStateBytesAndRequestPrimaryState2ScenarioScena0200_801FD4EC (0x801FD4EC of emi/scenario/scena02/00), differing only in the two stored constants.'
   - - 23184
     - asm
     - func_801FC690

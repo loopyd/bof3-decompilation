@@ -971,6 +971,27 @@ u8 func_801650B4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * those call sites, not a recovered callee contract.
  * @source 0x8016BB6C */
 void func_8016BB6C(s32 arg0, s32 arg1);
+/* Main-exe per-row flag getter read by the sub-step handler
+ * drawShopPanelStripThenPublishRowFlagsOnTimerExpiry with the constant 0 and
+ * its signed halfword row counter, and stored into the four halfwords
+ * D_801E6100. Its main-EXE body sign-extends both arguments, loads the pointer
+ * of the row group from the word table at 0x80190308 indexed by the first
+ * argument, adds 172 times the second argument, and returns the byte at
+ * +0x2B of that row, so the value is one row flag zero-extended into `$v0` by
+ * the closing `lbu`. The reviewed call site stores it narrowed to 16 bits and
+ * tests only the low halfword, so the widths below are the widths observed at
+ * that call site, not a recovered callee contract.
+ * @source 0x8016B344 */
+s16 func_8016B344(s32 arg0, s32 arg1);
+/* Main-exe per-row setup helper called by the same handler as the getter
+ * above, with the constant 0 and the row index of every nonzero flag. Its
+ * main-EXE body sign-extends both arguments and hands them to 0x8016B868,
+ * which reaches the same 172-byte row of the same pointer table, submits the
+ * row's +0x78/+0x7A pair through 0x80172F10 and clears bits 1 and 3 of the
+ * word at +0x90. The reviewed call site drops the result, so the widths below
+ * are the widths observed at that call site, not a recovered callee contract.
+ * @source 0x8016B968 */
+void func_8016B968(s32 arg0, s32 arg1);
 u32 func_801502D0(u32 arg0);
 /* Main-exe icon-record helper called by this target's sub-step handler
  * emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate with the constants 0

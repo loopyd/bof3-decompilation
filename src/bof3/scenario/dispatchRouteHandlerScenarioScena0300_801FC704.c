@@ -6,14 +6,16 @@ s32 func_801FC7EC(s32 arg0, s32 arg1);
 s32 func_801FC8AC(s32 arg0, s32 arg1);
 s32 func_801FC944(s32 arg0, s32 arg1);
 s32 func_801FC9DC(s32 arg0, s32 arg1);
-s32 func_801FCAB8(s32 arg0, s32 arg1);
 s32 func_801FCB4C(s32 arg0, s32 arg1);
+s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8(s32 arg0, s32 arg1);
 
 /* @source 0x801FC704
  * @behavior Route dispatcher of this overlay: it reads the shared unsigned
  * route word D_80143F00 and, for the six route values 0x25, 0x29, 0x32, 0x33,
  * 0x45 and 0x63, runs the matching overlay route handler — 0x25 runs
- * func_801FC944, 0x29 runs func_801FC8AC, 0x32 runs func_801FCAB8, 0x33 runs
+ * func_801FC944, 0x29 runs func_801FC8AC, 0x32 runs
+ * requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8,
+ * 0x33 runs
  * func_801FC7EC, 0x45 runs func_801FC9DC and 0x63 runs func_801FCB4C — and
  * returns that handler's result sign-extended from its low byte (sll/sra 24).
  * Every other route value returns 0. Both incoming packed record words are
@@ -42,7 +44,7 @@ s32 dispatchRouteHandlerScenarioScena0300_801FC704(s32 arg0, s32 arg1) {
     return (s8)func_801FC8AC(arg0, arg1);
 
   case 0x32:
-    return (s8)func_801FCAB8(arg0, arg1);
+    return (s8)requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8(arg0, arg1);
 
   case 0x33:
     return (s8)func_801FC7EC(arg0, arg1);

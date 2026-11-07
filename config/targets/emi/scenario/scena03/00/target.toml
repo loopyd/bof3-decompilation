@@ -58,5 +58,6 @@ support_sources = [
     "src/bof3/scenario/advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84.c",
     "src/bof3/scenario/claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C.c",
     "src/bof3/scenario/armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8.c",
+    "src/bof3/scenario/requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

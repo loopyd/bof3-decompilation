@@ -135,8 +135,8 @@ segments:
     - asm
     - func_801FAFA0
   - - 17592
-    - asm
-    - func_801FB0B8
+    - c
+    - clampPaletteChannelsScenarioScena1300_801FB0B8
   - - 17764
     - c
     - copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164

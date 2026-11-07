@@ -227,8 +227,10 @@ segments:
     - asm
     - func_801FD7F4
   - - 27888
-    - asm
-    - func_801FD8F0
+    - c
+    - waitFlag3DThenRequestPrimaryState8Substate0AndSetFlagBit18OrSubstate5ScenarioScena0900_801FD8F0
+    - '@source: src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate0AndSetFlagBit18OrSubstate5ScenarioScena0900_801FD8F0.c'
+    - '@behavior: Entry 6 (the word stored at 0x801FE4D4) of the 38-entry in-image code-pointer table at 0x801FE4BC that dispatchCoordinateLookupHandlerScenarioScena0900_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8 and calls with jalr, so no in-image jal targets the address and the dispatcher returns this handler''s signed low byte. It takes the two-stage wait func_8015B5D4 on the shared flag word D_8014686C for wait id 0x3D. A non-zero return runs the shared front-end startup helper func_8015C088, requests primary scene state 8 with secondary sub-state 0 by storing 0 in the shared sub-state byte D_80146875 and then 8 in the shared state byte D_80146874, arms scenario flag bit 0x18 of that same word through func_8015B580(D_8014686C, 0x18) and answers 1 in the j delay slot of the jump to the shared epilogue, with the reloaded flag word scheduled ahead of both byte stores. A zero return runs the same startup helper and requests the same primary state 8 with sub-state 5, answering 1 ahead of the two stores and falling into the shared epilogue without touching the flag word. It takes no arguments, reads no other state and writes no other byte; the 0x18-byte frame only keeps $ra across the calls and each byte store materialises the 0x8014 page in $at. Its 136 bytes differ from the next table word func_801FD978 (0x801FD978) only in the stored sub-state constant and the armed flag bit, which is shape evidence only: no shipped overlay payload holds a byte-identical copy of this span and that twin''s own row is still asm.'
   - - 28024
     - asm
     - func_801FD978
