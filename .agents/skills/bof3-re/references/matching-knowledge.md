@@ -48,6 +48,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Arm tests a loaded value and passes it as a call argument; the build reloads the cell for the argument | Give that load its own local, test the local and pass the local. Read the arm's argument register: when it is the register the `sltiu`/compare tested, one load feeds both uses, so the same cell written in the argument list is a second load |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
+| First difference is one `addu` building an indexed entry address with its operand roles swapped | Give that entry address its own pointer local and compare through the dereference (`entry = records + index + 2; if (g < *entry)`). This is a lifetime edit, not a representation one: casts on the index and a reversed comparison each re-folded the address and stayed short, while the pointer local matched |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size. Grouping also places the multiply's `mflo`: a scaled sum of two byte-table addends kept left-associative measured a partial with `mflo` ahead of the last addend's add, and parenthesizing each addend's own load-plus-offset fixed that order at unchanged size |
@@ -472,6 +473,13 @@ base constant, subtract in place, then truncate with a self-assignment
 instructions short at the original size, and an arm-local narrow temporary copied
 into the wide local measured the same. A store to another cell written ahead of that
 staircase closed the remaining pair, while swapping declarations did not move it.
+
+One argument word that carries a signed cell in its high half and a fraction in its
+low half wants that split as well: read the cell out into a narrow local and mask off
+the fraction in its own statement, both ahead of the dependent index and the repack.
+Respelling that single expression - a cast at each use, a shift-pair cast, narrower
+step locals, a by-value struct parameter - stayed short of the original's size or
+kept the wrong order, and the split matched at its order and size.
 
 ### Halfword read-modify-write
 
