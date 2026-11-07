@@ -31,7 +31,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web. A fixed-address scalar read and written back later steals it too: bare `g += 1` splits the symbol into `lui` plus displacement at each access, while one pointer local to it (`p = &g; *p = *p + 1;`) keeps the original's single base and clears that entry-block difference with it |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score. When that block also materialises a fixed-address base, order each zeroing against that materialisation separately: hoisting both above the base measured 96/98, the reversed pair 90/98, and the split matched. The later zeroing's home, plain statement or `for` initializer, measured the same, so the split is the lever |
-| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask. A redundant `andi 0xFF` on a byte the original's own load already zero-extended is a widening conversion written at the use, so cast there, and keep such a byte-validity guard as its two tests (`!((u32)mode < 2u || mode == 2)`) because folding them into `mode <= 2` emits one compare where the original has `sltiu` plus `addiu`/`bne` |
+| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask. A redundant `andi 0xFF` on a byte the original's own load already zero-extended is a widening conversion written at the use, so cast there, and keep such a byte-validity guard as its two tests (`!((u32)mode < 2u || mode == 2)`) because folding them into `mode <= 2` emits one compare where the original has `sltiu` plus `addiu`/`bne`. A mask on a call argument the original does not carry is the callee's declared parameter width, not the argument expression: a `u16` parameter emitted that mask ahead of the `jal` with eight extra bytes, dropping the cast at the call site measured the same bytes, and declaring the parameter `u32` removed it. Take the width off the original's argument register, since existing sources on other targets may declare that callee narrower |
 | One byte of a named byte group, addressed by a constant subscript or by a stride the body computes | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate. The split is per byte, not per subscript kind: byte fields of one table record walked with a runtime stride need one extern each for the same reason, since every load then folds its own `%hi`/`%lo` |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
@@ -912,6 +912,14 @@ extra bytes.
 array symbol for both row uses, then the named product. The named product also
 shrank the frame from 32 to the original 24 bytes, which no body instruction had
 shown.
+
+The mirror is not a lever: a sum the original recomputes at each use stays inline.
+One local both edge stores read measured a hunk short at a wider frame, rewriting
+the parameter in place measured eight bytes over with an extra saved register, and
+writing the sum out at each store matched, because GCC still copies the parameter
+and adds into that copy per site. Before naming, find the original's own separate
+materialisation; a name serving only two existing uses widens a live range without
+adding an instruction the original has.
 
 ### Repeated literals through one narrow value local
 
