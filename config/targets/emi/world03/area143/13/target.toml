@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/world/requestFrontSelectorContextWorld03Area14313_801F3C10.c",
     "src/bof3/world/area14313DispatchTables.c",
     "src/bof3/world/area14313_gate_status.c",
+    "src/bof3/world/setStatus54AndModeIndex6CloneWorld03Area14313_801F3A88.c",
     "src/bof3/world/setStatus54AndModeIndex6IfGateElseFFFFWorld03Area14313_801F3A44.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld03Area14313_801F39E4.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld03Area14313_801F3A14.c",

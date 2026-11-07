@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801F301C
   - - 1300
-    - asm
-    - func_801F3114
+    - c
+    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114
+    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114.c'
+    - '@behavior: Byte-2 state handler entry 2 of the six-entry handler table based at 0x801F45EC, the table the overlay dispatcher at 0x801F2E98 indexes by the state byte of the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x20 from the record unsigned halfword at offset 0x30, stores the truncated halfword, and, once that stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 at 0x801F3170; it then calls the payload routine at 0x801F3324, which reads the same halfword as a sprite screen offset.'
   - - 1392
     - c
     - setWorkState2To4WhenCameraOutsideFixedCoordinateWindowWorld03Area11913_801F3170

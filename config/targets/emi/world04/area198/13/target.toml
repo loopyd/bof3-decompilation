@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area198_13_psyq.c",
     "src/bof3/world/area19813DispatchTables.c",
     "src/bof3/world/scalePaletteBlocksWorld04Area19813_801F2D28.c",
+    "src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854.c",
 ]
 psyq_source = "src/bof3/support/area198_13_psyq.c"

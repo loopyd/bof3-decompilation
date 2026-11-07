@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F369C
   - - 2860
-    - asm
-    - func_801F372C
+    - c
+    - queueSharedUiElementSize50AtShiftedCellInsideMarkerBlockWorld01Area04013_801F372C
+    - '@source: src/bof3/world/queueSharedUiElementSize50AtShiftedCellInsideMarkerBlockWorld01Area04013_801F372C.c'
+    - '@behavior: reads the shared route index from the shared mode-record byte 0x80145E98 masked with 7, takes that entry (index times two) of the shared direction-step table 0x80181B00 / 0x80181B01 as two signed byte steps, keeps the low halfword of each of the two packed position arguments while subtracting the step from its cell halfword, and queues the shared UI element at the shifted cell pair through 0x801A4BC0 with size 0x50 when the first shifted cell is 0x94..0x97 and the second is 0x20..0x23.'
   - - 3028
     - asm
     - func_801F37D4

@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 900
-    - asm
-    - func_801F2F84
+    - c
+    - setStatusFFFFAndWorkHalfword7E0BProgressFSubstate3IfGateElseSubstate8World03Area12813_801F2F84
+    - '@source: src/bof3/world/setStatusFFFFAndWorkHalfword7E0BProgressFSubstate3IfGateElseSubstate8World03Area12813_801F2F84.c'
+    - '@behavior: Resets the shared status halfword D_801490A8 to 0xFFFF, then branches on the shared gate byte D_801490C7. When the gate byte is zero it stores 0xB into the unsigned halfword at +0x7E of the work record published through the pointer cell D_80148208, stores 0xF into the shared scenario progress byte g_ScenarioProgress, and requests sub-state 3 through D_80146875; when the gate byte is nonzero it requests sub-state 8 instead.'
   - - 984
     - asm
     - func_801F2FD8

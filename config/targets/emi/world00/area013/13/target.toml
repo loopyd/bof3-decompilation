@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/world/incrementWorkByte8Modulo8World00Area01313_801F2E18.c",
     "src/bof3/support/area013_13_psyq.c",
+    "src/bof3/world/advanceHalfword0aByCWhenWorkByte79Not8World00Area01313_801F2CAC.c",
 ]
 psyq_source = "src/bof3/support/area013_13_psyq.c"

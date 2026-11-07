@@ -77,8 +77,9 @@ segments:
     - asm
     - func_801F36B4
   - - 3156
-    - asm
-    - func_801F3854
+    - c
+    - publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854
+    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854.c'
   - - 3508
     - asm
     - func_801F39B4

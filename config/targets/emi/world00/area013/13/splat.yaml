@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801F2C54
   - - 172
-    - asm
-    - func_801F2CAC
+    - c
+    - advanceHalfword0aByCWhenWorkByte79Not8World00Area01313_801F2CAC
+    - '@source: src/bof3/world/advanceHalfword0aByCWhenWorkByte79Not8World00Area01313_801F2CAC.c'
+    - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and, when that byte is not 8, advances the halfword at offset 0x0A of the record published through the global pointer cell 0x80148210 by 0x0C; mode 8 returns before the halfword is touched'
   - - 236
     - asm
     - func_801F2CEC

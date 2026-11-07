@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F43FC
   - - 6548
-    - asm
-    - func_801F4594
+    - c
+    - stepScratchWorkAccumulatorsByPhaseTableWhileScenarioBehindRequirementElseSnapAndAdvanceSharedWorld04Area17413_801F4594
+    - '@source: src/bof3/world/stepScratchWorkAccumulatorsByPhaseTableWhileScenarioBehindRequirementElseSnapAndAdvanceSharedWorld04Area17413_801F4594.c'
+    - '@behavior: Per-frame step of the scratch work record published through the scratchpad pointer cell 0x1F800044, gated on the scenario progress byte against the requirement byte at 0x2 of the record table reached through word 0x124 of the object published through 0x80146250 and indexed by the halfword at 0x0A of the shared record published through 0x80148210: while the progress byte reads below the requirement it steps the record by the signed 16-entry phase table at 0x801F6754 indexed by the four low bits of phase byte 0x0A, adding the scaled entry to word 0x34, subtracting it from word 0x38, decrementing the phase byte and consuming two units of the halfword at 0x122 of the record published through 0x80146250; once the progress byte reaches the requirement it instead clears the low 15 bits of words 0x34 and 0x38 and advances the shared halfword at 0x0A by one. Takes no arguments and returns nothing.'
   - - 6792
     - asm
     - func_801F4688

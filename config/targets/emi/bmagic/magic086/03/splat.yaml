@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801F0038
   - - 5312
-    - asm
-    - func_801F00C0
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic08603_801F00C0
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic08603_801F00C0.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once, tests that record''s byte at offset 0xB against one and, only when it equals 1, loads the scratchpad work-object pointer cell at 0x1F800044 with its own lui/lw pair and increments that object''s byte at offset 0x2 at byte width. Takes no arguments, returns nothing, keeps no frame and writes no other state; the table entry at 0x801F0384 is its only in-image reference.'
   - - 5376
     - asm
     - func_801F0100
