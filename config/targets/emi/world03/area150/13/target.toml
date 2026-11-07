@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/setStatusFFFFAndByte801448EC0EIfGateElse0CWorld03Area15013_801F2CDC.c",
+    "src/bof3/world/startStateEntry3AProgress0AWhenPackedArgRangesWorld03Area15013_801F2F58.c",
     "src/bof3/support/area150_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area150_13_psyq.c"

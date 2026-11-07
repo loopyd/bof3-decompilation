@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801F2D0C
   - - 856
-    - asm
-    - func_801F2F58
+    - c
+    - startStateEntry3AProgress0AWhenPackedArgRangesWorld03Area15013_801F2F58
+    - '@source: src/bof3/world/startStateEntry3AProgress0AWhenPackedArgRangesWorld03Area15013_801F2F58.c'
+    - '@behavior: Sign-extends the high half of the first argument with `sra` and returns 0 outside the window 0x17..0x1C (`addiu -0x17` / `sltiu 6`), repeats the test on the second argument against 0x33..0x38, and on a match runs the shared front-end startup helper func_8015C088(), stores 0x3A into the state selector D_801448EB and 0x0A into the progress byte D_801448EC, returning 1; the $ra store fills the first test branch delay slot and the successful path reaches the shared epilogue through its own `j` with the 1 in the delay slot.'
   - - 960
     - textbin
     - D_801F2FC0

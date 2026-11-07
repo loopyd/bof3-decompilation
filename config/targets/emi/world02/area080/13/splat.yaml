@@ -61,8 +61,9 @@ segments:
     - asm
     - func_801F352C
   - - 3124
-    - asm
-    - func_801F3834
+    - c
+    - resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834
+    - '@source: src/bof3/world/resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834.c'
   - - 3184
     - asm
     - func_801F3870

@@ -70,8 +70,10 @@ segments:
     - asm
     - func_801F3348
   - - 1924
-    - asm
-    - func_801F3384
+    - c
+    - clearWorkTableAt800E4800World03Area12513_801F3384
+    - '@source: src/bof3/world/clearWorkTableAt800E4800World03Area12513_801F3384.c'
+    - '@behavior: Overlay work-table clear: zeroes the lead byte of each of the first 0x10 entries of the 0x28-byte-stride record table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop, takes no arguments, returns nothing, reads no state and calls nothing. Its only caller in this payload is func_801F2C48, the first word of the handler run selected by dispatchStateByte1Table36ccWorld03Area12513_801F2C04, which calls it and afterwards advances byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044.'
   - - 1968
     - asm
     - func_801F33B0

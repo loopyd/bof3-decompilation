@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0.c",
     "src/bof3/world/claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413_801F4288.c",
     "src/bof3/world/clearWorkTableSeedWorkWords34To3CAnd0CTo14DispatchCue208AndAdvanceWorkByte1World03Area13413_801F4388.c",
+    "src/bof3/world/storeSharedCoordinateGapInWorkWord34ThenSelectSubstate1EAndInvokeHelperWorld03Area13413_801F34DC.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

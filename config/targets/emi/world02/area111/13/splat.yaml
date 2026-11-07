@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801F3768
   - - 2960
-    - asm
-    - func_801F3790
+    - c
+    - decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790
+    - '@source: src/bof3/world/decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790.c'
+    - '@behavior: Decrement published record halfword 0x0A by two unless the state byte matches its work-record slot code.'
   - - 3080
     - asm
     - func_801F3808

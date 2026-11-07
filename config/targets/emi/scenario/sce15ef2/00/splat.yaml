@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801D0D5C
   - - 420
-    - asm
-    - func_801D0DA4
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1 of this payload: loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at +0x1 and calls that entry of the handler run based at 0x801D1B2C (entry 4 of the run at 0x801D1B1C) with no arguments, without bounding the index; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the index and table load delay slots stay nops.'
   - - 488
     - asm
     - func_801D0DE8

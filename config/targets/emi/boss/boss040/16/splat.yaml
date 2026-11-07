@@ -75,8 +75,10 @@ segments:
     - c
     - noopHandlerBossBoss04016_800C1A80
   - - 648
-    - asm
-    - func_800C1A88
+    - c
+    - publishBattleHooksBossBoss04016_800C1A88
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss04016_800C1A88.c'
+    - '@behavior: Publishes this overlay late-phase handler trio into the shared battle hook slots: func_800C1AC8 (mode-transition handler: tests the 0x2 bit of D_80146328 and, while it is set, stores 0x26 into D_80146875 and calls func_801DDED8, and otherwise calls func_801DDF00) into 0x801463A4, the inert handler noopHandlerBossBoss04016_800C1B14 into 0x801463A8 and the zero-result accessor zeroResultBossBoss04016_800C1AC0 into 0x801463AC'
   - - 704
     - c
     - zeroResultBossBoss04016_800C1AC0

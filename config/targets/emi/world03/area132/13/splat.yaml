@@ -86,8 +86,9 @@ segments:
     - asm
     - func_801F3560
   - - 2980
-    - asm
-    - func_801F37A4
+    - c
+    - seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4
+    - '@source: src/bof3/world/seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4.c'
   - - 3072
     - asm
     - func_801F3800

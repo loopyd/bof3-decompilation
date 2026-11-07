@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801F3534
   - - 2448
-    - asm
-    - func_801F3590
+    - c
+    - setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590
+    - '@source: src/bof3/world/setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590.c'
+    - '@behavior: When the shared front-side byte 0x80143F03 reads zero, returns without touching the work record published at the scratchpad pointer cell 0x1F800044 when its byte 0x0A equals the shared overlay state byte 0x8014933B. Otherwise reads the record route byte 0x08 once: a non-zero route compares the shared camera word 0x80145EC8 with the record halfword 0x3A and a zero route compares 0x80145EC4 with the record halfword 0x36, both against the cell centre ((halfword + 1) << 16) | 0x8000 at a 0x20000 threshold, and stores 4 into the record state byte 0x02 when the camera lies outside. When that first check passes, the other axis halfword and its camera word test both the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16) at the same threshold before storing 4 into the state byte.'
   - - 2740
     - asm
     - func_801F36B4

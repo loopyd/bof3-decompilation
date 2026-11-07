@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801F3440
   - - 2268
-    - asm
-    - func_801F34DC
+    - c
+    - storeSharedCoordinateGapInWorkWord34ThenSelectSubstate1EAndInvokeHelperWorld03Area13413_801F34DC
+    - '@source: src/bof3/world/storeSharedCoordinateGapInWorkWord34ThenSelectSubstate1EAndInvokeHelperWorld03Area13413_801F34DC.c'
+    - '@behavior: Saves the scratchpad work pointer, reads the work-record coordinate word at 0x801468BC, publishes the record at 0x80146888, publishes 0x80145E90 at 0x80146250 and stores the gap D_80145EC4 - 0x801468BC in the saved record word at offset 0x34 through that pointer; restores the saved pointer after a brief 0x80145E90 republish, selects the shared sub-state byte 0x80146875 = 0x1E and invokes the shared helper func_80196070.'
   - - 2400
     - c
     - dispatchStateByte1Table57a4World03Area13413_801F3560

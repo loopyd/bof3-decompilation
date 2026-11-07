@@ -75,8 +75,8 @@ segments:
     - c
     - invokeZeroArgBossBoss01416_800C1A74
   - - 660
-    - asm
-    - func_800C1A94
+    - c
+    - publishBattleHooksBossBoss01416_800C1A94
   - - 716
     - c
     - zeroResultBossBoss01416_800C1ACC
