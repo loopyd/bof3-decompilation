@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F3228
   - - 1816
-    - asm
-    - func_801F3318
+    - c
+    - copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318
+    - '@source: src/bof3/world/copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318.c'
+    - '@behavior: decrements scratchpad work-record byte +0xA read through pointer cell 0x1F800044, publishes colour row[+0xB] and row[0x1F - +0xB] from the 0x80033800 CLUT window to the 0x80037800 shadow window, halving each channel with (c & 0x7BDE) >> 1 while the countdown is non-zero and copying both words unchanged on the frame it reaches zero; that frame re-arms +0xA with 2, increments +0xB and, at 0x10, arms +0xA with 0x1E and increments record byte +4; then advances the palette-stage serial at 0x80145988 and calls the drawing helper at 0x801F2ED4 with 0x12C and 0xFF.'
   - - 2308
     - asm
     - func_801F3504

@@ -59,5 +59,6 @@ support_sources = [
     "src/bof3/scenario/claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C.c",
     "src/bof3/scenario/armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8.c",
     "src/bof3/scenario/requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8.c",
+    "src/bof3/scenario/requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F2EE8
   - - 812
-    - asm
-    - func_801F2F2C
+    - c
+    - selectSequenceByFrameParitySeedWorkByteARandom7ArmHandler1AndDecrementRecordHalfword0aWorld00Area01513_801F2F2C
+    - '@source: src/bof3/world/selectSequenceByFrameParitySeedWorkByteARandom7ArmHandler1AndDecrementRecordHalfword0aWorld00Area01513_801F2F2C.c'
+    - '@behavior: Overlay step handler and handler-table entry 0 of this payload: reads bit 0x2 of the shared frame counter 0x80143E6C, shifts it down to 0 or 1 and doubles it into the byte offset of the two-entry selection run at 0x801F4104 whose records are (1,1) and (0,1), writes rand() & 7 into work byte 0x0A through the scratchpad pointer cell 0x1F800044, passes the selected record first byte to the shared work-sequence selector func_8014D8D4, copies the selected record second byte into work byte 0x2A after a fresh cell load, writes 1 into work byte 0x04 so the next frame dispatches through the local table at 0x801F40FC to func_801F2E60, then reloads the shared record pointer 0x80148210 and subtracts 2 from its +0x0A halfword.'
 - - 976
   - bin
   - tail

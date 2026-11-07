@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp67800_801CE610.c",
     "src/bof3/plchar/dispatchWorkByte2Table0598PlcharPlp67800_801CF4AC.c",
     "src/bof3/plchar/dispatchWorkByte2Table05a4PlcharPlp67800_801CF6E0.c",
+    "src/bof3/plchar/dispatchWorkByte2Table05b0PlcharPlp67800_801D0108.c",
     "src/bof3/support/plp678_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp678_00_psyq.c"

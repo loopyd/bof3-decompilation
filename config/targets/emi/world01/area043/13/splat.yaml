@@ -40,8 +40,10 @@ segments:
     - seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28
     - '@source: src/bof3/world/seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28.c'
   - - 956
-    - asm
-    - func_801F2FBC
+    - c
+    - submitWorkRequestEntry1BDSeedPairE000ArmTintPlus20ThenSetByte2BTo3World01Area04313_801F2FBC
+    - '@source: src/bof3/world/submitWorkRequestEntry1BDSeedPairE000ArmTintPlus20ThenSetByte2BTo3World01Area04313_801F2FBC.c'
+    - '@behavior: Boots the scratch work record at the pointer cell 0x1F800044: submits it through func_80196718, requests entry 0x1BD through func_8014DD3C and entry 0 through func_8014D6B8, clears work byte 0x2A, stores 0xE000 in the words at 0x40 and 0x44, submits its positional effect through func_8019651C with mode 1 and stores the returned effect byte at 0x93 of the record published at 0x80146884, writes 1 into byte 0x5C, 0x14 into the signed channels 0x5F, 0x5E and 0x5D, and 3 into byte 0x2B.'
   - - 1136
     - asm
     - func_801F3070

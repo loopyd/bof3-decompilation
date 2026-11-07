@@ -36,8 +36,9 @@ segments:
     - asm
     - func_801D0CEC
   - - 432
-    - asm
-    - func_801D0DB0
+    - c
+    - drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0
+    - '@source: src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c'
   - - 604
     - asm
     - func_801D0E5C
