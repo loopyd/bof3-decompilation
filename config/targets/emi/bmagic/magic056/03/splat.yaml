@@ -49,8 +49,9 @@ segments:
     - asm
     - func_801EF1F4
   - - 1660
-    - asm
-    - func_801EF27C
+    - c
+    - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C
+    - '@source: src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C.c'
   - - 1756
     - asm
     - func_801EF2DC

@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F082C
   - - 7352
-    - asm
-    - func_801F08B8
+    - c
+    - incrementWorkByteBRecordCountersOnFrameParityThenAdvanceWorkByte2WhenCounterIs8BmagicMagic06000_801F08B8
+    - '@source: src/bof3/bmagic/incrementWorkByteBRecordCountersOnFrameParityThenAdvanceWorkByte2WhenCounterIs8BmagicMagic06000_801F08B8.c'
+    - '@behavior: Index 1 of the three-entry handler run at 0x801F0BDC that the work-byte-2 dispatcher resolves. When the low bit of the shared frame counter at 0x80143E6C is set it advances the three counter bytes of the 12-byte counter record selected by the work object byte 0xB, each group re-reading the scratchpad pointer cell at 0x1F800044 and that work byte into a byte offset (idx*12 as idx*3*4) and incrementing the selected byte of the three byte arrays based at 0x80145BD6, 0x80145BD7 and 0x80145BD8 (lbu, addiu 1, sb through the address temporary). It then re-reads the cell and the work byte 0xB and, when the selected record byte at offset 0x2 equals 8 (lb against a materialized 8, the signed record view of the same table), increments the work object byte 0x2 (lbu, addiu 1, sb), advancing the work byte 2 dispatcher. Leaf with no frame; takes no arguments, calls nothing, returns nothing and reads or writes no other state.'
   - - 7648
     - asm
     - func_801F09E0

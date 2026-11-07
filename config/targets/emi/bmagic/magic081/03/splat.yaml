@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF0B8
   - - 1420
-    - asm
-    - func_801EF18C
+    - c
+    - reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStepThenAdvanceWorkByteBAndByte9AndByte2AtLeast81BmagicMagic08103_801EF18C
+    - '@source: src/bof3/bmagic/reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStepThenAdvanceWorkByteBAndByte9AndByte2AtLeast81BmagicMagic08103_801EF18C.c'
+    - '@behavior: On the frames where the low two bits of the shared counter at 0x80143E6C are both set, claims the first free record of the 0x78-byte-stride pool at 0x801EFA8C through reserveFirstFreeRecordBmagicMagic08103_801EFA20 and fills its pointer word at +0x74 with the work-object pointer read from the scratchpad cell 0x1F800044, its byte +0xB with the work-object byte 0x9 and its byte +0xA with a ramp step of 8 below 100 that falls by one per four counts past 100. It then increments the work-object byte 0xB, and every frame increments work byte 0x9 and, once that truncated byte reaches 0x81, the work-object state byte 0x2, advancing the overlay work byte 2 handler sequence.'
   - - 1696
     - asm
     - func_801EF2A0

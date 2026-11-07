@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801EF584
   - - 2704
-    - asm
-    - func_801EF690
+    - c
+    - add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690
+    - '@source: src/bof3/bmagic/add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690.c'
+    - '@behavior: Adds 0x10 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte has ramped to 0x80, re-reads that pointer cell and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 2784
     - asm
     - func_801EF6E0

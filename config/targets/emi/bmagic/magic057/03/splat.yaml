@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801EEEB0
   - - 932
-    - asm
-    - func_801EEFA4
+    - c
+    - advanceWorkByte1AndClearWorkByte2WhenWorkBytes9AEqualBmagicMagic05703_801EEFA4
+    - '@source: src/bof3/bmagic/advanceWorkByte1AndClearWorkByte2WhenWorkBytes9AEqualBmagicMagic05703_801EEFA4.c'
+    - '@behavior: Overlay handler of the scratchpad work object published through the pointer cell at 0x1F800044. It loads that cell once and compares the object unsigned byte 0x09 with its unsigned byte 0x0A; when the two are equal it increments work byte 0x01 by one at byte width with the pointer the comparison holds, re-reads the cell and clears work byte 0x02 through the reloaded pointer. Byte 0x01 is the work state that selects the overlay handler table and byte 0x02 is the handler index that state 1 indexes its own table with; byte 0x09 and byte 0x0A stay offset-anchored. Leaf with no frame: it takes no arguments, makes no call and returns nothing.'
   - - 1004
     - asm
     - func_801EEFEC

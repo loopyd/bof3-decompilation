@@ -83,8 +83,9 @@ segments:
     - asm
     - func_801EFA78
   - - 4564
-    - asm
-    - func_801EFDD4
+    - c
+    - recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4
+    - '@source: src/bof3/bmagic/recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4.c'
   - - 4664
     - asm
     - func_801EFE38

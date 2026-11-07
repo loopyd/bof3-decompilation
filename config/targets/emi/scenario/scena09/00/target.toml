@@ -35,6 +35,7 @@ support_sources = [
     "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0900_801FE1AC.c",
     "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0900_801FE1DC.c",
     "src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate0AndSetFlagBit18OrSubstate5ScenarioScena0900_801FD8F0.c",
+    "src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate1AndSetFlagBit19OrSubstate5ScenarioScena0900_801FD978.c",
     "src/bof3/support/scena09_00_psyq.c",
     "src/bof3/scenario/resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0.c",
     "src/bof3/scenario/requestPrimaryState0AAndClearSubstateScenarioScena0900_801FC6DC.c",

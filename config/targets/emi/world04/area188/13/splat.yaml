@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801F3484
   - - 2456
-    - asm
-    - func_801F3598
+    - c
+    - seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598
+    - '@source: src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598.c'
+    - '@behavior: Overlay progress step handler: post-increments work record byte 6 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F3DE0; then runs the per-frame passes 0x801F44B4 and 0x801F3E7C, decrements the countdown byte 9 and, on the frame it reaches zero, sets the step words 0x0C and 0x10 to -0x1000 and -0x400, rewinds the words 0x18 0x1C 0x20 from the origin triple 0x64 0x68 0x6C and advances work byte 1.'
   - - 2636
     - c
     - claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C
