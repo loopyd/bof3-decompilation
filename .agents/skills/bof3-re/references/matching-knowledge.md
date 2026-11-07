@@ -65,6 +65,8 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor, or give each read its own local: two locals loaded from the one cell stay two `lui`/`lw` pairs where a shared local folds them into one and lands a pair short, with the first difference at the second read. That serves the pair inside a single arm too, where the store between the reads writes another symbol and so forces nothing. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral |
 | Second read of one byte missing with no store between the two | That pair needs a volatile pointee on the pointer reaching the byte, keeping the record's word fields on plain typed views; see [representation](#representation-and-volatility) |
 | Second read of one table element scheduled above an intervening store | Write that read as a scalar dereference through its own pointer local (`p = &row[i]; ... return *p;`): a repeated `row[i]` compiles as an array-element reference, which the pre-reload scheduler lifts above the store, moving the store's constant into another register, while the scalar load stays at its statement. One pointer for both uses measured a 48/49 partial with the `addu` operands exchanged, and one value local folded the pair into a single load four bytes short; width, cast and guard respellings held at 46/49 at the original size, so the split of uses is the lever, not another local's width |
+| One extern array covers a run of same-size tables and a later table is reached as `base[i + N]` | Bind that table at its own symbolic address and index it with its own element type (`extern s16 D_A[16][2]; extern s16 D_B[16][2];` then `D_B[i][0]`). The offset form gives both tables one base pseudo and one index quantity: one measured seed spelled the second table as `D_A[i + 16][0]` and held 23 of 46 instructions with a swapped index-register pair (`move a0,v0` against `move a1,v0`), while the two symbolic rows matched on the next gate. Both addresses are the payload's own immediates, so this is a binding split, not a layout change |
+| Fixed run of identical calls whose arguments differ only in a constant | Write each call out with its own literal arguments rather than looping over an argument table: the original's run has no latch, and a loop adds the induction, the counter register and the frame bytes the original never had |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 
@@ -149,6 +151,16 @@ unchanged frame. A result local live across
 the calls cost a saved register and frame bytes, and an early `return B;` before the
 block relocated that return out of line instead - `.text` size stayed equal and only the
 branch shape differed (`bne` to a trailing `move $v0,$zero`).
+
+Per-arm cleanup is the arm merge in the other direction: when every case of a
+`switch` ends with the same block and the original's failure edge lands past it,
+write that block inside each case before its `break`. One copy placed after the
+switch gives the default edge a block the original never enters, and the first
+difference is that branch's target, one instruction away, with a re-arm constant
+then hoisted into the case's delay slot. The identical per-arm tails cross-jump
+into the one site the original shows, so the cleanup still emits as a single
+block.
+
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
