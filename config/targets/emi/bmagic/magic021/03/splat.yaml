@@ -81,8 +81,9 @@ segments:
     - asm
     - func_801EF600
   - - 2896
-    - asm
-    - func_801EF750
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c'
   - - 2976
     - asm
     - func_801EF7A0

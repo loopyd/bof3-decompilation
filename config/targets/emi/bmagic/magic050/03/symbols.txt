@@ -9,5 +9,5 @@ func_801EF0E8 = 0x801EF0E8;
 func_801EF138 = 0x801EF138;
 func_801EF1B0 = 0x801EF1B0;
 func_801EF4C4 = 0x801EF4C4;
-func_801EF898 = 0x801EF898;
+drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898 = 0x801EF898;
 D_801EFA90 = 0x801EFA90;

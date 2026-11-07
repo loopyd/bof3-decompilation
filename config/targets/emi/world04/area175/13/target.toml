@@ -23,6 +23,7 @@ support_sources = [
     "src/bof3/world/area17513_gate_status.c",
     "src/bof3/world/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c",
     "src/bof3/world/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c",
+    "src/bof3/world/setStatus72AndStepByte1CIfGateElse78AndStepByte1BWorld04Area17513_801F3CCC.c",
     "src/bof3/world/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c",
     "src/bof3/world/startWorkCountdownMode1World04Area17513_801F4248.c",
     "src/bof3/world/setWorkByte9AndClearTintWorld04Area17513_801F3228.c",

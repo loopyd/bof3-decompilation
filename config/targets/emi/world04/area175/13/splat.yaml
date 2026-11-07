@@ -177,8 +177,10 @@ segments:
     - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xA0 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x9F when the gate byte is zero.'
   - - 4300
-    - asm
-    - func_801F3CCC
+    - c
+    - setStatus72AndStepByte1CIfGateElse78AndStepByte1BWorld04Area17513_801F3CCC
+    - '@source: src/bof3/world/setStatus72AndStepByte1CIfGateElse78AndStepByte1BWorld04Area17513_801F3CCC.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while the gate byte is nonzero, stores 0x72 into the shared status halfword D_801490A8 and 0x0C into byte 1 of the overlay-wide step cell group at 0x801F294D; when the gate byte is zero it stores 0x78 and 0x0B there instead. Either way it then clears step byte 2 at 0x801F294E.'
   - - 4376
     - asm
     - func_801F3D18

@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801EF1CC
   - - 1576
-    - asm
-    - func_801EF228
+    - c
+    - clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228
+    - '@source: src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once and tests that record''s byte at offset 0xB against two; only when it equals 2 it clears the scratchpad work-object byte at offset 0xA and rewrites the work-object byte at offset 0x2 with a fresh pointer-cell load. Takes no arguments, returns nothing and keeps no frame.'
   - - 1656
     - asm
     - func_801EF278

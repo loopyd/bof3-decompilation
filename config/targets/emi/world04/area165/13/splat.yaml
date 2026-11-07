@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F34C8
   - - 2328
-    - asm
-    - func_801F3518
+    - c
+    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenAdvanceWorkByte2AndDrawWorld04Area16513_801F3518
+    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenAdvanceWorkByte2AndDrawWorld04Area16513_801F3518.c'
+    - '@behavior: Byte-2 state handler, entry 2 of the four-entry handler table based at 0x801F35B0: subtracts 0x10 from the scratch work record halfword +0x30, then, once that stored signed halfword falls to zero or below, queues sound cue 0x201 through func_8015DF18 only while the front-end phase byte D_80143BB0 is zero and advances the record state byte +0x02 so the next dispatch takes entry 3 at 0x801F30D4; the overlay draw routine at 0x801F30D4 runs on every call and reads the same halfword as a sprite screen offset.'
   - - 2452
     - textbin
     - D_801F3594

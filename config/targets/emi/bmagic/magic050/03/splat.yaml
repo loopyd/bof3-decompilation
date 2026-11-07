@@ -51,7 +51,7 @@ segments:
     - c
     - dispatchWorkByte2ThenCallUpdatePassesBmagicMagic05003_801EEF4C
     - '@source: src/bof3/bmagic/dispatchWorkByte2ThenCallUpdatePassesBmagicMagic05003_801EEF4C.c'
-    - '@behavior: Handler installed as entry 0 of the byte-1 dispatch table at 0x801EFA9C: reads the work-record pointer from the scratchpad cell at 0x1F800044, calls the step handler that the record byte at offset 2 selects from the three-entry table at 0x801EFAF0 (0x801EEFDC, 0x801EF0E8, 0x801EF138), re-reads the work-record pointer after that call, and calls func_800AF764, func_801EF1B0, func_801EF4C4 and func_801EF898 in that order when the record byte at offset 2 and the record byte at offset 0 are both nonzero. Takes no arguments and returns nothing.'
+    - '@behavior: Handler installed as entry 0 of the byte-1 dispatch table at 0x801EFA9C: reads the work-record pointer from the scratchpad cell at 0x1F800044, calls the step handler that the record byte at offset 2 selects from the three-entry table at 0x801EFAF0 (0x801EEFDC, 0x801EF0E8, 0x801EF138), re-reads the work-record pointer after that call, and calls func_800AF764, func_801EF1B0, func_801EF4C4 and drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898 in that order when the record byte at offset 2 and the record byte at offset 0 are both nonzero. Takes no arguments and returns nothing.'
   - - 988
     - asm
     - func_801EEFDC
@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF4C4
   - - 3224
-    - asm
-    - func_801EF898
+    - c
+    - drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898
+    - '@source: src/bof3/bmagic/drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898.c'
+    - '@behavior: Per-frame overlay drawing step called last by dispatchWorkByte2ThenCallUpdatePassesBmagicMagic05003_801EEF4C once the work record is active. Publishes three scratchpad values from the work object read through the pointer cell at 0x1F800044: the radius cell at 0x1F800000 takes three times the object byte at 0x0A, the word at 0x1F800008 takes six times its byte at 0x09 and the word at 0x1F80000C takes that same byte. Then runs sixteen iterations of phase `i << 8`, each re-reading GetGraphType twice to pick the draw-mode tpage argument (0xA5 when it returns 1, 0xA5 again when 2, 0x35 otherwise), passing it to SetDrawMode with dfe 0 and dtd 1, linking a kind-2 0xC-class grid-cell primitive at the work cursor pair 0x34/0x38 through func_80155A08, seeding the primitive cursor with func_8017AA30 and marking it semi-transparent, writing the object halfwords 0x2E/0x30 plus the sine and cosine of the phase scaled by the radius cell and shifted right 12 into the primitive halfwords 0x08/0x0A, and writing the two published tint words into the primitive colour bytes 0x04/0x05/0x06 with the channel order selected by the shared battle-kind halfword 0x801463C0: 0x32 repeats the 0x1F800008 value in green and takes 0x1F80000C for blue, every other kind puts 0x1F80000C in green and 0x1F800008 in blue. Each iteration closes by linking the same cell again and incrementing the counter. Takes no arguments and returns nothing.'
   - - 3728
     - textbin
     - D_801EFA90

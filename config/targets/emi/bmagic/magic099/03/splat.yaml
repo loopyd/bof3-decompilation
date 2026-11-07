@@ -65,8 +65,9 @@ segments:
     - asm
     - func_801EF374
   - - 2020
-    - asm
-    - func_801EF3E4
+    - c
+    - incrementWorkByteBAndDecrementWorkByte9ThenAdvanceWorkByte2WhenZeroBmagicMagic09903_801EF3E4
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte9ThenAdvanceWorkByte2WhenZeroBmagicMagic09903_801EF3E4.c'
   - - 2124
     - asm
     - func_801EF44C

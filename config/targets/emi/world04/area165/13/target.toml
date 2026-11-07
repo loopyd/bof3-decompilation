@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area165_13_psyq.c",
     "src/bof3/world/area16513DispatchTables.c",
     "src/bof3/world/loadWorkStepRowResetWorkFieldsAndAdvanceState2World04Area16513_801F345C.c",
+    "src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenAdvanceWorkByte2AndDrawWorld04Area16513_801F3518.c",
 ]
 psyq_source = "src/bof3/support/area165_13_psyq.c"

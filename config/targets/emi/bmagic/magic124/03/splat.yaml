@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF3FC
   - - 2440
-    - asm
-    - func_801EF588
+    - c
+    - add4ToWorkByteAAndAdvanceWorkByte2At16BmagicMagic12403_801EF588
+    - '@source: src/bof3/bmagic/add4ToWorkByteAAndAdvanceWorkByte2At16BmagicMagic12403_801EF588.c'
+    - '@behavior: Advances the scratchpad work-object byte at offset 0xA by four modulo 256 through one load of the pointer cell at 0x1F800044, then tests the truncated byte it just stored against 0x10 by equality; only when that byte equals 0x10 does it re-read the pointer cell and increment the object byte at offset 0x2, the overlay work byte 2 handler step.'
   - - 2520
     - asm
     - func_801EF5D8

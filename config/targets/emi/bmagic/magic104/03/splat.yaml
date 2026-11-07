@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC80
   - - 636
-    - asm
-    - func_801EEE7C
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C.c'
+    - '@behavior: Stage handler at index 1 of the four-word code pointer run at 0x801EEC04 that the overlay entry at 0x801EEC14 dispatches with work byte 0x1. Reads the scratchpad work-object pointer cell at 0x1F800044 once and tests work byte 0xB against seven by equality; only on that path it stores 8 into work byte 0x9 and then re-reads the cell to increment work byte 0x1 by one, moving the stage index from 1 to 2. Takes no arguments and returns nothing.'
   - - 704
     - asm
     - func_801EEEC0

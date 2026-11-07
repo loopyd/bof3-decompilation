@@ -85,8 +85,9 @@ segments:
     - dispatchStateByte2Table0c24BmagicMagic06203_801EFBBC
     - '@source: src/bof3/bmagic/magic06203DispatchTables.c'
   - - 4096
-    - asm
-    - func_801EFC00
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06203_801EFC00
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06203_801EFC00.c'
   - - 4172
     - asm
     - func_801EFC4C

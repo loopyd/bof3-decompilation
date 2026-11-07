@@ -9,6 +9,6 @@ func_801F30D4 = 0x801F30D4;
 dispatchStateByte2Table35b0World04Area16513_801F3418 = 0x801F3418;
 loadWorkStepRowResetWorkFieldsAndAdvanceState2World04Area16513_801F345C = 0x801F345C;
 func_801F34C8 = 0x801F34C8;
-func_801F3518 = 0x801F3518;
+decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenAdvanceWorkByte2AndDrawWorld04Area16513_801F3518 = 0x801F3518;
 D_801F3594 = 0x801F3594;
 workStepRowTable35c0World04Area16513 = 0x801F35C0;
