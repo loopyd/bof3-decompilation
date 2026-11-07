@@ -120,8 +120,10 @@ segments:
     - c
     - setSubstate8AndClearWorkFlagsWorld01Area06813_801F37F0
   - - 3100
-    - asm
-    - func_801F381C
+    - c
+    - publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C
+    - '@source: src/bof3/world/publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C.c'
+    - '@behavior: Selects the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F4D64 and publishes it into the shared status halfword 0x801490A8, then stores 0x14 into the shared scenario progress byte 0x80146864 when the mode reads 0 and 3 when it reads 1, leaving that byte untouched for any other mode. Leaf, no frame.'
   - - 3180
     - asm
     - func_801F386C

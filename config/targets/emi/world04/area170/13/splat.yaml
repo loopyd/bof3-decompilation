@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F49F8
   - - 7756
-    - asm
-    - func_801F4A4C
+    - c
+    - setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C
+    - '@source: src/bof3/world/setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x37 into the shared state byte D_801448EC while the gate byte is nonzero and 0x34 when it is zero.'
   - - 7804
     - c
     - raiseWorldFlags1010World04Area17013_801F4A7C

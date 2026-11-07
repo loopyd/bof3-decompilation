@@ -130,8 +130,10 @@ segments:
     - c
     - incrementWorkByte2World02Area10814_801F4108
   - - 5416
-    - asm
-    - func_801F4128
+    - c
+    - clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128
+    - '@source: src/bof3/world/clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128.c'
+    - '@behavior: Entry 3 of the four-pointer handler table at 0x801F5718 that the byte-+0x02 dispatcher 0x801F3FF8 indexes: while the shared scenario progress byte at 0x80146864 reads 0x1C it clears the shared overlay state byte at 0x8014933B that the preceding handler 0x801F405C raises, then clears the shared work flags through the 0x80196070 helper (clearWorkFlags in emi/etc/game/00); every other progress value leaves both untouched.'
   - - 5472
     - asm
     - func_801F4160

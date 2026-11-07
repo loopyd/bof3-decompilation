@@ -30,5 +30,6 @@ support_sources = [
     "src/bof3/bmagic/seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8.c",
     "src/bof3/bmagic/decrementWorkTintChannel5DByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F0CB0.c",
     "src/bof3/bmagic/decrementWorkByte9AdvanceWorkWord14By20ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1D60.c",
+    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1380.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

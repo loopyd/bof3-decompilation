@@ -189,8 +189,10 @@ segments:
     - asm
     - func_801F1318
   - - 10112
-    - asm
-    - func_801F1380
+    - c
+    - incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1380
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1380.c'
+    - '@behavior: Per-frame step of the scratchpad work object published at the pointer cell 0x1F800044; it increments work byte 0xB through one cell read, re-reads the cell and subtracts two from work byte 0xA, then re-reads the cell and tests work byte 0xA for zero. Only when that byte is zero does it read the shared battle work record pointer 0x801EB4E0, decrement that record byte 0xB and invoke the shared helper at 0x801E5988 with the store in the call delay slot. Frame 0x18 with $ra only, because of the call; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 10248
     - asm
     - func_801F1408

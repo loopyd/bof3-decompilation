@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801F3F60
   - - 5168
-    - asm
-    - func_801F4030
+    - c
+    - drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030
+    - '@source: src/bof3/world/drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030.c'
+    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and treats its byte 0x09 as a five-tick band counter: while that byte''s remainder modulo five is zero it hands the block drawer func_801F4E70 the band index (byte 0x09 / 5) + 4, then advances byte 0x09 by one and runs the drawing pass func_801F49A0(1); once the advanced byte has reached band 3 (0x0F through 0x13) it clears the shared overlay state byte 0x8014933B, restarts byte 0x09 at 1 and increments the record''s work byte 0x02 so the next frame dispatches entry 7 of the work-byte-2 table at 0x801F5954.'
   - - 5384
     - asm
     - func_801F4108
