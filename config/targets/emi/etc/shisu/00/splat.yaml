@@ -75,8 +75,13 @@ segments:
     - asm
     - func_801D2D88
   - - 8616
+    - c
+    - dispatchStateByteTable9734EtcShisu00_801D2DA8
+    - '@source: src/bof3/ui/dispatchStateByteTable9734EtcShisu00_801D2DA8.c'
+    - '@behavior: Handler dispatch on the SHISU state byte at 0x801DA0C1: reads that unsigned byte, scales it by four and calls the entry at that index of the reviewed textbin handler run based at 0x801D9734 with no arguments; the index is not bounded before the scaled load and the 0x18-byte frame only keeps $ra across the indirect call.'
+  - - 8676
     - asm
-    - func_801D2DA8
+    - func_801D2DE4
   - - 10016
     - asm
     - func_801D3320

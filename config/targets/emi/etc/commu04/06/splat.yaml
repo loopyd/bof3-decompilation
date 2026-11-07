@@ -57,8 +57,8 @@ segments:
     - asm
     - func_801D1670
   - - 2724
-    - asm
-    - func_801D16A4
+    - c
+    - initializeCommuUiState
   - - 2896
     - textbin
     - T_801D1750

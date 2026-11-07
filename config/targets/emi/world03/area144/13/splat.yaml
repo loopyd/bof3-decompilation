@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801F3AB4
   - - 3820
-    - asm
-    - func_801F3AEC
+    - c
+    - advanceHalfword0aBy3WhenSharedByte2World03Area14413_801F3AEC
+    - '@source: src/bof3/world/advanceHalfword0aBy3WhenSharedByte2World03Area14413_801F3AEC.c'
+    - '@behavior: Overlay handler reached from the handler table word at 0x801F4904: when the shared main-RAM byte at 0x80146189 reads 2, advances the halfword at offset 0x0A of the work record published through the global pointer cell 0x80148210 by 3.'
   - - 3876
     - asm
     - func_801F3B24

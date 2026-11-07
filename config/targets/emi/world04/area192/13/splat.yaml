@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801F326C
   - - 2020
-    - asm
-    - func_801F33E4
+    - c
+    - lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4
+    - '@source: src/bof3/world/lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4.c'
+    - '@behavior: Returns the byte at 0x801F3890 indexed by the low byte of arg0 plus either the 0x801F38C0 column offset that arg2 selects while the low byte of arg3 stays below 5 or the fixed offset 8, and leaves arg1 unused.'
   - - 2084
     - c
     - invokeHelperWorld04Area19213_801F3424

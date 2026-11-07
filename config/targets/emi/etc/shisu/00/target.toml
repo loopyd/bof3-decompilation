@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
     "src/bof3/ui/dispatchStateByteTable9720EtcShisu00_801D2C0C.c",
+    "src/bof3/ui/dispatchStateByteTable9734EtcShisu00_801D2DA8.c",
     "src/bof3/ui/initializeShisuUiState.c",
     "src/bof3/support/shisu_00_psyq.c",
 ]

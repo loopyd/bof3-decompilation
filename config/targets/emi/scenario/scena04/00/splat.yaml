@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F732C
   - - 2172
-    - asm
-    - func_801F747C
+    - c
+    - seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C
+    - '@source: src/bof3/scenario/seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C.c'
+    - '@behavior: Seeds the overlay-local five-record segment key table at 0x801FA2C0: each 0x20-byte record receives three start/end word pairs at +0/+0x10, +0x4/+0x14 and +0x8/+0x18, the first pair is 0x00568000 to 0x005E8000 in every record, the second and third pairs vary per record as the C source lists, and the words at +0xC and +0x1C stay untouched. Its only caller func_801F6D44 calls it after stamping the frame primitive words into the scratch work object at 0x1F800044 and before it sets work byte 1 to 1; its only reader func_801F75BC walks the five records by index, lerps each pair over 16 and draws one projected segment per record, so each record is one segment that grows from its start point. It reads nothing, makes no call and keeps no stack frame.'
   - - 2492
     - asm
     - func_801F75BC

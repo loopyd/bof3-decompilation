@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801EF59C
   - - 2540
-    - asm
-    - func_801EF5EC
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic08803_801EF5EC
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic08803_801EF5EC.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and compares its byte at offset 0xB against two with an unsigned bound, so the guard is taken for every value below two; only on that path it reads the scratchpad work pointer cell at 0x1F800044 and increments the byte at offset 2 of that work object by one at byte width.'
   - - 2608
     - asm
     - func_801EF630

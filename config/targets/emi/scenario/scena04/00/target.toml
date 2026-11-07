@@ -20,6 +20,7 @@ sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0400_801F77A8.c",
     "src/bof3/scenario/dispatchWorkObjectHandlerScenarioScena0400_801F7A84.c",
     "src/bof3/scenario/addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC.c",
+    "src/bof3/scenario/seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

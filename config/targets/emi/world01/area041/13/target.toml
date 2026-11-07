@@ -18,6 +18,7 @@ support_sources = [
     "src/bof3/world/invokeHelperArgWorld01Area04113_801F4230.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld01Area04113_801F3B08.c",
     "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld01Area04113_801F3DBC.c",
+    "src/bof3/world/setStatus64AndModeIndex6IfGateElseFFFFWorld01Area04113_801F3D78.c",
     "src/bof3/support/area041_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area041_13_psyq.c"

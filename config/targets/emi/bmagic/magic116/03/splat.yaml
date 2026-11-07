@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EEDB0
   - - 564
-    - asm
-    - func_801EEE34
+    - c
+    - raiseFlag4AndInvokeHelperWhenNoRecordActiveBmagicMagic11603_801EEE34
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenNoRecordActiveBmagicMagic11603_801EEE34.c'
+    - '@behavior: Idle step of this overlay, the fourth word (index 3) of the four-entry code pointer run at 0x801EEC04 in the leading table segment of this target, whose words are 0x801EEC80, 0x801EED2C, 0x801EEDB0 and 0x801EEE34; no jal inside this payload reaches it. It runs the record sweep at 0x801EF118, which walks the 0x80 records of the 0x3C-byte-stride pool at 0x801EF2A8 and returns non-zero once it has drawn at least one record whose lead byte at offset 0 reads non-zero. Only when that result masked to its low byte is zero, meaning no record is active, does it raise bit 0x4 of the shared battle global halfword at 0x801462E8 and then invoke the shared helper at 0x801E5988 with no arguments; the 0x18-byte frame only keeps the return address across the two calls and nothing is returned.'
   - - 636
     - asm
     - func_801EEE7C
