@@ -77,7 +77,9 @@ useful lesson: it records which lever closed which residual class.
 One disjoint target per lane. Lane writes target-owned `src/bof3/**`, owning header
 and target `splat.yaml`/`symbols.txt`/`target.toml` only. Parent owns shared headers,
 `config/splat.yaml`, index, caches, naming baseline and Git. Report shared changes;
-do not apply them. Preserve unrelated dirty work. Worst-first targets
+do not apply them. No lane, reviewer, namer or harvest child runs `git add`,
+`git commit` or `git push`; the parent commits the batch after re-gating every
+selector. Preserve unrelated dirty work. Worst-first targets
 `emi/etc/game/00`, `emi/battle/battle/15`, `emi/battle/battle/03` get fewer selectors.
 
 Harness resolves registry refs. Freeze supplied membership; report data/no-op/blocked
