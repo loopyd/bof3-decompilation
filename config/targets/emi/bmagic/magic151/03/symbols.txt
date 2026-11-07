@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+D_80145FB8 = 0x80145FB8;
 dispatchWorkByte1HandlerBmagicMagic15103_801EEC50 = 0x801EEC50;
 func_801EECB0 = 0x801EECB0;
 dispatchWorkByte2LocalPairBmagicMagic15103_801EEDE0 = 0x801EEDE0;
@@ -11,7 +12,7 @@ selectWorkRecordClearFlag40ThenAdvanceWorkByte1AndClearWorkBytes2And3BmagicMagic
 dispatchWorkByte3HandlerBmagicMagic15103_801EF318 = 0x801EF318;
 func_801EF388 = 0x801EF388;
 func_801EF484 = 0x801EF484;
-func_801EF938 = 0x801EF938;
+raiseFlag4SetActingBattlerFlag20ClearFlag4ThenInvokeHelperWhenWorkByteBIs2BmagicMagic15103_801EF938 = 0x801EF938;
 dispatchStateByte1Table24a4BmagicMagic15103_801EF9F0 = 0x801EF9F0;
 dispatchWorkByte2HandlerBmagicMagic15103_801EFA34 = 0x801EFA34;
 func_801EFAAC = 0x801EFAAC;

@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF148
   - - 1652
-    - asm
-    - func_801EF274
+    - c
+    - stepHalfword801492D8ByWorkByte9LowBitDecrementWorkByte9ThenSeedNegative682OnZeroSetByte9To22AdvanceWorkByte2BmagicMagic22203_801EF274
+    - '@source: src/bof3/bmagic/stepHalfword801492D8ByWorkByte9LowBitDecrementWorkByte9ThenSeedNegative682OnZeroSetByte9To22AdvanceWorkByte2BmagicMagic22203_801EF274.c'
+    - '@behavior: Per-frame work-handler step of this overlay. It reads the scratchpad work object through the pointer cell at 0x1F800044, tests bit 0 of work byte 9 and steps the shared unsigned halfword at 0x801492D8 by 20 in the selected direction (up when the bit is set, down when it is clear), storing the new value once at the join. It then re-reads the cell and decrements work byte 9 in place, returning while that countdown is still nonzero. On zero it re-reads the cell, seeds the halfword at 0x801492D8 with -682, sets work byte 9 to 22, re-reads the cell and advances work byte 2 by one, which moves the dispatcher to the next work-byte-2 step. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 1828
     - asm
     - func_801EF324

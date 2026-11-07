@@ -31,5 +31,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkTintChannel5DByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F0CB0.c",
     "src/bof3/bmagic/decrementWorkByte9AdvanceWorkWord14By20ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1D60.c",
     "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15103_801F1380.c",
+    "src/bof3/bmagic/raiseFlag4SetActingBattlerFlag20ClearFlag4ThenInvokeHelperWhenWorkByteBIs2BmagicMagic15103_801EF938.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

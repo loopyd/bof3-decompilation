@@ -11,6 +11,7 @@ sources = [
     "src/bof3/ui/func_801D0C68.c",
     "src/bof3/ui/computeEntryListOriginY.c",
     "src/bof3/ui/publishCommuEntryTextId.c",
+    "src/bof3/ui/publishCommuEntryTextIdForRow.c",
     "src/bof3/ui/findActiveRecordSlotByKind.c",
 ]
 support_sources = [

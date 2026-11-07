@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801F0254
   - - 5836
-    - asm
-    - func_801F02CC
+    - c
+    - clearWorkByte9AndIncrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic06000_801F02CC
+    - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic06000_801F02CC.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record''s byte at offset 0xB equals 1, clears the scratchpad work-object byte at offset 0x9 with sb $zero, then re-reads the work-object pointer cell at 0x1F800044 and increments that object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb). Leaf with no frame; takes no arguments, returns nothing and writes no other state.'
   - - 5916
     - asm
     - func_801F031C

@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EF484
   - - 3384
-    - asm
-    - func_801EF938
+    - c
+    - raiseFlag4SetActingBattlerFlag20ClearFlag4ThenInvokeHelperWhenWorkByteBIs2BmagicMagic15103_801EF938
+    - '@source: src/bof3/bmagic/raiseFlag4SetActingBattlerFlag20ClearFlag4ThenInvokeHelperWhenWorkByteBIs2BmagicMagic15103_801EF938.c'
+    - '@behavior: Work-byte-0xB step handler of the overlay work object: reads the scratchpad work-object pointer cell 0x1F800044 once before the 0x18-byte frame and, only when that work object''s byte 0xB equals 2, raises bit 0x4 of the shared battle global halfword at 0x801462E8, sets bit 0x20 and then clears bit 0x4 of the acting battler''s flag word at 0x80145FB8 + D_80146374 * 0x140 (each flag access re-reads the battler byte), and invokes the shared helper at 0x801E5988. Frame 0x18 with $ra only, because of the call; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 3568
     - c
     - dispatchStateByte1Table24a4BmagicMagic15103_801EF9F0

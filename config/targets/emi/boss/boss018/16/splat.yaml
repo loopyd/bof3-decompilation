@@ -96,8 +96,8 @@ segments:
     - asm
     - func_800C1DC4
   - - 1764
-    - asm
-    - func_800C1EE4
+    - c
+    - dispatchStateByte2Table2d94BossBoss01816_800C1EE4
   - - 1832
     - asm
     - func_800C1F28

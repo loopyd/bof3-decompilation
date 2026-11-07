@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801EF688
   - - 2860
-    - asm
-    - func_801EF72C
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic00100_801EF72C
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EF72C.c'
+    - '@behavior: Overlay step dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044 once, copies the three-word code pointer table at 0x801EEC3C (0x801EF78C, 0x801EFA14, 0x801EFA84) into its own 0x28-byte frame, and invokes the copied entry selected by the work object unsigned byte at offset 1 with no arguments; reads no other state, writes none, and the frame only holds the copied table and $ra.'
   - - 2956
     - asm
     - func_801EF78C

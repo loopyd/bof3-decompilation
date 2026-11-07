@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801CF37C
   - - 4244
-    - asm
-    - func_801CF494
+    - c
+    - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01600_801CF494
+    - '@source: src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01600_801CF494.c'
+    - '@behavior: Overlay step: reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks it up in the shared 0x74-byte front-end record table at 0x80143FC8 and, while row byte 0 reads 0, clears the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 4352
     - c
     - dispatchWorkByte2Table065cPlcharPlp01600_801CF500

@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/boss/publishEnemyWorkBaseThenDispatchStateByte1BossBoss05516_800C26D4.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2728.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2888.c",
+    "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C29E8.c",
     "src/bof3/support/boss055_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss055_16_psyq.c"

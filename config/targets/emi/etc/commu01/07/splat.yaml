@@ -131,8 +131,10 @@ segments:
     - c
     - publishCommuEntryTextId
   - - 16044
-    - asm
-    - func_801D4AAC
+    - c
+    - publishCommuEntryTextIdForRow
+    - '@source: src/bof3/ui/publishCommuEntryTextIdForRow.c'
+    - '@behavior: publishes the text id of the commu list row that its byte pointer argument addresses into the request result halfword 0x801D4E0C; the row equals the shared cursor 0x801448ED -> 0x44, row 0 -> 0x69, rows 9 and above index the halfword table at 0x801D4DDA, and rows 1 through 8 take 0x44 when the pending world entry count is below the row, 0x69 when their record slot is empty, otherwise the halfword table at 0x801D4BB0 indexed by that slot kind byte'
   - - 16216
     - asm
     - func_801D4B58

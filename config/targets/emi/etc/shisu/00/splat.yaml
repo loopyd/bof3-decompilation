@@ -57,8 +57,23 @@ segments:
     - asm
     - func_801D2ADC
   - - 8204
+    - c
+    - dispatchStateByteTable9720EtcShisu00_801D2C0C
+  - - 8264
     - asm
-    - func_801D2C0C
+    - func_801D2C48
+  - - 8272
+    - asm
+    - func_801D2C50
+  - - 8324
+    - asm
+    - func_801D2C84
+  - - 8420
+    - asm
+    - func_801D2CE4
+  - - 8584
+    - asm
+    - func_801D2D88
   - - 8616
     - asm
     - func_801D2DA8
