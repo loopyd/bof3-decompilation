@@ -1,3 +1,4 @@
+clearOwnerRecordHead = 0x800AC934;
 func_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848 = 0x800C1848;
 func_800C18A0 = 0x800C18A0;
@@ -13,5 +14,5 @@ noopHandlerBossBoss03016_800C19D4 = 0x800C19D4;
 func_800C19DC = 0x800C19DC;
 zeroResultBossBoss03016_800C1A14 = 0x800C1A14;
 func_800C1A1C = 0x800C1A1C;
-func_800C1A84 = 0x800C1A84;
+clearOwnerRecordHeadsBossBoss03016_800C1A84 = 0x800C1A84;
 D_800C1AB4 = 0x800C1AB4;

@@ -48,8 +48,10 @@ segments:
     - c
     - dispatchStateByte1Table0c60BossBoss03816_800C193C
   - - 384
-    - asm
-    - func_800C1980
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03816_800C1980
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03816_800C1980.c'
+    - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1C10 into +0xEC of the current enemy work record from 0x801EB4E8, the step dispatcher 0x800C19E4 into +0xE4 and the in-row pointer 0x800C1C1C into +0xE8, raises bit 0x8 of the record +0x104 flag word, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 484
     - asm
     - func_800C19E4

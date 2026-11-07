@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848.c",
     "src/bof3/boss/zeroResultBossBoss03016_800C1A14.c",
+    "src/bof3/boss/clearOwnerRecordHeadsBossBoss03016_800C1A84.c",
     "src/bof3/boss/noopHandlerBossBoss03016_800C19D4.c",
     "src/bof3/boss/noopHandlerBossBoss03016_800C19CC.c",
     "src/bof3/boss/noopHandlerBossBoss03016_800C19C4.c",

@@ -6,10 +6,10 @@ typedef void (*Boss03216Handler)(void);
  * Handler table at 0x800C1C88, the table this dispatcher selects from: its
  * three words are 0x800C19B0, 0x800C19B8 and 0x800C19C0, the inert handlers of
  * this overlay. They are the last words of the pointer run the payload keeps
- * from 0x800C1C40 to 0x800C1C94 inside the Splat asm span at 0x800C1C2C, which
- * disassembles as a word run. The generated undefined_syms_auto.txt row for
- * D_800C1C88 already binds the word the scaled index is added to, so this
- * declaration needs no map row.
+ * from 0x800C1C40 to 0x800C1C93, inside the promoted data span D_800C1C2C that
+ * runs from 0x800C1C2C to the end of the overlay. The generated
+ * undefined_syms_auto.txt row for D_800C1C88 already binds the word the scaled
+ * index is added to, so this declaration needs no map row.
  */
 extern Boss03216Handler D_800C1C88[]; /* @source 0x800C1C88 @kind data */
 

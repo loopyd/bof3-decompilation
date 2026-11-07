@@ -108,8 +108,10 @@ segments:
     - c
     - zeroResultBossBoss03416_800C2378
   - - 2944
-    - asm
-    - func_800C2380
+    - c
+    - initModeTupleByBattleFlagBossBoss03416_800C2380
+    - '@source: src/bof3/boss/initModeTupleByBattleFlagBossBoss03416_800C2380.c'
+    - '@behavior: Overlay mode-transition handler: while the 0x2 bit of the shared battle flag byte D_80146328 is set it stores 5 into the shared mode byte D_80146875 and runs initModeTuple510, and otherwise it runs initModeTuple520'
   - - 3020
     - c
     - noopHandlerBossBoss03416_800C23CC
