@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801F2FA0
   - - 1500
-    - asm
-    - func_801F31DC
+    - c
+    - drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC
+    - '@source: src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c'
+    - '@behavior: Draws the overlay three-glyph banner at the signed halfword origin (x, y) and marks the glyph the work record selected. Arms draw mode 0, covers the box with three semi-transparent (0, 0x80, 0) quads 0x136 wide and 0x5A tall (two 5-pixel end caps and the body), and draws the three 9x7 glyph grids at x+9, x+0x6D and x+0xD1 from the 0x3F-byte stride table at 0x801F58D0 starting at the row phases in 0x801F5990 through 0x801F5992. When bit 4 of the shared frame word 0x80143E6C is set it steps x down one pixel and marks the glyph selected by byte 6 of the scratchpad work record at 0x1F800044, scaled by 100: two unfilled (0xC8, 0xC8, 0xC8) triangles flank the column and four lines draw the 0x5A by 0x46 selection frame. The record is re-read for each of the three marks.'
   - - 2452
     - asm
     - func_801F3594

@@ -9,7 +9,8 @@ extern u8 D_80143BB0;
 /* @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
 
-void func_801F40DC(s16 arg0, s16 arg1);
+void drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC(
+    s16 arg0, s16 arg1);
 
 /* @source 0x801F3768
  * @behavior Byte-1 state handler 7 of the byte-1 handler table 0x801F67D8 for
@@ -43,5 +44,6 @@ void decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfw
     area12114WorkCursor_1F800044[3] = 3;
   }
   emitter = area12114WorkCursor_1F800044;
-  func_801F40DC(0x5C, FIELD_REF(s16, emitter, 0x30));
+  drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC(
+      0x5C, FIELD_REF(s16, emitter, 0x30));
 }

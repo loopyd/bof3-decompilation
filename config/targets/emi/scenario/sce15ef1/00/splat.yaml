@@ -127,8 +127,10 @@ segments:
     - asm
     - func_801D2B64
   - - 8104
-    - asm
-    - func_801D2BA8
+    - c
+    - clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8
+    - '@source: src/bof3/scenario/clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8.c'
+    - '@behavior: Entry 6 of the overlay step-handler code-pointer run at 0x801D3954: arms the scratchpad work object countdown byte +0x9 with 0x14, clears the word pair +0x0C/+0x10 of its step triple and the word pair +0x18/+0x1C of its head point through the first pointer-cell load, advances work byte +0x1 through a second load of that cell, and dispatches sound cue 0x208 through the resident cue dispatcher 0x8015DF18.'
   - - 8192
     - asm
     - func_801D2C00

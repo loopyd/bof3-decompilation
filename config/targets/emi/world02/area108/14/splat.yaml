@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F4160
   - - 5784
-    - asm
-    - func_801F4298
+    - c
+    - setStatusFFFFAndStateEntry3Or2SetFlagBit1EOr1FAndFrontendState5ByGateWorld02Area10814_801F4298
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntry3Or2SetFlagBit1EOr1FAndFrontendState5ByGateWorld02Area10814_801F4298.c'
+    - '@behavior: Overlay state setter, entry 0 of the in-image code-pointer run based at 0x801F62DC: reads the shared gate byte at 0x801490C7 signed and stores 0xFFFF into the shared status halfword at 0x801490A8 on every path; gate 0 or 1 then writes 3 or 2 into the shared state-entry byte at 0x801448ED, sets flag bit 0x1E or 0x1F of the shared flag block at 0x80144F28 through the shared bit-set helper 0x8015B580 using that byte''s own address advanced by 0x63B, and both handled arms reach the closing store of 5 into the shared frontend state byte at 0x801448EB, the front-end selector that the front-end dispatcher 0x801A7CAC indexes its handler table with; any other gate value returns before it.'
   - - 5920
     - c
     - setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320

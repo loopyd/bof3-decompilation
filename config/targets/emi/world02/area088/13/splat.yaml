@@ -141,8 +141,10 @@ segments:
     - setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234
     - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234.c'
   - - 5812
-    - asm
-    - func_801F42B4
+    - c
+    - decrementHalfword30By10AndAdvanceState3BelowC9AndSetState3To3WhenGatedThenDrawHalfword30World02Area08813_801F42B4
+    - '@source: src/bof3/world/decrementHalfword30By10AndAdvanceState3BelowC9AndSetState3To3WhenGatedThenDrawHalfword30World02Area08813_801F42B4.c'
+    - '@behavior: subtracts 0xA from work-record halfword 0x30 and increments work byte 0x03 while the stored value stays below 0xC9; when the gate holds (shared byte 0x801454F2 set and record byte 0x0B nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 set) it writes 3 to work byte 0x03 through a second read of the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6028
     - asm
     - func_801F438C

@@ -1,3 +1,4 @@
+dispatchSoundCue = 0x8015DF18;
 func_80196070 = 0x80196070;
 func_801D0C04 = 0x801D0C04;
 func_801D0C48 = 0x801D0C48;
@@ -27,7 +28,7 @@ func_801D26BC = 0x801D26BC;
 func_801D2934 = 0x801D2934;
 invokeHelperScenarioSce15ef100_801D2B44 = 0x801D2B44;
 func_801D2B64 = 0x801D2B64;
-func_801D2BA8 = 0x801D2BA8;
+clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8 = 0x801D2BA8;
 func_801D2C00 = 0x801D2C00;
 func_801D2C94 = 0x801D2C94;
 func_801D2D5C = 0x801D2D5C;

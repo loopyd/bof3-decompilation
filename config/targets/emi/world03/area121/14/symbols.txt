@@ -34,7 +34,7 @@ advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World0
 func_801F39F0 = 0x801F39F0;
 func_801F3B18 = 0x801F3B18;
 func_801F3EE4 = 0x801F3EE4;
-func_801F40DC = 0x801F40DC;
+drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC = 0x801F40DC;
 dispatchState01World03Area12114_801F418C = 0x801F418C;
 func_801F41D0 = 0x801F41D0;
 func_801F430C = 0x801F430C;
