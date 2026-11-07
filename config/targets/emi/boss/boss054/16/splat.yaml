@@ -29,9 +29,11 @@ segments:
   - - 4
     - textbin
     - func_800C1804
-  - - 36
-    - asm
-    - func_800C1824
+  - - 56
+    - c
+    - dispatchStateByte1Table2090BossBoss05416_800C1838
+    - '@source: src/bof3/boss/dispatchStateByte1Table2090BossBoss05416_800C1838.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer at scratchpad cell 0x1F800044, calls the handler at that record byte 1 of the run based at 0x800C2090 with no arguments, and the epilogue leaves the selected handler return value untouched.'
   - - 124
     - asm
     - func_800C187C

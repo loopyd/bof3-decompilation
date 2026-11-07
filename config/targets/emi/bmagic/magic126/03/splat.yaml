@@ -109,8 +109,9 @@ segments:
     - asm
     - func_801F06AC
   - - 7452
-    - asm
-    - func_801F091C
+    - c
+    - dispatchRecordByte1Table12a8BmagicMagic12603_801F091C
+    - '@source: src/bof3/bmagic/dispatchRecordByte1Table12a8BmagicMagic12603_801F091C.c'
   - - 7520
     - asm
     - func_801F0960

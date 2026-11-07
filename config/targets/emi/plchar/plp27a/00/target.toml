@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/plchar/getAndClearPlcharPlp27a00_801CF858.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC.c",
+    "src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp27a00_801CEA10.c",
     "src/bof3/support/plp27a_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp27a_00_psyq.c"

@@ -1,6 +1,6 @@
 func_801EEC04 = 0x801EEC04;
 func_801EECE4 = 0x801EECE4;
-func_801EEE80 = 0x801EEE80;
+forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80 = 0x801EEE80;
 func_801EEEE0 = 0x801EEEE0;
 dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24 = 0x801EEF24;
 func_801EEFAC = 0x801EEFAC;

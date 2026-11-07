@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801CE8AC
   - - 1552
-    - asm
-    - func_801CEA10
+    - c
+    - testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp27a00_801CEA10
   - - 1760
     - asm
     - func_801CEAE0

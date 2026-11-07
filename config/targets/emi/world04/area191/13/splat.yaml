@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801F37AC
   - - 3364
-    - asm
-    - func_801F3924
+    - c
+    - lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924
+    - '@source: src/bof3/world/lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924.c'
+    - '@behavior: Reads the small column offset at 0x801F4290 indexed by the low byte of the third argument and adds it to the first argument while the low byte of the fourth argument is below 5, otherwise adds the fixed offset 8, then returns the byte at 0x801F4260 indexed by the low byte of that sum.'
   - - 3428
     - asm
     - func_801F3964

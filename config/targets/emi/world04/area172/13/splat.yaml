@@ -73,8 +73,10 @@ segments:
     - asm
     - func_801F32E8
   - - 1908
-    - asm
-    - func_801F3374
+    - c
+    - setSubstate14AndClearWorkFlagsWhenEffectIdleWorld04Area17213_801F3374
+    - '@source: src/bof3/world/setSubstate14AndClearWorkFlagsWhenEffectIdleWorld04Area17213_801F3374.c'
+    - '@behavior: While the shared effect-busy halfword 0x80143C40 reads zero, stores the sub-state 0x14 into the shared sub-state byte 0x80146875 and then runs the shared 0x80196070 work-flag reset helper; a busy effect leaves both untouched.'
   - - 1964
     - c
     - dispatchStateByte1Table50a8World04Area17213_801F33AC

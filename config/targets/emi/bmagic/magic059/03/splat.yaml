@@ -49,8 +49,9 @@ segments:
     - asm
     - func_801EF504
   - - 2416
-    - asm
-    - func_801EF570
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570.c'
   - - 2496
     - asm
     - func_801EF5C0

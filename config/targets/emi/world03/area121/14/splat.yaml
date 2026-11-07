@@ -57,8 +57,10 @@ segments:
     - prepareWorkRecordForLookup158AndArmMode1World03Area12114_801F3078
     - '@source: src/bof3/world/prepareWorkRecordForLookup158AndArmMode1World03Area12114_801F3078.c'
   - - 1284
-    - asm
-    - func_801F3104
+    - c
+    - requestResourceForInteractionByteThenAdvanceMode2World03Area12114_801F3104
+    - '@source: src/bof3/world/requestResourceForInteractionByteThenAdvanceMode2World03Area12114_801F3104.c'
+    - '@behavior: Mode-1 handler of the work-record mode table at 0x801F67C4, indexed by the work-record byte at 0x01. It latches the interaction byte at 0x0B into work byte 0x07 and selects a resource: interaction 1 searches the local four-byte-row table 0x801F64D8 for the row whose first halfword equals the shared context seed 0x80143F10 and takes that row byte at offset 2; interactions 2, 3 and 4 request resources 3, 0 and 1; every other value returns. Each requesting path clears work word 0x40, stores 0x10000 in word 0x44, stores 2 in work byte 0x48 and 8 in byte 0x09, only the interaction-1 path publishes the matched seed in word 0x18, then the resource is requested through the shared resident helper at 0x8014D6B8 and the mode byte at 0x01 becomes 2. Takes no arguments and returns nothing.'
   - - 1596
     - c
     - setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C
