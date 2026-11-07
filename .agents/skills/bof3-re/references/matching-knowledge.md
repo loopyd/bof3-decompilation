@@ -212,6 +212,10 @@ the reviewed table placement before probing more C. A table whose entries differ
 in which block each case value reaches is part of that step, because the reviewed
 `.rodata` compares entry contents: when reshaping the arms leaves one differing table
 word at matching `.text` size, move the case labels and leave the bodies alone.
+The mirror carries no bound at all: a body that loads a state byte, scales it by
+four and adds it to the table base with no `sltiu` in front is one indexed call on
+an extern bound at that word, whatever the entry count, so write no clamp, no
+bound check and no arms.
 
 ### Operation scopes and loop-note dependencies
 
@@ -501,18 +505,24 @@ adjacent fields of one record are updated in a row.
    original's store sequence gives it, ahead of that test: moving it after the
    test dropped nine instructions at the original size with the first difference
    inside the block, and moving the test earlier cost more.
-   Locals win instead when the original groups its own loads above its
-   adds and its last store fills the delay slot of a branch on the other value:
-   bind both new values, store the one that branch tests before that test, and
-   leave the last store as its own statement after the test so it alone can fill
-   the slot. Where the original's adds sit tells which side applies.
+   Locals win instead when the original groups its own loads above its adds:
+   bind both new values and order the two stores so the one the slot carries is
+   written last before the test, because a store sitting immediately before a
+   test is that slot's own candidate. Both splits are measured: a slot holding
+   the tested field's own store writes the other field first, while a slot
+   holding the other field's store writes the tested field first and leaves the
+   test on its local. Where the original's adds sit tells which side applies.
 5. Confirm with live asm-diff and the whole-function gate before retaining.
 
 Byte cells take a `u8` accumulator instead:
 `countdown = (u8)(p[n] - 1); p[n] = countdown; if (countdown == 0)` is the form
 whose `sb` is followed by `andi 0xff` and `bnez` on that stored register, with no
 second load of the cell. The exact countdown handlers across these overlays keep
-that shape, so the truncation, not a reload, supplies the compared value. The local
+that shape, so the truncation, not a reload, supplies the compared value. Where
+that mask sits picks the form: a byte update whose mask shapes the stored value
+stays in place (`p[n] = (p[n] - 1) & 0x1F;` emits `lbu`, `addiu -1`, `andi 0x1F`,
+`sb` on one loaded base), while the `sb` an `andi 0xff` follows is this
+accumulator, because only the test consumes that mask. The local
 itself is not load-bearing: `if (--p[n] == 0)` emits the same `lbu`, `addiu -1`,
 `sb`, `andi 0xff` and `bnez` on the stored register. Both spellings reached exact
 on that class, so take the one the sibling shows and spend no probe on the other -
@@ -712,7 +722,10 @@ declaration and casting the one access (`*(u8*)&cell += 1`), which reproduced th
 original address computation, while a byte-scalar extern at the same address folded
 the load into `$at` and re-materialised `$at` for the store. Inside
 one block, stores keep source statement order, and a constant re-materialised into
-one register between stores shows where its statement starts.
+one register between stores shows where its statement starts. That order holds
+within one width: a `sh` pair can land above byte stores written before it, so a
+mixed-width run's source order is the `sb` sequence and the constant
+materialisations, not the emitted store order.
 A run of stores to one pointer cell that parks a different record and restores the
 saved value is real state: keep every publish and restore as a store to the cell and
 re-read the cell after the restore, because holding the record in a local drops the run.
@@ -720,6 +733,15 @@ The re-read covers a call too: once a record is published into the cell, address
 next field through the named cell, not through the local that was stored, because the
 callee may republish the cell and the original's store then reaches the callee's
 record.
+
+An unrolled repeat over one strided table splits by field, not by record. The
+original keeps one base for the field it advances by the stride and re-materialises
+`$at` for every other word, so give that field a pointer local advanced between
+records and write each remaining word as its own fixed-address dereference
+(`p = D_t; *p = K; *PSX_PTR(s32, ADDR) = K2; p += 8;`). Keep the repeat spelled
+out, since the original has no latch, and leave out fields it never writes.
+Walking a whole record through the one pointer gives those stores the shared base
+the original re-materialises.
 
 Reads follow it in the other direction. When the original materialises a fixed-address
 symbol once into a saved register and re-reads one byte of it before each call,
