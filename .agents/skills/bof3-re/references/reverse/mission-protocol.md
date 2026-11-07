@@ -49,7 +49,11 @@ Before first gate: evidence-backed name/module, complete ownership and canonical
 metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect
 measurements. Placeholder tags (`@status partial`, `@match 0.00`) fail the gate on
 byte-identical code, so write the measured tags in the same edit as the source
-instead of spending a gate cycle on metadata alone. After PASS, confirm naming
+instead of spending a gate cycle on metadata alone. Name no tag inside prose: a
+comment carrying `@behavior`, or `@source` alone on its own line above a definition,
+parses as that function's metadata block and refuses the gate with `invalid_metadata`
+before it compiles, while the same words after code on the line stay prose; delete
+the token, since rewording around it still matches. After PASS, confirm naming
 without rewriting correct source.
 Later source/binding edit requires renewed gate.
 

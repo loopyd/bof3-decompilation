@@ -108,8 +108,10 @@ segments:
     - c
     - dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20
   - - 7012
-    - asm
-    - func_801CFF64
+    - c
+    - dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64
+    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64.c'
+    - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales the u16 at 0x2C by four and calls that entry of this overlay handler run based at 0x801CFFF8 with no arguments, discarding any result'
   - - 7080
     - textbin
     - func_801CFFA8

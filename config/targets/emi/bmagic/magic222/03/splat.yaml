@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF324
   - - 2120
-    - asm
-    - func_801EF448
+    - c
+    - decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22203_801EF448
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22203_801EF448.c'
+    - '@behavior: Per-frame work-handler step, entry 8 of the sixteen-word code pointer run at 0x801F0D54 whose word at 0x801F0D74 holds this function address: it reads the scratchpad work object through the pointer cell at 0x1F800044 and decrements its unsigned byte 9 in place, so the rest of the body runs only when that countdown reaches zero. On zero it re-reads the cell to raise bit 0x20 of work byte 0, re-reads it to set mode byte 0x5C to 1, re-reads it before each of the three tint-channel bytes it clears (0x5D, 0x5E and 0x5F), and re-reads it once more to advance work byte 2 by one, which moves the dispatcher to the next byte-2 step. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 2288
     - asm
     - func_801EF4F0

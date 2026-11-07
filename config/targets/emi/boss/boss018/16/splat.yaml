@@ -72,8 +72,8 @@ segments:
     - c
     - noopHandlerBossBoss01816_800C1B7C
   - - 900
-    - asm
-    - func_800C1B84
+    - c
+    - dispatchStateByte1Table2d24BossBoss01816_800C1B84
   - - 968
     - asm
     - func_800C1BC8

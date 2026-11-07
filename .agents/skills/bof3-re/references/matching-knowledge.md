@@ -854,7 +854,11 @@ extra bytes.
    loop and indexes from it, one instruction more than the original's per-iteration
    `lui $at,%hi(X)` + `addu $at,$at,offset` + `lbu %lo($at)` fold; the named offset
    restores the fold. A bare-index subscript such as `D_y[i]` already folds, so
-   leave that one inline.
+   leave that one inline. That hoist is not generic: with the stride in its own
+   register - a separate counting index feeding the bound compare and the stride's
+   `addiu` in the latch delay slot - an inline `D_x[index << 3]` keeps the per-access
+   fold and takes no saved base, so read the original's base register before naming
+   an offset.
 4. Two passes over one table with the same stride need one offset local per pass.
    A shared local ties the second pass' product to the first pass' quantity, so the
    scale stops being block-local; keep each pass' own index reset and multiply.

@@ -17,6 +17,7 @@ sources = [
     "src/bof3/scenario/findFreeWorkRecordByte25ScenarioScena0400_801F7FF8.c",
     "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0400_801F863C.c",
     "src/bof3/scenario/dispatchRecordCallbackScenarioScena0400_801F9D48.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0400_801F77A8.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F75BC
   - - 2984
-    - asm
-    - func_801F77A8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0400_801F77A8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0400_801F77A8.c'
+    - '@behavior: Per-frame step dispatcher of this overlay indexed from the seventh word of its handler run: loads the work-object pointer from the scratchpad cell 0x1F800044 before it creates its frame, takes that object''s unsigned byte at offset 1, scales it by four and invokes that slot of the overlay-local code-pointer run based at 0x801FA198 with no arguments and no result consumed; 0x801FA198 is entry 6 of the run based at 0x801FA180, so the index is relative to 0x801F77EC, 0x801F78F4 and 0x801F7A64, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 3052
     - asm
     - func_801F77EC

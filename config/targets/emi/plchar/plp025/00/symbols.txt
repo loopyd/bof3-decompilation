@@ -25,6 +25,6 @@ func_801CFB74 = 0x801CFB74;
 func_801CFD40 = 0x801CFD40;
 func_801CFE4C = 0x801CFE4C;
 dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20 = 0x801CFF20;
-func_801CFF64 = 0x801CFF64;
+dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64 = 0x801CFF64;
 func_801CFFA8 = 0x801CFFA8;
 func_801CFFE8 = 0x801CFFE8;
