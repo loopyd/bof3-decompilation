@@ -51,8 +51,8 @@ segments:
     - c
     - invokeHelperPlcharPlp46700_801CE82C
   - - 1100
-    - asm
-    - func_801CE84C
+    - c
+    - dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C
   - - 1168
     - asm
     - func_801CE890

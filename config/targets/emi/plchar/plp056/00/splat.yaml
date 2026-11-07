@@ -135,8 +135,8 @@ segments:
     - asm
     - func_801D066C
   - - 9168
-    - asm
-    - func_801D07D0
+    - c
+    - dispatchWorkHalfword2cTable08bcPlcharPlp05600_801D07D0
   - - 9236
     - asm
     - func_801D0814

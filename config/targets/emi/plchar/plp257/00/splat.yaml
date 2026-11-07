@@ -105,8 +105,8 @@ segments:
     - asm
     - func_801CFD20
   - - 6740
-    - asm
-    - func_801CFE54
+    - c
+    - dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54
   - - 6808
     - asm
     - func_801CFE98
