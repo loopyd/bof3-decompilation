@@ -84,7 +84,10 @@ delay slot, prove branch operands and liveness; never introduce a clobber.
 Use `lift sweep` for eligible clean-C alternatives without a call or variant quota.
 No per-variant `asm-diff`/`byte-match` loop or local Python/shell compile/
 compare harness. Reading one comparison needs no script: `lift asm-compare`
-renders the aligned rows. In-process sweep resolves comparison context/canonical compile
+renders the aligned rows. A spelling question an exact sibling already answers owes no
+variant: the sibling's compiled body at `out/asm-diff/<target>/<function>/current.s`
+shows which access re-materialises a cell and which register holds a base, so read it
+and write that form. In-process sweep resolves comparison context/canonical compile
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
 Use `--subprocess` only for deliberate legacy reproduction. Give every variant the
 measured `@source`/`@behavior` metadata: one without them is refused before

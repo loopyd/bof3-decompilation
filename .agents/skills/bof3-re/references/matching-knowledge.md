@@ -686,7 +686,12 @@ share one base. Two accesses to one cell then trade one instruction for one: the
 shared base makes the first access `lui`+`ori`+`lw 0(base)` and the second a bare
 `lw 0(base)`. So a body can keep the original byte count and still lose matched
 instructions with the first difference at instruction 0 - that pair is the accessor,
-not an allocation residual.
+not an allocation residual. The cost scales with how many accesses cross the call: a
+body whose many cell accesses all follow one `jal` measured 35 of 66 instructions,
+first difference in the prologue (`sw s0,16(sp)` where the original materialises the
+cell), and both local layouts, each access inline and one local per store group,
+measured identically there, so only the cell spelling moves that residual and no
+local sweep is owed.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read
