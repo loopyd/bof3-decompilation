@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "6cd646a6e0b3cf6fb4b90ec5eabe1cc28273aa8e",
-  "published_at": "2026-11-07T08:32:33.498868+00:00",
+  "revision": "661855dedd137c268910aef7a3d25581006c11e7",
+  "published_at": "2026-11-07T08:43:08.942743+00:00",
   "counts": {
-    "completed": 3785,
+    "completed": 3786,
     "partial": 150,
-    "unlifted": 6596,
+    "unlifted": 6595,
     "invalid": 0,
     "total": 10531,
     "symbols": {
-      "named": 66061,
-      "raw": 57376,
+      "named": 66062,
+      "raw": 57375,
       "total": 123437
     }
   },
@@ -4442,14 +4442,14 @@
       "family": "world01",
       "archive": "area047",
       "entry": "13",
-      "completed": 2,
+      "completed": 3,
       "partial": 0,
-      "unlifted": 13,
+      "unlifted": 12,
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 160,
-        "raw": 137,
+        "named": 161,
+        "raw": 136,
         "total": 297
       }
     },
