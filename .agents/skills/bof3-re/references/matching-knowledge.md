@@ -78,13 +78,17 @@ global needs narrow evidenced local extern, not anonymous macro hiding ownership
 Interpret every delay slot on both paths before changing equal-valued arms; slot
 constant may be comparison operand, not selected result. Bounded matrix: ordered
 then nested/inverted equality; separate ungrouped cases; duplicated arm stores/
-returns; shared locals or labels. When every arm re-tests one byte and stores,
-keep those cases ungrouped: arm stores stop the byte staying live, so separate
-`if` statements re-materialise the base and reload it per arm, while a `switch`
-or `if`/`else if` chain evaluates it once and drops that reload. Advance only
-when measured evidence rejects eligible alternatives. Locals may change register
-web. GCC can normalize chain inversion regardless of spelling; another spelling
-alone is not new evidence.
+returns; shared locals or labels. Two equality tests on one call result that select
+the same value take one disjunction with a single assignment
+(`if (f() == A || f() == B) v = C; else v = D;`): the original reuses one assignment
+block for both hits and puts `li C` in the branch delay slot, while an `else if`
+chain repeating the assignment emits the merged compare form instead. When every arm
+re-tests one byte and stores, keep those cases ungrouped: arm stores stop the byte
+staying live, so separate `if` statements re-materialise the base and reload it per
+arm, while a `switch` or `if`/`else if` chain evaluates it once and drops that
+reload. Advance only when measured evidence rejects eligible alternatives. Locals may
+change register web. GCC can normalize chain inversion regardless of spelling; another
+spelling alone is not new evidence.
 
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
@@ -331,6 +335,10 @@ advance block with size unchanged.
   statement order, one local or pointer hoist.
 - Original `move tN,aN`/`move vN,aN`: prove lifetime across call/branch or overlapping
   temporary, then local copy at that lifetime with bounded declaration/first-use order.
+  A `move` that copies a freshly loaded base into a saved register after a store group
+  marks a second local's live-range start: one local serving both the store group and
+  the loop base keeps that saved register live from the first store on and drops the
+  copy, so load the loop base into its own local after the group.
 - Frame mismatch: solve prototype/width/call/aggregate/address-taking first.
 - Relocation/load order: owner, symbol form, offset, pointer-cell volatility and
   cache/reload evidence first.
