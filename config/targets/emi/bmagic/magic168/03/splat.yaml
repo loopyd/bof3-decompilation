@@ -55,8 +55,10 @@ segments:
     - dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338
     - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338.c'
   - - 1916
-    - asm
-    - func_801EF37C
+    - c
+    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16803_801EF37C
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16803_801EF37C.c'
+    - '@behavior: Copies the three words at 0x801EEC1C into its own frame and invokes the copy selected by the work record byte at offset 2, then, when that record byte 0 has bit 0 set and its byte 2 is non-zero, runs the helper at 0x801EFCD8 and, when the record halfword at 0xC has either low bit set, the draw helpers at 0x801EF80C and 0x801EFA40 with the halved shared frame counter at 0x80143E6C and the record byte at offset 6. Takes no arguments, returns nothing and keeps a 0x28-byte frame.'
   - - 2168
     - asm
     - func_801EF478

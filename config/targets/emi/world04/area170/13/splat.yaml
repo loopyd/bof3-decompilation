@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F3838
   - - 3212
-    - asm
-    - func_801F388C
+    - c
+    - drawGlyphCellMarkerWorld04Area17013_801F388C
+    - '@source: src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c'
+    - '@behavior: Draws the marker of one glyph cell of the overlay 9x7 glyph grid at the signed halfword cell origin (x, y), keyed by the signed cell value the glyph table holds. Value 1 draws a cross in 0xC8 red: a horizontal span from (x+2, y+5) to (x+8, y+5) and a vertical span from (x+5, y+2) to (x+5, y+8). Value -1 draws only the horizontal span in 0xC8 blue. Every other value draws nothing, and the semi-transparency flag stays clear on both spans.'
   - - 3476
     - asm
     - func_801F3994

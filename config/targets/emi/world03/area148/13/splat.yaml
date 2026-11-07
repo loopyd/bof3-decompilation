@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F3720
   - - 2952
-    - asm
-    - func_801F3788
+    - c
+    - setSharedByte1ThenDrawWorld03Area14813_801F3788
+    - '@source: src/bof3/world/setSharedByte1ThenDrawWorld03Area14813_801F3788.c'
+    - '@behavior: Handler at word 3 of the state-byte-2 dispatch run based at 0x801F5024. Writes 0x01 to the shared overlay byte at 0x8014933B and then calls the quad drawing routine at 0x801F37B8 with the selection index 2 and the signed byte mode 0.'
   - - 3000
     - asm
     - func_801F37B8

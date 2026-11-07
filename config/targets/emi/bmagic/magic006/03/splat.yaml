@@ -97,8 +97,9 @@ segments:
     - asm
     - func_801F0594
   - - 6564
-    - asm
-    - func_801F05A4
+    - c
+    - copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4
+    - '@source: src/bof3/bmagic/copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4.c'
   - - 6644
     - asm
     - func_801F05F4

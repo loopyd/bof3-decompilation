@@ -108,8 +108,10 @@ segments:
     - asm
     - func_801F0354
   - - 6064
-    - asm
-    - func_801F03B0
+    - c
+    - clearRecordBytes0Through4BmagicMagic06303_801F03B0
+    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic06303_801F03B0.c'
+    - '@behavior: Clears work-record bytes 0x00 through 0x04 of the record published through the pointer cell at 0x801F1054 with one sb per byte, re-materializing the cell address and reloading the record pointer before each store; takes no arguments, returns nothing and writes no other state.'
   - - 6144
     - textbin
     - D_801F0400

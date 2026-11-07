@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/world/invokeHelperWorld03Area14913_801F2CB4.c",
     "src/bof3/world/area14913DispatchTables.c",
     "src/bof3/world/copyWords7a8cToWork34383cWorld03Area14913_801F2EC4.c",
+    "src/bof3/world/requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40.c",
     "src/bof3/support/area149_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area149_13_psyq.c"

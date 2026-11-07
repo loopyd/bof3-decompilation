@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801EFD98
   - - 4624
-    - asm
-    - func_801EFE10
+    - c
+    - dispatchPanelStateLocalTableBatlEnd00_801EFE10
+    - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801EFE10.c'
+    - '@behavior: Battle-end panel state dispatch through a local handler table: reads the object published at 0x80148648, takes its byte +0x03 (the PanelTask state field), scales it by four and calls the entry at that index of the two-word table built on the stack, with no arguments; only entry 0 is seeded with func_801EFE5C and the index is not bounded.'
   - - 4700
     - asm
     - func_801EFE5C
