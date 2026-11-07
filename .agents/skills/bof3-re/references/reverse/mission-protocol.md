@@ -77,5 +77,5 @@ Return tool counts, wall time, method and measured outcomes in mission result.
 | --- | --- |
 | Gate once | Use the gate batch above after all owned edits; never duplicate native checks for the same candidate. |
 | Iterate with the sweeper | Use `bin/harness lift sweep SELECTOR SOURCE [--keep-best] VARIANTS...` for evidence-backed alternatives; record every variant/outcome and residual class. |
-| Prefill once | ONE `bin/harness agent context reverse SELECTOR`, without head/tail pipes. If clipped, read the saved output remainder rather than rerunning the command. |
+| Prefill once | ONE `bin/harness agent context reverse SELECTOR`, without head/tail pipes. If clipped, read the saved output remainder rather than rerunning the command. With no reachable remainder, do not rerun either: the skill and reference bodies sit at their authored paths, and the target's declarations come from `out/index`, `out/splat/<target>/asm` and the payload bytes; that route still reached a first-gate exact match. Record the substitution in `history_gaps`. |
 | Pick once | ONE `bin/harness lift next TARGET` (ranking + `div`/`break` screen in one call). |
