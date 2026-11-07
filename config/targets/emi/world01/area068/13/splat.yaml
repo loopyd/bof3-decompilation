@@ -92,8 +92,10 @@ segments:
     - c
     - noopHandlerWorld01Area06813_801F3530
   - - 2360
-    - asm
-    - func_801F3538
+    - c
+    - incrementPadMatchCountAndArmState10World01Area06813_801F3538
+    - '@source: src/bof3/world/incrementPadMatchCountAndArmState10World01Area06813_801F3538.c'
+    - '@behavior: While the shared pad halfword 0x80145AA8 reads exactly 0x40, advances this overlay''s 16-bit counter 0x801F4E04 by one and arms state byte +1 of the scratchpad work record at 0x1F800044 with 0x10, the index the local dispatchers at 0x801F2C04 and 0x801F2DA4 select with. Leaf, no frame.'
   - - 2424
     - asm
     - func_801F3578

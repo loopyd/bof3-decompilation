@@ -38,7 +38,7 @@ void countdownWorkByte9ClearIdentityAndQueueEvent(void) {
   }
   if (D_1F800044->unk_03 == 5u) {
     D_80146250->unk_85 = 0;
-    func_801E0B64();
+    rebuildLocalWorkBandsFromFieldRecords();
   }
   if (D_1F800044->unk_03 == 6u) {
     D_80146250->unk_87 = 0;

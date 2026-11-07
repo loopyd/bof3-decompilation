@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F3598
   - - 2636
-    - asm
-    - func_801F364C
+    - c
+    - claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C
+    - '@source: src/bof3/world/claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C.c'
+    - '@behavior: Overlay progress step handler: post-increments work record byte 6 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F3DE0; then runs the per-frame passes 0x801F44B4 and 0x801F3E7C, arms work byte 9 with 0x20 and advances work byte 1.'
   - - 2756
     - asm
     - func_801F36C4

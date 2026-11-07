@@ -144,8 +144,10 @@ segments:
     - '@source: src/bof3/world/drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44.c'
     - '@behavior: hands work-record byte 0x09 to the drawer func_801F5174 with 0x80 and then to the drawer func_801F53F0, increments byte 0x09 through its own reload of the scratchpad pointer cell 0x1F800044, and advances the byte-2 dispatch step when byte 0x09 has reached 8.'
   - - 9172
-    - asm
-    - func_801F4FD4
+    - c
+    - drawWorkStep7AndAdvanceWorkByte2At20World02Area10313_801F4FD4
+    - '@source: src/bof3/world/drawWorkStep7AndAdvanceWorkByte2At20World02Area10313_801F4FD4.c'
+    - '@behavior: hands the ramp drawer func_801F5174 the fixed pair (7, 0x80), the hardest per-band step of the 0x1F-down ramp with the 0x80 shade level, then reads the work record published through the scratchpad pointer cell 0x1F800044 and, only while that record''s byte 0x09 is below 0x10, hands the byte to the arg-scaled quad drawer func_801F53F0, increments byte 0x09 through a fresh cell read, and clears it and advances the record''s work-byte-2 dispatch step when a further cell read shows it has reached 0x20.'
   - - 9340
     - c
     - drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C

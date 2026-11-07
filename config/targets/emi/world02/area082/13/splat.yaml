@@ -171,8 +171,10 @@ segments:
     - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 8336
-    - asm
-    - func_801F4C90
+    - c
+    - fillScreenRampColorIncrementWorkByte9Set8014933AAdvanceWorkByte2At79World02Area08213_801F4C90
+    - '@source: src/bof3/world/fillScreenRampColorIncrementWorkByte9Set8014933AAdvanceWorkByte2At79World02Area08213_801F4C90.c'
+    - '@behavior: re-reads the scratchpad work pointer cell 0x1F800044, packs a 15-bit colour word from that record byte +0x09 (green = level / 5, blue = green + 6, red = 5 - level / 24, bit 28 set), clears the shared palette-stage byte at 0x8014933A, fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428, advances the work byte +0x09, and, once a fresh cell read shows that byte has reached 0x79, stores 1 into 0x8014933A and advances the record dispatch byte +0x02 by one.'
   - - 8556
     - asm
     - func_801F4D6C

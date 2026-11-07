@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area06813_801F3960.c",
     "src/bof3/world/countdownScratchStateToMode13World01Area06813_801F32CC.c",
+    "src/bof3/world/incrementPadMatchCountAndArmState10World01Area06813_801F3538.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

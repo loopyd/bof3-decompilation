@@ -197,8 +197,10 @@ segments:
     - c
     - setScratchWorkStateWorld04Area17213_801F4DC4
   - - 8672
-    - asm
-    - func_801F4DE0
+    - c
+    - advanceHalfword2eBy0aAndSetState1To2At191ThenDrawHalfword2eWorld04Area17213_801F4DE0
+    - '@source: src/bof3/world/advanceHalfword2eBy0aAndSetState1To2At191ThenDrawHalfword2eWorld04Area17213_801F4DE0.c'
+    - '@behavior: Advances the work halfword at 0x2E by 0x0A and, once it reads at least 0x191, increments the shared counter byte at 0x80146875 and sets state byte 1 to 2; then draws through 0x801F4E8C(0xDC, 0xC8) and 0x801F4F70(halfword 0x2E, 0xC8).'
   - - 8808
     - c
     - invokeHelperArgsWorld04Area17213_801F4E68

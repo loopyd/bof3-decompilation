@@ -43,6 +43,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Strided row stores whose scale the original re-reads from a published byte before the later rows | Keep the computed index in a local for the uses before that reload, and address each later row through the published byte (`D_row[(u32)*scratch * stride] = ...`). Read both ends off the original: the store that consumes the register without reloading it, and the `lbu` that precedes the first row which does reload |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes. The same arm pair selected by an already-loaded byte instead of a call result needs no value local: read the byte into a local, then write one conditional expression straight into the cell (`cell = (gate != 0) ? 0x14 : 0xA;`), which matched on the first gate because the load's value and the selected constant keep their own registers. That local's own width is not part of the shape: a compare-and-store local carrying no arithmetic emitted the same `lbu` as `u8` and as `s32` across two exact bodies of the shape, so take the sibling's width and spend no variant on it |
+| Arm tests a loaded value and passes it as a call argument; the build reloads the cell for the argument | Give that load its own local, test the local and pass the local. Read the arm's argument register: when it is the register the `sltiu`/compare tested, one load feeds both uses, so the same cell written in the argument list is a second load |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
@@ -228,7 +229,12 @@ passes before changing scope placement.
    empty slot with it. A volatile view over the same cursors recovered the block
    order and still left that slot `nop`, and a baseline `.sched2` kept both
    constants in the body while only the delay-slot pass hoisted one, so name the
-   pass from its dump before choosing this lever.
+   pass from its dump before choosing this lever. A loop index reset is the same
+   real initialization: when it directly follows a call whose delay slot the
+   original's zeroing fills and the loop's bound read comes next, write
+   `do { index = 0; } while (0);` ahead of that read, so `LOOP_END` keeps the reset
+   below the call. That boundary is per call, so one body takes one scope per such
+   loop, while a reset that follows an ordinary statement stays plain.
 3. Compare plain initialization, PRE placement and proposed placement through
    `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
    another placement may retain allocation while freeing argument order. Bind
@@ -477,7 +483,10 @@ accumulator `s8` and store and test it plainly. A cell whose test has its own lo
 takes the `s8` view on the cell expression at that test instead. An add-then-test
 cell takes its spelling from that test: one that re-reads the cell stays in place
 (`p[n] += 4; if (p[n] == limit)`), while an unsigned bound on the value just stored
-takes the `u8` accumulator. Two exact sources on one overlay differ in nothing else,
+takes the `u8` accumulator. A guard on the value before the store is neither: when
+the original's `andi` tests the loaded byte while the incremented byte's `sb` fills
+the branch delay slot, keep the old value (`old = p[n]++; if ((old & 3) == 0)`) rather
+than testing the stored byte. Two exact sources on one overlay differ in nothing else,
 so the cell's test decides before either form is probed.
 
 ### Scratch cursor group variables

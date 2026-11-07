@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld02Area10814_801F2CC8.c",
     "src/bof3/world/dispatchWorkByte4Table63c4World02Area10814_801F4B14.c",
     "src/bof3/world/setWorkByte24Bit4World02Area10814_801F4E9C.c",
+    "src/bof3/world/invokeHelperByteArgWorld02Area10814_801F4EBC.c",
     "src/bof3/world/incrementWorkByte2World02Area10814_801F4108.c",
     "src/bof3/world/area10814DispatchTables.c",
     "src/bof3/world/incrementWorkByte2World02Area10814_801F403C.c",

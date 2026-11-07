@@ -685,6 +685,10 @@ void func_800AD074(u8 arg0);
 void adjustBattleWorkValuesForMode(void);
 void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
+/* Owned by the SLUS address space; the band rebuild
+ * rebuildLocalWorkBandsFromFieldRecords runs between its two band copies takes
+ * no argument and returns nothing. Address @source 0x800AAA74 */
+void func_800AAA74(void);
 /* Owned by the SLUS address space (lifted as selectionSetupEnabled in
  * emi/battle/battle/15); the selection setup predicate
  * activatePanelTaskUnlessBattlerInactive asks for once the selected battler
@@ -908,7 +912,7 @@ void func_801DEA64(s32 arg0);
 void queueActiveBattlerSnapshots(void);
 u8   func_801E0E0C(void);
 void selectLocalCleanupSubstate(void);
-void func_801E0B64(void);
+void rebuildLocalWorkBandsFromFieldRecords(void);
 void resetScratchWhenGlobalBit4(void);
 void func_801E1DD4(void);
 u8   enemyReadyOrHelper2(void);

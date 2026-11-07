@@ -762,8 +762,10 @@ segments:
     - c
     - selectLocalCleanupSubstate
   - - 65380
-    - asm
-    - func_801E0B64
+    - c
+    - rebuildLocalWorkBandsFromFieldRecords
+    - '@source: src/bof3/battle/rebuildLocalWorkBandsFromFieldRecords.c'
+    - '@behavior: Rebuilds the field record selected by byte +0x13C of the published local work record D_80146250 through func_80164A44, then for all localBattlerCount D_80145E90 local work records copies the six-byte identity run at +0x0E and the 0x20-byte position/colour band at +0x1C of that record''s D_80144968 field record (selected by the record''s own D_80145FCC byte) into the record''s +0x82 bytes and +0xB0 band, calls func_800AAA74, mirrors every +0xB0 band into the parallel +0x90 band (0x80145F20), calls func_800A4458 and closes with one func_800A9BD8 refresh per battler index.'
   - - 66060
     - c
     - func_801E0E0C

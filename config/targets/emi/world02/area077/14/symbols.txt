@@ -68,7 +68,7 @@ publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C 
 decrementCountdownId71InSlot1World02Area07714_801F5BAC = 0x801F5BAC;
 setSharedFlagBit4World02Area07714_801F5BD8 = 0x801F5BD8;
 publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00 = 0x801F5C00;
-func_801F5C80 = 0x801F5C80;
+publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5C80 = 0x801F5C80;
 func_801F5D00 = 0x801F5D00;
 retreatCounterAndQueueCue200World02Area07714_801F5D80 = 0x801F5D80;
 advanceCounterWorld02Area07714_801F5DC0 = 0x801F5DC0;
