@@ -99,8 +99,8 @@ segments:
     - c
     - noopHandlerBossBoss00113_800C1E48
   - - 1616
-    - asm
-    - func_800C1E50
+    - c
+    - publishBattleHooksBossBoss00113_800C1E50
   - - 1672
     - asm
     - func_800C1E88

@@ -165,8 +165,10 @@ segments:
     - asm
     - func_800C292C
   - - 4524
-    - asm
-    - func_800C29AC
+    - c
+    - fillTwoByTwoCellBlockBossBoss01816_800C29AC
+    - '@source: src/bof3/boss/fillTwoByTwoCellBlockBossBoss01816_800C29AC.c'
+    - '@behavior: Writes the dword fill value selected by the second argument into a two-by-two block of the dword cell array at 0x80104030, addressed with the resident map row stride byte at 0x80104000, at the block column and row held by the two-byte origin record of 0x800C2DC4 selected by the first argument.'
   - - 4672
     - asm
     - func_800C2A40

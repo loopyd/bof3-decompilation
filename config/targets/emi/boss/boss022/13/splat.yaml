@@ -39,8 +39,10 @@ segments:
     - asm
     - func_800C18F4
   - - 312
-    - asm
-    - func_800C1938
+    - c
+    - accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938
+    - '@source: src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938.c'
+    - '@behavior: Battle-step handler of this overlay: runs the shared readiness helper at 0x8014DAEC and the shared enemy accumulation pass at 0x801E54EC, then overrides that pass re-arm by raising bit 0x1000 of word +0x100 of the current enemy work record published at 0x801EB4E8, clearing the accumulate flag 0x40 of byte 0 of the work object held by the scratchpad pointer cell 0x1F800044 and writing 3, 0, 0 into its bytes 1, 2 and 3.'
   - - 440
     - asm
     - func_800C19B8

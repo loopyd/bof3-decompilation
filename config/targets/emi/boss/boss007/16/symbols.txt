@@ -1,5 +1,5 @@
 func_800C1804 = 0x800C1804;
-func_800C1864 = 0x800C1864;
+publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00716_800C1864 = 0x800C1864;
 func_800C18BC = 0x800C18BC;
 noopHandlerBossBoss00716_800C18F4 = 0x800C18F4;
 noopHandlerBossBoss00716_800C18FC = 0x800C18FC;
