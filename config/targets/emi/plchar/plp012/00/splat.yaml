@@ -96,8 +96,8 @@ segments:
     - asm
     - func_801CF9A8
   - - 5900
-    - asm
-    - func_801CFB0C
+    - c
+    - testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C
   - - 6108
     - asm
     - func_801CFBDC

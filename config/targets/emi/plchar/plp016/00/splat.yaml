@@ -95,8 +95,10 @@ segments:
     - c
     - dispatchWorkByte3Table0670PlcharPlp01600_801CF770
   - - 5044
-    - asm
-    - func_801CF7B4
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4.c'
+    - '@behavior: Work byte 3 == 0 step: when work byte 8 of the record published at scratchpad pointer cell 0x1F800044 is even, stores ((byte 8 - 1) & 7), and while the payload step test func_801D02A0 reads zero stores ((byte 8 + 2) & 7) and tests again, restoring the decremented direction when that test reads zero as well; both paths then run the payload refresh func_801D0444, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3.'
   - - 5300
     - asm
     - func_801CF8B4

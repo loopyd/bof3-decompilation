@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/world/invokeTwoHelpersWorld03Area11513_801F4740.c",
     "src/bof3/world/invokeTwoHelpersWorld03Area11513_801F34A4.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area11513_801F3510.c",
+    "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area11513_801F35BC.c",
     "src/bof3/support/area115_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area115_13_psyq.c"

@@ -102,8 +102,10 @@ segments:
     - c
     - dispatchStateByte3Table0a94PlcharPlp02600_801CFB94
   - - 6104
-    - asm
-    - func_801CFBD8
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8.c'
+    - '@behavior: Work byte 3 == 0 step of the work-byte-3 dispatcher at 0x801CFB94: when work byte 8 is even it walks that byte through the payload step test func_801D06C4, then refreshes the layers through func_801D0868, selects the shared work sequence from work byte 8 through func_8014D8D4, clears work byte 0xB, writes 0xB into work byte 0xA and 1 into work byte 3.'
   - - 6360
     - asm
     - func_801CFCD8

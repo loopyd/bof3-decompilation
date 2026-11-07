@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/magic162_03_psyq.c",
     "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16203_801F0068.c",
+    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16203_801EFFFC.c",
 ]
 psyq_source = "src/bof3/support/magic162_03_psyq.c"
