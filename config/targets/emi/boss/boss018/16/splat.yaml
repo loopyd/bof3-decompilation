@@ -150,8 +150,8 @@ segments:
     - asm
     - func_800C265C
   - - 3804
-    - asm
-    - func_800C26DC
+    - c
+    - publishBattleHooksBossBoss01816_800C26DC
   - - 3860
     - asm
     - func_800C2714

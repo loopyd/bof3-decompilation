@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF0B8
   - - 1304
-    - asm
-    - func_801EF118
+    - c
+    - testBattleTargetKindFlagBmagicMagic06000_801EF118
+    - '@source: src/bof3/bmagic/testBattleTargetKindFlagBmagicMagic06000_801EF118.c'
+    - '@behavior: Tests one bit of the per-kind flag table at 0x80144FA0 for the current battle target: reads the battle target selector byte 0x80146384, takes the kind byte of that target''s 0x118-byte local panel record at 0x801EB6AC indexed by (selector - 3), and returns nonzero when bit (kind & 0x1F) of the flag word D_80144FA0[kind >> 5] is set. Leaf with no frame; takes no arguments and writes no state.'
   - - 1396
     - asm
     - func_801EF174

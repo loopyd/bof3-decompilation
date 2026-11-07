@@ -120,8 +120,10 @@ segments:
     - '@source: src/bof3/scenario/requestPrimaryState5Substate5ScenarioScena1400_801FB574.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 5 with secondary sub-state 5 by storing 5 in the shared primary state byte D_80146874 and 5 in the shared secondary sub-state byte D_80146875. It takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call; the constant 5 is materialised once in $v0 and reused by both byte stores. No in-image jal targets the address; its only image word is 0x801FC47C, entry 5 of the twenty-two-word pointer run at 0x801FC468 that func_801FB37C indexes with the byte at offset 0x7A of its first argument.'
   - - 18856
-    - asm
-    - func_801FB5A8
+    - c
+    - requestPrimaryState5Substate1EAndIncrementRecordHalfword7EScenarioScena1400_801FB5A8
+    - '@source: src/bof3/scenario/requestPrimaryState5Substate1EAndIncrementRecordHalfword7EScenarioScena1400_801FB5A8.c'
+    - '@behavior: Overlay per-record callback: it runs the shared front-end startup helper func_8015C088 and then requests primary scene state 5 with secondary sub-state 0x1E by storing 5 in the shared primary state byte D_80146874 and 0x1E in the shared secondary sub-state byte D_80146875, and finally increments the record''s unsigned 16-bit field at offset 0x7E in place. It takes the record pointer in $a0, ignores the second argument its dispatcher passes and returns nothing; the record pointer is copied from $a0 into $s0 in the jal delay slot, so the 0x18-byte frame saves $s0 and $ra, and both store constants and the incremented halfword share $v0. No in-image jal reaches the address; its only image word is 0x801FC480, entry 6 of the twenty-two-word pointer run at 0x801FC468 that func_801FB37C indexes with the byte at offset 0x7A of its first argument.'
   - - 18936
     - asm
     - func_801FB5F8

@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBDC4.c",
     "src/bof3/scenario/addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800.c",
     "src/bof3/scenario/averagePaletteChannelsScenarioScena1400_801F7960.c",
+    "src/bof3/scenario/requestPrimaryState5Substate1EAndIncrementRecordHalfword7EScenarioScena1400_801FB5A8.c",
 ]
 psyq_source = "src/bof3/support/scena14_00_psyq.c"

@@ -126,8 +126,8 @@ segments:
     - asm
     - func_801D482C
   - - 15812
-    - asm
-    - func_801D49C4
+    - c
+    - publishCommuEntryTextId
   - - 16044
     - asm
     - func_801D4AAC

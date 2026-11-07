@@ -94,6 +94,12 @@ value in a general register and one more register live. That merge also needs ea
 to read the cell's base itself: a pointer loaded once above three arms that write one
 byte cell kept all three stores, with the first difference at the extra store, while a
 base read inside each arm folded them into the original's single post-branch store.
+That merge also costs instructions when one constant reaches one cell from two
+nesting depths: an outer arm and an arm inside its `else` chain are identical blocks
+to the late jump passes, which merge them, drop the outer arm's own store path and
+land two instructions short; give the inner arm its own result local at the store
+width and hand it over with one assignment after the chain, since that copy
+coalesces in registration.
 The accessor is not the discriminator: the constant slot form and the named cell
 measured the same while that read stayed above the arms. Do not route that argument
 through one shared constant local: with one call it hoists the fall-through arm's
@@ -280,7 +286,9 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
    re-declaration re-types every sibling handler. A latch that zero-extends the
    counter with `andi` before an unsigned `sltiu` bound is the same placement. The
    compare reads the counter's low byte, so keep the counter wide and write
-   `((u8)i < 10)` at the test.
+   `((u8)i < 10)` at the test. Declare that wide value unsigned: a `u8` local or a
+   named masked local folds the `andi` away, and a signed wide local emits `slti`
+   for the bound where the original has `sltiu`, one instruction off.
 5. Confirm predicted setup, entry test and compare through `lift sweep`, then
    full function/readonly-byte gate and independent review. Freeze during review.
    Correct setup alone proves neither semantics nor exactness; this lever does
@@ -482,7 +490,13 @@ second load of the cell. The exact countdown handlers across these overlays keep
 that shape, so the truncation, not a reload, supplies the compared value. The local
 itself is not load-bearing: `if (--p[n] == 0)` emits the same `lbu`, `addiu -1`,
 `sb`, `andi 0xff` and `bnez` on the stored register. Both spellings reached exact
-on that class, so take the one the sibling shows and spend no probe on the other.
+on that class, so take the one the sibling shows and spend no probe on the other -
+unless the same loaded pointer also carries a word update: there the named
+accumulator measured a partial at unchanged size with the pointer and that word
+holding each other's registers from the first instruction, while the in-place
+decrement matched, and rebinding the word's statements, deriving a word view or
+swapping the cell spelling all measured that same partial, so remove the
+accumulator instead.
 The test's signedness picks that extension: `if ((s8)countdown == 8)` on the same
 `u8` accumulator emits `sll`/`sra` of the stored register before the compare, so a
 test against a signed-looking channel value takes a cast at the test and leaves the

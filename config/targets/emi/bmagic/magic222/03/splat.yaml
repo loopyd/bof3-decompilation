@@ -76,8 +76,9 @@ segments:
     - asm
     - func_801EF624
   - - 2612
-    - asm
-    - func_801EF634
+    - c
+    - decrementWorkByte9ThenCopyWorkWordTripletClearWord14AndByte9SetATo26AndAdvanceWorkByte2BmagicMagic22203_801EF634
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearWord14AndByte9SetATo26AndAdvanceWorkByte2BmagicMagic22203_801EF634.c'
   - - 2760
     - c
     - incrementWorkByte9AdvanceWorkWord14By6AndAdvanceWorkByte2At10BmagicMagic22203_801EF6C8
