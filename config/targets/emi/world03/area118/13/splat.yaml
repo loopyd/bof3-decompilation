@@ -104,8 +104,10 @@ segments:
     - asm
     - func_801F4278
   - - 5952
-    - asm
-    - func_801F4340
+    - c
+    - decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScaledFrameWorld03Area11813_801F4340
+    - '@source: src/bof3/world/decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScaledFrameWorld03Area11813_801F4340.c'
+    - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 2. Decrements the work record byte at offset 0x09 published at the scratchpad pointer cell 0x1F800044 and, once that countdown reads zero, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table (0x801F43FC). Draws the record through the overlay record draw routine 0x801F4634 with mode 0 and size 0x40, then takes the record cursor byte at offset 0x0B as an index into the four-byte flag-number table 0x801F5138, probes that flag number in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4, and draws the record again with frame index record byte 0x0B plus four times that flag result plus one, so the frame steps by four once the indexed flag is set, at size record byte 0x09 times eight, so the drawn size shrinks with the countdown. Every path finishes with the overlay primitive setup 0x801F48E0, and the record cell is reloaded for each of the four uses.'
   - - 6140
     - c
     - setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area11813_801F43FC

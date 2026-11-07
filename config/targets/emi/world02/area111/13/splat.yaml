@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F4140
   - - 6416
-    - asm
-    - func_801F4510
+    - c
+    - selectWorkRecordSlotFromScrollCellAndEnterState11World02Area11113_801F4510
+    - '@source: src/bof3/world/selectWorkRecordSlotFromScrollCellAndEnterState11World02Area11113_801F4510.c'
+    - '@behavior: Halves the shared scroll pair at 0x80145EC6 minus 0xB and 0x80145ECA minus 0xB1, reads the packed nibble at 0x801F5C18 indexed by column times four plus row over two (low nibble on an odd row, high nibble on an even row), publishes that nibble minus one to 0x801448ED and 0x11 to 0x801448EB, stores the argument to 0x801448EC and to byte 8 of the 0x98-byte work record at that slot of the shared table 0x80147A58, and calls the shared startup helper at 0x8015C088.'
   - - 6660
     - asm
     - func_801F4604

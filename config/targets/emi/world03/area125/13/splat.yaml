@@ -52,8 +52,10 @@ segments:
     - c
     - clearWorkHalfwords2eAnd30ThenAdvanceStateByte1World03Area12513_801F2E58
   - - 636
-    - asm
-    - func_801F2E7C
+    - c
+    - stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C
+    - '@source: src/bof3/world/stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C.c'
+    - '@behavior: Spawn-schedule step of this overlay handler run: entry 7 of the nine-word run at 0x801F36CC reads the frame counter halfword at +0x2E of the work object published at the scratchpad pointer cell 0x1F800044 and stores the spawn stage byte 0 to 4 at 0x801F3834 at the thresholds 0x3C, 0xB4, 0x12C and 0x168; when the countdown halfword at +0x30 is zero it spawns the stage count from the byte table at 0x801F36F0 through 0x801F3268 and arms that countdown with the stage wait from the byte table at 0x801F36F8, otherwise it drops the countdown by one; it then advances the frame counter by one, and from 0x1A4 frames up it advances the work byte at +0x1 to the next handler instead; both paths end in the overlay helper at 0x801F33B0.'
   - - 912
     - asm
     - func_801F2F90

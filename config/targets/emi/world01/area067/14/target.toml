@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124.c",
+    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F41A4.c",
     "src/bof3/world/setWorkByte24Bit4World01Area06714_801F3EC4.c",
     "src/bof3/world/advanceCounter2World01Area06714_801F4440.c",
     "src/bof3/world/area06714DispatchTables.c",

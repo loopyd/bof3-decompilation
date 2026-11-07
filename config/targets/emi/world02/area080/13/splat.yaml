@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801F3C44
   - - 4244
-    - asm
-    - func_801F3C94
+    - c
+    - publishModeStatusFromTable449cAndProgress1Or0AWorld02Area08013_801F3C94
+    - '@source: src/bof3/world/publishModeStatusFromTable449cAndProgress1Or0AWorld02Area08013_801F3C94.c'
+    - '@behavior: publishes the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F449C into the shared status halfword D_801490A8, then stores 1 into the shared scenario progress byte g_ScenarioProgress while that mode reads 0 and 0xA while it reads 1, leaving it untouched for any other mode; no arguments, no call, no frame'
   - - 4324
     - c
     - retreatCounter2By20World02Area08013_801F3CE4

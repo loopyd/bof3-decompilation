@@ -43,8 +43,10 @@ segments:
     - findWorkPositionBoundsIndexWorld01Area04914_801F2D00
     - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld01Area04914_801F2D00.c'
   - - 460
-    - asm
-    - func_801F2DCC
+    - c
+    - syncWorkRecordsFromAreaFlagsAndBoundsTableWorld01Area04914_801F2DCC
+    - '@source: src/bof3/world/syncWorkRecordsFromAreaFlagsAndBoundsTableWorld01Area04914_801F2DCC.c'
+    - '@behavior: Per-frame work-record sync for this area: clears bit 0x2000 of the shared world flags D_80146258, walks the D_80146254 live records of the 0x140-byte array at D_80145E90 publishing each one as D_80146250 and as the scratchpad cursor 0x1F800044, drops a record whose area flags 0x25 and 0x3A or whose 0xFF bounds index from 0x801F2D00 report it absent, activates a record that is clear in both D_8014625A and the saved cursor bitmask byte 0x0B with shared work mode 2, countdown byte 9 zero and kind byte D_801F5C0C of its six-byte bounds record flipped by bit 2 against the D_801F5C0D partner of the 0x80144F28 flag bank, refreshes and mirrors the motion words +0x0C, +0x10 and +0x14 of an already active record when that kind changed, and closes every active path with func_801B0DFC, a countdown step, func_8014D978 and world flag bit 0x2000. Restores the saved cursor last. Takes no arguments and returns nothing.'
   - - 1428
     - asm
     - func_801F3194

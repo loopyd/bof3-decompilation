@@ -19,6 +19,7 @@ sources = [
     "src/bof3/world/claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413_801F4288.c",
     "src/bof3/world/clearWorkTableSeedWorkWords34To3CAnd0CTo14DispatchCue208AndAdvanceWorkByte1World03Area13413_801F4388.c",
     "src/bof3/world/storeSharedCoordinateGapInWorkWord34ThenSelectSubstate1EAndInvokeHelperWorld03Area13413_801F34DC.c",
+    "src/bof3/world/retreatWorkWord24By100000AndSweepHalfword20ThenResetWorkareaAtCountdownEndWorld03Area13413_801F44C0.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",
