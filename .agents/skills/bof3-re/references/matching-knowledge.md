@@ -643,6 +643,12 @@ each reload, not by adjacency: reloads it lands in one register stay one local e
 with a whole block between them, and reloads it lands in different registers take one
 local each, so count groups from those registers rather than from statement distance.
 
+The walk state itself can be that cell: when the original advances a published cursor
+by the record stride and re-materialises the cell's load after each call or iteration,
+keep the loop on the cell - advance the cell in place and address the body through it,
+or read one fresh local from it per iteration - instead of carrying one pointer local
+across the loop, which keeps a single base and drops those reloads.
+
 ### Shared and branch-local cursor loads
 
 Use when the body and size match but a branch target is off by eight bytes, or when
@@ -758,10 +764,13 @@ materialisations, not the emitted store order.
 A run of stores to one pointer cell that parks a different record and restores the
 saved value is real state: keep every publish and restore as a store to the cell and
 re-read the cell after the restore, because holding the record in a local drops the run.
-The re-read covers a call too: once a record is published into the cell, address the
-next field through the named cell, not through the local that was stored, because the
-callee may republish the cell and the original's store then reaches the callee's
-record.
+The re-read begins at the next call, not at the publish: a field store written between
+the publishing store and that call keeps the local that holds the published pointer,
+because the original consumes that value in the call's own delay slot, while an access
+after the call addresses the named cell, since the callee may republish it and the
+original's store then reaches the callee's record. Two exact bodies of one family
+differ in nothing but that position, so read where the field store sits before
+choosing.
 
 An unrolled repeat over one strided table splits by field, not by record. The
 original keeps one base for the field it advances by the stride and re-materialises
