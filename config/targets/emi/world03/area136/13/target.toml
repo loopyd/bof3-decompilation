@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018.c",
     "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
+    "src/bof3/world/selectCrossedFrontSideState2Or4World03Area13613_801F33BC.c",
     "src/bof3/support/area136_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area136_13_psyq.c"

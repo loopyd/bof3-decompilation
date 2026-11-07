@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801F3198
   - - 1980
-    - asm
-    - func_801F33BC
+    - c
+    - selectCrossedFrontSideState2Or4World03Area13613_801F33BC
+    - '@source: src/bof3/world/selectCrossedFrontSideState2Or4World03Area13613_801F33BC.c'
+    - '@behavior: Overlay front-side selector: when the staged byte 0x80143F06 reads 1 and the live byte 0x80143F03 reads 4 it stores 0x02 into 0x80147ACF, and when the staged byte reads 4 and the live byte reads 1 it stores 0x04 there; every other pair writes nothing. Leaf, no arguments, no return value.'
 - - 2084
   - bin
   - tail

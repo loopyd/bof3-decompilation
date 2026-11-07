@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F2FC4
   - - 1456
-    - asm
-    - func_801F31B0
+    - c
+    - claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0
+    - '@source: src/bof3/world/claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0.c'
+    - '@behavior: Work-record spawn from this overlay per-slot tables: asks the scan at 0x801F3348 for the first free entry of the 0x10-entry, 0x28-byte-stride record table at 0x800E4800 and returns without writing when none is free; otherwise claims the record with 1 at byte 0, clears bytes 1 and 2, stores 0x20 at byte 3 and the halfword 0x80 at offset 4, then seeds the words at 0x08 and 0x0C from the entry the unsigned argument selects in the 16-entry signed-halfword table at 0x801F364C shifted left 8 and the words at 0x18 and 0x1C from the same index in the table at 0x801F368C shifted left 5, with the words at 0x10 and 0x20 cleared. Entry i of the first table is the center 0x1980,0x1680 plus entry i of the second, so the seeded pair is a ring position and its direction vector.'
   - - 1640
     - asm
     - func_801F3268

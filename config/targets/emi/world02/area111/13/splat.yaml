@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F319C
   - - 1520
-    - asm
-    - func_801F31F0
+    - c
+    - advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0
+    - '@source: src/bof3/world/advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0.c'
+    - '@behavior: Adds 4 to the halfword at offset 0x30 of the work record published at scratchpad pointer cell 0x1F800044, clears the shared work flags through the exe-resident helper when that stored halfword reads at least 0x100 as a signed value, and then calls the overlay draw routine at 0x801F3244.'
   - - 1604
     - asm
     - func_801F3244

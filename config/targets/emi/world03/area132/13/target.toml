@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/world/seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4.c",
     "src/bof3/world/seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0.c",
     "src/bof3/world/tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0.c",
+    "src/bof3/world/drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268.c",
     "src/bof3/support/area132_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area132_13_psyq.c"

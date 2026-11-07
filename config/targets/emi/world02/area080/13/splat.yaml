@@ -76,8 +76,10 @@ segments:
     - '@source: src/bof3/world/findFreeRecordAt800E486CWorld02Area08013_801F3B98.c'
     - '@behavior: publishes the 0x800E486C base of the eight-entry, 0x60-byte-stride record table as the shared cursor D_801F44A4, then walks that cursor one record per iteration and returns the first record whose lead byte reads zero while leaving the cursor on it, returning zero after all eight records read as in use; no arguments, no call, no other write'
   - - 4084
-    - asm
-    - func_801F3BF4
+    - c
+    - publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4
+    - '@source: src/bof3/world/publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4.c'
+    - '@behavior: publishes the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F4494 into the shared status halfword D_801490A8, then stores 1 into the shared scenario progress byte g_ScenarioProgress while that mode reads 0 and 0xA while it reads 1, leaving it untouched for any other mode; no arguments, no call, no frame'
   - - 4164
     - asm
     - func_801F3C44

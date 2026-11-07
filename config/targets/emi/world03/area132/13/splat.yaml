@@ -84,8 +84,9 @@ segments:
     - asm
     - func_801F31EC
   - - 1640
-    - asm
-    - func_801F3268
+    - c
+    - drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268
+    - '@source: src/bof3/world/drawTexturedRibbonAlongWorkSpanWorld03Area13213_801F3268.c'
   - - 2400
     - asm
     - func_801F3560

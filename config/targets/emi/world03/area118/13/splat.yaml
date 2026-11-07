@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F48E0
   - - 8072
-    - asm
-    - func_801F4B88
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88
+    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88.c'
+    - '@behavior: Publishes the shared work base 0x80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 1 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of this payload byte table 0x801F51B8 and halfwords +0x2E/+0x30 = 0x80145EBE/0x80145EC0; unless the call reports 0xFF the returned record index is stored in work byte +0x0B, the byte the byte-2 handlers of this overlay read as their flag-number index. No jal reaches this address: its only in-image reference is the code-pointer word at 0x801F5990 in this payload textbin blob D_801F511C, where it follows the three data pointers 0x801F595C/0x801F5968/0x801F5974 and directly precedes the six-byte bounds records starting at 0x801F5994.'
   - - 8200
     - c
     - findWorkPositionBoundsIndexWorld03Area11813_801F4C08

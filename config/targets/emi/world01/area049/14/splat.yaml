@@ -109,8 +109,9 @@ segments:
     - asm
     - func_801F376C
   - - 3052
-    - asm
-    - func_801F37EC
+    - c
+    - queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC
+    - '@source: src/bof3/world/queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC.c'
   - - 3204
     - c
     - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884

@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801F3074
   - - 1200
-    - asm
-    - func_801F30B0
+    - c
+    - stepCoordinatePairByFaceButtonAndArmState12World01Area06813_801F30B0
+    - '@source: src/bof3/world/stepCoordinatePairByFaceButtonAndArmState12World01Area06813_801F30B0.c'
+    - '@behavior: Returns untouched unless the shared pad halfword 0x80145AA8 carries one face button (0x1000, 0x2000, 0x4000, 0x8000) or one diagonal pair of two of them (0x3000, 0x6000, 0x9000, 0xC000). Otherwise it caches the pad in 0x801F4E14, plays cue 0x202 through 0x8015DF18 and steps the party coordinate pair by 0x800 in the pressed direction - 0x1000/0x3000 subtract from 0x80145EC8, 0x4000/0xC000 add to it, 0x2000/0x6000 add to 0x80145EC4 and 0x8000/0x9000 subtract from it - after republishing the first 0x140-byte work record 0x80145E90 as both 0x80146250 and the scratchpad work cursor at 0x1F800044, restoring the previous cursor afterwards, and then arms the record state byte +1 with 12 and its countdown byte +9 with 12.'
   - - 1740
     - c
     - countdownScratchStateToMode13World01Area06813_801F32CC
