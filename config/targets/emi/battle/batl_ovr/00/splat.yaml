@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/battle/emitTintedPanelSprite.c'
     - '@behavior: Emits one 168x24 sprite panel at (0x4c, 0x30) sampled from the battle texture page GetTPage(1, 0, 0x340, 0x100) with CLUT (0, 0x1fa), stores the caller''s colour byte into r0/g0/b0, zeroes u0/v0, and appends the 0x14-byte SPRT under ordering-table index 2.'
   - - 2172
-    - asm
-    - func_801EF47C
+    - c
+    - drawSlidingPanelWithGradientEdge
+    - '@source: src/bof3/battle/drawSlidingPanelWithGradientEdge.c'
+    - '@behavior: Appends, at g_PrimCursor under texture page 0x3c0, an opaque black 0xa8x0x18 tile at (x + 0x20, 0x30) and then a semi-transparent 0x22x0x18 Gouraud quad at (x, 0x30) that ramps from black on its left corners to 0xff/0xff/0xff on its right corners, both at ordering-table index 1; the sole caller passes the animated battle counter D_801463B0, so the panel and its ramp move right together.'
   - - 2552
     - textbin
     - D_801EF5F8

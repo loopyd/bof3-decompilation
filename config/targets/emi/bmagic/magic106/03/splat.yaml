@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801EEEE0
   - - 804
-    - asm
-    - func_801EEF24
+    - c
+    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c'
   - - 940
     - asm
     - func_801EEFAC

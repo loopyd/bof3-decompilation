@@ -30,8 +30,10 @@ segments:
   vram: 2149526592
   subsegments:
   - - 64
-    - asm
-    - func_801F2C40
+    - c
+    - stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40
+    - '@source: src/bof3/world/stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40.c'
+    - '@behavior: Per-frame step of the AREA099 slot-13 work record published at the scratchpad pointer cell 0x1F800044: while bit 0 of record byte 0x08 is clear it rewinds that byte by one modulo 8, then queues the shared cue formed from the record halfword at 0x2C plus 0x100 and requests the shared work sequence ((byte 0x08 - 1) / 2 + 0x42) truncated to a byte, sets bit 0x40 of byte 0x118 of the work record published through 0x80146250, and publishes the front-end record index from the shared allocator 0x8019601C into record byte 0x0B; unless that index reads 0xFF it seeds the claimed 0x74-byte row at 0x80143FC8 with occupancy byte +0 = 1 and handler selector 0x1B at +0x05.'
   - - 360
     - c
     - dispatchWorkByte4Table4988World02Area09913_801F2D68

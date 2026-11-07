@@ -41,5 +41,6 @@ support_sources = [
     "src/bof3/world/prepareWorkRecordForLookup158AndArmMode1World03Area12114_801F3078.c",
     "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C.c",
     "src/bof3/world/drawSpriteFrameAndMainRamTexture0World03Area12114_801F40DC.c",
+    "src/bof3/world/setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

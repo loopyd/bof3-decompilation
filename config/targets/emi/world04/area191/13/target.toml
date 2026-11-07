@@ -14,5 +14,6 @@ support_sources = [
     "src/bof3/world/area19113DispatchTables.c",
     "src/bof3/support/area191_13_psyq.c",
     "src/bof3/world/setStatusFFFFIfGateElse68World04Area19113_801F2F18.c",
+    "src/bof3/world/setStatusFFFFIfGateElse6CWorld04Area19113_801F2FEC.c",
 ]
 psyq_source = "src/bof3/support/area191_13_psyq.c"

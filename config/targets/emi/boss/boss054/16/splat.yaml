@@ -81,8 +81,8 @@ segments:
     - asm
     - func_800C1CFC
   - - 1328
-    - asm
-    - func_800C1D30
+    - c
+    - dispatchStateByte1LocalHandlerBossBoss05416_800C1D30
   - - 1404
     - asm
     - func_800C1D7C

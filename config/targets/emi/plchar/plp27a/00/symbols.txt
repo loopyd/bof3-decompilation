@@ -20,5 +20,5 @@ func_801CF724 = 0x801CF724;
 getAndClearPlcharPlp27a00_801CF858 = 0x801CF858;
 getAndClearPlcharPlp27a00_801CF868 = 0x801CF868;
 dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878 = 0x801CF878;
-func_801CF8BC = 0x801CF8BC;
+dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC = 0x801CF8BC;
 T_801CF900 = 0x801CF900;

@@ -68,8 +68,9 @@ segments:
     - asm
     - func_801EFE8C
   - - 5144
-    - asm
-    - func_801F0018
+    - c
+    - copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018
+    - '@source: src/bof3/bmagic/copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018.c'
   - - 5232
     - asm
     - func_801F0070

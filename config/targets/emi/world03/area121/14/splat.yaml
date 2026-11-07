@@ -193,8 +193,10 @@ segments:
     - asm
     - func_801F5380
   - - 10616
-    - asm
-    - func_801F5578
+    - c
+    - setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578
+    - '@source: src/bof3/world/setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578.c'
+    - '@behavior: Returns one when the halfwords at 0x80145AA8 and 0x80145AB8 share a set bit and halfword 0x80146258 has bit 0x40 clear, having dispatched sound cue 0x105, written 1 to mode byte 0x80143BB0 and cleared byte 2 of the work record at scratchpad pointer slot 0x44.'
   - - 10732
     - c
     - setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC

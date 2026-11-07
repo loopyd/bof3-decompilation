@@ -26,5 +26,6 @@ support_sources = [
     "src/bof3/world/clearWorkTableAt800E4800World04Area17213_801F38BC.c",
     "src/bof3/world/stepScratchWorkAccumulatorsByPhaseTableAndSnapWorld04Area17213_801F491C.c",
     "src/bof3/world/advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0.c",
+    "src/bof3/world/advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C.c",
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

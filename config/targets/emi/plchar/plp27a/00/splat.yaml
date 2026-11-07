@@ -93,8 +93,8 @@ segments:
     - c
     - dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878
   - - 5308
-    - asm
-    - func_801CF8BC
+    - c
+    - dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC
   - - 5376
     - textbin
     - T_801CF900

@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801F33F0
   - - 2092
-    - asm
-    - func_801F342C
+    - c
+    - advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C
+    - '@source: src/bof3/world/advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C.c'
+    - '@behavior: Advances word 0x0C of the work record at pointer cell 0x1F800044 by 8 and draws it as a signed halfword colour through 0x801F4060, counts the byte at 0x09 down, and when it reaches zero writes 0x140 into the halfword at 0x32, 0x10 into the countdown byte, 0x100 into words 0x0C and 0x10, advances state byte 0x01 and arms the shared effect byte 0x8014832E with 0x1F.'
   - - 2264
     - asm
     - func_801F34D8
