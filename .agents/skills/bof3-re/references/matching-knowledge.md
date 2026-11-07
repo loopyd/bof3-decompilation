@@ -60,6 +60,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
 | Original stores the same constant to one cell twice | Write both stores in the original order. The repeat is real bytes: one store leaves the build short and puts the first difference in that cell's block |
+| Exactly 4 bytes over an exact twin whose bodies differ only in the constants they store | A store of zero reads `$zero` and needs no materialisation, while a store of a non-zero constant costs the `addiu` that produces it, so the twin that stores zero is the shorter one by that instruction and the difference is not a shape fault. Read both stored constants before reshaping, and do not recover the bytes by respelling the store |
 | Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor, or give each read its own local: two locals loaded from the one cell stay two `lui`/`lw` pairs where a shared local folds them into one and lands a pair short, with the first difference at the second read. That serves the pair inside a single arm too, where the store between the reads writes another symbol and so forces nothing. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral |
 | Second read of one byte missing with no store between the two | That pair needs a volatile pointee on the pointer reaching the byte, keeping the record's word fields on plain typed views; see [representation](#representation-and-volatility) |
 | Second read of one table element scheduled above an intervening store | Write that read as a scalar dereference through its own pointer local (`p = &row[i]; ... return *p;`): a repeated `row[i]` compiles as an array-element reference, which the pre-reload scheduler lifts above the store, moving the store's constant into another register, while the scalar load stays at its statement. One pointer for both uses measured a 48/49 partial with the `addu` operands exchanged, and one value local folded the pair into a single load four bytes short; width, cast and guard respellings held at 46/49 at the original size, so the split of uses is the lever, not another local's width |
@@ -531,7 +532,10 @@ accumulator `s8` and store and test it plainly. A cell whose test has its own lo
 takes the `s8` view on the cell expression at that test instead. An add-then-test
 cell takes its spelling from that test: one that re-reads the cell stays in place
 (`p[n] += 4; if (p[n] == limit)`), while an unsigned bound on the value just stored
-takes the `u8` accumulator. A guard on the value before the store is neither: when
+takes the `u8` accumulator. That bound admits the in-place result too:
+`if ((p[n] += 0x10) == 0x80)` and `if (++p[n] >= 0x81)` each reached exact on the
+first gate, so a body seeded from a sibling that compares its own update owes no
+accumulator probe. A guard on the value before the store is neither: when
 the original's `andi` tests the loaded byte while the incremented byte's `sb` fills
 the branch delay slot, keep the old value (`old = p[n]++; if ((old & 3) == 0)`) rather
 than testing the stored byte. Two exact sources on one overlay differ in nothing else,
@@ -837,7 +841,11 @@ Use this lever when the body matches but the frame differs, with no emitted body
 access to the extra bytes. First exclude ABI, call, aggregate and address-escape
 errors. An indexed access to a strided record type is no aggregate error and can
 reserve that frame on its own, so try the record spelling before declaring a
-padding local. In GCC 2.7.2, a folded address can leave an internal `USE` of a
+padding local. It cuts the other way on a frame-less leaf over a strided table: a
+record-typed view of three byte fields reserved a 16-byte frame the original does
+not have, while the same statements as byte arrays with a computed byte offset
+matched on the first gate, so read the original's frame before choosing the view.
+In GCC 2.7.2, a folded address can leave an internal `USE` of a
 pseudo whose definition disappeared. Reload may allocate a slot for that pseudo
 even though the `USE` emits no instruction.
 
