@@ -93,8 +93,8 @@ segments:
     - asm
     - func_800C1F90
   - - 2096
-    - asm
-    - func_800C2030
+    - c
+    - dispatchStateByte2Table327cBossBoss02513_800C2030
   - - 2164
     - asm
     - func_800C2074

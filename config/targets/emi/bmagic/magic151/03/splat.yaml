@@ -182,8 +182,10 @@ segments:
     - asm
     - func_801F10E8
   - - 9696
-    - asm
-    - func_801F11E0
+    - c
+    - decrementWorkByte9ThenSeedWorkTripletRandomByteBAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801F11E0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedWorkTripletRandomByteBAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801F11E0.c'
+    - '@behavior: Work-step handler of the overlay work object published at word 0x801F24FC of the code pointer run at 0x801F24A4. The scratchpad work-object pointer cell at 0x1F800044 is read once, before the 0x18-byte frame is created, and the work-object byte at offset 0x9 is decremented with a byte-width read-modify-write whose truncated result is tested; the function returns while that byte is nonzero. On expiry the shared battle work record read through 0x801EB4E0 supplies its words 0x34, 0x38 and 0x3C, which are copied into the work object through one further cell read, the 0x3C store filling the call delay slot, and the low four bits of rand are then stored into work byte 0xB through a fresh cell read. Work bytes 9 and 0xA are cleared and the work-object state byte at offset 0x2 is incremented, each through its own cell read, advancing the overlay work byte 2 handler sequence. Frame 0x18 with $ra only, because of the call; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 9884
     - c
     - incrementWorkByteBAdd4ToWorkByteAThenSetWorkByte9To8AndAdvanceWorkByte2At10BmagicMagic15103_801F129C

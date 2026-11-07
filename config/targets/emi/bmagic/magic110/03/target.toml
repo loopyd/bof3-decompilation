@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/magic110_03_psyq.c",
     "src/bof3/bmagic/magic11003DispatchTables.c",
     "src/bof3/bmagic/offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844.c",
+    "src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c",
 ]
 psyq_source = "src/bof3/support/magic110_03_psyq.c"

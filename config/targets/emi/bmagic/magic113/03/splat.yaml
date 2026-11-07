@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801EF1F8
   - - 1884
-    - asm
-    - func_801EF35C
+    - c
+    - setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C
+    - '@source: src/bof3/bmagic/setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and, only when the work object byte at offset 0xB equals 6, stores 0x84 into that byte and then re-reads the cell and increments the work object byte at offset 0x1 by one.'
   - - 1952
     - c
     - incrementWorkByte1WhenWorkByteBIs80BmagicMagic11303_801EF3A0

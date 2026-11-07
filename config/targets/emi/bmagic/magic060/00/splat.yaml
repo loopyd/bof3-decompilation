@@ -119,8 +119,10 @@ segments:
     - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic06000_801F02CC.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record''s byte at offset 0xB equals 1, clears the scratchpad work-object byte at offset 0x9 with sb $zero, then re-reads the work-object pointer cell at 0x1F800044 and increments that object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb). Leaf with no frame; takes no arguments, returns nothing and writes no other state.'
   - - 5916
-    - asm
-    - func_801F031C
+    - c
+    - incrementWorkByte9ThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At1EBmagicMagic06000_801F031C
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At1EBmagicMagic06000_801F031C.c'
+    - '@behavior: Advances the scratchpad work-object byte at offset 0x9 by one modulo 256, then tests the truncated byte it just stored (andi 0xFF of the stored register, no second load) against 0x1E. Only when that byte equals 0x1E does it read the shared battle work pointer at 0x801EB4E0, store 2 into that record''s byte at offset 0xB - the constant is materialised in the delay slot of the equality test - re-read the work-object pointer cell at 0x1F800044 and increment that object''s byte at offset 0x2, advancing the overlay work byte 2 handler sequence. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 6012
     - asm
     - func_801F037C

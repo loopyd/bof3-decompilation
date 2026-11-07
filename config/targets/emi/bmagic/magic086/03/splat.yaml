@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801EEEE0
   - - 1008
-    - asm
-    - func_801EEFF0
+    - c
+    - incrementWorkByte1WhenWorkByteBIs2BmagicMagic08603_801EEFF0
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs2BmagicMagic08603_801EEFF0.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and tests the work object''s byte at offset 0xB against two; only when that byte equals 2 it increments the work byte at offset 0x1 by one at byte width through the same base. It is the handler the overlay entry point at 0x801EEC1C selects with the work byte at offset 0x1, takes no arguments, returns nothing and keeps no frame.'
   - - 1060
     - asm
     - func_801EF024

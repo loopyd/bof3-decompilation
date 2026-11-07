@@ -111,8 +111,10 @@ segments:
     - asm
     - func_801EFFB8
   - - 5184
-    - asm
-    - func_801F0040
+    - c
+    - offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040
+    - '@source: src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c'
+    - '@behavior: Entry 4 of the six-word work-byte-2 handler run at 0x801F048C, seeded from the shared channel pair 0x80149308/0x8014930C plus the offset pair in row 0xB of the table at 0x801F04A4, copies the shared battle record word 0x3C, sets work byte 9 to 0x60 and byte 0xA to 0x40, then advances work byte 2.'
   - - 5336
     - asm
     - func_801F00D8

@@ -126,8 +126,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504.c'
     - '@behavior: Per-frame work-handler step, entry 3 of the sixteen-word code pointer run at 0x801F0D54 whose word at 0x801F0D60 holds this function address: it reads the scratchpad work object through the pointer cell at 0x1F800044 before it creates its frame, takes that object unsigned byte 2, scales it by four and calls that entry of the five-entry handler table at 0x801F0D98 (0x801F0584, 0x801F061C, 0x801F066C, 0x801F06C8, 0x801F0730) with no arguments. When that handler returns it re-reads the cell once for both gate bytes and, when work byte 0 and work byte 2 are both non-zero, calls this overlay drawing routine func_801F07A8 twice. The frame keeps only $ra; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 6532
-    - asm
-    - func_801F0584
+    - c
+    - seedWorkHalfwordPairFromRecordRaiseFlag10RearmWorkBytesAndAdvanceWorkByte2BmagicMagic22203_801F0584
+    - '@source: src/bof3/bmagic/seedWorkHalfwordPairFromRecordRaiseFlag10RearmWorkBytesAndAdvanceWorkByte2BmagicMagic22203_801F0584.c'
+    - '@behavior: Per-frame work-handler step, entry 0 of the five-entry handler table at 0x801F0D98 that the byte-1 dispatcher dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504 indexes with the scratchpad work object byte 0x2. It seeds the work object halfword pair 0x2E/0x30 from the same halfwords of the shared battle record read through 0x801EB4E0, taking the record pointer and the work pointer through 0x1F800044 before it creates its 0x18-byte frame and storing both halves through that one work base. It then calls func_800A9610 with the shared battle target byte at 0x80146384 and the battler status flag 0x10. After the call it re-reads the cell before each store group to set work byte 0xB to 8, work byte 0x9 to 0 and work byte 0xA to 4, and re-reads it once more to advance work byte 0x2 by one, which selects table entry 1 (0x801F061C). It takes no arguments, returns nothing and reads or writes no other state.'
   - - 6684
     - c
     - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C

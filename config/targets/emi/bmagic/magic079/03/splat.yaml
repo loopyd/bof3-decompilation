@@ -91,8 +91,10 @@ segments:
     - copyWorkWordTripletSetBytes9To4AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EFC74
     - '@source: src/bof3/bmagic/copyWorkWordTripletSetBytes9To4AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EFC74.c'
   - - 4316
-    - asm
-    - func_801EFCDC
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic07903_801EFCDC
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic07903_801EFCDC.c'
+    - '@behavior: Advances the scratchpad work object byte at 0x9 by one through one load of the pointer cell 0x1F800044, tests the truncated byte it just stored against 0x10, and only then re-reads the cell and increments work byte 0x2.'
   - - 4396
     - asm
     - func_801EFD2C

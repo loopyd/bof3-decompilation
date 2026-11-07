@@ -1,8 +1,9 @@
+g_battle_work = 0x1F800044;
 dispatchWorkByte1HandlerBmagicMagic08603_801EEC1C = 0x801EEC1C;
 func_801EEC94 = 0x801EEC94;
 func_801EEE44 = 0x801EEE44;
 func_801EEEE0 = 0x801EEEE0;
-func_801EEFF0 = 0x801EEFF0;
+incrementWorkByte1WhenWorkByteBIs2BmagicMagic08603_801EEFF0 = 0x801EEFF0;
 func_801EF024 = 0x801EF024;
 func_801EF168 = 0x801EF168;
 func_801EF1C8 = 0x801EF1C8;

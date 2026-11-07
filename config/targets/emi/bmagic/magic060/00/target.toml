@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/bmagic/testBattleTargetKindFlagBmagicMagic06000_801EF118.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F0090.c",
     "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic06000_801F02CC.c",
+    "src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At1EBmagicMagic06000_801F031C.c",
     "src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2At10BmagicMagic06000_801F0030.c",
 ]
 psyq_source = "src/bof3/support/magic060_00_psyq.c"
