@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3) {
+void drawDecimalGlyphRun(s16 arg0, s16 arg1, u8 arg2, u16 arg3) {
   u8  index;
   u8  temp;
   u8  digit;

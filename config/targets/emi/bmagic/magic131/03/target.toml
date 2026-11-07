@@ -26,6 +26,7 @@ sources = [
     "src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13103_801EF61C.c",
     "src/bof3/bmagic/setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0.c",
+    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic131_03_symbols.c",

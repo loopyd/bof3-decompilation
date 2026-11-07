@@ -110,8 +110,10 @@ segments:
     - c
     - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13103_801F0264
   - - 5808
-    - asm
-    - func_801F02B0
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0.c'
+    - '@behavior: Work-byte-2 step handler, entry index 4 of the five-entry code pointer run at 0x801F1BF4 that 0x801F0100 indexes with the scratchpad work object''s byte 2: decrements that work object''s countdown byte 0x09 at byte width and tests the stored byte truncated to eight bits, and only when the countdown reaches zero reads the shared battle work record pointer at 0x801EB4E0, decrements that record''s byte 0x0B by one with the store filling the call delay slot, and invokes the shared helper at 0x801E5988; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra across the call, and nothing is returned.'
   - - 5900
     - asm
     - func_801F030C

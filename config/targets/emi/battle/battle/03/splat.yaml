@@ -220,8 +220,10 @@ segments:
     - asm
     - func_801D8690
   - - 32484
-    - asm
-    - func_801D8AE4
+    - c
+    - drawBattlerStatusPanel
+    - '@source: src/bof3/battle/drawBattlerStatusPanel.c'
+    - '@behavior: Draws the battle status panel of the battler whose panel index is arg2 at the anchor (arg0, arg1): the row-8 panel tile, the row-9 colour tile, the row-2/row-3 quadrangle caps, then either the textured gauge of the 0x118-byte D_801EB630 record selected by arg2 - 3 (when its +0x7F byte reads 1) or a blanked numeric run, then the record text pointer at +0x74 when func_801DA69C accepts that index, and finally the four sprite-prim box outline from (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12).'
   - - 33272
     - asm
     - func_801D8DF8

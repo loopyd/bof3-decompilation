@@ -718,8 +718,15 @@ the self-assignment merges them. Where the later result is a product of a
 separately loaded value, assign the product into the dead local and leave that
 load in its own scalar. Mask, shift and operand-order spellings of that tail
 stall at one hunk with the size already exact, so the residual belongs to this rung,
-not to another shaping attempt. Never add dummy uses to inflate liveness. Compatible
-locals can also serve mutually exclusive arms when each arm defines before use and no
+not to another shaping attempt. A copy is not that rung: copying a consumed operand
+into fresh locals tied at every placement attempted, while defining the value a later
+consumer needs into that same formal closed a size-and-saved-register residual,
+because the original keeps two live phases of the operand and only a later real
+definition keeps them apart. Reusing the dead formal for an unrelated quantity can
+restore that pair and still leave a residual. Read a copy-only sweep that ties
+everywhere as the operand being a formal, not a missing placement. Never add dummy
+uses to inflate liveness. Compatible locals can also serve mutually exclusive arms
+when each arm defines before use and no
 value escapes the join. Split phase values when their interference differs; share a
 consumed scalar only with a real later consumer. Review the whole allocator output,
 not one register pair.

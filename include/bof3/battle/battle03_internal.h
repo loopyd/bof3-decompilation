@@ -666,6 +666,11 @@ u8   func_8014D978(void);
 u8   func_8014DAEC(void);
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
+/* @behavior draws the submitted text at the given signed coordinates with the
+ * justification argument and the string passed as the last argument; the body
+ * is not lifted in this target.
+ * @source 0x8014FC90 */
+void func_8014FC90(s16 arg0, s16 arg1, s32 arg2, u32 arg3, const u8* arg4);
 u32  func_8014D8D4(u8 arg0);
 u8   isBattlerInactiveOrFlag4000(u8 arg0);
 s32  testFlag400WhenEligible(u8 arg0);
@@ -793,10 +798,15 @@ void func_801D7D10(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
 void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
 void drawBattleCommandStrip(u32 arg0);
 void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
-void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);
+void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
 u8   markBattlersMeetingOpposingThresholds(void);
-void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
+/* arg1 and arg3 are the coordinates/data the run consumes: both call sites in
+ * the original sign-extend arg1 (`sll`/`sra` pair) and pass arg3 either as a
+ * bare `lhu` or as the unsigned 0xFFFF constant (`ori`), so arg1 is signed and
+ * arg3 unsigned; the `(u16)arg3` test against 0xffff in the body stays the
+ * identity. */
+void drawDecimalGlyphRun(s16 arg0, s16 arg1, u8 arg2, u16 arg3);
 /* arg1 is the signed slot Y halfword: both call sites (func_801E5CA4 and
  * func_801E62BC) sign-extend it in the original binary (`lh`) and the callee
  * stores only its low half, so the declaration stays signed to reproduce that
@@ -824,6 +834,13 @@ extern u8  D_8014833A[]; /* @source 0x8014833A @kind unknown */
 /* Byte view of the kind byte at +0x7C of the 0x118-byte D_801EB630 enemy work
  * records, reached by the func_801DA69C UI-slot reuse scan. */
 extern u8  D_801EB6AC[]; /* @source 0x801EB6AC @kind unknown */
+/* Text pointer at +0x74 and mode byte at +0x7F of the same 0x118-byte
+ * D_801EB630 records, read by drawBattlerStatusPanel for the record
+ * D_801EB630[panel index - 3]. Both fold onto the record base the original
+ * reaches with one 0x118-scaled index, so they bind as flat byte views the
+ * same way D_801EB6AC does. */
+extern u8  D_801EB6A4[]; /* @source 0x801EB6A4 @kind unknown */
+extern u8  D_801EB6AF[]; /* @source 0x801EB6AF @kind unknown */
 /* Panel correction bytes selected by the D_801EB630 record byte +0x08 read by
  * func_801E99AC; bound as two symbols because the original reaches each with its
  * own displacement. */

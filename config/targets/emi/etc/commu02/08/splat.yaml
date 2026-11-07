@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801D8058
   - - 29996
-    - asm
-    - func_801D812C
+    - c
+    - drawPanelStripThenSubmitWorkImage
+    - '@source: src/bof3/ui/drawPanelStripThenSubmitWorkImage.c'
+    - '@behavior: draws the 0x118 by 0x13 panel strip at (0x14, 0x10) through func_801D8A40 with the main-RAM CLUT-bank byte D_80144952, then submits the texture named by the 0x801DB0C8 image selector at (0x1B, 0x13) unless that selector holds the 0xFFFF no-image sentinel'
   - - 30116
     - c
     - drawSmallWindowFrame

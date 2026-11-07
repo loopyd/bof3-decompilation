@@ -10,7 +10,8 @@
  * @residual none
  */
 void func_801E9910(void) {
-  func_801D8AE4(*(s16 *)&D_80148648[4], *(s16 *)&D_80148648[6], D_80148648[0xA]);
+  drawBattlerStatusPanel(*(s16 *)&D_80148648[4], *(s16 *)&D_80148648[6],
+                         D_80148648[0xA]);
 
   if (D_801462EF != 0) {
     if (*D_801EB4D8 == D_80148648[0xA]) {

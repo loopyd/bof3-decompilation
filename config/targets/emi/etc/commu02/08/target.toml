@@ -21,6 +21,7 @@ sources = [
     "src/bof3/ui/drawThreeCardRowStates.c",
     "src/bof3/ui/drawCardRowWithSlotOffsets.c",
     "src/bof3/ui/setFrontLocalMode0AndAdvanceStepByte1.c",
+    "src/bof3/ui/drawPanelStripThenSubmitWorkImage.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

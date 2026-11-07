@@ -163,8 +163,10 @@ segments:
     - asm
     - func_801F0DD8
   - - 8784
-    - asm
-    - func_801F0E50
+    - c
+    - incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50.c'
+    - '@behavior: One handler step reached as entry 2 of the four-word handler run at 0x801F1394 that the dispatcher at 0x801F0D64 selects with the scratchpad work object''s byte 0x2. Reads the shared battle work record pointer at 0x801EB4E0 once and, only while that record''s byte at offset 0x2 equals 0xA, reads the scratchpad work-object pointer cell at 0x1F800044 and increments the work object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb through the same base). The compare constant is materialized in $v0 after the record-byte load, so that load delay stays a nop, and the cell is only touched on the taken path. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 8848
     - asm
     - func_801F0E90

@@ -168,8 +168,10 @@ segments:
     - asm
     - func_801F4B80
   - - 8584
-    - asm
-    - func_801F4D88
+    - c
+    - selectCrossedFrontSideStateWorld04Area18813_801F4D88
+    - '@source: src/bof3/world/selectCrossedFrontSideStateWorld04Area18813_801F4D88.c'
+    - '@behavior: Selects one of two constants for the shared byte 0x80147ACF from the crossed pair of the staged front-side byte 0x80143F06 and the live front-side byte 0x80143F03: pending 1 with live 4 stores 0x0C, pending 4 with live 1 stores 0x0E, and every other pair writes nothing.'
   - - 8688
     - textbin
     - D_801F4DF0
