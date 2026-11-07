@@ -326,7 +326,10 @@ body keeps the base pointer for the head accesses and reaches the tail group thr
 the anchor the compiler derives, whose stores then read as negative displacements.
 The increment list is order-bearing in the same way: of two updates, the one that
 advances the anchor comes first, and the reversed list lost one instruction at the
-advance block with size unchanged.
+advance block with size unchanged. The loss can land at the loop head instead, with
+the reversed step rotated in there and dropped after the last store, and moving the
+same two steps to trailing `while` statements reproduces it: the order is the lever
+and the loop spelling is not.
 
 ## Delay slots and entry copies
 
@@ -377,9 +380,14 @@ pointer that cell just supplied may alias the cell, so every access on the plain
 cell re-reads it and the per-access reload comes out unflagged. That alias covers any
 pointer cell, not only the scratchpad one: exact bodies reload an in-image cell before
 each byte store of a clear run, with every access on the plain named cell and no
-pointer local. Pick a sibling's cell spelling by its handoff pattern - consecutive
-stores that no call separates take the volatile cell, a reload per store group takes
-the plain one - and leave a cell that already has exact siblings on both counts alone.
+pointer local. That alias needs a store through the pointer the cell supplied. Where
+the original loads one fixed-address pointer cell again before each of several copied
+fields and only stores through another pointer separate those loads, the plain cell
+keeps one loaded value and the body comes out short: one local per read does not
+restore the loads, and `u8* volatile` on the cell does. Pick a sibling's cell spelling
+by its handoff pattern - consecutive stores that no call separates take the volatile
+cell, a reload per store group takes the plain one - and leave a cell that already has
+exact siblings on both counts alone.
 The qualifier is not neutral once the reloads are already forced by an intervening
 store or call: the plain cell also leaves a re-arm constant free to fill the delay
 slot of the test that follows it, while the volatile spelling keeps that slot `nop`,
