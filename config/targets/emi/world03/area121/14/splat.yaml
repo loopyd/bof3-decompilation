@@ -234,8 +234,10 @@ segments:
     - '@source: src/bof3/world/alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C.c'
     - '@behavior: Compares the facing byte 0x08 of the work record published at the scratchpad pointer cell 0x1F800044 with the shared mode byte at 0x80145E98; while they differ it asks the turn helper 0x801F5ECC for one step toward the mode byte and then for the same facing with bit 0x04 toggled, returning without a position publish when either answers nonzero, and otherwise republishes the facing at 0x80145E98 and runs the position publish at 0x801F5C7C, which also runs directly when the two bytes already agree.'
   - - 13004
-    - asm
-    - func_801F5ECC
+    - c
+    - stepWorkFacing8TowardModeByteWhenWithinThreeStepsThenArmMoveAndSetState2World03Area12114_801F5ECC
+    - '@source: src/bof3/world/stepWorkFacing8TowardModeByteWhenWithinThreeStepsThenArmMoveAndSetState2World03Area12114_801F5ECC.c'
+    - '@behavior: Turns the facing byte 0x08 of the work record published at the scratchpad pointer cell 0x1F800044 one step toward the shared mode byte at 0x80145E98. The facing and the mode are masked to their low byte and compared as a magnitude; a magnitude below three turns directly, and otherwise the shorter arc is tried by lifting the smaller of the two by eight and re-comparing the pair, so a facing of 0 turns to 7 and a facing of 7 turns to 0. A magnitude of three or more on both arcs, or an exact match, returns zero without touching memory. Otherwise the turn stores -0x40 into the step word at offset 0x14 when the mode lies below the facing and 0x40 otherwise, stores the stepped facing at offset 0x08, masks that byte to three bits, republishes it at 0x80145E98, rearms the countdown byte at offset 0x09 with 8, runs the turn-step update at 0x801F5FF8, sets the state byte at offset 0x01 to 2 and returns one.'
   - - 13304
     - c
     - advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8

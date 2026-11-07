@@ -95,13 +95,15 @@ segments:
     - asm
     - func_801D1370
   - - 2012
-    - asm
-    - func_801D13DC
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC.c'
+    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object''s unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D2800 with no arguments, discarding the result. That run holds six in-image code pointers, entry 0 = 0x801D1420 through entry 5 = 0x801D16BC at 0x801D2814, so work bytes 0 through 5 select this dispatcher''s handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D13DC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the three exact siblings dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38, ..._801D0EAC and ..._801D1068 record; a span comparison against each leaves the same two differing bytes at 0x24, the table-address low immediate.'
   - - 2080
     - c
     - clearWorkCountdownSetWorkByte6AndAdvanceWorkByte1ScenarioSce15ef300_801D1420
     - '@source: src/bof3/scenario/clearWorkCountdownSetWorkByte6AndAdvanceWorkByte1ScenarioSce15ef300_801D1420.c'
-    - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D2800 (D_801D2800), which the dispatcher func_801D13DC selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it clears that object byte at +0x9, writes 0x10 to its byte at +0x6, then increments the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D1460). The 0x40-byte instruction stream re-reads the scratchpad pointer cell before each byte store, and the +0x9 byte is the work countdown the exact sibling armCountdownAndAdvanceWorkByte1ScenarioSce15ef300_801D0D7C documents.'
+    - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D2800 (D_801D2800), which the dispatcher dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it clears that object byte at +0x9, writes 0x10 to its byte at +0x6, then increments the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D1460). The 0x40-byte instruction stream re-reads the scratchpad pointer cell before each byte store, and the +0x9 byte is the work countdown the exact sibling armCountdownAndAdvanceWorkByte1ScenarioSce15ef300_801D0D7C documents.'
   - - 2144
     - asm
     - func_801D1460

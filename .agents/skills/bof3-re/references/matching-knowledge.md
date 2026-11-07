@@ -90,7 +90,12 @@ base keeps one call site per arm, each with its own setup. Arm stores merge the
 same way: two stores into one cell whose constants share a high half cross-jump
 into the one join store with that half's `lui` filling the branch delay slot, so keep
 the store in each arm rather than selecting into a result local, which holds the
-value in a general register and one more register live. Do not route that argument
+value in a general register and one more register live. That merge also needs each arm
+to read the cell's base itself: a pointer loaded once above three arms that write one
+byte cell kept all three stores, with the first difference at the extra store, while a
+base read inside each arm folded them into the original's single post-branch store.
+The accessor is not the discriminator: the constant slot form and the named cell
+measured the same while that read stayed above the arms. Do not route that argument
 through one shared constant local: with one call it hoists the fall-through arm's
 constant above the test and fills the branch delay slot with `sw $ra`, three
 instructions short of the original. A signed pair such as `-1` and `0` fails one step

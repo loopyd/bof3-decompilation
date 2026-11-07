@@ -185,8 +185,10 @@ segments:
     - asm
     - func_801F4F28
   - - 9096
-    - asm
-    - func_801F4F88
+    - c
+    - setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88
+    - '@source: src/bof3/world/setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88.c'
+    - '@behavior: overlay step handler, entry index 9 of the sixteen-pointer step table at 0x801F57D0; seeds the scratch translation vector at 0x1F800014/16/18 with -0x2E40/-0x3240/-0x3E0, clears 0x1F80001C/1E and stores the shared frame counter 0x80143E6C shifted left by five at 0x1F800020, draws one translucent quad band from row 4 x work byte +0x09 up to 0x1F through the drawer at 0x801F46C8 with the matrix seed 0 and the per-row offset scale 0x18, clears the palette-stage byte 0x8014933A and fills the whole 0x140 x 0xF0 screen with the colour word 0x10001805 through the gradient fill helper at 0x801F5428, increments work byte +0x09 and advances work byte +0x02 once that counter reaches 8.'
   - - 9320
     - c
     - fillScreenGradientAdvanceWorkByte2AtScenarioProgress37World02Area08213_801F5068

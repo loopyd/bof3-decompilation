@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801D0CC0
   - - 340
-    - asm
-    - func_801D0D54
+    - c
+    - invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54
+    - '@source: src/bof3/scenario/invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54.c'
+    - '@behavior: Entry 2 of the overlay step-handler run at 0x801D3918: hands the work object behind scratchpad pointer cell 0x1F800044 to the overlay helper 0x801D147C as (origin block at +0x64, signed halfword at +0x2E, flag mask 6), ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x20 and advances work byte +0x1 by one.'
   - - 472
     - asm
     - func_801D0DD8

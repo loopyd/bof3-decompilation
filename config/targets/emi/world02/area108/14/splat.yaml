@@ -204,8 +204,10 @@ segments:
     - '@source: src/bof3/world/invokeHelperByteArgWorld02Area10814_801F4EBC.c'
     - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D20, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8932
-    - asm
-    - func_801F4EE4
+    - c
+    - invokeHelperByteArgWorld02Area10814_801F4EE4
+    - '@source: src/bof3/world/invokeHelperByteArgWorld02Area10814_801F4EE4.c'
+    - '@behavior: Thin overlay wrapper: reads the shared main-RAM byte 0x80145029 unsigned and passes it as the single argument of the shared helper at 0x80161D74, which it calls once and whose result it discards; the byte load is materialised ahead of the 0x18-byte frame because the argument is its only consumer.'
   - - 8972
     - c
     - decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C

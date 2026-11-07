@@ -65,8 +65,9 @@ segments:
     - asm
     - func_801F3258
   - - 2480
-    - asm
-    - func_801F35B0
+    - c
+    - average12BitValuesWorld02Area08813_801F35B0
+    - '@source: src/bof3/world/average12BitValuesWorld02Area08813_801F35B0.c'
   - - 2560
     - asm
     - func_801F3600

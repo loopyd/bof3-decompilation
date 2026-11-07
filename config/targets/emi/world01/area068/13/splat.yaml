@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801F3658
   - - 2764
-    - asm
-    - func_801F36CC
+    - c
+    - countdownStepArmState14Or10ByPad40Else11World01Area06813_801F36CC
+    - '@source: src/bof3/world/countdownStepArmState14Or10ByPad40Else11World01Area06813_801F36CC.c'
+    - '@behavior: Counts the overlay gate byte 0x801F4E00 down by one, writes the truncated byte back, then selects the state byte at +1 of the work record at the scratchpad pointer cell 0x1F800044: 0x14 when the countdown reaches zero (and clears the gate byte), 0x10 when the shared pad halfword 0x80145AA8 reads 0x40 while advancing the overlay counter 0x801F4E04 by one and clearing 0x801F4E0C, and 0x11 otherwise. Leaf, no frame.'
   - - 2908
     - c
     - noopHandlerWorld01Area06813_801F375C
