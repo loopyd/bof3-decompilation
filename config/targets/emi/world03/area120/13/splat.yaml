@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F4320
   - - 5968
-    - asm
-    - func_801F4350
+    - c
+    - setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350
+    - '@source: src/bof3/world/setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350.c'
+    - '@behavior: Reads the shared gate byte D_801490C7 with a signed byte read. When the gate byte is zero it stores 0xFFFF into the shared status halfword D_801490A8, publishes the work record pointer cell D_80148208 and increments that record unsigned halfword at offset 0x7E in place, then requests primary state 0xD and sub-state 8 through D_80146874 and D_80146875. When the gate byte is nonzero it stores only 0x35 into D_801490A8. Leaf, no arguments, no return value.'
   - - 6072
     - textbin
     - D_801F43B8

@@ -92,8 +92,9 @@ segments:
     - dispatchStateByte3Table4f90World00Area03313_801F35C0
     - '@source: src/bof3/world/dispatchStateByte3Table4f90World00Area03313_801F35C0.c'
   - - 2564
-    - asm
-    - func_801F3604
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604.c'
   - - 2692
     - asm
     - func_801F3684

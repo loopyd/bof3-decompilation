@@ -94,8 +94,9 @@ segments:
     - asm
     - func_801F00A0
   - - 5360
-    - asm
-    - func_801F00F0
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c'
   - - 5428
     - asm
     - func_801F0134

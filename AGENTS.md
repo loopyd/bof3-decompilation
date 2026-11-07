@@ -53,6 +53,10 @@ request. Prefer one small check over layers of generators, controllers and recei
 Preserve authorization, runtime bounds, rollback obligations and truthful evidence.
 These focus rules take precedence over broader skill workflow suggestions.
 
+Await the process instead of sleeping. Keep a `sleep` in Bash at 30 seconds or
+less; when a build, test run, or workflow must finish, wait on it directly (a
+foreground call or `wait` on its PID) rather than polling in sleep loops.
+
 ## Documentation
 
 Keep README files, guides, and API references focused on current supported behavior,

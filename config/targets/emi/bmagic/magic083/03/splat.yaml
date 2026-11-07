@@ -58,8 +58,9 @@ segments:
     - asm
     - func_801EF2F8
   - - 2344
-    - asm
-    - func_801EF528
+    - c
+    - incrementWorkByte2WhenWorkByteBZeroBmagicMagic08303_801EF528
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic08303_801EF528.c'
   - - 2396
     - asm
     - func_801EF55C

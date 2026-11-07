@@ -69,8 +69,9 @@ segments:
     - asm
     - func_801F400C
   - - 6264
-    - asm
-    - func_801F4478
+    - c
+    - setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478
+    - '@source: src/bof3/world/setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478.c'
   - - 6328
     - textbin
     - D_801F44B8

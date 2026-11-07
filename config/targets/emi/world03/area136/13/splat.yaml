@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F2FD0
   - - 1048
-    - asm
-    - func_801F3018
+    - c
+    - setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018
+    - '@source: src/bof3/world/setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018.c'
+    - '@behavior: Reads the low byte of the packed scenario word at the cross-overlay address 0x801FD288 with lbu, tests it against the unsigned window 0x62..0x66 through the addiu -0x62 and sltiu 5 pair, and stores 0x0A in the shared scenario progress byte 0x80146864 while the byte is inside that window and 0x1E otherwise. The inside constant fills the bnez delay slot and both arms share the single sb. Leaf, no arguments, no return value.'
   - - 1096
     - asm
     - func_801F3048

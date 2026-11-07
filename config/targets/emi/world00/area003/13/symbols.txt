@@ -5,4 +5,4 @@ setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8 = 0x801F2CA8;
 func_801F2CEC = 0x801F2CEC;
 func_801F2D30 = 0x801F2D30;
 func_801F2D88 = 0x801F2D88;
-func_801F2DE0 = 0x801F2DE0;
+initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0 = 0x801F2DE0;

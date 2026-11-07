@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area003_13_psyq.c",
     "src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8.c",
+    "src/bof3/world/initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0.c",
 ]
 psyq_source = "src/bof3/support/area003_13_psyq.c"
