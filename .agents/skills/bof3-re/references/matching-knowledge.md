@@ -659,7 +659,10 @@ a probe and the seeded sibling's form stands. One body can mix both: keep a
 read-modify-write pair on one pointer local and re-spell the named cell for each
 later access, because a store through that local may alias the cell and the
 original re-reads it there. Read each access's own `lui`/`lw` pair; running one
-local down the body shares that base and drops the later reloads.
+local down the body shares that base and drops the later reloads. When every access
+re-reads the cell, a per-width `u16 *`/`u8 *` local or one pointer per access group
+still shares a base within that view. Write each access as a cast/index expression on
+the named cell instead.
 
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the
