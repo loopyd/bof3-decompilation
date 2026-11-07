@@ -33,8 +33,9 @@ segments:
     - asm
     - func_801EEC28
   - - 276
-    - asm
-    - func_801EED14
+    - c
+    - clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14
+    - '@source: src/bof3/bmagic/clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14.c'
   - - 428
     - asm
     - func_801EEDAC

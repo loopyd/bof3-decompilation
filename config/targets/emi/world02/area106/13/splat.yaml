@@ -71,8 +71,9 @@ segments:
     - asm
     - func_801F3CD4
   - - 4692
-    - asm
-    - func_801F3E54
+    - c
+    - setStateEntry24AndProgressByteWorld02Area10613_801F3E54
+    - '@source: src/bof3/world/setStateEntry24AndProgressByteWorld02Area10613_801F3E54.c'
   - - 4752
     - textbin
     - D_801F3E90

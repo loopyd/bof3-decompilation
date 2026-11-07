@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF5D8
   - - 2600
-    - asm
-    - func_801EF628
+    - c
+    - setWorkByteBToOneAndAdvanceWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22503_801EF628
+    - '@source: src/bof3/bmagic/setWorkByteBToOneAndAdvanceWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22503_801EF628.c'
+    - '@behavior: Work byte 1 step 7: when byte 0xB of the record published by the shared battle pointer at 0x801EB4E0 reads below two, stores 1 into byte 0xB of the record published by the scratchpad pointer cell at 0x1F800044 and advances that record byte 0x2.'
   - - 2684
     - asm
     - func_801EF67C

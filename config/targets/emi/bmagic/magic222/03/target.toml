@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/bmagic/stepHalfword801492D8ByWorkByte9LowBitDecrementWorkByte9ThenSeedNegative682OnZeroSetByte9To22AdvanceWorkByte2BmagicMagic22203_801EF274.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504.c",
     "src/bof3/bmagic/seedWorkHalfwordPairFromRecordRaiseFlag10RearmWorkBytesAndAdvanceWorkByte2BmagicMagic22203_801F0584.c",
+    "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801EF770.c",
 ]
 psyq_source = "src/bof3/support/magic222_03_psyq.c"

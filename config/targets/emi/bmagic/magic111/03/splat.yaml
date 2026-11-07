@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF238
   - - 1672
-    - asm
-    - func_801EF288
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288.c'
+    - '@behavior: Step of the work-object handler reached through entry 5 of the ten-pointer handler table based at 0x801EFA9C: decrements the unsigned byte 0xA of the scratchpad work object reached through the pointer cell at 0x1F800044 and, only when that byte reaches zero, re-reads the cell and increments the object byte 2; takes no arguments, returns nothing and keeps no frame.'
   - - 1748
     - asm
     - func_801EF2D4

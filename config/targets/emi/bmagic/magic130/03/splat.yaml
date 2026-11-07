@@ -55,8 +55,9 @@ segments:
     - asm
     - func_801EF10C
   - - 1428
-    - asm
-    - func_801EF194
+    - c
+    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF194
+    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF194.c'
   - - 1504
     - asm
     - func_801EF1E0
