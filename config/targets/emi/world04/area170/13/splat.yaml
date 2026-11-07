@@ -81,8 +81,9 @@ segments:
     - asm
     - func_801F3DE8
   - - 4904
-    - asm
-    - func_801F3F28
+    - c
+    - advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28.c'
   - - 4996
     - c
     - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84

@@ -39,5 +39,6 @@ support_sources = [
     "src/bof3/world/stepWorkFacing8TowardModeByteWhenWithinThreeStepsThenArmMoveAndSetState2World03Area12114_801F5ECC.c",
     "src/bof3/world/publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C.c",
     "src/bof3/world/prepareWorkRecordForLookup158AndArmMode1World03Area12114_801F3078.c",
+    "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

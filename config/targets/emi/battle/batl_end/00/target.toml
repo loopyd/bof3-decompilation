@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c",
     "src/bof3/battle/dispatchSubstateTable0c98BatlEnd00_801EEC58.c",
     "src/bof3/battle/dispatchSubstateTable0ca4BatlEnd00_801EEC94.c",
+    "src/bof3/battle/dispatchSubstateTable0cb8BatlEnd00_801EF018.c",
     "src/bof3/support/batl_end_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/batl_end_00_psyq.c"

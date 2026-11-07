@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801EFAFC
   - - 4076
-    - asm
-    - func_801EFBEC
+    - c
+    - seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC
+    - '@source: src/bof3/bmagic/seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC.c'
+    - '@behavior: Overlay step handler seed: copies byte 0x27 of the shared battle work record at 0x801EB4E0 into byte 0x27 of the scratchpad work object read through cell 0x1F800044, then sets work word 0x14 = 0x100, word 0x20 = -0x10, byte 9 = 0 and byte 0xA = 0x10, and finally advances work byte 2 with a byte-width read-modify-write whose store lands in the return delay slot; leaf with no frame, reads no other state.'
   - - 4180
     - asm
     - func_801EFC54

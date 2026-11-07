@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801F44B0
   - - 6524
-    - asm
-    - func_801F457C
+    - c
+    - drawWorkBandOnFifthTickWrapWorkByte9At0fThenAdvanceWorkByte9World02Area10313_801F457C
+    - '@source: src/bof3/world/drawWorkBandOnFifthTickWrapWorkByte9At0fThenAdvanceWorkByte9World02Area10313_801F457C.c'
+    - '@behavior: overlay step handler, entry 13 of the work-byte-2 handler table at 0x801F5954; while the shared state word 0x80143B90 reads 0x00050005 and the status halfword 0x801EB7CA has bit 0x4000 set it advances work byte 0x02, then rewinds byte 0x09 at 0x0F, hands func_801F4E70 the band index (byte 0x09 / 5) + 7 on every fifth tick and advances byte 0x09.'
   - - 6748
     - asm
     - func_801F465C

@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F3104
   - - 1596
-    - asm
-    - func_801F323C
+    - c
+    - setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C
+    - '@source: src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld03Area12114_801F323C.c'
+    - '@behavior: Seeds the work halfwords through the local 0x801F3418 helper, which writes 0xA0 to work offset 0x2E and 0x50 to offset 0x30, then decrements the countdown byte at 0x09 of the work record published at the scratchpad pointer cell 0x1F800044 and advances the record word at 0x40 by 0x2000. It reads the cell again and, once that countdown has reached zero, clears work byte 0x48 and writes 3 to the state byte at 0x01 through a third read of the cell, then calls the shared resident helper at 0x8014D4E0. Takes no arguments and returns nothing.'
   - - 1720
     - asm
     - func_801F32B8

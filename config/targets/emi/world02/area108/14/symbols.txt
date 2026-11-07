@@ -1,3 +1,5 @@
+workScreenX34World02Area10814 = 0x1F800034;
+workScreenY36World02Area10814 = 0x1F800036;
 workRecord44World02Area10814 = 0x1F800044;
 D_80146865 = 0x80146865;
 dispatchStateByte1Table56e8World02Area10814_801F2C44 = 0x801F2C44;
@@ -16,7 +18,7 @@ func_801F3588 = 0x801F3588;
 dispatchStateByte1Table56fcWorld02Area10814_801F36A4 = 0x801F36A4;
 func_801F36E8 = 0x801F36E8;
 func_801F376C = 0x801F376C;
-func_801F384C = 0x801F384C;
+drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C = 0x801F384C;
 func_801F3920 = 0x801F3920;
 func_801F3A14 = 0x801F3A14;
 fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area10814_801F3A6C = 0x801F3A6C;

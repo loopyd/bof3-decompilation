@@ -86,8 +86,10 @@ segments:
     - asm
     - func_801F376C
   - - 3148
-    - asm
-    - func_801F384C
+    - c
+    - drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C
+    - '@source: src/bof3/world/drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C.c'
+    - '@behavior: Overlay step handler, entry 2 of the state-byte-1 handler table at 0x801F56FC: projects the work record cursor words at +0x34/+0x38/+0x3C through the shared projector 0x801AFF04 into the scratchpad screen pair at 0x1F800034/0x1F800036, copies that pair into the record halfwords +0x2E and +0x30, paints a white circle of radius halfword +0x18 around that point through the circle helper 0x801F3D90 with 0xFF as both colours, then decrements the frame countdown byte +0x09 and, when it reaches zero, seeds the white tint triplet at +0x5F/+0x5E/+0x5D with 0x60 and advances the state byte +0x01 by one.'
   - - 3360
     - asm
     - func_801F3920

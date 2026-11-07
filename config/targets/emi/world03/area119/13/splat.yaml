@@ -162,8 +162,10 @@ segments:
     - c
     - clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554
   - - 6532
-    - asm
-    - func_801F4584
+    - c
+    - setStatusFFFFAndScenarioProgress0AOr14ByGateWorld03Area11913_801F4584
+    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress0AOr14ByGateWorld03Area11913_801F4584.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, clears the shared status halfword D_801490A8 to 0xFFFF, then stores 0x0A into the shared scenario progress byte g_ScenarioProgress when the gate byte reads 0 and 0x14 when it reads 1; any other gate value leaves that byte untouched. Takes no arguments, calls nothing, returns nothing.'
   - - 6596
     - textbin
     - D_801F45C4

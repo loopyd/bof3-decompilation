@@ -35,5 +35,6 @@ support_sources = [
     "src/bof3/world/initializeWorkModeWithTintMinus128Consume2CountdownWorld02Area10814_801F4B58.c",
     "src/bof3/world/clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128.c",
     "src/bof3/world/publishFrontEndRecordIndexToWorkByteBAndDecrementRecordHalfword0aBy2WhenTableFullWorld02Area10814_801F4D60.c",
+    "src/bof3/world/drawWhiteCircleSeedTintTripletAndAdvanceWorkByte1WhenCountdownExpiresWorld02Area10814_801F384C.c",
 ]
 psyq_source = "src/bof3/support/area108_14_psyq.c"

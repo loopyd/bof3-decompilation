@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EEFCC
   - - 1048
-    - asm
-    - func_801EF018
+    - c
+    - dispatchSubstateTable0cb8BatlEnd00_801EF018
+    - '@source: src/bof3/battle/dispatchSubstateTable0cb8BatlEnd00_801EF018.c'
+    - '@behavior: Battle handler-run dispatch: reads the unsigned byte at 0x801462E4, scales it by four and calls the handler pointer at that index of this overlay''s handler run based at 0x801F0CB8 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1108
     - asm
     - func_801EF054

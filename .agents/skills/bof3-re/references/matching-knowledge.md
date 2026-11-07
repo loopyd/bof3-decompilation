@@ -370,7 +370,10 @@ Signedness belongs to the use site, not the cell: read it off that site's load. 
 byte cell can need `*(s8*)&cell` where the original emits `lb` in a branch test and an
 unsigned read where another function emits `lbu` on the same address, so a shared
 header's `u8` scalar fixes the address without proving the signedness. Declare the
-signed view locally at the use that shows `lb`.
+signed view locally at the use that shows `lb`. Width is per target use in the same
+way: an address sibling targets declare and access as a `u16` takes a `u32` extern in
+the target whose own original compares the whole word, because the declaration picks
+the load that compare reads.
 
 Unaligned fields/padding/SDK stack types follow type-application reference. For
 pooled member addresses, compare direct access through the existing member with
@@ -694,8 +697,11 @@ pointer copy takes the base load early enough to fill the preceding delay slot, 
 the inline symbol expression materialises the base after that store and costs two
 instructions. A cell that is loaded, stored and re-armed inside a guard wants it too:
 one base for all three uses is what lets the original keep the re-arm constant in both
-branch delay slots. A local that only re-types a promoted value (`u16 row = y;`) folds
-away and changes nothing.
+branch delay slots. A fixed address the original hands to a callee as its destination
+is this same local from the other side: take the address once (`screen = &cell;`), pass
+the local, and read the result back through it, while a cell of the same pair the body
+only reads keeps its own symbol expression. A local that only re-types a promoted
+value (`u16 row = y;`) folds away and changes nothing.
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
