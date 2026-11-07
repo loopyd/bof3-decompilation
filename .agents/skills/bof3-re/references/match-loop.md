@@ -108,7 +108,7 @@ ineligible/declined reasons; revisit only with new evidence.
 
 | Condition | Lever | Evidence and authority |
 | --- | --- | --- |
-| No function-shaped bytes: neither a prologue nor a `jr $ra` return path, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift |
+| No function-shaped bytes: neither a prologue nor a `jr $ra` return path, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift. A target-wide run also settles one selector: a range with its own prologue and `jr $ra` return that is absent from that target's ranked list declines the data lever on measured evidence, with no per-range probe owed |
 | Fragment/jump-table arm/shared epilogue with head elsewhere; code inside leading bare `[offset, bin, name]` segment or `bin` subsegment | `bin/harness analysis carve TARGET@0xADDRESS START:END` | Isolated two-split row/segment regroup probe preserving `vram`/text order. Never applies. Lane reports evidence; parent owns reviewed Splat placement, no whole-image oracle |
 | Few clean-C shapes explain `first=` | `bin/harness lift sweep SELECTOR SOURCE variants...` | In-process comparison; retain each variant and outcome |
 | Join-spanning boolean result or extra return copy | Compare expression return with [constant-return arms](matching-knowledge.md#boolean-return-expansion) | Predict the RTL change; preserve arithmetic, accesses and ABI; require the complete live gate |

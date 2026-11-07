@@ -34,7 +34,7 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
 
 ## Lift setup order (once, before the first `asm-diff`)
 
-1. Splat boundary `asm` → `c` with `@source`/`@behavior`. Those two annotation rows are not checked by the gate batch, which reads the C file's own tags, while the mission candidate check refuses a new lift whose boundary lacks `source` or `behavior`; confirm both rows by hand before gating. When one `asm` row declares several functions, flip only the selected range and leave the rest as `asm` rows at the offsets its own endlabels already declare; relabelling the whole row to `c` claims the neighbours' bytes.
+1. Splat boundary `asm` → `c` with `@source`/`@behavior`. Those two annotation rows are not checked by the gate batch, which reads the C file's own tags, while the mission candidate check refuses a new lift whose boundary lacks `source` or `behavior`; confirm both rows by hand before gating. When one `asm` row declares several functions, flip only the selected range and leave the rest as `asm` rows at the offsets its own endlabels already declare; relabelling the whole row to `c` claims the neighbours' bytes. After the flip, `out/splat/<target>/asm/` keeps the old `func_<addr>.s` beside the stub generated for the new label while `linker.ld` names only the C object, so that leftover is generated-tree residue, not a boundary fault: leave it and report parent cleanup instead of deleting it or re-gating.
 2. Target map row under the boundary's own name, `sym = 0xADDR;` (without it
    `asm-diff` cannot resolve the symbol). A raw `func_` row left beside a semantic `c`
    label refuses the first gate with `expected exactly one defined function symbol`;
