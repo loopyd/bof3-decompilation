@@ -38,6 +38,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place. When the original copies only a leading prefix of a longer pointer run, size that extern's type to the copied words: the aggregate assignment emits one word load and store per declared element and nothing past it, while a type covering the whole run copies the neighbours |
 | Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
+| Frame grows with callee-saved registers and a cell store the original commits before a call ends up after it in the build | Keep that store at its original place, as an in-place update on the record (`p[n]++`). Carrying the incremented value in a local and storing it after the call keeps the value live across the call: one measured body cost two callee-saved registers and an `0x20`-byte frame (22 of 32 instructions, 144 bytes against 128), while the in-place form let the following argument load fill the load-delay gap and the store fill the call's delay slot. This is the mirror of a `jal` result the original stores right after the call, which does take its own local |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Saved-register group differs at entry while one stack aggregate feeds repeated calls and some of its fields keep a literal | Assign every field at each update, including the fields whose value does not change. Each assignment is that field's definition, so a skipped field drops its literal's liveness, which moves the literal to a caller-saved register and removes its store (one measured partial 61/67 at 244 bytes, first difference at the entry group). Naming those literals as locals measured identical, so the lever is field coverage, not spelling |
 | Strided row stores whose scale the original re-reads from a published byte before the later rows | Keep the computed index in a local for the uses before that reload, and address each later row through the published byte (`D_row[(u32)*scratch * stride] = ...`). Read both ends off the original: the store that consumes the register without reloading it, and the `lbu` that precedes the first row which does reload |
@@ -556,7 +557,11 @@ cell load or a record address computed from a cursor.
    through its own variable, so split where two groups share one, not every access:
    routing the leading group through the later group's variable merges them into one
    quantity and hands the leading group the later group's register (measured `v1`
-   against `a0` at unchanged size).
+   against `a0` at unchanged size). Two reads of one cell inside a single statement
+   are separate reload points as well: when the original's two loads land in
+   different registers, one local serving both arguments of that one call is a
+   single allocno and gives them one register (measured nine instructions short),
+   while the inline named-cell spelling and two distinct locals both matched.
 2. Read the allocator dump before changing spelling. `.greg` reports the number of
    global pseudos, each conflict set and the register each pseudo receives.
 3. Give the variables distinct names. GCC then keeps separate quantities, so each
