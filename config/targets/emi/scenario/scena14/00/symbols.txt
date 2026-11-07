@@ -42,5 +42,5 @@ func_801FC130 = 0x801FC130;
 armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8 = 0x801FC1E8;
 func_801FC22C = 0x801FC22C;
 func_801FC280 = 0x801FC280;
-func_801FC328 = 0x801FC328;
+recountLiveWorkRecordsThenCopyPartyBytesAndInvokeHelperScenarioScena1400_801FC328 = 0x801FC328;
 D_801FC404 = 0x801FC404;

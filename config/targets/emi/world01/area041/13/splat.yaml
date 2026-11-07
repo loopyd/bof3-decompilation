@@ -129,8 +129,10 @@ segments:
     - asm
     - func_801F3EE4
   - - 4968
-    - asm
-    - func_801F3F68
+    - c
+    - advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68
+    - '@source: src/bof3/world/advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68.c'
+    - '@behavior: Per-frame work-record step: decrements the countdown byte at 0x0A of the record published at the scratchpad pointer cell 0x1F800044, adds the record step word at 0x0C into the accumulator word at 0x34, and when the countdown byte reads zero re-arms it to 8 and stores handler index 3 into the record state byte at 0x04. Both paths then consume two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250.'
   - - 5084
     - asm
     - func_801F3FDC

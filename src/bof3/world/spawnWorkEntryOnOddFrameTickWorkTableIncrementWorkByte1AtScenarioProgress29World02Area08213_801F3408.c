@@ -19,7 +19,7 @@ void func_801F393C(void);
  * zero-extended byte whether any entry still carried a non-zero lead byte this
  * frame. Splat binds the address through this target's own asm subsegments, so
  * no target-map row is needed. */
-void func_801F3AAC(void);
+void updateWorkTableAndReportActiveWorld02Area08213_801F3AAC(void);
 
 /* @source 0x801F3408
  * @behavior Overlay step handler, entry index 9 of the twelve-pointer step
@@ -47,7 +47,7 @@ void spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29
   if (D_80143E6C & 1) {
     func_801F393C();
   }
-  func_801F3AAC();
+  updateWorkTableAndReportActiveWorld02Area08213_801F3AAC();
   if (g_ScenarioProgress == 0x29) {
     work = SPAD_PTR_SLOT(u8, 0x44);
     work[1]++;

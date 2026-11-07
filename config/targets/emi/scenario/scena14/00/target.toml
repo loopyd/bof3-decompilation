@@ -26,5 +26,6 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryState5Substate1EAndIncrementRecordHalfword7EScenarioScena1400_801FB5A8.c",
     "src/bof3/scenario/requestPrimaryState7Substate1EAndIncrementRecordHalfword7EScenarioScena1400_801FB5F8.c",
     "src/bof3/scenario/startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904.c",
+    "src/bof3/scenario/recountLiveWorkRecordsThenCopyPartyBytesAndInvokeHelperScenarioScena1400_801FC328.c",
 ]
 psyq_source = "src/bof3/support/scena14_00_psyq.c"

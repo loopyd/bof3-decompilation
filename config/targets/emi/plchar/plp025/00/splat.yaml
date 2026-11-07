@@ -83,8 +83,10 @@ segments:
     - '@source: src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF738.c'
     - '@behavior: Tests one front-end record slot''s stored position against the shared main-executable work records: the slot scaled by 0x74 selects the row word x at 0x80143FFC, the row word y at 0x80144000 and the row halfword at 0x80144006 biased by 0x200 and taken as a signed 16-bit reference, and work records 1 through the count byte 0x80146254 minus one are each passed with that triple, the range 1 and their 0x140-byte record to the shared gate func_801BDD58, returning 1 at the first match and 0 otherwise'
   - - 5128
-    - asm
-    - func_801CF808
+    - c
+    - testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF808
+    - '@source: src/bof3/plchar/testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF808.c'
+    - '@behavior: Tests the projected position of one front-end record against the shared main-executable work records: the record slot scaled by 0x74 selects the row word x at 0x80143FFC, the row word y at 0x80144000 and the row halfword at 0x80144006 taken as a signed 16-bit reference, the active work area''s route byte at 0x08 read through the scratchpad pointer cell 0x1F800044 selects an eight-byte movement offset record whose x offset at 0x80181B94 and y offset at 0x80181B98 are doubled and added to the matching row word, and work records 1 through the count byte 0x80146254 minus one are each passed with that projected pair, the range 1 and their 0x140-byte record to the shared gate func_801BDD58, returning 1 at the first match and 0 otherwise'
   - - 5412
     - asm
     - func_801CF924

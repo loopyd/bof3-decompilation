@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801F393C
   - - 3756
-    - asm
-    - func_801F3AAC
+    - c
+    - updateWorkTableAndReportActiveWorld02Area08213_801F3AAC
+    - '@source: src/bof3/world/updateWorkTableAndReportActiveWorld02Area08213_801F3AAC.c'
+    - '@behavior: overlay per-frame helper, walks the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800 and, for each entry whose lead byte is non-zero, subtracts the signed halfword at record +0x02 shifted left by eight from the record +0x0C word, stores the difference back, calls the per-record draw helper at 0x801F387C with the entry pointer and clears the lead byte once the updated +0x0C word is below the +0x3C word of the scratch work record published through 0x1F800044; it then returns 1 when at least one entry was active this frame and 0 when none was, whether or not any entry was retired.'
   - - 3932
     - c
     - dispatchStateByte2Table576cWorld02Area08213_801F3B5C

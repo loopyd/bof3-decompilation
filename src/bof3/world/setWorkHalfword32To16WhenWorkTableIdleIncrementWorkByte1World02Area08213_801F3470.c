@@ -7,7 +7,7 @@
  * reports through a zero-extended byte whether any entry still carried a
  * non-zero lead byte this frame. Splat binds the address through this target's
  * generated undefined_funcs_auto.txt, so no target-map row is needed. */
-u8 func_801F3AAC(void);
+u8 updateWorkTableAndReportActiveWorld02Area08213_801F3AAC(void);
 
 /* @source 0x801F3470
  * @behavior Overlay step handler, entry index 10 of the twelve-pointer step
@@ -32,7 +32,7 @@ void setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_80
     void) {
   u8* work;
 
-  if (func_801F3AAC() == 0u) {
+  if (updateWorkTableAndReportActiveWorld02Area08213_801F3AAC() == 0u) {
     work = SPAD_PTR_SLOT(u8, 0x44);
     *(u16*)(work + 0x32) = 0x10;
     work[1]++;

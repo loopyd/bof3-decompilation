@@ -579,7 +579,10 @@ cell and give a value local only to the copy whose store the original places lat
 pointer local for that block measured a partial at unchanged size and instruction
 order: its reload attached to the preceding field load, and the byte-masked slot index
 then took the neighbouring register. Step 1 applies where a reload opens a store or
-call group, not between fields of one record.
+call group, not between fields of one record. Split by the register the original gives
+each reload, not by adjacency: reloads it lands in one register stay one local even
+with a whole block between them, and reloads it lands in different registers take one
+local each, so count groups from those registers rather than from statement distance.
 
 ### Shared and branch-local cursor loads
 
@@ -684,6 +687,10 @@ one register between stores shows where its statement starts.
 A run of stores to one pointer cell that parks a different record and restores the
 saved value is real state: keep every publish and restore as a store to the cell and
 re-read the cell after the restore, because holding the record in a local drops the run.
+The re-read covers a call too: once a record is published into the cell, address the
+next field through the named cell, not through the local that was stored, because the
+callee may republish the cell and the original's store then reaches the callee's
+record.
 
 Reads follow it in the other direction. When the original materialises a fixed-address
 symbol once into a saved register and re-reads one byte of it before each call,

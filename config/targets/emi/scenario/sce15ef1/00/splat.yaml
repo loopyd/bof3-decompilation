@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801D0FEC
   - - 1132
-    - asm
-    - func_801D106C
+    - c
+    - drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
+    - '@source: src/bof3/scenario/drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C.c'
+    - '@behavior: Entry 6 of the overlay step-handler run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and calls the record claim 0x801D19C8 when the pre-increment value is a multiple of four, calls 0x801D1A60 then 0x801D2088, draws one semi-transparent quad from the object head point +0x18 to the point +0x34 with intensity 0x40, adds the origin triple +0x64/+0x68/+0x6C into the step triple +0x0C/+0x10/+0x14 and that step into the head point, re-seeds the head point with 0x2F8000/0x278000/0x0F000000 when its first word reads at or below 0x2F7FFF, subtracts 4 from the intensity byte +0x3 and ticks countdown byte +0x9 down by one; when that countdown reaches zero it exchanges the head point with +0x34/+0x38/+0x3C, re-seeds 0x10 consecutive 0x2C-byte effect records of the table at 0x801D3DE8 through 0x801D1F68, exchanges the two points back, re-arms the countdown with 0x80 and advances work byte +0x1.'
   - - 1696
     - asm
     - func_801D12A0
