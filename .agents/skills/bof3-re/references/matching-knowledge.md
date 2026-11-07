@@ -675,12 +675,13 @@ their fold can surface outside the body: a frame eight bytes larger with one ext
 saved register and no differing body access is the shared base, not an orphan slot.
 The accessor folds only while its address is not shared: a cell read again after a
 call keeps the constant live across it, so the base hoists into a callee-saved
-register and the frame grows with it, while the named map cell re-materialises per
-access. Two accesses to one cell then trade one instruction for one: the shared base
-makes the first access `lui`+`ori`+`lw 0(base)` and the second a bare `lw 0(base)`. So a
-body can keep the original byte count and still lose matched instructions with the
-first difference at instruction 0 - that pair is the accessor, not an allocation
-residual.
+register and the frame grows with it, while the named map cell re-materialises at
+each reload point, since reads that no call and no aliasing store separate still
+share one base. Two accesses to one cell then trade one instruction for one: the
+shared base makes the first access `lui`+`ori`+`lw 0(base)` and the second a bare
+`lw 0(base)`. So a body can keep the original byte count and still lose matched
+instructions with the first difference at instruction 0 - that pair is the accessor,
+not an allocation residual.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read

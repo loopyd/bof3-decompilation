@@ -3,7 +3,10 @@
 ## Required loop
 
 Before changing existing C, obtain a live normal asm diff. For absent C, follow
-the [first-source route](#first-source). Diagnose `first=`, classify through the
+the [first-source route](#first-source). A gate that stops before comparison yields
+no `first=`: `undefined reference` at link is a binding gap, so add the row for the
+address it names to this target's own map and re-gate the same source instead of
+editing C. Diagnose `first=`, classify through the
 [playbook](matching-knowledge.md#delay-slots-and-entry-copies), make one structural
 fix and rerun normal diff. Revert percentage regressions immediately. Use full diff
 only for first/ambiguous diagnosis; partial catalogs cannot replace live diagnosis.
