@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801EF078
   - - 1276
-    - asm
-    - func_801EF0FC
+    - c
+    - incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC.c'
+    - '@behavior: Increments the scratchpad work object byte at offset 0x9 and tests the truncated value it just stored against 0x20; when it equals 0x20 it stores 0xFF into byte 0xB of the shared battle work record read through 0x801EB4E0 and calls the shared helper at 0x801E5988, the store filling the call delay slot. The 0x18-byte frame only keeps $ra across the call, and it takes no arguments and returns nothing.'
   - - 1356
     - asm
     - func_801EF14C

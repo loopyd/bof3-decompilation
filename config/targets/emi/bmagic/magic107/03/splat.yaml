@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EEEA0
   - - 780
-    - asm
-    - func_801EEF0C
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte1AtC0BmagicMagic10703_801EEF0C
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte1AtC0BmagicMagic10703_801EEF0C.c'
+    - '@behavior: Overlay step handler for the scratchpad work object read through pointer cell 0x1F800044: increments the object unsigned byte 0x09 by one at byte width, then re-reads the pointer cell into a local pointer and, when the re-read unsigned byte 0x09 equals 0xC0, increments work byte 0x01 through that same loaded pointer, the byte the in-payload dispatcher at 0x801EEC04 scales by four to select its two-word handler run (0x801EEC5C, 0x801EED40). Leaf with no frame, no argument and no return value; reads or writes no other state, and no jal or in-image word in this payload names the span.'
   - - 860
     - asm
     - func_801EEF5C

@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF30C
   - - 2096
-    - asm
-    - func_801EF430
+    - c
+    - decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430.c'
+    - '@behavior: Work-byte-1 state 8 handler: decrements the scratchpad work countdown byte 9 and, on zero, stores 0xB into work word 0xC, seeds work halfwords 0x2E and 0x30 from the shared battle record less 0x37 and 0x10, clears byte 9, sets byte 0xA to 0x20 and advances work byte 2.'
   - - 2240
     - asm
     - func_801EF4C0

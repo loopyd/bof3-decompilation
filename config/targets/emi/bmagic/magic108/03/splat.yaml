@@ -61,8 +61,9 @@ segments:
     - incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0
     - '@source: src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0.c'
   - - 1328
-    - asm
-    - func_801EF130
+    - c
+    - incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130.c'
   - - 1408
     - asm
     - func_801EF180

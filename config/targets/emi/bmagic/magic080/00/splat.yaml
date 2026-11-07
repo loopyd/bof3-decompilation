@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkChannelPairDistanceRandomByteBCountdownAndAdvanceWorkByte1BmagicMagic08000_801EEC5C.c'
     - '@behavior: Work byte 1 state 0 of the MAGIC080 overlay: entry 0 of the two-entry handler table func_801EEC04 builds in its own frame (0x801EEC5C, 0x801EECE4) and dispatches on the scratchpad work object''s state byte 1. It seeds the work object published at the pointer cell 0x1F800044: work word 0x34 takes the shared channel word at 0x80149308, work word 0x38 takes 0x8014930C through one value local that is also the helper''s second argument, and work halfword 0x3E takes the signed func_8015477C distance of that pair. It then seeds work byte 0xB with the low six bits of rand(), sets the countdown byte 9 to 0x30 and advances work byte 1 with a byte-width read-modify-write, which selects entry 1 (0x801EECE4). The 0x18-byte frame only keeps $ra across the two calls; it reads or writes no other state and returns nothing.'
   - - 228
-    - asm
-    - func_801EECE4
+    - c
+    - decayWorkHalfword2EThenDrawByWorkByteBAndRaiseFlag4WhenByte9ExpiresBmagicMagic08000_801EECE4
+    - '@source: src/bof3/bmagic/decayWorkHalfword2EThenDrawByWorkByteBAndRaiseFlag4WhenByte9ExpiresBmagicMagic08000_801EECE4.c'
+    - '@behavior: Work byte 1 state 1 of the MAGIC080 overlay: entry 1 of the two-entry handler table func_801EEC04 builds in its own frame and dispatches on the scratchpad work object state byte 1, which state 0 at 0x801EEC5C advances into. It calls the shared update pass func_800AF764, re-reads the work-object pointer cell 0x1F800044 and subtracts 0x24 from the unsigned work halfword 0x2E, that store filling the branch delay slot. It then calls the draw variant func_801EEF5C when the work object byte 0x0B is non-zero and func_801EED94 when it is zero. After that group it re-reads the cell and decrements work byte 0x09 at byte width, the stored value truncated to eight bits supplying the test, so the countdown reaching zero loads the shared battle byte at 0x80146384 unsigned and passes it to func_800A9820, raises bit 0x4 of the shared battle halfword at 0x801462E8 and invokes func_801E5988. The 0x18-byte frame only keeps $ra across the calls; it returns nothing.'
   - - 404
     - asm
     - func_801EED94

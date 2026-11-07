@@ -60,8 +60,9 @@ segments:
     - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670
     - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670.c'
   - - 2724
-    - asm
-    - func_801EF6A4
+    - c
+    - advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4
+    - '@source: src/bof3/bmagic/advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4.c'
   - - 2972
     - asm
     - func_801EF79C

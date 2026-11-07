@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEEAC = 0x801EEEAC;
@@ -8,6 +9,6 @@ func_801EF188 = 0x801EF188;
 func_801EF3C4 = 0x801EF3C4;
 func_801EF4B8 = 0x801EF4B8;
 decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670 = 0x801EF670;
-func_801EF6A4 = 0x801EF6A4;
+advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4 = 0x801EF6A4;
 func_801EF79C = 0x801EF79C;
 dispatchHandlerTable801EFBB0 = 0x801EFBB0;

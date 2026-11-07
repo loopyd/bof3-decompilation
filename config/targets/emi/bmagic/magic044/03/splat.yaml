@@ -40,11 +40,10 @@ segments:
     - dispatchStateByte1Table0a14BmagicMagic04403_801EEE00
     - '@source: src/bof3/bmagic/magic04403DispatchTables.c'
   - - 580
-    - textbin
-    - T_801EEE44
-  - - 588
-    - asm
-    - func_801EEE4C
+    - c
+    - dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 before it creates its frame, takes the work-object byte at offset 0x2 scaled by four and calls that entry of the three-entry handler table at 0x801F0A1C with no arguments; then re-reads the pointer cell and, when the work-object byte at offset 0x0 and the byte at offset 0x2 are both non-zero, calls func_801EF4E0 while the work-object byte at offset 0x4 is non-zero and func_801EFA4C while it is zero. Entered as entry 0 of the six-word handler run at 0x801F0A14 with no arguments; takes no arguments and returns nothing.'
   - - 764
     - asm
     - func_801EEEFC
