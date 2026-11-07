@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D30
   - - 448
-    - asm
-    - func_801F2DC0
+    - c
+    - claimFrontEndRecordAndSetHandlerBaWorld03Area12114_801F2DC0
+    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandlerBaWorld03Area12114_801F2DC0.c'
+    - '@behavior: asks the shared free-record selector func_8019601C for an index, masks it to a byte and, unless that byte is 0xFF, marks the selected 0x74-byte front-end record at 0x80143FC8 occupied (byte +0 = 1) and stores handler selector 0xBA in record byte +5. Takes no arguments and returns nothing.'
   - - 540
     - asm
     - func_801F2E1C

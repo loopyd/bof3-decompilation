@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801F39E0
   - - 3748
-    - asm
-    - func_801F3AA4
+    - c
+    - drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4
+    - '@source: src/bof3/world/drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4.c'
+    - '@behavior: emits two batches of eight textured tiles through the tile emitter at 0x801F3AE4, at position 0x400 with texture page 0x848000 and index 0x10, then at position 0xC00 with texture page 0x888000 and index 0x11; takes no arguments and returns nothing.'
   - - 3812
     - asm
     - func_801F3AE4

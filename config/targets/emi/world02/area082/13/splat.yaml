@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801F3398
   - - 2056
-    - asm
-    - func_801F3408
+    - c
+    - spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29World02Area08213_801F3408
+    - '@source: src/bof3/world/spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29World02Area08213_801F3408.c'
+    - '@behavior: overlay step handler, entry index 9 of the twelve-pointer step table at 0x801F5734; on the odd frames of the shared per-frame counter 0x80143E6C it spawns one work-table entry through the overlay routine at 0x801F393C, then ticks the work table through func_801F3AAC and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record +0x01 step byte by one; takes no arguments and returns nothing.'
   - - 2160
     - c
     - setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470

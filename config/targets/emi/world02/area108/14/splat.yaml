@@ -193,8 +193,10 @@ segments:
     - asm
     - func_801F4C28
   - - 8544
-    - asm
-    - func_801F4D60
+    - c
+    - publishFrontEndRecordIndexToWorkByteBAndDecrementRecordHalfword0aBy2WhenTableFullWorld02Area10814_801F4D60
+    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBAndDecrementRecordHalfword0aBy2WhenTableFullWorld02Area10814_801F4D60.c'
+    - '@behavior: stores the front-end record index returned by the shared allocator 0x8019601C into work byte +0x0B of the record published at scratchpad pointer cell 0x1F800044 and, only when that byte re-reads as 0xFF (the allocator table-full result), subtracts 2 from the halfword at +0x0A of the record published through the global pointer cell 0x80148210.'
   - - 8648
     - asm
     - func_801F4DC8

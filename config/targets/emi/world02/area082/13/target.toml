@@ -34,5 +34,6 @@ support_sources = [
     "src/bof3/world/setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88.c",
     "src/bof3/world/fillScreenRampDownColorDimPaletteSetChannelBiasIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4DC8.c",
     "src/bof3/support/area082_13_psyq.c",
+    "src/bof3/world/spawnWorkEntryOnOddFrameTickWorkTableIncrementWorkByte1AtScenarioProgress29World02Area08213_801F3408.c",
 ]
 psyq_source = "src/bof3/support/area082_13_psyq.c"

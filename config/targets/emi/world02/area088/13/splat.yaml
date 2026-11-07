@@ -119,8 +119,9 @@ segments:
     - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08813_801F4070
     - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08813_801F4070.c'
   - - 5312
-    - asm
-    - func_801F40C0
+    - c
+    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08813_801F40C0
+    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08813_801F40C0.c'
   - - 5404
     - c
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08813_801F411C

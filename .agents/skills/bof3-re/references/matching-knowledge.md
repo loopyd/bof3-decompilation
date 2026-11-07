@@ -662,7 +662,11 @@ register across the run instead has a shared base or aggregate view the original
 lacked. Read the store's base register to pick the spelling. A store that
 re-materialises `$at` wants the bare symbol expression, while a store through the
 base the load already left in a saved register wants one pointer local for both
-accesses, even when the load sits in a guard test and the store in its arm. Inside
+accesses, even when the load sits in a guard test and the store in its arm. A byte
+that is one field of a wider cell reaches that shared base by keeping the wider
+declaration and casting the one access (`*(u8*)&cell += 1`), which reproduced the
+original address computation, while a byte-scalar extern at the same address folded
+the load into `$at` and re-materialised `$at` for the store. Inside
 one block, stores keep source statement order, and a constant re-materialised into
 one register between stores shows where its statement starts.
 A run of stores to one pointer cell that parks a different record and restores the

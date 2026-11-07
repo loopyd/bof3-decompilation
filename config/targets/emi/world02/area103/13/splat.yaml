@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/world/rampWorkXyPositionDrawOnFifthTickAndAdvanceWorkByte2At1cWorld02Area10313_801F3EB4.c'
     - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x800 and retreats its x word at 0x34 by 0x800 while the signed halfword at 0x3A stays below 0x1C and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer func_801F482C.'
   - - 4960
-    - asm
-    - func_801F3F60
+    - c
+    - advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Area10313_801F3F60
+    - '@source: src/bof3/world/advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Area10313_801F3F60.c'
+    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and watches the signed halfword at 0x36, the upper half of the fixed-point x word at 0x34: while that halfword stays below 0x4F it advances work byte 0x02 by one on every frame whose shared counter 0x80143E6C satisfies ((counter / 5) & 3) == 3, and once the halfword has reached 0x4F it retreats the x word at 0x34 by 0x1000 per frame; it then drives the block drawer func_801F4E70 with (counter / 5) & 3 when the counter is a multiple of five and ends with func_801F49A0(0), func_801F49A0(1) and the four-block drawer func_801F482C.'
   - - 5168
     - c
     - drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030

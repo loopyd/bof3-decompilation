@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/world/incrementPadMatchCountAndArmState10World01Area06813_801F3538.c'
     - '@behavior: While the shared pad halfword 0x80145AA8 reads exactly 0x40, advances this overlay''s 16-bit counter 0x801F4E04 by one and arms state byte +1 of the scratchpad work record at 0x1F800044 with 0x10, the index the local dispatchers at 0x801F2C04 and 0x801F2DA4 select with. Leaf, no frame.'
   - - 2424
-    - asm
-    - func_801F3578
+    - c
+    - countdownStepArmState14Or11ByPad40ElseAdvanceState10Or16World01Area06813_801F3578
+    - '@source: src/bof3/world/countdownStepArmState14Or11ByPad40ElseAdvanceState10Or16World01Area06813_801F3578.c'
+    - '@behavior: Counts gate byte 0x801F4E00 down by one, then selects the state byte +1 of the scratchpad work record at 0x1F800044: 0x14 when the countdown expires; 0x11 after advancing counter 0x801F4E04 by one, clearing 0x801F4E0C and advancing shared byte 0x80146865 when pad halfword 0x80145AA8 reads exactly 0x40; otherwise after advancing 0x801F4E0C by one, 0x10 while that byte is below 0x1C and 0x16 above it. Leaf, no frame.'
   - - 2648
     - asm
     - func_801F3658

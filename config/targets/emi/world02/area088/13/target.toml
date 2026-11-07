@@ -23,6 +23,7 @@ support_sources = [
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234.c",
     "src/bof3/world/average12BitValuesWorld02Area08813_801F35B0.c",
     "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08813_801F411C.c",
+    "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08813_801F40C0.c",
     "src/bof3/support/area088_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area088_13_psyq.c"

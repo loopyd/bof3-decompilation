@@ -100,8 +100,9 @@ segments:
     - dispatchStateByte2Table460cWorldWorld03Area11913_801F3AFC
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 3904
-    - asm
-    - func_801F3B40
+    - c
+    - armCountdownByte9To1ClearWorkByteBAndAdvanceWorkByte2WhenSharedStateSetWorld03Area11913_801F3B40
+    - '@source: src/bof3/world/armCountdownByte9To1ClearWorkByteBAndAdvanceWorkByte2WhenSharedStateSetWorld03Area11913_801F3B40.c'
   - - 3992
     - asm
     - func_801F3B98

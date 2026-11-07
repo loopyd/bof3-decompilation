@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/world/drawWorkStep7AndAdvanceWorkByte2At20World02Area10313_801F4FD4.c",
     "src/bof3/world/drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C.c",
     "src/bof3/world/drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030.c",
+    "src/bof3/world/advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Area10313_801F3F60.c",
     "src/bof3/support/area103_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area103_13_psyq.c"

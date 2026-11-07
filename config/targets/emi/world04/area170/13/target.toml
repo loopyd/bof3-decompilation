@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/raiseWorldFlags1010World04Area17013_801F4A7C.c",
     "src/bof3/world/clearWorldFlags1010World04Area17013_801F4A9C.c",
     "src/bof3/world/setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C.c",
+    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",
