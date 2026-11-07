@@ -14,6 +14,7 @@ sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c",
     "src/bof3/scenario/claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8.c",
     "src/bof3/scenario/invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54.c",
+    "src/bof3/scenario/advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

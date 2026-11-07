@@ -187,8 +187,10 @@ segments:
     - asm
     - func_801F3EC8
   - - 4936
-    - asm
-    - func_801F3F48
+    - c
+    - resetWorkRecordAndPublishRecordIndexThenState4Substate3World01Area06813_801F3F48
+    - '@source: src/bof3/world/resetWorkRecordAndPublishRecordIndexThenState4Substate3World01Area06813_801F3F48.c'
+    - '@behavior: Overlay entry handler: runs the shared front-end startup helper at 0x8015C088, resets byte +1, byte 0x77 and the halfword at 0x7E of the work record published through the pointer cell 0x80148208, publishes into 0x80146867 the position of that record in the 0x98-byte record array at 0x80146888, then writes 4 into the shared state byte 0x801448EB and 3 into 0x801448ED. Returns 0.'
   - - 5092
     - textbin
     - D_801F3FE4

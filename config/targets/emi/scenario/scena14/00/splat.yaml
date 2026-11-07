@@ -86,8 +86,10 @@ segments:
     - asm
     - func_801F9834
   - - 15620
-    - asm
-    - func_801FA904
+    - c
+    - startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904
+    - '@source: src/bof3/scenario/startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904.c'
+    - '@behavior: Overlay party-scan action starter reached through the two in-image jal sites 0x801F9938 and 0x801F9A30 inside func_801F9834, both taken only while the gate word D_80143C40 is clear and the object row 0x80143FC8 has bit 0 clear; it walks the four candidate party ids of its first argument''s byte row in order and, for each, scans the D_80146254 live 0x140-byte-stride local work records for one whose party byte (+0x79, at D_80145F09) equals that candidate. On the first match it starts that candidate''s front-end action - the paired halfword row entry - through func_80150224, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns the action id; when no live record carries any of the four candidates it returns 0xFFFF. The caller passes the rows 0x801FC450 ({8, 2, 5, 4}) with 0x801FC458 ({2, 3, 4, 5}) at the first jal site and 0x801FC454 ({4, 5, 2, 8}) with 0x801FC460 ({6, 7, 8, 9}) at the second. Its 0x18-byte frame keeps $ra and $s0: $s0 holds the action-row pointer across the func_80150224 call for the returned reload, the candidate-row pointer stays in $t0 and dies before that call, and the record count is re-read for the inner loop''s bottom test because the body calls out. No image word holds this address; it is reached only through those two jal sites.'
   - - 15816
     - asm
     - func_801FA9C8

@@ -60,8 +60,10 @@ segments:
     - dispatchStateByte2Table4d80World01Area04813_801F37B0
     - '@source: src/bof3/world/area04813DispatchTables.c'
   - - 3060
-    - asm
-    - func_801F37F4
+    - c
+    - drawTwoTexturedTileBatchesThenAdvanceState2WhenSharedStateSetWorld01Area04813_801F37F4
+    - '@source: src/bof3/world/drawTwoTexturedTileBatchesThenAdvanceState2WhenSharedStateSetWorld01Area04813_801F37F4.c'
+    - '@behavior: entry 0 of the five-handler work-byte-+0x02 run based at 0x801F4D80; emits two batches of eight textured tiles through the tile emitter at 0x801F3AE4 (position 0 with texture page 0x858000 and index 0, then position 0x800 with texture page 0x878000 and index 1) and, while the shared overlay state byte at 0x8014933B is nonzero, advances the scratch work record''s dispatch state byte +0x02 and clears its byte +0x09.'
   - - 3188
     - asm
     - func_801F3874

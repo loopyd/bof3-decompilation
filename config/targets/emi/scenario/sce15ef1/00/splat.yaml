@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801D0C48
   - - 192
-    - asm
-    - func_801D0CC0
+    - c
+    - advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0
+    - '@source: src/bof3/scenario/advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0.c'
+    - '@behavior: Entry 1 of the overlay step-handler run at 0x801D3918: adds 0x20 to the unsigned work halfword at +0x2E and stores it back, hands the origin block at +0x64, that value as a signed halfword and the flag mask 6 to the overlay helper 0x801D147C, ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x40 and advances work byte +0x1 by one.'
   - - 340
     - c
     - invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54

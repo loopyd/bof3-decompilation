@@ -79,8 +79,10 @@ segments:
     - c
     - invokeHelperScenarioScena0400_801F7A64
   - - 3716
-    - asm
-    - func_801F7A84
+    - c
+    - dispatchWorkObjectHandlerScenarioScena0400_801F7A84
+    - '@source: src/bof3/scenario/dispatchWorkObjectHandlerScenarioScena0400_801F7A84.c'
+    - '@behavior: Work-object dispatch on the work byte its handlers advance: loads the work-object pointer from the scratchpad cell 0x1F800044 before it creates its frame, takes that object''s unsigned byte at offset 1, scales it by four and invokes that slot of the overlay-local code-pointer run based at 0x801FA1E4 with no arguments and no result consumed; that run holds the eight work-object handlers 0x801F7AC8 through 0x801FA010, and the word after them at 0x801FA204 is 0x801F8160, which begins the separate progress run.'
   - - 3784
     - c
     - clearWorkTableByte25AndAdvanceWorkByte1ScenarioScena0400_801F7AC8

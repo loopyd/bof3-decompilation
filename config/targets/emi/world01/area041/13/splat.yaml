@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801F3D78
   - - 4540
-    - asm
-    - func_801F3DBC
+    - c
+    - setStatusFFFFAndStateEntryProgress5WhenGateClearWorld01Area04113_801F3DBC
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld01Area04113_801F3DBC.c'
+    - '@behavior: stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 is zero, writes 0x0A, 5 and 0xFF into the shared state-entry bytes 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 4608
     - c
     - setHalfwordFF00AndTwoWorld01Area04113_801F3E00

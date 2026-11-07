@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801CF5D4
   - - 4920
-    - asm
-    - func_801CF738
+    - c
+    - testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF738
+    - '@source: src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF738.c'
+    - '@behavior: Tests one front-end record slot''s stored position against the shared main-executable work records: the slot scaled by 0x74 selects the row word x at 0x80143FFC, the row word y at 0x80144000 and the row halfword at 0x80144006 biased by 0x200 and taken as a signed 16-bit reference, and work records 1 through the count byte 0x80146254 minus one are each passed with that triple, the range 1 and their 0x140-byte record to the shared gate func_801BDD58, returning 1 at the first match and 0 otherwise'
   - - 5128
     - asm
     - func_801CF808
