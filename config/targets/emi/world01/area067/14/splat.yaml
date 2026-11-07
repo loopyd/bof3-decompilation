@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801F39D8
   - - 3740
-    - asm
-    - func_801F3A9C
+    - c
+    - findFreeWorkRecordByCountdownAt800E4800World01Area06714_801F3A9C
+    - '@source: src/bof3/world/findFreeWorkRecordByCountdownAt800E4800World01Area06714_801F3A9C.c'
+    - '@behavior: returns the first 0xE-stride record at 0x800E4800 whose +0xC countdown halfword reads zero, or zero when all 0x80 records are busy'
   - - 3800
     - asm
     - func_801F3AD8

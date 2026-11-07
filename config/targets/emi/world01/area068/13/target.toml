@@ -17,6 +17,7 @@ sources = [
     "src/bof3/world/countdownStepArmState14Or11ByPad40ElseAdvanceState10Or16World01Area06813_801F3578.c",
     "src/bof3/world/resetWorkRecordAndPublishRecordIndexThenState4Substate3World01Area06813_801F3F48.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area06813_801F3A18.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area06813_801F3A98.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

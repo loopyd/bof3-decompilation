@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801F3414
   - - 2136
-    - asm
-    - func_801F3458
+    - c
+    - setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458
+    - '@source: src/bof3/world/setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458.c'
+    - '@behavior: Runs only while the shared scenario progress byte at 0x80146864 is not 1. When the shared mode byte at 0x80143BB0 reads 3 it arms the scratch work record published through the pointer cell at 0x1F800044 by or-ing flag bit 0x40 into record byte 0 through a value register and then writing 1 into record byte 4 through a fresh load of the same cell, and whatever the mode byte reads it subtracts 2 from the halfword at 0x0A of the record published through the global pointer cell 0x80148210. Progress 1 returns without touching either record. Takes no arguments and returns nothing.'
   - - 2256
     - asm
     - func_801F34D0

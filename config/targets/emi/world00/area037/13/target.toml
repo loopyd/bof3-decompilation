@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508.c",
+    "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F354C.c",
 ]
 support_sources = [
     "src/bof3/support/area037_13_psyq.c",

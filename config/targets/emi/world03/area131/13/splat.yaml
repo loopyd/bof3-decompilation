@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F2E68
   - - 656
-    - asm
-    - func_801F2E90
+    - c
+    - advanceCounter2By2World03Area13113_801F2E90
+    - '@source: src/bof3/world/advanceCounter2By2World03Area13113_801F2E90.c'
+    - '@behavior: Reads the shared halfword counter2 at 0x8014932A, stores 2 into the area status byte at 0x80149333, then writes counter2 back advanced by 0x02.'
   - - 696
     - c
     - copyModeByteWorld03Area13113_801F2EB8
