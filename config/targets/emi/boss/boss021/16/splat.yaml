@@ -54,8 +54,8 @@ segments:
     - asm
     - func_800C19E4
   - - 552
-    - asm
-    - func_800C1A28
+    - c
+    - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1A28
   - - 640
     - asm
     - func_800C1A80

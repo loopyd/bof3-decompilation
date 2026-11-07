@@ -179,8 +179,9 @@ segments:
     - asm
     - func_801F3D40
   - - 4544
-    - asm
-    - func_801F3DC0
+    - c
+    - publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0
+    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0.c'
   - - 4672
     - c
     - noopHandlerWorld01Area06813_801F3E40

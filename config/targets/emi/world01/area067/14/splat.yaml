@@ -34,8 +34,10 @@ segments:
     - asm
     - func_801F2C48
   - - 416
-    - asm
-    - func_801F2DA0
+    - c
+    - stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0
+    - '@source: src/bof3/world/stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0.c'
+    - '@behavior: steps the work-record halfword at +0x10 by -2 while the countdown byte at +9 reads below 0x1A and by +2 otherwise, grows the halfword at +0x12 by 0x40 and redraws the quad at +0xC, then decrements the byte at +9 and advances the state byte at +1 when it reaches zero'
   - - 584
     - asm
     - func_801F2E48

@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801F30C0
   - - 1324
-    - asm
-    - func_801F312C
+    - c
+    - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C
+    - '@source: src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C.c'
+    - '@behavior: Overlay work-record step handler and entry 1 of the byte-1 handler table based at 0x801F3E00: advances the record signed word at +0x1C by 0x01000000 and clamps it to the word at +0x14 plus 0x08000000, sweeps the halfword at +0x20 down by 0x200 in the delay slot of the no-argument helper 0x801F3268, then decrements the countdown byte at +0x09 and, when it reads zero, re-arms that byte with 0x10 and advances the state byte at +0x01.'
   - - 1516
     - asm
     - func_801F31EC

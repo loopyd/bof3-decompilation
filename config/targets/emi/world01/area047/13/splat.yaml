@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F34A0
   - - 3316
-    - asm
-    - func_801F38F4
+    - c
+    - seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4
+    - '@source: src/bof3/world/seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c'
+    - '@behavior: Seeds the overlay view through the scratchpad work record at 0x1F800044: stores 0x120000 in the record coordinate word at 0x34 and 0x240000 in the coordinate word at 0x38 and mirrors the same two words into the shared channel pair at 0x80149308 and 0x8014930C, runs the resident helper at 0x80153DE8, then stores 0x1220 in the record halfword at 0x3E and passes that same value to the resident helper at 0x80154FD8 before seeding the shared signed world coordinates at 0x801492D8 with -0x48A and at 0x801492DC with 0xF8. The resident call splits the two groups, so the scratchpad cell is re-read for the second group. Takes no arguments and returns nothing.'
   - - 3436
     - asm
     - func_801F396C

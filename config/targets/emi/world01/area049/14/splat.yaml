@@ -110,8 +110,9 @@ segments:
     - asm
     - func_801F37EC
   - - 3204
-    - asm
-    - func_801F3884
+    - c
+    - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884
+    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884.c'
   - - 3336
     - asm
     - func_801F3908

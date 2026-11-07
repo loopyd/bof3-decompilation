@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60.c",
     "src/bof3/world/setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458.c",
+    "src/bof3/world/clearWorkFlag40RequestResourceAndClearWorkByte4UnlessMode3ThenDecrementHalfword0aWorld03Area14213_801F34D0.c",
     "src/bof3/support/area142_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area142_13_psyq.c"
