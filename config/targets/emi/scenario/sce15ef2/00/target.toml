@@ -16,5 +16,6 @@ support_sources = [
     "src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef200_801D10A4.c",
     "src/bof3/scenario/clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0.c",
+    "src/bof3/scenario/add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0.c",
 ]
 psyq_source = "src/bof3/support/sce15ef2_00_psyq.c"

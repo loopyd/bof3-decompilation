@@ -79,8 +79,10 @@ segments:
     - '@source: src/bof3/world/clearWorkTableAt800E4800World03Area12513_801F3384.c'
     - '@behavior: Overlay work-table clear: zeroes the lead byte of each of the first 0x10 entries of the 0x28-byte-stride record table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop, takes no arguments, returns nothing, reads no state and calls nothing. Its only caller in this payload is func_801F2C48, the first word of the handler run selected by dispatchStateByte1Table36ccWorld03Area12513_801F2C04, which calls it and afterwards advances byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044.'
   - - 1968
-    - asm
-    - func_801F33B0
+    - c
+    - rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0
+    - '@source: src/bof3/world/rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0.c'
+    - '@behavior: Per-frame sweep of the 0x10 records of the 0x28-byte-stride work table at 0x800E4800: for each record whose lead byte at offset 0 is non-zero it advances the two-state intensity ramp, raising the byte at +0x03 by 4 per frame with the counter byte at +0x02 while the state byte at +0x01 is 0 and lowering it by 4 once that counter reaches 0x10, until the counter reaches 0x20 and the lead byte is cleared; then it adds the velocity words at +0x18 and +0x1C to the position words at +0x08 and +0x0C, advances the angle halfword at +0x04 by 8, stores func_8015477C of the two position words shifted left 16 into the word at +0x10, and calls the record emitter of this overlay func_801F2FC4 with the record. It returns 1 once at least one record was active and 0 otherwise, and its 0x58-byte frame holds the scratch area func_801AFE18 fills plus the saved $ra/$s0-$s3 of the sweep.'
   - - 2308
     - asm
     - func_801F3504

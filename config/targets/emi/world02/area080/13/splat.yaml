@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801F2E7C
   - - 848
-    - asm
-    - func_801F2F50
+    - c
+    - seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50
+    - '@source: src/bof3/world/seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50.c'
+    - '@behavior: overlay step handler, entry 4 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; loads the record base published in D_801F44A0, copies the three shared saved words D_80146954, D_80146958 and D_8014695C into the words at +0x10, +0x14 and +0x18 of that record, calls the overlay record helpers at 0x801F30B0, 0x801F31A0 and 0x801F33DC with the reloaded record base and then the eight-record table step loop at 0x801F3870 with no arguments, decrements the countdown byte at +0x09 of the scratch work record, and re-arms that byte with 0x10 and increments the state byte at +0x01 when the countdown reads zero; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the calls'
   - - 1048
     - asm
     - func_801F3018

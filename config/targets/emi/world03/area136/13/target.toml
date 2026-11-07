@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
     "src/bof3/world/selectCrossedFrontSideState2Or4World03Area13613_801F33BC.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area13613_801F2E50.c",
+    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13613_801F2F50.c",
     "src/bof3/support/area136_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area136_13_psyq.c"

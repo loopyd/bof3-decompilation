@@ -80,8 +80,9 @@ segments:
     - asm
     - func_801F3460
   - - 2548
-    - asm
-    - func_801F35F4
+    - c
+    - publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4
+    - '@source: src/bof3/world/publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4.c'
   - - 2920
     - asm
     - func_801F3768

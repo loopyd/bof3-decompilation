@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/world/clearWorkHalfwords2eAnd30ThenAdvanceStateByte1World03Area12513_801F2E58.c",
     "src/bof3/world/clearWorkTableAt800E4800World03Area12513_801F3384.c",
     "src/bof3/world/invokeHelperWorld03Area12513_801F362C.c",
+    "src/bof3/world/rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0.c",
     "src/bof3/world/area12513DispatchTables.c",
     "src/bof3/world/claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0.c",
     "src/bof3/world/stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C.c",

@@ -9,7 +9,8 @@
 extern u8* D_1F800044;
 
 void func_801F3268(s32 count);
-void func_801F33B0(void);
+s32 rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0(
+    void);
 
 /* The overlay spawn schedule indexed by the stage byte this entry keeps at
  * 0x801F3834: the first five bytes are how many ring records the stage spawns
@@ -94,5 +95,5 @@ void stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E
   } else {
     work[1] += 1;
   }
-  func_801F33B0();
+  rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0();
 }

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801D0C70
   - - 160
-    - asm
-    - func_801D0CA0
+    - c
+    - add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0
+    - '@source: src/bof3/scenario/add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0.c'
+    - '@behavior: Entry 1 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it advances that object word at +0xC by 0x10 and ticks its countdown byte at +0x9 down by one through the one loaded pointer, the word store filling the guard branch delay slot; when the decremented byte reaches zero it re-arms that byte with 0x20 and advances the same work byte at +0x1 by one, so the next frame of that run dispatches entry 2. It takes no arguments, returns nothing and keeps no frame.'
   - - 256
     - c
     - tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00

@@ -73,8 +73,10 @@ segments:
     - asm
     - func_801F36B4
   - - 2888
-    - asm
-    - func_801F3748
+    - c
+    - stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748
+    - '@source: src/bof3/world/stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748.c'
+    - '@behavior: Byte-2 state handler that the first byte-2 dispatch table of this overlay (0x801F516C, indexed by the dispatcher at 0x801F3014) lists at entry 5. Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its cursor byte 0x0B as the flag number and probes that flag in the bank at 0x80144ED0 through the shared flag tester func_8015B5D4; when the flag is clear only the draw call runs. When the flag is set it stamps 0xA1 into the map byte of the record column at offset 0x36 for the row at offset 0x3A, addressed through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, then stamps the same 0xA1 into one neighbouring cell chosen by the record route byte at offset 0x08: the row below when that route byte is zero, otherwise the cell at the column advanced by the route byte. It then stores 1 into the record state byte at offset 0x02 so the next dispatch takes entry 1 of the same table. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1.'
   - - 3100
     - asm
     - func_801F381C
