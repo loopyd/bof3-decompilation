@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC24
   - - 144
-    - asm
-    - func_801EEC90
+    - c
+    - submitRecordStoreEffectByteBClearWorkByte9SetByteATo2ThenAdvanceWorkByte1BmagicMagic11700_801EEC90
+    - '@source: src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9SetByteATo2ThenAdvanceWorkByte1BmagicMagic11700_801EEC90.c'
+    - '@behavior: Loads the battle record pointer published at 0x8014638C once per call through a cell-address local, submits that record through func_80196718, then submits its positional effect through func_8019651C with the 0/0/0 offsets and mode 1 and stores the low return byte in the scratchpad work object''s byte 0xB at 0x1F800044. It then clears the work object''s countdown byte 9, sets its mode byte 0xA to 2 and advances its state byte 1, re-reading the work-object pointer cell for all four stores.'
   - - 300
     - c
     - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C

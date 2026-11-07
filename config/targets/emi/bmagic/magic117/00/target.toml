@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/magic117_00_psyq.c",
     "src/bof3/bmagic/incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C.c",
+    "src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9SetByteATo2ThenAdvanceWorkByte1BmagicMagic11700_801EEC90.c",
 ]
 psyq_source = "src/bof3/support/magic117_00_psyq.c"

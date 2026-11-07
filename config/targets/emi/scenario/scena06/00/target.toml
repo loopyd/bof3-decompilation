@@ -46,5 +46,6 @@ support_sources = [
     "src/bof3/scenario/setSubstate0FClearProgressAndSharedStateBytesAndRequestPrimaryState2AndSetFlagBit4ScenarioScena0600_801FCF30.c",
     "src/bof3/scenario/clearProgressAndSharedByteThenWaitFlag23Substate0AOr14AndRequestPrimaryState10ScenarioScena0600_801FD234.c",
     "src/bof3/scenario/clearProgressAndSharedByteThenWaitFlag22SubstateZeroOr14AndRequestPrimaryState10ScenarioScena0600_801FD1C8.c",
+    "src/bof3/scenario/waitFlag5ThenSetSubstate0AClearProgressAndSharedStateBytesAndRequestPrimaryState2ScenarioScena0600_801FCEC0.c",
 ]
 psyq_source = "src/bof3/support/scena06_00_psyq.c"

@@ -206,14 +206,10 @@ segments:
     - asm
     - func_801F14D0
   - - 12348
-    - asm
-    - func_801F1C3C
-  - - 12412
-    - textbin
-    - T_801F1C7C
-  - - 12476
-    - asm
-    - func_801F1CBC
+    - c
+    - dispatchWorkByte2HandlerThenDrawQuadPairAndPopWhenWorkBytes0And2SetBmagicMagic15103_801F1C3C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawQuadPairAndPopWhenWorkBytes0And2SetBmagicMagic15103_801F1C3C.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work record published at the pointer cell 0x1F800044: the record byte at offset 0x2, scaled by four, selects one entry of the three-entry handler table at 0x801F250C (0x801F1CCC, 0x801F1D28, 0x801F1D60) and that entry is invoked with no arguments. After the handler returns the pointer cell is read a second time; only when the record byte at offset 0x0 and the byte at offset 0x2 are both non-zero does it call func_801F1DC0, which pushes the GTE matrix stack and installs the record''s transform, then the two quad drawers func_801F1E70 and func_801F2188, then PopMatrix, restoring the stack it pushed. Frame 0x18 with $ra only, because of the calls; it takes no arguments, returns nothing, stores nothing directly and reads no other state. One 0x90-byte range: the rows that split it at 0x801F1C7C (a consumer-less textbin row over live code) and at 0x801F1CBC (this frame''s own epilogue) are merged here.'
   - - 12492
     - c
     - copyWorkTripletSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic15103_801F1CCC

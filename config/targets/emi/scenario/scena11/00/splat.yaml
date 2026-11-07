@@ -34,8 +34,10 @@ segments:
     - dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4.c'
   - - 1284
-    - asm
-    - func_801F7104
+    - c
+    - seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104
+    - '@source: src/bof3/scenario/seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104.c'
+    - '@behavior: Reseeds the three 16.16 panel accumulators at 0x801481E8/0x801481EC/0x801481F0 from the signed halfword panel coordinates at 0x801492D8/0x801492DA/0x801492DC shifted left sixteen, zeroes the paired per-frame deltas at 0x801481F8/0x801481FC/0x80148200, copies work-record byte 9 read through the scratchpad pointer cell 0x1F800044 into the shared mode byte 0x80149333, and stores 1 in that work-record byte at offset 1.'
   - - 1400
     - asm
     - func_801F7178

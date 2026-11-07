@@ -1,6 +1,6 @@
 D_80146865 = 0x80146865;
 dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4 = 0x801F70B4;
-func_801F7104 = 0x801F7104;
+seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104 = 0x801F7104;
 func_801F7178 = 0x801F7178;
 func_801F7200 = 0x801F7200;
 dispatchProgressHandlerScenarioScena1100_801F7288 = 0x801F7288;
