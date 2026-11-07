@@ -85,8 +85,9 @@ renders the aligned rows. In-process sweep resolves comparison context/canonical
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
 Use `--subprocess` only for deliberate legacy reproduction. Give every variant the
 measured `@source`/`@behavior` metadata: one without them is refused before
-comparing and the sweeper prints `-`, so record that as a non-measurement and fix
-the variant rather than reading it as a neutral result.
+comparing and the sweeper prints `-`, while a plain `asm-diff` on that variant
+prints no diff line at all, so record that as a non-measurement and fix the
+variant rather than reading it as a neutral result.
 
 Before each sweep, state the semantic precondition and predicted instruction
 change. Compare the full result, not score alone. Restore neutral/regressive probes.

@@ -43,6 +43,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Strided row stores whose scale the original re-reads from a published byte before the later rows | Keep the computed index in a local for the uses before that reload, and address each later row through the published byte (`D_row[(u32)*scratch * stride] = ...`). Read both ends off the original: the store that consumes the register without reloading it, and the `lbu` that precedes the first row which does reload |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes. The same arm pair selected by an already-loaded byte instead of a call result needs no value local: read the byte into a local, then write one conditional expression straight into the cell (`cell = (gate != 0) ? 0x14 : 0xA;`), which matched on the first gate because the load's value and the selected constant keep their own registers. That local's own width is not part of the shape: a compare-and-store local carrying no arithmetic emitted the same `lbu` as `u8` and as `s32` across two exact bodies of the shape, so take the sibling's width and spend no variant on it |
+| Set-once flag assigned a literal in several arms and returned as the result; body short of the original with the first difference inside the dispatch | Declare the flag and the return at the width the original stores it (`u8` for a byte store). As `s32` the pair measured four bytes short, because a wide value reuses a constant the dispatch already holds and drops the flag's own `addiu` and store; the byte pair restored both at the original size. That width insensitivity belongs to a compared-and-stored local, not to a returned literal |
 | Arm tests a loaded value and passes it as a call argument; the build reloads the cell for the argument | Give that load its own local, test the local and pass the local. Read the arm's argument register: when it is the register the `sltiu`/compare tested, one load feeds both uses, so the same cell written in the argument list is a second load |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
@@ -488,7 +489,13 @@ adjacent fields of one record are updated in a row.
    let GCC hoist all the loads above the whole add chain; the all-in-place form
    matched on the next probe. Once every update is in place, the remaining store
    positions are free: interleaving the countdown store between two updates also
-   matched. Locals win instead when the original groups its own loads above its
+   matched, but that freedom sits between adjacent in-place updates. Where the
+   block instead copies a descriptor, advances a field, decrements a counter and
+   then decrements-and-tests another, the plain decrement keeps the place the
+   original's store sequence gives it, ahead of that test: moving it after the
+   test dropped nine instructions at the original size with the first difference
+   inside the block, and moving the test earlier cost more.
+   Locals win instead when the original groups its own loads above its
    adds and its last store fills the delay slot of a branch on the other value:
    bind both new values, store the one that branch tests before that test, and
    leave the last store as its own statement after the test so it alone can fill
