@@ -70,8 +70,9 @@ segments:
     - asm
     - func_801EF6EC
   - - 3040
-    - asm
-    - func_801EF7E0
+    - c
+    - subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0
+    - '@source: src/bof3/bmagic/subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0.c'
   - - 3252
     - c
     - addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4

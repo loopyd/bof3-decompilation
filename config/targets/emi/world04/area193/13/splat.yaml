@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2DC8
   - - 568
-    - asm
-    - func_801F2E38
+    - c
+    - clearWorkAnimBit0ThenRunStartupAndIncrementWorkHalfword7EIfPartyByte7World04Area19313_801F2E38
+    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndIncrementWorkHalfword7EIfPartyByte7World04Area19313_801F2E38.c'
+    - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then, when the party byte of local work record 0 at 0x80145F09 holds 7, runs the shared front-end startup helper 0x8015C088 and increments the unsigned halfword at offset 0x7E of the record re-read from 0x80146884 after that call. Takes no arguments and returns nothing.'
   - - 672
     - asm
     - func_801F2EA0

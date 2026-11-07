@@ -13,5 +13,6 @@ support_sources = [
     "src/emi/bmagic/magic017/03/magic01703DispatchTables.c",
     "src/bof3/support/magic017_03_psyq.c",
     "src/bof3/bmagic/addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4.c",
+    "src/bof3/bmagic/subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0.c",
 ]
 psyq_source = "src/bof3/support/magic017_03_psyq.c"

@@ -137,8 +137,10 @@ segments:
     - asm
     - func_800C2C78
   - - 5332
-    - asm
-    - func_800C2CD4
+    - c
+    - dispatchStateByte2LocalPairBossBoss05516_800C2CD4
+    - '@source: src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2CD4.c'
+    - '@behavior: Overlay step dispatch that seeds a local two-entry handler array with 0x800C2D2C and 0x800C2E04 and calls the entry selected by the unsigned state byte at +2 of the work record published at scratchpad cell 0x1F800044.'
   - - 5420
     - asm
     - func_800C2D2C
