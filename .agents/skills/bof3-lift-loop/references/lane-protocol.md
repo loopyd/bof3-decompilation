@@ -84,6 +84,9 @@ selector. Preserve unrelated dirty work. Worst-first targets
 
 Harness resolves registry refs. Freeze supplied membership; report data/no-op/blocked
 instead of substituting selectors. Parent chooses follow-up with `lift next TARGET`.
+A gate that answers `no authored source` while the target's config changed means the lane
+turned a row over without finishing it. Revert that target rather than keeping a
+promotion nobody proved, and leave the boundary for a lane that can close it.
 
 ## Routing and evidence
 
