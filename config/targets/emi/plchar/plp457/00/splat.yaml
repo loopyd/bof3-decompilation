@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801CE82C
   - - 1136
-    - asm
-    - func_801CE870
+    - c
+    - stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870
+    - '@source: src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870.c'
+    - '@behavior: Sixth entry of the front-end work handler run based at 0x801CF900, the word at 0x801CF918 and the only word of this payload that names the span, which no jal of the payload reaches. Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: byte 0x08 is the route index of the eight-entry route window, byte 0x2B the claim byte, byte 0x02 the step counter, halfword 0x3E the reference sample and words 0x34 and 0x38 the work position. While the route index is even the body steps it one back inside the window by storing ((index - 1) & 7), stores 1 into the claim byte and probes two candidate layer positions: it adds the layer offsets 0x80181BAC and 0x80181BB0 to the work position and asks the route-parameterised position routine func_80154F78 for that point with route 3, then does the same with 0x80181BBC and 0x80181BC0 and route 5. For each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, it asks the screen-space routine func_80154F28 for the same point and clears the claim byte when the signed reference halfword 0x3E is below that answer, so the two probes only ever clear it. It finishes by selecting the shared work sequence 0x42 plus the route index halved, truncated to a byte, through func_8014D8D4, and increments the step counter byte 0x02.'
   - - 1596
     - c
     - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp45700_801CEA3C

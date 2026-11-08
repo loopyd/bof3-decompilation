@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c",
     "src/bof3/support/sce15ef0_00_psyq.c",
     "src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c",
     "src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c",

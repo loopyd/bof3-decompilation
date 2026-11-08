@@ -35,5 +35,5 @@ dispatchWorkByte2Table05bcPlcharPlp67800_801D0314 = 0x801D0314;
 func_801D0358 = 0x801D0358;
 func_801D0470 = 0x801D0470;
 dispatchWorkHalfword2cTable05c4PlcharPlp67800_801D04DC = 0x801D04DC;
-func_801D0520 = 0x801D0520;
+dispatchWorkHalfword2cTable05d0PlcharPlp67800_801D0520 = 0x801D0520;
 T_801D0564 = 0x801D0564;

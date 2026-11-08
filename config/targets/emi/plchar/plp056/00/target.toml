@@ -10,6 +10,7 @@ load_address = 0x801CE400
 sources = [
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp05600_801CF76C.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp05600_801CFEB8.c",
+    "src/bof3/plchar/claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp05600_801CFF4C.c",
     "src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp05600_801CE404.c",
     "src/bof3/plchar/dispatchWorkByte2Table087cPlcharPlp05600_801CF338.c",
     "src/bof3/plchar/dispatchWorkByte2Table0888PlcharPlp05600_801CF728.c",

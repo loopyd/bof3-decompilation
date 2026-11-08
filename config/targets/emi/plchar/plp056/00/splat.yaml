@@ -111,8 +111,10 @@ segments:
     - c
     - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp05600_801CFEB8
   - - 6988
-    - asm
-    - func_801CFF4C
+    - c
+    - claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp05600_801CFF4C
+    - '@source: src/bof3/plchar/claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp05600_801CFF4C.c'
+    - '@behavior: Map cell claim of the front-end payload at 0x801CFF4C. The body narrows its two arguments to the signed cell pair and asks the shared map probe func_80166CB0 for the one-byte code of that cell. Codes 0xF0, 0xF1 and 0xF4 claim one front-end record with entry state 0 at the cell, roll rand() and claim a second record with entry state 4 when the low three bits read six or more, then queue cue 0x10B and answer one. Codes 0xF6 and 0xF7 claim the state 0 record and queue cue 0x10B as well, then roll rand() masked to four bits: a roll below 7 claims a state 3 record, copies the twelve-byte name func_80165D48 answers for entry 0 of stream 0x29 into 0x801490D8, clears 0x801490E4, takes the cue selector 2 when func_801650B4 reports that stream entry as set after queueing cue 0x106 and the selector 3 otherwise, dispatches it through func_80150284 and stores 2 into work byte 0xB; a roll of 7 to 11 writes nothing there; a roll of 12 or more claims a state 2 record, runs func_801C308C, hands the literal 1 and byte 0x79 of the record published at 0x80146250 to func_8016813C, dispatches cue 0xD9, marks 0x80143BB0 busy with 2 and stores 1 into work byte 0xB. All three rolls end by marking 0x80143BB0 busy with 2 and answering one, and any other cell code answers 0 without touching state. The 0x20-byte frame keeps the return address at 0x1C and three saved registers at 0x18, 0x14 and 0x10 across the seventeen call sites. The 0x20C bytes match the plp016 body at 0x801CFD24 and the other seven plchar copies word for word apart from the absolute words of the five claim calls and the three intra-body jumps.'
   - - 7512
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp05600_801D0158

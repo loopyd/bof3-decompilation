@@ -21,6 +21,7 @@ support_sources = [
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp45700_801CF1E0.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744.c",
+    "src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp45700_801CE870.c",
     "src/bof3/support/plp457_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp457_00_psyq.c"

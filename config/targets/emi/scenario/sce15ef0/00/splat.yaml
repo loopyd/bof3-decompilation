@@ -40,8 +40,9 @@ segments:
     - drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0
     - '@source: src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c'
   - - 604
-    - asm
-    - func_801D0E5C
+    - c
+    - brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C
+    - '@source: src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c'
   - - 836
     - c
     - dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44

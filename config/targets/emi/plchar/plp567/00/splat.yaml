@@ -51,8 +51,8 @@ segments:
     - c
     - dispatchStateByte2Table07a4PlcharPlp56700_801CEA00
   - - 1604
-    - asm
-    - func_801CEA44
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CEA44
   - - 1808
     - asm
     - func_801CEB10

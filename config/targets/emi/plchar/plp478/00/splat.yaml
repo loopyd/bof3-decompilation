@@ -81,8 +81,8 @@ segments:
     - c
     - dispatchWorkByte2Tablef708PlcharPlp47800_801CF488
   - - 4300
-    - asm
-    - func_801CF4CC
+    - c
+    - adjustEvenWorkByte8ClaimFrontEndRecordHandler1BSelectSequenceAndQueueCueThenAdvanceWorkByte2PlcharPlp47800_801CF4CC
   - - 4580
     - c
     - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4

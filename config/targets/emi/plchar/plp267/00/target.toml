@@ -18,6 +18,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTable09e8PlcharPlp26700_801D0900.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable09f4PlcharPlp26700_801D0944.c",
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp26700_801CEEB0.c",
+    "src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp26700_801CEFB0.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp26700_801CF32C.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp26700_801D06E8.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp26700_801CF62C.c",

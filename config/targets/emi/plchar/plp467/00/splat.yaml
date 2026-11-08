@@ -83,8 +83,10 @@ segments:
     - c
     - dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C
   - - 3456
-    - asm
-    - func_801CF180
+    - c
+    - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180
+    - '@source: src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180.c'
+    - '@behavior: Work byte 3 == 0 step of this overlay, held as the first word of the code-pointer run based at 0x801D03E0 that the byte-3 dispatcher 0x801CF13C indexes by work byte 3 scaled by four, so no jal in this payload names it. It calls the payload layer-position refresh at 0x801CF564, then reads work record unsigned byte 8 through the scratchpad pointer cell 0x1F800044 and selects the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, then writes 0xB into work byte 0xA and 1 into work byte 3 to advance the dispatch to entry 1 at 0x801D03E4. The subtraction leaves the division signed, so byte 8 == 0, 1 and 2 all select sequence 0x42 while byte 8 == 3 gives 0x43. It takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 3564
     - asm
     - func_801CF1EC
