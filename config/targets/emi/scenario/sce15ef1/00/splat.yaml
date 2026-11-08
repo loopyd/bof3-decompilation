@@ -136,8 +136,10 @@ segments:
     - '@source: src/bof3/scenario/clearStepAndHeadXYWordsArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2BA8.c'
     - '@behavior: Entry 6 of the overlay step-handler code-pointer run at 0x801D3954: arms the scratchpad work object countdown byte +0x9 with 0x14, clears the word pair +0x0C/+0x10 of its step triple and the word pair +0x18/+0x1C of its head point through the first pointer-cell load, advances work byte +0x1 through a second load of that cell, and dispatches sound cue 0x208 through the resident cue dispatcher 0x8015DF18.'
   - - 8192
-    - asm
-    - func_801D2C00
+    - c
+    - advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00
+    - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c'
+    - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay draw helper 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
   - - 8340
     - asm
     - func_801D2C94

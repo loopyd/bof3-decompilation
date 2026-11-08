@@ -123,8 +123,10 @@ segments:
     - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC.c'
     - '@behavior: Overlay step reached through the code-pointer word 0x801CFAEC at 0x801D07D8, entry 0 of this overlay handler run at 0x801D078C that the byte-2 dispatcher 0x801CFAA8 indexes. It reads the signed scenario byte 0x80146870 and, while that byte is 0xF, only clears byte 0x12B of the front-end record at 0x80146250. Every other scenario re-arms the work object read through the scratchpad pointer cell 0x1F800044: it compares the distance of route byte 0x08 from the candidate route indices 3 and 5, stores the step sign from 0x801B2D00 towards the nearer one in byte 0x0B and the chosen index in byte 0x03, then sets countdown byte 0x09 to 2 and increments step counter byte 0x02.'
   - - 6112
-    - asm
-    - func_801CFBE0
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp56700_801CFBE0
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp56700_801CFBE0.c'
+    - '@behavior: Overlay step reached through the code-pointer word 0x801CFBE0 at 0x801D07DC, entry 1 of this overlay handler run at 0x801D07D8 that the byte-2 dispatcher 0x801CFAA8 indexes, so the body runs when work byte 2 reads 1. It reads the work object published at the scratchpad pointer cell 0x1F800044: when route byte 0x08 already equals the chosen candidate byte 0x03 the walk has arrived, so it selects the route arrival sequence through the shared selector func_8014D8D4 with 0x40 for route 3 and 0x41 for route 5 and no sequence for any other route, then increments step counter byte 0x02. Every other arrival state stores countdown byte 0x09 one lower and, when that reads zero, restores it to 2, adds step sign byte 0x0B into route byte 0x08, masks that index with 7 and selects the sequence of the new route index.'
   - - 6364
     - c
     - dispatchStateByte2Table07e4PlcharPlp56700_801CFCDC

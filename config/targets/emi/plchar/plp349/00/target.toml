@@ -26,6 +26,7 @@ support_sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24.c",
     "src/bof3/plchar/probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp34900_801CE698.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp34900_801CF438.c",
+    "src/bof3/plchar/tickWorkCountdownByteAThenSeedFrontEndRowFoundBySlotSearchAndQueueCue10bElseMarkProjectedRecordClaimProjectedCellAndAdvanceWorkByte3PlcharPlp34900_801CE7B8.c",
     "src/bof3/support/plp349_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp349_00_psyq.c"

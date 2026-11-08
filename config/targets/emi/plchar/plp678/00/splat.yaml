@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801D0358
   - - 8304
-    - asm
-    - func_801D0470
+    - c
+    - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801D0470
+    - '@source: src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801D0470.c'
+    - '@behavior: Work byte 3 == 13 step of this overlay, published at the pointer word 0x801D05C0, word 23 of the thirty-word code-pointer run based at 0x801D0564 and word 13 of the arm the byte-3 dispatcher 0x801CEF20 indexes from 0x801D058C by work byte 3 scaled by four, so no jal in this payload names it. It indexes the shared 0x74-byte front-end record table at 0x80143FC8 with work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, clears the state byte 0x12B of the record published at 0x80146250 while the selected row byte 0 reads 0, then runs the shared no-argument update helper func_8014D978 on both paths.'
   - - 8412
     - c
     - dispatchWorkHalfword2cTable05c4PlcharPlp67800_801D04DC

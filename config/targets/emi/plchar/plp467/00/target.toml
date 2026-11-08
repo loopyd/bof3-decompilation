@@ -23,6 +23,7 @@ support_sources = [
     "src/bof3/plchar/getAndClearPlcharPlp46700_801CE610.c",
     "src/bof3/plchar/invokeHelperPlcharPlp46700_801CE82C.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180.c",
+    "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp46700_801CED50.c",
     "src/bof3/support/plp467_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp467_00_psyq.c"

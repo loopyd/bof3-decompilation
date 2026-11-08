@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CEA44.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp56700_801CF560.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp56700_801CF130.c",
+    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp56700_801CFBE0.c",
     "src/bof3/plchar/selectArrivalWorkSequenceAndAdvanceWorkByte2WhenRouteReachedElseStepRouteOnCountdownExpiryPlcharPlp56700_801CEB10.c",
     "src/bof3/support/plp567_00_psyq.c",
 ]

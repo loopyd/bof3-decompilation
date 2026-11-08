@@ -51,8 +51,10 @@ segments:
     - c
     - dispatchWorkByte2Tablef6f0PlcharPlp47800_801CE854
   - - 1176
-    - asm
-    - func_801CE898
+    - c
+    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp47800_801CE898
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp47800_801CE898.c'
+    - '@behavior: Work-step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 6 of the twenty-word code pointer run based at 0x801CF6D8, whose word 0x801CE898 sits at 0x801CF6F0 and which this payload own byte-2 dispatcher 0x801CE854 indexes from that same base, so work byte 2 equal to 0 selects it. When the route index byte 0x08 is even the body steps it back inside the eight-entry window, runs the payload step test at 0x801CF148 and, while that answers zero, steps it two forward and tests again before restoring it. It then projects the work position by adding the undoubled movement offsets of 0x80181B94 and 0x80181B98 selected by the route byte to work words 0x34 and 0x38, keeps the shared position sample func_80154F28 minus the reference halfword 0x3E and queries func_80154F78 for the same point with the route byte. While the gate byte 0x1F800000 reads nonzero and that difference is at least 0x41 the step selects sequence 0x46 plus the halved route index through func_8014D8D4 and advances step byte 0x02, which the shared tail advances again. Every other case claims the work by storing 1 into byte 0x2B, probes the layer offsets 0x80181BAC and 0x80181BB0 with route 3 and 0x80181BBC and 0x80181BC0 with route 5 through func_80154F78, clearing the claim byte for each probe whose narrowed sample reaches 0x41 while func_80154F28 answers above the reference halfword and the gate reads nonzero, then queues cue 0x100 plus work halfword 0x2C through func_8015DF18, selects sequence 0x42 plus the halved route index and arms countdown byte 0x0A with 5. Both arms clear step sign byte 0x0B and advance step byte 0x02.'
   - - 2020
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4

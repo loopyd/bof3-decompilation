@@ -441,8 +441,10 @@ segments:
     - asm
     - func_801FE12C
   - - 30064
-    - asm
-    - func_801FE170
+    - c
+    - requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170
+    - '@source: src/bof3/scenario/requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170.c'
+    - '@behavior: Overlay per-frame work-state handler, index 49 of the fifty-one-entry handler run at 0x801FE894 (the word at 0x801FE958), so the work-byte-1 dispatcher reaches it with no arguments of its own and the two packed record words the frame was entered with remain in $a0 and $a1; it first requires the route word D_80143F00 to read 1, the first packed word to equal the built literal 0x338000 and the second word high half to fall in the inclusive range 0x27..0x28, then on a clear shared flag 6 waits through func_8015B5D4(D_8014686C, 6), runs the shared front-end startup helper func_8015C088, requests primary scene state 4 with sub-state 5 and returns 1, while on a set flag 6 it waits through func_8015B5D4(D_8014686C, 7) and on a clear flag 7 runs the same helper, clears the shared progress byte g_ScenarioProgress (0x80146864), requests primary scene state 5 with sub-state 0 and returns 1; a second arm requires the route word to read 0x46 with the first packed word equal to 0x388000 and the second word high half in 0x2E..0x31 and sets flag bit 0x16 of the shared scenario flag word D_8014686C through func_8015B580; all arms jump to the single epilogue that restores its 0x20-byte frame.'
   - - 30368
     - asm
     - func_801FE2A0
