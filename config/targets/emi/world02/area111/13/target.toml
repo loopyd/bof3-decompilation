@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130.c",
     "src/bof3/world/invokeHelperWorld02Area11113_801F2D80.c",
     "src/bof3/world/copySharedWord7b5cTo7ac4World02Area11113_801F3448.c",
     "src/bof3/world/setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8.c",

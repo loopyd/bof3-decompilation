@@ -67,8 +67,10 @@ segments:
     - '@source: src/bof3/boss/initBattleEntryStateBossBoss02213_800C1A48.c'
     - '@behavior: Battle-entry hook of this overlay, published into the shared battle-hook slot 0x801463A4 by the installer at 0x800C1A08: seeds the shared scenario progress byte with 12, stores the entry mode byte 3 into 0x80146255, stores 0x6A into 0x80145029, stores that same mode byte 3 into 0x80146255 a second time, raises bit 0x8 of the shared battle flag byte 0x80146328 through one address taken into a local pointer, clears bit 0x40 of 0x80146325 and runs initModeTuple530, which seeds the three-byte battle mode tuple.'
   - - 700
-    - asm
-    - func_800C1ABC
+    - c
+    - setupBattleWorkRecordBossBoss02213_800C1ABC
+    - '@source: src/bof3/boss/setupBattleWorkRecordBossBoss02213_800C1ABC.c'
+    - '@behavior: Battle setup hook of this overlay, published into the shared hook slot 0x801463A8 by the installer at 0x800C1A08: strips the 0x40 flag of owner record 0 through clearOwnerRecordFlag40, looks that same record up through findOwnerRecord and publishes it into the scratchpad work-record cursor 0x1F800044, requests entry 0xAA through the shared func_8014DD3C helper, clears the published record bytes at offsets 0x2A and 0x48, and requests resource 6 through the shared func_8014D6B8 helper.'
   - - 792
     - textbin
     - D_800C1B18

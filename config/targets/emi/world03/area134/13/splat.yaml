@@ -379,8 +379,10 @@ segments:
     - c
     - setTwoWorld03Area13413_801F53D0
   - - 10220
-    - asm
-    - func_801F53EC
+    - c
+    - publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F53EC
+    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F53EC.c'
+    - '@behavior: Publishes the second shared work base 0x80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one front-end record of kind 1 through the shared allocator/seeder at 0x8015CB18 with word 0x0C = 0, word 0x10 = the selector-indexed byte D_801F5868[D_80144F5B] and the published base halfwords 0x2E/0x30, then stores the returned index in work byte 0x0B unless it is 0xFF.'
   - - 10348
     - asm
     - func_801F546C

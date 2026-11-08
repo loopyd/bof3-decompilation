@@ -57,8 +57,10 @@ segments:
     - asm
     - func_800C1AA8
   - - 748
-    - asm
-    - func_800C1AEC
+    - c
+    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC.c'
+    - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1F9C into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C1C08 into +0xE4 and the in-row data pointer 0x800C1FAC into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 836
     - asm
     - func_800C1B44

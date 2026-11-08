@@ -73,8 +73,10 @@ segments:
     - asm
     - func_800C1A44
   - - 1204
-    - asm
-    - func_800C1CB4
+    - c
+    - initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4
+    - '@source: src/bof3/boss/initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4.c'
+    - '@behavior: Battle-flag state switch and first member of this overlay hook trio: loads the shared battle flag byte 0x80146328 once and tests bit 0x1; while the bit is set it stores the mode byte 6 into 0x80146255, 6 into 0x80146874 and 0x32 into the step byte 0x80146875, and otherwise it stores 2 into 0x80146255, writes the loaded value with bit 0x8 raised back to 0x80146328, clears the effect-bank byte 0x8014832E, advances 0x80146875 by one and stores 4 into the selection index 0x80145029; both paths then run initModeTuple530.'
   - - 1360
     - c
     - invokeHelperArgZeroThenOneBossBoss00716_800C1D50

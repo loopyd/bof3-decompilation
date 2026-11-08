@@ -1,3 +1,4 @@
+g_world02Area11113Work = 0x1F800044;
 func_801C5DFC = 0x801C5DFC;
 dispatchStateByte1Table4890World02Area11113_801F2C64 = 0x801F2C64;
 func_801F2CA8 = 0x801F2CA8;
@@ -5,7 +6,7 @@ func_801F2CFC = 0x801F2CFC;
 invokeHelperWorld02Area11113_801F2D80 = 0x801F2D80;
 func_801F2DA0 = 0x801F2DA0;
 dispatchStateByte2Table489cWorld02Area11113_801F30EC = 0x801F30EC;
-func_801F3130 = 0x801F3130;
+zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130 = 0x801F3130;
 func_801F319C = 0x801F319C;
 advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0 = 0x801F31F0;
 func_801F3244 = 0x801F3244;

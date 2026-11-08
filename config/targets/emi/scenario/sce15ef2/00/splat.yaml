@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801D0EC4
   - - 760
-    - asm
-    - func_801D0EF8
+    - c
+    - dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1 of this payload followed by the reported screen pair. It loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at offset +0x1, scales it by four and calls that entry of the handler run based at 0x801D1B38 with no arguments, discarding any result. That base is word 7 of the run whose word 4 the sibling dispatcher dispatches through. It then reloads the same pointer cell into a second local because the indirect call may republish it, and while the work byte at +0x1 is still non-zero it hands the draw helper func_801D17A0 the signed halfwords at +0x2E and +0x30 and the literal 0x80. It takes no arguments, returns nothing and keeps only $ra at 0x10 of its 0x18-byte frame across the two calls.'
   - - 872
     - c
     - armCountdown10ClearScreenPairAndAdvanceWorkByteScenarioSce15ef200_801D0F68

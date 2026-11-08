@@ -170,8 +170,10 @@ segments:
     - '@source: src/bof3/boss/fillTwoByTwoCellBlockBossBoss01816_800C29AC.c'
     - '@behavior: Writes the dword fill value selected by the second argument into a two-by-two block of the dword cell array at 0x80104030, addressed with the resident map row stride byte at 0x80104000, at the block column and row held by the two-byte origin record of 0x800C2DC4 selected by the first argument.'
   - - 4672
-    - asm
-    - func_800C2A40
+    - c
+    - selectModeByteByLocalWorkKindBossBoss01816_800C2A40
+    - '@source: src/bof3/boss/selectModeByteByLocalWorkKindBossBoss01816_800C2A40.c'
+    - '@behavior: Reads the unsigned kind byte +0x79 of the first local work record of the 0x140-stride battle work run at 0x80145E90 and publishes one mode byte for it into 0x80146255: kind 0 stores 0x2C, kind 1 stores 0x2D, kind 5 stores 0x2E and kind 6 stores 0x2F, while every other kind stores nothing.'
   - - 4772
     - asm
     - func_800C2AA4

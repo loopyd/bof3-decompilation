@@ -51,8 +51,10 @@ segments:
     - dispatchStateByte2Table489cWorld02Area11113_801F30EC
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 1328
-    - asm
-    - func_801F3130
+    - c
+    - zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130
+    - '@source: src/bof3/world/zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130.c'
+    - '@behavior: Clears the step halfword at offset 0x30 of the work record published at scratchpad pointer cell 0x1F800044 and then probes flag 0x28 of the main-RAM bank at 0x80144F28 through the shared flag tester at 0x8015B5D4: when that flag reads set it resets the shared work area through the exe-resident helper at 0x80196070, and when it reads clear it advances the dispatch byte at offset 0x02 of that record and calls the overlay draw routine at 0x801F3244.'
   - - 1436
     - asm
     - func_801F319C

@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte1Table2d24BossBoss01816_800C1B84.c",
     "src/bof3/boss/publishBattleHooksBossBoss01816_800C26DC.c",
     "src/bof3/boss/fillTwoByTwoCellBlockBossBoss01816_800C29AC.c",
+    "src/bof3/boss/selectModeByteByLocalWorkKindBossBoss01816_800C2A40.c",
     "src/bof3/boss/noopHandlerBossBoss01816_800C210C.c",
     "src/bof3/boss/noopHandlerBossBoss01816_800C206C.c",
     "src/bof3/boss/noopHandlerBossBoss01816_800C2064.c",

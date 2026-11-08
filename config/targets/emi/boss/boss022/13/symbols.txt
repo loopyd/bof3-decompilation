@@ -1,3 +1,6 @@
+D_1F800044 = 0x1F800044;
+findOwnerRecord = 0x800AC754;
+clearOwnerRecordFlag40 = 0x800AC844;
 func_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
 func_800C18B8 = 0x800C18B8;
@@ -10,7 +13,9 @@ noopHandlerBossBoss02213_800C1A00 = 0x800C1A00;
 func_800C1A08 = 0x800C1A08;
 zeroResultBossBoss02213_800C1A40 = 0x800C1A40;
 initBattleEntryStateBossBoss02213_800C1A48 = 0x800C1A48;
-func_800C1ABC = 0x800C1ABC;
+setupBattleWorkRecordBossBoss02213_800C1ABC = 0x800C1ABC;
 D_800C1B18 = 0x800C1B18;
+func_8014D6B8 = 0x8014D6B8;
+func_8014DD3C = 0x8014DD3C;
 initModeTuple530 = 0x801DDF28;
 accumulateEnemyHalfwordsAndResetScratch = 0x801E54EC;
