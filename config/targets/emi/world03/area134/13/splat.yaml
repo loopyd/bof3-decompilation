@@ -397,8 +397,10 @@ segments:
     - asm
     - func_801F557C
   - - 10764
-    - asm
-    - func_801F560C
+    - c
+    - seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C
+    - '@source: src/bof3/world/seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C.c'
+    - '@behavior: Claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, marks the 0x74-byte row at 0x80143FC8 as occupied (row byte 0x00 = 1), writes handler selector 0x93 into the row byte 0x05 and copies the scratch work object position triple 0x34/0x38/0x3C published at the 0x1F800044 cell into the row words 0x34/0x38/0x3C.'
   - - 10904
     - asm
     - func_801F5698

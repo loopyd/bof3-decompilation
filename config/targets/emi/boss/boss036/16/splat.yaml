@@ -42,8 +42,8 @@ segments:
     - asm
     - func_800C1980
   - - 596
-    - asm
-    - func_800C1A54
+    - c
+    - dispatchStateByte2Table206cBossBoss03616_800C1A54
   - - 664
     - asm
     - func_800C1A98

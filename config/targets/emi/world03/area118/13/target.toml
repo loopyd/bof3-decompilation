@@ -22,6 +22,7 @@ support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88.c",
     "src/bof3/world/stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748.c",
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4.c",
+    "src/bof3/world/setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4.c",
     "src/bof3/world/seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54.c",
     "src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278.c",
     "src/bof3/world/routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058.c",

@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801D1008
   - - 1104
-    - asm
-    - func_801D1050
+    - c
+    - tickCountdownLowerScreenPairBy7And3ThenResetWorkAreaWhenExpiredScenarioSce15ef200_801D1050
+    - '@source: src/bof3/scenario/tickCountdownLowerScreenPairBy7And3ThenResetWorkAreaWhenExpiredScenarioSce15ef200_801D1050.c'
+    - '@behavior: Entry 10 of the overlay code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: through the one loaded pointer it lowers that object projected screen-pair halfwords at +0x2E and +0x30 by 7 and 3, ticks its countdown byte at +0x9 down by one, and leaves the +0x30 store for the guard branch delay slot; when the decremented byte reaches zero it resets the shared work area through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte, so the overlay drops back to work state 0.'
   - - 1188
     - c
     - dispatchWorkByte1HandlerScenarioSce15ef200_801D10A4

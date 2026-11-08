@@ -30,5 +30,6 @@ support_sources = [
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss00216_800C1C9C.c",
     "src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss00216_800C1B88.c",
+    "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48.c",
 ]
 psyq_source = "src/bof3/support/boss002_16_psyq.c"

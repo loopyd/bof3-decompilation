@@ -57,8 +57,10 @@ segments:
     - asm
     - func_800C1B4C
   - - 1100
-    - asm
-    - func_800C1C4C
+    - c
+    - raiseWorkHalfwordF8OnBattleMode10AndActingBattler8ThenRaiseWorkHalfword94BossBoss01316_800C1C4C
+    - '@source: src/bof3/boss/raiseWorkHalfwordF8OnBattleMode10AndActingBattler8ThenRaiseWorkHalfword94BossBoss01316_800C1C4C.c'
+    - '@behavior: Step handler named by the data word at 0x800C2690 of this payload row: when the battle mode byte 0x801462EA is 0x10 and the acting battler byte 0x80146374 is 8 it raises the signed halfword +0xF8 of the current enemy work record published at 0x801EB4E8 from zero to 1, then on every path raises that record unsigned halfword +0x94 from zero to 1; the 0x801EB4E8 cell is re-read for the second store on the paths that stored, and no jal in the payload names this function.'
   - - 1212
     - c
     - noopHandlerBossBoss01316_800C1CBC

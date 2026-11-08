@@ -58,8 +58,10 @@ segments:
     - routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058
     - '@source: src/bof3/world/routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058.c'
   - - 1956
-    - asm
-    - func_801F33A4
+    - c
+    - setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4
+    - '@source: src/bof3/world/setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4.c'
+    - '@behavior: Byte-2 state handler that the first byte-2 dispatch table of this overlay (0x801F516C, indexed by the dispatcher at 0x801F3014) lists at entry 1; that dispatcher indexes the work record published at the scratchpad pointer cell 0x1F800044 by its state byte at offset 0x02. When the shared front-side byte 0x80143F03 reads zero and the record byte at offset 0x0A equals the shared state byte 0x8014933B, it queues sound cue 0x200 through the resident cue dispatcher 0x8015DF18 while the front-end phase byte 0x80143BB0 is zero and stores 2 into that state byte. The record route byte at offset 0x08 then selects the camera word 0x80145EC8 against the cell centre of the halfword at 0x3A, or 0x80145EC4 against the centre of the halfword at 0x36, where the centre is (((halfword + 1) << 16) | 0x8000); a distance above 0x8000 leaves the step at its draw call, otherwise the other axis halfword and its camera word feed the shared tail, which stores 2 into the state byte when the camera lies within 0x10000 of that halfword cell start (halfword << 16) or of the next cell start ((halfword + 1) << 16) and queues cue 0x200 under the same phase gate. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1.'
   - - 2356
     - c
     - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11813_801F3534

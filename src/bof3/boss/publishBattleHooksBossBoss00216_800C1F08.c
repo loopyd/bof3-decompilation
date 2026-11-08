@@ -2,12 +2,13 @@
 
 typedef void (*Boss00216Handler)(void);
 
-/* Overlay entrypoints this installer publishes. The first is the raw-address
- * routine at 0x800C1F48, which tests the 0x2 mask of D_80146328 and either
- * stores 0x5 into D_80146875 and calls func_801DDED8, or calls func_801DDF00.
+/* Overlay entrypoints this installer publishes. The first is the
+ * mode-transition handler initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48,
+ * which tests the 0x2 mask of D_80146328 and either stores 0x5 into D_80146875
+ * and calls func_801DDED8, or calls func_801DDF00.
  * The second takes no argument and touches no state. The third returns a zero
  * result, which the void slot type drops. */
-void func_800C1F48(void);
+void initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48(void);
 void noopHandlerBossBoss00216_800C1F94(void);
 s32 zeroResultBossBoss00216_800C1F40(void);
 
@@ -35,7 +36,7 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss00216_800C1F08(void) {
-  D_801463A4 = func_800C1F48;
+  D_801463A4 = initModeTuple510Or520ByFlagBitTwoBossBoss00216_800C1F48;
   D_801463A8 = noopHandlerBossBoss00216_800C1F94;
   D_801463AC = (Boss00216Handler)zeroResultBossBoss00216_800C1F40;
 }

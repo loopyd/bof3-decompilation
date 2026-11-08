@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss03316_800C1B50.c",
     "src/bof3/boss/publishBattleHooksBossBoss03316_800C1D70.c",
     "src/bof3/boss/setBossStateThreeAndClearScratchByte4WhenWorkExpiredBossBoss03316_800C1CDC.c",
+    "src/bof3/boss/raiseFlagBit0AndExpireWorkHalfword94WhenRemainderAtMostQuarterHalfwordA0BossBoss03316_800C1D14.c",
     "src/bof3/support/boss033_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

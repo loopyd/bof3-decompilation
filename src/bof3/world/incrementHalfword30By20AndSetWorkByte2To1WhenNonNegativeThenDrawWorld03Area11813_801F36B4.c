@@ -1,9 +1,10 @@
 #include "bof3/bof3.h"
 
 /* The overlay step routine this handler runs once the record halfword has
- * climbed back to zero. It is a neighbouring code span of this overlay and is
- * still lifted from assembly, so only its own prototype is declared here. */
-void func_801F33A4(void);
+ * climbed back to zero; it is the lifted camera-window step of this same
+ * overlay. */
+void setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4(
+    void);
 
 /* The overlay record draw routine every reaching path of this step finishes
  * with, called here with a zero mode argument. */
@@ -57,7 +58,8 @@ void incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area
   half = *(u16*)(work + 0x30) + 0x20;
   *(u16*)(work + 0x30) = half;
   if ((s16)half >= 0) {
-    func_801F33A4();
+    setWorkState2To2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenDrawMode1World03Area11813_801F33A4(
+        );
     if (D_1F800044[2] == 2) {
       return;
     }

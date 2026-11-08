@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801F3D3C
   - - 4840
-    - asm
-    - func_801F3EE8
+    - c
+    - dispatchSharedModeByteTable2C04World02Area11113_801F3EE8
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World02Area11113_801F3EE8.c'
+    - '@behavior: Steps this overlay''s shared front-end mode byte 0x801448EC through its 24-entry jump table at 0x801F2C04. Modes 1, 3, 5 and 7 queue the shared cue func_801BE1B0 with 0, arm the shared halfword countdown 0x801448EE with 0x0A and advance the mode to 0x0A; mode 0x0A consumes that countdown and, at zero, clears the shared selectors 0x801448EB/0x801448EC/0x801448ED and runs the shared release helper func_8015C058. Mode 0x14 runs func_8015507C with 0x11 and 0xB7, arms the countdown with 0x1E and advances to 0x15. Mode 0x15 consumes the countdown and, at zero, publishes the fade pair 0x118000/0xAF0000 at 0x80149308/0x8014930C, clears the shared facing halfword 0x80149330, advances to 0x16 and stores the shared frame-selector byte 0x80181BD8 scaled by eight at 0x8014932E. Mode 0x16, while the shared readiness byte 0x80149332 reads clear, runs func_8015507C with 0x11 and 0xAD, the four cursor-rect calls func_801A4BC0 with 0x11 and 0x12 against 0xAD and 0xAE, the cue func_8015DF18 with 0x205 and the flag-bit call func_8015B580 against the shared block 0x80144F28 with bit 0x28, arms the countdown with 0x1E and advances to 0x17. Mode 0x17 consumes the countdown and, at zero, commits the shared pair 0x80145EC4/0x80145EC8 into 0x80149308/0x8014930C, clears 0x80149330, advances to 0x18 and stores the same scaled frame-selector byte at 0x8014932E. Mode 0x18, while 0x80149332 reads clear, arms the countdown with 1 and advances to 0x0A. Every other table slot returns without touching the shared state.'
   - - 5440
     - c
     - enterState11WithCodeForMatchedWorkCellAndRouteStepWorld02Area11113_801F4140

@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F318C
   - - 1480
-    - asm
-    - func_801F31C8
+    - c
+    - drawRadialGouraudLineBurstAroundPointWorld01Area06714_801F31C8
+    - '@source: src/bof3/world/drawRadialGouraudLineBurstAroundPointWorld01Area06714_801F31C8.c'
+    - '@behavior: sets the 0x380/0x100 texture page draw mode at the current primitive cursor and links that 0xC-byte packet through the grid-cell linker func_80155A08 on the target word pair at 0x801F53A0/0x801F53A4, then for eight phase steps 0x200 apart counted from the record halfword at +0x6 emits one 0x14-byte LINE_G2 per step whose start point is the record halfword pair at +0x0/+0x2 and whose end point is that pair plus the +0x4 reach halfword scaled by the fixed-point x helper func_801783C8 and y helper func_801782FC of the phase with each product shifted by (i & 1) + 0xC, taking 0x80 for the base colours and zero for the tip ones, then hands the record to func_801F3394 and restores the same draw mode'
   - - 1940
     - asm
     - func_801F3394

@@ -63,8 +63,8 @@ segments:
     - c
     - setBossStateThreeAndClearScratchByte4WhenWorkExpiredBossBoss03316_800C1CDC
   - - 1300
-    - asm
-    - func_800C1D14
+    - c
+    - raiseFlagBit0AndExpireWorkHalfword94WhenRemainderAtMostQuarterHalfwordA0BossBoss03316_800C1D14
   - - 1384
     - c
     - noopHandlerBossBoss03316_800C1D68
