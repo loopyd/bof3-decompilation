@@ -393,6 +393,14 @@ and the loop spelling is not.
   marks a second local's live-range start: one local serving both the store group and
   the loop base keeps that saved register live from the first store on and drops the
   copy, so load the loop base into its own local after the group.
+- Entry-block save pair inverted (`sw s0` ahead of `sw ra`) with the first difference
+  in those prologue words: that order is post-reload scheduling of the entry block, not
+  prologue emission, because GCC 2.7.2 `save_restore_insns` emits saves high-to-low
+  through `emit_insn`. Move the statements the first test competes with: one measured
+  73/76 body also put a zeroing `move` in the dispatch branch's delay slot instead of
+  the pre-test one, and reading the cell into a local and zeroing the flag before that
+  test moved both at unchanged size and matched, while the flag's
+  declaration-initializer form alone measured neutral.
 - Frame mismatch: solve prototype/width/call/aggregate/address-taking first.
 - Relocation/load order: owner, symbol form, offset, pointer-cell volatility and
   cache/reload evidence first.
