@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "2c23551be8f14e23ff112eb1637a2f43957037e3",
-  "published_at": "2026-11-08T17:53:48.667602+00:00",
+  "revision": "0c4676bd2cb873d49f370bae06071b20f68bd921",
+  "published_at": "2026-11-08T18:23:31.273556+00:00",
   "counts": {
-    "completed": 4328,
+    "completed": 4338,
     "partial": 181,
-    "unlifted": 6022,
+    "unlifted": 6012,
     "invalid": 0,
     "total": 10531,
     "symbols": {
-      "named": 66694,
-      "raw": 56862,
+      "named": 66704,
+      "raw": 56852,
       "total": 123556
     }
   },
@@ -3082,14 +3082,14 @@
       "family": "plchar",
       "archive": "plp034",
       "entry": "00",
-      "completed": 13,
+      "completed": 14,
       "partial": 0,
-      "unlifted": 21,
+      "unlifted": 20,
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 172,
-        "raw": 143,
+        "named": 173,
+        "raw": 142,
         "total": 315
       }
     },
@@ -3099,14 +3099,14 @@
       "family": "plchar",
       "archive": "plp056",
       "entry": "00",
-      "completed": 19,
+      "completed": 20,
       "partial": 0,
-      "unlifted": 22,
+      "unlifted": 21,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 177,
-        "raw": 145,
+        "named": 178,
+        "raw": 144,
         "total": 322
       }
     },
@@ -3116,14 +3116,14 @@
       "family": "plchar",
       "archive": "plp247",
       "entry": "00",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 170,
-        "raw": 137,
+        "named": 171,
+        "raw": 136,
         "total": 307
       }
     },
@@ -3133,14 +3133,14 @@
       "family": "plchar",
       "archive": "plp257",
       "entry": "00",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 170,
-        "raw": 142,
+        "named": 171,
+        "raw": 141,
         "total": 312
       }
     },
@@ -3150,14 +3150,14 @@
       "family": "plchar",
       "archive": "plp267",
       "entry": "00",
-      "completed": 16,
+      "completed": 17,
       "partial": 0,
-      "unlifted": 25,
+      "unlifted": 24,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 175,
-        "raw": 148,
+        "named": 176,
+        "raw": 147,
         "total": 323
       }
     },
@@ -3201,14 +3201,14 @@
       "family": "plchar",
       "archive": "plp349",
       "entry": "00",
-      "completed": 9,
+      "completed": 10,
       "partial": 0,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 167,
-        "raw": 141,
+        "named": 168,
+        "raw": 140,
         "total": 308
       }
     },
@@ -3218,14 +3218,14 @@
       "family": "plchar",
       "archive": "plp457",
       "entry": "00",
-      "completed": 7,
+      "completed": 8,
       "partial": 0,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 165,
-        "raw": 141,
+        "named": 166,
+        "raw": 140,
         "total": 306
       }
     },
@@ -3235,14 +3235,14 @@
       "family": "plchar",
       "archive": "plp467",
       "entry": "00",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 29,
+      "unlifted": 28,
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 165,
-        "raw": 153,
+        "named": 166,
+        "raw": 152,
         "total": 318
       }
     },
@@ -3252,14 +3252,14 @@
       "family": "plchar",
       "archive": "plp478",
       "entry": "00",
-      "completed": 5,
+      "completed": 6,
       "partial": 0,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 164,
-        "raw": 140,
+        "named": 165,
+        "raw": 139,
         "total": 304
       }
     },
@@ -3269,14 +3269,14 @@
       "family": "plchar",
       "archive": "plp567",
       "entry": "00",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 30,
+      "unlifted": 29,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 169,
-        "raw": 153,
+        "named": 170,
+        "raw": 152,
         "total": 322
       }
     },
