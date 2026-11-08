@@ -40,6 +40,7 @@ support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C2280.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1D1C.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC.c",
+    "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress20BossBoss00816_800C20C8.c",
     "src/bof3/support/boss008_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss008_16_psyq.c"

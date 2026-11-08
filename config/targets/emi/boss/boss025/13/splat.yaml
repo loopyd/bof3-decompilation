@@ -78,8 +78,10 @@ segments:
     - c
     - dispatchStateByte1Table3244BossBoss02513_800C1D88
   - - 1484
-    - asm
-    - func_800C1DCC
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC.c'
+    - '@behavior: Step setup of this overlay work state machine at 0x800C1DCC. Publishes this payload data row pointer 0x800C3180 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher 0x800C20F0 into +0xE4 and the in-row pointer 0x800C3194 into +0xE8, stores 3 into that record byte at +8 and 2 into its state byte at +1 through the scratchpad pointer cell 0x1F800044, then calls the shared main-program helper 0x8014D978. Prologue and return path both place the boundary.'
   - - 1588
     - asm
     - func_800C1E34

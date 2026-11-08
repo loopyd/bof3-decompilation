@@ -1,6 +1,7 @@
+D_1F800044 = 0x1F800044;
 func_801F2C04 = 0x801F2C04;
 func_801F2C38 = 0x801F2C38;
-func_801F2EF0 = 0x801F2EF0;
+projectScrollIntoScratchSelectByte0BThenDispatchModeWorld03Area11513_801F2EF0 = 0x801F2EF0;
 func_801F3064 = 0x801F3064;
 snapshotWorkByteBThenResetRecordAndRequestModeResourceAndSetState2World03Area11513_801F30F0 = 0x801F30F0;
 func_801F3228 = 0x801F3228;

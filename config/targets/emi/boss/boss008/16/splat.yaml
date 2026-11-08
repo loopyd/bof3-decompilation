@@ -153,8 +153,10 @@ segments:
     - c
     - zeroResultBossBoss00816_800C20C0
   - - 2248
-    - asm
-    - func_800C20C8
+    - c
+    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress20BossBoss00816_800C20C8
+    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress20BossBoss00816_800C20C8.c'
+    - '@behavior: Battle-flag state switch of this overlay and first member of the second hook trio its installer publishBattleHooksBossBoss00816_800C2088 writes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x20 into the shared scenario progress byte 0x80146864 and calls initModeTuple510, and otherwise calls initModeTuple520.'
   - - 2324
     - asm
     - func_800C2114

@@ -156,8 +156,10 @@ segments:
     - '@source: src/bof3/world/armScratchWorkMin80LevelTripleWorld04Area17213_801F440C.c'
     - '@behavior: clears flag bit 0x40 and sets flag bit 0x20 of scratch work record byte 0, writes 1 into its 0x5C marker byte and -0x80 into its signed level bytes 0x5D-0x5F through a fresh cell load each, then reloads the cell to select handler byte 1, zero its 0x0C/0x10/0x14 words and set its 0x20 word to -8, and finally consumes two units of the halfword at 0x0A of the record published through the global pointer cell 0x80148210.'
   - - 6340
-    - asm
-    - func_801F44C4
+    - c
+    - advanceScratchWorkAndSelectHandler2Past3eElseConsumeSharedThenStepFactorTripletAndRampLevelTripleWorld04Area17213_801F44C4
+    - '@source: src/bof3/world/advanceScratchWorkAndSelectHandler2Past3eElseConsumeSharedThenStepFactorTripletAndRampLevelTripleWorld04Area17213_801F44C4.c'
+    - '@behavior: advances the scratch work record published through the pointer cell 0x1F800044 by its 0x20 step word over its 0x14 motion word and runs the shared mover func_801B0DFC, then compares the record signed halfword 0x3E against the signed halfword narrowed from func_80154F28(coord_x_34, coord_y_38); when 0x3E is below it the record is released - flag bit 0x20 of byte 0 cleared, the 0x5C marker and level bytes 0x5D/0x5E/0x5F zeroed through a fresh cell load each, then one load stores the raw result into 0x3E, zeroes 0x14 and 0x20, writes 2 into the handler byte 0x04, requests resource 0x39 through func_8014D6B8 and writes 4 into byte 0x01 of the record at 0x80148210 - and otherwise consumes two units of that record halfword 0x0A. Both arms then subtract 2 from the +0x0/+0x1/+0x2 factor bytes of the 12-byte record selected by byte 0x13D of 0x80146250 through a fresh read of that cell each, and unless signed level byte 0x5D is already 0x40 add 4 to 0x5D and to unsigned level bytes 0x5E and 0x5F, and finally publish the record 0x3C word into 0x80143F84 and hand the record signed halfword 0x3E to func_80154FD8. Takes no arguments and returns nothing.'
   - - 6940
     - c
     - dispatchWorkByte4Table6778World04Area17213_801F471C

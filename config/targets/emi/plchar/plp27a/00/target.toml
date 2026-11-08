@@ -20,6 +20,7 @@ support_sources = [
     "src/bof3/plchar/clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp27a00_801CE83C.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448.c",
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40.c",
+    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34.c",
     "src/bof3/plchar/selectArrivalSequenceAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CE514.c",
     "src/bof3/support/plp27a_00_psyq.c",
 ]

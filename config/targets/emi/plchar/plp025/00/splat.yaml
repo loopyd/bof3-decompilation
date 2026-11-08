@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801CF37C
   - - 4452
-    - asm
-    - func_801CF564
+    - c
+    - clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp02500_801CF564
+    - '@source: src/bof3/plchar/clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp02500_801CF564.c'
+    - '@behavior: Reads the unsigned countdown byte 0x09 of the active work object through the scratchpad pointer cell 0x1F800044: while that byte is nonzero it stores the value one lower and runs the work advance step func_801B0DFC, and when it reads zero it clears state byte 0x12B of the front-end record published at 0x80146250 and clears bit 0x1000 of the world-flag halfword 0x80146258, after which both paths run the shared no-argument update helper func_8014D978'
   - - 4564
     - c
     - findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp02500_801CF5D4

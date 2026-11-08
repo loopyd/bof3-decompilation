@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801CFB00
   - - 6192
-    - asm
-    - func_801CFC30
+    - c
+    - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp01600_801CFC30
+    - '@source: src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp01600_801CFC30.c'
+    - '@behavior: Work-step handler for work byte 3 == 3 of the scratch work object published at the scratchpad pointer cell 0x1F800044, reached through the word 0x801CFC30 at 0x801D067C, entry 3 of the code-pointer run based at 0x801D0670 that the byte-3 dispatcher func_801CF770 indexes. Runs the shared readiness helper func_8014DAEC and keeps only its returned byte as a ready test; while it reports not ready the handler writes nothing. Once ready it passes the record byte 8 to the shared resource request helper func_8014D6B8, then re-loads the pointer cell and advances the record byte 3, the work-step index, by one so the next dispatch reaches the word 0x801CFC90 at 0x801D0680.'
   - - 6288
     - c
     - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp01600_801CFC90

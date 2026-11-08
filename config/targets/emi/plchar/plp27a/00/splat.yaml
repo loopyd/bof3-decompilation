@@ -70,8 +70,10 @@ segments:
     - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40.c'
     - '@behavior: Overlay step of the front-end work object reached from outside this payload: while the signed scenario-state byte 0x80146870 reads 0xF it skips the work step entirely and only clears the state byte 0x12B of the front-end record published at 0x80146250, and for every other scenario it compares the distance from the work route index byte 0x08 read through the scratchpad pointer cell 0x1F800044 to the candidate route indices 3 and 5, asks the shared helper func_801B2D00 for the step sign towards the closer candidate and stores that answer in byte 0x0B, both paths then storing the chosen candidate itself in byte 0x03 through one shared store; the body closes by setting the countdown byte 0x09 to 2 and incrementing the step counter byte 0x02.'
   - - 2356
-    - asm
-    - func_801CED34
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 and entry 6 of this payload handler run at 0x801CF900, the word 0x801CF918: when the current route index byte 0x08 equals the chosen candidate index byte 0x03 it selects that route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and 0x41 for route 5 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index, masks that index with 7 and selects the sequence of the new route index.'
   - - 2608
     - asm
     - func_801CEE30

@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/boss/storeThreeOrZeroByFlagBitThreeBossBoss02513_800C2128.c",
     "src/bof3/boss/publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710.c",
     "src/bof3/boss/publishBattleHooksBossBoss02513_800C2B60.c",
+    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC.c",
     "src/bof3/support/boss025_13_psyq.c",
     "src/bof3/boss/dispatchStateByte1Table3244BossBoss02513_800C1D88.c",
     "src/bof3/boss/dispatchStateByte2Table327cBossBoss02513_800C2030.c",

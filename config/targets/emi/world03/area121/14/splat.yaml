@@ -203,8 +203,9 @@ segments:
     - asm
     - func_801F5324
   - - 10112
-    - asm
-    - func_801F5380
+    - c
+    - probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380
+    - '@source: src/bof3/world/probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380.c'
   - - 10616
     - c
     - setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578
