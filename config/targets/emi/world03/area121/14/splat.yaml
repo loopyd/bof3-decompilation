@@ -235,8 +235,10 @@ segments:
     - '@source: src/bof3/world/emitMeterBarWithPaletteWorld03Area12114_801F595C.c'
     - '@behavior: Appends one textured FT4 bar to the primitive cursor at 0x8014598C. The quad runs from (0xE4, 0x1D) to (0xE4 + (width & 0xFF), 0x1D + 0xA) and is flat 0x80 grey. Its texture is the 4x8 texel cell on texture page 0xF chosen by the 2-entry palette table at 0x801F2C04: the (palette & 0xFF) entry low byte is the left texture column and that byte plus 4 the right one, while the entry high nibble becomes clut bits 0-5 above the 0x7800 base. The local GetGraphType probe is kept as the original wrote it, and the finished primitive is handed to func_8014E5A0 at 0x28 bytes. Takes a width and a palette index and returns nothing.'
   - - 11936
-    - asm
-    - func_801F5AA0
+    - c
+    - emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0
+    - '@source: src/bof3/world/emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0.c'
+    - '@behavior: Emits the fixed 0x50-by-0x20 shade sprite of the AREA121 meter frame that its only caller at 0x801F5B90 places at (0xDC, 0x10). The draw-mode texture page word is 0x22C when the graph type reads 1 or 2 and 0x9C otherwise; that DR_MODE is sized 0xC and appended to the primitive cursor at 0x8014598C under ordering-table index 2 before the sprite itself. The SPRT is fixed at 0x50 by 0x20 with CLUT 0x7B80, texture column 0 and texture row ((shade & 0xFF) << 5) + 0x78, so the shade argument selects one 0x20-tall row band of that texture, and it is drawn at (x, y) in flat 0x80 grey and appended at 0x14 bytes under ordering-table index 2. Takes an x, a y and a shade index and returns nothing.'
   - - 12176
     - c
     - drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90

@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/countDownWorkByteAThenSeedWorkRadiusAngleRandomTripletAndAdvanceWorkByte2BmagicMagic10603_801EEFAC.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c",
+    "src/bof3/bmagic/drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4.c",
     "src/bof3/support/magic106_03_psyq.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C.c",

@@ -33,5 +33,6 @@ support_sources = [
     "src/bof3/world/setSubstate14AndClearWorkFlagsWhenEffectIdleWorld04Area17213_801F3374.c",
     "src/bof3/world/decrementWorkByte9ClearWorkFlagsAtZeroThenDrawSemiTransTileWorld04Area17213_801F2D98.c",
     "src/bof3/world/claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWorld04Area17213_801F32E8.c",
+    "src/bof3/world/drawWorkQuadReseedEffectEntriesAtProgress0aThenArmCountdownAndAdvanceStateWorld04Area17213_801F30F8.c"
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

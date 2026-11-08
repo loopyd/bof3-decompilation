@@ -66,8 +66,10 @@ segments:
     - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C.c'
     - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F05F8 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 2548
-    - asm
-    - func_801EF5F4
+    - c
+    - drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4
+    - '@source: src/bof3/bmagic/drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4.c'
+    - '@behavior: Picks the draw-mode tpage argument from GetGraphType (0xA5 for type 1 or 2, 0x35 otherwise), seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte cell at work-record words 0x10 and 0x14 with kind 2, publishes the three products of record bytes 0x05, 0x06 and 0x07 with byte 0x09 into scratchpad halfwords 0x1F80000A, 0x1F80000C and 0x1F80000E, and fills the scratchpad scalar block at 0x1F800000 from four halfword phase tables plus record byte 0x0B added to a byte table and masked to four bits while the first triangle vertex at 0x1F800014 is cleared. It then runs four iterations, each seeding a fresh g_PrimCursor primitive through func_8017A97C, marking it semi-transparent, filling the two later vertices from the func_801782FC and func_801783C8 samples of the angle cells scaled by the radius cells and shifted right 12 with a shared z from the phase cell shifted right 7, projecting the vertices through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18, writing the colour bytes and linking the 0x1C-byte cell at the same record words, keeping $ra and $s0 through $s3 in a 0x40-byte frame.'
   - - 3348
     - c
     - reserveFirstFreeRecordBmagicMagic10603_801EF914

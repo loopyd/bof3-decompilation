@@ -11,7 +11,7 @@ extern u8 D_80145E9B;
 /* @source 0x80143E6C @kind unknown */
 extern u32 D_80143E6C;
 
-void func_801F5AA0(s32 arg0, s32 arg1, s32 arg2);
+void emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0(s32 x, s32 y, s32 shade);
 void emitMeterBarWithPaletteWorld03Area12114_801F595C(s32 width, s32 palette);
 
 /* @source 0x801F5B90
@@ -46,7 +46,7 @@ void drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90(void) {
   }
   if ((D_80146871 & 0x40) == 0) {
     if ((D_80145E9A == 0)) {
-      func_801F5AA0(0xDC, 0x10, 0);
+      emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0(0xDC, 0x10, 0);
       emitMeterBarWithPaletteWorld03Area12114_801F595C(0x40, 0);
       palette = 1;
       width = 0x40;
@@ -54,15 +54,15 @@ void drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90(void) {
       width = (u8)width;
     } else {
       if (D_80143E6C & 2) {
-        func_801F5AA0(0xDC, 0x10, 1);
+        emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0(0xDC, 0x10, 1);
       } else {
-        func_801F5AA0(0xDC, 0x10, 2);
+        emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0(0xDC, 0x10, 2);
       }
       width = 0x40;
       palette = 0;
     }
   } else {
-    func_801F5AA0(0xDC, 0x10, 0);
+    emitShadedMeterFrameSpriteWorld03Area12114_801F5AA0(0xDC, 0x10, 0);
     emitMeterBarWithPaletteWorld03Area12114_801F595C(0x40, 0);
     width = 0x40;
     palette = 1;

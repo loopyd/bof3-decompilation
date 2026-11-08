@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801F3064
   - - 1272
-    - asm
-    - func_801F30F8
+    - c
+    - drawWorkQuadReseedEffectEntriesAtProgress0aThenArmCountdownAndAdvanceStateWorld04Area17213_801F30F8
+    - '@source: src/bof3/world/drawWorkQuadReseedEffectEntriesAtProgress0aThenArmCountdownAndAdvanceStateWorld04Area17213_801F30F8.c'
+    - '@behavior: Overlay progress step handler, entry 7 of the state byte 1 handler run at 0x801F507C and entry 2 of the run at 0x801F5090. It emits the work quad through 0x801F36C0 from the work position words at +0x34 and the angle halfword at +0x2E with flag mask 7, and then, only while the shared scenario progress byte reads 0x0A, clears the lead byte of the eight 0x18-byte records at 0x800E4800, re-seeds and draws all 0x20 entries of the 0x2C-byte-stride effect table at 0x800E48C0 through 0x801F3E90 between a PushMatrix/PopMatrix pair, clears the work frame counter byte at +0x06, sets the level byte at +0x5D to 8 and the countdown byte at +0x09 to 0x78, and advances the reloaded work state byte at +0x01.'
   - - 1488
     - asm
     - func_801F31D0

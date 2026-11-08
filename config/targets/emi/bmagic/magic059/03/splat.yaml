@@ -40,8 +40,10 @@ segments:
     - dispatchStateByte1Table066cBmagicMagic05903_801EF1E0
     - '@source: src/bof3/bmagic/magic05903DispatchTables.c'
   - - 1572
-    - asm
-    - func_801EF224
+    - c
+    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224.c'
+    - '@behavior: Step handler for state 0 of the overlay work object published at the scratchpad pointer cell 0x1F800044. It reads that object unsigned byte 0x2, scales it by four and calls the handler pointer at that index of the work byte 2 handler table based at 0x801F0670. When the handler returns it re-reads the cell and, only when the record byte 0x0 and the byte 0x2 are both non-zero, calls the projection helper at 0x801EF638, then the sixteen positional draw calls to 0x801EF70C and finally PopMatrix, restoring the GTE stack the projection helper pushed. The first eight draw calls subtract the record byte 0x9 from the base angles 0x00 through 0x38 and mask to the six bit turn with offset 0x20; the next eight subtract twice that byte from the base angles 0x04 through 0x3C and mask to 0x3E with offset 0x50. Each draw re-reads the cell and the byte instead of holding the record pointer across the calls. The 0x18-byte frame only keeps $ra across the indirect call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 2244
     - asm
     - func_801EF4C4

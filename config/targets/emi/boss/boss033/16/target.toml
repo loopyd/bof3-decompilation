@@ -26,6 +26,7 @@ support_sources = [
     "src/bof3/boss/requestResource3ThenAdvanceWorkByte2WhenHelperReadyBossBoss03316_800C1F38.c",
     "src/bof3/boss/setTriplet5D5F5EToMinus16xByteBInvokeReadinessHelperTickByte9CountdownInvokeHelperWhenZeroBossBoss03316_800C26A4.c",
     "src/bof3/boss/countDownScratchByteAThenSubmitEnemyWorkEffectPairAndAdvanceWorkByte2BossBoss03316_800C1A58.c",
+    "src/bof3/boss/advanceWorkWord3CWhileBelowWord20ElseSeedChannelPairFromSideOffsetRequestResource4AdvanceWorkByte2BossBoss03316_800C1F88.c",
     "src/bof3/support/boss033_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

@@ -23,5 +23,5 @@ lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924 = 0x801F3924;
 activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964 = 0x801F3964;
 func_801F39AC = 0x801F39AC;
 resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0 = 0x801F3AB0;
-func_801F3BE0 = 0x801F3BE0;
+clearFrontStateSetScenarioBit0AndResetWorkAreaWhenFlag77SetWorld04Area19113_801F3BE0 = 0x801F3BE0;
 D_801F3C54 = 0x801F3C54;

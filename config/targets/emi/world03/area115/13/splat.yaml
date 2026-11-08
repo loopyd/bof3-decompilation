@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801F36D4
   - - 2900
-    - asm
-    - func_801F3754
+    - c
+    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area11513_801F3754
+    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area11513_801F3754.c'
+    - '@behavior: handler 5 of the state-byte-2 handler table 0x801F4F64 subtracts 0xA from work-record halfword 0x30 and increments state byte 0x03 while the stored value stays below 0xC9, then writes 3 to that state byte when the shared mode byte 0x801454F2 and record byte 0x0B are both set or the phase byte 0x80143BB0 is 2 or bit 0x100 of halfword 0x80146258 is set, and finally calls the local emitter 0x801F40C8 with 0x5C and the signed halfword 0x30.'
   - - 3116
     - asm
     - func_801F382C

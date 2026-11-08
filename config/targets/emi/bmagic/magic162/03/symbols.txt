@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+func_8017AA94 = 0x8017AA94;
 func_801EEC28 = 0x801EEC28;
 func_801EED38 = 0x801EED38;
 decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0 = 0x801EEFA0;
@@ -11,7 +12,7 @@ func_801EF37C = 0x801EF37C;
 decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478 = 0x801EF478;
 advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic16203_801EF678 = 0x801EF678;
 func_801EF728 = 0x801EF728;
-func_801EF80C = 0x801EF80C;
+drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic16203_801EF80C = 0x801EF80C;
 func_801EFA40 = 0x801EFA40;
 func_801EFCD8 = 0x801EFCD8;
 reserveFirstFreeRecordBmagicMagic16203_801EFFFC = 0x801EFFFC;

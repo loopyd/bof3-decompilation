@@ -1,3 +1,4 @@
+func_8015477C = 0x8015477C;
 func_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE514 = 0x801CE514;
@@ -15,7 +16,7 @@ func_801CEE74 = 0x801CEE74;
 func_801CF1C0 = 0x801CF1C0;
 func_801CF35C = 0x801CF35C;
 func_801CF448 = 0x801CF448;
-func_801CF640 = 0x801CF640;
+claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640 = 0x801CF640;
 func_801CF724 = 0x801CF724;
 getAndClearPlcharPlp27a00_801CF858 = 0x801CF858;
 getAndClearPlcharPlp27a00_801CF868 = 0x801CF868;
