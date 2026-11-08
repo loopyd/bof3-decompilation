@@ -6,7 +6,8 @@ typedef void (*Boss00816Handler)(void);
  * the third is the overlay's zero-result accessor. */
 void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4(
     void);
-void func_800C2210(void);
+void setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210(
+    void);
 s32  zeroResultBossBoss00816_800C21BC(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -19,17 +20,18 @@ extern Boss00816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 /* @source 0x800C2184
  * @behavior Publishes this overlay's third handler trio into the shared hook
  * slots: the progress-mode switch 0x800C21C4 (writes scenario progress 0x30)
- * into 0x801463A4, the setup routine 0x800C2210 (initializes mode work with
- * argument 2) into 0x801463A8, and the zero-result accessor 0x800C21BC into
- * 0x801463AC; the accessor is stored through the slot type, so its s32 result
- * is never consumed. Reached as one entry of the battle mode table D_800B5108,
- * which the battle engine dispatches by the battle mode byte.
+ * into 0x801463A4, the setup routine 0x800C2210 (initializes owner record 2
+ * mode work with argument 2) into 0x801463A8, and the zero-result accessor
+ * 0x800C21BC into 0x801463AC; the accessor is stored through the slot type, so
+ * its s32 result is never consumed. Reached as one entry of the battle mode
+ * table D_800B5108, which the battle engine dispatches by the battle mode byte.
  * @status exact
  * @match 100.00
  * @residual none
  */
 void publishBattleHooksBossBoss00816_800C2184(void) {
   D_801463A4 = initModeTuple510Or520ByFlagBitTwoSetScenarioProgress30BossBoss00816_800C21C4;
-  D_801463A8 = func_800C2210;
+  D_801463A8 =
+      setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210;
   D_801463AC = (Boss00816Handler)zeroResultBossBoss00816_800C21BC;
 }

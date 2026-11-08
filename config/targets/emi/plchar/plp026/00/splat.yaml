@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801CEA94
   - - 2096
-    - asm
-    - func_801CEC30
+    - c
+    - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30
+    - '@source: src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30.c'
+    - '@behavior: Work-step handler reached as entry 5 of the thirty-word code-pointer run at 0x801D0A54 that the overlay dispatcher of work record byte 2 steps. It dispatches on work record byte 0x0B read through the scratchpad pointer cell 0x1F800044: byte 0 polls the shared readiness helper func_8014DAEC and reports done when that helper answers nonzero; byte 1 polls the same helper and, once it answers, passes work byte 0x08 to the shared resource request helper func_8014D6B8 and writes 2 into byte 0x0B; every other value runs the shared no-argument helper func_8014D978 and reports done when the front-end phase byte 0x80143BB0 reads zero. When the done flag is set it clears work byte 0x2B and byte 0x12B of the record published at 0x80146250. It takes no arguments and returns nothing.'
   - - 2332
     - asm
     - func_801CED1C

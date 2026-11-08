@@ -108,8 +108,8 @@ segments:
     - c
     - dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54
   - - 6808
-    - asm
-    - func_801CFE98
+    - c
+    - dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98
   - - 6876
     - textbin
     - func_801CFEDC

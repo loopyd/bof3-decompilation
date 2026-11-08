@@ -120,8 +120,8 @@ segments:
     - c
     - dispatchWorkByte3Table08b0PlcharPlp05600_801D0244
   - - 7816
-    - asm
-    - func_801D0288
+    - c
+    - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288
   - - 7924
     - asm
     - func_801D02F4

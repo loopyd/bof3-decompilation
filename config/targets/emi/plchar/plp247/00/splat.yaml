@@ -96,8 +96,8 @@ segments:
     - asm
     - func_801CF940
   - - 5748
-    - asm
-    - func_801CFA74
+    - c
+    - dispatchWorkHalfword2cTablefb34PlcharPlp24700_801CFA74
   - - 5816
     - asm
     - func_801CFAB8
