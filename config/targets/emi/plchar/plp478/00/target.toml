@@ -7,7 +7,9 @@ binary = "out/binaries/emi/plchar/plp478/00.bin"
 splat = "config/targets/emi/plchar/plp478/00/splat.yaml"
 load_address = 0x801CE400
 
-sources = []
+sources = [
+    "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4.c",
+]
 support_sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp47800_801CF064.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4.c",

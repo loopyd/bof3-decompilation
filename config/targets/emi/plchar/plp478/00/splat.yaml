@@ -54,8 +54,8 @@ segments:
     - asm
     - func_801CE898
   - - 2020
-    - asm
-    - func_801CEBE4
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4
   - - 2432
     - asm
     - func_801CED80

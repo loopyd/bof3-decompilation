@@ -12,6 +12,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablefae8PlcharPlp57800_801CF65C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4.c",
+    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp57800_801CF444.c",
 ]
 support_sources = [
     "src/bof3/support/plp578_00_psyq.c",

@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801CF224
   - - 4144
-    - asm
-    - func_801CF430
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp56700_801CF430
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp56700_801CF430.c'
+    - '@behavior: Seeds one free row of the shared 0x74-byte front-end record table based at 0x80143FC8. It asks the allocator func_8019601C for a row index, keeps the masked byte and, unless that byte is 0xFF, scales it by the row stride and writes row byte 0 = 1, row byte 5 = 0x34, row byte 1 = its first argument, row word 0x34 = the second argument shifted left 16 and row word 0x38 = the third argument shifted left 16, then re-reads row word 0x34 and passes it with the shifted third argument to the distance helper func_8015477C, stores that answer plus 0x200 in row halfword 0x3E and writes 1 into row byte 0x0B. The five jal sites that reach it sit in func_801CF224 at 0x801CF28C, 0x801CF2B4, 0x801CF2E4, 0x801CF314 and 0x801CF3B0 with state bytes 0, 4, 0, 3 and 2, each passing the sign-extended halves of that body own two arguments as the position pair and ignoring the result.'
   - - 4380
     - c
     - dispatchStateByte3Table07ccPlcharPlp56700_801CF51C

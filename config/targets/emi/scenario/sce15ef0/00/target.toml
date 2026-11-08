@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/sce15ef0_00_psyq.c",
     "src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c",
     "src/bof3/scenario/drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0.c",
+    "src/bof3/scenario/dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44.c",
 ]
 psyq_source = "src/bof3/support/sce15ef0_00_psyq.c"

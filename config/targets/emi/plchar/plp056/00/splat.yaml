@@ -129,8 +129,10 @@ segments:
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp05600_801D042C
   - - 8392
-    - asm
-    - func_801D04C8
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp05600_801D04C8
+    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp05600_801D04C8.c'
+    - '@behavior: Step test of the front-end work object read through the scratchpad pointer cell 0x1F800044, named by the two jal sites 0x801CFA04 and 0x801CFA34 of the step handler at 0x801CF9DC, which calls it only while work byte 8 is even: once after storing the decremented direction ((byte 8 - 1) & 7), and again after storing the neighbour ((byte 8 + 2) & 7) once the first answer reads zero. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by work byte 0x08 to the work words 0x34 and 0x38, and hands that pair to the slot search func_801BDE14 at range 0, so the answer starts at one when the search reports any slot rather than -1. The no-argument test func_801B5AE4 raises that answer to one again when it reports anything other than -1. The body then probes the map code of the projected cell through func_80166CB0 and raises the answer to one when a code reads 0xF0, 0xF1, 0xF4, 0xF6 or 0xF7: the projected cell always, the cell one column further whenever the low half of the first projected word is nonzero, and the cell one row further whenever the low half of the second projected word is nonzero. It returns that answer as an unsigned byte and takes no arguments, and the 0x20-byte frame keeps the return address at 0x1C and three saved registers at 0x18, 0x14 and 0x10 across the four calls. All 0x1A4 bytes match the PLP016 body at 0x801D02A0, the PLP034 body at 0x801CFEAC and the PLP267 body at 0x801CF99C.'
   - - 8812
     - c
     - claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C

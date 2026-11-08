@@ -1,0 +1,119 @@
+#include "bof3/bof3.h"
+
+/* Scratchpad work-object pointer cell of the shared main executable. This body
+ * reads the cell once, in its first statement, and keeps the pointer in a
+ * register across all four shared calls, so the cell has no later access here.
+ * @source 0x1F800044 @kind data
+ */
+extern u8* D_1F800044;
+
+/* Movement offset tables of the shared main-executable data section: eight-byte
+ * records holding the first-coordinate offset at 0x80181B94 and the
+ * second-coordinate offset at 0x80181B98, selected by the active work area's
+ * route byte at offset 0x08. The original scales that byte by eight once, which
+ * is element index route * 2, and doubles each offset before it adds it, so both
+ * bases stay their own symbol.
+ * @source 0x80181B94 @kind table
+ */
+extern s32 D_80181B94[];
+/* @source 0x80181B98 @kind table */
+extern s32 D_80181B98[];
+
+/* Slot search of the shared EXE image, outside this payload: it answers the
+ * signed slot of the first eligible work record that holds the supplied point at
+ * the supplied range, or -1 when no record does. This body passes range 0 and
+ * turns the answer into a flag, so the original sign-extends the returned byte
+ * and tests it against -1. The exact F2 lift at 0x801CF940 declares the same
+ * prototype. */
+s8 func_801BDE14(s32 x, s32 y, s32 range);
+
+/* Test of the shared EXE image, outside this payload, that takes no arguments
+ * and answers a signed byte the body tests against -1 the same way the slot
+ * search is tested. The original sets up no argument register for this call,
+ * which is why the prototype takes none, and its role is not established, so
+ * the name stays address-anchored. The exact PLP016 lift at 0x801D02A0 declares
+ * the same prototype. */
+s8 func_801B5AE4(void);
+
+/* Map code probe of the shared EXE image, outside this payload: it answers the
+ * one-byte code of the map cell at the supplied signed column and row. This body
+ * asks for the projected cell and for the two cells one unit further on, and
+ * compares each answer with the code run 0xF0, 0xF1, 0xF4, 0xF6, 0xF7. The cell
+ * offsets are signed sixteen-bit values, so the original converts each retry
+ * index to that width. The exact F2 lift at 0x801CF940 declares the same
+ * prototype. */
+u8 func_80166CB0(s16 col, s16 row);
+
+/* @source 0x801D04C8
+ * @behavior Step test of the front-end work object read through the scratchpad
+ *           pointer cell 0x1F800044, named by the two jal sites 0x801CFA04 and
+ *           0x801CFA34 that sit in the exact lift of this payload's step handler
+ *           0x801CF9DC. That handler acts only while work byte 0x08 is even: it
+ *           first stores the decremented direction ((byte 0x08 - 1) & 7) and
+ *           calls this body, then, only while that answer reads zero, stores the
+ *           neighbour ((byte 0x08 + 2) & 7) and calls it again. It projects the
+ *           work position by adding the doubled movement offsets of 0x80181B94
+ *           and 0x80181B98 selected by work byte 0x08 to the work words 0x34 and
+ *           0x38, and hands that pair to the slot search func_801BDE14 at range
+ *           0, so the answer starts at one when the search reports any slot
+ *           rather than -1. The no-argument test func_801B5AE4 raises that
+ *           answer to one again when it reports anything other than -1. The
+ *           body then probes the map code of the projected cell through
+ *           func_80166CB0 and raises the answer to one when a code reads 0xF0,
+ *           0xF1, 0xF4, 0xF6 or 0xF7: the projected cell always, the cell one
+ *           column further whenever the low half of the first projected word is
+ *           nonzero, and the cell one row further whenever the low half of the
+ *           second projected word is nonzero. It returns that answer as an
+ *           unsigned byte and takes no arguments. The 0x20-byte frame keeps the
+ *           return address at 0x1C and three saved registers at 0x18, 0x14 and
+ *           0x10 across the four calls, and the range constant 0 is materialised
+ *           before the projection tables are read, which is why the argument
+ *           register is cleared two statements ahead of the slot search. All
+ *           0x1A4 bytes match the exact PLP016 lift at 0x801D02A0, the exact
+ *           PLP034 lift at 0x801CFEAC and the exact PLP267 lift at 0x801CF99C,
+ *           cmp of the payload spans at their own offsets with all 420 bytes
+ *           equal in every case, so those three twins are shape evidence rather
+ *           than clone sources and the name they carry, which states the same
+ *           behavior, is kept here.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp05600_801D04C8(
+    void) {
+  u8* work;
+  u8 route;
+  s32 x;
+  s32 y;
+  u8 code;
+  u8 hit;
+
+  work = D_1F800044;
+  route = work[0x08];
+  x = *(s32*)(work + 0x34) + D_80181B94[route * 2] * 2;
+  y = *(s32*)(work + 0x38) + D_80181B98[route * 2] * 2;
+  hit = (func_801BDE14(x, y, 0) != -1);
+  if (func_801B5AE4() != -1) {
+    hit = 1;
+  }
+  code = func_80166CB0(x >> 16, y >> 16);
+  if (code == 0xF0 || code == 0xF1 || code == 0xF4 || code == 0xF6 ||
+      code == 0xF7) {
+    hit = 1;
+  }
+  if ((x & 0xFFFF) != 0) {
+    code = func_80166CB0((x >> 16) + 1, y >> 16);
+    if (code == 0xF0 || code == 0xF1 || code == 0xF4 || code == 0xF6 ||
+        code == 0xF7) {
+      hit = 1;
+    }
+  }
+  if ((y & 0xFFFF) != 0) {
+    code = func_80166CB0(x >> 16, (y >> 16) + 1);
+    if (code == 0xF0 || code == 0xF1 || code == 0xF4 || code == 0xF6 ||
+        code == 0xF7) {
+      hit = 1;
+    }
+  }
+  return hit;
+}

@@ -43,8 +43,9 @@ segments:
     - asm
     - func_801D0E5C
   - - 836
-    - asm
-    - func_801D0F44
+    - c
+    - dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44
+    - '@source: src/bof3/scenario/dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44.c'
   - - 1052
     - asm
     - func_801D101C

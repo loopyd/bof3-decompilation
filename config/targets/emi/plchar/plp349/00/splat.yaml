@@ -42,8 +42,10 @@ segments:
     - c
     - dispatchWorkByte3Tablef600PlcharPlp34900_801CE654
   - - 664
-    - asm
-    - func_801CE698
+    - c
+    - probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp34900_801CE698
+    - '@source: src/bof3/plchar/probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp34900_801CE698.c'
+    - '@behavior: Work byte 3 == 0 step of this overlay: the address is published at the pointer word 0x801CF600, entry 5 of the sixteen-word code-pointer run based at 0x801CF5EC, and that word is the base the byte-3 dispatcher dispatchWorkByte3Tablef600PlcharPlp34900_801CE654 indexes by work byte 3 scaled by four, so the body runs as that dispatcher step 0 and no jal in this payload names it. When work byte 8 is even it stores the decremented direction, byte 8 minus one masked to three bits, calls the payload neighbour probe func_801CF184, and only while that answer reads zero stores the neighbour two steps the other way, byte 8 plus two masked the same way, calls the probe once more and again only while the answer reads zero stores that value minus two, which restores the decremented candidate. It then queues the cue taken from the record unsigned halfword 0x2C plus 0x100 through func_8015DF18, selects the shared work sequence ((byte 8 - 1) / 2 + 0x42) truncated to a byte through func_8014D8D4, clears the step-sign byte 0x0B and the front-end record selection byte 6, arms the countdown byte 0x0A with 8 and sets work byte 3 to 1, so the next dispatch reaches the entry at 0x801CF604. Takes no arguments, returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across its four calls. The game meaning of the even-byte guard is not established here, so the name describes the effect.'
   - - 952
     - asm
     - func_801CE7B8

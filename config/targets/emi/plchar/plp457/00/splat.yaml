@@ -97,8 +97,8 @@ segments:
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp45700_801CF660
   - - 4932
-    - asm
-    - func_801CF744
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744
   - - 5240
     - asm
     - func_801CF878
