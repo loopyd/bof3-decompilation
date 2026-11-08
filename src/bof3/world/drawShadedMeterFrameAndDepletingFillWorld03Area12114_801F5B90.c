@@ -12,7 +12,7 @@ extern u8 D_80145E9B;
 extern u32 D_80143E6C;
 
 void func_801F5AA0(s32 arg0, s32 arg1, s32 arg2);
-void func_801F595C(s32 arg0, s32 arg1);
+void emitMeterBarWithPaletteWorld03Area12114_801F595C(s32 width, s32 palette);
 
 /* @source 0x801F5B90
  * @behavior Draws the AREA121 meter widget unless byte 0x8014832E holds none of
@@ -47,7 +47,7 @@ void drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90(void) {
   if ((D_80146871 & 0x40) == 0) {
     if ((D_80145E9A == 0)) {
       func_801F5AA0(0xDC, 0x10, 0);
-      func_801F595C(0x40, 0);
+      emitMeterBarWithPaletteWorld03Area12114_801F595C(0x40, 0);
       palette = 1;
       width = 0x40;
       width -= D_80145E9B;
@@ -63,9 +63,9 @@ void drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90(void) {
     }
   } else {
     func_801F5AA0(0xDC, 0x10, 0);
-    func_801F595C(0x40, 0);
+    emitMeterBarWithPaletteWorld03Area12114_801F595C(0x40, 0);
     width = 0x40;
     palette = 1;
   }
-  func_801F595C(width, palette);
+  emitMeterBarWithPaletteWorld03Area12114_801F595C(width, palette);
 }

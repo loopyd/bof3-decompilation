@@ -55,8 +55,10 @@ segments:
     - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570.c'
   - - 2496
-    - asm
-    - func_801EF5C0
+    - c
+    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05903_801EF5C0
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05903_801EF5C0.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. It reads the scratchpad work-object pointer cell at 0x1F800044 once and advances that object unsigned byte 0x9 by one with a byte-width add, re-reads the cell and subtracts one from unsigned byte 0xA with a byte-width add. It tests the byte it just stored there, truncated to 0xFF in the stored register rather than re-loaded, against zero, and only on that equality loads the shared battle work pointer at 0x801EB4E0, decrements its byte 0xB with a byte-width add and calls the shared helper at 0x801E5988 with the store in the delay slot. The function takes no arguments, returns nothing and reads or writes no other state.'
   - - 2616
     - asm
     - func_801EF638

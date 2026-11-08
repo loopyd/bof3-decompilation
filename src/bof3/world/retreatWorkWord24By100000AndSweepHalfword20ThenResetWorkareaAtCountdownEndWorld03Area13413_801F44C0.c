@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F4B6C(void);
+void drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C(void);
 void func_80196070(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
@@ -60,6 +60,6 @@ void retreatWorkWord24By100000AndSweepHalfword20ThenResetWorkareaAtCountdownEndW
     sweep = D_1F800044;
     FIELD_REF(u16, sweep, 0x20) -= 0x200;
     FIELD_REF(u32, sweep, 0x24) += 0xFFF00000;
-    func_801F4B6C();
+    drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C();
   }
 }

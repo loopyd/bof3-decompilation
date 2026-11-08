@@ -110,8 +110,10 @@ segments:
     - '@source: src/bof3/world/lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924.c'
     - '@behavior: Reads the small column offset at 0x801F4290 indexed by the low byte of the third argument and adds it to the first argument while the low byte of the fourth argument is below 5, otherwise adds the fixed offset 8, then returns the byte at 0x801F4260 indexed by the low byte of that sum.'
   - - 3428
-    - asm
-    - func_801F3964
+    - c
+    - activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964
+    - '@source: src/bof3/world/activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964.c'
+    - '@behavior: Reads the shared signed scenario byte D_80146870 and calls the local record activator func_801F39AC whenever that byte is not 0x0E; for scenario 0x0E it first runs the shared two-stage wait 0x8015B5D4 over the scenario progress word D_8014686C with id 5 and skips the activator only when that wait reports a nonzero, unfinished result.'
   - - 3500
     - asm
     - func_801F39AC

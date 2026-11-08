@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F4B6C(void);
+void drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C(void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer for each of the four access groups below. */
@@ -86,7 +86,7 @@ void advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World0
   }
   sweep = D_1F800044;
   FIELD_REF(u16, sweep, 0x20) -= 0x200;
-  func_801F4B6C();
+  drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C();
   cursor = D_1F800044;
   countdown = (u8)(cursor[9] - 1);
   cursor[9] = countdown;

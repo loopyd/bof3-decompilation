@@ -39,8 +39,10 @@ segments:
     - asm
     - func_800C18E4
   - - 600
-    - asm
-    - func_800C1A58
+    - c
+    - countDownScratchByteAThenSubmitEnemyWorkEffectPairAndAdvanceWorkByte2BossBoss03316_800C1A58
+    - '@source: src/bof3/boss/countDownScratchByteAThenSubmitEnemyWorkEffectPairAndAdvanceWorkByte2BossBoss03316_800C1A58.c'
+    - '@behavior: Byte-1 handler entry 13 of this overlay code-pointer run based at 0x800C275C, the table the overlay entry dispatcher func_800C1804 indexes with work byte 1 scaled by four; run word 13 at 0x800C2790 holds this address and no jal in this payload names it. It loads the scratch work object published at the pointer cell 0x1F800044 before it creates its frame, decrements that object unsigned byte 0xA as a countdown, stores it back and returns while the stored byte is non-zero, so the countdown store happens on both paths. When the countdown reaches zero it reads the current enemy work record published at 0x801EB4E8 and the word at that record offset 0xE8, the effect table func_800C1848 publishes there from this overlay word 0x800C2750, and submits that table halfword 0 and the same halfword plus four through the shared main-executable submitter func_801E52F0. It then re-reads the scratch cell and advances object byte 2, the work step index, by one so the next dispatch selects the following step of the handler run based at 0x800C27B4. Takes no arguments and returns nothing; the 0x18-byte frame only keeps the return address at 0x10 across its two calls.'
   - - 760
     - asm
     - func_800C1AF8

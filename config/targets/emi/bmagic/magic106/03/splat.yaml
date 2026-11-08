@@ -45,8 +45,10 @@ segments:
     - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c'
   - - 940
-    - asm
-    - func_801EEFAC
+    - c
+    - countDownWorkByteAThenSeedWorkRadiusAngleRandomTripletAndAdvanceWorkByte2BmagicMagic10603_801EEFAC
+    - '@source: src/bof3/bmagic/countDownWorkByteAThenSeedWorkRadiusAngleRandomTripletAndAdvanceWorkByte2BmagicMagic10603_801EEFAC.c'
+    - '@behavior: Overlay work-step handler reached as entry 0 of the four-word handler run at 0x801EF9C4 that the byte-2 dispatcher indexes with record byte 0x02. It decrements record byte 0x0A and returns while the masked result is non-zero; on zero it seeds the scratchpad radius cell 0x1F800000 with (byte 0x04 >> 5) * 0x10 + 0x60 and the scratchpad angle cell 0x1F800004 with (byte 0x04 & 0x1F) * 0x80, projects the shared battle words 0x34 and 0x38 plus the two rotator results scaled by the signed scratchpad radius into the record words 0x10 and 0x14, copies the shared battle word 0x3C into the record word 0x18, publishes the scratchpad angle into the record halfword 0x0E, fills record bytes 0x05 through 0x07 with (rand() & 7) + 5, clears record bytes 0x03 and 0x09, sets record byte 0x0A to (rand() & 3) << 3 and byte 0x0B to the rand() result, then copies the scratchpad radius into the record halfword 0x0C and increments the record byte 0x02, keeping $ra and $s0 in a 0x18-byte frame across its three calls.'
   - - 1388
     - asm
     - func_801EF16C

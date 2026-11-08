@@ -230,8 +230,10 @@ segments:
     - dispatchStateByte1Table68a4World03Area12114_801F5918
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 11612
-    - asm
-    - func_801F595C
+    - c
+    - emitMeterBarWithPaletteWorld03Area12114_801F595C
+    - '@source: src/bof3/world/emitMeterBarWithPaletteWorld03Area12114_801F595C.c'
+    - '@behavior: Appends one textured FT4 bar to the primitive cursor at 0x8014598C. The quad runs from (0xE4, 0x1D) to (0xE4 + (width & 0xFF), 0x1D + 0xA) and is flat 0x80 grey. Its texture is the 4x8 texel cell on texture page 0xF chosen by the 2-entry palette table at 0x801F2C04: the (palette & 0xFF) entry low byte is the left texture column and that byte plus 4 the right one, while the entry high nibble becomes clut bits 0-5 above the 0x7800 base. The local GetGraphType probe is kept as the original wrote it, and the finished primitive is handed to func_8014E5A0 at 0x28 bytes. Takes a width and a palette index and returns nothing.'
   - - 11936
     - asm
     - func_801F5AA0

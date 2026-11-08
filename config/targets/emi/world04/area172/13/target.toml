@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/startStateEntry23Progress0WhenPackedCommandAndModeByteWorld04Area17213_801F4CC4.c",
     "src/bof3/world/advanceHalfword2eBy0aAndSetState1To2At191ThenDrawHalfword2eWorld04Area17213_801F4DE0.c",
     "src/bof3/world/armScratchWorkMin80LevelTripleThenAdvanceAndSelectHandler1World04Area17213_801F4760.c",
     "src/bof3/world/dispatchWorkByte4Table6778World04Area17213_801F471C.c",

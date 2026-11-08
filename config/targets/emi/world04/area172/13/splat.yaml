@@ -194,8 +194,10 @@ segments:
     - asm
     - func_801F4BC0
   - - 8388
-    - asm
-    - func_801F4CC4
+    - c
+    - startStateEntry23Progress0WhenPackedCommandAndModeByteWorld04Area17213_801F4CC4
+    - '@source: src/bof3/world/startStateEntry23Progress0WhenPackedCommandAndModeByteWorld04Area17213_801F4CC4.c'
+    - '@behavior: Rejects a nonzero front-side byte D_80143F03, a first argument other than 0x248000, a packed second argument whose high half lies outside 0x35..0x37, and a game-mode byte D_80145E98 outside {0,6,7}; on pass it runs func_8015C088 and stores state entry 0x23 with progress 0, returning 1 from that arm and 0 from every reject.'
   - - 8536
     - c
     - queueSharedUiElement9x3Size50World04Area17213_801F4D58
