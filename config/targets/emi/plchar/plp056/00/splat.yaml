@@ -102,8 +102,8 @@ segments:
     - asm
     - func_801CFADC
   - - 6440
-    - asm
-    - func_801CFD28
+    - c
+    - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp05600_801CFD28
   - - 6744
     - c
     - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp05600_801CFE58

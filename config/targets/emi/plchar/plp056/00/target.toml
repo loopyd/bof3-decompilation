@@ -29,6 +29,7 @@ sources = [
     "src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp05600_801CF654.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenQueueCue2CPlus100SeedFrontEndRowThenQueueCue10bPlcharPlp05600_801D02F4.c",
     "src/bof3/plchar/claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C.c",
+    "src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp05600_801CFD28.c",
 ]
 support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",

@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801CF8AC
   - - 5572
-    - asm
-    - func_801CF9C4
+    - c
+    - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4
+    - '@source: src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4.c'
+    - '@behavior: Overlay step reached from this payload handler run at 0x801CFAB8. It reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044 once, ahead of frame creation, and looks that row up in the shared 0x74-byte front-end record table at 0x80143FC8, scaling the index by 116 without a bound. When the selected row byte 0 reads 0 it clears the state byte at 0x12B of the record published at 0x80146250, and both paths then run the shared no-argument update helper func_8014D978 with no arguments, discarding any result. It returns nothing and writes no other state; no other word of the payload names it, its address sits at pointer word 0x801CFAF8, entry 16 of the twenty-three-word run based at 0x801CFAB8, and the 0x18-byte frame only holds $ra at 0x10 across the call.'
   - - 5680
     - c
     - dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30

@@ -24,6 +24,7 @@ sources = [
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp26700_801CFCE8.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp26700_801CFDDC.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp26700_801D0268.c",
+    "src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp26700_801CF1FC.c",
 ]
 support_sources = [
     "src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp26700_801CEE28.c",

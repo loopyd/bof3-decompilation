@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48.c",
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp45700_801CEC60.c",
     "src/bof3/plchar/dispatchWorkByte2Tablef924PlcharPlp45700_801CEC1C.c",
     "src/bof3/plchar/dispatchWorkByte2Tablef930PlcharPlp45700_801CEE50.c",

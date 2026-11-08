@@ -32,7 +32,7 @@ extern s32 D_80181B98[];
  */
 extern u8 D_801468FC[];
 
-/* Map cell claim of this same payload, still `asm` in this target: it
+/* Map cell claim of this same payload, lifted exact at 0x801CFA44: it
  * sign-extends both arguments through `sll` plus `sra` in its own prologue, asks
  * the shared map probe for the one-byte code of that cell, claims a front-end
  * record for the codes it handles and answers one when a record was claimed and
@@ -40,7 +40,8 @@ extern u8 D_801468FC[];
  * signed halves, and the retry paths let the compiler narrow the stepped
  * coordinate to the same signed half before the call.
  */
-u8 func_801CFA44(s16 x, s16 y);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp25700_801CFA44(
+    s16 x, s16 y);
 
 /* Slot search of the shared EXE image, outside this payload: it answers the
  * signed slot of the first eligible 0x98-byte work record that holds the
@@ -128,13 +129,16 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CFA44(cx, cy);
+    claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp25700_801CFA44(
+        cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CFA44(cx + 1, cy);
+        claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp25700_801CFA44(
+            cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CFA44(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp25700_801CFA44(
+            cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;

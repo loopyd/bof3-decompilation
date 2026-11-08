@@ -135,8 +135,10 @@ segments:
     - asm
     - func_801D02F4
   - - 8428
-    - asm
-    - func_801D04EC
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp56700_801D04EC
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp56700_801D04EC.c'
+    - '@behavior: Claims one free front-end record and seeds it from a caller-supplied position pair. The body asks the shared allocator func_8019601C for a row index, masks it to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride and seeds the row at 0x80143FC8: row byte 0 takes 1, the occupancy flag, row byte 5 takes the handler selector 0x34, row byte 1 takes the caller state byte, row word 0x34 takes the first coordinate shifted left 16 and row word 0x38 takes the second the same way, so the pair lands in signed 16.16 form. It then re-reads row word 0x34 and passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x100 in row halfword 0x3E, and finally clears row byte 0x0B. Nothing is returned and a full table leaves every row untouched. The three in-image call sites are inside this payload unlifted func_801D02F4: at 0x801D0364 and 0x801D041C it passes state 0 with the sign-extended halves of its own two arguments, and at 0x801D03E0 it passes state 1 with those same halves after the first claim; each site ignores the result. The roles of row byte 0x0B and of the seeded record are not established, so the name describes the effect.'
   - - 8656
     - asm
     - func_801D05D0

@@ -61,8 +61,10 @@ segments:
     - '@source: src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp45700_801CEA3C.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as word 0x801CF91C, index 7 of the sixteen-word handler run based at 0x801CF900: it runs the shared update helper func_8014D978 and returns while the work halfword 0x58 does not read 0x0A, and when it does it claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 the byte indexes with the occupancy flag 1 in row byte 0 and the handler selector 0x3A in row byte 5, then hands the cue id 0x100 plus the work halfword 0x2C to the cue dispatcher func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02'
   - - 1864
-    - asm
-    - func_801CEB48
+    - c
+    - selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48
+    - '@source: src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp45700_801CEB48.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as word 0x801CF920, index 8 of the code-pointer run that starts at 0x801CF900 and ends with this payload: while the work pending-request flag byte 0x07 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and, once it reports ready, hands the work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag; while the flag reads zero it runs the same helper and, once ready, clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250 only while the 0x74-byte front-end row selected by work byte 0x0B still has its occupancy byte 0 clear'
   - - 2076
     - c
     - dispatchWorkByte2Tablef924PlcharPlp45700_801CEC1C

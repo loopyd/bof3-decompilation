@@ -129,8 +129,8 @@ segments:
     - c
     - dispatchWorkHalfword2cTable0404PlcharPlp46700_801D0324
   - - 8040
-    - asm
-    - func_801D0368
+    - c
+    - dispatchWorkHalfword2cTable0410PlcharPlp46700_801D0368
   - - 8108
     - textbin
     - T_801D03AC
