@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640.c'
     - '@behavior: Seeds one claimed front-end record from a caller-supplied position pair. The body asks the shared allocator func_8019601C for a row index, masks it to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride of the table at 0x80143FC8 and seeds the row: occupancy byte 0 takes 1, handler selector byte 5 takes 0x34, entry state byte 1 takes the caller state byte, row word 0x34 takes the first signed coordinate shifted left 16 and row word 0x38 takes the second the same way, so the pair lands in signed 16.16 form. It then re-reads row word 0x34, passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x100 in row halfword 0x3E and clears row byte 0x0B. Nothing is returned and a full table leaves every row untouched.'
   - - 4900
-    - asm
-    - func_801CF724
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp27a00_801CF724
+    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp27a00_801CF724.c'
+    - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from func_801CEE74 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second is nonzero, each probe raising the answer to one when the code reads 0xF2. It returns that answer as an unsigned byte and takes no arguments.'
   - - 5208
     - c
     - getAndClearPlcharPlp27a00_801CF858

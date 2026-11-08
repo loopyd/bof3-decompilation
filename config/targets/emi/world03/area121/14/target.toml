@@ -55,5 +55,6 @@ support_sources = [
     "src/bof3/world/drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390.c",
     "src/bof3/world/probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380.c",
     "src/bof3/world/drawTwoLayerTexturedPanelNearSharedFocusWorld03Area12114_801F477C.c",
+    "src/bof3/world/advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

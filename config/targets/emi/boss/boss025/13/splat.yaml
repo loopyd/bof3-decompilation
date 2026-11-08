@@ -125,8 +125,9 @@ segments:
     - setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634
     - '@source: src/bof3/boss/setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634.c'
   - - 3712
-    - asm
-    - func_800C2680
+    - c
+    - enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680
+    - '@source: src/bof3/boss/enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680.c'
   - - 3856
     - c
     - publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710

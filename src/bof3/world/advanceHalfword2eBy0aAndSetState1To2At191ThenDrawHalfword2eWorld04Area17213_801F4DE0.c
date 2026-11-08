@@ -4,7 +4,8 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80146875;
 
 void drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C(s32 arg0, s32 arg1);
-void func_801F4F70(s16 arg0, s32 arg1);
+void drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70(s32 arg0,
+    s32 arg1);
 
 /* @source 0x801F4DE0
  * @behavior Advances the work record published through the scratchpad pointer
@@ -38,5 +39,6 @@ void advanceHalfword2eBy0aAndSetState1To2At191ThenDrawHalfword2eWorld04Area17213
   }
   drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C(0xdc, 0xc8);
   next = D_1F800044;
-  func_801F4F70(*(s16*)(next + 0x2e), 0xc8);
+  drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70(
+      *(s16*)(next + 0x2e), 0xc8);
 }

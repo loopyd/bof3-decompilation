@@ -9,7 +9,8 @@ extern u32 D_80145EC8;
 /* @source 0x80145ECC @kind unknown */
 extern u32 D_80145ECC;
 
-void func_801F60F4(void);
+void advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4(
+    void);
 
 /* @source 0x801F6068
  * @behavior Byte-1 state handler 3 of the byte-1 handler table 0x801F68A4 for
@@ -37,7 +38,7 @@ void copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03
     FIELD_REF(u32, work, 0x34) = D_80145EC4;
     FIELD_REF(u32, work, 0x38) = D_80145EC8;
     FIELD_REF(u32, work, 0x3C) = D_80145ECC + 0x800000u;
-    func_801F60F4();
+    advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4();
     cursor = area12114WorkCursor_1F800044;
     cursor[1] += 1;
   } else {

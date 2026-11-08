@@ -110,8 +110,9 @@ segments:
     - asm
     - func_801F392C
   - - 3548
-    - asm
-    - func_801F39DC
+    - c
+    - emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC
+    - '@source: src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC.c'
   - - 3844
     - c
     - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F3B04

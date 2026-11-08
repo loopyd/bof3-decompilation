@@ -280,8 +280,10 @@ segments:
     - copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068
     - '@source: src/bof3/world/copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068.c'
   - - 13556
-    - asm
-    - func_801F60F4
+    - c
+    - advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4
+    - '@source: src/bof3/world/advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4.c'
+    - '@behavior: Byte-1 state handler 4 of the byte-1 handler table 0x801F68A4 for the work record published at the scratchpad pointer cell 0x1F800044. It adds 0x10 to work halfword 0x3E, writes 3 to state byte 0x01 once that signed halfword reaches 0x281, returns unless bits 0x1B of the shared effect bank byte 0x8014832E are set, and otherwise projects a semi-transparent flat grey diamond of halfsize (work halfword 0x3E shifted right seven) times ten plus 0x10 through the shared matrix 0x801492E8 from the work words 0x34 and 0x38, filling the scratchpad vectors at 0x1F800014 and stamping POLY_FT4 with texture page 0xAB for graph type 1 or 2 and 0x3B otherwise, texture columns 0xE0 to 0xFE and rows 0x30 to 0x4E on clut 0x78CA. It links the primitive with kind 1 at 0x28 bytes through 0x80155A08 and pops the matrix.'
   - - 14224
     - c
     - drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390

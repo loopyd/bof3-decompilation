@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801CF544
   - - 4624
-    - asm
-    - func_801CF610
+    - c
+    - selectArrivalSequence41ForRouteThreeAnd40ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF610
+    - '@source: src/bof3/plchar/selectArrivalSequence41ForRouteThreeAnd40ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF610.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: when the route index byte 0x08 equals the chosen candidate byte 0x03 the walk has arrived, so the body selects that route arrival sequence through the shared helper func_8014D8D4, sequence 0x41 for route 3 and 0x40 for route 5 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks it into the eight-entry window with 7 and selects the sequence of the new route index through the same helper.'
   - - 4876
     - asm
     - func_801CF70C
