@@ -1,3 +1,4 @@
+copyOwnerRecordFieldsByMode = 0x800AC870;
 func_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
 func_800C18A0 = 0x800C18A0;
@@ -27,7 +28,7 @@ func_800C1DD4 = 0x800C1DD4;
 noopHandlerBossBoss00216_800C1E34 = 0x800C1E34;
 publishBattleHooksBossBoss00216_800C1E3C = 0x800C1E3C;
 zeroResultBossBoss00216_800C1E74 = 0x800C1E74;
-func_800C1E7C = 0x800C1E7C;
+initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C = 0x800C1E7C;
 invokeZeroArgBossBoss00216_800C1EE8 = 0x800C1EE8;
 publishBattleHooksBossBoss00216_800C1F08 = 0x800C1F08;
 zeroResultBossBoss00216_800C1F40 = 0x800C1F40;

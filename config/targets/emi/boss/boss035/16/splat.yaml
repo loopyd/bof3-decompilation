@@ -93,8 +93,8 @@ segments:
     - asm
     - func_800C1C3C
   - - 1136
-    - asm
-    - func_800C1C70
+    - c
+    - publishBattleHooksBossBoss03516_800C1C70
   - - 1192
     - c
     - zeroResultBossBoss03516_800C1CA8

@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/world/findFreeWorkRecordByCountdownAt800E4800World01Area06714_801F3A9C.c'
     - '@behavior: returns the first 0xE-stride record at 0x800E4800 whose +0xC countdown halfword reads zero, or zero when all 0x80 records are busy'
   - - 3800
-    - asm
-    - func_801F3AD8
+    - c
+    - drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8
+    - '@source: src/bof3/world/drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8.c'
+    - '@behavior: sets the 0x380/0x100 texture page draw mode with the dither enable raised at the current primitive cursor and links that 0xC-byte packet through the grid-cell linker func_80155A08 on the target word pair at 0x801F53A0/0x801F53A4, then for eight steps emits two 0x24-byte Gouraud quads per step, one per 0x100 of the turn, each vertex placing its point pair at the record +0x0 halfword plus the +0x4 reach halfword scaled by the fixed-point x helper func_801783C8 shifted right 12 and between y 0 and the record +0x2 halfword plus that reach scaled by the y helper func_801782FC shifted right 13, with all six channel bytes taking the record +0x8 halfword clamped into 0x00..0xFF after walking four units up for the first two steps and down afterwards, each packet linked as grid kind 4, and finally restores the same draw mode with the dither enable cleared'
   - - 4436
     - c
     - seedRandomWorkRecordPositionAroundWorkObjectAndArmCountdownWorld01Area06714_801F3D54

@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss03616_800C1B5C.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1B24.c",
     "src/bof3/support/boss036_16_psyq.c",
+    "src/bof3/boss/dispatchStateByte1Table2080BossBoss03616_800C1C98.c",
 ]
 psyq_source = "src/bof3/support/boss036_16_psyq.c"

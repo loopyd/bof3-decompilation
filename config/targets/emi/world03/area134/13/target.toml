@@ -27,6 +27,7 @@ sources = [
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F546C.c",
     "src/bof3/world/advanceWorkWord1CBy1199AndRunHelperThenDispatchCue20FAndAdvanceWorkByte1World03Area13413_801F4624.c",
     "src/bof3/world/seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C.c",
+    "src/bof3/world/seedFrontEndRecordHandler99FromWorkPositionWorld03Area13413_801F5698.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

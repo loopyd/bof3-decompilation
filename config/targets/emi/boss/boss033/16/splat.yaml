@@ -87,8 +87,10 @@ segments:
     - asm
     - func_800C1E70
   - - 1752
-    - asm
-    - func_800C1ED8
+    - c
+    - copyWorkWord3CPlus4000000IntoWord20RequestResource2SetWorkByteBTo10ThenAdvanceWorkByte2BossBoss03316_800C1ED8
+    - '@source: src/bof3/boss/copyWorkWord3CPlus4000000IntoWord20RequestResource2SetWorkByteBTo10ThenAdvanceWorkByte2BossBoss03316_800C1ED8.c'
+    - '@behavior: Work-step handler at index 2 of this overlay code-pointer run based at 0x800C27AC, which is also the base word 0x800C27B4 that the step dispatcher func_800C1E70 indexes with work byte 2 scaled by four. It loads the scratch work object published at the pointer cell 0x1F800044 and stores that object word at 0x3C plus 0x04000000 into its own word at 0x20, requests resource 2 through 0x8014D6B8, then re-reads the cell to set object byte 0xB to 0x10 and again to advance object byte 2 by one. Takes no arguments and returns nothing. The roles of the words at 0x20 and 0x3C and of byte 0xB are not established.'
   - - 1848
     - asm
     - func_800C1F38

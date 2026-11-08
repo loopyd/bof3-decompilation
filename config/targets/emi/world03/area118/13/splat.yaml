@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801F4CD0
   - - 9260
-    - asm
-    - func_801F502C
+    - c
+    - setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C
+    - '@source: src/bof3/world/setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C.c'
+    - '@behavior: Matches the two zero-extended byte arguments and the shared game-mode byte 0x80145E98 against the two records of this payload trigger table at 0x801F59E0 (record 0 reads 0x0B/0x46/0x01/0x85 and record 1 is all zeroes, the empty terminator), walking the table by a byte offset advanced 0x04 per record and stopping at the accepted record. The accepted record sets its fourth byte as a bit of the shared main-RAM flag bank 0x80144F28 through the shared setter func_8015B5F4, unless that bank already reports bit 0x1C through the shared tester func_8015B5D4, and only on that path does it call the main-executable routine 0x8019ABB0 with 0xF and queue sound cue 0x203 through the resident cue dispatcher. It returns 1 exactly on that path; a run that reaches the end of the table without acceptance, the empty terminator record and an already-set bit 0x1C all return 0. No jal and no word of this payload names the address, so the two byte arguments carry no evidenced role.'
   - - 9500
     - textbin
     - D_801F511C

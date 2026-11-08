@@ -2,14 +2,15 @@
 
 typedef void (*Boss00216Handler)(void);
 
-/* Overlay entrypoints this installer publishes. The first is the raw-address
- * routine at 0x800C1E7C, which tests the 0x6 mask of D_80146328 and either
- * calls func_800AC870(0, D_801EB630, 0), stores 0x6D into g_ScenarioProgress
- * and 0x18 into D_80145029 and then calls func_801DDED8, or calls
- * func_801DDF00. The second takes no argument and forwards zero to
- * func_800AC844. The third returns a zero result, which the void slot type
- * drops. */
-void func_800C1E7C(void);
+/* Overlay entrypoints this installer publishes. The first is the progress hook
+ * at 0x800C1E7C, which tests the 0x6 mask of D_80146328 and either calls
+ * copyOwnerRecordFieldsByMode(0, D_801EB630, 0), stores 0x6D into
+ * g_ScenarioProgress and 0x18 into D_80145029 and then calls
+ * initModeTuple510, or calls initModeTuple520. The second takes no argument and
+ * forwards zero to func_800AC844. The third returns a zero result, which the
+ * void slot type drops. */
+void initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C(
+    void);
 void invokeZeroArgBossBoss00216_800C1EE8(void);
 s32 zeroResultBossBoss00216_800C1E74(void);
 
@@ -36,7 +37,8 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss00216_800C1E3C(void) {
-  D_801463A4 = func_800C1E7C;
+  D_801463A4 =
+      initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C;
   D_801463A8 = invokeZeroArgBossBoss00216_800C1EE8;
   D_801463AC = (Boss00216Handler)zeroResultBossBoss00216_800C1E74;
 }

@@ -130,8 +130,10 @@ segments:
     - asm
     - func_801F4604
   - - 6824
-    - asm
-    - func_801F46A8
+    - c
+    - redrawGridCellCodesAndRestorePackedCellMapThenQueueCursorRectsWorld02Area11113_801F46A8
+    - '@source: src/bof3/world/redrawGridCellCodesAndRestorePackedCellMapThenQueueCursorRectsWorld02Area11113_801F46A8.c'
+    - '@behavior: Draws this overlay grid and cursor state for the shared front-side cell code byte 0x80143F03. While that byte reads clear it clears flag 0x28 of the main-RAM bank 0x80144F28 through 0x8015B5A8. When it reads 1 it passes entry column times seven plus row of the 7x7 code table at 0x801F5BC8 to this overlay cell draw 0x801F4604 as the cell size, restores the 28-byte packed cell map 0x801F5C18 from the seven-word template 0x801F5BFC, and queues the four cursor rectangles 0x11/0x12 by 0xAD/0xAE through the shared UI queue 0x801A4BC0 with sizes 0x50/0x50/0/0 while flag 0x28 of 0x80144F28 reads clear through 0x8015B5D4 and 0xA1/0xA1/0xC0/0xC0 while it reads set. When it reads 5 it queues the two shared UI elements (0xA, 8) and (0xB, 8) with size 0x50.'
   - - 7312
     - textbin
     - D_801F4890

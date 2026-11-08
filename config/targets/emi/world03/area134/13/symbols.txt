@@ -95,6 +95,6 @@ publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F
 func_801F54EC = 0x801F54EC;
 func_801F557C = 0x801F557C;
 seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C = 0x801F560C;
-func_801F5698 = 0x801F5698;
+seedFrontEndRecordHandler99FromWorkPositionWorld03Area13413_801F5698 = 0x801F5698;
 D_801F5724 = 0x801F5724;
 D_801F5874 = 0x801F5874;

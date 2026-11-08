@@ -26,5 +26,6 @@ support_sources = [
     "src/bof3/world/seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54.c",
     "src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278.c",
     "src/bof3/world/routeRecordToNextCellStampMapCellsByAreaFlagThenSetStateFromCameraWindowWorld03Area11813_801F3058.c",
+    "src/bof3/world/setTriggerRecordFlagAndQueueCue203OnMatchedArgumentsWorld03Area11813_801F502C.c",
 ]
 psyq_source = "src/bof3/support/area118_13_psyq.c"

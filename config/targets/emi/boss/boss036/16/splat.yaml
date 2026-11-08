@@ -63,8 +63,10 @@ segments:
     - asm
     - func_800C1B6C
   - - 1176
-    - asm
-    - func_800C1C98
+    - c
+    - dispatchStateByte1Table2080BossBoss03616_800C1C98
+    - '@source: src/bof3/boss/dispatchStateByte1Table2080BossBoss03616_800C1C98.c'
+    - '@behavior: Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record byte at offset 1, scales it by four and calls the entry at that index of the handler run based at the interior word 0x800C2080 of the reviewed row D_800C2020, leaving the selected handler result in $v0.'
   - - 1244
     - asm
     - func_800C1CDC

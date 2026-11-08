@@ -120,8 +120,10 @@ segments:
     - c
     - zeroResultBossBoss00216_800C1E74
   - - 1660
-    - asm
-    - func_800C1E7C
+    - c
+    - initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C
+    - '@source: src/bof3/boss/initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C.c'
+    - '@behavior: Progress hook this overlay publishes into the shared battle hook slot 0x801463A4: it reads the shared battle flag word D_80146328 and, when the 0x6 mask of that word is set, copies the owner-0 field group of the shared battle record base 0x801EB630, stores 0x6D into the shared scenario progress byte 0x80146864 and 0x18 into the shared selected-record index byte 0x80145029, then calls the shared initializer at 0x801DDED8; when the mask is clear it calls the one at 0x801DDF00 instead.'
   - - 1768
     - c
     - invokeZeroArgBossBoss00216_800C1EE8
