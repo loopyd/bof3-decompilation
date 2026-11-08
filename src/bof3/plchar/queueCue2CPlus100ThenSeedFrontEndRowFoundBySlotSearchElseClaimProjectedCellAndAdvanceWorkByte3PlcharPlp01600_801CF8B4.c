@@ -64,15 +64,16 @@ s8 func_801B5AE4(void);
  * raises the animation bit of the answered record. */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map cell claim of this same payload, still an `asm` row at 0x801CFD24: it
+/* Map cell claim of this same payload, an exact `c` row at 0x801CFD24: it
  * sign-extends its two signed halves, probes the map cell code through the shared
  * func_80166CB0 and claims a front-end record for the accepted codes. It answers
- * one when the claim succeeded and zero when it did not, and this body tests only
- * the low byte of that answer. Both cell offsets are signed sixteen-bit values,
- * so the original converts each retry index to that width before the call. Its
- * own Splat row sits before this one in the payload, so the symbol is defined
- * inside this payload and needs no foreign binding. */
-u8 func_801CFD24(s16 col, s16 row);
+ * one for the codes it accepts and zero otherwise, and this body tests only the
+ * low byte of that answer. Both cell offsets are signed sixteen-bit values, so
+ * the original converts each retry index to that width before the call. Its own
+ * Splat row sits before this one in the payload, so the symbol is defined inside
+ * this payload and needs no foreign binding. */
+u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+    s16 col, s16 row);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it last on every path and discards the returned byte. */
@@ -101,7 +102,7 @@ u8 func_8014DAEC(void);
  *           byte 0x74 of the found work record through the column base 0x801468FC
  *           and the slot stride 0x98 and queues the literal cue 0x10B. It then
  *           claims a front-end record at the projected point through this
- *           payload's claim func_801CFD24, passing the high half of each
+ *           payload's claim at 0x801CFD24, passing the high half of each
  *           projected word: when that claim answers zero and the first word has a
  *           nonzero low half it retries one unit further on that axis, and when
  *           the retry also answers zero and the second word has a nonzero low
@@ -159,13 +160,16 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = func_801CFD24(cx, cy);
+        claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+            cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = func_801CFD24(cx + 1, cy);
+            claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+                cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            func_801CFD24(cx, cy + 1);
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp01600_801CFD24(
+                cx, cy + 1);
           }
         }
       }

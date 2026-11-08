@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801CF940
   - - 5964
-    - asm
-    - func_801CFB4C
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C.c'
+    - '@behavior: Claims one free front-end record and seeds it from a caller-supplied position pair. It asks the shared main-executable allocator func_8019601C for a row index, masks the answer to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride and seeds the row of the shared front-end record table at 0x80143FC8: row byte 0 takes the occupancy flag 1, row byte 5 takes the handler selector 0x34, row byte 1 takes the caller state byte, row word 0x34 takes the first coordinate shifted left 16 and row word 0x38 takes the second the same way, so the pair lands in signed 16.16 form. It then re-reads row word 0x34 and passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x200 in row halfword 0x3E, and writes 1 into row byte 0x0B, while a full table leaves every row untouched. No jal in this payload and no word of its twenty-eight-word code-pointer run at 0x801D02F4 holds 0x801CFB4C, so the body is an overlay entry reached from outside every extracted payload and its three argument roles stay structural. The roles of row byte 0x0B, of the plus 0x200 bias and of the caller state byte are not established, so the name describes the effect.'
   - - 6200
     - c
     - dispatchWorkByte3Table0334PlcharPlp03400_801CFC38

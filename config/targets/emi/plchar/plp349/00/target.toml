@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablef620PlcharPlp34900_801CF328.c",
     "src/bof3/plchar/dispatchWorkByte3Tablef614PlcharPlp34900_801CEF10.c",
     "src/bof3/plchar/dispatchWorkByte3Tablef600PlcharPlp34900_801CE654.c",
+    "src/bof3/plchar/dispatchWorkHalfword2cTablef638PlcharPlp34900_801CF5A8.c",
     "src/bof3/plchar/getAndClearPlcharPlp34900_801CF554.c",
     "src/bof3/plchar/getAndClearPlcharPlp34900_801CF544.c",
     "src/bof3/plchar/getAndClearPlcharPlp34900_801CF534.c",

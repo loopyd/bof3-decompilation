@@ -13,6 +13,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTablefcf4PlcharPlp27800_801CFC2C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefd00PlcharPlp27800_801CFC70.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0.c",
+    "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27800_801CF89C.c",
 ]
 support_sources = [
     "src/bof3/support/plp278_00_psyq.c",

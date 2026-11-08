@@ -81,8 +81,8 @@ segments:
     - c
     - dispatchWorkByte2Table0888PlcharPlp05600_801CF728
   - - 4972
-    - asm
-    - func_801CF76C
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp05600_801CF76C
   - - 5176
     - asm
     - func_801CF838

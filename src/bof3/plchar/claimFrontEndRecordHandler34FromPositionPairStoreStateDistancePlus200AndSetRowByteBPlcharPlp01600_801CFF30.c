@@ -65,7 +65,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           helper func_8015477C, storing that answer plus 0x200 in row
  *           halfword 0x3E, and finally writes 1 into row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. All five
- *           in-image call sites are inside this payload's func_801CFD24, which
+ *           in-image call sites are inside this payload's claim at 0x801CFD24, which
  *           pass a small selector in the first argument register and a masked
  *           byte in the fourth; this body reads neither the fourth nor the
  *           fifth, so they stay unnamed here. The roles of row byte 0x0B, of the

@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801CE620
   - - 612
-    - asm
-    - func_801CE664
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp45700_801CE664
   - - 816
     - asm
     - func_801CE730

@@ -82,7 +82,8 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * are signed sixteen-bit values, so the original converts each retry index to
  * that width before the call.
  */
-u8 func_801D0148(s16 col, s16 row);
+u8 claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+    s16 col, s16 row);
 
 /* @source 0x801CFCD8
  * @behavior Work byte 3 == 1 step of the work-byte-3 dispatcher at 0x801CFB94.
@@ -109,7 +110,8 @@ u8 func_801D0148(s16 col, s16 row);
  *           the found work record through the column base 0x801468FC and queues
  *           the literal cue 0x10B. It then claims a front-end row at the
  *           projected point through this payload's map cell claim handler
- *           func_801D0148, passing the high half of each projected word: when
+ *           claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteB,
+ *           passing the high half of each projected word: when
  *           that claim fails and the first word has a nonzero low half it retries
  *           one unit further on that axis, and when the retry also fails and the
  *           second word has a nonzero low half it retries one unit further on the
@@ -193,13 +195,16 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = func_801D0148(cx, cy);
+        claimed = claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+            cx, cy);
         if (claimed == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = func_801D0148(cx + 1, cy);
+            claimed = claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+                cx + 1, cy);
           }
           if (claimed == 0 && (y & 0xFFFF) != 0) {
-            func_801D0148(cx, cy + 1);
+            claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+                cx, cy + 1);
           }
         }
       }
