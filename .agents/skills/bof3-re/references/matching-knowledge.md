@@ -428,8 +428,13 @@ the load that compare reads.
 Unaligned fields/padding/SDK stack types follow type-application reference. For
 pooled member addresses, compare direct access through the existing member with
 an initialized pointer local serving one operation. Direct member access can retain
-folded offsets where a reused pointer materializes the cell address. Compare plain
-and single-execution scopes; loop notes can change CSE/combine as well as scheduling.
+folded offsets where a reused pointer materializes the cell address. An array of rows
+is that same comparison at a wider scale: a per-column `u8*` row-pointer local kept
+the narrowed column in a caller-saved register across the row's draw call and cost two
+instructions and eight bytes, while declaring the table with its own rank and indexing
+`[col][row]` matched, and re-narrowing the column into an `s16` local lost nineteen
+instructions. Let the declaration carry the rank. Compare plain and single-execution
+scopes; loop notes can change CSE/combine as well as scheduling.
 Preserve cell/pointee types, qualifiers, evaluation count, aliases and reloads after
 stores. Do not replace the owning aggregate, add cell aliases or qualify accesses
 solely for matching. Check the whole function and frame, not the first fixed load.
@@ -484,6 +489,18 @@ body's uses alone. The mirror case is a cast used twice: `(s8)value` in both the
 and the comparison lets one conversion serve both, while reassigning
 `value = (s8)value;` between them duplicates it.
 
+Where the mask sits, not the parameter's name, decides that width. An original that
+masks a byte argument once at entry (`andi $a0,$a0,0xff`) and leaves it alone after
+has the wide formal with the mask written into the body: the `u8` formal made GCC mask
+per use and left the body 68 bytes over at 39 of 60 instructions, while `s32`
+parameters with in-place `& 0xFF` matched on the next gate. The mirror is the call
+site. A truncation this build emits in a `jal` delay slot that the original lacks
+means the prototype the body declares for that callee is narrower than the original's,
+so widen the declared parameter and re-gate. That declaration belongs to the caller,
+because the conversion is the caller's: two exact callers of one helper declared it
+`u8` and `s32` and each matched its own call-site bytes, so unifying them into one
+declaration owes both call sites a fresh gate.
+
 The formal's width decides the exit the same way. When the original's tail
 sign-extends the return value with `sll`/`sra` of `$v0`, that conversion comes from a
 narrow declared return type: an `s32` local returned as `return (s16)local;` folds the
@@ -492,8 +509,12 @@ return type to `s32` reproduces the same loss. Declare the narrow return and ret
 the narrow local plainly.
 
 Mirror the width rule at the assignment: when a narrow callee return feeds a narrow
-cell, keep the accumulator local at the cell's width. A wider local converts the
-return where it is assigned and costs an `sll`/`sra` pair the original does not have,
+cell, keep the accumulator local at the cell's width. A clamp result stored into
+several byte fields takes those fields' width too, not the `s16` it was computed from:
+the wide local measured two instructions and eight bytes over with the first difference
+inside the second clamp group, and the `u8` local left one `andi 0xff` per group.
+A wider local converts the return where it is assigned and costs an `sll`/`sra` pair
+the original does not have,
 while the narrow local leaves the truncation to the store. The accumulator's width
 also picks the load: scaling a signed byte element by a wider value through an `s8`
 local made GCC load it `lbu` and widen with `sll`/`sra` before the multiply, which
