@@ -900,7 +900,14 @@ value into that same local and compute the widened result from it - so its count
 rises and the allocation order reverses. One lane spent its whole shape sweep on
 this exchange and closed it on the compiler-evidence rung alone with that one change.
 Declaration-order swaps, a named limit constant and respelled clamps measured neutral
-at the same score, so they are not candidates for it.
+at the same score, so they are not candidates for it. The same count lever reaches a
+call result: when a masked call result is compared against a loaded table byte and
+the two trade registers mid-body at equal size and frame, write the mask as its own
+statement on the same local (`v = draw(); v &= MASK;`). The folded
+`v = draw() & MASK` put the result in `$a0` and the byte in `$v1`, the reverse of the
+original's `.greg` order, and the split statement restored the pair. Width, cast and
+declaration-order spellings of that local measured identical there, so the statement
+count is the lever and the type is not.
 
 A narrowed induction temporary needs a complete reachable-range proof, including
 the final endpoint. A higher score at the same size can be a retainable partial
