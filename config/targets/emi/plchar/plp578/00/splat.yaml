@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801CF9C4
   - - 5680
-    - asm
-    - func_801CFA30
+    - c
+    - dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30
+    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30.c'
+    - '@behavior: Overlay step dispatch on the work-record halfword at offset 0x2C: reads the scratchpad work-record pointer cell at 0x1F800044 once, takes that record unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFAFC with no arguments, discarding any result; no index bound, no other state read or written, and the 0x18-byte frame only holds $ra across the indirect call. Base 0x801CFAFC is entry 17 of the run at 0x801CFAB8.'
   - - 5748
     - asm
     - func_801CFA74

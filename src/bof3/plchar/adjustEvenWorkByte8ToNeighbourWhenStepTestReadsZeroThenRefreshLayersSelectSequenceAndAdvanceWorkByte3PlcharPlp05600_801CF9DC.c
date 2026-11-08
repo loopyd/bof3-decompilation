@@ -21,7 +21,8 @@ u8 func_801D04C8(void);
  * all 89 instructions, to the refresh the two sibling step handlers of this
  * payload call.
  */
-void func_801D066C(void);
+void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. The
  * sibling step handlers at 0x801D0060 (PLP016) and 0x801D0484 (PLP026) declare
@@ -72,7 +73,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectS
       }
     }
   }
-  func_801D066C();
+  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

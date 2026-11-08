@@ -132,8 +132,8 @@ segments:
     - asm
     - func_801D04C8
   - - 8812
-    - asm
-    - func_801D066C
+    - c
+    - claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C
   - - 9168
     - c
     - dispatchWorkHalfword2cTable08bcPlcharPlp05600_801D07D0

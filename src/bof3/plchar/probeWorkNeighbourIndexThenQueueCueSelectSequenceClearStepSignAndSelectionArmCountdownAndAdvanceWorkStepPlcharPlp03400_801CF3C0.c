@@ -9,13 +9,15 @@
  */
 extern u8* D_1F800044;
 
-/* Neighbour probe of this payload, outside this span and still unlifted. It
- * takes no arguments, reads work-record byte 8 as the index of the two-word
+/* Neighbour probe of this payload, now lifted at 0x801CFEAC as
+ * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC.
+ * It takes no arguments, reads work-record byte 8 as the index of the two-word
  * neighbour offsets it adds to record words 0x34 and 0x38, and returns a byte
  * flag for what it finds at that neighbour: it answers through $v0 with the
  * 0/1 the original call sites test, so the declared return type is that byte.
  */
-extern u8 func_801CFEAC(void);
+extern u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC(
+    void);
 
 /* Cue queue routine of the shared EXE image, outside this payload. The original
  * calls it through a plain `jal` with the work halfword 0x2C plus 0x100 in $a0,
@@ -43,8 +45,9 @@ extern u32 func_8014D8D4(u8 arg0);
  *           the body runs as that dispatcher's step 0; no jal in this payload
  *           names it, so it is reached through the run alone. It first settles
  *           the work record's byte 8, the index the payload's own probe
- *           func_801CFEAC uses to pick the two-word neighbour offset it adds to
- *           record words 0x34 and 0x38. When that byte reads even the handler
+ *           testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC
+ *           uses to pick the two-word neighbour offset it adds to record words
+ *           0x34 and 0x38. When that byte reads even the handler
  *           stores byte 8 minus one masked to three bits, calls the probe, and
  *           only while the probe's byte answer reads zero stores byte 8 plus
  *           two masked the same way, calls the probe once more, and again only
@@ -80,9 +83,9 @@ void probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionA
     void) {
   if ((D_1F800044[8] & 1) == 0) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (!func_801CFEAC()) {
+    if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC()) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (!func_801CFEAC()) {
+      if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC()) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }
     }

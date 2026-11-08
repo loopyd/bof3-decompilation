@@ -20,6 +20,7 @@ support_sources = [
     "src/bof3/plchar/queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp34900_801CEF54.c",
     "src/bof3/plchar/getAndClearPlcharPlp34900_801CF544.c",
     "src/bof3/plchar/getAndClearPlcharPlp34900_801CF534.c",
+    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp34900_801CEE24.c",
     "src/bof3/support/plp349_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp349_00_psyq.c"

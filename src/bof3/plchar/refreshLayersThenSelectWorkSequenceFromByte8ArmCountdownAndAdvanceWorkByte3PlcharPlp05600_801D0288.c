@@ -13,9 +13,10 @@ extern u8* D_1F800044;
  * this caller reads no result from $v0. Its 0x164-byte body is byte-identical,
  * all 89 instructions, to the helper the two sibling step handlers call —
  * 0x801D0444 of PLP016 and 0x801D0868 of PLP026, the helper PLP026 describes as
- * refreshing the layers — and its own row here is still `asm`.
+ * refreshing the layers — and its own row here is a `c` lift of its own.
  */
-void func_801D066C(void);
+void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. The
  * sibling step handlers at 0x801D0060 (PLP016) and 0x801D0484 (PLP026) declare
@@ -52,7 +53,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288(
     void) {
-  func_801D066C();
+  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp05600_801D066C();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;

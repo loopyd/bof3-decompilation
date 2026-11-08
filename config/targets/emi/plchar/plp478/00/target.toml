@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp47800_801CF064.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablef71cPlcharPlp47800_801CF694.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablef710PlcharPlp47800_801CF650.c",

@@ -103,8 +103,10 @@ segments:
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp26700_801CF75C
   - - 5064
-    - asm
-    - func_801CF7C8
+    - c
+    - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp26700_801CF7C8
+    - '@source: src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp26700_801CF7C8.c'
+    - '@behavior: Work byte 3 == 1 step of this overlay, entry 16 of the thirty-word code-pointer run based at 0x801D0988 and so index 1 from the byte-3 dispatcher base 0x801D09C4 that dispatchWorkByte3Table09c4PlcharPlp26700_801CF718 indexes; the body address appears once in the payload bytes, as the run word at 0x801D09C8, and no jal names it. Runs the shared readiness helper func_8014DAEC and keeps only its low byte as the ready test: while ready it passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, which advances the dispatch to entry 17, the 0x801CF900 handler. Otherwise it reads the countdown byte 0x0A that the step at 0x801CF75C arms with 0xB, does nothing while that byte reads zero, otherwise decrements it and continues only when a second read of the same byte reaches zero: that path queues the cue of work halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B and work byte 7 into the same row field 0x0A after defaulting work byte 7 to 1, then queues cue 0x10B through the same dispatcher.'
   - - 5376
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900

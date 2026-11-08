@@ -25,5 +25,6 @@ support_sources = [
     "src/bof3/plchar/probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp03400_801CF3C0.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp03400_801D0160.c",
     "src/bof3/plchar/tickWorkCountdownByteAThenSeedFrontEndRowFoundBySlotSearchAndQueueCue10bElseMarkProjectedRecordClaimProjectedCellAndAdvanceWorkByte3PlcharPlp03400_801CF4E0.c",
+    "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC.c",
 ]
 psyq_source = "src/bof3/support/plp034_00_psyq.c"
