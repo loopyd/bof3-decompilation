@@ -431,8 +431,13 @@ solely for matching. Check the whole function and frame, not the first fixed loa
 
 Match local views to existing storage and consumers. A mutable source view over a
 mutable byte table can change read-after-write code generation without adding
-volatility. `const` does not imply non-aliasing. A pointer-cell reload after a store
-may correct an earlier reconstruction rather than preserve PRE under every alias.
+volatility. `const` does not imply non-aliasing. A `const volatile` view is a
+separate declaration from a mutable `volatile` one: when a partial's view already
+re-reads its live fields and a tail of load and store order differences survives,
+dropping `const` from both the declaration and the cast leaves every access and store
+unchanged and closed that residual at the original size, while qualifier probes on
+the individual reads measured neutral. A pointer-cell reload after a store may
+correct an earlier reconstruction rather than preserve PRE under every alias.
 Prove original accesses and final linked bytes; make no universal alias guarantee.
 
 Use established halfword/aggregate views when field widths and consumers support
@@ -799,17 +804,21 @@ declare a local `u8 *` to that symbol so one base serves every read. Passing the
 expression to each call instead emits its own `lui %hi`/`lbu %lo` pair and loses the
 shared base. A cell that holds a pointer takes the address of the cell: `T **cell =
 &sym;` and `*cell` at each use. The value local (`T *p = sym;`) caches the pointee,
-so it drops the original's later reload along with the shared base. One read needs
-the same local when a store to another cell sits between the base and the read: the
-pointer copy takes the base load early enough to fill the preceding delay slot, while
-the inline symbol expression materialises the base after that store and costs two
-instructions. A cell that is loaded, stored and re-armed inside a guard wants it too:
-one base for all three uses is what lets the original keep the re-arm constant in both
-branch delay slots. A fixed address the original hands to a callee as its destination
-is this same local from the other side: take the address once (`screen = &cell;`), pass
-the local, and read the result back through it, while a cell of the same pair the body
-only reads keeps its own symbol expression. A local that only re-types a promoted
-value (`u16 row = y;`) folds away and changes nothing.
+so it drops the original's later reload along with the shared base. A post-call reload
+whose only difference is the register that receives its base (`$v1` where the original
+builds `$v0`) is that local's lifetime, not allocation: keep the local for the accesses
+ahead of the call and write the post-call test on the named cell, which cleared the
+one-register residual. One read needs the same local when a store to another cell sits
+between the base and the read: the pointer copy takes the base load early enough to
+fill the preceding delay slot, while the inline symbol expression materialises the base
+after that store and costs two instructions. A cell that is loaded, stored and
+re-armed inside a guard wants it too: one base for all three uses is what lets the
+original keep the re-arm constant in both branch delay slots. A fixed address the
+original hands to a callee as its destination is this same local from the other side:
+take the address once (`screen = &cell;`), pass the local, and read the result back
+through it, while a cell of the same pair the body only reads keeps its own symbol
+expression. A local that only re-types a promoted value (`u16 row = y;`) folds away
+and changes nothing.
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
