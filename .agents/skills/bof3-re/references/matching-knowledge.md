@@ -1289,7 +1289,9 @@ added to, which can be an entry inside a longer in-image pointer run rather than
 run's first word. Two exact dispatchers of one overlay differed only in that table
 immediate, so a run base is not automatically the table symbol. A run can also cross
 a reviewed data-row boundary; that is no reason to split or extend a row, so declare
-the extern at the indexed word and leave both rows as reviewed.
+the extern at the indexed word and leave both rows as reviewed. A word the body
+stores as a value binds the same way: take the address of that interior word and
+leave the row whole, since a published address needs no row boundary.
 
 A Splat `asm` span is not automatically code. Disassemble the span against the target
 binary before treating it as a lift target:
