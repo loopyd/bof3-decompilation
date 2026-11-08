@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c'
     - '@behavior: Entry 0 of the overlay handler table at 0x801D1B48 dispatched by func_801D10A4 with the work object byte at +0x1: arms the countdown byte at +0x9 with 0x10 and advances the work byte at +0x1.'
   - - 1304
-    - asm
-    - func_801D1118
+    - c
+    - drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118
+    - '@source: src/bof3/scenario/drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118.c'
+    - '@behavior: Entry 1 of this overlay handler run at 0x801D1B48 (0x801D10E8, 0x801D1118, 0x801D11A4), which the dispatcher func_801D10A4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it scales that object countdown byte at +0x9 by 16, negates the product, passes the low byte to the in-payload draw helper func_801D19A8 that fills the red component of two full-screen quads with it, then ticks the countdown down by one; when the decremented byte reaches zero it re-arms it with 0x10 and advances the work byte at +0x1 by one, so the next frame dispatches entry 2. It takes no arguments, returns nothing and its frame only keeps $ra across the helper call.'
   - - 1444
     - asm
     - func_801D11A4

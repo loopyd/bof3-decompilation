@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/scenario/claimFreeWorkTableEntryAt800E4800ScenarioSce15ef200_801D15DC.c",
     "src/bof3/scenario/armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8.c",
+    "src/bof3/scenario/drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118.c",
 ]
 psyq_source = "src/bof3/support/sce15ef2_00_psyq.c"

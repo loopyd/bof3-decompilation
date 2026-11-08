@@ -105,8 +105,10 @@ segments:
     - dispatchStateByte2Table519cWorldWorld03Area11813_801F410C
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 5456
-    - asm
-    - func_801F4150
+    - c
+    - seedRecordCursorCoordinatePairFromSlotTablesAndHalfDistanceThenAdvanceCursorAndDispatchFlagStateWorld03Area11813_801F4150
+    - '@source: src/bof3/world/seedRecordCursorCoordinatePairFromSlotTablesAndHalfDistanceThenAdvanceCursorAndDispatchFlagStateWorld03Area11813_801F4150.c'
+    - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 0. Seeds the work record published at the scratchpad pointer cell 0x1F800044 from its target halfword at offset 0x36: stores the low byte of that halfword into the cursor byte at offset 0x0B, then writes the record word at 0x34 as the byte two cursor steps into table 0x801F51B0 shifted left 16 and the record word at 0x38 the same way from table 0x801F51B1, so the pair is the cell coordinate of the indexed slot. Calls the shared distance helper func_8015477C with that coordinate pair and stores minus half of the returned signed distance less the cursor-indexed halfword of table 0x801F51B4 into the record halfword at 0x3E, then advances the cursor byte at 0x0B. Probes the flag number the advanced cursor picks from table 0x801F5198 in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4; when that flag is set it increments the record state byte at 0x02 and calls its sibling handler at 0x801F4278, otherwise it stores 3 into that state byte and calls the sibling handler at 0x801F43FC. Takes no arguments and returns nothing; the record pointer is loaded before the frame is created and the 0x18-byte frame keeps only $ra at 0x10.'
   - - 5752
     - c
     - setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagClearThenDrawFlagIndexedScaledFrameWorld03Area11813_801F4278

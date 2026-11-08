@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F400C.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F4098.c",
     "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndClearProgressAndRequestPrimaryState4Substate0IfPartyByte6World01Area06714_801F451C.c",
+    "src/bof3/world/drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0.c",
 ]
 psyq_source = "src/bof3/support/area067_14_psyq.c"

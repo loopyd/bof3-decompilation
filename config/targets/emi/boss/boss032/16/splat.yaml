@@ -62,8 +62,10 @@ segments:
     - asm
     - func_800C1A08
   - - 1004
-    - asm
-    - func_800C1BEC
+    - c
+    - publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC
+    - '@source: src/bof3/boss/publishOwnerRecordAndRequestResourceZeroBossBoss03216_800C1BEC.c'
+    - '@behavior: Battle setup hook of this overlay: clears the 0x40 flag of owner record 0, publishes the pointer returned by findOwnerRecord into the shared battle-record cell 0x80146884 and into the scratchpad work-record cursor 0x1F800044, then requests resource 0; the installer at 0x800C19C8 publishes it into the shared hook slot 0x801463A8.'
   - - 1068
     - textbin
     - D_800C1C2C

@@ -115,8 +115,10 @@ segments:
     - asm
     - func_801F3EE8
   - - 5440
-    - asm
-    - func_801F4140
+    - c
+    - enterState11WithCodeForMatchedWorkCellAndRouteStepWorld02Area11113_801F4140
+    - '@source: src/bof3/world/enterState11WithCodeForMatchedWorkCellAndRouteStepWorld02Area11113_801F4140.c'
+    - '@behavior: One-shot position trigger gated by the shared byte 0x80143F03: it clears flag 0x28 of the bank at 0x80144F28 through 0x8015B5A8 while that byte is clear, returns 0 unless it then reads 1, and otherwise matches the doubled cell coordinates of its two arguments against the edges of two nested rectangles together with the sign of the published work record route step at 0x80181B00 or 0x80181B01, entering state 11 through 0x801F4510 with code 3, 7, 5 or 1 on a match, and finally publishes state selector 0x11 with code 0x14 when the cell index pair falls inside 0x11..0x12 and 0xB7..0xB8 and flag 0x28 reads clear.'
   - - 6416
     - c
     - selectWorkRecordSlotFromScrollCellAndEnterState11World02Area11113_801F4510

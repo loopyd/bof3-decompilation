@@ -71,8 +71,10 @@ segments:
     - asm
     - func_800C1D08
   - - 1368
-    - asm
-    - func_800C1D58
+    - c
+    - dispatchStateByte2Table26c8BossBoss01316_800C1D58
+    - '@source: src/bof3/boss/dispatchStateByte2Table26c8BossBoss01316_800C1D58.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x800C26C8 with no arguments.'
   - - 1436
     - asm
     - func_800C1D9C

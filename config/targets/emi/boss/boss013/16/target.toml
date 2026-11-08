@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss01316_800C2004.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C1CBC.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C1A2C.c",
+    "src/bof3/boss/dispatchStateByte2Table26c8BossBoss01316_800C1D58.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1E58.c",
     "src/bof3/boss/dispatchStateByte1Table2698BossBoss01316_800C1CC4.c",
     "src/bof3/boss/publishBattleHooksBossBoss01316_800C200C.c",

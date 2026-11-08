@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801F358C
   - - 3232
-    - asm
-    - func_801F38A0
+    - c
+    - drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0
+    - '@source: src/bof3/world/drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0.c'
+    - '@behavior: draws one 0xE-stride work record as a flat two-pixel-wide vertical quadrangle at the primitive cursor, spanning the +0x2 halfword minus and plus the +0x4 halfword at x = the +0x0 halfword, clamped to the record halves at +0x8 and +0xA, opaque 0x80 grey, and links the 0x18-byte packet as grid kind 4'
   - - 3500
     - c
     - clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC

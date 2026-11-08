@@ -24,6 +24,7 @@ sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F5200.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13413_801F52D0.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F53EC.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F546C.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",
