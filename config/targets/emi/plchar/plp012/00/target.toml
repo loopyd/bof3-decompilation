@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C.c",
     "src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp01200_801CF9A8.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01200_801CF170.c",
+    "src/bof3/plchar/selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF23C.c",
     "src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C.c",
     "src/bof3/plchar/testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC.c",
     "src/bof3/support/plp012_00_psyq.c",

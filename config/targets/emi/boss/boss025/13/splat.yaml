@@ -48,8 +48,10 @@ segments:
     - c
     - noopHandlerBossBoss02513_800C1AF8
   - - 768
-    - asm
-    - func_800C1B00
+    - c
+    - completeFrontendModeEntryWhenGateClearBossBoss02513_800C1B00
+    - '@source: src/bof3/boss/completeFrontendModeEntryWhenGateClearBossBoss02513_800C1B00.c'
+    - '@behavior: Pending frontend-mode entry retire of this overlay handler run at 0x800C1B00. Returns unless bit 0x2 of the shared battle flag halfword 0x801462E8 is set and the global gate halfword 0x80143C40 reads zero; then strips the 0x40 flag of owner record 0 through func_800AC844, clears the shared effect-bank byte 0x8014832E and clears bit 0x2 of 0x801462E8.'
   - - 876
     - c
     - dispatchStateByte1Table31f0BossBoss02513_800C1B6C

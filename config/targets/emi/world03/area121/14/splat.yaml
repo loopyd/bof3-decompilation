@@ -171,8 +171,10 @@ segments:
     - c
     - invokeTwoHelpersWorld03Area12114_801F4754
   - - 7036
-    - asm
-    - func_801F477C
+    - c
+    - drawTwoLayerTexturedPanelNearSharedFocusWorld03Area12114_801F477C
+    - '@source: src/bof3/world/drawTwoLayerTexturedPanelNearSharedFocusWorld03Area12114_801F477C.c'
+    - '@behavior: Two-layer scrolling textured panel of the work record published at the scratchpad pointer cell 0x1F800044. Its entry block adds the low four bits of the shared frame counter 0x80143E6C to work halfword 0x3A while byte 0x02 is still zero. It then returns unless bit 0x04 of the shared effect bank byte 0x8014832E is set, derives the layer as work byte 0x0B minus 2, advances scroll word 0x38 by 0x800 plus the layer shifted left ten, clamps work halfword 0x3A to -8 once the shared map byte 0x80104001 plus 8 no longer exceeds it, and returns again when both |0x8014930A - halfword 0x36| and |0x8014930E - halfword 0x3A| reach 0x1A. It projects two POLY_FT4 quads over the scratchpad vectors at 0x1F800014, both centred on the work words 0x34 and 0x38 shifted right nine and biased by -0x3FC0, with a halfsize of (2 - layer) shifted left eight: the first on z 0 and the second on z -0x300 with the halfsize grown by |0x0F - (frame counter & 0x1F)|. Each quad goes through SetPolyFT4, SetShadeTex, RotTransPers4, the texture window helper 0x80155560 with the layer in the low bits of 0xBB28A100 for the far layer and 0xBB509100 for the near one, and the 0x28-byte append 0x8014E5A0 into ordering table slot 5 and slot 4 respectively. Takes no arguments and returns nothing.'
   - - 7936
     - c
     - dispatchStateByte2Table689cThenUpdateMaskChargeWorld03Area12114_801F4B00

@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801CF924
   - - 5480
-    - asm
-    - func_801CF968
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp02500_801CF968
+    - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp02500_801CF968.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it reads the unsigned route index byte 0x08 and compares its distance from the two candidate route indices 3 and 5, so when the distance to 5 is the smaller one it asks the shared helper func_801B2D00 for the step sign towards 5 and stores that answer in byte 0x0B, otherwise it asks for the sign towards 3 and stores that, both paths then storing the chosen candidate index in byte 0x03, after which it sets the countdown byte 0x09 to 2 and increments the step counter byte 0x02 to re-arm the work object for the selected route, and it takes no arguments and returns nothing; the dispatcher at 0x801CF924 scales byte 0x02 by four and calls the pointer run based at 0x801CFFD4, whose word 0x801CFFD4 is this body, so it is entry 0 of that run and is reached from outside the payload'
   - - 5684
     - asm
     - func_801CFA34

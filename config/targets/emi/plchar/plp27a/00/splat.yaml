@@ -81,8 +81,8 @@ segments:
     - asm
     - func_801CEE74
   - - 3520
-    - asm
-    - func_801CF1C0
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0
   - - 3932
     - asm
     - func_801CF35C

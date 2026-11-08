@@ -67,8 +67,10 @@ segments:
     - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01500_801CF170.c'
     - '@behavior: Re-arms the front-end work object read through the scratchpad pointer cell 0x1F800044 on the nearer of route indices 1 and 7. The body takes the unsigned route index byte 0x08, compares its distances from 1 and 7 and, when the distance to 7 is the smaller one, asks the shared route step-sign helper func_801B2D00 for the step sign towards 7 and stores that answer in byte 0x0B, otherwise it asks for the sign towards 1 and stores that; both paths store the chosen candidate index in byte 0x03. It then sets the countdown byte 0x09 to 2 and increments the step counter byte 0x02. It takes no arguments and returns nothing, the pointer cell is re-read before each store, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 3644
-    - asm
-    - func_801CF23C
+    - c
+    - selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01500_801CF23C
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01500_801CF23C.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. When the unsigned route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so the body selects that arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 1 and 0x41 for route 7 and none for any other route, then increments the step counter byte 0x02. Otherwise it decrements the countdown byte 0x09 and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments and returns nothing, and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 3896
     - asm
     - func_801CF338

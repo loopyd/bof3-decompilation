@@ -11,7 +11,7 @@ claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPl
 func_801CEFF8 = 0x801CEFF8;
 func_801CF12C = 0x801CF12C;
 pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01500_801CF170 = 0x801CF170;
-func_801CF23C = 0x801CF23C;
+selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01500_801CF23C = 0x801CF23C;
 func_801CF338 = 0x801CF338;
 func_801CF37C = 0x801CF37C;
 func_801CF494 = 0x801CF494;

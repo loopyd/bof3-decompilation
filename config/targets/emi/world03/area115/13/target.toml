@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/world/seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld03Area11513_801F32A4.c",
     "src/bof3/world/snapshotWorkByteBThenResetRecordAndRequestModeResourceAndSetState2World03Area11513_801F30F0.c",
     "src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld03Area11513_801F2EF0.c",
+    "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F3B04.c",
 ]
 psyq_source = "src/bof3/support/area115_13_psyq.c"

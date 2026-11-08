@@ -22,7 +22,7 @@ decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30
 advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area11513_801F382C = 0x801F382C;
 func_801F392C = 0x801F392C;
 func_801F39DC = 0x801F39DC;
-func_801F3B04 = 0x801F3B04;
+drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F3B04 = 0x801F3B04;
 func_801F3ED0 = 0x801F3ED0;
 func_801F40C8 = 0x801F40C8;
 dispatchStateByte1Table4ff4World03Area11513_801F4178 = 0x801F4178;
@@ -33,3 +33,4 @@ dispatchStateByte1Table5018World03Area11513_801F45CC = 0x801F45CC;
 func_801F4610 = 0x801F4610;
 invokeTwoHelpersWorld03Area11513_801F4740 = 0x801F4740;
 func_801F4768 = 0x801F4768;
+D_801F4FDC = 0x801F4FDC;

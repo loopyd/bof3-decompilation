@@ -199,8 +199,10 @@ segments:
     - asm
     - func_801F4B3C
   - - 8128
-    - asm
-    - func_801F4BC0
+    - c
+    - stepSharedModeStartOrRequestSelectorAtCounter14World04Area17213_801F4BC0
+    - '@source: src/bof3/world/stepSharedModeStartOrRequestSelectorAtCounter14World04Area17213_801F4BC0.c'
+    - '@behavior: Steps the shared front-end mode byte 0x801448EC through this overlay two entry pairs and returns untouched for every other mode; mode 0 passes 1 to func_801BE1B0 and advances to 1, mode 5 passes 0 and advances to 6, and modes 1 and 6 wait for the shared counter byte 0x80146867 to read 0x14 before raising bit 0x4E of the shared bank 0x80144F28, requesting the front selector context seed 0xAC through func_8019FA28 with 0xA0000 and 0x50000 as kind 0x83 from mode 1 and 0x260000 and 0x360000 as kind 0x82 from mode 6, and then clearing the shared flag byte 0x801448EB and the mode byte.'
   - - 8388
     - c
     - startStateEntry23Progress0WhenPackedCommandAndModeByteWorld04Area17213_801F4CC4
