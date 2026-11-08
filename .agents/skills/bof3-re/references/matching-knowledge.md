@@ -191,7 +191,12 @@ the `do` supplies the latch compare the original shows. That zeroing also matter
 the counter feeds a scale before the loop: folding `index = 0` into the `for`
 initializer moved the first difference to instruction 0 at unchanged size, while `for`,
 `do`/`while` and `continue`-per-bound-test spellings of the loop measured identical, so
-spend no variant on the loop keyword.
+spend no variant on the loop keyword. The guard applies with no zeroing in play as
+well: when the original leaves load-delay `nop`s ahead of the loop's own setup, a
+plain `while` hoists that setup into a preheader and fills them, so write an explicit
+guard with a `do`/`while` body and keep the bound expression inline in both tests,
+while the same shape carrying a declared `end` local measured 125 of 141
+instructions.
 
 A shared test after value-producing arms extends a local across the join. Test
 per-arm checks branching to the existing common operation. When that common statement
@@ -910,7 +915,12 @@ padded, and keep the separately loaded fixed cell on its own local. A member acc
 against it where two pointer expressions cannot. Measured
 negatives: reading that cell earlier, binding its value to a local, moving its
 read-modify-write above the record's pointer stores, and one pointer local serving
-both bases each kept the first difference or lost instructions.
+both bases each kept the first difference or lost instructions. A single store can
+carry that need with no other member: an inline one-field struct cast at that store
+reproduced the original's cursor-load order where the same store through an array
+element left that load early, and a struct pointer declared for the one store measured
+189 of 203 instructions with a 12-byte larger frame and the first difference in the
+prologue, so keep the cast inline and give it no pointer lifetime.
 
 Split record views by access width, not only by type. When word-pair updates match but a
 byte cell's load is hoisted above them, keep the word pairs on one word-typed pointer
