@@ -146,8 +146,10 @@ segments:
     - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC.c'
     - '@behavior: Battle-flag state switch this overlay publishes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x11 into the shared scenario progress byte 0x80146864 and calls func_801DDED8, and otherwise calls func_801DDF00.'
   - - 2088
-    - asm
-    - func_800C2028
+    - c
+    - setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028
+    - '@source: src/bof3/boss/setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028.c'
+    - '@behavior: Battle setup hook this overlay publishes into the shared battle-hook slot 0x801463A8: clears the 0x40 flag of owner record 0, publishes that record base into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 and requests resource 0, then copies the adjacent halfword pair 0x801EB688/0x801EB68A into the published record at +0x58 and +0x5A.'
   - - 2184
     - c
     - publishBattleHooksBossBoss00816_800C2088

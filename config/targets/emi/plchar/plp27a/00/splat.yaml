@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801CEE30
   - - 2676
-    - asm
-    - func_801CEE74
+    - c
+    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp27a00_801CEE74
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp27a00_801CEE74.c'
+    - '@behavior: Work-step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 8 of this payload handler run based at 0x801CF900, the word 0x801CF920. When the route byte 0x08 is even it rewrites that byte to the decremented route, runs the payload step test 0x801CF724 and, while that call reads zero, tries the neighbour two steps the other way and finally puts the byte back to the route two steps down. It then projects the work position by adding the undoubled movement offsets of 0x80181B94 and 0x80181B98 selected by the route byte to the work words 0x34 and 0x38, asks the shared position routine func_80154F28 for the sample of that point, keeps that sample less the unsigned reference halfword 0x3E and queries the route-parameterised routine func_80154F78 for the same point with the route byte. While the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed difference is at least 0x41 it selects the shared work sequence ((byte 8 - 1) / 2 + 0x46) truncated to a byte and increments the step counter byte 0x02, which the shared tail increments again. Every other case claims the work by storing 1 into byte 0x2B, probes the layer offset pairs 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5 through func_80154F78 and, while the gate byte reads nonzero and that sample is at least 0x41, clears the claim byte again when the signed reference halfword 0x3E is below the answer of func_80154F28 for that layer point. It then requests the cue (work halfword 0x2C + 0x100) through func_8015DF18, selects the shared work sequence ((byte 8 - 1) / 2 + 0x42) truncated to a byte and arms byte 0x0A with 5. Both arms join on a tail that clears the step sign byte 0x0B and increments the step counter byte 0x02. It takes no arguments and returns nothing.'
   - - 3520
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0

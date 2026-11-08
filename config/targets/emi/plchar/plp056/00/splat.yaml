@@ -138,8 +138,8 @@ segments:
     - c
     - dispatchWorkHalfword2cTable08bcPlcharPlp05600_801D07D0
   - - 9236
-    - asm
-    - func_801D0814
+    - c
+    - dispatchWorkHalfword2cTable08c8PlcharPlp05600_801D0814
   - - 9304
     - textbin
     - func_801D0858

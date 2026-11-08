@@ -124,8 +124,10 @@ segments:
     - asm
     - func_801D0148
   - - 8020
-    - asm
-    - func_801D0354
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354.c'
+    - '@behavior: Claims one free row of the shared 0x74-byte front-end record table at 0x80143FC8, from the row index the shared allocator func_8019601C answers (0xFF skips the body), and seeds it from a caller-supplied position pair: row byte 0 takes 1, row byte 5 takes the handler selector 0x34, row byte 1 takes the first argument, row words 0x34 and 0x38 take the second and third arguments shifted left 16, row halfword 0x3E takes the shared distance helper func_8015477C answer plus 0x200, and row byte 0x0B takes 1.'
   - - 8256
     - c
     - dispatchStateByte3Table0aa8PlcharPlp02600_801D0440

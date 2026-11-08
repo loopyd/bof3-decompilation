@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801CFB74
   - - 6464
-    - asm
-    - func_801CFD40
+    - c
+    - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp02500_801CFD40
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp02500_801CFD40.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it runs the shared update helper func_8014D978 and returns while the work halfword 0x58 does not read 0x0A; when it does, it claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 it indexes with the occupancy flag 1 in row byte 0 and the handler selector 0x3A in row byte 5, then hands the cue id 0x100 plus the work halfword 0x2C to the cue dispatcher func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02'
   - - 6732
     - asm
     - func_801CFE4C

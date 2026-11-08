@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801CF750
   - - 5404
-    - asm
-    - func_801CF91C
+    - c
+    - claimFrontEndRecordHandler3AAndQueueCue2CPlus100ClearByte7AndAdvanceStepWhenWorkHalfword58MatchesTenPlcharPlp01500_801CF91C
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler3AAndQueueCue2CPlus100ClearByte7AndAdvanceStepWhenWorkHalfword58MatchesTenPlcharPlp01500_801CF91C.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. It runs the shared external update func_8014D978 first and only then tests the work halfword 0x58; when that halfword reads 10 (0x0A) it claims a front-end record by asking the shared allocator func_8019601C for a free 0x74-byte row index, storing that answer in work byte 0x0B and, if the byte is not 0xFF, seeding the row at 0x80143FC8: occupancy byte 0 takes 1 and handler selector byte 5 takes 0x3A. Whether or not a row was claimed it then queues the cue whose id is the work halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18, clears work byte 0x07 and increments the step counter byte 0x02, which advances the sequence past this step. A work halfword 0x58 that reads anything else leaves the object untouched and returns right after the external update. It takes no arguments and returns nothing.'
   - - 5672
     - asm
     - func_801CFA28

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801CE448
   - - 552
-    - asm
-    - func_801CE628
+    - c
+    - requestWorkResourceByte4WithCount2For50ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01600_801CE628
+    - '@source: src/bof3/plchar/requestWorkResourceByte4WithCount2For50ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01600_801CE628.c'
+    - '@behavior: Overlay entry over the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from the shared EXE because no word or jump of this payload names it. Byte 0x08 is the current route index of the eight-entry window, byte 0x03 the chosen candidate index, byte 0x02 the step counter, byte 0x09 the countdown, byte 0x0B the step sign and byte 0x04 the record resource id. When the route index already equals the chosen index the body requests that resource again, as the pair (0x50, 2) through func_8014D6DC when the id reads 0x50 and as the bare id through func_8014D6B8 otherwise, and increments the step counter. Otherwise it stores the countdown one lower and, when that reaches zero, puts it back to 2, adds the step sign into the route index, masks the index with 7 and selects the resulting sequence through func_8014D8D4. It takes no arguments, returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across the calls.'
   - - 812
     - asm
     - func_801CE72C

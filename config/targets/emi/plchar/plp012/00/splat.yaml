@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801CE448
   - - 552
-    - asm
-    - func_801CE628
+    - c
+    - requestResourceForWorkByte4ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CE628
+    - '@source: src/bof3/plchar/requestResourceForWorkByte4ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CE628.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 1 of the sixteen-word code-pointer run at 0x801CFD80 that the work-byte-2 dispatcher indexes: when the current route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so it requests the resource named by work byte 0x04 through the shared helpers func_8014D6DC with the resource 0x50 and the count 2 while byte 0x04 reads 0x50 and through func_8014D6B8 with byte 0x04 otherwise, then increments the step counter byte 0x02; on every other entry it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks that index into the eight-entry window with 7 and selects the resulting sequence through func_8014D8D4'
   - - 812
     - asm
     - func_801CE72C

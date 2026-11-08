@@ -20,11 +20,13 @@ extern u8 g_ScenarioProgress;
  * it keeps its address anchor. */
 void func_801F36C0(u8* position, s32 angle, s32 flags);
 
-/* Effect entry seeder and draw pass at 0x801F3E90: it copies the work object's
- * 0x34/0x38/0x3C position words into the 0x2C-byte entry handed in $a0, fills
- * that entry's 0x10..0x1C rotation halfwords from masked rand() angles and draws
- * it through the shared matrix helpers. Still an asm boundary in this payload. */
-void func_801F3E90(u8* entry);
+/* Effect entry seeder at 0x801F3E90: it copies the work object's 0x34/0x38/0x3C
+ * position words into the 0x2C-byte entry handed in $a0, seeds that entry's
+ * 0x10..0x1C corner offset halfwords from the shared angular pair at +0x18 and
+ * -0x18, rotates both offset vectors through a random Euler matrix, arms the
+ * entry scale halfword at +0x28 and clears its phase halfwords. */
+void seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90(
+    u8* entry);
 
 void clearWorkTableAt800E4800World04Area17213_801F38BC(void);
 
@@ -74,7 +76,8 @@ void drawWorkQuadReseedEffectEntriesAtProgress0aThenArmCountdownAndAdvanceStateW
     entry = PSX_PTR(u8, 0x800E48C0u);
     index = 0u;
     do {
-      func_801F3E90(entry);
+      seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90(
+          entry);
       entry += 0x2cu;
       index += 1u;
     } while (index < 0x20u);

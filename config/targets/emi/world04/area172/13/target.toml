@@ -37,6 +37,7 @@ support_sources = [
     "src/bof3/world/publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8.c",
     "src/bof3/world/drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C.c",
     "src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC.c",
+    "src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90.c",
     "src/bof3/world/advanceScratchWorkAndSelectHandler2Past3eElseConsumeSharedThenStepFactorTripletAndRampLevelTripleWorld04Area17213_801F44C4.c",
     "src/bof3/world/stepSharedModeStartOrRequestSelectorAtCounter14World04Area17213_801F4BC0.c",
     "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c",

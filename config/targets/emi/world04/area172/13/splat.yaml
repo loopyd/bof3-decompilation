@@ -126,8 +126,10 @@ segments:
     - asm
     - func_801F3BFC
   - - 4752
-    - asm
-    - func_801F3E90
+    - c
+    - seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90
+    - '@source: src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90.c'
+    - '@behavior: Effect entry seeder run for every one of the 0x20 entries of the 0x2C-byte-stride effect table at 0x800E48C0 between the PushMatrix/PopMatrix pair of the state byte 1 handler entry 7 at 0x801F30F8. It copies the scratchpad work object 0x34/0x38/0x3C position words behind 0x1F800044 into the entry words at +0x00/+0x04/+0x08, seeds the corner offset SVECTORs at +0x10 and +0x18 from the shared angular pair 0x801783C8/0x801782FC at +0x18 and -0x18 with their third halfwords cleared, builds a scratch rotation matrix from three random Euler angles through 0x801AFF64, 0x80179C58, 0x80179DF8 with the middle angle negated and 0x80179F98, rotates both offset vectors in place through it with ApplyMatrixSV, arms the scale halfword at +0x28 to (rand() & 3) + 4 and clears the halfwords at +0x20, +0x22, +0x24 and +0x2A.'
   - - 5036
     - c
     - drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC

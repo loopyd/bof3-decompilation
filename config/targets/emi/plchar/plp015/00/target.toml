@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/claimFrontEndRecordHandler3AAndQueueCue2CPlus100ClearByte7AndAdvanceStepWhenWorkHalfword58MatchesTenPlcharPlp01500_801CF91C.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01500_801CEA94.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefbd4PlcharPlp01500_801CFB40.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefbc8PlcharPlp01500_801CFAFC.c",
