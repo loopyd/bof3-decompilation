@@ -72,7 +72,7 @@ stepWorkFacing8TowardModeByteWhenWithinThreeStepsThenArmMoveAndSetState2World03A
 advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8 = 0x801F5FF8;
 copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068 = 0x801F6068;
 func_801F60F4 = 0x801F60F4;
-func_801F6390 = 0x801F6390;
+drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390 = 0x801F6390;
 D_801F64D8 = 0x801F64D8;
 D_801F67B4 = 0x801F67B4;
 D_801F67E0 = 0x801F67E0;

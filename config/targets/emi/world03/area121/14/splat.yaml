@@ -278,8 +278,10 @@ segments:
     - asm
     - func_801F60F4
   - - 14224
-    - asm
-    - func_801F6390
+    - c
+    - drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390
+    - '@source: src/bof3/world/drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390.c'
+    - '@behavior: One full width POLY_G4 band anchored on the screen top. Gated on the shared overlay state byte 0x8014933B reading 1 or 2 and on bit 0x04 of the effect bank byte 0x8014832E; otherwise it returns without touching the GPU. It selects the texture page from the graph type, with 0x225 for a first answer of 1, a repeated probe whose answer of 2 keeps 0x225 and any other answer of 0x95, arms SetDrawMode with the primitive cursor at 0x8014598C, 0 as dfe, 1 as dtd, that page and a stacked fifth argument of zero, appends the 0x0C-byte draw mode packet to ordering table slot 7 through 0x8014E5A0, stamps the 0x24-byte quad with SetPolyG4, clears its semi-transparency through SetSemiTrans with zero, writes left x 0 and right x 0x140 on both rows with the top row at y 0 and the bottom row at the height the byte table 0x801F68B8 holds for the overlay state, colours the top pair r 0x48 g 0x38 b 0xFF and the bottom pair 0xFF on every channel, and appends the quad to ordering table slot 7. Takes no arguments and returns nothing.'
   - - 14552
     - textbin
     - D_801F64D8

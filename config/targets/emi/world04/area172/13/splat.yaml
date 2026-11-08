@@ -223,8 +223,10 @@ segments:
     - c
     - invokeHelperArgsWorld04Area17213_801F4E68
   - - 8844
-    - asm
-    - func_801F4E8C
+    - c
+    - drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C
+    - '@source: src/bof3/world/drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C.c'
+    - '@behavior: Fills the POLY_FT4 at the shared primitive cursor g_PrimCursor with the 0x40 by 0x20 quad whose top-left corner is (arg0, arg1), sampling the same 0x40 by 0x20 texel window from the top-left of its texture page; the CLUT comes from GetClut(0, 0x1EB) and the 16-bit semi-transparent texture page from GetTPage(1, 1, 0x300, 0x100), the primitive is tinted 0x80 grey and then queued at ordering-table index 1 with primitive size 0x28 through func_8014E5A0.'
   - - 9072
     - asm
     - func_801F4F70

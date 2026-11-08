@@ -46,8 +46,10 @@ segments:
     - c
     - invokeHelperWorld04Area19113_801F2E14
   - - 564
-    - asm
-    - func_801F2E34
+    - c
+    - drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34
+    - '@source: src/bof3/world/drawFullscreenWorkColorFadeTileWorld04Area19113_801F2E34.c'
+    - '@behavior: Selects the drawing mode for tpage GetTPage(0, 2, 0x3C0, 0) with dithering enabled and queues the mode primitive on order-table head 5, then builds a 320x240 TILE at the screen origin whose red, green and blue channels are the work-record bytes at offsets 0x5D, 0x5E and 0x5F of the record published through the scratchpad pointer cell 0x1F800044, marks it semi-transparent with shading disabled and queues the finished primitive on the same head.'
   - - 792
     - c
     - setStatusFFFFIfGateElse68World04Area19113_801F2F18

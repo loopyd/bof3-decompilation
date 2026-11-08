@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801F3228
   - - 1700
-    - asm
-    - func_801F32A4
+    - c
+    - seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld03Area11513_801F32A4
+    - '@source: src/bof3/world/seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld03Area11513_801F32A4.c'
+    - '@behavior: seeds the work halfwords at record offsets 0x2E and 0x30, then unless the shared state halfword 0x80143B90 reads 1, resets the work record published at scratchpad pointer slot 0x44 when its byte 0x0B differs from its byte 0x07, or the shared mode byte 0x80143BB0 reads 5, or byte 0x0B reads 1 while the record word at 0x18 differs from the shared context seed 0x80143F10; the reset writes 2 to record byte 0x48, 8 to byte 0x09 and 4 to record mode byte 0x01 through a fresh read of the pointer slot, and then the shared helper 0x8014D4E0 runs.'
   - - 1892
     - asm
     - func_801F3364

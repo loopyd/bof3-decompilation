@@ -1,4 +1,6 @@
 D_1F800044 = 0x1F800044;
+func_800AC7D0 = 0x800AC7D0;
+func_800ACFF4 = 0x800ACFF4;
 func_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
 func_800C18A0 = 0x800C18A0;
@@ -8,7 +10,7 @@ func_800C1AF8 = 0x800C1AF8;
 noopHandlerBossBoss03316_800C1B50 = 0x800C1B50;
 func_800C1B58 = 0x800C1B58;
 func_800C1B9C = 0x800C1B9C;
-func_800C1BD4 = 0x800C1BD4;
+runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4 = 0x800C1BD4;
 func_800C1CA4 = 0x800C1CA4;
 setBossStateThreeAndClearScratchByte4WhenWorkExpiredBossBoss03316_800C1CDC = 0x800C1CDC;
 raiseFlagBit0AndExpireWorkHalfword94WhenRemainderAtMostQuarterHalfwordA0BossBoss03316_800C1D14 = 0x800C1D14;
@@ -31,4 +33,6 @@ raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkBy
 setTriplet5D5F5EToMinus16xByteBInvokeReadinessHelperTickByte9CountdownInvokeHelperWhenZeroBossBoss03316_800C26A4 = 0x800C26A4;
 D_800C2744 = 0x800C2744;
 D_80146375 = 0x80146375;
+func_8015C264 = 0x8015C264;
+clearPendingBit = 0x801DE1B0;
 D_801EB4E8 = 0x801EB4E8;

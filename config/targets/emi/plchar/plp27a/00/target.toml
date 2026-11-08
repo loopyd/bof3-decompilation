@@ -19,6 +19,7 @@ support_sources = [
     "src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp27a00_801CE8AC.c",
     "src/bof3/plchar/clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp27a00_801CE83C.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448.c",
+    "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40.c",
     "src/bof3/support/plp27a_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp27a_00_psyq.c"

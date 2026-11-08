@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F4E8C(s32 arg0, s32 arg1);
+void drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C(s32 arg0, s32 arg1);
 
 /* @source 0x801F4E68
  * @behavior Thin overlay wrapper calling the helper at 0x801F4E8C with the
@@ -10,5 +10,5 @@ void func_801F4E8C(s32 arg0, s32 arg1);
  * @residual none
  */
 void invokeHelperArgsWorld04Area17213_801F4E68(void) {
-  func_801F4E8C(0xDC, 0xC8);
+  drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C(0xDC, 0xC8);
 }

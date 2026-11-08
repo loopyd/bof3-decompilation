@@ -56,8 +56,10 @@ segments:
     - asm
     - func_800C1B9C
   - - 980
-    - asm
-    - func_800C1BD4
+    - c
+    - runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4
+    - '@source: src/bof3/boss/runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4.c'
+    - '@behavior: Byte-1 handler entry 16 of this overlay code-pointer run based at 0x800C275C, the table the overlay entry dispatcher func_800C1804 indexes with work byte 1 scaled by four; run word 16 at 0x800C279C holds this address and no jal in this payload names it. It runs the shared readiness helper at 0x8014DAEC with its result dropped, resolves the owner-0 scan record index through the shared battle record scan at 0x800AC7D0, and hands that index 0x98-byte record of the table at 0x801468FC to the shared record routine at 0x8015C264 together with 0, -0xE, 0x40, -0x400, 0xFF and 0. Only when that routine returns zero does the finish tail run, in this order: it clears the pending bit of byte +5 of the work object held by the scratchpad pointer cell 0x1F800044, raises bit 0x2 of the shared battle flag byte D_80146328, adds the current enemy work record halfword at byte offset 0x86, read through the pointer published at 0x801EB4E8, into the shared accumulator D_8014632C, and calls the shared battle work reset at 0x800ACFF4. Takes no arguments and returns nothing; the 0x28-byte frame only keeps the return address at 0x20 above the three stack arguments of the seven-argument call. The roles of the six values handed to 0x8015C264 and of the accumulator are not established.'
   - - 1188
     - asm
     - func_800C1CA4

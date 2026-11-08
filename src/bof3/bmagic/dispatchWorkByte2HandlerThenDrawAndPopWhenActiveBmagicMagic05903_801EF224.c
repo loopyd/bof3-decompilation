@@ -18,9 +18,11 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * needs no map row. */
 extern void (*D_801F0670[])(void); /* @source 0x801F0670 @kind data */
 
-/* Pushes the GTE matrix stack, builds the work record's translation and
- * rotation and installs both GTE matrices. */
-void func_801EF638(void);
+/* Pushes the GTE matrix stack, copies the shared battle record position pair
+ * and heading into the work record, projects them and installs both GTE
+ * matrices. */
+void copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638(
+    void);
 
 /* Draws one element of the work record's active effect: the angular index in
  * the first argument selects a position in the sixty-four step turn and the
@@ -62,7 +64,7 @@ void dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224(v
   D_801F0670[step_record[2]]();
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[2] != 0) {
-    func_801EF638();
+    copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638();
     func_801EF70C((-g_battle_work[9]) & 0x3F, 0x20);
     func_801EF70C((0x08 - g_battle_work[9]) & 0x3F, 0x20);
     func_801EF70C((0x10 - g_battle_work[9]) & 0x3F, 0x20);

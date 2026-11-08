@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTablefdc0PlcharPlp01200_801CFCF8.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C.c",
     "src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C.c",
+    "src/bof3/plchar/testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC.c",
     "src/bof3/support/plp012_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp012_00_psyq.c"

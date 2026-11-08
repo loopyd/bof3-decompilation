@@ -50,6 +50,6 @@ dispatchStateByte1Table6790World04Area17213_801F4D80 = 0x801F4D80;
 setScratchWorkStateWorld04Area17213_801F4DC4 = 0x801F4DC4;
 advanceHalfword2eBy0aAndSetState1To2At191ThenDrawHalfword2eWorld04Area17213_801F4DE0 = 0x801F4DE0;
 invokeHelperArgsWorld04Area17213_801F4E68 = 0x801F4E68;
-func_801F4E8C = 0x801F4E8C;
+drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C = 0x801F4E8C;
 func_801F4F70 = 0x801F4F70;
 D_801F507C = 0x801F507C;

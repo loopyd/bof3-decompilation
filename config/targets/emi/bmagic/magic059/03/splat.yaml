@@ -62,8 +62,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05903_801EF5C0.c'
     - '@behavior: Per-frame step of an overlay work-object handler. It reads the scratchpad work-object pointer cell at 0x1F800044 once and advances that object unsigned byte 0x9 by one with a byte-width add, re-reads the cell and subtracts one from unsigned byte 0xA with a byte-width add. It tests the byte it just stored there, truncated to 0xFF in the stored register rather than re-loaded, against zero, and only on that equality loads the shared battle work pointer at 0x801EB4E0, decrements its byte 0xB with a byte-width add and calls the shared helper at 0x801E5988 with the store in the delay slot. The function takes no arguments, returns nothing and reads or writes no other state.'
   - - 2616
-    - asm
-    - func_801EF638
+    - c
+    - copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638
+    - '@source: src/bof3/bmagic/copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638.c'
+    - '@behavior: Pushes the GTE matrix stack, copies the position word pair 0x34 and 0x38 and the halfword 0x3E of the shared battle record published at the pointer cell 0x801EB4E0 into the same offsets of the work record published at the scratchpad pointer cell 0x1F800044, zeros a three halfword triplet, projects the copied fields as a second halfword triplet through RotTrans into the translation field of a 0x20-byte scratch matrix, turns the zeroed triplet into that matrix through RotMatrix, composes the shared matrix at 0x801492E8 under it through MulMatrix2 and installs the result through SetRotMatrix and SetTransMatrix. The 0x50-byte frame keeps ra and s0 across the matrix calls; takes no arguments, returns nothing and the caller pairs it with a PopMatrix.'
   - - 2828
     - asm
     - func_801EF70C

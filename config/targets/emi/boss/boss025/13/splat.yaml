@@ -150,8 +150,10 @@ segments:
     - c
     - dispatchStateByte1Table32a0BossBoss02513_800C2FF4
   - - 6200
-    - asm
-    - func_800C3038
+    - c
+    - advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038
+    - '@source: src/bof3/boss/advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038.c'
+    - '@behavior: Fourth word of the five-entry handler run at 0x800C3294, entered through the sibling dispatcher 0x800C2FF4 when work-record byte 1 holds zero. Reads the global byte at 0x80148603 and returns when it is non-zero, then reads 0x80146329 and returns when bit 0x2 is set; only with both gates clear does it load the scratchpad work-object pointer cell 0x1F800044 once and increment the work object byte at offset 1, moving the dispatch state byte from zero to one. Takes no arguments and returns nothing.'
   - - 6280
     - asm
     - func_800C3088
