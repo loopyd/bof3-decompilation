@@ -133,8 +133,10 @@ segments:
     - asm
     - func_801CFF1C
   - - 7784
-    - asm
-    - func_801D0268
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp26700_801D0268
+    - '@source: src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp26700_801D0268.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 and entered as entry 22 of the thirty-word handler run based at 0x801D0988, so as byte-2 step index 1 counted from the dispatcher base 0x801D09DC: it decrements the countdown byte 0x0A and does nothing else while that byte stays nonzero, and once it reaches zero it projects the work words 0x34 and 0x38 with the doubled movement offsets at 0x80181B94 and 0x80181B98 selected by the route byte 0x08, hands that pair to the slot search func_801BDE14 with range 0, raises bit 0 of the animation byte at 0x801468FC for the found record at stride 0x98, claims a front-end record at the projected point through func_801D04F0 of this payload from the high half of each projected word with one-unit axis retries, increments the step counter byte 0x02 through the scratchpad cell and runs the shared readiness helper func_8014DAEC'
   - - 8196
     - asm
     - func_801D0404

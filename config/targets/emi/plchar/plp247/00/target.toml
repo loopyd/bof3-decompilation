@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp24700_801CF090.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp24700_801CF85C.c",
+    "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664.c",
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp24700_801CEE5C.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefb28PlcharPlp24700_801CF04C.c",

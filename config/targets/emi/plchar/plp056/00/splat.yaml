@@ -123,8 +123,8 @@ segments:
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288
   - - 7924
-    - asm
-    - func_801D02F4
+    - c
+    - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenQueueCue2CPlus100SeedFrontEndRowThenQueueCue10bPlcharPlp05600_801D02F4
   - - 8236
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp05600_801D042C

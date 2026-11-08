@@ -60,7 +60,8 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           helper func_8015477C, storing that answer plus 0x100 in row
  *           halfword 0x3E, and finally clears row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. All three
- *           in-image call sites are inside this payload's func_801CF664, which
+ *           in-image call sites are inside this payload's own map cell claim
+ *           handler at 0x801CF664, which
  *           pass 0 or 1 in the first argument register and the caller's own
  *           coordinate pair in the two position registers; nothing else in the
  *           image holds this address. The fourth argument register is never

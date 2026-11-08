@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801CEE08
   - - 2636
-    - asm
-    - func_801CEE4C
+    - c
+    - stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp25700_801CEE4C
+    - '@source: src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp25700_801CEE4C.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 8 of the twenty-three-entry code pointer run that starts at 0x801CFEDC and whose base no word of this payload names, the body word 0x801CEE4C sitting at 0x801CFEFC. Steps the route index byte 0x08 one back inside the eight-entry window while it is even, claims the work by storing 1 into byte 0x2B, probes the layer offsets 0x80181BAC and 0x80181BB0 with route 3 and 0x80181BBC and 0x80181BC0 with route 5 through func_80154F78, and for each probe clears the claim byte when the narrowed sample reaches 0x41 and func_80154F28 answers above the reference halfword 0x3E while the gate byte 0x1F800000 reads nonzero. It then selects work sequence 0x42 plus the halved route index through func_8014D8D4 and increments the step counter byte 0x02.'
   - - 3096
     - c
     - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp25700_801CF018

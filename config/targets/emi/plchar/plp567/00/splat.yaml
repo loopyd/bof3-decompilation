@@ -66,8 +66,10 @@ segments:
     - c
     - dispatchStateByte3Table07b8PlcharPlp56700_801CEC70
   - - 2228
-    - asm
-    - func_801CECB4
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4.c'
+    - '@behavior: Work byte 3 == 0 step of the second byte-3 dispatch group of this overlay: entry 0 of the handler run that the byte-3 dispatcher D_801D07B8 indexes, the word at 0x801D07B8 of the in-image pointer run at 0x801D078C. When work byte 8 is even it stores the decremented direction ((byte 8 - 1) and 7), calls the payload step test func_801CF7A0 and, only while that call reads zero, stores ((byte 8 + 2) and 7) and calls the same test again; if that call reads zero too the byte returns to the decremented direction. Both paths then run the payload refresh func_801CF944, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) divided by 2 plus 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3, which advances the dispatch to the handler at 0x801CEDB4. The original re-loads the pointer cell before every byte-8 read and before each of the three stores; the subtraction leaves the division signed, so byte 8 == 0 still selects sequence 0x42.'
   - - 2484
     - asm
     - func_801CEDB4

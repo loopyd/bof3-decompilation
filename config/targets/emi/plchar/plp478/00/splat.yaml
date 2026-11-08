@@ -84,8 +84,8 @@ segments:
     - asm
     - func_801CF4CC
   - - 4580
-    - asm
-    - func_801CF5E4
+    - c
+    - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4
   - - 4688
     - c
     - dispatchWorkHalfword2cTablef710PlcharPlp47800_801CF650

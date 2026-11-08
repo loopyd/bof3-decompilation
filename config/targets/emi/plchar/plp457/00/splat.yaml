@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801CEE94
   - - 3552
-    - asm
-    - func_801CF1E0
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp45700_801CF1E0
+    - '@source: src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp45700_801CF1E0.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 13 of the twenty-one-word handler run based at 0x801CF900, whose word 0x801CF934 this overlay byte-2 work dispatcher reaches from its own base 0x801CF924 at index 4 and the second dispatcher from 0x801CF930 at index 1. Decrements the countdown byte 0x0A and, while it stays nonzero, only runs the shared readiness helper func_8014DAEC. When it reaches zero the step projects the work position: route byte 0x08 scaled by eight selects the doubled movement offsets of 0x80181B94 and 0x80181B98, which it adds to work words 0x34 and 0x38. It hands that pair with range 0 to the shared slot search func_801BDE14 and, unless the search answers -1, raises bit 0 of the animation byte at 0x801468FC plus the found slot scaled by the 0x98-byte work record stride. It then claims a front-end record at the projected point through the own claim handler 0x801CF468 of this payload, passing the high half of each projected word as signed halves, and when that claim answers zero and the first word has a nonzero low half it retries one unit further on that axis, and when the retry also answers zero and the second word has a nonzero low half it retries one unit further on the second axis. It then increments step byte 0x02 through the scratchpad cell itself, and the body closes by running func_8014DAEC on every path.'
   - - 3964
     - asm
     - func_801CF37C

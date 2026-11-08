@@ -40,7 +40,8 @@ extern u8 D_801468FC[];
  * signed halves, and the retry paths let the compiler narrow the stepped
  * coordinate to the same signed half before the call.
  */
-u8 func_801CF664(s16 x, s16 y);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664(
+    s16 x, s16 y);
 
 /* Slot search of the shared EXE image, outside this payload: it answers the
  * signed slot of the first eligible 0x98-byte work record that holds the
@@ -133,13 +134,16 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CF664(cx, cy);
+    claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664(
+        cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CF664(cx + 1, cy);
+        claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664(
+            cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CF664(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp24700_801CF664(
+            cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;
