@@ -123,8 +123,8 @@ segments:
     - asm
     - func_800C2680
   - - 3856
-    - asm
-    - func_800C2710
+    - c
+    - publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710
   - - 3936
     - asm
     - func_800C2760

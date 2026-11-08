@@ -11,7 +11,7 @@ incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelp
 func_801EF638 = 0x801EF638;
 func_801EF70C = 0x801EF70C;
 dispatchStateByte1Table0680BmagicMagic05903_801EFE48 = 0x801EFE48;
-func_801EFE8C = 0x801EFE8C;
+dispatchWorkByte2HandlerThenProjectRecordPositionPairAndDrawWhenActiveBmagicMagic05903_801EFE8C = 0x801EFE8C;
 copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018 = 0x801F0018;
 func_801F0070 = 0x801F0070;
 incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC = 0x801F00DC;

@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801F3658
   - - 2988
-    - asm
-    - func_801F37AC
+    - c
+    - lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC
+    - '@source: src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC.c'
+    - '@behavior: Searches the caller code byte in the five-entry row table 0x801F4248, scales the found position by the nine-column stride and clamps the shared counter D_80144F56 to 8, then returns one byte of the matching row: while the shared wait 0x8015B5D4 reports the bank base 0x80144EF8 with id 0x0A as pending the row is read from 0x801F4260 through the sibling lookup 0x801F3924 with the column offset 0x801F4290[level], otherwise the byte at offset 0x1A of the 164-byte field record D_80144982[D_80181B10[code]] picks an offset of 8, of the 0x801F4250 column entry, or of a fixed 7 and the second use of the same wait over D_8014686C with id 2 picks between the 0x801F4218 and 0x801F41E8 rows.'
   - - 3364
     - c
     - lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924

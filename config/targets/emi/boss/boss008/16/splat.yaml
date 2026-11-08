@@ -96,8 +96,10 @@ segments:
     - dispatchStateByte1Table2708BossBoss00816_800C1DC4
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 1544
-    - asm
-    - func_800C1E08
+    - c
+    - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1E08
+    - '@source: src/bof3/boss/publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1E08.c'
+    - '@behavior: Step-3 handler of this overlay work state machine, entry 3 of the 0x800C26FC run that dispatchIndexedHandlerBossBoss00816_800C1D74 selects from: publishes the data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the no-op-run step handler dispatchIndexedHandlerBossBoss00816_800C1E60 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 1632
     - c
     - dispatchIndexedHandlerBossBoss00816_800C1E60

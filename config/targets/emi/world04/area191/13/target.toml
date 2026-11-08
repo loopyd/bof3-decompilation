@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC.c",
     "src/bof3/world/activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964.c",
     "src/bof3/world/clearFrontStateSetScenarioBit0AndResetWorkAreaWhenFlag77SetWorld04Area19113_801F3BE0.c",
+    "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC.c",
 ]
 psyq_source = "src/bof3/support/area191_13_psyq.c"

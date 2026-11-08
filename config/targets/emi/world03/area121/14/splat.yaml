@@ -130,8 +130,10 @@ segments:
     - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area12114_801F3940.c'
     - '@behavior: Byte-1 state handler 9 of the byte-1 handler table 0x801F67D8 for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to work halfword 0x30 and compares the stored signed halfword against 0xF0, clearing state byte 0x03 once the height reaches that value. Unless the shared mode byte 0x801454F2 is set, the byte at 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it then arms state byte 0x03 at 1 through a second read of the pointer cell. Finally it passes mode 0x5C and the signed work halfword 0x30 to the overlay emitter at 0x801F40DC.'
   - - 3568
-    - asm
-    - func_801F39F0
+    - c
+    - emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0
+    - '@source: src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0.c'
+    - '@behavior: Emits one semi-transparent sprite of the AREA121 sprite table. The draw-mode texture page word is 0x22C when the graph type reads 1 or 2 and 0x9C otherwise, and that DR_MODE is sized 0xC and appended to the primitive cursor at 0x8014598C under ordering-table index 1. The SPRT that follows is flagged semi-transparent, drawn in flat 0x80 grey with CLUT 0x7B80, and takes its width, height and two texture bytes from the four-byte entry of the byte table 0x801F6800 that the entry argument selects, then is appended at 0x14 bytes. The only caller at 0x801F40DC passes entries 4 and 5, which that table fills as 0x80 by 0x18 at texture (0, 0x38) and 8 by 0x18 at texture (0, 0x50).'
   - - 3864
     - asm
     - func_801F3B18

@@ -1,4 +1,6 @@
+D_1F800004 = 0x1F800004;
 g_battle_work = 0x1F800044;
+func_8017A97C = 0x8017A97C;
 func_8017AA94 = 0x8017AA94;
 func_801EEC28 = 0x801EEC28;
 func_801EED38 = 0x801EED38;
@@ -14,8 +16,9 @@ advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtB
 func_801EF728 = 0x801EF728;
 drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic16203_801EF80C = 0x801EF80C;
 func_801EFA40 = 0x801EFA40;
-func_801EFCD8 = 0x801EFCD8;
+drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8 = 0x801EFCD8;
 reserveFirstFreeRecordBmagicMagic16203_801EFFFC = 0x801EFFFC;
 clearRecordBytes0Through4BmagicMagic16203_801F0068 = 0x801F0068;
 D_801F00B8 = 0x801F00B8;
+D_801F0158 = 0x801F0158;
 magic16203RecordFlags = 0x801F01B0;

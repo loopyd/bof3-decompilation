@@ -72,8 +72,10 @@ segments:
     - dispatchStateByte1Table0680BmagicMagic05903_801EFE48
     - '@source: src/bof3/bmagic/magic05903DispatchTables.c'
   - - 4748
-    - asm
-    - func_801EFE8C
+    - c
+    - dispatchWorkByte2HandlerThenProjectRecordPositionPairAndDrawWhenActiveBmagicMagic05903_801EFE8C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectRecordPositionPairAndDrawWhenActiveBmagicMagic05903_801EFE8C.c'
+    - '@behavior: Step handler for the second state of the overlay work object published at the scratchpad pointer cell 0x1F800044. It reads that object unsigned byte 0x2, scales it by four and calls the handler pointer at that index of the work byte 2 handler table based at 0x801F0684. When the handler returns it re-reads the cell and, only when the record byte 0x0 and the byte 0x2 are both non-zero, publishes the record turn from byte 0x9 into the scratchpad phase halfword 0x1F80000E as ((byte 0x9 times 3) and 0x3F) shifted left six, samples the shared phase helpers and stores the record world position pair 0x34 and 0x38 as the shared battle work record words 0x34 and 0x38 plus those samples scaled by the scratchpad centre halfword 0x1F800000, adds the final rotated sample to word 0x38, then calls the shared helper at 0x800AF764 and this overlay draw routine at 0x801F01A4. The first cell load precedes frame creation; the 0x18-byte frame keeps only $ra and the phase cell address. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 5144
     - c
     - copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018

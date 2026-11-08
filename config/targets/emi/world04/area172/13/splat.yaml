@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801F2DF4
   - - 728
-    - asm
-    - func_801F2ED8
+    - c
+    - publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8
+    - '@source: src/bof3/world/publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8.c'
+    - '@behavior: Publishes every work record through the scratchpad pointer cell 0x1F800044 with ordering-table index 2 in byte 0x29 and then runs the shared main-executable service 0x8014D290 for it: first the six 0x98-byte game work records at 0x80146888, then each live 0x140-byte local work record at 0x80145E90 whose party byte at +0x79 reads 7 while the shared live count 0x80146254 is non-zero, restoring the cell value read on entry.'
   - - 1008
     - c
     - dispatchStateByte1Table5090World04Area17213_801F2FF0

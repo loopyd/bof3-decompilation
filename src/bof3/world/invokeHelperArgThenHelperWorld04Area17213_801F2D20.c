@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 void func_801F2DF4(s32 arg0);
-void func_801F2ED8(void);
+void publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8(
+    void);
 
 /* @source 0x801F2D20
  * @behavior Thin overlay wrapper calling the helper at 0x801F2DF4 with the
@@ -13,5 +14,5 @@ void func_801F2ED8(void);
  */
 void invokeHelperArgThenHelperWorld04Area17213_801F2D20(void) {
   func_801F2DF4(2);
-  func_801F2ED8();
+  publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8();
 }

@@ -18,7 +18,7 @@ advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Are
 advanceWorkStepAndLowerWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3320 = 0x801F3320;
 func_801F33C8 = 0x801F33C8;
 func_801F3658 = 0x801F3658;
-func_801F37AC = 0x801F37AC;
+lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC = 0x801F37AC;
 lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924 = 0x801F3924;
 activateRecordsUnlessScenarioIs0EAndWait5PendingWorld04Area19113_801F3964 = 0x801F3964;
 func_801F39AC = 0x801F39AC;

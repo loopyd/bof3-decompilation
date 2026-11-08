@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801EFA40
   - - 4312
-    - asm
-    - func_801EFCD8
+    - c
+    - drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8
+    - '@source: src/bof3/bmagic/drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8.c'
+    - '@behavior: Drawing step of the battle-magic overlay, reached only from the draw branch of the dispatcher at 0x801EF37C when the work record byte 0 has bit 0 set and the record byte 2 is non-zero. It picks the draw-mode tpage argument from GetGraphType, 0xA5 for types 1 and 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte draw-mode packet at the record words 0x14 and 0x18 with kind 2, then publishes the scratchpad cells the loop reads: the radius cell 0x1F800004 takes record byte 0x06 plus the low two bits of rand, the centre cells 0x1F800000 and 0x1F800002 take record halfwords 0x20 and 0x22, the tint cells 0x1F800008, 0x1F80000A and 0x1F80000C take the three bytes of the palette row at 0x801F0158 selected by record byte 0x03 times three plus record byte 0x04 times twelve, each scaled by record byte 0x05, and cell 0x1F80000E takes record byte 0x05. It then runs eight triangles: each iteration takes a fresh g_PrimCursor primitive, seeds it through func_8017A97C, marks it semi-transparent, writes the published centre into halfwords 0x08 and 0x0A, the func_801782FC and func_801783C8 samples of the counter shifted left 9 scaled by the radius cell and shifted right 12 into halfwords 0x10 and 0x12, increments the counter, writes the same two samples of the incremented counter into halfwords 0x18 and 0x1A, writes the palette triplet into bytes 0x04, 0x05 and 0x06, writes the 0x1F80000E cell into bytes 0x0C, 0x0D, 0x0E, 0x14, 0x15 and 0x16, and links the 0x1C-byte POLY_G3 packet at the record words 0x14 and 0x18 with kind 2. Takes no arguments, returns nothing and keeps a 0x30-byte frame.'
   - - 5116
     - c
     - reserveFirstFreeRecordBmagicMagic16203_801EFFFC
