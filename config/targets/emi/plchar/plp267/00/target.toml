@@ -27,6 +27,7 @@ sources = [
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp26700_801D0268.c",
     "src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp26700_801CF1FC.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp26700_801CF99C.c",
+    "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp26700_801CFF1C.c",
 ]
 support_sources = [
     "src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp26700_801CEE28.c",

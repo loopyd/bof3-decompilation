@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801D12A0
   - - 2036
-    - asm
-    - func_801D13F4
+    - c
+    - decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4
+    - '@source: src/bof3/scenario/decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4.c'
+    - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3918: subtracts 0x10 from the unsigned work halfword +0x2E and 8 from the intensity byte +0x3 through one load of the scratchpad pointer cell 0x1F800044, calls the overlay helper 0x801D1A60, draws one semi-transparent quad from the work object head point +0x18 to the point +0x34 with the decayed intensity byte +0x3, ticks countdown byte +0x9 down by one through a third load of that cell and, when it reaches zero, calls the resident reset helper 0x80196070.'
   - - 2172
     - asm
     - func_801D147C

@@ -66,8 +66,8 @@ segments:
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp47800_801CF064
   - - 3400
-    - asm
-    - func_801CF148
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp47800_801CF148
   - - 3708
     - c
     - dispatchWorkByte2Tablef6fcPlcharPlp47800_801CF27C

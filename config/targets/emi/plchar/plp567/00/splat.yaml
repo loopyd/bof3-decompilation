@@ -116,8 +116,10 @@ segments:
     - c
     - dispatchStateByte2Table07d8PlcharPlp56700_801CFAA8
   - - 5868
-    - asm
-    - func_801CFAEC
+    - c
+    - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC
+    - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC.c'
+    - '@behavior: Overlay step reached through the code-pointer word 0x801CFAEC at 0x801D07D8, entry 0 of this overlay handler run at 0x801D078C that the byte-2 dispatcher 0x801CFAA8 indexes. It reads the signed scenario byte 0x80146870 and, while that byte is 0xF, only clears byte 0x12B of the front-end record at 0x80146250. Every other scenario re-arms the work object read through the scratchpad pointer cell 0x1F800044: it compares the distance of route byte 0x08 from the candidate route indices 3 and 5, stores the step sign from 0x801B2D00 towards the nearer one in byte 0x0B and the chosen index in byte 0x03, then sets countdown byte 0x09 to 2 and increments step counter byte 0x02.'
   - - 6112
     - asm
     - func_801CFBE0

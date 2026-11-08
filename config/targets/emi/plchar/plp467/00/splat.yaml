@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801CF1EC
   - - 3876
-    - asm
-    - func_801CF324
+    - c
+    - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp46700_801CF324
+    - '@source: src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp46700_801CF324.c'
+    - '@behavior: Work byte 3 == 2 step of this overlay, the word 0x801CF324 at 0x801D03E8, index 2 of the work-byte-3 handler run based at 0x801D03E0 that this target''s dispatcher 0x801CF13C indexes by work byte 3 scaled by four, so no jal in this payload names it. It reads work record unsigned byte 0x0B through the scratchpad pointer cell 0x1F800044 as the byte offset of a row in the shared 0x74-byte front-end record table at 0x80143FC8 and enters the body when that row''s byte 0 reads 0 or its byte 1 reads 1, provided the shared gate byte 0x80149332 reads zero; the body clears work byte 0x2B and state byte 0x12B of the record published at 0x80146250, and both paths run the shared update helper func_8014D978. It takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra at 0x10 across the call.'
   - - 4032
     - asm
     - func_801CF3C0

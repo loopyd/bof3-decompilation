@@ -26,7 +26,7 @@ clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpd
 func_801CF7A0 = 0x801CF7A0;
 func_801CF944 = 0x801CF944;
 dispatchStateByte2Table07d8PlcharPlp56700_801CFAA8 = 0x801CFAA8;
-func_801CFAEC = 0x801CFAEC;
+clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC = 0x801CFAEC;
 func_801CFBE0 = 0x801CFBE0;
 dispatchStateByte2Table07e4PlcharPlp56700_801CFCDC = 0x801CFCDC;
 func_801CFD20 = 0x801CFD20;

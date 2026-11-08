@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801CEA44
   - - 1848
-    - asm
-    - func_801CEB38
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp57800_801CEB38
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp57800_801CEB38.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. When the current route index byte 0x08 already equals the chosen candidate index byte 0x03 the walk has arrived, so the body selects that route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and sequence 0x41 for route 5, and no sequence for any other route, then increments the step counter byte 0x02. Otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index, masks that index into the eight-entry window with 7 and selects the sequence of the new route index through the same selector. It takes no arguments and returns nothing. The 0x18-byte frame only holds $ra at 0x10 across the calls, the first pointer load precedes frame creation, and no word of the payload encodes a jump to this body: its address is word 7 of the twenty-three-word run at 0x801CFAB8, stored at 0x801CFAD4, which also holds the 0x801CE514 copy of the same step body at its word 1.'
   - - 2100
     - c
     - dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34

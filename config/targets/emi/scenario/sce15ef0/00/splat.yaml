@@ -51,8 +51,9 @@ segments:
     - asm
     - func_801D101C
   - - 1220
-    - asm
-    - func_801D10C4
+    - c
+    - decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4
+    - '@source: src/bof3/scenario/decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4.c'
   - - 1460
     - asm
     - func_801D11B4
