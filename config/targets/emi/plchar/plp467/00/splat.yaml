@@ -54,8 +54,8 @@ segments:
     - c
     - dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C
   - - 1168
-    - asm
-    - func_801CE890
+    - c
+    - dispatchWorkByte3Table03ccPlcharPlp46700_801CE890
   - - 1236
     - asm
     - func_801CE8D4

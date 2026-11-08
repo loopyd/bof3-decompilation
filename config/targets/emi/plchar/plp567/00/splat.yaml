@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801CF130
   - - 3472
-    - asm
-    - func_801CF190
+    - c
+    - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp56700_801CF190
   - - 3620
     - asm
     - func_801CF224

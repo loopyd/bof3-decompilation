@@ -84,8 +84,8 @@ segments:
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp05600_801CF76C
   - - 5176
-    - asm
-    - func_801CF838
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp05600_801CF838
   - - 5428
     - c
     - invokeHelperPlcharPlp05600_801CF934

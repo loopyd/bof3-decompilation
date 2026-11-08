@@ -121,8 +121,10 @@ segments:
     - c
     - dispatchWorkByte2Table0340PlcharPlp03400_801D0050
   - - 7316
-    - asm
-    - func_801D0094
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094
+    - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044. It takes the unsigned route index byte 0x08 and compares its distance from the two candidate route indices 3 and 5: when the distance to 5 is the smaller one it asks the shared helper func_801B2D00 for the step sign towards 5 and stores that answer in byte 0x0B, otherwise it asks for the sign towards 3 and stores that. Both paths then store the chosen candidate index in byte 0x03, so the two branches share one store and differ only in the argument and in the constant they hand to it. The body then sets the countdown byte 0x09 to 2 and increments the step counter byte 0x02, which re-arms the work object for the selected route. It takes no arguments, returns nothing and answers no value. The route byte is loaded once and both distances are computed from it; the pointer cell is re-read before every store; the first pointer load precedes frame creation and the 0x18-byte frame only keeps the return address at 0x10 across the calls. The address of this body is the word 0x801D0340, entry 19 of the twenty-eight-word handler run at 0x801D02F4 and index 0 of the tail that dispatchWorkByte2Table0340PlcharPlp03400_801D0050 indexes from work byte 2, so no jal in this payload names it and the overlays reach it through that run alone.'
   - - 7520
     - asm
     - func_801D0160

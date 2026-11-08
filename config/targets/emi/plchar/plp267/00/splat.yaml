@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801CF420
   - - 4652
-    - asm
-    - func_801CF62C
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp26700_801CF62C
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp26700_801CF62C.c'
+    - '@behavior: Claims one free front-end record of the shared 0x74-byte row table at 0x80143FC8 and seeds it from a caller-supplied position pair. Five jal call sites inside func_801CF420 of this payload reach it: 0x801CF488 and 0x801CF4E0 pass a zero state byte, 0x801CF4B0 passes 4, 0x801CF510 passes 3 and 0x801CF5AC passes 2, each with the first coordinate in $a1 and the second in $a2 as sign-extended halfwords. It asks the shared allocator func_8019601C for a row index and, unless that byte is 0xFF, scales it by the 0x74-byte stride and writes row byte 0 as 1, row byte 5 as 0x34, row byte 1 as the state byte, row word 0x34 as the first coordinate shifted left 16, row word 0x38 as the second shifted the same way, row halfword 0x3E as the shared distance helper func_8015477C over the re-read row word 0x34 and the shifted second coordinate plus 0x200, and row byte 0x0B as 1.'
   - - 4888
     - c
     - dispatchWorkByte3Table09c4PlcharPlp26700_801CF718

@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801CEB24
   - - 1924
-    - asm
-    - func_801CEB84
+    - c
+    - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp34900_801CEB84
+    - '@source: src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp34900_801CEB84.c'
+    - '@behavior: Drops the front-end record selection the scratchpad work record carries: loads the work-record pointer published at the pointer cell 0x1F800044, reads that record unsigned byte 6 as the index of the shared 0x74-byte front-end record table at 0x80143FC8, and when the selected row reads zero at row byte 0 or value 1 at row byte 1, and the shared gate byte 0x80149332 reads zero, stores zero in work byte 6 and then, re-loading the pointer cell, steps the work byte 3 dispatch index back by two; no index bound, no calls, no frame, and it writes no other state. Its address is published at word 9 of the sixteen-word code-pointer run at 0x801CF5EC.'
   - - 2072
     - asm
     - func_801CEC18

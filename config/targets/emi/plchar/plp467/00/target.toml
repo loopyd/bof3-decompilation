@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/plchar/dispatchWorkByte2Table03b8PlcharPlp46700_801CE620.c",
     "src/bof3/plchar/dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C.c",
+    "src/bof3/plchar/dispatchWorkByte3Table03ccPlcharPlp46700_801CE890.c",
     "src/bof3/plchar/getAndClearPlcharPlp46700_801CE610.c",
     "src/bof3/plchar/invokeHelperPlcharPlp46700_801CE82C.c",
     "src/bof3/support/plp467_00_psyq.c",
