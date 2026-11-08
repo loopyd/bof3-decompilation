@@ -71,6 +71,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
+| A call site fills an argument register the callee's own body never reads | Parameter count belongs to the call site, not the callee. Where every call of a callee sets `$a3` while that callee's own lifted body reads three parameters, this caller declares the fourth argument the original fill needs and the callee's source keeps the three it reads: measured exact on the first gate, with the callee's own row gating unchanged. Read the fills off the `jal` sites, and keep each list in its own source, since a shared header would carry one and conflict |
 | One small `li` for an argument sits before the address load another argument needs, instead of after it | Hold the value that fills that slot at the width the call consumes: a `u16` local narrowed it and the compiler hoisted the literal over the `lui`/`lw`, while the same body with an `s32` local emitted source order and matched. Argument-list respellings at that call (an extra local, a cast, an extra zero argument) kept the one-instruction swap, so read the residual as the held value's width, not the call's argument list |
 | Original stores one cell twice on one path: the same constant, or a second value derived from the first read | Write both stores in the original order. The repeat is real bytes: one store leaves the build short and puts the first difference in that cell's block, while folding the pair into one expression emits a single store. That covers a byte the original adds a second byte to and then masks back through the same cell, and a counter it stores `+1` into before a guard overwrites it with `+2` |
 | Exactly 4 bytes over an exact twin whose bodies differ only in the constants they store | A store of zero reads `$zero` and needs no materialisation, while a store of a non-zero constant costs the `addiu` that produces it, so the twin that stores zero is the shorter one by that instruction and the difference is not a shape fault. Read both stored constants before reshaping, and do not recover the bytes by respelling the store |
@@ -237,7 +238,10 @@ sign and magnitude tests, so write each test as its own early return. A bounded 
 whose lower bound the original subtracts before a single `sltiu` is that wrapped
 unsigned compare, not the two-test conjunction: write `(u32)(x - lo) >= N`, casting
 at the compare so a value below `lo` wraps into the reject range. Two signed compares
-cannot emit the `addiu`/`sltiu` pair, and the failure arm stays the early return.
+cannot emit the `addiu`/`sltiu` pair, and the failure arm stays the early return. A
+pair of adjacent discrete code values is that same single compare with `N = 2`, so
+write `((v + 0x100 - lo) & 0xFF) < 2`: the mask is what keeps the compare `sltiu`,
+while a lone code value in the same body stays its own `==` on the byte cast.
 
 Unrelated reject tests around a block that itself calls are the opposite case: write
 them as one conjunction with a single `return 0` after that block. A ladder of early
