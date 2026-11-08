@@ -101,7 +101,12 @@ base keeps one call site per arm, each with its own setup. Arm stores merge the
 same way: two stores into one cell whose constants share a high half cross-jump
 into the one join store with that half's `lui` filling the branch delay slot, so keep
 the store in each arm rather than selecting into a result local, which holds the
-value in a general register and one more register live. Read the store count off the
+value in a general register and one more register live. Keeping the store in both
+arms is not enough on its own: a constant stored in one arm and a read-modify-write
+of the same cell in the other merge into one join store with a selected value even
+when the constants share no high half, which dropped that arm's load and store and
+left 28 of 39 instructions at the original size, while a separate pointer base for
+the increment arm restored the per-arm store. Read the store count off the
 original before choosing that: the cross-jump applies where the original stores once
 per arm, while an original that stores once after the branch keeps the store there and
 selects in the arms. A guard that picks the sign of one delta on a shared halfword is
@@ -757,7 +762,11 @@ body whose many cell accesses all follow one `jal` measured 35 of 66 instruction
 first difference in the prologue (`sw s0,16(sp)` where the original materialises the
 cell), and both local layouts, each access inline and one local per store group,
 measured identically there, so only the cell spelling moves that residual and no
-local sweep is owed.
+local sweep is owed. A body with no map row for the cell has a non-volatile
+spelling: build the accessor's base from a non-constant offset (`u32 off = 0x44u;`
+then `PSX_REF(u8 *, SPAD_BASE + off)` at each reload point), which measured 28 of 28
+instructions where the same accessor with a literal offset hoisted the cell address
+into `$s0` and measured 18 of 28.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read
