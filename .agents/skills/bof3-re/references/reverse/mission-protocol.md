@@ -54,7 +54,10 @@ comment carrying `@behavior`, or `@source` alone on its own line above a definit
 parses as that function's metadata block and refuses the gate with `invalid_metadata`
 before it compiles, while the same words after code on the line stay prose; delete
 the token, since rewording around it still matches. After PASS, confirm naming
-without rewriting correct source.
+without rewriting correct source. A retained comment that reports a sibling's lift
+status is a measurement from when the seed was written, so write it in the past
+tense with the measurement it rests on, because a sibling lifted exact afterwards
+falsifies the present tense and returns as a comment-only edit and re-gate.
 Later source/binding edit requires renewed gate.
 
 ## Gate batch (one pass, after all edits)
