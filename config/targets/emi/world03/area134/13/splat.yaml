@@ -248,8 +248,9 @@ segments:
     - asm
     - func_801F3F78
   - - 5320
-    - asm
-    - func_801F40C8
+    - c
+    - endAreaWhenThirdWorkWord34ExceedsLimitElseStepWorkByte9AndArmMode1World03Area13413_801F40C8
+    - '@source: src/bof3/world/endAreaWhenThirdWorkWord34ExceedsLimitElseStepWorkByte9AndArmMode1World03Area13413_801F40C8.c'
   - - 5552
     - c
     - invokeHelperWorld03Area13413_801F41B0

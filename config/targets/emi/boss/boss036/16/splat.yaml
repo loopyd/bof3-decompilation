@@ -96,8 +96,8 @@ segments:
     - c
     - zeroResultBossBoss03616_800C1E44
   - - 1612
-    - asm
-    - func_800C1E4C
+    - c
+    - initModeTuple510Or520ByFlagBitTwoAndSetSubstate5BossBoss03616_800C1E4C
   - - 1688
     - c
     - noopHandlerBossBoss03616_800C1E98

@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/world/advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0.c",
     "src/bof3/world/advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C.c",
     "src/bof3/world/setSubstate14AndClearWorkFlagsWhenEffectIdleWorld04Area17213_801F3374.c",
+    "src/bof3/world/decrementWorkByte9ClearWorkFlagsAtZeroThenDrawSemiTransTileWorld04Area17213_801F2D98.c",
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

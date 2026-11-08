@@ -106,8 +106,10 @@ segments:
     - asm
     - func_800C2310
   - - 3148
-    - asm
-    - func_800C244C
+    - c
+    - integrateWorkFieldQuadAndAdvanceWorkByte2WhenWorkWord14HitsMinus40BossBoss03316_800C244C
+    - '@source: src/bof3/boss/integrateWorkFieldQuadAndAdvanceWorkByte2WhenWorkWord14HitsMinus40BossBoss03316_800C244C.c'
+    - '@behavior: Work-step handler at index 5 of the code pointer run based at 0x800C27B4, the base word the step dispatcher func_800C1E70 indexes with work byte 2 scaled by four; run word 5 at 0x800C27C8 holds this address and no jal in the payload names it. It loads the scratch work object published at the pointer cell 0x1F800044 once and adds four deltas into four of that object fields in this store order: word 0x0C into word 0x34, the pre-update word 0x14 into unsigned halfword 0x3E, word 0x10 into word 0x38 and word 0x18 into word 0x3C. It then advances word 0x14 by word 0x20 and, when that advanced word equals minus 0x40, raises object byte 2, the handler index, by one. It finishes with its single call, the readiness helper func_8014DAEC, whose returned byte it discards; the 0x18-byte frame keeps only the return address at 0x10.'
   - - 3292
     - asm
     - func_800C24DC

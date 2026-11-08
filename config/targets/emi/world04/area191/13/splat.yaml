@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801F31E4
   - - 1656
-    - asm
-    - func_801F3278
+    - c
+    - advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278
+    - '@source: src/bof3/world/advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278.c'
+    - '@behavior: Per-frame rise step of the scratch work record published through the pointer cell 0x1F800044: adds the step word at 0x0C to the accumulator word at 0x34, adds 0x2000 to each of the words at 0x40 and 0x44 and decrements the countdown byte at 0x0A; a countdown multiple of four selects handler byte 4 value 2, and a zero countdown selects 0, otherwise the shared halfword at 0x0A of the record at 0x80148210 loses two.'
   - - 1824
     - asm
     - func_801F3320

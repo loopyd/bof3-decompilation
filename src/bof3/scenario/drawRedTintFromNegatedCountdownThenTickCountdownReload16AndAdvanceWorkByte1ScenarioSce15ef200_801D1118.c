@@ -4,7 +4,8 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D19A8(u8 shade);
+void drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+    u8 shade);
 
 /* @source 0x801D1118
  * @behavior Entry 1 of this overlay handler run at 0x801D1B48 (0x801D10E8,
@@ -12,7 +13,8 @@ void func_801D19A8(u8 shade);
  * unsigned work byte at offset +0x1 of the scratchpad work object published at
  * pointer slot 0x1F800044 and calls with no arguments: it takes that object
  * countdown byte at +0x9, scales it by 16, negates the product and passes the
- * low byte to the in-payload draw helper func_801D19A8, which submits two
+ * low byte to the in-payload draw helper
+ * drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8, which submits two
  * 320-pixel-wide semi-transparent quads covering the screen and writes that
  * byte into the red component of every vertex, so the countdown drives a red
  * tint that deepens as the countdown expires. It then ticks the same countdown
@@ -50,7 +52,8 @@ void func_801D19A8(u8 shade);
  * @residual none
  */
 void drawRedTintFromNegatedCountdownThenTickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D1118(void) {
-  func_801D19A8(-(D_1F800044[9] << 4));
+  drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+      -(D_1F800044[9] << 4));
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x10;
     D_1F800044[1]++;

@@ -7,7 +7,7 @@ typedef void (*Boss01316Handler)(void);
 /* Overlay handlers this installer publishes. The first two take no arguments
  * and return nothing; the third ends with a zero result, which the void slot
  * type drops. */
-void func_800C2348(void);
+void initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348(void);
 void func_800C243C(void);
 s32  func_800C2138(void);
 
@@ -27,7 +27,8 @@ extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
 
 /* @source 0x800C20D8
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * func_800C2348 into 0x801463A4, func_800C243C into 0x801463A8 and
+ * initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348
+ * (0x800C2348) into 0x801463A4, func_800C243C into 0x801463A8 and
  * func_800C2138 into 0x801463AC, then seeds the overlay step countdown byte at
  * 0x800C26E0 with 8 plus the low two bits of rand() (andi 0x2, addiu 8), so the
  * countdown starts at 8, 9 or 10. The 0x18-byte frame exists only to keep $ra
@@ -45,7 +46,7 @@ extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
  * @residual none
  */
 void publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8(void) {
-  D_801463A4 = func_800C2348;
+  D_801463A4 = initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348;
   D_801463A8 = func_800C243C;
   D_801463AC = (Boss01316Handler)func_800C2138;
   D_800C26E0 = (rand() & 2) + 8;

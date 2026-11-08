@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801F0070
   - - 5340
-    - asm
-    - func_801F00DC
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, advances the object unsigned byte 0x9 by one with a byte-width add, tests the truncated byte it just stored against 0xA0, and only then reloads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5420
     - asm
     - func_801F012C

@@ -119,13 +119,15 @@ segments:
     - c
     - publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8
     - '@source: src/bof3/boss/publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8.c'
-    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (func_800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler func_800C1E90 decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
+    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (0x800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler func_800C1E90 decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
   - - 2360
     - asm
     - func_800C2138
   - - 2888
-    - asm
-    - func_800C2348
+    - c
+    - initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348
+    - '@source: src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348.c'
+    - '@behavior: First member of the battle handler trio publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8 installs into the shared battle hook slot 0x801463A4. Tests bit 0x2 of the shared battle flag byte 0x80146328: while set it stores 0x14 into the shared scenario progress byte 0x80146864, stores the sum of the shared halfwords 0x801EB6B6 and 0x801EB7CE into the shared word 0x8014632C, and runs initModeTuple510 (0x801DDED8); while clear it tests bit 0x40 of the shared flag byte 0x801462ED and, when set, publishes the shared record 0x801EB860 into the scratchpad pointer cell 0x1F800044, applies main lookup record 0xF9 through 0x8014DD3C, clears bit 0 of that record byte 0x24, stores 1 into its byte 0x2A and requests resource 1 through 0x8014D6B8, after which both clear-path outcomes store 0x50 into 0x80146864 and run initModeTuple530 (0x801DDF28). The shared tail stores 0x31 into the shared byte 0x80145029 and clears bit 0x0080 of the shared halfword 0x80146258. No jal in the payload names this function; the installer stores its address with lui and addiu.'
   - - 3132
     - asm
     - func_800C243C

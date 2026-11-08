@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801F2D48
   - - 408
-    - asm
-    - func_801F2D98
+    - c
+    - decrementWorkByte9ClearWorkFlagsAtZeroThenDrawSemiTransTileWorld04Area17213_801F2D98
+    - '@source: src/bof3/world/decrementWorkByte9ClearWorkFlagsAtZeroThenDrawSemiTransTileWorld04Area17213_801F2D98.c'
+    - '@behavior: Decrements the countdown byte at offset 0x09 of the work record published at scratchpad pointer cell 0x1F800044 and, once the reloaded countdown reads zero, resets the shared work area through the exe-resident helper 0x80196070, then emits the overlay semi-transparent full-screen tile through the overlay helper 0x801F2DF4 with blend-rate argument 1.'
   - - 500
     - asm
     - func_801F2DF4

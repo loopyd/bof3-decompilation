@@ -187,8 +187,10 @@ segments:
     - asm
     - func_801F50F4
   - - 9832
-    - asm
-    - func_801F5268
+    - c
+    - faceWorkTowardResolvedSlotThenDecrementByte9AndSetState2To1World03Area12114_801F5268
+    - '@source: src/bof3/world/faceWorkTowardResolvedSlotThenDecrementByte9AndSetState2To1World03Area12114_801F5268.c'
+    - '@behavior: Returns one only when the world state halfword 0x80143F00 is 0x79 and the range-1 record lookup at the work position words 0x34 and 0x38 of the scratchpad pointer cell 0x1F800044 resolves a slot that the facing step of 0x801F5028 reports as settled. On that path it runs the shared update at 0x801C24D0, decrements work byte 0x09, runs 0x801B0DFC, writes 1 to byte 0x12B of the record published at 0x80146250 and sets work byte 0x02 to 1. Any other world state, or a facing step that reports zero, returns zero.'
   - - 10020
     - asm
     - func_801F5324
