@@ -68,8 +68,10 @@ segments:
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp45700_801CEC60
   - - 2388
-    - asm
-    - func_801CED54
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CED54.c'
+    - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen index byte 0x03 it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through the shared selector and advances the step byte 0x02, else it ticks the countdown byte 0x09 and, when that expires, re-arms it to 2 and steps the route index byte 0x08 by the sign byte 0x0B masked to the eight-entry window before reselecting.'
   - - 2640
     - c
     - dispatchWorkByte2Tablef930PlcharPlp45700_801CEE50

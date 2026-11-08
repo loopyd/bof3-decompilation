@@ -68,8 +68,10 @@ segments:
     - c
     - dispatchWorkByte3Tablef614PlcharPlp34900_801CEF10
   - - 2900
-    - asm
-    - func_801CEF54
+    - c
+    - queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp34900_801CEF54
+    - '@source: src/bof3/plchar/queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp34900_801CEF54.c'
+    - '@behavior: Overlay step dispatched on work-record byte 3 when it reads zero through the dispatcher based at 0x801CF614: loads the work record published at the scratchpad pointer cell 0x1F800044 and, in order, queues the cue taken from the record unsigned halfword 0x2C plus 0x100, selects the shared work sequence ((record byte 8 - 1) / 2 + 0x42) truncated to a byte, arms the countdown byte 0x0A with 8 and sets the dispatch byte 3 to 1. Both calls answer nothing it keeps; no index bound, no arguments, no jal caller, and the 0x18-byte frame keeps only $ra at 0x10. Its address is published at the pointer word 0x801CF614, entry 10 of the sixteen-word code-pointer run based at 0x801CF5EC.'
   - - 3020
     - asm
     - func_801CEFCC

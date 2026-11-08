@@ -123,8 +123,9 @@ segments:
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp26700_801CFCE8
   - - 6620
-    - asm
-    - func_801CFDDC
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp26700_801CFDDC
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp26700_801CFDDC.c'
   - - 6872
     - c
     - dispatchWorkByte2Table09dcPlcharPlp26700_801CFED8
