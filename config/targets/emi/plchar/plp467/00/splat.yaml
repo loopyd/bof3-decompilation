@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801CF050
   - - 3388
-    - asm
-    - func_801CF13C
+    - c
+    - dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C
   - - 3456
     - asm
     - func_801CF180

@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/support/plp034_00_psyq.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp03400_801CF84C.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C.c",
+    "src/bof3/plchar/probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp03400_801CF3C0.c",
 ]
 psyq_source = "src/bof3/support/plp034_00_psyq.c"

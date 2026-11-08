@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/plchar/getAndClearPlcharPlp45700_801CE610.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp45700_801CF660.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp45700_801CE664.c",
+    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CE730.c",
     "src/bof3/support/plp457_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp457_00_psyq.c"

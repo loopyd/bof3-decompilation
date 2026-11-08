@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801CEFCC
   - - 3308
-    - asm
-    - func_801CF0EC
+    - c
+    - clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp34900_801CF0EC
+    - '@source: src/bof3/plchar/clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp34900_801CF0EC.c'
+    - '@behavior: Overlay step selected from outside this payload: reads the front-end record index from work byte 0x0B of the record published at the scratchpad pointer cell 0x1F800044, looks that row up in the shared 0x74-byte front-end record table at 0x80143FC8, and when the selected row reads 0 at byte 0 or 1 at byte 1, and the shared gate byte 0x80149332 reads zero, stores zero in the state byte 0x12B of the record published at the pointer cell 0x80146250; both paths then call the shared no-argument update helper func_8014D978. No arguments, no result, no dispatch byte written; row byte 1, the gate byte and state byte 0x12B stay address-anchored. Its address is published at word 12 (0x801CF61C) of the sixteen-word code-pointer run at 0x801CF5EC that func_801CE404 indexes from work byte 2, and it has no jal caller.'
   - - 3460
     - asm
     - func_801CF184

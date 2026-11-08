@@ -24,7 +24,7 @@ markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWork
 func_801CF958 = 0x801CF958;
 func_801CFA44 = 0x801CFA44;
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C = 0x801CFC3C;
-func_801CFD20 = 0x801CFD20;
+testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp25700_801CFD20 = 0x801CFD20;
 dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54 = 0x801CFE54;
 dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98 = 0x801CFE98;
 func_801CFEDC = 0x801CFEDC;

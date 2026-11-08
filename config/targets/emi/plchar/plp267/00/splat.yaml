@@ -120,8 +120,8 @@ segments:
     - c
     - dispatchWorkByte2Table09d0PlcharPlp26700_801CFCA4
   - - 6376
-    - asm
-    - func_801CFCE8
+    - c
+    - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp26700_801CFCE8
   - - 6620
     - asm
     - func_801CFDDC

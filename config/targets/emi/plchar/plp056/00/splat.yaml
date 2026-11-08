@@ -72,8 +72,8 @@ segments:
     - asm
     - func_801CF37C
   - - 4424
-    - asm
-    - func_801CF548
+    - c
+    - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp05600_801CF548
   - - 4692
     - asm
     - func_801CF654

@@ -90,8 +90,8 @@ segments:
     - c
     - dispatchStateByte3Table07ccPlcharPlp56700_801CF51C
   - - 4448
-    - asm
-    - func_801CF560
+    - c
+    - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp56700_801CF560
   - - 4556
     - asm
     - func_801CF5CC

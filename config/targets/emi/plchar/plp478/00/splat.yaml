@@ -87,8 +87,8 @@ segments:
     - asm
     - func_801CF5E4
   - - 4688
-    - asm
-    - func_801CF650
+    - c
+    - dispatchWorkHalfword2cTablef710PlcharPlp47800_801CF650
   - - 4756
     - asm
     - func_801CF694
