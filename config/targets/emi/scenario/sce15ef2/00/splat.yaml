@@ -68,8 +68,10 @@ segments:
     - '@source: src/bof3/scenario/armCountdown10ClearScreenPairAndAdvanceWorkByteScenarioSce15ef200_801D0F68.c'
     - '@behavior: Entry 7 of the overlay code-pointer run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object at pointer slot 0x1F800044 and calls with no arguments: arms that object countdown byte at +0x9 with 0xA, clears the projected screen-pair halfwords at +0x2E and +0x30, then advances the same work byte at +0x1 by one.'
   - - 924
-    - asm
-    - func_801D0F9C
+    - c
+    - tickCountdownMoveScreenPairReload90AndAdvanceWorkByteScenarioSce15ef200_801D0F9C
+    - '@source: src/bof3/scenario/tickCountdownMoveScreenPairReload90AndAdvanceWorkByteScenarioSce15ef200_801D0F9C.c'
+    - '@behavior: Entry 8 of the overlay handler run at 0x801D1B1C, which the overlay entry func_801D0C04 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044 and calls with no arguments: it moves that object projected screen-pair halfwords at +0x2E and +0x30 by +0x15 and +9 through one loaded pointer, ticks its countdown byte at +0x9 down by one, and leaves the +0x30 store for the guard branch delay slot; when the decremented byte reaches zero it re-arms that byte with 0x5A and advances the same work byte at +0x1 by one, and both zero-branch accesses reload the pointer cell because the byte stores through the loaded pointer may alias it.'
   - - 1032
     - asm
     - func_801D1008

@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss00216_800C1AA0.c",
     "src/bof3/support/boss002_16_psyq.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00216_800C1D00.c",
+    "src/bof3/boss/publishBattleHooksBossBoss00216_800C1E3C.c",
 ]
 psyq_source = "src/bof3/support/boss002_16_psyq.c"

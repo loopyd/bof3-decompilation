@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801F3C54
   - - 4844
-    - asm
-    - func_801F3EEC
+    - c
+    - stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC
+    - '@source: src/bof3/world/stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC.c'
+    - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 1. Reads the work record published at the scratchpad pointer cell 0x1F800044 and compares its byte at offset 0x0A with the shared state byte 0x8014933B; when they differ the body is skipped and only the draw call runs. Otherwise the front-end phase byte 0x80143BB0 gates sound cue 0x200 through the resident cue dispatcher at 0x8015DF18, which fires only while that phase byte is zero. It then stamps 0xA1 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below, addressed through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, and stores 2 into the record state byte at offset 0x02 so the next dispatch takes entry 2 of the same table. Every path finishes with the overlay record draw routine 0x801F381C called with mode 1. The record cell is reloaded for each of the four uses.'
   - - 5072
     - c
     - stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0

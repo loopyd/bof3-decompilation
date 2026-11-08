@@ -84,8 +84,10 @@ segments:
     - '@source: src/bof3/world/rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0.c'
     - '@behavior: Per-frame sweep of the 0x10 records of the 0x28-byte-stride work table at 0x800E4800: for each record whose lead byte at offset 0 is non-zero it advances the two-state intensity ramp, raising the byte at +0x03 by 4 per frame with the counter byte at +0x02 while the state byte at +0x01 is 0 and lowering it by 4 once that counter reaches 0x10, until the counter reaches 0x20 and the lead byte is cleared; then it adds the velocity words at +0x18 and +0x1C to the position words at +0x08 and +0x0C, advances the angle halfword at +0x04 by 8, stores func_8015477C of the two position words shifted left 16 into the word at +0x10, and calls the record emitter of this overlay func_801F2FC4 with the record. It returns 1 once at least one record was active and 0 otherwise, and its 0x58-byte frame holds the scratch area func_801AFE18 fills plus the saved $ra/$s0-$s3 of the sweep.'
   - - 2308
-    - asm
-    - func_801F3504
+    - c
+    - seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504
+    - '@source: src/bof3/world/seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504.c'
+    - '@behavior: Weighted record pick of this overlay: it draws rand into the low six bits and walks the eight byte weights at 0x801F37E8, subtracting every weight the draw does not fall below, so the walk stops on a weighted index below 8. It then clears the lead flag byte at offset 0 of the other seven of the first eight 0x98-byte records at 0x80146888, and for a selected index below 8 it draws rand into the low three bits, doubles that into the eight-entry byte-pair table at 0x801F37D8 and stores the pair shifted left 16 into the selected record position words at +0x34 and +0x38, then stores func_8015477C of those two words in the signed halfword at +0x3E. It ends by storing the halfword at 0x80145FB8 minus 5 in the shared halfword at 0x80143F22.'
   - - 2604
     - c
     - invokeHelperWorld03Area12513_801F362C

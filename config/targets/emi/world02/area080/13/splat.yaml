@@ -100,8 +100,9 @@ segments:
     - c
     - setTwoWorld02Area08013_801F3D34
   - - 4432
-    - asm
-    - func_801F3D50
+    - c
+    - claimFrontEndRecordAndSetHandler44World02Area08013_801F3D50
+    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area08013_801F3D50.c'
   - - 4524
     - textbin
     - D_801F3DAC

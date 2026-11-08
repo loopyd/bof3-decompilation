@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F3504(void);
+void seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504(
+    void);
 
 /* @source 0x801F362C
  * @behavior Thin overlay wrapper calling the helper at 0x801F3504.
@@ -9,5 +10,5 @@ void func_801F3504(void);
  * @residual none
  */
 void invokeHelperWorld03Area12513_801F362C(void) {
-  func_801F3504();
+  seedWeightedRandomWorkRecordClearOthersPositionAndDistanceThenStoreSharedHalfwordMinus5World03Area12513_801F3504();
 }

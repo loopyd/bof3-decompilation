@@ -1,3 +1,4 @@
+dispatchSoundCue = 0x8015DF18;
 dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2C6C = 0x801F2C6C;
@@ -15,7 +16,7 @@ stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawW
 func_801F381C = 0x801F381C;
 dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10 = 0x801F3C10;
 func_801F3C54 = 0x801F3C54;
-func_801F3EEC = 0x801F3EEC;
+stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC = 0x801F3EEC;
 stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0 = 0x801F3FD0;
 dispatchStateByte2Table519cWorldWorld03Area11813_801F410C = 0x801F410C;
 func_801F4150 = 0x801F4150;

@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4.c",
     "src/bof3/world/publishModeStatusFromTable449cAndProgress1Or0AWorld02Area08013_801F3C94.c",
     "src/bof3/world/seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50.c",
+    "src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area08013_801F3D50.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area08013_801F3D34.c",

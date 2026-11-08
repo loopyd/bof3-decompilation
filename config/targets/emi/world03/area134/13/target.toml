@@ -21,6 +21,7 @@ sources = [
     "src/bof3/world/storeSharedCoordinateGapInWorkWord34ThenSelectSubstate1EAndInvokeHelperWorld03Area13413_801F34DC.c",
     "src/bof3/world/retreatWorkWord24By100000AndSweepHalfword20ThenResetWorkareaAtCountdownEndWorld03Area13413_801F44C0.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld03Area13413_801F5114.c",
+    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13413_801F5200.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

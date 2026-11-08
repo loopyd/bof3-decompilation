@@ -69,8 +69,10 @@ segments:
     - '@source: src/bof3/world/setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018.c'
     - '@behavior: Reads the low byte of the packed scenario word at the cross-overlay address 0x801FD288 with lbu, tests it against the unsigned window 0x62..0x66 through the addiu -0x62 and sltiu 5 pair, and stores 0x0A in the shared scenario progress byte 0x80146864 while the byte is inside that window and 0x1E otherwise. The inside constant fills the bnez delay slot and both arms share the single sb. Leaf, no arguments, no return value.'
   - - 1096
-    - asm
-    - func_801F3048
+    - c
+    - publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13613_801F3048
+    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13613_801F3048.c'
+    - '@behavior: Publishes the second shared work base 0x80145FD0 as the scratchpad work cursor at 0x1F800044, then seeds one kind-3 front-end record through the shared allocator/seeder at 0x8015CB18 with word +0x0C = 0, word +0x10 = the per-party byte table of this payload at 0x801F3430 indexed by the second shared party byte 0x80144F5B, and halfwords +0x2E/+0x30 = 0x80145FFE/0x80146000; unless the call reports 0xFF the returned record index is stored in work byte +0x0B of the re-read cursor. No arguments, no return value.'
   - - 1224
     - asm
     - func_801F30C8

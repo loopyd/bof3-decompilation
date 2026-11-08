@@ -16,7 +16,7 @@ publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area1
 func_801F3768 = 0x801F3768;
 decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790 = 0x801F3790;
 func_801F3808 = 0x801F3808;
-func_801F39E0 = 0x801F39E0;
+requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0 = 0x801F39E0;
 func_801F3BC0 = 0x801F3BC0;
 func_801F3D3C = 0x801F3D3C;
 func_801F3EE8 = 0x801F3EE8;
