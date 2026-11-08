@@ -73,6 +73,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Fixed run of identical calls whose arguments differ only in a constant | Write each call out with its own literal arguments rather than looping over an argument table: the original's run has no latch, and a loop adds the induction, the counter register and the frame bytes the original never had |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
+| One output record filled field by field; first difference is where the computation behind a later field group sits | Write the fields in the original's store order and place a dependent lookup at the field that consumes it: the lookup and the neighbouring store group share scheduler slots, so moving those writes later merges the lookup into the wrong group. One fill measured 75/81 at 328 bytes with the dependent writes moved after a neighbouring field write, and 81/81 at 324 bytes with them at their own fields |
 
 Named extern-array indexing can emit folded `lw table(index)` and assembler
 `lui $at; addu $at,$at,index`; fixed-address arithmetic may emit compiler's opposite
@@ -248,6 +249,11 @@ The mirror carries no bound at all: a body that loads a state byte, scales it by
 four and adds it to the table base with no `sltiu` in front is one indexed call on
 an extern bound at that word, whatever the entry count, so write no clamp, no
 bound check and no arms.
+
+A guard whose second operand is a call that reads another cell takes the whole test
+as one short-circuit chain (`if (mode != K || wait(cell, id) == 0)`): the second
+operand keeps that cell's load and its `jal` on the matching path, where the original
+has them, instead of both landing ahead of the first test.
 
 ### Operation scopes and loop-note dependencies
 
