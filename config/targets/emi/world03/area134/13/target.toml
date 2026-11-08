@@ -33,6 +33,7 @@ sources = [
     "src/bof3/world/emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64.c",
     "src/bof3/world/endAreaWhenThirdWorkWord34ExceedsLimitElseStepWorkByte9AndArmMode1World03Area13413_801F40C8.c",
     "src/bof3/world/advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0.c",
+    "src/bof3/world/endAreaWhenThirdWorkWord34ExceedsLimitElseSeedRandomStatusByteAndArmMode2World03Area13413_801F3E8C.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

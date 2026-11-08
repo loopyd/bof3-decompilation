@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/world/lookupTable4260ByteByTable4290OffsetOr8World04Area19113_801F3924.c",
     "src/bof3/world/advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278.c",
     "src/bof3/world/advanceWorkStepAndLowerWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3320.c",
+    "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0.c",
 ]
 psyq_source = "src/bof3/support/area191_13_psyq.c"

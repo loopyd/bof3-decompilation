@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801F31D0
   - - 1768
-    - asm
-    - func_801F32E8
+    - c
+    - claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWorld04Area17213_801F32E8
+    - '@source: src/bof3/world/claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWorld04Area17213_801F32E8.c'
+    - '@behavior: Overlay progress step handler, entry 4 of the state byte 1 dispatch table at 0x801F5090: increments work record byte 0x06, calls the record claim 0x801F38E8 on every fourth frame, runs the tile draw pass 0x801F3FAC and the record pass 0x801F3984, and while the shared effect-busy halfword 0x80143C40 reads zero sets front-end mode 9, clears the shared byte 0x8014832E and advances work state byte 0x01.'
   - - 1908
     - c
     - setSubstate14AndClearWorkFlagsWhenEffectIdleWorld04Area17213_801F3374

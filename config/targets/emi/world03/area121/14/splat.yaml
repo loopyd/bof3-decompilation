@@ -184,8 +184,10 @@ segments:
     - faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028
     - '@source: src/bof3/world/faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028.c'
   - - 9460
-    - asm
-    - func_801F50F4
+    - c
+    - setResolvedSlotAnimBit0WhenFacingMatchesElseFaceAndDecrementByte9World03Area12114_801F50F4
+    - '@source: src/bof3/world/setResolvedSlotAnimBit0WhenFacingMatchesElseFaceAndDecrementByte9World03Area12114_801F50F4.c'
+    - '@behavior: Requires the world state halfword 0x80143F00 to be 0x79 and then projects the active work record: the position words 0x34 and 0x38 of the scratchpad pointer cell 0x1F800044 are offset by the doubled route words at 0x80181B94 and 0x80181B98 selected by the record route byte 0x08. It asks 0x801BDE14 for a range-1 record at that point and, when the pad halfwords 0x80145AA4 and 0x80145AB6 overlap and the active route byte equals the low three bits of the resolved slot route byte at 0x80146890, raises bit 0 of that slot animation byte at 0x801468FC and returns without moving. Otherwise, when the facing step of 0x801F5028 reports the slot settled, it runs the shared update at 0x801C24D0, decrements work byte 0x09, runs 0x801B0DFC, writes 1 to byte 0x12B of the record published at 0x80146250 and sets work byte 0x02 to 1.'
   - - 9832
     - c
     - faceWorkTowardResolvedSlotThenDecrementByte9AndSetState2To1World03Area12114_801F5268

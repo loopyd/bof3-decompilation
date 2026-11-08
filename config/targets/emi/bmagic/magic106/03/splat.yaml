@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF29C
   - - 2072
-    - asm
-    - func_801EF418
+    - c
+    - stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClearRecordAtZeroBmagicMagic10603_801EF418
+    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClearRecordAtZeroBmagicMagic10603_801EF418.c'
+    - '@behavior: Advances the work record angle halfword at offset 0x0E by 0x40 within 0x1000, projects the two position words at offsets 0x10 and 0x14 from the shared battle word offsets 0x34 and 0x38 plus the two rotator helper results scaled by the record signed halfword 0x0C, adds record byte 0x0A onto halfword 0x1A, increments byte 0x0B, and when bit 0 of the shared battle word at 0x80143E6C is set counts down byte 0x09 and on zero decrements byte 0x0B of the shared battle word and calls func_801EF970 to clear the record.'
   - - 2348
     - asm
     - func_801EF52C

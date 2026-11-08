@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EF478
   - - 2680
-    - asm
-    - func_801EF678
+    - c
+    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic16203_801EF678
+    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic16203_801EF678.c'
+    - '@behavior: Steps the 0x2C-byte work record published through the pointer cell at 0x801F17B0: increments and stores back the record halfword at 0xC unmasked, stores the low six bits of the incremented value shifted left 6 into the scratchpad halfword cell at 0x1F800006, passes the same shifted value to func_801782FC and adds that result scaled by 0x18 and shifted right 12 to the record halfword at 0x8 into the record halfword at 0x20, re-reads the cell and adds the record halfword at 0xA into the record halfword at 0x22, then increments the record byte at 0x6 and increments the record byte at 0x2 when that byte equals the record byte at 0x7; takes no arguments and returns nothing.'
   - - 2856
     - asm
     - func_801EF728

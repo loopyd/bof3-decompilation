@@ -47,8 +47,10 @@ segments:
     - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07003_801EF15C.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and compares the work object byte 0xB against 5 with an unsigned bound, so the arm runs only below 5; on that path it stores 8 into work byte 0x9 and then re-reads the cell and increments work byte 0x1, the entry stage index, at byte width. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 1444
-    - asm
-    - func_801EF1A4
+    - c
+    - decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF1A4
+    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07003_801EF1A4.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access group and decrements the counter bytes 0x0/0x1/0x2 of the 12-byte record that the work object byte 0xA selects in the 0x80145BD6 table, then decrements the work object countdown byte 9 and, only when it reaches zero, submits the battle record word at 0x8014638C through func_80196718, passes the shared battle byte at 0x80146384 to func_800AF814 and increments the work object stage byte 0x1; takes no arguments and returns nothing.'
   - - 1756
     - asm
     - func_801EF2DC

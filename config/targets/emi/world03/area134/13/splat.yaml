@@ -242,8 +242,10 @@ segments:
     - c
     - setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50
   - - 4748
-    - asm
-    - func_801F3E8C
+    - c
+    - endAreaWhenThirdWorkWord34ExceedsLimitElseSeedRandomStatusByteAndArmMode2World03Area13413_801F3E8C
+    - '@source: src/bof3/world/endAreaWhenThirdWorkWord34ExceedsLimitElseSeedRandomStatusByteAndArmMode2World03Area13413_801F3E8C.c'
+    - '@behavior: Overlay state-byte-1 handler 1 of the five-entry handler run based at 0x801F5804: when the shared area status byte D_80146865 already reads 0xFE it resets the work-area header through func_80196070, then publishes the third shared work base D_80146110 as the shared work pointer D_80146250 and as the scratchpad work cursor 0x1F800044 while keeping the caller cursor in a register. When the word at +0x34 of that base (D_80146144) reads above 0x33FFFF as a signed word the area ends - status byte 0xFF, D_80146866 and D_80146867 cleared, D_80146875 set to 0x14 and the restored record header reset through func_80196070. Otherwise it restores the caller cursor, seeds the status byte from the 16-entry table at 0x801F5724 at the low nibble of rand() and arms mode 2 in the restored record byte +1.'
   - - 4984
     - asm
     - func_801F3F78

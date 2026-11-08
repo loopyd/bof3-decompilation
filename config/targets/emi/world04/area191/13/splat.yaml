@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801F39AC
   - - 3760
-    - asm
-    - func_801F3AB0
+    - c
+    - resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0
+    - '@source: src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19113_801F3AB0.c'
+    - '@behavior: Walks the eight 164-byte field records of D_80144968 and, for every record whose flag byte at offset 0x07 has bit 0 set, clears the halfword at offset 0x0C and copies the halfwords at 0x1C and 0x1E over the pair at 0x14 and 0x16; it then walks the visible entry count D_80146254 in order, selects the field record index D_80181B10[D_80144F5A[entry]] and copies that whole 164-byte field record into offset 0x74 of the entry work record in the 0x140-byte-stride array whose array base is D_80145E90.'
   - - 4064
     - asm
     - func_801F3BE0

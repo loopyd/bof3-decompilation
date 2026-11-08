@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F01A4
   - - 6288
-    - asm
-    - func_801F0490
+    - c
+    - reserveFirstFreeRecordBmagicMagic05903_801F0490
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05903_801F0490.c'
+    - '@behavior: Finds and reserves a slot in the record pool at 0x801F0694. It walks up to 24 records of stride 0x78 comparing each record flags byte bit 0 for zero, and on the first clear slots sets that bit with a byte store and returns the zero-extended record index; when all 24 records are occupied it returns 0xFF. The pool address is re-materialized for the flags load and again for the store, and both callers index the same pool with the returned byte.'
   - - 6388
     - c
     - clearWorkBytesBmagicMagic05903_801F04F4
