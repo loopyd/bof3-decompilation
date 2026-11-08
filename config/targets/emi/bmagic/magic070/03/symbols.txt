@@ -1,5 +1,5 @@
 func_801EEC28 = 0x801EEC28;
-func_801EED38 = 0x801EED38;
+clearPoolThenPublishSourceRecordActivateRandomRecordsAndAdvanceWorkByte1BmagicMagic07003_801EED38 = 0x801EED38;
 func_801EEFA4 = 0x801EEFA4;
 func_801EF04C = 0x801EF04C;
 setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07003_801EF15C = 0x801EF15C;

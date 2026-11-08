@@ -111,8 +111,10 @@ segments:
     - asm
     - func_801F38E8
   - - 3460
-    - asm
-    - func_801F3984
+    - c
+    - stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984
+    - '@source: src/bof3/world/stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984.c'
+    - '@behavior: Overlay per-frame record pass: fills the 0x20-byte projection scratch through 0x801AFE18, then walks the 8 entries of the 0x18-byte-stride work table at 0x800E4800 and, for every entry whose claim byte at +0x00 reads non-zero, marks the frame active, steps the countdown byte at +0x02 down by one and the halfword at +0x14 down by 0x0C, clears the claim byte on the frame the decremented countdown reaches zero, and calls the per-record projection and draw pass 0x801F3A38 with the entry base in $a0. Returns 1 when at least one entry was claimed this frame and 0 when the whole table is free; both in-image call sites discard the result.'
   - - 3640
     - asm
     - func_801F3A38

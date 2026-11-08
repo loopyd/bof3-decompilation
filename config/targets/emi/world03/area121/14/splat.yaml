@@ -151,8 +151,10 @@ segments:
     - asm
     - func_801F41D0
   - - 5900
-    - asm
-    - func_801F430C
+    - c
+    - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area12114_801F430C
+    - '@source: src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area12114_801F430C.c'
+    - '@behavior: Mode-1 handler of the three-entry mode handler table 0x801F6870, the table the overlay step dispatch at 0x801F418C indexes with work byte 0x01 of the work record published at the scratchpad pointer cell 0x1F800044. It applies main lookup entry 0x46 through the resident helper 0x8014DD3C, clears work bytes 0x48 and 0x24, stores 5 in work byte 0x29, seeds the step words 0x0C and 0x10 with the signed halfword pair the facing byte 0x08 selects from the four-pair table 0x801F687C and copies the shared position words 0x80145EC4 and 0x80145EC8 into record offsets 0x34 and 0x38. While work byte 0x06 is set it subtracts the signed thirteenth-unit of that pair from the position halfwords 0x36 and 0x3A and, when the seeded word at 0x0C reads zero, steps halfword 0x36 by 2 in the direction work byte 0x06 selects, otherwise storing the stepped halfword 0x3A moved by 2. It then subtracts the signed ninth-unit of the same pair from both halfwords, clears work byte 0x0B, increments work byte 0x01 so the next step dispatches handler 2, requests the first byte of the pair 0x801F688C that the facing byte selects through the shared helper 0x8014D6B8, stores that pair second byte in work byte 0x2A and finally calls the shared helper 0x8014D290.'
   - - 6460
     - asm
     - func_801F453C

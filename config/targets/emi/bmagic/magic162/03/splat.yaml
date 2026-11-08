@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED38
   - - 928
-    - asm
-    - func_801EEFA0
+    - c
+    - decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0.c'
+    - '@behavior: Reads the battle record pointer published at 0x8014638C once into a saved register, decrements the scratchpad work object byte at offset 0x9 and returns while the stored value stays non-zero; only on zero it submits that record through func_80196718, stores the low return byte of func_8019651C called with the 0/0/0 offsets and mode 1 in work byte 0xA, sets work byte 0x9 to 8 and advances work byte 0x1, re-reading the work object pointer cell at 0x1F800044 for each of the three stores. Takes no arguments and returns nothing.'
   - - 1096
     - asm
     - func_801EF048

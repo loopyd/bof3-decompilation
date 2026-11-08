@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC.c",
     "src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp27a00_801CEA10.c",
     "src/bof3/plchar/testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp27a00_801CEAE0.c",
+    "src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp27a00_801CE8AC.c",
     "src/bof3/support/plp27a_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp27a_00_psyq.c"

@@ -14,7 +14,7 @@ extern u8 *volatile D_801F05F8; /* @source 0x801F05F8 @kind data */
 extern void (*D_801EF9C4[])(void); /* @source 0x801EF9C4 @kind data */
 
 /* Projects the work record's position and installs the resulting transform. */
-extern void func_801EF52C(void);
+extern void projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C(void);
 
 /* Draws the geometry of the active work record. */
 extern void func_801EF5F4(void);
@@ -25,8 +25,9 @@ extern void func_801EF5F4(void);
  *           the handler table based at 0x801EF9C4, which it calls with no
  *           arguments. When the handler returns it reads the cell again in a
  *           second load; if the record byte at offset 0x0 and the byte at
- *           offset 0x2 are both non-zero it calls func_801EF52C, then
- *           func_801EF5F4, then PopMatrix. Reads no other state, stores
+ *           offset 0x2 are both non-zero it calls
+ *           projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C,
+ *           then func_801EF5F4, then PopMatrix. Reads no other state, stores
  *           nothing and returns nothing. The 0x18-byte frame only keeps $ra
  *           across the indirect call.
  * @status exact
@@ -41,7 +42,7 @@ void dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24(v
     D_801EF9C4[step_record[2]]();
     draw_record = D_801F05F8;
     if (draw_record[0] != 0 && draw_record[2] != 0) {
-        func_801EF52C();
+        projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C();
         func_801EF5F4();
         PopMatrix();
     }

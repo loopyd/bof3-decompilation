@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC28
   - - 312
-    - asm
-    - func_801EED38
+    - c
+    - clearPoolThenPublishSourceRecordActivateRandomRecordsAndAdvanceWorkByte1BmagicMagic07003_801EED38
+    - '@source: src/bof3/bmagic/clearPoolThenPublishSourceRecordActivateRandomRecordsAndAdvanceWorkByte1BmagicMagic07003_801EED38.c'
+    - '@behavior: Clears bytes 0x00, 0x01 and 0x02 of all 128 records of the 0x2C-byte-stride pool at 0x801F01B4, then clears work byte 0x4 of the scratchpad work object at 0x1F800044 and copies the byte 0x8 and words 0x34, 0x38 and 0x3C of the battle record reached through 0x8014638C into that work object before calling func_800AF764; it clears work byte 0xB, stores 8 into work byte 0x9, clears work byte 0xA and increments work byte 0x1, then, while the count D_801F0198[work byte 0x4] is nonzero, reserves pool records through func_801F0000 and for every reserve that is not 0xFF clears that record bytes 0x01 and 0x02, publishes the work object pointer into its word 0x28, stores the low two bits of rand() into byte 0x03, the iteration ordinal into byte 0x07, work byte 0x4 into byte 0x04 and D_801F01A0[work byte 0x4] scaled by the ordinal shifted right two plus one into byte 0x05, incrementing work byte 0xB each time, and finally calls func_8015DF18 with 0x100; takes no arguments and returns nothing.'
   - - 932
     - asm
     - func_801EEFA4

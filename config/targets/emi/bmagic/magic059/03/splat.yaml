@@ -83,8 +83,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, advances the object unsigned byte 0x9 by one with a byte-width add, tests the truncated byte it just stored against 0xA0, and only then reloads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5420
-    - asm
-    - func_801F012C
+    - c
+    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic05903_801F012C
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic05903_801F012C.c'
+    - '@behavior: Per-frame handler of the battle work object published at the scratchpad pointer cell 0x1F800044. It increments that object unsigned byte 0x9 by one at byte width, re-reads the cell and subtracts one from unsigned byte 0xA the same way, then tests the stored byte truncated to eight bits so that the truncated register rather than a reload supplies the compared value. Only when byte 0xA reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one and invoke this overlay work-byte clear routine at 0x801F04F4, the store filling the call delay slot. The first cell load precedes frame creation because the increment needs no stack; the 0x18-byte frame only keeps $ra across the call. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 5540
     - asm
     - func_801F01A4

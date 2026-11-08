@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F3054
   - - 1244
-    - asm
-    - func_801F30DC
+    - c
+    - runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC
+    - '@source: src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19113_801F30DC.c'
+    - '@behavior: Runs the shared front-end startup helper 0x8015C088, clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then increments that record halfword at offset 0x7E after re-reading the pointer cell.'
   - - 1328
     - asm
     - func_801F3130

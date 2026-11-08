@@ -21,7 +21,8 @@ extern u8 D_8014832E; /* @source 0x8014832E @kind unknown */
  * 0x801F3984 is the record pass over the same 0x800E4800 table. */
 void func_801F38E8(void);
 void func_801F3FAC(void);
-void func_801F3984(void);
+void stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984(
+    void);
 
 /* @source 0x801F32E8
  * @behavior Overlay progress step handler, entry 4 of the state byte 1
@@ -73,7 +74,7 @@ void claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWor
     func_801F38E8();
   }
   func_801F3FAC();
-  func_801F3984();
+  stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984();
   if (D_80143C40 == 0) {
     func_8014ECAC(9);
     D_8014832E = 0;

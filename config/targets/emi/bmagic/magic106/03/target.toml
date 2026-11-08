@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c",
     "src/bof3/support/magic106_03_psyq.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80.c",
+    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic10603_801EF914.c",
     "src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClearRecordAtZeroBmagicMagic10603_801EF418.c",
 ]
