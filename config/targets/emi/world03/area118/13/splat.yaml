@@ -86,8 +86,10 @@ segments:
     - dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 4180
-    - asm
-    - func_801F3C54
+    - c
+    - seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54
+    - '@source: src/bof3/world/seedRecordCellPoseFromTablesStampMapColumnAdvanceStateAndClearSpriteOffsetWhenCameraInsideWorld03Area11813_801F3C54.c'
+    - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 0. Reads the work record published at the scratchpad pointer cell 0x1F800044 and derives its cell pose from this overlay pose tables: it stores 8 minus the record halfword at offset 0x36 into the byte at offset 0x0A, the byte at 0x801F5138 indexed by the signed halfword at offset 0x3A into the byte at offset 0x0B, the byte at 0x801F515C indexed by twice the halfword at offset 0x36 back into that halfword, and the byte at 0x801F515D at that same index into the halfword at offset 0x3A, and records whether the original halfword at offset 0x36 was zero in the byte at offset 0x08. It then takes the signed distance of the record words at offsets 0x34 and 0x38 from the resident distance helper 0x8015477C, stores half its negation less the halfword at 0x801F513C into the record halfword at offset 0x3E and that table halfword into the halfword at offset 0x32, clears the halfword at offset 0x30, copies the halfword at 0x801F514C into the halfword at offset 0x2E, stamps 0x52 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, and increments the record state byte at offset 0x02 so the next dispatch takes entry 3 of the same table. When the camera word 0x80145EC4 lies no further than 0x8000 from that cell centre ((halfword at offset 0x36 plus 1) << 16 or 0x8000) and the camera word 0x80145EC8 lies no further than 0x10000 from the cell start (halfword at offset 0x3A << 16) or from the next cell start, it also stamps 0xA1 into both map bytes and stores -0x100 into the record halfword at offset 0x30. Every path finishes with the overlay record draw routine 0x801F381C called with a zero mode argument.'
   - - 4844
     - c
     - stampRecordColumnTwoRowsAndQueueCue200WhenFrontendPhaseZeroThenSetWorkStateTo2AndDrawWorld03Area11813_801F3EEC

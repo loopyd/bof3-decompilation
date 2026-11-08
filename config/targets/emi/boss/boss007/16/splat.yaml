@@ -50,8 +50,10 @@ segments:
     - c
     - dispatchStateByte1Table1ddcBossBoss00716_800C190C
   - - 336
-    - asm
-    - func_800C1950
+    - c
+    - publishWorkStepHandlerAndDataThenClearWorkByte8AndSetStateTo2BossBoss00716_800C1950
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenClearWorkByte8AndSetStateTo2BossBoss00716_800C1950.c'
+    - '@behavior: Step setup, entry 0 of the twelve-word handler run 0x800C1DDC: publishes this payload data row pointer 0x800C1D84 into +0xEC of the current enemy work record from 0x801EB4E8, the next step dispatcher 0x800C19B4 into +0xE4 and the in-row pointer 0x800C1D98 into +0xE8, clears byte +8 of the work record published at the scratchpad pointer cell 0x1F800044, stores 2 into that record byte +1 and calls func_8014D978.'
   - - 436
     - asm
     - func_800C19B4

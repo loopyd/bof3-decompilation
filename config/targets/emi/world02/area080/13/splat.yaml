@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801F3870
   - - 3420
-    - asm
-    - func_801F395C
+    - c
+    - claimFreeRecordSeedRandomRotationColorHeadingAndProjectedTrailSlotsWorld02Area08013_801F395C
+    - '@source: src/bof3/world/claimFreeRecordSeedRandomRotationColorHeadingAndProjectedTrailSlotsWorld02Area08013_801F395C.c'
+    - '@behavior: spawn step of the six-word handler run based at 0x801F3DAC, called with no arguments by the handler at 0x801F2DE0 after the eight-record table walk at 0x801F3870 and before that handler decrements the work countdown byte; claims the first free record of the 0x800E486C table through 0x801F3B98, publishes it as D_801F44A4 and returns without seeding when the shared frame counter D_80143E6C is not a multiple of four or when no record was free, otherwise seeds record words +0x18/+0x1C/+0x20 from the scratchpad work record at 0x1F800044 (position +0x34/+0x38/+0x3C, the last biased by 0x06000000), rotates that position by a random twelve-bit angle through the shared rotation pair 0x801783C8/0x801782FC scaled by 256 into +0x28/+0x2C, stores their heading 0x8015477C scaled by 0x10000 into +0x30, derives the velocity words +0x8/+0xC from the first angle plus a random spread of -0x100..0xFF plus 0x800 scaled by 16, clears +0x10, copies one word of the eight-entry word table at 0x801F3DC4 picked by a random low three-bit index into the colour word at +4, marks the record claimed with byte +0 = 1 and typed with byte +1 = 0x20, fills a 0x20-byte projection scratch through 0x801AFE18, projects the position (+0x18) into +0x40 and the rotated point (+0x28) into +0x50 through 0x801AFF04 and copies each projected pair into the next three words of its slot group; no arguments, no return value, 0x50-byte frame holding $ra at 0x48, $s1 at 0x44, $s0 at 0x40 and the scratch at 0x10'
   - - 3992
     - c
     - findFreeRecordAt800E486CWorld02Area08013_801F3B98

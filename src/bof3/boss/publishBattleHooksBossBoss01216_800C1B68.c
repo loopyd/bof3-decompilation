@@ -7,7 +7,8 @@ typedef void (*Boss01216Handler)(void);
  * 0x23 into g_ScenarioProgress, sets the 0x8 bit of D_80146328 and calls
  * func_801DDED8, and otherwise calls func_801DDF00. The second is an inert
  * handler; the third returns a zero result, which the void slot type drops. */
-void func_800C1BA8(void);
+void initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8(
+    void);
 void noopHandlerBossBoss01216_800C1C00(void);
 s32  zeroResultBossBoss01216_800C1BA0(void);
 
@@ -20,7 +21,8 @@ extern Boss01216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C1B68
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * func_800C1BA8 (state switch: tests the 0x2 bit of D_80146328 and, while it
+ * initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8
+ * (state switch: tests the 0x2 bit of D_80146328 and, while it
  * is set, stores 0x23 into g_ScenarioProgress, sets the 0x8 bit of D_80146328
  * and calls func_801DDED8, and otherwise calls func_801DDF00) into
  * 0x801463A4, the inert noopHandlerBossBoss01216_800C1C00 into 0x801463A8,
@@ -36,7 +38,8 @@ extern Boss01216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss01216_800C1B68(void) {
-  D_801463A4 = func_800C1BA8;
+  D_801463A4 =
+      initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8;
   D_801463A8 = noopHandlerBossBoss01216_800C1C00;
   D_801463AC = (Boss01216Handler)zeroResultBossBoss01216_800C1BA0;
 }

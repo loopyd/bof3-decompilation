@@ -69,8 +69,8 @@ segments:
     - c
     - zeroResultBossBoss01216_800C1BA0
   - - 936
-    - asm
-    - func_800C1BA8
+    - c
+    - initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8
   - - 1024
     - c
     - noopHandlerBossBoss01216_800C1C00

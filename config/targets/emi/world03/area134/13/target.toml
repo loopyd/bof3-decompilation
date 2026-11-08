@@ -69,5 +69,6 @@ support_sources = [
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c",
     "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode18World03Area13413_801F3C44.c",
     "src/bof3/world/selectScratchState12Or13ByWorkWordWorld03Area13413_801F3138.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13413_801F5350.c",
 ]
 psyq_source = "src/bof3/support/area134_13_psyq.c"

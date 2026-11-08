@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss01216_800C1B50.c",
     "src/bof3/boss/publishBattleHooksBossBoss01216_800C1B68.c",
     "src/bof3/support/boss012_16_psyq.c",
+    "src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8.c",
 ]
 psyq_source = "src/bof3/support/boss012_16_psyq.c"

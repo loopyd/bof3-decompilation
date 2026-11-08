@@ -92,8 +92,9 @@ segments:
     - asm
     - func_800C2208
   - - 2892
-    - asm
-    - func_800C234C
+    - c
+    - publishBattleHooksBossBoss00413_800C234C
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss00413_800C234C.c'
   - - 2948
     - asm
     - func_800C2384

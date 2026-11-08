@@ -92,8 +92,10 @@ segments:
     - '@source: src/bof3/world/decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790.c'
     - '@behavior: Decrement published record halfword 0x0A by two unless the state byte matches its work-record slot code.'
   - - 3080
-    - asm
-    - func_801F3808
+    - c
+    - clearAndStampPublishedWorkRecordCodeInPackedCellMapThenQueueCue204World02Area11113_801F3808
+    - '@source: src/bof3/world/clearAndStampPublishedWorkRecordCodeInPackedCellMapThenQueueCue204World02Area11113_801F3808.c'
+    - '@behavior: Clears the one-based cell code of the published 0x98-byte work record from every nibble of the packed 7x7 cell map at 0x801F5C18, stamps that code into the map cell the work object published at scratchpad cell 0x1F800044 now occupies and draws that cell through 0x801F4604 before it queues cue 0x204.'
   - - 3552
     - c
     - requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0

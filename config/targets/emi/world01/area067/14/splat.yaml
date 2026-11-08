@@ -122,8 +122,10 @@ segments:
     - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F400C.c'
     - '@behavior: publishes the second shared work base D_80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through the extended allocator/seeder func_8015CC00 with the mode-indexed byte of the payload byte table at 0x801F4644, that base word pair D_80145FFE/D_80146000 and the word at +0x3C of the same base, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5272
-    - asm
-    - func_801F4098
+    - c
+    - publishThirdWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F4098
+    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3WithWorkWord3CFromModeTableWorld01Area06714_801F4098.c'
+    - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through the extended allocator/seeder func_8015CC00 with the party-indexed byte of the payload byte table at 0x801F4644, that base word pair D_8014613E/D_80146140 and the word at +0x3C of the same base, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5412
     - c
     - publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124

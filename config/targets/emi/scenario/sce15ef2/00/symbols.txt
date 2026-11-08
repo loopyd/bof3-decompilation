@@ -4,7 +4,7 @@ add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0
 tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00 = 0x801D0D00;
 func_801D0D5C = 0x801D0D5C;
 dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 = 0x801D0DA4;
-func_801D0DE8 = 0x801D0DE8;
+armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8 = 0x801D0DE8;
 func_801D0E30 = 0x801D0E30;
 func_801D0EC4 = 0x801D0EC4;
 func_801D0EF8 = 0x801D0EF8;

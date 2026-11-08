@@ -51,8 +51,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4.c'
     - '@behavior: Overlay step dispatch on work-record byte 1 of this payload: loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that object unsigned byte at +0x1 and calls that entry of the handler run based at 0x801D1B2C (entry 4 of the run at 0x801D1B1C) with no arguments, without bounding the index; the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the index and table load delay slots stay nops.'
   - - 488
-    - asm
-    - func_801D0DE8
+    - c
+    - armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8
+    - '@source: src/bof3/scenario/armWorkHalfword2E300ClearCountdownAndWorkTableThenAdvanceWorkByte1ScenarioSce15ef200_801D0DE8.c'
+    - '@behavior: Entry 0 of this overlay step handler run at 0x801D1B2C, which is word 4 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it stores 0x12C in that object halfword at +0x2E, zeroes its countdown byte at +0x9, runs the helper that clears the lead byte of every 6-byte entry of the 0x800E4800 work table, and then advances the same work byte at +0x1. It takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 560
     - asm
     - func_801D0E30
