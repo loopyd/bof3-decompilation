@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "1aae1fc9c9395735dc78ebd2e43a93e936f7ffae",
-  "published_at": "2026-11-08T04:41:01.889443+00:00",
+  "revision": "1f08a07962280b68786d2816252e3d8f3b149ad7",
+  "published_at": "2026-11-08T05:08:54.114536+00:00",
   "counts": {
-    "completed": 4091,
+    "completed": 4101,
     "partial": 169,
-    "unlifted": 6271,
+    "unlifted": 6261,
     "invalid": 0,
     "total": 10531,
     "symbols": {
-      "named": 66429,
-      "raw": 57088,
+      "named": 66439,
+      "raw": 57078,
       "total": 123517
     }
   },
@@ -2283,14 +2283,14 @@
       "family": "boss",
       "archive": "boss013",
       "entry": "16",
-      "completed": 12,
+      "completed": 13,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 171,
-        "raw": 141,
+        "named": 172,
+        "raw": 140,
         "total": 312
       }
     },
@@ -2538,14 +2538,14 @@
       "family": "boss",
       "archive": "boss033",
       "entry": "16",
-      "completed": 10,
+      "completed": 11,
       "partial": 0,
-      "unlifted": 21,
+      "unlifted": 20,
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 168,
-        "raw": 147,
+        "named": 169,
+        "raw": 146,
         "total": 315
       }
     },
@@ -2572,14 +2572,14 @@
       "family": "boss",
       "archive": "boss035",
       "entry": "16",
-      "completed": 15,
+      "completed": 16,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 173,
-        "raw": 136,
+        "named": 174,
+        "raw": 135,
         "total": 309
       }
     },
@@ -2589,14 +2589,14 @@
       "family": "boss",
       "archive": "boss036",
       "entry": "16",
-      "completed": 12,
+      "completed": 13,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 170,
-        "raw": 141,
+        "named": 171,
+        "raw": 140,
         "total": 311
       }
     },
@@ -2708,14 +2708,14 @@
       "family": "boss",
       "archive": "boss051",
       "entry": "16",
-      "completed": 9,
+      "completed": 10,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 19,
       "symbols": {
-        "named": 167,
-        "raw": 134,
+        "named": 168,
+        "raw": 133,
         "total": 301
       }
     },
@@ -2725,14 +2725,14 @@
       "family": "boss",
       "archive": "boss052",
       "entry": "16",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 164,
-        "raw": 136,
+        "named": 165,
+        "raw": 135,
         "total": 300
       }
     },
@@ -2742,14 +2742,14 @@
       "family": "boss",
       "archive": "boss054",
       "entry": "16",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 166,
-        "raw": 139,
+        "named": 167,
+        "raw": 138,
         "total": 305
       }
     },
@@ -3371,14 +3371,14 @@
       "family": "scenario",
       "archive": "sce15ef2",
       "entry": "00",
-      "completed": 16,
+      "completed": 17,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 174,
-        "raw": 134,
+        "named": 175,
+        "raw": 133,
         "total": 308
       }
     },
@@ -5530,14 +5530,14 @@
       "family": "world03",
       "archive": "area118",
       "entry": "13",
-      "completed": 17,
+      "completed": 18,
       "partial": 5,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 181,
-        "raw": 134,
+        "named": 182,
+        "raw": 133,
         "total": 315
       }
     },
@@ -5751,14 +5751,14 @@
       "family": "world03",
       "archive": "area134",
       "entry": "13",
-      "completed": 70,
+      "completed": 71,
       "partial": 3,
-      "unlifted": 21,
+      "unlifted": 20,
       "invalid": 0,
       "total": 94,
       "symbols": {
-        "named": 233,
-        "raw": 148,
+        "named": 234,
+        "raw": 147,
         "total": 381
       }
     },
