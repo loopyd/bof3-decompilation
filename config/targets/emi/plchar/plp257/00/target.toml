@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CED0C.c",
     "src/bof3/support/plp257_00_psyq.c",
+    "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp25700_801CF7BC.c",
 ]
 psyq_source = "src/bof3/support/plp257_00_psyq.c"

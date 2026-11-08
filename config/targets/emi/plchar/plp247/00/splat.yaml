@@ -74,8 +74,10 @@ segments:
     - '@source: src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp24700_801CEE5C.c'
     - '@behavior: Overlay step of the front-end work object reached from outside this payload as the word at 0x801CFB1C, the base this overlay byte-2 work dispatcher indexes: while the signed scenario-state byte 0x80146870 reads 0xF it skips the work step entirely and only clears the state byte 0x12B of the front-end record published at 0x80146250, and for every other scenario it compares the distance from the work route index byte 0x08 read through the scratchpad pointer cell 0x1F800044 to the candidate route indices 3 and 5, asks the shared helper func_801B2D00 for the step sign towards the closer candidate and stores that answer in byte 0x0B, both paths then storing the chosen candidate itself in byte 0x03 through one shared store; the body closes by setting the countdown byte 0x09 to 2 and incrementing the step counter byte 0x02.'
   - - 2896
-    - asm
-    - func_801CEF50
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp24700_801CEF50
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp24700_801CEF50.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 at runtime address 0x801CEF50, reached from outside this payload as the word at 0x801CFB20, entry 9 of the twenty-word handler run based at 0x801CFAFC: while the route index byte 0x08 equals the chosen index byte 0x03 the walk has arrived, so it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through the shared selector func_8014D8D4 and increments the step counter byte 0x02; every other route selects no sequence and only increments that counter. While the two indices differ it decrements the countdown byte 0x09 and, when that reaches zero, sets it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks the index into the eight-entry route window with 7 and selects the sequence of the new index through the same selector.'
   - - 3148
     - c
     - dispatchWorkByte2Tablefb28PlcharPlp24700_801CF04C
