@@ -49,7 +49,7 @@ void emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC(
     s16 arg0, s16 arg1, u8 arg2);
 
 /* Local panel the last layer is followed by. */
-void func_801F3ED0(s16 arg0, s16 arg1);
+void appendTransformedG4PanelWorld03Area11513_801F3ED0(s16 arg0, s16 arg1);
 
 /* Resident map probe returning the map byte under the given coordinates. */
 s32 func_80166CB0(s16 arg0, s16 arg1);
@@ -157,5 +157,6 @@ void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F
     emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC(
         (s16)(arg0 + 0x30), (s16)(arg1 + 0x18), 3);
   }
-  func_801F3ED0((s16)(arg0 + 0x18), (s16)(arg1 + 0x18));
+  appendTransformedG4PanelWorld03Area11513_801F3ED0((s16)(arg0 + 0x18),
+                                                    (s16)(arg1 + 0x18));
 }

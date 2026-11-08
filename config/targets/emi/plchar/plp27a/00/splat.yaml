@@ -84,8 +84,9 @@ segments:
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp27a00_801CF1C0
   - - 3932
-    - asm
-    - func_801CF35C
+    - c
+    - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C
+    - '@source: src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C.c'
   - - 4168
     - asm
     - func_801CF448

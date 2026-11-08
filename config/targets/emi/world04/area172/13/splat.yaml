@@ -137,8 +137,10 @@ segments:
     - asm
     - func_801F4060
   - - 5432
-    - asm
-    - func_801F4138
+    - c
+    - drawTranslucentRadialFanOfThirtyTwoGouraudTrianglesTintedByCenterAndArcShadeWorld04Area17213_801F4138
+    - '@source: src/bof3/world/drawTranslucentRadialFanOfThirtyTwoGouraudTrianglesTintedByCenterAndArcShadeWorld04Area17213_801F4138.c'
+    - '@behavior: Overlay radial fade disc run by two work-step handlers of this overlay. It arms the draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor g_PrimCursor with frame-buffer dithering on, appends the 0xC-byte draw-mode primitive at ordering table index 1 through 0x8014E5A0, and then stamps a fan of thirty-two translucent Gouraud triangles: the phase starts at zero and advances by 0x80 per triangle through a word accumulator truncated to an unsigned halfword at each use, so the wedges close the whole 0x1000 turn, each triangle keeps its first vertex on the passed centre pair and its two arc vertices offset by the radius scaled through the shared rotation helpers 0x801783C8 for x and 0x801782FC for y and shifted down by twelve, and the clamped fourth argument tints the centre vertex while the clamped fifth tints both arc vertices. Each 0x1C-byte POLY_G3 is marked semi-transparent and appended at the same ordering table index, and the 0x40-byte frame keeps $ra, $fp and $s0-$s7 across the calls.'
   - - 5924
     - c
     - clearSharedFlagBit4EWorld04Area17213_801F4324

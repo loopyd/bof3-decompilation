@@ -53,8 +53,10 @@ segments:
     - asm
     - func_800C1AB4
   - - 840
-    - asm
-    - func_800C1B48
+    - c
+    - shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48
+    - '@source: src/bof3/boss/shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48.c'
+    - '@behavior: Per-frame handler of this overlay work state machine, entry 11 of the fifteen-word run based at 0x800C2690 that dispatchStateByte2Table2690BossBoss00816_800C18A0 indexes with work byte 2: runs the overlay ring renderer at 0x800C236C with work byte 9 as its scale, subtracts 4 from that byte and 0x2000 from each of the words at 0x40 and 0x44, clamping a word that is not positive to 0; once work byte 9 reaches 0 it clears work byte 0x48, applies main lookup record 0x83, requests resource 0, runs the shared accumulation pass at 0x801E54EC, clears bit 0x40 of work byte 0, stores 6 into work byte 1 and 4 into work byte 2, which hand the record to this overlay byte-2 dispatcher 0x800C18A0 and its handler 0x800C18E4, and advances work byte 3 to 1 while clearing work byte 4.'
   - - 1128
     - c
     - invokeHelperBossBoss00816_800C1C68

@@ -23,7 +23,7 @@ advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfwor
 func_801F392C = 0x801F392C;
 emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC = 0x801F39DC;
 drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F3B04 = 0x801F3B04;
-func_801F3ED0 = 0x801F3ED0;
+appendTransformedG4PanelWorld03Area11513_801F3ED0 = 0x801F3ED0;
 func_801F40C8 = 0x801F40C8;
 dispatchStateByte1Table4ff4World03Area11513_801F4178 = 0x801F4178;
 func_801F41BC = 0x801F41BC;

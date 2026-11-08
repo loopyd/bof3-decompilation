@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld03Area11513_801F2EF0.c",
     "src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area11513_801F3B04.c",
+    "src/bof3/world/appendTransformedG4PanelWorld03Area11513_801F3ED0.c",
 ]
 psyq_source = "src/bof3/support/area115_13_psyq.c"

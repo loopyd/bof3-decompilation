@@ -144,8 +144,9 @@ segments:
     - c
     - publishBattleHooksBossBoss02513_800C2B60
   - - 5016
-    - asm
-    - func_800C2B98
+    - c
+    - raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98
+    - '@source: src/bof3/boss/raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98.c'
   - - 5500
     - asm
     - func_800C2D7C

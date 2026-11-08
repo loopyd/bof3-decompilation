@@ -39,6 +39,7 @@ support_sources = [
     "src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC.c",
     "src/bof3/world/advanceScratchWorkAndSelectHandler2Past3eElseConsumeSharedThenStepFactorTripletAndRampLevelTripleWorld04Area17213_801F44C4.c",
     "src/bof3/world/stepSharedModeStartOrRequestSelectorAtCounter14World04Area17213_801F4BC0.c",
-    "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c"
+    "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c",
+    "src/bof3/world/drawTranslucentRadialFanOfThirtyTwoGouraudTrianglesTintedByCenterAndArcShadeWorld04Area17213_801F4138.c"
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"
