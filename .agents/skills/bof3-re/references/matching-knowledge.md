@@ -1126,7 +1126,12 @@ extra bytes.
    materialisation. Write the byte offset as its own local against the byte view
    (`offset = slot * 152; ((u8 *)D_x)[offset] += ...;`) so every access re-derives
    the base. Five respellings of the word-scaled subscript, including a named
-   `slot * 38` and a separate load/store value local, measured identical.
+   `slot * 38` and a separate load/store value local, measured identical. An exact
+   body that already indexes the same table settles that local's declared width
+   and signedness along with the rest of the record's spelling: keeping the scale
+   inline in the subscript and holding the lookup result in its own `u8` measured
+   4 bytes short, while the sibling's `s32` offset local and the existing `u8`
+   carrying that result closed it at unchanged size.
 3. An inline scale inside a fixed-address array subscript makes the whole symbol
    address loop-invariant. GCC hoists that base into a saved register before the
    loop and indexes from it, one instruction more than the original's per-iteration
