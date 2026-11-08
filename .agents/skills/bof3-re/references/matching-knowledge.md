@@ -155,7 +155,13 @@ written first needs its own `j`, which cost one instruction and four bytes at an
 unchanged frame. A result local live across
 the calls cost a saved register and frame bytes, and an early `return B;` before the
 block relocated that return out of line instead - `.text` size stayed equal and only the
-branch shape differed (`bne` to a trailing `move $v0,$zero`).
+branch shape differed (`bne` to a trailing `move $v0,$zero`). A guard that returns the
+same constant a loop exit holds is that case from the other side: the early-return
+spelling needs `bne` plus `j` to reach the shared block, while wrapping the body in the
+guard's complement, looping with `for` and keeping the constant arm inside the guard,
+matched where the early return and the same wrap under a do-while both stayed short
+(43/52 against 51/51, the short forms four bytes over the original at an unchanged
+frame).
 
 Per-arm cleanup is the arm merge in the other direction: when every case of a
 `switch` ends with the same block and the original's failure edge lands past it,
@@ -735,7 +741,14 @@ A bare constant scratchpad address is CSE'd into one register: `lui` plus `ori` 
 then `lw 0(vN)` per access. When the original re-materialises the constant per access,
 name the cell: declare an extern at its fixed address so each access emits its own
 `lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
-per use; the named symbol in the map restores that repetition.
+per use; the named symbol in the map restores that repetition. The CSE also holds that
+register across an intervening `jal`, so a cell read on both sides of a call costs a
+callee-saved register, its save/restore pair and frame bytes: a built `0x20` frame
+against the original's `0x10` or `0x18`, first mismatch the prologue's
+`addiu sp,sp,-32`. Shorten the live range instead - a single-use store written inline
+at its site lets the cell load land after the call, and a cell the original re-reads
+around a call takes the pointer-cell extern (`extern u8 *D_<ADDRESS>`) reloaded at
+every access.
 
 Pick the access spelling from the original's hi/lo pair, not from symbol ownership:
 `lui` plus `ori` is an integer-constant address, while a map symbol emits
