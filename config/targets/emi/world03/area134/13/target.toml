@@ -30,6 +30,7 @@ sources = [
     "src/bof3/world/seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F54EC.c",
     "src/bof3/world/seedFrontEndRecordHandler99FromWorkPositionWorld03Area13413_801F5698.c",
     "src/bof3/world/seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F557C.c",
+    "src/bof3/world/emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

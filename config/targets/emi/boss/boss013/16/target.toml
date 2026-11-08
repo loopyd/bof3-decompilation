@@ -10,6 +10,7 @@ load_address = 0x800C1800
 sources = []
 support_sources = [
     "src/bof3/boss/zeroResultBossBoss01316_800C2044.c",
+    "src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C2004.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C1CBC.c",
     "src/bof3/boss/noopHandlerBossBoss01316_800C1A2C.c",

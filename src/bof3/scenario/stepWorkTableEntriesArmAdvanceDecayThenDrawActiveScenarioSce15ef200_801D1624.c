@@ -4,7 +4,8 @@ extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_801AFE18(void* arg0);
-void func_801D1414(u8* record);
+void drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414(
+    u8* record);
 
 /* @source 0x801D1624
  * @behavior Per-frame step of the 0x10-entry work table at 0x800E4800, the
@@ -22,7 +23,8 @@ void func_801D1414(u8* record);
  * subtracts 8 from the halfword at +0x4 and clears the claim byte once that
  * halfword reads negative, which releases the entry. After the switch it draws
  * every entry whose state byte is still non-zero through the in-payload helper
- * func_801D1414 with the entry base in $a0. It returns non-zero in the frames
+ * drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414
+ * (0x801D1414) with the entry base in $a0. It returns non-zero in the frames
  * where at least one entry claim byte read non-zero; both in-payload call sites,
  * the overlay handler run entries at 0x801D0E30 and 0x801D0EC4, pass the literal
  * 0xF0 - the halfword the arm stores - so the argument and the result are full
@@ -77,7 +79,8 @@ s32 stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624
           break;
       }
       if (FIELD_REF(u8, record, 0x2) != 0) {
-        func_801D1414(record);
+        drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414(
+            record);
       }
     }
     record += 0x6;

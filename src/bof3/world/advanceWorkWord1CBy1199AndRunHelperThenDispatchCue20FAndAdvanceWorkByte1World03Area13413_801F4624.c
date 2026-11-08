@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F4E64(void* block, s32 value);
+void emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64(
+    void* center, s32 radius);
 
 /* @source 0x8015DF18 @kind unknown
  * Resident executable sound-cue dispatcher; it consumes one cue id and returns
@@ -74,7 +75,8 @@ void advanceWorkWord1CBy1199AndRunHelperThenDispatchCue20FAndAdvanceWorkByte1Wor
   WorkareaStepRecord* state;
 
   state = (WorkareaStepRecord*)D_1F800044;
-  func_801F4E64(&state->saved_0c, (s32)state->unk_1c);
+  emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64(&state->saved_0c,
+                                                               (s32)state->unk_1c);
   state->unk_1c += 0x1199u;
 
   if (--((WorkareaStepRecord*)D_1F800044)->timer_09 == 0) {

@@ -94,8 +94,10 @@ segments:
     - asm
     - func_800C1E0C
   - - 1960
-    - asm
-    - func_800C1FA8
+    - c
+    - addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenAdvanceWorkByte2WhileBelowDistancePlus180BossBoss05416_800C1FA8
+    - '@source: src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenAdvanceWorkByte2WhileBelowDistancePlus180BossBoss05416_800C1FA8.c'
+    - '@behavior: Per-frame field integrator of this payload work state machine: adds work word 0x14 as it stood before this update into work halfword 0x3E, advances word 0x14 by word 0x20, and while the re-read signed halfword 0x3E stays below the func_8015477C distance of the position pair at 0x34 and 0x38 plus 0x180 it re-reads the scratchpad pointer cell 0x1F800044 and raises work byte 2, the handler index. Its address is entry 11 of the overlay header pointer run 0x800C1804 through 0x800C1834, so no jal names it.'
   - - 2096
     - asm
     - func_800C2030

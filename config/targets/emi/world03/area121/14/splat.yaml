@@ -180,8 +180,9 @@ segments:
     - c
     - classifyDirectionToPointWorld03Area12114_801F4F78
   - - 9256
-    - asm
-    - func_801F5028
+    - c
+    - faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028
+    - '@source: src/bof3/world/faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028.c'
   - - 9460
     - asm
     - func_801F50F4

@@ -82,8 +82,10 @@ segments:
     - c
     - zeroResultBossBoss03616_800C1DB0
   - - 1464
-    - asm
-    - func_800C1DB8
+    - c
+    - initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8
+    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8.c'
+    - '@behavior: Mode-transition handler and first slot of the trio this overlay publishes into the shared battle hook slots: when the 0x2 bit of the shared battle flag byte at 0x80146328 is set it stores 8 into the shared secondary sub-state byte at 0x80146875 and calls the shared initializer at 0x801DDED8, and otherwise calls the shared initializer at 0x801DDF00.'
   - - 1540
     - c
     - noopHandlerBossBoss03616_800C1E04

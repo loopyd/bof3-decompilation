@@ -112,8 +112,10 @@ segments:
     - asm
     - func_800C24DC
   - - 3436
-    - asm
-    - func_800C256C
+    - c
+    - dispatchWorkByte2Table27d0ThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C256C
+    - '@source: src/bof3/boss/dispatchWorkByte2Table27d0ThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C256C.c'
+    - '@behavior: Overlay step dispatch on the work-record byte 2 from the tail of this overlay handler run: it loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the code pointer run based at 0x800C27D0, whose two entries are 0x800C25D4 and 0x800C26A4, the last two of the nine-entry run based at 0x800C27B4 that func_800C1E70 indexes. After that call returns it re-reads the pointer cell and, when the work record unsigned byte at offset 0 is non-zero, runs the shared main-executable service func_8014D290. It does not bound the index before the scaled table load and writes no state; the 0x18-byte frame only keeps the return address at 0x10. The run word at 0x800C27B0 holds this function own address, so it is entry 1 of the byte-1 handler run based at 0x800C27AC.'
   - - 3540
     - c
     - raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte2BossBoss03316_800C25D4

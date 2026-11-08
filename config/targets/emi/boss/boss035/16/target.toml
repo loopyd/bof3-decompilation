@@ -26,6 +26,7 @@ support_sources = [
     "src/bof3/boss/raiseFlagBit2ThenEnterFrontendMode4BossBoss03516_800C1C3C.c",
     "src/bof3/support/boss035_16_psyq.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03516_800C1994.c",
+    "src/bof3/boss/setSubstate15ThenInitModeTuple510Or520ByFlagBitTwoBossBoss03516_800C1BF0.c",
 ]
 psyq_source = "src/bof3/support/boss035_16_psyq.c"
 

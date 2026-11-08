@@ -106,8 +106,10 @@ segments:
     - c
     - zeroResultBossBoss01316_800C2044
   - - 2124
-    - asm
-    - func_800C204C
+    - c
+    - initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C
+    - '@source: src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C.c'
+    - '@behavior: First member of this overlay battle hook trio: loads the shared battle flag byte 0x80146328 and tests bit 0x2; while the bit is set it stores 0x32 into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), and when the bit is clear it stores the same 0x32 into 0x80146864, runs initModeTuple530 (0x801DDF28) and then stores the mode byte 3 into 0x80146255. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A4, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2224
     - c
     - clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0

@@ -1,3 +1,4 @@
+D_1F800044 = 0x1F800044;
 func_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05116_800C1858 = 0x800C1858;
 dispatchStateByte2Table1df4BossBoss05116_800C18BC = 0x800C18BC;
@@ -15,6 +16,6 @@ noopHandlerBossBoss05116_800C1AA0 = 0x800C1AA0;
 dispatchStateByte1Table1804BossBoss05116_800C1AA8 = 0x800C1AA8;
 func_800C1B14 = 0x800C1B14;
 func_800C1BF0 = 0x800C1BF0;
-func_800C1CE4 = 0x800C1CE4;
+pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4 = 0x800C1CE4;
 raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C = 0x800C1D7C;
 D_800C1DB0 = 0x800C1DB0;

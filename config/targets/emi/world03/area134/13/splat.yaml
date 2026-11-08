@@ -337,8 +337,10 @@ segments:
     - asm
     - func_801F4B6C
   - - 8804
-    - asm
-    - func_801F4E64
+    - c
+    - emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64
+    - '@source: src/bof3/world/emitFourStepRingAtWorkPositionRadiusWorld03Area13413_801F4E64.c'
+    - '@behavior: Ring emitter for one work record: prepares a 0x20-byte projection scratch through the shared setup at 0x801AFE18, then runs four ring steps, handing the record centre triple, the passed radius, the quarter-turn step angle clipped to 0xFC00 and the signed ring offset pairs D_801F5848/D_801F5858 to the local emitter at 0x801F4F0C.'
   - - 8972
     - asm
     - func_801F4F0C

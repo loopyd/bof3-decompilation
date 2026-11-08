@@ -80,8 +80,9 @@ segments:
     - asm
     - func_800C1BF0
   - - 1252
-    - asm
-    - func_800C1CE4
+    - c
+    - pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4
+    - '@source: src/bof3/boss/pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4.c'
   - - 1404
     - c
     - raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C

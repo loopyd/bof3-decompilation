@@ -19,6 +19,6 @@ func_800C1CFC = 0x800C1CFC;
 dispatchStateByte1LocalHandlerBossBoss05416_800C1D30 = 0x800C1D30;
 func_800C1D7C = 0x800C1D7C;
 func_800C1E0C = 0x800C1E0C;
-func_800C1FA8 = 0x800C1FA8;
+addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenAdvanceWorkByte2WhileBelowDistancePlus180BossBoss05416_800C1FA8 = 0x800C1FA8;
 func_800C2030 = 0x800C2030;
 D_800C2078 = 0x800C2078;
