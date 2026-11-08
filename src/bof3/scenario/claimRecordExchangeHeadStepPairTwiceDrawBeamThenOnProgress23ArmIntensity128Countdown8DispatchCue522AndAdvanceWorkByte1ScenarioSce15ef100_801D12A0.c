@@ -16,7 +16,12 @@ extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind data */
 extern void dispatchSoundCue(u32 cue_id);
 
 void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
-void func_801D1A60(void);
+
+/* Overlay work-record pass at 0x801D1A60: it ticks the life pair of every
+ * claimed record of the 0x801D39A8 table and draws the claimed ones. Its result
+ * is not consumed here. */
+u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
+
 void func_801D2088(void);
 void func_801D1678(u8* from, u8* to, u8 intensity);
 void swapWords(u32* arg0, u32* arg1);
@@ -100,7 +105,7 @@ void claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128
     point = D_1F800044;
     swapWords((u32*)(point + 0x3C), (u32*)(point + 0x20));
   }
-  func_801D1A60();
+  stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   func_801D2088();
   point = D_1F800044;
   func_801D1678(point + 0x18, point + 0x34, 0x40);

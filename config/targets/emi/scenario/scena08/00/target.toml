@@ -93,5 +93,6 @@ support_sources = [
     "src/bof3/scenario/tickCountdownByte9SeedWorkWords34To3CAnd0CTo14AdvanceStateAndQueueCues202And203ScenarioScena0800_801F9AC0.c",
     "src/bof3/scenario/claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C.c",
     "src/bof3/scenario/emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108.c",
+    "src/bof3/scenario/emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4.c",
 ]
 psyq_source = "src/bof3/support/scena08_00_psyq.c"

@@ -52,8 +52,10 @@ segments:
     - asm
     - func_80117514
   - - 1436
-    - asm
-    - func_8011759C
+    - c
+    - stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C
+    - '@source: src/bof3/world/stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C.c'
+    - '@behavior: Overlay step handler 3 of the thirteen in-image pointers the textbin row D_8011818C places: reads the work record published in the overlay cell 0x801181DC and adds its word at 0x14 to its word at 0x04 and its word at 0x18 to its word at 0x08, the position pair func_801172D0 seeds from the shared coordinate triple and the random angle-step velocity pair it stores in those two words. Decrements the record fade byte at 0x03 that the renderer func_801170D8 passes as the color component of each channel selected by the bits of byte 0x26, decrements the countdown byte at 0x02 that claimWorkRecordSeedWorkPositionWorld01Area04913_80117864 seeds to 0x20, and when that countdown reaches zero clears the claim byte at 0x00 so findFreeWorkRecordAt800E4800World01Area04913_801178C4 finds the record free again. Reads the cell three times, makes no call, takes no arguments and returns nothing; its 0x74 bytes are a leaf with no frame.'
   - - 1552
     - asm
     - func_80117610

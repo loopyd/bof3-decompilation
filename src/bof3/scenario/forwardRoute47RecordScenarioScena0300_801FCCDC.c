@@ -2,11 +2,12 @@
 
 extern u16 D_80143F00;
 
-s32 func_801FCD1C(s32 arg0, s32 arg1);
+s32 requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C(s32 arg0, s32 arg1);
 
 /* @source 0x801FCCDC
  * @behavior Route-0x47 gate in front of the overlay's packed-record handler
- * func_801FCD1C: when the shared route word D_80143F00 reads 0x47 (71) it
+ * requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C:
+ * when the shared route word D_80143F00 reads 0x47 (71) it
  * forwards its own two incoming packed record words unchanged (no argument
  * register is set up anywhere in its body, and the callee consumes both: it
  * matches the first word's high half against the record kinds 0x0E..0x11 and
@@ -25,7 +26,7 @@ s32 func_801FCD1C(s32 arg0, s32 arg1);
  */
 s32 forwardRoute47RecordScenarioScena0300_801FCCDC(s32 arg0, s32 arg1) {
   if (D_80143F00 == 0x47) {
-    return (s8)func_801FCD1C(arg0, arg1);
+    return (s8)requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C(arg0, arg1);
   }
   return 0;
 }

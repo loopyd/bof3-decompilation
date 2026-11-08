@@ -4,10 +4,11 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-/* Overlay helper at 0x801D1A60, one of the two helpers every step handler of
- * this overlay's run at 0x801D3918 calls before it draws. Its role is not
- * established here, so it stays address-anchored. */
-void func_801D1A60(void);
+/* Overlay work-record pass at 0x801D1A60, one of the two helpers every step
+ * handler of this overlay's run at 0x801D3918 calls before it draws: it ticks
+ * the life pair of every claimed record of the 0x801D39A8 table and draws the
+ * claimed ones. Its result is not consumed here. */
+u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
 /* Overlay draw helper at 0x801D1678: builds one semi-transparent quad from the
  * head point at +0x18 to the point at +0x34 of the work object and shades it
@@ -67,7 +68,7 @@ void decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateW
   work = D_1F800044;
   *(u16*)(work + 0x2E) -= 0x10;
   work[3] -= 8;
-  func_801D1A60();
+  stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   point = D_1F800044;
   func_801D1678(point + 0x18, point + 0x34, point[3]);
   if (--D_1F800044[9] == 0) {

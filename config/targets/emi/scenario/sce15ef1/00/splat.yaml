@@ -89,8 +89,10 @@ segments:
     - '@source: src/bof3/scenario/claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8.c'
     - '@behavior: Claims the first of the 0x10 entries of the 0x18-byte-stride record table at 0x801D39A8 whose lead byte reads zero, then seeds that record from the scratchpad work object behind pointer cell 0x1F800044 and stops the walk; it takes no argument, makes no call and returns nothing.'
   - - 3680
-    - asm
-    - func_801D1A60
+    - c
+    - stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60
+    - '@source: src/bof3/scenario/stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60.c'
+    - '@behavior: Per-frame pass over this overlay table of 0x10 records of 0x18 bytes at 0x801D39A8, one of the two helpers every step handler of the run at 0x801D3918 calls before it draws: it fills the 0x20-byte projection scratch through the resident helper 0x801AFE18, then for every record whose claim byte at +0x0 reads non-zero subtracts 1 from the countdown byte at +0x2 and 0x10 from the halfword at +0x14, clears the claim byte when that countdown reaches zero, and hands the record base to the in-payload draw helper 0x801D1B10. It returns 1 once any record was claimed and 0 when the whole table is free.'
   - - 3856
     - asm
     - func_801D1B10

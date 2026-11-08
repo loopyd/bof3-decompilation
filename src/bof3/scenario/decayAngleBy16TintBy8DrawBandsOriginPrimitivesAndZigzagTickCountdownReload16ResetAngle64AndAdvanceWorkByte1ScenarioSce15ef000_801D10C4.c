@@ -43,7 +43,9 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * plus the amplitude reload. The angle role of +0x2E follows the `s16 angle`
  * argument those lifts give func_801D1A20 and the tint role of +0x5D their
  * `u8 red` argument to func_801D1C1C, which the `sb $s2, 0x4/0x5/0x6($s0)`
- * stores of func_801D1220 fix as the r channel of the Sprt this overlay tints.
+ * stores of
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220 fix
+ * as the r channel of the Sprt this overlay tints.
  * @status exact
  * @match 100.00
  * @residual none

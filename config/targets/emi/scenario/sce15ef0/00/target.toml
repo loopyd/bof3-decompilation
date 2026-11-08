@@ -18,6 +18,7 @@ support_sources = [
     "src/bof3/scenario/decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4.c",
     "src/bof3/scenario/drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C.c",
     "src/bof3/scenario/raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC.c",
+    "src/bof3/scenario/drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.c",
     "src/bof3/scenario/drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540.c",
 ]
 psyq_source = "src/bof3/support/sce15ef0_00_psyq.c"

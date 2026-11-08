@@ -4,7 +4,8 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D1220(u8 level);
+void drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
+    u8 level);
 void func_801D1A20(u8* origin, s16 angle, s32 flags);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
@@ -15,8 +16,10 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It first dims the work object's colour byte at
- * +0x5E by 0x40 and hands the resulting level to func_801D1220 (0x801D1220),
- * which loops eight times submitting one translucent `SetSemiTrans` prim with
+ * +0x5E by 0x40 and hands the resulting level to
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
+ * (0x801D1220), which loops eight times submitting one translucent
+ * `SetSemiTrans` prim with
  * GetTPage(0,1,0x3C0,0) and writes that level into the prim's r0/g0/b0 bytes,
  * so the argument is a grey fill level. It then draws this overlay's work-origin
  * primitives through exactly the two calls the overlay's step-2 handler
@@ -39,7 +42,9 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * inline cell spelling; the countdown tail is the shape of the target's own
  * exact lift drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0
  * minus its green clear and with this body's re-arm 60, and the
- * `sb $s2, 0x4/0x5/0x6($s0)` stores of func_801D1220 fix the level argument's
+ * `sb $s2, 0x4/0x5/0x6($s0)` stores of
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
+ * fix the level argument's
  * byte width. The colour role of +0x5E follows the target's own step-2 lift,
  * which records it as the channel drawWorkObjectTintSprite maps into g0.
  * @status exact
@@ -48,7 +53,8 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  */
 void dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44(void) {
   D_1F800044[0x5E] -= 0x40;
-  func_801D1220(D_1F800044[0x5E]);
+  drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
+      D_1F800044[0x5E]);
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(0x40);

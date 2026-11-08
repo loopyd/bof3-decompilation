@@ -52,7 +52,9 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * issue, and the countdown tail is the former's tail with cue 0x20D instead of
  * 0x20E and no zigzag call. The tint role of +0x5D follows the `u8 red`
  * argument those lifts give func_801D1C1C, which the `sb $s2, 0x4/0x5/0x6($s0)`
- * stores of func_801D1220 fix as the r channel of the Sprt this overlay tints.
+ * stores of
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220 fix
+ * as the r channel of the Sprt this overlay tints.
  *
  * Shape decisions measured on this body: the original loads the published cell
  * once for both ramp stores and keeps that pointer in `$v1` across the `sb`,

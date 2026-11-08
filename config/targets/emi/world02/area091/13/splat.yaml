@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F2DB0
   - - 620
-    - asm
-    - func_801F2E6C
+    - c
+    - clearWorkCountdownAndRowByteAdvanceWorkByte4WhenFirstRecordKindUnseededWorld02Area09113_801F2E6C
+    - '@source: src/bof3/world/clearWorkCountdownAndRowByteAdvanceWorkByte4WhenFirstRecordKindUnseededWorld02Area09113_801F2E6C.c'
+    - '@behavior: reads the shared record-kind byte at 0x80145FBB and, while it is zero, dispatches cue 0x200 through 0x8015DF18 then clears the scratchpad work record read through pointer cell 0x1F800044: byte +0xA (the countdown the area091 palette-step sibling decrements) and byte +0xB (the row index that sibling re-arms) go to zero, and byte +4 is incremented; each of the three accesses reloads the cell, and a nonzero kind byte skips the body.'
   - - 724
     - asm
     - func_801F2ED4

@@ -56,8 +56,8 @@ segments:
     - asm
     - func_801CEA04
   - - 1844
-    - asm
-    - func_801CEB34
+    - c
+    - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp67800_801CEB34
   - - 1940
     - c
     - dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp67800_801CEB94

@@ -11,7 +11,12 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern void dispatchSoundCue(u32 cue_id);
 
 void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
-void func_801D1A60(void);
+
+/* Overlay work-record pass at 0x801D1A60: it ticks the life pair of every
+ * claimed record of the 0x801D39A8 table and draws the claimed ones. Its result
+ * is not consumed here. */
+u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
+
 void func_801D2088(void);
 
 /* @source 0x801D0FEC
@@ -73,7 +78,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersArmCountdown32DispatchCue209AndA
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
   func_801D2088();
-  func_801D1A60();
+  stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   countdown = D_1F800044;
   countdown[9] = 0x20;
   advance = D_1F800044;

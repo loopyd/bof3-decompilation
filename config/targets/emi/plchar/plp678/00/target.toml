@@ -25,5 +25,6 @@ support_sources = [
     "src/bof3/support/plp678_00_psyq.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801D0470.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801CF108.c",
+    "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp67800_801CEB34.c",
 ]
 psyq_source = "src/bof3/support/plp678_00_psyq.c"

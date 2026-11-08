@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/world/dispatchWorkByte2Table81acWorld01Area04913_80117A30.c",
     "src/bof3/world/dispatchWorkByte2Table81b4World01Area04913_80117BF4.c",
     "src/bof3/support/area049_13_psyq.c",
+    "src/bof3/world/stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C.c",
 ]
 psyq_source = "src/bof3/support/area049_13_psyq.c"

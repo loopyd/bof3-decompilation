@@ -107,8 +107,10 @@ segments:
     - '@source: src/bof3/scenario/invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C.c'
     - '@behavior: Call helper 0x801F85F0 with signed work halfwords 0x2E, 0x30 and 0x32, reload the work pointer, decrement halfword 0x5A and subtract 16 from halfword 0x32 modulo 65536, then reset work flags when the countdown reaches zero.'
   - - 2996
-    - asm
-    - func_801F77B4
+    - c
+    - emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4
+    - '@source: src/bof3/scenario/emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4.c'
+    - '@behavior: Emits one screen-space translucent textured quad centred on the record point the only caller, the table-refresh helper 0x801F7E14 that walks the 0x40-entry table at 0x800E4800, hands over. It initialises the shared primitive cursor 0x8014598C with SetPolyFT4 and SetSemiTrans(prim, 1), writes the record word at +0x24 shifted right by 6 into the first halfword of its local screen pair, copies the record words at +0x04..+0x13 into a local point, shifts that point''s third word left by 8, converts that pair for the point through func_801AFFD8 into the scratch''s second entry and projects the point through func_801AFF04 over the first. The four corners are the projected pair plus and minus the converted size halfword on both axes, so each corner pair repeats one stored value and the size halfword at +0x00 of the second entry serves both axes. Texels are the 0x20 by 0x20 cell at (0xE0, 0x30), the CLUT is GetClut(0xA0, 0x1E3) and the texture page GetTPage(0, 1, 0x2C0, 0x100); the record byte at +0x03 is stored as red with green and blue cleared. It queues the primitive through func_8014E5A0 with OT index 1 and size 0x28, takes the record pointer as its only argument, returns nothing, and keeps a 0x40-byte frame for $ra and $s0..$s2 over the 0x20-byte scratch at 0x10..0x2F. The record''s remaining fields stay unknown; the shape follows the exact sibling drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4.'
   - - 3368
     - c
     - dispatchWorkByte1HandlerScenarioScena0800_801F7928

@@ -315,10 +315,12 @@ segments:
     - c
     - forwardRoute47RecordScenarioScena0300_801FCCDC
     - '@source: src/bof3/scenario/forwardRoute47RecordScenarioScena0300_801FCCDC.c'
-    - '@behavior: Route-0x47 gate in front of the overlay packed-record handler func_801FCD1C: when the shared route word D_80143F00 reads 0x47 it forwards its two incoming packed record words unchanged and returns the sign-extended low byte of that handler result, otherwise it returns 0 without reading or writing any other state; the 0x18-byte frame only keeps $ra across the call.'
+    - '@behavior: Route-0x47 gate in front of the overlay packed-record handler requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C: when the shared route word D_80143F00 reads 0x47 it forwards its two incoming packed record words unchanged and returns the sign-extended low byte of that handler result, otherwise it returns 0 without reading or writing any other state; the 0x18-byte frame only keeps $ra across the call.'
   - - 24860
-    - asm
-    - func_801FCD1C
+    - c
+    - requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C
+    - '@source: src/bof3/scenario/requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C.c'
+    - '@behavior: Route-0x47 packed-record handler of this overlay, reached from the gate at 0x801FCCDC through the jal at 0x801FCCFC with both incoming packed record words forwarded unchanged: after the shared wait func_8015B5D4(D_8014686C, 0x1E) reports nonzero it returns 0, then it requires the second word to equal 0x490000 and the first word high half to fall in 0x0E..0x11, otherwise it returns 0; on that path it calls the shared no-argument helper func_8015C088, requests primary scene state 8 with sub-state 2 (D_80146874 = 8, D_80146875 = 2), arms the shared frame countdown D_80146876 with 0x1E and answers 1. The 0x20-byte frame only keeps $s0, $s1 and $ra across the two calls, and no image word of this target holds 0x801FCD1C, so that jal is its only reference.'
   - - 25012
     - c
     - dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4

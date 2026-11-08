@@ -61,8 +61,9 @@ segments:
     - decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4
     - '@source: src/bof3/scenario/decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4.c'
   - - 1568
-    - asm
-    - func_801D1220
+    - c
+    - drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
+    - '@source: src/bof3/scenario/drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.c'
   - - 1904
     - asm
     - func_801D1370

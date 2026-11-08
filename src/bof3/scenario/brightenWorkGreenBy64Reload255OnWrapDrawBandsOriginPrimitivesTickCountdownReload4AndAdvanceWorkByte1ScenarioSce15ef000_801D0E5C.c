@@ -4,7 +4,8 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D1220(u8 level);
+void drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
+    u8 level);
 void func_801D1A20(u8* origin, s16 angle, s32 flags);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 
@@ -14,7 +15,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It first raises the work object's green
- * channel byte at +0x5E by 0x40 and hands that byte to func_801D1220
+ * channel byte at +0x5E by 0x40 and hands that byte to
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
  * (0x801D1220) as a fill level; the byte is read back as a signed byte, so the
  * two arms of that hand-off narrow it to the level's unsigned width, and the
  * zero arm submits 0xFF instead, which is what a ramp that has wrapped from
@@ -45,7 +47,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * and without its green clear. The green role of +0x5E follows those two lifts,
  * which record the channels 0x5D/0x5E/0x5F as the r0/g0/b0 of the SPRT this
  * overlay tints, and the level argument's unsigned byte width follows the
- * `sb $s2, 0x4/0x5/0x6($s0)` stores of func_801D1220.
+ * `sb $s2, 0x4/0x5/0x6($s0)` stores of
+ * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.
  *
  * Shape decisions measured on this body: the level hand-off is two calls, one
  * in each arm, with the level and the literal 0xFF as their arguments. The
@@ -70,9 +73,11 @@ void brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownR
   D_1F800044[0x5E] += 0x40;
   level = *(s8*)(D_1F800044 + 0x5E);
   if (level)
-    func_801D1220(level);
+    drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
+        level);
   else
-    func_801D1220(0xFF);
+    drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
+        0xFF);
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {

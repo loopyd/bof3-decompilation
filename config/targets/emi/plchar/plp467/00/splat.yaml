@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801CF70C
   - - 5120
-    - asm
-    - func_801CF800
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp46700_801CF800
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp46700_801CF800.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload: the body address appears once in the payload, as word 0x801D03F0, entry 17 of the twenty-eight-word handler run based at 0x801D03AC and index 1 of the base 0x801D03EC that the work-byte-2 dispatcher 0x801CF6C8 enters by scaling work byte 0x02 by four. Byte 0x08 is the current route index of the eight-entry route window, byte 0x03 the chosen candidate index, byte 0x09 the countdown, byte 0x02 the step counter and byte 0x0B the step sign. When the route index equals the chosen index the body selects the route arrival sequence through the shared selector func_8014D8D4, 0x40 for route 3 and 0x41 for route 5 and nothing for any other route, and then increments work byte 0x02. Otherwise it decrements work byte 0x09 and, when that reaches zero, restores it to 2, adds work byte 0x0B into work byte 0x08, masks that index with 7 and selects the sequence of the new route index. It takes no arguments and returns nothing; the 0x18-byte frame only keeps the return address at 0x10 across the calls.'
   - - 5372
     - c
     - dispatchWorkByte2Table03f8PlcharPlp46700_801CF8FC

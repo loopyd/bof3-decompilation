@@ -9,7 +9,12 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 g_ScenarioProgress;
 
 void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
-void func_801D1A60(void);
+
+/* Overlay work-record pass at 0x801D1A60: it ticks the life pair of every
+ * claimed record of the 0x801D39A8 table and draws the claimed ones. Its result
+ * is not consumed here. */
+u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
+
 void func_801D2088(void);
 
 /* @source 0x801D0F10
@@ -97,7 +102,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStat
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
   func_801D2088();
-  func_801D1A60();
+  stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   if (g_ScenarioProgress == 0x14) {
     motion = D_1F800044;
     originX = *(s32*)(motion + 0x64);
