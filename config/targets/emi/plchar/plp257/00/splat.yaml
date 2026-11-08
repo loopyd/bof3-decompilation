@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801CEC40
   - - 2316
-    - asm
-    - func_801CED0C
+    - c
+    - selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CED0C
+    - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CED0C.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 6 of the twenty-three-entry code pointer run at 0x801CFEDC. Selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through func_8014D8D4 and advances step byte 0x02 when the route index byte 0x08 equals the chosen index byte 0x03, else ticks countdown byte 0x09 and, at zero, re-arms it to 2, steps byte 0x08 by sign byte 0x0B inside the eight-entry window and selects the new route sequence.'
   - - 2568
     - asm
     - func_801CEE08

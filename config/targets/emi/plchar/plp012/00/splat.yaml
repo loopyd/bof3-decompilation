@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801CE72C
   - - 880
-    - asm
-    - func_801CE770
+    - c
+    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01200_801CE770
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01200_801CE770.c'
+    - '@behavior: Work-step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only through entry 3 of the sixteen-word handler run based at 0x801CFD80, which holds the body address once at word 0x801CFD8C; no jal in this payload names it. When the route byte 0x08 is even it rewrites that byte three times around the payload step test 0x801CEFF8, storing ((byte 8 - 1) & 7) and, only while each test answers zero, ((byte 8 + 2) & 7) and then ((byte 8 - 2) & 7). It then adds the route-selected movement offsets of 0x80181B94/0x80181B98 to the work words 0x34/0x38 and queries func_80154F78 for that point with the route byte: while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed answer is at least 0x41, it selects sequence ((byte 8 - 1) / 2 + 0x46) through func_8014D8D4 and increments the step counter byte 0x02, which the shared tail increments a second time. Otherwise it claims the work by storing 1 into byte 0x2B, probes the layer offsets 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5, clears the claim byte again whenever the gate reads nonzero, that answer is at least 0x41 and the signed reference halfword 0x3E is below the screen-space answer of func_80154F28 for the layer point, then requests the cue (work halfword 0x2C + 0x100) through func_8015DF18, selects sequence ((byte 8 - 1) / 2 + 0x42) and arms the countdown byte 0x0A with 5. Both arms join on a tail that clears the step sign byte 0x0B and increments the step counter byte 0x02. It takes no arguments and returns nothing on a 0x20-byte frame.'
   - - 1684
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01200_801CEA94
@@ -63,7 +65,7 @@ segments:
     - c
     - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp01200_801CEFF8
     - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp01200_801CEFF8.c'
-    - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from func_801CE770 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2, and returns that answer as an unsigned byte without taking arguments.'
+    - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01200_801CE770 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2, and returns that answer as an unsigned byte without taking arguments.'
   - - 3372
     - asm
     - func_801CF12C

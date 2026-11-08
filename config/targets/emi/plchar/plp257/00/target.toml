@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C.c",
+    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CED0C.c",
     "src/bof3/support/plp257_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp257_00_psyq.c"

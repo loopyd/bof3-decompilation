@@ -20,6 +20,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkHalfword2cTable08c8PlcharPlp05600_801D0814.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp05600_801D042C.c",
+    "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp05600_801CF9DC.c",
 ]
 support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",

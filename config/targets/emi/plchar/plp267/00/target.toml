@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = [
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp26700_801CF38C.c",
+    "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900.c",
     "src/bof3/plchar/dispatchWorkByte3Table09c4PlcharPlp26700_801CF718.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp26700_801CF75C.c",
     "src/bof3/plchar/dispatchWorkByte2Table09d0PlcharPlp26700_801CFCA4.c",

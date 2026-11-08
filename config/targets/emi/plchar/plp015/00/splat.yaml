@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801CE72C
   - - 880
-    - asm
-    - func_801CE770
+    - c
+    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01500_801CE770
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01500_801CE770.c'
+    - '@behavior: Work-step handler of the front-end work object read through the scratchpad pointer cell 0x1F800044 and entered as entry 3 of the sixteen-word handler run based at 0x801CFB84: when the route byte 0x08 is even it stores ((byte 8 - 1) & 7), runs the payload step test func_801CEFF8 and, only while that call answers zero, stores ((byte 8 + 2) & 7) and runs the same test again, and if that call answers zero too it stores ((byte 8 - 2) & 7), which restores the value the first store left; it then projects the work words 0x34 and 0x38 with the undoubled movement offsets at 0x80181B94 and 0x80181B98 selected by the route byte and asks the route-parameterised position routine func_80154F78 for that point with the route byte, so while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed answer is at least 0x41 it selects the sequence ((byte 8 - 1) / 2 + 0x46) through func_8014D8D4 and increments the step counter byte 0x02, and every other case claims the work by storing 1 into byte 0x2B, probes the layer offsets 0x80181BAC and 0x80181BB0 with route 3 and then 0x80181BBC and 0x80181BC0 with route 5, clearing the claim again for either probe while the gate reads nonzero and the narrowed sample is at least 0x41 while the signed reference halfword 0x3E is below the screen-space answer of func_80154F28, after which it queues the cue 0x100 plus the work halfword 0x2C through func_8015DF18, selects the sequence ((byte 8 - 1) / 2 + 0x42) through func_8014D8D4 and arms the countdown byte 0x0A with 5; both arms join on a tail that clears the step sign byte 0x0B and increments the step counter byte 0x02'
   - - 1684
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01500_801CEA94

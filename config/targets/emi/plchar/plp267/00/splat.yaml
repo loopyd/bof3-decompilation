@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801CF7C8
   - - 5376
-    - asm
-    - func_801CF900
+    - c
+    - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900
+    - '@source: src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900.c'
+    - '@behavior: Work byte 3 == 2 step: entry 17 of the thirty-word code-pointer run at 0x801D0988, reached as index 2 from the byte-3 dispatcher base 0x801D09C4; reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks that row up by byte offset in the shared 0x74-byte front-end record table at 0x80143FC8 and, while row byte 0 reads 0 or row byte 1 reads 1 and the shared gate byte 0x80149332 reads 0, clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 5532
     - asm
     - func_801CF99C

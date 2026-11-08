@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkByte3Table0320PlcharPlp03400_801CF37C.c",
     "src/bof3/plchar/dispatchWorkByte3Table0334PlcharPlp03400_801CFC38.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC.c",
+    "src/bof3/plchar/clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp03400_801CFE14.c",
     "src/bof3/support/plp034_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp034_00_psyq.c"

@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801CFCD8
   - - 6948
-    - asm
-    - func_801CFF24
+    - c
+    - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp02600_801CFF24
+    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp02600_801CFF24.c'
+    - '@behavior: Work byte 3 == 2 step of the work-byte-3 dispatcher at 0x801CFB94: entry 2 of the five-word run the dispatcher reaches from the base word 0x801D0A94 with work record byte 3 read through the scratchpad pointer cell 0x1F800044, the word 0x801CFF24 at 0x801D0A9C, entry 18 of the thirty-word code-pointer run based at 0x801D0A54. When work byte 0x0B reads 1 it passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into byte 0x0B. It then re-reads the pointer cell and dispatches on byte 0x0B again: zero polls the shared readiness helper func_8014DAEC and reports done once that helper answers nonzero, two polls the same helper and, once it answers nonzero, passes work byte 8 to the shared resource request helper func_8014D6B8 and writes 3 into byte 0x0B, and every other value runs the shared no-argument update helper func_8014D978 and reports done whenever the front-end phase byte 0x80143BB0 reads zero. When done it clears work byte 0x2B and byte 0x12B of the record published at 0x80146250.'
   - - 7252
     - c
     - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp02600_801D0054
