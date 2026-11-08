@@ -57,8 +57,10 @@ segments:
     - c
     - dispatchWorkByte3Table03ccPlcharPlp46700_801CE890
   - - 1236
-    - asm
-    - func_801CE8D4
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4.c'
+    - '@behavior: Work byte 3 == 0 step of this overlay, the word 0x801CE8D4 at 0x801D03CC, which this payload byte-3 dispatcher 0x801CE890 indexes by work byte 3 scaled by four and which is entry 8 of the twenty-eight-word handler run based at 0x801D03AC, so no jal in this payload names it. When work byte 8 is even it stores ((byte 8 - 1) & 7), calls the payload step test 0x801CF3C0 and, only while that call answers zero, stores ((byte 8 + 2) & 7) and calls the same test again, putting the byte back to the decremented direction when that call answers zero too. Either way it then runs the payload layer-position refresh 0x801CF564, selects the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clears work byte 0xB, writes 0xB into work byte 0xA and 1 into work byte 3, advancing the dispatch to entry 1 at 0x801D03D0. The subtraction leaves the division signed, so byte 8 == 0, 1 and 2 all select sequence 0x42 while byte 8 == 3 gives 0x43. It takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 1492
     - asm
     - func_801CE9D4

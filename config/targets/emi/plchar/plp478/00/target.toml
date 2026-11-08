@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = [
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4.c",
+    "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp47800_801CED80.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp47800_801CF148.c",
     "src/bof3/plchar/adjustEvenWorkByte8ClaimFrontEndRecordHandler1BSelectSequenceAndQueueCueThenAdvanceWorkByte2PlcharPlp47800_801CF4CC.c",
 ]

@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801CF37C
   - - 4200
-    - asm
-    - func_801CF468
+    - c
+    - claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468
+    - '@source: src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468.c'
+    - '@behavior: Map cell claim of the plp457 front-end payload, reached from the step body 0x801CF1E0 of the same payload as its own claim handler for a projected point. The body narrows both arguments to the signed cell pair and asks the shared map probe func_80166CB0 for the byte code of that cell. For the code 0xF2 it asks the shared record allocator func_8019601C for a free front-end record and, unless the answer is 0xFF, claims one record with state 0 at the cell through the own record claim 0x801CF660, rolls rand() and keeps the low four bits: a roll below 0xD stops there, and from 0xD on the size starts at 5 and drops to 2 for the rolls 0xD and 0xE only. When flag bits 1 and 2 of 0x80143F02 are set, a second rand() masked to two bits expands that size to twenty times its truncated byte on a zero answer. It hands the size to func_801B5E58 and claims a second record with state 1 at the same cell, then stores 1 into work byte 0xB. For the code 0xF8 it claims one record with state 0 at the cell, copies the twelve-byte name that func_80165D48 answers for entry 0 of stream 0x56 into 0x801490D8, clears the terminator byte 0x801490E4, takes the cue selector 2 when func_801650B4 reports entry 0 of stream 0x56 as set, after queueing cue 0x106 through func_8015DF18, and the selector 3 otherwise, dispatches that selector through func_80150284, marks the local state byte 0x80143BB0 busy with 2 and stores 1 into the work byte 0xB. Any other cell code returns 0 without touching state. Both claiming paths hand the original pair to func_801553B8 and return 1, so the caller only runs its second attempt when no record was claimed. Roles of the codes 0xF2 and 0xF8, of the size value, of the work byte 0xB and of the shared helpers are not established here, so the behaviour keeps both codes and the address.'
   - - 4704
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp45700_801CF660

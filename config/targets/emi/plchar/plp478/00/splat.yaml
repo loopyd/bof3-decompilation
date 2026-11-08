@@ -57,8 +57,8 @@ segments:
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4
   - - 2432
-    - asm
-    - func_801CED80
+    - c
+    - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp47800_801CED80
   - - 2668
     - asm
     - func_801CEE6C

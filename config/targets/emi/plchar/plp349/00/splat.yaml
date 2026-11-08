@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801CE7B8
   - - 1524
-    - asm
-    - func_801CE9F4
+    - c
+    - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp34900_801CE9F4
+    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp34900_801CE9F4.c'
+    - '@behavior: Work byte 3 == 2 step of this overlay: the address is published at the pointer word 0x801CF608, entry 2 of the dispatcher view based at 0x801CF600 that the byte-3 dispatcher dispatchWorkByte3Tablef600PlcharPlp34900_801CE654 indexes with work record byte 3 scaled by four, and that word is index 7 of the sixteen-word code-pointer run this payload places at 0x801CF5EC, so no jal in this payload names the body. When work byte 0x0B reads 1 it passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into byte 0x0B, then re-reads the scratchpad pointer cell 0x1F800044 and dispatches on byte 0x0B again: a zero byte polls the shared readiness helper func_8014DAEC and reports done once that helper answers nonzero, while a nonzero byte takes one of two arms and both report done whenever the front-end phase byte 0x80143BB0 reads zero, byte 2 polling the same helper and, once ready, passing work byte 8 to the shared resource request helper func_8014D6B8 before it writes 3 into byte 0x0B, and any other value running the shared no-argument update helper func_8014D978. When the done flag is set it clears work byte 0x2B and then byte 0x12B of the record published at 0x80146250. The 0x18-byte frame only keeps the done flag at 0x10 and the return address at 0x14 across the calls, the pointer cell is loaded ahead of frame creation and re-read before every store, and every arm joins one epilogue. Takes no arguments and returns nothing. The 0x130-byte body equals the lift at 0x801CF1FC of the plp267 payload apart from the two intra-body jump words at 0x801CEAA0 and 0x801CEAC4, each of which shifts by exactly the 0x808 delta between the two spans. The roles of work bytes 0x0B, 0x05, 0x2B and 8 are not established, so the name describes the effect.'
   - - 1828
     - c
     - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp34900_801CEB24

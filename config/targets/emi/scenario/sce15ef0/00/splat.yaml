@@ -55,8 +55,9 @@ segments:
     - decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4
     - '@source: src/bof3/scenario/decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4.c'
   - - 1460
-    - asm
-    - func_801D11B4
+    - c
+    - decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4
+    - '@source: src/bof3/scenario/decayAngleBy4DrawZigzagTickCountdownAndClearWorkFlagsOnZeroScenarioSce15ef000_801D11B4.c'
   - - 1568
     - asm
     - func_801D1220

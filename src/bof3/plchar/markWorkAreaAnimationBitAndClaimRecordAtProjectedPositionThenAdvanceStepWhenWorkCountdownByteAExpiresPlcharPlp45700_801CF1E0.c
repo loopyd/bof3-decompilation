@@ -40,7 +40,7 @@ extern u8 D_801468FC[];
  * stepped coordinate to the same signed half before the call. Its own body is
  * the same handler that the plp247 overlay places at 0x801CF664, which is where
  * the three call words of this span differ from that overlay's exact lift. */
-u8 func_801CF468(s16 x, s16 y);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468(s16 x, s16 y);
 
 /* Slot search of the shared EXE image, outside this payload: it answers the
  * signed slot of the first eligible 0x98-byte work record that holds the
@@ -71,7 +71,7 @@ u8 func_8014DAEC(void);
  *           unless the search answers -1, raises bit 0 of the animation byte at
  *           0x801468FC plus the found slot scaled by the 0x98-byte work record
  *           stride. It then claims a front-end record at the projected point
- *           through this payload's own claim handler func_801CF468, passing the
+ *           through this payload's own claim handler claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468, passing the
  *           high half of each projected word as signed halves: when that claim
  *           answers zero and the first word has a nonzero low half it retries
  *           one unit further on that axis, and when the retry also answers zero
@@ -127,13 +127,13 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CF468(cx, cy);
+    claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468(cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CF468(cx + 1, cy);
+        claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468(cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CF468(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp45700_801CF468(cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;

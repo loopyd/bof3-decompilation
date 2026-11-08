@@ -142,8 +142,10 @@ segments:
     - asm
     - func_801D2C94
   - - 8540
-    - asm
-    - func_801D2D5C
+    - c
+    - drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C
+    - '@source: src/bof3/scenario/drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C.c'
+    - '@behavior: Entry 9 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it hands the work object point at +0x34 and its word pair +0x0C/+0x10 to the overlay draw helper 0x801D36BC, then re-reads that cell and through one pointer ticks countdown byte +0x9 down by one, adds the head point pair +0x18/+0x1C into the word pair +0x0C/+0x10, subtracts 0x100 from +0x18 and 0x200 from +0x1C, and when the countdown reaches zero calls the resident reset helper 0x80196070.'
   - - 8684
     - c
     - dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC
