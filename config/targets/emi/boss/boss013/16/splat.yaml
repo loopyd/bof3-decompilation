@@ -68,8 +68,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table2698BossBoss01316_800C1CC4.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C2698 with no arguments.'
   - - 1288
-    - asm
-    - func_800C1D08
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkByte8AndStateTo2BossBoss01316_800C1D08.c'
+    - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C25F0 into +0xEC of the current enemy work record from 0x801EB4E8, the byte-indexed dispatcher dispatchIndexedHandlerBossBoss01316_800C1E58 into +0xE4 and the in-row pointer 0x800C2618 (0x800C25D8 + 0x40) into +0xE8, then stores 1 into the byte at +8 of the work record published at the scratchpad pointer cell 0x1F800044 and 2 into that record state byte at +1, and returns without calling anything: the state byte is what the overlay dispatcher at 0x800C1CC4 scales into the run based at 0x800C2698, whose entry 0 this function is and whose entry 2 is the main-executable handler 0x801E35D8.'
   - - 1368
     - c
     - dispatchStateByte2Table26c8BossBoss01316_800C1D58

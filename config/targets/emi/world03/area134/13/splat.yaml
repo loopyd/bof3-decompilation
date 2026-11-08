@@ -304,8 +304,10 @@ segments:
     - asm
     - func_801F45A0
   - - 6692
-    - asm
-    - func_801F4624
+    - c
+    - advanceWorkWord1CBy1199AndRunHelperThenDispatchCue20FAndAdvanceWorkByte1World03Area13413_801F4624
+    - '@source: src/bof3/world/advanceWorkWord1CBy1199AndRunHelperThenDispatchCue20FAndAdvanceWorkByte1World03Area13413_801F4624.c'
+    - '@behavior: Entry 5 of the work-byte-1 handler table based at 0x801F5828, dispatched by dispatchStateByte1Table5828World03Area13413_801F4344 with the state byte at +0x01: hands the record block at +0x0C and the word at +0x1C to the overlay helper at 0x801F4E64, advances that word by 0x1199, counts the byte at +0x09 down modulo 256 and, when it reaches zero, posts sound cue 0x20F through the resident dispatcher at 0x8015DF18 and advances the state byte at +0x01 by one towards entry 6 at 0x801F46AC.'
   - - 6828
     - c
     - invokeHelperWorld03Area13413_801F46AC

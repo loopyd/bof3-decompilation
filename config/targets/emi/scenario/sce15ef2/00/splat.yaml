@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801D0E30
   - - 708
-    - asm
-    - func_801D0EC4
+    - c
+    - stepWorkTableValueF0AndResetWorkStateWhenNoRecordActiveScenarioSce15ef200_801D0EC4
+    - '@source: src/bof3/scenario/stepWorkTableValueF0AndResetWorkStateWhenNoRecordActiveScenarioSce15ef200_801D0EC4.c'
+    - '@behavior: Entry 2 of this overlay step handler run at 0x801D1B2C, which is word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned work byte at offset +0x1 of the scratchpad work object published at pointer slot 0x1F800044: it runs the work-table stepper func_801D1624 with the literal 0xF0, the value that stepper stores as the halfword at +0x4 of every entry it claims in this frame, and when that stepper masked to a byte reports zero - that is, when no entry of the 0x800E4800 work table had a non-zero lead byte - it resets the shared work-area block through func_80196070, which zeroes work-object bytes 0x00-0x04 including that dispatch byte. It takes no arguments, returns nothing, reads and writes no other state, and the 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 760
     - c
     - dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8

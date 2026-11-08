@@ -69,7 +69,7 @@ retreatWorkWord24By100000AndSweepHalfword20ThenResetWorkareaAtCountdownEndWorld0
 invokeHelperWorld03Area13413_801F453C = 0x801F453C;
 dispatchStateByte1Table5838World03Area13413_801F455C = 0x801F455C;
 func_801F45A0 = 0x801F45A0;
-func_801F4624 = 0x801F4624;
+advanceWorkWord1CBy1199AndRunHelperThenDispatchCue20FAndAdvanceWorkByte1World03Area13413_801F4624 = 0x801F4624;
 invokeHelperWorld03Area13413_801F46AC = 0x801F46AC;
 invokeHelperWorld03Area13413_801F46CC = 0x801F46CC;
 func_801F46EC = 0x801F46EC;
