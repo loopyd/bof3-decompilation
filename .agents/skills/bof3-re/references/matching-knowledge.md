@@ -848,8 +848,12 @@ later access, because a store through that local may alias the cell and the
 original re-reads it there. Read each access's own `lui`/`lw` pair; running one
 local down the body shares that base and drops the later reloads. When every access
 re-reads the cell, a per-width `u16 *`/`u8 *` local or one pointer per access group
-still shares a base within that view. Write each access as a cast/index expression on
-the named cell instead.
+still shares a base within that view; where the view would hide a reload, write that
+access as a cast/index expression on the named cell instead. Give each post-alias group
+its own local (`step = D_1F800044;`): that statement reproduces the original's cell load
+into `$v0` and the copy into the group's register, while one local shared by two such
+groups makes GCC load straight into the later group's register, measured 40 of 50
+instructions at 196 bytes with the first difference at that load.
 
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the
@@ -956,7 +960,13 @@ and changes nothing.
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
 lands; a byte view leaves both ambiguous, so the gap shows up as a displaced load rather
-than a wrong one. Check the original access order before widening the view.
+than a wrong one. Check the original access order before widening the view. That type
+also picks the register the live pointer gets: over one group of member updates, inline
+byte offsets measured 42 of 49 because the `sb` forces a second cell load, a flat `u8 *`
+local 41 of 49 because the pointer lands in `$a0` rather than `$v1`, and a struct local
+over the evidenced offsets 49 of 49, its members keeping the original's `lbu`/`sb` then
+`lhu`/`sh` order. It pays for a group sharing one live pointer, so the single-store case
+below still keeps its cast inline.
 
 A displaced store/load pair that keeps its score and its first difference through
 reorder variants is the representation, not an ordering residual: give each accessed
@@ -986,7 +996,9 @@ the next store to that record re-reads the named cell, because a store through t
 derived pointer may alias the cell. Two exact bodies reached a byte cell through the
 derived view at the end of the word copy and the following byte store of that same
 record through the named cell; writing both on the local gives both stores one base and
-drops that reload.
+drops that reload. Two adjacent word updates through one word-typed view also serialise
+through one `$v0`, as the original's do, while the same negations written at byte
+offsets let the scheduler pair them into `$v0`/`$v1`, measured 44 of 50.
 
 ### Signed table index feeding a scaled offset
 
