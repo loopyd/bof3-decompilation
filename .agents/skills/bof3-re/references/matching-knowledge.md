@@ -48,6 +48,8 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Arm tests a loaded value and passes it as a call argument; the build reloads the cell for the argument | Give that load its own local, test the local and pass the local. Read the arm's argument register: when it is the register the `sltiu`/compare tested, one load feeds both uses, so the same cell written in the argument list is a second load |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
+| One narrow local carries two different cells' byte values and the masked compare emits `andi` into the input register where the original writes a separate one | Give each cell its own value local. The shared local is one allocno, so the mask's destination takes the register the other cell's value held; size, count and the test's own spelling stay equal, so the value split is the lever, not another rewrite of the test |
+| Several stores into one indexed table record, and the build folds the row base once (`la`, `lui`/`addiu` in place of the original's per-store `lui $at` + `addu $at,$at,index`) into a saved register that the frame then saves | Declare the table's element as its record type and index it directly (`Table[index].field`). The stride belongs in the declaration: a byte-typed extern with the stride or a constant addend written in the subscript, and a materialised row pointer (`row = &Table[index]`), each leave one shared base for GCC to hoist, and naming the offset does not restore the fold once the row carries several fields. Mirror case: an original that does hold one base across the run takes the byte view with a named offset instead, so read the original's base register before choosing the view |
 | First difference is one `addu` building an indexed entry address with its operand roles swapped | Give that entry address its own pointer local and compare through the dereference (`entry = records + index + 2; if (g < *entry)`). This is a lifetime edit, not a representation one: casts on the index and a reversed comparison each re-folded the address and stayed short, while the pointer local matched |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
@@ -724,7 +726,13 @@ the original reuses one cursor load across stores that the current build reloads
    does not change; only the target exposes the difference.
 3. Judge argument width from the mask. `andi 0xffff` means a `u16` parameter; a
    cast to `s16` emits `sll`/`sra` instead. Widening a shared prototype is safe when
-   the existing exact callers still pass whole-number constants.
+   the existing exact callers still pass whole-number constants. The same judgement
+   reads inside a body you are defining: a residual that survives the statement-order
+   probes and sits in the argument's own shift or mask chain is that parameter's
+   declared width, so narrow the definition to the byte extent the shift implies. A
+   literal argument emits the same caller code under either width, so a caller TU that
+   still declares it wider is a separate prototype alignment, not an obstacle to the
+   narrower definition.
 4. For a run of consecutive word clears that shares one cursor load, take a `u32*`
    local and index by word: `words = (u32*)D_x; words[24] = 0u;`. A `u8*` local with
    byte offsets emits the same stores yet blocks the delay-slot fill of the call
