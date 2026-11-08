@@ -90,8 +90,9 @@ segments:
     - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C
     - '@source: src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp27a00_801CF35C.c'
   - - 4168
-    - asm
-    - func_801CF448
+    - c
+    - claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448
+    - '@source: src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448.c'
   - - 4672
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp27a00_801CF640

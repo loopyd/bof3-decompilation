@@ -123,8 +123,10 @@ segments:
     - asm
     - func_801F3A38
   - - 4092
-    - asm
-    - func_801F3BFC
+    - c
+    - drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC
+    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC.c'
+    - '@behavior: Effect entry draw pass run by 0x801F3FAC for every one of the 0x20 entries of the 0x2C-byte-stride effect table at 0x800E48C0 with the entry base as its only argument. It stamps the primitive cursor through 0x8017A97C, turns semi-transparency on, projects the entry position words at 0x00/0x04/0x08 into the first vertex of the POLY_G3 at cursor byte 0x08, and builds the vertices at cursor bytes 0x10 and 0x18 from the extent pairs at entry 0x10/0x12/0x14 and 0x18/0x1A/0x1C rotated by the spin angle halfword at 0x24, shifted by 8, scaled by the halfword at 0x28 and translated by the entry position; all three channels of the first vertex take the 0x2A halfword clamped to 0..0xFF, the other two vertices are cleared, and the 0x1C-byte primitive is appended for ordering-table index 1.'
   - - 4752
     - c
     - seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90

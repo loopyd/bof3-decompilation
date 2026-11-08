@@ -134,8 +134,10 @@ segments:
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8HalfArmCountdownAndAdvanceWorkByte3PlcharPlp01600_801D0060
   - - 7372
-    - asm
-    - func_801D00CC
+    - c
+    - selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp01600_801D00CC
+    - '@source: src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp01600_801D00CC.c'
+    - '@behavior: Work byte 3 == 1 step, the second handler of the work-byte-3 run based at 0x801D0684: runs the shared readiness helper func_8014DAEC and, while it reports ready, passes work byte 8 to the shared work-sequence selector func_8014D8D4 and writes 2 into work byte 3, advancing the dispatch to the 0x801D0204 handler. Otherwise it decrements work byte 0x0A, the counter the 0x801D0060 step armed with 0xB, and leaves the record untouched while that counter still reads nonzero; when the countdown reaches zero it queues the cue computed from work halfword 0x2C plus 0x100, copies work byte 8 into field 0x08 of the 0x74-byte front-end row selected by work byte 0x0B, copies work byte 7 into that row field 0x0A after defaulting work byte 7 to 1 when it reads zero, and closes by queueing cue 0x10B.'
   - - 7684
     - c
     - clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01600_801D0204

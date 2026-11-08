@@ -1,0 +1,92 @@
+#include "bof3/bof3.h"
+
+/* Scratchpad work-object pointer cell of the shared main executable. The
+ * original re-reads the cell after every call and after every store that may
+ * alias the cell itself, so the source keeps the named-symbol form and lets
+ * each access read the cell again.
+ * @source 0x1F800044 @kind data
+ */
+extern u8* D_1F800044;
+
+/* Front-end record table of the shared main-executable data segment: 0x74-byte
+ * rows based at 0x80143FC8. This body addresses two row fields through their
+ * own absolute symbols, because the original re-materialises each field base
+ * and adds the scaled row offset again instead of keeping one row base.
+ * @source 0x80143FD0 @kind unknown
+ */
+extern u8 D_80143FD0[];
+/* Row field of the same 0x74-byte front-end row as D_80143FD0, two bytes on.
+ * @source 0x80143FD2 @kind unknown
+ */
+extern u8 D_80143FD2[];
+
+/* Readiness poll helper of the main executable; the sibling lifts of this
+ * target and of the battle and bmagic overlays declare the same prototype. The
+ * original keeps only the returned byte as the ready test.
+ */
+extern u8 func_8014DAEC(void);
+
+/* Work-sequence selector of the shared EXE image. The exact sibling at
+ * 0x801D0060 of this target declares the same prototype and passes the same
+ * sequence byte.
+ */
+extern u32 func_8014D8D4(u8 sequence);
+
+/* Cue dispatcher of the shared EXE image. The exact sibling lift at 0x801CF91C
+ * declares the same prototype and passes the same kind of cue id.
+ */
+extern void func_8015DF18(u32 cue);
+
+/* @source 0x801D00CC
+ * @behavior Work byte 3 == 1 step of this overlay, the second handler of the
+ *           work-byte-3 run based at 0x801D0684: it is the word 0x801D00CC at
+ *           0x801D0688 inside the thirty-word code-pointer run at 0x801D0630,
+ *           which the dispatcher dispatchWorkByte3Table0684PlcharPlp01600_801D001C
+ *           indexes from that base, so it takes no arguments and any result is
+ *           discarded. It first runs the shared readiness helper func_8014DAEC
+ *           and keeps only that answer's low byte. While the helper reports
+ *           ready the step passes the work record's unsigned byte 8 to the
+ *           shared work-sequence selector func_8014D8D4 and writes 2 into work
+ *           byte 3, which advances the dispatch to entry 2 of the same run, the
+ *           0x801D0204 handler. Otherwise the step reads work byte 0x0A, the
+ *           counter the previous step at 0x801D0060 arms with 0xB, and while it
+ *           reads zero the step leaves every record field untouched. A nonzero
+ *           counter is decremented and its new value compared with zero again
+ *           through a second read of the same work byte; only a countdown that
+ *           reaches zero continues. That body queues the cue computed from the
+ *           work record's unsigned halfword 0x2C plus 0x100 through the shared
+ *           cue dispatcher func_8015DF18, then copies work byte 8 into field
+ *           0x08 of the front-end row selected by work byte 0x0B, whose row
+ *           stride is 0x74, and copies work byte 7 into the same row's field
+ *           0x0A after defaulting work byte 7 to 1 when it reads zero. It closes
+ *           by queueing the literal cue 0x10B through the same dispatcher. The
+ *           roles of work byte 7, of row fields 0x08 and 0x0A, of the two cues
+ *           and of the ready answer are not established, so those stay
+ *           described by their address or by the effect the step has on them.
+ *           The original scales the row index with the sll/subu/sll/addu/sll
+ *           chain of a multiply by 0x74 and addresses both row stores through
+ *           the field symbols, and it reloads the pointer cell before every
+ *           access that follows a call or a store. The 0x18-byte frame only
+ *           keeps $ra at 0x10 across the calls.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp01600_801D00CC(
+    void) {
+  if (func_8014DAEC()) {
+    func_8014D8D4(D_1F800044[8]);
+    D_1F800044[3] = 2;
+  } else if (D_1F800044[0x0A] != 0) {
+    D_1F800044[0x0A]--;
+    if (D_1F800044[0x0A] == 0) {
+      func_8015DF18(*(u16*)(D_1F800044 + 0x2C) + 0x100);
+      D_80143FD0[(u32)D_1F800044[0x0B] * 0x74u] = D_1F800044[8];
+      if (D_1F800044[7] == 0) {
+        D_1F800044[7] = 1;
+      }
+      D_80143FD2[(u32)D_1F800044[0x0B] * 0x74u] = D_1F800044[7];
+      func_8015DF18(0x10B);
+    }
+  }
+}

@@ -60,7 +60,9 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           helper func_8015477C, storing that answer plus 0x100 in row
  *           halfword 0x3E, and finally clears row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. The three
- *           in-image call sites are func_801CF448, which passes state 0 with the
+ *           in-image call sites are
+ *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448,
+ *           which passes state 0 with the
  *           sign-extended halves of its two arguments and, on the other branch,
  *           state 1 with the same pair, and each ignores the result.
  * @status exact

@@ -17,6 +17,7 @@ support_sources = [
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp02500_801CEA94.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp02500_801CF968.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp02500_801CFA34.c",
+    "src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp02500_801CFE4C.c",
     "src/bof3/plchar/testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF738.c",
     "src/bof3/plchar/testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp02500_801CF808.c",
     "src/bof3/support/plp025_00_psyq.c",

@@ -35,8 +35,10 @@ u32 func_8014D8D4(u8 arg0);
  *           handler the byte-3 dispatcher
  *           dispatchStateByte3Table0aa8PlcharPlp02600_801D0440 selects while the
  *           work record's dispatch byte 3 reads zero, and it advances that byte
- *           to 1, the entry of func_801D04F0. It first refreshes this payload's
- *           two layers through the position-query routine at 0x801D0868, then
+ *           to 1, the step-1 entry
+ *           selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0.
+ *           It first refreshes this payload's two layers through the
+ *           position-query routine at 0x801D0868, then
  *           takes the work record published at the scratchpad pointer cell
  *           0x1F800044, reads that record's unsigned byte 8 and selects the
  *           shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 +

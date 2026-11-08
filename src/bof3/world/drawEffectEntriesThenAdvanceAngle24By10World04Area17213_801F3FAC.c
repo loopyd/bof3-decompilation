@@ -7,7 +7,8 @@
  * halfword at 0x24, the extents at 0x10 and 0x12 and the scale halfword at 0x28,
  * so it is the caller of the sine and cosine pair 0x801782FC and 0x801783C8.
  * Still an asm boundary in this payload, so it keeps its address anchor. */
-void func_801F3BFC(u8* entry);
+void drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC(
+    u8* entry);
 
 /* Shared projection setup at 0x801AFE18: fills the 0x20-byte projection scratch
  * handed in $a0. Bound by the generated undefined_funcs_auto.txt row. */
@@ -75,7 +76,7 @@ void drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC(void) {
   index = 0u;
 
   do {
-    func_801F3BFC(entry);
+    drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC(entry);
     FIELD_REF(u16, entry, 0x24u) = (u16)(FIELD_REF(u16, entry, 0x24u) + 0x10);
     entry += 0x2cu;
     index += 1u;

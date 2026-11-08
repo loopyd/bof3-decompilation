@@ -120,8 +120,10 @@ segments:
     - c
     - getAndClearPlcharPlp03400_801D025C
   - - 7788
-    - asm
-    - func_801D026C
+    - c
+    - dispatchWorkHalfword2cTable034cPlcharPlp03400_801D026C
+    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTable034cPlcharPlp03400_801D026C.c'
+    - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: entry 22 of the twenty-eight-word code-pointer run at 0x801D02F4. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of the run based at 0x801D034C with no arguments, discarding any result.'
   - - 7856
     - asm
     - func_801D02B0
