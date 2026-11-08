@@ -74,6 +74,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 | One output record filled field by field; first difference is where the computation behind a later field group sits | Write the fields in the original's store order and place a dependent lookup at the field that consumes it: the lookup and the neighbouring store group share scheduler slots, so moving those writes later merges the lookup into the wrong group. One fill measured 75/81 at 328 bytes with the dependent writes moved after a neighbouring field write, and 81/81 at 324 bytes with them at their own fields |
+| Byte size equal and the first difference is the register a later call's argument setup leaves a product in (`mflo` into the neighbouring register) | Assign that product's local above the neighbouring record store. Written between that store and the `+=` that consumes it the same body measured 88 of 99 instructions at the original size; the same local assigned before the store matched, so read this signature as statement position, not as a multiply or argument-order defect |
 
 Named extern-array indexing can emit folded `lw table(index)` and assembler
 `lui $at; addu $at,$at,index`; fixed-address arithmetic may emit compiler's opposite
@@ -409,8 +410,14 @@ volatile pointee may cause `lbu` plus manual sign extension versus original `lb`
 Remove unjustified qualifier only with semantic evidence; reviewed plain view may
 restore shape. Volatile pointer cell forces reload without qualifying pointee; use
 API reference. Never add volatility as
-arbitrary scheduler control. The shared scratchpad work cell is the one place this is
-already decided: five byte-exact sources declare it `u8* volatile`, so when the original
+arbitrary scheduler control. A volatile scalar extern read at several uses also needs
+its address in a local: each direct read of the named cell materialises `lui` with a
+folded `lbu`, where the original builds the base once with `addiu` and reloads at
+`0(base)`, so write `volatile u8 *p = &cell;` and read `p[0]` at each use. One selector
+byte feeding three scaled index computations measured all three spellings: the plain
+cell folded the reads into one address, the bare volatile cell rebuilt the address per
+read, and the local pointer matched. The shared scratchpad work cell is the one place
+this is already decided: five byte-exact sources declare it `u8* volatile`, so when the original
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
 Reading or writing that cell from another target still owes this target its own
@@ -1124,6 +1131,10 @@ extra bytes.
 4. Two passes over one table with the same stride need one offset local per pass.
    A shared local ties the second pass' product to the first pass' quantity, so the
    scale stops being block-local; keep each pass' own index reset and multiply.
+   The cursor splits the same way: when each pass publishes its record pointer into
+   one shared cell, the second pass keeps its own pointer local, because reusing the
+   first pass' record pointer, or chaining the publish store with the record pointer,
+   left the second base folded and three instructions differing at the original size.
 5. Measure. Require the original frame, the original base load position and the
    complete function bytes before accepting.
 
