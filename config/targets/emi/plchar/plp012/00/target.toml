@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/commitProjectedFrontEndRecordQueueCueAndAdvanceStepElseClaimWorkSlotAndClearState12BPlcharPlp01200_801CF750.c",
     "src/bof3/plchar/requestResourceForWorkByte4ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CE628.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01200_801CEA94.c",
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp01200_801CEC30.c",

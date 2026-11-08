@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801CF70C
   - - 4944
-    - asm
-    - func_801CF750
+    - c
+    - adjustEvenRouteByteThenClaimWorkProbeTwoLayerOffsetsSelectSequence42PlusHalvedRouteAndAdvanceStepPlcharPlp01500_801CF750
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenClaimWorkProbeTwoLayerOffsetsSelectSequence42PlusHalvedRouteAndAdvanceStepPlcharPlp01500_801CF750.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 14 of the sixteen-word handler run that starts at 0x801CFB84. When the unsigned route index byte 0x08 is even it stores the decremented route ((byte 8 - 1) and 7) and then claims the work by storing 1 into byte 0x2B. It probes two layer offset pairs, 0x80181BAC with 0x80181BB0 for route id 3 and 0x80181BBC with 0x80181BC0 for route id 5, adding each pair to the work position words 0x34 and 0x38 and asking the shared route-parameterised routine func_80154F78 for the sample of that point; while the scratchpad gate byte 0x1F800000 is nonzero and that sample narrowed to a halfword is at least 0x41 it asks the shared position routine func_80154F28 for the layer point and clears the claim byte when the signed reference halfword 0x3E is below that answer. It then selects the shared work sequence through func_8014D8D4 with the halved route index plus 0x42, truncated to a byte, and increments the step counter byte 0x02. It takes no arguments and returns nothing.'
   - - 5404
     - c
     - claimFrontEndRecordHandler3AAndQueueCue2CPlus100ClearByte7AndAdvanceStepWhenWorkHalfword58MatchesTenPlcharPlp01500_801CF91C

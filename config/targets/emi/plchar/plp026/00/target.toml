@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp02600_801D0354.c",
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp02600_801D04F0.c",
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp02600_801CEC30.c",
+    "src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868.c",
 ]
 psyq_source = "src/bof3/support/plp026_00_psyq.c"

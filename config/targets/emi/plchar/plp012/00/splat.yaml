@@ -101,8 +101,10 @@ segments:
     - asm
     - func_801CF70C
   - - 4944
-    - asm
-    - func_801CF750
+    - c
+    - commitProjectedFrontEndRecordQueueCueAndAdvanceStepElseClaimWorkSlotAndClearState12BPlcharPlp01200_801CF750
+    - '@source: src/bof3/plchar/commitProjectedFrontEndRecordQueueCueAndAdvanceStepElseClaimWorkSlotAndClearState12BPlcharPlp01200_801CF750.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only through the eight-word pointer run based at 0x801CFDB8 that func_801CF70C indexes with the work step counter byte 0x02; this body is word 0 of that run and no jal in this payload names it. It asks the record lookup func_801CF9A8 for the front-end record that holds the projected work position and masks the answer into an unsigned index byte. With no record found (index 0xFF) it projects the work words 0x34 and 0x38 by the route-selected and doubled offsets of 0x80181B94 and 0x80181B98 and, unless bit 0 of byte 0x12C of the record published at 0x80146250 is set, hands that pair to the slot search func_801BDE14 with range 1 and raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and stride 0x98. With a record found it commits only when neither the record position test func_801CFB0C nor its projected position test func_801CFBDC reports a work position: it seeds row byte 0x0B through the base 0x80143FD3 and row stride 0x74, queues cue halfword 0x2C plus 0x100 through func_8015DF18, selects sequence route byte 0x08 plus 8 through func_8014D8D4, sets the shared work mode byte 0x11C to 2 and raises bit 0x1000 of the halfword 0x80146258, runs the shared update func_801C24D0, decrements work byte 0x09 and runs the work advance step func_801B0DFC, writes 1 into state byte 0x12B of that record and increments the step counter byte 0x02. Every other path clears state byte 0x12B.'
   - - 5432
     - asm
     - func_801CF938

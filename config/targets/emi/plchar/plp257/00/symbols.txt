@@ -1,3 +1,4 @@
+func_8015477C = 0x8015477C;
 func_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE514 = 0x801CE514;
@@ -22,7 +23,7 @@ func_801CF470 = 0x801CF470;
 func_801CF7BC = 0x801CF7BC;
 func_801CF958 = 0x801CF958;
 func_801CFA44 = 0x801CFA44;
-func_801CFC3C = 0x801CFC3C;
+claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp25700_801CFC3C = 0x801CFC3C;
 func_801CFD20 = 0x801CFD20;
 dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54 = 0x801CFE54;
 dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98 = 0x801CFE98;

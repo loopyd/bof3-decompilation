@@ -14,12 +14,14 @@ extern u8* D_1F800044;
  * route-parameterised position routine func_80154F78 and the screen-space
  * routine func_80154F28 for the work record's coord_x_34/coord_y_38 pair over
  * the two layer bases at 0x80181BAC/0x80181BB0 and 0x80181BBC/0x80181BC0, and
- * clears work byte 0x2B when a layer sits in front. Its own Splat row is still
- * `asm`, so only a prototype is needed here; the original calls it through a
- * plain `jal` with nothing set up in the argument registers and reads no result
- * from $v0. The exact PLP016 sibling calls the same routine at its own
- * overlay-local address 0x801D0444. */
-void func_801D0868(void);
+ * clears work byte 0x2B when a layer sits in front. Its Splat row is a `c` row
+ * of this payload, lifted as
+ * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868;
+ * the original calls it through a plain `jal` with nothing set up in the
+ * argument registers and reads no result from $v0. The exact PLP016 sibling
+ * calls the same routine at its own overlay-local address 0x801D0444. */
+void claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. The ui
  * and bmagic lifts (for example src/bof3/ui/selectWorkSequenceForRoute7.c)
@@ -65,7 +67,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp02600_801D0484(
     void) {
-  func_801D0868();
+  claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;

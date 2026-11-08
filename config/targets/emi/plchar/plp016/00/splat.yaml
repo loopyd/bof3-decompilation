@@ -106,7 +106,7 @@ segments:
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4
     - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4.c'
-    - '@behavior: Work byte 3 == 0 step: when work byte 8 of the record published at scratchpad pointer cell 0x1F800044 is even, stores ((byte 8 - 1) & 7), and while the payload step test func_801D02A0 reads zero stores ((byte 8 + 2) & 7) and tests again, restoring the decremented direction when that test reads zero as well; both paths then run the payload refresh func_801D0444, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3.'
+    - '@behavior: Work byte 3 == 0 step: when work byte 8 of the record published at scratchpad pointer cell 0x1F800044 is even, stores ((byte 8 - 1) & 7), and while the payload step test func_801D02A0 reads zero stores ((byte 8 + 2) & 7) and tests again, restoring the decremented direction when that test reads zero as well; both paths then run the payload claim-byte refresh at 0x801D0444, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3.'
   - - 5300
     - asm
     - func_801CF8B4
@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801D02A0
   - - 8260
-    - asm
-    - func_801D0444
+    - c
+    - claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444
+    - '@source: src/bof3/plchar/claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444.c'
+    - '@behavior: Layer refresh of the front-end work object read through the scratchpad pointer cell 0x1F800044, run by the two work-step handlers 0x801D0060 and 0x801CF7B4 of this payload before they select the shared work sequence. Byte 0x2B is the claim byte and the signed halfword 0x3E the work reference sample. The body first claims the work by storing 1 into byte 0x2B and then probes two fixed route offsets of the shared main-executable data section: 0x80181BAC and 0x80181BB0 with route 3, then 0x80181BBC and 0x80181BC0 with route 5. For each probe it projects the work position by adding that offset pair to the work words 0x34 and 0x38, asks the route-parameterised position routine func_80154F78 for the sample of that point, and while the scratchpad gate byte 0x1F800000 reads nonzero and that sample narrowed to 16 bits is at least 0x41 it asks the position routine func_80154F28 for the same point and clears the claim byte when the reference halfword 0x3E is below that answer. A layer whose sample reads below the bound, or whose query is skipped by a zero gate byte, leaves the claim byte untouched, so the two probes only ever clear it. It takes no arguments, returns nothing, and the 0x20-byte frame only keeps the return address at 0x18 and the two projected coordinates at 0x14 and 0x10 across the calls. The route constants 3 and 5 are materialised in the argument register per probe, the 5 of the second probe issued in the first block branch delay slots.'
   - - 8616
     - c
     - dispatchWorkHalfword2cTable0690PlcharPlp01600_801D05A8

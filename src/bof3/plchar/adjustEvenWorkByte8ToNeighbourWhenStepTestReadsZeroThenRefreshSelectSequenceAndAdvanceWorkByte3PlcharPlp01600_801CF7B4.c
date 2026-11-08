@@ -15,11 +15,15 @@ extern u8* D_1F800044;
  */
 u8 func_801D02A0(void);
 
-/* Two-layer position refresh of this payload; the original calls it through a
- * plain `jal` with nothing set up in the argument registers, so it takes no
- * arguments. Its own Splat row is still `asm`.
+/* Claim-byte refresh of this payload; the original calls it through a plain
+ * `jal` with nothing set up in the argument registers, so it takes no
+ * arguments. It claims work byte 0x2B and clears it again when either of its two
+ * layer probes reads above 64 and beyond the work reference halfword 0x3E. Its
+ * own lift at 0x801D0444 came out exact, so this caller reads no result from
+ * $v0.
  */
-void func_801D0444(void);
+void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
  * binds the address through this target's generated undefined_funcs_auto.txt, and
@@ -37,8 +41,9 @@ u32 func_8014D8D4(u8 arg0);
  *           func_801D02A0 and, only while that call reads zero, stores the
  *           neighbour two steps the other way ((byte 8 + 2) & 7) and calls the
  *           same test again; if that call reads zero too the byte is put back to
- *           the decremented direction. Both paths then run the payload refresh
- *           func_801D0444, select the shared work sequence through func_8014D8D4
+ *           the decremented direction. Both paths then run the payload
+ *           claim-byte refresh at 0x801D0444, select the shared work sequence
+ *           through func_8014D8D4
  *           with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte
  *           0xB, write 0xB into work byte 0xA and 1 into work byte 3, which
  *           advances the dispatch to the next entry of the same run. The original
@@ -66,7 +71,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenc
       }
     }
   }
-  func_801D0444();
+  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801CFB30
   - - 6004
-    - asm
-    - func_801CFB74
+    - c
+    - stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp02500_801CFB74
+    - '@source: src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp02500_801CFB74.c'
+    - '@behavior: Fourth entry of the front-end work handler run based at 0x801CFFD4 through the word at 0x801CFFE0, which the step dispatcher func_801CF924 enters after scaling the work byte 0x02 by four, and no jal in the payload names it: while the route index byte 0x08 of the front-end work object read through the scratchpad pointer cell 0x1F800044 is even the body first steps that index back inside its eight-entry window with ((index - 1) & 7), then claims the work by storing 1 into byte 0x2B and probes two candidate layer positions, adding the layer offsets 0x80181BAC and 0x80181BB0 to the work words 0x34 and 0x38 and asking the route-parameterised position routine func_80154F78 for that point with route 3, then the same with 0x80181BBC and 0x80181BC0 and route 5, clearing the claim byte again for either probe while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41 while the signed reference halfword 0x3E is below the screen-space answer of func_80154F28, after which it selects the shared work sequence 0x42 plus the halved route index through func_8014D8D4 and increments the step counter byte 0x02'
   - - 6464
     - c
     - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp02500_801CFD40

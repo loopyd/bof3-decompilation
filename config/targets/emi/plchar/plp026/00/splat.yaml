@@ -107,7 +107,7 @@ segments:
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8
     - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8.c'
-    - '@behavior: Work byte 3 == 0 step of the work-byte-3 dispatcher at 0x801CFB94: when work byte 8 is even it walks that byte through the payload step test func_801D06C4, then refreshes the layers through func_801D0868, selects the shared work sequence from work byte 8 through func_8014D8D4, clears work byte 0xB, writes 0xB into work byte 0xA and 1 into work byte 3.'
+    - '@behavior: Work byte 3 == 0 step of the work-byte-3 dispatcher at 0x801CFB94: when work byte 8 is even it walks that byte through the payload step test func_801D06C4, then refreshes the layers through claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868, selects the shared work sequence from work byte 8 through func_8014D8D4, clears work byte 0xB, writes 0xB into work byte 0xA and 1 into work byte 3.'
   - - 6360
     - asm
     - func_801CFCD8
@@ -150,8 +150,10 @@ segments:
     - asm
     - func_801D06C4
   - - 9320
-    - asm
-    - func_801D0868
+    - c
+    - claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868
+    - '@source: src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp02600_801D0868.c'
+    - '@behavior: Two-layer position refresh called at the end of the work-byte-3 steps 0x801CFBD8 and 0x801D0484: claims work byte 0x2B with 1, then probes the layer point pairs 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5 through the route-parameterised position routine func_80154F78, and for each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, clears work byte 0x2B when the signed reference halfword 0x3E is below the point func_80154F28 answers.'
   - - 9676
     - c
     - dispatchWorkHalfword2cTable0ab4PlcharPlp02600_801D09CC

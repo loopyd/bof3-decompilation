@@ -19,6 +19,7 @@ support_sources = [
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01500_801CF610.c",
     "src/bof3/plchar/selectWorkSequenceFromRouteByte8AndClearByte7WhenSetElseClearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededPlcharPlp01500_801CFA28.c",
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp01500_801CEC30.c",
+    "src/bof3/plchar/adjustEvenRouteByteThenClaimWorkProbeTwoLayerOffsetsSelectSequence42PlusHalvedRouteAndAdvanceStepPlcharPlp01500_801CF750.c",
     "src/bof3/support/plp015_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp015_00_psyq.c"

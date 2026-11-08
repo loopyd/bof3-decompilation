@@ -7,12 +7,13 @@
  */
 extern u8* D_1F800044;
 
-/* Two-layer position refresh of this payload; the original calls it through a
- * plain `jal` with nothing set up in the argument registers, so it takes no
- * arguments. Its own Splat row is still `asm`, and this caller reads no result
- * from $v0.
+/* Claim-byte refresh of this payload; the original calls it through a plain
+ * `jal` with nothing set up in the argument registers, so it takes no
+ * arguments. Its own lift at 0x801D0444 came out exact, and this caller reads no
+ * result from $v0.
  */
-void func_801D0444(void);
+void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. The ui
  * and bmagic lifts (for example src/bof3/ui/selectWorkSequenceForRoute7.c)
@@ -48,7 +49,7 @@ u32 func_8014D8D4(u8 arg0);
  */
 void refreshLayersThenSelectWorkSequenceFromByte8HalfArmCountdownAndAdvanceWorkByte3PlcharPlp01600_801D0060(
     void) {
-  func_801D0444();
+  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xA] = 0xB;
   D_1F800044[3] = 1;
