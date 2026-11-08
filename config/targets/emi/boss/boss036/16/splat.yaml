@@ -30,8 +30,8 @@ segments:
     - asm
     - func_800C1804
   - - 84
-    - asm
-    - func_800C1854
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854
   - - 184
     - asm
     - func_800C18B8

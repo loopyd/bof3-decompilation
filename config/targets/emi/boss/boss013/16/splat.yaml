@@ -107,8 +107,10 @@ segments:
     - asm
     - func_800C204C
   - - 2224
-    - asm
-    - func_800C20B0
+    - c
+    - clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0
+    - '@source: src/bof3/boss/clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0.c'
+    - '@behavior: Second member of this overlay battle hook trio: clears the 0x40 flag of the battle record owned by id 0 through clearOwnerRecordFlag40 at 0x800AC844, then the same flag of the record owned by id 1, and returns through a 0x18 byte frame that keeps the return address across both calls. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A8, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2264
     - c
     - publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8

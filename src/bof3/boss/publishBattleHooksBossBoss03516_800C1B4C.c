@@ -12,7 +12,7 @@ typedef void (*Boss03516Handler)(void);
  * whose own body calls func_801DB524 with 3 and then sets the 0x2 bit of
  * D_80146328. */
 void func_800C1BF0(void);
-void func_800C1C3C(void);
+void raiseFlagBit2ThenEnterFrontendMode4BossBoss03516_800C1C3C(void);
 void func_800C1B84(u8 index);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -26,9 +26,11 @@ extern Boss03516Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
  * func_800C1BF0 (state switch: tests the 0x2 bit of D_80146328 and, while it is
  * set, stores 0x15 into the byte at D_80146875 and calls func_801DDED8, and
- * otherwise calls func_801DDF00) into 0x801463A4, func_800C1C3C (sets the 0x2
- * bit of the halfword at D_801462E8 and calls func_8014ECAC with 4) into
- * 0x801463A8, and the indexed handler dispatcher func_800C1B84 into 0x801463AC;
+ * otherwise calls func_801DDF00) into 0x801463A4, the flag-raising frontend
+ * mode request raiseFlagBit2ThenEnterFrontendMode4BossBoss03516_800C1C3C (sets
+ * the 0x2 bit of the halfword at D_801462E8 and calls func_8014ECAC with 4)
+ * into 0x801463A8, and the indexed handler dispatcher func_800C1B84 into
+ * 0x801463AC;
  * that dispatcher's byte index parameter is dropped by the void slot type. Same
  * trio shape as the sibling installers of this archive family, which write the
  * same three slots in the same order and differ only in the published
@@ -41,6 +43,6 @@ extern Boss03516Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss03516_800C1B4C(void) {
   D_801463A4 = func_800C1BF0;
-  D_801463A8 = func_800C1C3C;
+  D_801463A8 = raiseFlagBit2ThenEnterFrontendMode4BossBoss03516_800C1C3C;
   D_801463AC = (Boss03516Handler)func_800C1B84;
 }

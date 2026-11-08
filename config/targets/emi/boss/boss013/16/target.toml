@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/boss/raiseWorkHalfwordF8OnBattleMode10AndActingBattler8ThenRaiseWorkHalfword94BossBoss01316_800C1C4C.c",
     "src/bof3/support/boss013_16_psyq.c",
     "src/bof3/boss/publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8.c",
+    "src/bof3/boss/clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0.c",
 ]
 psyq_source = "src/bof3/support/boss013_16_psyq.c"

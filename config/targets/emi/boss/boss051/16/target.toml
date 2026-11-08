@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss05116_800C1984.c",
     "src/bof3/boss/dispatchStateByte2Table1df4BossBoss05116_800C18BC.c",
     "src/bof3/support/boss051_16_psyq.c",
+    "src/bof3/boss/raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C.c",
 ]
 psyq_source = "src/bof3/support/boss051_16_psyq.c"

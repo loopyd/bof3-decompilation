@@ -1,3 +1,4 @@
+clearOwnerRecordFlag40 = 0x800AC844;
 func_800C1804 = 0x800C1804;
 func_800C1860 = 0x800C1860;
 func_800C18FC = 0x800C18FC;
@@ -22,7 +23,7 @@ noopHandlerBossBoss01316_800C2004 = 0x800C2004;
 publishBattleHooksBossBoss01316_800C200C = 0x800C200C;
 zeroResultBossBoss01316_800C2044 = 0x800C2044;
 func_800C204C = 0x800C204C;
-func_800C20B0 = 0x800C20B0;
+clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0 = 0x800C20B0;
 publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8 = 0x800C20D8;
 func_800C2138 = 0x800C2138;
 func_800C2348 = 0x800C2348;

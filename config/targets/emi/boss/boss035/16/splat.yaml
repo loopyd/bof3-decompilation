@@ -90,8 +90,8 @@ segments:
     - asm
     - func_800C1BF0
   - - 1084
-    - asm
-    - func_800C1C3C
+    - c
+    - raiseFlagBit2ThenEnterFrontendMode4BossBoss03516_800C1C3C
   - - 1136
     - c
     - publishBattleHooksBossBoss03516_800C1C70

@@ -71,8 +71,10 @@ segments:
     - c
     - zeroResultBossBoss03816_800C1B08
   - - 784
-    - asm
-    - func_800C1B10
+    - c
+    - initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10
+    - '@source: src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss03816_800C1B10.c'
+    - '@behavior: Battle-flag state switch of this overlay: loads the shared battle flag byte 0x80146328 once and tests bit 0x2; while the bit is set it stores 5 into the shared scenario progress byte 0x80146864, stores 0x20 into 0x80146875, stores 0x77 into 0x80145029 and then runs initModeTuple510 at 0x801DDED8, and when the bit is clear it runs initModeTuple520 at 0x801DDF00 instead. It does not write the flag byte back, reads no other state and its 0x18-byte frame keeps the return address at 0x10 across the chosen call.'
   - - 884
     - c
     - noopHandlerBossBoss03816_800C1B74
