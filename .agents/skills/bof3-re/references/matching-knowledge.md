@@ -826,7 +826,11 @@ one block, stores keep source statement order, and a constant re-materialised in
 one register between stores shows where its statement starts. That order holds
 within one width: a `sh` pair can land above byte stores written before it, so a
 mixed-width run's source order is the `sb` sequence and the constant
-materialisations, not the emitted store order.
+materialisations, not the emitted store order. Two adjacent compound stores on one
+record that differ in width behave the same way, seen from the loads: their stores
+can issue in one order while the operands each one needs load in the other. Source
+order sets those loads, so order the two statements by the original's load order,
+not by its store order.
 A run of stores to one pointer cell that parks a different record and restores the
 saved value is real state: keep every publish and restore as a store to the cell and
 re-read the cell after the restore, because holding the record in a local drops the run.
