@@ -41,7 +41,11 @@ and what stayed equal around it. Discovery of further actions: `bin/harness lift
 For genuinely absent C, require parent admission for the selected source. Pin original
 bytes/load, reviewed boundary, caller/callee evidence, PRE absence, owned source/
 header/map/layout paths and attempts. Create evidenced C89 with `@source`/`@behavior`,
-manifest claim, declarations/bindings and `c` boundary. Obtain a live
+manifest claim, declarations/bindings and `c` boundary. For a fresh member of a family
+that already holds an exact lift, take that C89 from the sibling's body
+([reverse protocol](reverse/mission-protocol.md)): where the twin differed only in
+relocation words it measured first-gate exact, owed no sweep variant and left no
+prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. Obtain a live
 [native diff](native-execution.md) before another edit. Missing-source errors supply
 no baseline; seeds grant no score or acceptance. Unresolved
 ownership/ABI or failed native gates stop matching. Require final byte match and
