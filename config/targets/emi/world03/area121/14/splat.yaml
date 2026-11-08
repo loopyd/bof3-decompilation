@@ -178,8 +178,10 @@ segments:
     - dispatchStateByte2Table689cThenUpdateMaskChargeWorld03Area12114_801F4B00
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 8012
-    - asm
-    - func_801F4B4C
+    - c
+    - turnWorkFacingOneStepTowardSavedThenDispatchStepOutcomeWorld03Area12114_801F4B4C
+    - '@source: src/bof3/world/turnWorkFacingOneStepTowardSavedThenDispatchStepOutcomeWorld03Area12114_801F4B4C.c'
+    - '@behavior: Byte-2 state handler 0 of the two-entry handler table 0x801F689C that the overlay step dispatch at 0x801F4B00 indexes with work byte 0x02. It exits while the facing step at 0x801F5268 reports a settled slot, bit 0x100 of halfword 0x80146258, bit 0x40 of halfword 0x8014625A, shared byte 0x80143BB0 or work byte 0x0A is nonzero, and again when any of the guards 0x801B6674, 0x801F5578, 0x801B6258 and 0x801F55EC answers nonzero. It clears record byte 0x12A of 0x80146250 while halfword 0x8014625C is nonzero and bit 0x20 of the 0xA4-byte slot flag record selected by record byte 0x13C is clear. It latches work facing byte 0x08, runs the mask update at 0x801F5684 and, when the pad halfwords 0x80145AA4 and 0x80145AB6 overlap or work byte 0x0B reads 0x40, restores the facing and resets through 0x801F564C. Otherwise an overlap still restores the facing and a facing that differs from the latched byte is stepped one place on the eight-way ring only when the two lifted values stand exactly two apart, then masked to three bits. The low byte of 0x801B0E44 selects the arm: 0 settles through 0x801F50F4 when 0x801BDF08 reports a nonzero byte, otherwise runs 0x801F5734 and either re-publishes the latched facing with record byte 0x11C left clear or advances through 0x801C24D0, 0x801C4C48, the countdown byte 0x09 and 0x801B0DFC; 1 and 0xFF restore the facing, clear work bytes 0x09 and 0x02 and write 3 to record byte 0x11C. Takes no arguments and returns nothing.'
   - - 9080
     - c
     - classifyDirectionToPointWorld03Area12114_801F4F78

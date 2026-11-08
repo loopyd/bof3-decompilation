@@ -98,8 +98,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkStepAndLowerWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3320.c'
     - '@behavior: Per-frame fall step of the scratch work record published through the pointer cell 0x1F800044: adds the step word at 0x0C to the accumulator word at 0x34, adds -0x2000 to each of the words at 0x40 and 0x44 and decrements the countdown byte at 0x0A; a countdown multiple of four selects handler byte 4 value 1, and a zero countdown selects 0, otherwise the shared halfword at 0x0A of the record at 0x80148210 loses two.'
   - - 1992
-    - asm
-    - func_801F33C8
+    - c
+    - dispatchSharedModeByteTable2C04World04Area19113_801F33C8
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World04Area19113_801F33C8.c'
+    - '@behavior: Steps the shared front-end mode byte 0x801448EC through this overlay area-entry sequence, selecting the arm from the 31-slot jump table the payload keeps at 0x801F2C04; modes 0, 2, 3, 4, 10, 20 and 30 have bodies and every other slot returns untouched. Mode 0 requests the area action 0x6D, latches the shared phase byte 0x80143BB0 to 2 and advances the mode to 1. Mode 2 waits until that phase byte differs from 2, sets the shared front-end mode to 0 and advances to 3. Mode 3 waits until the shared halfword 0x80143C40 reads zero, clears the byte 0x8014832E, passes the shared byte 0x80145029 to the shared helper 0x80161D20, fills the overlay field records through 0x801F3AB0, re-arms the shared frame timer through 0x801636A0 with the pair 0 and 1, and advances to 4. Mode 4 waits for the shared predicate 0x80163EA0, raises bit 0x82 of the shared bank 0x80144F28, advances to 10 and resets the shared front state. Mode 10 releases the overlay through 0x8015C058, requests the front selector context from 0x80145048 with 0x80145040 and 0x80145044 as kind 4, clears 0x8014504A, raises bit 0x40 of 0x8014625A, clears flag 0x77 of the shared bank and drops the shared flag byte 0x801448EB and the mode byte to zero. Mode 20 only releases the overlay and clears that pair. Mode 30 does the same release and bank clear, requests the context 0x96 with 0x180000 and 0x300000 as kind 1, clears 0x8014504A, raises bit 0x40 of 0x8014625A, clears the shared flag and mode bytes and clears bit 0 of 0x80146871.'
   - - 2648
     - asm
     - func_801F3658

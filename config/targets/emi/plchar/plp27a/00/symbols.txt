@@ -1,7 +1,7 @@
 func_8015477C = 0x8015477C;
 func_801CE404 = 0x801CE404;
 pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448 = 0x801CE448;
-func_801CE514 = 0x801CE514;
+selectArrivalSequenceAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CE514 = 0x801CE514;
 func_801CE610 = 0x801CE610;
 func_801CE654 = 0x801CE654;
 clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp27a00_801CE83C = 0x801CE83C;

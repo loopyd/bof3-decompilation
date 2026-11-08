@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801CED1C
   - - 2836
-    - asm
-    - func_801CEF14
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp01500_801CEF14
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp01500_801CEF14.c'
+    - '@behavior: Claims one free front-end record and seeds it from a caller-supplied position pair. The body asks the shared allocator func_8019601C for a row index, masks it to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride of the table at 0x80143FC8 and seeds the row: occupancy byte 0 takes 1, handler selector byte 5 takes 0x34, entry state byte 1 takes the caller state byte, row word 0x34 takes the first signed coordinate shifted left 16 and row word 0x38 takes the second the same way, so the pair lands in signed 16.16 form. It then re-reads row word 0x34, passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x100 in row halfword 0x3E and clears row byte 0x0B. Nothing is returned and a full table leaves every row untouched.'
   - - 3064
     - asm
     - func_801CEFF8

@@ -29,6 +29,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2Table327cBossBoss02513_800C2030.c",
     "src/bof3/boss/dispatchStateByte1Table32a0BossBoss02513_800C2FF4.c",
     "src/bof3/boss/advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038.c",
+    "src/bof3/boss/setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634.c",
 ]
 psyq_source = "src/bof3/support/boss025_13_psyq.c"
 

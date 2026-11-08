@@ -13,14 +13,14 @@ extern u16 D_80143C40; /* @source 0x80143C40 @kind unknown */
 /* Shared effect-bank byte at 0x8014832E, bound by the shared map. */
 extern u8 D_8014832E; /* @source 0x8014832E @kind unknown */
 
-/* The three per-frame passes this handler runs, still anchored to their
- * addresses. 0x801F38E8 walks the 0x18-byte-stride record table at 0x800E4800
- * for the first free entry, marks it active and seeds it with byte 2 = 0x20
- * before reloading the work record. 0x801F3FAC is the tile draw pass: it asks
- * for a 0x380 tpage, sets the draw mode and builds quads through g_PrimCursor.
+/* The three per-frame passes this handler runs, described here by address.
+ * 0x801F38E8 walks the 0x18-byte-stride record table at 0x800E4800 for the
+ * first free entry, marks it active and seeds it with byte 2 = 0x20 before
+ * reloading the work record. 0x801F3FAC is the tile draw pass: it asks for a
+ * 0x380 tpage, sets the draw mode and builds quads through g_PrimCursor.
  * 0x801F3984 is the record pass over the same 0x800E4800 table. */
 void func_801F38E8(void);
-void func_801F3FAC(void);
+void drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC(void);
 void stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984(
     void);
 
@@ -73,7 +73,7 @@ void claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWor
   if ((tick & 3) == 0) {
     func_801F38E8();
   }
-  func_801F3FAC();
+  drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC();
   stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984();
   if (D_80143C40 == 0) {
     func_8014ECAC(9);

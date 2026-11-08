@@ -139,8 +139,10 @@ segments:
     - c
     - zeroResultBossBoss00816_800C1FD4
   - - 2012
-    - asm
-    - func_800C1FDC
+    - c
+    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC
+    - '@source: src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress11BossBoss00816_800C1FDC.c'
+    - '@behavior: Battle-flag state switch this overlay publishes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x11 into the shared scenario progress byte 0x80146864 and calls func_801DDED8, and otherwise calls func_801DDF00.'
   - - 2088
     - asm
     - func_800C2028

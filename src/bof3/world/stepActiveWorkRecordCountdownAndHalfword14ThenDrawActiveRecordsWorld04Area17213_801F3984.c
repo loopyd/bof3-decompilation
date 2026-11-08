@@ -1,8 +1,10 @@
 #include "bof3/bof3.h"
 
 /* Shared projection setup that fills the 0x20-byte stack scratch the frame
- * passes of this payload read; func_801F3FAC, func_801F34D8, func_801F35D8 and
- * func_801F36C0 call it from the same generated map row of this target. */
+ * passes of this payload read; the tile draw pass
+ * drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC and
+ * func_801F34D8, func_801F35D8 and func_801F36C0 call it from the same
+ * generated map row of this target. */
 void func_801AFE18(void* arg0);
 
 /* 0x801F3A38 - this overlay's per-record projection and draw pass, fed the

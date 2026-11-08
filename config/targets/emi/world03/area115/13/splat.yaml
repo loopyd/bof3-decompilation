@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F3064
   - - 1264
-    - asm
-    - func_801F30F0
+    - c
+    - snapshotWorkByteBThenResetRecordAndRequestModeResourceAndSetState2World03Area11513_801F30F0
+    - '@source: src/bof3/world/snapshotWorkByteBThenResetRecordAndRequestModeResourceAndSetState2World03Area11513_801F30F0.c'
+    - '@behavior: snapshots work-record byte 0x0B into byte 0x07, then acts on that entry mode read through a fresh load of the scratchpad pointer cell 0x1F800044 - mode 1 walks the halfword keys of the local table based at 0x801F4D7C in four-byte steps until one equals the shared seed 0x80143F10, stores that key as a word at record offset 0x18 and takes the resource id from the companion byte at 0x801F4D7E for the same entry, while modes 2, 3 and 4 take resource ids 3, 0 and 1 and any other mode returns; modes 1 to 4 all clear the record word at 0x40, store 0x10000 as a word at 0x44, store 2 to byte 0x48 and 8 to byte 0x09, request that resource through the shared helper 0x8014D6B8, and store the state 2 to record byte 0x01.'
   - - 1576
     - asm
     - func_801F3228

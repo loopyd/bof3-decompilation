@@ -30,5 +30,6 @@ support_sources = [
     "src/bof3/boss/advanceWorkWord3CWhileBelowWord20ElseSeedChannelPairFromSideOffsetRequestResource4AdvanceWorkByte2BossBoss03316_800C1F88.c",
     "src/bof3/support/boss033_16_psyq.c",
     "src/bof3/boss/runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4.c",
+    "src/bof3/boss/copyWorkHeadIntoMode6SlotTickByteBThenApplyHelper50ToStateRecordRequestResource5WhenRangeCoversWorkAdvanceWorkByte2BossBoss03316_800C20CC.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

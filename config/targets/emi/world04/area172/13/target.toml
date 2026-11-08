@@ -35,6 +35,7 @@ support_sources = [
     "src/bof3/world/claimWorkRecordEveryFourthTickThenDrawSlotsAndAdvanceStateWhenEffectIdleWorld04Area17213_801F32E8.c",
     "src/bof3/world/drawWorkQuadReseedEffectEntriesAtProgress0aThenArmCountdownAndAdvanceStateWorld04Area17213_801F30F8.c",
     "src/bof3/world/publishWorkRecordsWithOtIndex2AndRunSharedHandlerWorld04Area17213_801F2ED8.c",
-    "src/bof3/world/drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C.c"
+    "src/bof3/world/drawTexturedQuad64x32Clut1ebWorld04Area17213_801F4E8C.c",
+    "src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC.c"
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

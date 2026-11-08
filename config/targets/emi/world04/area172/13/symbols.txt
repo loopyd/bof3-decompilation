@@ -27,7 +27,7 @@ stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_
 func_801F3A38 = 0x801F3A38;
 func_801F3BFC = 0x801F3BFC;
 func_801F3E90 = 0x801F3E90;
-func_801F3FAC = 0x801F3FAC;
+drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC = 0x801F3FAC;
 func_801F4060 = 0x801F4060;
 func_801F4138 = 0x801F4138;
 clearSharedFlagBit4EWorld04Area17213_801F4324 = 0x801F4324;

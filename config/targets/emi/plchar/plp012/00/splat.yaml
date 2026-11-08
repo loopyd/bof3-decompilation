@@ -93,8 +93,10 @@ segments:
     - asm
     - func_801CF938
   - - 5544
-    - asm
-    - func_801CF9A8
+    - c
+    - findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp01200_801CF9A8
+    - '@source: src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp01200_801CF9A8.c'
+    - '@behavior: Finds the index of the first front-end record whose stored position matches the projected work-area position: the record published at 0x80146250 must report state byte 0x79 == 2 with bit 0 of byte 0x12C clear, the work area read through the scratchpad pointer cell 0x1F800044 supplies the route byte at 0x08 that selects the movement offsets at 0x80181B94 and 0x80181B98 added to its words at 0x34 and 0x38, and the twenty 0x74-byte rows of 0x80143FC8 with nonzero byte 0 and byte 5 == 0x30 are each passed with that projected pair, the work halfword at 0x3E as a signed reference, the range 1 and the row address to the shared gate func_801BDD58, the row index being returned as a signed byte when the gate matches and the row word at 0x80143FFC or 0x80144000 equals the work word at 0x34 or 0x38, and -1 otherwise'
   - - 5900
     - c
     - testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C

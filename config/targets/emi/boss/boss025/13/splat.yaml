@@ -117,8 +117,9 @@ segments:
     - asm
     - func_800C2208
   - - 3636
-    - asm
-    - func_800C2634
+    - c
+    - setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634
+    - '@source: src/bof3/boss/setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634.c'
   - - 3712
     - asm
     - func_800C2680

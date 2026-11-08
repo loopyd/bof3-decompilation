@@ -129,8 +129,10 @@ segments:
     - asm
     - func_801F3E90
   - - 5036
-    - asm
-    - func_801F3FAC
+    - c
+    - drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC
+    - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area17213_801F3FAC.c'
+    - '@behavior: Overlay effect draw pass run by the state byte 1 handler entry 4 at 0x801F32E8 with no arguments and no result. It arms the shared draw mode for the 0x380 by 0x100 texture page on the primitive cursor g_PrimCursor with dithering off and frame-buffer dithering on, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table index 1, fills the 0x20-byte projection scratch on its own frame through 0x801AFE18, and then walks all 0x20 entries of the 0x2C-byte-stride effect table at 0x800E48C0: it draws the entry through 0x801F3BFC, which rotates it by the spin angle halfword the loop then advances, and adds 0x10 to that entry halfword at byte 0x24, read, added and written back as an unsigned halfword while a byte pointer reaches the next entry and a byte counter is compared against 0x20.'
   - - 5216
     - asm
     - func_801F4060
