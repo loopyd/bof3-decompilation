@@ -721,7 +721,13 @@ Pick the access spelling from the original's hi/lo pair, not from symbol ownersh
 `%hi`/`%lo`, folds into the load when the offset fits and otherwise builds its base
 with `addiu`. A cell that owns a map row can still need a literal accessor at one use
 site; the hi/lo pair and base register in that load separate the two forms before
-another local arrangement is tried.
+another local arrangement is tried. The pair also says when to un-fold: when the
+original builds the cell's base with `addiu` ahead of the access, a direct access
+through the named cell folds that address into the load's 16-bit displacement
+(`lbu v0,OFFSET(v0)` where the original has `addiu v0,v0,OFFSET`). Take the cell's
+address into a pointer local and access through it (`u8 *flags = &D_<ADDRESS>;
+*flags |= 1;`) so the address gets its own register. A byte read-modify-write residual
+closed on the next gate with that spelling.
 
 The form is per body, not per family or per cell, so count the original's cell loads
 before copying a sibling's spelling: a member that reads the cell once and reuses that
@@ -875,8 +881,13 @@ as the next record address, as the exact sibling does, removes it.
 Same-CFG near match plus narrow probe causing spills/frame/size/save-register/
 prologue changes indicates allocation sensitivity. Follow the match-loop ledger
 and exhaustion gate. Move intact statements across dependency-safe lifetime
-boundaries before expression churn. Classify retained improvement, retained frontier,
-reverted neutral/local regression/structural regression. Rank exact bytes, matched
+boundaries before expression churn. A store group is one of those statements: when one
+register tie survives declaration order, scope and narrowing variants with the same
+`first=`, the residual is program order. Move that group to the point the original's
+stores show, after the statement that produces the later value; the move alone flipped
+the allocated pair and dropped the scheduling drift that followed the tie. Classify
+retained improvement, retained frontier, reverted neutral/local regression/structural
+regression. Rank exact bytes, matched
 instructions, later first mismatch, fewer hunks, unchanged size/count/frame, then
 least source disturbance. Frontier alone is not completion; keep it separately and
 combine with best strict improvement only with semantic evidence and live comparison.
@@ -1277,7 +1288,13 @@ use exact `.word` only in generated/SDK assembly, never C matching technique.
 A reviewed manifest placement row is comparison-link evidence only: payload address
 comes from the generated `linker.ld`, which can still group `.rodata` per segment, so
 when a compiler-emitted table sits inside a `bin` span, check the generated placement
-with the parent instead of reading payload placement from the row.
+with the parent instead of reading payload placement from the row. A switch jump table
+the original placed in leading table data is the case that row is for: write
+`[[matching.section_placements]]` with the function, the section, the original's own
+address and the table size, and the comparator lowers only that section's alignment to
+the largest power of two dividing that address before it compares the emitted table
+against the payload words. With the row the gate read every case word in its original
+slot, including the slots no case owns.
 
 Read the effective address of a dense symbol load, not the printed base. A
 `lui at,0x8015` with the displacement `0x930C` resolves to `0x8014930C` because the
