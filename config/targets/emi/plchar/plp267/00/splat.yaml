@@ -72,8 +72,8 @@ segments:
     - c
     - dispatchWorkByte3HandlerPlcharPlp26700_801CEE6C
   - - 2736
-    - asm
-    - func_801CEEB0
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp26700_801CEEB0
   - - 2992
     - asm
     - func_801CEFB0

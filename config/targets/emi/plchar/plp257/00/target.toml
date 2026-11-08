@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CF330.c",
     "src/bof3/plchar/dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8.c",
     "src/bof3/plchar/dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54.c",

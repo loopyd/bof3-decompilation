@@ -46,9 +46,12 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * allocator func_8019601C for a front-end record and answers one when the claim
  * succeeded and zero when it did not. It calls the payload function at
  * 0x801CEF14, which is still `asm`, and the original passes it the projected
- * point's two high halves as signed halves.
+ * point's two high halves as signed halves. Its own source spells the pair
+ * unsigned sixteen-bit; both spellings carry the same low half, so this caller
+ * keeps the signed one.
  */
-u8 func_801CED1C(s16 x, s16 y);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C(
+    s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it on both paths and discards the returned byte. */
@@ -68,7 +71,8 @@ u8 func_8014DAEC(void);
  *           answers -1, raises bit 0 of the animation byte 0x74 of the found
  *           work record through the column base 0x801468FC and the slot stride
  *           0x98. It then claims a front-end record at the projected point
- *           through func_801CED1C, passing the high half of each projected word:
+ *           through the payload's map-cell claim handler at 0x801CED1C, passing
+ *           the high half of each projected word:
  *           when that claim fails and the first word has a nonzero low half it
  *           retries one unit further on that axis, and when the retry also fails
  *           and the second word has a nonzero low half it retries one unit
@@ -118,13 +122,18 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CED1C(cx, cy);
+    claimed =
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C(
+            cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CED1C(cx + 1, cy);
+        claimed =
+            claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C(
+                cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CED1C(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01200_801CED1C(
+            cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;

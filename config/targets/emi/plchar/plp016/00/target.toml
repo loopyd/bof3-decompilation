@@ -31,5 +31,6 @@ support_sources = [
     "src/bof3/plchar/selectWorkSequenceFromByte8AndAdvanceWorkByte3WhenHelperReadyElseTickCountdownByteAThenSeedFrontEndRowAndQueueCue2CPlus100Then10bPlcharPlp01600_801D00CC.c",
     "src/bof3/plchar/claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444.c",
     "src/bof3/plchar/passPaletteRowSelectedByWorkByte5ThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWhenDonePlcharPlp01600_801CFB00.c",
+    "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp01600_801D02A0.c",
 ]
 psyq_source = "src/bof3/support/plp016_00_psyq.c"

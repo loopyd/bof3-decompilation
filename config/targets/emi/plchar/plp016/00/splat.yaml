@@ -106,7 +106,7 @@ segments:
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4
     - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp01600_801CF7B4.c'
-    - '@behavior: Work byte 3 == 0 step: when work byte 8 of the record published at scratchpad pointer cell 0x1F800044 is even, stores ((byte 8 - 1) & 7), and while the payload step test func_801D02A0 reads zero stores ((byte 8 + 2) & 7) and tests again, restoring the decremented direction when that test reads zero as well; both paths then run the payload claim-byte refresh at 0x801D0444, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3.'
+    - '@behavior: Work byte 3 == 0 step: when work byte 8 of the record published at scratchpad pointer cell 0x1F800044 is even, stores ((byte 8 - 1) & 7), and while the payload step test at 0x801D02A0 reads zero stores ((byte 8 + 2) & 7) and tests again, restoring the decremented direction when that test reads zero as well; both paths then run the payload claim-byte refresh at 0x801D0444, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into work byte 3.'
   - - 5300
     - asm
     - func_801CF8B4
@@ -148,8 +148,10 @@ segments:
     - '@source: src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01600_801D0204.c'
     - '@behavior: Work byte 3 == 2 step: reads the front-end record index from work byte 0x0B of the record published at scratchpad pointer cell 0x1F800044, looks that row up by byte offset in the shared 0x74-byte front-end record table at 0x80143FC8 and, while row byte 0 reads 0 or row byte 1 reads 1 and the shared gate byte 0x80149332 reads 0, clears work byte 0x2B and the state byte at 0x12B of the record published at 0x80146250; both paths then run the shared no-argument update helper func_8014D978.'
   - - 7840
-    - asm
-    - func_801D02A0
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp01600_801D02A0
+    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp01600_801D02A0.c'
+    - '@behavior: Step test of the front-end work object read through the scratchpad pointer cell 0x1F800044, run by the payload step handler 0x801CF7B4 with work byte 8 moved one back and again with it moved two forward. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, and hands that pair to the slot search func_801BDE14 at range 0, so the answer starts at one when the search reports any slot rather than -1. The no-argument test func_801B5AE4 raises that answer to one again when it reports anything other than -1. The body then probes the map code of the projected cell through func_80166CB0 and raises the answer to one when a code reads 0xF0, 0xF1, 0xF4, 0xF6 or 0xF7: the projected cell always, the cell one column further whenever the low half of the first projected word is nonzero, and the cell one row further whenever the low half of the second projected word is nonzero. It returns that answer as an unsigned byte and takes no arguments, and the 0x20-byte frame only keeps the return address at 0x1C and three saved registers across the four calls.'
   - - 8260
     - c
     - claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp01600_801D0444

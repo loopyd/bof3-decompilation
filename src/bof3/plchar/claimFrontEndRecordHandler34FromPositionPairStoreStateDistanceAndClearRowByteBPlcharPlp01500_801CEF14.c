@@ -61,7 +61,9 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           halfword 0x3E, and finally clears row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. The three
  *           in-image call sites are func_801CED8C, func_801CEE08 and
- *           func_801CEE44, all inside this payload's func_801CED1C: the first
+ *           func_801CEE44, all inside this payload's
+ *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp01500_801CED1C:
+ *           the first
  *           and third pass state 0 with unsigned argument copies, the second
  *           passes state 1 with the sign-extended halves of its two arguments,
  *           and each ignores the result.

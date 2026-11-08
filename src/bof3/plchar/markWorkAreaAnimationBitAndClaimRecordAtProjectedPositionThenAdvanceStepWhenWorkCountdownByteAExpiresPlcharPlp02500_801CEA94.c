@@ -38,15 +38,15 @@ extern u8 D_801468FC[];
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Record claim of this same payload, still `asm` in this target: its prologue
- * stores the 0x28-byte frame, then sign-extends both arguments through `sll 16`
- * plus `sra 16` and keeps the second coordinate in `$s1`, so it takes the pair
- * of signed 16-bit cells this body passes and answers a byte. The lifted
- * claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp01600_801CFF30
- * of the plp016 overlay declares the same pair-of-signed-cells prototype for its
- * own payload's claim, whose bytes are the same at the same offset.
+/* Record claim of this same payload: its prologue stores the 0x28-byte frame,
+ * then sign-extends both arguments through `sll 16` plus `sra 16` and keeps the
+ * second coordinate in `$s1`, so it takes the pair of signed 16-bit cells this
+ * body passes and answers a byte. The lifted claim of the plp016 overlay declares
+ * the same pair-of-signed-cells prototype for its own payload's claim, whose
+ * bytes are the same at the same offset.
  */
-u8 func_801CED1C(s16 x, s16 y);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C(
+    s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it on both paths and discards the returned byte. */
@@ -66,7 +66,9 @@ u8 func_8014DAEC(void);
  *           the search answers -1, raises bit 0 of the animation byte 0x74 of
  *           the found work record through the column base 0x801468FC and the
  *           slot stride 0x98. It then claims a front-end record at the projected
- *           point through func_801CED1C, passing the high half of each projected
+ *           point through
+ *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C,
+ *           passing the high half of each projected
  *           word: when that claim fails and the first word has a nonzero low
  *           half it retries one unit further on that axis, and when the retry
  *           also fails and the second word has a nonzero low half it retries
@@ -117,13 +119,16 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CED1C(cx, cy);
+    claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C(
+        cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CED1C(cx + 1, cy);
+        claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C(
+            cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CED1C(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C(
+            cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;

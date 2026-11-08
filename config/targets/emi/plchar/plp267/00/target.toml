@@ -16,6 +16,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Table09dcPlcharPlp26700_801CFED8.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable09e8PlcharPlp26700_801D0900.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable09f4PlcharPlp26700_801D0944.c",
+    "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp26700_801CEEB0.c",
 ]
 support_sources = [
     "src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp26700_801CEE28.c",
