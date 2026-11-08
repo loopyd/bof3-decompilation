@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-u32 func_801F49A0(void);
+s32 advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0(
+    void);
 void func_80196070(void);
 
 /* @source 0x801F4310
@@ -22,7 +23,8 @@ void func_80196070(void);
  * @residual none
  */
 void clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310(void) {
-  if ((func_801F49A0() & 0xFF) == 0) {
+  if ((advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0() &
+       0xFF) == 0) {
     func_80196070();
   }
 }

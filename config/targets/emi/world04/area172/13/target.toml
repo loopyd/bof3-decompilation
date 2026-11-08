@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/setScratchWorkByte9ClearHalf2eAdvanceStateWorld04Area17213_801F3034.c",
     "src/bof3/world/setScratchWorkStateWorld04Area17213_801F4DC4.c",
     "src/bof3/world/area17213DispatchTables.c",
+    "src/bof3/world/claimFrontEndRecordSetHandler92AndStoreOwnerWorkIndexWorld04Area17213_801F49DC.c",
     "src/bof3/world/invokeHelperArgsWorld04Area17213_801F4E68.c",
     "src/bof3/world/invokeHelperArgThenHelperWorld04Area17213_801F2D20.c",
     "src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c",

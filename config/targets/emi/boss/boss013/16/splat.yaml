@@ -94,8 +94,10 @@ segments:
     - asm
     - func_800C1E90
   - - 1828
-    - asm
-    - func_800C1F24
+    - c
+    - initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24
+    - '@source: src/bof3/boss/initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24.c'
+    - '@behavior: Entry 1 of the handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Initializes the battle UI bundle slot 0 through 0x801D9484, copies eight bytes of the field record selected by the local-battler byte 0x80181B11 into the shared name slot 0x801490D8 through 0x801501E4, resolves texture 0x25 through 0x801502D0 and queues it through 0x801DE560 as event row kind 2 with halfword 0x2D, clears the overlay step countdown byte 0x800C26E0, runs the shared transition helper 0x801C1254 with 1 and 1, stores 4 into byte 0x29 of the work record published at the scratchpad pointer cell 0x1F800044, republishes the in-row pointer 0x800C25FC into the +0xEC data-row word of the current enemy work record from 0x801EB4E8, requests resource work byte +8 plus 4 through 0x8014D6B8 and raises bit 0x40 of the shared flag byte 0x801462ED. Only the word at 0x800C26D8 holds its address, so no jal in the payload names it.'
   - - 2052
     - c
     - noopHandlerBossBoss01316_800C2004

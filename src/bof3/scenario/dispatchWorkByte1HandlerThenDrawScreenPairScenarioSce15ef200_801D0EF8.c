@@ -9,9 +9,11 @@
  * reference are all that bind it. */
 extern void (*D_801D1B38[])(void); /* @source 0x801D1B38 @kind data */
 
-/* Unlifted draw helper, so its parameter widths follow this call site: the two
- * argument halfwords load with `lh` and the third argument is the literal 0x80. */
-void func_801D17A0(s16 x, s16 y, s32 shade);
+/* The draw helper at 0x801D17A0 is an exact lift: its body takes the two signed
+ * halfword arc extents this call site loads with `lh` and the u8 shade byte this
+ * call site's literal 0x80 feeds. */
+void drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0(
+    s16 half_width, s16 half_height, u8 shade);
 
 /* @source 0x801D0EF8
  * @behavior Overlay step dispatch on work-record byte 1 of this payload, then
@@ -28,10 +30,11 @@ void func_801D17A0(s16 x, s16 y, s32 shade);
  * before the scaled table load. It then reloads the same pointer cell into a
  * second local, because the indirect call may republish that cell, and gates on
  * the work byte at +0x1 again: while that byte is non-zero it hands the draw
- * helper func_801D17A0 the signed halfwords at +0x2E and +0x30 (the reported x
- * and y that sibling lifts of this work object read there) and the literal
- * 0x80. It takes no arguments and returns nothing; the 0x18-byte frame only
- * keeps $ra at 0x10 across the two calls.
+ * helper drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0
+ * the signed halfwords at +0x2E and +0x30 (the reported x and y that sibling
+ * lifts of this work object read there) and the literal 0x80. It takes no
+ * arguments and returns nothing; the 0x18-byte frame only keeps $ra at 0x10
+ * across the two calls.
  *
  * Evidence: the table base immediate 0x801D1B38 is the fourth word of the run
  * from word 4, and the payload's only in-image pointer run is the fourteen
@@ -54,6 +57,7 @@ void dispatchWorkByte1HandlerThenDrawScreenPairScenarioSce15ef200_801D0EF8(void)
   D_801D1B38[work[1]]();
   next = PSX_REF(u8*, SPAD_BASE + slot_offset);
   if (next[1] != 0) {
-    func_801D17A0(*(s16*)(next + 0x2E), *(s16*)(next + 0x30), 0x80);
+    drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0(
+        *(s16*)(next + 0x2E), *(s16*)(next + 0x30), 0x80);
   }
 }

@@ -22,6 +22,7 @@ support_sources = [
     "src/bof3/boss/dispatchWorkByte2Table27d0ThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C256C.c",
     "src/bof3/boss/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C1E70.c",
     "src/bof3/boss/integrateWorkFieldQuadAndAdvanceWorkByte2WhenWorkWord14HitsMinus40BossBoss03316_800C244C.c",
+    "src/bof3/boss/clearEnemyWorkFlag40ThenPublishBattleWorkRecordRequestResource0AndInvokeHelperBossBoss03316_800C24DC.c",
     "src/bof3/support/boss033_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

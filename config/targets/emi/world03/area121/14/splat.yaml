@@ -242,8 +242,10 @@ segments:
     - '@source: src/bof3/world/publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C.c'
     - '@behavior: Per-frame position publish for the work record at the scratchpad pointer cell 0x1F800044, run directly by the turn-step update at 0x801F5FF8 and from the settle helper at 0x801F5E2C. Copies the shared position words 0x80145EC4 and 0x80145EC8 into record offsets 0x34 and 0x38 and the shared halfword 0x80145ECE into record offset 0x3E, calls the resident helper at 0x8015A944 with whatever argument registers the caller left, and then runs the overlay meter draw at 0x801F5B90. Takes no arguments and returns nothing.'
   - - 12496
-    - asm
-    - func_801F5CD0
+    - c
+    - armMeterStateFromModeByteClearTintAdvanceAndSeedFourEntriesWorld03Area12114_801F5CD0
+    - '@source: src/bof3/world/armMeterStateFromModeByteClearTintAdvanceAndSeedFourEntriesWorld03Area12114_801F5CD0.c'
+    - '@behavior: Byte-1 state handler 0 of the byte-1 handler table 0x801F68A4 for the work record published at the scratchpad pointer cell 0x1F800044, the entry state of that four-handler group. It copies the shared mode byte 0x80145E98 into work byte 0x08, releases the world record sub-object that 0x8017F974 holds at record offset 0x08 by passing that word plus 8 to the resident helper 0x8015AC8C, clears the work tint triplet at 0x5D, 0x5E and 0x5F to -0x80, advances work byte 0x01 so the next frame dispatches handler 1, and runs the shared position publish and meter draw at 0x801F5C7C. On the frames where the shared world/state id 0x80143F00 reads 0x68 it first asks the shared selector 0x80166140 for id 0xA and returns early when that answers zero; otherwise it lays out four front-end entries of the 0x74-byte record table 0x80143FC8 from index helper 0x8019601C. Takes no arguments and returns nothing.'
   - - 12844
     - c
     - alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C

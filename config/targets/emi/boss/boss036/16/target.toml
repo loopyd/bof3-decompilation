@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate5BossBoss03616_800C1E4C.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8.c",
     "src/bof3/boss/dispatchStateByte2Table206cBossBoss03616_800C1A54.c",

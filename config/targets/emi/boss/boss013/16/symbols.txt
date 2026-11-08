@@ -18,7 +18,7 @@ applyMainLookupRecordF9ClearWorkByte24Bit0RequestResource2ThenAdvanceWorkByte2Bo
 func_800C1DF4 = 0x800C1DF4;
 dispatchIndexedHandlerBossBoss01316_800C1E58 = 0x800C1E58;
 func_800C1E90 = 0x800C1E90;
-func_800C1F24 = 0x800C1F24;
+initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24 = 0x800C1F24;
 noopHandlerBossBoss01316_800C2004 = 0x800C2004;
 publishBattleHooksBossBoss01316_800C200C = 0x800C200C;
 zeroResultBossBoss01316_800C2044 = 0x800C2044;

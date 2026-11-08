@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 void claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0(void);
-u32 func_801F49A0(void);
+s32 advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0(
+    void);
 
 /* Shared published work-pointer cell: the original re-materialises the cell
  * address and reloads the pointer for each of the three store groups below. */
@@ -69,5 +70,5 @@ void claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413
   if (countdown == 0) {
     D_1F800044[1]++;
   }
-  func_801F49A0();
+  advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0();
 }

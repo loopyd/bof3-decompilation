@@ -108,8 +108,10 @@ segments:
     - asm
     - func_800C1EE4
   - - 1860
-    - asm
-    - func_800C1F44
+    - c
+    - clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44
+    - '@source: src/bof3/boss/clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44.c'
+    - '@behavior: Entry 0 of this payload three-word in-image code pointer run at 0x800C1804, which holds 0x800C1F44, 0x800C1FA4 and 0x800C2000. The byte-2 dispatcher at 0x800C1EE4 copies that run into its own frame and indexes it with the work-record byte at offset 2. It clears work-record byte 0x0B, re-reads the scratchpad pointer cell 0x1F800044 and clears record byte 0x09, requests resource 1 through the shared helper at 0x8014D6B8, runs the shared battle updates 0x8014D978 and 0x8014D4E0 in that order, then re-reads the cell once more and advances record byte 0x02 by one so the next dispatch on that byte enters 0x800C1FA4. No jal names 0x800C1F44; the word at 0x800C1804 is its only in-image reference.'
   - - 1956
     - asm
     - func_800C1FA4

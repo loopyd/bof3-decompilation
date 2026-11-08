@@ -332,8 +332,10 @@ segments:
     - c
     - clearWorkTableAt800E4800World03Area13413_801F4974
   - - 7584
-    - asm
-    - func_801F49A0
+    - c
+    - advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0
+    - '@source: src/bof3/world/advanceStampedWorkRecordRampsIntegrateAndEmitQuadWorld03Area13413_801F49A0.c'
+    - '@behavior: Per-frame sweep of the 0x20 records of the 0x28-byte-stride work table at 0x800E4800: it prepares the shared projection scratch through the overlay setup at 0x801AFE18, then serves every record whose lead byte equals the byte 6 stamp of the work object published at the scratchpad pointer cell 0x1F800044, advancing a four-stage ramp keyed by the state byte at 0x01 that raises the quad size halfword at 0x04 by 4 until the counter byte at 0x02 reads 8, lowers the colour byte at 0x03 by 8 until it reads 0x10, then lowers that halfword by 0x10 until it reads 0x18 and 0x20 and clears the lead byte to release the record; each served record then adds the velocity word at 0x18 to the position word at 0x08, raises the halfword at 0x04 by 8, adds the velocity word at 0x1C to the position word at 0x0C, stores the projection of both position words scaled left by 16 in the word at 0x10 and hands the record to the overlay quad emitter at 0x801F46EC, leaving 1 in the return register once any record carried the stamp.'
   - - 8044
     - asm
     - func_801F4B6C

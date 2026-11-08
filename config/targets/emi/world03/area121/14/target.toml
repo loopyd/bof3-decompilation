@@ -45,5 +45,6 @@ support_sources = [
     "src/bof3/world/requestResourceForInteractionByteThenAdvanceMode2World03Area12114_801F3104.c",
     "src/bof3/world/faceSlotThenStepRotatingFacingUntilPositionHoldsNoRecordWorld03Area12114_801F5028.c",
     "src/bof3/world/faceWorkTowardResolvedSlotThenDecrementByte9AndSetState2To1World03Area12114_801F5268.c",
+    "src/bof3/world/armMeterStateFromModeByteClearTintAdvanceAndSeedFourEntriesWorld03Area12114_801F5CD0.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

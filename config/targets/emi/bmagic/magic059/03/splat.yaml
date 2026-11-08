@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801EF4C4
   - - 2308
-    - asm
-    - func_801EF504
+    - c
+    - incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504
+    - '@source: src/bof3/bmagic/incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. It reads the scratchpad work-object pointer cell at 0x1F800044 once and advances that object unsigned byte 0x9 by one with a byte-width add, then re-reads the cell and adds two to the same object byte 0xA with a byte-width add. It tests the byte it just stored there, truncated to 0xFF in the stored register rather than re-loaded, against 0x20 for equality, and only on that equality re-reads the pointer cell and increments the object byte 0x2 with a byte-width add, advancing to the next byte-0x2 handler step. The function is a leaf with no frame; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 2416
     - c
     - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570

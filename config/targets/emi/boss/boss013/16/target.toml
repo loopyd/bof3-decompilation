@@ -25,5 +25,6 @@ support_sources = [
     "src/bof3/boss/clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0.c",
     "src/bof3/boss/applyMainLookupRecordF9ClearWorkByte24Bit0RequestResource2ThenAdvanceWorkByte2BossBoss01316_800C1D9C.c",
     "src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348.c",
+    "src/bof3/boss/initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24.c",
 ]
 psyq_source = "src/bof3/support/boss013_16_psyq.c"
