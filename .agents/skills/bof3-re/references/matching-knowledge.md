@@ -834,6 +834,16 @@ the same storage fixes which value the pointer holds and where the second cell l
 lands; a byte view leaves both ambiguous, so the gap shows up as a displaced load rather
 than a wrong one. Check the original access order before widening the view.
 
+A displaced store/load pair that keeps its score and its first difference through
+reorder variants is the representation, not an ordering residual: give each accessed
+field of the record a typed member over its evidenced offset with the unknown gaps
+padded, and keep the separately loaded fixed cell on its own local. A member access does not enter the
+`sched.c` `true_dependence` test against a standalone fixed cell, so the pair orders
+against it where two pointer expressions cannot. Measured
+negatives: reading that cell earlier, binding its value to a local, moving its
+read-modify-write above the record's pointer stores, and one pointer local serving
+both bases each kept the first difference or lost instructions.
+
 Split record views by access width, not only by type. When word-pair updates match but a
 byte cell's load is hoisted above them, keep the word pairs on one word-typed pointer
 and reach that byte through a `u8*` derived from it:
