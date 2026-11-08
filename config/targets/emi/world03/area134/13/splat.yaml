@@ -396,8 +396,10 @@ segments:
     - '@source: src/bof3/world/seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F54EC.c'
     - '@behavior: Claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, marks the 0x74-byte row at 0x80143FC8 as occupied (row byte 0x00 = 1), writes handler selector 0x90 into the row byte 0x05, clears the row byte 0x01 and copies the scratch work object position triple 0x34/0x38/0x3C published at the 0x1F800044 cell into the row words 0x34/0x38/0x3C.'
   - - 10620
-    - asm
-    - func_801F557C
+    - c
+    - seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F557C
+    - '@source: src/bof3/world/seedFrontEndRecordHandler90AndClearRowByte1FromWorkPositionWorld03Area13413_801F557C.c'
+    - '@behavior: Seeds one claimed front-end record from the current work position: claims the record through the shared allocator func_8019601C and, unless the returned index is 0xFF, fills the claimed 0x74-byte row at 0x80143FC8 - row byte 0x00 takes the occupancy flag 1, row byte 0x05 takes the handler selector 0x90 and row byte 0x01 is cleared - then copies the work object position triple 0x34/0x38/0x3C published at the 0x1F800044 cell into the row words 0x34/0x38/0x3C. The 0x90-byte span is byte-identical to the already-exact sibling at 0x801F54EC and is reached only as index 14 of the pointer run based at 0x801F6330.'
   - - 10764
     - c
     - seedFrontEndRecordHandler93FromWorkPositionWorld03Area13413_801F560C

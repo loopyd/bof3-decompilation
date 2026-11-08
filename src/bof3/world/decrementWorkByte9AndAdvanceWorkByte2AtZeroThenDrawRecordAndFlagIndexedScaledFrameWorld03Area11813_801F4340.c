@@ -5,7 +5,7 @@ extern u8 D_801F5138[];
 extern u8* D_1F800044; /* @source 0x1F800044 @kind bss */
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
-void func_801F4634(s32 arg0, s32 arg1);
+void drawRecordCellTexturedQuadWorld03Area11813_801F4634(s32 arg0, s32 arg1);
 void func_801F48E0(void);
 
 /* @source 0x801F4340
@@ -37,8 +37,8 @@ void decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScal
   if (D_1F800044[9] == 0) {
     D_1F800044[2]++;
   }
-  func_801F4634(0, 0x40);
-  func_801F4634(
+  drawRecordCellTexturedQuadWorld03Area11813_801F4634(0, 0x40);
+  drawRecordCellTexturedQuadWorld03Area11813_801F4634(
       D_1F800044[0xB] +
           (func_8015B5D4((u32)&D_80144ED0, D_801F5138[D_1F800044[0xB]]) << 2) +
           1,

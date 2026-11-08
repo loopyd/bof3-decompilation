@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801F447C
   - - 6708
-    - asm
-    - func_801F4634
+    - c
+    - drawRecordCellTexturedQuadWorld03Area11813_801F4634
+    - '@source: src/bof3/world/drawRecordCellTexturedQuadWorld03Area11813_801F4634.c'
+    - '@behavior: Overlay record draw routine the four byte-2 state handlers of this overlay call with an animation frame index and a size. Builds the four corners of one textured quad from the work record at 0x1F800044 in the scratchpad vector deck 0x1F800014: the common x comes from the record column halfword at 0x36 as ((column - 0x80) << 7) + 0x40, the two y values from the row halfword at 0x3A as ((row - 0x80) << 7) plus and minus size - 8, and each corner z is the negated half of the func_8015477C distance of its own fixed-point x and y minus the record halfword at 0x3E, the low-y corners subtracting size - 8 and the high-y corners adding size. Seeds the shared primitive cursor 0x8014598C as a POLY_FT4, clears its shade texture, projects the four corners through RotTransPers4, fills the texture state through func_80155560 from the frame index added to 0x285000F3 and links the record position pair at 0x34/0x38 through func_80155A08 with kind 1 and size class 0x28.'
   - - 7392
     - asm
     - func_801F48E0

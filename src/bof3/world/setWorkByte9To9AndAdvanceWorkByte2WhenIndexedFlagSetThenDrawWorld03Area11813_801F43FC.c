@@ -5,7 +5,7 @@ extern u8 D_801F5198[];
 extern u8* D_1F800044; /* @source 0x1F800044 @kind bss */
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
-void func_801F4634(s32 arg0, s32 arg1);
+void drawRecordCellTexturedQuadWorld03Area11813_801F4634(s32 arg0, s32 arg1);
 
 /* @source 0x801F43FC
  * @behavior Byte-2 state handler that the last byte-2 dispatch table of this
@@ -36,5 +36,5 @@ void setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area1181
     D_1F800044[9] = 9;
     D_1F800044[2]++;
   }
-  func_801F4634(0, 0x40);
+  drawRecordCellTexturedQuadWorld03Area11813_801F4634(0, 0x40);
 }

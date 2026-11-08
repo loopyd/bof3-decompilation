@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
-/* Unlifted work-table stepper of this payload (0x801D1624, not yet lifted, so
- * the prototype is caller-side evidence): it walks the 0x10 entries of
+/* Work-table stepper of this payload, lifted as
+ * stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624:
+ * it walks the 0x10 entries of
  * six-byte stride of the work table at 0x800E4800, and for every entry whose
  * lead byte is non-zero it advances that entry's state byte at +0x2 - on the
  * state-0 arm it claims the entry by writing 4 to the entry bytes at +0x1 and
@@ -12,7 +13,8 @@
  * non-zero. Both in-payload call sites pass the literal 0xF0, so the argument
  * and the result are declared as full words and only the low byte of the result
  * is consumed. */
-s32 func_801D1624(s32 entry_value);
+s32 stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624(
+    s32 entry_value);
 
 /* Shared work-area reset helper of the game image: it zeroes work-object bytes
  * 0x00-0x04, including the work byte this overlay dispatches on, so the overlay
@@ -25,7 +27,9 @@ void func_80196070(void);
  * word 6 of the fourteen-word code-pointer run at 0x801D1B1C and which
  * dispatchWorkByte1HandlerScenarioSce15ef200_801D0DA4 selects with the unsigned
  * work byte at offset +0x1 of the scratchpad work object published at pointer
- * slot 0x1F800044: it runs the work-table stepper func_801D1624 with the
+ * slot 0x1F800044: it runs the work-table stepper
+ * stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624
+ * with the
  * literal 0xF0 (the value that stepper stores as the halfword at +0x4 of every
  * entry it claims in this frame) and, when that stepper masked to a byte
  * reports zero - that is, when no entry of the 0x800E4800 work table had a
@@ -42,7 +46,8 @@ void func_80196070(void);
  * @residual none
  */
 void stepWorkTableValueF0AndResetWorkStateWhenNoRecordActiveScenarioSce15ef200_801D0EC4(void) {
-  if ((func_801D1624(0xF0) & 0xFF) == 0) {
+  if ((stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624(0xF0) &
+       0xFF) == 0) {
     func_80196070();
   }
 }

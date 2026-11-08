@@ -69,8 +69,10 @@ segments:
     - asm
     - func_800C1D98
   - - 1528
-    - asm
-    - func_800C1DF8
+    - c
+    - clearWorkByteBAndPublishClassRowByteThenRequestResource4AndAdvanceWorkByte2BossBoss05216_800C1DF8
+    - '@source: src/bof3/boss/clearWorkByteBAndPublishClassRowByteThenRequestResource4AndAdvanceWorkByte2BossBoss05216_800C1DF8.c'
+    - '@behavior: Work-step handler of this overlay: clears scratch work-record byte 0x0B, stores the class-row byte D_800E40CE[D_801EB710[0] * 0x88] into record byte 0x09, requests resource 4 through func_8014D6B8, runs func_8014D978 and func_8014D4E0, then advances record byte 0x02 by one.'
   - - 1660
     - asm
     - func_800C1E7C

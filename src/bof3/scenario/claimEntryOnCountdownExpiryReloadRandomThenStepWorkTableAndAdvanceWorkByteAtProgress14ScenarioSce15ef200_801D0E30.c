@@ -10,8 +10,9 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * in the sibling lifts of the same overlay family. */
 extern u8 g_ScenarioProgress;
 
-/* Unlifted work-table stepper of this payload (0x801D1624, not yet lifted, so
- * the prototype is caller-side evidence): it walks the 0x10 entries of
+/* Work-table stepper of this payload, lifted as
+ * stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624:
+ * it walks the 0x10 entries of
  * six-byte stride of the work table at 0x800E4800, and for every entry whose
  * lead byte is non-zero it advances that entry's state byte at +0x2 - on the
  * state-0 arm it claims the entry by writing 4 to the entry bytes at +0x1 and
@@ -22,7 +23,8 @@ extern u8 g_ScenarioProgress;
  * non-zero. Both in-payload call sites pass the literal 0xF0, so the argument
  * and the result are declared as full words and only the low byte of the result
  * is consumed. */
-s32 func_801D1624(s32 entry_value);
+s32 stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624(
+    s32 entry_value);
 
 /* Claim helper of this payload: it takes the first entry of the 0x800E4800 work
  * table whose lead byte reads zero, sets that lead byte to 1 and clears the
@@ -40,7 +42,8 @@ void claimFreeWorkTableEntryAt800E4800ScenarioSce15ef200_801D15DC(void);
  * countdown with the low nibble of rand() plus 0x18, while a non-zero countdown
  * only ticks down by one. Both arms then store the byte at +0x9 through one
  * shared base, so the load, the decrement and the re-arm all end in a single
- * store placed after the join. It then runs the work-table stepper func_801D1624
+ * store placed after the join. It then runs the work-table stepper
+ * stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624
  * with the literal 0xF0 (the value that stepper stores as the halfword at +0x4
  * of every entry it claims in this frame) and, when the shared scenario progress
  * byte g_ScenarioProgress reads 14, advances the work byte at +0x1 by one so the
@@ -87,7 +90,7 @@ void claimEntryOnCountdownExpiryReloadRandomThenStepWorkTableAndAdvanceWorkByteA
   } else {
     work[9]--;
   }
-  func_801D1624(0xF0);
+  stepWorkTableEntriesArmAdvanceDecayThenDrawActiveScenarioSce15ef200_801D1624(0xF0);
   if (g_ScenarioProgress == 0xE) {
     D_1F800044[1]++;
   }

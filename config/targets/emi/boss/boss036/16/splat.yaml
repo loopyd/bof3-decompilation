@@ -45,8 +45,10 @@ segments:
     - c
     - dispatchStateByte2Table206cBossBoss03616_800C1A54
   - - 664
-    - asm
-    - func_800C1A98
+    - c
+    - stepWorkWord34ByWordCThenAdvanceWorkByte2AtWord18AndCallEnemyReadyBossBoss03616_800C1A98
+    - '@source: src/bof3/boss/stepWorkWord34ByWordCThenAdvanceWorkByte2AtWord18AndCallEnemyReadyBossBoss03616_800C1A98.c'
+    - '@behavior: Work-record step of the overlay handler run at 0x800C206C: rewrites work-record word 0x34 as word 0x34 minus word 0xC, stores that result in the branch delay slot, increments the record byte 0x2 when the result equals record word 0x18, then calls the shared readiness helper at 0x801E30F8.'
   - - 744
     - asm
     - func_800C1AE8

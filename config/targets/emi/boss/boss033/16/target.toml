@@ -19,6 +19,7 @@ support_sources = [
     "src/bof3/boss/raiseFlagBit0AndExpireWorkHalfword94WhenRemainderAtMostQuarterHalfwordA0BossBoss03316_800C1D14.c",
     "src/bof3/boss/copyWorkWord3CPlus4000000IntoWord20RequestResource2SetWorkByteBTo10ThenAdvanceWorkByte2BossBoss03316_800C1ED8.c",
     "src/bof3/boss/raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte2BossBoss03316_800C25D4.c",
+    "src/bof3/boss/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C1E70.c",
     "src/bof3/support/boss033_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

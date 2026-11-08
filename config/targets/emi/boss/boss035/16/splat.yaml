@@ -48,8 +48,8 @@ segments:
     - asm
     - func_800C1950
   - - 404
-    - asm
-    - func_800C1994
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03516_800C1994
   - - 504
     - asm
     - func_800C19F8
