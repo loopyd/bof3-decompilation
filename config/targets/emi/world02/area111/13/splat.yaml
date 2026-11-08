@@ -100,8 +100,10 @@ segments:
     - '@source: src/bof3/world/requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0.c'
     - '@behavior: Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its index byte at +0x18 to pick the 0x98-byte work-record cell at 0x80147A58 and its route byte at +8 masked with 0x7 to pick the shared route-step entry at 0x80181B00 and 0x80181B01, halves the cell coordinate at byte 0x3A minus 0xB1 and the coordinate at byte 0x36 minus 0xB, and while both stay below 7 reads the packed nibble at 0x801F5C18 as column times four plus row over two with the low nibble on an odd row and the high nibble on an even one. A nibble minus one below 4 selects a cell slot, so it requests work mode 7 through the shared helper at 0x801AC768 with that slot, the one-based ordinal of the front-end record published at 0x80146250 inside the 0x140-byte table at 0x80145E90 and sub-command 0xC, saves and writes back the published record halfword at +0x0A around the call, publishes the route byte to byte 8 of the selected cell at 0x80147A60 and takes six units off that halfword.'
   - - 4032
-    - asm
-    - func_801F3BC0
+    - c
+    - walkRouteUntilBlockedCellAndPublishStepCountWorld02Area11113_801F3BC0
+    - '@source: src/bof3/world/walkRouteUntilBlockedCellAndPublishStepCountWorld02Area11113_801F3BC0.c'
+    - '@behavior: Walks the shared route-step table out of the grid cell of the published work record, stopping at the first out-of-range or 0xF cell code, and publishes the walked step count: stores the counter plus one into byte 7 of the record published at 0x80148210, calls the shared helper at 0x801C5DFC with the record route byte, sets bit 0x40 in that record, clears the shared facing halfword at 0x80149330 and the work record word at +0x14, and stores -0x500 into the work record halfword at +0x3E.'
   - - 4412
     - asm
     - func_801F3D3C

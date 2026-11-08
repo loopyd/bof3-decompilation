@@ -8,7 +8,7 @@ seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1W
 func_801F3018 = 0x801F3018;
 func_801F30B0 = 0x801F30B0;
 func_801F31A0 = 0x801F31A0;
-func_801F33DC = 0x801F33DC;
+drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC = 0x801F33DC;
 func_801F352C = 0x801F352C;
 resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834 = 0x801F3834;
 func_801F3870 = 0x801F3870;

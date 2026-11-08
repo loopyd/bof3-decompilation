@@ -1,3 +1,4 @@
+D_1F800044 = 0x1F800044;
 dispatchSoundCue = 0x8015DF18;
 dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
@@ -11,7 +12,7 @@ func_801F3058 = 0x801F3058;
 func_801F33A4 = 0x801F33A4;
 decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11813_801F3534 = 0x801F3534;
 setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590 = 0x801F3590;
-func_801F36B4 = 0x801F36B4;
+incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4 = 0x801F36B4;
 stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748 = 0x801F3748;
 func_801F381C = 0x801F381C;
 dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10 = 0x801F3C10;

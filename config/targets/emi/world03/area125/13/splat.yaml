@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F2F90
   - - 964
-    - asm
-    - func_801F2FC4
+    - c
+    - drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4
+    - '@source: src/bof3/world/drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4.c'
+    - '@behavior: Per-record emitter of this overlay sweep: the record pointer comes from rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0, which walks the 0x10-entry 0x28-byte-stride table at 0x800E4800 and calls it once per active record; it takes the shared primitive cursor 0x8014598C, initialises one POLY_FT4 with SetPolyFT4, marks it translucent with SetSemiTrans(prim, 1), projects the three-word record point at +0x08 through func_801AFF04, writes the record halfword at +0x04 into both halfwords of a second screen entry and converts that pair in place through func_801AFFD8, then places the four vertices around the projected point so that it is the quad centre: the converted pair is the full edge and half of it is the offset of the first vertex, the second and fourth vertices add the pair to the two axes and the third repeats the first. The texels are the 0x20 by 0x20 cell at (0xE0, 0x30), the CLUT is GetClut(0xA0, 0x1E3), the texture page is GetTPage(0, 1, 0x2C0, 0x100), and the colour bytes are the ramp byte at +0x03, three quarters of it and half of it. It closes by queueing the primitive through func_80155A08 with the record position pair, kind 3 and size 0x28.'
   - - 1456
     - c
     - claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0

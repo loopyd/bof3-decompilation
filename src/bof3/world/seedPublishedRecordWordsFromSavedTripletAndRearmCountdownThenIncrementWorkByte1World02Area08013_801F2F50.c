@@ -2,7 +2,8 @@
 
 void func_801F30B0(u8* record);
 void func_801F31A0(u8* record);
-void func_801F33DC(u8* record);
+void drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC(
+    u8* record);
 void func_801F3870(void);
 
 /* Shared saved work triplet, read as three consecutive 32-bit words by the
@@ -86,7 +87,8 @@ void seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkB
   *(s32*)(record + 0x18) = D_8014695C;
   func_801F30B0(record);
   func_801F31A0(D_801F44A0);
-  func_801F33DC(D_801F44A0);
+  drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC(
+      D_801F44A0);
   func_801F3870();
   cursor = D_1F800044;
   countdown = (u8)(cursor[9] - 1);

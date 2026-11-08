@@ -78,8 +78,10 @@ segments:
     - asm
     - func_800C1E64
   - - 1968
-    - asm
-    - func_800C1FB0
+    - c
+    - publishBattleHooksBossBoss00413_800C1FB0
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss00413_800C1FB0.c'
+    - '@behavior: Publishes this overlay second handler trio into the shared hook slots 0x801463A4, 0x801463A8 and 0x801463AC: the state switch 0x800C2188, the setup routine 0x800C2208 and the byte-masked step dispatcher 0x800C1FE8, whose zero result the void slot type drops. Same trio shape and slot order as the other installers of this archive family.'
   - - 2024
     - asm
     - func_800C1FE8

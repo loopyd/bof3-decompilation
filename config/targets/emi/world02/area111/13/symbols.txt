@@ -1,3 +1,4 @@
+func_801C5DFC = 0x801C5DFC;
 dispatchStateByte1Table4890World02Area11113_801F2C64 = 0x801F2C64;
 func_801F2CA8 = 0x801F2CA8;
 func_801F2CFC = 0x801F2CFC;
@@ -17,7 +18,7 @@ func_801F3768 = 0x801F3768;
 decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790 = 0x801F3790;
 func_801F3808 = 0x801F3808;
 requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0 = 0x801F39E0;
-func_801F3BC0 = 0x801F3BC0;
+walkRouteUntilBlockedCellAndPublishStepCountWorld02Area11113_801F3BC0 = 0x801F3BC0;
 func_801F3D3C = 0x801F3D3C;
 func_801F3EE8 = 0x801F3EE8;
 func_801F4140 = 0x801F4140;

@@ -366,8 +366,10 @@ segments:
     - c
     - retreatCounter2By8World03Area13413_801F52A8
   - - 9936
-    - asm
-    - func_801F52D0
+    - c
+    - publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13413_801F52D0
+    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13413_801F52D0.c'
+    - '@behavior: Publishes the second shared work base 0x80145FD0 as the scratchpad work cursor at 0x1F800044 and seeds one front-end record of kind 3 through the shared allocator/seeder at 0x8015CB18 with word 0x0C = 0, word 0x10 = the selector-indexed byte D_801F5868[D_80144F5B] and the published base halfwords 0x2E/0x30, then stores the returned index in work byte 0x0B unless it is 0xFF.'
   - - 10064
     - asm
     - func_801F5350

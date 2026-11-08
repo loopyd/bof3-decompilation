@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F31A0
   - - 2012
-    - asm
-    - func_801F33DC
+    - c
+    - drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC
+    - '@source: src/bof3/world/drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC.c'
+    - '@behavior: overlay record render step, called with the work record base published in D_801F44A0 by the exact step handler at 0x801F2F50; opens the drawing environment with the texture page from GetTPage(0, 1, 0x3C0, 0) through SetDrawMode and appends a twelve-byte primitive, then for each of sixteen ring points stored at +0x2C of that record passes the record point at +0x24 and the ring points at index i and index (i + 1) masked with 0xF to the shared cross-product test at 0x801AFF90 and, while that test reads positive, fills a semi-transparent POLY_F3 from the shared primitive cursor through the setter at 0x8017A954 with the record point as its first vertex, the two ring points as its second and third vertices and the record byte at +0x22 as its three colour bytes, appending it as a twenty-byte primitive; one argument, no return value, 0x30-byte frame holding $ra at 0x2C'
   - - 2348
     - asm
     - func_801F352C

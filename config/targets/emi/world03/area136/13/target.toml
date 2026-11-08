@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.c",
     "src/bof3/world/setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018.c",
     "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
     "src/bof3/world/selectCrossedFrontSideState2Or4World03Area13613_801F33BC.c",

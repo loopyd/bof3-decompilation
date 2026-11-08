@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801F2D68
   - - 520
-    - asm
-    - func_801F2E08
+    - c
+    - queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08
+    - '@source: src/bof3/world/queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.c'
+    - '@behavior: Queues the three shared UI elements at x = 0x9 with y = 0x59, 0x5A and 0x5B, every one at size 0x51, through the shared marker queue 0x801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps the return address across the three calls.'
   - - 592
     - c
     - publishSecondWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area13613_801F2E50

@@ -120,8 +120,8 @@ segments:
     - c
     - invokeZeroArgBossBoss00216_800C1EE8
   - - 1800
-    - asm
-    - func_800C1F08
+    - c
+    - publishBattleHooksBossBoss00216_800C1F08
   - - 1856
     - c
     - zeroResultBossBoss00216_800C1F40

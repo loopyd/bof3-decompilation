@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/world/decrementWorkByte9AndAdvanceWorkByte2AtZeroThenDrawRecordAndFlagIndexedScaledFrameWorld03Area11813_801F4340.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area11813_801F4B88.c",
     "src/bof3/world/stampRecordColumnAndRouteNeighbourCellAndSetWorkStateTo1WhenAreaFlagSetThenDrawWorld03Area11813_801F3748.c",
+    "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11813_801F36B4.c",
 ]
 psyq_source = "src/bof3/support/area118_13_psyq.c"
