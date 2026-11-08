@@ -95,8 +95,10 @@ segments:
     - asm
     - func_80117B60
   - - 3060
-    - asm
-    - func_80117BF4
+    - c
+    - dispatchWorkByte2Table81b4World01Area04913_80117BF4
+    - '@source: src/bof3/world/dispatchWorkByte2Table81b4World01Area04913_80117BF4.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: reads the work-record pointer published at scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching unchecked entry of this overlay''s handler table based at 0x801181B4, the interior word 10 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries func_80117C38 through func_80117DF0). The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Takes no arguments and returns nothing.'
   - - 3128
     - c
     - incrementWorkByte2World01Area04913_80117C38

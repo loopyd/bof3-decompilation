@@ -9,14 +9,16 @@
  */
 extern u8* D_1F800044;
 
-/* Neighbour probe of this payload, whose own Splat row at 0x801CF184 is still
- * asm. It reads work-record byte 8 as the index of the two direction-vector word
+/* Neighbour probe of this payload, now lifted at 0x801CF184 as
+ * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184.
+ * It reads work-record byte 8 as the index of the two direction-vector word
  * tables at 0x80181B94 and 0x80181B98, adds the selected word pair to the record
  * position held at work +0x34 and classifies the tile the pair lands on,
  * answering through $v0 with the byte the original call sites test, so the
  * declared return type is that unsigned byte and the caller owes no callee lift.
  */
-u8 func_801CF184(void);
+u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184(
+    void);
 
 /* Cue queue routine of the shared EXE image, outside this payload. The original
  * calls it through a plain `jal` with the work halfword 0x2C plus 0x100 in $a0,
@@ -38,7 +40,7 @@ u32 func_8014D8D4(u8 arg0);
 
 /* Seeded from the body at plp034/00 0x801CF3C0: the two payload spans are equal
  * in all 72 words except the two probe `jal` words at +0x28 and +0x58, which name
- * this payload's own probe func_801CF184, so that sibling is shape evidence and
+ * this payload's own probe at 0x801CF184, so that sibling is shape evidence and
  * this span is no clone of it. Statement order, the pointer-cell access form and
  * the declaration style are carried over with this function's own name and this
  * payload's own dispatch facts.
@@ -53,7 +55,9 @@ u32 func_8014D8D4(u8 arg0);
  *           zero; no `jal` in this payload names it, so it is reached through the
  *           run alone. When work byte 8 is even it first rewrites that byte: it
  *           stores the decremented direction ((byte 8 - 1) & 7), calls the
- *           payload neighbour probe func_801CF184 and, only while that call reads
+ *           payload neighbour probe
+ *           testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184
+ *           and, only while that call reads
  *           zero, stores the neighbour two steps the other way ((byte 8 + 2) & 7)
  *           and calls the same probe again; if that answer reads zero too the byte
  *           is put back to the decremented direction, so the stored index ends at
@@ -88,9 +92,9 @@ void probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionA
     void) {
   if ((D_1F800044[8] & 1) == 0) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (!func_801CF184()) {
+    if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184()) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (!func_801CF184()) {
+      if (!testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp34900_801CF184()) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }
     }

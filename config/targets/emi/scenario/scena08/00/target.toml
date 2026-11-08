@@ -12,6 +12,7 @@ sources = [
     "src/bof3/scenario/advanceTrailProjectPointsFillHeadingsAndAverageAnglesScenarioScena0800_801F8D98.c",
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectGroupScenarioScena0800_801FE7AC.c",
     "src/bof3/scenario/requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170.c",
+    "src/bof3/scenario/claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",

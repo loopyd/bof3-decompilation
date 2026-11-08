@@ -403,8 +403,10 @@ segments:
     - asm
     - func_801FC45C
   - - 25724
-    - asm
-    - func_801FD07C
+    - c
+    - claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C
+    - '@source: src/bof3/scenario/claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C.c'
+    - '@behavior: Selects the pair of work records this overlay activates. It asks func_8015CA48 for a free local effect slot identifier, publishes it at 0x801FEA74 - one of the two words that the preceding overlay body at 0x801FC45C fills from the selected record 0x34 and 0x38 words - and returns when that identifier is 0xFF. Otherwise it sets the flag byte of the 0x98-byte record of 0x80146888 that the identifier indexes, publishes a second identifier from func_8015CA48 at 0x801FEA78, and when the second one is 0xFF it clears the first record flag byte and returns. With two identifiers it sets the second record flag byte, publishes the first identifier as the halfword at 0x1F800000 and hands the 16-byte activation entry at 0x801FE9A0 to func_801A65A0, which resolves that halfword into the 0x80146888 table, republishes the resolved record at 0x1F800044 and 0x80146884 and applies the entry fields to it, and then requests resource 0x4C with mode 0 through func_8014D6DC. It repeats both steps for the second identifier with the entry at 0x801FE9B0, which is 0x10 bytes past the first one, and resource 0x36. It takes no arguments and returns nothing; the 0x20-byte frame keeps the ra register plus the three saved registers that hold the reused 0xFF and 1 constants, the first entry base and the scratchpad halfword address.'
   - - 26020
     - asm
     - func_801FD1A4

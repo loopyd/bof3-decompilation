@@ -281,7 +281,7 @@ segments:
     - c
     - dispatchRouteHandlerScenarioScena0300_801FC704
     - '@source: src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c'
-    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, func_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, func_801FC7EC, func_801FC9DC, func_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
+    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, func_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, func_801FC7EC, requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC, func_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
   - - 23532
     - asm
     - func_801FC7EC
@@ -294,8 +294,10 @@ segments:
     - '@source: src/bof3/scenario/requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944.c'
     - '@behavior: Route 0x25 handler of this overlay, reached from the dispatcher at 0x801FC704 through the jal at 0x801FC77C with both packed record words forwarded unchanged: after the shared wait func_8015B5D4(D_8014686C, 0x15) reports nonzero it returns 0, then it requires the second word to equal 0x418000 and the first word high half to fall in 0x20..0x23, otherwise it returns 0; on that path it requests primary scene state 4 with sub-state 5 (D_80146874 = 4, D_80146875 = 5), queues front-end mode 0x33 through the overlay tail at 0x801FCC9C and returns that tail result sign-extended from its low byte. No image word of this target holds 0x801FC944, so the dispatcher jal is its only reference.'
   - - 24028
-    - asm
-    - func_801FC9DC
+    - c
+    - requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
+    - '@source: src/bof3/scenario/requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC.c'
+    - '@behavior: Route 0x45 handler of this overlay, reached from the dispatcher at 0x801FC704 through the jal at 0x801FC7BC with both packed record words forwarded unchanged: after the shared wait func_8015B5D4(D_8014686C, 0x18) reports nonzero it returns 0, then it accepts three alternative packed-record pairs -- first word 0x3A8000 with second word high half 0x3C..0x3D, second word 0x28000 with first word high half 0x1F..0x20, second word 0x4C8000 with the same first word high half -- and returns 0 when all three fail; on that path it requests primary scene state 5 with sub-state 0 (D_80146874 = 5, D_80146875 = 0), queues front-end mode 0x12 through the overlay tail at 0x801FCC9C and returns that tail result sign-extended from its low byte. No image word of this target holds 0x801FC9DC, so the dispatcher jal is its only reference.'
   - - 24248
     - c
     - requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8

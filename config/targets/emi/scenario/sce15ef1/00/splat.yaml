@@ -141,8 +141,10 @@ segments:
     - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c'
     - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay draw helper 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
   - - 8340
-    - asm
-    - func_801D2C94
+    - c
+    - advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94
+    - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94.c'
+    - '@behavior: Entry 8 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it clears the work object step word pair +0x0C/+0x10 and head point word pair +0x18/+0x1C, then runs twenty integration passes that add 0x100 to the head word +0x18 and 0x200 to +0x1C and fold the updated head pair into the step pair, re-reads that cell and through the second load arms countdown byte +0x9 with 0x14 and negates the accumulated step pair, then re-reads that cell again and through the third load advances work byte +0x1 and dispatches sound cue 0x208.'
   - - 8540
     - c
     - drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C

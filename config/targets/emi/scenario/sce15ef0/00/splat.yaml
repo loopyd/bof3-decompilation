@@ -33,8 +33,9 @@ segments:
     - asm
     - func_801D0C48
   - - 236
-    - asm
-    - func_801D0CEC
+    - c
+    - raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC
+    - '@source: src/bof3/scenario/raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC.c'
   - - 432
     - c
     - drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0

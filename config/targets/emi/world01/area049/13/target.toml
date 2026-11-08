@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/world/findFreeWorkRecordAt800E4800World01Area04913_801178C4.c",
     "src/bof3/world/incrementWorkByte2World01Area04913_80117C38.c",
     "src/bof3/world/dispatchWorkByte2Table81acWorld01Area04913_80117A30.c",
+    "src/bof3/world/dispatchWorkByte2Table81b4World01Area04913_80117BF4.c",
     "src/bof3/support/area049_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area049_13_psyq.c"

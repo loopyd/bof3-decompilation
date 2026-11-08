@@ -8,7 +8,8 @@ void func_80150224(s32 arg0);
 /* @source 0x801FCC9C
  * @behavior Shared overlay tail called by four sibling handlers of this
  * overlay — requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944
- * (jal at 0x801FC9AC with 0x33), func_801FC9DC
+ * (jal at 0x801FC9AC with 0x33),
+ * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
  * (0x801FCA88 with 0x12), requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8
  * (0x801FCB1C with 0x1F) and
  * func_801FCB4C (0x801FCC6C with 0x0C, and 0x11 on the branch path that lands

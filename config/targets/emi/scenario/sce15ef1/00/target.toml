@@ -23,6 +23,7 @@ sources = [
     "src/bof3/scenario/decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4.c",
     "src/bof3/scenario/drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C.c",
     "src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c",
+    "src/bof3/scenario/advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

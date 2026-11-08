@@ -134,8 +134,10 @@ segments:
     - asm
     - func_801CFD20
   - - 7276
-    - asm
-    - func_801D006C
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp56700_801D006C
+    - '@source: src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp56700_801D006C.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 23 of the twenty-four-word handler run at 0x801D078C that the payload top dispatcher func_801CE404 indexes with work-record byte 2 scaled by four. It decrements the work object countdown byte 0x0A and does nothing else while that byte stays nonzero. When it reaches zero the step projects the work position by offsetting the work words 0x34 and 0x38 with the movement offsets of 0x80181B94 and 0x80181B98 selected by the route byte 0x08 and doubled, hands that pair with range 0 to the shared slot search func_801BDE14 and, unless the search answers -1, raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and the slot stride 0x98. It then claims a map cell record at the projected point through this payload claim handler func_801D02F4 with the high half of each projected word as a signed half: when that claim fails and the first word has a nonzero low half it retries one unit further on that axis, and when the retry also fails and the second word has a nonzero low half it retries one unit further on the second axis. The projected second word keeps a second live copy because the two cell halves claim the register that holds it. Both paths then increment the step counter byte 0x02 through the scratchpad cell itself, and the body closes by running the shared readiness helper func_8014DAEC on every path.'
   - - 7688
     - asm
     - func_801D0208

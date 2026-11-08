@@ -130,8 +130,8 @@ segments:
     - asm
     - func_801CFF14
   - - 7436
-    - asm
-    - func_801D010C
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp46700_801D010C
   - - 7664
     - asm
     - func_801D01F0
