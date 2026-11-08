@@ -45,7 +45,10 @@ manifest claim, declarations/bindings and `c` boundary. For a fresh member of a 
 that already holds an exact lift, take that C89 from the sibling's body
 ([reverse protocol](reverse/mission-protocol.md)): where the twin differed only in
 relocation words it measured first-gate exact, owed no sweep variant and left no
-prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. Obtain a live
+prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. Among siblings
+that carry the identical span, transcribe the one whose own gate measured exact: a
+span-equal sibling whose lift recorded a partial carries a spelling that reproduces
+its residual, so keep it a shape donor rather than the seed. Obtain a live
 [native diff](native-execution.md) before another edit. Missing-source errors supply
 no baseline; seeds grant no score or acceptance. Unresolved
 ownership/ABI or failed native gates stop matching. Require final byte match and
