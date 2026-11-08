@@ -63,8 +63,10 @@ segments:
     - '@source: src/bof3/scenario/drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C.c'
     - '@behavior: Entry 6 of the overlay step-handler run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and calls the record claim 0x801D19C8 when the pre-increment value is a multiple of four, calls 0x801D1A60 then 0x801D2088, draws one semi-transparent quad from the object head point +0x18 to the point +0x34 with intensity 0x40, adds the origin triple +0x64/+0x68/+0x6C into the step triple +0x0C/+0x10/+0x14 and that step into the head point, re-seeds the head point with 0x2F8000/0x278000/0x0F000000 when its first word reads at or below 0x2F7FFF, subtracts 4 from the intensity byte +0x3 and ticks countdown byte +0x9 down by one; when that countdown reaches zero it exchanges the head point with +0x34/+0x38/+0x3C, re-seeds 0x10 consecutive 0x2C-byte effect records of the table at 0x801D3DE8 through 0x801D1F68, exchanges the two points back, re-arms the countdown with 0x80 and advances work byte +0x1.'
   - - 1696
-    - asm
-    - func_801D12A0
+    - c
+    - claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128Countdown8DispatchCue522AndAdvanceWorkByte1ScenarioSce15ef100_801D12A0
+    - '@source: src/bof3/scenario/claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128Countdown8DispatchCue522AndAdvanceWorkByte1ScenarioSce15ef100_801D12A0.c'
+    - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3918: advances the scratchpad work object frame byte +0x6 and, when the pre-increment value is a multiple of four, claims a work record through 0x801D19C8, exchanges the head triple +0x18/+0x1C/+0x20 with the point triple +0x34/+0x38/+0x3C word by word, claims a second record through the same helper and exchanges the two triples back; it then calls 0x801D1A60 and 0x801D2088, draws one semi-transparent quad from the head triple to the point triple with intensity 0x40, and only when the shared scenario progress byte 0x80146864 reads 0x17 it arms the intensity byte +0x3 with 0x80 and the countdown byte +0x9 with 8, advances work byte +0x1 and dispatches sound cue 0x20A.'
   - - 2036
     - c
     - decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateWhenCountdown9ExpiresScenarioSce15ef100_801D13F4

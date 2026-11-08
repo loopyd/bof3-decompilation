@@ -14,7 +14,7 @@ markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWork
 func_801CF160 = 0x801CF160;
 func_801CF24C = 0x801CF24C;
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp57800_801CF444 = 0x801CF444;
-func_801CF528 = 0x801CF528;
+testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528 = 0x801CF528;
 dispatchWorkByte2Tablefae8PlcharPlp57800_801CF65C = 0x801CF65C;
 pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp57800_801CF6A0 = 0x801CF6A0;
 func_801CF76C = 0x801CF76C;

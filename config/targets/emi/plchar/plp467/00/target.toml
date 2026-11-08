@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp46700_801D010C.c",
+    "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp46700_801CF324.c",
     "src/bof3/plchar/dispatchWorkByte2Table03b8PlcharPlp46700_801CE620.c",
     "src/bof3/plchar/dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C.c",

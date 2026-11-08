@@ -71,15 +71,16 @@ s8 func_801B5AE4(void);
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map cell claim of this same payload, still an asm row at 0x801CEC18 in this
- * target: it sign-extends both arguments through sll plus sra in its own
- * prologue, probes the map cell code at the supplied signed column and row
+/* Map cell claim of this same payload, carried by the exact lift at 0x801CEC18
+ * of this target: it sign-extends both arguments through sll plus sra in its
+ * own prologue, probes the map cell code at the supplied signed column and row
  * through the shared func_80166CB0 and claims a front-end row for the codes it
  * handles, answering one when a row was claimed and zero otherwise. It reads no
  * third argument register, so the two coordinates are its whole argument list,
  * and this body tests only the low byte of its answer.
  */
-u8 func_801CEC18(s16 col, s16 row);
+u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+    s16 col, s16 row);
 
 /* @source 0x801CE7B8
  * @behavior Work byte 3 == 1 step of this overlay: the body address appears once
@@ -107,8 +108,10 @@ u8 func_801CEC18(s16 col, s16 row);
  *           byte at 0x801468FC plus the found slot scaled by the 0x98-byte work
  *           record stride and queues the same cue 0x10B. It then claims a
  *           front-end row at the projected point through this payload's own map
- *           cell claim func_801CEC18, passing the high half of each projected
- *           word: when that claim answers zero and the first word has a nonzero
+ *           cell claim
+ *           claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18,
+ *           passing the high half of each projected word: when that claim
+ *           answers zero and the first word has a nonzero
  *           low half it retries one unit further on that axis, and when the
  *           retry also answers zero and the second word has a nonzero low half
  *           it retries one unit further on the second axis, discarding the last
@@ -178,13 +181,18 @@ void tickWorkCountdownByteAThenSeedFrontEndRowFoundBySlotSearchAndQueueCue10bEls
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = func_801CEC18(cx, cy);
+        claimed =
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+                cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = func_801CEC18(cx + 1, cy);
+            claimed =
+                claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+                    cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            func_801CEC18(cx, cy + 1);
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp34900_801CEC18(
+                cx, cy + 1);
           }
         }
       }

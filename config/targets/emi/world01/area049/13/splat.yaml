@@ -70,8 +70,10 @@ segments:
     - asm
     - func_80117818
   - - 2148
-    - asm
-    - func_80117864
+    - c
+    - claimWorkRecordSeedWorkPositionWorld01Area04913_80117864
+    - '@source: src/bof3/world/claimWorkRecordSeedWorkPositionWorld01Area04913_80117864.c'
+    - '@behavior: Spawn step of this overlay''s 0x800E4800 work table: takes the free record findFreeWorkRecordAt800E4800World01Area04913_801178C4 returned, sets its claim byte at offset 0 to 1 and seeds the record from the scratch work object published at the scratchpad pointer cell 0x1F800044, copying that object''s words 0x34/0x38/0x3C into the record''s position triple at 0x04/0x08/0x0C and writing byte 1 = 0, byte 2 = 0x20, byte 3 = 0xC0, halfword 0x24 = 0x80, byte 0x26 = 2 and word 0x1C = 0. Takes the record pointer as its only argument, makes no call and returns nothing.'
   - - 2244
     - c
     - findFreeWorkRecordAt800E4800World01Area04913_801178C4

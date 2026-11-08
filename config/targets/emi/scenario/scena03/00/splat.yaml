@@ -244,8 +244,10 @@ segments:
     - c
     - dispatchRecordCallbackScenarioScena0300_801FC46C
   - - 22700
-    - asm
-    - func_801FC4AC
+    - c
+    - setScenarioFlagBit14ThenRequestPrimaryState4Substate0ScenarioScena0300_801FC4AC
+    - '@source: src/bof3/scenario/setScenarioFlagBit14ThenRequestPrimaryState4Substate0ScenarioScena0300_801FC4AC.c'
+    - '@behavior: Record-callback table slot 0; runs the shared front-end startup helper func_8015C088, sets scenario flag bit index 0x14 of the incoming flag word through func_8015B580, then requests primary scene state 4 with a cleared sub-state (D_80146874 = 4, D_80146875 = 0).'
   - - 22772
     - c
     - setScenarioFlagBit10ThenInvokeHelperScenarioScena0300_801FC4F4

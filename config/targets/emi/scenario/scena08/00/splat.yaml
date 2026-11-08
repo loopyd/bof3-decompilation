@@ -411,8 +411,10 @@ segments:
     - asm
     - func_801FD1A4
   - - 26624
-    - asm
-    - func_801FD400
+    - c
+    - seedTwoObjectRowsAtProgress6ThenSetFlagBit14AndResetHandlerScenarioScena0800_801FD400
+    - '@source: src/bof3/scenario/seedTwoObjectRowsAtProgress6ThenSetFlagBit14AndResetHandlerScenarioScena0800_801FD400.c'
+    - '@behavior: Overlay scenario handler selected by the shared primary state byte D_80146874, driving its own sub-state D_80146875. Sub-state 0 runs the shared front-end startup helper func_8015C058 and func_801BE1B0(1) and then returns the overlay to handler 0. Sub-state 0xA asks func_8019601C for an object index, publishes it in scratchpad 0x1F800000 and, unless that byte reads 0xFF, seeds the object 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, +9 = 0x20, word -0x2EC at +0x64, the signed halfword D_801492DA at +0x68 and word 0xB6 at +0x6C), then advances to 0xB. Sub-state 0xB waits for the shared progress byte g_ScenarioProgress to read 6 and then claims a second object index, publishes it at 0x801FEA6C and seeds that object row the same way except for word -0x2AA at +0x64 and word 0x200 at +0x6C, advancing to 0xC. Sub-state 0xC re-reads the published index, and while bit 0 of that row +0 flag byte is clear it runs func_8015C058, sets scenario flag bit 0x14 through func_8015B580(D_8014686C, 0x14) and returns the overlay to handler 0. Every other sub-state value does nothing. It takes no arguments and returns nothing; the 0x18-byte frame keeps ra plus s0, which holds the one materialised D_80146875 byte base that the dispatch load and the three sub-state stores share, while the scratchpad pointer stays in a0 and every row cell recomputes its scaled index from scratchpad or from 0x801FEA6C.'
   - - 27396
     - asm
     - func_801FD704

@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801CEE44
   - - 3152
-    - asm
-    - func_801CF050
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050.c'
+    - '@behavior: Record claim of this front-end payload, reached from five jal sites inside func_801CEE44 at 0x801CEEAC and 0x801CEF04 with a zero state byte, at 0x801CEED4 with state 4, at 0x801CEF34 with state 3 and at 0x801CEFD0 with state 2. It asks the shared allocator func_8019601C for a row index, masks it to a byte and, unless that byte is 0xFF, scales it by the 0x74-byte row stride of the shared table at 0x80143FC8 and seeds the row: row byte 0 takes 1, row byte 5 takes the handler selector 0x34, row byte 1 takes the caller state byte, row word 0x34 takes the first coordinate shifted left 16, row word 0x38 takes the second shifted the same way, row halfword 0x3E takes the shared distance helper func_8015477C over the re-read row word 0x34 and the shifted second coordinate plus 0x200, and row byte 0x0B takes 1. It returns nothing, a full table leaves every row untouched, no word of this payload holds 0x801CF050, and every call site ignores the result. Roles of row byte 0x0B, of the +0x200 bias and of the state codes are not established.'
   - - 3388
     - c
     - dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C

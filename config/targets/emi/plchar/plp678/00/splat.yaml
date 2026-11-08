@@ -45,8 +45,10 @@ segments:
     - c
     - dispatchWorkByte3Table0578PlcharPlp67800_801CE674
   - - 696
-    - asm
-    - func_801CE6B8
+    - c
+    - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp67800_801CE6B8
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp67800_801CE6B8.c'
+    - '@behavior: Work byte 3 == 0 step of this overlay: the word 0x801CE6B8 at 0x801D0578 is index 0 of the three-entry handler run that the byte-3 dispatcher 0x801CE674 indexes by work byte 3 scaled by four, and 0x801D0578 is entry 5 of the thirty-word code-pointer run based at 0x801D0564, so no jal in this payload names it and it takes no arguments. When work byte 8 is even it stores the decremented direction ((byte 8 - 1) & 7), calls the payload step test at 0x801CF1A4 and, only while that call answers zero, stores ((byte 8 + 2) & 7) and calls the same test again, then puts the byte back to the decremented direction when that second call answers zero as well. Both paths then run the payload layer-position refresh at 0x801CF348, select the shared work sequence through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a byte, clear work byte 0xB, write 0xB into work byte 0xA, the countdown the byte-3 entry 1 handler at 0x801CEFD0 decrements, and 1 into work byte 3 to advance the dispatch to that same run entry 1 at 0x801CE7B8. The pointer cell is loaded once before frame creation for the first byte-8 read and store and re-loaded before the byte-8 read of each inner block and before each of the three stores after the calls, the subtraction leaves the division signed so byte 8 of 0, 1 and 2 all select sequence 0x42 and byte 8 of 3 selects 0x43, and the 0x18-byte frame only keeps $ra at 0x10 across the calls.'
   - - 952
     - asm
     - func_801CE7B8

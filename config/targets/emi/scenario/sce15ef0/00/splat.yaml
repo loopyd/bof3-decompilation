@@ -67,8 +67,9 @@ segments:
     - asm
     - func_801D1370
   - - 2368
-    - asm
-    - func_801D1540
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540
+    - '@source: src/bof3/scenario/drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540.c'
   - - 2704
     - asm
     - func_801D1690
