@@ -36,7 +36,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place. When the original copies only a leading prefix of a longer pointer run, size that extern's type to the copied words: the aggregate assignment emits one word load and store per declared element and nothing past it, while a type covering the whole run copies the neighbours |
-| Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads |
+| Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads. Fields copied one at a time instead of as one block take the same type per field: assign each moved four-byte field through an alignment-1 typedef, since that record's own `u32` field keeps the aligned load |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Frame grows with callee-saved registers and a cell store the original commits before a call ends up after it in the build | Keep that store at its original place, as an in-place update on the record (`p[n]++`). Carrying the incremented value in a local and storing it after the call keeps the value live across the call: one measured body cost two callee-saved registers and an `0x20`-byte frame (22 of 32 instructions, 144 bytes against 128), while the in-place form let the following argument load fill the load-delay gap and the store fill the call's delay slot. This is the mirror of a `jal` result the original stores right after the call, which does take its own local |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
@@ -949,6 +949,13 @@ An empty body is that cause at its limit: original bytes of only a prologue,
 `jr $ra` and a `nop` still take one declared local of the frame's size, so a frame
 on a function that reads and writes no state is this lever, not a missing call or
 a wrong boundary.
+
+A local the body already uses bounds the frame the same way. When an aggregate it
+passes to a callee sets the frame and the frame still falls short by a fixed gap,
+widen that aggregate's declared extent rather than adding an unused local beside it:
+every access and offset stays as written and the gap closes. Only the bytes the
+callee reads evidence that type, so the wider extent is shape evidence, not a
+recovered declaration.
 
 1. Bind before/after dumps to the source and unchanged compiler settings. Trace
    the address definition, its death note and surviving `USE` through combine,
