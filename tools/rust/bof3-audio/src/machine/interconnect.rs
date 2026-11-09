@@ -309,6 +309,14 @@ impl Interconnect {
     /// mixing. Caller supplies already-resampled input frames. Audible reverb
     /// requires explicit configuration; no silent dry fallback is permitted.
     pub fn step_spu_output(&mut self, inputs: SpuInputs) -> crate::Result<[f32; 2]> {
+        self.step_spu_output_with_capture(inputs, Some(inputs.cd))
+    }
+
+    fn step_spu_output_with_capture(
+        &mut self,
+        inputs: SpuInputs,
+        cd_capture: Option<[i16; 2]>,
+    ) -> crate::Result<[f32; 2]> {
         let sample = self
             .spu_voices
             .as_ref()
@@ -339,7 +347,7 @@ impl Interconnect {
         };
         let output = self.spu_mixer.finish(sends, wet)?;
         self.spu_transfer
-            .capture_frame(inputs.cd, [voices.voices[1].mono, voices.voices[3].mono])?;
+            .capture_frame(cd_capture, [voices.voices[1].mono, voices.voices[3].mono])?;
         self.deliver_spu_irq();
         Ok(output)
     }

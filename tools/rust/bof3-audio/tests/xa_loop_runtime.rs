@@ -96,7 +96,7 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
                         .volume()
                         .apply_xa(frame)
                 }));
-                fixture.bus.inner.enqueue_cd_audio(&bytes).unwrap();
+                fixture.bus.inner.enqueue_cd_audio(&bytes, 0).unwrap();
             }
             Delivery::Data { bytes, response } => {
                 fixture
@@ -162,7 +162,7 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
                     .volume()
                     .apply_xa(frame)
             }));
-            fixture.bus.inner.enqueue_cd_audio(&bytes).unwrap();
+            fixture.bus.inner.enqueue_cd_audio(&bytes, 0).unwrap();
             assert_eq!(
                 fixture
                     .bus
@@ -181,7 +181,7 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
             for frame in expected {
                 assert_eq!(
                     bof3_audio::interchange::wave::pcm16(
-                        fixture.bus.inner.step_spu_cd_output([0; 2]).unwrap()
+                        fixture.bus.inner.step_spu_cd_output([0; 2], 0).unwrap()
                     ),
                     frame.map(|v| ((i32::from(v) >> 1) >> 1) as i16)
                 );
@@ -397,7 +397,7 @@ fn run_cue_comparison(
                                     configured_audio = true;
                                 }
                                 let Admission::Queued { frames: added } =
-                                    fixture.bus.inner.enqueue_cd_audio(&bytes).unwrap()
+                                    fixture.bus.inner.enqueue_cd_audio(&bytes, 0).unwrap()
                                 else {
                                     panic!("unexpected XA queue drop or mute")
                                 };
@@ -425,7 +425,7 @@ fn run_cue_comparison(
                         // of the one/four-sector game scheduler call ordering.
                         for _ in 0..294 {
                             let frame = bof3_audio::interchange::wave::pcm16(
-                                fixture.bus.inner.step_spu_cd_output([0; 2]).unwrap(),
+                                fixture.bus.inner.step_spu_cd_output([0; 2], 0).unwrap(),
                             );
                             signal |= frame != [0; 2];
                             for sample in frame {

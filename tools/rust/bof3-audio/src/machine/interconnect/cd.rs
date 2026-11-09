@@ -31,23 +31,25 @@ impl Interconnect {
     pub fn enqueue_cd_audio(
         &mut self,
         sector: &[u8],
+        cycle: u64,
     ) -> crate::Result<crate::machine::cd_queue::Admission> {
         let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
         self.cd_audio
             .as_mut()
             .ok_or("CD audio is not configured")?
-            .sector(sector, self.cd_command_muted, host.volume())
+            .sector(sector, self.cd_command_muted, host.volume(), cycle)
     }
     /// Submit one already-selected raw CDDA sector; drive selection is external.
     pub fn enqueue_cd_cdda(
         &mut self,
         sector: &[u8],
+        cycle: u64,
     ) -> crate::Result<crate::machine::cd_queue::Admission> {
         let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
         self.cd_audio
             .as_mut()
             .ok_or("CD audio is not configured")?
-            .cdda_sector(sector, self.cd_command_muted, host.volume())
+            .cdda_sector(sector, self.cd_command_muted, host.volume(), cycle)
     }
     /// Complete a pending XA/CDDA submission after supplied output/wait boundaries.
     pub fn finish_cd_audio_submission(
@@ -62,17 +64,35 @@ impl Interconnect {
     /// One supplied SPU frame boundary. Drive gain and source mute were applied
     /// at sector admission. Failed SPU output retains the
     /// queued frame; the existing SPU engine may have advanced internal state.
-    pub fn step_spu_cd_output(&mut self, external: [i16; 2]) -> crate::Result<[f32; 2]> {
+    pub fn step_spu_cd_output(
+        &mut self,
+        external: [i16; 2],
+        cycle: u64,
+    ) -> crate::Result<[f32; 2]> {
         let cd = self.cd_audio()?.preview();
-        let output = self.step_spu_output(super::SpuInputs { cd, external })?;
+        let sample = self
+            .spu_voices
+            .as_ref()
+            .ok_or("configure SPU voices before output")?
+            .sample_model();
+        let capture = if sample == crate::machine::spu_sample::Model::EmulatorReference {
+            self.cd_audio.as_ref().unwrap().preview_capture(cycle)
+        } else {
+            Some(cd)
+        };
+        let output =
+            self.step_spu_output_with_capture(super::SpuInputs { cd, external }, capture)?;
+        if sample == crate::machine::spu_sample::Model::EmulatorReference {
+            self.cd_audio.as_mut().unwrap().consume_capture();
+        }
         self.cd_audio.as_mut().unwrap().consume();
         Ok(output)
     }
     /// Clocked output consumes configured CD input; no attached source is silent.
     /// External input has no scheduled source.
-    pub(crate) fn step_spu_scheduled_output(&mut self) -> crate::Result<[f32; 2]> {
+    pub(crate) fn step_spu_scheduled_output(&mut self, cycle: u64) -> crate::Result<[f32; 2]> {
         if self.cd_audio.is_some() {
-            self.step_spu_cd_output([0; 2])
+            self.step_spu_cd_output([0; 2], cycle)
         } else {
             self.step_spu_output(super::SpuInputs::default())
         }

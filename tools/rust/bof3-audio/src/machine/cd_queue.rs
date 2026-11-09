@@ -1,4 +1,5 @@
 //! XA/CDDA-to-SPU queue. Caller supplies selected sectors and output boundaries.
+mod capture;
 use super::cd_audio::{Model as Resampling, Volume, XaAudio};
 use crate::{
     xa::{Arithmetic, Histories, Stream},
@@ -60,6 +61,7 @@ pub struct Queue {
     pending: Option<Vec<[i16; 2]>>,
     model: Model,
     statistics: Statistics,
+    capture: capture::Capture,
 }
 
 impl Queue {
@@ -79,6 +81,7 @@ impl Queue {
             pending: None,
             model,
             statistics: Statistics::default(),
+            capture: capture::Capture::default(),
         })
     }
 
@@ -89,12 +92,13 @@ impl Queue {
             ..self.statistics
         }
     }
-    /// Explicit fresh context: discard queued and pending output and forget
+    /// Explicit fresh context: discard queued, pending and capture frames and forget
     /// the decoder context. This is not a drive command. The next sector starts
     /// zero predictor/interpolation history, retaining arithmetic/model choices.
     pub fn reset(&mut self) -> usize {
         let discarded = self.frames.len() + self.pending.take().map_or(0, |frames| frames.len());
         self.frames.clear();
+        self.capture = capture::Capture::default();
         self.audio = None;
         self.format_ready = false;
         self.statistics.resets += 1;
@@ -121,11 +125,14 @@ impl Queue {
     /// must finish before another sector. Decode/interpolation precede the wait;
     /// a timeout discards output while retaining both advanced histories.
     /// Mute precedes admission; gain is sampled before a submission can wait.
+    /// Capture receives post-gain frames before the callback-output wait.
+    /// Feed/capture cycles share the caller's 33,868,800 Hz CPU-cycle domain.
     pub fn sector(
         &mut self,
         bytes: &[u8],
         command_muted: bool,
         volume: &Volume,
+        cycle: u64,
     ) -> Result<Admission> {
         if self.pending.is_some() {
             return Err("CD audio queue has a pending submission".into());
@@ -172,17 +179,20 @@ impl Queue {
         );
         self.audio = Some(candidate);
         self.format_ready = true;
+        self.capture.feed(self.pending.as_ref().unwrap(), cycle);
         self.finish_submission(WaitOutcome::Retry)
     }
 
     /// One already-selected raw 2352-byte CDDA sector, little-endian stereo at
     /// 44.1 kHz. It bypasses XA decoding/interpolation without changing either
     /// history. The caller owns track selection and drive timing.
+    /// Capture receives these frames before callback-output admission.
     pub fn cdda_sector(
         &mut self,
         bytes: &[u8],
         command_muted: bool,
         volume: &Volume,
+        cycle: u64,
     ) -> Result<Admission> {
         if self.pending.is_some() {
             return Err("CD audio queue has a pending submission".into());
@@ -207,6 +217,7 @@ impl Queue {
                 })
                 .collect(),
         );
+        self.capture.feed(self.pending.as_ref().unwrap(), cycle);
         self.finish_submission(WaitOutcome::Retry)
     }
 
@@ -244,6 +255,19 @@ impl Queue {
     /// not advance decoder/interpolation history or invent buffered samples.
     pub fn preview(&self) -> [i16; 2] {
         self.frames.front().copied().unwrap_or([0; 2])
+    }
+
+    /// One caller-scheduled native capture boundary in the feed CPU-cycle domain.
+    /// None holds the CD RAM cursor during recent-feed underflow. The native
+    /// worker samples this cycle once per batch; per-frame scheduling does not
+    /// establish that phase. Callback consumption and waits remain independent.
+    pub fn preview_capture(&self, cycle: u64) -> Option<[i16; 2]> {
+        self.capture.preview(cycle)
+    }
+
+    /// Commit a buffered capture frame only after SPU output accepts it.
+    pub fn consume_capture(&mut self) {
+        self.capture.consume();
     }
 
     /// Commit only after the downstream consumer accepts the scheduled frame.

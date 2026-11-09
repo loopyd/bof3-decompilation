@@ -43,6 +43,7 @@ pub struct Transfer {
     ram_control: u16,
     ram_control_model: Option<RamControlModel>,
     capture_position: u16,
+    cd_capture_position: u16,
     irq_model: Option<IrqModel>,
     irq_flag: bool,
     irq_request: bool,
@@ -61,6 +62,7 @@ impl Default for Transfer {
             ram_control: 0,
             ram_control_model: None,
             capture_position: 0,
+            cd_capture_position: 0,
             irq_model: None,
             irq_flag: false,
             irq_request: false,
@@ -131,16 +133,30 @@ impl Transfer {
     pub fn capture_position(&self) -> u16 {
         self.capture_position
     }
+    pub fn cd_capture_position(&self) -> u16 {
+        self.cd_capture_position
+    }
 
     /// One scheduled output-frame capture, after voice reads. CD is captured
     /// before SPU input gain, voices 1/3 after ADSR and before panning/mute.
-    /// Position starts at zero in this component context, not a verified boot state.
-    pub fn capture_frame(&mut self, cd: [i16; 2], voices: [i16; 2]) -> Result<()> {
+    /// None holds CD RAM and its cursor; voice/IRQ position still advances.
+    /// Both positions start at zero here, not a verified boot state.
+    pub fn capture_frame(&mut self, cd: Option<[i16; 2]>, voices: [i16; 2]) -> Result<()> {
         self.require_ram_control()
             .map_err(|error| format!("SPU capture: {error}"))?;
-        for (channel, sample) in [cd[0], cd[1], voices[0], voices[1]].into_iter().enumerate() {
-            let offset = channel * 1024 + usize::from(self.capture_position);
+        if let Some(cd) = cd {
+            for (channel, sample) in cd.into_iter().enumerate() {
+                let offset = channel * 1024 + usize::from(self.cd_capture_position);
+                self.ram[offset..offset + 2].copy_from_slice(&sample.to_le_bytes());
+            }
+            self.cd_capture_position = (self.cd_capture_position + 2) & 1023;
+        }
+        for (channel, sample) in voices.into_iter().enumerate() {
+            let offset = (channel + 2) * 1024 + usize::from(self.capture_position);
             self.ram[offset..offset + 2].copy_from_slice(&sample.to_le_bytes());
+        }
+        for channel in 0..4 {
+            let offset = channel * 1024 + usize::from(self.capture_position);
             if usize::from(self.irq_address) * 8 == offset {
                 self.trigger_irq();
             }

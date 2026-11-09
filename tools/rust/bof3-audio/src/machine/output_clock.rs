@@ -149,7 +149,14 @@ impl Clock {
                 if self.collection == Collection::Retain && self.pending.len() == QUEUE_LIMIT {
                     return Err("SPU output queue full; drain frames before advancing".into());
                 }
-                let frame = bus.step_spu_scheduled_output()?;
+                let cycle = match &self.reference_phase {
+                    Some(phase) => phase
+                        .activation_cycle
+                        .checked_add(self.ticks)
+                        .ok_or("output cycle overflow")?,
+                    None => transfer.ticks(),
+                };
+                let frame = bus.step_spu_scheduled_output(cycle)?;
                 if self.collection == Collection::Retain {
                     self.pending.push(frame);
                 }

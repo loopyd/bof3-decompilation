@@ -55,7 +55,7 @@ fn context() -> (Interconnect, Drive) {
 #[test]
 fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     let (mut bus, mut drive) = context();
-    let Admission::Queued { frames } = bus.enqueue_cd_audio(&sector(0, 0)).unwrap() else {
+    let Admission::Queued { frames } = bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap() else {
         panic!("expected queued audio");
     };
     let data: Vec<u8> = (0..2048).map(|i| (i % 256) as u8).collect();
@@ -74,7 +74,7 @@ fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 1);
     drive.complete(0).unwrap();
     assert_eq!(
-        bus.enqueue_cd_audio(&sector(1, 1)).unwrap(),
+        bus.enqueue_cd_audio(&sector(1, 1), 0).unwrap(),
         Admission::Muted
     );
 }
@@ -98,18 +98,18 @@ fn apply(
 #[test]
 fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     let mut q = queue(0, 0);
-    q.sector(&sector(0, 0), false, &volume()).unwrap();
+    q.sector(&sector(0, 0), false, &volume(), 0).unwrap();
     for _ in 0..31 {
         q.consume();
     }
     for _ in 0..2 {
         assert!(matches!(
-            q.sector(&sector(0, 0), false, &volume()).unwrap(),
+            q.sector(&sector(0, 0), false, &volume(), 0).unwrap(),
             Admission::Queued { .. }
         ));
     }
     assert!(matches!(
-        q.sector(&sector(0, 0), false, &volume()).unwrap(),
+        q.sector(&sector(0, 0), false, &volume(), 0).unwrap(),
         Admission::Pending { .. }
     ));
     let discarded = q.statistics().queued_frames + q.statistics().pending_frames;
@@ -119,13 +119,13 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     let before = q.statistics();
     let mut invalid = sector(1, 1);
     invalid[5] = 3;
-    assert!(q.sector(&invalid, false, &volume()).is_err());
+    assert!(q.sector(&invalid, false, &volume(), 0).is_err());
     assert_eq!(q.statistics(), before);
     let mut fresh = queue(2, 5);
     let bytes = sector(2, 5);
     assert_eq!(
-        q.sector(&bytes, false, &volume()).unwrap(),
-        fresh.sector(&bytes, false, &volume()).unwrap()
+        q.sector(&bytes, false, &volume(), 0).unwrap(),
+        fresh.sector(&bytes, false, &volume(), 0).unwrap()
     );
     while fresh.statistics().queued_frames != 0 {
         assert_eq!(q.preview(), fresh.preview());
@@ -135,8 +135,8 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     assert_eq!(q.statistics().reset_discarded_frames, discarded as u64);
     assert_eq!(q.statistics().resets, 1);
     assert_eq!(
-        q.sector(&sector(3, 5), false, &volume()).unwrap(),
-        fresh.sector(&bytes, false, &volume()).unwrap()
+        q.sector(&sector(3, 5), false, &volume(), 0).unwrap(),
+        fresh.sector(&bytes, false, &volume(), 0).unwrap()
     );
     while fresh.statistics().queued_frames != 0 {
         assert_eq!(q.preview(), fresh.preview());
@@ -148,7 +148,7 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
 #[test]
 fn setloc_and_seek_preserve_audio_and_data_buffers() {
     let (mut bus, mut drive) = context();
-    bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
+    bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap();
     let frames = bus.cd_audio().unwrap().statistics().queued_frames;
     bus.present_cd_data(&[7; 2048]).unwrap();
     let setloc = apply(
@@ -179,7 +179,7 @@ fn setloc_and_seek_preserve_audio_and_data_buffers() {
 #[test]
 fn invalid_seek_and_active_dma_failure_preserve_drive_and_queues() {
     let (mut bus, mut drive) = context();
-    bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
+    bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap();
     bus.present_cd_data(&[7; 2048]).unwrap();
     let state = drive.clone();
     let stats = bus.cd_audio().unwrap().statistics();
@@ -215,7 +215,7 @@ fn command_mute_and_host_mute_are_independent_and_keep_existing_output() {
     assert_eq!(response.response.bytes, [2]);
     assert!(drive.muted() && !response.xa_predictors_reset);
     assert_eq!(
-        bus.enqueue_cd_audio(&sector(0, 0)).unwrap(),
+        bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap(),
         Admission::Muted
     );
     apply(&mut bus, &mut drive, 0x0c, &[]);
@@ -223,12 +223,12 @@ fn command_mute_and_host_mute_are_independent_and_keep_existing_output() {
     bus.write(0x1f801800, Width::Byte, 3).unwrap();
     bus.write(0x1f801803, Width::Byte, 1).unwrap();
     assert_eq!(
-        bus.enqueue_cd_audio(&sector(0, 0)).unwrap(),
+        bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap(),
         Admission::Muted
     );
     bus.write(0x1f801803, Width::Byte, 0).unwrap();
     assert!(matches!(
-        bus.enqueue_cd_audio(&sector(0, 0)).unwrap(),
+        bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap(),
         Admission::Queued { .. }
     ));
     let before = bus.cd_audio().unwrap().statistics();
@@ -242,7 +242,7 @@ fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
     apply(&mut bus, &mut drive, 0x1b, &[]);
     drive.complete(0).unwrap();
     drive.complete(0).unwrap();
-    bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
+    bus.enqueue_cd_audio(&sector(0, 0), 0).unwrap();
     bus.present_cd_data(&[7; 2048]).unwrap();
     let stats = bus.cd_audio().unwrap().statistics();
     for (index, explicit_target) in [false, true].into_iter().enumerate() {

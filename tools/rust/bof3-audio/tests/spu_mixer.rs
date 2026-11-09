@@ -157,13 +157,13 @@ fn signed_reverb_return_and_main_registers_preserve_distinct_scales() {
 #[test]
 fn capture_preserves_four_independent_rings_and_half_status() {
     let mut transfer = Transfer::default();
-    assert!(transfer.capture_frame([1; 2], [1; 2]).is_err());
+    assert!(transfer.capture_frame(Some([1; 2]), [1; 2]).is_err());
     assert_eq!(transfer.capture_position(), 0);
     assert!(transfer.ram().iter().all(|&v| v == 0));
     transfer.write(12, 4).unwrap();
     for frame in 0..512i16 {
         transfer
-            .capture_frame([frame, -frame], [1000 + frame, -1000 - frame])
+            .capture_frame(Some([frame, -frame]), [1000 + frame, -1000 - frame])
             .unwrap();
         assert_eq!(transfer.capture_position(), ((frame as u16 + 1) * 2) % 1024);
         assert_eq!(transfer.status() & 0x800 != 0, (255..511).contains(&frame));
@@ -186,7 +186,7 @@ fn capture_preserves_four_independent_rings_and_half_status() {
         }
     }
     transfer
-        .capture_frame([32767, -32768], [-12345, 23456])
+        .capture_frame(Some([32767, -32768]), [-12345, 23456])
         .unwrap();
     for (base, expected) in [(0, 32767), (0x400, -32768), (0x800, -12345), (0xc00, 23456)] {
         assert_eq!(sample(&transfer, base, 0), expected);
@@ -195,7 +195,7 @@ fn capture_preserves_four_independent_rings_and_half_status() {
     assert_eq!(transfer.capture_position(), 2);
     assert!(transfer.ram()[0x1000..].iter().all(|&v| v == 0));
     transfer.write(12, 0).unwrap();
-    assert!(transfer.capture_frame([0; 2], [0; 2]).is_err());
+    assert!(transfer.capture_frame(Some([0; 2]), [0; 2]).is_err());
     assert_eq!(sample(&transfer, 0, 0), 32767);
     assert_eq!(transfer.capture_position(), 2);
 }

@@ -2046,7 +2046,7 @@ IRQ latency.
 
 `Interconnect::configure_spu_irq(spu_transfer::IrqModel::EmulatorReference)` selects
 the current native address comparisons and latch behavior. A matching voice
-block fetch or capture write clears SPUCNT bit 6, sets SPUSTAT bit 6 and pulses
+block fetch or scheduled capture comparison clears SPUCNT bit 6, sets SPUSTAT bit 6 and pulses
 interrupt-controller line 9. A control write with bit 6 clear acknowledges the
 SPU flag. A write with bit 6 set rearms comparison and retains that flag.
 I_STAT acknowledgement clears the controller latch independently.
@@ -2054,8 +2054,9 @@ I_STAT acknowledgement clears the controller latch independently.
 Voice fetches match IRQ byte addresses in `(block_start, block_start + 16]`.
 For a block with the end bit set, comparison also covers
 `(previous_repeat - 16, previous_repeat]`, before a loop-start flag changes the
-repeat register. Capture compares each halfword write in the four buffers at
-`0x000..0xFFF`. Address zero is valid. Transfers and reverb accesses do not
+repeat register. Capture compares all four buffer offsets at the voice-frame
+cursor in `0x000..0xFFF`, independently of the CD cursor or a held CD capture.
+Address zero is valid. Transfers and reverb accesses do not
 trigger this emulator-reference comparator.
 
 Comparisons follow the existing explicit frame and block-fetch schedule. This
@@ -2338,13 +2339,15 @@ data. The [reverb engine](#rust-spu-reverb-execution) now connects the separate
 mixer return boundary to shared RAM. Later execution errors can follow
 partial voice advancement and require stopping, not retrying the same frame.
 
-Completed output frames write four independent 1 KiB capture rings in SPU RAM:
-CD left/right at `0x000/0x400` before SPU input gain, and voices 1/3 at
-`0x800/0xC00` after ADSR but before pan/mute. A shared two-byte cursor wraps after
-512 frames and supplies STAT bit 11 for its current half. This component starts
-the cursor at zero; original boot position and capture bus cadence are not
-established. Sample reads precede these explicit frame writes. The
-[selected IRQ model](#rust-spu-ram-transfers-and-dma4) compares their addresses.
+Capture uses four 1 KiB SPU RAM buffers. CD left/right occupy `0x000/0x400`,
+after drive gain and before SPU input gain. Voices 1/3 occupy `0x800/0xC00`,
+after ADSR and before panning. The voice cursor advances two bytes per output
+frame, wraps after 512 frames and supplies STAT bit 11. CD has a separate cursor,
+which advances only when a CD capture frame is supplied. `None` preserves CD RAM
+and its cursor. Both cursors start at zero; original boot positions and native
+capture cadence remain unverified. Published queue output and direct `SpuInputs`
+retain their supplied CD frames. Sample reads precede these scheduled writes.
+The [selected IRQ model](#rust-spu-ram-transfers-and-dma4) follows the voice cursor.
 
 [Noise tests](../../../tools/rust/bof3-audio/tests/spu_noise.rs) compare 65,536
 frames at each of 64 clocks against an independently calculated Python integer
@@ -2965,7 +2968,7 @@ uses the native stream-1 ring predicate: queued plus incoming frames must be
 less than 16,384. A batch that cannot fit returns `Admission::Pending` without
 partially inserting it. Decode and interpolation histories have already advanced.
 `Queue::finish_submission` rechecks capacity at a supplied retry or timeout
-boundary. Room admits the whole batch; timeout while full discards its output
+boundary. Room admits the whole batch; timeout while full discards its callback output
 and retains those histories. Another sector rejects while submission is pending.
 Queued and pending frames, timeout drops, muted sectors, consumption and empty
 output are counted separately. Malformed input fails on a private candidate
@@ -2989,21 +2992,37 @@ command lifecycle below. Drive routing and end flags use the contract below;
 coding follows the first-success latch below; physical timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
-through `enqueue_cd_audio`; pending batches finish through
+through `enqueue_cd_audio(sector, cycle)`; pending batches finish through
 `finish_cd_audio_submission(WaitOutcome::Retry | WaitOutcome::TimedOut)` after
 caller-supplied consumption/wait boundaries. The queue does not infer a timeout
 from immediate fullness. Queue consumption commits only after successful SPU
 output. A failure retains its queued frame, but the SPU engine can have advanced
-internal state before a later failure.
+internal state before a later failure. `Queue::sector`, `Queue::cdda_sector`,
+`enqueue_cd_audio`, `enqueue_cd_cdda` and `step_spu_cd_output` require an explicit
+CPU cycle. Feed and capture cycles must use the same 33,868,800 Hz domain.
+
+Native-reference CD capture uses a separate
+[16,384-frame ring](../../../tools/rust/bof3-audio/src/machine/cd_queue/capture.rs).
+Unmuted XA/CDDA frames enter it after drive gain, before callback-output admission
+or waiting. Callback consumption and timeout drops do not consume or discard
+capture data. Both ring indices wrap modulo 16,384; equal indices mean empty,
+including an exact full wrap. On underflow, `preview_capture(cycle)` returns
+`None` while the last feed cycle is nonzero and the wrapping elapsed count is
+strictly below `33_868_800 * 4 / 75`. Otherwise it supplies zero. Cycle zero is
+the inactive timestamp sentinel. `consume_capture` commits a buffered frame after
+successful output. `Queue::reset` clears this feed ring and timestamp.
 
 [The output clock](../../../tools/rust/bof3-audio/src/machine/output_clock.rs)
 consumes configured CD audio at each 768-CPU-tick sample boundary, including when
 advanced by `Execution`. It uses the same capture, routing and gain path as
-`step_spu_cd_output`. An absent or empty CD source supplies zero; external input
+`step_spu_cd_output`. An absent or empty callback-output source supplies zero; external input
 is zero. Its 4,096-frame output queue must be drained before advancing further.
 A full output queue stops before consuming the next CD frame. Errors are terminal;
 elapsed device work is not rolled back. Activation phase, sector delivery,
 mechanical transitions and pending-submission deadlines remain caller supplied.
+The output clock supplies each functional frame's cycle to capture. Native
+workers sample that cycle once per batch; per-frame scheduling does not establish
+native underflow behavior, worker phase or hardware timing.
 
 [Queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
 exercise strict whole-batch capacity, pending retry and timeout, advanced histories
@@ -3029,7 +3048,8 @@ acceptance or C retirement.
 
 ## Rust selected CDDA feed
 
-`Queue::cdda_sector` accepts a complete 2,352-byte selected raw CDDA sector:
+`Queue::cdda_sector(bytes, command_muted, volume, cycle)` accepts a complete
+2,352-byte selected raw CDDA sector:
 588 little-endian stereo frames at 44.1 kHz. `Volume::apply_cdda` uses the
 active ATV matrix with native CDDA scaling: multiply the matrix sum by 31130,
 arithmetic-shift by 22, clip to signed 16-bit, multiply by 31880, then
@@ -3037,7 +3057,7 @@ arithmetic-shift by 15. This differs from XA's pre-clamp coefficient of 33617.
 The 44.1 kHz feed bypasses interpolation without changing XA predictor, ring,
 phase or previous-sample state.
 
-`Interconnect::enqueue_cd_cdda` supplies the host's active matrix and command
+`Interconnect::enqueue_cd_cdda(sector, cycle)` supplies the host's active matrix and command
 mute. XA-only mute does not suppress CDDA. Gain is fixed before submission;
 queued and pending frames retain it across later latches. Both sources share
 strict whole-batch capacity, retry, timeout, consumption and explicit reset.

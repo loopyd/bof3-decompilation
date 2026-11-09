@@ -152,13 +152,13 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
         let mut q = queue();
         let mut reference = audio();
         let first = sector(0, 0x64, 0x12);
-        q.sector(&first, false, &volume()).unwrap();
+        q.sector(&first, false, &volume(), 0).unwrap();
         let mut first_frames = drive_gain(reference.sector(&first).unwrap());
         if admission == 2 {
             // Three 4-bit mono blocks fill 14,112 frames; the EOF batch must wait.
             for _ in 0..2 {
                 assert!(matches!(
-                    q.sector(&first, false, &volume()).unwrap(),
+                    q.sector(&first, false, &volume(), 0).unwrap(),
                     Admission::Queued { .. }
                 ));
                 first_frames.extend(drive_gain(reference.sector(&first).unwrap()));
@@ -168,7 +168,7 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
             assert_eq!(drain(&mut q), first_frames);
         }
         let eof = sector(0, 0xe4, 0x76);
-        let result = q.sector(&eof, admission == 1, &volume()).unwrap();
+        let result = q.sector(&eof, admission == 1, &volume(), 0).unwrap();
         match admission {
             0 => {
                 assert!(matches!(result, Admission::Queued { .. }));
@@ -190,7 +190,7 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
             }
         }
         let next = sector(1, 0x64, 0x34);
-        q.sector(&next, false, &volume()).unwrap();
+        q.sector(&next, false, &volume(), 0).unwrap();
         let normalized = sector(0, 0x64, 0x34);
         let expected = if admission == 1 {
             use bof3_audio::{machine::cd_audio::Resampler, xa::Decoder};
@@ -217,7 +217,7 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
         );
         assert_eq!(drain(&mut q), expected);
         assert!(matches!(
-            q.sector(&sector(2, 0x64, 0), false, &volume()).unwrap(),
+            q.sector(&sector(2, 0x64, 0), false, &volume(), 0).unwrap(),
             Admission::Queued { .. }
         ));
     }
@@ -226,31 +226,32 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
 #[test]
 fn rejected_eof_and_unsupported_coding_preserve_audio_state() {
     let mut q = queue();
-    q.sector(&sector(0, 0x64, 0x12), false, &volume()).unwrap();
+    q.sector(&sector(0, 0x64, 0x12), false, &volume(), 0)
+        .unwrap();
     let before = q.statistics();
     let mut bad = sector(0, 0xe4, 0);
     bad[8 + 17 * 128 + 4] = 0xf8;
-    assert!(q.sector(&bad, false, &volume()).is_err());
+    assert!(q.sector(&bad, false, &volume(), 0).is_err());
     assert_eq!(q.statistics(), before);
-    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // EOF alone remains audio
+    q.sector(&sector(0, 0xe4, 0), false, &volume(), 0).unwrap(); // EOF alone remains audio
     q.reset_predictors().unwrap();
     let before = q.statistics();
     let mut changed = sector(1, 0x64, 0);
     changed[3] = 0x40;
     changed[7] = 0x40;
     assert!(q
-        .sector(&changed, false, &volume())
+        .sector(&changed, false, &volume(), 0)
         .unwrap_err()
         .to_string()
         .contains("emphasis"));
     assert_eq!(q.statistics(), before);
     assert!(matches!(
-        q.sector(&sector(1, 0x64, 0), false, &volume()).unwrap(),
+        q.sector(&sector(1, 0x64, 0), false, &volume(), 0).unwrap(),
         Admission::Queued { .. }
     ));
     // Already-selected identities share queue capacity.
     assert!(matches!(
-        q.sector(&sector(2, 0x64, 0), false, &volume()).unwrap(),
+        q.sector(&sector(2, 0x64, 0), false, &volume(), 0).unwrap(),
         Admission::Pending { .. }
     ));
 }
@@ -262,7 +263,7 @@ fn setfilter_preserves_audio_and_invalid_parameters_preserve_filter() {
     bus.configure_cd_audio(queue()).unwrap();
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0x48, [1, 0]).unwrap();
     let first = sector(0, 0x64, 0x12);
-    bus.enqueue_cd_audio(&first).unwrap();
+    bus.enqueue_cd_audio(&first, 0).unwrap();
     let before = bus.cd_audio().unwrap().statistics();
     let drive_before = drive.clone();
     let invalid = bus
@@ -279,7 +280,7 @@ fn setfilter_preserves_audio_and_invalid_parameters_preserve_filter() {
     assert_eq!(bus.cd_audio().unwrap().statistics(), before);
     // Stream identity changes without clearing the already queued block.
     assert!(matches!(
-        bus.enqueue_cd_audio(&sector(1, 0x64, 0x76)).unwrap(),
+        bus.enqueue_cd_audio(&sector(1, 0x64, 0x76), 0).unwrap(),
         Admission::Queued { .. }
     ));
     assert_eq!(
@@ -293,10 +294,11 @@ fn identity_change_preserves_tail_and_continuous_decoder_history() {
     let mut q = queue();
     let mut reference = audio();
     let first = sector(0, 0x64, 0x12);
-    q.sector(&first, false, &volume()).unwrap();
+    q.sector(&first, false, &volume(), 0).unwrap();
     let expected = drive_gain(reference.sector(&first).unwrap());
     assert_eq!(drain(&mut q), expected);
-    q.sector(&sector(1, 0x64, 0x34), false, &volume()).unwrap();
+    q.sector(&sector(1, 0x64, 0x34), false, &volume(), 0)
+        .unwrap();
     let normalized = sector(0, 0x64, 0x34);
     let expected = drive_gain(reference.sector(&normalized).unwrap());
     assert_ne!(expected, drive_gain(audio().sector(&normalized).unwrap()));
@@ -334,7 +336,7 @@ fn raw_voice_explicit_filter_decodes_complete_first_stream() {
             }
             channels.insert((bytes[0], bytes[1]));
             assert!(matches!(
-                q.sector(&bytes, false, &volume()).unwrap(),
+                q.sector(&bytes, false, &volume(), 0).unwrap(),
                 Admission::Queued { .. }
             ));
             let actual = drain(&mut q);

@@ -432,7 +432,10 @@ impl Interconnect {
                 self.respond_clocked_cd(response.interrupt, &response.bytes)?;
             }
             Delivery::Xa(bytes) => {
-                if matches!(self.enqueue_cd_audio(&bytes)?, Admission::Pending { .. }) {
+                if matches!(
+                    self.enqueue_cd_audio(&bytes, cycle)?,
+                    Admission::Pending { .. }
+                ) {
                     return Err(
                         "CD controller: pending audio host-wait timing is not implemented".into(),
                     );
@@ -461,7 +464,10 @@ impl Interconnect {
             cycle as u32,
         )?;
         if let Some(bytes) = delivery.audio {
-            if matches!(self.enqueue_cd_cdda(&bytes)?, Admission::Pending { .. }) {
+            if matches!(
+                self.enqueue_cd_cdda(&bytes, cycle)?,
+                Admission::Pending { .. }
+            ) {
                 return Err(
                     "CD controller: pending audio host-wait timing is not implemented".into(),
                 );
