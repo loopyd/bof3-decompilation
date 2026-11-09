@@ -1,5 +1,6 @@
 //! Explicit reference clock for SPU/CD output and NTSC VBlank, without GPU/drive
-//! scheduling or CPU stalls. Origin is the caller-selected activation boundary.
+//! scheduling or CPU stalls. Reference execution retains its counter owner and
+//! requires an explicit functional sample phase, without native timing parity.
 use super::{interconnect::Interconnect, spu_clock};
 use crate::Result;
 use serde::Serialize;
@@ -18,6 +19,8 @@ pub enum Model {
 #[derive(Debug, Serialize)]
 pub struct Clock {
     model: Model,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    reference_phase: Option<ReferencePhase>,
     ticks: u64,
     frames: u64,
     vblanks: u64,
@@ -28,10 +31,17 @@ pub struct Clock {
     pending: Vec<[i16; 2]>,
 }
 
+#[derive(Debug, Serialize)]
+struct ReferencePhase {
+    activation_cycle: u64,
+    first_sample_ticks: u32,
+}
+
 impl Clock {
     pub fn new(model: Model) -> Self {
         Self {
             model,
+            reference_phase: None,
             ticks: 0,
             frames: 0,
             vblanks: 0,
@@ -40,6 +50,18 @@ impl Clock {
             line_remaining: LINE_TICKS,
             pending: Vec::new(),
         }
+    }
+    pub(super) fn for_reference(activation_cycle: u64, first_sample_ticks: u32) -> Result<Self> {
+        if !(1..=SAMPLE_TICKS).contains(&first_sample_ticks) {
+            return Err("reference output first sample must be within 1..=768 ticks".into());
+        }
+        let mut clock = Self::new(Model::PcsxReduxNtsc);
+        clock.reference_phase = Some(ReferencePhase {
+            activation_cycle,
+            first_sample_ticks,
+        });
+        clock.sample_remaining = first_sample_ticks;
+        Ok(clock)
     }
     pub fn ticks(&self) -> u64 {
         self.ticks
@@ -59,26 +81,37 @@ impl Clock {
     /// terminal: elapsed work is not rolled back. Drain the bounded PCM queue
     /// regularly. Configured CD audio advances at sample boundaries. External
     /// input, drive scheduling, HBlank duration and dot clocks are absent.
+    /// With an explicit reference phase, only transfer and PCM advance here;
+    /// reference counters retain blanking and timer ownership. The line and
+    /// VBlank counts then remain zero. CD callbacks follow this work in Execution.
     pub fn advance(
         &mut self,
         bus: &mut Interconnect,
         transfer: &mut spu_clock::Clock,
         ticks: u32,
     ) -> Result<()> {
-        bus.require_scanline_clocks()?;
+        let scanlines = self.reference_phase.is_none();
+        if scanlines {
+            bus.require_scanline_clocks()?;
+        }
         self.ticks
             .checked_add(u64::from(ticks))
             .ok_or("output clock overflow")?;
         let mut left = ticks;
         while left != 0 {
-            let step = left.min(self.sample_remaining).min(self.line_remaining);
+            let mut step = left.min(self.sample_remaining);
+            if scanlines {
+                step = step.min(self.line_remaining);
+            }
             transfer.advance(bus, step)?;
-            bus.advance_cpu(step)?;
+            if scanlines {
+                bus.advance_cpu(step)?;
+                self.line_remaining -= step;
+            }
             self.ticks += u64::from(step);
             self.sample_remaining -= step;
-            self.line_remaining -= step;
             left -= step;
-            if self.line_remaining == 0 {
+            if scanlines && self.line_remaining == 0 {
                 self.line_remaining = LINE_TICKS;
                 self.line = (self.line + 1) % 263;
                 // One reference scanline pulse advances timer 1. Timer 0

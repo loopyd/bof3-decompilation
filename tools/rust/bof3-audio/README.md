@@ -278,3 +278,19 @@ commands and FLAC are retired from the replacement command surface.
 Use [PCSX-Redux Agentic](https://github.com/loopyd/pcsx-redux-agentic) for SPU/CD
 implementation comparisons and runtime captures. Agreement with the fork alone
 does not establish hardware fidelity.
+
+### Development reference PCM
+
+`Execution::from_boot` keeps original-BIOS timer and blanking ownership. To
+advance PCM concurrently, call `enable_reference_output(first_sample_ticks)`
+with an explicit first-sample distance of 1 through 768 CPU ticks. The clock
+report retains that distance and its absolute activation cycle. Later samples
+occur every 768 ticks. Drain the bounded frame queue with `take_audio_frames`.
+
+Instruction accesses precede elapsed transfer and sample work. CD callbacks run
+afterward at the existing branch frontier, so a newly admitted feed reaches
+subsequent sample work. This functional ordering does not establish native
+CPU/worker write visibility or infer a native sample phase. Reference output
+leaves the output clock's synthetic line and VBlank counts at zero; the original
+root counters retain their own phase. `enable_output` rejects execution created
+by `from_boot`; use `enable_reference_output` for this explicit activation.

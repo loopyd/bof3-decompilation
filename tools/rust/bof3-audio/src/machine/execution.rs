@@ -287,15 +287,31 @@ impl Execution {
     /// Existing SPU arithmetic models must already be configured on the bus.
     pub fn enable_output(&mut self, model: output_clock::Model) -> Result<()> {
         if self.reference.is_some() {
-            return Err(
-                "original-BIOS reference timing does not implement PCM output scheduling".into(),
-            );
+            return Err("original-BIOS output requires an explicit reference sample phase".into());
         }
         if self.output.is_some() {
             return Err("output clock already enabled".into());
         }
         self.bus.set_vblank(false);
         self.output = Some(output_clock::Clock::new(model));
+        Ok(())
+    }
+    /// Activate functional PCM alongside original-BIOS timing. The caller must
+    /// supply 1..=768 ticks until the first sample; no native phase is inferred.
+    /// Instruction accesses precede elapsed sample work, then branch-dispatched
+    /// CD service runs. A feed admitted there reaches subsequent sample work.
+    /// Original counters retain their phase and own all timers and blanking.
+    pub fn enable_reference_output(&mut self, first_sample_ticks: u32) -> Result<()> {
+        let cycle = self
+            .reference_cycles()
+            .ok_or("reference output requires original-BIOS timing")?;
+        if self.output.is_some() {
+            return Err("output clock already enabled".into());
+        }
+        self.output = Some(output_clock::Clock::for_reference(
+            cycle,
+            first_sample_ticks,
+        )?);
         Ok(())
     }
     pub fn output(&self) -> Option<&output_clock::Clock> {
