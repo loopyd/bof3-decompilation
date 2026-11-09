@@ -88,6 +88,12 @@ fn physical_tone_slots_preserve_original_skips_and_undeclared_playable_tones() -
         let (mut p, archive) = prepare_entries(archive, header, body);
         let table = cues::stage(&mut p, &archive, header + 1)?;
         p.execution.call(0x8015ce70, [0; 4], 100_000)?;
+        // Initialization leaves background voices armed. Isolate these cue layers.
+        for voice in 0..24 {
+            p.execution
+                .bus
+                .write(0x1f801c00 + voice * 16, Width::Word, 0)?;
+        }
         p.execution.enable_output(
             output_clock::Model::PcsxReduxNtsc,
             output_clock::Collection::Retain,
