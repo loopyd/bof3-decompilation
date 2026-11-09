@@ -110,7 +110,12 @@ Use `--subprocess` only for deliberate legacy reproduction. Give every variant t
 measured `@source`/`@behavior` metadata: one without them is refused before
 comparing and the sweeper prints `-`, while a plain `asm-diff` on that variant
 prints no diff line at all, so record that as a non-measurement and fix the
-variant rather than reading it as a neutral result.
+variant rather than reading it as a neutral result. A sweep row is that variant's own
+measurement, not a reproducible one: variants with identical codegen scored
+differently, and a shape the sweep reported a few instructions short at the original
+byte size reached exact on the native gate, so when two rows disagree, or a retained
+shape sits short at equal size, install that variant and gate it natively before
+discarding it.
 
 Before each sweep, state the semantic precondition and predicted instruction
 change. Change one statement class per variant, as in the repair loop: a variant
