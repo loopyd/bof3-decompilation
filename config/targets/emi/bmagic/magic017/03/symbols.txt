@@ -1,7 +1,7 @@
 func_801E5988 = 0x801E5988;
 func_801EEC38 = 0x801EEC38;
 func_801EEC98 = 0x801EEC98;
-func_801EEF68 = 0x801EEF68;
+invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic01703_801EEF68 = 0x801EEF68;
 func_801EEFD8 = 0x801EEFD8;
 dispatchWorkByte1HandlerBmagicMagic01703_801EF014 = 0x801EF014;
 func_801EF058 = 0x801EF058;

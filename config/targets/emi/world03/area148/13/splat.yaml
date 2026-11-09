@@ -117,8 +117,10 @@ segments:
     - asm
     - func_801F3BD0
   - - 4132
-    - asm
-    - func_801F3C24
+    - c
+    - dispatchSharedModeByteTable2C04World03Area14813_801F3C24
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World03Area14813_801F3C24.c'
+    - '@behavior: Steps the shared front-end mode byte 0x801448EC through this overlay area-entry sequence, selecting the arm from the 22-slot jump table the payload keeps at 0x801F2C04. Modes 0, 1, 10, 11, 12, 13, 14, 20 and 21 have bodies and every other slot returns untouched. Mode 0 runs func_801BE1B0 with 0 and advances to 1. Mode 1 waits for the shared byte 0x80146867 to read 0x18, then clears 0x801448EB and the mode byte, raises flag 0x46 of the main-RAM flag bank 0x80144F28 through func_8015B580 and requests the front selector context 0x95 with 0x1C0000, 0xC0000 and kind 0x80. Modes 10 and 13 claim a front-end record through func_8019601C, publish the index in 0x801448ED and, unless the index is 0xFF, seed that 0x74-byte row: +0 = 1, +5 = 0x13, a word at +0x64 that is -0x39A in mode 10 and -0x2AA in mode 13, the signed halfword 0x801492DA at +0x68, a word at +0x6C that is 0x190 in mode 10 and 0x200 in mode 13, and +9 = 0x30 or 0x20; mode 10 advances to 11 while mode 13 advances to 14. Mode 11 waits for bit 0 of the row to clear and runs func_801C601C with 2. Mode 12 waits for 0x80146867 to read 0x20, runs the shared bit service func_8015B580 on bit 0x5A of the same bank and arms the halfword countdown 0x801448EE with 0x20. Mode 14 releases the overlay through func_8015C058 and clears the state pair once 0x80146867 reads zero. Mode 20 runs that bit service on bit 0x6A, queues cue 0x204 through func_8015DF18 and runs func_8015822C with (0, 0x380, -6, -4, -4) or (0, 0x180, 0, 0, 0) depending on the flag tester func_8015B5D4, then arms the countdown with 0xF and advances to 21. Mode 21 ticks that countdown, arms 0x1F in the effect bank 0x8014832E at zero and releases the overlay through the same shared trailing block as mode 14. Takes no arguments and answers nothing while keeping a 0x20-byte frame that saves ra at 0x1C and s0 at 0x18.'
   - - 5384
     - asm
     - func_801F4108

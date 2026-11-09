@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
 func_801EEC50 = 0x801EEC50;
 func_801EECB0 = 0x801EECB0;
@@ -13,7 +14,7 @@ func_801EF134 = 0x801EF134;
 func_801EF3C4 = 0x801EF3C4;
 func_801EF528 = 0x801EF528;
 func_801EF55C = 0x801EF55C;
-func_801EF5BC = 0x801EF5BC;
+clearWorkByte9SetWorkByteAFromStageTableInvokeHelperAt100ClearWorkWord10AndIncrementWorkByte2BmagicMagic05703_801EF5BC = 0x801EF5BC;
 func_801EF620 = 0x801EF620;
 decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0 = 0x801EF7A0;
 func_801EF7E0 = 0x801EF7E0;

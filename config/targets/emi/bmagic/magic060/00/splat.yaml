@@ -89,8 +89,10 @@ segments:
     - dispatchStateByte1Table0bb0BmagicMagic06000_801EFF44
     - '@source: src/bof3/bmagic/magic06000DispatchTables.c'
   - - 5000
-    - asm
-    - func_801EFF88
+    - c
+    - dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic06000_801EFF88
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic06000_801EFF88.c'
+    - '@behavior: Index 0 of the handler table at 0x801F0BB0 that the work-byte-1 dispatcher at 0x801EFF44 indexes with work byte 1, and itself a dispatcher: it reads the scratchpad work-object pointer cell at 0x1F800044 into a work pointer and uses the work object''s byte at offset 0x2, scaled by four, to select one entry of the handler table at 0x801F0BBC (first entry 0x801F0000), which it calls with no arguments. When the handler returns the pointer cell is read again in a second load; if the work object''s byte at offset 0x0 and its byte at offset 0x2 are both non-zero it calls this overlay''s drawing routine func_801F012C. The two pointer reads are separate locals because the original materializes the cell twice, before and after the indirect call. The two guards are one conjunction: both tests branch to the same epilogue label. Reads no other state, stores nothing but the saved return address and returns nothing.'
   - - 5120
     - c
     - clearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F0000

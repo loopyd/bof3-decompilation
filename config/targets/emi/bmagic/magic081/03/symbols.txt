@@ -11,7 +11,7 @@ reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStepThenAdva
 func_801EF2A0 = 0x801EF2A0;
 func_801EF2F0 = 0x801EF2F0;
 func_801EF330 = 0x801EF330;
-func_801EF39C = 0x801EF39C;
+copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C = 0x801EF39C;
 func_801EF44C = 0x801EF44C;
 func_801EF57C = 0x801EF57C;
 decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMagic08103_801EF614 = 0x801EF614;

@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF330
   - - 1948
-    - asm
-    - func_801EF39C
+    - c
+    - copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C
+    - '@source: src/bof3/bmagic/copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C.c'
+    - '@behavior: Work byte 2 handler of this overlay, word 8 of the pointer run at 0x801EEC04, so it is reached through the table and has no jal caller. It reads the shared battle record through the pointer cell at 0x801EB4E0 and the scratchpad work object through the cell at 0x1F800044, then publishes the record pose in the work object: work word 0x34 receives the record word 0x34 plus 0x2000, work word 0x38 receives the record word 0x38, and work halfword 0x3E receives the record unsigned halfword 0x3E plus 0x100. The record byte 0xA then selects the 0x78-byte-stride queued action-slot store record, and func_8017A138 takes the word differences between that record fields 0x801EC364 and 0x801EC368 and the work words 0x34 and 0x38 re-read through the work pointer, its answer being stored in work word 0x14. Last it clears work byte 9 and advances work byte 2 through a second cell read, both taken after the heading call because a store through the loaded pointer may alias the cell. Takes no arguments and returns nothing through the jr $ra.'
   - - 2124
     - asm
     - func_801EF44C

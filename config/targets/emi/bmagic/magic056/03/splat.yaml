@@ -75,8 +75,9 @@ segments:
     - asm
     - func_801EFB38
   - - 4004
-    - asm
-    - func_801EFBA4
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic05603_801EFBA4
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic05603_801EFBA4.c'
   - - 4084
     - asm
     - func_801EFBF4

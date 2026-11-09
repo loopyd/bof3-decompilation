@@ -71,8 +71,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionToward8014638CClearByte9AndAdvanceWorkByte2BmagicMagic17203_801EF590.c'
     - '@behavior: entry index 7 of the handler pointer run beginning at 0x801F0B74, whose word at 0x801F0B90 holds this address; reads the scratchpad work object through the pointer cell at 0x1F800044, decrements its byte 9 and, when that countdown reaches zero, copies words 0x34, 0x38 and 0x3C of the record read through 0x801EB4E0 into the work object with 0x800000 added to the third, stores the angle of the word 0x34 and 0x38 differences against the record read through 0x8014638C into work word 0xC through the helper at 0x8017A138, clears byte 9 and advances dispatch byte 2'
   - - 2640
-    - asm
-    - func_801EF650
+    - c
+    - raiseWorkByte9ByFourWhenBelow10InvokePointHelperStoreHeadingToward8014638CAndAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic17203_801EF650
+    - '@source: src/bof3/bmagic/raiseWorkByte9ByFourWhenBelow10InvokePointHelperStoreHeadingToward8014638CAndAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic17203_801EF650.c'
+    - '@behavior: entry with dispatch byte 2 equal to 8, the value the handler at 0x801EF590 writes one frame earlier, and reached through that byte rather than a jal; raises work byte 9 by four only when it is below 0x10, builds a stack point triple from words 0x34, 0x38 and 0x3C of the record published at 0x8014638C and passes it with an unset fourth word and the size literal 0x40 to the point helper at 0x800AF3A0, copies work word 0xC into work word 0x10, stores the angle of the word 0x34 and 0x38 differences against that record into work word 0xC through the helper at 0x8017A138 and advances dispatch byte 2 when byte 0x801EC332 of the action-slot record selected by work byte 4 scaled by 0x78 equals 2'
   - - 2928
     - asm
     - func_801EF770

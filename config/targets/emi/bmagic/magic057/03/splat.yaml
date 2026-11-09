@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EF55C
   - - 2492
-    - asm
-    - func_801EF5BC
+    - c
+    - clearWorkByte9SetWorkByteAFromStageTableInvokeHelperAt100ClearWorkWord10AndIncrementWorkByte2BmagicMagic05703_801EF5BC
+    - '@source: src/bof3/bmagic/clearWorkByte9SetWorkByteAFromStageTableInvokeHelperAt100ClearWorkWord10AndIncrementWorkByte2BmagicMagic05703_801EF5BC.c'
+    - '@behavior: Stage reset of the scratchpad work object published through the pointer cell at 0x1F800044. It clears work byte 0x09, the stage index the per-frame dispatcher func_801EF620 advances through the three-entry byte table at 0x801EFADC, so the sequence restarts at stage 0; it then re-reads the cell and loads the byte at that index into work byte 0x0A through the table base, that store filling the delay slot of the call to the shared helper func_8015D71C with selector 0x100, and byte 0x0A is the per-stage frame countdown the same dispatcher decrements. Last it reads the cell once more and, through that one pointer, loads work byte 0x02, clears work word 0x10 and stores byte 0x02 plus one, byte 0x02 being the handler index the state handler func_801EF55C uses to index the three-word table at 0x801EEC38, of which this body is entry 0. Takes no arguments, returns nothing through the jr $ra at 0x801EF618 inside a 0x18-byte frame, and leaves work word 0x10 offset-anchored because it only clears it.'
   - - 2592
     - asm
     - func_801EF620
