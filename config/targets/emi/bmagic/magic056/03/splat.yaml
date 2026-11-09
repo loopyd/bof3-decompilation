@@ -81,8 +81,10 @@ segments:
     - incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic05603_801EFBA4
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic05603_801EFBA4.c'
   - - 4084
-    - asm
-    - func_801EFBF4
+    - c
+    - incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4
+    - '@source: src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4.c'
+    - '@behavior: Third entry of the byte-0x9 timer sequence reached through word 2 of the in-image code-pointer run at 0x801F0764. It reads the scratchpad work-object pointer cell at 0x1F800044 once, compares that object byte 9 truncated to eight bits against 0x2E and only when the byte is not already 0x2E stores the value widened by one at byte width, so the counter saturates at 0x2E. It then re-reads the cell and subtracts one from the object byte 0xA at byte width, testing that stored register truncated to eight bits. Only when that countdown reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one at byte width and invoke the shared helper at 0x801E5988, the store filling the call delay slot. It takes no arguments, returns nothing, and its 0x18-byte frame keeps only the return address.'
   - - 4212
     - asm
     - func_801EFC74

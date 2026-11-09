@@ -86,8 +86,10 @@ segments:
     - asm
     - func_801EF4E4
   - - 2436
-    - asm
-    - func_801EF584
+    - c
+    - decrementWorkByte9ThenSeedScratchAngleFromWorkByteBStepPositionPairBySampledAngularPairTimesTwelveClearByte9SetByteATo4AndAdvanceWorkByte2BmagicMagic03903_801EF584
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedScratchAngleFromWorkByteBStepPositionPairBySampledAngularPairTimesTwelveClearByte9SetByteATo4AndAdvanceWorkByte2BmagicMagic03903_801EF584.c'
+    - '@behavior: Decrements the scratchpad work-object byte 9 and, when that countdown reaches zero, scales work byte 0xB by 0x200 into the scratchpad halfword 0x1F80000A and steps the position pair from the shared record at 0x801EB4E0 by twelve times the first sampled angular value of that angle (word 0x34) and twelve times the second, sampled from the stored halfword (word 0x38), copies the record word 0x3C, clears work byte 9, sets work byte 0xA to 4 and advances the dispatch state byte 0x2.'
   - - 2704
     - c
     - add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690

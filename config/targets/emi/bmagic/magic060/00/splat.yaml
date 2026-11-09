@@ -153,8 +153,10 @@ segments:
     - dispatchStateByte2Table0bdcBmagicMagic06000_801F07E8
     - '@source: src/bof3/bmagic/magic06000DispatchTables.c'
   - - 7212
-    - asm
-    - func_801F082C
+    - c
+    - submitRecordStoreEffectByteBClearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F082C
+    - '@source: src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F082C.c'
+    - '@behavior: Index 0 of the three-entry handler table at 0x801F0BDC that the work-byte-2 dispatcher at 0x801F07E8 resolves. Loads the battle record pointer published at 0x8014638C through one cell-address local whose base stays in a saved register across the first call, submits that record through the shared function at 0x80196718, then submits its positional effect through the shared helper at 0x8019651C with the 0/0/0 offsets and mode 1 - the mode constant materialised before the argument registers are cleared and stored into the fifth argument slot in the call delay slot - and stores the low return byte, the submitted effect byte, in the scratchpad work-object byte at offset 0xB. It then clears the work object byte at offset 0x9 with sb $zero and increments the object byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb), advancing the work-byte-2 handler sequence. The work-object pointer cell at 0x1F800044 is re-read for each of the three accesses. The 0x20-byte frame holds the saved cell base, $ra and the fifth-argument stack slot. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 7352
     - c
     - incrementWorkByteBRecordCountersOnFrameParityThenAdvanceWorkByte2WhenCounterIs8BmagicMagic06000_801F08B8

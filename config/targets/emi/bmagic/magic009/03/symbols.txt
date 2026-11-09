@@ -15,6 +15,6 @@ func_801EF3B8 = 0x801EF3B8;
 func_801EF6B0 = 0x801EF6B0;
 func_801EF740 = 0x801EF740;
 func_801EF788 = 0x801EF788;
-func_801EF814 = 0x801EF814;
+decrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenZeroBmagicMagic00903_801EF814 = 0x801EF814;
 invokeHelperBmagicMagic00903_801EF87C = 0x801EF87C;
 D_801EF89C = 0x801EF89C;

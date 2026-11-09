@@ -130,8 +130,9 @@ segments:
     - c
     - setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618
   - - 6768
-    - asm
-    - func_801F4670
+    - c
+    - setStatusFFFFAndStateEntry2BSubstate1WhenGateClearWorld04Area18813_801F4670
+    - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 reads zero, runs the shared front-end startup helper 0x8015C088 and writes the shared state-entry tuple 0x801448EB = 0x2B, 0x801448EC = 0 and 0x801448ED = 1.'
   - - 6860
     - asm
     - func_801F46CC

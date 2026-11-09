@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801F9498
   - - 13452
-    - asm
-    - func_801FA08C
+    - c
+    - armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C
+    - '@source: src/bof3/scenario/armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C.c'
+    - '@behavior: Word 7 of the seventeen-word in-image primary state table at 0x801FE3EC, the word stored at 0x801FE408, that dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes with the signed shared primary state byte D_80146874 and invokes with no arguments, so no in-image jal targets 0x801FA08C and that one table word is its only reference in this payload. It reads the shared sub-state byte D_80146875 once through one address taken into a local pointer, which keeps that base in $s0 for the whole body. Sub-state 0, while the unsigned shared mode byte D_8014623B (0x8014623B, read with lbu) is not 2, runs the shared helper func_801BE1B0(0) and advances the sub-state byte to 1. Sub-state 1, once the front-end phase byte D_80143BB0 (0x80143BB0, read with lbu) leaves 2, sets scenario flag bit 0x13 of the shared flag word D_8014686C (0x8014686C, read with lw) through func_8015B580 and falls into the shared clearing tail. Sub-state 5, while the halfword flag pair D_80145AA8 and D_80145AB8 (0x80145AA8 and 0x80145AB8, both read with lhu) has no bit in common and the phase byte reads 0, clears the shared scenario progress byte g_ScenarioProgress (0x80146864), advances the sub-state byte to 6, then seeds the front selector context func_8019FA28(0x76, 0x490000, 0x188000, 0x81), whose own tail arms that phase byte to 5. Sub-state 6, once the progress byte reads 1 and the phase byte leaves 2, clears the progress byte and falls into that same clearing tail, which runs the shared release helper func_8015C058 and clears the sub-state byte and the primary state byte D_80146874 back to zero, ending the state. Every other sub-state value returns without touching the tail. It takes no arguments, reads no other state and writes no other byte, and its 0x18-byte frame only keeps $ra and $s0.'
   - - 13808
     - asm
     - func_801FA1F0

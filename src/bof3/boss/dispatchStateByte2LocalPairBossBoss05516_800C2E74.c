@@ -3,7 +3,7 @@
 typedef void (*Boss05516Handler)(void);
 
 void func_800C2ECC(void);
-void func_800C2FA4(void);
+void callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4(void);
 
 /* @source 0x800C2E74
  * @behavior Overlay step dispatch on the state byte of the work record
@@ -29,7 +29,7 @@ void func_800C2FA4(void);
  * @residual none
  */
 void dispatchStateByte2LocalPairBossBoss05516_800C2E74(void) {
-  Boss05516Handler handlers[2] = { func_800C2ECC, func_800C2FA4 };
+  Boss05516Handler handlers[2] = { func_800C2ECC, callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4 };
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic05703_801EFABC.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic05703_801EF81C.c",
     "src/bof3/support/magic057_03_psyq.c",
+    "src/bof3/bmagic/seedWorkObjectFromDecrementedRecordPositionPairPublishDistanceRequestResource0AndAdvanceWorkByte2BmagicMagic05703_801EF900.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic05703_801EF02C.c",
     "src/bof3/bmagic/advanceWorkByte1AndClearWorkByte2WhenWorkBytes9AEqualBmagicMagic05703_801EEFA4.c",
     "src/bof3/bmagic/decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0.c",
