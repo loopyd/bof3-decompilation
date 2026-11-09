@@ -131,6 +131,11 @@ impl Ports {
             return Err("SPU current voice-volume writes are not hardware-verified".into());
         }
         if offset < 0x180 {
+            if offset & 15 == 12
+                && self.voices.sample_model() == spu_sample::Model::EmulatorReference
+            {
+                return Ok(());
+            }
             return self
                 .voices
                 .write((offset / 16) as usize, offset & 15, value);

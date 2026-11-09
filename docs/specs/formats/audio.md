@@ -1680,8 +1680,10 @@ frame's gain using the selected ordering. The
 [voice owner](#rust-spu-sample-and-voice-execution) uses the preceding envelope
 for published output and the freshly stepped envelope for native-reference
 output. Native ADSR writes, key-off and phase changes preserve the counter;
-key-on resets it. Signed manual level injection remains a Rust component policy,
-while the native guest ENVX handler ignores writes. Neither arithmetic model
+key-on resets it. Signed manual level injection remains a Rust component policy.
+Native-reference voice ports ignore guest ENVX writes without changing envelope
+state; Published ports retain manual injection. Direct `Voices::write` calls at
+offset 12 inject component state for either model. Neither arithmetic model
 establishes hardware fidelity, MMIO timing or CPU/sample alignment.
 
 [Existing checks](../../../tools/rust/bof3-audio/tests/adsr.rs) cover phase traces,
