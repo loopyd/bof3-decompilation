@@ -2514,8 +2514,8 @@ XA EOF/EOR state and CDDA peak phase commit only after the feed returns.
 callback before visiting later slots from the retained pass. Retry can leave it
 waiting. Available capacity admits the batch even with `TimedOut`; timeout drops
 callback output only while capacity remains insufficient. Suspension and
-resumption do not advance CPU, timer or output-clock time. Native host wall-clock
-timeout behavior remains unaccepted.
+resumption do not advance CPU, timer or output-clock time. Production host-output
+scheduling and complete runtime timing remain unaccepted.
 
 `Execution::step` and `step_retired` return `StepOutcome { retired, devices }`.
 A retired instruction is reported once, including when its device pass waits.
@@ -3009,6 +3009,12 @@ and retains those histories. Another sector rejects while submission is pending.
 Queued and pending frames, timeout drops, muted sectors, consumption and empty
 output are counted separately. Malformed input fails on a private candidate
 without changing queue state. Host wait timing and hardware latency remain open.
+
+The native Audio ABI 6 journal pairs each XA/CDDA feed with mutex-protected
+queue counts, the initial capacity predicate and elapsed host wait duration.
+These observations can supply admission outcomes for a Rust replay. They do not
+schedule production host output or convert a host duration into CPU cycles. See
+the [native capture contract](../../../.agents/skills/psx-emulator/references/audio.md).
 
 XA mute is sampled at sector admission. An admitted muted sector advances ADPCM
 predictor history, but does not resample or append output. Previously queued

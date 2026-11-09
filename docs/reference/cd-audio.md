@@ -269,6 +269,12 @@ while full discards only the pending output, retaining both advanced histories.
 Another sector cannot enter until the pending submission finishes or resets.
 The model does not measure the native host's 200 ms wait or infer hardware timing.
 
+The [native Audio journal](../../.agents/skills/psx-emulator/references/audio.md)
+records queue counts under the admission mutex and the host duration around
+`wait_for`. Its initial blocked predicate distinguishes immediate admission from
+admission after capacity becomes available. Replays can use these observed
+outcomes; production host scheduling and hardware latency remain separate.
+
 Mute advances ADPCM predictors but skips interpolation and submission, regardless
 of queue occupancy. Unmuted decoding applies active drive gain before waiting;
 later latches leave queued and pending frames unchanged. Output supplies the
