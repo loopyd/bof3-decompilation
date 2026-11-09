@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp67800_801CF108.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp67800_801CEB34.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp67800_801CEE34.c",
+    "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp67800_801D014C.c",
 ]
 psyq_source = "src/bof3/support/plp678_00_psyq.c"

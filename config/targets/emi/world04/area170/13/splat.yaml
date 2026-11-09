@@ -47,8 +47,10 @@ segments:
     - invokeHelperWorld04Area17013_801F2F80
     - '@source: src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c'
   - - 928
-    - asm
-    - func_801F2FA0
+    - c
+    - drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0
+    - '@source: src/bof3/world/drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0.c'
+    - '@behavior: Draws one glyph of the overlay banner as a 9-by-7 grid of 10-pixel cells at the signed halfword origin (x, y). Arms draw mode 2 and covers the 0x5A by 0x46 glyph box with one semi-transparent (0x40, 0x40, 0x40) POLY_F4, then arms draw mode 1 and draws the cell borders as ten gray (0x96) vertical lines at x+10k running from y to y+0x45 and eight at y+10k running from x to x+0x59. It then marks every cell of the grid: display column j at x+10j takes its seven row values from the 63-byte signed glyph table that is passed in, read at row*9+phase, with the phase advanced by one per display column and wrapped to zero once it reaches nine. Each value goes to the marker routine at 0x801F388C, whose 1 draws a cross and whose -1 draws a blue bar.'
   - - 1500
     - c
     - drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC

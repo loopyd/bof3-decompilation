@@ -48,8 +48,10 @@ segments:
     - '@source: src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7334.c'
     - '@behavior: Submits the 0x98-byte work records at 0x80146888 selected by work bytes 3 and 4 through func_80196718, then clears the scratchpad work-area header through func_80196070.'
   - - 1980
-    - asm
-    - func_801F73BC
+    - c
+    - tickCountdownThenDrawIndexedRectAndAdvanceWorkByte1ScenarioScena0300_801F73BC
+    - '@source: src/bof3/scenario/tickCountdownThenDrawIndexedRectAndAdvanceWorkByte1ScenarioScena0300_801F73BC.c'
+    - '@behavior: Ticks work byte 9; at zero draws a 16 by 40 draw-area move rect from the overlay record run at 0x801FCF40 selected by work byte 1, advances work byte 1, clears byte 0x29, reloads the countdown from it and clears the work-area header at step 4.'
   - - 2312
     - c
     - dispatchWorkByte1HandlerScenarioScena0300_801F7508

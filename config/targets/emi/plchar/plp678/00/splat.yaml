@@ -125,8 +125,10 @@ segments:
     - c
     - dispatchWorkByte2Table05b0PlcharPlp67800_801D0108
   - - 7500
-    - asm
-    - func_801D014C
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp67800_801D014C
+    - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp67800_801D014C.c'
+    - '@behavior: Work byte 3 == 9 step of this overlay and entry 0 of the work-byte-2 dispatch: the word 0x801D014C stands at 0x801D05B0, entry 19 of the thirty-word code-pointer run 0x801D0564 through 0x801D05D8, which is the base the work-byte-2 dispatcher 0x801D0108 indexes by work byte 2, and it sits 0x24 bytes above the base 0x801D058C that the byte-3 dispatcher 0x801CEF20 indexes by work byte 3, so no jal in this payload names it. It takes the unsigned route index byte 8 of the work record read through the scratchpad pointer cell 0x1F800044 and compares its distance from the two candidate route indices 3 and 5: when the distance to 5 is the smaller one it asks the shared helper func_801B2D00 for the step sign towards 5 and stores that answer in work byte 0x0B, otherwise it asks for the sign towards 3 and stores that, and both paths then store the chosen candidate index in work byte 3 through one shared store, so the two branches differ only in the argument and in the constant they hand to the helper. The body then sets the countdown byte 9 to 2 and increments the step counter byte 2, which re-arms the work object for the selected route. The route byte is loaded once and both distances are computed from it, the pointer cell is re-read before every store because a store through the pointer may alias the cell itself, the first pointer load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the calls and the two paths join on one epilogue. The 0xCC-byte span agreed with the exact lift at plp27a 0x801CE448 in 50 of its 51 words, the one differing word being the intra-body jump at span offset 0x64 that encodes its own shared-store address against the sibling answer by exactly the address delta, so that lift is shape evidence and not a clone.'
   - - 7704
     - asm
     - func_801D0218

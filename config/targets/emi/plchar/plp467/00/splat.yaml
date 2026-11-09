@@ -141,8 +141,10 @@ segments:
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp46700_801D010C
   - - 7664
-    - asm
-    - func_801D01F0
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp46700_801D01F0
+    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp46700_801D01F0.c'
+    - '@behavior: Candidate-route probe of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached twice from func_801CF940 of this payload at call words 0x801CF970 and 0x801CF9A0: that caller skips both calls when bit 0 of work byte 0x08 is set, and otherwise rewinds the byte by one through the mask 7, calls this body, steps the byte forward by two, masks again and calls once more, leaving for its own tail as soon as either answer is nonzero. The body projects the work position by adding the doubled movement offsets 0x80181B94 and 0x80181B98 selected by route byte 0x08 to the work words 0x34 and 0x38, hands that pair with range 0 to the shared slot search func_801BDE14 and starts its answer at one unless that call answers minus one, then probes map codes through the shared func_80166CB0 for the projected cell, for the cell one column further when the first projected word has a nonzero low half and for the cell one row further when the second does, raising the answer to one whenever a code reads 0xF2. It takes no arguments and returns that answer as an unsigned byte; the 0x30-byte frame keeps the return address at 0x28 and six saved registers across the calls, and the range constant is materialised before the projection tables are read. The 0x134-byte span measured byte-identical to the exact lifts at 0x801CF940 of plp247, 0x801CF724 of plp27a, 0x801CEFF8 of plp012, 0x801CFD20 of plp257, 0x801CF744 of plp457 and 0x801CF528 of plp578.'
   - - 7972
     - c
     - dispatchWorkHalfword2cTable0404PlcharPlp46700_801D0324

@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28.c",
     "src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c",
     "src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c",
+    "src/bof3/world/drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

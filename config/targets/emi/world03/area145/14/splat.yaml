@@ -107,8 +107,10 @@ segments:
     - asm
     - func_801F3F18
   - - 5080
-    - asm
-    - func_801F3FD8
+    - c
+    - requestFrontSelectorContextWorld03Area14514_801F3FD8
+    - '@source: src/bof3/world/requestFrontSelectorContextWorld03Area14514_801F3FD8.c'
+    - '@behavior: Requests the shared front selector context through func_8019FA28 with the fixed tuple of selection seed 0x70, context pair 0xC8000/0x580000 and kind 0x81; the overlay code-pointer run at 0x801F5C20 holds this address at the word 0x801F5C2C.'
   - - 5128
     - asm
     - func_801F4008

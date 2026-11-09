@@ -358,8 +358,10 @@ segments:
     - asm
     - func_801F9F8C
   - - 13724
-    - asm
-    - func_801FA19C
+    - c
+    - drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C
+    - '@source: src/bof3/scenario/drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C.c'
+    - '@behavior: Emit one semi-transparent Gouraud line between the two work points the movement handlers hand over: publish the GetTPage(0, 1, 0x3C0, 0x100) draw mode at the primitive cursor, queue that 0x0C-byte packet under OT slot 1, stamp the re-read LINE_G2 cursor cell, project both three-word positions into one screen pair, write the first as x0/y0 and the second as x1/y1 with the head at grey 0x40 and the tail at black, and queue the 0x14-byte line under OT slot 1.'
   - - 13972
     - c
     - dispatchProgressHandlerScenarioScena0800_801FA294

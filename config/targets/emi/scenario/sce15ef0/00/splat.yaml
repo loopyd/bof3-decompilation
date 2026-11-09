@@ -73,8 +73,9 @@ segments:
     - drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540
     - '@source: src/bof3/scenario/drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540.c'
   - - 2704
-    - asm
-    - func_801D1690
+    - c
+    - drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690
+    - '@source: src/bof3/scenario/drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690.c'
   - - 3348
     - c
     - drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914

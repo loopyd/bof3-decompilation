@@ -8,13 +8,15 @@
  */
 extern u8* D_1F800044;
 
-/* Step test of this payload, whose own Splat row is still `asm`: it reads work
- * byte 8, takes that entry of the direction-vector word tables at
+/* Step test of this payload, lifted exact at 0x801CF7A0 as
+ * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0:
+ * it reads work byte 8, takes that entry of the direction-vector word tables at
  * 0x80181B94/0x80181B98, offsets the record position held at work +0x34/+0x38 by
  * the entry and classifies the tile the step lands on. This caller reads that
- * answer as an unsigned byte without a lift of the callee.
+ * answer as an unsigned byte.
  */
-u8 func_801CF7A0(void);
+u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0(
+    void);
 
 /* Position refresh of this payload, lifted exact at 0x801CF944 as
  * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
@@ -40,7 +42,7 @@ u32 func_8014D8D4(u8 arg0);
  *           D_801D07B8 indexes, the word at 0x801D07B8 of the in-image pointer
  *           run at 0x801D078C. When work byte 8 is even it first rewrites that
  *           byte: it stores the decremented direction ((byte 8 - 1) & 7), calls
- *           the payload step test func_801CF7A0 and, only while that call reads
+ *           the payload step test at 0x801CF7A0 and, only while that call reads
  *           zero, stores the neighbour two steps the other way ((byte 8 + 2) & 7)
  *           and calls the same test again; if that call reads zero too the byte is
  *           put back to the decremented direction. Both paths then run the
@@ -67,9 +69,11 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenc
     void) {
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (func_801CF7A0() == 0) {
+    if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0() ==
+        0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (func_801CF7A0() == 0) {
+      if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0() ==
+          0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }
     }

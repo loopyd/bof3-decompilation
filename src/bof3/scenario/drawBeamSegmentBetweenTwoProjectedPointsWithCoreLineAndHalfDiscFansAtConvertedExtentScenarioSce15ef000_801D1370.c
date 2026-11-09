@@ -9,8 +9,9 @@ void func_8017AA80(void* arg0);
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
 void func_801AFFD8(const void* arg0, void* arg1, void* arg2);
-void func_801D1690(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
-                   s32 arg6, s32 arg7);
+void drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690(
+    s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
+    s32 arg7);
 void drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540(
     s16 x, s16 y, s32 scale, s32 start_angle);
 
@@ -45,11 +46,11 @@ typedef struct ScenarioSce15ef000ScreenPoint {
  * half-disc fan of eight Gouraud triangles is then drawn at the first vertex
  * from that radius starting at the axis angle plus 0x400, the pair is converted
  * again at the second vertex for the second radius, a second fan is drawn at the
- * second vertex from the axis angle plus 0xC00, and func_801D1690 closes the
- * body by taking both vertex pairs, both radii and both start angles. The two
- * start angles sit half a turn apart, 0x800 of the 0x1000 phase circle, which is
- * the span each eight-triangle fan covers, so the two caps meet the body quad as
- * the round ends of one capsule.
+ * second vertex from the axis angle plus 0xC00, and a translucent Gouraud
+ * quad pair closes the body by taking both vertex pairs, both radii and both
+ * start angles. The two start angles sit half a turn apart, 0x800 of the 0x1000
+ * phase circle, which is the span each eight-triangle fan covers, so the two
+ * caps meet the body quad as the round ends of one capsule.
  *
  * Evidence: the LINE_F2 identity is the 0x10 link size together with the
  * r0/g0/b0 stores at cursor offsets +0x04/+0x05/+0x06 and the two 4-byte corner
@@ -88,10 +89,10 @@ typedef struct ScenarioSce15ef000ScreenPoint {
  * those two absolute `jal` words alone.
  *
  * Frame: the 0x70-byte frame carries the 16-byte incoming argument home area at
- * sp+0x00, the four-word outgoing argument block of func_801D1690 from sp+0x10
- * (the call whose stack words are 0x10, 0x14, 0x18 and 0x1C), the two 8-byte
- * screen entries at sp+0x20 and sp+0x28, the 0x20-byte sort scratch from sp+0x30
- * and the saved group $s0-$s5 plus $ra from sp+0x50 to sp+0x6C.
+ * sp+0x00, the four-word outgoing argument block of the beam-body quad pair at
+ * sp+0x10 (the call whose stack words are 0x10, 0x14, 0x18 and 0x1C), the two
+ * 8-byte screen entries at sp+0x20 and sp+0x28, the 0x20-byte sort scratch from
+ * sp+0x30 and the saved group $s0-$s5 plus $ra from sp+0x50 to sp+0x6C.
  * @status exact
  * @match 100.00
  * @residual none
@@ -134,6 +135,7 @@ void drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConver
   second_extent = screen[1].x + (D_80143E6C & 1);
   drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540(
       prim->x1, prim->y1, second_extent, second_angle);
-  func_801D1690(prim->x0, prim->y0, first_extent, first_angle, prim->x1,
-                prim->y1, second_extent, second_angle);
+  drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690(
+      prim->x0, prim->y0, first_extent, first_angle, prim->x1, prim->y1,
+      second_extent, second_angle);
 }

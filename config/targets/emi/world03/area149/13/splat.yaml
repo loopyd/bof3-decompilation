@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F2FC4
   - - 1128
-    - asm
-    - func_801F3068
+    - c
+    - requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068
+    - '@source: src/bof3/world/requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068.c'
+    - '@behavior: Step 2 of the four-entry handler run this overlay bases at 0x801F4580, which func_801F2EFC indexes with work byte 4: when the shared signed halfword 0x8014932C is zero the body stores 0x14 into the scenario progress byte, queues front-end cue 1 through func_8015DF18 and increments work byte 4 to advance the run, and whether or not that gate fires it stores 3 into the flag byte 0x80147AD0 while the shared coordinate word 0x80147A8C is still below the shared X channel 0x80149308 widened by a 0x20000 window, then calls the local helper func_801F3140 with -2 and subtracts 2 from the +0x0A halfword of the record published through 0x80148210; takes no arguments and returns nothing.'
   - - 1288
     - asm
     - func_801F3108

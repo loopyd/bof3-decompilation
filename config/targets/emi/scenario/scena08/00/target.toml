@@ -16,6 +16,7 @@ sources = [
     "src/bof3/scenario/seedTwoObjectRowsAtProgress6ThenSetFlagBit14AndResetHandlerScenarioScena0800_801FD400.c",
     "src/bof3/scenario/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackScenarioScena0800_801F9470.c",
     "src/bof3/scenario/gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioScena0800_801FBA70.c",
+    "src/bof3/scenario/drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",
