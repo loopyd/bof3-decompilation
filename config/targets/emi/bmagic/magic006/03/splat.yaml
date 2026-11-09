@@ -65,8 +65,9 @@ segments:
     - asm
     - func_801EF118
   - - 1688
-    - asm
-    - func_801EF298
+    - c
+    - queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298
+    - '@source: src/bof3/bmagic/queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298.c'
   - - 2076
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C

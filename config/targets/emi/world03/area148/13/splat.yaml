@@ -99,8 +99,9 @@ segments:
     - c
     - setWorld03Area14813_801F3A0C
   - - 3616
-    - asm
-    - func_801F3A20
+    - c
+    - startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14813_801F3A20
+    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14813_801F3A20.c'
   - - 3812
     - asm
     - func_801F3AE4

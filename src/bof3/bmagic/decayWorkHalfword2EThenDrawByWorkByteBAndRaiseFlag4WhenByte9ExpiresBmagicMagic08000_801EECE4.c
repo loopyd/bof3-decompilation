@@ -7,12 +7,14 @@ void func_800AF764(void);
 
 /* The two draw variants this entry selects by the work object's byte 0x0B; each
  * one emits SetPolyFT4, GetTPage, GetClut and func_8014E5A0 prims over the work
- * halfwords at 0x2E and 0x30. The zero-mask variant is lifted in this target as
- * drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94;
- * the non-zero-mask variant func_801EEF5C is still assembly in this overlay. */
+ * halfwords at 0x2E and 0x30. The zero-mask variant is the six-tile row
+ * drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
+ * and the non-zero-mask variant is the seven-tile row
+ * drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C. */
 void drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94(
     void);
-void func_801EEF5C(void);
+void drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C(
+    void);
 
 void func_800A9820(u8 arg0);
 void func_801E5988(void);
@@ -40,8 +42,10 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *   0x801EEC5C advances into. It first calls the shared update pass
  *   func_800AF764, re-reads the work-object pointer cell 0x1F800044 and
  *   subtracts 0x24 from the unsigned work halfword 0x2E at halfword width, that
- *   store filling the branch delay slot. It then calls the draw variant
- *   func_801EEF5C when the work object byte 0x0B (the random mask byte state 0
+ *   store filling the branch delay slot. It then calls the seven-tile draw
+ *   variant
+ *   drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C
+ *   when the work object byte 0x0B (the random mask byte state 0
  *   seeds) is non-zero and the lifted six-tile row variant
  *   drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
  *   when it is zero. After that group it re-reads the pointer cell and
@@ -71,7 +75,7 @@ void decayWorkHalfword2EThenDrawByWorkByteBAndRaiseFlag4WhenByte9ExpiresBmagicMa
   work = g_battle_work;
   *(u16 *)(work + 0x2E) -= 0x24;
   if (work[0xB] != 0) {
-    func_801EEF5C();
+    drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C();
   } else {
     drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94();
   }

@@ -16,9 +16,10 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * 0x801EF124. Every entry is four bytes: the (u, v) halfword pair of one 12x12
  * texel cell sits at +0 and +2, and the original reads each halfword at a byte
  * offset of the loop counter times four, so the run is a byte table of
- * 4-byte entries. The two-layer draw variant func_801EEF5C reads the sibling
- * table 0x801EF13C, six entries further on, the same way, so the run belongs to
- * the overlay and keeps its address-qualified name. */
+ * 4-byte entries. The non-zero-mask draw variant
+ * drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C
+ * reads the sibling table 0x801EF13C, six entries further on, the same way, so
+ * the run belongs to the overlay and keeps its address-qualified name. */
 extern u8 D_801EF124[]; /* @source 0x801EF124 @kind unknown */
 
 /* Matching note: the scaled table offset belongs in a separate `offset` local.
@@ -35,8 +36,9 @@ extern u8 D_801EF124[]; /* @source 0x801EF124 @kind unknown */
 /* @source 0x801EED94
  * @behavior Textured row variant of the MAGIC080 overlay: the draw entry the
  *   work byte 1 state 1 handler func_801EECE4 selects when the random frame-mask
- *   byte 0x0B is zero, where the same handler selects func_801EEF5C for a
- *   non-zero mask. It emits six 0x28-byte POLY_FT4 primitives from the cursor
+ *   byte 0x0B is zero, where the same handler selects
+ *   drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C
+ *   for a non-zero mask. It emits six 0x28-byte POLY_FT4 primitives from the cursor
  *   cell 0x8014598C, one per loop iteration, each after SetPolyFT4 stamps it.
  *   Every primitive is a 12x12 texel cell: x0 and x2 take the work halfword
  *   0x2E plus the counter times 0xC and x1 and x3 take that halfword plus the

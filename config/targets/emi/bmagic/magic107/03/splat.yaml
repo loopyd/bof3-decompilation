@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte1AtC0BmagicMagic10703_801EEF0C.c'
     - '@behavior: Overlay step handler for the scratchpad work object read through pointer cell 0x1F800044: increments the object unsigned byte 0x09 by one at byte width, then re-reads the pointer cell into a local pointer and, when the re-read unsigned byte 0x09 equals 0xC0, increments work byte 0x01 through that same loaded pointer, the byte the in-payload dispatcher at 0x801EEC04 scales by four to select its two-word handler run (0x801EEC5C, 0x801EED40). Leaf with no frame, no argument and no return value; reads or writes no other state, and no jal or in-image word in this payload names the span.'
   - - 860
-    - asm
-    - func_801EEF5C
+    - c
+    - incrementWorkByte9AndDecrementWorkByteAThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic10703_801EEF5C
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic10703_801EEF5C.c'
+    - '@behavior: Overlay step handler for the scratchpad work object read through pointer cell 0x1F800044: increments the object unsigned byte 0x09 by one at byte width, re-reads the pointer cell and subtracts one from unsigned byte 0x0A the same way, then re-reads the cell once more and tests the byte 0x0A found there. Only when that byte is zero it loads the battle work record pointer from main RAM address 0x801EB4E0, stores 0xFF into that record byte 0x0B and calls the shared helper at 0x801E5988. The 0x18-byte frame only keeps the return address across the call. Takes no arguments, returns nothing, and no in-image word of this payload names the span.'
   - - 980
     - asm
     - func_801EEFD4

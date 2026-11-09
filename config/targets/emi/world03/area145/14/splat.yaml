@@ -189,8 +189,10 @@ segments:
     - c
     - noopHandlerWorld03Area14514_801F5324
   - - 10028
-    - asm
-    - func_801F532C
+    - c
+    - drawFullScreenSkyBlueToNavyGradientQuadWhileOverlayStateSetWorld03Area14514_801F532C
+    - '@source: src/bof3/world/drawFullScreenSkyBlueToNavyGradientQuadWhileOverlayStateSetWorld03Area14514_801F532C.c'
+    - '@behavior: Overlay curtain drawer gated on the shared overlay state byte 0x8014933B: while it reads zero the body returns, otherwise it takes the draw-mode texture page 0x225 when GetGraphType answers 1 or the repeated probe answers 2 and 0x95 for any other answer, arms SetDrawMode on the shared primitive cursor 0x8014598C with dfe 0, dtd 1, that page and a null fifth argument, appends the 0x0C-byte draw mode packet to ordering table slot 7, stamps the 0x24-byte POLY_G4 at the cursor with SetPolyG4 and a cleared SetSemiTrans bit, fills it as a full-screen quad from 0/0 to 0x140/0xF0 coloured 0/0xC8/0xFF on the top pair and 0/0/0x20 on the bottom pair, and appends that 0x24-byte packet to slot 7.'
   - - 10292
     - textbin
     - D_801F5434

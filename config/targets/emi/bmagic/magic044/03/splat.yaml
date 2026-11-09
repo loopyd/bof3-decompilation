@@ -80,7 +80,7 @@ segments:
     - c
     - dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478.c'
-    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and uses the work-object byte at offset 0x2, scaled by four, to select one entry of the three-entry handler table at 0x801F0A2C, which it calls with no arguments; then re-reads the pointer cell and, when the work-object byte at offset 0x0 and the byte at offset 0x2 are both non-zero, calls the overlay primitive routine func_801F06D8.'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and uses the work-object byte at offset 0x2, scaled by four, to select one entry of the three-entry handler table at 0x801F0A2C, which it calls with no arguments; then re-reads the pointer cell and, when the work-object byte at offset 0x0 and the byte at offset 0x2 are both non-zero, calls the overlay quad emitter drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8 at the same address.'
   - - 6384
     - c
     - invokeHelperAdd8ToWorkHalfword30SeedRandomWorkBytes5d5e5fResetByte9SetByteATo10AdvanceWorkByte2BmagicMagic04403_801F04F0
@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkHalfword30ByTwoAndHalfword2EByOneAdvanceByte9By1WhenByteAZeroDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic04403_801F0638.c'
     - '@behavior: Entry 2 of the three-entry handler table at 0x801F0A2C that the work-byte-2 dispatcher dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478 indexes with the scratchpad work-object byte 0x2; reads the work pointer cell at 0x1F800044 once before its frame and, through that one base, subtracts two from the work object halfword 0x30 and adds one to work byte 9 with the byte store in the rand() call delay slot, then re-reads the cell and subtracts one from halfword 0x2E, then re-reads the cell, subtracts one from byte 0x0A and tests the stored byte truncated to eight bits, so it reads the shared record pointer at 0x801EB4E0, decrements that record byte 0x0B and invokes func_801E5988 only when byte 0x0A reaches zero. Takes no arguments and returns nothing.'
   - - 6872
-    - asm
-    - func_801F06D8
+    - c
+    - drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8
+    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimesBytes5d5e5fBmagicMagic04403_801F06D8.c'
+    - '@behavior: The quad emitter the work-byte-2 dispatcher dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478 calls with no arguments from 0x801F04D8 once the work object byte 0x0 and the handler index byte 0x2 are both non-zero. It reads the shared graphic type twice and selects the draw-mode texture page 0x125 when either answer is 1 or 2 and 0x55 otherwise, then links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 anchored at the work object projection words 0x34 and 0x38 with kind 2 through func_80155A08. It publishes work byte 9 shifted left 1 as the radius in the scratchpad halfword 0x1F800000, takes a fresh g_PrimCursor POLY_FT4, seeds it with SetPolyFT4 and marks it semi-transparent, then writes four corners around the work object screen halfwords 0x2E and 0x30 from the 0x801783C8 and 0x801782FC samples of the constant corner angles 0x200, 0x600, 0xE00 and 0xA00 scaled by that radius and shifted right 12. The texture is tpage GetTPage(0, 2, 0x340, 0x100) and clut GetClut(0x20, 0x1FA) with the fixed 0x20-by-0x20 uv tile at (0x80, 0x20), and the tint is work byte 0xA times the signed work bytes 0x5D, 0x5E and 0x5F for red, green and blue, published in the scratchpad halfwords 0x1F80000A, 0x1F80000C and 0x1F80000E and read back for the colour bytes. It then links the 0x28-byte polygon at the same projection words with kind 2 and returns, so it stores nothing but those scratchpad cells and the primitive; its 0x28-byte frame keeps $ra, $s1, $s0 and the fifth draw-mode argument at 0x10.'
   - - 7696
     - textbin
     - T_801F0A10

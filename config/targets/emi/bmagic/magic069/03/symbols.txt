@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
-func_801EEE30 = 0x801EEE30;
+forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06903_801EEE30 = 0x801EEE30;
 dispatchStateByte1Table04f8BmagicMagic06903_801EEE90 = 0x801EEE90;
 func_801EEED4 = 0x801EEED4;
 decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034 = 0x801EF034;

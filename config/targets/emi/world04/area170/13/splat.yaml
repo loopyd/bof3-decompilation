@@ -169,8 +169,9 @@ segments:
     - asm
     - func_801F4B58
   - - 10148
-    - asm
-    - func_801F53A4
+    - c
+    - startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4
+    - '@source: src/bof3/world/startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4.c'
   - - 10904
     - asm
     - func_801F5698

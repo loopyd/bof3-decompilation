@@ -9,7 +9,7 @@ decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleTowa
 func_801EF04C = 0x801EF04C;
 func_801EF0B8 = 0x801EF0B8;
 func_801EF118 = 0x801EF118;
-func_801EF298 = 0x801EF298;
+queueEightSlotsSetByte1RandomByte9PublishRecordPointerThenSlotSetByte1To2InvokeHelperAt102RearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EF298 = 0x801EF298;
 decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801EF41C = 0x801EF41C;
 func_801EF478 = 0x801EF478;
 func_801EFB6C = 0x801EFB6C;

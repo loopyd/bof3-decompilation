@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC5C
   - - 352
-    - asm
-    - func_801EED60
+    - c
+    - copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60
+    - '@source: src/bof3/bmagic/copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60.c'
+    - '@behavior: Copies the unsigned halfword pair 0x2E and 0x30 of the battle record pointer at 0x8014638C into the scratchpad work object read through 0x1F800044, subtracting 0x10 from the second halfword, and returns while work byte 0xB differs from 0xFF. Only on that equality does it select the battler record of the shared target byte at 0x80146384 (0x140-byte party entries at 0x80145E90 below three, 0x118-byte enemy entries at 0x801EB2E8 otherwise), submit it through func_80196718, forward the target byte to func_800AF814 and func_800A9820, raise bit 4 of the shared halfword at 0x801462E8 and invoke the shared helper func_801E5988. The 0x18-byte frame keeps the return address and the base of 0x80146384, and it takes no arguments and returns nothing.'
   - - 588
     - asm
     - func_801EEE4C
