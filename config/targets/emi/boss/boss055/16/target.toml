@@ -37,6 +37,7 @@ support_sources = [
     "src/bof3/boss/callEnemyReadyThenFoldHalfword96RaiseFlag800ClearModeByteAndAdvanceWorkByte2BossBoss05516_800C2158.c",
     "src/bof3/boss/claimKind3Mode5SlotCopyWorkHeadPublishHeadPointerAndStampSlotBytesBossBoss05516_800C238C.c",
     "src/bof3/boss/callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4.c",
+    "src/bof3/boss/callEnemyReadyThenCallHelperWhenGlobalWorkByte1Is2ElseBattleUpdateAndRefreshWorkBossBoss05516_800C2C78.c",
     "src/bof3/support/boss055_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss055_16_psyq.c"

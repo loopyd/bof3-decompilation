@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801EF990
   - - 3620
-    - asm
-    - func_801EFA24
+    - c
+    - decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic09203_801EFA24
+    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic09203_801EFA24.c'
+    - '@behavior: Entry 10 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which dispatchStateByte1Table07bcBmagicMagic09203_801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It decrements work byte 9 by two through the pointer cell at 0x1F800044, increments work byte 0xA when bit 0 of the shared frame counter at 0x80143E6C is set, and only when the reloaded work byte 9 equals 1 does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801EFB00; work bytes 9, 0xA and 0x00..0x04 and record byte 0xB stay offset-anchored.'
   - - 3844
     - asm
     - func_801EFB04

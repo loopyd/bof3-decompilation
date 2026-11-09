@@ -89,8 +89,9 @@ segments:
     - asm
     - func_801EFC74
   - - 4904
-    - asm
-    - func_801EFF28
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic05603_801EFF28
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic05603_801EFF28.c'
   - - 5096
     - c
     - copyRecordByte27ThenAdvanceWorkByte2BmagicMagic05603_801EFFE8

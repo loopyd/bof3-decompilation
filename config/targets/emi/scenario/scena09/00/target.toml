@@ -53,6 +53,7 @@ support_sources = [
     "src/bof3/scenario/clearWorkByte0ThenRequestPrimaryState0DSubstate5ScenarioScena0900_801FC748.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDCF4.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDD38.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0900_801FDD7C.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDDC8.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDE0C.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC.c",

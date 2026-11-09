@@ -167,8 +167,10 @@ segments:
     - asm
     - func_801F4AAC
   - - 7972
-    - asm
-    - func_801F4B24
+    - c
+    - claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24
+    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24.c'
+    - '@behavior: Overlay record seed: asks the shared free-record selector 0x8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record of the shared table 0x80143FC8 occupied with record byte +0 = 1 and stores handler selector 0xB9 in record byte +5.'
   - - 8064
     - asm
     - func_801F4B80

@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/bmagic/addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenGlobalWorkByteBIs1AndChannelIsZeroBmagicMagic05603_801F0658.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic05603_801EF17C.c",
     "src/bof3/bmagic/raiseFlag20SetByte5CToOneClearWorkColorTripletThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05603_801F0024.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic05603_801EFF28.c",
 ]
 psyq_source = "src/bof3/support/magic056_03_psyq.c"

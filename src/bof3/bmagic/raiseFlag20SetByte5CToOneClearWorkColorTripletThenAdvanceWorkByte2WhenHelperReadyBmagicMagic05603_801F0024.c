@@ -31,8 +31,10 @@ extern u8 func_8014DAEC(void); /* @source 0x8014DAEC */
  *           0x5F, and re-reads the cell once more to advance work byte 2 by one
  *           (lbu / addiu 1 / sb), which moves the work-byte-2 dispatcher to the
  *           next step. Its address is word 1 of the nine-word code pointer run at
- *           0x801EEC10, which the step dispatcher func_801EFF28 copies into its
- *           0x40-byte frame and selects from with work byte 2 scaled by four, so
+ *           0x801EEC10, which the step dispatcher dispatchWorkByte2HandlerThen
+ *           InvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic05603_801EFF28
+ *           copies into its 0x40-byte frame and selects
+ *           from with work byte 2 scaled by four, so
  *           the body runs as that dispatcher's step 1; the same word sits at
  *           0x801EEC14 of the twelve-word run based at 0x801EEC04, whose first
  *           three words the byte-1 dispatcher func_801EEC34 selects from. No jal

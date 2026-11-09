@@ -43,8 +43,9 @@ segments:
     - dispatchStateByte1Table0400BmagicMagic06303_801EEF30
     - '@source: src/bof3/bmagic/magic06303DispatchTables.c'
   - - 884
-    - asm
-    - func_801EEF74
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic06303_801EEF74
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06303_801EEF74.c'
   - - 996
     - asm
     - func_801EEFE4

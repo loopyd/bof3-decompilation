@@ -40,8 +40,10 @@ extern void func_8014D978(void); /* @source 0x8014D978 */
  *           0x10 across its single call; the step takes no arguments, returns
  *           nothing and reads or writes no other state. Its address is word 5 of
  *           the nine-word code pointer run based at 0x801EEC10, which the step
- *           dispatcher func_801EFF28 copies into its 0x40-byte frame and selects
- *           from with work byte 2 scaled by four, so the body runs as that
+ *           dispatcher dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWork
+ *           Bytes0And2SetBmagicMagic05603_801EFF28 copies into its 0x40-byte
+ *           frame and selects from with work byte 2 scaled by four, so the body
+ *           runs as that
  *           dispatcher's step 5; no jal in this payload names 0x801F042C, so it
  *           is reached through the run alone. The roles of work byte 9 and of
  *           work bytes 0x5C, 0x5D, 0x5E and 0x5F are not established beyond the

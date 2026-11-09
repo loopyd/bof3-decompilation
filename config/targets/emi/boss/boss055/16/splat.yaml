@@ -146,8 +146,10 @@ segments:
     - asm
     - func_800C2BA0
   - - 5240
-    - asm
-    - func_800C2C78
+    - c
+    - callEnemyReadyThenCallHelperWhenGlobalWorkByte1Is2ElseBattleUpdateAndRefreshWorkBossBoss05516_800C2C78
+    - '@source: src/bof3/boss/callEnemyReadyThenCallHelperWhenGlobalWorkByte1Is2ElseBattleUpdateAndRefreshWorkBossBoss05516_800C2C78.c'
+    - '@behavior: Overlay step body, entry 1 of the two-entry handler pair that dispatchStateByte2LocalPairBossBoss05516_800C2B48 seeds with 0x800C2BA0 then this function: calls the EXE-side readiness helper 0x801E30F8 first, then reads the shared battle work record pointer at 0x801EB4E0 and, when that record unsigned byte +1 equals 2, calls the shared helper 0x801E5988 alone; otherwise it calls the shared battle update 0x8014D4E0 and this overlay own work refresh 0x800C3284, in that order, discarding each result across the 0x18-byte frame that keeps only $ra.'
   - - 5332
     - c
     - dispatchStateByte2LocalPairBossBoss05516_800C2CD4

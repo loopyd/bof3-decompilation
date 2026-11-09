@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC34
   - - 164
-    - asm
-    - func_801EECA4
+    - c
+    - queueTwoSlotsSetByte1ToZeroAndOnePublishWorkPointerRaiseBattleTargetKindFlagClearWorkByteBAndAdvanceWorkByte1BmagicMagic06000_801EECA4
+    - '@source: src/bof3/bmagic/queueTwoSlotsSetByte1ToZeroAndOnePublishWorkPointerRaiseBattleTargetKindFlagClearWorkByteBAndAdvanceWorkByte1BmagicMagic06000_801EECA4.c'
+    - '@behavior: Work-byte-1 handler of this overlay, index 0 of the five-entry code pointer run at 0x801EEC04 (0x801EECA4, 0x801EED68, 0x801EEE00, 0x801EEE84 and 0x801EEF04, terminated by a zero word) that the dispatcher func_801EEC34 copies into its 0x30-byte frame and selects with the scratchpad work object byte at offset 0x1 scaled by four. This step runs unconditionally: it takes no argument, returns nothing, guards on nothing. It claims an action slot through the shared allocator func_801E590C(1, 0x12) twice, masks each returned index to a byte and scales it by the 0x78-byte slot stride, and never tests the allocator 0xFF answer. The first entry receives 0 in its byte at pool offset +0x01 and the scratchpad work-object pointer in its word at +0x74, the pointer cell read once between the two shifts of the stride product. The second entry receives 1 in byte +0x01 and the re-read pointer in word +0x74, with the stride product completed before the cell is read. It then calls raiseBattleTargetKindFlagFromRecordDeltaRollThenStoreWorkByte4BmagicMagic06000_801EEF50 with a nop in the delay slot, clears the work object byte 0xB through a fresh read of the pointer cell, and closes by re-reading that cell to increment the work object byte 0x1. The 0x18-byte frame keeps only ra at 0x10.'
   - - 360
     - c
     - queueSlotSetByte1To2PublishWorkPointerThenSetWorkByte9To10AndAdvanceWorkByte1WhenWorkByteBIs2BmagicMagic06000_801EED68
