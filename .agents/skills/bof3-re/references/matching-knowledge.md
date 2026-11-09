@@ -876,7 +876,10 @@ The walk state itself can be that cell: when the original advances a published c
 by the record stride and re-materialises the cell's load after each call or iteration,
 keep the loop on the cell - advance the cell in place and address the body through it,
 or read one fresh local from it per iteration - instead of carrying one pointer local
-across the loop, which keeps a single base and drops those reloads.
+across the loop, which keeps a single base and drops those reloads. When the base
+comes once from a selector byte and the body then branches on that same byte each
+iteration, keep the base in its local and spell the test on the named cell, because
+one local for both hoists the test's reload out of the loop.
 
 ### Shared and branch-local cursor loads
 
