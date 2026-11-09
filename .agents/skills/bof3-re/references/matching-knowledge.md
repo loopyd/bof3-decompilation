@@ -457,9 +457,16 @@ stored - a saturation arm testing the sum it wrote - needs the plain view. Witho
 store to separate them the mirror holds: a byte the original re-reads for its own
 decrement after a test already loaded it takes a volatile pointee on the pointer that
 reaches it, while that record's word fields stay plain through typed views whose cast
-drops the qualifier, so the scheduler still interleaves them. On the shared
-scratchpad cell this pointee qualifier sits beside the `u8* volatile` spelling below,
-which still governs reloads of the cell itself. Narrow
+drops the qualifier, so the scheduler still interleaves them. A lone field store the
+original keeps ahead of its neighbouring store group is the mirror of that plain view:
+qualify that store through the field's own address. Take it only once the group's own
+store order and a second alias for the group each leave the first difference on that
+store; the qualified store then matched where every regrouping held the displacement,
+and the byte-offset spelling matches identically, so try one spelling rather than a
+sweep. A call answer narrowed to the store's width is not that lever: its `andi` takes
+the call's delay slot. On the shared scratchpad cell this pointee qualifier sits
+beside the `u8* volatile` spelling below, which still governs reloads of the cell
+itself. Narrow
 volatile pointee may cause `lbu` plus manual sign extension versus original `lb`.
 Remove unjustified qualifier only with semantic evidence; reviewed plain view may
 restore shape. Volatile pointer cell forces reload without qualifying pointee; use
