@@ -26,7 +26,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Symptom | Evidence and clean-C lever |
 | --- | --- |
 | Pointer load versus address calculation | Prove pointer versus array declaration |
-| Wrong relocation/base folding | Standalone symbol versus reviewed struct field/array, then read the original's base register: a second address it reaches as a displacement off a live pointer (`addiu $a0,$s0,0x63C`) while still materialising the neighbouring symbol with `lui $at` stays pointer arithmetic on that local, because the compiler folds no two symbols into one base, so writing the second address as its own symbol drops that shared base |
+| Wrong relocation/base folding | Standalone symbol versus reviewed struct field/array, then read the original's base register: a second address it reaches as a displacement off a live pointer (`addiu $a0,$s0,0x63C`) while still materialising the neighbouring symbol with `lui $at` stays pointer arithmetic on that local, because the compiler folds no two symbols into one base, so writing the second address as its own symbol drops that shared base. The same fold decides one address read two ways: when the original materialises its base at a scaled-index read and again with `lui`+`lh` for fixed fields of record 0, keep the array for the indexed read and bind the record-0 view as its own symbol at that address (a second map row beside the array's, reported for parent review of the same-address pair), because spelling both reads through one declaration — an array of the record type, or a cast of the array — shares or materialises one base, spills it and grows the frame |
 | `addu $at,index,$at` versus `addu $at,$at,index` | Named extern array can shift expansion to assembler; never pin scratch `$at`. For a scaled byte subscript on a named table, four symbol-based spellings (named-array subscript, `(u32)sym + off`, pointer add, offset local) all kept the compiler's operand order and stayed one instruction short, and only a fixed-address lvalue carrying the scale inside its constant (`PSX_REF(u8, base + i*STRIDE)`) produced the original `addu $at,index,$at` |
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web. A fixed-address scalar read and written back later steals it too: bare `g += 1` splits the symbol into `lui` plus displacement at each access, while one pointer local to it (`p = &g; *p = *p + 1;`) keeps the original's single base and clears that entry-block difference with it |
 | Frame and size already equal, but the count stalls and each arm's base sits in a different register than the payload rotates | Own the base inside each arm and declare it with its initializer there (`T *p = &cell;`), which gives that arm's web the register the payload rotates. Function-scope temporaries, block-scope value temporaries and the same declarations in swapped order all measured the same short body at the same size, so no statement order closes it: that plateau is allocation-scope work, not another arm rewrite |
@@ -708,7 +708,11 @@ cell load or a record address computed from a cursor.
    Mutually exclusive arms split the same way: a record pointer declared once and
    used by both arms of an `if`/`else` stays a single quantity, so declare it
    inside each arm. That split made the already-close arm exact at unchanged byte
-   count, while sharing the pointer kept that arm mismatched.
+   count, while sharing the pointer kept that arm mismatched. Loop counters split the
+   same way: one column counter serving two sequential loops put both inductions in
+   one register and left the body short, while a distinct counter for the second loop
+   matched, and a row counter the original does carry into the next loop stays one
+   local, so split only the counters whose registers differ.
    Only the reuse is the defect, not the missing variable. A group read once before
    the next reload point measured the same bytes reached through the named cell as
    through its own variable, so split where two groups share one, not every access:
