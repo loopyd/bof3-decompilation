@@ -2505,6 +2505,11 @@ completion and CD DMA completion. It tests each selected slot's current deadline
 once. Output-clock subdivisions do not dispatch device callbacks. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
+Native CD-port `CpuRead` and `CpuWrite` records retain the interpreter's
+incremented sequential PC, which is the accessing instruction address plus four.
+This also applies in a delay slot, before the pending branch destination takes
+effect. Compare this PC and the absolute access cycle separately.
+
 `advance_devices` returns `DeviceProgress::Ready` or
 `DeviceProgress::WaitingForCdAudio`. A pending batch suspends its callback and
 retains the CPU cycle, original pending-slot snapshot and next slot.
