@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF5FC
   - - 2708
-    - asm
-    - func_801EF694
+    - c
+    - setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694.c'
+    - '@behavior: Step handler of this overlay handler run: the word at 0x801EEC24 holds this function address, index 5 of the ten words the run dispatcher func_801EF058 copies from 0x801EEC10 into its frame and indexes with scratchpad work-object byte 2. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 8 into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing the run to index 6 at 0x801EF6EC. The 8 constant is materialized in the guard branch delay slot, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 2796
     - asm
     - func_801EF6EC

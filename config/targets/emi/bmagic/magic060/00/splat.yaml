@@ -59,8 +59,10 @@ segments:
     - '@source: src/bof3/bmagic/testBattleTargetKindFlagBmagicMagic06000_801EF118.c'
     - '@behavior: Tests one bit of the per-kind flag table at 0x80144FA0 for the current battle target: reads the battle target selector byte 0x80146384, takes the kind byte of that target''s 0x118-byte local panel record at 0x801EB6AC indexed by (selector - 3), and returns nonzero when bit (kind & 0x1F) of the flag word D_80144FA0[kind >> 5] is set. Leaf with no frame; takes no arguments and writes no state.'
   - - 1396
-    - asm
-    - func_801EF174
+    - c
+    - drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174
+    - '@source: src/bof3/bmagic/drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174.c'
+    - '@behavior: Draws the result panel of the current battle target. It reads the selector byte 0x80146384, saves the party byte of that selector''s 0x140-byte work record at 0x80145F09 (row offset 0x79), stores zero over it, passes the same row''s name string 0x80145F04 (row offset 0x74) with pen position (0x70,0x30) to the overlay text helper func_801EF590, then re-reads the selector and restores the party byte, so it is only cleared for the name draw. It then draws ten static label strings of this overlay with the same two helpers: func_801EF76C draws WEAK at (0x5A,0x44), POINT at (0x80,0x44) and ITEM at (0x5A,0x8A), and func_801EF590 draws the twelve-glyph 0x5C rule at (0x70,0x50), (0x70,0x98) and (0x70,0xAC), the one-glyph 0x5C cell 0x801F0B88 at (0x9C,0x64) and (0x9C,0x78), EXP at (0xB0,0x64) and the one-glyph 0x60 cell 0x801F0B70 at (0xB0,0x78). Frame 0x20 holding s0 and s1; takes no arguments and returns nothing.'
   - - 1756
     - asm
     - func_801EF2DC

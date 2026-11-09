@@ -14,5 +14,6 @@ support_sources = [
     "src/bof3/bmagic/copyRecordByte27ThenAdvanceWorkByte2BmagicMagic05603_801EFFE8.c",
     "src/bof3/support/magic056_03_psyq.c",
     "src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C.c",
+    "src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EFAD8.c",
 ]
 psyq_source = "src/bof3/support/magic056_03_psyq.c"

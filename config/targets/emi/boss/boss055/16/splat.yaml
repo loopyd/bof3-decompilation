@@ -159,8 +159,10 @@ segments:
     - asm
     - func_800C2FA4
   - - 6140
-    - asm
-    - func_800C2FFC
+    - c
+    - dispatchStateByte2TableCopyBossBoss05516_800C2FFC
+    - '@source: src/bof3/boss/dispatchStateByte2TableCopyBossBoss05516_800C2FFC.c'
+    - '@behavior: Overlay step dispatch that copies the three payload handler words at 0x800C184C into its frame and calls the entry selected by the unsigned state byte at +2 of the work record published at scratchpad cell 0x1F800044.'
   - - 6236
     - asm
     - func_800C305C

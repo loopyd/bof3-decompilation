@@ -170,8 +170,10 @@ segments:
     - asm
     - func_801F4798
   - - 7760
-    - asm
-    - func_801F4A50
+    - c
+    - drawTranslucentTwoGouraudQuadsAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4A50
+    - '@source: src/bof3/world/drawTranslucentTwoGouraudQuadsAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4A50.c'
+    - '@behavior: Overlay gouraud quad emitter of the payload, called by the plain jal at 0x801F49D8 inside the record builder 0x801F4798 with the record halfwords at 0x8 and 0xA as the first screen pair, the recorded amplitude and the accumulated angle plus 0x400 as its signed amplitude and its angle, the record halfwords at 0xC and 0xE as the second screen pair, the record halfword 0x28 plus the low bit of 0x80143E6C as the second signed amplitude and the accumulated angle plus 0xC00 as the second angle. It seeds one POLY_G4 in the shared primitive cursor g_PrimCursor through SetPolyG4, marks it semi-transparent and writes the two screen pairs as the first two vertices; the two far vertices sit on the rotator samples func_801783C8 and func_801782FC of the two angles scaled by one signed amplitude through a shift of 12, the first leaving the first screen pair along the first angle and the second leaving the second screen pair along the second angle plus 0x800. The two near vertices take the shade triple at 0x801F6138 + 3 * work byte 6 and the four far vertex shades are black. func_80155A08 links the record fixed-point position pair at 0x18/0x1C with kind 0 and the 0x24 size class; the 0x24-byte primitive is then copied one size class further on and its two far vertices rewritten half a turn round, the first screen pair along the first angle plus 0x800 scaled by the sign-extended second angle plus 0x800 and the second screen pair along the bare second angle scaled by the second amplitude, and the copy is linked by a second func_80155A08 call with the same position pair, kind 0 and 0x24 size class.'
   - - 8688
     - c
     - drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0

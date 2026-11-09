@@ -33,6 +33,6 @@ projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813
 func_801F45C8 = 0x801F45C8;
 updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614 = 0x801F4614;
 func_801F4798 = 0x801F4798;
-func_801F4A50 = 0x801F4A50;
+drawTranslucentTwoGouraudQuadsAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4A50 = 0x801F4A50;
 drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0 = 0x801F4DF0;
 D_801F4FC4 = 0x801F4FC4;

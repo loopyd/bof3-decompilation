@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801EF57C
   - - 2580
-    - asm
-    - func_801EF614
+    - c
+    - decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMagic08103_801EF614
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMagic08103_801EF614.c'
+    - '@behavior: Ends one step of this overlay work handler. It calls the shared main-executable helper at 0x800AF764 and then this overlay draw step at 0x801EF6A0, both with no arguments and no result, decrements byte 0xB of the shared battle work record read through the pointer cell at 0x801EB4E0 with a byte-width read-modify-write, and clears work bytes 0x00 through 0x04 of the record published through the scratchpad pointer cell at 0x1F800044 with one sb zero per byte, re-materialising that cell before each store because a store through the loaded pointer may alias it. The 0x18-byte frame keeps ra at 0x10 across the two calls; nothing is returned and no other state is read or written.'
   - - 2720
     - asm
     - func_801EF6A0
