@@ -69,5 +69,6 @@ support_sources = [
     "src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate2AndSetFlagBit1AOrSubstate5ScenarioScena0900_801FDA04.c",
     "src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate3AndSetFlagBit1BOrSubstate5ScenarioScena0900_801FDA90.c",
     "src/bof3/scenario/waitFlag3DThenRequestPrimaryState8Substate4AndSetFlagBit1COrSubstate5ScenarioScena0900_801FDB1C.c",
+    "src/bof3/scenario/waitFlag0CForParty5ThenRequestPrimaryState6Substate0Or14Or5ScenarioScena0900_801FD2E8.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

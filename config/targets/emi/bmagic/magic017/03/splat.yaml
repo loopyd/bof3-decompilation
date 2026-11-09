@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EF248
   - - 1792
-    - asm
-    - func_801EF300
+    - c
+    - incrementWorkByte9To16ThenSeedStepPairFromWorkByteBAddPublishedRecordPositionCopyWord3CSetVerticalStepInvokeHelperAt101RearmByte9AndAdvanceWorkByte2BmagicMagic01703_801EF300
+    - '@source: src/bof3/bmagic/incrementWorkByte9To16ThenSeedStepPairFromWorkByteBAddPublishedRecordPositionCopyWord3CSetVerticalStepInvokeHelperAt101RearmByte9AndAdvanceWorkByte2BmagicMagic01703_801EF300.c'
+    - '@behavior: Work byte 2 state 2 of this overlay, index 2 of the ten-word handler table at 0x801EEC10 (0x801EF11C, 0x801EF248, 0x801EF300, 0x801EF460, 0x801EF5FC, 0x801EF694, 0x801EF6EC, 0x801EF7E0, 0x801EF8B4, 0x801EF970) whose word at 0x801EEC18 is the only occurrence of this address in the payload; func_801EF058 copies that table into its frame and indexes it with scratchpad work-object byte 2. It increments work byte 9 with a byte-width add and only when that countdown reaches 0x10 seeds the work step words 0xC and 0x10 from bit 0 of work byte 0xB (word 0xC takes 0xFFFE0000 in both arms, word 0x10 takes 0xFFFF0000 with the bit set and 0x00010000 with it clear), invokes the shared helper at 0x801DD350 on the work object, stores work word 0x34 and 0x38 as the published record words at 0x8014638C added onto those steps, copies the record word 0x3C into work word 0x3C, zeroes work word 0xC and sets work word 0x10 to 0x1000 or -0x1000 by the same bit, invokes the helper at 0x801DD350 again, forwards the helper at 0x8015D71C the selector 0x101 while work byte 0xB is zero, then stores 0x10 into work byte 9 and increments work byte 2, selecting entry 3 at 0x801EF460. The 0x18-byte frame only keeps the return address at 0x10 across the three calls, and nothing is returned.'
   - - 2144
     - c
     - addWord0CToWord34AndWord10ToWord38And4ToTintTripletThenDecrementWorkByte9AndOnZeroDecrementGlobalWorkByteBOrClearFlag20ResetWorkAdvanceWorkByte2BmagicMagic01703_801EF460

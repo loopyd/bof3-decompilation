@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/bmagic/add16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic03903_801EF690.c'
     - '@behavior: Adds 0x10 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte has ramped to 0x80, re-reads that pointer cell and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 2784
-    - asm
-    - func_801EF6E0
+    - c
+    - add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic03903_801EF6E0
+    - '@source: src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic03903_801EF6E0.c'
+    - '@behavior: Adds 8 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and subtracts 1 from work-object byte 0xA, then, when that stored byte reaches zero, reads the shared battle work record pointer at 0x801EB4E0, decrements its byte 0xB and invokes the helper at 0x801E5988.'
   - - 2904
     - asm
     - func_801EF758

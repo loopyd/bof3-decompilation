@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF2A0
   - - 1776
-    - asm
-    - func_801EF2F0
+    - c
+    - invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0
+    - '@source: src/bof3/bmagic/invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0.c'
+    - '@behavior: Overlay step handler at word 1 of the two-word code pointer run based at 0x801EFA84, whose word 0 is 0x801EF058. The step dispatcher dispatchStateByte1Tablefa84BmagicMagic08103_801EF014 indexes that run with work-object byte 0x1, so no jal in this payload names the body. It reads the shared battle global halfword at 0x801462E8 once and tests bit 0x0004, calling the shared helper func_801E5988 with no arguments when the bit is set and the shared main-executable helper func_800AFD9C with no arguments when it is clear, then returns. The 0x18-byte frame keeps ra at 0x10 across the one call and no other state is read or written. Takes no arguments and returns nothing.'
   - - 1840
     - asm
     - func_801EF330

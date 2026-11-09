@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/bmagic/copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C.c",
     "src/bof3/bmagic/clearRecordPoolBytes0To2PublishRecordPoseSetGlobalByte80145988ToOneCopy16HalfwordsSettingBit15RequestResource1ThenAdvanceHandlerIndexBmagicMagic08103_801EED44.c",
     "src/bof3/bmagic/claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC.c",
+    "src/bof3/bmagic/invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0.c",
 ]
 psyq_source = "src/bof3/support/magic081_03_psyq.c"

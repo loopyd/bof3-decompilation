@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801EEF3C
   - - 1404
-    - asm
-    - func_801EF17C
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic05603_801EF17C
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic05603_801EF17C.c'
   - - 1456
     - c
     - dispatchStateByte1Table0744BmagicMagic05603_801EF1B0

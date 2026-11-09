@@ -113,8 +113,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F0090.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record has byte 0x83 at offset 0xB, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments that object with a byte-width add (lbu, addiu $v0,$v0,1, sb) at offset 0x2. Leaf with no frame; takes no arguments, returns nothing and writes no other state.'
   - - 5328
-    - asm
-    - func_801F00D0
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F00D0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F00D0.c'
+    - '@behavior: Entry index 3 of the six-entry work-byte-2 step table at 0x801F0BBC that the dispatcher at 0x801EFF88 indexes with the scratchpad work-object byte at offset 0x2. Reads the work-object pointer cell at 0x1F800044 once, before the frame is created, decrements that object countdown byte at offset 0x09 at byte width (lbu, addiu -1, sb) and tests the stored byte truncated to eight bits (andi 0xFF, no second load of the cell) for zero. Only when the countdown reaches zero does it read the shared battle work pointer at 0x801EB4E0, decrement that record byte at offset 0x0B by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. Frame 0x18 keeps only the return address at 0x10 because of that call. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 5420
     - asm
     - func_801F012C
