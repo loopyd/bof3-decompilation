@@ -74,8 +74,9 @@ segments:
     - asm
     - func_801F0198
   - - 6888
-    - asm
-    - func_801F06E8
+    - c
+    - drawFortySevenSemiTransDashesAlongPerpendicularWorkAngleFromDriftingScreenPairTintedByWorkByte4ShadeBmagicMagic12103_801F06E8
+    - '@source: src/bof3/bmagic/drawFortySevenSemiTransDashesAlongPerpendicularWorkAngleFromDriftingScreenPairTintedByWorkByte4ShadeBmagicMagic12103_801F06E8.c'
   - - 8248
     - textbin
     - T_801F0C38

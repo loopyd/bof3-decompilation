@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByteAAndDecrementGlobalWorkByteBAndAdvanceWorkByte2AtA0BmagicMagic07903_801EF2BC.c",
     "src/bof3/bmagic/incrementWorkByteAThenDecrementWorkByteBAndInvokeHelperWhenZeroBmagicMagic07903_801EF348.c",
     "src/bof3/bmagic/incrementWorkByteAThenDecrementWorkByte9AndDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByte9Is4BmagicMagic07903_801EFFB0.c",
+    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C.c",
 ]
 psyq_source = "src/bof3/support/magic079_03_psyq.c"

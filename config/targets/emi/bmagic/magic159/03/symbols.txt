@@ -9,5 +9,5 @@ func_801EEEC8 = 0x801EEEC8;
 func_801EEF58 = 0x801EEF58;
 func_801EEFC4 = 0x801EEFC4;
 func_801EF014 = 0x801EF014;
-func_801EF08C = 0x801EF08C;
+drawRotatedTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8AtTopCornersBmagicMagic15903_801EF08C = 0x801EF08C;
 func_801EF420 = 0x801EF420;

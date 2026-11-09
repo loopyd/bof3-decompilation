@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EFC00
   - - 4884
-    - asm
-    - func_801EFF14
+    - c
+    - drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14
+    - '@source: src/bof3/bmagic/drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14.c'
+    - '@behavior: Ring emitter of the MAGIC069 work object, reached by the jal at 0x801EEF88 inside the per-frame draw function func_801EEED4 and by the jal at 0x801EF3C0 inside the state-7 frame function func_801EF30C, both guarded by work byte 0 bit 0 and work byte 2 non-zero and both followed by the sibling draw routine func_801EFC00. It takes no arguments and returns nothing. It seeds the scratchpad radius cell 0x1F800000 from work byte 0x0A, the centre cells 0x1F80000C and 0x1F80000E from work halfwords 0x2E and 0x30 and the shade cell 0x1F800006 with 0x80 - 0x30 * work byte 0x0B while work byte 0x02 is below 2 and with 0x80 otherwise, then walks one full 0x1000 turn in 64 steps of 0x40 and emits a segment only when (phase & 0xC) is 4 or 8, so the drawn phases form four 45-degree arcs separated by four 45-degree gaps. A segment is one semi-transparent flat 0x10-byte primitive from g_PrimCursor, initialised by func_8017AA80 and SetSemiTrans with 1 and queued with GpuAppendPrim(3, 0x10); its corners are the scratchpad centre plus the rotator samples func_801782FC and func_801783C8 of the current and next segment angle times the signed radius shifted right 12, and its three colour bytes are reads of the shade cell, so the ring is a dashed grey circle around the cached work screen pair.'
   - - 5380
     - c
     - drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104

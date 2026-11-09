@@ -28,10 +28,10 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           0x801EFEEC (payload offset 0x2EC) holds 0x801EEF10, so it is entry 1
  *           of the five-word in-image handler run at 0x801EFEE8 that the step
  *           dispatcher dispatchStateByte1Tablefee8BmagicMagic14303_801EED70
- *           indexes with work byte 1, and entry 0 of the run that func_801EEDB4
- *           indexes at 0x801EFEEC with work byte 2; the entry is dispatched, so
- *           it has no jal caller. Statement order, operand forms and declaration
- *           style follow the exact siblings
+ *           indexes with work byte 1, and entry 0 of the run that the step
+ *           handler at 0x801EEDB4 indexes at 0x801EFEEC with work byte 2; the
+ *           entry is dispatched, so it has no jal caller. Statement order,
+ *           operand forms and declaration style follow the exact siblings
  *           clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C
  *           (same named cell, byte 9 and byte 0xA writes and byte 2 increment) and
  *           seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8

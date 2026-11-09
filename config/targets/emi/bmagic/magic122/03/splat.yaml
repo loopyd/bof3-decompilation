@@ -45,8 +45,9 @@ segments:
     - asm
     - func_801EEEA0
   - - 812
-    - asm
-    - func_801EEF2C
+    - c
+    - decrementWorkByte9ThenRefreshAndCopyRecordTripletSetStepPairFromRecordByte8StepPositionPairSetHeadingRearmWorkAndAdvanceWorkByte2BmagicMagic12203_801EEF2C
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenRefreshAndCopyRecordTripletSetStepPairFromRecordByte8StepPositionPairSetHeadingRearmWorkAndAdvanceWorkByte2BmagicMagic12203_801EEF2C.c'
   - - 1368
     - asm
     - func_801EF158

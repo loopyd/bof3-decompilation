@@ -41,8 +41,10 @@ segments:
     - dispatchStateByte1Tablefee8BmagicMagic14303_801EED70
     - '@source: src/bof3/bmagic/magic14303DispatchTables.c'
   - - 436
-    - asm
-    - func_801EEDB4
+    - c
+    - dispatchWorkByte2HandlerThenDrawBandsAndFanAndPopWhenWorkBytes2And0SetBmagicMagic14303_801EEDB4
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawBandsAndFanAndPopWhenWorkBytes2And0SetBmagicMagic14303_801EEDB4.c'
+    - '@behavior: Overlay work step over the record published at the scratchpad pointer cell 0x1F800044: dispatches the record unsigned byte 2 scaled by four through the four-entry handler table based at 0x801EFEEC without bounding the index, calls the shared helper at 0x800AF764, and then, only when the re-read record byte 2 and byte 0 are both non-zero, runs the transform installer at 0x801EF188, three band draws through 0x801EF23C with bases 0x30, 0x20 and 0x18, offsets 0x10, 0x50 and 0x80 and masks 3, 0xF and 0x1F while walking the record byte 0xB by +4, +2, +4 and -0xA, then adds 0x10 and subtracts 0x20 around two draws through 0x801EFC74 and pops the matrix stack; the 0x18-byte frame only keeps $ra and the cell is re-read at every use.'
   - - 784
     - c
     - seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10

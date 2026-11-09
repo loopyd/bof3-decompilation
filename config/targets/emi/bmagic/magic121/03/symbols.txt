@@ -1,3 +1,4 @@
+D_1F800000 = 0x1F800000;
 g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
@@ -13,5 +14,5 @@ func_801EF35C = 0x801EF35C;
 decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8 = 0x801EF3A8;
 func_801EF414 = 0x801EF414;
 func_801F0198 = 0x801F0198;
-func_801F06E8 = 0x801F06E8;
+drawFortySevenSemiTransDashesAlongPerpendicularWorkAngleFromDriftingScreenPairTintedByWorkByte4ShadeBmagicMagic12103_801F06E8 = 0x801F06E8;
 T_801F0C38 = 0x801F0C38;

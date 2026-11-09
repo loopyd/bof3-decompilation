@@ -20,10 +20,11 @@ extern void (*D_801EF424[])(void); /* @source 0x801EF424 @kind data */
  * row; this caller passes no arguments and reads no result. */
 void func_800AF764(void);
 
-/* This overlay's draw routine at 0x801EF08C: reads the work object's motion
- * pair through the same pointer cell and emits the sprite primitives. Unlifted,
- * so it keeps its raw name; it takes no arguments here. */
-void func_801EF08C(void);
+/* This overlay's draw routine at 0x801EF08C: the rotated textured quad emitter
+ * this target lifted at that address. It takes no arguments here and returns
+ * nothing. */
+void drawRotatedTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8AtTopCornersBmagicMagic15903_801EF08C(
+    void);
 
 /* @source 0x801EEE28
  * @behavior Reads the scratchpad work-object pointer cell at 0x1F800044 and
@@ -66,6 +67,6 @@ void dispatchWorkByte2HandlerThenShiftMotionPairAndDrawWhenActiveBmagicMagic1590
     y = *(u16 *)(motionWork + 0x30);
     *(u16 *)(motionWork + 0x2E) = x + 8;
     *(u16 *)(motionWork + 0x30) = y - 0x10;
-    func_801EF08C();
+    drawRotatedTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8AtTopCornersBmagicMagic15903_801EF08C();
   }
 }

@@ -129,8 +129,9 @@ segments:
     - incrementWorkByteAThenDecrementWorkByte9AndDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByte9Is4BmagicMagic07903_801EFFB0
     - '@source: src/bof3/bmagic/incrementWorkByteAThenDecrementWorkByte9AndDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByte9Is4BmagicMagic07903_801EFFB0.c'
   - - 5164
-    - asm
-    - func_801F002C
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByte9TintedByShadeRampIndexedByWorkByteALowNibbleBmagicMagic07903_801F002C.c'
   - - 5796
     - textbin
     - D_801F02A4

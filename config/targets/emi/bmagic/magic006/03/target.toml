@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c",
     "src/bof3/bmagic/drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308.c",
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790.c",
+    "src/bof3/bmagic/drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C.c",
 ]
 psyq_source = "src/bof3/support/magic006_03_psyq.c"

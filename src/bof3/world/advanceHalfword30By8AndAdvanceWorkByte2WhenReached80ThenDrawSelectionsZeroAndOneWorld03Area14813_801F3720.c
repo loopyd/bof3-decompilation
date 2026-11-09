@@ -1,10 +1,10 @@
 #include "bof3/bof3.h"
 
-/* Overlay drawing routine of this payload. It builds the record's quad
- * primitive (SetPolyFT4, SetShadeTex) for three consecutive selections and
- * projects it with RotTransPers4, so its two arguments are the selection index
- * and a signed byte mode. It stays address-anchored until it is lifted. */
-void func_801F37B8(s32 arg0, s32 arg1);
+/* Overlay drawing routine of this payload, lifted at 0x801F37B8: three
+ * selection rows of textured quads built from packed vertex triples, taking the
+ * selection index and a signed byte mode. */
+void drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+    s32 arg0, s32 arg1);
 
 /* @source 0x801F3720
  * @behavior Handler at word 2 of the overlay state-byte-2 dispatch run based at
@@ -47,6 +47,8 @@ void advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroA
   if ((s16)offset >= 0x80) {
     work[2]++;
   }
-  func_801F37B8(0, -1);
-  func_801F37B8(1, 1);
+  drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+      0, -1);
+  drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+      1, 1);
 }

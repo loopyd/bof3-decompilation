@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/bmagic/oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0.c",
     "src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c",
     "src/bof3/bmagic/queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274.c",
+    "src/bof3/bmagic/drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14.c",
 ]
 psyq_source = "src/bof3/support/magic069_03_psyq.c"

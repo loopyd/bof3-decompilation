@@ -2,11 +2,11 @@
 
 extern u8 D_80144F28;
 
-/* Overlay drawing routine of this payload. It builds the record's quad
- * primitive (SetPolyFT4, SetShadeTex) for three consecutive selections and
- * projects it with RotTransPers4, so its two arguments are the selection index
- * and a signed byte mode. It stays address-anchored until it is lifted. */
-void func_801F37B8(s32 arg0, s32 arg1);
+/* Overlay drawing routine of this payload, lifted at 0x801F37B8: three
+ * selection rows of textured quads built from packed vertex triples, taking the
+ * selection index and a signed byte mode. */
+void drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+    s32 arg0, s32 arg1);
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
 
@@ -64,13 +64,16 @@ void stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorl
 
     FIELD_REF(u16, work, 0x30) = 0x80;
     work[2] = 3;
-    func_801F37B8(0, -2);
+    drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+        0, -2);
   } else {
     u8* work = SPAD_PTR_SLOT(u8, 0x44u);
 
     work[2] = work[2] + 1;
     FIELD_REF(u16, work, 0x30) = 0;
-    func_801F37B8(0, 1);
-    func_801F37B8(1, 1);
+    drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+        0, 1);
+    drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8(
+        1, 1);
   }
 }

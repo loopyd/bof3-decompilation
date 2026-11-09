@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EF478
   - - 3948
-    - asm
-    - func_801EFB6C
+    - c
+    - drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C
+    - '@source: src/bof3/bmagic/drawTwoRotatedTranslucentGouraudQuadsAroundWorkHalfwords2EAnd30WithFixedRadii40And38AndTip8GradedDarkBlueBmagicMagic00603_801EFB6C.c'
+    - '@behavior: Draws two translucent gouraud quads around the work object halfwords 2E and 30, one per mirrored side, rotating fixed radii 40, 38 and 8 by the work object word 14 through the shared angular helpers at 801782FC and 801783C8.'
   - - 5220
     - c
     - dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064

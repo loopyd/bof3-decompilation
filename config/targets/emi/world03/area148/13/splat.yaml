@@ -82,8 +82,10 @@ segments:
     - '@source: src/bof3/world/setSharedByte1ThenDrawWorld03Area14813_801F3788.c'
     - '@behavior: Handler at word 3 of the state-byte-2 dispatch run based at 0x801F5024. Writes 0x01 to the shared overlay byte at 0x8014933B and then calls the quad drawing routine at 0x801F37B8 with the selection index 2 and the signed byte mode 0.'
   - - 3000
-    - asm
-    - func_801F37B8
+    - c
+    - drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8
+    - '@source: src/bof3/world/drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8.c'
+    - '@behavior: Overlay draw routine called from three state handlers of the payload (0x801F361C with modes -2 and 1, 0x801F3720 with -1 and 1, 0x801F3788 with 0). For each of the three selection rows it seeds the shared primitive cursor as a POLY_FT4, clears the shade texture and fills the four scratchpad corner vectors at 0x1F800014 from that row of packed six-byte vertex triples at 0x801F5038 + row * 0x18, keeping each triple y and z and rewriting x as the triple x plus ((selection & 1) << 7) minus the record halfword at 0x30 times the signed byte 0x801F5034[selection & 1]. RotTransPers4 projects the corners into the primitive vertex pairs, func_80155560 fills the texture state from the row word in 0x801F5080 and func_80155A08 links the record position pair at 0x34/0x38 with the signed byte mode as kind and 0x28 as size. Takes the selection index and the mode and returns nothing.'
   - - 3472
     - c
     - setWorld03Area14813_801F3990

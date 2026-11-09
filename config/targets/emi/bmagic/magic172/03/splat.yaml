@@ -60,8 +60,10 @@ segments:
     - decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17203_801EF4BC
     - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17203_801EF4BC.c'
   - - 2328
-    - asm
-    - func_801EF518
+    - c
+    - dispatchWorkByte2HandlerThenDrawWhenWorkBytes2And0SetBmagicMagic17203_801EF518
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes2And0SetBmagicMagic17203_801EF518.c'
+    - '@behavior: dispatches one step of the overlay work handler from the work record published at the scratchpad pointer cell 0x1F800044, whose byte 2 scaled by four indexes the handler table word at 0x801F0B90, then re-reads the record and calls the shared helper at 0x800AF764 and the overlay draw step at 0x801F0908 only when the AND of its bytes 0 and 2 is non-zero'
   - - 2448
     - asm
     - func_801EF590
