@@ -1,4 +1,4 @@
-//! Original US low-level SPU initialization, with explicit untimed device service.
+//! Original US low-level SPU initialization with immediate RAM-port transfers.
 use bof3_audio::machine::{
     adsr,
     bus::{Bus, Width},
@@ -26,9 +26,7 @@ fn initialize(bus: &mut Interconnect, stack: u32, argument: u32) -> u32 {
         );
         cpu.step(bus)
             .unwrap_or_else(|e| panic!("instruction {count}: {e}"));
-        // Deliberately transaction-based: not one hardware transfer per CPU
-        // instruction. Do not schedule voice frames or infer key-on latency.
-        bus.service_spu(1).unwrap();
+        // Voice frames remain unscheduled; key-on latency is not established.
         count += 1;
     }
     assert_eq!(cpu.register(2), 0);
@@ -75,7 +73,6 @@ fn original_hardware_initializer_uploads_dummy_block_and_sets_all_voice_register
         dummy.termination,
         bof3_audio::codec::adpcm::Termination::EndRepeat
     );
-    assert_eq!(bus.spu_transfer().fifo_halfwords(), 0);
     assert_eq!(bus.dma().priority(), 0x076f_4321);
     assert!(bus.spu_transfer().ram()[..0x1000].iter().all(|b| *b == 0));
     assert!(bus.spu_transfer().ram()[0x1010..].iter().all(|b| *b == 0));

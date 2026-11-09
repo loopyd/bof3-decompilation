@@ -1,12 +1,13 @@
 use bof3_audio::machine::{
     adsr,
     bus::{Bus, Ram, Width},
+    clock,
     interconnect::Interconnect,
     output_clock::{Clock, Model},
-    spu_clock, spu_sample,
+    spu_sample,
 };
 
-fn fixture() -> (Interconnect, spu_clock::Clock, Clock) {
+fn fixture() -> (Interconnect, clock::Clock, Clock) {
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_spu_voices(
         spu_sample::Model::EmulatorReference,
@@ -24,7 +25,7 @@ fn fixture() -> (Interconnect, spu_clock::Clock, Clock) {
     bus.write(0x1f801daa, Width::Half, 0xc000).unwrap();
     (
         bus,
-        spu_clock::Clock::new(spu_clock::Model::EmulatorReference),
+        clock::Clock::default(),
         Clock::new(
             Model::PcsxReduxNtsc,
             bof3_audio::machine::output_clock::Collection::Retain,
@@ -35,10 +36,10 @@ fn fixture() -> (Interconnect, spu_clock::Clock, Clock) {
 #[test]
 fn sample_and_vblank_edges_are_partition_invariant() {
     fn run(parts: &[u32]) -> (serde_json::Value, Vec<[i16; 2]>, u16, u64) {
-        let (mut bus, mut transfer, mut clock) = fixture();
+        let (mut bus, mut elapsed, mut clock) = fixture();
         bus.write(0x1f801114, Width::Half, 0x100).unwrap();
         for &ticks in parts {
-            clock.advance(&mut bus, &mut transfer, ticks).unwrap();
+            clock.advance(&mut bus, &mut elapsed, ticks).unwrap();
         }
         let pcm = clock
             .take_frames()
@@ -54,7 +55,7 @@ fn sample_and_vblank_edges_are_partition_invariant() {
             serde_json::to_value(clock).unwrap(),
             pcm,
             bus.interrupts().status(),
-            transfer.ticks(),
+            elapsed.ticks(),
         )
     }
     let total = 1_130_017;
@@ -66,38 +67,38 @@ fn sample_and_vblank_edges_are_partition_invariant() {
     assert_eq!(whole.0["vblanks"], 2);
     assert_eq!(whole.3, u64::from(total));
 
-    let (mut bus, mut transfer, mut clock) = fixture();
+    let (mut bus, mut elapsed, mut clock) = fixture();
     clock
-        .advance(&mut bus, &mut transfer, 243 * 2146 - 1)
+        .advance(&mut bus, &mut elapsed, 243 * 2146 - 1)
         .unwrap();
     assert_eq!(bus.interrupts().status() & 1, 0);
-    clock.advance(&mut bus, &mut transfer, 1).unwrap();
+    clock.advance(&mut bus, &mut elapsed, 1).unwrap();
     assert_eq!(bus.interrupts().status() & 1, 1);
     bus.write(0x1f801070, Width::Half, 0).unwrap();
     clock
-        .advance(&mut bus, &mut transfer, 263 * 2146 - 1)
+        .advance(&mut bus, &mut elapsed, 263 * 2146 - 1)
         .unwrap();
     assert_eq!(bus.interrupts().status() & 1, 0);
-    clock.advance(&mut bus, &mut transfer, 1).unwrap();
+    clock.advance(&mut bus, &mut elapsed, 1).unwrap();
     assert_eq!(bus.interrupts().status() & 1, 1);
 }
 
 #[test]
 fn unsupported_clock_sources_and_undrained_output_fail_explicitly() {
     for (address, mode) in [(0x1f801104, 1), (0x1f801104, 0x100)] {
-        let (mut bus, mut transfer, mut clock) = fixture();
+        let (mut bus, mut elapsed, mut clock) = fixture();
         bus.write(address, Width::Half, mode).unwrap();
         assert!(clock
-            .advance(&mut bus, &mut transfer, 768)
+            .advance(&mut bus, &mut elapsed, 768)
             .unwrap_err()
             .to_string()
             .contains("HBlank"));
-        assert_eq!((clock.ticks(), transfer.ticks()), (0, 0));
+        assert_eq!((clock.ticks(), elapsed.ticks()), (0, 0));
     }
-    let (mut bus, mut transfer, mut clock) = fixture();
-    clock.advance(&mut bus, &mut transfer, 4096 * 768).unwrap();
+    let (mut bus, mut elapsed, mut clock) = fixture();
+    clock.advance(&mut bus, &mut elapsed, 4096 * 768).unwrap();
     assert!(clock
-        .advance(&mut bus, &mut transfer, 768)
+        .advance(&mut bus, &mut elapsed, 768)
         .unwrap_err()
         .to_string()
         .contains("queue full"));

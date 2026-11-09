@@ -4,13 +4,13 @@
 //! mechanical/media timing and graphics processing remain unmodeled.
 //! PCM output uses a separate explicit clock.
 use super::{
-    boot,
+    boot, clock,
     cpu::{Cpu, FaultKind, Step},
     exception_calls::Environment,
     executable::ram_offset,
     interconnect::Interconnect,
     kernel::Kernel,
-    output_clock, spu_clock,
+    output_clock,
 };
 use crate::Result;
 use serde::Serialize;
@@ -30,7 +30,7 @@ pub struct Call {
 pub struct Execution {
     pub cpu: Cpu,
     pub bus: Interconnect,
-    pub clock: spu_clock::Clock,
+    pub clock: clock::Clock,
     syscalls: u64,
     interrupts: u64,
     output: Option<output_clock::Clock>,
@@ -52,11 +52,11 @@ enum Transition {
 
 impl Execution {
     /// Execute caller-loaded code without host kernel services.
-    pub fn new(cpu: Cpu, bus: Interconnect, model: spu_clock::Model) -> Self {
+    pub fn new(cpu: Cpu, bus: Interconnect) -> Self {
         Self {
             cpu,
             bus,
-            clock: spu_clock::Clock::new(model),
+            clock: clock::Clock::default(),
             syscalls: 0,
             interrupts: 0,
             output: None,
@@ -74,12 +74,11 @@ impl Execution {
     pub fn with_kernel(
         cpu: Cpu,
         bus: Interconnect,
-        model: spu_clock::Model,
         kernel: Kernel,
         environment: Environment,
     ) -> Result<Self> {
         kernel.require_plain_context()?;
-        let mut execution = Self::new(cpu, bus, model);
+        let mut execution = Self::new(cpu, bus);
         execution.instruction = Some(boot::timing::Clock::default());
         execution.kernel = Some(Services {
             kernel,
@@ -95,8 +94,8 @@ impl Execution {
 
     /// Preserve the original BIOS interpreter's absolute NTSC phase for
     /// development reference calls. This does not enable the PCM output clock.
-    pub fn from_boot(machine: boot::Machine, model: spu_clock::Model) -> Self {
-        let mut execution = Self::new(machine.cpu, machine.bus, model);
+    pub fn from_boot(machine: boot::Machine) -> Self {
+        let mut execution = Self::new(machine.cpu, machine.bus);
         execution.reference = Some(machine.timing);
         execution
     }
@@ -266,12 +265,12 @@ impl Execution {
         if let Some(output) = &mut self.output {
             output.advance(&mut self.bus, &mut self.clock, ticks)?;
         } else {
-            self.clock.advance(&mut self.bus, ticks)?;
+            self.clock.advance(ticks)?;
             if self.reference.is_none() {
                 self.bus.advance_cpu(ticks)?;
             }
         }
-        self.bus.advance_cd_controller(
+        self.bus.advance_devices(
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;

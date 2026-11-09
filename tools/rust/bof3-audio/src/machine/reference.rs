@@ -1,7 +1,7 @@
 //! Explicit original EXE/BIOS development execution. Production callers use driver::Image.
 use super::{
     adsr, bank, boot, driver::Audio, executable::Executable, execution::Execution, firmware::Image,
-    profile::Profile, spu_clock, spu_reverb, spu_sample, spu_voice_ports::DisableModel,
+    profile::Profile, spu_reverb, spu_sample, spu_voice_ports::DisableModel,
 };
 use crate::{catalog::loader, Result};
 use emi_ex_v2::image::ArchiveImage;
@@ -75,11 +75,7 @@ fn prepare_bank_output(
     let audio = audio(executable)?;
     let plan = plan_bank(executable, archive, options)?;
     let machine = boot::load_us(firmware, executable, 3_000_000)?;
-    let mut execution = Execution::new(
-        machine.cpu,
-        machine.bus,
-        spu_clock::Model::EmulatorReference,
-    );
+    let mut execution = Execution::new(machine.cpu, machine.bus);
     execution.bus.configure_spu_voices(
         spu_sample::Model::EmulatorReference,
         adsr::Model::EmulatorReference,

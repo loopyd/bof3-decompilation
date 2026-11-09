@@ -27,7 +27,6 @@ fn fixture() -> Interconnect {
     for _ in 0..7 {
         half(&mut bus, 0x1f801da8, 0x1111);
     }
-    assert_eq!(bus.service_spu(8).unwrap(), 8);
     for voice in 0..24 {
         let base = 0x1f801c00 + voice * 16;
         half(&mut bus, base, 0x2000);
@@ -61,11 +60,10 @@ fn explicit_disable_model_preserves_voice_state_and_rejects_atomically() {
     assert!(bus
         .configure_spu_disable(DisableModel::EmulatorReference)
         .is_err());
-    // Invalid IRQ configuration and a buffered FIFO stop must fail before any
-    // envelope or control-register changes, even after model selection.
+    // Invalid IRQ configuration must fail before envelope or control-register
+    // changes, even after model selection. Manual RAM writes are immediate.
     assert!(bus.write(0x1f801daa, Width::Half, 0x50).is_err());
     half(&mut bus, 0x1f801da8, 0x1234);
-    assert!(bus.write(0x1f801daa, Width::Half, 0).is_err());
     for voice in 0..24 {
         assert_eq!(
             bus.read(0x1f801c0c + voice * 16, Width::Half).unwrap(),
@@ -73,7 +71,8 @@ fn explicit_disable_model_preserves_voice_state_and_rejects_atomically() {
         );
     }
     assert_eq!(bus.read(0x1f801daa, Width::Half).unwrap(), 0xc010);
-    bus.service_spu(1).unwrap();
+    half(&mut bus, 0x1f801daa, 0);
+    assert_eq!(bus.read(0x1f801daa, Width::Half).unwrap(), 0);
     half(&mut bus, 0x1f801daa, 0x10);
     for voice in 0..24 {
         assert_eq!(
@@ -328,7 +327,6 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
     for _ in 0..32 {
         half(&mut bus, 0x1f801da8, 1000);
     }
-    bus.service_spu(32).unwrap();
     let before = bus.spu_transfer().ram()[0x60000..0x60040].to_vec();
     bus.write(0x1f801d80, Width::Word, 0x20002000).unwrap();
     bus.write(0x1f801d84, Width::Word, 0x40004000).unwrap();

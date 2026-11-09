@@ -3,12 +3,12 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        adsr, boot,
+        adsr, boot, clock,
         cpu::{Cpu, FaultKind},
         executable::Executable,
         firmware::Image,
         profile::Profile,
-        spu_clock, spu_reverb, spu_sample,
+        spu_reverb, spu_sample,
         spu_voice_ports::DisableModel,
     },
     Result,
@@ -76,7 +76,7 @@ fn main() -> Result<()> {
     machine
         .bus
         .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
-    let mut clock = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut clock = clock::Clock::default();
     let initial_instructions = machine.cpu.instructions();
     let initial_registers: Vec<_> = (0..32).map(|r| machine.cpu.register(r)).collect();
     let mut recent = VecDeque::with_capacity(17);
@@ -112,8 +112,8 @@ fn main() -> Result<()> {
         if recent.len() > 16 {
             recent.pop_front();
         }
-        if let Err(error) = clock.advance(&mut machine.bus, 2) {
-            outcome = format!("SPU transfer clock: {error}");
+        if let Err(error) = clock.advance(2) {
+            outcome = format!("elapsed clock: {error}");
             break;
         }
     }
@@ -126,7 +126,7 @@ fn main() -> Result<()> {
             "syscall_exceptions":exceptions, "outcome":outcome,
             "pc":machine.cpu.pc(), "cop0":machine.cpu.cop0(),
             "registers":(0..32).map(|r|machine.cpu.register(r)).collect::<Vec<_>>(),
-            "recent":recent,"transfer_clock":clock,
+            "recent":recent,"elapsed_clock":clock,
             "final_ram_sha256":sha256_hex(machine.bus.ram().bytes()),
             "spu_ram_sha256":sha256_hex(machine.bus.spu_transfer().ram()),
             "context_limits":"explicit emulator-reference SPU sample/envelope/disable/reverb models; no audio frames, CD/timer/GPU clocks or IRQ scheduler; callback/sound modes replace CPU entry with a diagnostic call, handoff GPR/COP0, zero HI/LO and arguments, sentinel RA",

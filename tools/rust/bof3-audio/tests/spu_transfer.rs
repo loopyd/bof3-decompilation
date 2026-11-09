@@ -2,7 +2,6 @@ use bof3_audio::machine::{
     bus::{Bus, Width},
     executable::Executable,
     interconnect::Interconnect,
-    spu_dma::Channel,
     spu_transfer::{Transfer, RAM_BYTES},
 };
 
@@ -14,6 +13,7 @@ fn bus() -> Interconnect {
     }
     let mut bus = Interconnect::from_executable(&Executable::from_bytes(bytes).unwrap());
     bus.write(0x1f801014, Width::Word, 0x200931e1).unwrap();
+    bus.write(0x1f801dac, Width::Half, 4).unwrap();
     bus
 }
 
@@ -40,187 +40,172 @@ fn dma(b: &mut Interconnect, address: u32, blocks: u16, words: u16, control: u32
 }
 
 #[test]
-fn manual_fifo_transfer_preserves_order_address_register_and_ram_wrap() {
+fn manual_ports_preserve_order_advance_tsa_and_wrap_in_all_modes() {
     let mut b = bus();
-    // SB on even SPU addresses writes a halfword; odd SB is ignored.
-    b.write(0xbf801da6, Width::Byte, 0xffff).unwrap();
-    b.write(0xbf801da7, Width::Byte, 0).unwrap();
-    assert_eq!(b.read(0x1f801da6, Width::Half).unwrap(), 0xffff);
-    assert_eq!(b.read(0x9f801da7, Width::Byte).unwrap(), 255);
-    for n in 0..32 {
-        half(&mut b, 0x1f801da8, 0x1000 + n);
+    for control in [0, 0x10, 0x20, 0x30] {
+        mode(&mut b, control);
+        b.write(0xbf801da6, Width::Byte, 0xffff).unwrap();
+        b.write(0xbf801da7, Width::Byte, 0).unwrap();
+        assert_eq!(b.read(0x9f801da7, Width::Byte).unwrap(), 255);
+        for n in 0..64 {
+            half(&mut b, 0x1f801da8, 0x1000 + n);
+        }
+        assert_eq!(status(&mut b), u32::from(control));
+        assert_eq!(b.spu_transfer().current_address(), 120);
+        assert_eq!(b.read(0x1f801da6, Width::Half).unwrap(), 15);
+        for n in 0..64usize {
+            let at = (RAM_BYTES - 8 + n * 2) % RAM_BYTES;
+            assert_eq!(
+                &b.spu_transfer().ram()[at..at + 2],
+                &(0x1000 + n as u16).to_le_bytes()
+            );
+        }
+        half(&mut b, 0x1f801da6, 0xffff);
+        for n in 0..64 {
+            assert_eq!(b.read(0x1f801da8, Width::Half).unwrap(), 0x1000 + n);
+        }
+        assert_eq!(b.read(0x1f801da6, Width::Half).unwrap(), 15);
     }
-    assert!(b.write(0x1f801da8, Width::Half, 999).is_err());
-    mode(&mut b, 0x10);
-    assert_eq!(status(&mut b) & 0x3f, 0); // Not a scheduled device boundary yet.
-    b.service_spu(0).unwrap();
-    assert_eq!(status(&mut b), 0x410);
-    assert_eq!(b.service_spu(32).unwrap(), 32);
-    assert_eq!(status(&mut b), 0x10);
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 0);
-    assert_eq!(b.spu_transfer().current_address(), 56);
-    assert_eq!(b.read(0x1f801da6, Width::Half).unwrap(), 0xffff);
-    for n in 0..32usize {
-        let at = (RAM_BYTES - 8 + n * 2) % RAM_BYTES;
-        assert_eq!(
-            &b.spu_transfer().ram()[at..at + 2],
-            &(0x1000 + n as u16).to_le_bytes()
-        );
-    }
-    assert!(b.read(0x1f801da8, Width::Half).is_err());
     assert!(b.write(0x1f801da5, Width::Half, 0).is_err());
     assert!(b.write_masked(0x1f801da4, 0, 1).is_err());
 }
 
 #[test]
-fn dma_write_completion_is_distinct_from_fifo_drain_and_dma_irq_acknowledgment() {
+fn dma_write_payload_precedes_busy_completion_and_irq_acknowledgment() {
     let mut b = bus();
     for n in 0..32 {
         write(&mut b, 0x10000 + n * 4, 0xa0b00000 + n);
     }
-    mode(&mut b, 0x20);
+    mode(&mut b, 0);
     half(&mut b, 0x1f801da6, 0x1000);
     write(&mut b, 0x1f8010f4, (1 << 23) | (1 << 20));
     half(&mut b, 0x1f801074, 8);
     dma(&mut b, 0x10000, 2, 16, 0x01000201);
-    b.service_spu(0).unwrap();
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 0); // DPCR disabled.
-    assert_eq!(status(&mut b), 0x1a0);
-    write(&mut b, 0x1f8010f0, 0x076d4321);
-    b.service_spu(0).unwrap();
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 32);
-    assert_eq!(read(&mut b, 0x1f8010c0), 0x10040);
-    assert_eq!(read(&mut b, 0x1f8010c4), 0x10010);
-    assert_ne!(read(&mut b, 0x1f8010c8) & (1 << 24), 0);
-    assert!(!b.interrupts().pending());
     assert!(b.spu_transfer().ram()[0x8000..0x8080]
         .iter()
         .all(|&x| x == 0));
-    b.service_spu(32).unwrap(); // First FIFO drained, second DMA slice queued.
-    assert_eq!(read(&mut b, 0x1f8010c4), 16);
+    write(&mut b, 0x1f8010f0, 0x076d4321);
+    b.advance_devices(1, true).unwrap();
+    assert_eq!(read(&mut b, 0x1f8010c0), 0x10000); // DPCR does not restart DMA.
+    write(&mut b, 0x1f8010c8, 0x01000201);
     assert_eq!(read(&mut b, 0x1f8010c0), 0x10080);
-    assert_eq!(read(&mut b, 0x1f8010c8), 0x201);
-    assert_eq!(status(&mut b), 0x420); // SPU still busy after DMA completion.
-    assert!(b.interrupts().pending());
-    b.service_spu(32).unwrap();
+    assert_eq!(read(&mut b, 0x1f8010c4), 16);
+    assert_eq!(read(&mut b, 0x1f8010c8), 0x01000201);
+    assert_eq!(status(&mut b), 0);
     for n in 0..32usize {
         assert_eq!(
             &b.spu_transfer().ram()[0x8000 + n * 4..0x8004 + n * 4],
             &(0xa0b00000 + n as u32).to_le_bytes()
         );
     }
-    assert_eq!(status(&mut b), 0x1a0);
+    b.advance_devices(100, false).unwrap();
+    assert!(!b.interrupts().pending());
+    assert_ne!(read(&mut b, 0x1f8010c8) & (1 << 24), 0);
+    b.advance_devices(101, true).unwrap();
+    assert_eq!(read(&mut b, 0x1f8010c8), 0x201);
+    assert!(b.interrupts().pending());
     write(&mut b, 0x1f8010f4, (1 << 23) | (1 << 20) | (1 << 28));
-    assert_ne!(b.interrupts().status() & 8, 0); // Controller latch is separate.
+    assert_ne!(b.interrupts().status() & 8, 0);
     half(&mut b, 0x1f801070, 0);
     assert!(!b.interrupts().pending());
 }
 
 #[test]
-fn dma_reads_use_full_fifo_requests_and_preserve_little_endian_words() {
+fn dma_reads_copy_immediately_and_preserve_little_endian_halfwords() {
     let mut b = bus();
     mode(&mut b, 0x10);
     half(&mut b, 0x1f801da6, 0x200);
     for n in 0..32 {
         half(&mut b, 0x1f801da8, 0x8000 + n);
     }
-    b.service_spu(32).unwrap();
-    mode(&mut b, 0);
-    b.service_spu(0).unwrap();
     half(&mut b, 0x1f801da6, 0x200);
-    mode(&mut b, 0x30);
+    mode(&mut b, 0);
     write(&mut b, 0x1f801014, 0x220931e1);
     write(&mut b, 0x1f8010f0, 0x076d4321);
-    dma(&mut b, 0x20002, 1, 16, 0x01000200); // Address low bits ignored on RAM bus only.
-    assert_eq!(b.service_spu(31).unwrap(), 31);
-    assert_eq!(read(&mut b, 0x20000), 0);
-    assert_ne!(read(&mut b, 0x1f8010c8) & (1 << 24), 0);
-    b.service_spu(1).unwrap();
-    assert_eq!(read(&mut b, 0x1f8010c0), 0x20042);
+    dma(&mut b, 0x20002, 1, 16, 0x01000200);
+    assert_eq!(read(&mut b, 0x1f8010c0), 0x20040);
     for n in 0..16 {
         assert_eq!(
             read(&mut b, 0x20000 + n * 4),
             (0x8001 + n * 2) << 16 | (0x8000 + n * 2)
         );
     }
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 0);
+    assert_eq!(b.read(0x1f801da6, Width::Half).unwrap(), 0x208);
+    assert_eq!(read(&mut b, 0x1f8010c8), 0x01000200);
+    b.advance_devices(9, true).unwrap();
     assert_eq!(read(&mut b, 0x1f8010c8), 0x200);
 }
 
 #[test]
-fn per_slice_interrupts_decrementing_addresses_and_ram_mirrors_are_observable() {
+fn dma_ram_mirrors_and_halfword_observations_preserve_order() {
     let mut b = bus();
     write(&mut b, 0x10000, 0x11223344);
-    write(&mut b, 0xfffc, 0x55667788);
-    mode(&mut b, 0x20);
+    write(&mut b, 0x10004, 0x55667788);
+    mode(&mut b, 0x30); // Native payload copies are independent of SPUCNT mode.
     write(&mut b, 0x1f8010f0, 0x076d4321);
     write(&mut b, 0x1f8010f4, (1 << 23) | (1 << 20) | (1 << 4));
-    dma(&mut b, 0x210000, 2, 1, 0x11000203);
-    b.service_spu(0).unwrap();
-    assert_eq!(read(&mut b, 0x1f8010c0), 0x20fffc);
-    assert_ne!(read(&mut b, 0x1f8010f4) & (1 << 28), 0);
-    assert_eq!(read(&mut b, 0x1f8010c8), 0x01000203); // Force-start bit cleared.
-    b.service_spu(4).unwrap();
+    b.enable_dma_observation(4).unwrap();
+    dma(&mut b, 0x210002, 2, 1, 0x01000201);
+    assert_eq!(read(&mut b, 0x1f8010c0), 0x210008);
+    assert_eq!(read(&mut b, 0x1f8010f4) & (1 << 28), 0);
     assert_eq!(
         &b.spu_transfer().ram()[..8],
         &[0x44, 0x33, 0x22, 0x11, 0x88, 0x77, 0x66, 0x55]
     );
-    assert_eq!(read(&mut b, 0x1f8010c0), 0x20fff8);
+    let observation = b.take_dma_observation().unwrap();
+    assert!(!observation.overflowed);
+    assert_eq!(observation.accesses.len(), 4);
+    for (index, access) in observation.accesses.iter().enumerate() {
+        assert_eq!(access.width, Width::Half);
+        assert_eq!(access.address, 0x210000 + index as u32 * 2);
+        assert_eq!(access.physical_address, 0x10000 + index as u32 * 2);
+    }
+    b.advance_devices(2, true).unwrap();
+    assert_ne!(read(&mut b, 0x1f8010f4) & (1 << 28), 0);
 }
 
 #[test]
-fn unsupported_execution_and_fifo_capacity_fail_without_false_completion() {
+fn unsupported_dma_controls_and_payload_ranges_fail_before_copying() {
     let mut b = bus();
-    for control in [0x01000001, 0x01000401, 0x01000301, 0x21000201] {
+    for control in [0x01000001, 0x01000401, 0x01000301, 0x21000201, 0x11000203] {
         write(&mut b, 0x1f8010c4, 0x10010);
         assert!(b.write(0x1f8010c8, Width::Word, control).is_err());
         assert_eq!(read(&mut b, 0x1f8010c8), 0);
     }
-    for size in [0, 17, 65535] {
-        write(&mut b, 0x1f8010c4, 0x10000 | size);
-        assert!(b.write(0x1f8010c8, Width::Word, 0x01000201).is_err());
-    }
     assert!(b.write(0x1f801daa, Width::Half, 0x8040).is_err());
     assert_eq!(b.read(0x1f801daa, Width::Half).unwrap(), 0);
     half(&mut b, 0x1f801dac, 6);
-    half(&mut b, 0x1f801daa, 0x20);
-    assert!(b.service_spu(100).is_err());
+    assert!(b.write(0x1f801da8, Width::Half, 42).is_err());
     assert_eq!(b.spu_transfer().current_address(), 0);
-    mode(&mut b, 0x20);
+    mode(&mut b, 0);
     write(&mut b, 0x1f8010f0, 0x076d4321);
-    dma(&mut b, 0x800000, 1, 16, 0x01000201);
-    assert!(b.service_spu(100).is_err());
-    assert_ne!(read(&mut b, 0x1f8010f4) & (1 << 15), 0);
-    assert_ne!(read(&mut b, 0x1f8010c8) & (1 << 24), 0);
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 0);
+    write(&mut b, 0x1f8010c0, 0x1ffffc);
+    write(&mut b, 0x1f8010c4, 0x10002);
+    assert!(b.write(0x1f8010c8, Width::Word, 0x01000201).is_err());
+    assert_eq!(read(&mut b, 0x1f8010c8), 0);
     assert!(b.spu_transfer().ram().iter().all(|&v| v == 0));
     let mut t = Transfer::default();
     t.write(12, 4).unwrap();
-    t.write(10, 0x10).unwrap();
-    t.apply_control().unwrap();
-    t.write(8, 42).unwrap();
-    assert!(t.write(10, 0).is_err());
-    assert_eq!(t.fifo_halfwords(), 1);
-    let mut t = Transfer::default();
     t.write(10, 0x30).unwrap();
-    assert!(t.write(8, 42).is_err()); // Pending read must not accept write data.
-    assert_eq!(t.fifo_halfwords(), 0);
+    t.write(8, 42).unwrap();
+    t.write(10, 0).unwrap();
+    t.write(6, 0).unwrap();
+    assert_eq!(t.read(8).unwrap(), 42);
 }
 
 #[test]
-fn zero_block_count_means_65536_slices_and_cancellation_does_not_complete() {
-    let mut c = Channel::default();
-    c.write(4, 1).unwrap();
-    c.write(8, 0x01000201).unwrap();
-    assert_eq!(c.next_word(false), None);
-    assert_eq!(c.next_word(true), Some(0));
-    assert!(c.finish_word().unwrap());
-    assert_eq!(c.read(4).unwrap(), 0xffff0001);
-    assert!(c.write(0, 0x10000).is_err());
-    c.write(8, 0).unwrap();
-    assert!(!c.active());
-    assert_eq!(c.next_word(true), None);
-    assert!(c.finish_word().is_err());
+fn zero_block_count_copies_nothing_but_advances_native_registers() {
+    let mut b = bus();
+    write(&mut b, 0x1f8010f0, 0x076d4321);
+    half(&mut b, 0x1f801da6, 0x1000);
+    dma(&mut b, 0x10000, 0, 1, 0x01000201);
+    assert_eq!(read(&mut b, 0x1f8010c0), 0x50000);
+    assert_eq!(read(&mut b, 0x1f8010c4), 1);
+    assert_eq!(b.spu_transfer().current_address(), 0x8000);
+    write(&mut b, 0x1f8010c8, 0);
+    assert_eq!(read(&mut b, 0x1f8010c8), 0);
+    b.advance_devices(1, true).unwrap();
+    assert_eq!(read(&mut b, 0x1f8010c8), 0);
 }
 
 #[test]
@@ -234,12 +219,15 @@ fn unstable_read_bus_configuration_and_unsupported_port_accesses_fail() {
     assert_eq!(read(&mut b, 0x1f801014), 0x200931e1);
     mode(&mut b, 0x30);
     write(&mut b, 0x1f8010f0, 0x076d4321);
-    dma(&mut b, 0x10000, 1, 16, 0x01000200);
-    let error = b.service_spu(32).unwrap_err().to_string();
+    write(&mut b, 0x1f8010c0, 0x10000);
+    write(&mut b, 0x1f8010c4, 0x10010);
+    let error = b
+        .write(0x1f8010c8, Width::Word, 0x01000200)
+        .unwrap_err()
+        .to_string();
     assert!(error.contains("stable reads require"), "{error}");
-    assert_eq!(b.spu_transfer().fifo_halfwords(), 0);
     assert_eq!(read(&mut b, 0x1f8010c4), 0x10010);
-    assert_eq!(read(&mut b, 0x1f8010c8), 0x01000200);
+    assert_eq!(read(&mut b, 0x1f8010c8), 0);
     assert_eq!(read(&mut b, 0x1f8010f4), 0);
 }
 
@@ -290,12 +278,9 @@ fn original_dispatcher_uploads_and_downloads_rounded_blocks_without_code_substit
             assert_eq!(read(&mut b, 0x80183b04), 0x80010000);
             assert_eq!(read(&mut b, 0x80183b08), rounded / 64);
             assert_eq!(read(&mut b, 0x1f801014), 0x200931e1);
-            assert_eq!(read(&mut b, 0x1f8010c4), (rounded / 64) << 16 | 16);
+            assert_eq!(read(&mut b, 0x1f8010c4), 16);
             assert_eq!(read(&mut b, 0x1f8010c8), 0x01000201);
-            assert_eq!(
-                b.service_spu(rounded as usize / 2).unwrap(),
-                rounded as usize / 2
-            );
+            b.advance_devices(u64::from(rounded), true).unwrap();
             assert_eq!(read(&mut b, 0x1f8010c0), 0x10000 + rounded);
             assert_eq!(read(&mut b, 0x1f8010c8), 0x201);
             assert_ne!(read(&mut b, 0x1f8010f4) & (1 << 28), 0);
@@ -306,7 +291,6 @@ fn original_dispatcher_uploads_and_downloads_rounded_blocks_without_code_substit
                 );
             }
             half(&mut b, 0x1f801daa, 0);
-            b.service_spu(0).unwrap();
             for (command, arg1, arg2) in [(2, spu_address, 0), (0, 0, 0), (3, 0x80020000, length)] {
                 let (result, count) = call(&mut b, command, arg1, arg2);
                 assert_eq!(result, 0);
@@ -315,14 +299,13 @@ fn original_dispatcher_uploads_and_downloads_rounded_blocks_without_code_substit
             assert_eq!(read(&mut b, 0x80183b00), 1);
             assert_eq!(read(&mut b, 0x1f801014), 0x220931e1);
             assert_eq!(read(&mut b, 0x1f8010c8), 0x01000200);
-            b.service_spu(rounded as usize / 2).unwrap();
+            b.advance_devices(u64::from(rounded) * 2, true).unwrap();
             assert_eq!(read(&mut b, 0x1f8010c8), 0x200);
             assert_eq!(read(&mut b, 0x1f8010c0), 0x20000 + rounded);
             assert_eq!(
                 &b.ram().bytes()[0x20000..0x20000 + rounded as usize],
                 payload.as_slice()
             );
-            assert_eq!(b.spu_transfer().fifo_halfwords(), 0);
         }
     }
     // Original timeout returns -2 without starting DMA when control never matches.
@@ -331,5 +314,5 @@ fn original_dispatcher_uploads_and_downloads_rounded_blocks_without_code_substit
     let (result, count) = call(&mut b, 3, 0x80010000, 64);
     assert_eq!(result, 0xffff_fffe);
     assert_eq!(read(&mut b, 0x1f8010c8), 0);
-    eprintln!("Original US transfer dispatcher: 16 upload/download pairs, {total_instructions} instructions; original timeout {count} instructions; explicit device service, no bus timing or PCM validation");
+    eprintln!("Original US transfer dispatcher: 16 upload/download pairs, {total_instructions} instructions; original timeout {count} instructions; immediate payload and explicit branch callbacks, no full CPU timing or PCM validation");
 }

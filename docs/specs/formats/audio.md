@@ -2022,33 +2022,37 @@ independent audio-fidelity oracle.
 
 [SPU transfer state](../../../tools/rust/bof3-audio/src/machine/spu_transfer.rs),
 [DMA4](../../../tools/rust/bof3-audio/src/machine/spu_dma.rs) and the
-[interconnect](../../../tools/rust/bof3-audio/src/machine/interconnect.rs) now
-provide normal 512 KiB sound RAM, a 32-halfword FIFO, manual writes and request-mode
-DMA in both directions. `service_spu` explicitly applies pending control and
-services a bounded number of halfwords. It does not advance CPU clocks or model
-bus wait states; CPU stepping alone does not service the transfer device.
+[interconnect](../../../tools/rust/bof3-audio/src/machine/interconnect.rs) share
+512 KiB sound RAM. Manual data-port reads and writes take effect immediately in
+every SPUCNT transfer mode. Each halfword advances the transfer address, wrapping
+within sound RAM. TSA reads expose that advancing address in eight-byte units.
+The [elapsed clock](../../../tools/rust/bof3-audio/src/machine/clock.rs) counts
+supplied CPU cycles without servicing transfers.
 
-The [SPU transfer reference](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-memory-access)
-describes eight-byte TSA units, a separate advancing RAM address, FIFO requests
-and normal `RAM_CTRL=4`. The model retains programmed TSA while wrapping the
-internal byte address. DMA completion can precede FIFO drain. The
+DMA4 accepts exact active CHCR values `0x01000200` for SPU-to-RAM and `0x01000201`
+for RAM-to-SPU. A CHCR start launches only when DPCR channel 4 is enabled.
+Enabling DPCR later does not launch it. The complete payload and MADR/BCR updates
+become visible during the start write, independently of SPUCNT mode. The copied
+word count is the product of both BCR halves. A zero high half copies nothing,
+although MADR advancement interprets that half as 65,536 blocks. BCR retains its
+low half. The aligned RAM address is folded into the 2 MiB backing once.
+A contiguous payload extending beyond that backing rejects before copying.
+
+Completion is separate from copying. Its deadline is the start access cycle plus
+the copied word count divided by two, with integer truncation. The shared branch
+callback clears busy and signals DMA completion. Global DMA interrupt control
+uses native DICR behavior from reset, independently of CD-controller attachment.
+
+RAM access requires `RAM_CTRL=4` unless the explicit emulator-reference
+RAM-control model is selected. The
 [memory-control reference](https://psx-spx.consoledev.net/memorycontrol/#1f801014h-dev4-spu-delaysize-200931e1h-use-220931e1h-for-spu-ram-reads)
 identifies `DEV4_CTRL=0x200931E1` for ordinary access and `0x220931E1` for stable
-reads. The interconnect accepts word writes of these two configurations, retaining
-them for original read/modify/write helpers; other configurations and partial
-accesses fail explicitly. DMA reads reject the unstable ordinary-access setting.
-References checked 2026-09-24 UTC; no hardware transfer trace has been accepted.
-
-DMA4 supports 1–16 words per request slice, incrementing/decrementing RAM
-addresses, RAM mirrors, block-count zero as 65,536 blocks, DPCR gating, cancellation
-and completion/per-slice IRQ notification through the existing DMA controller.
-CPU SPU ports support aligned halfword/word accesses and the established even-SB
-halfword/odd-SB-ignore behavior. Unsupported transfer modes, FIFO overflow,
-manual reads, IRQ9 enable without an explicit model, buffered direction
-changes/stops, masked MMIO and unimplemented hardware fail explicitly.
-Frame-driven voices, capture and configured reverb use the same RAM.
-Transfer status is component state, not complete SPUSTAT emulation or proof of
-IRQ latency.
+reads. The interconnect accepts word writes of these configurations.
+DMA reads require the latter. CPU SPU ports retain aligned halfword/word accesses
+and even-byte-store halfword/odd-byte-store-ignore behavior. Unsupported active
+DMA controls, masked MMIO and IRQ9 enable without an explicit model reject.
+Voices, capture and configured reverb share this RAM. These policies do not
+establish hardware transfer timing, concurrent worker behavior or PCM fidelity.
 
 `Interconnect::configure_spu_irq(spu_transfer::IrqModel::EmulatorReference)` selects
 the current native address comparisons and latch behavior. A matching voice
@@ -2076,8 +2080,8 @@ DMA RAM observation is disabled by default. Call
 records to capture successful RAM accesses by the implemented DMA3 and DMA4
 paths. Each record contains the channel, access width, DMA access address before
 RAM mirroring, physical RAM address, value and `from_ram` direction. Manual CD
-transfers and SPU transfers record words; clocked CD transfers record their
-actual byte writes. `take_dma_observation()` drains records and the overflow
+transfers record words, SPU DMA transfers record halfwords, and clocked CD
+transfers record their actual byte writes. `take_dma_observation()` drains records and the overflow
 flag for that interval, retaining the enabled limit. Overflow drops later records
 without stopping DMA; it makes the interval incomplete. A recorded RAM read can
 precede a later SPU-side failure. Observation adds no bus reads or clock advances
@@ -2212,7 +2216,7 @@ The interconnect requires explicit `configure_spu_voices` model selection before
 voice MMIO becomes available. Eight registers per voice and key/modulation/reverb/
 end masks share the existing SPU width/alias handling. `step_spu_voices` applies
 pending key latches at a caller-selected boundary and returns per-voice outputs
-plus the reverb-send mask. It reads the RAM written by FIFO/DMA transactions.
+plus the reverb-send mask. It reads the RAM written by manual-port and DMA transactions.
 
 Native MMIO accepts KON before any sample-start write, using the initial zero
 address until the guest writes another value. Accepted KON and KOFF bits remain
@@ -2458,7 +2462,7 @@ full-file offset `0xEE024`, runtime `exe/slus_004_22@0x80184024`. This is preset
 identity, not proof that a game path selected or executed that preset.
 
 [Output integration checks](../../../tools/rust/bof3-audio/tests/spu_output.rs)
-upload stored audio through the SPU FIFO, observe wet/main gain and preserve RAM
+upload stored audio through immediate SPU RAM ports, observe wet/main gain and preserve RAM
 with writes disabled. A bounded native mixed-PCM capture agrees with steady
 stored-RAM reverb output after the separately identified native host Volume,
 clipping and float conversion. It does not validate Rust main gain, startup
@@ -2489,10 +2493,11 @@ drive and unit-scale controller clock. The first pending opcode write installs a
 26,993-cycle FIFO deadline, the native integer conversion of 797 microseconds.
 Replacing that opcode keeps the deadline. Result reads, full acknowledgements
 and completed command handlers replace it when the response queue has space.
-`Execution` dispatches due callbacks after branch delay slots, before next-step
-IRQ admission. Each pass snapshots pending slots, visits FIFO, command continuation, read, then DMA completion and tests each
-slot's current target once. Output-clock subdivisions
-do not dispatch CD work. Reference execution uses absolute MMIO access cycles;
+`Execution` dispatches due device callbacks after branch delay slots, before
+next-step IRQ admission. Root counters advance first. Each dispatch pass snapshots
+pending slots, then visits CD FIFO, command continuation, sector read, SPU DMA
+completion and CD DMA completion. It tests each selected slot's current deadline
+once. Output-clock subdivisions do not dispatch device callbacks. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
@@ -2661,9 +2666,9 @@ Chopping, request mode, reverse direction, pause and snooping remain unsupported
 or CPU stalls. A failed overread retains prior writes and does not signal completion.
 
 With an attached controller, CHCR `0x11000000` and `0x11400100` support native
-bulk device-to-RAM copying. Attachment requires idle DMA3/DMA4 channels and
-selects the native global DICR write mask and master-flag behavior. Manual
-`service_cd` is unavailable while the controller owns DMA. A busy CHCR write
+bulk device-to-RAM copying. Attachment requires an idle host, idle DMA3, a paused
+drive and no existing controller. Manual `service_cd` is unavailable while the
+controller owns DMA. A busy CHCR write
 starts only when DPCR channel 3 is enabled; enabling DPCR later does not start it.
 MADR is aligned and masked with `0x7ffffc`; supported destinations stay within the
 8 MiB RAM mirror region. Unsupported controls and crossing that region reject
@@ -2695,11 +2700,10 @@ does not establish arbitrary ordering within a host service call.
 
 Native DICR writes acknowledge selected flags and replace control bits using
 mask `0x00ff803f`. They recompute the stored master flag from retained flags,
-force/master enable and the written value. Completion creates channel 3's flag
+force/master enable and the written value. Completion creates the channel's flag
 only when master and channel enables are both set. DMA asserts I_STAT bit 3 on
 the master-flag transition; clearing I_STAT alone does not reassert it while that
-flag remains set. These rules apply to the attached native model; the manual
-word-service model retains its functional IRQ contract.
+flag remains set. These global DICR rules apply from reset.
 
 Bounded native guest execution matches normal/fast transfers, partial and zero
 counts, count clamping, RAM aliases, DPCR gating, busy cancellation and a read
@@ -4008,9 +4012,8 @@ capture. The mixer does not add a bit-15 gate to the voice mix. Bit-14 mute
 timing remains a separate limitation. The [native source and observations](../../reference/spu-samples.md#disable-transition)
 do not establish hardware disable behavior.
 
-The test services at most one FIFO halfword after each integer instruction as
-an explicit transaction schedule, without clock or voice-frame simulation.
-Consequently the written key masks do not establish latch timing or audible
+The initializer check uses immediate manual-port transactions without scheduling
+voice frames. Its written key masks do not establish latch timing or audible
 initialization. This direct callee check does not cover BIOS `A0:72` or supply
 BIOS state for the bootstrap path. CPU/SPU and IRQ9 timing, disabled CD behavior,
 bit-14 mute timing and independent trace/audio acceptance remain required.

@@ -40,6 +40,9 @@ impl Interrupts {
     pub fn acknowledge(&mut self, value: u32) {
         self.status &= value as u16;
     }
+    pub(crate) fn request(&mut self, source: Source) {
+        self.status |= 1 << source as u8;
+    }
     pub fn set_line(&mut self, source: Source, asserted: bool) {
         let bit = 1 << source as u8;
         if asserted {

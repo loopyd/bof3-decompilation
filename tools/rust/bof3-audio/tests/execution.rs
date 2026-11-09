@@ -3,7 +3,6 @@ use bof3_audio::machine::{
     cpu::Cpu,
     execution::Execution,
     interconnect::Interconnect,
-    spu_clock,
 };
 
 fn fixture() -> Execution {
@@ -12,11 +11,7 @@ fn fixture() -> Execution {
     for (i, word) in [0x00851021, 0x03e00008, 0x24420001].into_iter().enumerate() {
         ram.write(0x2000 + i as u32 * 4, Width::Word, word).unwrap();
     }
-    Execution::new(
-        Cpu::new(0),
-        Interconnect::from_ram(ram),
-        spu_clock::Model::EmulatorReference,
-    )
+    Execution::new(Cpu::new(0), Interconnect::from_ram(ram))
 }
 
 #[test]

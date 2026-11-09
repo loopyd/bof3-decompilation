@@ -169,9 +169,7 @@ impl Interconnect {
         if (0x1f80_10c0..0x1f80_10cc).contains(&physical) {
             Self::require_word_port(address, width)?;
             return self
-                .dma
-                .spu
-                .write(physical & 15, value)
+                .write_spu_dma(physical & 15, value)
                 .map_err(|e| error(address, &e.to_string()));
         }
         if (0x1f80_1100..0x1f80_1130).contains(&physical) {

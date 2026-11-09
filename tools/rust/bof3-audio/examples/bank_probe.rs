@@ -323,7 +323,7 @@ fn main() -> Result<()> {
         "calls":calls,"pc":execution.cpu.pc(),"registers":(0..32).map(|r|execution.cpu.register(r)).collect::<Vec<_>>(),
         "sequence_ticks":sequence_ticks,
         "output_clock":execution.output(),"pcm_frames":pcm.len()/2,"pcm_peak":pcm.iter().map(|x|x.unsigned_abs()).max(),
-            "transfer_clock":execution.clock,"spu_ram_sha256":sha256_hex(execution.bus.spu_transfer().ram()),
+            "elapsed_clock":execution.clock,"spu_ram_sha256":sha256_hex(execution.bus.spu_transfer().ram()),
             "acceptance":"host supplies archive buffers, layout 0, explicit device inputs and a linked owned kernel; original game/SDK routines remain required; base clocks and optional output/VBlank clock; no firmware boot, CD streaming or independent PCM acceptance"
         }))?
     );

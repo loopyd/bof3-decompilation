@@ -4,8 +4,9 @@ use bof3_audio::{
         bus::{Bus, Ram, Width},
         cd_audio::{Model as Resampling, Resampler, XaAudio},
         cd_queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
+        clock,
         interconnect::Interconnect,
-        output_clock, spu_clock, spu_sample,
+        output_clock, spu_sample,
     },
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
 };
@@ -235,7 +236,7 @@ fn malformed_input_and_empty_output_do_not_advance_decoder_state() {
 #[test]
 fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain() {
     let mut bus = bus(queue());
-    let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut elapsed = clock::Clock::default();
     let mut clock = output_clock::Clock::new(
         output_clock::Model::PcsxReduxNtsc,
         output_clock::Collection::Retain,
@@ -253,7 +254,7 @@ fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain()
             port(&mut bus, 3, 3, 1);
         } // Mute future admission, not tail.
         let expected = cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16);
-        clock.advance(&mut bus, &mut transfer, 768).unwrap();
+        clock.advance(&mut bus, &mut elapsed, 768).unwrap();
         assert_eq!(
             clock
                 .take_frames()
@@ -328,7 +329,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     drive.complete(0).unwrap();
     let mut bus = bus(queue());
     let mut direct = reference();
-    let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut elapsed = clock::Clock::default();
     let mut clock = output_clock::Clock::new(
         output_clock::Model::PcsxReduxNtsc,
         output_clock::Collection::Retain,
@@ -349,7 +350,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
         for _ in 0..294 {
             // 44100 / 150. Phase is an explicit fixture input.
             let cd = expected.pop_front().expect("reference input exhausted");
-            clock.advance(&mut bus, &mut transfer, 768).unwrap();
+            clock.advance(&mut bus, &mut elapsed, 768).unwrap();
             let frames = clock
                 .take_frames()
                 .into_iter()

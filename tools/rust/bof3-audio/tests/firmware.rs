@@ -272,8 +272,8 @@ fn original_us_bios_executes_reset_memory_and_cache_setup_to_spu_setup() {
 
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS pointing to verified US SCPH-5501 ROM"]
-fn original_us_bios_uploads_spu_data_with_explicit_transfer_clock() {
-    use bof3_audio::machine::{adsr, spu_clock, spu_reverb, spu_sample, spu_voice_ports};
+fn original_us_bios_uploads_spu_data_through_immediate_ports() {
+    use bof3_audio::machine::{adsr, clock, spu_reverb, spu_sample, spu_voice_ports};
     let bytes = std::fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
     assert_eq!(
         sha256_hex(&bytes),
@@ -291,7 +291,7 @@ fn original_us_bios_uploads_spu_data_with_explicit_transfer_clock() {
         .unwrap();
     bus.configure_spu_reverb(spu_reverb::Model::EmulatorReference)
         .unwrap();
-    let mut clock = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut clock = clock::Clock::default();
     let mut cpu = Cpu::pcsx_redux_reset();
     let mut exceptions = 0;
     for _ in 0..20_000_000 {
@@ -306,27 +306,26 @@ fn original_us_bios_uploads_spu_data_with_explicit_transfer_clock() {
             }
             Err(fault) => panic!("{fault}"),
         }
-        clock.advance(&mut bus, 2).unwrap();
+        clock.advance(2).unwrap();
     }
     assert_eq!(cpu.pc(), 0x8005_a4e8);
     assert_eq!(cpu.instructions(), 19_247_628);
     assert_eq!(exceptions, 4);
     assert_eq!(clock.ticks(), 38_495_264);
-    assert_eq!(clock.halfwords(), 54_328);
-    assert_eq!(bus.spu_transfer().fifo_halfwords(), 0);
-    // Regression snapshot of the original ROM's writes under this explicit
-    // clock model, not independent hardware or rendered-audio evidence.
+    // Snapshot of the original ROM's immediate RAM writes. This does not
+    // establish independent hardware timing or rendered-audio acceptance.
     assert_eq!(
         sha256_hex(bus.spu_transfer().ram()),
         "35eff894304fb8c68065a11b9942b685a660fd39cbad4f31815c12afd4332416"
     );
     assert_eq!(bus.post_status(), Some(7));
     assert_eq!(cpu.register(2), 0x1f80_1814);
-    assert!(cpu
-        .step(&mut bus)
-        .unwrap_err()
-        .to_string()
-        .contains("unimplemented I/O read"));
+    let fault = cpu.step(&mut bus).unwrap_err();
+    assert!(
+        matches!(fault.kind, FaultKind::Bus(ref error)
+        if error.address == 0x1f80_1814 && error.detail == "GPU status model is not configured"),
+        "{fault}"
+    );
 }
 
 #[test]

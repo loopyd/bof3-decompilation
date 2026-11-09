@@ -3,6 +3,7 @@ mod cache;
 mod cd;
 mod mapped;
 mod memory;
+mod scheduler;
 
 use super::{
     bus::{Bus, BusError, Ram, Width},
@@ -15,7 +16,7 @@ use super::{
     spu_noise::Noise,
     spu_readback::{Readback, Settings as ReadbackSettings},
     spu_reverb::{Model as ReverbModel, Reverb},
-    spu_transfer::{Mode as SpuMode, Transfer as SpuTransfer},
+    spu_transfer::Transfer as SpuTransfer,
     spu_voice_ports,
     timers::Timers,
 };
@@ -43,6 +44,7 @@ pub struct Interconnect {
     spu_voices: Option<spu_voice_ports::Ports>,
     spu_readback: Option<Readback>,
     reference_access: Option<u64>,
+    scheduler: scheduler::Scheduler,
     spu_mixer: Mixer,
     spu_reverb: Option<Reverb>,
     // Only the linked runtime's two normal bus configurations are supported.
@@ -79,6 +81,7 @@ impl Interconnect {
             spu_voices: None,
             spu_readback: None,
             reference_access: None,
+            scheduler: scheduler::Scheduler::default(),
             spu_mixer: Mixer::default(),
             spu_reverb: None,
             spu_bus_control: 0,
@@ -251,7 +254,8 @@ impl Interconnect {
         if self.spu_transfer.read(10)? & 0x8000 == 0 {
             voices.require_disable_model()?;
         }
-        let frame = voices.tick(self.spu_transfer.ram(), self.spu_transfer.read(10)?)?;
+        let control = self.spu_transfer.read(10)?;
+        let frame = voices.tick(self.spu_transfer.ram(), control)?;
         for voice in &frame.voices {
             if let Some(address) = voice.fetched_address {
                 self.spu_transfer
@@ -429,90 +433,55 @@ impl Interconnect {
         }
     }
 
-    /// Service a bounded number of FIFO/RAM halfword transactions, pumping
-    /// DMA4 slices at request boundaries. This does not advance CPU clocks and
-    /// must not be used as evidence for bus latency or cycle-accurate DMA.
-    pub fn service_spu(&mut self, halfword_budget: usize) -> crate::Result<usize> {
-        self.spu_transfer.apply_control()?;
-        self.pump_spu_dma()?;
-        let mut count = 0;
-        while count < halfword_budget && self.spu_transfer.service_halfword()? {
-            count += 1;
-            self.pump_spu_dma()?;
-        }
-        Ok(count)
-    }
-
-    fn pump_spu_dma(&mut self) -> crate::Result<()> {
-        if self.dma.priority() & (1 << 19) == 0 || !self.dma.spu.active() {
+    fn write_spu_dma(&mut self, offset: u32, value: u32) -> crate::Result<()> {
+        let mut channel = self.dma.spu.clone();
+        channel.write(offset, value)?;
+        if offset != 8 || !channel.active() || self.dma.priority() & (1 << 19) == 0 {
+            self.dma.spu = channel;
             return Ok(());
         }
-        let mode = self.spu_transfer.mode();
-        if mode == SpuMode::Stopped {
-            return Ok(());
-        }
-        let from_ram = self.dma.spu.from_ram();
         if !matches!(self.spu_bus_control, 0x2009_31e1 | 0x2209_31e1)
-            || (!from_ram && self.spu_bus_control != 0x2209_31e1)
+            || (!channel.from_ram() && self.spu_bus_control != 0x2209_31e1)
         {
             return Err("DMA4 requires normal DEV4_CTRL; stable reads require 0x220931e1".into());
         }
-        if mode
-            != if from_ram {
-                SpuMode::DmaWrite
-            } else {
-                SpuMode::DmaRead
-            }
-        {
-            return Err("DMA4 direction does not match SPU transfer mode".into());
+        self.spu_transfer.require_ram_control()?;
+        let (address, words) = channel.transfer();
+        let physical = address & 0x001f_fffc;
+        let bytes = u64::from(words) * 4;
+        if u64::from(physical) + bytes > self.ram.bytes().len() as u64 {
+            return Err("DMA4: native contiguous payload exceeds the 2 MiB RAM backing".into());
         }
-        while self.spu_transfer.can_dma_word(from_ram) {
-            let Some(address) = self.dma.spu.next_word(self.spu_transfer.dma_request()) else {
-                break;
+        let from_ram = channel.from_ram();
+        for halfword in 0..words * 2 {
+            let at = physical + halfword * 2;
+            let value = if from_ram {
+                let value = self.ram.read(at, Width::Half)? as u16;
+                self.spu_transfer.write_halfword(value)?;
+                value
+            } else {
+                let value = self.spu_transfer.read_halfword()?;
+                self.ram.write(at, Width::Half, u32::from(value))?;
+                value
             };
-            if address >= 0x0080_0000 {
-                self.dma.bus_error();
-                self.interrupts.set_line(Source::Dma, self.dma.irq_line());
-                return Err(format!(
-                    "DMA4 address {address:#08x} is outside the RAM mirror region"
-                )
-                .into());
-            }
-            let physical = address & 0x001f_fffc;
-            if from_ram {
-                let word = self.ram.read(physical, Width::Word)?;
-                if let Some(observation) = &mut self.dma_observation {
-                    observation.record(super::dma::RamAccess {
-                        channel: 4,
-                        width: Width::Word,
-                        address,
-                        physical_address: physical,
-                        value: word,
-                        from_ram,
-                    });
-                }
-                self.spu_transfer.dma_write(word)?;
-            } else {
-                let word = self.spu_transfer.dma_read()?;
-                self.ram.write(physical, Width::Word, word)?;
-                if let Some(observation) = &mut self.dma_observation {
-                    observation.record(super::dma::RamAccess {
-                        channel: 4,
-                        width: Width::Word,
-                        address,
-                        physical_address: physical,
-                        value: word,
-                        from_ram,
-                    });
-                }
-            }
-            let slice_ended = self.dma.spu.finish_word()?;
-            if slice_ended && (!self.dma.spu.active() || self.dma.interrupt() & (1 << 4) != 0) {
-                self.dma.complete(4)?;
-                self.interrupts.set_line(Source::Dma, self.dma.irq_line());
+            if let Some(observation) = &mut self.dma_observation {
+                observation.record(super::dma::RamAccess {
+                    channel: 4,
+                    width: Width::Half,
+                    address: address + halfword * 2,
+                    physical_address: at,
+                    value: u32::from(value),
+                    from_ram,
+                });
             }
         }
-        Ok(())
+        channel.advance_registers();
+        self.dma.spu = channel;
+        self.scheduler.schedule(
+            scheduler::Slot::SpuDma,
+            self.reference_access.unwrap_or(self.scheduler.cycle()),
+            u64::from(words / 2),
+        )
     }
 
     fn read_spu_port(&mut self, address: u32, width: Width) -> Result<u32, BusError> {

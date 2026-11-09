@@ -218,17 +218,15 @@ width/alias/error behavior and absent EXP1 mapping, alignment and RAM
 preservation. These checks do not establish full boot, clock scheduling,
 independent trace agreement, or audio fidelity.
 
-## BIOS SPU initialization and transfer clock
+## BIOS SPU initialization and elapsed cycles
 
-The boot probe now accepts optional `spu` choices for sample/envelope arithmetic,
-disable behavior and reverb, plus an optional `transfer_clock`. It records these
-choices and the final SPU RAM hash, FIFO occupancy and transfer address. Existing
-contexts without models retain their prior behavior. Unknown choices, missing
-required arithmetic selections and extra SPU fields are rejected. The transfer
-clock requires the explicit `pcsx_redux_reset` CPU profile. The bounded probe cap
-is now 100 million transitions; a numeric trace ring avoids allocating JSON on
-every instruction. Neither the larger cap nor model selection declares a BIOS
-revision supported for production rendering.
+[The BIOS probe](../../tools/rust/bof3-audio/examples/bios_probe.rs) accepts
+`bof3.bios-probe-context/v2`. Optional `spu` configuration requires sample and
+envelope arithmetic selections and permits disable and reverb models.
+Unknown fields and choices reject. The `bof3.bios-probe/v2` report records these
+selections, `elapsed_clock`, the final SPU RAM hash and transfer address.
+The transition limit is 1 through 100 million. Model selection does not establish
+production BIOS support.
 
 Key-on/off MMIO now preserves each written halfword for readback separately from
 pending frame events. Reads retain unused upper bits and survive event consumption;
@@ -238,29 +236,18 @@ and the [PCSX-Redux Agentic register array](../../third_party/pcsx-redux-agentic
 `0x800543B4` and reads key-on state after configuring voices; the previous
 write-only model rejected that valid access.
 
-[The Rust transfer clock](../../tools/rust/bof3-audio/src/machine/spu_clock.rs)
-advances FIFO/RAM transfers at an explicitly selected
-16 system ticks per halfword, with retained partial progress and no accumulated
-idle-time credit. This retained `EmulatorReference` timing policy does not
-reproduce the current native transfer path or establish hardware timing.
-Control applies at an advance call; DMA FIFO handshakes still use the existing
-untimed interconnect. The probe supplies two base ticks per executed instruction
-or entered syscall, taking `BIAS=2` from the [PCSX-Redux Agentic CPU constants](../../third_party/pcsx-redux-agentic/src/core/psxemulator.h).
-The [current interpreter](../../third_party/pcsx-redux-agentic/src/core/psxinterpreter.cc)
-and [memory handlers](../../third_party/pcsx-redux-agentic/src/core/psxmem.cc)
-add ROM and access costs that this clock omits. Memory stalls, voice frames,
-timer/CD clocks and DMA arbitration are absent. The emulator's
-[SPU register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
-writes manual SPU data directly; this FIFO model does not claim identical emulator timing.
-The clock establishes bounded, reproducible device progress, not final PSX timing
-or PCM fidelity. No reference implementation code is imported or executed.
+[The elapsed clock](../../tools/rust/bof3-audio/src/machine/clock.rs) counts
+supplied cycles without advancing devices. This probe adds two base ticks per
+executed instruction or entered syscall. Manual SPU accesses take effect
+immediately. DMA payload copying occurs during its start-register write.
+The probe does not dispatch scheduled device callbacks or advance voice frames,
+root counters or CD clocks. Its elapsed count omits native ROM/access costs,
+stalls and arbitration, and does not establish native timing or PCM fidelity.
+See the [current transfer contract](../specs/formats/audio.md#rust-spu-ram-transfers-and-dma4).
 
-The hash-gated ROM fixture exercises initialization under this clock model;
-it is regression evidence, not an independent trace. Clock
-checks exercise split-step equivalence, exact transfer boundaries, idle/stopped
-behavior, invalid control and DMA-read completion. Key-latch checks distinguish
-readback from consumed events. Full boot and independent audio acceptance
-remain separate gates.
+The hash-gated ROM fixture checks manual-port uploads against a retained RAM hash.
+Key-latch checks distinguish register readback from consumed events. Full boot
+and independent audio acceptance remain separate gates.
 
 ## BIOS shell handoff and original sound initialization
 
@@ -293,9 +280,10 @@ executes the first original EXE instruction.
 `entry` executes the original EXE startup. The other modes are explicitly marked
 diagnostic calls: they retain handoff GPR/COP0 state, select the original routine,
 set zero arguments/HI/LO and a return sentinel. They do not claim that the game
-has run its full startup. All modes select the existing emulator-reference SPU
-models and transfer clock; BIOS services execute through guest vectors and ROM,
-without the host `Kernel` dispatcher or synthetic kernel tables.
+has run its full startup. All modes select emulator-reference SPU models and
+record elapsed base ticks without dispatching device callbacks. BIOS services
+execute through guest vectors and ROM, without the host `Kernel` dispatcher or
+synthetic kernel tables.
 
 ENDX writes now have transient readback separate from actual voice loop-end
 latches, consistent with [psx-spx's read/write notes](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-voice-flags).
@@ -314,10 +302,10 @@ runtime/PCM comparisons.
 
 `machine::execution::Execution` runs bounded guest calls while retaining CPU,
 BIOS kernel and device state. Syscalls enter the guest exception vector; pending
-interrupts use the CPU exception path. Each instruction advances root counters
-and the explicit emulator-reference SPU transfer clock by two base ticks.
-Memory stalls, audio frames, beam/CD clocks and DMA arbitration remain unmodeled;
-this is functional bank-loading evidence, not playback timing evidence.
+interrupts use the CPU exception path. Execution advances its configured CPU and
+root-counter timing and dispatches due device callbacks after branch delay slots.
+SPU payload copies occur at manual-port or DMA-start writes. This is functional
+bank-loading evidence, not playback-timing acceptance.
 
 Fresh Rizin disassembly of the US executable payload (SHA-256
 `677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff`)
@@ -442,10 +430,10 @@ The NTSC line clock uses the PCSX-Redux Agentic base counter setup in
 [src/core/psxcounters.h](../../third_party/pcsx-redux-agentic/src/core/psxcounters.h):
 33,868,800 / (60 × 263), truncated to 2146 system ticks
 per line, with VBlank starting at line 243 and ending on line wrap. Each line
-also supplies a pulse for timer 1's HBlank clock. Root counters, the existing
-SPU FIFO/DMA transfer clock, scanline events and output frames advance on the
-same clock. Guest instructions retain the explicit two-tick base cost; IRQs
-enter the guest BIOS at the next instruction boundary.
+also supplies a pulse for timer 1's HBlank clock. Root counters, scanline events
+and output frames share the supplied elapsed cycles. DMA completion callbacks
+run afterward at branch boundaries. Output-clock subdivisions do not dispatch
+them. IRQs enter the guest at the next admitted instruction boundary.
 
 The BIOS leaves timer 1 mode `0x0507`, using HBlank pulses and synchronization
 with VBlank. The implementation services this clock source. Timer 0 HBlank gating and
@@ -478,7 +466,7 @@ and release-tail controls. Diagnostic frame totals include guest IRQ execution
 through return after the last VBlank, so they vary with sequence workload and
 do not represent exact requested durations.
 
-Default tests prove partition-invariant output, root-counter/transfer clock
+Default tests prove partition-invariant output, root-counter and elapsed-clock
 advancement, exact model VBlank boundaries, interrupt acknowledgement,
 unsupported timer modes and bounded-output failure. The expanded BGM000 media
 test checks nonzero clocked PCM, frame accounting, and repeated-enable rejection.

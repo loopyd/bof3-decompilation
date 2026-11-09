@@ -30,7 +30,6 @@ fn configure(bus: &mut Interconnect) {
     for _ in 0..7 {
         half(bus, 0x1f801da8, 0x1111);
     }
-    assert_eq!(bus.service_spu(8).unwrap(), 8);
     for v in 0..24 {
         let base = 0x1f801c00 + v * 16;
         half(bus, base, 0x3fff);

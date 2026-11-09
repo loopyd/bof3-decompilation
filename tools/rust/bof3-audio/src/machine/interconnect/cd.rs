@@ -138,7 +138,8 @@ impl Interconnect {
                     && drive.mode() & 0x40 == 0
                     && candidate.mode() & 0x40 != 0));
         let init = command.opcode == 0x0a && response.interrupt == 3;
-        if (seek_reset || play_seek || init) && self.dma.cd.active() && !self.dma.reference() {
+        if (seek_reset || play_seek || init) && self.dma.cd.active() && self.cd_controller.is_none()
+        {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
         }
         if xa_predictors_reset {
@@ -236,7 +237,7 @@ impl Interconnect {
             };
             if address >= 0x0080_0000 {
                 self.dma.bus_error();
-                self.interrupts.set_line(Source::Dma, self.dma.irq_line());
+                self.interrupts.request(Source::Dma);
                 return Err(format!(
                     "DMA3 address {address:#08x} is outside the RAM mirror region"
                 )
@@ -314,7 +315,7 @@ impl Interconnect {
             self.write_cd_register((physical & 3) as u8, value as u8)
         } else if physical >= 0x1f80_10b0 {
             Self::require_word_port(address, width)?;
-            if self.dma.reference() {
+            if self.cd_controller.is_some() {
                 self.write_clocked_cd_dma(physical & 15, value)
             } else {
                 self.dma.cd.write(physical & 15, value)

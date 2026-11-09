@@ -11,18 +11,13 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         execution::Execution,
         interconnect::Interconnect,
         music_progress::{Progress, Stop},
-        spu_clock,
     };
     let mut ram = fixture();
     let record = prepare(&mut ram, 1, 2, &[0; 32]);
     ram.write(record + 0x3c, Width::Byte, 255).unwrap();
     ram.write(record + 0x46, Width::Half, 1).unwrap();
     ram.write(0x8018_e264, Width::Byte, 0).unwrap();
-    let mut execution = Execution::new(
-        Cpu::new(0),
-        Interconnect::from_ram(ram),
-        spu_clock::Model::EmulatorReference,
-    );
+    let mut execution = Execution::new(Cpu::new(0), Interconnect::from_ram(ram));
     execution.cpu.set_register(29, 0x801f_ff00);
     let mut progress = Progress::new(
         bof3_audio::machine::reference::progress_instructions(),

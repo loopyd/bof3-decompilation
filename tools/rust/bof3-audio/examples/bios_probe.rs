@@ -4,11 +4,12 @@ use bof3_audio::{
     machine::{
         adsr,
         bus::Ram,
+        clock,
         cpu::{Cpu, FaultKind},
         executable::RAM_BYTES,
         firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
-        spu_clock, spu_reverb, spu_sample,
+        spu_reverb, spu_sample,
         spu_voice_ports::DisableModel,
     },
     Result,
@@ -25,8 +26,6 @@ struct Context {
     reset_profile: Option<String>,
     #[serde(default)]
     spu: Option<SpuModels>,
-    #[serde(default)]
-    transfer_clock: Option<spu_clock::Model>,
     ram: Option<PathBuf>,
     entry_pc: u32,
     status: u32,
@@ -91,7 +90,7 @@ fn main() -> Result<()> {
     }
     let context_bytes = read_bounded(&context_path, 65536)?;
     let context: Context = serde_json::from_slice(&context_bytes)?;
-    if context.schema != "bof3.bios-probe-context/v1"
+    if context.schema != "bof3.bios-probe-context/v2"
         || context.provenance.trim().is_empty()
         || context.registers[0] != 0
         || context.entry_pc & 3 != 0
@@ -118,12 +117,7 @@ fn main() -> Result<()> {
     if let Some(models) = &context.spu {
         models.configure(&mut bus)?;
     }
-    if context.transfer_clock.is_some() && context.reset_profile.as_deref() != Some("pcsx-redux") {
-        return Err(
-            "transfer-clock probe requires the explicit PCSX-Redux CPU reset profile".into(),
-        );
-    }
-    let mut transfer_clock = context.transfer_clock.map(spu_clock::Clock::new);
+    let mut clock = clock::Clock::default();
     let mut cpu = match context.reset_profile.as_deref() {
         None => {
             let mut cpu = Cpu::new(context.entry_pc);
@@ -188,27 +182,19 @@ fn main() -> Result<()> {
         if recent.len() > 16 {
             recent.pop_front();
         }
-        if let Some(clock) = &mut transfer_clock {
-            // Pinned PCSX-Redux interpreter BIAS=2 base ticks per instruction.
-            // Memory stalls, frame clocks and DMA arbitration remain absent.
-            if let Err(error) = clock.advance(&mut bus, 2) {
-                outcome = format!("SPU transfer clock: {error}");
-                break;
-            }
-        }
+        clock.advance(2)?;
     }
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
-            "schema":"bof3.bios-probe/v1", "rom_sha256":rom_hash,
+            "schema":"bof3.bios-probe/v2", "rom_sha256":rom_hash,
             "context_sha256":sha256_hex(&context_bytes), "provenance":context.provenance,
             "reset_profile":context.reset_profile,
             "spu_models":context.spu,
-            "transfer_clock":transfer_clock,
+            "elapsed_clock":clock,
             "spu_ram_sha256":sha256_hex(bus.spu_transfer().ram()),
-            "spu_fifo_halfwords":bus.spu_transfer().fifo_halfwords(),
             "spu_transfer_address":bus.spu_transfer().current_address(),
-            "timing_limits":"optional transfer clock uses two base ticks per CPU instruction/exception; no memory stalls, voice frames, timer/CD clocks or DMA arbitration",
+            "timing_limits":"two base ticks per CPU instruction/exception; no memory stalls, scheduled device callbacks, voice frames or timer/CD clocks",
             "initial_ram_sha256":ram_hash,"final_ram_sha256":sha256_hex(bus.ram().bytes()),
             "ram_input":context.ram,"initial_entry_pc":context.entry_pc,"initial_status":context.status,
             "initial_registers":context.registers,"transition_limit":context.transition_limit,"stop_pc":context.stop_pc,

@@ -77,10 +77,9 @@ fn interconnect_preserves_aliases_scratchpad_and_full_dma_store_values() {
     assert!(bus.read(0xbf80_0000, Width::Word).is_err());
     bus.write(0x1f80_10f0, Width::Half, 0x3333_3333).unwrap();
     assert_eq!(bus.dma().priority(), 0x3333_3333);
-    assert!(
-        bus.write(0x1f80_10c8, Width::Word, 0x0100_0201).is_err(),
-        "DMA4 without a valid block size may not silently start/finish"
-    );
+    bus.write(0x1f80_10c8, Width::Word, 0x0100_0201).unwrap();
+    assert_eq!(bus.read(0x1f80_10c8, Width::Word).unwrap(), 0x0100_0201);
+    assert_eq!(bus.read(0x1f80_10c4, Width::Word).unwrap(), 0);
 }
 
 #[test]

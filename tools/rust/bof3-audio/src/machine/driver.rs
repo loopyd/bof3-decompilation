@@ -12,7 +12,7 @@ use super::{
     execution::{Call, Execution},
     interconnect::Interconnect,
     kernel::Kernel,
-    spu_clock, spu_reverb, spu_sample,
+    spu_reverb, spu_sample,
     spu_voice_ports::DisableModel,
 };
 use crate::{digest::sha256_hex, Result};
@@ -396,7 +396,6 @@ impl Image {
         let mut execution = Execution::with_kernel(
             cpu,
             bus,
-            spu_clock::Model::EmulatorReference,
             kernel,
             Environment {
                 stack_top: self.symbol("audio_exception_stack_end")?,

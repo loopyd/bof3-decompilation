@@ -1,7 +1,7 @@
 //! Explicit reference clock for SPU/CD output and NTSC VBlank, without GPU/drive
 //! scheduling or CPU stalls. Reference execution retains its counter owner and
 //! requires an explicit functional sample phase, without native timing parity.
-use super::{interconnect::Interconnect, spu_clock};
+use super::{clock, interconnect::Interconnect};
 use crate::Result;
 use serde::Serialize;
 
@@ -100,13 +100,13 @@ impl Clock {
     /// terminal: elapsed work is not rolled back. Drain the bounded PCM queue
     /// regularly. Configured CD audio advances at sample boundaries. External
     /// input, drive scheduling, HBlank duration and dot clocks are absent.
-    /// With an explicit reference phase, only transfer and PCM advance here;
+    /// With an explicit reference phase, only elapsed cycles and PCM advance here;
     /// reference counters retain blanking and timer ownership. The line and
     /// VBlank counts then remain zero. CD callbacks follow this work in Execution.
     pub fn advance(
         &mut self,
         bus: &mut Interconnect,
-        transfer: &mut spu_clock::Clock,
+        elapsed: &mut clock::Clock,
         ticks: u32,
     ) -> Result<()> {
         let scanlines = self.reference_phase.is_none();
@@ -122,7 +122,7 @@ impl Clock {
             if scanlines {
                 step = step.min(self.line_remaining);
             }
-            transfer.advance(bus, step)?;
+            elapsed.advance(step)?;
             if scanlines {
                 bus.advance_cpu(step)?;
                 self.line_remaining -= step;
@@ -154,7 +154,7 @@ impl Clock {
                         .activation_cycle
                         .checked_add(self.ticks)
                         .ok_or("output cycle overflow")?,
-                    None => transfer.ticks(),
+                    None => elapsed.ticks(),
                 };
                 let frame = bus.step_spu_scheduled_output(cycle)?;
                 if self.collection == Collection::Retain {

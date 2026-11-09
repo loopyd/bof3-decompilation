@@ -9,7 +9,7 @@ use bof3_audio::{
         firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
         profile::Profile,
-        spu_clock, spu_reverb, spu_sample,
+        spu_reverb, spu_sample,
         spu_voice_ports::DisableModel,
         thread_context,
     },
@@ -169,7 +169,7 @@ fn original_callback_and_sound_initializers_return_using_bios_created_kernel_sta
 
 fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (Execution, u64, u64) {
     let machine = boot::load_us(Image::from_bytes(rom.to_vec()).unwrap(), exe, 3_000_000).unwrap();
-    let mut machine = Execution::from_boot(machine, spu_clock::Model::EmulatorReference);
+    let mut machine = Execution::from_boot(machine);
     let start = machine.cpu.instructions();
     machine.cpu.resume_at(entry);
     for register in 4..8 {

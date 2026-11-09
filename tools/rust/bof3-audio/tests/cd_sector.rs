@@ -159,7 +159,8 @@ fn unsupported_transfers_and_bus_errors_preserve_pending_data() {
         .unwrap_err()
         .to_string()
         .contains("RAM mirror"));
-    assert_eq!(bus.dma().interrupt() & 0x80008000, 0x80008000);
+    assert_eq!(bus.dma().interrupt() & 0x80008000, 0x00008000);
+    assert_ne!(bus.interrupts().status() & 8, 0);
     assert_eq!(
         bus.read(0x1f801802, Width::Byte).unwrap(),
         u32::from(bytes[0])

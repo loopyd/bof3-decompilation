@@ -1,7 +1,7 @@
 use bof3_audio::{
     catalog::loader, digest::sha256_hex, machine::adsr, machine::boot, machine::bus::Bus,
     machine::bus::Width, machine::executable::Executable, machine::execution::Execution,
-    machine::firmware::Image, machine::spu_clock, machine::spu_reverb, machine::spu_sample,
+    machine::firmware::Image, machine::spu_reverb, machine::spu_sample,
     machine::spu_voice_ports::DisableModel,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -34,11 +34,7 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
     let layout = loader::initialize_layout(&exe, 0).unwrap();
     let slot = &layout.slots[0];
     let machine = boot::load_us(rom, &exe, 3_000_000).unwrap();
-    let mut execution = Execution::new(
-        machine.cpu,
-        machine.bus,
-        spu_clock::Model::EmulatorReference,
-    );
+    let mut execution = Execution::new(machine.cpu, machine.bus);
     execution
         .bus
         .configure_spu_voices(
