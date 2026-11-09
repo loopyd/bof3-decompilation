@@ -18,7 +18,7 @@ pub struct Settings {
 
 struct Cursor {
     block: Option<usize>,
-    repeat: Option<usize>,
+    repeat: usize,
     remaining: u8,
     position: u32,
     step: u32,
@@ -38,12 +38,12 @@ impl Cursor {
                 };
                 let flags = ram[block + 1];
                 if flags & 4 != 0 && !self.ignore_loop {
-                    self.repeat = Some(block);
+                    self.repeat = block;
                 }
                 self.block = if flags & 1 == 0 {
                     Some((block + 16) % RAM_BYTES)
                 } else if flags == 3 {
-                    self.repeat
+                    Some(self.repeat)
                 } else {
                     None
                 };
@@ -66,18 +66,19 @@ struct Key {
 }
 
 struct Voice {
-    start: Option<usize>,
-    repeat: Option<usize>,
+    start: usize,
+    repeat: usize,
     pitch: u16,
     registers: Registers,
     key: Option<Key>,
 }
 
 impl Voice {
+    /// Address defaults follow fresh native stream opening, before guest writes.
     fn new() -> Self {
         Self {
-            start: None,
-            repeat: None,
+            start: 0,
+            repeat: 0,
             pitch: 0,
             registers: Registers { adsr1: 0, adsr2: 0 },
             key: None,
@@ -161,7 +162,7 @@ impl Readback {
                         key.cursor.step = (u32::from(voice.pitch) << 4).max(1);
                     }
                 }
-                6 => voice.start = Some(usize::from(value & !1) * 8),
+                6 => voice.start = usize::from(value & !1) * 8,
                 8 | 10 => {
                     // Native ADSR writes leave the readback checkpoint intact.
                     // Its next walk uses the latest rates for the uncached gap.
@@ -178,7 +179,7 @@ impl Readback {
                 12 => (),
                 14 => {
                     voice.advance(cycle, delay, ram)?;
-                    voice.repeat = Some(usize::from(value & !1) * 8);
+                    voice.repeat = usize::from(value & !1) * 8;
                     if let Some(key) = &mut voice.key {
                         key.cursor.repeat = voice.repeat;
                         key.cursor.ignore_loop = true;
@@ -196,7 +197,6 @@ impl Readback {
                     if mask & (1 << index) == 0 {
                         continue;
                     }
-                    let Some(start) = voice.start else { continue };
                     let mut envelope = Adsr::new(voice.registers, Model::EmulatorReference);
                     envelope.key_on();
                     voice.key = Some(Key {
@@ -206,7 +206,7 @@ impl Readback {
                         envelope,
                         ended: false,
                         cursor: Cursor {
-                            block: Some(start),
+                            block: Some(voice.start),
                             repeat: voice.repeat,
                             remaining: 0,
                             position: if self.settings.interpolation >= 2 {

@@ -104,7 +104,6 @@ struct NativeReader {
     window: NativeWindow,
     position: u32,
     consumed: usize,
-    repeat_valid: bool,
     ignore_loop: bool,
     ended: bool,
 }
@@ -115,7 +114,6 @@ impl Default for NativeReader {
             window: NativeWindow::default(),
             position: 3 * 0x10000,
             consumed: 28,
-            repeat_valid: false,
             ignore_loop: false,
             ended: false,
         }
@@ -154,6 +152,8 @@ pub struct Player {
 }
 
 impl Player {
+    /// Native-reference addresses begin at RAM offset zero, as after native
+    /// stream opening. This constructor does not import a saved native voice.
     pub fn new(model: Model) -> Self {
         Self {
             model,
@@ -192,10 +192,8 @@ impl Player {
         self.history = DecoderState::new(self.model);
         self.samples = [0; 31];
         if let Some(native) = &mut self.native {
-            let repeat_valid = native.repeat_valid;
             let ignore_loop = native.ignore_loop;
             *native = NativeReader::default();
-            native.repeat_valid = repeat_valid;
             native.ignore_loop = ignore_loop;
         }
         self.flags = 0;
@@ -208,7 +206,6 @@ impl Player {
         self.repeat = value;
         if let Some(native) = &mut self.native {
             self.repeat &= !1;
-            native.repeat_valid = true;
             native.ignore_loop = true;
         }
     }
@@ -380,15 +377,14 @@ impl Player {
                 native.consumed = 0;
                 frame.fetched_address = Some(u32::from(current) * 8);
                 frame.loop_end = flags & 1 != 0;
-                if frame.loop_end && native.repeat_valid {
+                if frame.loop_end {
                     frame.fetched_loop_address = Some(u32::from(self.repeat) * 8);
                 }
                 if flags & 4 != 0 && !native.ignore_loop {
                     self.repeat = current;
-                    native.repeat_valid = true;
                 }
                 self.address = if frame.loop_end {
-                    (flags == 3 && native.repeat_valid).then_some(self.repeat)
+                    (flags == 3).then_some(self.repeat)
                 } else {
                     Some(current.wrapping_add(2))
                 };

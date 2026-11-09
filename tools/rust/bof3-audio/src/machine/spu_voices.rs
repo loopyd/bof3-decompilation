@@ -34,7 +34,6 @@ struct Voice {
     volumes: [VoiceVolume; 2],
     pitch: u16,
     start: u16,
-    start_written: bool,
     envelope: Adsr,
     player: Player,
     started: bool,
@@ -51,13 +50,14 @@ pub struct Voices {
 }
 
 impl Voices {
+    /// Native-reference start and repeat addresses model a fresh native open,
+    /// where RAM offset zero is valid before any guest register write.
     pub fn new(sample_model: SampleModel, envelope_model: EnvelopeModel) -> Self {
         Self {
             voices: std::array::from_fn(|_| Voice {
                 volumes: [VoiceVolume::new(sample_model, envelope_model); 2],
                 pitch: 0,
                 start: 0,
-                start_written: false,
                 envelope: Adsr::new(Registers { adsr1: 0, adsr2: 0 }, envelope_model),
                 player: Player::new(sample_model),
                 started: false,
@@ -144,7 +144,7 @@ impl Voices {
         let mut accepted = 0;
         for (i, voice) in self.voices.iter_mut().enumerate() {
             let bit = 1 << i;
-            if mask & bit != 0 && voice.start_written {
+            if mask & bit != 0 {
                 accepted |= bit;
                 voice.player.accept_key_on();
             }
@@ -202,10 +202,7 @@ impl Voices {
                 voice.pitch = value;
                 voice.player.write_pitch(value);
             }
-            6 => {
-                voice.start = value;
-                voice.start_written = true;
-            }
+            6 => voice.start = value,
             8 | 10 => {
                 let mut registers = voice.envelope.registers();
                 if offset == 8 {

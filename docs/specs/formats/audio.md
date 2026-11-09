@@ -2117,16 +2117,17 @@ the source fixtures.
 [The sample reader](../../../tools/rust/bof3-audio/src/machine/spu_sample.rs)
 fetches ADPCM blocks from shared 512 KiB SPU RAM and preserves decoder and
 interpolation history across blocks and loops. Both models ignore the low
-start-address bit. Native-reference manual repeat writes also align the address
-and distinguish an explicitly written zero address from an uninitialized repeat.
+start-address bit. Native-reference construction uses fresh-open address defaults.
+Start, repeat and current addresses are valid SPU RAM offset zero before guest
+register writes. Manual repeat writes also ignore the low address bit.
 
 Native-reference ENDX is reported when an end-marked block is fetched. Only exact
-flags `0x03` with a valid repeat address select another loop. Other supported
-end-marked flags, including `0x07`, park the next decode cursor. Buffered samples
-finish before an owed fetch encounters that parked cursor and reports
+flags `0x03` select the repeat address, including its initial zero value. Other
+supported end-marked flags, including `0x07`, park the next decode cursor. Buffered
+samples finish before an owed fetch encounters that parked cursor and reports
 `Frame::stopped`. An accepted native MMIO KON write clears manual loop-start
 protection immediately; scheduled playback start preserves any later manual
-repeat write. Start retains the repeat address and validity while resetting
+repeat write. Start retains the repeat address while resetting
 decoder and interpolation state.
 
 `Player::current_address()` returns `Option<u16>`. It exposes the next native
@@ -2207,10 +2208,10 @@ end masks share the existing SPU width/alias handling. `step_spu_voices` applies
 pending key latches at a caller-selected boundary and returns per-voice outputs
 plus the reverb-send mask. It reads the RAM written by FIFO/DMA transactions.
 
-Native MMIO accepts KON only after the sample-start register has been written;
-an explicit zero address is valid. Accepted KON and KOFF bits remain pending
-across zero writes and writes for other voices. KON acceptance clears ENDX and
-loop-start protection at the write boundary. Playback starts later at the
+Native MMIO accepts KON before any sample-start write, using the initial zero
+address until the guest writes another value. Accepted KON and KOFF bits remain
+pending across zero writes and writes for other voices. KON acceptance clears
+ENDX and loop-start protection at the write boundary. Playback starts later at the
 scheduled frame boundary. Key-register reads expose the latest written masks,
 independently of pending requests. Native ENDX writes are ignored and reads
 expose live flags. Published MMIO retains latest-mask keys and temporary ENDX
@@ -5638,6 +5639,13 @@ the MMIO handler; unstamped host ENVX reads and SPU writes reject in this mode.
 Key-on starts a zero envelope. The owner subtracts the configured startup delay
 from elapsed 44.1 kHz steps and applies key-off at its recorded cycle. Register
 latches remain separate from pending output-frame keys.
+
+The readback owner also begins with valid zero start and repeat addresses and
+accepts KON before a sample-start write. These defaults model fresh native
+opening; they do not import saved voice state. Address agreement does not resolve
+the initial ADSR configuration gap. Native opening sets the internal sustain
+level to 15, while Rust derives zero from its initial ADSR registers until an
+ADSR1 write.
 
 The readback cursor follows guest start, repeat, pitch, loop flags and SPU RAM.
 A pitch-modulated voice retains the fork's untracked-cursor convention until
