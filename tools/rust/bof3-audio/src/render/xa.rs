@@ -372,7 +372,7 @@ pub fn render(
             && e.output().unwrap().frames() - capture_start_frame < boundary)
             || e.cpu.pc() != foreground
         {
-            e.step_observed(&mut observe)?;
+            e.step_retired(&mut observe)?.devices.require_ready()?;
             if e.output().unwrap().frames() - capture_start_frame > options.safety_frames {
                 return Err("XA render: safety limit reached during foreground continuation; no output published".into());
             }

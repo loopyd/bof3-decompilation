@@ -1,14 +1,14 @@
 //! Native FIFO, command, read and DMA callbacks at CPU branch boundaries.
 use super::super::{
     scheduler::Slot::{CdCommand as COMMAND, CdDma as DMA, CdFifo as FIFO, CdRead as READ},
-    Interconnect,
+    DeviceProgress, Interconnect,
 };
 use crate::{
     machine::{
         bus::Bus,
-        cd_drive::{Activity, Delivery, Drive},
+        cd_drive::{Activity, AudioCompletion, Delivery, Drive, Response},
         cd_media::{DataSector, Media},
-        cd_queue::Admission,
+        cd_queue::{Admission, WaitOutcome},
     },
     Result,
 };
@@ -20,6 +20,15 @@ pub(in crate::machine::interconnect) struct Controller {
     drive: Drive,
     media: Option<Media>,
     seekp_command: SeekPCommand,
+    audio_continuation: Option<AudioContinuation>,
+}
+
+enum AudioContinuation {
+    Read(AudioCompletion),
+    Play {
+        completion: AudioCompletion,
+        response: Option<Response>,
+    },
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -33,7 +42,8 @@ impl Interconnect {
     /// Attach an explicit paused drive and unit-scale native controller clock.
     /// The selected cycle is the caller's CPU phase. FIFO and Pause/Init/Seek
     /// continuations execute at branch boundaries. ReadN/S and Play require
-    /// owned media; host-wait timing is not implemented.
+    /// owned media. Full audio submissions suspend until an explicit host-wait
+    /// outcome resumes the callback and its scheduler pass.
     pub fn configure_cd_controller(&mut self, drive: Drive, cycle: u64) -> Result<()> {
         if self.cd_controller.is_some()
             || self.dma.cd.active()
@@ -50,6 +60,7 @@ impl Interconnect {
             drive,
             media: None,
             seekp_command: SeekPCommand::Other,
+            audio_continuation: None,
         });
         Ok(())
     }
@@ -152,17 +163,62 @@ impl Interconnect {
         &mut self,
         slot: super::super::scheduler::Slot,
         cycle: u64,
-    ) -> Result<()> {
+    ) -> Result<DeviceProgress> {
         let mut controller = self
             .cd_controller
             .take()
             .ok_or("scheduled CD callback has no controller")?;
         let result = match slot {
-            FIFO => self.service_clocked_cd_fifo(&mut controller, cycle),
-            COMMAND => self.service_clocked_cd_command(&mut controller, cycle),
+            FIFO => self
+                .service_clocked_cd_fifo(&mut controller, cycle)
+                .map(|()| DeviceProgress::Ready),
+            COMMAND => self
+                .service_clocked_cd_command(&mut controller, cycle)
+                .map(|()| DeviceProgress::Ready),
             READ => self.service_clocked_cd_read(&mut controller, cycle),
             _ => Err("invalid CD controller callback".into()),
         };
+        self.cd_controller = Some(controller);
+        result
+    }
+
+    pub(in crate::machine::interconnect) fn resume_clocked_cd_audio(
+        &mut self,
+        outcome: WaitOutcome,
+        cycle: u64,
+    ) -> Result<DeviceProgress> {
+        let mut controller = self
+            .cd_controller
+            .take()
+            .ok_or("suspended CD audio callback has no controller")?;
+        let result = (|| {
+            if controller.audio_continuation.is_none() {
+                return Err("CD callback has no pending audio continuation".into());
+            }
+            let admission = self
+                .cd_audio
+                .as_mut()
+                .ok_or("CD audio is not configured")?
+                .finish_submission(outcome)?;
+            if matches!(admission, Admission::Pending { .. }) {
+                return Ok(DeviceProgress::WaitingForCdAudio);
+            }
+            match controller.audio_continuation.take().unwrap() {
+                AudioContinuation::Read(completion) => {
+                    controller.drive.complete_audio(completion);
+                    self.scheduler
+                        .schedule(READ, cycle, controller.drive.read_period_cycles())?
+                }
+                AudioContinuation::Play {
+                    completion,
+                    response,
+                } => {
+                    controller.drive.complete_audio(completion);
+                    self.complete_clocked_cd_play(&controller, response, cycle)?;
+                }
+            }
+            Ok(DeviceProgress::Ready)
+        })();
         self.cd_controller = Some(controller);
         result
     }
@@ -312,20 +368,26 @@ impl Interconnect {
         Ok(())
     }
 
-    fn service_clocked_cd_read(&mut self, controller: &mut Controller, cycle: u64) -> Result<()> {
+    fn service_clocked_cd_read(
+        &mut self,
+        controller: &mut Controller,
+        cycle: u64,
+    ) -> Result<DeviceProgress> {
         match controller.drive.activity() {
             Activity::PreparingRead { .. } | Activity::PreparingPlay { .. } => {
                 let delay = controller.drive.read_seek_delay_cycles()?;
                 controller.drive.complete(cycle as u32)?;
-                return self.scheduler.schedule(READ, cycle, delay);
+                self.scheduler.schedule(READ, cycle, delay)?;
+                return Ok(DeviceProgress::Ready);
             }
             Activity::SeekingRead { .. } | Activity::SeekingPlay { .. } => {
                 if let Some(response) = controller.drive.complete(cycle as u32)? {
-                    return self.respond_clocked_cd(response.interrupt, &response.bytes);
+                    self.respond_clocked_cd(response.interrupt, &response.bytes)?;
+                    return Ok(DeviceProgress::Ready);
                 }
             }
             _ if matches!(controller.drive.status() & 0xe0, 0x20 | 0x80) => {}
-            _ => return Ok(()),
+            _ => return Ok(DeviceProgress::Ready),
         }
         if controller.drive.status() & 0xe0 == 0x80 {
             return self.service_clocked_cd_play(controller, cycle);
@@ -341,15 +403,19 @@ impl Interconnect {
         } else {
             None
         };
-        let delivery = match raw.as_ref() {
-            Some(DataSector::Complete(bytes)) => controller.drive.sector(Some(bytes))?,
-            Some(DataSector::Retained(bytes)) => controller.drive.retained_sector(bytes)?,
-            None => controller.drive.sector(None)?,
+        let (delivery, completion) = match raw.as_ref() {
+            Some(DataSector::Complete(bytes)) => {
+                controller.drive.begin_sector(Some(bytes), true)?
+            }
+            Some(DataSector::Retained(bytes)) => {
+                controller.drive.begin_sector(Some(bytes), false)?
+            }
+            None => controller.drive.begin_sector(None, true)?,
         };
         match delivery {
             Delivery::Error(response) => {
                 self.respond_clocked_cd(response.interrupt, &response.bytes)?;
-                return Ok(());
+                return Ok(DeviceProgress::Ready);
             }
             Delivery::Data { bytes, response } => {
                 self.cd_mut()?.replace_read_data(&bytes)?;
@@ -360,18 +426,27 @@ impl Interconnect {
                     self.enqueue_cd_audio(&bytes, cycle)?,
                     Admission::Pending { .. }
                 ) {
-                    return Err(
-                        "CD controller: pending audio host-wait timing is not implemented".into(),
-                    );
+                    controller.audio_continuation = Some(AudioContinuation::Read(
+                        completion.expect("XA delivery has a post-feed completion"),
+                    ));
+                    return Ok(DeviceProgress::WaitingForCdAudio);
                 }
             }
             Delivery::Filtered => {}
         }
+        if let Some(completion) = completion {
+            controller.drive.complete_audio(completion);
+        }
         self.scheduler
-            .schedule(READ, cycle, controller.drive.read_period_cycles())
+            .schedule(READ, cycle, controller.drive.read_period_cycles())?;
+        Ok(DeviceProgress::Ready)
     }
 
-    fn service_clocked_cd_play(&mut self, controller: &mut Controller, cycle: u64) -> Result<()> {
+    fn service_clocked_cd_play(
+        &mut self,
+        controller: &mut Controller,
+        cycle: u64,
+    ) -> Result<DeviceProgress> {
         let raw = if let Some(lba) = controller.drive.play_media_lba()? {
             Some(
                 controller
@@ -383,7 +458,7 @@ impl Interconnect {
         } else {
             None
         };
-        let delivery = controller.drive.play_sector(
+        let (delivery, completion) = controller.drive.begin_play_sector(
             crate::machine::cd_position::CdPosition::from_lba(controller.drive.next_lba())?,
             raw.as_ref().map(|bytes| &bytes[..]),
             cycle as u32,
@@ -393,12 +468,27 @@ impl Interconnect {
                 self.enqueue_cd_cdda(&bytes, cycle)?,
                 Admission::Pending { .. }
             ) {
-                return Err(
-                    "CD controller: pending audio host-wait timing is not implemented".into(),
-                );
+                controller.audio_continuation = Some(AudioContinuation::Play {
+                    completion: completion.expect("CDDA feed has a post-feed completion"),
+                    response: delivery.response,
+                });
+                return Ok(DeviceProgress::WaitingForCdAudio);
             }
         }
-        if let Some(response) = delivery.response {
+        if let Some(completion) = completion {
+            controller.drive.complete_audio(completion);
+        }
+        self.complete_clocked_cd_play(controller, delivery.response, cycle)?;
+        Ok(DeviceProgress::Ready)
+    }
+
+    fn complete_clocked_cd_play(
+        &mut self,
+        controller: &Controller,
+        response: Option<Response>,
+        cycle: u64,
+    ) -> Result<()> {
+        if let Some(response) = response {
             self.respond_clocked_cd(response.interrupt, &response.bytes)?;
         }
         if controller.drive.status() & 0xe0 == 0x80 {

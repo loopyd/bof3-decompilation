@@ -74,9 +74,15 @@ fn dma_read_payload_is_immediate_but_busy_waits_for_a_branch_callback() {
         );
     }
     clock.advance(511).unwrap();
-    bus.advance_devices(clock.ticks(), false).unwrap();
+    bus.advance_devices(clock.ticks(), false)
+        .unwrap()
+        .require_ready()
+        .unwrap();
     assert_ne!(bus.read(0x1f8010c8, Width::Word).unwrap() & (1 << 24), 0);
     clock.advance(1).unwrap();
-    bus.advance_devices(clock.ticks(), true).unwrap();
+    bus.advance_devices(clock.ticks(), true)
+        .unwrap()
+        .require_ready()
+        .unwrap();
     assert_eq!(bus.read(0x1f8010c8, Width::Word).unwrap(), 0x200);
 }

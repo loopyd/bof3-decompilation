@@ -4,6 +4,7 @@ mod cd;
 mod mapped;
 mod memory;
 mod scheduler;
+pub use scheduler::DeviceProgress;
 
 use super::{
     bus::{Bus, BusError, Ram, Width},

@@ -8,7 +8,7 @@ use super::{
     cpu::{Cpu, FaultKind, Step},
     exception_calls::Environment,
     executable::ram_offset,
-    interconnect::Interconnect,
+    interconnect::{DeviceProgress, Interconnect},
     kernel::Kernel,
     output_clock,
 };
@@ -47,7 +47,14 @@ struct Services {
 
 enum Transition {
     Stopped,
-    Advanced(Option<Step>),
+    Advanced(StepOutcome),
+}
+
+/// A retired instruction is reported once, including when its device pass waits.
+#[must_use]
+pub struct StepOutcome {
+    pub retired: Option<Step>,
+    pub devices: DeviceProgress,
 }
 
 impl Execution {
@@ -120,28 +127,50 @@ impl Execution {
         self.syscalls
     }
 
-    pub fn step(&mut self) -> Result<()> {
-        self.step_observed(&mut |_| Ok(()))
-    }
-
-    /// Observe the instruction selected after IRQ admission, before execution.
-    /// The observer cannot mutate guest state. Its failure aborts this run.
-    pub fn step_observed(&mut self, observer: &mut impl FnMut(&Self) -> Result<()>) -> Result<()> {
-        self.step_retired(observer).map(|_| ())
+    pub fn step(&mut self) -> Result<StepOutcome> {
+        self.step_retired(&mut |_| Ok(()))
     }
 
     /// Return the actual fetched instruction after CPU and scheduled device
     /// service complete. The observer runs at the selected pre-execution
     /// boundary, so it can retain address registers for retirement evidence.
-    /// Syscalls and host service transitions return None because no instruction
-    /// retired. Errors retain advanced state; owned execution cannot resume.
+    /// Syscalls and host service transitions have no retired instruction.
+    /// During a CD audio wait, repeated calls execute nothing and report no
+    /// instruction. Resume with resume_cd_audio before further guest work.
+    /// Errors retain advanced state; owned execution cannot resume.
     pub fn step_retired(
         &mut self,
         observer: &mut impl FnMut(&Self) -> Result<()>,
-    ) -> Result<Option<Step>> {
+    ) -> Result<StepOutcome> {
         match self.transition(observer, None)? {
-            Transition::Stopped => Ok(None),
+            Transition::Stopped => unreachable!("a step has no stop address"),
             Transition::Advanced(step) => Ok(step),
+        }
+    }
+
+    /// Finish a suspended device pass without CPU, timer or output-clock work.
+    pub fn resume_cd_audio(
+        &mut self,
+        outcome: super::cd_queue::WaitOutcome,
+    ) -> Result<DeviceProgress> {
+        self.require_execution()?;
+        let result = self.bus.resume_cd_audio(outcome);
+        self.retain_failure(&result);
+        result
+    }
+
+    fn require_execution(&self) -> Result<()> {
+        if self.kernel.as_ref().is_some_and(|services| services.failed) {
+            return Err("owned execution is unfinished after a previous failure".into());
+        }
+        Ok(())
+    }
+
+    fn retain_failure<T>(&mut self, result: &Result<T>) {
+        if result.is_err() {
+            if let Some(services) = &mut self.kernel {
+                services.failed = true;
+            }
         }
     }
 
@@ -150,15 +179,9 @@ impl Execution {
         observer: &mut impl FnMut(&Self) -> Result<()>,
         stop: Option<u32>,
     ) -> Result<Transition> {
-        if self.kernel.as_ref().is_some_and(|services| services.failed) {
-            return Err("owned execution is unfinished after a previous failure".into());
-        }
+        self.require_execution()?;
         let result = self.advance(observer, stop);
-        if result.is_err() {
-            if let Some(services) = &mut self.kernel {
-                services.failed = true;
-            }
-        }
+        self.retain_failure(&result);
         result
     }
 
@@ -167,6 +190,12 @@ impl Execution {
         observer: &mut impl FnMut(&Self) -> Result<()>,
         stop: Option<u32>,
     ) -> Result<Transition> {
+        if self.bus.device_progress() == DeviceProgress::WaitingForCdAudio {
+            return Ok(Transition::Advanced(StepOutcome {
+                retired: None,
+                devices: DeviceProgress::WaitingForCdAudio,
+            }));
+        }
         if stop == Some(self.cpu.pc())
             && self
                 .kernel
@@ -270,7 +299,7 @@ impl Execution {
                 self.bus.advance_cpu(ticks)?;
             }
         }
-        self.bus.advance_devices(
+        let devices = self.bus.advance_devices(
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;
@@ -279,7 +308,7 @@ impl Execution {
                 "original-BIOS reference timing does not implement owned WaitEvent polling".into(),
             );
         }
-        Ok(Transition::Advanced(retired))
+        Ok(Transition::Advanced(StepOutcome { retired, devices }))
     }
 
     /// Activate an explicit output/scanline phase at this guest boundary.
@@ -338,6 +367,8 @@ impl Execution {
     /// RETURN is a stop address only; no instruction or trampoline is written.
     /// The limit counts transitions, including BIOS calls and blocked wait polls.
     /// Errors may leave guest execution advanced; callers must not retry calls.
+    /// These synchronous helpers have no host audio wait resolver. A full CD
+    /// queue is terminal here; use stepped execution for resumable host waits.
     pub fn call(&mut self, entry: u32, arguments: [u32; 4], limit: u64) -> Result<Call> {
         self.call_observed(entry, arguments, limit, &mut |_| Ok(()))
     }
@@ -359,6 +390,7 @@ impl Execution {
             }
             services.kernel.require_plain_context()?;
         }
+        self.bus.device_progress().require_ready()?;
         let result = self.run_call(entry, arguments, limit, observer);
         if result.is_err() {
             if let Some(services) = &mut self.kernel {
@@ -383,11 +415,9 @@ impl Execution {
         }
         self.cpu.set_register(31, RETURN);
         for _ in 0..limit {
-            if matches!(
-                self.transition(observer, Some(RETURN))?,
-                Transition::Stopped
-            ) {
-                break;
+            match self.transition(observer, Some(RETURN))? {
+                Transition::Stopped => break,
+                Transition::Advanced(step) => step.devices.require_ready()?,
             }
         }
         if self.cpu.pc() != RETURN {

@@ -29,7 +29,10 @@ fn emulator_reset_has_enabled_interrupts_but_no_seeded_response_or_completion() 
     )
     .unwrap();
     bus.write(0x1f801801, Width::Byte, 1).unwrap();
-    bus.advance_devices(26_994, true).unwrap();
+    bus.advance_devices(26_994, true)
+        .unwrap()
+        .require_ready()
+        .unwrap();
     assert!(bus
         .configure_cd_host_reset(Model::EmulatorReference)
         .is_err());

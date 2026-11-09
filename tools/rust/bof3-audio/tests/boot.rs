@@ -195,7 +195,7 @@ fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (Execution, 
         if machine.cpu.pc() == 0x80010000 {
             break;
         }
-        machine.step().unwrap();
+        machine.step().unwrap().devices.require_ready().unwrap();
     }
     println!(
         "{}",

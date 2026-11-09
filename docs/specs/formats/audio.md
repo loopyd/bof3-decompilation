@@ -2505,6 +2505,26 @@ completion and CD DMA completion. It tests each selected slot's current deadline
 once. Output-clock subdivisions do not dispatch device callbacks. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
+`advance_devices` returns `DeviceProgress::Ready` or
+`DeviceProgress::WaitingForCdAudio`. A pending batch suspends its callback and
+retains the CPU cycle, original pending-slot snapshot and next slot.
+Read headers and CDDA track selection are visible before the wait. Drive position,
+XA EOF/EOR state and CDDA peak phase commit only after the feed returns.
+`resume_cd_audio(WaitOutcome::Retry | WaitOutcome::TimedOut)` finishes that
+callback before visiting later slots from the retained pass. Retry can leave it
+waiting. Available capacity admits the batch even with `TimedOut`; timeout drops
+callback output only while capacity remains insufficient. Suspension and
+resumption do not advance CPU, timer or output-clock time. Native host wall-clock
+timeout behavior remains unaccepted.
+
+`Execution::step` and `step_retired` return `StepOutcome { retired, devices }`.
+A retired instruction is reported once, including when its device pass waits.
+Further steps while waiting return no retired instruction and perform no IRQ
+admission, observer call, CPU execution or clock advancement.
+`Execution::resume_cd_audio` resumes the retained pass. Synchronous call helpers
+use `require_ready` and fail on a host audio wait. They supply no host-consumer
+schedule.
+
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
 GetlocL/P, GetTN/TD, Pause, Init, SeekL/P, ReadN/S and Play through the functional
 drive. Supply required TOC metadata before attachment; automatic seek timing
@@ -2593,8 +2613,8 @@ during explicit seek preparation. The same guests run through reference
 XA/CDDA submission counts and frame counts agree for a bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
-Other DATA I/O failures, partial reads and pending audio host-wait timing fail
-explicitly. Defined-buffer EOF follows the retained-data path above.
+Other DATA I/O failures and partial reads fail explicitly. Defined-buffer EOF
+follows the retained-data path above.
 Attached DMA completion can overlap read and command callbacks because copying
 already finished during the CHCR write. Other scheduler interactions, broader IRQ phase and
 hardware fidelity remain unaccepted. A fresh ready drive has no retained GetlocL
@@ -2619,8 +2639,8 @@ Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
 response queuing alone does not accept native data-overrun or DMA timing.
-The attached controller supplies the DMA completion path below; host waits and
-broader IRQ timing remain implementation obligations. Retained
+The attached controller supplies the DMA completion path below. Native host-wait
+timing and broader IRQ phase remain acceptance obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 
@@ -3008,14 +3028,22 @@ command lifecycle below. Drive routing and end flags use the contract below;
 coding follows the first-success latch below; physical timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
-through `enqueue_cd_audio(sector, cycle)`; pending batches finish through
-`finish_cd_audio_submission(WaitOutcome::Retry | WaitOutcome::TimedOut)` after
-caller-supplied consumption/wait boundaries. The queue does not infer a timeout
-from immediate fullness. Queue consumption commits only after successful SPU
-output. A failure retains its queued frame, but the SPU engine can have advanced
-internal state before a later failure. `Queue::sector`, `Queue::cdda_sector`,
-`enqueue_cd_audio`, `enqueue_cd_cdda` and `step_spu_cd_output` require an explicit
-CPU cycle. Feed and capture cycles must use the same 33,868,800 Hz domain.
+through `enqueue_cd_audio(sector, cycle)`. Manual pending submissions finish
+through `finish_cd_audio_submission(WaitOutcome::Retry | WaitOutcome::TimedOut)`.
+A suspended controller callback instead requires `resume_cd_audio`; direct
+submission completion rejects while that callback owns the wait. Neither API
+infers a timeout from immediate fullness.
+
+`take_cd_audio_frame` consumes one caller-supplied host output boundary without
+running SPU synthesis, advancing CPU time or consuming RAM-capture samples. It can
+drain callback output while a controller submission waits. The SPU-output path
+consumes its queued frame only after successful output. A failure retains that
+frame, although SPU internal state may already have advanced.
+
+`Queue::sector`, `Queue::cdda_sector`, `enqueue_cd_audio`, `enqueue_cd_cdda` and
+`step_spu_cd_output` require an explicit CPU cycle. Feed and capture cycles must
+use the same 33,868,800 Hz domain. Callback-output consumption remains separate
+from the capture ring below.
 
 Native-reference CD capture uses a separate
 [16,384-frame ring](../../../tools/rust/bof3-audio/src/machine/cd_queue/capture.rs).
@@ -3123,9 +3151,10 @@ and failed reads produce silence. Command mute suppresses the feed while
 position and peak phase advance. Playback before an audio first track rejects.
 The returned `PlayDelivery` contains optional selected audio and a response.
 The caller submits audio through `Interconnect::enqueue_cd_cdda`, completes
-any pending feed and publishes the response. The attached controller performs
-these operations automatically when admission completes immediately; pending
-host-wait timing remains unsupported.
+any pending feed and publishes the response. The attached controller retains any
+pending submission and response until `resume_cd_audio` completes admission or
+the supplied timeout outcome. It then publishes the response and schedules the
+next playback callback at the original callback cycle.
 
 Reports begin after 25,401,600 wrapping CPU cycles, or 750 ms. They occur on
 absolute frame numbers divisible by ten and alternate absolute and relative
@@ -5022,6 +5051,10 @@ and idle observations, commands, queue statistics, clock coordinates and PCM16
 delivery. `capture_start_frame` is the absolute origin. Body, cancellation,
 idle and executed-frame counts are relative to it. WAV, JSON and optional Ogg
 use the existing verified publication transaction and fixed quality 0.7 policy.
+
+The renderer uses `require_ready` and fails without publication if a controller
+callback requires a host audio wait. This bounded path supplies no resumable
+host-consumer schedule.
 
 The 60 Hz functional tick cadence, service latency and CPU/sample alignment
 remain unaccepted native timing. Guest idle and the encoded sector extent do
@@ -7046,12 +7079,15 @@ commits. Each memory record distinguishes the effective address, bus address and
 width, consumed/stored byte lanes and cache-isolation state. Merged loads still
 read a full bus word: their consumed lanes do not remove device read side effects.
 Original executable words are checked against the pinned image before recording.
-`Execution::step_retired` returns that successful CPU step after scheduled device
-service. Its read-only observer runs after IRQ admission and before execution,
-so callers can capture `retirement::Before` there. A delivered syscall returns
-`None`; other faults remain errors. A pre-step RAM read alone does not establish
-which instruction the cache supplied. CPU retirement records exclude host and
-DMA accesses and do not establish startup ownership.
+`Execution::step_retired` returns `StepOutcome`; its `retired` field contains the
+successful CPU step once, even when scheduled device service waits. Its read-only
+observer runs after IRQ admission and before execution, so callers can capture
+`retirement::Before` there. Delivered syscalls and host service transitions have
+no retired instruction. Repeated steps during a device wait do not rerun the
+observer or retire another instruction. Other faults remain errors. A pre-step
+RAM read alone does not establish which instruction the cache supplied. CPU
+retirement records exclude host and DMA accesses and do not establish startup
+ownership.
 
 The six full-reset S_XA/MAGIC/VOICE scenarios, at one and four sectors per tick,
 preserve the existing command, scheduler, stop and dry PCM comparisons. The

@@ -96,6 +96,12 @@ pub struct PlayDelivery {
     pub response: Option<Response>,
 }
 
+/// Drive changes that occur after the synchronous native audio feed returns.
+pub(crate) enum AudioCompletion {
+    Read { next_lba: i32, xa_ended: bool },
+    Play { next_lba: i32, peak_right: bool },
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub interrupt: u8,
@@ -670,6 +676,19 @@ impl Drive {
         raw: Option<&[u8]>,
         cycle: u32,
     ) -> Result<PlayDelivery> {
+        let (delivery, completion) = self.begin_play_sector(position, raw, cycle)?;
+        if let Some(completion) = completion {
+            self.complete_audio(completion);
+        }
+        Ok(delivery)
+    }
+
+    pub(crate) fn begin_play_sector(
+        &mut self,
+        position: CdPosition,
+        raw: Option<&[u8]>,
+        cycle: u32,
+    ) -> Result<(PlayDelivery, Option<AudioCompletion>)> {
         if self.status() & 0xe0 != 0x80 || position.lba() != self.next_lba {
             return Err("CD playback: require playing state and current position".into());
         }
@@ -681,20 +700,26 @@ impl Drive {
             self.set_idle();
             let response = self.response(4);
             self.motor_on = false;
-            return Ok(PlayDelivery {
-                audio: None,
-                response: Some(response),
-            });
+            return Ok((
+                PlayDelivery {
+                    audio: None,
+                    response: Some(response),
+                },
+                None,
+            ));
         }
         let q = toc
             .position(self.next_lba)?
             .ok_or("CD playback has no position")?;
         if self.auto_pause && self.play_track != 0 && q[0] != self.play_track {
             self.set_idle();
-            return Ok(PlayDelivery {
-                audio: None,
-                response: Some(self.response(4)),
-            });
+            return Ok((
+                PlayDelivery {
+                    audio: None,
+                    response: Some(self.response(4)),
+                },
+                None,
+            ));
         }
         if raw.is_some_and(|bytes| bytes.len() != 2352) {
             return Err(
@@ -756,14 +781,16 @@ impl Drive {
             }
         }
         let audio = (!self.muted).then(|| samples.to_vec());
-        self.peak_right = Some(right);
-        self.play_track = if self.play_track == 0 {
-            q[0]
-        } else {
-            self.play_track
-        };
-        self.next_lba = next_lba;
-        Ok(PlayDelivery { audio, response })
+        if self.play_track == 0 {
+            self.play_track = q[0];
+        }
+        Ok((
+            PlayDelivery { audio, response },
+            Some(AudioCompletion::Play {
+                next_lba,
+                peak_right: right,
+            }),
+        ))
     }
 
     /// Supply one Read boundary. TOC errors precede any backing read and accept
@@ -771,24 +798,24 @@ impl Drive {
     /// failed data reads require the owned media cache. Overruns and deferred
     /// retry remain unsupported. Input checks precede data state changes.
     pub fn sector(&mut self, raw: Option<&[u8]>) -> Result<Delivery> {
-        self.sector_with_position(raw, true)
+        let (delivery, completion) = self.begin_sector(raw, true)?;
+        if let Some(completion) = completion {
+            self.complete_audio(completion);
+        }
+        Ok(delivery)
     }
 
-    pub(crate) fn retained_sector(&mut self, raw: &[u8; 2352]) -> Result<Delivery> {
-        self.sector_with_position(Some(raw), false)
-    }
-
-    fn sector_with_position(
+    pub(crate) fn begin_sector(
         &mut self,
         raw: Option<&[u8]>,
         check_position: bool,
-    ) -> Result<Delivery> {
+    ) -> Result<(Delivery, Option<AudioCompletion>)> {
         if self.status() & 0xe0 != 0x20 {
             return Err("CD drive: sector arrival requires completed read seek".into());
         }
         if let Some(code) = self.media_error_code(self.next_lba, false) {
             self.set_idle();
-            return Ok(Delivery::Error(self.media_error(code)));
+            return Ok((Delivery::Error(self.media_error(code)), None));
         }
         let raw = raw.ok_or("CD drive: failed data media reads are not implemented")?;
         if raw.len() != 2352
@@ -827,7 +854,6 @@ impl Drive {
             {
                 Delivery::Filtered
             } else {
-                self.xa_ended = raw[18] & 0x81 == 0x81;
                 Delivery::Xa(raw[16..].to_vec())
             }
         } else {
@@ -843,8 +869,32 @@ impl Drive {
         };
         self.last_header = Some(raw[12..20].try_into()?);
         self.header_valid = true;
-        self.next_lba = next_lba;
-        Ok(delivery)
+        let completion = if matches!(delivery, Delivery::Xa(_)) {
+            Some(AudioCompletion::Read {
+                next_lba,
+                xa_ended: raw[18] & 0x81 == 0x81,
+            })
+        } else {
+            self.next_lba = next_lba;
+            None
+        };
+        Ok((delivery, completion))
+    }
+
+    pub(crate) fn complete_audio(&mut self, completion: AudioCompletion) {
+        match completion {
+            AudioCompletion::Read { next_lba, xa_ended } => {
+                self.next_lba = next_lba;
+                self.xa_ended = xa_ended;
+            }
+            AudioCompletion::Play {
+                next_lba,
+                peak_right,
+            } => {
+                self.next_lba = next_lba;
+                self.peak_right = Some(peak_right);
+            }
+        }
     }
 }
 

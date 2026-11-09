@@ -28,6 +28,15 @@ impl Interconnect {
             .as_ref()
             .ok_or_else(|| "CD audio is not configured".into())
     }
+    /// Consume one caller-supplied host output boundary from the shared queue.
+    /// This does not run SPU synthesis, advance CPU time or consume RAM-capture
+    /// samples. A host callback may drain output while a CD submission waits.
+    pub fn take_cd_audio_frame(&mut self) -> crate::Result<[i16; 2]> {
+        let queue = self.cd_audio.as_mut().ok_or("CD audio is not configured")?;
+        let frame = queue.preview();
+        queue.consume();
+        Ok(frame)
+    }
     pub fn enqueue_cd_audio(
         &mut self,
         sector: &[u8],
@@ -56,6 +65,9 @@ impl Interconnect {
         &mut self,
         outcome: crate::machine::cd_queue::WaitOutcome,
     ) -> crate::Result<crate::machine::cd_queue::Admission> {
+        if self.device_progress() == super::DeviceProgress::WaitingForCdAudio {
+            return Err("resume the suspended CD callback through resume_cd_audio".into());
+        }
         self.cd_audio
             .as_mut()
             .ok_or("CD audio is not configured")?
