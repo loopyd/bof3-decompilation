@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801CF724
   - - 5744
-    - asm
-    - func_801CFA70
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp67800_801CFA70
+    - '@source: src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp67800_801CFA70.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached as word 0x801D05A8, entry 17 of the thirty-word code-pointer run based at 0x801D0564, so no jal in this payload names it and it takes no arguments. It decrements work countdown byte 0xA and does nothing else while that byte stays nonzero. When it reaches zero it projects the work position from the work words 0x34 and 0x38 plus the offsets of 0x80181B94 and 0x80181B98 selected by route byte 8 and doubled, hands that pair with range 0 to the shared slot search func_801BDE14 and, unless the answer is -1, raises bit 0 of the animation byte at 0x801468FC plus the slot times 0x98. It then claims a map cell record at the projected point through this payload claim handler 0x801CFCF8 with the high half of each projected word as a signed half, retrying one unit further on the first axis when the claim fails and that word has a nonzero low half, and one unit further on the second axis when the retry also fails and the second word has a nonzero low half; the second projected word keeps a second live copy because the cell halves claim the register that holds it. Both paths increment step byte 2 and then run the shared readiness helper func_8014DAEC. The 0x30-byte frame keeps ra at 0x28 and six saved registers across the calls.'
   - - 6156
     - asm
     - func_801CFC0C

@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F7FFC
   - - 5488
-    - asm
-    - func_801F8170
+    - c
+    - drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170
+    - '@source: src/bof3/scenario/drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170.c'
+    - '@behavior: Arms the overlay emitter with GetTPage(0, 1, 0x3C0, 0), SetDrawMode on the g_PrimCursor packet with dfe 0 and dtd 1, a 0xC-byte DR_MODE queued under OT slot 1 through func_8014E5A0 and the 0x20-byte sort scratch filled by func_801AFE18, then draws the work object Gouraud quad as two 0x1C-byte POLY_G3 triangles through 0x801F8200 over the records indexed 0, 1, 2 and 0, 3, 2 with vertex colours 0x40, 0, 0x80.'
   - - 5632
     - asm
     - func_801F8200

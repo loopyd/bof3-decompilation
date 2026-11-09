@@ -128,8 +128,10 @@ segments:
     - asm
     - func_801F4288
   - - 5892
-    - asm
-    - func_801F4304
+    - c
+    - advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304
+    - '@source: src/bof3/world/advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304.c'
+    - '@behavior: Queries the shared byte-result selector func_80166140 with the constant 0xB and, when the byte-extended result is nonzero, advances the halfword at offset 0x0A of the work record published through the main-RAM pointer cell 0x80148210 by 3.'
   - - 5964
     - c
     - invokeHelperByteArgWorld03Area14514_801F434C

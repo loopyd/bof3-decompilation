@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801F435C
   - - 6328
-    - asm
-    - func_801F44B8
+    - c
+    - tickWorkCountdownByteAThenAdvanceWorkByte9AndSetState1World03Area14813_801F44B8
+    - '@source: src/bof3/world/tickWorkCountdownByteAThenAdvanceWorkByte9AndSetState1World03Area14813_801F44B8.c'
+    - '@behavior: Record step of this overlay. Loads the work record pointer from the scratchpad cell 0x1F800044, passes the record addresses +0x34 and +0x18 to the record builder at 0x801F4798 and then runs the record table update at 0x801F4614. Decrements the record countdown byte at +0xA and, when that byte reaches zero, increments the record byte at +9 and writes 1 into the record byte at +1, the byte that the state-byte-1 dispatcher of this overlay indexes by four through its handler table based at 0x801F6160. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at +0x10; the scratchpad record pointer cell is reloaded for each access and is loaded before the frame is created.'
   - - 6468
     - asm
     - func_801F4544

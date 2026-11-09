@@ -2,7 +2,8 @@
 
 extern u8 *D_1F800044;
 void func_801F7FFC(u8 *work);
-void func_801F8170(u8 *work);
+void drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+    u8 *work);
 
 /* @source 0x801F7CE0
  * @behavior Calls local helpers 0x801F7FFC and 0x801F8170 with the captured
@@ -25,7 +26,8 @@ void tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScen
   work = D_1F800044;
   helper_work = work + 0x0C;
   func_801F7FFC(helper_work);
-  func_801F8170(helper_work);
+  drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
+      helper_work);
   *(u16 *)(work + 0x5A) -= 8;
   halfword = *(u16 *)(work + 0x5C);
   countdown_work = D_1F800044;

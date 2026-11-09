@@ -31,6 +31,7 @@ sources = [
     "src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC.c",
     "src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934.c",
     "src/bof3/scenario/drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088.c",
+    "src/bof3/scenario/claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

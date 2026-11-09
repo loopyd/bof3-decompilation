@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C.c",
     "src/bof3/scenario/drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964.c",
     "src/bof3/scenario/drawTranslucentGouraudRingOfSixteenQuadsAroundScreenCenterFadingFromBlackToWhiteScenarioScena0800_801F9688.c",
+    "src/bof3/scenario/waitForProgressOrRecordFlagThenSetFlagBit5Or6QueueMode24AndSeedFrontSelectorContextScenarioScena0800_801FB8A0.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",
@@ -101,3 +102,13 @@ support_sources = [
     "src/bof3/scenario/emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4.c",
 ]
 psyq_source = "src/bof3/support/scena08_00_psyq.c"
+
+# The sub-state switch of the entry-4 progress handler at 0x801FB8A0 dispatches
+# eleven values through the eleven-word table the overlay keeps at 0x801F6C8C in
+# its leading table data; psyq gcc emits a switch table as .rodata, so this row
+# gives the comparator the payload address and size of that table.
+[[matching.section_placements]]
+function = 0x801FB8A0
+section = ".rodata"
+address = 0x801F6C8C
+size = 0x2C

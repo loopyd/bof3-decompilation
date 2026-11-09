@@ -166,8 +166,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c'
     - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the eleven-word local code-pointer run at 0x801D397C; the record comes from the scratchpad pointer cell 0x1F800044 and the entry takes no arguments.'
   - - 8752
-    - asm
-    - func_801D2E30
+    - c
+    - claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30
+    - '@source: src/bof3/scenario/claimFrontEndRecordFromWorkBlockSetPatternGridOriginAndSpritePageRequestResource7ResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D2E30.c'
+    - '@behavior: Step handler 5 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte 1: while the shared progress byte 0x80146864 reads 0x29 it asks func_8019601C for a free front-end record index and, unless that index reads 0xFF, writes 1 into the selector byte 0x801D40AC, forms the 0x74-byte record at 0x80143FC8 + index * 0x74, calls func_8014E564 with 0x340/0x100/0x80/0x100, copies the 0x74-byte block that the work object word 0x4C points at into that record, seeds record bytes 0x00/0x01/0x02/0x05 with 1/2/0/0x3A, record halfwords 0x2E/0x30 from the base pair of the pattern-grid entry that byte 0x801D40AC selects, record byte 0x25 from GetTPage(0, 0, 0x340, 0x100) and bytes 0x26 = 0x80 and 0x24 |= 0x88, then publishes the fresh record through the scratchpad cell 0x1F800044, requests resource 7, runs the main-executable service 0x8014D290 and the reset helper 0x80196070 while the fresh record is published, restores the cell to the previous work object and arms its countdown byte 0x09 with 2; either way it re-reads the cell and increments work byte 0x01.'
   - - 9176
     - asm
     - func_801D2FD8
