@@ -6,6 +6,8 @@ use crate::{
 use serde_json::json;
 use std::collections::BTreeSet;
 
+pub(crate) const ROOT_SCHEMA: &str = "bof3.audio-extraction/v2";
+
 pub(crate) struct Validated<'a> {
     pub asset: &'a Asset,
     pub bank: &'a Bank,

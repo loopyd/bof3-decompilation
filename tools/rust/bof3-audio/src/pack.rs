@@ -37,6 +37,11 @@ pub struct BankReport {
     pub samples: Vec<crate::bank::packing::Report>,
 }
 
+struct Documents {
+    banks: Vec<(PathBuf, Option<Element>)>,
+    pending: BTreeMap<String, Pending>,
+}
+
 pub fn banks(options: &Options) -> Result<Report> {
     if options.pitch_ram.is_some() {
         return Err("pack: runtime pitch RAM applies only to music".into());
@@ -46,10 +51,12 @@ pub fn banks(options: &Options) -> Result<Report> {
     if !root.is_dir() {
         return Err("pack: --input must be one bank folder or an extraction root".into());
     }
-    let documents = documents(&root)?;
+    let Documents {
+        banks: documents,
+        mut pending,
+    } = documents(&root)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
     crate::machine::profile::Profile::identify(&executable)?;
-    let mut pending = BTreeMap::<String, Pending>::new();
     let mut ids = BTreeSet::new();
     let mut report = Report {
         schema: "bof3.audio-pack-report/v1", output: options.output.display().to_string(), archives: Vec::new(), banks: Vec::new(),
@@ -57,7 +64,7 @@ pub fn banks(options: &Options) -> Result<Report> {
             "only bank PCM and forward smpl loop edits within existing allocations are supported; XML musical/runtime metadata is validated, not editable",
             "sample reference rates are export contexts; no resampling, tuning, program or allocation edits are inferred",
             "sample loss uses zero-history integer SPU decoding; complete original-runtime playback is not verified",
-            "shared content at distinct archive identities is independent; only listed bank folders are edited",
+            "shared content at distinct archive identities is independent; only listed bank folders are edited; root snapshots without audio assets retain every original byte",
             "music folders use --mode music; disc image rebuilding is outside scope",
         ],
     };
@@ -146,40 +153,82 @@ pub fn banks(options: &Options) -> Result<Report> {
     Ok(report)
 }
 
-fn documents(root: &Path) -> Result<Vec<(PathBuf, Option<Element>)>> {
+fn documents(root: &Path) -> Result<Documents> {
     let audio = root.join("audio.xml");
     let bank = root.join("bank.xml");
     if audio.exists() && bank.exists() {
         return Err("pack: folder contains both audio.xml and bank.xml; input is ambiguous".into());
     }
     if !audio.exists() {
-        return Ok(vec![(
-            manifest::relative_file(root, root, "bank.xml")?,
-            None,
-        )]);
+        return Ok(Documents {
+            banks: vec![(manifest::relative_file(root, root, "bank.xml")?, None)],
+            pending: BTreeMap::new(),
+        });
     }
     let node = manifest::read(&manifest::relative_file(root, root, "audio.xml")?)?;
     if node.name != "audio" {
         return Err("pack: expected <audio> root".into());
     }
-    node.shape(&["schema", "mode", "kind"], &["bank"], false)?;
+    node.shape(&["schema", "mode", "kind"], &["bank", "archive"], false)?;
+    if node.attribute("schema")? != crate::bank::manifest::ROOT_SCHEMA {
+        return Err(
+            "pack: unsupported bank extraction schema; re-extract with the current implementation"
+                .into(),
+        );
+    }
     node.scalars(
-        &json!({"schema": "bof3.audio-extraction/v1", "mode": "audio", "kind": "bank"}),
+        &json!({"schema": crate::bank::manifest::ROOT_SCHEMA, "mode": "audio", "kind": "bank"}),
         &[],
         &[],
     )?;
     if node.children.is_empty() {
-        return Err("pack: root contains no banks".into());
+        return Err("pack: root contains no banks or preserved archives".into());
     }
     let mut paths = BTreeSet::new();
-    let mut result = Vec::new();
+    let mut result = Documents {
+        banks: Vec::new(),
+        pending: BTreeMap::new(),
+    };
     for link in node.children {
+        if link.name == "archive" {
+            link.shape(&["source", "source_sha256"], &["preservation"], false)?;
+            let bytes =
+                manifest::preservation(link.child("preservation")?, Some("entire_source_archive"))?;
+            let source = link.attribute("source")?;
+            if source.is_empty() {
+                return Err("pack: preserved archive identity is empty".into());
+            }
+            link.scalars(
+                &json!({"source": source, "source_sha256": sha256_hex(&bytes)}),
+                &[],
+                &[],
+            )?;
+            let image = ArchiveImage::from_bytes(bytes)?;
+            let catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
+            if !catalog.assets.is_empty() {
+                return Err("pack: preserved root archive contains audio assets; re-extract its bank or music folders".into());
+            }
+            if result
+                .pending
+                .insert(
+                    source.into(),
+                    Pending {
+                        image,
+                        entries: BTreeMap::new(),
+                    },
+                )
+                .is_some()
+            {
+                return Err(format!("pack: duplicate preserved archive identity {source}").into());
+            }
+            continue;
+        }
         link.shape(&["id", "path", "source_sha256"], &[], false)?;
         let path = manifest::relative_file(root, root, link.attribute("path")?)?;
         if !paths.insert(path.clone()) {
             return Err("pack: duplicate manifest path".into());
         }
-        result.push((path, Some(link)));
+        result.banks.push((path, Some(link)));
     }
     Ok(result)
 }

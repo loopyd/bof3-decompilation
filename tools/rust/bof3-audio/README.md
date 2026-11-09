@@ -93,6 +93,16 @@ the complete bank remains editable and packable. Its report records
 `selection_role` and `selected_banks` with their source-qualified role evidence.
 The WAVs use the explicit export reference rate and do not represent cue playback.
 
+Without `--id` or `--type`, bank extraction also preserves every supplied EMI
+file that has no cataloged audio assets. The bank root `audio.xml` uses
+`bof3.audio-extraction/v2`. Its `archive` children retain complete source bytes,
+lengths and hashes, including reserved table fields, padding and tails. Packing
+reconstructs these files unchanged without opening their original paths.
+The `bof3.audio-extract-report/v2` report counts all source `archives` and the
+subset `preserved_archives` without audio assets. These snapshots do not assign
+an audio role. Regenerate older bank roots; standalone `bank.xml` folders retain
+their current format. XA roots keep their separate format and workflow.
+
 XA extraction requires `--xa-arithmetic split-floor|combined-rounded` and
 `--xa-history zero|continuous`. Zero history starts each asset independently.
 Continuous history carries a zero-start decode of preceding sectors of the selected

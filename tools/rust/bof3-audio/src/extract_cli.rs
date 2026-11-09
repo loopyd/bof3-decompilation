@@ -13,6 +13,7 @@ pub const HELP: &str =
  --type sfx selects source-qualified bank references; every sample in each bank is exported.\n\
  Default reference rate: 44100 Hz (SPU pitch 4096); unity note 60 is an export convention.\n\
  Full original EMI bytes are preserved inside each bank.xml. Output must not exist.\n\
+ Unfiltered extraction also preserves supplied EMI files without audio assets in audio.xml.\n\
  XA: --kind xa_stream|xa_cue|xa_views --xa-arithmetic split-floor|combined-rounded\n\
      --xa-history zero|continuous --output NEW_DIR [--id ID] [--executable PSX_EXE]\n\
  XA cues require the executable; streams can use it to retain known cue placement.\n\
@@ -213,8 +214,17 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         println!("{}", serde_json::to_string_pretty(&report)?);
     } else {
         println!(
-            "{}: {} banks, {} WAV samples, {} PCM frames at reference {} Hz",
-            report.output, report.banks, report.samples, report.pcm_frames, report.reference_rate
+            "{}: {} EMI archives, {} banks, {} WAV samples, {} PCM frames at reference {} Hz",
+            report.output,
+            report.archives,
+            report.banks,
+            report.samples,
+            report.pcm_frames,
+            report.reference_rate
+        );
+        println!(
+            "{} archives without audio assets preserved in audio.xml",
+            report.preserved_archives
         );
         println!(
             "{} fixed PCM loops approximate continuing ADPCM predictor history",

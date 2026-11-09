@@ -6,6 +6,7 @@ pub const HELP: &str = "
 Audio packing:
   pack --mode audio --input FOLDER [--executable PSX_EXE] --output NEW_DIR [--json]
   Bank folders/roots and XA roots preserve unchanged EMI/STR bytes.
+  Unfiltered bank roots also retain supplied EMI archives without audio assets.
   WAV edits must fit allocations; XA cues require compatible history boundaries.
   XA roots accept --xa-padding reject|zero (default reject) for shorter WAV input.
   Executable required for banks and recorded XA runtime metadata.

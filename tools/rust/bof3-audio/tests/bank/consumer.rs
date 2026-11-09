@@ -23,13 +23,20 @@ pub fn validate(directory: &Path, source_root: Option<&Path>) {
     let document = Document::parse(&xml).unwrap();
     let root = document.root_element();
     assert_eq!(root.attributes().len(), 3);
-    assert_eq!(attr(root, "schema"), "bof3.audio-extraction/v1");
+    assert_eq!(attr(root, "schema"), "bof3.audio-extraction/v2");
     assert_eq!(attr(root, "mode"), "audio");
     assert_eq!(attr(root, "kind"), "bank");
     let (mut banks, mut samples, mut frames, mut approximate) = (0, 0, 0, 0);
     let mut ids = BTreeSet::new();
+    let mut archives = BTreeSet::new();
     let mut records = String::new();
     for link in root.children().filter(|n| n.is_element()) {
+        if link.has_tag_name("archive") {
+            assert_eq!(link.attributes().len(), 2);
+            assert!(archives.insert(attr(link, "source")));
+            original(link, &attr(link, "source_sha256"), source_root);
+            continue;
+        }
         assert!(link.has_tag_name("bank"));
         assert!(ids.insert(attr(link, "id")));
         let manifest = relative(directory, directory, &attr(link, "path"));
@@ -38,16 +45,7 @@ pub fn validate(directory: &Path, source_root: Option<&Path>) {
         let bank = document.root_element();
         assert_eq!(attr(bank, "schema"), "bof3.audio-bank/v1");
         assert_eq!(attr(bank, "id"), attr(link, "id"));
-        let source = PathBuf::from(attr(bank, "source"));
-        let source = source_root.map_or_else(|| source.clone(), |base| base.join(&source));
-        let preservation = child(bank, "preservation");
-        assert_eq!(attr(preservation, "encoding"), "hex");
-        assert_eq!(attr(preservation, "scope"), "entire_source_archive");
-        let original = hex(preservation.text().unwrap());
-        assert_eq!(original, fs::read(source).unwrap());
-        assert_eq!(original.len(), num(preservation, "bytes"));
-        assert_eq!(digest(&original), attr(preservation, "sha256"));
-        assert_eq!(digest(&original), attr(link, "source_sha256"));
+        let original = original(bank, &attr(link, "source_sha256"), source_root);
         let mut entries = Vec::new();
         let mut offset = 2048;
         for entry in 0..(u32le(&original, 0) & 0xffff) as usize {
@@ -189,4 +187,22 @@ pub fn validate(directory: &Path, source_root: Option<&Path>) {
             "cf7f115ccb8e468b1e321657f4715ab4ffd5573cc0bbcd37a911b1f644522eae"
         );
     }
+}
+
+fn original(
+    node: roxmltree::Node<'_, '_>,
+    expected_hash: &str,
+    source_root: Option<&Path>,
+) -> Vec<u8> {
+    let source = PathBuf::from(attr(node, "source"));
+    let source = source_root.map_or_else(|| source.clone(), |base| base.join(&source));
+    let preservation = child(node, "preservation");
+    assert_eq!(attr(preservation, "encoding"), "hex");
+    assert_eq!(attr(preservation, "scope"), "entire_source_archive");
+    let original = hex(preservation.text().unwrap());
+    assert_eq!(original, fs::read(source).unwrap());
+    assert_eq!(original.len(), num(preservation, "bytes"));
+    assert_eq!(digest(&original), attr(preservation, "sha256"));
+    assert_eq!(digest(&original), expected_hash);
+    original
 }

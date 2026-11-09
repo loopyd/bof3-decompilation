@@ -44,6 +44,8 @@ pub struct Selection {
 pub struct Report {
     pub schema: &'static str,
     pub output: String,
+    pub archives: usize,
+    pub preserved_archives: usize,
     pub banks: usize,
     pub samples: usize,
     pub pcm_frames: usize,
@@ -79,13 +81,27 @@ pub fn banks(options: &Options) -> Result<Report> {
             .filter(|asset| asset.kind() == "bank")
             .collect()
     };
-    if selected.is_empty() {
+    let preserved = catalog
+        .sources
+        .iter()
+        .filter(|source| {
+            options.id.is_none()
+                && options.role.is_none()
+                && source.container == "emi"
+                && !catalog
+                    .assets
+                    .iter()
+                    .any(|asset| asset.source == source.source)
+        })
+        .collect::<Vec<_>>();
+    if selected.is_empty() && preserved.is_empty() {
         return Err("extract: no banks match the selected sources and role".into());
     }
     let transaction = Publication::new(&options.output)?;
-    let mut root = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<audio schema=\"bof3.audio-extraction/v1\" mode=\"audio\" kind=\"bank\">\n");
+    let mut root = format!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<audio schema=\"{}\" mode=\"audio\" kind=\"bank\">\n", super::manifest::ROOT_SCHEMA);
     let mut report = Report {
-        schema: "bof3.audio-extract-report/v1", output: options.output.display().to_string(),
+        schema: "bof3.audio-extract-report/v2", output: options.output.display().to_string(),
+        archives: 0, preserved_archives: preserved.len(),
         banks: 0, samples: 0, pcm_frames: 0, approximate_loops: 0,
         reference_rate: options.reference_rate,
         selection_role: options.role.clone(),
@@ -96,8 +112,8 @@ pub fn banks(options: &Options) -> Result<Report> {
             "fixed PCM loops with pcm_repeat_is_stable=false approximate continuing ADPCM predictor history",
             "bank roles identify source-qualified dispatcher references; a selected bank retains every sample, including samples with unresolved roles",
             "bank loader song IDs use each preserved source alone; other supplied archives do not change that export context",
-            "active layout, gameplay note/voice context, accepted playback and vocal classification remain unresolved",
-            "XML includes full original EMI bytes; bank PCM/loop packing is supported within existing allocations; music extraction remains incomplete",
+            "active layout, gameplay note/voice context and accepted playback remain unresolved",
+            "XML includes full original EMI bytes; unfiltered roots also preserve supplied EMI files without audio assets; these snapshots do not establish an audio role",
         ],
     };
     let mut paths = BTreeSet::new();
@@ -282,6 +298,22 @@ pub fn banks(options: &Options) -> Result<Report> {
             roles: asset.roles.clone(),
         });
         report.banks += 1;
+    }
+    report.archives = source_songs.len() + preserved.len();
+    for source in preserved {
+        let path = options.disc_root.as_ref().map_or_else(
+            || PathBuf::from(&source.source),
+            |root| root.join(&source.source),
+        );
+        let media = MediaImage::read(&path)?;
+        let hash = sha256_hex(media.bytes());
+        if source.sha256.as_deref() != Some(&hash) {
+            return Err(format!("{}: source changed after inventory", source.source).into());
+        }
+        let MediaImage::Emi(image) = media else {
+            return Err("preserved source is not EMI".into());
+        };
+        writeln!(root, "<archive source=\"{}\" source_sha256=\"{hash}\"><preservation encoding=\"hex\" scope=\"entire_source_archive\" bytes=\"{}\" sha256=\"{hash}\">{}</preservation></archive>", xml::attribute(&source.source)?, image.bytes().len(), xml::hex(image.bytes()))?;
     }
     root.push_str("</audio>\n");
     write_new(&transaction.staging.join("audio.xml"), root.as_bytes())?;

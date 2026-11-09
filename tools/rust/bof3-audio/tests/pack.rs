@@ -52,7 +52,7 @@ fn refuses_ambiguous_roots_empty_roots_escape_paths_and_existing_outputs() {
     let opts = options(&input, &output);
     fs::write(
         input.join("audio.xml"),
-        "<audio schema=\"bof3.audio-extraction/v1\" mode=\"audio\" kind=\"bank\"/>",
+        "<audio schema=\"bof3.audio-extraction/v2\" mode=\"audio\" kind=\"bank\"/>",
     )
     .unwrap();
     assert!(pack::banks(&opts)
@@ -66,7 +66,7 @@ fn refuses_ambiguous_roots_empty_roots_escape_paths_and_existing_outputs() {
         .contains("ambiguous"));
     fs::remove_file(input.join("bank.xml")).unwrap();
     fs::write(directory.0.join("outside.xml"), "<bank/>").unwrap();
-    fs::write(input.join("audio.xml"), "<audio schema=\"bof3.audio-extraction/v1\" mode=\"audio\" kind=\"bank\"><bank id=\"x\" path=\"../outside.xml\" source_sha256=\"x\"/></audio>").unwrap();
+    fs::write(input.join("audio.xml"), "<audio schema=\"bof3.audio-extraction/v2\" mode=\"audio\" kind=\"bank\"><bank id=\"x\" path=\"../outside.xml\" source_sha256=\"x\"/></audio>").unwrap();
     assert!(pack::banks(&opts)
         .unwrap_err()
         .to_string()

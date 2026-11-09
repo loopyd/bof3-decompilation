@@ -3502,7 +3502,7 @@ under the [effects-role contract](#source-qualified-effects-references), retaini
 all samples in each selected bank. `extract --type vocals` remains unsupported.
 Music uses `--mode music`; XA uses the separate stream/cue extraction surface.
 
-The root `audio.xml` (`bof3.audio-extraction/v1`) references relative bank
+The bank root `audio.xml` (`bof3.audio-extraction/v2`) references relative bank
 manifests. Each folder's `bank.xml` (`bof3.audio-bank/v1`) records qualified
 source/header/body and game-bank identities, executable hash and pitch routine
 addresses, all parsed program/tone fields, diagnostics and sample WAV paths.
@@ -3515,8 +3515,18 @@ active layout remains unresolved.
 The `preservation` element contains the entire original EMI as hexadecimal text
 with its byte length and SHA-256, including unrelated entries, padding, ordering
 and trailing bytes. Each bank folder therefore retains its own source snapshot.
-No executable bytes are embedded. Source hashes are checked against inventory
+The external game executable is not embedded. Source hashes are checked against inventory
 before extraction; snapshots do not authorize ignoring subsequent content edits.
+
+Without `--id` or `--type`, extraction also preserves supplied EMI files that
+have no cataloged audio assets. Each root `archive` child has `source` and
+`source_sha256` attributes and one `preservation` child with the same whole-file
+contract. These files remain opaque and receive no audio role. Explicit bank or
+role selection includes only the selected banks. A root may contain preserved
+archives without banks. The `bof3.audio-extract-report/v2` report counts all
+source `archives` and the subset `preserved_archives` without audio assets.
+Regenerate older bank roots; the current standalone bank format and XA root
+format are unchanged.
 
 WAVs contain mono PCM16 and `smpl` metadata. The default reference rate is
 44,100 Hz, corresponding to SPU pitch register 4096; `--reference-rate` accepts
@@ -3637,6 +3647,11 @@ tail bytes is reported. Emptying a nonempty sample, implicit padding/resampling,
 unsupported loops, pitch/timecode/vendor metadata and ancillary chunks are
 rejected. Decoding each replacement verifies its PCM and loop result before use.
 
+Root archives without audio assets pass through the same whole-file staging
+and read-back checks without entry replacements. Their length and SHA-256 must
+match preservation metadata. Duplicate source identities and snapshots that
+contain cataloged audio assets fail before publication.
+
 Multiple selected banks from one source combine into one EMI. Conflicting
 preserved source bytes or body replacements fail. Identical bank content at
 different physical identities remains independent. Unchanged archives require
@@ -3654,12 +3669,8 @@ loss and limitations. [Sample tests](../../../tools/rust/bof3-audio/tests/bank/p
 and [packing tests](../../../tools/rust/bof3-audio/tests/pack.rs) cover unchanged
 and edited samples, loops, capacity/metadata failures, standalone/root use,
 missing original inputs, combined bank edits, preservation conflicts and CLI
-publication. The opt-in whole-corpus check (`BOF3_AUDIO_CORPUS` and
-`BOF3_AUDIO_EXE`) passed on 2026-09-24: all 809 bank-containing EMI archives,
-1,020 banks and 8,385 samples reproduced whole original files byte-for-byte.
-The fresh BGM000 CLI extract/pack/verify smoke output is 266,240 bytes with SHA-256
-`e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91`.
-Evidence is retained under `out/audio-migration/bank-pack-*`.
+publication. The opt-in whole-corpus check uses `BOF3_AUDIO_CORPUS` and
+`BOF3_AUDIO_EXE` to compare complete original files containing banks.
 
 Bank and SoundFont sample reports include `loop_reconstruction`: `original` and
 `output` hold the decoded loop metadata, including `pcm_repeat_is_stable`, and
