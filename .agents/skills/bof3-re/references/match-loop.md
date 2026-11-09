@@ -113,7 +113,10 @@ prints no diff line at all, so record that as a non-measurement and fix the
 variant rather than reading it as a neutral result.
 
 Before each sweep, state the semantic precondition and predicted instruction
-change. Compare the full result, not score alone. Restore neutral/regressive probes.
+change. Change one statement class per variant, as in the repair loop: a variant
+that also moves the base-local count or the store order cannot attribute its score
+gain, so measure those classes in separate variants. Compare the full result, not
+score alone. Restore neutral/regressive probes.
 Retain a strict coherent partial improvement only after semantic review and truthful
 metadata; retention is not exact acceptance or exhaustion. Near-exact allocation
 differences trigger compiler evidence, not another spelling batch.
