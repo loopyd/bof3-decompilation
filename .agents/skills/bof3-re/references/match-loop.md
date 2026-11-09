@@ -119,6 +119,9 @@ gain, so measure those classes in separate variants. Attribution is not independ
 a store-order variant and an arm-polarity variant that each measured neutral on the
 same residual measured exact as their union, and neither delta predicted it, so when
 two variants are neutral on the same residual the composed spelling is the next probe.
+Partial gains compose the same way: two order levers that each closed one instruction
+and neither finished measured exact as their union, so a retained partial gain is
+input to the next composed variant, not a lever to re-test alone.
 Compare the full result, not score alone. Restore neutral/regressive probes.
 Retain a strict coherent partial improvement only after semantic review and truthful
 metadata; retention is not exact acceptance or exhaustion. Near-exact allocation
