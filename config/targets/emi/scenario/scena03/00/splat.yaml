@@ -150,8 +150,10 @@ segments:
     - c
     - dispatchWorkByte1HandlerScenarioScena0300_801F844C
   - - 6288
-    - asm
-    - func_801F8490
+    - c
+    - seedEffectRectWithRandomOffsetsAndAdvanceWorkByte1ScenarioScena0300_801F8490
+    - '@source: src/bof3/scenario/seedEffectRectWithRandomOffsetsAndAdvanceWorkByte1ScenarioScena0300_801F8490.c'
+    - '@behavior: Seeds the effect-rectangle record at work plus 0x0C (intensity 0x600, width and height 0x100, random halfwords 0x0E and 0x10, white colour bytes) then advances work byte 1.'
   - - 6460
     - c
     - drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C

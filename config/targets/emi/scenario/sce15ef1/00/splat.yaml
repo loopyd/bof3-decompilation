@@ -179,8 +179,10 @@ segments:
     - '@source: src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC.c'
     - '@behavior: Word 7 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte 1: through work pointer word 0x4C it projects the object point at +0x34/+0x38/+0x3C with 0x801AFF04 after filling the scratch through 0x801AFE18, then walks the pattern-cell pointer 0x801D40B0 over the bound-by-bound grid of the eight-byte entry at 0x801D393C that the byte 0x801D40AC selects, appends a ten-byte effect record at the cursor 0x801D40B4 for every nonzero cell with the cell as its colour halfword and the projected pair less the entry base plus the column and cell index as its position, raises the live count 0x801D40A8, and finally increments work byte 9 and advances work byte 1 when that value reads 2.'
   - - 9972
-    - asm
-    - func_801D32F4
+    - c
+    - seedBlinkingEffectRecordsWithRandomLifeAndVelocityArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D32F4
+    - '@source: src/bof3/scenario/seedBlinkingEffectRecordsWithRandomLifeAndVelocityArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D32F4.c'
+    - '@behavior: Seeding step handler 8 of the eleven-word code-pointer run at 0x801D397C that the dispatcher 0x801D2DEC indexes with work byte +0x1: it fills a sixteen-byte stack array with the alternating byte pattern 0, 1 and keeps it as the blink-flag source, then walks the ten-byte effect records of the shared array at 0x800EA200 up to this payload count halfword 0x801D40A8; every sixteenth pass it re-runs the sixteen-pass random redraw of that array in which one `rand() & 0xF` draw supplies both ends of the swap, and each record takes its flag byte 0x0 from the cursor, draws its velocity pair bytes 0x8 and 0x9 from two `rand() & 0xF` draws and orders them so byte 0x8 holds the larger draw and byte 0x9 its negation, arms its life byte 0x1 with `(rand() & 0x1E) + 0xA` and pre-adds the velocity scaled by that life to the position halfwords 0x4 and 0x6; it then re-reads the scratchpad cell 0x1F800044 and arms its countdown byte 0x9 with 0x50, re-reads the cell and advances work byte 0x1, and dispatches sound cue 0x20C.'
   - - 10480
     - c
     - drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0

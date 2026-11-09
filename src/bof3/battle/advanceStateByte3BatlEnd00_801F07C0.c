@@ -10,7 +10,8 @@ extern u8 *D_80148648;
  * @match 100.00
  * @residual none
  * Byte-identical twin of advanceStateByte3BatlEnd00_801F09D4 in this target;
- * the state byte indexed here is the axis dispatched by func_801F0768.
+ * the state byte indexed here is the axis dispatched by
+ * dispatchPanelStateLocalTableBatlEnd00_801F0768.
  */
 void advanceStateByte3BatlEnd00_801F07C0(void) {
   ((u8 *)D_80148648)[3]++;

@@ -70,8 +70,9 @@ segments:
     - asm
     - func_801F0568
   - - 7228
-    - asm
-    - func_801F083C
+    - c
+    - drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C.c'
   - - 7872
     - asm
     - func_801F0AC0

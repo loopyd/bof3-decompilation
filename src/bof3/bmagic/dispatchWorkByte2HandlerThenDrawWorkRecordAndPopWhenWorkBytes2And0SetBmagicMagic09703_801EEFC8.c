@@ -35,9 +35,11 @@ void func_801EF5C4(s32, s32, s32);
 /* Flushes the primitives the band calls have queued. Still an asm row. */
 void func_801F0568(void);
 
-/* Applies the halfword the caller has just stored into the work record. Still
- * an asm row. */
-void func_801F083C(void);
+/* Draws the eight-triangle translucent fan whose centre vertex is the work
+ * record screen pair at halfwords 0x2E and 0x30, so the two calls below paint
+ * the ring above and below the record position. */
+void drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C(
+    void);
 
 /* @source 0x801EEFC8
  * @behavior Dispatches one step of the overlay work handler from the work
@@ -53,9 +55,9 @@ void func_801F083C(void);
  *   0x1F, adding 4 to the record's byte at offset 0xB before the second and
  *   third of them and flushing through 0x801F0568 after the second and third,
  *   then subtracts 8 from that byte, adds 0x10 to the record's unsigned
- *   halfword at offset 0x2E and applies it through 0x801F083C, subtracts 0x20
- *   from the same halfword and applies it again, and finally pops the matrix
- *   stack with PopMatrix. Each store's opcode fills the delay slot of the call
+ *   halfword at offset 0x2E and draws the fan through the eight-triangle
+ *   emitter at 0x801F083C, subtracts 0x20 from the same halfword and draws
+ *   the fan again, and finally pops the matrix stack with PopMatrix. Each store's opcode fills the delay slot of the call
  *   that follows it while its load and add are issued before that call. The
  *   pointer cell is re-read at every use because both the intervening calls and
  *   the stores through the pointer the cell supplied may change it, which is
@@ -81,9 +83,9 @@ void dispatchWorkByte2HandlerThenDrawWorkRecordAndPopWhenWorkBytes2And0SetBmagic
     func_801F0568();
     g_battle_work[0xB] -= 8;
     FIELD_REF(u16, g_battle_work, 0x2Eu) += 0x10;
-    func_801F083C();
+    drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C();
     FIELD_REF(u16, g_battle_work, 0x2Eu) -= 0x20;
-    func_801F083C();
+    drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C();
     PopMatrix();
   }
 }

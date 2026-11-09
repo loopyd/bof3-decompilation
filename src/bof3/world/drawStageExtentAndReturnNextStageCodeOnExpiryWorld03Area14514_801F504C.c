@@ -32,10 +32,11 @@ extern s32 D_80147A8C; /* @source 0x80147A8C @kind data */
 extern s32 D_80147A90; /* @source 0x80147A90 @kind data */
 extern s32 D_80147AC4; /* @source 0x80147AC4 @kind data */
 
-/* Draw request of this payload at 0x801F5190, still carried as raw assembly:
- * it takes two 16.16 points and queues the record pair that spans them. The
- * address keeps its address-anchored name and its map row already exists. */
-s32 func_801F5190(s32 x0, s32 y0, s32 x1, s32 y1);
+/* Draw request of this payload at 0x801F5190, lifted in
+ * claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c:
+ * it takes two 16.16 points and queues the record pair that spans them. */
+s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+    s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* @source 0x801F504C
  * @behavior One stage of a chained overlay effect, reached from the stage walk
@@ -99,8 +100,9 @@ u8 drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C(s32 ar
     m = stage->length;
   }
   y = dy * (u16)m;
-  func_801F5190(*(s32*)((u8*)&D_80147A8C + off), *(s32*)((u8*)&D_80147A90 + off),
-                *(s32*)((u8*)&D_80147A8C + off) + x,
-                *(s32*)((u8*)&D_80147A90 + off) + y);
+  claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
+      *(s32*)((u8*)&D_80147A8C + off), *(s32*)((u8*)&D_80147A90 + off),
+      *(s32*)((u8*)&D_80147A8C + off) + x,
+      *(s32*)((u8*)&D_80147A90 + off) + y);
   return t < stage->length ? 1 : stage->next;
 }

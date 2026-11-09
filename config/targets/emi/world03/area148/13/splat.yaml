@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2E64
   - - 932
-    - asm
-    - func_801F2FA4
+    - c
+    - advanceHalfword30By10AndAdvanceWorkByte2WhenReached80ThenDrawWithHalfword32ModeWorld03Area14813_801F2FA4
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2WhenReached80ThenDrawWithHalfword32ModeWorld03Area14813_801F2FA4.c'
+    - '@behavior: Handler at word 2 of the state-byte-2 dispatch run based at 0x801F4FC4 for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x10 to the record halfword at +0x30, stores the truncated halfword back and advances the record dispatch byte at +2 by one when the signed halfword has reached 0x80. It then reloads the scratchpad pointer cell, reads the signed record halfword at +0x32 and calls the overlay draw routine at 0x801F31AC with mode -1 when that halfword is zero and mode 0 when it is not. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at +0x10; the record pointer load precedes the frame creation.'
   - - 1056
     - c
     - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld03Area14813_801F3020

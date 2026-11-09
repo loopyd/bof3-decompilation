@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/world/seedWorkCursorTripleAndAdvanceStateByte1World03Area14514_801F38E0.c",
     "src/bof3/support/area145_14_psyq.c",
     "src/bof3/world/advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304.c",
+    "src/bof3/world/claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c",
 ]
 psyq_source = "src/bof3/support/area145_14_psyq.c"

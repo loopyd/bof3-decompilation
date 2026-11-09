@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/battle/advanceStateByte3BatlEnd00_801F07C0.c",
     "src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c",
+    "src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801F0768.c",
     "src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801EFE10.c",
     "src/bof3/battle/dispatchSubstateTable0c98BatlEnd00_801EEC58.c",
     "src/bof3/battle/dispatchSubstateTable0ca4BatlEnd00_801EEC94.c",

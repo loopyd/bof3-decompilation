@@ -79,7 +79,7 @@ s8 func_801B5AE4(void);
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map-code claim handler of this same payload, the asm row at 0x801CEE44: it
+/* Map-code claim handler of this same payload, the row at 0x801CEE44: it
  * sign-extends its two signed halves, probes the map cell code through the
  * shared func_80166CB0 and claims a front-end row for the codes it accepts
  * through claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp46700_801CF050,
@@ -87,12 +87,14 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * and zero otherwise, and this body tests only the low byte of that answer, so
  * the declared return is that byte. Both cell offsets are signed sixteen-bit
  * values, so the original converts each retry index to that width before the
- * call. Its map row is already in this target symbols.txt, so the link needs no
- * new binding. The exact siblings of PLP016, PLP267 and PLP567 declare their own
- * payload claim handler with the same two-argument prototype and the same
- * low-byte answer test.
+ * call, and this prototype keeps the signed widths because they produce that
+ * conversion at the three call sites. Its map row is already in this target
+ * symbols.txt, so the link needs no new binding. The exact siblings of PLP016,
+ * PLP267 and PLP567 declare their own payload claim handler with the same
+ * two-argument prototype and the same low-byte answer test.
  */
-u8 func_801CEE44(s16 col, s16 row);
+u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+    s16 col, s16 row);
 
 /* @source 0x801CE9D4
  * @behavior Work byte 3 == 1 step of this overlay, the word 0x801CE9D4 at
@@ -118,7 +120,9 @@ u8 func_801CEE44(s16 col, s16 row);
  *           the animation byte 0x74 of the found work record through the column
  *           base 0x801468FC and the stride 0x98 and queues the literal cue
  *           0x10B, then claims a front-end row at the projected point through
- *           this payload map-code claim handler func_801CEE44, passing the high
+ *           this payload map-code claim handler
+ *           claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44,
+ *           passing the high
  *           half of each projected word as a signed half, retrying one unit
  *           further on the first axis when that claim fails and the first word
  *           has a nonzero low half and one unit further on the second axis when
@@ -193,13 +197,16 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = func_801CEE44(cx, cy);
+        claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+            cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = func_801CEE44(cx + 1, cy);
+            claimed = claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+                cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            func_801CEE44(cx, cy + 1);
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp46700_801CEE44(
+                cx, cy + 1);
           }
         }
       }

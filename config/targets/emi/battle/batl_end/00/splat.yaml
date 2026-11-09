@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F0650
   - - 7016
-    - asm
-    - func_801F0768
+    - c
+    - dispatchPanelStateLocalTableBatlEnd00_801F0768
+    - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801F0768.c'
+    - '@behavior: Battle-end panel state dispatch through a two-entry local handler table on the stack: seeds entry 0 with the overlay handler at 0x801F07C0, which advances the shared panel state byte, and entry 1 with the overlay handler at 0x801F07E0, then calls the entry indexed by byte +0x03 of the object published at 0x80148648 with no arguments; the index is unbounded exactly as in the original.'
   - - 7104
     - c
     - advanceStateByte3BatlEnd00_801F07C0

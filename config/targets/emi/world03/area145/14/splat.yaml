@@ -167,8 +167,10 @@ segments:
     - '@source: src/bof3/world/drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C.c'
     - '@behavior: Chained overlay effect stage drawing the shared work record position advanced by the route step times the elapsed value clamped to the stage length, then answering 1 until that length is reached and the next stage code afterwards.'
   - - 9616
-    - asm
-    - func_801F5190
+    - c
+    - claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190
+    - '@source: src/bof3/world/claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c'
+    - '@behavior: Claims the next free 0x74-byte front-end record row of the shared table at 0x80143FC8 through the allocator func_8019601C, publishes the returned index in scratchpad byte 0x1F800000 and, unless that index is 0xFF, seeds the claimed row: byte +0 takes the occupancy flag 1, byte +5 the handler selector 0x3F, the words at +0x0C and +0x10 the first 16.16 point it is given, +0x18 and +0x1C the second, and both depth words +0x14 and +0x20 the fixed 0x500000. It answers 1 when the table is full and 0 once the row is seeded; its one in-image caller is the stage walker at 0x801F504C.'
   - - 10020
     - c
     - noopHandlerWorld03Area14514_801F5324

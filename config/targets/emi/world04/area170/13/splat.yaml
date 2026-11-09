@@ -96,8 +96,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84.c'
     - '@behavior: Overlay step gate over the scratchpad work record at 0x1F800044. Reads the record route byte at +8 once: when it is non-zero the gate compares the shared camera word D_80145EC8 with the record halfword at +0x3A, and when it is zero it compares D_80145EC4 with the record halfword at +0x36 instead. Both comparisons build the cell centre ((halfword + 1) << 16) | 0x8000, take the absolute difference from the camera word and advance the record step byte at +2 when that difference exceeds 0x20000. When the first check passes, the record halfword of the other axis and the matching camera word become the shared tail operands: the step byte is advanced when the absolute difference from both the halfword cell start and the next cell start exceeds 0x20000. Takes no arguments, returns nothing and keeps no frame.'
   - - 5248
-    - asm
-    - func_801F4080
+    - c
+    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17013_801F4080
+    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17013_801F4080.c'
+    - '@behavior: Byte-2 state handler, entry 4 of the five-entry handler table based at 0x801F588C. Subtracts 0x10 from the work record halfword at 0x30, stores the truncated halfword and tests it as a signed halfword; while it stays above zero the handler only draws. Once the countdown reaches zero or below, the front-end phase byte D_80143BB0 gates sound cue 0x201 through func_8015DF18 and the record state byte at 0x02 is set to 1 so the next dispatch takes entry 1 at 0x801F3DE8 of the same table. The draw routine at 0x801F40F0 runs on every call; the 0x18-byte frame only keeps ra at 0x10 and the pointer cell is re-read after the cue gate.'
   - - 5360
     - asm
     - func_801F40F0
