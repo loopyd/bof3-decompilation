@@ -1083,6 +1083,13 @@ drops that reload. Two adjacent word updates through one word-typed view also se
 through one `$v0`, as the original's do, while the same negations written at byte
 offsets let the scheduler pair them into `$v0`/`$v1`, measured 44 of 50.
 
+A scratchpad block the original addresses through one base register is one object, not
+one extern per cell: declare a struct over the whole block at the block's own origin,
+take each member's width from the original's own load width, and cast at the member it
+loads signed. GCC 2.7.2 then forms the base at the cell the body addresses most and
+writes the others as displacements from it, plus a second base at the origin when some
+cells are cheaper from there, which per-cell externs cannot produce.
+
 ### Signed table index feeding a scaled offset
 
 When a signed table load feeds an index multiply, GCC 2.7.2 can allocate the offset and
@@ -1200,7 +1207,12 @@ original bytes is not exactness; inspect conversion, mask, frame and flow change
 
 Use this lever when the body matches but the frame differs, with no emitted body
 access to the extra bytes. First exclude ABI, call, aggregate and address-escape
-errors. An indexed access to a strided record type is no aggregate error and can
+errors. A slot the body writes once immediately before a call is that call's own
+outgoing argument: a callee declared with more than four parameters puts its fifth
+at `0x10($sp)`. Declare those parameters and pass the values rather than reading the
+slot as frame growth, because the shorter prototype drops that store and leaves the
+bytes unexplained. An indexed access to a strided record type is
+no aggregate error and can
 reserve that frame on its own, so try the record spelling before declaring a
 padding local. It cuts the other way on a frame-less leaf over a strided table: a
 record-typed view of three byte fields reserved a 16-byte frame the original does
