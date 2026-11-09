@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801EF44C
   - - 2428
-    - asm
-    - func_801EF57C
+    - c
+    - invokeRecordHelper3StepAndDrawCountdownWorkByteAAndAdvanceWorkByte2WhenZeroBmagicMagic08103_801EF57C
+    - '@source: src/bof3/bmagic/invokeRecordHelper3StepAndDrawCountdownWorkByteAAndAdvanceWorkByte2WhenZeroBmagicMagic08103_801EF57C.c'
+    - '@behavior: Work step handler of one action-slot sequence of this overlay. It reads the shared battle record pointer from 0x801EB4E0 and takes that record byte 0xA, the index of the queued action-slot entry it holds, then calls the main executable record helper func_800AF2B4 with the entry address - the 0x78-byte-stride store based at 0x801EC330 scaled by that index - and the constant 3, followed by the shared main executable step helper func_800AF764 and this overlay draw step func_801EF6A0, both with no arguments. After those three calls it reads the scratchpad work-object pointer cell 0x1F800044 once and decrements work-object byte 0xA through it with a byte-width read-modify-write, then tests the truncated byte it just stored and returns while that countdown stays nonzero. On expiry it re-reads the cell, because a store through the loaded pointer may alias it, and increments work-object byte 0x2, the state byte that advances this overlay work handler sequence. The 0x18-byte frame keeps ra at 0x10 across the three calls; it takes no arguments and returns nothing.'
   - - 2580
     - c
     - decrementGlobalWorkByteBAndClearWorkBytes0Through4BmagicMagic08103_801EF614

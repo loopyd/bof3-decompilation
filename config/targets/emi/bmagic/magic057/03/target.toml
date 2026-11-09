@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/bmagic/copyDecrementedRecordPositionPairPublishDistanceAndAdvanceWorkByte2WhenRecordByte0IsEvenBmagicMagic05703_801EFA38.c",
     "src/bof3/bmagic/dispatchStateByte2Tableec44BmagicMagic05703_801EF83C.c",
     "src/bof3/bmagic/queueSlotClearBytes1And2CopyRecordWordTripletPublishWorkPointerEverySecondTickWhileWorkByte9Below32AdvanceWorkByte2At32BmagicMagic05703_801EEEB0.c",
+    "src/bof3/bmagic/dispatchPhaseCountDownStageTimerAdvanceStageTableInvokeHelperAt100AndPublishWorkWord10ToHalfword8014932ABmagicMagic05703_801EF620.c",
 ]
 psyq_source = "src/bof3/support/magic057_03_psyq.c"

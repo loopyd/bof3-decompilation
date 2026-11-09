@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4.c",
     "src/bof3/support/magic039_03_psyq.c",
     "src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic03903_801EF6E0.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8.c",
 ]
 psyq_source = "src/bof3/support/magic039_03_psyq.c"

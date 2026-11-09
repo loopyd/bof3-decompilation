@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF484
   - - 2284
-    - asm
-    - func_801EF4EC
+    - c
+    - drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwoFadingRedGreenTwelveBmagicMagic17303_801EF4EC
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwoFadingRedGreenTwelveBmagicMagic17303_801EF4EC.c'
+    - '@behavior: Gouraud band emitter of the byte-4 draw group, reached only from the jal at 0x801EEEA4 in func_801EEE3C while work bytes 4, 0 and 2 are all non-zero, so it takes no arguments and returns nothing. It selects the draw-mode page 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, links a 0xC-byte draw-mode packet at g_PrimCursor, seeds the band radius cell 0x1F800000 with 2 and walks the pair table row that work byte 0x4 selects from the first record at or after work byte 0xB whose leading halfword is not the 0xFFFF sentinel up to the record before work byte 0xA. The starting record becomes the prior point, the record after it the current point, the heading of their difference the band heading, and the starting record again the current point. Each step publishes the previous current point as the prior point, loads the next record as the current point, marks a fresh semi-transparent POLY_G4, and fills its four corners as the prior point pushed off by the rotator sample of the band heading plus and minus one quarter turn and the current point pushed off by the same two turns of the heading re-derived from the published point cells, each offset scaled by the radius and shifted right 12. Both colour runs read the shade cell 0x1F800006 back after each write, giving corners 0 and 2 the red and green 0x61 - 12 (i - 1) and corners 1 and 3 the red and green 0x61 - 12 i with every blue byte fixed at 1, and each step links a 0x24-byte primitive. The body closes by selecting the draw-mode page 0x25 for graphic type 1 or 2 and 0x15 otherwise and linking a 0xC-byte draw-mode packet, and its 0x40-byte frame holds $ra and all eight $s registers.'
   - - 3636
     - asm
     - func_801EFA34

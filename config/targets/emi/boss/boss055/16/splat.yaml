@@ -75,10 +75,12 @@ segments:
     - c
     - queueSlotThenRaisePendingFlagBossBoss05516_800C2340
     - '@source: src/bof3/boss/queueSlotThenRaisePendingFlagBossBoss05516_800C2340.c'
-    - '@behavior: Queues one D_801EC330 slot-store record through func_800C238C with its first two arguments masked to bytes, then raises byte +0xB of the scratchpad work object at 0x1F800044 and stores the third masked byte into the battle halfword 0x801463BE.'
+    - '@behavior: Queues one D_801EC330 slot-store record through claimKind3Mode5SlotCopyWorkHeadPublishHeadPointerAndStampSlotBytesBossBoss05516_800C238C with its first two arguments masked to bytes, then raises byte +0xB of the scratchpad work object at 0x1F800044 and stores the third masked byte into the battle halfword 0x801463BE.'
   - - 2956
-    - asm
-    - func_800C238C
+    - c
+    - claimKind3Mode5SlotCopyWorkHeadPublishHeadPointerAndStampSlotBytesBossBoss05516_800C238C
+    - '@source: src/bof3/boss/claimKind3Mode5SlotCopyWorkHeadPublishHeadPointerAndStampSlotBytesBossBoss05516_800C238C.c'
+    - '@behavior: Overlay slot-store helper reached from queueSlotThenRaisePendingFlagBossBoss05516_800C2340 with both arguments masked to bytes: claims an action-slot entry through func_801E590C(3, 5), scales the returned low byte by the 0x78-byte D_801EC330 stride, copies the 0x74-byte D_801EB630 work head into it, publishes the D_801EB630 address at entry +0x74 and stamps entry bytes +0x01/+0x02/+0x05/+0x06/+0x09/+0x29 with arg0, 0, 5, 3, 0 and arg1.'
   - - 3232
     - c
     - publishBattleHooksBossBoss05516_800C24A0

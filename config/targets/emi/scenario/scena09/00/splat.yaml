@@ -76,8 +76,9 @@ segments:
     - c
     - noopHandlerScenarioScena0900_801F8414
   - - 6172
-    - asm
-    - func_801F841C
+    - c
+    - setFlagBit0RequestFrontSelectorContextArmEffectBankThenSetFlagBit1AndClearStateOnProgress11ScenarioScena0900_801F841C
+    - '@source: src/bof3/scenario/setFlagBit0RequestFrontSelectorContextArmEffectBankThenSetFlagBit1AndClearStateOnProgress11ScenarioScena0900_801F841C.c'
   - - 6404
     - asm
     - func_801F8504

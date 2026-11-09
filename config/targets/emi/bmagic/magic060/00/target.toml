@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/bmagic/drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1WhenPadStateSetBmagicMagic06000_801EEE84.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBIs80BmagicMagic06000_801EEF04.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F00D0.c",
+    "src/bof3/bmagic/queueSlotSetByte1To2PublishWorkPointerThenSetWorkByte9To10AndAdvanceWorkByte1WhenWorkByteBIs2BmagicMagic06000_801EED68.c",
 ]
 psyq_source = "src/bof3/support/magic060_00_psyq.c"

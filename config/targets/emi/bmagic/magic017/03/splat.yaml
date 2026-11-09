@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC38
   - - 152
-    - asm
-    - func_801EEC98
+    - c
+    - copyRecordTripletIntoWorkQueueSixActingBattlerSlotsStampOrdinalAndStepPublishWorkCopyStatBytesAndRaiseFlag40BmagicMagic01703_801EEC98
+    - '@source: src/bof3/bmagic/copyRecordTripletIntoWorkQueueSixActingBattlerSlotsStampOrdinalAndStepPublishWorkCopyStatBytesAndRaiseFlag40BmagicMagic01703_801EEC98.c'
+    - '@behavior: Work byte 1 state 0 of this overlay, entry 0 of the three-word handler table at 0x801EEC04 (0x801EEC98, 0x801EEF68, 0x801EEFD8) that func_801EEC38 copies into its frame and indexes with scratchpad work byte 1. Copies the shared battle work record byte 8 and word triplet 0x34/0x38/0x3C into the work object, clears work bytes 0xB and 9, raises work byte 1 and dispatches event 0xC, then makes six passes that claim a queued slot through func_801E590C(1, 0x21), copy the acting battler record head selected by 0x80146374 (party 0x80145E90 stride 0x140, enemy 0x801EB630 stride 0x118 indexed by selector minus 3) into the slot, stamp entry bytes 1/2/5/6/9/0xB, publish the work pointer at +0x74 and raise work byte 0xB, and finally publishes record bytes 0x27/0x28/0x24, raises record bit 0x40 and calls func_8015D71C(0x100).'
   - - 872
     - c
     - invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic01703_801EEF68

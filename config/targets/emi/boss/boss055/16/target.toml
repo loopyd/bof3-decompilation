@@ -34,6 +34,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2E74.c",
     "src/bof3/boss/refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284.c",
     "src/bof3/boss/callEnemyReadyThenFoldHalfword96RaiseFlag800ClearModeByteAndAdvanceWorkByte2BossBoss05516_800C2158.c",
+    "src/bof3/boss/claimKind3Mode5SlotCopyWorkHeadPublishHeadPointerAndStampSlotBytesBossBoss05516_800C238C.c",
     "src/bof3/support/boss055_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss055_16_psyq.c"

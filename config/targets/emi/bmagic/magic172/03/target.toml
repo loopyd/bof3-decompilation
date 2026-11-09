@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908.c",
     "src/bof3/bmagic/drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWithRadiusJitterBmagicMagic17203_801F02C8.c",
     "src/bof3/bmagic/drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWhileRadiusAtLeastTwelveWithFinePhaseStepBmagicMagic17203_801F05E8.c",
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenRadiiSixteenAndTwentyFourAtSixteenPhaseStepsAroundWorkHalfwords2EAnd30TintedByWorkByte9BmagicMagic17203_801EFA2C.c",
 ]
 psyq_source = "src/bof3/support/magic172_03_psyq.c"
