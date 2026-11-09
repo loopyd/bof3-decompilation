@@ -88,6 +88,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Two pointer bases read on both sides of a call exchange registers (`$3`/`$4` where the original has `$4`/`$3`) at equal size and count | Split both lifetimes at the call: one local per base before it and a fresh local per base after it. One local per base held across the call keeps each pre-call value live into the join, and the allocator exchanges the two bases there (25 of 33 at the payload size), while splitting one base alone reallocated the whole body (14 of 35); swapping the two post-call reads in source order measured that same 25 because the scheduler keeps the emitted load order, so this is a value-lifetime lever, not representation or statement order |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 | Three adjacent cell stores with one literal in the group; the group's order or size is the residual | Do not write the group in the emitted order: the literal's `li` and `lui $at` hoist between a neighbour's reload and its shifted value, so the literal store's source position decides only where the neighbours land. Ascending cell order with the literal written last matched, where the emitted order in source measured one instruction and four bytes short |
+| Entry block: the first difference is the second instruction, a literal store and a following work-object load hoisted above the prologue's `sw ra`, count far short at equal size | Write the table binding before the neighbouring literal store (`handlers = D_table;` then `D_cell = K;`). Literal first let the scheduler lift that store and the load above the frame save; the swapped pair matched at the original bytes |
 | One output record filled field by field; first difference is where the computation behind a later field group sits | Write the fields in the original's store order and place a dependent lookup at the field that consumes it: the lookup and the neighbouring store group share scheduler slots, so moving those writes later merges the lookup into the wrong group. One fill measured 75/81 at 328 bytes with the dependent writes moved after a neighbouring field write, and 81/81 at 324 bytes with them at their own fields |
 | First difference is a store's `lui` base where the build has the shift or product computing the stored value, and that offset survives every reordering of the block | The original sets that store's base up before computing the value, so store the value back into its cell immediately after the statement that computes it, and let the later copies that read that cell follow in the original's order. Keeping that store at the end of the group measured 120/127, moving it among the neighbouring stores without the adjacency 116/127, and computing, storing, then the neighbouring pair reordered matched: the store's position relative to its own computation is the lever, and the pair's order is a second decision that shows only once the first is in place |
 | Byte size equal and the first difference is the register a later call's argument setup leaves a product in (`mflo` into the neighbouring register) | Assign that product's local above the neighbouring record store. Written between that store and the `+=` that consumes it the same body measured 88 of 99 instructions at the original size; the same local assigned before the store matched, so read this signature as statement position, not as a multiply or argument-order defect |
@@ -159,9 +160,13 @@ instructions short of the original. A signed pair such as `-1` and `0` fails one
 worse: selecting it into a local drops the branch for a compare-and-negate, so the
 duplicated call is the spelling that keeps it. Early returns versus initialized
 result changes `$v0` lifetime. Two constants that share no high half still
-cross-jump, so per-arm stores do not save that select: every function-level
-spelling, counting a result local, a conditional expression written into the cell, a
-store in each arm and either polarity, came out short of the original.
+cross-jump for that call-carrying select, so per-arm stores do not save it: every
+function-level spelling, counting a result local, a conditional expression written
+into the cell, a store in each arm and either polarity, came out short of the
+original. Arms that hold nothing but the constant store are not that case: the plain
+`if`/`else` pair matched at the full count, while the ternary folded the pair into one
+selected value and inverted the test at equal size, and writing one constant first
+for the test to overwrite measured ten instructions further short.
 Nesting the select inside the positive guard block that carries the function's own
 `return 1` splits the arms again; in that block the arm order is the last variable,
 since the correct order leaves the branch delay slot unfilled and the mirrored
