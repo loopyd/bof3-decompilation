@@ -666,6 +666,10 @@ a mask the build adds to the answer at its assignment, where the original carrie
 whole answer, means the declared return is narrower than that callee's real one, so
 declare the width the site shows - a bare `addu` of the answer into the result
 register is a 32-bit return - and leave the body's own exit to narrow what it returns.
+A body whose returns are all literals has no exit conversion to reproduce, so its
+declared width measures nothing: the same two-return body declared `s32`, `s8` and
+`u32` kept one shortfall and one first difference, and the arm and constant shape was
+the lever. Read the exit before spending a gate on the width.
 
 Mirror the width rule at the assignment: when a narrow callee return feeds a narrow
 cell, keep the accumulator local at the cell's width. A clamp result stored into
@@ -1282,11 +1286,15 @@ In GCC 2.7.2, a folded address can leave an internal `USE` of a
 pseudo whose definition disappeared. Reload may allocate a slot for that pseudo
 even though the `USE` emits no instruction.
 
-A bare prologue and epilogue with no saved register, every instruction outside them
-already matching, and an original frame larger than this body's own locals is a
-second cause: the reservation comes from a declaration the original translation
-unit carried that emitted no code. One declared local of the missing size restores
-the frame, and it takes no use, since a use would change liveness instead. That holds
+An original frame larger than this body's own locals is a second cause: the
+reservation comes from a declaration the original translation unit carried that
+emitted no code. Read that gap off the rows that name `sp`, not off the entry
+`addiu` alone: with saved registers present it shows as the reservation, each save
+offset and each restore differing together while every other row and both counts
+stay equal, which is this lever and not a save-group ordering. One declared local of
+the missing size restores the frame, and it takes no use, since a use would change
+liveness instead. That size must be the whole gap: a local larger than the missing
+bytes reopened the entry difference. That holds
 when an exact sibling hands the same callee its own scratch region: the region stays a
 declaration and the call stays argless, because passing it measured one instruction
 over the original, the region's address copied into the argument register in the
