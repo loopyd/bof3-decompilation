@@ -18,7 +18,9 @@ Compiler-source research follows the matching ladder and owning build provenance
 6. Require the final live instruction/byte comparison and target symbol/Splat checks through the gate batch below; an exact workflow selector needs no redundant byte-verification reviewer. A new lift needs a `c` Splat boundary with `@source`/`@behavior`. No `just check`/`bin/harness lift status` in the mission. Retained map, reviewed Splat/annotation, or manifest source/support/header fact → `snapshot_index_refresh_required: true`; global analysis is prohibited here; the parent serially refreshes the snapshot, rebuilds the global index once, and checks both statuses.
 7. Before declaring exhaustion apply the [exhaustion gate](../review/review-checklist.md): after the ladder and every failed experiment, search for safe untried candidates and record the searched evidence and rejection reasons. The [eligible-condition levers](../../SKILL.md#eligible-condition-levers) are that search surface: `analysis data-candidates` for a data-shaped range, `analysis carve` for a fragment boundary whose head lives in another segment or a bare `bin` blob, and `lift clone` for a range that is byte-identical to an already-exact function. Non-exact: restore regressions; leave the best coherent candidate + owned facts review-pending. Report baseline, best live diff / first mismatch / class, ledger, experiment effects, remaining candidates. The parent reviews, then continues from the complete ordered attempt ledger; restoration/sharing is parent-owned.
 8. Retry reaches exact: report decisive experiment and prior partial diff for
-   reusable-rule review. Never generalize register coincidence.
+   reusable-rule review. A fresh lift that needed a rung above representation owes
+   that same report, naming the first gate's miss class and the rung that closed
+   it. Never generalize register coincidence.
 
 ## Banned
 
