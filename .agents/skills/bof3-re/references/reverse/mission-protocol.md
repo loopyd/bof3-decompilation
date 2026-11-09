@@ -41,7 +41,11 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
    renaming that row cleared it with no body change. That rename retires the
    function's naming debt, so a stale `func_` entry for it in
    `config/symbol-naming-baseline.json` survives with the symbols check already
-   passing: report it and leave the parent-owned baseline alone.
+   passing: report it and leave the parent-owned baseline alone. A whole-target
+   naming check also fails on rows this lane never wrote: read such a row from
+   `HEAD`, confirm the lane's own selectors report no findings, and run the same
+   check on an unrelated target, which reports its own inherited findings, then
+   report it and repair nothing.
 3. Manifest claim. `sources` and `support_sources` are both claimed and compiled, and every `sources` entry must carry function metadata, so a target whose `sources` is empty takes the lift in `support_sources` beside its generated psyq file.
 4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) bound the way step 2's precedence selects rather than with a map row plus `WEAK_SYMBOL_AT`, and that target's map row when the name is not `D_<ADDRESS>` and no generated `undefined_syms_auto.txt` row covers the address because the asm spelled it as a literal; the omission fails the link naming the symbol, before any instruction measurement. Per referenced function: a target-local prototype, which keeps its `extern` keyword once it carries an `@source` tag, because the tag above a keyword-less prototype parses as that function's metadata block and the gate refuses at parse with `invalid_metadata: requires @behavior`, before any measurement.
 
