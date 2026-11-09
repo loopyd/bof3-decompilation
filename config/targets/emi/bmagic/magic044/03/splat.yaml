@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801EF4E0
   - - 3660
-    - asm
-    - func_801EFA4C
+    - c
+    - drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwelveBmagicMagic04403_801EFA4C
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwelveBmagicMagic04403_801EFA4C.c'
+    - '@behavior: Two-sided Gouraud band emitter the byte-4 dispatcher dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44 calls at 0x801EEEB0 while work bytes 0x0 and 0x2 are non-zero and byte 0x4 is zero. It selects the draw-mode texture page 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, seeds the scratchpad radius cell 0x1F800000 with 0xC, and then, for the pair-table row at 0x801F0A38 that work byte 0x4 selects, walks the records from the first one at or after work byte 0xB that is not the 0xFFFF sentinel up to the record before work byte 0xA. Each record step publishes the previous and the current record point in the scratchpad cells 0x1F80000C/0x1F80000E and 0x1F800008/0x1F80000A, re-derives the 12-bit heading of the step through func_8017A138 into cell 0x1F800002, turns that heading a quarter turn into cell 0x1F800004, and emits one semi-transparent POLY_G4 whose four corners are previous+offset, current+offset, previous and current, the offset being the func_801782FC sample for x and the func_801783C8 sample for y of the turned heading scaled by the radius and shifted right 12. The first pass turns the heading by +0x400 and shades red and blue from 0x61 down by 6 per record step, the second repeats the same walk from the same record with -0x400 and 0x81 down by 8, so the two passes draw the band on both sides of the record polyline. Each shade is published in the scratchpad halfword 0x1F800006 and read back for the red and blue byte; corners 0 and 2 take 0x61 - 6(i - 1) and 0x81 - 8(i - 1), corners 1 and 3 take the same base minus one step, and every green byte is 1. Each pass closes with a 0x24-byte primitive link; the body then selects the draw-mode page 0x25 for graphic type 1 or 2 and 0x15 otherwise, re-links a 0xC-byte draw-mode packet at g_PrimCursor and returns. The 0x40-byte frame keeps $ra and all eight $s registers.'
   - - 5792
     - asm
     - func_801F02A0

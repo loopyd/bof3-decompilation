@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F311C
   - - 1836
-    - asm
-    - func_801F332C
+    - c
+    - drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C
+    - '@source: src/bof3/world/drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C.c'
+    - '@behavior: Overlay drawing helper projecting the work record''s two three-word position vectors, drawing a rotated translucent end quad at each projected point at extents converted from the shared {0x10, 0} size pair and phases 0x400 and 0xC00 apart, then the gouraud body quad between the two projected points.'
   - - 2248
     - asm
     - func_801F34C8

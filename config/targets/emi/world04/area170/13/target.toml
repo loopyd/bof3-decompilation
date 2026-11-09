@@ -28,6 +28,7 @@ sources = [
     "src/bof3/world/drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698.c",
     "src/bof3/world/drawSemiTransFlatQuadPrimWorld04Area17013_801F3594.c",
     "src/bof3/world/startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4.c",
+    "src/bof3/world/raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

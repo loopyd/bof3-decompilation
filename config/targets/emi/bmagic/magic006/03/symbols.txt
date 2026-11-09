@@ -25,6 +25,6 @@ copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4 = 0x8
 add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4 = 0x801F05F4;
 incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic00603_801F0644 = 0x801F0644;
 func_801F0684 = 0x801F0684;
-func_801F06E0 = 0x801F06E0;
+projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0 = 0x801F06E0;
 func_801F0790 = 0x801F0790;
 D_801F0A24 = 0x801F0A24;

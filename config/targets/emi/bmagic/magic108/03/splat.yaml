@@ -51,8 +51,9 @@ segments:
     - asm
     - func_801EEF48
   - - 1056
-    - asm
-    - func_801EF020
+    - c
+    - incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020.c'
   - - 1168
     - asm
     - func_801EF090

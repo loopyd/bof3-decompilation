@@ -103,8 +103,9 @@ segments:
     - startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14813_801F3A20
     - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14813_801F3A20.c'
   - - 3812
-    - asm
-    - func_801F3AE4
+    - c
+    - startActionForFirstPresentPartyCandidateActions0FTo12World03Area14813_801F3AE4
+    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions0FTo12World03Area14813_801F3AE4.c'
   - - 4008
     - c
     - setStatus6IfGateElse4World03Area14813_801F3BA8

@@ -73,8 +73,10 @@ segments:
     - asm
     - func_801EF23C
   - - 1724
-    - asm
-    - func_801EF2BC
+    - c
+    - decrementWorkByte9ThenIncrementWorkByteAAndDecrementGlobalWorkByteBAndAdvanceWorkByte2AtA0BmagicMagic07903_801EF2BC
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByteAAndDecrementGlobalWorkByteBAndAdvanceWorkByte2AtA0BmagicMagic07903_801EF2BC.c'
+    - '@behavior: Decrements the scratchpad work object byte at 0x9 while it is not zero, then re-reads the pointer cell 0x1F800044 to increment work byte 0xA and tests the truncated byte it just stored against 0xA0, and only at 0xA0 decrements byte 0xB of the shared battle work record at 0x801EB4E0 and increments work byte 0x2.'
   - - 1864
     - asm
     - func_801EF348

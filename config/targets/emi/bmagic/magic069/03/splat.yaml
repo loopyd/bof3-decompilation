@@ -80,8 +80,10 @@ segments:
     - dispatchStateByte2Table0520BmagicMagic06903_801EF520
     - '@source: src/bof3/bmagic/magic06903DispatchTables.c'
   - - 2404
-    - asm
-    - func_801EF564
+    - c
+    - seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564
+    - '@source: src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c'
+    - '@behavior: Work-byte-2 state 0 handler: selects the 0x140-stride party work record at 0x80145E90 or the 0x118-stride enemy work record at 0x801EB2E8 by the work object byte 0xB, submits it through 0x80196718 and its 0/0/0/1 positional effect through 0x8019651C, stores the returned effect value in work byte 0xA, seeds work halfwords 0x2E and 0x30 from the record halfwords less 0x20 and 0xC, reduces 0x30 by the 0x801EB108/0x801EB109 party byte pair selected by record byte 0x79 when record byte 0x08 is below two or by the 0x800E40CB class row of the 0x801EB710 enemy class byte otherwise, then clears work byte 9 and advances work byte 2.'
   - - 2852
     - asm
     - func_801EF724

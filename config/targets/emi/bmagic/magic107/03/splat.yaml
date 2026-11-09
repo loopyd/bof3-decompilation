@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC5C
   - - 320
-    - asm
-    - func_801EED40
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic10703_801EED40
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic10703_801EED40.c'
+    - '@behavior: Overlay work-step handler for the work object published at the scratchpad pointer cell 0x1F800044: reads the cell once before the frame exists and returns while the object unsigned byte 0x0B is not 0xFF; only on that equality loads the shared battle byte 0x80146384 unsigned and forwards it to func_800A9820, raises bit 0x4 of the shared battle global halfword 0x801462E8 (unsigned halfword load, ori, halfword store) and invokes the shared helper func_801E5988. The 0x18-byte frame only keeps the return address across the two calls. Takes no arguments and returns nothing; the in-payload dispatcher at 0x801EEC04 scales work byte 0x01 by four to select the two-word handler run (0x801EEC5C, 0x801EED40) this span is the second arm of.'
   - - 416
     - asm
     - func_801EEDA0

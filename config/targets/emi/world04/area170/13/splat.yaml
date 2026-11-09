@@ -179,8 +179,10 @@ segments:
     - asm
     - func_801F56E0
   - - 11016
-    - asm
-    - func_801F5708
+    - c
+    - raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708
+    - '@source: src/bof3/world/raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708.c'
+    - '@behavior: Front-end request of this overlay tail group. Keeps the scratchpad work pointer cell 0x1F800044 in a callee-saved register and writes it back at the end. While flag 0x79 of the main-RAM flag bank D_80144F28 is clear and the shared record gate func_801650B4 reports record 0x4B of family 1, it sets flag 0x79 through func_8015B580, requests resource 1 through func_8014D6B8, requests front-end entry action 0x22 through func_80150224 and queues sound cue 0x106 through func_8015DF18; every other case hands cue id 3 to the main-executable cue dispatcher func_80150284. Both arms then run the shared front-end helper func_801BE1B0 with the step selector 0xD, set the front-end phase byte D_80143BB0 to 2 and write the saved work pointer back. Takes no arguments and returns nothing; the 0x20-byte frame keeps s0, s1 and ra.'
   - - 11196
     - textbin
     - D_801F57BC

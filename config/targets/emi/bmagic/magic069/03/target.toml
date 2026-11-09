@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430.c",
     "src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC.c",
     "src/bof3/bmagic/oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0.c",
+    "src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c",
 ]
 psyq_source = "src/bof3/support/magic069_03_psyq.c"

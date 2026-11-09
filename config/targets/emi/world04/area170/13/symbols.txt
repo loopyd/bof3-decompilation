@@ -35,5 +35,5 @@ func_801F4B58 = 0x801F4B58;
 startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4 = 0x801F53A4;
 func_801F5698 = 0x801F5698;
 func_801F56E0 = 0x801F56E0;
-func_801F5708 = 0x801F5708;
+raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708 = 0x801F5708;
 D_801F57BC = 0x801F57BC;

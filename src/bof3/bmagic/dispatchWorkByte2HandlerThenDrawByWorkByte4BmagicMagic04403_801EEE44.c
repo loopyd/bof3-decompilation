@@ -18,11 +18,14 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern void (*D_801F0A1C[])(void); /* @source 0x801F0A1C @kind data */
 
 /* Overlay drawing routines this dispatcher picks between once the work object
- * is active: func_801EF4E0 while work byte 4 is non-zero and func_801EFA4C
- * while it is zero. Both call GetGraphType, SetDrawMode and g_PrimCursor
- * primitives, so both bodies draw. Unlifted, so they keep their raw names. */
+ * is active: func_801EF4E0 while work byte 4 is non-zero and
+ * drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarter
+ * TurnRadiusTwelveBmagicMagic04403_801EFA4C while it is zero. Both call
+ * GetGraphType, SetDrawMode and g_PrimCursor primitives, so both bodies draw.
+ * func_801EF4E0 is unlifted and keeps its raw name. */
 void func_801EF4E0(void);
-void func_801EFA4C(void);
+void drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwelveBmagicMagic04403_801EFA4C(
+    void);
 
 /* @source 0x801EEE44
  * @behavior Entry 0 of the six-word handler run at 0x801F0A14 that this
@@ -35,8 +38,10 @@ void func_801EFA4C(void);
  * that handler returns the cell is read again in a second load, because the
  * dispatched handler may republish it, and the work object's byte 4 selects the
  * drawing path: a non-zero byte 4 calls func_801EF4E0, a zero byte 4 calls
- * func_801EFA4C. Each path runs only while the work object's byte 0 and byte 2
- * are both non-zero, and the two gate tests branch to the shared epilogue, so
+ * drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarter
+ * TurnRadiusTwelveBmagicMagic04403_801EFA4C. Each path runs only while the work
+ * object's byte 0 and byte 2 are both non-zero, and the two gate tests branch to
+ * the shared epilogue, so
  * each path re-tests the pair rather than sharing one conjunction. Reads no
  * other state, stores nothing but the saved return address and returns
  * nothing. The 0x18-byte frame keeps only $ra at 0x10.
@@ -56,6 +61,6 @@ void dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44(void) 
       func_801EF4E0();
     }
   } else if (drawWork[0] != 0 && drawWork[2] != 0) {
-    func_801EFA4C();
+    drawTranslucentGouraudBandAlongRowRecordsFromWorkByteBToByteAOffsetByQuarterTurnRadiusTwelveBmagicMagic04403_801EFA4C();
   }
 }

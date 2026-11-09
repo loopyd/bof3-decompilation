@@ -122,8 +122,9 @@ segments:
     - asm
     - func_801F0684
   - - 6880
-    - asm
-    - func_801F06E0
+    - c
+    - projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0
+    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c'
   - - 7056
     - asm
     - func_801F0790

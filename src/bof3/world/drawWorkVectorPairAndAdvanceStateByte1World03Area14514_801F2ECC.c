@@ -5,7 +5,8 @@
  * the cell address for the argument group and again after the drawing call. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-void func_801F332C(void* arg0, void* arg1);
+void drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C(
+    void* arg0, void* arg1);
 
 /* @source 0x801F2ECC
  * @behavior Overlay per-frame step handler: loads the work-object pointer
@@ -28,6 +29,7 @@ void drawWorkVectorPairAndAdvanceStateByte1World03Area14514_801F2ECC(void) {
   u8* work;
 
   work = D_1F800044;
-  func_801F332C(work + 0x0C, work + 0x18);
+  drawProjectedBeamWithRotatedEndQuadsAndGouraudBodyWorld03Area14514_801F332C(
+      work + 0x0C, work + 0x18);
   D_1F800044[1]++;
 }
