@@ -4891,7 +4891,11 @@ The unconfigured component still requires `0x0004`. Hardware RAM-control modes,
 owned kernel startup phase and native CPU/worker alignment remain unverified.
 The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 `machine::reference` retains explicit original EXE/BIOS preparation and rendering
-for development comparisons and the current compiled player. Other production
+for development comparisons and the current compiled player. Its music renderer
+starts the functional output clock before sound initialization with the explicit
+native RAM-control policy. It discards initialization PCM, then begins capture
+before play without resetting device state or phase. The separate preparation
+functions leave output scheduling to their caller. Other production
 operations and independent timing/PCM acceptance remain incomplete.
 
 ### Owned cold-bank effects rendering

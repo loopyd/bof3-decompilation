@@ -61,6 +61,17 @@ pub fn prepare_bank(
     options: &bank::Options,
     observer: &mut impl FnMut(bank::Stage, &Execution) -> Result<()>,
 ) -> Result<bank::Prepared<boot::Evidence>> {
+    prepare_bank_output(executable, firmware, archive, options, false, observer)
+}
+
+fn prepare_bank_output(
+    executable: &Executable,
+    firmware: Image,
+    archive: &ArchiveImage,
+    options: &bank::Options,
+    continuous_output: bool,
+    observer: &mut impl FnMut(bank::Stage, &Execution) -> Result<()>,
+) -> Result<bank::Prepared<boot::Evidence>> {
     let audio = audio(executable)?;
     let plan = plan_bank(executable, archive, options)?;
     let machine = boot::load_us(firmware, executable, 3_000_000)?;
@@ -87,6 +98,15 @@ pub fn prepare_bank(
     execution
         .bus
         .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
+    if continuous_output {
+        execution
+            .bus
+            .configure_spu_ram_control(super::spu_transfer::RamControlModel::EmulatorReference)?;
+        execution.enable_output(
+            super::output_clock::Model::PcsxReduxNtsc,
+            super::output_clock::Collection::Discard,
+        )?;
+    }
     bank::load(
         execution,
         machine.evidence,
@@ -143,19 +163,17 @@ pub fn render_music(
     options: &crate::psx_render::Options,
 ) -> Result<crate::psx_render::Rendered<boot::Evidence>> {
     options.validate()?;
-    let mut runtime = prepare_music(
-        executable,
-        firmware,
+    let runtime = super::music::prepare_with(
         archive,
         options.layout,
         options.sequence,
-    )?;
-    runtime.execution.enable_output(
-        super::output_clock::Model::PcsxReduxNtsc,
-        super::output_clock::Collection::Discard,
+        &mut |_, _| Ok(()),
+        |options, observer| {
+            prepare_bank_output(executable, firmware, archive, options, true, observer)
+        },
     )?;
     crate::psx_render::render_prepared(runtime, options, "original_us_runtime", vec![
         "Development original EXE/BIOS execution with host-fed archive buffers and explicit functional clocks.",
-        "Output starts after initialization; independent PCM/native timing acceptance remains separate.",
+        "Functional output advances from before sound initialization; retained PCM begins before play without resetting device phase. Independent PCM/native timing acceptance remains separate.",
     ])
 }
