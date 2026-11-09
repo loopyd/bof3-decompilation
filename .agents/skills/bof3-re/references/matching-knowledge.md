@@ -775,7 +775,7 @@ accumulator probe. A guard on the value before the store is neither: when
 the original's `andi` tests the loaded byte while the incremented byte's `sb` fills
 the branch delay slot, keep the old value (`old = p[n]++; if ((old & 3) == 0)`) rather
 than testing the stored byte. Two exact sources on one overlay differ in nothing else,
-so the cell's test decides before either form is probed.
+so the cell's test decides before either form is probed. A countdown the original parks at a sentinel keeps that sentinel's own test in the same condition: `if (p[n] != K && --p[n] == 0)` emits the parked-value load and its skip ahead of the decrement, with the stage block inside that take arm.
 
 ### Scratch cursor group variables
 
