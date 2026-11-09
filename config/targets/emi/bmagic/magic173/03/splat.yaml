@@ -86,8 +86,10 @@ segments:
     - asm
     - func_801F06B0
   - - 6912
-    - asm
-    - func_801F0700
+    - c
+    - decrementWorkByte9By4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17303_801F0700
+    - '@source: src/bof3/bmagic/decrementWorkByte9By4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic17303_801F0700.c'
+    - '@behavior: Per-call step that reads the scratchpad work object through the pointer cell at 0x1F800044, subtracts four from work byte 9 at byte width and tests the stored byte truncated to eight bits, and only when that countdown reaches zero reads the shared battle work record pointer at 0x801EB4E0, decrements that record byte 0xB by one and invokes the shared helper at 0x801E5988 with the store in the call delay slot; the pointer-cell load precedes the 0x18-byte frame that keeps only the return address, and the function takes no arguments and returns nothing.'
   - - 7004
     - asm
     - func_801F075C

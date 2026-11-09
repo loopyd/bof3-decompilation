@@ -97,8 +97,9 @@ segments:
     - asm
     - func_801EFA50
   - - 3716
-    - asm
-    - func_801EFA84
+    - c
+    - drawGreyTexturedQuadAtWorkHalfwords2EAnd30Sized30ByWorkByteABmagicMagic06903_801EFA84
+    - '@source: src/bof3/bmagic/drawGreyTexturedQuadAtWorkHalfwords2EAnd30Sized30ByWorkByteABmagicMagic06903_801EFA84.c'
   - - 4096
     - asm
     - func_801EFC00

@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801F2EA0
   - - 1372
-    - asm
-    - func_801F315C
+    - c
+    - startStateEntry39Progress0AWhenEitherPackedWordMatches18000Or338000World04Area19313_801F315C
+    - '@source: src/bof3/world/startStateEntry39Progress0AWhenEitherPackedWordMatches18000Or338000World04Area19313_801F315C.c'
+    - '@behavior: Starts shared state entry 0x39 at progress 0x0A when the first or second argument equals 0x18000 or 0x338000. On a match it runs the shared front-end startup helper 0x8015C088, stores 0x39 into the state selector 0x801448EB and 0x0A into the progress byte 0x801448EC, and returns 1; otherwise it returns 0 without a call or store. Takes the two packed words the overlay entered with and returns the match result.'
   - - 1472
     - c
     - seedStateEntry39Progress14AndClearEffectBankIfSharedFlag8AElseRequestKind1World04Area19313_801F31C0

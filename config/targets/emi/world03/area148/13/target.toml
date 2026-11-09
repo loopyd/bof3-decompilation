@@ -34,5 +34,6 @@ support_sources = [
     "src/bof3/world/advanceWorkPositionThenRestartCountdownWithRandomPacingAndSetState2WhenPacingNonZeroWorld03Area14813_801F435C.c",
     "src/bof3/world/updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614.c",
     "src/bof3/world/drawThreeSelectionQuadsFromVertexTriplesScaledByHalfword30World03Area14813_801F37B8.c",
+    "src/bof3/world/drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0.c",
 ]
 psyq_source = "src/bof3/support/area148_13_psyq.c"

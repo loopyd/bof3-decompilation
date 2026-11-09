@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area193_13_psyq.c",
     "src/bof3/world/seedStateEntry39Progress14AndClearEffectBankIfSharedFlag8AElseRequestKind1World04Area19313_801F31C0.c",
     "src/bof3/world/clearWorkAnimBit0ThenRunStartupAndIncrementWorkHalfword7EIfPartyByte7World04Area19313_801F2E38.c",
+    "src/bof3/world/startStateEntry39Progress0AWhenEitherPackedWordMatches18000Or338000World04Area19313_801F315C.c",
 ]
 psyq_source = "src/bof3/support/area193_13_psyq.c"

@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic143_03_psyq.c",
+    "src/bof3/bmagic/drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4.c",
     "src/bof3/bmagic/magic14303DispatchTables.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawBandsAndFanAndPopWhenWorkBytes2And0SetBmagicMagic14303_801EEDB4.c",
     "src/bof3/bmagic/seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10.c",

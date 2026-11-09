@@ -33,9 +33,10 @@ void func_801EF23C(s32, s32, s32);
 
 /* Draws the argument-free band of the same effect, whose first step stores the
  * constant 0x80 where the 0x801EF23C path stores half its second argument. It
- * emits translucent primitives through RotTransPers / SetDrawMode / SetSemiTrans
- * and still an asm row. */
-void func_801EF9A4(void);
+ * emits translucent primitives through RotTransPers / SetDrawMode / SetSemiTrans;
+ * lifted at 0x801EF9A4 (partial on the entry-block copy). */
+void drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4(
+    void);
 
 /* Draws the translucent fan whose centre vertex is the record's screen pair at
  * halfword 0x2E, through rand / RotTransPers and the primitive queue. Still an
@@ -98,7 +99,7 @@ void dispatchWorkByte2HandlerThenDrawBandsAndFanAndPopWhenWorkBytes2And0SetBmagi
     g_battle_work[0xB] += 4;
     func_801EF23C(0x20, 0x50, 0xF);
     g_battle_work[0xB] += 2;
-    func_801EF9A4();
+    drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4();
     g_battle_work[0xB] += 4;
     func_801EF23C(0x18, 0x80, 0x1F);
     g_battle_work[0xB] -= 0xA;

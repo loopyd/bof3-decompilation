@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801EFAE0
   - - 4776
-    - asm
-    - func_801EFEA8
+    - c
+    - drawTranslucentGouraudQuadAlongSixteenthTurnStepsFadingFromWorkByteATimesTwelveToBlackBmagicMagic10703_801EFEA8
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadAlongSixteenthTurnStepsFadingFromWorkByteATimesTwelveToBlackBmagicMagic10703_801EFEA8.c'
+    - '@behavior: Translucent Gouraud quad emitter of this overlay draw group. It reads the scratchpad work object pointer cell 0x1F800044 once, stores work byte 0x0A shifted right two and multiplied by twelve plus one into the scratchpad colour word 0x1F80000C and takes that shift plus one as the pass count, compared against the low six bits of work byte 0x09 to decide whether any pass runs. Each pass publishes the phase cell 0x1F800008 as the sine of the pass phase shifted left six, scaled left nine and right twelve and biased by 0x400, then samples the rotator pair at 0x801782FC and 0x801783C8 eight times with that cell as the phase and builds the four vertex scratchpad quad at 0x1F800014 with every x halfword zero, the first vertex taking the samples times the radius word 0x1F800000 shifted right twelve, the second the samples shifted right eight, the third twenty-one times that and the fourth three times shifted right five. It picks the draw-mode tpage argument 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0, dtd 1 and a null RECT, links the 0xC-byte packet at the work record words 0x34 and 0x38 with kind 2, seeds the cursor primitive through func_8017AB08, marks it semi-transparent, projects the quad through RotTransPers4 into the primitive vertex pairs at 0x08, 0x10, 0x18 and 0x20, writes 1 into the first and last vertex colour triplets and the colour word into the two middle ones, subtracts 0xC from that word and links the 0x28-byte quad at the same record words with kind 2 while stepping the six-bit phase down by one. The 0x50-byte frame keeps $ra, all six $s registers and the six outgoing stack words of RotTransPers4; it takes no arguments, returns nothing, and no jal or in-image word of this payload names it.'
   - - 5548
     - asm
     - func_801F01AC

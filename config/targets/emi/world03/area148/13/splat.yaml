@@ -173,8 +173,10 @@ segments:
     - asm
     - func_801F4A50
   - - 8688
-    - asm
-    - func_801F4DF0
+    - c
+    - drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0
+    - '@source: src/bof3/world/drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0.c'
+    - '@behavior: Overlay gouraud fan emitter of the payload, called by the plain jal at 0x801F49A4 inside the record builder 0x801F4798 with the record halfwords at 0xC and 0xE as the fan centre, the record halfword 0x28 plus the low bit of 0x80143E6C as the signed amplitude and the record heading 0xC00 further on as the start angle. It seeds eight POLY_G3 triangles in the shared primitive cursor g_PrimCursor through func_8017A97C and SetSemiTrans, giving each one the centre as its first vertex and the rotator samples func_801783C8 and func_801782FC of the current angle and of the angle one 0x100 step further on, scaled by the amplitude through a shift of 12, for its other two vertices; the centre shade comes from the triple at 0x801F6138 + 3 * work byte 6 and the two far shades are black. func_80155A08 then links the record fixed-point position pair at 0x18/0x1C with kind 0 and the 0x1C size class. The angle advances 0x100 per triangle, so the eight triangles span a half turn.'
   - - 9156
     - textbin
     - D_801F4FC4

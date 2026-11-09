@@ -66,8 +66,9 @@ segments:
     - asm
     - func_801EF23C
   - - 3492
-    - asm
-    - func_801EF9A4
+    - c
+    - drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4
+    - '@source: src/bof3/bmagic/drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4.c'
   - - 4212
     - asm
     - func_801EFC74

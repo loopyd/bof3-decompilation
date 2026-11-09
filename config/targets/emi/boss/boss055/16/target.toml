@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C29E8.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2B48.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2CD4.c",
+    "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2E74.c",
     "src/bof3/support/boss055_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss055_16_psyq.c"

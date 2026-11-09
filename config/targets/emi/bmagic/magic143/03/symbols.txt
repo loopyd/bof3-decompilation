@@ -10,6 +10,6 @@ func_801EF054 = 0x801EF054;
 incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14303_801EF100 = 0x801EF100;
 func_801EF188 = 0x801EF188;
 func_801EF23C = 0x801EF23C;
-func_801EF9A4 = 0x801EF9A4;
+drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4 = 0x801EF9A4;
 func_801EFC74 = 0x801EFC74;
 func_801EFEE8 = 0x801EFEE8;

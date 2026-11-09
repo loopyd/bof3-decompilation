@@ -86,8 +86,10 @@ segments:
     - asm
     - func_801EF3A8
   - - 2136
-    - asm
-    - func_801EF458
+    - c
+    - drawTwentyFourLayerGouraudQuadRibbonSteppingDepthFortyTintedByShadeRampIndexedByWorkByteAPlusLayerAtEightPhaseStepsBmagicMagic07903_801EF458
+    - '@source: src/bof3/bmagic/drawTwentyFourLayerGouraudQuadRibbonSteppingDepthFortyTintedByShadeRampIndexedByWorkByteAPlusLayerAtEightPhaseStepsBmagicMagic07903_801EF458.c'
+    - '@behavior: Opens the draw mode with tpage 0x25 for graphic types 1 and 2 and 0x15 otherwise, seeds the scratchpad ring angle, seam and spread from the frame counter and the two shade ramps, then emits twenty-four layers of eight Gouraud quads whose near and far corners take the current and previous shade, stepping the near depth by minus forty per layer.'
   - - 4076
     - asm
     - func_801EFBEC

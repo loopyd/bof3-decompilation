@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawTwentyFourLayerGouraudQuadRibbonSteppingDepthFortyTintedByShadeRampIndexedByWorkByteAPlusLayerAtEightPhaseStepsBmagicMagic07903_801EF458.c",
     "src/bof3/support/magic079_03_psyq.c",
     "src/bof3/bmagic/magic07903DispatchTables.c",
     "src/bof3/bmagic/copyWorkWordTripletSetBytes9To4AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EFC74.c",
