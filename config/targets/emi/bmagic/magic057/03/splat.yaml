@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/bmagic/advanceWorkByte1AndClearWorkByte2WhenWorkBytes9AEqualBmagicMagic05703_801EEFA4.c'
     - '@behavior: Overlay handler of the scratchpad work object published through the pointer cell at 0x1F800044. It loads that cell once and compares the object unsigned byte 0x09 with its unsigned byte 0x0A; when the two are equal it increments work byte 0x01 by one at byte width with the pointer the comparison holds, re-reads the cell and clears work byte 0x02 through the reloaded pointer. Byte 0x01 is the work state that selects the overlay handler table and byte 0x02 is the handler index that state 1 indexes its own table with; byte 0x09 and byte 0x0A stay offset-anchored. Leaf with no frame: it takes no arguments, makes no call and returns nothing.'
   - - 1004
-    - asm
-    - func_801EEFEC
+    - c
+    - raiseFlag4ThenForwardBattleByteAndInvokeHelperBmagicMagic05703_801EEFEC
+    - '@source: src/bof3/bmagic/raiseFlag4ThenForwardBattleByteAndInvokeHelperBmagicMagic05703_801EEFEC.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8, then forwards the shared battle byte at 0x80146384 to the shared helper func_800A9820 and invokes the shared helper func_801E5988 with no arguments. The original materialises the halfword address once in a register, reads it unsigned, ORs the immediate 0x4 and stores it back through that same register, the store filling the delay slot of the first call; the byte argument is a separate unsigned byte load that the scheduler hoists above the ori. The 0x18-byte frame only keeps $ra at 0x10 across the two calls. Takes no arguments, returns nothing and writes no other state. This 0x40-byte span is word 2 of the three-word code pointer table at 0x801EEC04 (0x801EECB0, 0x801EED2C, 0x801EEFEC), which the dispatcher func_801EEC50 copies into its 0x28-byte frame and indexes with the scratchpad work object unsigned byte 0x01, so this body runs on the frames where that byte is 2 and no jal word in the image names it.'
   - - 1068
     - c
     - dispatchWorkByte1HandlerBmagicMagic05703_801EF02C

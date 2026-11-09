@@ -67,8 +67,10 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4.c'
     - '@behavior: Adds 2 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte equals 0x10, re-reads that pointer cell to clear work-object byte 0xA and re-reads the cell again to increment the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1332
-    - asm
-    - func_801EF134
+    - c
+    - incrementWorkByte9Add2ToWorkByteAThenSubmitRecordStoreEffectByteBAndAdvanceWorkByte2At18BmagicMagic03903_801EF134
+    - '@source: src/bof3/bmagic/incrementWorkByte9Add2ToWorkByteAThenSubmitRecordStoreEffectByteBAndAdvanceWorkByte2At18BmagicMagic03903_801EF134.c'
+    - '@behavior: Adds 1 to scratchpad work-object byte 0x9 and 2 to byte 0xA through the pointer at 0x1F800044 and, when byte 0xA has ramped to 0x18, submits the battle record published at 0x8014638C through func_80196718, submits its positional effect through func_8019651C with the 0/0/0/1 arguments, stores the low return byte in work-object byte 0xB, and increments the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1524
     - c
     - incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4

@@ -127,8 +127,8 @@ segments:
     - asm
     - func_801F4568
   - - 6680
-    - asm
-    - func_801F4618
+    - c
+    - setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618
   - - 6768
     - asm
     - func_801F4670

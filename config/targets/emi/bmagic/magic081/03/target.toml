@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/bmagic/claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC.c",
     "src/bof3/bmagic/invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0.c",
     "src/bof3/bmagic/invokeRecordHelper3StepAndDrawCountdownWorkByteAAndAdvanceWorkByte2WhenZeroBmagicMagic08103_801EF57C.c",
+    "src/bof3/bmagic/publishSavedWorkPointerInvokeReadinessHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic08103_801EEF88.c",
 ]
 psyq_source = "src/bof3/support/magic081_03_psyq.c"

@@ -2,13 +2,13 @@
 
 typedef void (*Boss05516Handler)(void);
 
-/* Phase-advance helper of this overlay, still unlifted: when bit 0x4 of the
+/* Phase-advance helper of this overlay: when bit 0x4 of the
  * main-program halfword 0x801462E8 is set it writes work-record byte +0xB = 1,
  * the halfword 0x801463BE = 8 and work-record byte +2 = 3 (or, when the
  * halfword 0x801463C0 is not 0x81, calls 0x801E567C instead); otherwise it
  * returns immediately. The store of 3 is one past the last step index this
  * dispatcher accepts, so the call below ends the step sequence. */
-void func_800C227C(void);
+void endStepSequenceRaisePendingFlagBossBoss05516_800C227C(void);
 
 /* Scratchpad pointer cell holding this overlay work record. Declared as the
  * absolute-address symbol so every use reloads the cell with the lui plus
@@ -46,6 +46,6 @@ void dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4(void) {
   D_800C35D8[((u8 *)g_battle_work)[2]]();
 
   if (((u8 *)g_battle_work)[1] == 8 && ((u8 *)g_battle_work)[2] < 3u) {
-    func_800C227C();
+    endStepSequenceRaisePendingFlagBossBoss05516_800C227C();
   }
 }

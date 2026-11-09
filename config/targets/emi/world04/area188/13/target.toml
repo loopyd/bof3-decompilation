@@ -21,6 +21,7 @@ support_sources = [
     "src/bof3/world/claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C.c",
     "src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598.c",
     "src/bof3/world/selectCrossedFrontSideStateWorld04Area18813_801F4D88.c",
+    "src/bof3/world/setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618.c",
     "src/bof3/support/area188_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

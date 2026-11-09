@@ -7,7 +7,7 @@ callEnemyReadyThenFoldHalfword96RaiseFlag800ClearModeByteAndAdvanceWorkByte2Boss
 callEnemyReadyUnlessKindFlagBossBoss05516_800C21E4 = 0x800C21E4;
 getAndClearBossBoss05516_800C2234 = 0x800C2234;
 resetScratchStateBossBoss05516_800C2244 = 0x800C2244;
-func_800C227C = 0x800C227C;
+endStepSequenceRaisePendingFlagBossBoss05516_800C227C = 0x800C227C;
 dispatchIndexedHandlerBossBoss05516_800C22F0 = 0x800C22F0;
 noopHandlerBossBoss05516_800C2328 = 0x800C2328;
 noopHandlerBossBoss05516_800C2330 = 0x800C2330;

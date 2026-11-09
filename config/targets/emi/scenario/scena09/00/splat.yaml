@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F8D30
   - - 10068
-    - asm
-    - func_801F9354
+    - c
+    - armProgress1UnlessMode2ThenWaitProgress9SetFlag3FOrProgress2AndClearStateScenarioScena0900_801F9354
+    - '@source: src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress9SetFlag3FOrProgress2AndClearStateScenarioScena0900_801F9354.c'
+    - '@behavior: Word 5 of the seventeen-word in-image primary state table at 0x801FE3EC, the word stored at 0x801FE400, that dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes with the signed shared primary state byte D_80146874 and invokes with no arguments, so no in-image jal targets 0x801F9354 and that one table word is its only reference. It reads the shared sub-state byte D_80146875 once through one address taken into a local pointer and runs two alternative sequences over that byte. Sub-state 0, while the unsigned mode byte D_80143BB0 (0x80143BB0) is not 2, sets the shared scenario progress byte g_ScenarioProgress (0x80146864) to 1, runs the shared helper func_801BE1B0 with 0xC and advances the sub-state byte to 1. Sub-state 1, once the progress byte reads 9, sets scenario flag bit 0x3F of the shared flag word D_8014686C through func_8015B580, runs the shared release helper func_8015C058 and joins the shared clearing tail. Sub-state 5, under the same not-2 mode gate, sets the progress byte to 1 and advances the sub-state byte to 6. Sub-state 6, once the progress byte reads 2, runs the release helper, clears the progress byte and falls into that same clearing tail, which clears the shared bytes D_80146865, D_80146866 and D_80146867, the sub-state byte and the primary state byte D_80146874 back to zero. Every other sub-state value does nothing. It takes no arguments, reads no other state and writes no other byte.'
   - - 10392
     - asm
     - func_801F9498

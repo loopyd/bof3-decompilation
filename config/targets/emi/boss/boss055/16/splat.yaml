@@ -57,8 +57,10 @@ segments:
     - c
     - resetScratchStateBossBoss05516_800C2244
   - - 2684
-    - asm
-    - func_800C227C
+    - c
+    - endStepSequenceRaisePendingFlagBossBoss05516_800C227C
+    - '@source: src/bof3/boss/endStepSequenceRaisePendingFlagBossBoss05516_800C227C.c'
+    - '@behavior: Phase-advance helper of this overlay, called by dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4 once the work record''s byte +1 is exactly 8 and its step byte +2 is below three. Gated on bit 0x4 of the shared battle flag halfword 0x801462E8: with that bit set and the current battle id halfword 0x801463C0 equal to 0x81 it raises byte +0xB of the scratchpad work object at 0x1F800044, stores 8 into the battle halfword 0x801463BE and writes step byte +2 = 3, one past the last step index the caller accepts; on any other battle id it calls the engine scratch-state reset 0x801E567C instead.'
   - - 2800
     - c
     - dispatchIndexedHandlerBossBoss05516_800C22F0

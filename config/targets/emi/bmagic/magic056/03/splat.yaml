@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F023C
   - - 6188
-    - asm
-    - func_801F042C
+    - c
+    - runSharedUpdateThenDecrementWorkByte9AndRaiseFlag20SetByte5CToOneClearWorkColorTripletAndAdvanceWorkByte2BmagicMagic05603_801F042C
+    - '@source: src/bof3/bmagic/runSharedUpdateThenDecrementWorkByte9AndRaiseFlag20SetByte5CToOneClearWorkColorTripletAndAdvanceWorkByte2BmagicMagic05603_801F042C.c'
+    - '@behavior: Countdown step of the overlay work object. It runs the shared no-argument update helper at 0x8014D978 and discards its answer, then decrements work-object byte 9 at byte width, and only when that countdown reaches zero does it raise bit 0x20 of work byte 0, set work byte 0x5C to 1, clear work bytes 0x5D, 0x5E and 0x5F and increment the work-object handler byte at offset 2. It re-reads the scratchpad work-object pointer cell at 0x1F800044 before each store group. It takes no arguments, returns nothing, uses a 0x18-byte frame that keeps only the return address and writes no other state.'
   - - 6380
     - asm
     - func_801F04EC

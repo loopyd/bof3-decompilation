@@ -14,10 +14,10 @@ extern u16 D_801463BE; /* @source 0x801463BE @kind unknown */
  * 0x74-byte D_801EB630 work head into it and stores the two byte parameters),
  * then raises byte +0xB of the scratchpad work object at 0x1F800044 to 1 and
  * stores the third masked byte into the battle halfword 0x801463BE. The
- * sibling handler func_800C227C of this overlay raises the same +0xB byte and
- * writes 0x801463BE = 8 on its battle id 0x81 path, and
- * getAndClearBossBoss05516_800C2234 clears that +0xB byte while returning the
- * work pointer.
+ * sibling handler endStepSequenceRaisePendingFlagBossBoss05516_800C227C of this
+ * overlay raises the same +0xB byte and writes 0x801463BE = 8 on its battle id
+ * 0x81 path, and getAndClearBossBoss05516_800C2234 clears that +0xB byte while
+ * returning the work pointer.
  * @status exact
  * @match 100.00
  * @residual none
