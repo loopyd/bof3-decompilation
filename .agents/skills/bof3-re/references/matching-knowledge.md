@@ -274,10 +274,14 @@ out-of-range index reaches is the default, so that case carries the default's
 statements instead of a duplicate block. Count the labels off that bound: a sparse
 `case 0:`/`default:` set builds a comparison chain and emits no table, which surfaces
 as a reviewed-`.rodata` placement refusal with no instruction count, so a `sltiu N`
-with no MIN subtraction and an N-entry table owes labels 0 through N-1. Label
-placement is part of that shape: write `default` first, because with it last the
-same arms measured four instructions short at that size, and a middle `default`
-with the cases reversed stayed short there too. A case that carries the default's
+with no MIN subtraction and an N-entry table owes labels 0 through N-1. Sparseness
+alone does not decide it: a set that declares no `default` and leaves its
+unpopulated slots unwritten built the table with nine of 22 slots populated -
+`sltiu`, scaled load, `jr`, those slots sharing the return edge - so read the
+original's dispatch before adding empty labels or a chain. Label placement is part
+of that shape: write `default` first, because with it last the same arms measured
+four instructions short at that size, and a middle `default` with the cases
+reversed stayed short there too. A case that carries the default's
 body must be numbered below the cluster's lowest real case, where it folds into
 that same bound: numbered inside the cluster it measured 150 of 143 instructions
 at 600 bytes against 572, and one above the top 144 of 143 at 576, while every
@@ -931,13 +935,17 @@ member casts from is part of the spelling, the far one taking the neighbouring v
 pointer rather than the base. Order is not the lever here: eight further permutations
 of the block measured the same count.
 
-The form is per body, not per family or per cell, so count the original's cell loads
-before copying a sibling's spelling: a member that reads the cell once and reuses that
-base for its guard and its store stays exact through the constant-address accessor,
-while a member whose original reloads the cell after a store through the record needs
-the named extern. Copy a sibling's statement order and operand forms, not its cell
-access spelling. Once the reload count and the load's base register agree, the
-spelling is free: a displacement that folds makes a named extern and the
+The form is per access, not per family, body or cell, so count the original's cell
+loads before copying a sibling's spelling: a member that reads the cell once and
+reuses that base for its guard and its store stays exact through the
+constant-address accessor, while a member whose original reloads the cell after a
+store through the record needs the named extern. Two arms of one exact body can
+spell the same cell differently - one publishing through a pointer local whose
+every read reloads it, the other indexing the named symbol directly - so read each
+arm's base register and never unify them. Copy a sibling's statement order and
+operand forms, not its cell access spelling. Once the reload count and the load's
+base register agree, the spelling is free: a displacement that folds makes a named
+extern and the
 `SPAD_PTR_TABLE` accessor at that cell's own word emit the same `lui`/`lw` pair at
 each reload point, so neither spelling is owed a probe and the seeded sibling's form
 stands. When the count agrees and only the base register differs, read it as
