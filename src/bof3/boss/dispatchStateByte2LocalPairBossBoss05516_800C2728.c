@@ -2,7 +2,8 @@
 
 typedef void (*Boss05516Handler)(void);
 
-void func_800C2780(void);
+void applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2780(
+    void);
 void func_800C27E8(void);
 
 /* @source 0x800C2728
@@ -14,7 +15,7 @@ void func_800C27E8(void);
  * does not bound the index, and it writes no state of its own: the 0x20-byte
  * frame only keeps $ra across the indirect call. The state byte is the same
  * one this overlay's step dispatcher selects this function with at run index 9
- * of the 0x800C35F8 handler run, and entry 0 (0x800C2780) advances it by one
+ * of the 0x800C35F8 handler run, and entry 0 (0x800C2780) advanced it by one
  * after its setup work, so the pair is this overlay's step 0 and step 1 bodies.
  * No word of the payload holds this function's address, so it is an overlay
  * entry reached from outside the payload; the prologue and return path alone
@@ -24,7 +25,9 @@ void func_800C27E8(void);
  * @residual none
  */
 void dispatchStateByte2LocalPairBossBoss05516_800C2728(void) {
-  Boss05516Handler handlers[2] = { func_800C2780, func_800C27E8 };
+  Boss05516Handler handlers[2] = {
+      applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2780,
+      func_800C27E8};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

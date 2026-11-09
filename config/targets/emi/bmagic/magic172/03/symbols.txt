@@ -19,5 +19,5 @@ func_801EFD04 = 0x801EFD04;
 func_801EFFE8 = 0x801EFFE8;
 func_801F02C8 = 0x801F02C8;
 func_801F05E8 = 0x801F05E8;
-func_801F0908 = 0x801F0908;
+drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908 = 0x801F0908;
 D_801F0B74 = 0x801F0B74;

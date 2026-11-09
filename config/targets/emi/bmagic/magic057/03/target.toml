@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0.c",
     "src/bof3/bmagic/clearWorkByte9SetWorkByteAFromStageTableInvokeHelperAt100ClearWorkWord10AndIncrementWorkByte2BmagicMagic05703_801EF5BC.c",
     "src/bof3/bmagic/copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0.c",
+    "src/bof3/bmagic/copyDecrementedRecordPositionPairPublishDistanceAndAdvanceWorkByte2WhenRecordByte0IsEvenBmagicMagic05703_801EFA38.c",
 ]
 psyq_source = "src/bof3/support/magic057_03_psyq.c"

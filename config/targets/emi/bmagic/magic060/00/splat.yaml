@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EEE00
   - - 644
-    - asm
-    - func_801EEE84
+    - c
+    - drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1WhenPadStateSetBmagicMagic06000_801EEE84
+    - '@source: src/bof3/bmagic/drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1WhenPadStateSetBmagicMagic06000_801EEE84.c'
+    - '@behavior: Result-panel step of the current battle target. Reads the selector byte D_80146384 and, when it is below 3 in an unsigned compare (sltiu 3), draws the party result panel through drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174; any larger selector takes the non-party path through func_801EF2DC instead, so exactly one arm runs. When the shared pressed-pad-state halfword D_80145AA8 is nonzero it then marks the scratchpad work-object byte at offset 0xB with 0x83 and advances that object byte at offset 0x1 by one, from two separate reads of the pointer cell 0x1F800044. Frame 0x18 holding ra, no arguments and no return value.'
   - - 772
     - asm
     - func_801EEF04

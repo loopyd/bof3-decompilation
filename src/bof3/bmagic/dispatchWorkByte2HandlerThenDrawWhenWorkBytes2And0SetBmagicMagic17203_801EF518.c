@@ -24,11 +24,11 @@ extern void (*D_801F0B90[])(void); /* @source 0x801F0B90 @kind data */
  * existed in this tree when this seed was written, so it keeps its raw name. */
 void func_800AF764(void);
 
-/* This overlay's own record draw step, still an asm row at 0x801F0908 in this
- * target: it selects a draw mode from GetGraphType, installs it on the prim
- * cursor and queues the record's primitives. Kept at its raw name because the
- * span has no authored body. */
-void func_801F0908(void);
+/* This overlay's own record draw step at 0x801F0908: it selects a draw mode
+ * from GetGraphType, installs it on the prim cursor and queues the record's
+ * primitives. */
+void drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908(
+    void);
 
 /* @source 0x801EF518
  * @behavior Dispatches one step of the overlay work handler and then draws the
@@ -53,6 +53,6 @@ void dispatchWorkByte2HandlerThenDrawWhenWorkBytes2And0SetBmagicMagic17203_801EF
   D_801F0B90[g_battle_work[2]]();
   if ((g_battle_work[0] & g_battle_work[2]) != 0) {
     func_800AF764();
-    func_801F0908();
+    drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908();
   }
 }

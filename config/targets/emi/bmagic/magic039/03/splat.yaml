@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EF070
   - - 1236
-    - asm
-    - func_801EF0D4
+    - c
+    - add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4
+    - '@source: src/bof3/bmagic/add2ToWorkByte9ClearWorkByteAAndAdvanceWorkByte2At10BmagicMagic03903_801EF0D4.c'
+    - '@behavior: Adds 2 to scratchpad work-object byte 9 through the pointer at 0x1F800044 and, when the stored byte equals 0x10, re-reads that pointer cell to clear work-object byte 0xA and re-reads the cell again to increment the dispatch state byte at offset 0x2, which advances the overlay work byte 2 handler sequence.'
   - - 1332
     - asm
     - func_801EF134

@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801F05E8
   - - 7432
-    - asm
-    - func_801F0908
+    - c
+    - drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908.c'
+    - '@behavior: overlay draw step called by the dispatch step at 0x801EF518 from the arm it takes when the work record bytes 0 and 2 are both non-zero; picks the draw-mode texture page from GetGraphType, arms SetDrawMode on the primitive cursor and links a 0xC-byte packet under ordering-table slot 3, publishes a radius of 0x18 at 0x1F800000, a phase of 0 at 0x1F800004 and four tint cells scaled from work byte 9 and byte 0xB with the coefficient pair at 0x801F0B9C and 0x801F0B9D, then emits sixteen translucent Gouraud triangles into slot 3 at 0x1C bytes each sharing the screen centre at work halfwords 0x2E and 0x30, a core colour of the three stored tint cells and rim vertices at colour one sampled at the previous and the advanced phase'
   - - 8052
     - textbin
     - D_801F0B74

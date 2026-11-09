@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EF900
   - - 3640
-    - asm
-    - func_801EFA38
+    - c
+    - copyDecrementedRecordPositionPairPublishDistanceAndAdvanceWorkByte2WhenRecordByte0IsEvenBmagicMagic05703_801EFA38
+    - '@source: src/bof3/bmagic/copyDecrementedRecordPositionPairPublishDistanceAndAdvanceWorkByte2WhenRecordByte0IsEvenBmagicMagic05703_801EFA38.c'
+    - '@behavior: Middle handler of this overlay second-phase dispatch, entry 1 of the three-word table at 0x801EEC44. The state-2 handler at 0x801EF83C copies those three words (0x801EF900, 0x801EFA38, 0x801EFABC) into its own 0x28-byte frame and indexes them with the scratchpad work object byte 0x02, and no jal in the image names this span. The body reads the shared record pointer at 0x801EB4E0 and the work object pointer cell at 0x1F800044 once each, stores record word 0x34 minus one into work word 0x34, re-reads that work word through the loaded pointer into a local, and stores record word 0x38 minus one into work word 0x38, which fills the jump delay slot of its only call. It then calls the shared two-argument distance helper func_8015477C with that one value as both arguments, re-reads the work object cell after the call and stores the returned signed halfword at work halfword 0x3E. Last it re-reads the record cell and, while record byte 0 bit 0 is clear, increments work byte 0x02 by one at byte width through the reloaded work pointer, which hands the next frame to entry 2 at 0x801EFABC. Takes no arguments, returns nothing through the jr $ra at 0x801EFAB4 inside a 0x18-byte frame, and leaves work words 0x34 and 0x38 offset-anchored because they only carry the decremented record pair.'
   - - 3772
     - c
     - invokeHelperBmagicMagic05703_801EFABC

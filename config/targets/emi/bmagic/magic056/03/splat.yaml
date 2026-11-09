@@ -96,8 +96,10 @@ segments:
     - asm
     - func_801F0024
   - - 5320
-    - asm
-    - func_801F00C8
+    - c
+    - decrementWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic05603_801F00C8
+    - '@source: src/bof3/bmagic/decrementWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic05603_801F00C8.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 three times and subtracts 0x10 from the work-object colour channels at offsets 0x5D, 0x5E and 0x5F at byte width with no floor test before those stores. It then re-reads the cell and the signed channel at 0x5D, and only when that channel reads exactly -0x80 it reads the shared battle work record pointer at 0x801EB4E0 once and copies that record word 0x34 into work word 0x34, word 0x38 into word 0x38 and word 0x3C into word 0x3C, incrementing the work-object handler byte at offset 2 at byte width. It takes no arguments, returns nothing, uses no stack frame and writes no other state.'
   - - 5496
     - asm
     - func_801F0178
