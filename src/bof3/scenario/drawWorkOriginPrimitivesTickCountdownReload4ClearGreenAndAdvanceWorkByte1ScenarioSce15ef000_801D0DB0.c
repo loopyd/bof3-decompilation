@@ -4,7 +4,8 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D1A20(u8* origin, s16 angle, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+    const void* origin, s16 extent, s32 channel_mask);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 
 /* @source 0x801D0DB0
@@ -15,7 +16,7 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * arguments and returns nothing. It hands this overlay's first drawing helper
  * func_801D1C1C (0x801D1C1C) the work object's origin block at +0x34, the
  * block at +0xC and the tint byte at +0x5D, then hands the second drawing
- * helper func_801D1A20 (0x801D1A20) the same origin block at +0x34, the
+ * helper the sector fan (0x801D1A20) the same origin block at +0x34, the
  * signed halfword at +0x2E and the mode constant 2. It finally ticks the work
  * object's countdown byte at +0x9 down by one and, when that byte reaches
  * zero, clears the colour channel byte at +0x5E, re-arms the countdown to 4
@@ -57,7 +58,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  */
 void drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0(void) {
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
-  func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+      D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {
     D_1F800044[0x5E] = 0;
     D_1F800044[9] = 4;

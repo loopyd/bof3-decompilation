@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp46700_801CEDB0.c",
     "src/bof3/plchar/getAndClearPlcharPlp46700_801CE610.c",
     "src/bof3/plchar/invokeHelperPlcharPlp46700_801CE82C.c",
+    "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp46700_801CFC8C.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp46700_801CED50.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp46700_801CF800.c",

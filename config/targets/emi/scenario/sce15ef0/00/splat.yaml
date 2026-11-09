@@ -79,8 +79,9 @@ segments:
     - drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914
     - '@source: src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c'
   - - 3616
-    - asm
-    - func_801D1A20
+    - c
+    - drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20
+    - '@source: src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c'
   - - 4124
     - asm
     - func_801D1C1C

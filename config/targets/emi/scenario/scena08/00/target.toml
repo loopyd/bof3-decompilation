@@ -14,6 +14,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState4Or5OnClearedFlag6Or7AndSetFlagBit16OnRoute46PackedWordMatchScenarioScena0800_801FE170.c",
     "src/bof3/scenario/claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C.c",
     "src/bof3/scenario/seedTwoObjectRowsAtProgress6ThenSetFlagBit14AndResetHandlerScenarioScena0800_801FD400.c",
+    "src/bof3/scenario/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackScenarioScena0800_801F9470.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",

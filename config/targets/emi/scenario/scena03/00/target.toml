@@ -64,5 +64,6 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC.c",
     "src/bof3/scenario/setScenarioFlagBit14ThenRequestPrimaryState4Substate0ScenarioScena0300_801FC4AC.c",
     "src/bof3/scenario/requestPrimaryState8Substate2AndArmCountdown30OnPackedRecordMatchScenarioScena0300_801FCD1C.c",
+    "src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7334.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

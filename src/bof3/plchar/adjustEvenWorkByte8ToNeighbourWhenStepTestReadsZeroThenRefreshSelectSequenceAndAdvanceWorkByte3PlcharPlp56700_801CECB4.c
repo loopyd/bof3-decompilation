@@ -16,13 +16,16 @@ extern u8* D_1F800044;
  */
 u8 func_801CF7A0(void);
 
-/* Position refresh of this payload, still an `asm` row: it claims work byte 0x2B,
- * offsets the work position held at +0x34/+0x38 by the deltas at
- * 0x80181BAC/0x80181BB0 and re-projects that position through func_80154F78. The
- * original calls it through a plain `jal` with nothing set up in the argument
- * registers, so it takes no arguments and this caller reads no result from $v0.
+/* Position refresh of this payload, lifted exact at 0x801CF944 as
+ * claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944
+ * when this declaration was re-pointed: it claims work byte 0x2B, offsets the
+ * work position held at +0x34/+0x38 by the deltas at 0x80181BAC/0x80181BB0 and
+ * re-projects that position through func_80154F78. The original calls it
+ * through a plain `jal` with nothing set up in the argument registers, so it
+ * takes no arguments and this caller reads no result from $v0.
  */
-void func_801CF944(void);
+void claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
  * binds the address through this target's generated undefined_funcs_auto.txt, and
@@ -41,7 +44,7 @@ u32 func_8014D8D4(u8 arg0);
  *           zero, stores the neighbour two steps the other way ((byte 8 + 2) & 7)
  *           and calls the same test again; if that call reads zero too the byte is
  *           put back to the decremented direction. Both paths then run the
- *           payload refresh func_801CF944, select the shared work sequence
+ *           payload refresh at 0x801CF944, select the shared work sequence
  *           through func_8014D8D4 with ((byte 8 - 1) / 2 + 0x42) truncated to a
  *           byte, clear work byte 0xB, write 0xB into work byte 0xA and 1 into
  *           work byte 3, which advances the dispatch to entry 1 of the same run,
@@ -71,7 +74,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenc
       }
     }
   }
-  func_801CF944();
+  claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

@@ -4,7 +4,8 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D1A20(u8* origin, s16 angle, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+    const void* origin, s16 extent, s32 channel_mask);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
 
@@ -19,7 +20,7 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * then draws this overlay's work-origin primitives through exactly the two
  * calls the overlay's step-2 handler func_801D0DB0 makes: func_801D1C1C
  * (0x801D1C1C) with the block at +0x34, the block at +0xC and the tint byte at
- * +0x5D, then func_801D1A20 (0x801D1A20) with the block at +0x34, the signed
+ * +0x5D, then the sector fan at 0x801D1A20 with the block at +0x34, the signed
  * halfword at +0x2E and the mode constant 2. It then draws the five-segment
  * zigzag through drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914
  * with the fixed level 0x40. Finally it ticks the work object's countdown byte
@@ -41,7 +42,7 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * and dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44
  * issue, and the countdown tail is those lifts' tail with this body's re-arm 16
  * plus the amplitude reload. The angle role of +0x2E follows the `s16 angle`
- * argument those lifts give func_801D1A20 and the tint role of +0x5D their
+ * argument those lifts give that fan and the tint role of +0x5D their
  * `u8 red` argument to func_801D1C1C, which the `sb $s2, 0x4/0x5/0x6($s0)`
  * stores of
  * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220 fix
@@ -58,7 +59,8 @@ void decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload1
     *(s8*)(D_1F800044 + 0x5D) -= 8;
   }
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
-  func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+      D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(0x40);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x10;

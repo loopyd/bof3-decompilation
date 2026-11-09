@@ -49,8 +49,10 @@ segments:
     - asm
     - func_80117410
   - - 1300
-    - asm
-    - func_80117514
+    - c
+    - stepWorkRecordPositionPairByDoubledVelocityAdvanceHalfword24AndCountDownThenResetAndAdvanceHandlerIndexWorld01Area04913_80117514
+    - '@source: src/bof3/world/stepWorkRecordPositionPairByDoubledVelocityAdvanceHalfword24AndCountDownThenResetAndAdvanceHandlerIndexWorld01Area04913_80117514.c'
+    - '@behavior: Step handler 2 of this overlay 13-entry in-image handler run: word 2 of the pointer row D_8011818C at 0x80118194, reached through dispatchWorkByte1Table818cWorld01Area04913_80117004 when the published work record byte at offset 1 reads 2. Reads the record in D_801181DC once, adds twice its word at 0x14 to its word at 0x04 and twice its word at 0x18 to its word at 0x08 (the position pair moved by the random angle-step velocity pair), adds 0x80 to the record halfword at 0x24 in the branch delay slot of its own test, and counts byte 0x02 down by one. When that countdown reaches zero it stores 0x40 back into byte 0x02 and increments the record handler index byte at offset 1, each through its own re-load of the pointer cell. Takes no arguments, makes no call, returns nothing, and its 0x88 bytes are a leaf whose only return path is the trailing jr $ra.'
   - - 1436
     - c
     - stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C

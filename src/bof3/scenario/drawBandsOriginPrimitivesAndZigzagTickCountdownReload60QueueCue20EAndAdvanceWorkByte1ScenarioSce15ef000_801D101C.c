@@ -5,7 +5,8 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
-void func_801D1A20(u8* origin, s16 angle, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+    const void* origin, s16 extent, s32 channel_mask);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
 
@@ -17,7 +18,7 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * arguments and returns nothing. It hands this overlay's first drawing helper
  * func_801D1C1C (0x801D1C1C) the work object's origin block at +0x34, the
  * block at +0xC and the tint byte at +0x5D, then hands the second drawing
- * helper func_801D1A20 (0x801D1A20) the same origin block at +0x34, the signed
+ * helper the sector fan (0x801D1A20) the same origin block at +0x34, the signed
  * halfword at +0x2E and the mode constant 2, and then draws the five-segment
  * zigzag through drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914
  * (0x801D1914) at the fixed level 0x40. It then ticks the work object's
@@ -55,7 +56,8 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  */
 void drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C(void) {
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
-  func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+      D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(0x40);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x3C;

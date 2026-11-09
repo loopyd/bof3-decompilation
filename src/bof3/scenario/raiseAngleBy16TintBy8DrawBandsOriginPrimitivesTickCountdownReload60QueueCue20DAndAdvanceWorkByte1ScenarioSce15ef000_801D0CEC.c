@@ -5,7 +5,8 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
-void func_801D1A20(u8* origin, s16 angle, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+    const void* origin, s16 extent, s32 channel_mask);
 void func_801D1C1C(u8* origin, u8* tint, u8 red);
 
 /* The two fields this entry ramps. The original keeps one loaded cell pointer
@@ -28,7 +29,7 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * primitives through exactly the two calls the overlay's step-5 handler
  * drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C
  * makes: func_801D1C1C (0x801D1C1C) with the block at +0x34, the block at
- * +0xC and the tint byte at +0x5D, then func_801D1A20 (0x801D1A20) with the
+ * +0xC and the tint byte at +0x5D, then the sector fan at 0x801D1A20 with the
  * block at +0x34, the signed halfword at +0x2E and the mode constant 2. Unlike
  * that handler it draws no zigzag. It finally ticks the work object's countdown
  * byte at +0x9 down by one and, when that byte reaches zero, re-arms it to
@@ -45,7 +46,7 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * run. The two ramp heads fix their widths: `lbu`/`addiu 8`/`sb` on +0x5D is an
  * unsigned byte add with no clamp, and `lhu`/`addiu 0x10`/`sh` on +0x2E is an
  * unsigned halfword add, while the second drawing call re-reads +0x2E with
- * `lh` because func_801D1A20 takes an `s16 angle`. The drawing calls are
+ * `lh` because that fan takes an `s16 extent`. The drawing calls are
  * word-for-word the pair this target's lifts
  * drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C
  * and decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4
@@ -76,7 +77,8 @@ void raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue
   work->red_5d += 8;
   work->angle_2e += 0x10;
   func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
-  func_801D1A20(D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
+      D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x3C;
     D_1F800044[1]++;

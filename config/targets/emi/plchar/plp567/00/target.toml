@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp56700_801D04EC.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp56700_801CF430.c",
+    "src/bof3/plchar/claimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferencePlcharPlp56700_801CF944.c",
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp56700_801CF704.c",
     "src/bof3/plchar/dispatchStateByte2Table07a4PlcharPlp56700_801CEA00.c",

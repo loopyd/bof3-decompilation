@@ -172,8 +172,10 @@ segments:
     - asm
     - func_801D32F4
   - - 10480
-    - asm
-    - func_801D34F0
+    - c
+    - drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0
+    - '@source: src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0.c'
+    - '@behavior: Entry of the overlay record pass: sets bit 6 of the flag byte behind work pointer word 0x4C, walks the ten-byte effect records at 0x800EA200 up to the count halfword at 0x801D40A8, and for each record whose blink flag is set subtracts its signed velocity bytes 8 and 9 from its position halfwords 4 and 6 while its life byte is nonzero, then draws the 0xC-byte primitive at that position through the cursor at 0x8014598C with the packed colour halfword 2 expanded left by three per five-bit channel and submits it under OT slot 2. Every record has its blink flag complemented. It then ticks work countdown byte 9 down by one and, on zero, stores progress 0x2B and advances work byte 1 by one.'
   - - 10908
     - c
     - invokeHelperScenarioSce15ef100_801D369C

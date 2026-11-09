@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801CF940
   - - 6284
-    - asm
-    - func_801CFC8C
+    - c
+    - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp46700_801CFC8C
+    - '@source: src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp46700_801CFC8C.c'
+    - '@behavior: Work byte 0x0A expiry step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload: the body address appears once in the payload, as word 0x801D03FC, entry 20 of the handler run based at 0x801D03AC that this overlay places as the textbin row at that base and whose base 0x801D03F8 the dispatcher 0x801CF8FC enters by scaling work byte 0x02 by four, so no jump word of this payload names the body. It decrements work byte 0x0A and does nothing else while that byte stays nonzero. When it reaches zero the body projects the work position from work words 0x34 and 0x38 offset by the movement offsets 0x80181B94 and 0x80181B98 selected by route byte 0x08 and doubled, hands that pair with range 0 to the shared slot search func_801BDE14 and, unless the search answers -1, raises bit 0 of the animation byte 0x74 of the found work record through the column base 0x801468FC and the stride 0x98. It then claims a map cell record at the projected point through this payload map-code step func_801CFF14, passing the high half of each projected word as a signed half, retries one unit further on the first axis when that claim fails and the first word has a nonzero low half, and retries one unit further on the second axis when the retry also fails and the second word has a nonzero low half. Both paths increment work byte 0x02 through the scratchpad cell itself and the body closes with the shared readiness helper func_8014DAEC. It takes no arguments and returns nothing; the 0x30-byte frame keeps $ra at 0x28 and six saved registers across the calls.'
   - - 6696
     - asm
     - func_801CFE28

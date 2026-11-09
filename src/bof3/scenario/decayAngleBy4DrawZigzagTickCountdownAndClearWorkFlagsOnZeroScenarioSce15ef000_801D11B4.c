@@ -40,8 +40,8 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * lifts (`lbu`, `addiu -1`, `sb`, `andi 0xFF`, `bnez`) up to their re-arm and
  * advance stores, which this span does not have; the differing effect is the
  * `jal` to 0x80196070 in the taken arm. Those two lifts read the same work
- * halfword as the angle argument of func_801D1A20, which is the role this name
- * keeps for +0x2E.
+ * halfword as the extent argument of the sector fan at 0x801D1A20, which is the
+ * role this name keeps for +0x2E.
  * @status exact
  * @match 100.00
  * @residual none

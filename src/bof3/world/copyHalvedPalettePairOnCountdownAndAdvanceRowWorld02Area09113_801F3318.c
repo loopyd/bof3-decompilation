@@ -12,10 +12,13 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
  * scalePaletteChannelsWorld02Area08213_801F5388 names this byte. */
 extern u8 paletteStageSerial; /* @source 0x80145988 @kind unknown */
 
-/* Target-local overlay drawing helper at 0x801F2ED4: builds a matrix, walks
- * 0x20 transformed rows and emits two quads through the primitive cursor. It
- * is still an asm subsegment of this target, so only a prototype is needed. */
-void func_801F2ED4(s32 arg0, s32 arg1);
+/* Target-local overlay fan drawing helper at 0x801F2ED4: projects a fixed
+ * point into a scratch matrix, composes it under the shared screen matrix and
+ * stamps thirty-two semi-transparent Gouraud wedges at the passed radius and
+ * centre shade through the primitive cursor. It was still an asm subsegment of
+ * this target when this caller was seeded, so only a prototype is needed. */
+void drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4(
+    s32 arg0, s32 arg1);
 
 typedef struct {
   u16 entry[0x20];
@@ -108,5 +111,6 @@ void copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318(void
   }
 
   paletteStageSerial = paletteStageSerial + 1;
-  func_801F2ED4(0x12C, 0xFF);
+  drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4(
+      0x12C, 0xFF);
 }
