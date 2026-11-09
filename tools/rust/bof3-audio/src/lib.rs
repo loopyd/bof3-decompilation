@@ -18,6 +18,7 @@ pub mod pc_archive;
 pub mod pc_render;
 pub mod player;
 pub mod psx_render;
+pub mod render;
 mod publication;
 mod render_cli;
 pub mod sample;

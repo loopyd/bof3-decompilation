@@ -198,13 +198,54 @@ The entries and cue row belong to the named archive. Unsupported cross-bank
 records and unresolved sample references fail without publishing output.
 
 `--history cold` and a positive `--duration` are required. Repeated-event
-histories, multi-bank playback and vocal/XA streaming remain unsupported.
+histories and multi-bank playback remain unsupported in SFX mode.
 The renderer polls game voice status before playback and after the body. It
 releases the explicit SDK voice, or all 24 voices for a game cue in the otherwise
 empty machine. The fixed tail includes guest release and safe-call delay and may
 end before silence. The `bof3.psx-effects-render/v4` report records the selected
 bank, playback values, calls, status snapshots, cutoff and clock limits.
 Independent native timing and PCM agreement remain open.
+
+XA cues use the separate cold renderer, without an original executable or BIOS:
+
+```sh
+bin/harness audio render --mode xa --engine psx \
+  --track /path/to/data.bin --toc /path/to/disc-toc.json \
+  --driver out/audio/driver --cue 0x2000 --history cold \
+  --output out/xa-render --json
+```
+
+Supply the whole first DATA track as raw 2352-byte sectors and explicit
+`bof3.disc-toc/v1` JSON. The disc directory must contain the three supported XA
+source paths. The selected complete STR extent must match its original US hash.
+These checks identify that extent, not the whole DATA track. Output is stereo
+at 44,100 Hz; incoming and repeated histories remain unsupported.
+
+The TOC gives sector LBAs and exclusive ends. For the original supported US disc:
+
+```json
+{
+  "schema": "bof3.disc-toc/v1",
+  "tracks": [
+    {"kind": "data", "pregap_lba": 0, "start_lba": 0, "end_lba": 188324},
+    {"kind": "audio", "pregap_lba": 188324, "start_lba": 188474, "end_lba": 204224}
+  ],
+  "lead_out_lba": 204224
+}
+```
+
+The DATA track must start at zero and end at the supplied file's sector count.
+Subsequent AUDIO tracks supply position metadata; their audio is not attached.
+
+Cue IDs accept decimal or `0x` hexadecimal. `--duration SECONDS` selects a
+positive fixed body and pulses the guest cancellation input at its boundary.
+Without it, the body ends at guest idle after Pause. `--tail` defaults to two
+seconds; `--timeout` defaults to, and cannot exceed, 600 seconds. Publication
+waits for idle, retains exactly body plus tail frames and fails on timeout.
+The fixed tail may cut queued audio. The `bof3.xa-render/v1` report records
+source and TOC identity, cue, commands, cancellation, idle, queue and clock state.
+The 60 Hz functional tick cadence and guest idle do not establish native timing,
+the original audible endpoint or independent PCM agreement.
 
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--executable` and `--allow-approximations`, without BIOS or layout. It shares
@@ -287,7 +328,7 @@ regenerated. No compatibility export or packing implementation is retained.
 
 The migration is incomplete. Supported preservation, extraction, edited packing
 and bounded rendering paths are available. Independent PSX fidelity,
-repeated SFX histories, vocal/XA runtime rendering, MP3 delivery and full verification evidence remain
+repeated SFX and incoming XA histories, XA timing/PCM acceptance, MP3 delivery and full verification evidence remain
 open. Unsupported operations fail explicitly. C source retirement is separately gated; this
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.

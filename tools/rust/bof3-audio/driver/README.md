@@ -50,14 +50,16 @@ running guest callback registration, Nop, Init, Demute, IRQ draining and SPU CD 
 It returns `CdStarted` with the service startup and CD initialization call records.
 An active drive, failed guest call or unsuccessful initializer returns an error.
 The supplied drive declares an authenticated, closed, spinning disc context;
-startup does not establish authentication. XA decoder history and cue tables
-require separate explicit bindings. PCM output is not enabled during
+startup does not establish authentication. XA decoder history and media LBAs
+require separate explicit bindings. The image supplies the US selector tables
+and their pointers. PCM output is not enabled during
 startup, and these functional calls do not establish native timing.
 
 The `audio_xa_select_cue` leaf takes a packed cue ID in A0. The signed upper
-value `A0 >> 12` must be 0, 1 or 2; the low 12 bits select the cue. Before
-calling, bind the three live `audio_xa_table_pointers` to readable guest
-halfword tables and populate `audio_xa_file_lbas` at each selected file slot.
+value `A0 >> 12` must be 0, 1 or 2; the low 12 bits select the cue. The three live
+`audio_xa_table_pointers` start bound to complete US halfword tables supplied by
+`audio/tables.s`. Before calling, populate `audio_xa_file_lbas` at each selected
+file slot. A low-level caller that replaces a table pointer owns its full walk.
 The adjacent `audio_xa_file_slots` words default to 681, 434 and 682. Slots
 may change within the allocated 0..682 index range when their LBA is supplied.
 Every halfword reached by the original high-bit table walk, including the
@@ -148,10 +150,15 @@ uses 64-bit absolute CPU cycles. This profile uses the default disabled
 Owned execution counts instruction fetch, data access and multiply/divide costs
 with the same interpreter model. Host kernel services retain two functional
 ticks per dispatch; their latency is unverified. Owned timers and PCM output
-keep their separate device clocks. Output phase starts after initialization,
-and instruction costs alone do not establish native timing or PCM equivalence.
+keep their separate device clocks. Production output starts before game sound
+initialization, and capture retains its phase. CD service startup remains
+unclocked. Instruction costs alone do not establish native timing or PCM equivalence.
 
-The production PSX music renderer uses this driver. Other production operations,
-full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
+Production PSX music, cold-bank SFX and cold XA cue renderers use this driver.
+The XA host parks at `audio_xa_foreground` between its 60 Hz functional tick calls,
+returning through interrupt continuations before the next call. Duration stopping
+pulses the caller-owned state byte at +0x20 for one tick; the guest owns recovery,
+gain ramp, Pause and callback teardown. Broader playback histories, other
+production operations, native timing and independent PCM acceptance remain open.
 The authored sources use the project [MIT license](../LICENSE); dependency
 notices remain in [`THIRD_PARTY_LICENSES.txt`](../THIRD_PARTY_LICENSES.txt).

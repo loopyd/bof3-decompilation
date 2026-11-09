@@ -476,7 +476,7 @@ pub struct Delivery {
     pub peak: f32,
 }
 
-fn deliver_pcm16(samples: Vec<f32>) -> (Vec<i16>, Delivery) {
+pub(crate) fn deliver_pcm16(samples: Vec<f32>) -> (Vec<i16>, Delivery) {
     let mut clipped_samples = 0;
     let mut peak = 0.0f32;
     let mut pcm = Vec::with_capacity(samples.len());

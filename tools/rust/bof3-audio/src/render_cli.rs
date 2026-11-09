@@ -8,6 +8,7 @@ use crate::{
     pc_render::{self, Options},
     psx_render,
     publication::{self, Publication},
+    render::xa,
     Result,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -29,6 +30,9 @@ render --mode music --engine pc --archive EMI --executable PSX_EXE
     --voice V --program P --tone T --key K --fine F --left L --right R
     --output NEW_DIR [--layout 0|1|2] [--tail SECONDS] [--timeout SECONDS] [--json]
   For a local game cue, replace the seven note options with --auxiliary-entry INDEX --cue-row ROW.
+  render --mode xa --engine psx --track RAW_DATA --toc TOC_JSON --driver DIRECTORY
+    --cue PACKED_ID --history cold --output NEW_DIR [--duration SECONDS]
+    [--tail SECONDS] [--timeout SECONDS] [--json]
   [--format wav|ogg] [--quality 0.7]
   Writes render.wav and render.json after validation, plus render.ogg for --format ogg.
 Output must not exist. Vorbis quality is fixed at the independently measured 0.7.
@@ -41,7 +45,9 @@ PSX uses the verified US profile and explicit reference clocks at 44100 Hz.
   PSX defaults to two infinite-loop traversals or the first end marker, with encoded finite loops retained.
 --duration sets a fixed body length instead of --loops. Independent PCM fidelity remains open.
   SFX requires a cold bank and one explicit note or local cue; repeated histories and cross-bank cues are unsupported.
-  MP3 delivery and vocal/XA rendering remain unsupported.
+  XA requires a complete recognized US source in a raw 2352-byte DATA track and an explicit bof3.disc-toc/v1 JSON.
+  XA cue IDs accept decimal or 0x hexadecimal. Without --duration, the body ends at guest idle after Pause.
+  MP3 delivery remains unsupported.
 ";
 
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
@@ -57,6 +63,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut voice, mut program, mut tone, mut key, mut fine, mut left, mut right) =
         (None, None, None, None, None, None, None);
     let mut history = None;
+    let (mut track, mut toc, mut xa_cue) = (None, None, None);
     let mut json = false;
     let mut allow_approximations = false;
     while let Some(arg) = args.next() {
@@ -74,6 +81,15 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                 executable = Some(PathBuf::from(value(&mut args, flag)?))
             }
             "--driver" if driver.is_none() => driver = Some(PathBuf::from(value(&mut args, flag)?)),
+            "--track" if track.is_none() => track = Some(PathBuf::from(value(&mut args, flag)?)),
+            "--toc" if toc.is_none() => toc = Some(PathBuf::from(value(&mut args, flag)?)),
+            "--cue" if xa_cue.is_none() => {
+                let text = string(&mut args, flag)?;
+                xa_cue = Some(match text.strip_prefix("0x") {
+                    Some(hex) => u16::from_str_radix(hex, 16)?,
+                    None => text.parse()?,
+                });
+            }
             "--sequence" if sequence.is_none() => {
                 sequence = Some(string(&mut args, flag)?.parse()?)
             }
@@ -112,11 +128,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         }
     }
     let sfx = mode.as_deref() == Some("sfx");
+    let xa_mode = mode.as_deref() == Some("xa");
     if !matches!(
         (mode.as_deref(), engine.as_deref()),
-        (Some("music"), Some("pc" | "psx")) | (Some("sfx"), Some("psx"))
+        (Some("music"), Some("pc" | "psx")) | (Some("sfx" | "xa"), Some("psx"))
     ) {
-        return Err("render requires --mode music --engine pc|psx, or --mode sfx --engine psx; other combinations are not implemented".into());
+        return Err("render requires --mode music --engine pc|psx, --mode sfx --engine psx, or --mode xa --engine psx; other combinations are not implemented".into());
     }
     let note_options = [voice, program, tone, key, fine, left, right];
     if !sfx
@@ -124,10 +141,15 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             || body_entry.is_some()
             || auxiliary_entry.is_some()
             || cue_row.is_some()
-            || history.is_some()
             || note_options.iter().any(Option::is_some))
     {
         return Err("render: bank entry, note, cue and history options require --mode sfx".into());
+    }
+    if history.is_some() && !sfx && !xa_mode {
+        return Err("render: --history requires --mode sfx or xa".into());
+    }
+    if !xa_mode && (track.is_some() || toc.is_some() || xa_cue.is_some()) {
+        return Err("render: --track, --toc and --cue require --mode xa".into());
     }
     let output = output.ok_or("render requires --output NEW_DIR")?;
     publication::require_absent(&output)?;
@@ -154,7 +176,48 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let release_frames = frames(tail.as_deref().unwrap_or("2"), rate)?;
     let safety_frames = frames(timeout.as_deref().unwrap_or("600"), rate)?;
     let duration_frames = duration.as_deref().map(|s| frames(s, rate)).transpose()?;
-    let (wave, mut report) = if sfx {
+    let (wave, mut report) = if xa_mode {
+        if midi.is_some()
+            || font.is_some()
+            || archive.is_some()
+            || executable.is_some()
+            || sequence.is_some()
+            || layout.is_some()
+            || loops.is_some()
+            || repeats.is_some()
+            || allow_approximations
+        {
+            return Err("XA render accepts raw DATA, TOC and cue inputs; music, bank, sequence, layout, loop and approximation options are invalid".into());
+        }
+        if rate != psx_render::SAMPLE_RATE {
+            return Err("XA render requires 44100 Hz output".into());
+        }
+        if history.as_deref() != Some("cold") {
+            return Err(
+                "XA render requires --history cold; incoming or repeated histories are unsupported"
+                    .into(),
+            );
+        }
+        let options = xa::Options {
+            cue: xa_cue.ok_or("XA render requires --cue PACKED_ID")?,
+            history: xa::History::Cold,
+            duration_frames,
+            release_frames,
+            safety_frames,
+        };
+        options.validate()?;
+        let image = Image::read(&driver.ok_or("XA render requires --driver DIRECTORY")?)?;
+        let toc: xa::DiscToc = serde_json::from_slice(&std::fs::read(
+            toc.ok_or("XA render requires --toc TOC_JSON")?,
+        )?)?;
+        let rendered = xa::render(
+            &image,
+            &track.ok_or("XA render requires --track RAW_DATA")?,
+            &toc,
+            &options,
+        )?;
+        (rendered.wave, serde_json::to_value(rendered.report)?)
+    } else if sfx {
         if midi.is_some()
             || font.is_some()
             || executable.is_some()

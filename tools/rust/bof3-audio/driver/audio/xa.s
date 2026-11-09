@@ -7,9 +7,16 @@
 
 .section .text
 .balign 4
+# Host foreground parking entry. Interrupt continuations return to this loop
+# before the host starts another bounded XA call; no original caller is implied.
+.globl audio_xa_foreground
+audio_xa_foreground:
+    b audio_xa_foreground
+    nop
+
 # exe/slus_004_22@0x80163744..0x80163858.
 # A0 >> 12 selects one of three streams. The low 12 bits select a cue.
-# The caller must bind the complete table walk and indexed LBA before entry.
+# The image supplies complete tables; the caller must bind indexed media LBAs.
 .globl audio_xa_select_cue
 .ent audio_xa_select_cue
 audio_xa_select_cue:
@@ -884,7 +891,7 @@ audio_xa_file_slots:
     .word 681, 434, 682
 .globl audio_xa_table_pointers
 audio_xa_table_pointers:
-    .word 0, 0, 0
+    .word audio_xa_scene_table, audio_xa_magic_table, audio_xa_voice_table
 
 # Original nine-entry table at 0x80183274..0x80183298.
 .globl audio_xa_handlers

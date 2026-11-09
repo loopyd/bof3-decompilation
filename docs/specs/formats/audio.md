@@ -4879,8 +4879,66 @@ The `bof3.psx-effects-render/v4` report records the bank and artifact identities
 selection, cold history, initialization, play, poll and release calls, voice
 snapshots, cutoff frames and output clock. WAV and report publication use the
 existing verified transaction. Optional Ogg delivery uses the accepted quality
-0.7 policy. Repeated-event histories, multi-bank playback and vocal/XA streaming
-remain unsupported. Native timing and independent PCM agreement remain open.
+0.7 policy. Repeated-event histories and multi-bank playback remain unsupported
+in SFX mode. Native timing and independent PCM agreement remain open.
+
+### Owned cold XA rendering
+
+`render --mode xa --engine psx` executes an original packed US cue ID through the
+owned driver, without an original executable or BIOS. It requires `--driver`,
+`--track`, `--toc`, `--cue`, `--history cold` and a new `--output` directory.
+Cue IDs accept decimal or `0x` hexadecimal. Output is stereo at 44,100 Hz.
+Cold playback starts with zero XA predictor history; incoming and repeated
+playback histories remain unsupported.
+
+`--track` supplies the whole first DATA track as raw 2352-byte sectors. `--toc`
+supplies strict `bof3.disc-toc/v1` JSON. For the original supported US disc:
+
+```json
+{
+  "schema": "bof3.disc-toc/v1",
+  "tracks": [
+    {"kind": "data", "pregap_lba": 0, "start_lba": 0, "end_lba": 188324},
+    {"kind": "audio", "pregap_lba": 188324, "start_lba": 188474, "end_lba": 204224}
+  ],
+  "lead_out_lba": 204224
+}
+```
+
+Positions are sector LBAs and ends are exclusive. The first track must be DATA,
+with pregap and start zero, and its end must equal the supplied file's sector
+count. Subsequent tracks must be AUDIO. Track ordering, pregaps and ends are
+validated against lead-out. Only DATA backing is attached; AUDIO entries supply
+track and position metadata.
+
+The disc directory must contain `BIN/SCE_XA/S_XA00.STR`,
+`BIN/BMAG_XA/MAGIC00.STR` and `BIN/SCE_XA/VOICE.STR`. The selected complete STR
+extent must match its recognized original US hash. Every selected sector must
+retain the required file, channel, coding and realtime audio flags. The complete
+owned selector tables are separately checked by size, pointer, file slot and
+hash. These checks identify the selected source, not the whole DATA track.
+Edited or unrecognized sources require further runtime acceptance.
+
+`--duration SECONDS` selects a positive fixed body. At its boundary, the host
+pulses the caller-owned cancellation input for one tick. The guest owns recovery,
+gain ramp, Pause and callback teardown. Without `--duration`, the body ends when
+guest idle is first observed. `--tail` defaults to two seconds. `--timeout`
+defaults to, and cannot exceed, 600 seconds; body and tail must fit. Publication
+waits for guest idle and retains exactly body plus tail frames. An insufficient
+safety limit publishes no render, including when cancellation outlasts the tail.
+
+The `bof3.xa-render/v1` report records source and TOC identity, cue selection,
+cold history, owned startup and guest calls, tick-return states, cancellation
+and idle observations, commands, queue statistics, clock coordinates and PCM16
+delivery. `capture_start_frame` is the absolute origin. Body, cancellation,
+idle and executed-frame counts are relative to it. WAV, JSON and optional Ogg
+use the existing verified publication transaction and fixed quality 0.7 policy.
+
+The 60 Hz functional tick cadence, service latency and CPU/sample alignment
+remain unaccepted native timing. Guest idle and the encoded sector extent do
+not establish the original audible endpoint; the fixed tail may cut queued
+audio. Disc authentication, CDDA playback, independent runtime PCM agreement
+and hardware fidelity remain outside this path.
 
 ### Rust BIOS event state
 

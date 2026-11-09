@@ -39,21 +39,90 @@ fn scheduler(executable: &Executable) -> Result<SchedulerEvidence> {
 pub fn read_cues(executable: &Executable) -> Result<Vec<XaCue>> {
     Profile::identify(executable)?;
     let mut ram = Ram::from_executable(executable);
-    let mut cues = Vec::new();
-    for (stream, table, words, expected_count, path, file_slot) in [
-        (0u8, 0x8018_39c4, 15, 11, "BIN/SCE_XA/S_XA00.STR", 681u16),
-        (1, 0x8018_32c4, 896, 880, "BIN/BMAG_XA/MAGIC00.STR", 434),
-        (2, 0x8018_3298, 10, 5, "BIN/SCE_XA/VOICE.STR", 682),
-    ] {
+    let mut bases = [0; 3];
+    for (stream, table, _, _, _, file_slot) in streams() {
         if ram.read(TABLE_POINTERS + u32::from(stream) * 4, Width::Word)? != table
             || ram.read(FILE_SLOTS + u32::from(stream) * 4, Width::Word)? != u32::from(file_slot)
         {
             return Err("US XA stream tables disagree with supported profile".into());
         }
-        let base = ram.read(
+        bases[usize::from(stream)] = ram.read(
             crate::catalog::music::FILE_TABLE + u32::from(file_slot) * 4,
             Width::Word,
         )?;
+    }
+    read_tables(&mut ram, [0x8018_39c4, 0x8018_32c4, 0x8018_3298], bases)
+}
+
+/// Read complete reviewed selector data from the built owned image. Media LBAs
+/// come from the supplied disc directory, independently of original EXE data.
+pub fn read_owned_cues(
+    image: &crate::machine::driver::Image,
+    bases: [u32; 3],
+) -> Result<Vec<XaCue>> {
+    let mut ram = image.ram()?;
+    let mut tables = [0; 3];
+    for (index, (name, words, hash)) in [
+        (
+            "scene",
+            15,
+            "c3c98939bc16564f49a85f703b236ed9fca15804b657d6c265addde7f9fe573a",
+        ),
+        (
+            "magic",
+            896,
+            "aa8abf2058a0e1f741ce583ba2045a57300ba469c9a6dbfc1a4e18bbda6a9f9f",
+        ),
+        (
+            "voice",
+            10,
+            "ed182923777f469bb91bc7138c741aeff3aab09b3260bbc3369c23a759a52f93",
+        ),
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let start = image.symbol(&format!("audio_xa_{name}_table"))?;
+        let end = image.symbol(&format!("audio_xa_{name}_table_end"))?;
+        if end.checked_sub(start) != Some(words * 2)
+            || ram.read(
+                image.symbol("audio_xa_table_pointers")? + index as u32 * 4,
+                Width::Word,
+            )? != start
+            || ram.read(
+                image.symbol("audio_xa_file_slots")? + index as u32 * 4,
+                Width::Word,
+            )? != u32::from(streams()[index].5)
+        {
+            return Err("owned XA: selector metadata differs from the supported US profile".into());
+        }
+        let mut bytes = Vec::with_capacity(words as usize * 2);
+        for offset in 0..words {
+            bytes.extend_from_slice(
+                &(ram.read(start + offset * 2, Width::Half)? as u16).to_le_bytes(),
+            );
+        }
+        if crate::digest::sha256_hex(&bytes) != hash {
+            return Err("owned XA: selector halfwords differ from the supported US profile".into());
+        }
+        tables[index] = start;
+    }
+    read_tables(&mut ram, tables, bases)
+}
+
+fn streams() -> [(u8, u32, u32, u16, &'static str, u16); 3] {
+    [
+        (0, 0x8018_39c4, 15, 11, "BIN/SCE_XA/S_XA00.STR", 681),
+        (1, 0x8018_32c4, 896, 880, "BIN/BMAG_XA/MAGIC00.STR", 434),
+        (2, 0x8018_3298, 10, 5, "BIN/SCE_XA/VOICE.STR", 682),
+    ]
+}
+
+fn read_tables(ram: &mut impl Bus, tables: [u32; 3], bases: [u32; 3]) -> Result<Vec<XaCue>> {
+    let mut cues = Vec::new();
+    for (stream, original_table, words, expected_count, path, file_slot) in streams() {
+        let table = tables[usize::from(stream)];
+        let base = bases[usize::from(stream)];
         let stride = if stream == 0 { 8 } else { 16 };
         let mut pos = 0;
         let mut channel = 0;
@@ -72,7 +141,7 @@ pub fn read_cues(executable: &Executable) -> Result<Vec<XaCue>> {
                 packed_id: u16::from(stream) * 0x1000 + cue_index,
                 stream,
                 cue_index,
-                table_address: address,
+                table_address: original_table + pos * 2,
                 disc_path: path,
                 disc_file_slot: file_slot,
                 filter_file: 1,
