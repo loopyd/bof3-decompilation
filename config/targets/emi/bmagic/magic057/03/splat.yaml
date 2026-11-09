@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC50
   - - 176
-    - asm
-    - func_801EECB0
+    - c
+    - copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0
+    - '@source: src/bof3/bmagic/copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0.c'
+    - '@behavior: First handler of the three-word handler table at 0x801EEC04, whose dispatcher func_801EEC50 indexes it with work byte 0x01. It reads the shared record pointer at 0x801EB4E0 and the scratchpad work object pointer cell at 0x1F800044 once each, copies the record words 0x34, 0x38 and 0x3C into the same three offsets of the work object as three bare load and store pairs, then requests engine action 0x1A through func_8014E3A0. After the call it re-reads the work object cell, increments the shared main-RAM byte at 0x80145988, and increments work byte 0x01, the index of the handler table above, so the next frame of the sequence runs the handler at 0x801EED2C. Takes no arguments and returns nothing through a jr $ra inside a 0x18-byte frame.'
   - - 300
     - asm
     - func_801EED2C

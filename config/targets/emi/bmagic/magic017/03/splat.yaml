@@ -71,8 +71,10 @@ segments:
     - '@source: src/bof3/bmagic/setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694.c'
     - '@behavior: Step handler of this overlay handler run: the word at 0x801EEC24 holds this function address, index 5 of the ten words the run dispatcher func_801EF058 copies from 0x801EEC10 into its frame and indexes with scratchpad work-object byte 2. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 8 into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing the run to index 6 at 0x801EF6EC. The 8 constant is materialized in the guard branch delay slot, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 2796
-    - asm
-    - func_801EF6EC
+    - c
+    - decrementWorkByte9ThenInvokeActingEnemyScriptSetFlag20Mode1SeedByte2BAndWorkColorTripletToC0SetWorkByte9To8AndAdvanceWorkByte2BmagicMagic01703_801EF6EC
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeActingEnemyScriptSetFlag20Mode1SeedByte2BAndWorkColorTripletToC0SetWorkByte9To8AndAdvanceWorkByte2BmagicMagic01703_801EF6EC.c'
+    - '@behavior: Work byte 2 state 6 of this overlay, entry 6 of the ten-word handler table at 0x801EEC10 (0x801EF11C, 0x801EF248, 0x801EF300, 0x801EF460, 0x801EF5FC, 0x801EF694, 0x801EF6EC, 0x801EF7E0, 0x801EF8B4, 0x801EF970) that func_801EF058 copies into its frame and indexes with scratchpad work-object byte 2. It decrements work byte 9 and, only when that countdown reaches zero, invokes the shared battle helper at 0x801E257C with the acting battler byte 0x80146374 and script selector 0 when that byte is 3 or more, raises bit 0x20 of work byte 0, sets mode byte 0x5C and work byte 0x2B to 1, sets the signed tint triplet at 0x5D, 0x5E and 0x5F to -0x40, re-seeds work byte 9 with 8 and increments work byte 2, selecting entry 7 at 0x801EF7E0. The 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 3040
     - c
     - subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0

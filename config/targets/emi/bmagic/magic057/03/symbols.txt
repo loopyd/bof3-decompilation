@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
 func_801EEC50 = 0x801EEC50;
-func_801EECB0 = 0x801EECB0;
+copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0 = 0x801EECB0;
 func_801EED2C = 0x801EED2C;
 func_801EED98 = 0x801EED98;
 func_801EEE50 = 0x801EEE50;

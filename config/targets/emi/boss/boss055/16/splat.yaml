@@ -33,8 +33,10 @@ segments:
     - asm
     - func_800C204C
   - - 2212
-    - asm
-    - func_800C20A4
+    - c
+    - dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4
+    - '@source: src/bof3/boss/dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4.c'
+    - '@behavior: Overlay entry dispatch on the state byte of the work record published at scratchpad pointer cell 0x1F800044 that calls the handler selected by the record''s unsigned byte +2 from this overlay''s handler run based at 0x800C35D8 and then, when the record''s byte +1 is 8 and byte +2 is below three, calls the phase-advance helper 0x800C227C.'
   - - 2336
     - asm
     - func_800C2120

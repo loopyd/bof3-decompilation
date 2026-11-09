@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4.c",
     "src/bof3/boss/dispatchStateByte2TableCopyBossBoss05516_800C2FFC.c",
     "src/bof3/boss/callEnemyReadyUnlessKindFlagBossBoss05516_800C21E4.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss05516_800C22F0.c",

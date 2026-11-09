@@ -13,10 +13,11 @@ extern u8 D_80143BB0; /* @source 0x80143BB0 @kind unknown */
 
 /* Record builders of this overlay: the routine at 0x801F4798 takes the record
  * addresses +0x34 and +0x18, the routine at 0x801F4614 runs the record table
- * update and 0x801F45C8 builds the step tables. All three still sat on asm
- * subsegments of this target except the update at 0x801F4614, which carries its
- * own target-map row. */
-void func_801F4798(s32 arg0, s32 arg1);
+ * update and 0x801F45C8 builds the step tables. The builder at 0x801F4798 and
+ * the update at 0x801F4614 carry their own target-map rows; 0x801F45C8 still
+ * sits on an asm subsegment. */
+void drawLineGouraudFanAndTwoGouraudQuadsBetweenRecordPoints34And18World03Area14813_801F4798(
+    s32 arg0, s32 arg1);
 void updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614(
     void);
 void func_801F45C8(void);
@@ -55,7 +56,8 @@ void advanceWorkPositionThenRestartCountdownWithRandomPacingAndSetState2WhenPaci
   u8* rec;
 
   if (D_80143BB0 != 0) {
-    func_801F4798((s32)(D_1F800044 + 0x34), (s32)(D_1F800044 + 0x18));
+    drawLineGouraudFanAndTwoGouraudQuadsBetweenRecordPoints34And18World03Area14813_801F4798(
+        (s32)(D_1F800044 + 0x34), (s32)(D_1F800044 + 0x18));
     return;
   }
   work = D_1F800044;
@@ -63,7 +65,8 @@ void advanceWorkPositionThenRestartCountdownWithRandomPacingAndSetState2WhenPaci
   work[9]--;
   next = D_1F800044;
   FIELD_REF(s32, work, 0x1C) += FIELD_REF(s32, work, 0x10);
-  func_801F4798((s32)(next + 0x34), (s32)(next + 0x18));
+  drawLineGouraudFanAndTwoGouraudQuadsBetweenRecordPoints34And18World03Area14813_801F4798(
+      (s32)(next + 0x34), (s32)(next + 0x18));
   updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614();
   rec = D_1F800044;
   if (rec[9] != 0) {

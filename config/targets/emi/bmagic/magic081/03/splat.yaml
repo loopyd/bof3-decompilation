@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED44
   - - 628
-    - asm
-    - func_801EEE74
+    - c
+    - publishSavedWorkPointerAdvancePreviousHandlerIndexWhenHelperReadyBmagicMagic08103_801EEE74
+    - '@source: src/bof3/bmagic/publishSavedWorkPointerAdvancePreviousHandlerIndexWhenHelperReadyBmagicMagic08103_801EEE74.c'
+    - '@behavior: Republishes the shared battle record word 0x74, its saved work-object pointer, through the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper at 0x8014DAEC, and when that helper returns a non-zero byte increments byte 0x1 of the previously published work object, the handler index this overlay dispatches on, before restoring the cell.'
   - - 732
     - asm
     - func_801EEEDC

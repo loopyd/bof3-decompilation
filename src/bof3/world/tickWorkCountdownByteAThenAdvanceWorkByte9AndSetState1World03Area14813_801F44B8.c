@@ -5,9 +5,11 @@
 extern u8* D_1F800044; /* @source 0x1F800044 @kind bss */
 
 /* Record builder of this overlay: the routine at 0x801F4798 takes the record
- * addresses +0x34 and +0x18. It is still an asm subsegment of this target, so
- * only a prototype is needed here. */
-void func_801F4798(s32 arg0, s32 arg1);
+ * addresses +0x34 and +0x18 and draws the beam between the two projected
+ * points. It is lifted beside this source, so only a prototype is needed
+ * here. */
+void drawLineGouraudFanAndTwoGouraudQuadsBetweenRecordPoints34And18World03Area14813_801F4798(
+    s32 arg0, s32 arg1);
 
 /* Record step of this overlay: the routine at 0x801F4614 runs the record
  * table update. It is a later code span of the same overlay and carries its
@@ -33,7 +35,8 @@ void updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_8
  */
 void tickWorkCountdownByteAThenAdvanceWorkByte9AndSetState1World03Area14813_801F44B8(
     void) {
-  func_801F4798((s32)(D_1F800044 + 0x34), (s32)(D_1F800044 + 0x18));
+  drawLineGouraudFanAndTwoGouraudQuadsBetweenRecordPoints34And18World03Area14813_801F4798(
+      (s32)(D_1F800044 + 0x34), (s32)(D_1F800044 + 0x18));
   updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614();
   D_1F800044[0xA]--;
   if (D_1F800044[0xA] == 0) {
