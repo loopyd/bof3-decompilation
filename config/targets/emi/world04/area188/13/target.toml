@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/invokeHelperWorld04Area18813_801F38C0.c",
     "src/bof3/world/advanceCounter2By2World04Area18813_801F48E0.c",
     "src/bof3/world/retreatCounter2By2World04Area18813_801F4908.c",
+    "src/bof3/world/growWorkExtentAndDrawShapeThenOnCountdownExpiryArm80QueueCue214AndAdvanceWorkByte1World04Area18813_801F3368.c",
     "src/bof3/world/clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30.c",
     "src/bof3/world/clearWorkTableByte0At800E4800World04Area18813_801F3DB4.c",
     "src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0.c",

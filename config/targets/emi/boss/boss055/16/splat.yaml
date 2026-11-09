@@ -159,8 +159,10 @@ segments:
     - asm
     - func_800C2D2C
   - - 5636
-    - asm
-    - func_800C2E04
+    - c
+    - advanceGlobalWorkByte1ClearWorkByte2AndCallHelperWhenEnemyReadyElseBattleUpdateAndRefreshWorkBossBoss05516_800C2E04
+    - '@source: src/bof3/boss/advanceGlobalWorkByte1ClearWorkByte2AndCallHelperWhenEnemyReadyElseBattleUpdateAndRefreshWorkBossBoss05516_800C2E04.c'
+    - '@behavior: Overlay step body, entry 1 of the two-entry handler pair that dispatchStateByte2LocalPairBossBoss05516_800C2CD4 seeds with 0x800C2D2C then this function: calls the EXE-side readiness helper 0x801E3160 and, when that helper unsigned byte result is nonzero, advances byte +1 of the shared battle work record at 0x801EB4E0, clears that record byte +2 and calls the shared helper 0x801E5988 alone; otherwise it calls the shared battle update 0x8014D4E0 and this overlay own work refresh 0x800C3284, in that order, discarding each result across the 0x18-byte frame that keeps only $ra.'
   - - 5748
     - c
     - dispatchStateByte2LocalPairBossBoss05516_800C2E74

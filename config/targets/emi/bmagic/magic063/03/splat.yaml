@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801F0220
   - - 5972
-    - asm
-    - func_801F0354
+    - c
+    - reserveFirstFreeRecordBmagicMagic06303_801F0354
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic06303_801F0354.c'
+    - '@behavior: Scans the 0x60 records of the pool at 0x801F0454, whose stride is 0x20, sets bit 0 of the first record whose flags byte has that bit clear and returns its index, or returns 0xFF once every record is occupied; the original keeps the mask-free counter and its byte-masked copy in separate registers, scales the masked copy once per iteration and reuses it for the load and the store, re-materializes the pool address for each access, and runs in no stack frame.'
   - - 6064
     - c
     - clearRecordBytes0Through4BmagicMagic06303_801F03B0

@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/bmagic/queueSlotSetByte1To2PublishWorkPointerThenSetWorkByte9To10AndAdvanceWorkByte1WhenWorkByteBIs2BmagicMagic06000_801EED68.c",
     "src/bof3/bmagic/raiseBattleTargetKindFlagFromRecordDeltaRollThenStoreWorkByte4BmagicMagic06000_801EEF50.c",
     "src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F082C.c",
+    "src/bof3/bmagic/drawKindSelectedValueTextOrRulePlaceholderBmagicMagic06000_801EF470.c",
 ]
 psyq_source = "src/bof3/support/magic060_00_psyq.c"

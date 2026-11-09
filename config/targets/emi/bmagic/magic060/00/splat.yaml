@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801EF2DC
   - - 2160
-    - asm
-    - func_801EF470
+    - c
+    - drawKindSelectedValueTextOrRulePlaceholderBmagicMagic06000_801EF470
+    - '@source: src/bof3/bmagic/drawKindSelectedValueTextOrRulePlaceholderBmagicMagic06000_801EF470.c'
+    - '@behavior: Value row of the battle result panel, drawn at pen column 0x70 and the caller-supplied y. It reads the scratchpad work-object pointer cell 0x1F800044 once before its 0x28-byte frame exists and gates the whole body on that object byte at offset 0x4. With the byte nonzero it selects one of four runtime-filled main-executable value-string tables by the kind byte: 1 takes the 24-byte rows of D_801C90DC, 2 the 22-byte rows of D_801C98A4 and 3 the 20-byte rows of D_801C9E7C, while 0 and every larger kind take the 18-byte rows of D_801C8964, each scaled by the low byte of the first argument. It queries the selected row through func_801AF20C and submits it through the shared text submitter func_8014F800 as (0x70, y, 0, count and 0xFF, row), so the queried low byte is the submitted cell count and the row address is the submitted fourth word. With the gate byte clear it submits the twelve-glyph 0x5C rule D_801F0B8C at the same pen position through the local text helper func_801EF590, which is the panel value slot before a value exists. The caller func_801EF2DC passes the two bytes of one panel-record halfword as low byte then high byte with the value rows 0x98 and 0xAC. Frame 0x28 holding ra at 0x20, s1 at 0x1C and s0 at 0x18, with the fifth call argument at 0x10; nothing is returned and no state is written.'
   - - 2448
     - asm
     - func_801EF590

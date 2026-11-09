@@ -301,8 +301,10 @@ segments:
     - c
     - invokeThreeHelpersScenarioScena0900_801FDE50
   - - 29312
-    - asm
-    - func_801FDE80
+    - c
+    - armEffectGroupThenInvokeFourHelpersScenarioScena0900_801FDE80
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0900_801FDE80.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 20 (the word stored at 0x801FE50C) of the 38-entry in-image code-pointer run at 0x801FE4BC that func_801FD280 indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr. It re-arms the overlay effect group for the ids 7, 6 and 5 through func_80166E88(7, 6, 5, 0), calls func_801C1400 with the constant argument 0, the per-id helper func_801C187C with the constant argument 5 and then with 6, and finally func_801C1630 with no arguments. It takes no arguments, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the five calls. Its 76 bytes are the same arm-and-four-helpers shape as the gate-exact sibling armEffectGroupThenInvokeFourHelpersScenarioScena0900_801FDD7C (word 16 of the same table), differing only in the func_80166E88 second argument and the two func_801C187C immediates.'
   - - 29388
     - c
     - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC

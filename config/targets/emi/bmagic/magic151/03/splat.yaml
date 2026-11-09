@@ -160,8 +160,10 @@ segments:
     - asm
     - func_801F0648
   - - 7880
-    - asm
-    - func_801F0AC8
+    - c
+    - dispatchWorkByte2HandlerThenAdvanceWorkByte9AndWordCThenDrawShadePairAndPopWhenWorkBytes0And2SetBmagicMagic15103_801F0AC8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenAdvanceWorkByte9AndWordCThenDrawShadePairAndPopWhenWorkBytes0And2SetBmagicMagic15103_801F0AC8.c'
+    - '@behavior: Dispatches one frame of the overlay work handler of the scratchpad work object published at the pointer cell 0x1F800044: the object byte at offset 0x2, scaled by four, selects one of the ten work step handlers at 0x801F24F0 (0x801F0BA8, 0x801F0C50, 0x801F0CB0, 0x801F11E0, 0x801F129C, 0x801F1318, 0x801F1380, 0x801F1CCC, 0x801F1D28, 0x801F1D60) and that handler is invoked with no arguments. After it returns the cell is read a second time and only when the object bytes at offset 0x0 and offset 0x2 are both non-zero does the body run: func_801F01BC is called, which pushes the GTE matrix stack and installs the object transform, then a third cell read adds two to work byte 0x9 and one to work word 0xC, and a fourth cell read supplies the shade pair 0x801F24D0 indexed by twice work byte 0x4 whose low byte added to work byte 0x9 is passed clamped to eight bits to func_801F0D0C with that pair high byte as the second argument. PopMatrix restores the matrix that func_801F01BC pushed. Frame 0x18 with $ra only, because of the calls; the first cell load precedes frame creation. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 8104
     - c
     - seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8

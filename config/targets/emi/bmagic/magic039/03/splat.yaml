@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801EFAA4
   - - 5204
-    - asm
-    - func_801F0054
+    - c
+    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054.c'
+    - '@behavior: Third draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF050 in dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8 between func_801EFAA4 and PopMatrix while work byte 0 has bit 0 set and byte 2 is non-zero. It picks the draw-mode texture page from GetGraphType (0xA5 for types 1 and 2, 0x35 otherwise), arms SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, links a 0xC-byte packet under slot 5, publishes 0x88 into the scratchpad radius halfword 0x1F800006, and fills the three colour halfwords 0x1F800000, 0x1F800002 and 0x1F800004 from the 3-byte-stride palette row at 0x801F0404 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up. It seeds the fan sample at phase zero through func_801782FC and func_801783C8 scaled by the signed radius and shifted right twelve, clears the three z halfwords, and runs sixteen passes at phase i << 8, each projecting the origin vertex, the previous sample and the current sample through RotTransPers3 and linking a 0x1C-byte POLY_G3 whose origin vertex is graded 1/1/1 and whose two rim vertices take the published palette triple; it closes by re-selecting the draw mode page (0x25 for types 1 and 2, 0x15 otherwise) and linking a second 0xC-byte packet.'
   - - 6148
     - rodata
     - T_801F0404

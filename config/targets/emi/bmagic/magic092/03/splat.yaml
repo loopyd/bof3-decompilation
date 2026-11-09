@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F04BC
   - - 7000
-    - asm
-    - func_801F0758
+    - c
+    - reserveFirstFreeRecordBmagicMagic09203_801F0758
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic09203_801F0758.c'
+    - '@behavior: Leaf at 0x801F0758 that reserves the first of the 48 records in the pool at 0x801F07F8 whose flags byte has bit 0 clear, sets that bit and returns the index, or returns 0xFF once every record is occupied. It computes the record offset as the index times 0x78 (sll 4, subu, sll 3), re-materializes the pool address for the flags load and again for the store, tests the loaded byte with andi 0x1, and bounds the scan with sltiu 0x30 on the index masked to a byte. Its only in-image caller at 0x801EF0CC calls it three times, masks the result to a byte, compares that against 0xFF and indexes the same pool with the same 0x78 stride to fill record bytes 1 through 3 and word 0x74, so a zero-extended byte result is what the caller consumes. Leaf with no frame and no arguments; the pool cell at 0x801F07F8 stays address-anchored.'
   - - 7100
     - textbin
     - T_801F07BC

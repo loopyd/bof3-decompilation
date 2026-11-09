@@ -67,8 +67,9 @@ segments:
     - asm
     - func_801F3304
   - - 1896
-    - asm
-    - func_801F3368
+    - c
+    - growWorkExtentAndDrawShapeThenOnCountdownExpiryArm80QueueCue214AndAdvanceWorkByte1World04Area18813_801F3368
+    - '@source: src/bof3/world/growWorkExtentAndDrawShapeThenOnCountdownExpiryArm80QueueCue214AndAdvanceWorkByte1World04Area18813_801F3368.c'
   - - 2048
     - asm
     - func_801F3400
