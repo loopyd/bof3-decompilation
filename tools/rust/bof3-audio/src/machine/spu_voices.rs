@@ -1,7 +1,7 @@
 //! Scheduled voice register operations and 24 per-frame outputs, before final mix.
 //! This component does not schedule MMIO, keys, capture, IRQs or reverb.
 use super::{
-    adsr::{Adsr, Model as EnvelopeModel, Registers},
+    adsr::{Adsr, Model as EnvelopeModel},
     spu_sample::{Model as SampleModel, Player, Signal},
     spu_transfer::RAM_BYTES,
     spu_volume::VoiceVolume,
@@ -58,7 +58,7 @@ impl Voices {
                 volumes: [VoiceVolume::new(sample_model, envelope_model); 2],
                 pitch: 0,
                 start: 0,
-                envelope: Adsr::new(Registers { adsr1: 0, adsr2: 0 }, envelope_model),
+                envelope: Adsr::fresh(envelope_model),
                 player: Player::new(sample_model),
                 started: false,
                 startup_remaining: 0,
@@ -203,15 +203,8 @@ impl Voices {
                 voice.player.write_pitch(value);
             }
             6 => voice.start = value,
-            8 | 10 => {
-                let mut registers = voice.envelope.registers();
-                if offset == 8 {
-                    registers.adsr1 = value;
-                } else {
-                    registers.adsr2 = value;
-                }
-                voice.envelope.write_registers(registers);
-            }
+            8 => voice.envelope.write_adsr1(value),
+            10 => voice.envelope.write_adsr2(value),
             12 => voice.envelope.write_level(value),
             14 => voice.player.write_repeat_address(value),
             _ => return Err(format!("SPU voice register offset {offset:#x} is invalid").into()),

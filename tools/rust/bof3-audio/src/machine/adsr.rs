@@ -123,6 +123,9 @@ impl Rate {
 #[derive(Clone, Debug, Serialize)]
 pub struct Adsr {
     registers: Registers,
+    // Effective parameters use register bit encoding. Native opening initializes
+    // these independently of the zeroed MMIO mirrors.
+    parameters: Registers,
     model: Model,
     phase: Phase,
     level: i16,
@@ -133,11 +136,26 @@ impl Adsr {
     pub fn new(registers: Registers, model: Model) -> Self {
         Self {
             registers,
+            parameters: registers,
             model,
             phase: Phase::Off,
             level: 0,
             counter: 0,
         }
+    }
+
+    /// Fresh voice configuration, before either ADSR halfword has been written.
+    pub(crate) fn fresh(model: Model) -> Self {
+        let mut envelope = Self::new(Registers { adsr1: 0, adsr2: 0 }, model);
+        if model == Model::EmulatorReference {
+            // SetupStreams supplies sustain level 15; wiped sustain increase is
+            // false. The raw register mirrors remain zero until guest writes.
+            envelope.parameters = Registers {
+                adsr1: 15,
+                adsr2: 0x4000,
+            };
+        }
+        envelope
     }
 
     pub fn registers(&self) -> Registers {
@@ -161,6 +179,23 @@ impl Adsr {
     /// its elapsed-frame counter. Published arithmetic resets its accumulator.
     pub fn write_registers(&mut self, registers: Registers) {
         self.registers = registers;
+        self.parameters = registers;
+        self.reset_written_counter();
+    }
+
+    pub(crate) fn write_adsr1(&mut self, value: u16) {
+        self.registers.adsr1 = value;
+        self.parameters.adsr1 = value;
+        self.reset_written_counter();
+    }
+
+    pub(crate) fn write_adsr2(&mut self, value: u16) {
+        self.registers.adsr2 = value;
+        self.parameters.adsr2 = value;
+        self.reset_written_counter();
+    }
+
+    fn reset_written_counter(&mut self) {
         if self.model == Model::Published {
             self.counter = 0;
         }
@@ -216,7 +251,7 @@ impl Adsr {
         if self.phase == Phase::Off {
             return self.level;
         }
-        let rate = self.registers.rate(self.phase);
+        let rate = self.parameters.rate(self.phase);
         let (delta, increment) = rate.delta_and_increment(self.level, self.model);
         self.counter += increment;
         if self.counter & 0x8000 != 0 {
@@ -231,7 +266,7 @@ impl Adsr {
         // Target checks also apply on non-step frames (e.g. a manual ENVX write).
         let next = match self.phase {
             Phase::Attack if self.level == 32767 => Some(Phase::Decay),
-            Phase::Decay if self.level <= self.registers.sustain_level() => Some(Phase::Sustain),
+            Phase::Decay if self.level <= self.parameters.sustain_level() => Some(Phase::Sustain),
             Phase::Release if self.level <= 0 => Some(Phase::Off),
             _ => None,
         };
@@ -245,7 +280,7 @@ impl Adsr {
         if self.phase == Phase::Off {
             return 0;
         }
-        let rate = self.registers.rate(self.phase);
+        let rate = self.parameters.rate(self.phase);
         let mut bits = u32::from(rate.shift) * 4 + u32::from(rate.step);
         if rate.exponential && !rate.decreasing && self.level >= 0x6000 {
             bits = (bits + 8).min(127);
@@ -274,7 +309,7 @@ impl Adsr {
             }
             Phase::Decay => {
                 level = level.max(0);
-                if (level >> 11) & 15 <= i32::from(self.registers.adsr1 & 15) {
+                if (level >> 11) & 15 <= i32::from(self.parameters.adsr1 & 15) {
                     self.enter(Phase::Sustain);
                 }
             }

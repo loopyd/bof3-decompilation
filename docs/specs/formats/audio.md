@@ -1686,6 +1686,12 @@ state; Published ports retain manual injection. Direct `Voices::write` calls at
 offset 12 inject component state for either model. Neither arithmetic model
 establishes hardware fidelity, MMIO timing or CPU/sample alignment.
 
+`Adsr::new(registers, model)` starts with the supplied register configuration.
+Native-reference voices and CPU readback instead begin with fresh-open internal
+configuration: sustain level 15 and decreasing sustain, while both raw ADSR
+register mirrors remain zero. An ADSR1 or ADSR2 write replaces only its own
+parameters and mirror. Key-on resets envelope progress and retains configuration.
+
 [Existing checks](../../../tools/rust/bof3-audio/tests/adsr.rs) cover phase traces,
 rate intervals, model differences, component injection and key/register changes.
 The opt-in corpus probe compares VAB register pairs over 250 ms held notes and
@@ -5641,11 +5647,10 @@ from elapsed 44.1 kHz steps and applies key-off at its recorded cycle. Register
 latches remain separate from pending output-frame keys.
 
 The readback owner also begins with valid zero start and repeat addresses and
-accepts KON before a sample-start write. These defaults model fresh native
-opening; they do not import saved voice state. Address agreement does not resolve
-the initial ADSR configuration gap. Native opening sets the internal sustain
-level to 15, while Rust derives zero from its initial ADSR registers until an
-ADSR1 write.
+accepts KON before a sample-start write. Its initial ADSR configuration follows
+the [fresh-open voice defaults](#rust-adsr-state-and-evidence-models), including
+the distinction between internal parameters and raw register mirrors. These
+defaults model fresh native opening; they do not import saved voice state.
 
 The readback cursor follows guest start, repeat, pitch, loop flags and SPU RAM.
 A pitch-modulated voice retains the fork's untracked-cursor convention until

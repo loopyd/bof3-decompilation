@@ -1,6 +1,6 @@
 //! Development-only ENVX observations at interpreter access cycles, not PCM time.
 use super::{
-    adsr::{Adsr, Model, Phase, Registers},
+    adsr::{Adsr, Model, Phase},
     spu_transfer::RAM_BYTES,
     spu_voices::VOICES,
 };
@@ -69,7 +69,7 @@ struct Voice {
     start: usize,
     repeat: usize,
     pitch: u16,
-    registers: Registers,
+    envelope: Adsr,
     key: Option<Key>,
 }
 
@@ -80,7 +80,7 @@ impl Voice {
             start: 0,
             repeat: 0,
             pitch: 0,
-            registers: Registers { adsr1: 0, adsr2: 0 },
+            envelope: Adsr::fresh(Model::EmulatorReference),
             key: None,
         }
     }
@@ -166,13 +166,14 @@ impl Readback {
                 8 | 10 => {
                     // Native ADSR writes leave the readback checkpoint intact.
                     // Its next walk uses the latest rates for the uncached gap.
-                    if offset & 15 == 8 {
-                        voice.registers.adsr1 = value;
+                    let write = if offset & 15 == 8 {
+                        Adsr::write_adsr1
                     } else {
-                        voice.registers.adsr2 = value;
-                    }
+                        Adsr::write_adsr2
+                    };
+                    write(&mut voice.envelope, value);
                     if let Some(key) = &mut voice.key {
-                        key.envelope.write_registers(voice.registers);
+                        write(&mut key.envelope, value);
                     }
                 }
                 // The native CPU register handler ignores manual ENVX writes.
@@ -197,7 +198,7 @@ impl Readback {
                     if mask & (1 << index) == 0 {
                         continue;
                     }
-                    let mut envelope = Adsr::new(voice.registers, Model::EmulatorReference);
+                    let mut envelope = voice.envelope.clone();
                     envelope.key_on();
                     voice.key = Some(Key {
                         cycle,
