@@ -542,7 +542,17 @@ the sign extension to the entry block, where the original converts at each use s
 Read the parameter directly and cast at the use instead. The formal's own width
 decides this: a wide parameter cast to `s16` at each use is a different shape that
 moved the entry block, frame and size, so declare the narrow formal and leave the
-body's uses alone. The mirror case is a cast used twice: `(s8)value` in both the call
+body's uses alone. When no statement extends the value, both widths emit the same
+body instructions and differ only in where the entry copy of that argument lands:
+the wide formal copied it two slots early and measured 114 of 116 at the original
+size with its first difference at +0x14, while the narrow formal placed the copy
+after the entry's own literal words. Read a prologue-only deficit at unchanged size
+as that signature, and take the width from a sibling that hands the identical pair to
+the same callee. Count the narrowings of one incoming register: where the original
+narrows it at the prologue and again at later call sites, the narrowed value did not
+survive the wide path between them, so keep the wide formal and let those calls
+convert again while the entry-narrowed pair stays in locals for the calls it
+dominates. The mirror case is a cast used twice: `(s8)value` in both the call
 and the comparison lets one conversion serve both, while reassigning
 `value = (s8)value;` between them duplicates it.
 
