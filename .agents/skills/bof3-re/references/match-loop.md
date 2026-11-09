@@ -51,7 +51,7 @@ span-equal sibling whose lift recorded a partial carries a spelling that reprodu
 its residual, so keep it a shape donor rather than the seed. That residual need not
 show as a score gap: a partial donor's spelling can reach the original's own byte
 count while dropping instructions, first difference a callee-saved register shift,
-so size parity never makes a partial seed the right one. A twin that is not
+so size parity never makes a partial seed the right one. A partial donor also reproduces its residual exactly: a seed taken from a 120/127 donor measured 120/127 at another target with the same block's slots differing, so a seed that lands on the donor's own score names the donor's spelling as the residual, not this body. A twin that is not
 byte-identical still seeds once every remaining differing word shifts by the span's
 own address delta, which is what an internal jump target does; a twin carrying one
 differing word more than that delta explains differs in a carried constant, so read
