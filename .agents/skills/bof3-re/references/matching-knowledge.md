@@ -886,10 +886,16 @@ before copying a sibling's spelling: a member that reads the cell once and reuse
 base for its guard and its store stays exact through the constant-address accessor,
 while a member whose original reloads the cell after a store through the record needs
 the named extern. Copy a sibling's statement order and operand forms, not its cell
-access spelling. Once the reload count agrees the spelling is free: a displacement
-that folds makes a named extern and the `SPAD_PTR_TABLE` accessor at that cell's own
-word emit the same `lui`/`lw` pair at each reload point, so neither spelling is owed
-a probe and the seeded sibling's form stands. One body can mix both: keep a
+access spelling. Once the reload count and the load's base register agree, the
+spelling is free: a displacement that folds makes a named extern and the
+`SPAD_PTR_TABLE` accessor at that cell's own word emit the same `lui`/`lw` pair at
+each reload point, so neither spelling is owed a probe and the seeded sibling's form
+stands. When the count agrees and only the base register differs, read it as
+volatility: a `volatile` named cell read on both sides of a call puts the post-call
+reload's base in `$a0` where the original builds `$v1`, and no regrouping of
+named-cell locals moved it (31 or 32 of 40 across three arrangements). The plain
+accessor matched, with one `slots = SPAD_PTR_TABLE(u8)` base taken before the call
+and `slots[N]` re-indexed after it. One body can mix both: keep a
 read-modify-write pair on one pointer local and re-spell the named cell for each
 later access, because a store through that local may alias the cell and the
 original re-reads it there. Read each access's own `lui`/`lw` pair; running one
@@ -1305,7 +1311,11 @@ tail after the switch, assign it in each arm to one arm-local of the store width
 store that local at both sites. Without the local the compiler loads the constant
 twice, and the first mismatch then sits at the case compare's target because the
 storing arm grew by that load, not at either store, so read that signature as this
-lever rather than as an arm-order defect.
+lever rather than as an arm-order defect. The inverse takes a real field, not a
+literal: when the original loads one record byte once per subscripted table
+statement, name the field inside each subscript and cache nothing, because a hoisted
+`u8` local lets CSE share the two loads and the span measures short by that one
+narrow load (23 of 33 instructions at 128 bytes, first difference the second `lbu`).
 
 ## Compiler evidence
 
