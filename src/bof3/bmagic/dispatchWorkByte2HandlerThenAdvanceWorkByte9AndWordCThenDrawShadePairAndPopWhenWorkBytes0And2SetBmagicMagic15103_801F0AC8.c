@@ -25,7 +25,8 @@ extern u8 workShadePairTable[]; /* @source 0x801F24D0 @kind data */
 /* Installs the work object transform: pushes the GTE matrix stack, builds the
  * translation and rotation of work words 0x34 and 0x38 with the work halfword
  * 0x3E and sets both GTE matrices. */
-void func_801F01BC(void);
+void projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F01BC(
+    void);
 
 /* Draws the tinted primitive of this overlay work object from one shade pair
  * entry and the work byte 9 offset the first argument carries. */
@@ -40,17 +41,17 @@ void func_801F0D0C(u8 shade, u8 page);
  *           0x801F1D28, 0x801F1D60) and that handler is invoked with no
  *           arguments. After it returns the cell is read a second time and only
  *           when the object bytes at offset 0x0 and offset 0x2 are both
- *           non-zero does the body run: func_801F01BC is called, which pushes
- *           the GTE matrix stack and installs the object transform, then a
- *           third cell read adds two to work byte 0x9 and one to work word
- *           0xC, and a fourth cell read supplies the shade pair 0x801F24D0
- *           indexed by twice work byte 0x4 whose low byte added to work byte
- *           0x9 is passed clamped to eight bits to func_801F0D0C with that
- *           pair high byte as the second argument. PopMatrix restores the
- *           matrix that func_801F01BC pushed. Frame 0x18 with $ra only,
- *           because of the calls; the first cell load precedes frame creation.
- *           Takes no arguments, returns nothing and reads or writes no other
- *           state.
+ *           non-zero does the body run: the transform installer at 0x801F01BC
+ *           is called, which pushes the GTE matrix stack and installs the
+ *           object transform, then a third cell read adds two to work byte
+ *           0x9 and one to work word 0xC, and a fourth cell read supplies the
+ *           shade pair 0x801F24D0 indexed by twice work byte 0x4 whose low
+ *           byte added to work byte 0x9 is passed clamped to eight bits to
+ *           func_801F0D0C with that pair high byte as the second argument.
+ *           PopMatrix restores the matrix the installer pushed. Frame 0x18
+ *           with $ra only, because of the calls; the first cell load precedes
+ *           frame creation. Takes no arguments, returns nothing and reads or
+ *           writes no other state.
  * @status exact
  * @match 100.00
  * @residual none
@@ -66,7 +67,7 @@ void dispatchWorkByte2HandlerThenAdvanceWorkByte9AndWordCThenDrawShadePairAndPop
   workByte2StepTable[g_battle_work[2]]();
   step_record = g_battle_work;
   if (step_record[0] != 0 && step_record[2] != 0) {
-    func_801F01BC();
+    projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F01BC();
     advance_record = g_battle_work;
     advance_record[9] += 2;
     words = (u32 *)advance_record;

@@ -67,8 +67,9 @@ segments:
     - add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308
     - '@source: src/bof3/bmagic/add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308.c'
   - - 1880
-    - asm
-    - func_801EF358
+    - c
+    - add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358
+    - '@source: src/bof3/bmagic/add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358.c'
   - - 2000
     - asm
     - func_801EF3D0

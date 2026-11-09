@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FE0D0.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FDFFC.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState4ScenarioScena0600_801FCFC0.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState2ScenarioScena0600_801FCE6C.c",

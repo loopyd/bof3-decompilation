@@ -80,8 +80,9 @@ segments:
     - asm
     - func_801EF5CC
   - - 2820
-    - asm
-    - func_801EF704
+    - c
+    - stepWorkRecordAngleProjectPositionPairIncrementWorkByteBAndRampWorkBytes3And5Through7ThenAdvanceWorkByte2OnZeroWorkByte8BmagicMagic06303_801EF704
+    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairIncrementWorkByteBAndRampWorkBytes3And5Through7ThenAdvanceWorkByte2OnZeroWorkByte8BmagicMagic06303_801EF704.c'
   - - 3200
     - asm
     - func_801EF880

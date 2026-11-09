@@ -79,5 +79,6 @@ support_sources = [
     "src/bof3/scenario/emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424.c",
     "src/bof3/scenario/seedEffectRecordsInSelectedBankScenarioScena0900_801F76D0.c",
     "src/bof3/scenario/waitFlags0C0E0DForParty5ThenRequestPrimaryState6Substate2Or3Or6ElseSetSharedByte2ScenarioScena0900_801FD6F8.c",
+    "src/bof3/scenario/waitFlags0D100FForParty5ThenRequestPrimaryState6Substate2Or3Or6ElseSetSharedByte3ScenarioScena0900_801FD7F4.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

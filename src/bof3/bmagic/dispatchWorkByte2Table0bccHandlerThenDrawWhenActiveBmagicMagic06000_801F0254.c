@@ -19,9 +19,9 @@ extern void (*D_801F0BCC[])(void); /* @source 0x801F0BCC @kind data */
 /* Overlay drawing routine this dispatcher invokes once the work object is
  * active: it calls GetGraphType, then SetDrawMode and func_8014E5A0, builds a
  * polygon with SetPolyG4 and SetSemiTrans, and walks four paint passes through
- * func_801782FC and func_801783C8. It was still unlifted when this body was
- * seeded and keeps its raw name. */
-extern void func_801F0428(void);
+ * func_801782FC and func_801783C8. Its own body is lifted at that name and
+ * measured 224 of the original 240 instructions at the lane that seeded it. */
+extern void drawTranslucentRotatedQuadAtScreenCenterScaledAndTintedByWorkByte9BmagicMagic06000_801F0428(void);
 
 /* @source 0x801F0254
  * @behavior Index 1 of the three-entry handler table at 0x801F0BB0 that the
@@ -32,7 +32,8 @@ extern void func_801F0428(void);
  * 0x801F0BCC, which it calls with no arguments. The original does not check the
  * index. When the handler returns the pointer cell is read again in a second
  * load; if the work object's byte at offset 0x0 and its byte at offset 0x2 are
- * both non-zero it calls this overlay's state drawing routine func_801F0428. The
+ * both non-zero it calls this overlay's state drawing routine
+ * drawTranslucentRotatedQuadAtScreenCenterScaledAndTintedByWorkByte9BmagicMagic06000_801F0428. The
  * two pointer reads are separate locals because the original materializes the
  * cell twice, before and after the indirect call, and the intervening call is
  * what invalidates the first value. The two guards are one conjunction: both
@@ -53,6 +54,6 @@ void dispatchWorkByte2Table0bccHandlerThenDrawWhenActiveBmagicMagic06000_801F025
   D_801F0BCC[stepWork[2]]();
   gateWork = g_battle_work;
   if (gateWork[0] != 0 && gateWork[2] != 0) {
-    func_801F0428();
+    drawTranslucentRotatedQuadAtScreenCenterScaledAndTintedByWorkByte9BmagicMagic06000_801F0428();
   }
 }

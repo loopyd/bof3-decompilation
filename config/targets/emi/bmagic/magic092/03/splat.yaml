@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801EEC04
   - - 260
-    - asm
-    - func_801EED04
+    - c
+    - clearRecordPoolBytes0To2AndWorkCountThenQueueSlotPerEligibleBattlerCopyTripletSetByte3StepByte9AndWorkPointerThenCopy15HalfwordsSettingBit15SetGlobalByte80145988AndAdvanceWorkByte1BmagicMagic09203_801EED04
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkCountThenQueueSlotPerEligibleBattlerCopyTripletSetByte3StepByte9AndWorkPointerThenCopy15HalfwordsSettingBit15SetGlobalByte80145988AndAdvanceWorkByte1BmagicMagic09203_801EED04.c'
+    - '@behavior: Entry 0 of the two-word pointer run the frame dispatcher func_801EEC04 builds in its own frame, which it indexes with scratchpad work byte 1 scaled by four, so no jal in this payload names this body. It clears bytes 0x00, 0x01 and 0x02 of all 48 records of the 0x78-byte-stride pool at 0x801F07F8, zeroes work byte 0xB, then queues one action slot per usable battler of the roster the shared battle target byte at 0x80146384 selects with bit 0x40: eight enemy slots with the 0x118-byte stride when set, three party slots with the 0x140-byte stride otherwise, each skipped when func_801DB524 reports the battler unusable and each claimed through func_801E590C with request class 0x28. A claimed entry of the pool at 0x801EC330 receives byte 0x03 with the walk ordinal, byte 0x09 with the running claimed-slot count stepped by 0x10 and raised by one, words 0x34, 0x38 and 0x3C with the battler record triplet and word 0x74 with the work pointer from the cell at 0x1F800044, and work byte 0xB counts them. The tail zeroes the first halfword at 0x8003AC00, copies the fifteen halfwords that follow from 0x80036C02 with bit 15 set, writes 1 to the shared byte 0x80145988 and increments work byte 1 so the next frame runs the following entry of the run. Frame 0x28 keeps ra at 0x20 and s0 to s3 at 0x10 to 0x1C; the slot bytes, both main-RAM tables and the byte 0x80145988 role stay offset-anchored.'
   - - 948
     - asm
     - func_801EEFB4

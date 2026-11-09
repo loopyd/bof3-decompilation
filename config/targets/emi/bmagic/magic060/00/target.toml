@@ -21,6 +21,7 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByteBRecordCountersOnFrameParityThenAdvanceWorkByte2WhenCounterIs8BmagicMagic06000_801F08B8.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic06000_801EFF88.c",
     "src/bof3/bmagic/dispatchWorkByte2Table0bccHandlerThenDrawWhenActiveBmagicMagic06000_801F0254.c",
+    "src/bof3/bmagic/drawTranslucentRotatedQuadAtScreenCenterScaledAndTintedByWorkByte9BmagicMagic06000_801F0428.c",
     "src/bof3/bmagic/drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174.c",
     "src/bof3/bmagic/drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1WhenPadStateSetBmagicMagic06000_801EEE84.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBIs80BmagicMagic06000_801EEF04.c",

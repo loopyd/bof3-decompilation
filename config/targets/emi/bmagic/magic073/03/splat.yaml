@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801F00C4
   - - 6120
-    - asm
-    - func_801F03E8
+    - c
+    - reserveFirstFreeRecordBmagicMagic07303_801F03E8
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic07303_801F03E8.c'
+    - '@behavior: Reserves the first of 0xA0 records in the pool at 0x801F0670 whose flags byte has bit 0 clear, sets that bit and returns its index. Records have stride 0x2C. The original re-materializes the pool address for the flags load and again for the store, tests the loaded byte with andi 0x1, and returns 0xFF once all 0xA0 records are occupied, the scan bound being the sltiu 0xA0 on the index masked to a byte. Its only in-image caller at 0x801EF1A8 masks the result to a byte, compares that against 0xFF and indexes the same pool with the same 0x2C stride. Leaf with no frame, no saved registers and no calls.'
   - - 6228
     - c
     - clearRecordBytes0Through4BmagicMagic07303_801F0454
