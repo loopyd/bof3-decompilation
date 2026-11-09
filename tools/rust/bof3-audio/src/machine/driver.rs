@@ -2,6 +2,9 @@
 use super::{
     adsr,
     bus::{Bus, Ram, Width},
+    cd_drive::Drive,
+    cd_host,
+    cd_media::Media,
     cpu::Cpu,
     event_calls::Service,
     exception_calls::{Dispatch, Environment, MissingHook},
@@ -48,6 +51,11 @@ pub struct Started {
     pub execution: Execution,
     pub initialization: Call,
     pub evidence: Evidence,
+}
+
+pub struct CdStarted {
+    pub services: Started,
+    pub initialization: Call,
 }
 
 #[derive(Clone, Copy)]
@@ -310,6 +318,38 @@ impl Image {
             ram.write(base + offset as u32, Width::Byte, u32::from(byte))?;
         }
         Ok(ram)
+    }
+
+    /// Start owned services and execute the full CD initializer with a caller's
+    /// paused drive. Optional media attaches before scheduling; XA cue bindings
+    /// remain separate caller inputs.
+    pub fn start_cd(
+        &self,
+        drive: Drive,
+        media: Option<Media>,
+        observer: &mut impl FnMut(&Execution) -> Result<()>,
+    ) -> Result<CdStarted> {
+        let initialize = self.entry("audio_cd_initialize")?;
+        let mut services = self.start(observer)?;
+        let execution = &mut services.execution;
+        execution
+            .bus
+            .configure_cd_host_reset(cd_host::Model::EmulatorReference)?;
+        execution
+            .bus
+            .configure_cd_controller(drive, execution.clock.ticks())?;
+        if let Some(media) = media {
+            execution.bus.configure_cd_media(media)?;
+        }
+        let initialization =
+            execution.call_observed(initialize, [1, 0, 0, 0], 3_000_000, observer)?;
+        if initialization.result != 1 {
+            return Err("owned driver: CD initialization did not succeed".into());
+        }
+        Ok(CdStarted {
+            services,
+            initialization,
+        })
     }
 
     /// Initialize services in zeroed RAM. Audio initialization remains an

@@ -30,7 +30,7 @@ ranges, data identities and provenance hashes.
 
 The Rust [`machine::driver::Image`](../src/machine/driver.rs) validates artifact
 hashes, required symbols and allocation bounds, then starts services in zeroed
-RAM with explicit event, exception, timer, CD, DMA and SPU bindings. It uses the
+RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
 Startup also owns RAM `0xA0..0xC0` for the A0/B0 entry vectors and
 `0x100..0x128` for kernel descriptors. A0/72 and B0/07,17,18 execute those
@@ -41,6 +41,18 @@ After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
+
+`Image::start_cd` also attaches a reset CD host and the caller's paused `Drive`.
+Its optional `Media` input attaches raw backing before any scheduled work.
+The automatic controller starts at the owned execution clock's current tick.
+The method executes `audio_cd_initialize(1)` with a 3,000,000-transition limit,
+running guest callback registration, Nop, Init, Demute, IRQ draining and SPU CD setup.
+It returns `CdStarted` with the service startup and CD initialization call records.
+An active drive, failed guest call or unsuccessful initializer returns an error.
+The supplied drive declares an authenticated, closed, spinning disc context;
+startup does not establish authentication. XA decoder history and cue tables
+require separate explicit bindings. PCM output is not enabled during
+startup, and these functional calls do not establish native timing.
 
 The `audio_xa_select_cue` leaf takes a packed cue ID in A0. The signed upper
 value `A0 >> 12` must be 0, 1 or 2; the low 12 bits select the cue. Before
