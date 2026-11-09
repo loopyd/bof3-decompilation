@@ -693,6 +693,13 @@ word for its later uses, which rotates the temporary pool at equal size; read th
 rotation as this width rather than an allocation residual, and keep the width on the
 accumulator, since a second narrow product local measured worse.
 
+A value stored into a byte field takes the field's width for a second reason. When
+two such stores take one computed base plus different offsets, halfword locals keep
+the second value as an increment of the first, because the store keeps only the low
+byte, while word locals let GCC fold both offsets into one base offset and drop that
+add. Two `s16` locals measured 119 of 119 instructions, and the same body with `s32`
+locals measured 114.
+
 A narrow value built from a difference wants that split one step further: assign the
 base constant, subtract in place, then truncate with a self-assignment
 (`w = 0x40; w -= limit; w = (u8)w;`). The one-expression `(u8)(0x40 - limit)` and the
