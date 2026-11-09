@@ -10,8 +10,8 @@
 extern void func_801F3838(s32 mode);
 extern void func_801F3594(s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2,
                           s16 x3, s16 y3, u8 r, u8 g, u8 b, u8 semi);
-extern void func_801F3698(s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, u8 r,
-                          u8 g, u8 b, u8 semi);
+extern void drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698(
+    s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, u8 r, u8 g, u8 b, u8 semi);
 extern void drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
     s16 x0, s16 y0, s16 x1, s16 y1, u8 r, u8 g, u8 b, u8 semi);
 extern void drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0(s16 x, s16 y,
@@ -101,9 +101,9 @@ void drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC(s32 x,
       s32 cell;
 
       cell = origin + D_1F800044[6] * 100;
-      func_801F3698((s16)(cell + 7), (s16)(y + 0x29), (s16)(cell + 3),
-                    (s16)(y + 0x2D), (s16)(cell + 7), (s16)(y + 0x31), 0xC8,
-                    0xC8, 0xC8, 0x00);
+      drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698(
+          (s16)(cell + 7), (s16)(y + 0x29), (s16)(cell + 3), (s16)(y + 0x2D),
+          (s16)(cell + 7), (s16)(y + 0x31), 0xC8, 0xC8, 0xC8, 0x00);
     }
     {
       s32 cell;
@@ -111,9 +111,9 @@ void drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC(s32 x,
 
       offset = D_1F800044[6] * 100 + 0x64;
       cell = origin + offset;
-      func_801F3698((s16)(cell + 4), (s16)(y + 0x29), (s16)(cell + 8),
-                    (s16)(y + 0x2D), (s16)(cell + 4), (s16)(y + 0x31), 0xC8,
-                    0xC8, 0xC8, 0x00);
+      drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698(
+          (s16)(cell + 4), (s16)(y + 0x29), (s16)(cell + 8), (s16)(y + 0x2D),
+          (s16)(cell + 4), (s16)(y + 0x31), 0xC8, 0xC8, 0xC8, 0x00);
     }
     {
       s32 cell;

@@ -21,11 +21,14 @@ void func_801AFE18(void* arg0);
 
 /* Record draw helper of this payload at 0x801D1CD4: it stamps the primitive
  * cursor, turns semi-transparency on, projects the record position triple at
- * +0x0/+0x4/+0x8 and builds the rotated quad from the spin angle halfword at
- * +0x24 through the sine and cosine pair 0x801783C8 and 0x801782FC, the extents
- * at +0x10/+0x12, the scale halfword at +0x28 and the second scale halfword at
- * +0x14. Still an asm boundary in this payload, so it keeps its address anchor. */
-void func_801D1CD4(u8* record);
+ * +0x0/+0x4/+0x8 into the first triangle vertex and builds the two further
+ * vertices from the spin angle halfword at +0x24 through the sine and cosine
+ * pair 0x801783C8 and 0x801782FC, the extent pairs at +0x10/+0x12 and
+ * +0x18/+0x1A, the z halfwords at +0x14 and +0x1C and the scale halfword at
+ * +0x28, tints them from the clamped halfword at +0x2A and appends the
+ * 0x1C-byte primitive to ordering-table slot 2. */
+void drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4(
+    u8* record);
 
 /* @source 0x801D2088
  * @behavior Draw pass over this overlay's 0x2C-byte effect records at
@@ -100,7 +103,8 @@ void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D208
   index = 0u;
 
   do {
-    func_801D1CD4(record);
+    drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4(
+        record);
     FIELD_REF(u16, record, 0x24u) = (u16)(FIELD_REF(u16, record, 0x24u) + 0x10);
     record += 0x2cu;
     index += 1u;

@@ -283,8 +283,10 @@ segments:
     - requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4
     - '@source: src/bof3/scenario/requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4.c'
   - - 23036
-    - asm
-    - func_801FC5FC
+    - c
+    - queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC
+    - '@source: src/bof3/scenario/queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC.c'
+    - '@behavior: Record-callback slot 5 at 0x801FD00C: marks shared selector id 1 through 0x80166180, queues front-end mode 0x2F through 0x80150224, latches the shared phase byte 0x80143BB0 to 2, hands the selection index byte 0x80145029 to 0x80161D20 and queues effect group 2 through 0x801636A0, then polls the main-EXE frontend-transition predicate 0x80163EA0, running 0x801992B8 and yielding one scheduler count through 0x8014B87C per zero pass, and finally hands 0x80145029 to 0x80161D74.'
   - - 23176
     - c
     - noopHandlerScenarioScena0300_801FC688

@@ -8,17 +8,17 @@
  */
 extern u8* D_1F800044;
 
-/* Step test of this payload, still an `asm` row here. It takes no arguments,
- * reads the work-object pointer cell itself, takes the direction-vector entries
- * of the word tables at 0x80181B94/0x80181B98 indexed by work byte 8, offsets
- * the record position held at work +0x34/+0x38 by them and answers 0 or 1 after
- * the map-code test of its own body. Its 0x1A4-byte span is byte-identical to
- * the copy at 0x801CF3C0 of plp467 that measured exact when this seed was
- * written. This caller reads that answer as an unsigned byte and passes no
- * argument, so the $a0 left over from the pointer load above is dead at the
- * first call.
+/* Step test of this payload, lifted as
+ * testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4;
+ * it takes no arguments, reads the work-object pointer cell itself, takes the
+ * direction-vector entries of the word tables at 0x80181B94/0x80181B98 indexed
+ * by work byte 8, offsets the record position held at work +0x34/+0x38 by them
+ * and answers 0 or 1 after the map-code test of its own body. This caller reads
+ * that answer as an unsigned byte and passes no argument, so the $a0 left over
+ * from the pointer load above is dead at the first call.
  */
-u8 func_801CF1A4(void);
+u8 testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4(
+    void);
 
 /* Layer-position refresh of this payload, lifted as
  * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348;
@@ -84,9 +84,11 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectS
     void) {
   if (!(D_1F800044[8] & 1)) {
     D_1F800044[8] = (D_1F800044[8] - 1) & 7;
-    if (func_801CF1A4() == 0) {
+    if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4() ==
+        0) {
       D_1F800044[8] = (D_1F800044[8] + 2) & 7;
-      if (func_801CF1A4() == 0) {
+      if (testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp67800_801CF1A4() ==
+          0) {
         D_1F800044[8] = (D_1F800044[8] - 2) & 7;
       }
     }

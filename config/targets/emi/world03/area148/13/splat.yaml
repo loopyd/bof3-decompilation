@@ -62,8 +62,10 @@ segments:
     - dispatchStateByte2Table5024World03Area14813_801F35D8
     - '@source: src/bof3/world/area14813DispatchTables.c'
   - - 2588
-    - asm
-    - func_801F361C
+    - c
+    - stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorld03Area14813_801F361C
+    - '@source: src/bof3/world/stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorld03Area14813_801F361C.c'
+    - '@behavior: Handler at word 0 of the overlay state-byte-2 dispatch run based at 0x801F5024, reached only through the dispatcher at 0x801F35D8. Probes flag 0x5A of the main-RAM flag bank D_80144F28 through the shared flag tester at 0x8015B5D4. When the flag reads set it stamps 0x80 into the work record halfword at +0x30 of the scratchpad pointer cell 0x1F800044, writes 3 into the record dispatch byte at +2 and calls the overlay quad routine at 0x801F37B8 with selection 0 and mode -2. When the flag reads clear it reloads the record pointer, reads the dispatch byte at +2 once, clears the halfword at +0x30, writes that byte plus one back and calls the quad routine twice, selection 0 and selection 1, both with mode 1. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at +0x10; the frame is created before the flag probe.'
   - - 2720
     - asm
     - func_801F36A0

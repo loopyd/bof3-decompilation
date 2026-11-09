@@ -8,7 +8,7 @@ decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20Advance
 func_801EF0C4 = 0x801EF0C4;
 func_801EF15C = 0x801EF15C;
 func_801EF1D0 = 0x801EF1D0;
-func_801EF2AC = 0x801EF2AC;
+decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC = 0x801EF2AC;
 func_801EF30C = 0x801EF30C;
 decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430 = 0x801EF430;
 func_801EF4C0 = 0x801EF4C0;

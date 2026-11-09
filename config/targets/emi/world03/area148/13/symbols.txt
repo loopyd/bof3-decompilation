@@ -7,7 +7,7 @@ advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld03Area14813_801F3020
 func_801F311C = 0x801F311C;
 func_801F31AC = 0x801F31AC;
 dispatchStateByte2Table5024World03Area14813_801F35D8 = 0x801F35D8;
-func_801F361C = 0x801F361C;
+stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorld03Area14813_801F361C = 0x801F361C;
 func_801F36A0 = 0x801F36A0;
 advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroAndOneWorld03Area14813_801F3720 = 0x801F3720;
 setSharedByte1ThenDrawWorld03Area14813_801F3788 = 0x801F3788;

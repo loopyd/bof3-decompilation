@@ -63,7 +63,9 @@ void func_80179F98(s32 arg0, MATRIX* arg1);
  * drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsReload128AndAdvanceWorkByte1ScenarioSce15ef100_801D106C
  * walking the 0x20 records of 0x801D3DE8, both stepping the record pointer by
  * 0x2C - and both hand over a pointer only, so the record kind is the effect
- * record func_801D1CD4 draws.
+ * record that
+ * drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4
+ * draws.
  *
  * Shape evidence: the world00 area024/14 seeder
  * seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area17213_801F3E90

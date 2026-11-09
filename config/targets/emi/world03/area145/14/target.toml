@@ -29,5 +29,6 @@ support_sources = [
     "src/bof3/world/stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0.c",
     "src/bof3/world/startActionForFirstPresentPartyCandidateWorld03Area14514_801F4100.c",
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14514_801F41C4.c",
+    "src/bof3/world/drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC.c",
 ]
 psyq_source = "src/bof3/support/area145_14_psyq.c"

@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EFB6C
   - - 5220
-    - asm
-    - func_801F0064
+    - c
+    - dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064.c'
+    - '@behavior: Copies the three words at 0x801EEC1C into its own frame and invokes the copy selected by the work object byte at offset 2, then, when that byte at offset 0 and the byte at offset 2 are both non-zero, calls the helper at 0x800AF764 and the draw routine at 0x801F0308. Takes no arguments, returns nothing and keeps a 0x28-byte frame.'
   - - 5376
     - asm
     - func_801F0100

@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801D1B10
   - - 4308
-    - asm
-    - func_801D1CD4
+    - c
+    - drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4
+    - '@source: src/bof3/scenario/drawTranslucentGouraudTriangleFromRecordPositionAndTwoRotatedOffsetsTintedRedAndGreenScenarioSce15ef100_801D1CD4.c'
+    - '@behavior: Draw pass for one 0x2C-byte effect record of this overlay, the helper the record walker 0x801D2088 calls for each of the 0x20 records of the table at 0x801D3B28 while it adds 0x10 to the spin angle of the record it just drew: it stamps the primitive cursor g_PrimCursor through 0x8017A97C, turns semi-transparency on, projects the record position triple at +0x0/+0x4/+0x8 into the first vertex of the POLY_G3 at cursor byte 0x08 through 0x801AFF04, builds the vertices at cursor bytes 0x10 and 0x18 by rotating the extent pairs at +0x10/+0x12 and +0x18/+0x1A with the spin angle at +0x24 through 0x801783C8 and 0x801782FC, shifting right by 8 and scaling by the halfword at +0x28 while z comes from the halfwords at +0x14 and +0x1C shifted left by 12 and scaled the same way, translates both by the record position, writes the halfword at +0x2A clamped to 0..0xFF into the red and green channels of the first vertex with its blue channel left zero, zeroes the other six channels and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 2.'
   - - 4968
     - c
     - seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68

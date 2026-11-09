@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F3594
   - - 2712
-    - asm
-    - func_801F3698
+    - c
+    - drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698
+    - '@source: src/bof3/world/drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698.c'
+    - '@behavior: Emits one semi-transparent flat-tinted 0x14-byte POLY_F3 triangle at the shared primitive cursor: stamps the cursor through 0x8017A954, passes the semi-transparency flag to SetSemiTrans, writes the three corners as the halfwords at 0x08/0x0A/0x0C/0x0E/0x10/0x12 and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x14.'
   - - 2932
     - c
     - drawSemiTransFlatLinePrimWorld04Area17013_801F3774

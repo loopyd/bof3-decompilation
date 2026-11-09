@@ -32,10 +32,12 @@ extern u8 D_801F5CDE[]; /* @source 0x801F5CDE @kind table */
 s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
-/* Stage walk of this payload at 0x801F4EDC, still an asm boundary here: it
- * takes the elapsed step value and the stage code of the stage-entry table and
+/* Stage walk of this payload at 0x801F4EDC, lifted in
+ * drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC.c:
+ * it takes the elapsed step value and the stage code of the stage-entry table and
  * walks that stage until it expires. */
-s32 func_801F4EDC(s32 arg0, s32 arg1);
+s32 drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC(
+    s32 arg0, s32 arg1);
 
 /* Shared cue request of the main executable: it takes the cue id in the low
  * half. */
@@ -134,5 +136,6 @@ u8 drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514
   if (t == D_801F5CDD[off]) {
     func_8015DF18(0x206);
   }
-  return func_801F4EDC(t, D_801F5CDE[off]);
+  return drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC(
+      t, D_801F5CDE[off]);
 }

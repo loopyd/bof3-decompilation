@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EF138
   - - 1824
-    - asm
-    - func_801EF320
+    - c
+    - queueSlotSetByte1PublishRecordPointerCopyWorkWordTripletEveryFourthTickWhileByteABelow16ThenAdvanceWorkByte2At16BmagicMagic04403_801EF320
+    - '@source: src/bof3/bmagic/queueSlotSetByte1PublishRecordPointerCopyWorkWordTripletEveryFourthTickWhileByteABelow16ThenAdvanceWorkByte2At16BmagicMagic04403_801EF320.c'
+    - '@behavior: Entry 2 of the three-entry handler table at 0x801F0A1C that the work-byte-2 dispatcher dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44 indexes with the scratchpad work-object byte 0x2. It reads the work pointer cell at 0x1F800044 before its frame and, while work byte 0x0A is below 0x10, increments work byte 0x0B and work byte 0x0A through a second read of the cell and then calls the shared helper func_800AF764 with the byte-0x0A store in that call delay slot and the overlay routine func_801F02A0. On every fourth frame, when the low two bits of the shared counter at 0x80143E6C are clear, it claims an action slot through func_801E590C(1, 6) and, unless the allocator reports 0xFF, scales the index by the 0x78-byte slot stride and fills byte +0x01 with 1, the pointer word at +0x74 with the shared record pointer read from 0x801EB4E0, and the entry words at +0x34, +0x38 and +0x3C with the work-object words at those offsets read through the third read of the cell, then re-reads 0x801EB4E0 and increments that record byte 0x0B. Last it re-reads the cell and, while work byte 0x0A is exactly 0x10, copies that byte to work byte 0x09 and increments the work state byte 0x02 through a final read of the cell. Takes no arguments and returns nothing; the 0x18-byte frame keeps only the return address at 0x10.'
   - - 2168
     - asm
     - func_801EF478
