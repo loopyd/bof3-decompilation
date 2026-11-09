@@ -84,8 +84,9 @@ segments:
     - c
     - setWorld03Area14813_801F3990
   - - 3492
-    - asm
-    - func_801F39A4
+    - c
+    - clearSharedFlagBit46ThenClearOverlayStateByteWorld03Area14813_801F39A4
+    - '@source: src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld03Area14813_801F39A4.c'
   - - 3540
     - c
     - copyWords7a8cToWork34383cWorld03Area14813_801F39D4

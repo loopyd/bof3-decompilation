@@ -129,8 +129,9 @@ segments:
     - '@source: src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D2474.c'
     - '@behavior: Entry 2 of both overlay code-pointer runs at 0x801D3954 and 0x801D397C: through work pointer word 0x4C it projects the object point at +0x34/+0x38/+0x3C with 0x801AFF04 after filling the scratch through 0x801AFE18, then walks the pattern-cell pointer 0x801D40B0 over the bound-by-bound grid of the eight-byte entry at 0x801D393C that the byte 0x801D40AC selects, appends a ten-byte effect record at the cursor 0x801D40B4 for every nonzero cell with the cell as its colour halfword and the projected pair less the entry base plus the column and cell index as its position, raises the live count 0x801D40A8, and finally increments work byte 0x9 and advances work byte 0x1 when that value reads 2.'
   - - 6844
-    - asm
-    - func_801D26BC
+    - c
+    - seedBlinkingEffectRecordsRandomizeVelocityByWorkByteBAndLifeByWorkByte6ArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D26BC
+    - '@source: src/bof3/scenario/seedBlinkingEffectRecordsRandomizeVelocityByWorkByteBAndLifeByWorkByte6ArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D26BC.c'
   - - 7476
     - c
     - drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934

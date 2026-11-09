@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F453C
   - - 6516
-    - asm
-    - func_801F4574
+    - c
+    - advanceWorkByte2AndPlayCue200WhenFlag67SetThenDrawWorld04Area17013_801F4574
+    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenFlag67SetThenDrawWorld04Area17013_801F4574.c'
+    - '@behavior: Byte-2 state handler gated on flag 0x67 of the shared main-RAM flag bank D_80144F28, which it tests through func_8015B5D4. While the flag is clear the handler only draws. Once it is set, the front-end phase byte D_80143BB0 gates sound cue 0x200 through func_8015DF18 and the record step byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044 is advanced by one so the next dispatch takes the following entry; the pointer cell is re-read after the cue gate. The draw routine at 0x801F4640 then runs with argument 1, the variant flag that enables its second rendering pass, and it runs on every call. The 0x18-byte frame only keeps ra at 0x10.'
   - - 6628
     - asm
     - func_801F45E4

@@ -54,8 +54,10 @@ segments:
     - advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4
     - '@source: src/bof3/bmagic/advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4.c'
   - - 2232
-    - asm
-    - func_801EF4B8
+    - c
+    - seedWorkObjectFromBattlerRecordWhenBattlerReadyAndStateByteNotSixElseFinishWorkByte2BmagicMagic01200_801EF4B8
+    - '@source: src/bof3/bmagic/seedWorkObjectFromBattlerRecordWhenBattlerReadyAndStateByteNotSixElseFinishWorkByte2BmagicMagic01200_801EF4B8.c'
+    - '@behavior: work-byte-2 handler for work-object byte 2 equal to 3, 6 or 9; parks work byte 2 at 0xA when the battler slot in work byte 3 is unavailable, returns untouched when byte 0x01 of the action record selected by work byte 4 through bit 0x40 of the battle target byte is 6, and otherwise seeds the work object from the shared battle record, randomizes byte 0xB with rand() and 7, sets byte 9 to 0x10, clears byte 0xA and advances work byte 2.'
   - - 2672
     - c
     - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670

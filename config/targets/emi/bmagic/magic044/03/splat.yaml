@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F04F0
   - - 6572
-    - asm
-    - func_801F05AC
+    - c
+    - consumeRandomDecayWorkHalfwords2EAnd30AdvanceByte9By4AdvanceWorkByte2At10BmagicMagic04403_801F05AC
+    - '@source: src/bof3/bmagic/consumeRandomDecayWorkHalfwords2EAnd30AdvanceByte9By4AdvanceWorkByte2At10BmagicMagic04403_801F05AC.c'
+    - '@behavior: Entry 1 of the three-entry handler table at 0x801F0A2C that the work-byte-2 dispatcher dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478 indexes with the scratchpad work-object byte 0x2; calls rand() and discards the answer, decrements the work object halfword 0x2E, adds four to work byte 9 and decrements halfword 0x30 through that same loaded base, then re-reads the work pointer cell and increments work byte 2 only when byte 9 is exactly 0x10. Takes no arguments and returns nothing.'
   - - 6712
     - asm
     - func_801F0638

@@ -23,8 +23,9 @@ extern void func_801F09F4(void);
  *   PanelTask state field of include/panel/task.h), scales it by four, adds the
  *   stack pointer and calls the entry at that index with no arguments. The
  *   index is not bounded, exactly as in the original. This span is the word at
- *   0x801EEC3C, the last of the six panel handler pointers that func_801EFD98
- *   copies from 0x801EEC28 and indexes by byte +0x02 of the same object. The
+ *   0x801EEC3C, the last of the six panel handler pointers that
+ *   dispatchPanelTaskTableEc28BatlEnd00_801EFD98 copies from 0x801EEC28 and
+ *   indexes by byte +0x02 of the same object. The
  *   0x20-byte frame holds the table at 0x10($sp) and $ra at 0x18($sp); this
  *   span loads the state cell before seeding the table, so the cell is bound to
  *   a local pointer ahead of the seeds. The selected handler's $v0 is left in

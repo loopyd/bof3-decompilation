@@ -119,8 +119,10 @@ segments:
     - asm
     - func_801F403C
   - - 5376
-    - asm
-    - func_801F4100
+    - c
+    - startActionForFirstPresentPartyCandidateWorld03Area14514_801F4100
+    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateWorld03Area14514_801F4100.c'
+    - '@behavior: walks the four candidate bytes of the table at 0x801F5CA8 and, for each candidate, scans the D_80146254 live 0x140-byte-stride local work records for one whose party byte at 0x80145F09 equals it; on the first match it starts that candidate action through func_80150224 with the paired halfword of the table at 0x801F5CAC, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns, and with no match it still returns after both loops.'
   - - 5572
     - asm
     - func_801F41C4

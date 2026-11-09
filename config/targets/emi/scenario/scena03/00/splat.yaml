@@ -240,8 +240,10 @@ segments:
     - asm
     - func_801FB8A4
   - - 21968
-    - asm
-    - func_801FC1D0
+    - c
+    - claimWorkSlotFromIndexedWorkRecordPositionScenarioScena0300_801FC1D0
+    - '@source: src/bof3/scenario/claimWorkSlotFromIndexedWorkRecordPositionScenarioScena0300_801FC1D0.c'
+    - '@behavior: Spawns the overlay object into a free work slot, placed at the position of the shared work record the argument selects. It asks the shared slot allocator func_8015CA48 for a free slot index and returns 0 when that index is 0xFF. Otherwise it resolves the 0x98-byte slot of 0x80146888 that the index scales, publishes that slot pointer both at the scratchpad cursor 0x1F800044 and at the shared copy 0x80146884, resets the slot through func_801A4AA8, requests entry 0x67 through func_8014DD3C and sets slot flag byte 0. The low byte of the argument then selects a 0x140-byte record of the shared work-record array, and only the two leading words of that record are consumed: the 0x34 word, biased by 0x8000, becomes slot word 0x34 and the 0x38 word becomes slot word 0x38, both mirrored into the slot words 0x80 and 0x84 while 0x88 is cleared. Slot halfword 0x3E receives the distance the shared helper func_8015477C computes from those two coordinates, slot byte 1 is set to state 4, bytes 2, 6 and 8 are cleared, slot halfword 0x8E is cleared, slot bytes 0x77 and 0x78 are set to 2 and slot halfwords 0x7C and 0x8C are cleared. It then hands a one-byte descriptor holding 0x88 to func_801A4990, raises flag bit 0x20 of the slot flag byte, clears the three signed tint channels 0x5D, 0x5E and 0x5F, sets the slot flags_5C byte to 1, calls func_801A4914 and returns 1.'
   - - 22452
     - c
     - addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4

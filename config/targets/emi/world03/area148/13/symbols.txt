@@ -13,7 +13,7 @@ advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroAndOne
 setSharedByte1ThenDrawWorld03Area14813_801F3788 = 0x801F3788;
 func_801F37B8 = 0x801F37B8;
 setWorld03Area14813_801F3990 = 0x801F3990;
-func_801F39A4 = 0x801F39A4;
+clearSharedFlagBit46ThenClearOverlayStateByteWorld03Area14813_801F39A4 = 0x801F39A4;
 copyWords7a8cToWork34383cWorld03Area14813_801F39D4 = 0x801F39D4;
 setWorld03Area14813_801F3A0C = 0x801F3A0C;
 func_801F3A20 = 0x801F3A20;

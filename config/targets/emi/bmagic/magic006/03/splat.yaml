@@ -79,8 +79,9 @@ segments:
     - asm
     - func_801F0100
   - - 5644
-    - asm
-    - func_801F020C
+    - c
+    - incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C
+    - '@source: src/bof3/bmagic/incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C.c'
   - - 5776
     - asm
     - func_801F0290
