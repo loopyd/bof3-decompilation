@@ -506,13 +506,30 @@ impl Interconnect {
     }
 
     fn write_spu_port(&mut self, address: u32, width: Width, value: u32) -> Result<(), BusError> {
+        let offset = Self::physical(address);
+        // Native maps current-volume addresses as ordinary hardware mirrors,
+        // outside its SPU handler range. Both byte lanes remain writable.
+        if width == Width::Byte
+            && (0x1f80_1e00..0x1f80_1e60).contains(&offset)
+            && self.spu_voices.as_ref().is_some_and(|ports| {
+                ports.sample_model() == super::spu_sample::Model::EmulatorReference
+            })
+        {
+            let shift = (offset & 1) * 8;
+            let old = self
+                .read_spu_half(offset & !1)
+                .map_err(|e| error(address, &e.to_string()))?;
+            let merged = (u32::from(old) & !(0xff << shift)) | ((value & 0xff) << shift);
+            return self
+                .write_spu_half(offset & !1, merged as u16)
+                .map_err(|e| error(address, &e.to_string()));
+        }
         if width == Width::Byte && address & 1 != 0 {
             return Ok(());
         }
         if address as usize & (width.bytes() - 1) != 0 {
             return Err(error(address, "unaligned SPU port write"));
         }
-        let offset = Self::physical(address);
         // Even-address SB sends the low halfword, not a read/modify/write byte.
         self.write_spu_half(offset, value as u16)
             .map_err(|e| error(address, &e.to_string()))?;

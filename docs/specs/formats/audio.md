@@ -2395,17 +2395,22 @@ Q14 decoder for native-reference voices, folding each sweep write into a fixed
 level that remains unchanged until another write. Signed products divide by
 `0x4000` toward zero and remain wide through stereo accumulation.
 
-Current voice-volume component reads at `0x1F801E00..0x1F801E5F` expose Q15
-levels with the existing SPU width/alias rules. Native internal Q14 gain is
-doubled for this component interface; native bus readback is not established.
-Writes to those ports remain unsupported for lack of hardware evidence;
-main current-volume writes remain available.
+Published current voice-volume reads at `0x1F801E00..0x1F801E5F` expose Q15
+levels. Published writes remain unsupported, and odd byte writes are ignored.
+Native-reference reads and writes use independent, initially zero hardware
+mirrors. Fixed and sweep gain writes and scheduled voice frames do not update
+those mirrors. Mirror writes do not change voice gain. Native byte stores
+update the selected byte lane, including odd addresses, because these addresses
+lie outside the native SPU handler range. Aligned halfword and word accesses
+and the existing address aliases remain available. Direct `Voices::read_volume`
+continues to expose component Q15 levels, twice the native internal Q14 gain.
+Main current-volume writes retain their separately selected behavior.
 
 These are scheduled effective writes, not a claim about hardware write latency.
 Published voice sweeps clock on every requested frame, including inactive voices.
 This interprets the published per-frame generator; native-reference voice gain
-does not run a sweep envelope. Write timing, current-volume bus behavior and
-hardware fidelity remain separate obligations. See
+does not run a sweep envelope. Native worker write timing and hardware fidelity
+remain separate obligations. See
 [retained sweep research](../../reference/spu-envelopes.md#volume-sweeps).
 
 [Sweep checks](../../../tools/rust/bof3-audio/tests/spu_volume.rs) cover all eight

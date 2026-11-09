@@ -29,6 +29,7 @@ pub struct Ports {
     noise_mask: u32,
     noise: Option<Noise>,
     disable_model: Option<DisableModel>,
+    current_volume_mirrors: [u16; VOICES * 2],
 }
 
 #[derive(Debug)]
@@ -58,6 +59,7 @@ impl Ports {
             noise_mask: 0,
             noise: None,
             disable_model: None,
+            current_volume_mirrors: [0; VOICES * 2],
         }
     }
 
@@ -101,6 +103,9 @@ impl Ports {
     /// not voice activity or pending keys consumed at a frame boundary.
     pub fn read(&self, offset: u32) -> Result<u16> {
         if (0x200..0x260).contains(&offset) && offset & 1 == 0 {
+            if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+                return Ok(self.current_volume_mirrors[((offset - 0x200) / 2) as usize]);
+            }
             return self
                 .voices
                 .read_volume(((offset - 0x200) / 4) as usize, ((offset & 2) / 2) as usize);
@@ -128,6 +133,10 @@ impl Ports {
     }
     pub fn write(&mut self, offset: u32, value: u16) -> Result<()> {
         if (0x200..0x260).contains(&offset) && offset & 1 == 0 {
+            if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+                self.current_volume_mirrors[((offset - 0x200) / 2) as usize] = value;
+                return Ok(());
+            }
             return Err("SPU current voice-volume writes are not hardware-verified".into());
         }
         if offset < 0x180 {
