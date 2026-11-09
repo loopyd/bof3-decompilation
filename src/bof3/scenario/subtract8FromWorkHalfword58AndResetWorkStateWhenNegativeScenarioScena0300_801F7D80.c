@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-void func_801F7FFC(u8 *work);
+void buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+    u8 *work);
 void drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
     u8 *work);
 void func_80196070(void);
@@ -32,7 +33,8 @@ void subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_8
 
   work = D_1F800044;
   helper_work = work + 0x0C;
-  func_801F7FFC(helper_work);
+  buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC(
+      helper_work);
   drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170(
       helper_work);
   halfword = *(u16 *)(work + 0x58) - 8;

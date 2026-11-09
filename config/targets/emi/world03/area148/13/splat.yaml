@@ -142,8 +142,10 @@ segments:
     - '@source: src/bof3/world/tickWorkCountdownByteAThenAdvanceWorkByte9AndSetState1World03Area14813_801F44B8.c'
     - '@behavior: Record step of this overlay. Loads the work record pointer from the scratchpad cell 0x1F800044, passes the record addresses +0x34 and +0x18 to the record builder at 0x801F4798 and then runs the record table update at 0x801F4614. Decrements the record countdown byte at +0xA and, when that byte reaches zero, increments the record byte at +9 and writes 1 into the record byte at +1, the byte that the state-byte-1 dispatcher of this overlay indexes by four through its handler table based at 0x801F6160. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at +0x10; the scratchpad record pointer cell is reloaded for each access and is loaded before the frame is created.'
   - - 6468
-    - asm
-    - func_801F4544
+    - c
+    - projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544
+    - '@source: src/bof3/world/projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544.c'
+    - '@behavior: Position step of this overlay, called by the plain jal at 0x801F42F4 from the state-byte-1 handler run based at 0x801F6160. Reads the work record through the scratchpad pointer cell 0x1F800044, selects the eight-byte record of the route byte at +0x08 from the offset tables 0x80181B94 and 0x80181B98, multiplies the selected offset words by five, adds them to the record words +0x34 and +0x38 and stores those derived position words into +0x18 and +0x1C. It passes exactly those two stored words to the shared distance helper at 0x8015477C and stores the answer shifted left by 16 into the record word +0x20, reloading the scratchpad cell for that last store. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at +0x10; the scratchpad record pointer cell is loaded before the frame is created.'
   - - 6600
     - asm
     - func_801F45C8

@@ -1,3 +1,6 @@
+D_1F800000 = 0x1F800000;
+D_1F800004 = 0x1F800004;
+D_1F800008 = 0x1F800008;
 g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
@@ -10,5 +13,5 @@ advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateInto
 seedWorkObjectFromBattlerRecordWhenBattlerReadyAndStateByteNotSixElseFinishWorkByte2BmagicMagic01200_801EF4B8 = 0x801EF4B8;
 decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01200_801EF670 = 0x801EF670;
 advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4 = 0x801EF6A4;
-func_801EF79C = 0x801EF79C;
+drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C = 0x801EF79C;
 dispatchHandlerTable801EFBB0 = 0x801EFBB0;

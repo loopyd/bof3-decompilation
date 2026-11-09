@@ -14,7 +14,7 @@
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 void func_800AF764(void);
-void func_801EF79C(u8 index, s32 mode);
+void drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(u8 index, s32 mode);
 s32 func_801782FC(s32 angle);
 s32 func_801783C8(s32 angle);
 
@@ -77,5 +77,5 @@ void advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14Accumulat
   }
 
   func_800AF764();
-  func_801EF79C(g_battle_work[0xB], 1);
+  drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(g_battle_work[0xB], 1);
 }

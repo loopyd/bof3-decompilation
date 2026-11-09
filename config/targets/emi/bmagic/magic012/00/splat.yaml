@@ -68,8 +68,9 @@ segments:
     - advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4
     - '@source: src/bof3/bmagic/advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWorkByte2AndDrawSpriteBmagicMagic01200_801EF6A4.c'
   - - 2972
-    - asm
-    - func_801EF79C
+    - c
+    - drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C
+    - '@source: src/bof3/bmagic/drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C.c'
   - - 4016
     - rodata
     - dispatchHandlerTable801EFBB0

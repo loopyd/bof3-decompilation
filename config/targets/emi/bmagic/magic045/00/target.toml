@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchStateByte2Tablef8e0BmagicMagic04500_801EEEE8.c",
     "src/bof3/bmagic/seedWorkObjectFromBattleRecordAndAdvanceWorkByte2BmagicMagic04500_801EF4A4.c",
     "src/bof3/bmagic/copyQueuedSlotPositionPairAndDistanceThenAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic04500_801EF608.c",
+    "src/bof3/bmagic/fadeWorkTintTripletStepPositionByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroBmagicMagic04500_801EF2B0.c",
     "src/bof3/support/magic045_00_psyq.c",
     "src/bof3/bmagic/magic04500DispatchTables.c",
 ]

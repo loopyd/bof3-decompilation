@@ -70,7 +70,7 @@ void func_800A9820(u8 arg0);
 void func_8015D71C(s32 arg0);
 s32 func_8017A138(s32 x, s32 y);
 void func_800AF764(void);
-void func_801EF79C(u8 index, s32 mode);
+void drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(u8 index, s32 mode);
 
 /* @source 0x801EF188
  * @behavior Work-byte-2 handler, the opening phase of this overlay's
@@ -177,5 +177,5 @@ void drawBattlerRecordPointSnapPositionWhenSlotUnavailableAndOnRangeHitRaiseFlag
   }
 
   func_800AF764();
-  func_801EF79C(g_battle_work[0xB], 0);
+  drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(g_battle_work[0xB], 0);
 }

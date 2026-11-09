@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801F3698
   - - 2932
-    - asm
-    - func_801F3774
+    - c
+    - drawSemiTransFlatLinePrimWorld04Area17013_801F3774
+    - '@source: src/bof3/world/drawSemiTransFlatLinePrimWorld04Area17013_801F3774.c'
+    - '@behavior: Emits one semi-transparent flat-tinted 0x10-byte line primitive at the shared primitive cursor: stamps the cursor through 0x8017AA80, passes the semi-transparency flag to SetSemiTrans, writes the two corner points as the halfwords at 0x08/0x0A/0x0C/0x0E and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x10.'
   - - 3128
     - asm
     - func_801F3838

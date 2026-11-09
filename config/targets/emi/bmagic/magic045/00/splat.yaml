@@ -51,8 +51,9 @@ segments:
     - asm
     - func_801EF118
   - - 1712
-    - asm
-    - func_801EF2B0
+    - c
+    - fadeWorkTintTripletStepPositionByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroBmagicMagic04500_801EF2B0
+    - '@source: src/bof3/bmagic/fadeWorkTintTripletStepPositionByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroBmagicMagic04500_801EF2B0.c'
   - - 2008
     - asm
     - func_801EF3D8

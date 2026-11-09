@@ -84,8 +84,9 @@ segments:
     - incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C
     - '@source: src/bof3/bmagic/incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C.c'
   - - 5776
-    - asm
-    - func_801F0290
+    - c
+    - add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290
+    - '@source: src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c'
   - - 5896
     - asm
     - func_801F0308

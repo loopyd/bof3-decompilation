@@ -36,6 +36,7 @@ sources = [
     "src/bof3/scenario/claimFrontEndRecordFromWorkBlockSeedPatternGridAndSpritePageRequestResource50Or4DResetArmCountdown2AndAdvanceWorkByte1ScenarioSce15ef100_801D21B4.c",
     "src/bof3/scenario/seedBlinkingEffectRecordsRandomizeVelocityByWorkByteBAndLifeByWorkByte6ArmCountdown80DispatchCue524AndAdvanceWorkByte1ScenarioSce15ef100_801D26BC.c",
     "src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C.c",
+    "src/bof3/scenario/seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

@@ -120,8 +120,10 @@ segments:
     - '@source: src/bof3/scenario/advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84.c'
     - '@behavior: Waits until none of the five record-pointer slots at work object + 0x0C reads zero at record byte 0x06, then increments the shared scenario progress byte g_ScenarioProgress and resets the work area through func_80196070.'
   - - 5116
-    - asm
-    - func_801F7FFC
+    - c
+    - buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC
+    - '@source: src/bof3/scenario/buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC.c'
+    - '@behavior: Publishes the four 16-byte corner vertex records the following emitter fans two translucent Gouraud triangles over: it arms one scratch rotation matrix from work halfwords 0x5A and 0x5C, walks the corner offsets (0, 0), (x, y), (x, 0) and (x, -y) built from the cosine and sine samples of work halfword 0x58 scaled by work halfword 0x5E and shifted up by 4, transforms each through that matrix and adds it to the work position triple at 0x0C/0x10/0x14, storing the x and y sums as plain words and the transformed z shifted up by 8.'
   - - 5488
     - c
     - drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170

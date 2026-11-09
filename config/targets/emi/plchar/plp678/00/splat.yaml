@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801CE7B8
   - - 1540
-    - asm
-    - func_801CEA04
+    - c
+    - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp67800_801CEA04
+    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp67800_801CEA04.c'
+    - '@behavior: Work byte 2 == 7 step of the scratch work object read through the pointer cell 0x1F800044: the word 0x801CEA04 at 0x801D0580 is entry 7 of the thirty-word code-pointer run based at 0x801D0564 that the byte-2 dispatcher func_801CE404 indexes with work-record byte 2 scaled by four, so no jal or j word of this payload names it and it takes no arguments. When work byte 0xB reads 1 it passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into byte 0xB, then re-reads the pointer cell and dispatches on byte 0xB again: zero polls the shared readiness helper func_8014DAEC and reports done as soon as that helper answers nonzero, while a nonzero byte takes one of two arms and both of them then report done whenever the front-end phase byte 0x80143BB0 reads zero. Byte 2 polls the same helper and, once it answers nonzero, passes work byte 8 to the shared resource request helper func_8014D6B8 and writes 3 into byte 0xB, and every other value runs the shared no-argument update helper func_8014D978. When the one done flag is set it clears work byte 0x2B and then byte 0x12B of the record published at 0x80146250, re-reading both pointer cells for the stores. The 0x18-byte frame only keeps $ra at 0x14 and the done flag at 0x10 across the calls, every arm joins on one epilogue, and the roles of work bytes 0xB, 5, 0x2B and 8 stay address-anchored.'
   - - 1844
     - c
     - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp67800_801CEB34

@@ -5,7 +5,7 @@ extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 
 /* Table of 0x20 records of 0x2C bytes at 0x801D3B28, directly after the
  * 0x10-entry 0x18-byte-stride record table at 0x801D39A8 and inside the same
- * Splat `textbin` row. It is zero on disc and filled at runtime: func_801D1F68
+ * Splat `textbin` row. It is zero on disc and filled at runtime: seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
  * seeds one record from the scratchpad work object's position triple at +0x34,
  * its random angle fields and the halfword pair at +0x28 and +0x2A, and clears
  * the spin angle at +0x24. */
@@ -65,7 +65,7 @@ void func_801D1CD4(u8* record);
  * registers from the same slots and returns.
  *
  * Name evidence: the drawn table is the 0x2C-byte-stride record run at
- * 0x801D3B28 the exact lift of 0x801D0DD8 already walks and func_801D1F68 seeds,
+ * 0x801D3B28 the exact lift of 0x801D0DD8 already walks and seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68 seeds,
  * and byte 0x24 of a record is its spin angle: the seed clears it, the draw
  * helper 0x801D1CD4 reads it as the argument of the sine and cosine pair
  * 0x801783C8 and 0x801782FC, and this body adds 0x10 to it once per record per

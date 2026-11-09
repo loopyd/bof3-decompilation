@@ -6,8 +6,8 @@
 extern void func_801F3838(s32 mode);
 extern void func_801F3594(s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2,
                           s16 x3, s16 y3, u8 r, u8 g, u8 b, u8 semi);
-extern void func_801F3774(s16 x0, s16 y0, s16 x1, s16 y1, u8 r, u8 g, u8 b,
-                          u8 semi);
+extern void drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
+    s16 x0, s16 y0, s16 x1, s16 y1, u8 r, u8 g, u8 b, u8 semi);
 void drawGlyphCellMarkerWorld04Area17013_801F388C(s16 x, s16 y, s8 value);
 
 /* @source 0x801F2FA0
@@ -51,13 +51,15 @@ void drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0(s16 x, s16 y,
   func_801F3838(1);
 
   for (col = 0; col < 0xA; col++) {
-    func_801F3774((s16)(x + col * 0xA), (s16)y, (s16)(x + col * 0xA),
-                  (s16)(y + 0x45), 0x96, 0x96, 0x96, 0);
+    drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
+        (s16)(x + col * 0xA), (s16)y, (s16)(x + col * 0xA), (s16)(y + 0x45),
+        0x96, 0x96, 0x96, 0);
   }
 
   for (row = 0; row < 0x8; row++) {
-    func_801F3774((s16)x, (s16)(y + row * 0xA), (s16)(x + 0x59),
-                  (s16)(y + row * 0xA), 0x96, 0x96, 0x96, 0);
+    drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
+        (s16)x, (s16)(y + row * 0xA), (s16)(x + 0x59), (s16)(y + row * 0xA),
+        0x96, 0x96, 0x96, 0);
   }
 
   for (markCol = 0; markCol < 0x9; markCol++) {

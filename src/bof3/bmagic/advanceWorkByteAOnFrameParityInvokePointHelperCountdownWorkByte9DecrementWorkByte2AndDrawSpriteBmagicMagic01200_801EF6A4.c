@@ -17,7 +17,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 void func_800AF3A0(s32 x, s32 y, s32 z, s32 depth, s32 size);
 void func_800AF764(void);
-void func_801EF79C(u8 index, s32 mode);
+void drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(u8 index, s32 mode);
 
 /* @source 0x801EF6A4
  * @behavior Work-byte-2 handler, entry 12 of this overlay's thirteen-entry
@@ -71,5 +71,5 @@ void advanceWorkByteAOnFrameParityInvokePointHelperCountdownWorkByte9DecrementWo
   }
 
   func_800AF764();
-  func_801EF79C(g_battle_work[0xB], 0);
+  drawRotatedTexturedQuadAtWorkScreenPairFromWorkByteBRowTintedByWorkByte9AndPhasedByWorkByteABmagicMagic01200_801EF79C(g_battle_work[0xB], 0);
 }

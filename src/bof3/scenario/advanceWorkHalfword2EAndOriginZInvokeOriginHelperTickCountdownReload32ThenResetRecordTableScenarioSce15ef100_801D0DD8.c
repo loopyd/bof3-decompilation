@@ -6,14 +6,14 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* Table of 0x20 records of 0x2C bytes at 0x801D3B28, directly after the
  * 0x10-entry 0x18-byte-stride record table at 0x801D39A8 and inside the same
- * Splat `textbin` row. It is zero on disc and filled at runtime: func_801D1F68
+ * Splat `textbin` row. It is zero on disc and filled at runtime: seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
  * seeds one record from the scratchpad work object's position triple at +0x34
  * and its random angle fields, and stores the halfword pair at +0x28 and +0x2A
  * that this function clears for the records past the first 0x10. */
 extern u8 D_801D3B28[]; /* @source 0x801D3B28 @kind data */
 
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C(const void* origin, s16 extent, s32 channel_mask);
-void func_801D1F68(u8* record);
+void seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68(u8* record);
 void clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C(void);
 
 /* @source 0x801D0DD8
@@ -42,7 +42,7 @@ void clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C(void);
  * is element 3 of the run whose base 0x801D3918 the overlay entry loads after
  * `sll $v0,$v0,2` of the work byte at +0x1. The helper's arguments are the ones
  * the exact sibling func_801D0D54 records for 0x801D147C: origin block, signed
- * halfword at +0x2E and the flag mask 6. The record init helper func_801D1F68
+ * halfword at +0x2E and the flag mask 6. The record init helper seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
  * has two in-payload call sites, the walk in this body (jal at 0x801D0EB4) and
  * func_801D106C (jal at 0x801D11F8), and the exact lift
  * clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C names this body
@@ -105,7 +105,7 @@ void advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenR
     record = D_801D3B28;
     count = 0u;
     do {
-      func_801D1F68(record);
+      seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68(record);
       count += 1u;
       record += 0x2Cu;
     } while (count < 0x10u);

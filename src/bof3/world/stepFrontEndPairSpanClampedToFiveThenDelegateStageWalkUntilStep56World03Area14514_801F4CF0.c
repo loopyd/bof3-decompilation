@@ -6,13 +6,16 @@
 s32 claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
-/* Stage drawer of this payload at 0x801F4DA4, still an asm boundary: it takes
- * the effect step index, indexes the shared 0x98-byte work records and the
- * payload stage tables with it, and answers 1 while the step stays under the
- * stage length and the stage transition answer afterwards. The original call
- * site copies its answer into the result register with a bare `addu`, so the
- * declared return here is 32-bit wide even though the body narrows itself. */
-s32 func_801F4DA4(u32 arg0);
+/* Stage drawer of this payload at 0x801F4DA4, lifted in
+ * drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4.c:
+ * it takes the effect step index, reads the payload stage-entry table row the
+ * shared work record status word selects, and answers 1 while the step stays
+ * under the stage length and the stage transition answer afterwards. The
+ * original call site copies its answer into the result register with a bare
+ * `addu`, so the declared return here is 32-bit wide even though the body
+ * narrows itself. */
+s32 drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4(
+    u32 arg0);
 
 /* Shared cue request of the main executable: it takes the cue id in the low
  * half. */
@@ -27,7 +30,9 @@ void func_8015DF18(u16 arg0);
  *           grows one unit per step up to a fixed span of five units. At step
  *           five it also queues cue 0x206. It answers 1 while the step stays
  *           under five and, from step five on, the answer of the payload stage
- *           drawer func_801F4DA4 for steps under 0x38 and the constant 2 once
+ *           drawer
+ *           drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4
+ *           for steps under 0x38 and the constant 2 once
  *           the step reaches 0x38. Its one in-image caller is the front-end
  *           state machine at 0x801F45EC, which increments the shared halfword,
  *           stores the new value back and then separates the answers 0, 1 and
@@ -78,7 +83,8 @@ u8 stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area1
   if ((arg0 & 0xFFFFu) < 5u) {
     return result;
   }
-  result = func_801F4DA4(arg0 & 0xFFFFu);
+  result = drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4(
+      arg0 & 0xFFFFu);
   if ((arg0 & 0xFFFFu) < 0x38u) {
     return result;
   }

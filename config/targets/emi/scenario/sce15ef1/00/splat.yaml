@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801D1CD4
   - - 4968
-    - asm
-    - func_801D1F68
+    - c
+    - seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
+    - '@source: src/bof3/scenario/seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68.c'
+    - '@behavior: Effect-record seeder of the 0x2C-byte-stride record tables of this payload, called once per record by the two step handlers that walk 0x801D3B28 and 0x801D3DE8: it copies the scratchpad work object position triple +0x34/+0x38/+0x3C behind 0x1F800044 into the record words +0x00/+0x04/+0x08, seeds the corner offset SVECTORs +0x10 and +0x18 from the shared angular pair 0x801783C8/0x801782FC at +0x10 and -0x10 with their third halfwords cleared, takes three random Euler angles (rand() & 0xFFF, (rand() & 0x7FF) - 0x400, rand() & 0xFFF), builds the scratch rotation matrix through 0x801AFF64 and 0x80179C58/0x80179DF8 with the middle angle negated/0x80179F98, rotates both offset SVECTORs in place with ApplyMatrixSV, arms the scale halfword +0x28 with (rand() & 2) + 3, clears +0x20/+0x22/+0x24 and writes 0x40 into the second scale halfword +0x2A.'
   - - 5256
     - c
     - drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088

@@ -7,7 +7,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 /* Table of 0x2C-byte effect records at 0x801D3DE8, after the 0x20-entry
  * 0x2C-byte-stride table the exact lift
  * advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8
- * walks at 0x801D3B28 and inside the same Splat `textbin` row. func_801D1F68
+ * walks at 0x801D3B28 and inside the same Splat `textbin` row. seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68
  * seeds one record from the scratchpad work object, so each walk of this table
  * re-stamps the records from the object's current points. */
 extern u8 D_801D3DE8[]; /* @source 0x801D3DE8 @kind data */
@@ -21,7 +21,7 @@ u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8Scenario
 
 void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
 void func_801D1678(u8* from, u8* to, u8 intensity);
-void func_801D1F68(u8* record);
+void seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68(u8* record);
 void swapWords(u32* arg0, u32* arg1);
 
 /* @source 0x801D106C
@@ -41,7 +41,7 @@ void swapWords(u32* arg0, u32* arg1);
  * the new first head word compares at or below 0x2F7FFF. It then subtracts 4
  * from the intensity byte at +0x3 and ticks the countdown byte at +0x9 down by
  * one; only when that countdown reaches zero does it exchange the head point
- * with the point at +0x34 word by word, call func_801D1F68 on 0x10 consecutive
+ * with the point at +0x34 word by word, call seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68 on 0x10 consecutive
  * 0x2C-byte records of the effect table at 0x801D3DE8 counted from 0x10 up to
  * 0x20 in an unsigned byte, exchange those two points back, re-arm the
  * countdown with 0x80 and advance the work byte at +0x1 by one. It takes no
@@ -63,7 +63,7 @@ void swapWords(u32* arg0, u32* arg1);
  * its two argument points through func_801AFF04 and widens each projected pair
  * by one screen unit, so the two triples handed to it at +0x18 and +0x34 are
  * the quad's two endpoints and its third argument is the quad's intensity byte.
- * func_801D1F68 copies the object's words at +0x34, +0x38 and +0x3C into the
+ * seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68 copies the object's words at +0x34, +0x38 and +0x3C into the
  * record it is given and fills that record's angle fields from rand, so during
  * the walk the exchange makes the table records read the head point.
  *
@@ -136,7 +136,7 @@ void drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsRe
     record = D_801D3DE8;
     count = 0x10;
     do {
-      func_801D1F68(record);
+      seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68(record);
       count += 1u;
       record += 0x2Cu;
     } while (count < 0x20u);
