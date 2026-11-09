@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF14C
   - - 2644
-    - asm
-    - func_801EF654
+    - c
+    - projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654
+    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654.c'
+    - '@behavior: Transform step of this overlay work step, called by the per-frame dispatcher at 0x801EEE4C between PushMatrix and PopMatrix. It reads the scratchpad work-object pointer cell at 0x1F800044 once, fills a halfword triplet whose first two elements are zero and whose third is the work object byte 0xA shifted left by four, and builds a second triplet from the work object words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 plus half the negated signed halfword 0x3E. RotTrans projects that second triplet into the translation field of a 0x20-byte scratch matrix while storing a flag word beside it, RotMatrix turns the zero-and-ramp triplet into that matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish it. Takes no arguments and returns nothing, and the 0x50-byte frame keeps the return address and one saved register across the two matrix calls.'
   - - 2832
     - asm
     - func_801EF710

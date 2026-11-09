@@ -10,6 +10,6 @@ incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhen
 func_801EF078 = 0x801EF078;
 incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC = 0x801EF0FC;
 func_801EF14C = 0x801EF14C;
-func_801EF654 = 0x801EF654;
+projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654 = 0x801EF654;
 func_801EF710 = 0x801EF710;
 func_801EF988 = 0x801EF988;

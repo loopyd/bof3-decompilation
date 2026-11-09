@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F40F0(void);
+void drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0(
+    void);
 
 /* @source 0x801F3F28
  * @behavior Per-frame handler of the overlay's work record, published at the
@@ -45,5 +46,5 @@ void advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28(
   if (*half >= 0xC0) {
     record[2]++;
   }
-  func_801F40F0();
+  drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0();
 }

@@ -95,8 +95,10 @@ segments:
     - add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290
     - '@source: src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c'
   - - 5896
-    - asm
-    - func_801F0308
+    - c
+    - drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308.c'
+    - '@behavior: Publishes the work object byte 0x9, byte 0xA and halfwords 0x2E and 0x30 into the scratchpad cells 0x1F800004, 0x1F800006, 0x1F800000 and 0x1F800002, picks the draw-mode page 0xA5 while the shared graphic type is 1 or 2 and 0x35 otherwise, links a 0xC-byte draw-mode packet at g_PrimCursor, and emits one semi-transparent gouraud quad around the published halfword pair with half extents taken from the two published bytes and a black-to-dark-blue gradient, then links the 0x24-byte quad. Takes no arguments, returns nothing and keeps a 0x20-byte frame.'
   - - 6388
     - asm
     - func_801F04F4

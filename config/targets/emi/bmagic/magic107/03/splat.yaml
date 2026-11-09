@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EF544
   - - 3608
-    - asm
-    - func_801EFA18
+    - c
+    - projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic10703_801EFA18
+    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic10703_801EFA18.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the scratchpad work-object pointer cell at 0x1F800044 once, then zeroes a three halfword rotation triplet and sets its third element to 0x400 only when unsigned work byte 0x08 has bit 0 set, a quarter turn of the 0x1000 angle circle. It fills a three halfword position triplet with the work object words 0x34 and 0x38 shifted right nine and biased by minus 0x4000 plus half the negated signed halfword 0x3E, projects it through RotTrans into the translation field of a 0x20-byte scratch matrix with a flag word stored beside it, builds that matrix with RotMatrix from the rotation triplet, composes the shared matrix 0x801492E8 under it with MulMatrix2, and publishes the result through SetRotMatrix and SetTransMatrix. Frame 0x50 keeps $ra and $s0 across the calls; it takes no arguments, returns nothing, and no jal or in-image word of this payload names it, so the paired PopMatrix is in its caller outside the archive.'
   - - 3808
     - asm
     - func_801EFAE0

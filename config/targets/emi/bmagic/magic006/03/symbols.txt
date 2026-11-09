@@ -1,3 +1,6 @@
+D_1F800002 = 0x1F800002;
+D_1F800004 = 0x1F800004;
+D_1F800006 = 0x1F800006;
 g_battle_work = 0x1F800044;
 func_801EEC38 = 0x801EEC38;
 func_801EEC90 = 0x801EEC90;
@@ -17,7 +20,7 @@ dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F00
 func_801F0100 = 0x801F0100;
 incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C = 0x801F020C;
 add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290 = 0x801F0290;
-func_801F0308 = 0x801F0308;
+drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308 = 0x801F0308;
 func_801F04F4 = 0x801F04F4;
 T_801F0554 = 0x801F0554;
 func_801F0594 = 0x801F0594;

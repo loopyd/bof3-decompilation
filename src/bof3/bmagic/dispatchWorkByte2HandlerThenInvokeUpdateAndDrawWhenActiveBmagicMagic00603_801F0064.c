@@ -36,10 +36,14 @@ void func_800AF764(void);
 /*
  * This overlay's draw routine at 0x801F0308: copies the GTE matrix to the
  * scratchpad words at 0x1F800000, picks the draw-mode byte from GetGraphType
- * and emits one semi-transparent quad through the primitive cursor. Still an
- * asm row in this target, so it keeps its raw name; it takes no arguments here.
+ * and emits one semi-transparent gouraud quad through the primitive cursor. It
+ * was still an asm row when this body was seeded and kept its raw name then; it
+ * has since been lifted to exact as
+ * drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308
+ * at the same address, so only this declaration and the call changed here.
  */
-void func_801F0308(void);
+void drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308(
+    void);
 
 /* @source 0x801F0064
  * @behavior Copies the three words at 0x801EEC1C (0x801F0100, 0x801F020C,
@@ -66,6 +70,6 @@ void dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_8
   handlers.handlers[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     func_800AF764();
-    func_801F0308();
+    drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308();
   }
 }

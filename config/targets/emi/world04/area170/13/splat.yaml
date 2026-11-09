@@ -111,8 +111,10 @@ segments:
     - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17013_801F4080.c'
     - '@behavior: Byte-2 state handler, entry 4 of the five-entry handler table based at 0x801F588C. Subtracts 0x10 from the work record halfword at 0x30, stores the truncated halfword and tests it as a signed halfword; while it stays above zero the handler only draws. Once the countdown reaches zero or below, the front-end phase byte D_80143BB0 gates sound cue 0x201 through func_8015DF18 and the record state byte at 0x02 is set to 1 so the next dispatch takes entry 1 at 0x801F3DE8 of the same table. The draw routine at 0x801F40F0 runs on every call; the 0x18-byte frame only keeps ra at 0x10 and the pointer cell is re-read after the cue gate.'
   - - 5360
-    - asm
-    - func_801F40F0
+    - c
+    - drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0
+    - '@source: src/bof3/world/drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0.c'
+    - '@behavior: Overlay draw routine of the byte-2 state handlers 0x801F3DE8, 0x801F3F28 and 0x801F4080. Route byte 0x08 of the scratchpad work record at 0x1F800044 selects the bar axis: non-zero fixes all four corner y at ((record halfword 0x3A - 0x80) << 7) | 0x40 and spreads the corners along x, zero fixes all four corner x from the record halfword 0x36 the same way and spreads along y. The spread is the unsigned record halfword 0x30 scaled by one signed byte of D_801F58B8 per packet: corners 0 and 2 take ((axis - 0x7F) << 7) + width + 0x40 and corners 1 and 3 take ((axis - 0x80) << 7) + width - 0x40. Each corner depth is -func_8015477C over ((x + 0x4000) << 9, (y + 0x4000) << 9) halved, minus the record halfword 0x3E, with corners 0 and 1 subtracting a further 0x180. RotTransPers4 projects the four deck vectors into the primitive corners, func_80155560 fills the texture state from 0x25510000 | (0x127 - packet) plus the route byte at bit 21, and func_8014E5A0 appends the 0x28-byte packet to slot 6. One 0x0C-byte draw mode is armed first with the texture depth 0x225 for graph types 1 and 2 and 0x95 otherwise. Takes no arguments, returns nothing and keeps a 0x50-byte frame.'
   - - 6392
     - c
     - dispatchStateByte2Table58bcWorld04Area17013_801F44F8

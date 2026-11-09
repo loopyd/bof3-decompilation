@@ -125,8 +125,10 @@ segments:
     - initArea14813State
     - '@source: src/bof3/world/initArea14813State.c'
   - - 5536
-    - asm
-    - func_801F41A0
+    - c
+    - requestPrimaryState1FWithMatchedRowSubstateWorld03Area14813_801F41A0
+    - '@source: src/bof3/world/requestPrimaryState1FWithMatchedRowSubstateWorld03Area14813_801F41A0.c'
+    - '@behavior: Gate handler over the one-row action table this payload carries at 0x801F615C, reached from outside the payload. Zero-extends both word arguments, takes the game-mode byte address once and walks the table by a byte offset advanced 4 per row, accepting a row when its first byte equals the first argument, its second byte the second argument and the low nibble of its third byte the leading byte of the main-RAM game-mode record 0x80145E98. A walk past the single row answers 0; an accepted row runs the shared front-end startup helper at 0x8015C088, publishes primary state 0x1F in D_801448EB with the matched row fourth byte as the sub-state in D_801448EC, and answers 1. Takes two arguments, returns a 0 or 1 answer and keeps a 0x18-byte frame that saves s0 at 0x10 and ra at 0x14.'
   - - 5748
     - c
     - noopHandlerWorld03Area14813_801F4274

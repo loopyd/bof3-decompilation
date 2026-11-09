@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9Subtract40FromWorkDistanceThenResetByte9To20AndAdvanceWorkByte2OnZeroBmagicMagic07903_801EF1DC.c",
     "src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletSetByte9To4AndAdvanceWorkByte2OnZeroBmagicMagic07903_801EFE88.c",
     "src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByteAAndDecrementGlobalWorkByteBAndAdvanceWorkByte2AtA0BmagicMagic07903_801EF2BC.c",
+    "src/bof3/bmagic/incrementWorkByteAThenDecrementWorkByteBAndInvokeHelperWhenZeroBmagicMagic07903_801EF348.c",
 ]
 psyq_source = "src/bof3/support/magic079_03_psyq.c"

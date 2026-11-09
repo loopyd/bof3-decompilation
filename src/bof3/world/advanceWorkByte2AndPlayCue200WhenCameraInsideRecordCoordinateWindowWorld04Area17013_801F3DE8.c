@@ -18,7 +18,8 @@ void func_8015DF18(u16 cue);
 /* Record draw routine of this overlay, still an `asm` span of this target at
  * 0x801F40F0; it re-reads the same work record and builds the sprite
  * primitive. */
-void func_801F40F0(void);
+void drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0(
+    void);
 
 /* @source 0x801F3DE8
  * @behavior Byte-2 state handler, entry 1 of the five-entry handler table based
@@ -147,5 +148,5 @@ void advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04A
   }
 
 draw:
-  func_801F40F0();
+  drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0();
 }

@@ -63,8 +63,9 @@ segments:
     - asm
     - func_801EF35C
   - - 1960
-    - asm
-    - func_801EF3A8
+    - c
+    - decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8
+    - '@source: src/bof3/bmagic/decrementWorkByteBIfNonZeroThenDecrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic12103_801EF3A8.c'
   - - 2068
     - asm
     - func_801EF414

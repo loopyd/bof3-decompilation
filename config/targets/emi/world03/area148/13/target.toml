@@ -26,6 +26,7 @@ support_sources = [
     "src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld03Area14813_801F2CA0.c",
     "src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld03Area14813_801F39A4.c",
     "src/bof3/world/initArea14813State.c",
+    "src/bof3/world/requestPrimaryState1FWithMatchedRowSubstateWorld03Area14813_801F41A0.c",
     "src/bof3/world/projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544.c",
     "src/bof3/world/stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorld03Area14813_801F361C.c",
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14813_801F3A20.c",

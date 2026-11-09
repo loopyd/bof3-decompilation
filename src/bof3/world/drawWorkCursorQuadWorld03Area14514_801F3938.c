@@ -5,14 +5,17 @@
  * materialises the pointer. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-void func_801F3980(void *point);
+void drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980(
+    s32 *point);
 
 /* @source 0x801F3938
  * @behavior Overlay per-frame step handler for the trail quad: it loads the
  * work-object pointer published at the scratchpad cell 0x1F800044 and copies
  * that object's three cursor words at +0x34, +0x38 and +0x3C into a local
  * twelve-byte point, then passes the address of that point to the overlay's
- * quad renderer at 0x801F3980. The cell pointer is loaded before the stack
+ * quad renderer at 0x801F3980,
+ * drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980.
+ * The cell pointer is loaded before the stack
  * frame because nothing between it and the local stores needs the frame, the
  * two constant seeds func_801F38E0 writes into the same words and the shared
  * work-object layout both place the cursor triple at +0x34, and the renderer
@@ -33,5 +36,6 @@ void drawWorkCursorQuadWorld03Area14514_801F3938(void) {
   point[0] = *(s32 *)(work + 0x34);
   point[1] = *(s32 *)(work + 0x38);
   point[2] = *(s32 *)(work + 0x3C);
-  func_801F3980(point);
+  drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980(
+      point);
 }

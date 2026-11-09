@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F0104
   - - 5748
-    - asm
-    - func_801F0274
+    - c
+    - queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274
+    - '@source: src/bof3/bmagic/queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274.c'
+    - '@behavior: Claims one action slot for every battler that passes both of its scans. The first scan walks the eight enemy battlers, selector 3 to 10, with a byte offset stepped by the 0x118-byte enemy stride; the second walks the three local party members, selector 0 to 2, with a byte offset stepped by the 0x140-byte party stride. A battler is skipped when the shared availability test func_801DB524 reports it inactive or flagged 0x4000, when it equals the acting battler byte at 0x80146374 or the selection byte 0x10 past it, and, in the enemy scan, when its halfword at +0xAA is not below two, its halfword at +0x82 has no 0x20 bit and its flag word at +0x104 has no 0x4000 bit; the party scan keeps the same halfword and 0x20 tests at +0x9A and +0x80 and accepts a flag word at +0x128 carrying either 0x4000 or bit 0. For every accepted battler it claims a pool entry through func_801E590C with the constants 1 and 0x39, scales the returned index by the 0x78-byte slot stride and stamps four fields of that entry: byte +0x01 becomes 2, byte +0x04 receives the running count of stamped entries, byte +0x0B receives the battler selector and the pointer word at +0x74 receives the shared battle record pointer read from 0x801EB4E0, after which it increments that record byte 0x0B and the running count. Takes no arguments and returns nothing; the 0x28-byte frame keeps the return address at 0x24 and $s0..$s4 at 0x10..0x20 across the calls.'
   - - 6392
     - textbin
     - T_801F04F8

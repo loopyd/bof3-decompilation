@@ -14,5 +14,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte1AtC0BmagicMagic10703_801EEF0C.c",
     "src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic10703_801EEF5C.c",
     "src/bof3/support/magic107_03_psyq.c",
+    "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic10703_801EFA18.c",
 ]
 psyq_source = "src/bof3/support/magic107_03_psyq.c"

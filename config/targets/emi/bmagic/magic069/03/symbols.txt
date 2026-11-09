@@ -31,5 +31,5 @@ func_801EFA84 = 0x801EFA84;
 func_801EFC00 = 0x801EFC00;
 func_801EFF14 = 0x801EFF14;
 func_801F0104 = 0x801F0104;
-func_801F0274 = 0x801F0274;
+queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274 = 0x801F0274;
 T_801F04F8 = 0x801F04F8;

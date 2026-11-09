@@ -26,9 +26,10 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
 /* This overlay's transform step: pushes the current matrix, installs the work
  * record's rotation and translation through SetRotMatrix/SetTransMatrix/
- * RotMatrix/MulMatrix2 and projects the record origin with RotTrans. Unlifted,
- * so it keeps its raw name and is called with no arguments. */
-void func_801EF654(void);
+ * RotMatrix/MulMatrix2 and projects the record origin with RotTrans. Lifted
+ * exact at 0x801EF654, and it takes no arguments. */
+void projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654(
+    void);
 
 /* This overlay's large draw step: samples the shared phase helpers
  * func_801782FC/func_801783C8/func_8017A97C, picks its draw-mode tpage from
@@ -93,7 +94,7 @@ void dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic094
   func_801EF988[g_battle_work[1]]();
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
-    func_801EF654();
+    projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654();
     func_801EF14C();
     func_801EF710();
     PopMatrix();
