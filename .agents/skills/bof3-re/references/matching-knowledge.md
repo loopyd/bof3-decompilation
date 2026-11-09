@@ -84,6 +84,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 | One output record filled field by field; first difference is where the computation behind a later field group sits | Write the fields in the original's store order and place a dependent lookup at the field that consumes it: the lookup and the neighbouring store group share scheduler slots, so moving those writes later merges the lookup into the wrong group. One fill measured 75/81 at 328 bytes with the dependent writes moved after a neighbouring field write, and 81/81 at 324 bytes with them at their own fields |
 | Byte size equal and the first difference is the register a later call's argument setup leaves a product in (`mflo` into the neighbouring register) | Assign that product's local above the neighbouring record store. Written between that store and the `+=` that consumes it the same body measured 88 of 99 instructions at the original size; the same local assigned before the store matched, so read this signature as statement position, not as a multiply or argument-order defect |
+| Body short with the first difference at the point the loop's running value is established | When that value arrives as a parameter and the body only advances it, advance the parameter in place (`phase += K;`) instead of copying it into a local. Four local forms measured the same two instructions short at that same first difference, over both widths (`s32`, `u32`) and either declaration position, with chained and with separate stores, so the copy, not the local's width or position, is the lever |
 
 Named extern-array indexing can emit folded `lw table(index)` and assembler
 `lui $at; addu $at,$at,index`; fixed-address arithmetic may emit compiler's opposite
@@ -1020,7 +1021,13 @@ boundaries before expression churn. A store group is one of those statements: wh
 register tie survives declaration order, scope and narrowing variants with the same
 `first=`, the residual is program order. Move that group to the point the original's
 stores show, after the statement that produces the later value; the move alone flipped
-the allocated pair and dropped the scheduling drift that followed the tie. Classify
+the allocated pair and dropped the scheduling drift that followed the tie. Order the
+groups inside that block by shared address expression and take their sequence from the
+original, never by ascending offset: a block written as one ascending per-store sweep
+measured seven instructions short, swapping two of its groups measured three short of
+the grouped form, and chained against separate stores inside one group measured
+identically, so the grouping and the group order are the levers and the chaining is
+free. Classify
 retained improvement, retained frontier, reverted neutral/local regression/structural
 regression. Rank exact bytes, matched
 instructions, later first mismatch, fewer hunks, unchanged size/count/frame, then
