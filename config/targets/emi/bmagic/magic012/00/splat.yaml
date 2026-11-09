@@ -47,8 +47,9 @@ segments:
     - asm
     - func_801EF080
   - - 1416
-    - asm
-    - func_801EF188
+    - c
+    - drawBattlerRecordPointSnapPositionWhenSlotUnavailableAndOnRangeHitRaiseFlag2000ForwardSlotSetHeadingTowardBattleRecordAndAdvanceWorkByte2BmagicMagic01200_801EF188
+    - '@source: src/bof3/bmagic/drawBattlerRecordPointSnapPositionWhenSlotUnavailableAndOnRangeHitRaiseFlag2000ForwardSlotSetHeadingTowardBattleRecordAndAdvanceWorkByte2BmagicMagic01200_801EF188.c'
   - - 1988
     - c
     - advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4

@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348.c",
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp67800_801CE6B8.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp67800_801CFEF0.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp67800_801CEB94.c",

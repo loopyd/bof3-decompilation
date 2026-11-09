@@ -20,15 +20,17 @@ extern u8* D_1F800044;
  */
 u8 func_801CF1A4(void);
 
-/* Layer-position refresh of this payload, still an `asm` row here. Its bytes
- * claim work byte 0x2B, draw the work reference positions and clear the claim
- * again when a probe reads above 64, and they are byte-identical to the span at
- * 0x801CF564 of plp467 that the exact lift of the same tail describes. The
- * exact sibling of this payload at 0x801CEF64 declares the same prototype from
- * the same `jal` form: nothing is set up in the argument registers, so it takes
- * no arguments, and this caller reads no result from $v0.
+/* Layer-position refresh of this payload, lifted as
+ * claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348;
+ * its bytes claim work byte 0x2B, draw the work reference positions and clear
+ * the claim again when a probe reads above 64, and they are byte-identical to
+ * the span at 0x801CF564 of plp467 that the exact lift of the same tail
+ * describes. This caller reaches it through the plain `jal` at self + 0x8C with
+ * nothing set up in the argument registers, so it takes no arguments, and this
+ * caller reads no result from $v0.
  */
-void func_801CF348(void);
+void claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348(
+    void);
 
 /* Work-sequence selector of the shared EXE image, outside this payload. Splat
  * binds the address through this target's generated undefined_funcs_auto.txt.
@@ -89,7 +91,7 @@ void adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectS
       }
     }
   }
-  func_801CF348();
+  claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348();
   func_8014D8D4((u8)((D_1F800044[8] - 1) / 2 + 0x42));
   D_1F800044[0xB] = 0;
   D_1F800044[0xA] = 0xB;

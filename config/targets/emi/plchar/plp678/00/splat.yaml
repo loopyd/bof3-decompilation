@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801CF1A4
   - - 3912
-    - asm
-    - func_801CF348
+    - c
+    - claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348
+    - '@source: src/bof3/plchar/claimWorkByte2BThenRefreshTwoLayerPositionsAndClearWhenLayerInFrontPlcharPlp67800_801CF348.c'
+    - '@behavior: Two-layer position refresh reached by the two plain jal sites 0x801CE744 of the work-byte-3 step at 0x801CE6B8 and 0x801CEF6C of the step at 0x801CEF64, both with nothing set up in the argument registers and neither reading $v0, so the body takes no arguments. It claims work byte 0x2B with 1, then probes the work point read through the scratchpad pointer cell 0x1F800044 by adding the layer offset words 0x80181BAC/0x80181BB0 to the work words 0x34/0x38 and asking the shared route-parameterised position routine func_80154F78 for that point with route 3, then repeats the probe with the pair 0x80181BBC/0x80181BC0 and route 5. For each probe, while the scratchpad gate byte 0x1F800000 reads nonzero and the narrowed sample is at least 0x41, it asks the shared screen-space routine func_80154F28 for the same point and clears work byte 0x2B when the signed reference halfword 0x3E is below that answer, so a probed layer that sits in front releases the claim; the second probe runs whether or not the first released it. The roles of work byte 0x2B, of the two layer offset pairs and of the gate byte are not established, so the name describes the effect. The span is byte-identical to the exact plp026 lift at 0x801D0868 and to the still-unmatched span at 0x801CF564 of plp467, the 0x20-byte frame only keeps $ra at 0x18 across the calls, and the reference halfword 0x3E is re-read through a fresh pointer load rather than kept in a register.'
   - - 4268
     - c
     - dispatchWorkByte2Table0598PlcharPlp67800_801CF4AC

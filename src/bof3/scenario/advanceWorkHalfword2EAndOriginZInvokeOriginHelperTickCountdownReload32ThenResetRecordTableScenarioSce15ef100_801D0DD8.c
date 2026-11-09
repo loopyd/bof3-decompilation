@@ -12,7 +12,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * that this function clears for the records past the first 0x10. */
 extern u8 D_801D3B28[]; /* @source 0x801D3B28 @kind data */
 
-void func_801D147C(u8* origin, s16 x, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C(const void* origin, s16 extent, s32 channel_mask);
 void func_801D1F68(u8* record);
 void clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C(void);
 
@@ -89,7 +89,7 @@ void advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenR
   *(u32*)(work + 0x6C) += 0xC0000;
   advance = *(u16*)(work + 0x2E) - 6;
   *(u16*)(work + 0x2E) = advance;
-  func_801D147C(work + 0x64, advance, 6);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C(work + 0x64, advance, 6);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x20;
     D_1F800044[6] = 0;

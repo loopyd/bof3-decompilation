@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC5C
   - - 416
-    - asm
-    - func_801EEDA0
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04403_801EEDA0
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04403_801EEDA0.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work-object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper func_801E5988. It takes no arguments, returns nothing and writes no other state; the 0x18-byte frame only keeps the return address at 0x10 across the two calls.'
   - - 512
     - c
     - dispatchStateByte1Table0a14BmagicMagic04403_801EEE00

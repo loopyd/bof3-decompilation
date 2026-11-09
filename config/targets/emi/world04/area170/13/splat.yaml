@@ -153,8 +153,10 @@ segments:
     - '@source: src/bof3/world/clearWorldFlags1010World04Area17013_801F4A9C.c'
     - '@behavior: Clears bits 0x0010 and 0x1000 of the shared world-flags halfword D_80146258 with one halfword read-modify-write: folded lui/lhu load, empty load delay slot, andi 0xEFEF, halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 7868
-    - asm
-    - func_801F4ABC
+    - c
+    - replaceStateEntry33With25AndDrawBannerAndQueueCue20COnCrossedFrontSideWorld04Area17013_801F4ABC
+    - '@source: src/bof3/world/replaceStateEntry33With25AndDrawBannerAndQueueCue20COnCrossedFrontSideWorld04Area17013_801F4ABC.c'
+    - '@behavior: Overlay step handler in two parts. It remaps the shared front-end state-entry request byte D_801448EB: while that byte holds 0x33 it is replaced by 0x25, and any other value is left alone. It then runs the overlay banner routine at 0x801F3994 unconditionally. The cue is the last part: when the staged front-side byte D_80143F06 reads 2 with the live byte D_80143F03 reading 1, or when the staged byte reads 3 with the live byte reading 2, the handler requests frontend cue 0x20C through the shared dispatcher at 0x8015DF18. The staged byte is reloaded for the second pair. Takes no arguments and returns nothing; the 0x18-byte frame only keeps ra at 0x10.'
   - - 8024
     - asm
     - func_801F4B58

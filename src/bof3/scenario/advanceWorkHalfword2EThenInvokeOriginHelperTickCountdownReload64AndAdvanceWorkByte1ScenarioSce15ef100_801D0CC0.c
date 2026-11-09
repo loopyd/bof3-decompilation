@@ -4,7 +4,7 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void func_801D147C(u8* origin, s16 x, s32 flags);
+void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C(const void* origin, s16 extent, s32 channel_mask);
 
 /* @source 0x801D0CC0
  * @behavior Entry 1 of the overlay's step-handler code-pointer run at
@@ -55,7 +55,7 @@ void advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceW
   work = D_1F800044;
   advance = *(u16*)(work + 0x2E) + 0x20;
   *(u16*)(work + 0x2E) = advance;
-  func_801D147C(work + 0x64, advance, 6);
+  drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef100_801D147C(work + 0x64, advance, 6);
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x40;
     D_1F800044[1]++;

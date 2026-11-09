@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F7508.c'
     - '@behavior: Dispatches the overlay-local handler table at 0x801FCF50 using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 2380
-    - asm
-    - func_801F754C
+    - c
+    - claimTwoWorkRecordsActivateBothWithScriptSpreadAccumulatorsAndSubmitScenarioScena0300_801F754C
+    - '@source: src/bof3/scenario/claimTwoWorkRecordsActivateBothWithScriptSpreadAccumulatorsAndSubmitScenarioScena0300_801F754C.c'
+    - '@behavior: Entry 0 of the work-byte-1 handler table at 0x801FCF50; claims two 0x98-byte work records through func_8015CA48 identifiers stored at cursor bytes 3 and 4 of the scratchpad work object at 0x1F800044, releases the first record when the second identifier is 0xFF, activates both through func_801A4D54 with the local template at 0x801FCF5C while publishing each identifier as the halfword at 0x1F800000, spreads the two records 0x34 and 0x38 accumulators by -0x1000/+0x1000, sets their 0x20 flag bit, clears their 0x5C byte, submits both through func_8019651C with the 0xF mask and mode 1, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 3296
     - c
     - tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0

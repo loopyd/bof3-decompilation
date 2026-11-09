@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801EF6C0
   - - 2940
-    - asm
-    - func_801EF77C
+    - c
+    - advanceSubstateWhenPadActiveBatlEnd00_801EF77C
+    - '@source: src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EF77C.c'
+    - '@behavior: Battle substate advance on input: while the shared pad state word at 0x80145AA4 reads nonzero, clears the battle state byte at 0x801462E5 and increments the substate index byte at 0x801462E4; leaf function, no frame and no arguments.'
   - - 2996
     - asm
     - func_801EF7B4

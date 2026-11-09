@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
-func_801EEDA0 = 0x801EEDA0;
+forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04403_801EEDA0 = 0x801EEDA0;
 dispatchStateByte1Table0a14BmagicMagic04403_801EEE00 = 0x801EEE00;
 dispatchWorkByte2HandlerThenDrawByWorkByte4BmagicMagic04403_801EEE44 = 0x801EEE44;
 func_801EEEFC = 0x801EEEFC;
