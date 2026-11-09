@@ -111,7 +111,11 @@ spelling alone is not new evidence.
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. Arms that each pass a
+keeps the per-arm argument setup the original shows. The single-call spelling fails at
+that join when one arm passes a literal: a conditional expression, or an `if`/`else`
+assigning one argument local, hoists the literal above the test, fills the load-delay
+slot with it and drops the join's `j`, two instructions short at the original size.
+Arms that each pass a
 different table base never cross-jump, so a dispatch whose arms differ only in that
 base keeps one call site per arm, each with its own setup. Arm stores merge the
 same way: two stores into one cell whose constants share a high half cross-jump
@@ -202,7 +206,11 @@ the `do` supplies the latch compare the original shows. That zeroing also matter
 the counter feeds a scale before the loop: folding `index = 0` into the `for`
 initializer moved the first difference to instruction 0 at unchanged size, while `for`,
 `do`/`while` and `continue`-per-bound-test spellings of the loop measured identical, so
-spend no variant on the loop keyword. The guard applies with no zeroing in play as
+spend no variant on the loop keyword. That neutrality holds only while the latch
+compare is the exit: a counted body whose only exit is a `break` at the top needs the
+`for` form, because `do { ... } while (i < N)` re-emits the stop test at the back
+edge, measured five instructions and 20 bytes over the original with the first
+difference on that back edge. The guard applies with no zeroing in play as
 well: when the original leaves load-delay `nop`s ahead of the loop's own setup, a
 plain `while` hoists that setup into a preheader and fills them, so write an explicit
 guard with a `do`/`while` body and keep the bound expression inline in both tests,
@@ -956,7 +964,11 @@ access keeps that count and still fails: a body that re-read the cell into a fre
 `u8 *` at each access measured 46 of 78 instructions at the original byte size,
 first difference at the cell load's `lui`, while indexing the named extern at each
 access matched. An unchanged-size score collapse whose first difference is a cell
-load's `lui` is that spelling, not allocation work. A post-call reload
+load's `lui` is that spelling, not allocation work. Reuse fails at the other end: one
+local read in two separate statements is a single allocno, so both cell loads take the
+register that local owns (34 of 43, first difference at the entry `lui`, where the
+original loads `$a1` then `$a0`), while two distinct locals matched as well as the
+inline form. A post-call reload
 whose only difference is the register that receives its base (`$v1` where the original
 builds `$v0`) is that local's lifetime, not allocation: keep the local for the accesses
 ahead of the call and write the post-call test on the named cell, which cleared the
