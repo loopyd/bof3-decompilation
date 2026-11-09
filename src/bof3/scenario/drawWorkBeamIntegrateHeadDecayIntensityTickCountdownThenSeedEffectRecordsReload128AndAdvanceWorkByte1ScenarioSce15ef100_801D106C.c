@@ -20,7 +20,11 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
 void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
-void func_801D1678(u8* from, u8* to, u8 intensity);
+/* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
+ * between the head point at +0x18 and the point at +0x34 of the work object and
+ * then its stepped trail, shading both with the intensity byte it is handed. */
+void drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+    u8* from, u8* to, u8 intensity);
 void seedEffectRecordFromWorkPositionWithRandomCornerRotationAndScaleScenarioSce15ef100_801D1F68(u8* record);
 void swapWords(u32* arg0, u32* arg1);
 
@@ -59,7 +63,8 @@ void swapWords(u32* arg0, u32* arg1);
  * `lbu` / `addiu` / `sb` / `andi ...,0x3` / `bnez` group; the claim itself is
  * the record claim the exact lift
  * claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8 records.
- * func_801D1678 builds a POLY_G4 at g_PrimCursor with SetSemiTrans, projects
+ * drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678
+ * builds the POLY_G4 quad pair at g_PrimCursor with SetSemiTrans, projects
  * its two argument points through func_801AFF04 and widens each projected pair
  * by one screen unit, so the two triples handed to it at +0x18 and +0x34 are
  * the quad's two endpoints and its third argument is the quad's intensity byte.
@@ -112,7 +117,8 @@ void drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsRe
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
   point = D_1F800044;
-  func_801D1678(point + 0x18, point + 0x34, 0x40);
+  drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+      point + 0x18, point + 0x34, 0x40);
   motion = D_1F800044;
   *(s32*)(motion + 0x0C) += *(s32*)(motion + 0x64);
   *(s32*)(motion + 0x10) += *(s32*)(motion + 0x68);

@@ -23,7 +23,11 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
 void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
-void func_801D1678(u8* from, u8* to, u8 intensity);
+/* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
+ * between the head point at +0x18 and the point at +0x34 of the work object and
+ * then its stepped trail, shading both with the intensity byte it is handed. */
+void drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+    u8* from, u8* to, u8 intensity);
 void swapWords(u32* arg0, u32* arg1);
 
 /* @source 0x801D12A0
@@ -108,7 +112,8 @@ void claimRecordExchangeHeadStepPairTwiceDrawBeamThenOnProgress23ArmIntensity128
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
   point = D_1F800044;
-  func_801D1678(point + 0x18, point + 0x34, 0x40);
+  drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+      point + 0x18, point + 0x34, 0x40);
   if (g_ScenarioProgress == 0x17) {
     intensity = D_1F800044;
     intensity[3] = 0x80;

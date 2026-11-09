@@ -22,6 +22,7 @@ support_sources = [
     "src/bof3/world/advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroAndOneWorld03Area14813_801F3720.c",
     "src/bof3/world/tickWorkCountdownByteAThenAdvanceWorkByte9AndSetState1World03Area14813_801F44B8.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2WhenReached80ThenDrawWithHalfword32ModeWorld03Area14813_801F2FA4.c",
+    "src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWithHalfword32ModeWorld03Area14813_801F311C.c",
     "src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld03Area14813_801F2CA0.c",
     "src/bof3/world/clearSharedFlagBit46ThenClearOverlayStateByteWorld03Area14813_801F39A4.c",
     "src/bof3/world/initArea14813State.c",

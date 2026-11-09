@@ -52,8 +52,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld03Area14813_801F3020.c'
     - '@behavior: Overlay step gate over the scratchpad work record at 0x1F800044. Reads the record route byte at +8 once: when it is non-zero the gate compares the shared camera word D_80145EC8 with the record halfword at +0x3A, and when it is zero it compares D_80145EC4 with the record halfword at +0x36 instead. Both comparisons build the cell centre ((halfword + 1) << 16) | 0x8000, take the absolute difference from the camera word and advance the record step byte at +2 when that difference exceeds 0x20000. When the first check passes, the record halfword of the other axis and the matching camera word become the shared tail operands: the step byte is advanced when the absolute difference from both the halfword cell start and the next cell start exceeds 0x20000. Takes no arguments, returns nothing and keeps no frame.'
   - - 1308
-    - asm
-    - func_801F311C
+    - c
+    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWithHalfword32ModeWorld03Area14813_801F311C
+    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWithHalfword32ModeWorld03Area14813_801F311C.c'
+    - '@behavior: Entry 4 of the five-entry handler table based at 0x801F4FC4, which the overlay dispatcher at 0x801F2C5C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044. Subtracts 0x10 from the record halfword at offset 0x30, stores the truncated halfword and tests the stored value as a signed halfword: while it stays above zero the handler only draws. Once the countdown reaches zero or below, the front-end phase byte D_80143BB0 gates the sound cue 0x201 through func_8015DF18, which fires only while that byte is zero, the record state byte at offset 0x02 is set to 1, and the handler then re-reads the pointer cell, reads the signed record halfword at offset 0x32 and calls the overlay draw routine at 0x801F31AC with mode -1 when that halfword is zero and mode 0 when it is not. Takes no arguments and returns nothing while keeping a 0x18-byte frame whose only saved register is ra at +0x10; the pointer load precedes the frame creation.'
   - - 1452
     - asm
     - func_801F31AC

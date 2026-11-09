@@ -25,6 +25,7 @@ sources = [
     "src/bof3/world/replaceStateEntry33With25AndDrawBannerAndQueueCue20COnCrossedFrontSideWorld04Area17013_801F4ABC.c",
     "src/bof3/world/drawSemiTransFlatLinePrimWorld04Area17013_801F3774.c",
     "src/bof3/world/drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698.c",
+    "src/bof3/world/drawSemiTransFlatQuadPrimWorld04Area17013_801F3594.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c'
     - '@behavior: Draws the overlay three-glyph banner at the signed halfword origin (x, y) and marks the glyph the work record selected. Arms draw mode 0, covers the box with three semi-transparent (0, 0x80, 0) quads 0x136 wide and 0x5A tall (two 5-pixel end caps and the body), and draws the three 9x7 glyph grids at x+9, x+0x6D and x+0xD1 from the 0x3F-byte stride table at 0x801F58D0 starting at the row phases in 0x801F5990 through 0x801F5992. When bit 4 of the shared frame word 0x80143E6C is set it steps x down one pixel and marks the glyph selected by byte 6 of the scratchpad work record at 0x1F800044, scaled by 100: two unfilled (0xC8, 0xC8, 0xC8) triangles flank the column and four lines draw the 0x5A by 0x46 selection frame. The record is re-read for each of the three marks.'
   - - 2452
-    - asm
-    - func_801F3594
+    - c
+    - drawSemiTransFlatQuadPrimWorld04Area17013_801F3594
+    - '@source: src/bof3/world/drawSemiTransFlatQuadPrimWorld04Area17013_801F3594.c'
+    - '@behavior: Emits one semi-transparent flat-tinted 0x18-byte POLY_F4 quad at the shared primitive cursor: stamps the cursor through 0x8017A9A4, passes the semi-transparency flag to SetSemiTrans, writes the four corners as the halfwords at 0x08/0x0A/0x0C/0x0E/0x10/0x12/0x14/0x16 and the tint bytes at 0x04/0x05/0x06, then appends it through func_8014E5A0 with class 2 and size 0x18.'
   - - 2712
     - c
     - drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698

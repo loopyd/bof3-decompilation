@@ -151,8 +151,10 @@ segments:
     - asm
     - func_801F43DC
   - - 6404
-    - asm
-    - func_801F4504
+    - c
+    - requestPrimaryState14WithMatchedRowSubstateWhenFlag9SetWorld03Area14514_801F4504
+    - '@source: src/bof3/world/requestPrimaryState14WithMatchedRowSubstateWhenFlag9SetWorld03Area14514_801F4504.c'
+    - '@behavior: Overlay entry gate of the 0x14 state family: it walks the seven four-byte rows of the payload table at 0x801F5CC0 with both byte arguments zero-extended and takes the first row whose first two bytes equal those arguments and whose third byte low nibble equals the leading byte of the main-RAM game-mode record 0x80145E98. When no row matches it answers 0; on a match it waits through the shared flag helper func_8015B5D4(D_80144EF0, 9) and answers 0 while that flag is clear, otherwise it runs the shared front-end startup helper func_8015C088, publishes primary state 0x14 in D_801448EB with the matched row fourth byte as the sub-state in D_801448EC and answers 1.'
   - - 6636
     - asm
     - func_801F45EC

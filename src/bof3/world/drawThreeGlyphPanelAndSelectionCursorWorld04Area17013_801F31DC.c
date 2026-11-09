@@ -8,8 +8,9 @@
  * cells starting at the given row phase, and 0x801F3838 arms the draw mode of
  * the texture page at (0x380, 0x100). */
 extern void func_801F3838(s32 mode);
-extern void func_801F3594(s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2,
-                          s16 x3, s16 y3, u8 r, u8 g, u8 b, u8 semi);
+extern void drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+    s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, s16 x3, s16 y3, u8 r, u8 g,
+    u8 b, u8 semi);
 extern void drawSemiTransFlatTrianglePrimWorld04Area17013_801F3698(
     s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, u8 r, u8 g, u8 b, u8 semi);
 extern void drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
@@ -72,15 +73,17 @@ void drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC(s32 x,
 
   func_801F3838(0);
 
-  func_801F3594((s16)x, (s16)(y + 0x05), (s16)(x + 0x05), (s16)y, (s16)x,
-                (s16)(y + 0x55), (s16)(x + 0x05), (s16)(y + 0x5A), 0x00, 0x80,
-                0x00, 0x01);
-  func_801F3594((s16)(x + 0x05), (s16)y, (s16)(x + 0x131), (s16)y,
-                (s16)(x + 0x05), (s16)(y + 0x5A), (s16)(x + 0x131),
-                (s16)(y + 0x5A), 0x00, 0x80, 0x00, 0x01);
-  func_801F3594((s16)(x + 0x131), (s16)y, (s16)(x + 0x136), (s16)(y + 0x05),
-                (s16)(x + 0x131), (s16)(y + 0x5A), (s16)(x + 0x136),
-                (s16)(y + 0x55), 0x00, 0x80, 0x00, 0x01);
+  drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+      (s16)x, (s16)(y + 0x05), (s16)(x + 0x05), (s16)y, (s16)x, (s16)(y + 0x55),
+      (s16)(x + 0x05), (s16)(y + 0x5A), 0x00, 0x80, 0x00, 0x01);
+  drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+      (s16)(x + 0x05), (s16)y, (s16)(x + 0x131), (s16)y, (s16)(x + 0x05),
+      (s16)(y + 0x5A), (s16)(x + 0x131), (s16)(y + 0x5A), 0x00, 0x80, 0x00,
+      0x01);
+  drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+      (s16)(x + 0x131), (s16)y, (s16)(x + 0x136), (s16)(y + 0x05),
+      (s16)(x + 0x131), (s16)(y + 0x5A), (s16)(x + 0x136), (s16)(y + 0x55), 0x00,
+      0x80, 0x00, 0x01);
 
   drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0((s16)(x + 0x09),
                                                       (s16)(y + 0x0A),

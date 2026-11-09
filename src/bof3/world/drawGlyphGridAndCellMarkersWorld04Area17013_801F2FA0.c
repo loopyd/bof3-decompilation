@@ -4,8 +4,9 @@
  * target declare them: 0x801F3594 fills a POLY_F4, 0x801F3774 a LINE_F2 and
  * 0x801F3838 arms the draw mode of the overlay texture page. */
 extern void func_801F3838(s32 mode);
-extern void func_801F3594(s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2,
-                          s16 x3, s16 y3, u8 r, u8 g, u8 b, u8 semi);
+extern void drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+    s16 x0, s16 y0, s16 x1, s16 y1, s16 x2, s16 y2, s16 x3, s16 y3, u8 r, u8 g,
+    u8 b, u8 semi);
 extern void drawSemiTransFlatLinePrimWorld04Area17013_801F3774(
     s16 x0, s16 y0, s16 x1, s16 y1, u8 r, u8 g, u8 b, u8 semi);
 void drawGlyphCellMarkerWorld04Area17013_801F388C(s16 x, s16 y, s8 value);
@@ -45,9 +46,9 @@ void drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0(s16 x, s16 y,
   u8 markCol;
 
   func_801F3838(2);
-  func_801F3594((s16)x, (s16)y, (s16)(x + 0x5A), (s16)y, (s16)x,
-                (s16)(y + 0x46), (s16)(x + 0x5A), (s16)(y + 0x46), 0x40, 0x40,
-                0x40, 1);
+  drawSemiTransFlatQuadPrimWorld04Area17013_801F3594(
+      (s16)x, (s16)y, (s16)(x + 0x5A), (s16)y, (s16)x, (s16)(y + 0x46),
+      (s16)(x + 0x5A), (s16)(y + 0x46), 0x40, 0x40, 0x40, 1);
   func_801F3838(1);
 
   for (col = 0; col < 0xA; col++) {

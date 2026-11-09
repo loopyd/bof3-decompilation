@@ -10,10 +10,11 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * claimed ones. Its result is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-/* Overlay draw helper at 0x801D1678: builds one semi-transparent quad from the
- * head point at +0x18 to the point at +0x34 of the work object and shades it
- * with the intensity byte it is handed. */
-void func_801D1678(u8* from, u8* to, u8 intensity);
+/* Overlay beam draw helper at 0x801D1678: draws the translucent quad pair
+ * between the head point at +0x18 and the point at +0x34 of the work object and
+ * then its stepped trail, shading both with the intensity byte it is handed. */
+void drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+    u8* from, u8* to, u8 intensity);
 
 /* Resident executable reset helper at 0x80196070, which zeroes work-object
  * bytes 0x00-0x04. */
@@ -28,7 +29,7 @@ void func_80196070(void);
  * +0x2E and 8 from the intensity byte at +0x3, storing both back through the
  * same pointer; it then calls the overlay helper 0x801D1A60, re-reads the cell
  * and hands the object's head point at +0x18 and the point at +0x34 to the
- * overlay draw helper 0x801D1678 together with the just-decayed intensity byte
+ * overlay draw helper together with the just-decayed intensity byte
  * at +0x3. It finally ticks the object's countdown byte at +0x9 down by one
  * through a third load of the cell and, when that countdown reaches zero, calls
  * the resident reset helper 0x80196070. The scratchpad cell is re-read after
@@ -70,7 +71,8 @@ void decayWorkHalfword2EAndIntensityByte3InvokeHelperDrawBeamThenResetWorkStateW
   work[3] -= 8;
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   point = D_1F800044;
-  func_801D1678(point + 0x18, point + 0x34, point[3]);
+  drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678(
+      point + 0x18, point + 0x34, point[3]);
   if (--D_1F800044[9] == 0) {
     func_80196070();
   }

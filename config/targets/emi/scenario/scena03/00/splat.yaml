@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F6E70.c'
     - '@behavior: Dispatches the SCENA03 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before the frame is created, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local three-entry handler table at 0x801FCF24 (entries 0x801F6EB4, 0x801F7260, 0x801F7334). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the callee returns nothing of its own.'
   - - 692
-    - asm
-    - func_801F6EB4
+    - c
+    - claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4
+    - '@source: src/bof3/scenario/claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4.c'
+    - '@behavior: Entry 0 of the per-frame handler table at 0x801FCF24; claims two 0x98-byte work records through func_8015CA48 identifiers stored at cursor bytes 3 and 4 of the scratchpad work object at 0x1F800044, releases the first record when the second identifier is 0xFF, activates both through func_801A65A0 with the shared 16-byte entry at 0x801FCF30 while publishing each identifier as the halfword at 0x1F800000 and requesting resource 0x61 with mode 0xC, spreads the two records apart by adding 0x1000 to the first 0x34 word and subtracting 0x1000 from its 0x38 word while giving the second record the mirrored steps, sets their 0x20 flag bit, clears their 0x5C byte, submits both through func_8019651C with the 0xF mask and mode 1, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 1632
     - c
     - tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260
