@@ -59,6 +59,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | First difference is the same value stored to a later byte offset of one record than the original's first store, inside a field run the body repeats | One chained assignment over a record's adjacent byte fields emits those stores in reverse of the written order, so write them as separate ascending statements: the chain measured 113 of 121 instructions with `first=` on the third byte of the first colour run, and the separate form matched on the next gate |
+| Two adjacent byte fields of one record swapped in place, the original issuing a three-`xor` chain that reloads each cell between the operations | Write the swap as three statements on that byte view (`p[7] ^= p[8]; p[8] ^= p[7]; p[7] ^= p[8];`). A temp-byte swap shortened the walk's read-modify-writes by sixteen instructions and twenty bytes; the chain matched at the payload's size. Two elements of one array object are distinct objects, so the idiom stays defined C89 here |
 | Two equality tests on one byte each call the same function with a different constant; the build is four bytes under the original with the first difference at the outer branch's target | Write a `switch` over that byte with one case per constant in the original's test order. Every `if`/`else if` spelling stayed off: the chain and its nested and reversed forms four bytes under, two separate `if`s sixteen over, the disjunction of both tests eight over. The reversed case order kept the size and inverted the second case's test (61 of 63). Mirror topology: a body whose original negates the second test keeps that nested form instead of the switch, where the chain measured 55 of 63 instructions four bytes under with its then arm holding a jump to the merged call, and `if (a != A) { if (a == B) f(C); } else f(D);` matched. Read which test the original negates before choosing between the two forms |
 | One helper is called again at each test of a chain, and the build issues fewer `jal`s to it than the original | Re-issue the call at each site and compare its own result (`p = probe(x, y); if (p == A) ... else { p = probe(x, y); if (p == B) ... }`). Those are successive readings, not one value tested repeatedly, so neither a result local bound once nor a `switch` over one reading matches |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size. Grouping also places the multiply's `mflo`: a scaled sum of two byte-table addends kept left-associative measured a partial with `mflo` ahead of the last addend's add, and parenthesizing each addend's own load-plus-offset fixed that order at unchanged size. A constant bias used once in the sum is part of that choice: `(a >> 9) - 0x4000 + p` keeps the `addiu` on the addend the original bills, while the algebraically equal `(a >> 9) + (p - 0x4000)` folds it into the product group and measured ten instructions short of a matched body of identical size, so a size-equal count deficit that survives corrected statement order is this association, not another ordering probe |
@@ -413,7 +414,10 @@ and the loop spelling is not.
   A `move` that copies a freshly loaded base into a saved register after a store group
   marks a second local's live-range start: one local serving both the store group and
   the loop base keeps that saved register live from the first store on and drops the
-  copy, so load the loop base into its own local after the group.
+  copy, so load the loop base into its own local after the group. The same copy
+  lands on an argument register: with one pointer local spanning an earlier store group
+  and the stores that feed a later call's argument, the build emitted `move $a0,$a1`
+  and four extra bytes, and giving that second region its own local removed both.
 - Entry-block save pair inverted (`sw s0` ahead of `sw ra`) with the first difference
   in those prologue words: that order is post-reload scheduling of the entry block, not
   prologue emission, because GCC 2.7.2 `save_restore_insns` emits saves high-to-low
@@ -816,7 +820,11 @@ the original reuses one cursor load across stores that the current build reloads
    before every access. The inverse split needs no local at all: when a guard read
    and the arm's first store share one loaded base while later stores re-read the
    cell, write every access on the named cell and the store's own possible aliasing
-   of the cell supplies those later reloads.
+   of the cell supplies those later reloads. Once a cell is volatile, the number of
+   locals carrying it still decides allocation: one local per read and one local for
+   every read each put the first cell load in `$a0` where the original has `$v1`
+   (27 of 35 at eight bytes under, 21 of 35 at the payload size), while one local per
+   read group matched. Group by the base the payload shares, not by access.
 2. When a reload runs on one arm only, make it the last statement of that arm.
    Written after the `if`, both arms share it and the branch target lands eight
    bytes before the original target. Size stays equal because the instruction count
