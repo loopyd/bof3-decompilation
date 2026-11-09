@@ -29,6 +29,7 @@ sources = [
     "src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0.c",
     "src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D2474.c",
     "src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D30AC.c",
+    "src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

@@ -85,8 +85,9 @@ segments:
     - drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20
     - '@source: src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c'
   - - 4124
-    - asm
-    - func_801D1C1C
+    - c
+    - drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+    - '@source: src/bof3/scenario/drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C.c'
   - - 5000
     - textbin
     - func_801D1F88

@@ -136,8 +136,10 @@ segments:
     - c
     - invokeHelperByteArgWorld03Area14514_801F4374
   - - 6044
-    - asm
-    - func_801F439C
+    - c
+    - initArea14514State
+    - '@source: src/bof3/world/initArea14514State.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then writes the shared state-entry tuple 0x801448EB = 0x2C, 0x801448EC = 0 and 0x801448ED = 0xF. No in-image jal or pointer word addresses this 64-byte handler, so the overlay reaches it from outside its payload.'
   - - 6108
     - asm
     - func_801F43DC

@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/scenario/drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20.c",
     "src/bof3/scenario/drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370.c",
     "src/bof3/scenario/drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15ef000_801D1690.c",
+    "src/bof3/scenario/drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C.c",
 ]
 psyq_source = "src/bof3/support/sce15ef0_00_psyq.c"

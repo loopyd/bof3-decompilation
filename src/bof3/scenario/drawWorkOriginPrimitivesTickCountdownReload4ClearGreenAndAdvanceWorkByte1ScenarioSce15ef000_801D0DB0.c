@@ -6,7 +6,8 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
     const void* origin, s16 extent, s32 channel_mask);
-void func_801D1C1C(u8* origin, u8* tint, u8 red);
+void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+    u8* origin, u8* tint, u8 red);
 
 /* @source 0x801D0DB0
  * @behavior Entry 2 of the overlay's step-handler run at 0x801D1F88, which the
@@ -14,7 +15,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It hands this overlay's first drawing helper
- * func_801D1C1C (0x801D1C1C) the work object's origin block at +0x34, the
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * (0x801D1C1C) the work object's origin block at +0x34, the
  * block at +0xC and the tint byte at +0x5D, then hands the second drawing
  * helper the sector fan (0x801D1A20) the same origin block at +0x34, the
  * signed halfword at +0x2E and the mode constant 2. It finally ticks the work
@@ -30,7 +32,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * func_801D0C04 loads. This address has no in-payload `jal` and no other word
  * in the payload holds it, so the entry is reached only through that run. Both
  * callees open with GetTPage and SetDrawMode and consume g_PrimCursor, and
- * func_801D1C1C keeps its third argument in $s3 for the primitive it submits,
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * keeps its third argument in $s3 for the primitive it submits,
  * which fixes the drawing role and the argument widths: the third argument of
  * the first call is the `lbu` at +0x5D, and the second argument of the second
  * call is the `lh` at +0x2E, that is a signed halfword. The
@@ -57,7 +60,8 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * @residual none
  */
 void drawWorkOriginPrimitivesTickCountdownReload4ClearGreenAndAdvanceWorkByte1ScenarioSce15ef000_801D0DB0(void) {
-  func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
+  drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+      D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {

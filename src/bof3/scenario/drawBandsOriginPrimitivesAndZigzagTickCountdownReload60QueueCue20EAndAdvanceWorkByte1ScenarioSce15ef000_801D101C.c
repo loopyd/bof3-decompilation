@@ -7,7 +7,8 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
     const void* origin, s16 extent, s32 channel_mask);
-void func_801D1C1C(u8* origin, u8* tint, u8 red);
+void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+    u8* origin, u8* tint, u8 red);
 void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
 
 /* @source 0x801D101C
@@ -16,7 +17,8 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It hands this overlay's first drawing helper
- * func_801D1C1C (0x801D1C1C) the work object's origin block at +0x34, the
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * (0x801D1C1C) the work object's origin block at +0x34, the
  * block at +0xC and the tint byte at +0x5D, then hands the second drawing
  * helper the sector fan (0x801D1A20) the same origin block at +0x34, the signed
  * halfword at +0x2E and the mode constant 2, and then draws the five-segment
@@ -55,7 +57,8 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * @residual none
  */
 void drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C(void) {
-  func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
+  drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+      D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(0x40);

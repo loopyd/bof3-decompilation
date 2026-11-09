@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c",
     "src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c",
     "src/bof3/world/drawGlyphGridAndCellMarkersWorld04Area17013_801F2FA0.c",
+    "src/bof3/world/setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

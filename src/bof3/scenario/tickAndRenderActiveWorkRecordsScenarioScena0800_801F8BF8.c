@@ -7,7 +7,8 @@ extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_801AFE18(void* arg0);
-void func_801F8964(u8* record);
+void drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964(
+    u8* record);
 
 /* @source 0x801F8BF8
  * @behavior Per-frame pass over this overlay's 0x8 work records (the
@@ -20,7 +21,8 @@ void func_801F8964(u8* record);
  * non-zero it invokes that record's work-state handler, taken from the
  * overlay-local pointer table at 0x801FE8FC by the record's state byte at
  * offset 1, with the record in $a0, and then emits the record's sprite through
- * func_801F8964 with the same record. It returns 1 once any record was handled
+ * drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964
+ * with the same record. It returns 1 once any record was handled
  * and 0 when the whole table is unclaimed; it writes no memory of its own and
  * the 0x50-byte frame holds the 0x20-byte projection scratch, the outgoing
  * argument slot of SetDrawMode's fifth argument plus the saved $ra and $s0-$s3
@@ -55,7 +57,8 @@ u32 tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8(void) {
     if (*record != 0) {
       D_801FE8FC[record[1]](record);
       active = 1;
-      func_801F8964(record);
+      drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964(
+          record);
     }
     index += 1u;
     record += 0x1Cu;

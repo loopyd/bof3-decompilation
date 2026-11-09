@@ -8,7 +8,8 @@ void drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
     u8 level);
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
     const void* origin, s16 extent, s32 channel_mask);
-void func_801D1C1C(u8* origin, u8* tint, u8 red);
+void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+    u8* origin, u8* tint, u8 red);
 void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
 
 /* @source 0x801D0F44
@@ -24,7 +25,9 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 level);
  * GetTPage(0,1,0x3C0,0) and writes that level into the prim's r0/g0/b0 bytes,
  * so the argument is a grey fill level. It then draws this overlay's work-origin
  * primitives through exactly the two calls the overlay's step-2 handler
- * func_801D0DB0 makes: func_801D1C1C (0x801D1C1C) with the block at +0x34, the
+ * func_801D0DB0 makes:
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * (0x801D1C1C) with the block at +0x34, the
  * block at +0xC and the tint byte at +0x5D, then the sector fan (0x801D1A20)
  * with the block at +0x34, the signed halfword at +0x2E and the mode constant 2.
  * It then draws the five-segment zigzag through
@@ -56,7 +59,8 @@ void dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndA
   D_1F800044[0x5E] -= 0x40;
   drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
       D_1F800044[0x5E]);
-  func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
+  drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+      D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(0x40);

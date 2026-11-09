@@ -203,8 +203,10 @@ segments:
     - asm
     - func_801F85F0
   - - 7524
-    - asm
-    - func_801F8964
+    - c
+    - drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964
+    - '@source: src/bof3/scenario/drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964.c'
+    - '@behavior: Emits the translucent radial disc of one work record: it projects the record point at +0x0C through func_801AFF04 into a local screen pair and converts the size pair seeded with 0x20 through func_801AFFD8 at the same point, adds the low bit of the frame counter at 0x80143E6C to that converted extent to form the radius, then runs sixteen semi-transparent POLY_G3 emissions at the primitive cursor, each with vertex 0 at the projected point and vertices 1 and 2 at that point offset by the radius rotated by the running phase and by the phase plus 0x100 (the phase advances 0x100 per pass, closing one 0x1000 turn in sixteen triangles), the first triplet taking the record byte at +0x03 in all three channels and the other two staying black, and appends each packet through func_8014E5A0 under class 1 with the 0x1C size; it writes no memory outside the primitive and its 0x40-byte frame holds three 8-byte scratch pairs plus $ra and $s0-$s4.'
   - - 7912
     - c
     - clearWorkTableAt800E4800ScenarioScena0800_801F8AE8
@@ -224,7 +226,7 @@ segments:
     - c
     - tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8
     - '@source: src/bof3/scenario/tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8.c'
-    - '@behavior: Overlay per-frame pass over the 0x8 work records of the 0x1C-byte-stride table at 0x800E4800: it arms the sprite draw mode first (GetTPage(0, 1, 0x3C0, 0) for the texture page, SetDrawMode with the primitive published at g_PrimCursor, and func_8014E5A0 queueing the 0x0C-byte DR_MODE packet), then fills the 0x20-byte projection scratch through func_801AFE18, then sweeps the table with an unsigned byte counter and for each record whose claim byte at offset 0 reads non-zero calls the record''s work-state handler - the overlay-local pointer table at 0x801FE8FC indexed by the record''s state byte at offset 1, called with the record - and then emits the record''s sprite through func_801F8964 with the same record. It returns 1 once at least one record was handled and 0 when every entry is unclaimed, writes no memory of its own, and its 0x50-byte frame holds the 0x20-byte projection scratch, SetDrawMode''s fifth outgoing argument slot and the saved $ra plus $s0-$s3.'
+    - '@behavior: Overlay per-frame pass over the 0x8 work records of the 0x1C-byte-stride table at 0x800E4800: it arms the sprite draw mode first (GetTPage(0, 1, 0x3C0, 0) for the texture page, SetDrawMode with the primitive published at g_PrimCursor, and func_8014E5A0 queueing the 0x0C-byte DR_MODE packet), then fills the 0x20-byte projection scratch through func_801AFE18, then sweeps the table with an unsigned byte counter and for each record whose claim byte at offset 0 reads non-zero calls the record''s work-state handler - the overlay-local pointer table at 0x801FE8FC indexed by the record''s state byte at offset 1, called with the record - and then emits the record''s sprite through drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964 with the same record. It returns 1 once at least one record was handled and 0 when every entry is unclaimed, writes no memory of its own, and its 0x50-byte frame holds the 0x20-byte projection scratch, SetDrawMode''s fifth outgoing argument slot and the saved $ra plus $s0-$s3.'
   - - 8412
     - c
     - tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC

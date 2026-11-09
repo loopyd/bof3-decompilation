@@ -7,7 +7,8 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 void func_8015DF18(u32 cue_id); /* @source 0x8015DF18 */
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
     const void* origin, s16 extent, s32 channel_mask);
-void func_801D1C1C(u8* origin, u8* tint, u8 red);
+void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+    u8* origin, u8* tint, u8 red);
 
 /* The two fields this entry ramps. The original keeps one loaded cell pointer
  * live across both updates, which a flat `u8*` local does not reproduce. */
@@ -28,7 +29,9 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * zero by a fixed step per frame. It then draws this overlay's work-origin
  * primitives through exactly the two calls the overlay's step-5 handler
  * drawBandsOriginPrimitivesAndZigzagTickCountdownReload60QueueCue20EAndAdvanceWorkByte1ScenarioSce15ef000_801D101C
- * makes: func_801D1C1C (0x801D1C1C) with the block at +0x34, the block at
+ * makes:
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * (0x801D1C1C) with the block at +0x34, the block at
  * +0xC and the tint byte at +0x5D, then the sector fan at 0x801D1A20 with the
  * block at +0x34, the signed halfword at +0x2E and the mode constant 2. Unlike
  * that handler it draws no zigzag. It finally ticks the work object's countdown
@@ -52,7 +55,9 @@ typedef struct ScenarioSce15ef000WorkRamps {
  * and decayAngleBy16TintBy8DrawBandsOriginPrimitivesAndZigzagTickCountdownReload16ResetAngle64AndAdvanceWorkByte1ScenarioSce15ef000_801D10C4
  * issue, and the countdown tail is the former's tail with cue 0x20D instead of
  * 0x20E and no zigzag call. The tint role of +0x5D follows the `u8 red`
- * argument those lifts give func_801D1C1C, which the `sb $s2, 0x4/0x5/0x6($s0)`
+ * argument those lifts give
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C,
+ * which the `sb $s2, 0x4/0x5/0x6($s0)`
  * stores of
  * drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220 fix
  * as the r channel of the Sprt this overlay tints.
@@ -76,7 +81,8 @@ void raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue
 
   work->red_5d += 8;
   work->angle_2e += 0x10;
-  func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
+  drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+      D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {

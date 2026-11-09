@@ -8,7 +8,8 @@ void drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
     u8 level);
 void drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
     const void* origin, s16 extent, s32 channel_mask);
-void func_801D1C1C(u8* origin, u8* tint, u8 red);
+void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+    u8* origin, u8* tint, u8 red);
 
 /* @source 0x801D0E5C
  * @behavior Entry 3 of the overlay's step-handler run at 0x801D1F88, which the
@@ -23,7 +24,9 @@ void func_801D1C1C(u8* origin, u8* tint, u8 red);
  * zero arm submits 0xFF instead, which is what a ramp that has wrapped from
  * 0xC0 to 0x00 looks like: the level never goes fully dark. It then draws this
  * overlay's work-origin primitives through exactly the two calls the overlay's
- * step-2 handler func_801D0DB0 makes: func_801D1C1C (0x801D1C1C) with the block
+ * step-2 handler func_801D0DB0 makes:
+ * drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C
+ * (0x801D1C1C) with the block
  * at +0x34, the block at +0xC and the tint byte at +0x5D, then the sector fan
  * (0x801D1A20) with the block at +0x34, the signed halfword at +0x2E and the
  * mode constant 2. Finally it ticks the work object's countdown byte at +0x9
@@ -79,7 +82,8 @@ void brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownR
   else
     drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220(
         0xFF);
-  func_801D1C1C(D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
+  drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C(
+      D_1F800044 + 0x34, D_1F800044 + 0xC, D_1F800044[0x5D]);
   drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20(
       D_1F800044 + 0x34, *(s16*)(D_1F800044 + 0x2E), 2);
   if (--D_1F800044[9] == 0) {

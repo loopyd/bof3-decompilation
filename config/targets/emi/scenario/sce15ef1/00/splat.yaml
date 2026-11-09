@@ -128,8 +128,10 @@ segments:
     - asm
     - func_801D26BC
   - - 7476
-    - asm
-    - func_801D2934
+    - c
+    - drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934
+    - '@source: src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityBeforeOrAfterLifeExpiryByWorkByte6TickCountdown9ThenAdvanceWorkByte1ScenarioSce15ef100_801D2934.c'
+    - '@behavior: Entry 4 of the ten-word overlay step-handler code-pointer run at 0x801D3954 and of the eleven-word run at 0x801D397C: sets bit 6 of the flag byte behind the work object pointer word +0x4C, then walks the ten-byte effect records of the shared table at 0x800EA200 up to this payload own count halfword 0x801D40A8. For a record whose blink flag reads nonzero, the scratchpad work byte +0x6 selects the phase: while it reads zero the record adds its signed velocity bytes +0x8 and +0x9 into the position halfwords +0x4 and +0x6 and decrements its life byte +0x1 only while that life byte reads nonzero, and while it reads nonzero the record decrements the life byte in place and adds the velocity only after that life byte has reached zero. The record is then drawn as one 0xC-byte semi-transparent primitive at its position through the cursor at 0x8014598C after preparation by 0x8017AA30, with the packed colour halfword +0x2 expanded per five-bit channel, and submitted under OT slot 2 through 0x8014E5A0; every record, drawn or not, has its blink flag complemented. The body finally ticks work countdown byte +0x9 down by one and, on zero, advances work byte +0x1 by one.'
   - - 8004
     - c
     - invokeHelperScenarioSce15ef100_801D2B44

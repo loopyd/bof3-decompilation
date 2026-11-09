@@ -289,10 +289,12 @@ segments:
     - c
     - dispatchRouteHandlerScenarioScena0300_801FC704
     - '@source: src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c'
-    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, func_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, func_801FC7EC, requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC, func_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
+    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, func_801FC8AC, requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8, requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC, requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC, func_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
   - - 23532
-    - asm
-    - func_801FC7EC
+    - c
+    - requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC
+    - '@source: src/bof3/scenario/requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC.c'
+    - '@behavior: Route 0x33 handler of this overlay, reached from the route dispatcher at 0x801FC704 through jal 0x801FC7AC with both packed record words forwarded unchanged: it queries the shared scenario bank D_8014686C through func_8015B5D4(D_8014686C, 1) and returns 0 when that reports nonzero, then queries index 0; a nonzero answer is confirmed by a second index-0 query and the body then requires the first word high half in 3..4 and the second word equal to 0x40000 to request primary state 1, while a zero answer requires the first word high half in 2..4 and the second word equal to 0x60000 to request primary state 2. The request is the single store of the picked constant 1 or 2 into the shared handler-index byte D_80146874, which the overlay primary-state table is indexed by; every path returns 0.'
   - - 23724
     - asm
     - func_801FC8AC
