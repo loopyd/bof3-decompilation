@@ -82,8 +82,9 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkByte9FromHelperB0058AndAdvanceWorkByte2BmagicMagic00903_801EF740.c'
     - '@behavior: Handler entry 0 of the nine-word pointer run at 0x801EEC04, whose tail 0x801EEC18..0x801EEC27 is the four-word table that 0x801EF6B0 copies into its frame and dispatches on scratchpad work byte 2, so this span runs for work byte 2 equal to 0. It calls the out-of-image helper at 0x800B0058 with no arguments and stores the returned byte at byte width into the work record countdown byte at offset 0x9, then re-reads the scratchpad pointer cell at 0x1F800044 and increments that record work byte at offset 0x2, advancing the state the table indexes. The 0x18-byte frame only keeps $ra at 0x10 across the call, the cell is re-read for the second access because the store through the loaded pointer may republish it, and the span reads or writes no other state. The pointer word at 0x801EEC18 holds its address and no jal in this payload reaches it, which is the dispatch-table shape rather than a missing caller.'
   - - 2952
-    - asm
-    - func_801EF788
+    - c
+    - decrementWorkByte9ThenInvokeBattleHelperOnZeroThenSetWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic00903_801EF788
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeBattleHelperOnZeroThenSetWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic00903_801EF788.c'
   - - 3092
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenZeroBmagicMagic00903_801EF814

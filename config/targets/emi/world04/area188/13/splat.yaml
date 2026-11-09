@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801F3400
   - - 2180
-    - asm
-    - func_801F3484
+    - c
+    - retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484
+    - '@source: src/bof3/world/retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484.c'
+    - '@behavior: Overlay progress step handler, element 3 of the nine-word handler run D_801F4E04 that the dispatcher 0x801F32C0 indexes with work byte 1: it advances the work record origin word 0x6C by 0xC0000, retreats the extent halfword 0x2E by 6, renders the record through 0x801F38E0 with the origin block 0x64 and channel mask 6, decrements the countdown byte 9 and, on the frame it reaches zero, re-arms it with 0x20, clears the frame byte 6, advances work byte 1, clears the record table at 0x800E4800, copies the origin triple 0x64 0x68 0x6C into the position triple 0x34 0x38 0x3C, re-seeds the first 0x10 entries of the 0x2C-stride effect table at 0x800E48C0 and queues the front-end cue 0x215.'
   - - 2456
     - c
     - seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598

@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801EFB00
   - - 4328
-    - asm
-    - func_801EFCE8
+    - c
+    - drawSixTileTexturedRowAtScreenPairFromTileTableTintedBySelectorRecordFlagsBmagicMagic06000_801EFCE8
+    - '@source: src/bof3/bmagic/drawSixTileTexturedRowAtScreenPairFromTileTableTintedBySelectorRecordFlagsBmagicMagic06000_801EFCE8.c'
+    - '@behavior: Draws one row of six 12x12 texel cells from the overlay tile table at 0x801F0B98 at the screen pair (x, y), advancing x by 0x14 per cell. Each cell is a SetPolyFT4 POLY_FT4 from g_PrimCursor with tpage GetTPage(0, 1, 0x3C0, 0x100) and clut GetClut(0, 0x1E0); its four uv corners come from the entry''s u halfword at +0 and v halfword at +2, each widened by 0xC into the second column and row. The tint is the grey 0x30 stored in the scratchpad word 0x1F800004, raised to 0x80 when the cell''s own flag byte in the 0x118-byte record at 0x801EB6DF + (D_80146384 - 3) * 0x118 passes that arm''s compare. The selector byte 0x80146384 chooses the record, the cell number chooses the byte through a six-arm switch, and the row is queued with GpuAppendPrim(2, 0x28).'
   - - 4932
     - c
     - dispatchStateByte1Table0bb0BmagicMagic06000_801EFF44

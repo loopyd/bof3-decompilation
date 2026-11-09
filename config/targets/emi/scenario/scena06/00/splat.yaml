@@ -180,8 +180,8 @@ segments:
     - c
     - noopHandlerScenarioScena0600_801FDE2C
   - - 29236
-    - asm
-    - func_801FDE34
+    - c
+    - waitFlag27ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0DScenarioScena0600_801FDE34
   - - 29348
     - asm
     - func_801FDEA4

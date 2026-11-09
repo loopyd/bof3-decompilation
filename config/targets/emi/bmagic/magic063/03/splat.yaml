@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF1C8
   - - 1764
-    - asm
-    - func_801EF2E4
+    - c
+    - invokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06303_801EF2E4
+    - '@source: src/bof3/bmagic/invokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06303_801EF2E4.c'
+    - '@behavior: Step handler entry 4 of the five-word code pointer run at 0x801EEC04, invoked with no arguments by the dispatcher at 0x801EEF74. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before its 0x18-byte frame, and tests that object unsigned byte 0x0B; only when that byte is zero does it pass the object unsigned byte 0x04 to the main-executable helper at 0x800A9820, load the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0x0B by one at byte width and invoke the shared helper at 0x801E5988 with the store filling the call delay slot.'
   - - 1856
     - c
     - dispatchWorkRecordByte1HandlerBmagicMagic06303_801EF340

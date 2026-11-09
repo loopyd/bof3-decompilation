@@ -38,5 +38,6 @@ support_sources = [
     "src/bof3/bmagic/raiseFlag4SetActingBattlerFlag20ClearFlag4ThenInvokeHelperWhenWorkByteBIs2BmagicMagic15103_801EF938.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSeedWorkTripletRandomByteBAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801F11E0.c",
     "src/bof3/bmagic/queueSlotEveryFourthTickSetByte1AndByte4PublishWorkPointerIncrementWorkBytesBAnd4ThenDecrementWorkByteAAndAdvanceWorkByte2WhenSharedRecordByte2Is5BmagicMagic15103_801EFF94.c",
+    "src/bof3/bmagic/decrementWorkByte9ThenQueueSlotClearByte1PublishWorkPointerIncrementWorkByteBInvokeHelperAt103RearmByte9To20AndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFC68.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

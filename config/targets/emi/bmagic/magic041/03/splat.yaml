@@ -75,8 +75,9 @@ segments:
     - copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484
     - '@source: src/bof3/bmagic/copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484.c'
   - - 2260
-    - asm
-    - func_801EF4D4
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic04103_801EF4D4.c'
   - - 2340
     - c
     - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic04103_801EF524

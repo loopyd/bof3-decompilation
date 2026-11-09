@@ -21,7 +21,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * %lo(SYM)(at)` rather than a shared record base, so each addressed byte keeps
  * its own flat symbol; the two are byte +0x01 and word +0x74 of the same entry.
  * This target's generated undefined_syms_auto.txt carries both addresses because
- * the asm handlers func_801EFAAC, func_801EEF24 and func_801EFC68 still
+ * the asm handlers func_801EFAAC and func_801EEF24 still
  * reference them. */
 extern u8 D_801EC331[]; /* @source 0x801EC331 @kind data */
 extern u8 D_801EC3A4[]; /* @source 0x801EC3A4 @kind data */

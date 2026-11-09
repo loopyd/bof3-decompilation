@@ -28,6 +28,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2728.c",
     "src/bof3/boss/applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2780.c",
     "src/bof3/boss/copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8.c",
+    "src/bof3/boss/copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C2948.c",
     "src/bof3/boss/applyMainLookupRecord30CClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C28E0.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2888.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C29E8.c",

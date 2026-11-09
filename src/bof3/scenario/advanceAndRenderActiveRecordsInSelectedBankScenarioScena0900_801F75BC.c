@@ -8,15 +8,17 @@ extern u8 *scenarioScena0900Work;
  * area; only a0 is live at the call site. */
 void func_801AFE18(void *arg0);
 
-/* 0x801F7424 — this overlay's per-record emitter: it draws one translucent
- * grid-cell quad from the record's position words at 0x18 and 0x1C and its
+/* 0x801F7424 — this overlay's per-record emitter: it draws one semi-transparent
+ * flat triangle from the record's position words at 0x18 and 0x1C and its
  * colour/pattern bytes at 0x03 and 0x04. */
-void func_801F7424(void *record);
+void emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424(
+    u8 *record);
 
 /* One 0x28-byte record of the 32-record effect bank at 0x800E5000 whose bank
  * is selected by scratchpad work byte 6 with stride 0x500. The seeding helper
  * func_801F76D0 fills the position and velocity words and the emitter
- * func_801F7424 reads the colour, pattern and position fields, so only the
+ * emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424
+ * reads the colour, pattern and position fields, so only the
  * offsets those three functions touch are modelled here.
  */
 typedef struct ScenarioScena0900EffectRecord {
@@ -45,7 +47,9 @@ typedef struct ScenarioScena0900EffectRecord {
  * to the 0x10 velocity, decrements the fade byte at 0x03 by 4, reseeds the
  * pattern byte at 0x04 from `rand() & 7`, decrements the countdown byte at
  * 0x02 and clears the lead byte when that countdown reaches zero, then calls
- * the record emitter func_801F7424 with the record. It takes no arguments and
+ * the record emitter
+ * emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424
+ * with the record. It takes no arguments and
  * returns 1 once at least one active record was handled and 0 otherwise; the
  * 0x40-byte frame holds the 0x20-byte scratch area func_801AFE18 fills plus
  * the saved $ra/$s0-$s2 of the sweep.
@@ -76,7 +80,8 @@ s32 advanceAndRenderActiveRecordsInSelectedBankScenarioScena0900_801F75BC(void) 
       if (--record->life_02 == 0) {
         record->flags_00 = 0;
       }
-      func_801F7424(record);
+      emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424(
+          (u8 *)record);
       handled = 1;
     }
     record++;

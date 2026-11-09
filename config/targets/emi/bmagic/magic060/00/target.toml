@@ -30,5 +30,6 @@ support_sources = [
     "src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F082C.c",
     "src/bof3/bmagic/drawKindSelectedValueTextOrRulePlaceholderBmagicMagic06000_801EF470.c",
     "src/bof3/bmagic/decrementWorkByteBRecordCountersOnFrameParityThenSetWorkByte2ToOneWhenCounterIsZeroSubmitPublishedRecordForwardBattleByteAndInvokeHelperOnFlag80BmagicMagic06000_801F09E0.c",
+    "src/bof3/bmagic/drawSixTileTexturedRowAtScreenPairFromTileTableTintedBySelectorRecordFlagsBmagicMagic06000_801EFCE8.c",
 ]
 psyq_source = "src/bof3/support/magic060_00_psyq.c"
