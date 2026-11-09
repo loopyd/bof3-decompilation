@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F0178
   - - 5692
-    - asm
-    - func_801F023C
+    - c
+    - decrementWorkByte9ThenQueueSlotPairSelector55PublishRecordPointerInvokeHelperAt100ThenRequestPartyResourceElseInvokeEnemyScriptRearmByte9AndAdvanceWorkByte2BmagicMagic05603_801F023C
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenQueueSlotPairSelector55PublishRecordPointerInvokeHelperAt100ThenRequestPartyResourceElseInvokeEnemyScriptRearmByte9AndAdvanceWorkByte2BmagicMagic05603_801F023C.c'
+    - '@behavior: Step 4 of the nine-word code pointer run based at 0x801EEC10, reached through the work-byte-2 dispatcher. It decrements the scratchpad work object byte 9 at byte width and runs the rest only when that countdown reaches zero. On expiry it claims two queued action slots with mode 1 and selector 0x55, sets the slot mode byte 1 to 0 for the first claim and to 2 for the second, stores the shared battle record pointer from 0x801EB4E0 into the slot word at +0x74 and advances that record byte 0xB each time. It then runs the main-executable helper selected by 0x100. It reads the acting battler byte at 0x80146374 and, while that byte is below 3, publishes the matching 0x140-byte party work record into the current record cell at 0x80146250 as the argument of func_801DD858 and restores the saved cell. It re-reads the acting battler byte and, while it is still below 3, publishes the matching party record as the scratchpad work object, requests resource for that record byte 8 plus 0x10, restores the saved work object and requests resource again for that object byte 8 plus 0x10. Once the acting battler byte is 3 or above it instead calls func_801E257C with that byte as enemy work index and 4 as script byte. Both arms then set work byte 9 to 0x1E and increment work byte 2 at byte width. It takes no arguments, returns nothing, uses a 0x20-byte frame that keeps the return address and three saved registers and writes no other state.'
   - - 6188
     - c
     - runSharedUpdateThenDecrementWorkByte9AndRaiseFlag20SetByte5CToOneClearWorkColorTripletAndAdvanceWorkByte2BmagicMagic05603_801F042C

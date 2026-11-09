@@ -4,7 +4,9 @@ typedef void (*Boss05516Handler)(void);
 
 void applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2780(
     void);
-void func_800C27E8(void);
+extern void
+copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8(
+    void); /* @source 0x800C27E8 */
 
 /* @source 0x800C2728
  * @behavior Overlay step dispatch on the state byte of the work record
@@ -27,7 +29,7 @@ void func_800C27E8(void);
 void dispatchStateByte2LocalPairBossBoss05516_800C2728(void) {
   Boss05516Handler handlers[2] = {
       applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2780,
-      func_800C27E8};
+      copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

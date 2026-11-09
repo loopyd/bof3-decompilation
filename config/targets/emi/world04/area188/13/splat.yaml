@@ -141,8 +141,8 @@ segments:
     - asm
     - func_801F477C
   - - 7232
-    - asm
-    - func_801F4840
+    - c
+    - armRecordLevel5AndSetRecordByte7WithinModeLimitThenRetreatHalfword0aWorld04Area18813_801F4840
   - - 7392
     - c
     - advanceCounter2By2World04Area18813_801F48E0

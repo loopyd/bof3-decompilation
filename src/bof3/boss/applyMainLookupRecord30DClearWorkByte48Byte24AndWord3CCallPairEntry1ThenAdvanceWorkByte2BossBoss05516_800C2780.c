@@ -9,9 +9,13 @@ void func_8014DD3C(s32 entry); /* @source 0x8014DD3C */
 
 /* Entry 1 of this overlay's local two-entry handler pair; the byte-2 dispatcher
  * dispatchStateByte2LocalPairBossBoss05516_800C2728 seeds the pair and this body
- * calls it directly. It stays an asm boundary, so the raw map name is the
- * target's canonical spelling. */
-void func_800C27E8(void);
+ * calls it directly. That entry was an asm boundary when this lift measured
+ * exact, so the raw map name was its spelling then; it has since been lifted as
+ * copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8,
+ * and the call below keeps the name that map row carries now. */
+extern void
+copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8(
+    void); /* @source 0x800C27E8 */
 
 /* Scratchpad work-record pointer cell: the battle code publishes the work
  * record here and every access reaches it through this cell. The cell is a
@@ -51,6 +55,6 @@ void applyMainLookupRecord30DClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdv
   g_battle_work[0x48] = 0;
   g_battle_work[0x24] = 0;
   FIELD_REF(s32, g_battle_work, 0x3C) = 0;
-  func_800C27E8();
+  copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C27E8();
   g_battle_work[2]++;
 }

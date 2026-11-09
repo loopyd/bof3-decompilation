@@ -75,5 +75,6 @@ support_sources = [
     "src/bof3/scenario/setFlagBit0RequestFrontSelectorContextArmEffectBankThenSetFlagBit1AndClearStateOnProgress11ScenarioScena0900_801F841C.c",
     "src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress9SetFlag3FOrProgress2AndClearStateScenarioScena0900_801F9354.c",
     "src/bof3/scenario/armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C.c",
+    "src/bof3/scenario/clearPartySlotsThenRearmEffectGroupAndResetEffectSlotsScenarioScena0900_801FDF54.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

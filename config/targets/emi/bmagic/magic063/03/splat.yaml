@@ -47,8 +47,10 @@ segments:
     - dispatchWorkByte2HandlerBmagicMagic06303_801EEF74
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06303_801EEF74.c'
   - - 996
-    - asm
-    - func_801EEFE4
+    - c
+    - copySelectedBattlerRecordTripletPlus2000000SeedByte9RandomZeroByteBClaimPoolRecordCountByteBAdvanceWorkByte2BmagicMagic06303_801EEFE4
+    - '@source: src/bof3/bmagic/copySelectedBattlerRecordTripletPlus2000000SeedByte9RandomZeroByteBClaimPoolRecordCountByteBAdvanceWorkByte2BmagicMagic06303_801EEFE4.c'
+    - '@behavior: Work byte 2 entry 0 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044, uses work byte 4 to pick the 0x140-byte-stride party battler record at 0x80145E90 when that index stays below three and the 0x118-byte-stride enemy record at 0x801EB2E8 otherwise, copies that record words 0x34, 0x38 and 0x3C into the same words of the work object while adding 0x2000000 to the third, seeds work byte 9 with one plus the low four bits of rand(), clears work byte 0xB and advances work byte 2, then claims one record of the pool at 0x801F0454 and on a non-0xFF answer stamps its byte 1 with 1 and its word 0x1C with the work-object pointer and raises work byte 0xB, all in a 0x18-byte frame that keeps only $ra.'
   - - 1296
     - asm
     - func_801EF110

@@ -25,6 +25,7 @@ support_sources = [
     "src/bof3/world/claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24.c",
     "src/bof3/world/setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618.c",
     "src/bof3/world/setStatusFFFFAndStateEntry2BSubstate1WhenGateClearWorld04Area18813_801F4670.c",
+    "src/bof3/world/armRecordLevel5AndSetRecordByte7WithinModeLimitThenRetreatHalfword0aWorld04Area18813_801F4840.c",
     "src/bof3/support/area188_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

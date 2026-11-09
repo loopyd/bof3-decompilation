@@ -66,8 +66,10 @@ segments:
     - dispatchStateByte1Table07d0BmagicMagic09203_801EF7FC
     - '@source: src/bof3/bmagic/magic09203DispatchTables.c'
   - - 3136
-    - asm
-    - func_801EF840
+    - c
+    - dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicMagic09203_801EF840
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicMagic09203_801EF840.c'
+    - '@behavior: Overlay step handler that dispatches on the scratchpad work record byte 2 and then runs the active update and draw passes. It reads the work record from the pointer cell at 0x1F800044, scales that record byte 2 by four and calls the selected word of the handler table at 0x801F07D8 with no arguments and no index bound, then re-reads the cell because the handler may republish it, and only when the reloaded record bytes 0 and 2 are both non-zero calls the shared main-executable update pass func_800AF764 and then this overlay own draw pass func_801EFB04. The 0x18-byte frame keeps only the return address at 0x10 and the cell load precedes frame creation; the 0x80-byte span takes no arguments and returns nothing.'
   - - 3264
     - c
     - clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic09203_801EF8C0

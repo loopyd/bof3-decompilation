@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801EF9F4
   - - 3748
-    - asm
-    - func_801EFAA4
+    - c
+    - drawTranslucentGouraudQuadBandOfSixtyFourQuadsSteppingSixtyFourthTurnWithRandJitteredWorkByteAProfileTintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801EFAA4
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadBandOfSixtyFourQuadsSteppingSixtyFourthTurnWithRandJitteredWorkByteAProfileTintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801EFAA4.c'
+    - '@behavior: Middle draw helper of this overlay work-byte-2 handler group, invoked with no arguments from the jal at 0x801EF048 in dispatchWorkByte2HandlerThenInvokeDrawHelpersAndPopWhenActiveBmagicMagic03903_801EEFA8 between func_801EF9F4 and func_801F0054 while work byte 0 is odd and byte 2 is non-zero. It publishes work byte 0x0A into scratchpad halfword 1F800008, takes the rand-jittered profile angle ((rand() & 3) + work byte 9) & 0xF shifted left eight into 1F80000A, publishes 0x80 into 1F80000C, and derives the driven radius 1F800006 as twice the 801782FC sample of that angle times the amplitude shifted right twelve less six amplitudes and the profile radius 1F80000E as eight amplitudes less twice the 801782FC sample times the amplitude shifted right twelve minus 0x80. It fills the colour halfwords 1F800000, 1F800002 and 1F800004 from the 3-byte-stride palette row at 0x801F0414 selected by work byte 4, multiplied by work byte 9 below 0x10 and shifted left four from 0x10 up, primes the quad at phase zero through 801783C8 and 801782FC scaled by the driven radius and by 0x80 and shifted right twelve, and runs sixty-four passes at phase i << 6 that republish both profile radii from a fresh jittered angle, carry the primed edges into the leading vertices, build the far vertices from the phase samples, offset the work record words 0x34 and 0x38 by the signed 1F80002C halfword shifted left nine, and link a 0xC-byte packet plus a 0x24-byte POLY_G4 through func_80155A08 with kind 0 whose near vertex is graded 1/1/1 and whose far vertices take the published palette triple after a RotTransPers4 projection.'
   - - 5204
     - c
     - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedBlackToPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic03903_801F0054

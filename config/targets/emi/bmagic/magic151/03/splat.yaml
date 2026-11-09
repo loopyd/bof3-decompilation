@@ -133,8 +133,10 @@ segments:
     - asm
     - func_801EFF44
   - - 5012
-    - asm
-    - func_801EFF94
+    - c
+    - queueSlotEveryFourthTickSetByte1AndByte4PublishWorkPointerIncrementWorkBytesBAnd4ThenDecrementWorkByteAAndAdvanceWorkByte2WhenSharedRecordByte2Is5BmagicMagic15103_801EFF94
+    - '@source: src/bof3/bmagic/queueSlotEveryFourthTickSetByte1AndByte4PublishWorkPointerIncrementWorkBytesBAnd4ThenDecrementWorkByteAAndAdvanceWorkByte2WhenSharedRecordByte2Is5BmagicMagic15103_801EFF94.c'
+    - '@behavior: On the frames where the low two bits of the shared counter at 0x80143E6C are clear, claims one action slot through func_801E590C(1, 0x44), scales the truncated index by the 0x78-byte slot stride and fills three fields of that entry - the state byte at +0x01 becomes 1, the pointer word at +0x74 receives the scratchpad work-object pointer read from 0x1F800044, and byte +0x04 receives the low four bits of work byte 0x04 - then increments work bytes 0x0B and 0x04, each on its own read of the cell. Independently, while the shared battle record read through 0x801EB4E0 has byte 2 equal to 5, it decrements work byte 0x0A and, when that truncated byte reaches zero, increments the work state byte 0x02.'
   - - 5300
     - c
     - incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4

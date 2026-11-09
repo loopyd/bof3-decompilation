@@ -60,8 +60,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic00903_801EF120.c'
     - '@behavior: overlay work-byte-2 dispatcher: reads the scratchpad work object through pointer cell 0x1F800044, takes its unsigned byte at offset 2 scaled by four as the index into the handler table word at 0x801EF8A4, the tail of the code-pointer run at 0x801EF89C, and calls that entry with no arguments; it then re-reads the cell and, only when the record bytes at offsets 0 and 2 are both non-zero, calls the overlay draw step at 0x801EF3B8 with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1432
-    - asm
-    - func_801EF198
+    - c
+    - decrementWorkByte9ThenCopyRecordByte8SeedWorkMotionPairAddRecordPositionClearByteAAndAdvanceWorkByte2BmagicMagic00903_801EF198
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte8SeedWorkMotionPairAddRecordPositionClearByteAAndAdvanceWorkByte2BmagicMagic00903_801EF198.c'
+    - '@behavior: Work-byte-2 handler entered as entry 0 of the handler run at 0x801EF8A4. Decrements the work object countdown byte 0x9 and, on zero, copies the 0x8014638C record byte 0x8 into work byte 0x8, stores the step triplet row the work byte 0xB selects into work words 0xC and 0x10, calls func_801DD350, adds the record words 0x34 and 0x38 into the work words 0x34 and 0x38, sets work word 0x3C from the record word 0x3C plus the row z word, calls func_800AF764, then clears work byte 0xA and advances work byte 0x2.'
   - - 1748
     - asm
     - func_801EF2D4
