@@ -395,8 +395,10 @@ segments:
     - asm
     - func_801FB8A0
   - - 20080
-    - asm
-    - func_801FBA70
+    - c
+    - gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioScena0800_801FBA70
+    - '@source: src/bof3/scenario/gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioScena0800_801FBA70.c'
+    - '@behavior: Entry 5 of the overlay progress-handler table at D_801FE970 that dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with the signed byte D_80146874: it drives the shared sub-state byte D_80146875 through six steps. Sub-state 0 seeds the front selector context through func_8019FA28(2, 0x4E0000, 0x340000, 0x85), stores 0xFF in D_80143F1F and advances to 0x64. Sub-state 0x64 waits for the shared halfword D_80143F00 to read 2, then asks func_8019601C for an object index and, unless that index reads 0xFF, seeds that object row of the 0x74-byte table at D_80143FC8 (+0 = 1, +5 = 0x57) before advancing to 1. Sub-state 1, at progress byte 1, seeds the front selector context func_8019FA28(0x35, 0x3D8000, 0xD8000, 0x83), stores 0xFF in D_80143F1D and D_80143F1F and advances to 2, then falls through to sub-state 2, which at progress byte 2 seeds func_8019FA28(0x35, 0x138000, 0x180000, 0x84) and advances to 3. Sub-state 3, at progress byte 6, raises the shared byte D_8014933B to 1 and advances to 4. Sub-state 4, at progress byte 8, runs func_801C16B8, func_8015B580 with the shared word D_8014686C and 7, func_8019FA28(0x73, 0x1B0000, 0x210000, 3) and func_8015C058, clears flag bit 3 of the mode halfword D_80146258, and returns the overlay to handler 0 by clearing the progress byte at 0x80146864, D_80146874 and the sub-state byte. Any other sub-state value does nothing. It takes no arguments and returns nothing; the 0x20-byte frame keeps ra plus the two saved registers that hold the sub-state address and the address of the progress byte.'
   - - 20644
     - asm
     - func_801FBCA4

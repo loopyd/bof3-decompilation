@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C.c",
     "src/bof3/scenario/seedTwoObjectRowsAtProgress6ThenSetFlagBit14AndResetHandlerScenarioScena0800_801FD400.c",
     "src/bof3/scenario/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackScenarioScena0800_801F9470.c",
+    "src/bof3/scenario/gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioScena0800_801FBA70.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",

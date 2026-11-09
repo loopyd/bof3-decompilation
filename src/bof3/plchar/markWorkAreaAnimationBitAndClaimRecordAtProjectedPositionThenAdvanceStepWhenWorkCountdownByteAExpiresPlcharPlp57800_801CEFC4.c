@@ -41,7 +41,7 @@ extern u8 D_801468FC[];
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map cell claim of this same payload, still an asm row at 0x801CF24C: its
+/* Map cell claim of this same payload, lifted exact at 0x801CF24C: its
  * prologue sign-extends both arguments through sll 16 plus sra 16, probes the
  * map cell code through the shared func_80166CB0 and claims a front-end record
  * through claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp57800_801CF444
@@ -50,7 +50,8 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * signed sixteen-bit values, so the original converts each retry index to that
  * width before the call.
  */
-u8 func_801CF24C(s16 col, s16 row);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C(
+    s16 col, s16 row);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it last on every path and discards the returned byte. */
@@ -122,13 +123,16 @@ void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhe
     }
     cx = x >> 16;
     cy = y >> 16;
-    claimed = func_801CF24C(cx, cy);
+    claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C(
+        cx, cy);
     if ((claimed & 0xFF) == 0) {
       if ((x & 0xFFFF) != 0) {
-        claimed = func_801CF24C(cx + 1, cy);
+        claimed = claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C(
+            cx + 1, cy);
       }
       if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CF24C(cx, cy + 1);
+        claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C(
+            cx, cy + 1);
       }
     }
     D_1F800044[0x02] += 1;

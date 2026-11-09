@@ -27,6 +27,7 @@ sources = [
     "src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c",
     "src/bof3/scenario/advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94.c",
     "src/bof3/scenario/drawBlinkingTintedEffectRecordsAdvanceByVelocityTickCountdown9ThenSetProgress43AndAdvanceWorkByte1ScenarioSce15ef100_801D34F0.c",
+    "src/bof3/scenario/emitProjectedPatternGridEffectRecordsAndAdvanceWorkByte1WhenWorkByte9Reaches2ScenarioSce15ef100_801D2474.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

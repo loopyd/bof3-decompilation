@@ -1,12 +1,14 @@
 #include "bof3/bof3.h"
 
-void func_801D1370(VECTOR* arg0, VECTOR* arg1, s32 arg2);
+void drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(
+    VECTOR* arg0, VECTOR* arg1, s16 arg2);
 
 /* @source 0x801D1914
  * @behavior Overlay entry that draws a zigzag of five projected segments: it
  * seeds two 16-byte VECTOR locals at sp+0x10 and sp+0x20 with fixed fixed-point
- * coordinates and issues five calls to this overlay's two-point segment drawer
- * func_801D1370 (0x801D1370), rewriting one whole point between calls. The six
+ * coordinates and issues five calls to this overlay's two-point beam drawer
+ * drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370
+ * (0x801D1370), rewriting one whole point between calls. The six
  * points are (0x308000, 0x718000, 0xFD000000), (0x308000, 0x718000,
  * 0xFE000000), (0x300000, 0x718000, 0xFE800000), (0x300000, 0x718000,
  * 0xFF000000), (0x308000, 0x718000, 0xFF800000) and (0x308000, 0x718000, 0), so
@@ -41,21 +43,21 @@ void drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914(s16 arg0) {
   second.vx = 0x308000;
   second.vy = 0x718000;
   second.vz = 0xFE000000;
-  func_801D1370(&first, &second, arg0);
+  drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(&first, &second, arg0);
   first.vx = 0x300000;
   first.vy = 0x718000;
   first.vz = 0xFE800000;
-  func_801D1370(&first, &second, arg0);
+  drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(&first, &second, arg0);
   second.vx = 0x300000;
   second.vy = 0x718000;
   second.vz = 0xFF000000;
-  func_801D1370(&first, &second, arg0);
+  drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(&first, &second, arg0);
   first.vx = 0x308000;
   first.vy = 0x718000;
   first.vz = 0xFF800000;
-  func_801D1370(&first, &second, arg0);
+  drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(&first, &second, arg0);
   second.vx = 0x308000;
   second.vy = 0x718000;
   second.vz = 0;
-  func_801D1370(&first, &second, arg0);
+  drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370(&first, &second, arg0);
 }

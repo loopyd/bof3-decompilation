@@ -48,6 +48,7 @@ support_sources = [
     "src/bof3/scenario/setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C.c",
     "src/bof3/scenario/setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578.c",
     "src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c",
+    "src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7A14.c",
     "src/bof3/support/scena03_00_psyq.c",
     "src/bof3/scenario/armCountdownAdvanceWorkByte1ThenQueueCue204ScenarioScena0300_801F8328.c",
     "src/bof3/scenario/projectSharedCoordinatesIntoWorkRecordThenAdvanceScenarioScena0300_801F8640.c",

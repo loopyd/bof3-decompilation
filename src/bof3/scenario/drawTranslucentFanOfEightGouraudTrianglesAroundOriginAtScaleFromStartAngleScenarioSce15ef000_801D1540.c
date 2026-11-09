@@ -31,8 +31,9 @@ void func_8017A97C(void* arg0);
  * advanced by 0x100, so the `u16` truncation of it, not a signed conversion,
  * forms each sampler argument. The scale is sign-extended once, before the loop,
  * by the `sll 16`/`sra 16` pair on the third argument, and the caller
- * func_801D1370 loads the origin pair with `lh` from the two vertices it draws
- * and derives the start angle from func_8017A138 plus 0x400 and 0xC00, which
+ * drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370
+ * loads the origin pair with `lh` from the two vertices it draws and derives the
+ * start angle from func_8017A138 plus 0x400 and 0xC00, which
  * fixes the two halfword widths, the signed scale and the phase units. This
  * per-triangle body is the exact sibling emitRadialTranslucentQuads of the
  * scenario module and the exact fan

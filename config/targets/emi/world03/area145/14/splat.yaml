@@ -155,8 +155,10 @@ segments:
     - asm
     - func_801F4EDC
   - - 9292
-    - asm
-    - func_801F504C
+    - c
+    - drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C
+    - '@source: src/bof3/world/drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C.c'
+    - '@behavior: Chained overlay effect stage drawing the shared work record position advanced by the route step times the elapsed value clamped to the stage length, then answering 1 until that length is reached and the next stage code afterwards.'
   - - 9616
     - asm
     - func_801F5190

@@ -65,8 +65,9 @@ segments:
     - drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220
     - '@source: src/bof3/scenario/drawEightTranslucentFlatQuadsWithGreyFillLevelScenarioSce15ef000_801D1220.c'
   - - 1904
-    - asm
-    - func_801D1370
+    - c
+    - drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370
+    - '@source: src/bof3/scenario/drawBeamSegmentBetweenTwoProjectedPointsWithCoreLineAndHalfDiscFansAtConvertedExtentScenarioSce15ef000_801D1370.c'
   - - 2368
     - c
     - drawTranslucentFanOfEightGouraudTrianglesAroundOriginAtScaleFromStartAngleScenarioSce15ef000_801D1540

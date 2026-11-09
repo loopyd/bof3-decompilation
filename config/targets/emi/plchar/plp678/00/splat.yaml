@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801CEC28
   - - 2612
-    - asm
-    - func_801CEE34
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp67800_801CEE34
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp67800_801CEE34.c'
+    - '@behavior: Claims one free row of the shared 0x74-byte front-end record table at 0x80143FC8 through the allocator func_8019601C and seeds it from a caller-supplied position pair. The body masks the allocator answer to a byte and, unless that byte is 0xFF, scales it by the row stride and writes the row: row byte 5 takes the handler selector 0x34, row word 0x34 takes the first signed coordinate shifted left 16, row byte 0 takes the occupancy flag 1, row byte 1 takes the caller state byte and row word 0x38 takes the second coordinate the same way, so the pair lands in signed 16.16 form; row halfword 0x3E then takes the shared distance helper func_8015477C answer for that re-read word pair plus 0x200 and row byte 0x0B takes 1, while a full table leaves every row untouched. The five jal sites 0x801CEC90, 0x801CECB8, 0x801CECE8, 0x801CED18 and 0x801CEDB4 in the still-unlifted map cell claim handler func_801CEC28 of this payload pass entry states 0, 4, 0, 3 and 2 with one narrowed halfword pair and a fourth byte argument this body never reads, so only the first three argument registers are named. The roles of row byte 0x0B, of the plus 0x200 bias and of the caller state byte are not established, so the name describes the effect.'
   - - 2848
     - c
     - dispatchWorkByte3Table058cPlcharPlp67800_801CEF20

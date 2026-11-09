@@ -64,8 +64,10 @@ segments:
     - '@source: src/bof3/scenario/tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0.c'
     - '@behavior: Ticks work byte 9 while setting selected record bit 0x40; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 3604
-    - asm
-    - func_801F7A14
+    - c
+    - submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7A14
+    - '@source: src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7A14.c'
+    - '@behavior: Entry 2 of the work-byte-1 handler table at 0x801FCF50; submits the 0x98-byte record at 0x80146888 selected by work byte 3 and then the record selected by work byte 4 through func_80196718, reloading the scratchpad work pointer from 0x1F800044 for each index, then clears the scratchpad work-area header through func_80196070.'
   - - 3740
     - asm
     - func_801F7A9C
