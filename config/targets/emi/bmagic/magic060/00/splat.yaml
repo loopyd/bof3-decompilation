@@ -72,7 +72,7 @@ segments:
     - c
     - drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174
     - '@source: src/bof3/bmagic/drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174.c'
-    - '@behavior: Draws the result panel of the current battle target. It reads the selector byte 0x80146384, saves the party byte of that selector''s 0x140-byte work record at 0x80145F09 (row offset 0x79), stores zero over it, passes the same row''s name string 0x80145F04 (row offset 0x74) with pen position (0x70,0x30) to the overlay text helper func_801EF590, then re-reads the selector and restores the party byte, so it is only cleared for the name draw. It then draws ten static label strings of this overlay with the same two helpers: func_801EF76C draws WEAK at (0x5A,0x44), POINT at (0x80,0x44) and ITEM at (0x5A,0x8A), and func_801EF590 draws the twelve-glyph 0x5C rule at (0x70,0x50), (0x70,0x98) and (0x70,0xAC), the one-glyph 0x5C cell 0x801F0B88 at (0x9C,0x64) and (0x9C,0x78), EXP at (0xB0,0x64) and the one-glyph 0x60 cell 0x801F0B70 at (0xB0,0x78). Frame 0x20 holding s0 and s1; takes no arguments and returns nothing.'
+    - '@behavior: Draws the result panel of the current battle target. It reads the selector byte 0x80146384, saves the party byte of that selector''s 0x140-byte work record at 0x80145F09 (row offset 0x79), stores zero over it, passes the same row''s name string 0x80145F04 (row offset 0x74) with pen position (0x70,0x30) to the overlay text helper func_801EF590, then re-reads the selector and restores the party byte, so it is only cleared for the name draw. It then draws ten static label strings of this overlay with the same two helpers: the first-glyph-bank drawer at 0x801EF76C draws WEAK at (0x5A,0x44), POINT at (0x80,0x44) and ITEM at (0x5A,0x8A), and func_801EF590 draws the twelve-glyph 0x5C rule at (0x70,0x50), (0x70,0x98) and (0x70,0xAC), the one-glyph 0x5C cell 0x801F0B88 at (0x9C,0x64) and (0x9C,0x78), EXP at (0xB0,0x64) and the one-glyph 0x60 cell 0x801F0B70 at (0xB0,0x78). Frame 0x20 holding s0 and s1; takes no arguments and returns nothing.'
   - - 1756
     - asm
     - func_801EF2DC
@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801EF590
   - - 2924
-    - asm
-    - func_801EF76C
+    - c
+    - drawFirstGlyphBankStringAsEightPixelCellsAtPenPositionBmagicMagic06000_801EF76C
+    - '@source: src/bof3/bmagic/drawFirstGlyphBankStringAsEightPixelCellsAtPenPositionBmagicMagic06000_801EF76C.c'
+    - '@behavior: Glyph-string drawer of this overlay result panel, invoked by drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174 for the three static labels WEAK, POINT and ITEM. It walks the NUL-terminated glyph-code string its first argument points at and queues one eight-pixel textured cell per code at the pen position (x, y), advancing x by eight pixels per code and terminating at the first zero code, after returning at once when the leading code is already zero. Before the run it picks the draw-mode word from GetGraphType, 0x25 when that returns 1 or 2 and 0x15 otherwise, opens SetDrawMode through g_PrimCursor and reserves 0xC bytes with GpuAppendPrim(2, 0xC). Each code stamps a POLY_FT4 from g_PrimCursor with SetPolyFT4 over the rectangle (x, y) to (x + 8, y + 8), fills the three colour channels with the literal grey 0x80, takes the texture page GetTPage(0, 1, 0x3C0, 0) and the clut GetClut(0, 0x1E0), and derives all four uv corners from the code byte it re-reads per corner: u0 and u2 are (code - 0x40) * 8, u1 and u3 are code * 8 - 0x1F8, v0 and v1 are 8 and v2 and v3 are 0x10. A code of 0xFF stamps the cell but skips the 0x28-byte GpuAppendPrim queue call, so that cell advances the pen without a queued primitive. The 0x40-byte frame keeps ra at 0x3C, fp at 0x38 and s7 to s0 at 0x34 to 0x18, and the repeated literals 0x80, 8 and 0x10 sit in s6, fp and s7 across the loop. Nothing is returned and no state outside the primitive cursor is written.'
   - - 3364
     - asm
     - func_801EF924

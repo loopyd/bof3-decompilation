@@ -165,8 +165,14 @@ segments:
     - asm
     - func_801FD568
   - - 27464
-    - asm
-    - func_801FD748
+    - c
+    - advanceCursorDepthOrResnapAndClearHandlerIndexScenarioScena0600_801FD748
+    - '@source: src/bof3/scenario/advanceCursorDepthOrResnapAndClearHandlerIndexScenarioScena0600_801FD748.c'
+    - '@behavior: Handler 2 of the 0x801FE46C handler table. Reads the work cursor
+      16.16 coordinate pair through 0x1F800044 into the shared depth helper and, when
+      the answer reaches the cursor depth halfword less 0x240, resnaps the depth and
+      clears handler index byte 4, else advances the depth by work word 0x14 shifted
+      right 8 and adds the caller fifth argument to that word.'
   - - 27648
     - asm
     - func_801FD800

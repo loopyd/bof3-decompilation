@@ -4,7 +4,7 @@
 extern u8 *scenarioScena0900Work;
 
 void clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574(void);
-void func_801F76D0(void);
+void seedEffectRecordsInSelectedBankScenarioScena0900_801F76D0(void);
 
 /* @source 0x801F73A0
  * @behavior Initializes the selected record bank by clearing its lead bytes
@@ -19,7 +19,7 @@ void func_801F76D0(void);
  */
 void initializeRecordBankArmByte9AndAdvanceStateScenarioScena0900_801F73A0(void) {
     clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574();
-    func_801F76D0();
+    seedEffectRecordsInSelectedBankScenarioScena0900_801F76D0();
     scenarioScena0900Work[9] = 255;
     scenarioScena0900Work[1]++;
 }

@@ -92,8 +92,9 @@ segments:
     - asm
     - func_801F36C4
   - - 3020
-    - asm
-    - func_801F37CC
+    - c
+    - spawnRecordEveryFourthTickRunPassesDrawShapeThenOnProgress3CountdownQueueCue216SetByte3To80AndAdvanceWorkByte1World04Area18813_801F37CC
+    - '@source: src/bof3/world/spawnRecordEveryFourthTickRunPassesDrawShapeThenOnProgress3CountdownQueueCue216SetByte3To80AndAdvanceWorkByte1World04Area18813_801F37CC.c'
   - - 3264
     - c
     - invokeHelperWorld04Area18813_801F38C0

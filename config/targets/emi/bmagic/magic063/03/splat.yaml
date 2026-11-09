@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801EFE04
   - - 4888
-    - asm
-    - func_801EFF18
+    - c
+    - stepWorkRecordAngleProjectPositionPairIncrementWorkByte9ByTwoAndWorkByteBThenAdvanceWorkByte2AtSixteenBmagicMagic06303_801EFF18
+    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairIncrementWorkByte9ByTwoAndWorkByteBThenAdvanceWorkByte2AtSixteenBmagicMagic06303_801EFF18.c'
+    - '@behavior: Step handler of the bmagic effect record published through the pointer cell at 0x801F1054: it adds 0x20 to the record 12-bit halfword angle at offset 0x0E inside 0x1000, stores that sum back, hands it to the shared rotator at 0x801782FC and stores the shared battle word at D_801EB4E0 offset 0x34 plus that rotator result shifted left five into the record word at offset 0x10; the second shared rotator at 0x801783C8 receives the record signed halfword at offset 0x0E and its result shifted left five is added to the shared battle word at offset 0x38 and stored in the record word at offset 0x14; it then adds two to the record byte at offset 0x09, adds one to the record byte at offset 0x0B and when the byte at offset 0x09 totals 0x10 advances the record step byte at offset 0x02, all in a 0x18-byte frame that keeps only $ra.'
   - - 5096
     - asm
     - func_801EFFE8

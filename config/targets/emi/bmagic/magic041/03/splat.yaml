@@ -62,8 +62,9 @@ segments:
     - asm
     - func_801EF27C
   - - 1800
-    - asm
-    - func_801EF308
+    - c
+    - add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308
+    - '@source: src/bof3/bmagic/add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308.c'
   - - 1880
     - asm
     - func_801EF358

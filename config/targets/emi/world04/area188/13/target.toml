@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntry2BSubstate1WhenGateClearWorld04Area18813_801F4670.c",
     "src/bof3/world/armRecordLevel5AndSetRecordByte7WithinModeLimitThenRetreatHalfword0aWorld04Area18813_801F4840.c",
     "src/bof3/world/retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484.c",
+    "src/bof3/world/spawnRecordEveryFourthTickRunPassesDrawShapeThenOnProgress3CountdownQueueCue216SetByte3To80AndAdvanceWorkByte1World04Area18813_801F37CC.c",
     "src/bof3/support/area188_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

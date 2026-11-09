@@ -16,7 +16,8 @@ void emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeSce
 
 /* One 0x28-byte record of the 32-record effect bank at 0x800E5000 whose bank
  * is selected by scratchpad work byte 6 with stride 0x500. The seeding helper
- * func_801F76D0 fills the position and velocity words and the emitter
+ * seedEffectRecordsInSelectedBankScenarioScena0900_801F76D0 fills the position
+ * and velocity words and the emitter
  * emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424
  * reads the colour, pattern and position fields, so only the
  * offsets those three functions touch are modelled here.

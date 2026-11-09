@@ -3,7 +3,8 @@
 typedef void (*Boss05516Handler)(void);
 
 void func_800C2A40(void);
-void func_800C2AA8(void);
+void copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C2AA8(
+    void);
 
 /* @source 0x800C29E8
  * @behavior Overlay step dispatch on the state byte of the work record
@@ -26,7 +27,9 @@ void func_800C2AA8(void);
  * @residual none
  */
 void dispatchStateByte2LocalPairBossBoss05516_800C29E8(void) {
-  Boss05516Handler handlers[2] = { func_800C2A40, func_800C2AA8 };
+  Boss05516Handler handlers[2] = {
+      func_800C2A40,
+      copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C2AA8};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

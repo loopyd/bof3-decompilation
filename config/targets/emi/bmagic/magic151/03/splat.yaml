@@ -187,8 +187,10 @@ segments:
     - asm
     - func_801F0D0C
   - - 9448
-    - asm
-    - func_801F10E8
+    - c
+    - dispatchWorkByte2StepThenInvokeSharedHelperThenDrawTintedQuadTripleAndPopWhenWorkBytes2And0SetBmagicMagic15103_801F10E8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2StepThenInvokeSharedHelperThenDrawTintedQuadTripleAndPopWhenWorkBytes2And0SetBmagicMagic15103_801F10E8.c'
+    - '@behavior: Frame wrapper around the work byte 2 step handlers of the scratchpad work object published at the pointer cell 0x1F800044: the object byte at offset 0x2, scaled by four, selects one entry of the step handler table based at 0x801F24FC and that handler is invoked with no arguments, the cell load preceding frame creation. The shared main-executable helper func_800AF764 is then called unconditionally. After it the cell is read again and only when the object bytes at offset 0x2 and offset 0x0 are both non-zero does the body run: func_801F1408 pushes the GTE matrix stack and installs the object transform, work byte 0xB is raised by four through its own cell read before func_801F14D0 draws one tinted four-vertex polygon, raised by four again through another cell read before the second draw and lowered by eight through a fourth cell read before PopMatrix restores the pushed matrix. The three draws pass 0x20/0x20/0x7, 0x10/0x40/0xF and 0x10/0x60/0x1F, so work byte 0xB ends where it started. Frame 0x18 with $ra only, because of the calls; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 9696
     - c
     - decrementWorkByte9ThenSeedWorkTripletRandomByteBAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801F11E0

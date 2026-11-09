@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801EFB04
   - - 5728
-    - asm
-    - func_801F0260
+    - c
+    - dispatchWorkByte2HandlerThenInvokeUpdateShiftHalfwords2EAnd30AndDrawWhenWorkBytes0And2SetBmagicMagic09203_801F0260
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateShiftHalfwords2EAnd30AndDrawWhenWorkBytes0And2SetBmagicMagic09203_801F0260.c'
+    - '@behavior: Entry 6 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which dispatchStateByte1Table07bcBmagicMagic09203_801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal in this payload names this body. It reads the work record published at the pointer cell 0x1F800044, scales that record byte 2 by four and calls the selected word of the handler table at 0x801F07E8 with no arguments and no index bound, then re-reads the cell because the handler may republish it. Only when the reloaded record bytes 0 and 2 are both non-zero does the arm run: it calls the shared main-executable update pass func_800AF764, re-reads the cell a third time, moves the unsigned halfword at 0x2E by minus 0x10 when record byte 0xB equals 1 and by plus 0x10 otherwise, subtracts 0xC from the unsigned halfword at 0x30 and then calls the overlay draw pass func_801F04BC with the 0x30 store filling that call delay slot. The 0x18-byte frame keeps only the return address at 0x10 and the cell load precedes frame creation; the 0xC0-byte span takes no arguments and returns nothing through the jr $ra at 0x801F0318.'
   - - 5920
     - asm
     - func_801F0320

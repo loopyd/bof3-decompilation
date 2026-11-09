@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic00903_801EF01C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenInvokeBattleHelperOnZeroThenSetWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic00903_801EF788.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic00903_801EF120.c",
+    "src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8.c",
     "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic00903_801EF068.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic00903_801EF87C.c",
     "src/bof3/bmagic/magic00903DispatchTables.c",

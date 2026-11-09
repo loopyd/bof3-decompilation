@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic09203_801F0758.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicMagic09203_801EF840.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateShiftHalfwords2EAnd30AndDrawWhenWorkBytes0And2SetBmagicMagic09203_801F0260.c",
 ]
 psyq_source = "src/bof3/support/magic092_03_psyq.c"

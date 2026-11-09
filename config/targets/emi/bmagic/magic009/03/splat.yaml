@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801EF340
   - - 1976
-    - asm
-    - func_801EF3B8
+    - c
+    - drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8
+    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8.c'
+    - '@behavior: Quad emitter of this overlay work-byte-2 handler group, reached with no arguments from 0x801EF120 once the scratchpad work record bytes 0x0 and 0x2 are both non-zero. It reads the shared graphic type twice and selects the draw-mode value 0xA5 when either answer is 1 or 2, else 0x35, links a 0xC-byte draw-mode packet through SetDrawMode at g_PrimCursor with dfe 0 and dtd 1 at the work object projection words 0x34 and 0x38 with kind 2 through func_80155A08, publishes work byte 9 shifted left 1 into the signed word cell at 0x1F800000, then takes a fresh g_PrimCursor POLY_FT4, seeds it through SetPolyFT4, marks it semi-transparent and writes four corners around the work screen halfwords 0x2E (x) and 0x30 (y) at the eighth-turn angles 0x200, 0x600, 0xE00 and 0xA00 of the 12-bit circle. Each corner x adds the func_801783C8 sample scaled by the published radius and shifted right 12 and each corner y adds the func_801782FC sample of the same angle. The texture is tpage GetTPage(0, 1, 0x340, 0x100) and clut GetClut(0x20, 0x1FA) over the 0x20-by-0x20 uv window at (0x80, 0x20), and the flat tint is work byte 0xA times 10 in red, 0 in green and that byte times 9 in blue. It links the 0x28-byte polygon at the same projection words with kind 2 and returns, having stored nothing but the scratchpad radius cell and the primitive itself.'
   - - 2736
     - asm
     - func_801EF6B0

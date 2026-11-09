@@ -77,5 +77,6 @@ support_sources = [
     "src/bof3/scenario/armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C.c",
     "src/bof3/scenario/clearPartySlotsThenRearmEffectGroupAndResetEffectSlotsScenarioScena0900_801FDF54.c",
     "src/bof3/scenario/emitSemiTransFlatTriangleFromRecordPositionSizedByFrameTableTintedByFadeScenarioScena0900_801F7424.c",
+    "src/bof3/scenario/seedEffectRecordsInSelectedBankScenarioScena0900_801F76D0.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

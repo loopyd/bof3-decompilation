@@ -22,13 +22,16 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * this word. */
 extern void (*D_801EF8A4[])(void); /* @source 0x801EF8A4 @kind data */
 
-/* This overlay's translucent-textured-quad draw step at 0x801EF3B8. Still an
- * asm row in this target: it selects a draw mode from GetGraphType, arms
- * SetDrawMode on the primitive cursor, links a 0xC-byte packet, then emits a
- * textured quad through SetPolyFT4 and SetSemiTrans with its vertices taken
- * from the work record's screen pair at halfwords 0x2E and 0x30 and the tile
- * and clut from GetTPage and GetClut. */
-void func_801EF3B8(void);
+/* This overlay's translucent textured quad draw step at 0x801EF3B8, lifted
+ * exact from this span's own bytes in
+ * src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWork
+ * Byte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8.c. It selects a
+ * draw mode from GetGraphType, arms SetDrawMode on the primitive cursor, links a
+ * 0xC-byte packet, then emits a textured quad through SetPolyFT4 and
+ * SetSemiTrans with its vertices taken from the work record's screen pair at
+ * halfwords 0x2E and 0x30 and the tile and clut from GetTPage and GetClut. */
+void drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8(
+    void);
 
 /* @source 0x801EF120
  * @behavior Dispatches one step of the overlay work handler and then draws the
@@ -53,6 +56,6 @@ void dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic00903_801EF
     void) {
   D_801EF8A4[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801EF3B8();
+    drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8();
   }
 }
