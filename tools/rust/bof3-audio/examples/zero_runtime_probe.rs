@@ -46,7 +46,10 @@ fn main() -> Result<()> {
         0,
     )?;
     let e = &mut prepared.execution;
-    e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+    e.enable_output(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    )?;
     let mut log = Vec::new();
     let mut returns = Vec::new();
     let mut observe = |e: &Execution| -> Result<()> {

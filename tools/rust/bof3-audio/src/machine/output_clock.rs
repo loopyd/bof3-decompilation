@@ -16,9 +16,17 @@ pub enum Model {
     PcsxReduxNtsc,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Collection {
+    Retain,
+    Discard,
+}
+
 #[derive(Debug, Serialize)]
 pub struct Clock {
     model: Model,
+    collection: Collection,
     #[serde(skip_serializing_if = "Option::is_none")]
     reference_phase: Option<ReferencePhase>,
     ticks: u64,
@@ -38,9 +46,10 @@ struct ReferencePhase {
 }
 
 impl Clock {
-    pub fn new(model: Model) -> Self {
+    pub fn new(model: Model, collection: Collection) -> Self {
         Self {
             model,
+            collection,
             reference_phase: None,
             ticks: 0,
             frames: 0,
@@ -55,7 +64,7 @@ impl Clock {
         if !(1..=SAMPLE_TICKS).contains(&first_sample_ticks) {
             return Err("reference output first sample must be within 1..=768 ticks".into());
         }
-        let mut clock = Self::new(Model::PcsxReduxNtsc);
+        let mut clock = Self::new(Model::PcsxReduxNtsc, Collection::Retain);
         clock.reference_phase = Some(ReferencePhase {
             activation_cycle,
             first_sample_ticks,
@@ -74,6 +83,16 @@ impl Clock {
     }
     pub fn take_frames(&mut self) -> Vec<[f32; 2]> {
         std::mem::take(&mut self.pending)
+    }
+
+    /// Start retaining PCM at the current absolute frame without changing phase
+    /// or device state. Discarded frames have already executed all device work.
+    pub(super) fn begin_capture(&mut self) -> Result<u64> {
+        if self.collection != Collection::Discard {
+            return Err("output clock is already retaining PCM".into());
+        }
+        self.collection = Collection::Retain;
+        Ok(self.frames)
     }
 
     /// Advance implemented devices to each output/line boundary. Guest writes
@@ -127,10 +146,13 @@ impl Clock {
             }
             if self.sample_remaining == 0 {
                 self.sample_remaining = SAMPLE_TICKS;
-                if self.pending.len() == QUEUE_LIMIT {
+                if self.collection == Collection::Retain && self.pending.len() == QUEUE_LIMIT {
                     return Err("SPU output queue full; drain frames before advancing".into());
                 }
-                self.pending.push(bus.step_spu_scheduled_output()?);
+                let frame = bus.step_spu_scheduled_output()?;
+                if self.collection == Collection::Retain {
+                    self.pending.push(frame);
+                }
                 self.frames += 1;
             }
         }

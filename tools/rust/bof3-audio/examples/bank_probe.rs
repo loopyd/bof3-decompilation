@@ -245,7 +245,10 @@ fn main() -> Result<()> {
             let record = base + sequence * 0xac;
             stage = "sequence_ticks";
             if args.len() == 6 {
-                execution.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+                execution.enable_output(
+                    output_clock::Model::PcsxReduxNtsc,
+                    output_clock::Collection::Retain,
+                )?;
             }
             for tick in 0..ticks {
                 let mut instructions = 0;

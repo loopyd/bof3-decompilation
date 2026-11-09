@@ -41,7 +41,10 @@ fn main() -> bof3_audio::Result<()> {
     let mut table_reads = BTreeMap::<(u32, u32), u64>::new();
     let mut table_writes = Vec::new();
     if playback_frames != 0 {
-        execution.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        execution.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         let mut observer =
             |e: &bof3_audio::machine::execution::Execution| -> bof3_audio::Result<()> {
                 let pc = e.cpu.pc();

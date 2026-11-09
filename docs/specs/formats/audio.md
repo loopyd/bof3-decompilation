@@ -2286,8 +2286,8 @@ batch timing and complete native runtime PCM remain unresolved.
 PCM16 file delivery multiplies by `32767`, rounds and clamps to
 `-32768..=32767`. This conversion can lose native callback range and precision;
 reports retain the float peak and clipped sample count. Published PCM16 results
-remain unchanged. Output requires configured voice models and normal RAM control
-`0x0004`.
+remain unchanged. Output requires configured voice models. Without an explicitly
+selected RAM-control model, RAM control must be `0x0004`.
 Frames with SPUCNT bit 15 clear also require an explicit disable model;
 `configure_spu_noise` additionally supplies explicit noise state.
 Inputs must already be at 44.1 kHz after drive-side processing. This is not a CD
@@ -4829,7 +4829,18 @@ owned initialization and transfer routines, and resolve their state from linked
 symbols. Layout candidates run in isolated scratch RAM; the selected layout is
 then installed on the playback machine. Music rendering binds both loop-store
 instructions and the end-event entry, preserving pre-execution observations.
-Its `bof3.psx-render/v4` report records owned startup instead of BIOS boot.
+Its `bof3.psx-render/v5` report records owned startup instead of BIOS boot.
+The functional output clock starts after owned kernel startup, before game sound
+initialization, and runs through upload and callback preparation. Only PCM
+collection is discarded. Starting collection before play preserves DSP state,
+RAM captures, transfer work and sample/scanline phase. `capture_start_frame` is
+the absolute frame origin; body, progress, stop and `executed_frames` counts are
+relative to it, while `output_clock` counters remain absolute. Both music and
+effects reports retain this origin and `ram_control_model`. The explicit
+`emulator_reference` RAM policy preserves the raw register latch and permits
+512 KiB accesses regardless of its value, matching the native implementation.
+The unconfigured component still requires `0x0004`. Hardware RAM-control modes,
+owned kernel startup phase and native CPU/worker alignment remain unverified.
 The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 `machine::reference` retains explicit original EXE/BIOS preparation and rendering
 for development comparisons and the current compiled player. Other production
@@ -4864,7 +4875,7 @@ for a game cue in the otherwise empty machine. Output has exactly the requested
 body and tail frames. The fixed tail includes call-boundary delay and guest
 release and can end before silence.
 
-The `bof3.psx-effects-render/v3` report records the bank and artifact identities,
+The `bof3.psx-effects-render/v4` report records the bank and artifact identities,
 selection, cold history, initialization, play, poll and release calls, voice
 snapshots, cutoff frames and output clock. WAV and report publication use the
 existing verified transaction. Optional Ogg delivery uses the accepted quality

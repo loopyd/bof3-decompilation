@@ -56,8 +56,10 @@ fn main() -> Result<()> {
                 let index = row["row"].as_u64().ok_or("missing row")? as usize;
                 let record = aux.records.get(index).ok_or("missing record")?;
                 p.execution.call(0x8015ce70, [0; 4], 100_000)?;
-                p.execution
-                    .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+                p.execution.enable_output(
+                    output_clock::Model::PcsxReduxNtsc,
+                    output_clock::Collection::Retain,
+                )?;
                 let mut calls = Vec::<Value>::new();
                 let mut return_pc = None;
                 let mut voices = BTreeSet::new();

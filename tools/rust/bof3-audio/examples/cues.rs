@@ -55,9 +55,10 @@ fn main() -> Result<()> {
         .call_observed(0x8015ce70, [0; 4], 100_000, &mut |e| {
             trace.observe(&exe, "Callbacks", e)
         })?;
-    prepared
-        .execution
-        .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+    prepared.execution.enable_output(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    )?;
     let mut event_reports = Vec::new();
     let mut event_entries = Vec::new();
     let mut voices = BTreeSet::new();

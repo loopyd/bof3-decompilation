@@ -88,8 +88,10 @@ fn physical_tone_slots_preserve_original_skips_and_undeclared_playable_tones() -
         let (mut p, archive) = prepare_entries(archive, header, body);
         let table = cues::stage(&mut p, &archive, header + 1)?;
         p.execution.call(0x8015ce70, [0; 4], 100_000)?;
-        p.execution
-            .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        p.execution.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         let mut calls = Vec::new();
         let mut results = Vec::new();
         let mut return_pc = None;

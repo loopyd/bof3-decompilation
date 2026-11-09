@@ -44,8 +44,10 @@ fn original_status_poll_controls_lower_priority_retrigger_without_host_state_pat
     let (mut p, archive) = prepare_image(edited);
     let table = cues::stage(&mut p, &archive, 1)?;
     p.execution.call(0x8015ce70, [0; 4], 100_000)?;
-    p.execution
-        .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+    p.execution.enable_output(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    )?;
     assert_eq!(trigger(&mut p, &table, 0)?, 2);
     advance(&mut p, 1024)?;
     assert!(p.execution.bus.read(0x1f801d6c, Width::Half)? > 0);

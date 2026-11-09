@@ -30,6 +30,7 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         2,
         record,
         Some(2),
+        0,
     )
     .unwrap();
     let mut other = Progress::new(
@@ -38,6 +39,7 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         0,
         BASE,
         Some(1),
+        0,
     )
     .unwrap();
     let call =
@@ -100,6 +102,7 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         2,
         record,
         Some(2),
+        0,
     )
     .unwrap();
     call(

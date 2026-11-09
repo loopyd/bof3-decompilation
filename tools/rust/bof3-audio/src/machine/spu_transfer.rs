@@ -16,6 +16,14 @@ pub enum IrqModel {
     EmulatorReference,
 }
 
+#[derive(Clone, Copy, Debug, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RamControlModel {
+    /// Native register storage preserves the latch but does not gate 512 KiB
+    /// RAM access. This does not model hardware RAM-control modes.
+    EmulatorReference,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
     Stopped,
@@ -33,6 +41,7 @@ pub struct Transfer {
     control: u16,
     applied_control: u16,
     ram_control: u16,
+    ram_control_model: Option<RamControlModel>,
     capture_position: u16,
     irq_model: Option<IrqModel>,
     irq_flag: bool,
@@ -50,6 +59,7 @@ impl Default for Transfer {
             control: 0,
             applied_control: 0,
             ram_control: 0,
+            ram_control_model: None,
             capture_position: 0,
             irq_model: None,
             irq_flag: false,
@@ -59,6 +69,25 @@ impl Default for Transfer {
 }
 
 impl Transfer {
+    pub fn configure_ram_control(&mut self, model: RamControlModel) -> Result<()> {
+        if self.ram_control_model.is_some() {
+            return Err("SPU RAM-control model already configured".into());
+        }
+        self.ram_control_model = Some(model);
+        Ok(())
+    }
+
+    pub fn ram_control_model(&self) -> Option<RamControlModel> {
+        self.ram_control_model
+    }
+
+    pub(crate) fn require_ram_control(&self) -> Result<()> {
+        if self.ram_control != 4 && self.ram_control_model.is_none() {
+            return Err(format!("SPU: RAM transfer control {:#06x} unsupported; normal 512 KiB mode requires 0x0004", self.ram_control).into());
+        }
+        Ok(())
+    }
+
     pub fn configure_irq(&mut self, model: IrqModel) -> Result<()> {
         if self.irq_model.is_some() {
             return Err("SPU IRQ model already configured".into());
@@ -107,9 +136,8 @@ impl Transfer {
     /// before SPU input gain, voices 1/3 after ADSR and before panning/mute.
     /// Position starts at zero in this component context, not a verified boot state.
     pub fn capture_frame(&mut self, cd: [i16; 2], voices: [i16; 2]) -> Result<()> {
-        if self.ram_control != 4 {
-            return Err("SPU capture requires normal 512 KiB RAM control 0x0004".into());
-        }
+        self.require_ram_control()
+            .map_err(|error| format!("SPU capture: {error}"))?;
         for (channel, sample) in [cd[0], cd[1], voices[0], voices[1]].into_iter().enumerate() {
             let offset = channel * 1024 + usize::from(self.capture_position);
             self.ram[offset..offset + 2].copy_from_slice(&sample.to_le_bytes());
@@ -216,8 +244,8 @@ impl Transfer {
 
     /// Apply a scheduled device-control boundary. No wall-clock delay is implied.
     pub fn apply_control(&mut self) -> Result<()> {
-        if mode(self.control) != Mode::Stopped && self.ram_control != 4 {
-            return Err(format!("SPU: RAM transfer control {:#06x} unsupported; normal 512 KiB mode requires 0x0004", self.ram_control).into());
+        if mode(self.control) != Mode::Stopped {
+            self.require_ram_control()?;
         }
         self.applied_control = self.control;
         Ok(())
@@ -255,9 +283,7 @@ impl Transfer {
         if self.mode() == Mode::Stopped {
             return Ok(false);
         }
-        if self.ram_control != 4 {
-            return Err("SPU: unsupported RAM transfer control".into());
-        }
+        self.require_ram_control()?;
         match self.mode() {
             Mode::DmaRead if self.fifo.len() < FIFO_HALFWORDS => {
                 let value = u16::from_le_bytes(

@@ -236,7 +236,10 @@ fn malformed_input_and_empty_output_do_not_advance_decoder_state() {
 fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain() {
     let mut bus = bus(queue());
     let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
-    let mut clock = output_clock::Clock::new(output_clock::Model::PcsxReduxNtsc);
+    let mut clock = output_clock::Clock::new(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    );
     bus.enqueue_cd_audio(&sector(0x12)).unwrap();
     let reference = drive_gain(reference().sector(&sector(0x12)).unwrap());
     for (index, cd) in reference.iter().copied().take(300).enumerate() {
@@ -326,7 +329,10 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     let mut bus = bus(queue());
     let mut direct = reference();
     let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
-    let mut clock = output_clock::Clock::new(output_clock::Model::PcsxReduxNtsc);
+    let mut clock = output_clock::Clock::new(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    );
     let mut expected = std::collections::VecDeque::new();
     let mut selected = 0;
     let mut nonzero = false;

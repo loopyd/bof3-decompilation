@@ -74,9 +74,10 @@ fn main() -> Result<()> {
         .call_observed(0x8015ce70, [0; 4], 100_000, &mut |e| {
             trace.observe(&exe, "Callbacks", e)
         })?;
-    prepared
-        .execution
-        .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+    prepared.execution.enable_output(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    )?;
     let key_on = effects::key_on(&mut prepared, note, &mut |e| {
         trace.observe(&exe, "KeyOn", e)
     })?;

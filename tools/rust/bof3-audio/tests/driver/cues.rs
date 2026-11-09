@@ -48,8 +48,10 @@ fn game_cues_preserve_ordered_layers_program_selection_and_silent_samples() -> R
                 .bus
                 .write(0x1f801c00 + voice * 16, Width::Word, 0)?;
         }
-        p.execution
-            .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        p.execution.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         let mut notes = Vec::new();
         let mut volumes = Vec::new();
         cues::dispatch(&mut p, &table, row, &mut |e| {

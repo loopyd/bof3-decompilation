@@ -25,7 +25,10 @@ fn fixture() -> (Interconnect, spu_clock::Clock, Clock) {
     (
         bus,
         spu_clock::Clock::new(spu_clock::Model::EmulatorReference),
-        Clock::new(Model::PcsxReduxNtsc),
+        Clock::new(
+            Model::PcsxReduxNtsc,
+            bof3_audio::machine::output_clock::Collection::Retain,
+        ),
     )
 }
 

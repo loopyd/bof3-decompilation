@@ -28,7 +28,10 @@ fn main() -> Result<()> {
     let record = ram_offset(prepared.record, 0xac)?;
     let initial = prepared.execution.bus.ram().bytes()[record..record + 0xac].to_vec();
     let e = &mut prepared.execution;
-    e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+    e.enable_output(
+        output_clock::Model::PcsxReduxNtsc,
+        output_clock::Collection::Retain,
+    )?;
     let mut notes = Vec::new();
     let mut returns = Vec::new();
     let mut observer = |e: &Execution| -> Result<()> {

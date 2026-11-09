@@ -32,6 +32,7 @@ pub struct Progress {
     pub handle: u32,
     pub sequence: u32,
     pub record: u32,
+    pub capture_start_frame: u64,
     pub requested_infinite_traversals: Option<u32>,
     pub loop_starts: u64,
     pub infinite_traversals: u64,
@@ -48,6 +49,7 @@ impl Progress {
         sequence: u32,
         record: u32,
         traversals: Option<u32>,
+        capture_start_frame: u64,
     ) -> Result<Self> {
         if handle >= 2 || sequence >= 4 || traversals == Some(0) {
             return Err("music progress: invalid handle, sequence or traversal limit".into());
@@ -72,6 +74,7 @@ impl Progress {
             handle,
             sequence,
             record,
+            capture_start_frame,
             requested_infinite_traversals: traversals,
             loop_starts: 0,
             infinite_traversals: 0,
@@ -132,7 +135,11 @@ impl Progress {
             if let Some(reason) = reason {
                 self.boundary = Some(Boundary {
                     reason,
-                    frame: execution.output().map_or(0, |c| c.frames()),
+                    frame: execution
+                        .output()
+                        .map_or(0, |c| c.frames())
+                        .checked_sub(self.capture_start_frame)
+                        .ok_or("music progress: output frame precedes capture origin")?,
                     instruction: cpu.instructions(),
                     pc,
                     cursor: word(4),

@@ -55,7 +55,10 @@ fn main() -> Result<()> {
             });
         }
         let e = &mut prepared.execution;
-        e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        e.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         // Preparation's observer has no host-call boundary notification. Preserve
         // its raw external transitions, but do not infer re-entry roots from them.
         let preparation_transitions = std::mem::take(&mut trace.reentries);

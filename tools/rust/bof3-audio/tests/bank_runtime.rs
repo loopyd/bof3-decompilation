@@ -208,10 +208,16 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
     // output and VBlank clocks. Host leaf calls do not dispatch audio events.
     use bof3_audio::machine::output_clock;
     execution
-        .enable_output(output_clock::Model::PcsxReduxNtsc)
+        .enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )
         .unwrap();
     assert!(execution
-        .enable_output(output_clock::Model::PcsxReduxNtsc)
+        .enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain
+        )
         .is_err());
     let mut frames = 0;
     let mut peak = 0;

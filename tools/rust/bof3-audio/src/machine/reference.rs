@@ -143,12 +143,16 @@ pub fn render_music(
     options: &crate::psx_render::Options,
 ) -> Result<crate::psx_render::Rendered<boot::Evidence>> {
     options.validate()?;
-    let runtime = prepare_music(
+    let mut runtime = prepare_music(
         executable,
         firmware,
         archive,
         options.layout,
         options.sequence,
+    )?;
+    runtime.execution.enable_output(
+        super::output_clock::Model::PcsxReduxNtsc,
+        super::output_clock::Collection::Discard,
     )?;
     crate::psx_render::render_prepared(runtime, options, "original_us_runtime", vec![
         "Development original EXE/BIOS execution with host-fed archive buffers and explicit functional clocks.",

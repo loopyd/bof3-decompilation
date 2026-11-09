@@ -285,7 +285,11 @@ impl Execution {
 
     /// Activate an explicit output/scanline phase at this guest boundary.
     /// Existing SPU arithmetic models must already be configured on the bus.
-    pub fn enable_output(&mut self, model: output_clock::Model) -> Result<()> {
+    pub fn enable_output(
+        &mut self,
+        model: output_clock::Model,
+        collection: output_clock::Collection,
+    ) -> Result<()> {
         if self.reference.is_some() {
             return Err("original-BIOS output requires an explicit reference sample phase".into());
         }
@@ -293,7 +297,7 @@ impl Execution {
             return Err("output clock already enabled".into());
         }
         self.bus.set_vblank(false);
-        self.output = Some(output_clock::Clock::new(model));
+        self.output = Some(output_clock::Clock::new(model, collection));
         Ok(())
     }
     /// Activate functional PCM alongside original-BIOS timing. The caller must
@@ -316,6 +320,12 @@ impl Execution {
     }
     pub fn output(&self) -> Option<&output_clock::Clock> {
         self.output.as_ref()
+    }
+    pub fn begin_audio_capture(&mut self) -> Result<u64> {
+        self.output
+            .as_mut()
+            .ok_or("output clock is not enabled")?
+            .begin_capture()
     }
     pub fn take_audio_frames(&mut self) -> Result<Vec<[f32; 2]>> {
         Ok(self

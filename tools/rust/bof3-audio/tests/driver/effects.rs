@@ -43,8 +43,10 @@ fn effects_banks_upload_nonzero_id_and_play_explicit_voices_without_sequences() 
                 .bus
                 .write(0x1f801c00 + voice * 16, Width::Word, 0)?;
         }
-        p.execution
-            .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        p.execution.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         let sp = p.execution.cpu.register(29);
         let mut entry_arguments = None;
         let call = effects::key_on(

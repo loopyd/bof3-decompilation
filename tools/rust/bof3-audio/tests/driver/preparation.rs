@@ -80,7 +80,10 @@ fn preparation_observer_preserves_machine_state_and_playback() {
     let playback =
         |p: &mut music::Prepared<bof3_audio::machine::boot::Evidence>| -> Result<Vec<[i16; 2]>> {
             let e = &mut p.execution;
-            e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+            e.enable_output(
+                output_clock::Model::PcsxReduxNtsc,
+                output_clock::Collection::Retain,
+            )?;
             e.call(0x8016b9cc, [p.handle, 0, 1, 1], 100000)?;
             let mut pcm = Vec::new();
             while e.output().unwrap().frames() < 8192 {

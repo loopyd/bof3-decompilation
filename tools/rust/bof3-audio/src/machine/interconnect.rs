@@ -266,6 +266,13 @@ impl Interconnect {
         self.spu_transfer.configure_irq(model)
     }
 
+    pub fn configure_spu_ram_control(
+        &mut self,
+        model: super::spu_transfer::RamControlModel,
+    ) -> crate::Result<()> {
+        self.spu_transfer.configure_ram_control(model)
+    }
+
     fn deliver_spu_irq(&mut self) {
         if self.spu_transfer.take_irq_request() {
             self.interrupts.set_line(Source::Spu, true);
@@ -315,9 +322,9 @@ impl Interconnect {
         if self.spu_reverb.is_none() {
             self.spu_mixer.require_dry(control)?;
         }
-        if self.spu_transfer.read(12)? != 4 {
-            return Err("SPU output capture requires normal 512 KiB RAM control 0x0004".into());
-        }
+        self.spu_transfer
+            .require_ram_control()
+            .map_err(|error| format!("SPU output capture: {error}"))?;
         let voices = self.step_spu_voices()?;
         let sends = self.spu_mixer.prepare(&voices, control, inputs)?;
         let wet = if let Some(reverb) = &mut self.spu_reverb {

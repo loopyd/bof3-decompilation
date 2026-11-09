@@ -34,8 +34,10 @@ fn all_seven_handlers_preserve_their_bank_identity_and_bounded_auxiliary_state()
         assert_eq!(table.capacity, 124);
         assert_eq!(p.execution.bus.read(0x80148a04, Width::Word)?, controls);
         p.execution.call(0x8015ce70, [0; 4], 100_000)?;
-        p.execution
-            .enable_output(output_clock::Model::PcsxReduxNtsc)?;
+        p.execution.enable_output(
+            output_clock::Model::PcsxReduxNtsc,
+            output_clock::Collection::Retain,
+        )?;
         let mut visited = false;
         let mut notes = Vec::new();
         cues::dispatch(&mut p, &table, row, &mut |e| {
