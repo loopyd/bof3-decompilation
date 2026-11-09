@@ -115,8 +115,11 @@ variant rather than reading it as a neutral result.
 Before each sweep, state the semantic precondition and predicted instruction
 change. Change one statement class per variant, as in the repair loop: a variant
 that also moves the base-local count or the store order cannot attribute its score
-gain, so measure those classes in separate variants. Compare the full result, not
-score alone. Restore neutral/regressive probes.
+gain, so measure those classes in separate variants. Attribution is not independence:
+a store-order variant and an arm-polarity variant that each measured neutral on the
+same residual measured exact as their union, and neither delta predicted it, so when
+two variants are neutral on the same residual the composed spelling is the next probe.
+Compare the full result, not score alone. Restore neutral/regressive probes.
 Retain a strict coherent partial improvement only after semantic review and truthful
 metadata; retention is not exact acceptance or exhaustion. Near-exact allocation
 differences trigger compiler evidence, not another spelling batch.

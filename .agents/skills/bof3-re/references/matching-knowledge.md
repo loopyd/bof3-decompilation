@@ -506,6 +506,14 @@ restore the loads, and `u8* volatile` on the cell does. Pick a sibling's cell sp
 by its handoff pattern - consecutive stores that no call separates take the volatile
 cell, a reload per store group takes the plain one - and leave a cell that already has
 exact siblings on both counts alone.
+Two qualifiers can be open at once, and each sits on its own object with its own first
+difference. A volatile store cursor pins each store group's loads after the preceding
+store but leaves a cell the original re-reads CSE'd, so that build's first difference
+stays on the cell load; volatile cells restore those reads and the loads then hoist
+across the groups. Measured on one body, cursor-only and cells-only each landed well
+under the original's instruction count, and the pair reached its byte count with only
+a store order left: read a first difference at a cell load in a body whose cursor is
+already volatile as the cells still being plain, not as an ordering failure.
 The qualifier is not neutral once the reloads are already forced by an intervening
 store or call: the plain cell also leaves a re-arm constant free to fill the delay
 slot of the test that follows it, while the volatile spelling keeps that slot `nop`,
