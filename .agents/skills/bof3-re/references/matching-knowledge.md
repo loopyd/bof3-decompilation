@@ -271,13 +271,21 @@ out-of-range index reaches is the default, so that case carries the default's
 statements instead of a duplicate block. Count the labels off that bound: a sparse
 `case 0:`/`default:` set builds a comparison chain and emits no table, which surfaces
 as a reviewed-`.rodata` placement refusal with no instruction count, so a `sltiu N`
-with no MIN subtraction and an N-entry table owes labels 0 through N-1. When the
-first seed already builds to the original `.text` size and differs only at
-address-bearing words, the source shape is settled; finish the symbol bindings and
-the reviewed table placement before probing more C. A table whose entries differ only
-in which block each case value reaches is part of that step, because the reviewed
-`.rodata` compares entry contents: when reshaping the arms leaves one differing table
-word at matching `.text` size, move the case labels and leave the bodies alone.
+with no MIN subtraction and an N-entry table owes labels 0 through N-1. Label
+placement is part of that shape: write `default` first, because with it last the
+same arms measured four instructions short at that size, and a middle `default`
+with the cases reversed stayed short there too. A case that carries the default's
+body must be numbered below the cluster's lowest real case, where it folds into
+that same bound: numbered inside the cluster it measured 150 of 143 instructions
+at 600 bytes against 572, and one above the top 144 of 143 at 576, while every
+below-cluster value probed, zero included, byte-matched, so take one and spend no
+variant on which. When the first seed already builds to the original `.text` size
+and differs only at address-bearing words, the source shape is settled; finish the
+symbol bindings and the reviewed table placement before probing more C. A table
+whose entries differ only in which block each case value reaches is part of that
+step, because the reviewed `.rodata` compares entry contents: when reshaping the
+arms leaves one differing table word at matching `.text` size, move the case labels
+and leave the bodies alone.
 The mirror carries no bound at all: a body that loads a state byte, scales it by
 four and adds it to the table base with no `sltiu` in front is one indexed call on
 an extern bound at that word, whatever the entry count, so write no clamp, no
@@ -701,7 +709,12 @@ accumulator measured a partial at unchanged size with the pointer and that word
 holding each other's registers from the first instruction, while the in-place
 decrement matched, and rebinding the word's statements, deriving a word view or
 swapping the cell spelling all measured that same partial, so remove the
-accumulator instead.
+accumulator instead. Where that accumulator held the cell advanced by the word
+beside it, the store takes the sum: a narrow local filled from the cell and
+advanced with `+=` measured 15 of 24 with the first difference at the entry `lui`,
+while storing `cell + word` and holding that sum in its own narrow local each
+matched, and typed views of the pointer, a wider counter, declaration order and
+the test's spelling all repeated that partial.
 The test's signedness picks that extension: `if ((s8)countdown == 8)` on the same
 `u8` accumulator emits `sll`/`sra` of the stored register before the compare, so a
 test against a signed-looking channel value takes a cast at the test and leaves the
