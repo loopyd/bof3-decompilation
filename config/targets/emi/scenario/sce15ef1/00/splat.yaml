@@ -160,7 +160,7 @@ segments:
     - c
     - advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00
     - '@source: src/bof3/scenario/advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScenarioSce15ef100_801D2C00.c'
-    - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay draw helper 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
+    - '@behavior: Entry 7 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it adds 0x200 to the work object head word +0x18 and 0x100 to +0x1C, adds that head pair into the step word pair +0x0C/+0x10, hands the work object point at +0x34 together with the updated step pair to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through the second load ticks countdown byte +0x9 down by one and calls the resident reset helper 0x80196070 when it reaches zero.'
   - - 8340
     - c
     - advanceHeadPairIntegrateStepPair20TimesNegateStepPairArmCountdown20DispatchCue208AndAdvanceWorkByte1ScenarioSce15ef100_801D2C94
@@ -170,7 +170,7 @@ segments:
     - c
     - drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C
     - '@source: src/bof3/scenario/drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenResetWorkStateScenarioSce15ef100_801D2D5C.c'
-    - '@behavior: Entry 9 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it hands the work object point at +0x34 and its word pair +0x0C/+0x10 to the overlay draw helper 0x801D36BC, then re-reads that cell and through one pointer ticks countdown byte +0x9 down by one, adds the head point pair +0x18/+0x1C into the word pair +0x0C/+0x10, subtracts 0x100 from +0x18 and 0x200 from +0x1C, and when the countdown reaches zero calls the resident reset helper 0x80196070.'
+    - '@behavior: Entry 9 of the overlay step-handler code-pointer run at 0x801D3954: through one load of the scratchpad pointer cell 0x1F800044 it hands the work object point at +0x34 and its word pair +0x0C/+0x10 to the overlay quad ring emitter 0x801D36BC, then re-reads that cell and through one pointer ticks countdown byte +0x9 down by one, adds the head point pair +0x18/+0x1C into the word pair +0x0C/+0x10, subtracts 0x100 from +0x18 and 0x200 from +0x1C, and when the countdown reaches zero calls the resident reset helper 0x80196070.'
   - - 8684
     - c
     - dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC
@@ -203,8 +203,10 @@ segments:
     - c
     - invokeHelperScenarioSce15ef100_801D369C
   - - 10940
-    - asm
-    - func_801D36BC
+    - c
+    - drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC
+    - '@source: src/bof3/scenario/drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC.c'
+    - '@behavior: Overlay quad ring emitter: GetTPage(0, 1, 0x2C0, 0x100) with SetDrawMode dfe 0 and dtd 0 at the g_PrimCursor packet, func_8014E5A0(2, 0xC) arming the draw mode and func_801AFE18 filling the 0x20-byte sort scratch; then the caller point at its first argument translated in x by the orange radius and by the black radius, each shifted left four and projected through func_801AFF04 into a screen entry; then thirty-two iterations of one semi-transparent POLY_G4 whose vertices 0 and 1 take the previous corner pair and whose vertices 2 and 3 take the pair recomputed at the phase advanced by 0x80, each corner being the caller point translated by the radius rotated through the 0x1000-unit cosine 0x801783C8 for x and sine 0x801782FC for y with the product shifted right eight, vertices 0 and 2 carrying the colour triplet 0xFF/0x7F/0x00 and vertices 1 and 3 black, each 0x24-byte packet appended through func_8014E5A0 under OT slot 2.'
   - - 11544
     - textbin
     - D_801D3918

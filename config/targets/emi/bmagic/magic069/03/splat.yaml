@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EF15C
   - - 1488
-    - asm
-    - func_801EF1D0
+    - c
+    - oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0
+    - '@source: src/bof3/bmagic/oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0.c'
+    - '@behavior: Work-byte-1 state 6 handler: branches on the scratchpad work object byte 0x0B and, while that direction flag is set, adds four to work byte 0x09 and clears the flag when the stored byte reaches 0x10, otherwise subtracts two from work byte 0x09 and sets the flag when the stored byte reaches zero; when the shared battle record byte 0x0B is one it invokes the helper at 0x8015D71C with 0x101, stores 0x10 into work byte 0x09 and advances work byte 2.'
   - - 1708
     - c
     - decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC

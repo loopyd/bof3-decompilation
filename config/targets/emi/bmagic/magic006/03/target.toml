@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByteAOnFrameParityThenAdd16ToWorkByte9AndAdvanceWorkByte2At80BmagicMagic00603_801F020C.c",
     "src/bof3/bmagic/add8ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00603_801F0290.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenActiveBmagicMagic00603_801F0064.c",
+    "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28.c",
 ]
 psyq_source = "src/bof3/support/magic006_03_psyq.c"

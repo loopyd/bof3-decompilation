@@ -5,7 +5,7 @@ forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00603_
 dispatchStateByte1Table0a24BmagicMagic00603_801EEE04 = 0x801EEE04;
 T_801EEE48 = 0x801EEE48;
 func_801EEE50 = 0x801EEE50;
-func_801EEF28 = 0x801EEF28;
+decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28 = 0x801EEF28;
 func_801EF04C = 0x801EF04C;
 func_801EF0B8 = 0x801EF0B8;
 func_801EF118 = 0x801EF118;

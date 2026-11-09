@@ -4,13 +4,13 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-/* Overlay draw helper at 0x801D36BC: takes the point record at its first
- * argument, whose first word is a vertex table base stepped in 0x10-byte rows,
- * uses the second argument as that row index and as one scale factor and the
- * third as a second scale factor, projects the record through 0x801AFF04 and
- * emits one semi-transparent quad through SetPolyG4. Its role beyond that is
- * not established here, so it stays address-anchored. */
-void func_801D36BC(s32* point, s32 row, s32 scale);
+/* Overlay quad ring emitter at 0x801D36BC, lifted at that address: it takes the
+ * three-word point record at its first argument and the two ring radii in the
+ * second and third, projects every corner formed by rotating one radius in the
+ * x/y plane of that point, and emits thirty-two semi-transparent quads through
+ * SetPolyG4. */
+void drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC(
+    s32* point, s32 orangeRadius, s32 blackRadius);
 
 /* Resident executable reset helper at 0x80196070, which zeroes work-object
  * bytes 0x00-0x04. */
@@ -22,7 +22,8 @@ void func_80196070(void);
  * byte at offset +0x1 of the scratchpad work object published at pointer slot
  * 0x1F800044 and calls with no arguments and no result consumed. Through one
  * load of that cell it hands the object's point at +0x34 and the object's word
- * pair at +0x0C/+0x10 to the overlay draw helper 0x801D36BC; it then re-reads
+ * pair at +0x0C/+0x10 to the overlay quad ring emitter 0x801D36BC as its two
+ * radii; it then re-reads
  * the cell and, through that second pointer, adds the head point pair at
  * +0x18/+0x1C into the word pair at +0x0C/+0x10, subtracts 0x100 from +0x18 and
  * 0x200 from +0x1C, and ticks the countdown byte at +0x9 down by one through
@@ -66,7 +67,8 @@ void drawWorkQuadIntegrateHeadPairIntoStepPairDecayHeadPairTickCountdownThenRese
   u8* state;
 
   work = D_1F800044;
-  func_801D36BC((s32*)(work + 0x34), *(s32*)(work + 0x0C), *(s32*)(work + 0x10));
+  drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC(
+      (s32*)(work + 0x34), *(s32*)(work + 0x0C), *(s32*)(work + 0x10));
   state = D_1F800044;
   *(s32*)(state + 0x0C) += *(s32*)(state + 0x18);
   *(s32*)(state + 0x10) += *(s32*)(state + 0x1C);

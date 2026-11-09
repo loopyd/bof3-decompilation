@@ -4,13 +4,13 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-/* Overlay draw helper at 0x801D36BC: takes the point record at its first
- * argument, whose first word is a vertex table base stepped in 0x10-byte rows,
- * uses the second argument as that row index and as one scale factor and the
- * third as a second scale factor, projects the record through 0x801AFF04 and
- * emits one semi-transparent quad through SetPolyG4. Its role beyond that is
- * not established here, so it stays address-anchored. */
-void func_801D36BC(s32* point, s32 row, s32 scale);
+/* Overlay quad ring emitter at 0x801D36BC, lifted at that address: it takes the
+ * three-word point record at its first argument and the two ring radii in the
+ * second and third, projects every corner formed by rotating one radius in the
+ * x/y plane of that point, and emits thirty-two semi-transparent quads through
+ * SetPolyG4. */
+void drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC(
+    s32* point, s32 orangeRadius, s32 blackRadius);
 
 /* Resident executable reset helper at 0x80196070, which zeroes work-object
  * bytes 0x00-0x04. */
@@ -24,7 +24,8 @@ void func_80196070(void);
  * load of that cell it moves the object's head point, adding 0x200 to the word
  * at +0x18 and 0x100 to the word at +0x1C, adds that head pair into the step
  * word pair at +0x0C/+0x10, and hands the object's point at +0x34 together with
- * the updated step pair to the overlay draw helper 0x801D36BC. It then
+ * the updated step pair to the overlay quad ring emitter 0x801D36BC as its two
+ * radii. It then
  * re-reads the cell and, through that second pointer, ticks the countdown byte
  * at +0x9 down by one, calling the resident reset helper 0x80196070 when the
  * decremented countdown reads zero. The cell is re-read after the call because
@@ -52,7 +53,7 @@ void func_80196070(void);
  * (entry 9 of the same run) with two statement reorderings and the opposite
  * head-point delta. That sibling establishes the pointer-cell spelling, the
  * `*(s32*)(ptr + a) += *(s32*)(ptr + b)` integration pairing, the draw through
- * 0x801D36BC from the +0x34 point with the step pair as row index and scale,
+ * 0x801D36BC from the +0x34 point with the step pair as the two ring radii,
  * the second cell load into a separate `state` local, and the `--state[9] == 0`
  * tail that calls 0x80196070. Here the head-point advance comes first and adds
  * its constants rather than subtracting, so it also differs in register: the
@@ -74,7 +75,8 @@ void advanceHeadPairIntegrateStepPairDrawQuadTickCountdownThenResetWorkStateScen
   *(s32*)(work + 0x1C) += 0x100;
   *(s32*)(work + 0x0C) += *(s32*)(work + 0x18);
   *(s32*)(work + 0x10) += *(s32*)(work + 0x1C);
-  func_801D36BC((s32*)(work + 0x34), *(s32*)(work + 0x0C), *(s32*)(work + 0x10));
+  drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC(
+      (s32*)(work + 0x34), *(s32*)(work + 0x0C), *(s32*)(work + 0x10));
   state = D_1F800044;
   if (--state[9] == 0) {
     func_80196070();

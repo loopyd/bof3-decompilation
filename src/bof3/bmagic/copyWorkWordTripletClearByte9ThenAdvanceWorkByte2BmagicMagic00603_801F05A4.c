@@ -2,8 +2,9 @@
 
 /* Battle record pointer published by the main executable. Splat binds the
  * address through this target's generated undefined_syms_auto.txt, where the
- * remaining asm spans func_801EF118, func_801EEF28 and func_801F0100 still
- * reference it, so this lift needs no target-map row. The word offsets read here
+ * remaining asm spans func_801EF118 and func_801F0100 still reference it; the
+ * lift at 0x801EEF28 was a third one of those spans before its own lift, so
+ * this lift needs no target-map row. The word offsets read here
  * (0x34, 0x38 and 0x3C) are the ones the exact bmagic siblings
  * copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344
  * and copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94

@@ -22,7 +22,7 @@ setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_80
 func_801F3CE4 = 0x801F3CE4;
 func_801F3DCC = 0x801F3DCC;
 func_801F3E10 = 0x801F3E10;
-func_801F3F18 = 0x801F3F18;
+advanceWorkMotionAndReleaseRecordPast3eElseConsumeSharedBy2World03Area14514_801F3F18 = 0x801F3F18;
 requestFrontSelectorContextWorld03Area14514_801F3FD8 = 0x801F3FD8;
 func_801F4008 = 0x801F4008;
 func_801F403C = 0x801F403C;

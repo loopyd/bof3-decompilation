@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/world/initArea14813State.c",
     "src/bof3/world/projectWorkPositionFromRouteOffsetsTimesFiveAndStoreDistanceAt20World03Area14813_801F4544.c",
     "src/bof3/world/stampReach80AndState3WhenFlag5ASetElseClearReachAndAdvanceStateThenDrawWorld03Area14813_801F361C.c",
+    "src/bof3/world/advanceWorkPositionThenRestartCountdownWithRandomPacingAndSetState2WhenPacingNonZeroWorld03Area14813_801F435C.c",
 ]
 psyq_source = "src/bof3/support/area148_13_psyq.c"

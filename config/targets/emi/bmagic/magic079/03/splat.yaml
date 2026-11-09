@@ -66,8 +66,9 @@ segments:
     - asm
     - func_801EF130
   - - 1500
-    - asm
-    - func_801EF1DC
+    - c
+    - decrementWorkByte9Subtract40FromWorkDistanceThenResetByte9To20AndAdvanceWorkByte2OnZeroBmagicMagic07903_801EF1DC
+    - '@source: src/bof3/bmagic/decrementWorkByte9Subtract40FromWorkDistanceThenResetByte9To20AndAdvanceWorkByte2OnZeroBmagicMagic07903_801EF1DC.c'
   - - 1596
     - asm
     - func_801EF23C

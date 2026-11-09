@@ -80,8 +80,10 @@ segments:
     - '@source: src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c'
     - '@behavior: Draws the marker of one glyph cell of the overlay 9x7 glyph grid at the signed halfword cell origin (x, y), keyed by the signed cell value the glyph table holds. Value 1 draws a cross in 0xC8 red: a horizontal span from (x+2, y+5) to (x+8, y+5) and a vertical span from (x+5, y+2) to (x+5, y+8). Value -1 draws only the horizontal span in 0xC8 blue. Every other value draws nothing, and the semi-transparency flag stays clear on both spans.'
   - - 3476
-    - asm
-    - func_801F3994
+    - c
+    - stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994
+    - '@source: src/bof3/world/stampGlyphGridCellCodesQueueCellElementsAndAttachCellTextureWorld04Area17013_801F3994.c'
+    - '@behavior: Stamps the 7x9 cell grid of the overlay banner into the map cell entries and queues one shared UI element per cell. Flag 0x7E of the shared flag bank 0x80144F28 is probed once through func_8015B5D4; while it is clear each cell takes the union of the three 0x3F-byte glyphs of the banner at 0x801F58D0, read at row*9 plus the per-glyph row phases at 0x801F5990 wrapped to nine, folded to one for a set cell and zero otherwise, and while the flag is set the cell value stays zero. The cell then queues func_801A4BC0 at (col + 0x16, row + 0x8E) with the size byte D_801F584C[row*9 + col] scaled by the cell value, and its map entry word - the block base 0x80104000 plus ((stride*rowCount + 1) >> 1)*4 plus four times the block bias at 0x80104002 plus four times D_8010402C[bias*2 + (row + 0x8E)*stride + col] - keeps its upper three bytes and takes the code byte D_801F57CC[cellValue*0x3F + row*9 + col] in the low one. func_801558F0 resolves the same cell and, when it returns a record, func_80155560 attaches that 0x50-byte entry of D_8012D880 with kind 2. Takes no arguments and returns nothing.'
   - - 4072
     - c
     - dispatchStateByte2Table588cWorld04Area17013_801F3BE8

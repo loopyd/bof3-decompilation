@@ -44,8 +44,10 @@ segments:
     - '@source: src/bof3/bmagic/raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C.c'
     - '@behavior: Raises battler status flag 0x20 by passing the shared battle target byte at 0x80146384 and the flag word 0x20 to func_800A9610, then clears scratchpad work-object byte 9 and byte 0xA and advances work byte 1 by one; the work-object pointer cell at 0x1F800044 is re-read before each store group, the 0x18-byte frame only keeps $ra across the call, and it takes no arguments and returns nothing.'
   - - 892
-    - asm
-    - func_801EEF7C
+    - c
+    - incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C.c'
+    - '@behavior: Ramps the scratchpad work object byte 0xA and then byte 9 and, only when the truncated byte 9 reaches 0x10, selects the battler record of the shared target byte at 0x80146384 (0x140-byte party entries at 0x80145E90 below three, 0x118-byte enemy entries at 0x801EB2E8 otherwise), submits it through func_80196718 and its positional effect through func_8019651C with the offsets 6, 4, 8 and 0, then clears work byte 9 and advances work byte 1, re-reading the work pointer cell at 0x1F800044 for each store group; takes no arguments and returns nothing.'
   - - 1144
     - asm
     - func_801EF078

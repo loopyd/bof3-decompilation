@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkHalfword30ByTwoAndHalfword2EByOneAdvanceByte9By1WhenByteAZeroDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic04403_801F0638.c",
     "src/bof3/bmagic/queueSlotSetByte1PublishRecordPointerCopyWorkWordTripletEveryFourthTickWhileByteABelow16ThenAdvanceWorkByte2At16BmagicMagic04403_801EF320.c",
     "src/bof3/bmagic/seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic04403_801EEEFC.c",
+    "src/bof3/bmagic/invokeHelperAdd8ToWorkHalfword30SeedRandomWorkBytes5d5e5fResetByte9SetByteATo10AdvanceWorkByte2BmagicMagic04403_801F04F0.c",
 ]
 psyq_source = "src/bof3/support/magic044_03_psyq.c"

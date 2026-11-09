@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EEE50
   - - 808
-    - asm
-    - func_801EEF28
+    - c
+    - decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28.c'
+    - '@behavior: Entry index 0 of the thirteen-word handler run 0x801EEC04..0x801EEC34 that the overlay frame loop copies and indexes with work byte 2. Reads the work object through the scratchpad pointer cell 0x1F800044 and decrements its unsigned byte 9, running the rest only when that countdown reaches zero. On zero it copies words 0x34, 0x38 and 0x3C of the battle record published at 0x801EB4E0 into the work object, adding 0x800000 to word 0x3C, invokes the shared helper func_800AF764, aims the work object at the record published at 0x8014638C with two func_8017A138 angle calls that write work word 0xC and the masked value of word 0x14, invokes the shared helper func_8015D71C with 0x100, re-arms the countdown to 0x20 and advances work byte 2. Takes no arguments, returns nothing and keeps a 0x18-byte frame.'
   - - 1100
     - asm
     - func_801EF04C

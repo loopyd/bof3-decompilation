@@ -2,6 +2,6 @@ g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 seedWorkChannelPairDistanceRandomByteBCountdownAndAdvanceWorkByte1BmagicMagic08000_801EEC5C = 0x801EEC5C;
 decayWorkHalfword2EThenDrawByWorkByteBAndRaiseFlag4WhenByte9ExpiresBmagicMagic08000_801EECE4 = 0x801EECE4;
-func_801EED94 = 0x801EED94;
+drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94 = 0x801EED94;
 func_801EEF5C = 0x801EEF5C;
 D_801EF124 = 0x801EF124;
