@@ -425,6 +425,12 @@ and the loop spelling is not.
 
 ## Delay slots and entry copies
 
+- Converted argument value: a value the original builds inside one argument's own
+  chain stays in that expression. A heading converted at a single argument site,
+  hoisted into its own local, was scheduled ahead of the later argument loads and
+  measured 172 of 174 with the first difference at that reorder, while
+  `(u16)(angle + 0x400)` written at the argument matched; the same heading read by
+  two calls keeps its local, so the form is per value, not per expression class.
 - Same-size branch/`jal`/`j` difference: identify exact instruction, live inputs/
   outputs, value use after transfer. Try branch inversion, early return, independent
   statement order, one local or pointer hoist.
@@ -1258,10 +1264,14 @@ A bare prologue and epilogue with no saved register, every instruction outside t
 already matching, and an original frame larger than this body's own locals is a
 second cause: the reservation comes from a declaration the original translation
 unit carried that emitted no code. One declared local of the missing size restores
-the frame, and it takes no use, since a use would change liveness instead. The bytes
-constrain only that size, so the name and type are a reconstruction choice rather
-than recovered source: flag the declaration for review and record what removing it
-leaves, which is the frame and offset residual with the body otherwise matching.
+the frame, and it takes no use, since a use would change liveness instead. That holds
+when an exact sibling hands the same callee its own scratch region: the region stays a
+declaration and the call stays argless, because passing it measured one instruction
+over the original, the region's address copied into the argument register in the
+call's delay slot. The bytes constrain only that size, so the name and type are a
+reconstruction choice rather than recovered source: flag the declaration for review
+and record what removing it leaves, which is the frame and offset residual with the
+body otherwise matching.
 An empty body is that cause at its limit: original bytes of only a prologue,
 `jr $ra` and a `nop` still take one declared local of the frame's size, so a frame
 on a function that reads and writes no state is this lever, not a missing call or
@@ -1375,7 +1385,15 @@ pointer reload, and routing the writes through one `s8` local merges them into t
 earlier write's quantity and frees that register. Keep every store site, order and
 value exact; one different literal or an extra store splits the quantity again.
 Confirm with the complete live gate, and keep this as the matching form: restoring
-inline literals re-opens the exchange. The arm-and-merged-tail form is worth trying
+inline literals re-opens the exchange. That local covers one literal: a second,
+different constant in the same block takes none of its own. Where the original loads
+one constant into a register and re-uses it for two stores before loading a second
+constant into that same register for a three-store triplet, keep the repeated literal
+on its narrow local and write the triplet inline at each store through the signed view
+of the cell (`((s8 *)cell)[N] = -0x40;`). Naming the triplet in an `s8` local of its
+own measured 51 of 61 at unchanged bytes with the first difference the seeded
+pointer-local spelling already showed, an unsigned `0xC0` spelling 60 of 61, and the
+inline signed stores matched. The arm-and-merged-tail form is worth trying
 before any dump: when one constant is stored inside a switch arm and again at the
 tail after the switch, assign it in each arm to one arm-local of the store width and
 store that local at both sites. Without the local the compiler loads the constant
