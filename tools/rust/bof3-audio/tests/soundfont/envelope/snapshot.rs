@@ -66,20 +66,33 @@ fn stopped_key_mapping_requires_opt_in_retains_pcm_and_preserves_unchanged_pack(
     assert_eq!(packed.header, header);
     assert_eq!(packed.body, body);
     assert!(packed.report.soundfont_byte_equal);
-    // Changing a running PSX voice from zero to a positive step can activate it.
-    // The explicitly reported static SF2 approximation above stays silent.
+    // The approximation uses the published frozen zero-step model. Native
+    // priming and its minimum step do not establish the same initial silence.
+    // A later positive step activates this source; the static SF2 zone stays silent.
     use bof3_audio::machine::{
-        spu_sample::{Model, Player},
+        spu_sample::{Model, Player, Signal},
         spu_transfer::RAM_BYTES,
     };
     let mut ram = vec![0; RAM_BYTES];
     ram[..body.len()].copy_from_slice(&body);
-    let mut player = Player::new(Model::EmulatorReference);
+    let mut player = Player::new(Model::Published);
+    player.write_pitch(0);
     player.key_on(0);
     for _ in 0..100 {
-        assert_eq!(player.tick(&ram, 0, None).unwrap().sample, 0);
+        assert_eq!(
+            player
+                .tick(&ram, None, Signal::Ordinary { unmuted: true })
+                .unwrap()
+                .sample,
+            0
+        );
     }
-    assert!((0..20).any(|_| player.tick(&ram, 4096, None).unwrap().sample != 0));
+    player.write_pitch(4096);
+    assert!((0..20).any(|_| player
+        .tick(&ram, None, Signal::Ordinary { unmuted: true })
+        .unwrap()
+        .sample
+        != 0));
 }
 
 #[test]

@@ -145,6 +145,38 @@ impl Interconnect {
         Ok(())
     }
 
+    /// Select immutable host settings before rendering native-reference output.
+    pub fn configure_spu_native_output(
+        &mut self,
+        settings: super::spu_mixer::NativeSettings,
+    ) -> crate::Result<()> {
+        let voices = self
+            .spu_voices
+            .as_ref()
+            .ok_or("configure SPU voices before native output")?;
+        if voices.sample_model() != super::spu_sample::Model::EmulatorReference {
+            return Err("native output requires native-reference sample voices".into());
+        }
+        self.spu_mixer.configure_native(settings)
+    }
+
+    pub fn spu_native_output_settings(&self) -> Option<super::spu_mixer::NativeSettings> {
+        self.spu_mixer.native_settings()
+    }
+
+    pub fn configure_spu_key_on_delay(&mut self, frames: i32) -> crate::Result<()> {
+        self.spu_voices
+            .as_mut()
+            .ok_or("configure SPU voices before key-on delay")?
+            .configure_key_on_delay(frames)
+    }
+
+    pub fn spu_key_on_delay(&self) -> Option<i32> {
+        self.spu_voices
+            .as_ref()
+            .and_then(|voices| voices.key_on_delay())
+    }
+
     pub(crate) fn configure_spu_readback(
         &mut self,
         settings: ReadbackSettings,
@@ -217,19 +249,35 @@ impl Interconnect {
             .as_mut()
             .ok_or("SPU voice arithmetic models must be configured explicitly")?;
         if self.spu_transfer.read(10)? & 0x8000 == 0 {
-            return Err(
-                "SPU voice stepping requires SPUCNT enable; disabled-frame execution is unmodeled"
-                    .into(),
-            );
+            voices.require_disable_model()?;
         }
-        voices.tick(self.spu_transfer.ram(), self.spu_transfer.read(10)?)
+        let frame = voices.tick(self.spu_transfer.ram(), self.spu_transfer.read(10)?)?;
+        for voice in &frame.voices {
+            if let Some(address) = voice.fetched_address {
+                self.spu_transfer
+                    .observe_voice_fetch(address, voice.fetched_loop_address);
+            }
+        }
+        self.deliver_spu_irq();
+        Ok(frame)
     }
 
-    pub fn configure_spu_noise(&mut self, level: u16, timer: i32) -> crate::Result<()> {
+    pub fn configure_spu_irq(&mut self, model: super::spu_transfer::IrqModel) -> crate::Result<()> {
+        self.spu_transfer.configure_irq(model)
+    }
+
+    fn deliver_spu_irq(&mut self) {
+        if self.spu_transfer.take_irq_request() {
+            self.interrupts.set_line(Source::Spu, true);
+            self.interrupts.set_line(Source::Spu, false);
+        }
+    }
+
+    pub fn configure_spu_noise(&mut self, state: super::spu_noise::State) -> crate::Result<()> {
         self.spu_voices
             .as_mut()
             .ok_or("configure SPU voices before noise")?
-            .configure_noise(Noise::from_published_state(level, timer)?)
+            .configure_noise(Noise::new(state)?)
     }
 
     pub fn configure_spu_disable(
@@ -253,7 +301,16 @@ impl Interconnect {
     /// One scheduled output frame, including captures and currently supported
     /// mixing. Caller supplies already-resampled input frames. Audible reverb
     /// requires explicit configuration; no silent dry fallback is permitted.
-    pub fn step_spu_output(&mut self, inputs: SpuInputs) -> crate::Result<[i16; 2]> {
+    pub fn step_spu_output(&mut self, inputs: SpuInputs) -> crate::Result<[f32; 2]> {
+        let sample = self
+            .spu_voices
+            .as_ref()
+            .ok_or("configure SPU voices before output")?
+            .sample_model();
+        self.spu_mixer.require_model(sample)?;
+        if sample == super::spu_sample::Model::EmulatorReference && inputs.external != [0; 2] {
+            return Err("native SPU output has no external input source".into());
+        }
         let control = self.spu_transfer.read(10)?;
         if self.spu_reverb.is_none() {
             self.spu_mixer.require_dry(control)?;
@@ -262,7 +319,7 @@ impl Interconnect {
             return Err("SPU output capture requires normal 512 KiB RAM control 0x0004".into());
         }
         let voices = self.step_spu_voices()?;
-        let sends = self.spu_mixer.prepare(&voices, control, inputs);
+        let sends = self.spu_mixer.prepare(&voices, control, inputs)?;
         let wet = if let Some(reverb) = &mut self.spu_reverb {
             reverb.tick(
                 self.spu_transfer.ram_mut(),
@@ -276,6 +333,7 @@ impl Interconnect {
         let output = self.spu_mixer.finish(sends, wet)?;
         self.spu_transfer
             .capture_frame(inputs.cd, [voices.voices[1].mono, voices.voices[3].mono])?;
+        self.deliver_spu_irq();
         Ok(output)
     }
 
@@ -342,11 +400,8 @@ impl Interconnect {
             && self.spu_transfer.read(10)? & 0x8000 != 0
             && value & 0x8000 == 0
         {
-            if let Some(voices) = self.spu_voices.as_mut() {
+            if let Some(voices) = self.spu_voices.as_ref() {
                 voices.require_disable_model()?;
-                self.spu_transfer.write(10, value)?;
-                voices.disable();
-                return Ok(());
             }
         }
         if physical < 0x1f80_1da0 || (0x1f80_1e00..0x1f80_1e60).contains(&physical) {

@@ -2,30 +2,43 @@
 //! This component does not schedule MMIO, keys, capture, IRQs or reverb.
 use super::{
     adsr::{Adsr, Model as EnvelopeModel, Registers},
-    spu_sample::{Model as SampleModel, Player},
+    spu_sample::{Model as SampleModel, Player, Signal},
     spu_transfer::RAM_BYTES,
-    spu_volume::Volume,
+    spu_volume::VoiceVolume,
 };
 use crate::Result;
 
 pub const VOICES: usize = 24;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ModulationRole {
+    #[default]
+    None,
+    Target,
+    Source,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Output {
-    /// Post-envelope signal, used to modulate the next voice before panning.
+    /// Clipped post-envelope capture signal, retained for modulation sources.
     pub mono: i16,
-    pub stereo: [i16; 2],
+    /// Per-voice sends stay wide until final mixing; sources send zero.
+    pub stereo: [i32; 2],
     pub fetched_address: Option<u32>,
+    /// End-flag comparison target before the fetched block updates repeat.
+    pub fetched_loop_address: Option<u32>,
 }
 
 #[derive(Clone, Debug)]
 struct Voice {
-    volumes: [Volume; 2],
+    volumes: [VoiceVolume; 2],
     pitch: u16,
     start: u16,
+    start_written: bool,
     envelope: Adsr,
     player: Player,
     started: bool,
+    startup_remaining: i32,
 }
 
 #[derive(Clone, Debug)]
@@ -33,23 +46,27 @@ pub struct Voices {
     voices: [Voice; VOICES],
     sample_model: SampleModel,
     end_flags: u32,
-    modulation: u32,
+    modulation: [ModulationRole; VOICES],
+    key_on_delay: Option<i32>,
 }
 
 impl Voices {
     pub fn new(sample_model: SampleModel, envelope_model: EnvelopeModel) -> Self {
         Self {
             voices: std::array::from_fn(|_| Voice {
-                volumes: [Volume::new(envelope_model); 2],
+                volumes: [VoiceVolume::new(sample_model, envelope_model); 2],
                 pitch: 0,
                 start: 0,
+                start_written: false,
                 envelope: Adsr::new(Registers { adsr1: 0, adsr2: 0 }, envelope_model),
                 player: Player::new(sample_model),
                 started: false,
+                startup_remaining: 0,
             }),
             sample_model,
             end_flags: 0,
-            modulation: 0,
+            modulation: [ModulationRole::None; VOICES],
+            key_on_delay: None,
         }
     }
 
@@ -57,35 +74,100 @@ impl Voices {
         self.end_flags
     }
 
-    /// Inspected emulator control-write behavior, not a hardware reset model.
-    /// Only active envelopes are silenced. Preserve manual ENVX on an already
-    /// off voice, sample position/history, gains, registers and ENDX.
-    pub(crate) fn disable_active_envelopes(&mut self) {
-        for voice in &mut self.voices {
-            if voice.envelope.phase() != super::adsr::Phase::Off {
-                voice.envelope.force_off();
+    pub(crate) fn sample_model(&self) -> SampleModel {
+        self.sample_model
+    }
+
+    pub fn configure_key_on_delay(&mut self, frames: i32) -> Result<()> {
+        if self.sample_model != SampleModel::EmulatorReference {
+            return Err("key-on delay requires native-reference voices".into());
+        }
+        if self.key_on_delay.is_some() {
+            return Err("native key-on delay already configured".into());
+        }
+        self.key_on_delay = Some(frames);
+        Ok(())
+    }
+
+    pub fn key_on_delay(&self) -> Option<i32> {
+        self.key_on_delay
+    }
+
+    pub(crate) fn require_key_on_delay(&self) -> Result<i32> {
+        if self.sample_model == SampleModel::Published {
+            return Ok(0);
+        }
+        Ok(self
+            .key_on_delay
+            .ok_or("native SPU frames require an explicit key-on delay")?
+            .max(0))
+    }
+
+    pub fn modulation_role(&self, index: usize) -> Result<ModulationRole> {
+        self.modulation
+            .get(index)
+            .copied()
+            .ok_or_else(|| "SPU voice index outside 0..24".into())
+    }
+
+    /// Apply one already scheduled PMON halfword write. Native assignments run
+    /// in ascending order and can replace a preceding target with a source.
+    pub fn write_modulation(&mut self, high: bool, value: u16) {
+        let first = if high { 16 } else { 0 };
+        let end = if high { VOICES } else { 16 };
+        for index in first..end {
+            if value & (1 << (index - first)) == 0 {
+                self.modulation[index] = ModulationRole::None;
+            } else if index != 0 {
+                self.modulation[index] = ModulationRole::Target;
+                if self.sample_model == SampleModel::EmulatorReference {
+                    self.modulation[index - 1] = ModulationRole::Source;
+                }
             }
         }
     }
-    pub fn set_modulation(&mut self, flags: u32) {
-        self.modulation = flags & 0x00ff_fffe;
+
+    /// Apply already accepted component keys atomically. Native MMIO acceptance
+    /// is separate. On wins if both bits are set; startup delay begins here.
+    pub fn apply_keys(&mut self, on: u32, off: u32) -> Result<()> {
+        self.require_key_on_delay()?;
+        for (i, voice) in self.voices.iter_mut().enumerate() {
+            if on & (1 << i) != 0 {
+                voice.player.accept_key_on();
+            }
+        }
+        self.end_flags &= !on;
+        self.start_keys(on, off)
     }
 
-    /// Apply already scheduled key masks. On wins if both bits are set. Latency
-    /// and minimum retrigger spacing must be implemented by the scheduler.
-    pub fn apply_keys(&mut self, on: u32, off: u32) {
+    pub(crate) fn accept_native_key_on(&mut self, mask: u32) -> u32 {
+        let mut accepted = 0;
+        for (i, voice) in self.voices.iter_mut().enumerate() {
+            let bit = 1 << i;
+            if mask & bit != 0 && voice.start_written {
+                accepted |= bit;
+                voice.player.accept_key_on();
+            }
+        }
+        self.end_flags &= !accepted;
+        accepted
+    }
+
+    pub(crate) fn start_keys(&mut self, on: u32, off: u32) -> Result<()> {
+        let delay = self.require_key_on_delay()?;
         for (i, voice) in self.voices.iter_mut().enumerate() {
             let bit = 1 << i;
             if off & bit != 0 {
                 voice.envelope.key_off();
             }
             if on & bit != 0 {
-                voice.player.key_on(voice.start);
+                voice.player.start(voice.start);
                 voice.envelope.key_on();
                 voice.started = true;
-                self.end_flags &= !bit;
+                voice.startup_remaining = delay;
             }
         }
+        Ok(())
     }
 
     /// Halfword register offsets relative to this voice's sixteen-byte MMIO bank.
@@ -116,8 +198,14 @@ impl Voices {
             0 | 2 => {
                 voice.volumes[(offset / 2) as usize].write(value)?;
             }
-            4 => voice.pitch = value,
-            6 => voice.start = value,
+            4 => {
+                voice.pitch = value;
+                voice.player.write_pitch(value);
+            }
+            6 => {
+                voice.start = value;
+                voice.start_written = true;
+            }
             8 | 10 => {
                 let mut registers = voice.envelope.registers();
                 if offset == 8 {
@@ -145,7 +233,13 @@ impl Voices {
     /// Produce one frame for all voices. RAM is snapshotted at block fetches.
     /// No final mix is implied. Failure may follow earlier voices' state updates;
     /// the execution owner must stop, never retry this frame as if it was atomic.
-    pub fn tick(&mut self, ram: &[u8], noise: Option<(u32, i16)>) -> Result<[Output; VOICES]> {
+    pub fn tick(
+        &mut self,
+        ram: &[u8],
+        noise: Option<(u32, i16)>,
+        unmuted: bool,
+    ) -> Result<[Output; VOICES]> {
+        self.require_key_on_delay()?;
         if ram.len() != RAM_BYTES {
             return Err("SPU voices require exactly 512 KiB RAM".into());
         }
@@ -159,42 +253,85 @@ impl Voices {
                 preceding = 0;
                 continue;
             }
-            let modulation = (self.modulation & (1 << i) != 0).then_some(preceding);
+            if self.sample_model == SampleModel::EmulatorReference
+                && voice.envelope.phase() == super::adsr::Phase::Off
+            {
+                let frame = voice
+                    .player
+                    .tick_silent(ram)
+                    .map_err(|e| format!("SPU voice {i}: {e}"))?;
+                if frame.loop_end {
+                    self.end_flags |= 1 << i;
+                }
+                output[i].fetched_address = frame.fetched_address;
+                output[i].fetched_loop_address = frame.fetched_loop_address;
+                preceding = 0;
+                continue;
+            }
+            if voice.startup_remaining > 0 {
+                voice.player.install_pending_frequency();
+                voice.startup_remaining -= 1;
+                preceding = 0;
+                continue;
+            }
+            let role = self.modulation[i];
+            let modulation = (role == ModulationRole::Target).then_some(preceding);
+            let signal = if role == ModulationRole::Source {
+                Signal::ModulationSource
+            } else {
+                Signal::Ordinary { unmuted }
+            };
             let frame = voice
                 .player
-                .tick(ram, voice.pitch, modulation)
+                .tick(ram, modulation, signal)
                 .map_err(|e| format!("SPU voice {i}: {e}"))?;
-            let noise_sample = noise
-                .filter(|(mask, _)| mask & (1 << i) != 0)
-                .map(|(_, level)| level);
-            let mono = scale(noise_sample.unwrap_or(frame.sample), voice.envelope.level());
-            output[i] = Output {
-                mono,
-                stereo: voice.volumes.map(|volume| scale(mono, volume.level())),
-                fetched_address: frame.fetched_address,
-            };
-            preceding = mono;
-            for volume in &mut voice.volumes {
-                volume.tick();
-            }
-            voice.envelope.tick();
             if frame.loop_end {
                 self.end_flags |= 1 << i;
             }
+            if frame.stopped {
+                voice.envelope.force_off();
+                output[i].fetched_address = frame.fetched_address;
+                output[i].fetched_loop_address = frame.fetched_loop_address;
+                preceding = 0;
+                continue;
+            }
+            let noise_sample = noise
+                .filter(|(mask, _)| mask & (1 << i) != 0)
+                .map(|(_, level)| level);
+            let raw = noise_sample.map(i32::from).unwrap_or(frame.sample);
+            let signal = raw
+                .checked_mul(i32::from(voice.envelope.sample()))
+                .ok_or_else(|| {
+                    format!("SPU voice {i}: envelope product exceeds signed 32-bit domain")
+                })?
+                >> 15;
+            let mono = signal.clamp(i32::from(i16::MIN), i32::from(i16::MAX)) as i16;
+            output[i] = Output {
+                mono,
+                stereo: if role == ModulationRole::Source {
+                    [0, 0]
+                } else {
+                    [
+                        voice.volumes[0].apply(signal)?,
+                        voice.volumes[1].apply(signal)?,
+                    ]
+                },
+                fetched_address: frame.fetched_address,
+                fetched_loop_address: frame.fetched_loop_address,
+            };
+            preceding = match self.sample_model {
+                SampleModel::Published => i32::from(mono),
+                SampleModel::EmulatorReference if role == ModulationRole::Source => signal,
+                SampleModel::EmulatorReference => 0,
+            };
+            for volume in &mut voice.volumes {
+                volume.tick();
+            }
             if frame.mute && noise_sample.is_none() {
-                match self.sample_model {
-                    SampleModel::Published => {
-                        voice.envelope.key_off();
-                        voice.envelope.write_level(0);
-                    }
-                    SampleModel::EmulatorReference => voice.envelope.force_off(),
-                }
+                voice.envelope.key_off();
+                voice.envelope.write_level(0);
             }
         }
         Ok(output)
     }
-}
-
-fn scale(sample: i16, level: i16) -> i16 {
-    ((i32::from(sample) * i32::from(level)) >> 15).clamp(-32768, 32767) as i16
 }

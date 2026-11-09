@@ -1,8 +1,14 @@
 //! Diagnose note-on zero-step sample values; no SF2 acceptance follows automatically.
 use bof3_audio::{
-    archive::MediaImage, catalog::model::AssetData, catalog::model::Catalog, codec::adpcm::History,
-    machine::executable::Executable, machine::spu_sample::Model, machine::spu_sample::Player,
-    machine::spu_transfer::RAM_BYTES, soundfont::bank::Gain, soundfont::gain,
+    archive::MediaImage,
+    catalog::model::AssetData,
+    catalog::model::Catalog,
+    codec::adpcm::History,
+    machine::executable::Executable,
+    machine::spu_sample::{Model, Player, Signal},
+    machine::spu_transfer::RAM_BYTES,
+    soundfont::bank::Gain,
+    soundfont::gain,
     voice::tuning::Reference,
 };
 use std::{collections::BTreeMap, fs, path::PathBuf};
@@ -99,39 +105,43 @@ fn main() -> bof3_audio::Result<()> {
             let mut values = Vec::new();
             for model in [Model::Published, Model::EmulatorReference] {
                 let mut player = Player::new(model);
+                player.write_pitch(0);
                 player.key_on(0x40);
-                let initial = player.tick(&ram, 0, None)?;
-                for _ in 0..64 {
-                    let frame = player.tick(&ram, 0, None)?;
+                let initial = player.tick(&ram, None, Signal::Ordinary { unmuted: true })?;
+                for frame_index in 0..64 {
+                    let frame = player.tick(&ram, None, Signal::Ordinary { unmuted: true })?;
+                    let expected_position = match model {
+                        Model::Published => 0,
+                        Model::EmulatorReference => 0x20000 + frame_index + 2,
+                    };
                     if frame.sample != initial.sample
                         || frame.fetched_address.is_some()
                         || frame.loop_end
                         || frame.mute
-                        || player.counter() != 0
+                        || frame.stopped
+                        || player.counter() != expected_position
                     {
-                        return Err("zero pitch: reader advanced or output changed".into());
+                        return Err("zero pitch: unexpected model progression or output".into());
                     }
                 }
                 values.push(initial.sample);
-            }
-            if values[0] != values[1] {
-                return Err("zero pitch: arithmetic models disagree".into());
             }
             let gain = Gain::from_bank(metadata, program, tone, gain::Model::SpecificationScale)?;
             *samples.entry(values[0]).or_insert(0usize) += keys.len();
             tones.push(
                 serde_json::json!({"bank":asset.id,"archive_sha256":archive_source.sha256,"program":program.program,"tone":tone.index,
                 "keys":keys,"sample":resolution.sample_id,"first_decoded_sample":first,
-                "held_sample":values[0],"gain_silent":gain.is_silent()}),
+                "published_held_sample":values[0],"native_first_sample":values[1],"gain_silent":gain.is_silent()}),
             );
         }
     }
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
-            "schema":"bof3.zero-pitch-probe/v1","executable_sha256":reference.profile().exe_sha256,
-            "held_values_by_tone_key":samples,"tones":tones,"unresolved":unresolved,
+            "schema":"bof3.zero-pitch-probe/v2","executable_sha256":reference.profile().exe_sha256,
+            "published_held_values_by_tone_key":samples,"tones":tones,"unresolved":unresolved,
             "limitations":["Isolated key-on reader state without pitch changes, modulation or noise.",
+                "Native-reference output covers 65 frames with a one-unit 16.16 increment, not a frozen position.",
                 "No independent hardware PCM validation or SF2 representability acceptance."]
         }))?
     );

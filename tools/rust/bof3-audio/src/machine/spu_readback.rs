@@ -1,7 +1,6 @@
 //! Development-only ENVX observations at interpreter access cycles, not PCM time.
 use super::{
     adsr::{Adsr, Model, Phase, Registers},
-    spu_sample::{pitch_step, Model as SampleModel},
     spu_transfer::RAM_BYTES,
     spu_voices::VOICES,
 };
@@ -162,7 +161,7 @@ impl Readback {
             match offset & 15 {
                 4 => {
                     voice.advance(cycle, delay, ram)?;
-                    voice.pitch = pitch_step(value, None, SampleModel::EmulatorReference);
+                    voice.pitch = value.min(0x3fff);
                     if let Some(key) = &mut voice.key {
                         key.cursor.step = (u32::from(voice.pitch) << 4).max(1);
                     }

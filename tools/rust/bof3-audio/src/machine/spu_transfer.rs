@@ -1,11 +1,20 @@
 //! Normal 512 KiB SPU RAM transfers. Service calls are transactions, not CPU clocks.
-//! Voice/reverb fetch timing and IRQ9 comparison are separate work.
+//! Explicit frame/fetch IRQ comparisons do not establish bus or CPU latency.
 
 use crate::Result;
+use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 
 pub const RAM_BYTES: usize = 512 * 1024;
 pub(crate) const FIFO_HALFWORDS: usize = 32;
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum IrqModel {
+    /// Current native comparisons and latch semantics at caller-scheduled
+    /// fetch/capture boundaries. Native batch and CPU delivery phase remain open.
+    EmulatorReference,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
@@ -25,6 +34,9 @@ pub struct Transfer {
     applied_control: u16,
     ram_control: u16,
     capture_position: u16,
+    irq_model: Option<IrqModel>,
+    irq_flag: bool,
+    irq_request: bool,
 }
 
 impl Default for Transfer {
@@ -39,11 +51,48 @@ impl Default for Transfer {
             applied_control: 0,
             ram_control: 0,
             capture_position: 0,
+            irq_model: None,
+            irq_flag: false,
+            irq_request: false,
         }
     }
 }
 
 impl Transfer {
+    pub fn configure_irq(&mut self, model: IrqModel) -> Result<()> {
+        if self.irq_model.is_some() {
+            return Err("SPU IRQ model already configured".into());
+        }
+        self.irq_model = Some(model);
+        Ok(())
+    }
+
+    /// Consume a device request separately from the SPUSTAT flag. The CPU
+    /// interrupt controller owns its own latch and acknowledgement.
+    pub(crate) fn take_irq_request(&mut self) -> bool {
+        std::mem::take(&mut self.irq_request)
+    }
+
+    pub(crate) fn observe_voice_fetch(&mut self, address: u32, loop_address: Option<u32>) {
+        let irq = u32::from(self.irq_address) * 8;
+        let block_match = irq > address && irq <= address + 16;
+        let loop_match = loop_address.is_some_and(|address| irq <= address && address - irq < 16);
+        if block_match || loop_match {
+            self.trigger_irq();
+        }
+    }
+
+    fn trigger_irq(&mut self) {
+        if let Some(IrqModel::EmulatorReference) = self.irq_model {
+            if self.control & 0x40 != 0 {
+                self.control &= !0x40;
+                self.applied_control &= !0x40;
+                self.irq_flag = true;
+                self.irq_request = true;
+            }
+        }
+    }
+
     pub fn ram(&self) -> &[u8] {
         &self.ram
     }
@@ -64,6 +113,9 @@ impl Transfer {
         for (channel, sample) in [cd[0], cd[1], voices[0], voices[1]].into_iter().enumerate() {
             let offset = channel * 1024 + usize::from(self.capture_position);
             self.ram[offset..offset + 2].copy_from_slice(&sample.to_le_bytes());
+            if usize::from(self.irq_address) * 8 == offset {
+                self.trigger_irq();
+            }
         }
         self.capture_position = (self.capture_position + 2) & 1023;
         Ok(())
@@ -94,6 +146,7 @@ impl Transfer {
             Mode::DmaRead => self.fifo.len() < FIFO_HALFWORDS,
         };
         (self.applied_control & 0x3f)
+            | (u16::from(self.irq_flag) << 6)
             | ((self.capture_position & 512) << 2)
             | (u16::from(busy) << 10)
             | (u16::from(request) << 7)
@@ -131,8 +184,8 @@ impl Transfer {
                 self.fifo.push_back(value);
             }
             10 => {
-                if value & 0x40 != 0 {
-                    return Err("SPU: IRQ9 address-comparison timing is not implemented".into());
+                if value & 0x40 != 0 && self.irq_model.is_none() {
+                    return Err("SPU IRQ9 requires an explicit address-comparison model".into());
                 }
                 if !self.fifo.is_empty()
                     && mode(value) == Mode::Stopped
@@ -148,6 +201,9 @@ impl Transfer {
                     );
                 }
                 self.control = value;
+                if value & 0x40 == 0 {
+                    self.irq_flag = false;
+                }
             }
             12 => self.ram_control = value,
             14 => return Err("SPU: status-register writes are unverified".into()),

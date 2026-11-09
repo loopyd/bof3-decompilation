@@ -527,3 +527,18 @@ fn u32le(bytes: &[u8], offset: usize) -> u32 {
             .expect("validated WAV field bounds"),
     )
 }
+
+/// Explicit PCM16 delivery. Native callback floats may exceed the PCM16 range.
+pub fn pcm16(frame: [f32; 2]) -> [i16; 2] {
+    frame.map(|sample| (sample * 32767.0).round().clamp(-32768.0, 32767.0) as i16)
+}
+
+pub fn pcm16_clipped(frame: [f32; 2]) -> u64 {
+    frame
+        .into_iter()
+        .filter(|sample| {
+            let scaled = (sample * 32767.0).round();
+            !(-32768.0..=32767.0).contains(&scaled)
+        })
+        .count() as u64
+}

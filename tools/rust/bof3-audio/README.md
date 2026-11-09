@@ -145,7 +145,14 @@ bin/harness audio render --mode music --engine psx \
 `--sequence` is an independent SEP index within the named archive. Output is a
 new directory containing `render.wav` and `render.json`; the report records
 media identities, owned calls, timing limits and unverified fidelity gates.
-The `bof3.psx-render/v2` report includes owned startup and artifact hashes.
+The `bof3.psx-render/v4` report includes owned startup and artifact hashes.
+Reports include `native_output_settings` and `pcm16_delivery`, whose `peak`
+records the float peak before conversion and `clipped_samples` counts channel
+samples saturated for PCM16 delivery. The renderer fixes native settings to
+volume 3, stereo and unmuted. Reports include `native_key_on_delay`, the
+configured signed delay in output frames. Production rendering uses six frames.
+These reports do not establish independent native PCM, CPU/worker alignment or
+hardware timing.
 The PSX branch requires `--driver DIRECTORY`, rejects `--executable`, and no
 longer accepts `--bios`. Original-reference execution remains in development
 examples and the explicit `machine::reference` owner. In an extracted source
@@ -185,7 +192,7 @@ histories, multi-bank playback and vocal/XA streaming remain unsupported.
 The renderer polls game voice status before playback and after the body. It
 releases the explicit SDK voice, or all 24 voices for a game cue in the otherwise
 empty machine. The fixed tail includes guest release and safe-call delay and may
-end before silence. The `bof3.psx-effects-render/v1` report records the selected
+end before silence. The `bof3.psx-effects-render/v3` report records the selected
 bank, playback values, calls, status snapshots, cutoff and clock limits.
 Independent native timing and PCM agreement remain open.
 

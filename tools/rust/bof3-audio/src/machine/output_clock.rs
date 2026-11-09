@@ -28,7 +28,7 @@ pub struct Clock {
     sample_remaining: u32,
     line_remaining: u32,
     #[serde(skip)]
-    pending: Vec<[i16; 2]>,
+    pending: Vec<[f32; 2]>,
 }
 
 #[derive(Debug, Serialize)]
@@ -72,7 +72,7 @@ impl Clock {
     pub fn vblanks(&self) -> u64 {
         self.vblanks
     }
-    pub fn take_frames(&mut self) -> Vec<[i16; 2]> {
+    pub fn take_frames(&mut self) -> Vec<[f32; 2]> {
         std::mem::take(&mut self.pending)
     }
 

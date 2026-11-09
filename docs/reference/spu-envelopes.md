@@ -10,43 +10,40 @@ Hardware descriptions and the current native comparator:
   No emulator implementation is imported into the Rust component. Native
   behavior still requires independent hardware validation.
 
-## Unresolved differences
+## Arithmetic models and boundaries
 
-The published pseudocode starts exponential-increase slowdown above `0x6000`;
-Rust `EmulatorReference` includes equality. Rust `Published` applies its minimum
-counter increment after exponential adjustment; `EmulatorReference` applies it
-before. At sufficiently slow increasing exponential rates, those orders can
-distinguish continued progression from a frozen envelope.
+[The Rust ADSR component](../../tools/rust/bof3-audio/src/machine/adsr.rs)
+requires an explicit arithmetic model. `Published` retains its Q15 accumulator,
+strict `level > 0x6000` exponential-increase threshold and frozen-rate rules.
+It applies its minimum counter increment after exponential adjustment.
 
-The native ADSR unit also includes equality at `0x6000`, but slows by adding eight
-to a rate-table index, capped at 127. Its numerator/denominator and fractional
-accumulator do not establish either Rust counter-floor policy. Native ENVX reads
-reconstruct the level at the reader's cycle, including zero before the first
-key-on envelope step. Manual ENVX writes are unimplemented there. Rust's
-non-step-frame target checks, counter reset on register writes and signed
-manual-level behavior therefore remain explicit component policies requiring
-device-level validation. Neither source supplies independently captured hardware
-traces or write timing.
+`EmulatorReference` follows the current native denominator table. Its counter
+counts elapsed frames since the last level step. Exponential increase at
+`level >= 0x6000` uses `min(rate + 8, 127)`, without a frozen-rate sentinel.
+ADSR writes, key-off and phase changes preserve this counter; key-on resets it.
+Decay enters sustain when the upper four level bits are at most the sustain
+field. Release stops only when its calculated level becomes negative. An
+exponential release can remain active at zero. Native-reference voice output
+uses the freshly stepped envelope; published output uses the preceding level.
+
+Native ENVX reads reconstruct the level at the reader's cycle, including zero
+before the first key-on envelope step. The native guest register handler ignores
+manual ENVX writes. Rust's signed level injection remains a component policy.
+Neither arithmetic model establishes hardware timing or complete device fidelity.
 
 ## Repository evidence and boundaries
 
-[The Rust ADSR component](../../tools/rust/bof3-audio/src/machine/adsr.rs) requires
-an explicit arithmetic model. The models select the threshold and counter-floor
-rules above within shared frame-driven state transitions. They do not constitute
-separately verified hardware implementations or complete native device models.
+[Existing checks](../../tools/rust/bof3-audio/tests/adsr.rs) cover literal phase
+traces, rate intervals, model differences, signed component injection and key or
+register transitions. The opt-in corpus probe compares VAB register pairs over
+250 ms held notes followed by 250 ms release. Counter units differ between
+models, so it compares level and phase rather than counter values.
 
-[Tests](../../tools/rust/bof3-audio/tests/adsr.rs) retain literal boundary traces,
-counter-rate alias checks, phase transitions, frozen rates and write/retrigger
-cases. A bounded corpus probe compares 250 ms held notes plus 250 ms release
-from VAB register pairs. It finds divergent trajectories in 125 of 543 distinct
-pairs, used by 395 of 21,112 tone records. Register pair `89BA/514C` reaches the
-threshold after eight ticks; the ninth yields levels 27648 versus 25344.
-
-Those results compare models, not measured game output. They do not account for
-game-time ADSR overrides, key scheduling, ADPCM termination or volume controls.
-[The audio specification](../specs/formats/audio.md#rust-adsr-state-and-evidence-models)
-owns integration status. Rendering fidelity and SoundFont approximation still
-require independent validation.
+These checks do not account for game-time ADSR overrides, key scheduling, ADPCM
+termination or volume controls. The
+[audio specification](../specs/formats/audio.md#rust-adsr-state-and-evidence-models)
+owns integration limits. SoundFont fitting remains an approximation of the
+selected model; complete gameplay and hardware validation remain separate.
 
 ## Volume sweeps
 
@@ -58,16 +55,29 @@ hardware delay that the frame-driven Rust component does not establish.
 
 The [Rust sweep component](../../tools/rust/bof3-audio/src/machine/spu_volume.rs)
 preserves current gain on sweep setup, resets its counter, stops at the relevant
-endpoint and clocks gains after applying them to output. Its current main-volume
+endpoint and clocks gains after applying them to output. Published current-main-volume
 writes change level without rearming a stopped sweep; current voice-volume writes
-remain rejected. Rust clocks all voice sweeps per requested frame, leaving
+remain rejected. Published-model voice sweeps clock per requested frame, leaving
 inactive-voice timing unvalidated.
 
 The [native voice-volume decoder](../../third_party/pcsx-redux-agentic/src/spu/volume.cc)
 approximates a sweep-mode write as a fixed level. It does not run the hardware
 sweep envelope, and the native register handler leaves main-volume writes
-unimplemented. The two Rust arithmetic models choose threshold/floor rules only;
-native comparison and independent device timing remain separate obligations.
+unimplemented. `VoiceVolume` selects this fixed approximation for native-reference
+voices through the configured sample model. Gain remains fixed between writes,
+including sweep writes. Native stereo products use signed Q14 levels and divide
+by `0x4000` toward zero. Published voice gain clips its input to `i16`, applies
+its Q15 level with an arithmetic shift and clips the result. Stereo sends remain
+`i32` through accumulation; capture remains separately clipped to `i16`.
+
+`VoiceVolume::level()` exposes a Q15 component level for both policies, twice
+the native Q14 level. It does not establish native current-volume bus readback.
+The separate `Volume` component retains its Q15 counters, selected threshold/floor
+rules and frozen `0x7F` rate for Published voice sweeps and Published main gain.
+Native-reference final output bypasses main gain and sweeps. The standalone
+`adsr::Model::EmulatorReference` rate policy remains distinct from native
+voice-volume decoding and final output. Bus timing, hardware fidelity and full PCM remain separate
+obligations.
 
 [Implementation and validation](../specs/formats/audio.md#rust-spu-volume-sweeps)
 retain these boundaries. The independent integer-vector hashes include 512
@@ -75,7 +85,7 @@ little-endian signed samples followed by a little-endian `u32` counter and one
 active-state byte for each mode/rate/start context:
 
 - Published: `a2f5dc635564de06a2b8554ade8d5ce234098c58d1c70c4de181687a1d989316`.
-- EmulatorReference arithmetic: `7388ac278502c579d5758840515eeee52682d7e05e4b63890527f5924a85635e`.
+- Q15 EmulatorReference rate arithmetic: `7388ac278502c579d5758840515eeee52682d7e05e4b63890527f5924a85635e`.
 
 ## SoundFont approximation target
 

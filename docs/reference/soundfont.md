@@ -161,20 +161,25 @@ or unconditional claim about every gameplay state.
 
 ## Stopped-pitch approximation
 
-The [zero-step evidence](spu-samples.md#zero-step-playback) permits a narrow
-key-on silence approximation, not a universally muted tone. With explicit
-`allow_stopped_pitch_approximation`, the bank converter maps known in-table
-zero-step keys whose first interpolated value is zero to a shared silent SF2
-sample. Original PCM and identities remain in the font and preservation XML.
-Other keys retain ordinary tuning. Unknown lookup regions and nonzero held
-values still fail. Music extraction enables this only through its existing
-`--allow-approximations` contract and reports affected keys.
+With explicit `allow_stopped_pitch_approximation`, the bank converter maps
+known in-table zero-step keys to a shared silent SF2 sample when the `Published`
+key-on model holds zero. That model clears three interpolation history samples
+and evaluates `floor(-first_decoded_sample / 32768)`. Original PCM and identities
+remain in the font and preservation XML. Other keys retain ordinary tuning.
+Unknown lookup regions and nonzero published held values fail. Music extraction
+enables this policy through `--allow-approximations` and reports affected keys.
+
+This policy does not establish native-reference silence. Native-reference
+playback primes decoded samples and advances by a minimum nonzero step even
+at zero pitch. It can therefore produce sound without a later pitch change.
+Equal first output values do not establish silence over longer playback.
+See the [zero-step model limits](spu-samples.md#zero-step-playback).
 
 Later pitch changes can activate the original source while a static SF2 silence
 zone stays silent. A media-backed test executes the supplied US BIOS and original
 runtime with an edited BGM000 fixture: key 108, center 60, shift 0, bend range
-12 semitones and a held envelope. No bend gives peak 0; a downward bend produces
-peak 6977, with first audible frame 11715. An upward octave remains zero through
+12 semitones and a held envelope. No bend remains silent during the bounded
+render; a downward bend produces audio. An upward octave remains zero through
 16-bit pitch wrapping, so it cannot demonstrate activation. The trace probe
 records original pitch calls and SPU writes. This verifies behavior
 within the Rust machine, not independent hardware PCM or timing fidelity.
@@ -182,8 +187,8 @@ within the Rust machine, not independent hardware PCM or timing fidelity.
 [Packing tests](../../tools/rust/bof3-audio/tests/bank/) preserve unchanged
 VH/VB bytes and a complete edited-fixture EMI through CLI extraction/repacking.
 [Stopped-tone pitch/reassignment edits](../../tools/rust/bof3-audio/tests/voice/tuning.rs), [synthetic-silence edits, and source edits
-whose re-encoded first sample changes the held value](../../tools/rust/bof3-audio/tests/soundfont/packing/) reject explicitly. Later
-PCM edits retaining a zero held value remain supported with encoding-loss reports.
+whose re-encoded first sample changes the published held value](../../tools/rust/bof3-audio/tests/soundfont/packing/) reject explicitly. Later
+PCM edits retaining a zero published held value remain supported with encoding-loss reports.
 
 This opt-in can make stopped-key banks representable, but later keys may still
 expose unsupported table contexts. It does not establish complete conversion or

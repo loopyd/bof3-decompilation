@@ -11,8 +11,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DisableModel {
-    /// Falling SPUCNT bit 15 forces active envelopes off. Neither hardware
-    /// write latency nor disabled-frame execution is established by this model.
+    /// Native bit 15 writes preserve voice state and scheduled frames continue.
+    /// This does not establish hardware disable behavior or write/sample latency.
     EmulatorReference,
 }
 
@@ -25,6 +25,7 @@ pub struct Ports {
     end_readback: Option<u32>,
     modulation: u32,
     reverb: u32,
+    active_reverb: u32,
     noise_mask: u32,
     noise: Option<Noise>,
     disable_model: Option<DisableModel>,
@@ -32,8 +33,11 @@ pub struct Ports {
 
 #[derive(Debug)]
 pub struct Frame {
+    /// Native bit-14 mute is already applied at ordinary sample stores.
+    pub sample_model: spu_sample::Model,
     pub voices: [Output; VOICES],
-    /// Per-voice sends are retained for a future reverb mixer, not discarded.
+    /// Native sends latch at key-on; published sends use the live register.
+    /// Modulation sources have zero stereo sends.
     pub reverb_mask: u32,
     /// Shared pre-envelope noise level used for this frame, when configured.
     pub noise_level: Option<i16>,
@@ -50,14 +54,27 @@ impl Ports {
             end_readback: None,
             modulation: 0,
             reverb: 0,
+            active_reverb: 0,
             noise_mask: 0,
             noise: None,
             disable_model: None,
         }
     }
 
+    pub(crate) fn sample_model(&self) -> spu_sample::Model {
+        self.voices.sample_model()
+    }
+
     pub(crate) fn envelope_model(&self) -> adsr::Model {
         self.envelope_model
+    }
+
+    pub fn configure_key_on_delay(&mut self, frames: i32) -> Result<()> {
+        self.voices.configure_key_on_delay(frames)
+    }
+
+    pub fn key_on_delay(&self) -> Option<i32> {
+        self.voices.key_on_delay()
     }
 
     pub fn configure_disable(&mut self, model: DisableModel) -> Result<()> {
@@ -70,16 +87,8 @@ impl Ports {
 
     pub(crate) fn require_disable_model(&self) -> Result<()> {
         self.disable_model
-            .ok_or("SPU disable transition requires an explicit evidence model")?;
+            .ok_or("SPU disable behavior requires an explicit evidence model")?;
         Ok(())
-    }
-
-    /// Call only after control-write validation, so rejected transfer/IRQ
-    /// changes cannot partially silence the device. Pending keys stay pending.
-    pub(crate) fn disable(&mut self) {
-        match self.disable_model.expect("validated SPU disable model") {
-            DisableModel::EmulatorReference => self.voices.disable_active_envelopes(),
-        }
     }
     pub fn configure_noise(&mut self, noise: Noise) -> Result<()> {
         if self.noise.is_some() {
@@ -137,7 +146,14 @@ impl Ports {
                 let index = ((offset - 0x188) / 4) as usize;
                 self.key_latches[index] =
                     (self.key_latches[index] & !(0xffff << shift)) | (u32::from(value) << shift);
-                if index == 0 {
+                if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+                    let mask = (u32::from(value) << shift) & 0x00ff_ffff;
+                    if index == 0 {
+                        self.on |= self.voices.accept_native_key_on(mask);
+                    } else {
+                        self.off |= mask;
+                    }
+                } else if index == 0 {
                     self.on = merge(self.on);
                 } else {
                     self.off = merge(self.off);
@@ -145,17 +161,18 @@ impl Ports {
             }
             0x190 => {
                 self.modulation = merge(self.modulation) & !1;
-                self.voices.set_modulation(self.modulation);
+                self.voices.write_modulation(offset & 2 != 0, value);
             }
             0x194 => self.noise_mask = merge(self.noise_mask),
             0x198 => self.reverb = merge(self.reverb),
-            // ENDX writes can briefly read back but must not change the
-            // voice loop-end latches. Our frame boundary refreshes readback;
-            // sub-frame hardware overwrite timing remains unverified.
+            // Native ENDX reads live flags and ignores writes. Published writes
+            // retain their temporary readback without changing loop-end latches.
             0x19c => {
-                self.end_readback = Some(merge(
-                    self.end_readback.unwrap_or_else(|| self.voices.end_flags()),
-                ));
+                if self.voices.sample_model() == spu_sample::Model::Published {
+                    self.end_readback = Some(merge(
+                        self.end_readback.unwrap_or_else(|| self.voices.end_flags()),
+                    ));
+                }
             }
             _ => {
                 return Err(
@@ -168,25 +185,38 @@ impl Ports {
     /// Apply pending keys once at the caller-selected boundary, then step voices.
     /// This does not establish hardware key latency or minimum retrigger spacing.
     pub fn tick(&mut self, ram: &[u8], control: u16) -> Result<Frame> {
+        self.voices.require_key_on_delay()?;
         if self.noise_mask != 0 && self.noise.is_none() {
-            return Err(
-                "SPU noise requires an explicit published-model initial level and timer".into(),
-            );
+            return Err("SPU noise requires explicit model-qualified initial state".into());
         }
-        let noise_level = self.noise.as_ref().map(Noise::level);
-        self.voices.apply_keys(self.on, self.off);
+        let noise_level = self
+            .noise
+            .as_mut()
+            .map(|noise| noise.sample(((control >> 8) & 63) as u8))
+            .transpose()?;
+        if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+            let armed = if control & 0x80 != 0 { self.reverb } else { 0 };
+            self.active_reverb = (self.active_reverb & !self.on) | (armed & self.on);
+        }
+        match self.voices.sample_model() {
+            spu_sample::Model::Published => self.voices.apply_keys(self.on, self.off)?,
+            spu_sample::Model::EmulatorReference => self.voices.start_keys(self.on, self.off)?,
+        }
         self.on = 0;
         self.off = 0;
-        let voices = self
-            .voices
-            .tick(ram, noise_level.map(|level| (self.noise_mask, level)))?;
+        let voices = self.voices.tick(
+            ram,
+            noise_level.map(|level| (self.noise_mask, level)),
+            control & 0x4000 != 0,
+        )?;
         self.end_readback = None;
-        if let Some(noise) = &mut self.noise {
-            noise.tick(((control >> 8) & 63) as u8)?;
-        }
         Ok(Frame {
+            sample_model: self.voices.sample_model(),
             voices,
-            reverb_mask: self.reverb,
+            reverb_mask: match self.voices.sample_model() {
+                spu_sample::Model::Published => self.reverb,
+                spu_sample::Model::EmulatorReference => self.active_reverb,
+            },
             noise_level,
         })
     }

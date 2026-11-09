@@ -255,7 +255,12 @@ fn main() -> Result<()> {
                         let call = execution.call(0x801753dc, [0; 4], 100_000)?;
                         instructions += call.instructions;
                         interrupts += call.interrupts;
-                        pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
+                        pcm.extend(
+                            execution
+                                .take_audio_frames()?
+                                .into_iter()
+                                .flat_map(bof3_audio::interchange::wave::pcm16),
+                        );
                     }
                     // A line edge can fall on the leaf's return instruction.
                     // Deliver that pending IRQ before recording this tick.
@@ -263,7 +268,12 @@ fn main() -> Result<()> {
                         let call = execution.call(0x801753dc, [0; 4], 100_000)?;
                         instructions += call.instructions;
                         interrupts += call.interrupts;
-                        pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
+                        pcm.extend(
+                            execution
+                                .take_audio_frames()?
+                                .into_iter()
+                                .flat_map(bof3_audio::interchange::wave::pcm16),
+                        );
                     }
                 } else {
                     execution.bus.set_vblank(true);

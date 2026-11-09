@@ -62,7 +62,7 @@ impl Interconnect {
     /// One supplied SPU frame boundary. Drive gain and source mute were applied
     /// at sector admission. Failed SPU output retains the
     /// queued frame; the existing SPU engine may have advanced internal state.
-    pub fn step_spu_cd_output(&mut self, external: [i16; 2]) -> crate::Result<[i16; 2]> {
+    pub fn step_spu_cd_output(&mut self, external: [i16; 2]) -> crate::Result<[f32; 2]> {
         let cd = self.cd_audio()?.preview();
         let output = self.step_spu_output(super::SpuInputs { cd, external })?;
         self.cd_audio.as_mut().unwrap().consume();
@@ -70,7 +70,7 @@ impl Interconnect {
     }
     /// Clocked output consumes configured CD input; no attached source is silent.
     /// External input has no scheduled source.
-    pub(crate) fn step_spu_scheduled_output(&mut self) -> crate::Result<[i16; 2]> {
+    pub(crate) fn step_spu_scheduled_output(&mut self) -> crate::Result<[f32; 2]> {
         if self.cd_audio.is_some() {
             self.step_spu_cd_output([0; 2])
         } else {

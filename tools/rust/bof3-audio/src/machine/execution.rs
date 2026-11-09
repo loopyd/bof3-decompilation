@@ -317,7 +317,7 @@ impl Execution {
     pub fn output(&self) -> Option<&output_clock::Clock> {
         self.output.as_ref()
     }
-    pub fn take_audio_frames(&mut self) -> Result<Vec<[i16; 2]>> {
+    pub fn take_audio_frames(&mut self) -> Result<Vec<[f32; 2]>> {
         Ok(self
             .output
             .as_mut()

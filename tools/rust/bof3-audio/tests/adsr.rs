@@ -41,17 +41,32 @@ fn counter_intervals_and_rate_alias_use_accumulation_not_shift_only_delays() {
     for model in [Model::Published, Model::EmulatorReference] {
         let mut a = start(48 << 8, 0, model);
         assert_eq!(a.tick(), 0);
-        assert_eq!(a.counter(), 0x4000);
+        assert_eq!(
+            a.counter(),
+            if model == Model::Published { 0x4000 } else { 1 }
+        );
         assert_eq!(a.tick(), 7);
         assert_eq!(a.counter(), 0);
         assert_eq!(a.tick(), 7);
         assert_eq!(a.tick(), 14);
         for rate in [0x6a, 0x76] {
             let mut a = start(rate << 8, 0, model);
-            for _ in 0..32767 {
+            let frames = if model == Model::EmulatorReference && rate == 0x76 {
+                262144
+            } else {
+                32768
+            };
+            for _ in 1..frames {
                 assert_eq!(a.tick(), 0);
             }
-            assert_eq!(a.counter(), 32767);
+            assert_eq!(
+                a.counter(),
+                if model == Model::Published {
+                    32767
+                } else {
+                    frames - 1
+                }
+            );
             assert_eq!(a.tick(), 5);
             assert_eq!(a.counter(), 0);
         }
@@ -112,7 +127,14 @@ fn exponential_release_rounds_negative_steps_down_and_sustain_zero_stays_active(
         a.write_level(1);
         a.key_off();
         assert_eq!(a.tick(), 0); // (-8 * 1) >> 15 = -1, not zero.
-        assert_eq!(a.phase(), Phase::Off);
+        assert_eq!(
+            a.phase(),
+            if model == Model::Published {
+                Phase::Off
+            } else {
+                Phase::Release
+            }
+        );
         let mut a = start(15, 0x4000, model);
         for _ in 0..5 {
             a.tick();
@@ -127,7 +149,7 @@ fn exponential_release_rounds_negative_steps_down_and_sustain_zero_stays_active(
 }
 
 #[test]
-fn all_ones_rates_freeze_without_turning_off_or_saturating() {
+fn all_ones_rates_remain_unchanged_during_the_bounded_probe() {
     for model in [Model::Published, Model::EmulatorReference] {
         let mut a = start(0x7f00, 31, model);
         a.write_level(1234);
@@ -140,10 +162,17 @@ fn all_ones_rates_freeze_without_turning_off_or_saturating() {
             assert_eq!(a.tick(), 1234);
         }
         assert_eq!(a.phase(), Phase::Release);
-        // A target reached by manual ENVX writing still changes phase.
+        // Only Published stops on an exact-zero release level.
         a.write_level(0);
         a.tick();
-        assert_eq!(a.phase(), Phase::Off);
+        assert_eq!(
+            a.phase(),
+            if model == Model::Published {
+                Phase::Off
+            } else {
+                Phase::Release
+            }
+        );
         let mut a = start(15, 127 << 6, model);
         for _ in 0..4 {
             a.tick();
@@ -163,16 +192,16 @@ fn register_writes_retriggering_and_key_off_keep_their_distinct_state_effects() 
     a.write_level(100);
     a.key_off();
     assert_eq!(a.tick(), 100);
-    assert_eq!(a.counter(), 0x4000);
+    assert_eq!(a.counter(), 1);
     a.key_off(); // Duplicate KOFF must not postpone a slow release indefinitely.
-    assert_eq!(a.counter(), 0x4000);
+    assert_eq!(a.counter(), 1);
     assert_eq!(a.tick(), 92);
     a.tick();
     a.write_registers(Registers {
         adsr1: 0,
         adsr2: 0x2000 | 12,
     });
-    assert_eq!(a.counter(), 0);
+    assert_eq!(a.counter(), 1);
     assert_eq!(a.phase(), Phase::Release);
     assert_eq!(a.level(), 92);
     assert_eq!(a.registers().adsr2, 0x200c); // Unused register bit is retained.
@@ -188,7 +217,8 @@ fn register_writes_retriggering_and_key_off_keep_their_distinct_state_effects() 
     assert_eq!(a.tick(), 0);
     assert_eq!(a.phase(), Phase::Off);
     a.write_level(0xffff);
-    assert_eq!(a.tick(), -1); // Off voices retain manually written ENVX readback.
+    assert_eq!(a.tick(), 0); // A stopped native envelope outputs zero.
+    assert_eq!(a.level(), -1); // Component injection remains visible in state.
     a.force_off();
     assert_eq!(a.level(), 0);
     assert_eq!(a.model(), model);
@@ -233,12 +263,20 @@ fn corpus_envelope_probe_keeps_reference_disagreements_visible() {
             b.tick();
             for e in [&a, &b] {
                 assert!(e.level() >= 0);
-                assert!(e.counter() < 0x8000);
+                assert!(
+                    e.counter()
+                        < if e.model() == Model::Published {
+                            0x8000
+                        } else {
+                            1 << 20
+                        }
+                );
                 if e.phase() == Phase::Off {
                     assert_eq!(e.level(), 0);
                 }
             }
-            if (a.level(), a.phase(), a.counter()) != (b.level(), b.phase(), b.counter()) {
+            // Counter units differ between the two arithmetic models.
+            if (a.level(), a.phase()) != (b.level(), b.phase()) {
                 differs = true;
                 if first_difference.is_none() {
                     first_difference = Some((adsr1, adsr2, frame, a.level(), b.level()));
@@ -254,7 +292,7 @@ fn corpus_envelope_probe_keeps_reference_disagreements_visible() {
     }
     eprintln!("ADSR corpus: tones={tones} unique_pairs={} differing_pairs={differing_pairs} differing_tones={differing_tones} off_after_probe={released:?} first_difference={first_difference:?}", cases.len());
     assert_eq!(cases.len(), 543);
-    assert_eq!((differing_pairs, differing_tones), (125, 395));
-    assert_eq!(released, [19595, 19595]);
-    assert_eq!(first_difference, Some((0x89ba, 0x514c, 8, 27648, 25344)));
+    assert_eq!((differing_pairs, differing_tones), (483, 3516));
+    assert_eq!(released, [19595, 18673]);
+    assert_eq!(first_difference, Some((0x8033, 0x57cd, 11025, 7907, 7899)));
 }

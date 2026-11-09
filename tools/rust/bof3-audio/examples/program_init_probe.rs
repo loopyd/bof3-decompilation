@@ -57,7 +57,12 @@ fn main() -> Result<()> {
     let mut peak = 0;
     while e.output().unwrap().frames() < 88200 {
         e.call_observed(0x801753dc, [0; 4], 100000, &mut observer)?;
-        for frame in e.take_audio_frames()? {
+        for frame in e
+            .take_audio_frames()?
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>()
+        {
             for v in frame {
                 peak = peak.max(v.unsigned_abs());
             }

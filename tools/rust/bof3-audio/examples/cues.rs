@@ -74,7 +74,7 @@ fn main() -> Result<()> {
                     .execution
                     .take_audio_frames()?
                     .into_iter()
-                    .flatten(),
+                    .flat_map(bof3_audio::interchange::wave::pcm16),
             );
         }
         let actual_frame = prepared.execution.output().unwrap().frames();
@@ -137,7 +137,7 @@ fn main() -> Result<()> {
                 .execution
                 .take_audio_frames()?
                 .into_iter()
-                .flatten(),
+                .flat_map(bof3_audio::interchange::wave::pcm16),
         );
     }
     let body_frames = prepared.execution.output().unwrap().frames();
@@ -158,7 +158,7 @@ fn main() -> Result<()> {
                 .execution
                 .take_audio_frames()?
                 .into_iter()
-                .flatten(),
+                .flat_map(bof3_audio::interchange::wave::pcm16),
         );
     }
     pcm.extend(
@@ -166,7 +166,7 @@ fn main() -> Result<()> {
             .execution
             .take_audio_frames()?
             .into_iter()
-            .flatten(),
+            .flat_map(bof3_audio::interchange::wave::pcm16),
     );
     let peak = pcm.iter().map(|&v| i32::from(v).abs()).max().unwrap_or(0);
     let nonzero = pcm.iter().filter(|&&v| v != 0).count();

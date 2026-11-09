@@ -38,6 +38,7 @@ pub mod spu_clock;
 pub mod spu_dma;
 pub mod spu_mixer;
 pub mod spu_noise;
+pub mod spu_pitch;
 pub mod spu_readback;
 pub mod spu_reverb;
 pub mod spu_sample;

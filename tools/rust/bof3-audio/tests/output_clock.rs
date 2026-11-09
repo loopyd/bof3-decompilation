@@ -13,6 +13,13 @@ fn fixture() -> (Interconnect, spu_clock::Clock, Clock) {
         adsr::Model::EmulatorReference,
     )
     .unwrap();
+    bus.configure_spu_key_on_delay(0).unwrap();
+    bus.configure_spu_native_output(bof3_audio::machine::spu_mixer::NativeSettings {
+        volume: 3,
+        mono: false,
+        muted: false,
+    })
+    .unwrap();
     bus.write(0x1f801dac, Width::Half, 4).unwrap();
     bus.write(0x1f801daa, Width::Half, 0xc000).unwrap();
     (
@@ -30,7 +37,11 @@ fn sample_and_vblank_edges_are_partition_invariant() {
         for &ticks in parts {
             clock.advance(&mut bus, &mut transfer, ticks).unwrap();
         }
-        let pcm = clock.take_frames();
+        let pcm = clock
+            .take_frames()
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>();
         assert_eq!(
             bus.read(0x1f801110, Width::Half).unwrap(),
             (clock.ticks() / 2146 - 1) as u32
@@ -88,5 +99,13 @@ fn unsupported_clock_sources_and_undrained_output_fail_explicitly() {
         .to_string()
         .contains("queue full"));
     assert_eq!(clock.frames(), 4096);
-    assert_eq!(clock.take_frames().len(), 4096);
+    assert_eq!(
+        clock
+            .take_frames()
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>()
+            .len(),
+        4096
+    );
 }

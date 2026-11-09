@@ -1,8 +1,7 @@
 //! Per-output-frame SPU ADSR state. MMIO/key-on latency and mixing are separate.
 //!
-//! Callers choose a named arithmetic model for the exponential-increase
-//! threshold and slow-rate floor. Neither model establishes hardware fidelity;
-//! runtime comparisons use PCSX-Redux Agentic.
+//! Callers choose published Q15 arithmetic or the current native denominator
+//! arithmetic. Neither model establishes hardware fidelity or bus timing.
 
 use serde::{Deserialize, Serialize};
 
@@ -11,7 +10,8 @@ use serde::{Deserialize, Serialize};
 pub enum Model {
     /// Strict >0x6000 threshold; rate floor after exponential adjustment.
     Published,
-    /// Inclusive >=0x6000 threshold; rate floor before exponential adjustment.
+    /// Current native ADSR periods and phase rules. Volume sweeps separately
+    /// retain their inclusive threshold and pre-adjustment rate floor.
     EmulatorReference,
 }
 
@@ -152,25 +152,29 @@ impl Adsr {
     pub fn level(&self) -> i16 {
         self.level
     }
+    /// Published Q15 accumulator, or native elapsed frames since the last step.
     pub fn counter(&self) -> u32 {
         self.counter
     }
 
-    /// Apply an already scheduled ADSR register write. Emulator-reference state
-    /// semantics reset the rate counter, retaining phase and level. Bus timing
-    /// and hardware acceptance of writes remain the device owner's obligation.
+    /// Apply an already scheduled ADSR register write. The native model retains
+    /// its elapsed-frame counter. Published arithmetic resets its accumulator.
     pub fn write_registers(&mut self, registers: Registers) {
         self.registers = registers;
-        self.counter = 0;
+        if self.model == Model::Published {
+            self.counter = 0;
+        }
     }
 
-    /// Preserve signed ENVX bits; the next generator step applies mode saturation.
+    /// Inject signed component state. This does not model a native guest ENVX
+    /// write, which the current native register handler ignores.
     pub fn write_level(&mut self, raw: u16) {
         self.level = raw as i16;
     }
 
     pub fn key_on(&mut self) {
         self.level = 0;
+        self.counter = 0;
         self.enter(Phase::Attack);
     }
 
@@ -182,17 +186,33 @@ impl Adsr {
 
     pub fn force_off(&mut self) {
         self.level = 0;
+        self.counter = 0;
         self.enter(Phase::Off);
     }
 
     fn enter(&mut self, phase: Phase) {
         self.phase = phase;
-        self.counter = 0;
+        if self.model == Model::Published {
+            self.counter = 0;
+        }
     }
 
-    /// Advance one 44.1 kHz envelope clock and return its new level. Sample
-    /// interpolation/mixing must choose its own before/after ordering explicitly.
+    /// Consume one frame's gain. Published output uses the preceding level;
+    /// native-reference output uses the freshly stepped envelope.
+    pub fn sample(&mut self) -> i16 {
+        let preceding = self.level;
+        let updated = self.tick();
+        match self.model {
+            Model::Published => preceding,
+            Model::EmulatorReference => updated,
+        }
+    }
+
+    /// Advance one 44.1 kHz envelope clock and return its output level.
     pub fn tick(&mut self) -> i16 {
+        if self.model == Model::EmulatorReference {
+            return self.tick_native();
+        }
         if self.phase == Phase::Off {
             return self.level;
         }
@@ -218,6 +238,55 @@ impl Adsr {
         if let Some(phase) = next {
             self.enter(phase);
         }
+        self.level
+    }
+
+    fn tick_native(&mut self) -> i16 {
+        if self.phase == Phase::Off {
+            return 0;
+        }
+        let rate = self.registers.rate(self.phase);
+        let mut bits = u32::from(rate.shift) * 4 + u32::from(rate.step);
+        if rate.exponential && !rate.decreasing && self.level >= 0x6000 {
+            bits = (bits + 8).min(127);
+        }
+        let shift = bits / 4;
+        let period = 1u32 << shift.saturating_sub(11);
+        self.counter += 1;
+        let mut level = i32::from(self.level);
+        if self.counter >= period {
+            self.counter = 0;
+            let magnitude = if rate.decreasing {
+                (bits % 4) as i32 - 8
+            } else {
+                7 - (bits % 4) as i32
+            };
+            let mut delta = magnitude * (1 << 11u32.saturating_sub(shift));
+            if rate.exponential && rate.decreasing {
+                delta = (delta * level) >> 15;
+            }
+            level += delta;
+        }
+        match self.phase {
+            Phase::Attack if level >= 32767 => {
+                level = 32767;
+                self.enter(Phase::Decay);
+            }
+            Phase::Decay => {
+                level = level.max(0);
+                if (level >> 11) & 15 <= i32::from(self.registers.adsr1 & 15) {
+                    self.enter(Phase::Sustain);
+                }
+            }
+            Phase::Sustain if rate.decreasing => level = level.max(0),
+            Phase::Sustain => level = level.min(32767),
+            Phase::Release if level < 0 => {
+                level = 0;
+                self.enter(Phase::Off);
+            }
+            _ => (),
+        }
+        self.level = level as i16;
         self.level
     }
 }

@@ -1537,8 +1537,10 @@ Current first failures are 137 pitch-table contexts and 41 zero pitches.
 #### Stopped-pitch SoundFont mapping
 
 Strict tuning continues to reject zero-step rows. Bank conversion can explicitly
-opt into key-on-only silence for known pitch-table zero steps with a zero held
-initial sample. Music extraction uses this under `--allow-approximations`.
+opt into key-on-only silence for known pitch-table zero steps whose `Published`
+key-on held sample is zero. Music extraction uses this under `--allow-approximations`.
+Native-reference priming and its minimum nonzero step can produce sound at zero
+pitch; this approximation does not establish sustained native silence.
 The source PCM remains in the SoundFont; per-tone binding `stopped_keys` records
 the affected keys. XML emits `<stopped_key tone="T" key="K"
 playback_sf2_sample="I" scope="key_on_only"/>` within the program. Song reports
@@ -1637,30 +1639,26 @@ This does not close bank conversion or independent runtime-fidelity gates.
 
 [The Rust ADSR component](../../../tools/rust/bof3-audio/src/machine/adsr.rs)
 advances explicit attack/decay/sustain/release state once per output-frame call.
-It supports register decoding, rate counters, linear/exponential steps, frozen
-rates, phase targets, signed level writes, retriggering and separate key-off /
-forced-off behavior. A zero sustain level does not automatically turn a voice off.
-The returned level is after the tick; the [voice owner](#rust-spu-sample-and-voice-execution)
-uses the current level for output before advancing this envelope.
+Callers choose `Published` or `EmulatorReference` arithmetic. `Published` retains
+its Q15 accumulator, frozen-rate and transition rules. `EmulatorReference`
+follows the current native denominator-counter arithmetic and phase rules.
+See [source provenance and model boundaries](../../reference/spu-envelopes.md).
 
-Callers must choose `Published` or `EmulatorReference` arithmetic. These names
-retain existing choices for the exponential slowdown threshold and slow-rate
-minimum; shared transition/write semantics remain host model behavior.
-`EmulatorReference` does not establish parity with the current
-[native ADSR implementation](../../../third_party/pcsx-redux-agentic/src/spu/adsr.cc).
-See [source provenance and exact differences](../../reference/spu-envelopes.md).
-Neither model is accepted as hardware-validated. Sample interpolation and bounded
-mixing are now connected below; MMIO timing, key-on delay and full runtime/device
-integration remain unimplemented.
+`Adsr::tick()` returns the updated output level. `Adsr::sample()` supplies one
+frame's gain using the selected ordering. The
+[voice owner](#rust-spu-sample-and-voice-execution) uses the preceding envelope
+for published output and the freshly stepped envelope for native-reference
+output. Native ADSR writes, key-off and phase changes preserve the counter;
+key-on resets it. Signed manual level injection remains a Rust component policy,
+while the native guest ENVX handler ignores writes. Neither arithmetic model
+establishes hardware fidelity, MMIO timing or CPU/sample alignment.
 
-[Six focused tests and one opt-in corpus test](../../../tools/rust/bof3-audio/tests/adsr.rs)
-cover literal phase traces, counter timing, rate aliases, mode disagreements,
-signed writes and frozen/zero-level behavior. The corpus probe uses all 543 VAB
-ADSR pairs across 21,112 tones with 250 ms held + 250 ms release trajectories.
-It finds differences in 125 pairs / 395 tone records; both models finish release
-within that probe for 19,595 tone records. Equal final status does not imply equal
-trajectories. These bounded model comparisons do not establish gameplay ADSR
-overrides, a general SF2 envelope approximation or reference-audio fidelity.
+[Existing checks](../../../tools/rust/bof3-audio/tests/adsr.rs) cover phase traces,
+rate intervals, model differences, component injection and key/register changes.
+The opt-in corpus probe compares VAB register pairs over 250 ms held notes and
+250 ms release. It compares level and phase because the models use different
+counter units. These checks do not establish gameplay ADSR overrides, complete
+PCM agreement or a general SF2 approximation.
 
 ### Measured SF2 envelope fitting
 
@@ -1696,15 +1694,11 @@ the target curve against actual RustySynth synthesis at selected points, with
 effects disabled and a block-aligned key-off. Normalized error there is below
 0.003; oscillator/filter startup and arbitrary sample-block phases are excluded.
 
-The full corpus probe fits all 543 ADSR pairs / 21,112 tone records under both
-models. Both find 393 pairs with changing sustain, 24 with a release still active
-at the probe horizon and 15 without a completed attack. For `Published`, 65 pairs
-used by 393 tones exceed normalized RMS 0.05; `EmulatorReference` gives 64 pairs /
-391 tones. The largest RMS errors are approximately 0.182219 and 0.182201,
-respectively, for `9BFF/4F8D`; its maximum sampled error is approximately 0.799204.
-These substantial differences remain exposed for future bank conversion and
-PC/PSX comparisons. Gameplay ADSR overrides, held durations outside the probes,
-sample termination and gain/pan/mixer behavior remain separate work.
+The opt-in corpus probe reports changing sustain, releases still active at the
+probe horizon, unfinished attacks and approximation errors for both models.
+Changing PSX sustain and short transients can produce substantial error even
+when overall RMS is low. Gameplay ADSR overrides, held durations outside the
+probes, sample termination and gain/pan/mixer behavior remain separate work.
 
 ## Rust music extraction with explicit approximations
 
@@ -2005,11 +1999,31 @@ addresses, RAM mirrors, block-count zero as 65,536 blocks, DPCR gating, cancella
 and completion/per-slice IRQ notification through the existing DMA controller.
 CPU SPU ports support aligned halfword/word accesses and the established even-SB
 halfword/odd-SB-ignore behavior. Unsupported transfer modes, FIFO overflow,
-manual reads, IRQ9 enable, buffered direction changes/stops, masked MMIO and
-unimplemented hardware fail explicitly. The frame-driven voice component below
-reads this RAM; capture and reverb accesses remain unimplemented.
-Transfer status is component state, not complete
-SPUSTAT emulation or proof of IRQ latency.
+manual reads, IRQ9 enable without an explicit model, buffered direction
+changes/stops, masked MMIO and unimplemented hardware fail explicitly.
+Frame-driven voices, capture and configured reverb use the same RAM.
+Transfer status is component state, not complete SPUSTAT emulation or proof of
+IRQ latency.
+
+`Interconnect::configure_spu_irq(spu_transfer::IrqModel::EmulatorReference)` selects
+the current native address comparisons and latch behavior. A matching voice
+block fetch or capture write clears SPUCNT bit 6, sets SPUSTAT bit 6 and pulses
+interrupt-controller line 9. A control write with bit 6 clear acknowledges the
+SPU flag. A write with bit 6 set rearms comparison and retains that flag.
+I_STAT acknowledgement clears the controller latch independently.
+
+Voice fetches match IRQ byte addresses in `(block_start, block_start + 16]`.
+For a block with the end bit set, comparison also covers
+`(previous_repeat - 16, previous_repeat]`, before a loop-start flag changes the
+repeat register. Capture compares each halfword write in the four buffers at
+`0x000..0xFFF`. Address zero is valid. Transfers and reverb accesses do not
+trigger this emulator-reference comparator.
+
+Comparisons follow the existing explicit frame and block-fetch schedule. This
+schedule does not reproduce native mixer batches, inactive or stopped voice
+fetches, sample/CPU phase, IRQ delivery timing, or RAM arbitration.
+Disabled-frame execution remains unsupported, and hardware IRQ timing remains
+unverified.
 
 DMA RAM observation is disabled by default. Call
 `Interconnect::enable_dma_observation(limit)` with a limit of 1–1,000,000
@@ -2061,43 +2075,136 @@ the source fixtures.
 ## Rust SPU sample and voice execution
 
 [The sample reader](../../../tools/rust/bof3-audio/src/machine/spu_sample.rs)
-now fetches ADPCM blocks from the shared 512 KiB SPU RAM, preserves decoder and
-three-sample interpolation history across blocks and loops, handles repeat-address
-updates and RAM wrap, and reports end/mute flags after consuming the final frame.
-Key-on resets prediction and interpolation histories while retaining the repeat
-register. Addresses use eight-byte units with the low block-address bit ignored.
-Reserved decoder headers still fail explicitly. Whole-block fetches are snapshots;
-concurrent RAM writes, internal fetch cadence and IRQ comparisons are not modeled.
+fetches ADPCM blocks from shared 512 KiB SPU RAM and preserves decoder and
+interpolation history across blocks and loops. Both models ignore the low
+start-address bit. Native-reference manual repeat writes also align the address
+and distinguish an explicitly written zero address from an uninitialized repeat.
+
+Native-reference ENDX is reported when an end-marked block is fetched. Only exact
+flags `0x03` with a valid repeat address select another loop. Other supported
+end-marked flags, including `0x07`, park the next decode cursor. Buffered samples
+finish before an owed fetch encounters that parked cursor and reports
+`Frame::stopped`. An accepted native MMIO KON write clears manual loop-start
+protection immediately; scheduled playback start preserves any later manual
+repeat write. Start retains the repeat address and validity while resetting
+decoder and interpolation state.
+
+`Player::current_address()` returns `Option<u16>`. It exposes the next native
+decode cursor or the published block address. Native `None` can coexist with a
+buffered end block; it does not by itself mean output has stopped. Published
+flag and loop behavior is unchanged. Reserved headers still reject, and
+whole-block fetches remain snapshots. Concurrent writes, internal fetch cadence
+and hardware timing remain unresolved. Fetch metadata feeds the interconnect's
+[explicit IRQ comparisons](#rust-spu-ram-transfers-and-dma4).
+
+Predictor history follows the selected model. `Published` uses the saturating
+sample codec. `EmulatorReference` retains raw signed 32-bit samples and history in
+`adpcm::NativeHistory`. `Player::history()` returns a `DecoderState` variant without
+narrowing native history. Key-on resets the selected state. Unsupported headers
+and native predictor arithmetic outside `i32` fail before history changes.
+
+`Player::tick(ram, preceding_voice, signal)` requires
+`Signal::Ordinary { unmuted }` or `Signal::ModulationSource`. Native ordinary
+stores clamp new samples to `i16`, or store zero when muted; existing window
+contents remain. Native source stores bypass Gaussian interpolation, clipping
+and this store-time mute. The raw source slot shares storage with the ordinary
+Gaussian window, preserving native state across role changes. Published arithmetic
+remains unchanged and rejects `ModulationSource`. `Frame::sample` is `i32`.
 
 The four-tap interpolation ROM contains 512 signed values, independently compared
 with the published reference. Its little-endian `i16`
 SHA-256 is `3e221a5b25de34ca9ad1ea945ad90fbe8171c5e3f7c52af15b232f9c36fbd40d`.
 No emulator implementation or new dependency is included. Callers must select
-`Published` (separate product rounding, pitch ceiling `0x4000`) or
-`EmulatorReference` (sum rounding, ceiling `0x3FFF`). Both retain signed pitch
-modulation and low-16-bit wrapping before clamping. These names retain host
-choices and do not establish current-fork parity. Native Gaussian rounding,
-zero-pitch stepping and key-on priming differ as described under
-[Gaussian interpolation](#gaussian-interpolation). Neither host model is
-hardware-accepted; [retained research](../../reference/spu-samples.md) records
-the discrepancy and remaining evidence obligation.
+`Published`, which shifts each product by 15 and uses pitch ceiling `0x4000`, or
+`EmulatorReference`, which shifts each product by 14, then the sum by one, and
+uses raw register ceiling `0x3FFF`. Its scalar interpolation arithmetic matches
+the current native implementation. Pitch state follows the selected model.
+`Published` retains signed pitch interpretation and low-16-bit wrapping before
+clamping. `EmulatorReference` uses clamped raw pitch and retains its installed
+step through key-on and zero or absent modulation input, after pending writes. [Gaussian interpolation](#gaussian-interpolation)
+and [retained research](../../reference/spu-samples.md) describe the remaining
+reader and integration limits. Neither model establishes hardware fidelity.
 
 [Voice execution](../../../tools/rust/bof3-audio/src/machine/spu_voices.rs) connects
 24 sample readers to explicitly selected ADSR models, manual envelope writes,
 fixed signed stereo gain, key-on/off and end flags. Pitch modulation uses the
 preceding voice's post-envelope signal before stereo gain; voice zero is excluded.
-Repeat-address writes affect future jumps, while sample-start writes take effect
-on the next key-on. A mute flag zeros the envelope after the current ADPCM output;
-noise-selected voices ignore that mute flag while retaining sample-address and
-end-flag progression.
-Started voices continue sample progression after envelope silence; no inactive
-voice IRQ behavior is claimed.
+The configured sample model also selects voice gain. Native-reference voices use
+the native Q14 register decoder, including its fixed sweep approximation, and
+divide signed stereo products by `0x4000` toward zero. Published voices retain
+their Q15 sweeps, input clipping and arithmetic-shift gain. Per-voice stereo sends
+are `i32` through accumulation; capture remains clipped to `i16` before routing.
+The [pitch owner](../../../tools/rust/bof3-audio/src/machine/spu_pitch.rs) accepts
+scheduled writes through `Player::write_pitch()`; frame calls consume that state.
+For native-reference arithmetic, a supplied nonzero source scales raw pitch by
+`(32768 + source) / 32768` with division toward zero, clamps the result to
+`1..=0x3FFF`, and computes integer frequency as `44100 * pitch / 4096`. Its 16.16
+step is `((frequency / 10) << 16) / 4410`, with a minimum of one. A repeated raw
+write updates frequency state even when its register value has not changed.
+Native-reference PMON writes update persistent roles in ascending voice order
+within the written halfword. An enabled target assigns the preceding voice as
+its source; later assignments can overwrite an earlier role. A cleared bit clears
+that voice's role without rebuilding roles from the full mask. Voice zero cannot
+be a target. Sources supply modulation and capture but do not contribute dry
+output or reverb sends. Published behavior is unchanged. Native sources supply
+their wide post-envelope signal to target pitch calculation. Capture clips that
+signal to `i16`; envelope multiplication rejects products outside the signed
+32-bit domain. `Voices::tick(ram, noise, unmuted)` receives the already scheduled
+mute state. Native batch boundaries, write timing and complete device behavior
+remain unresolved.
+Scheduled native playback start uses the latest sample-start register value,
+including writes made after KON acceptance. Native repeat writes affect
+future loop selection subject to the manual-repeat protection above. A native
+stopped frame forces the component envelope off before output and suppresses both
+sample and noise output. Published playback retains its block-exit mute behavior,
+including the noise exception. Envelope silence alone does not stop sample
+progression. These scheduled policies do not establish complete native ADSR stop
+state, batch timing, initial-state provenance, IRQ latency or hardware behavior.
 
 The interconnect requires explicit `configure_spu_voices` model selection before
 voice MMIO becomes available. Eight registers per voice and key/modulation/reverb/
 end masks share the existing SPU width/alias handling. `step_spu_voices` applies
 pending key latches at a caller-selected boundary and returns per-voice outputs
 plus the reverb-send mask. It reads the RAM written by FIFO/DMA transactions.
+
+Native MMIO accepts KON only after the sample-start register has been written;
+an explicit zero address is valid. Accepted KON and KOFF bits remain pending
+across zero writes and writes for other voices. KON acceptance clears ENDX and
+loop-start protection at the write boundary. Playback starts later at the
+scheduled frame boundary. Key-register reads expose the latest written masks,
+independently of pending requests. Native ENDX writes are ignored and reads
+expose live flags. Published MMIO retains latest-mask keys and temporary ENDX
+readback. Standalone `Voices::apply_keys()` remains an atomic component operation.
+These policies do not establish CPU/worker phase or hardware fetch behavior.
+
+Native-reference voices require an explicit immutable `i32` delay through
+`Interconnect::configure_spu_key_on_delay`. Negative values have an effective
+delay of zero. Owned and reference production profiles select six output frames.
+Published behavior is unchanged.
+
+During startup delay, voice output, capture and modulation-source output are
+zero. Sample consumption, interpolation and ADSR remain frozen. Pending
+frequency changes install before the delay check, while the shared noise
+generator continues advancing. Key-off during the delay retains release state;
+retriggering resets the delay. This scheduled policy does not establish
+CPU/worker phase, inactive fetches or hardware timing. Render reports include the
+configured signed value as `native_key_on_delay`.
+
+After the selected envelope enters `Off`, a previously started native-reference
+voice keeps consuming and decoding samples with its retained pitch step. It
+skips interpolation stores and reads, ADSR and sends. Pending pitch and PMON
+writes do not install during this silent walk. Fetches retain repeat, ENDX and
+IRQ metadata. The frame that enters `Off` still completes ordinary processing.
+Parked cursors stay parked and never-started voices remain stationary. Published
+behavior is unchanged. Native `On` correspondence requires native-reference ADSR;
+worker batching and initial-state provenance remain separate limits.
+
+Native-reference sends latch at scheduled key-on from each voice's reverb-enable
+bit and SPUCNT bit 7. Later register writes, master-enable changes and key-off
+preserve that latch; retriggering samples it again. Published output retains
+the live voice mask. This does not establish native CPU/batch phase or
+wet-output startup.
+
 This intermediate API does not apply final mixing or capture; the separate
 [output-frame API](#rust-spu-noise-mixing-and-capture) now owns those operations.
 Noise needs explicit initial state. Unsupported flag accesses and disable
@@ -2130,31 +2237,59 @@ full flush-function execution and final audio fidelity are not established.
 ## Rust SPU noise, mixing and capture
 
 [The noise component](../../../tools/rust/bof3-audio/src/machine/spu_noise.rs)
-implements the published shared 16-bit generator and six-bit SPUCNT clock. The
-caller supplies its initial level and countdown; no original boot phase is
-inferred. A frame uses the old noise level, then clocks the generator once,
-including frames with no selected noise voices. NON, key-on and pitch changes do
-not restart or retune this shared generator. VxPitch still advances the selected
-voice's ADPCM address and ENDX state. Noise replaces the interpolated sample
-before ADSR, stereo gain and next-voice pitch modulation. The inspected emulator
-uses a different fractional timer; hardware agreement remains unverified. See
+implements a shared generator with a six-bit SPUCNT clock.
+`Interconnect::configure_spu_noise(spu_noise::State)` and `Noise::new` require
+model-qualified initial state. `Published { level, timer }` uses a 16-bit level
+and a countdown in `0..=0x20000`. `EmulatorReference { value, count }` preserves
+the native 32-bit generator and fractional accumulator. The two states have no
+implicit conversion, and neither supplies original boot phase.
+
+`Noise::sample` advances once per scheduled frame. Published voices consume the
+preceding level; emulator-reference voices consume the new level. `Noise::tick`
+exposes the arithmetic transition alone, and `Noise::state` returns its typed
+state. Configured noise advances even with no selected noise voices. NON,
+key-on and pitch changes do not reset it. Clock writes preserve the selected
+model's counter; native write latency and CPU/sample phase remain unverified.
+
+VxPitch still advances the selected voice's ADPCM address and ENDX state. Noise
+replaces the interpolated sample before ADSR, stereo gain and next-voice pitch
+modulation. The published and native fractional rates differ; selecting a model
+does not establish hardware agreement. See
 [retained noise and mixer research](../../reference/spu-samples.md#noise-mixing-and-capture).
 
 [The mixer](../../../tools/rust/bof3-audio/src/machine/spu_mixer.rs) preserves wide
-voice sums and separate reverb sends, signed CD/external input gains, voice mute,
-fixed main gain and its independently writable current-volume registers. Voice
-mute suppresses voice dry/wet sends while enabled CD/external inputs remain
-routed. Input reverb flags cannot enable an otherwise disabled input. Reverb
-sends stay wide through the input FIR; decimated network inputs saturate to
-signed 16-bit values. The mixer adds the already gained, interpolated reverb
-return to the dry sum and clamps before main gain. The native reference leaves
-main gain writes unimplemented, so its output does not validate this final gain
-path. The unverified final `+32768` full-negative-gain rail fails explicitly.
-Main/voice sweeps use the component below.
+voice sums and separate reverb sends. Published output retains its input routing,
+signed gains, main sweeps, clipping order and bit-14 send gate.
+
+Native-reference output requires explicit immutable
+`NativeSettings { volume, mono, muted }` through
+`Interconnect::configure_spu_native_output`. Volume accepts `0..=3` and selects
+divisor `4 - volume`. The mixer divides the voice-plus-reverb sum toward zero,
+clamps it to `-32767..=32767`, and normalizes by `32767`. Main-volume and
+current-main-volume writes retain register latches without affecting native gain.
+
+Native CD input remains separate. It bypasses SPU input gains, enable bits and
+reverb sends, receives the same host divisor, and is added after SPU clipping as
+normalized float samples. Nonzero external input rejects. Host mute clears the
+combined output; mono averages its channels. The final float callback is not
+clamped and can exceed the PCM16 range. These selected component policies do not
+establish complete native runtime or hardware fidelity.
+
+Native-reference modulation sources retain capture, sample and envelope
+progression while their dry and reverb contributions are suppressed. Ordinary
+store-time muting preserves existing interpolation contents. The mixer applies
+no additional bit-14 gate to native-reference frames. CPU/write latency, native
+batch timing and complete native runtime PCM remain unresolved.
 
 `Interconnect::step_spu_output` executes one caller-scheduled frame and returns
-stereo PCM. It requires configured voice models, SPUCNT enable and normal RAM
-control `0x0004`; `configure_spu_noise` additionally supplies explicit noise state.
+`[f32; 2]`. The output clock and execution owner preserve these float frames.
+PCM16 file delivery multiplies by `32767`, rounds and clamps to
+`-32768..=32767`. This conversion can lose native callback range and precision;
+reports retain the float peak and clipped sample count. Published PCM16 results
+remain unchanged. Output requires configured voice models and normal RAM control
+`0x0004`.
+Frames with SPUCNT bit 15 clear also require an explicit disable model;
+`configure_spu_noise` additionally supplies explicit noise state.
 Inputs must already be at 44.1 kHz after drive-side processing. This is not a CD
 device, XA resampler or CPU-clock scheduler. Use either this API or the intermediate
 voice API once per frame, never both. Enabled reverb or either nonzero return gain
@@ -2168,8 +2303,9 @@ Completed output frames write four independent 1 KiB capture rings in SPU RAM:
 CD left/right at `0x000/0x400` before SPU input gain, and voices 1/3 at
 `0x800/0xC00` after ADSR but before pan/mute. A shared two-byte cursor wraps after
 512 frames and supplies STAT bit 11 for its current half. This component starts
-the cursor at zero; original boot position, capture bus cadence and IRQ comparison
-are not established. Sample reads precede these explicit frame writes.
+the cursor at zero; original boot position and capture bus cadence are not
+established. Sample reads precede these explicit frame writes. The
+[selected IRQ model](#rust-spu-ram-transfers-and-dma4) compares their addresses.
 
 [Noise tests](../../../tools/rust/bof3-audio/tests/spu_noise.rs) compare 65,536
 frames at each of 64 clocks against an independently calculated Python integer
@@ -2187,28 +2323,37 @@ original-game runtime acceptance remain required.
 ## Rust SPU volume sweeps
 
 [The volume component](../../../tools/rust/bof3-audio/src/machine/spu_volume.rs)
+owns separate published voice sweeps and native voice gain. Its `Volume` type
 retains raw registers, signed current gains, rate counters and terminal state for
-both channels of each voice and the main mixer. Fixed writes expand signed
+Published voices and Published main output. Fixed writes expand signed
 15-bit gain; sweep writes preserve that current gain and restart their counter.
-Linear/exponential, increasing/decreasing and phase-inverted modes share the
-ADSR rate calculation and its explicitly selected arithmetic model. Rate `0x7F`
-freezes without clamping. Endpoint saturation stops a sweep; a subsequent main
+Linear/exponential, increasing/decreasing and phase-inverted modes retain Q15
+counter arithmetic with explicitly selected threshold/floor rules. The native
+ADSR denominator-counter correction does not change sweeps. Rate `0x7F` freezes
+without clamping. Endpoint saturation stops a sweep; a subsequent main
 current-level write does not rearm it. Key-on does not reset stereo gain.
 
-Voices use their current gains before advancing sweeps; final mixing similarly
-advances main sweeps after output. `configure_spu_voices` binds the main sweep
-arithmetic as well as voice envelopes. Standalone mixer sweeps require explicit
-configuration; fixed gain needs no model. Current voice-volume reads at
-`0x1F801E00..0x1F801E5F` expose signed levels with the existing SPU width/alias
-rules. Writes to those ports remain unsupported for lack of hardware evidence;
+Published voices use current gains before advancing sweeps. Published mixing
+advances main sweeps after output; `configure_spu_voices` binds their arithmetic
+as well as voice envelopes. Standalone published mixer sweeps require explicit
+configuration; fixed published main gain needs no model. Native-reference output
+retains main-volume register latches but does not apply or clock main sweeps. `VoiceVolume` selects the native
+Q14 decoder for native-reference voices, folding each sweep write into a fixed
+level that remains unchanged until another write. Signed products divide by
+`0x4000` toward zero and remain wide through stereo accumulation.
+
+Current voice-volume component reads at `0x1F801E00..0x1F801E5F` expose Q15
+levels with the existing SPU width/alias rules. Native internal Q14 gain is
+doubled for this component interface; native bus readback is not established.
+Writes to those ports remain unsupported for lack of hardware evidence;
 main current-volume writes remain available.
 
 These are scheduled effective writes, not a claim about hardware write latency.
-The component clocks voice sweeps on every requested frame, including inactive
-voices. That is an interpretation of the published per-frame generator; the
-inspected emulator can skip inactive voices when IRQ9 is disabled. This difference,
-write timing and the existing arithmetic disagreements require independent
-hardware evidence. See [retained sweep research](../../reference/spu-envelopes.md#volume-sweeps).
+Published voice sweeps clock on every requested frame, including inactive voices.
+This interprets the published per-frame generator; native-reference voice gain
+does not run a sweep envelope. Write timing, current-volume bus behavior and
+hardware fidelity remain separate obligations. See
+[retained sweep research](../../reference/spu-envelopes.md#volume-sweeps).
 
 [Sweep checks](../../../tools/rust/bof3-audio/tests/spu_volume.rs) cover all eight
 modes, 128 rates and five signed starting levels across 512 frames per context,
@@ -2216,9 +2361,8 @@ against separately calculated integer traces for both models. Literal checks
 cover saturation, frozen rates, reset/rearm behavior and model boundaries.
 [Integration checks](../../../tools/rust/bof3-audio/tests/spu_output.rs) verify
 voice/main output ordering, key preservation and all 24 current-volume register
-pairs. Existing ADSR corpus results are unchanged: 543 pairs, 125 differing pairs
-and 395 affected tone records. Passing these checks does not establish original
-runtime timing or reference-audio fidelity.
+pairs. Passing these checks does not establish original runtime timing or
+reference-audio fidelity.
 
 ## Rust SPU reverb execution
 
@@ -2270,8 +2414,8 @@ with writes disabled. A bounded native mixed-PCM capture agrees with steady
 stored-RAM reverb output after the separately identified native host Volume,
 clipping and float conversion. It does not validate Rust main gain, startup
 phase, dynamic game preset execution or host queue timing. Capture follows
-reverb execution at the explicit frame boundary; bus arbitration, IRQ9,
-independent game traces and hardware audio remain acceptance work. An
+reverb execution at the explicit frame boundary; bus arbitration, IRQ delivery
+timing, independent game traces and hardware audio remain acceptance work. An
 unconfigured audible reverb path still fails.
 
 ## Rust CD decoder host registers
@@ -2793,8 +2937,11 @@ predictor history, but does not resample or append output. Previously queued
 frames remain available. Unmuted admission applies the active drive matrix
 after interpolation, before insertion. Later volume latches do not rescale the
 queued or pending tail. `Interconnect::step_spu_cd_output` passes those frames
-to the existing SPU CD gain, routing, reverb and final gain. Capture therefore sees
-post-drive, pre-SPU-gain samples. A bounded native original stereo comparison
+through the selected output policy. Published output applies SPU CD gain,
+routing, reverb sends and final main gain. Native-reference output keeps CD
+separate from those SPU paths and applies its explicit host settings at float
+output. Capture sees post-drive samples before either output policy.
+A bounded native original stereo comparison
 confirms unity and asymmetric crossed gain across a guest latch with old output
 still queued. Clipping and other matrices remain unaccepted against native output.
 Empty queue output is zero under the selected reference model and does not
@@ -3166,7 +3313,7 @@ used.
 
 ### Rust sample decoding and loop export limits
 
-[The Rust decoder](../../../tools/rust/bof3-audio/src/codec/adpcm/mod.rs) decodes complete
+[The Rust `History` decoder](../../../tools/rust/bof3-audio/src/codec/adpcm/mod.rs) decodes complete
 16-byte SPU ADPCM blocks to 28 signed PCM frames, carrying clipped predictor
 history between blocks. Standalone sample inspection starts with zero history
 and includes the first end block's PCM. Bytes after that block remain opaque
@@ -3174,6 +3321,11 @@ preservation data. Empty samples and bounded data without an end marker remain
 distinct. Unsupported predictors, shifts and flag bits fail explicitly; the
 current Rust API does not implement the reserved-value behavior described above.
 Samples do not intrinsically specify a playback rate, envelope or pitch context.
+The separate `NativeHistory` API returns raw signed 32-bit samples and retains
+wide predictor state for the explicitly selected native-reference reader.
+This follows the current native decoder, while clipping occurs at ordinary
+interpolation input. It does not change standalone sample exports or establish
+hardware decoding behavior.
 
 Loop ranges use the latest local start marker and an exclusive PCM endpoint;
 RIFF `smpl` requires converting that endpoint to its inclusive counterpart.
@@ -3579,7 +3731,8 @@ remain open.
 
 The host uses four-point interpolation with the published 512-entry SPU Gaussian
 table. Its coefficients match the current [native table](../../../third_party/pcsx-redux-agentic/src/spu/gauss.h).
-Table equality does not establish rendering fidelity. The host arithmetic is:
+Table equality does not establish rendering fidelity. The published host
+arithmetic is:
 
 ```c
 out  = (gauss[0x0FF - i] * oldest) >> 15;
@@ -3588,25 +3741,35 @@ out += (gauss[0x100 + i] * old)    >> 15;
 out += (gauss[0x000 + i] * new)    >> 15;
 ```
 
-The host interpolation index is pitch-counter bits 4–11. Bits 12 and above select
+The legacy C host interpolation index is pitch-counter bits 4–11. Bits 12 and above select
 the decoded source sample. Steps above `0x4000` clamp to `0x4000` after optional
 pitch modulation, so high pitches may skip decoded samples while still using
 the same four-point interpolation window.
 
 The current [native interpolator](../../../third_party/pcsx-redux-agentic/src/spu/interpolation.cc)
-shifts each product by 14, then the four-product sum by one. This differs from
-both Rust choices, which shift each product by 15 or shift the sum by 15.
+shifts each product by 14, then the four-product sum by one.
+Rust `EmulatorReference` uses the same scalar arithmetic. `Published` shifts
+each product by 15 before summing.
+
 Native pitch stepping uses a 16.16 counter with phase bits 8–15. The
 [pitch writer](../../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
-caps the raw pitch at `0x3FFF`; the interpolator uses a minimum step of one for
-zero pitch. Gaussian key-on clears the window and seeds the counter at `0x30000`
-to prime it before output. The retained host counter and zero-pitch policies
-remain unchanged; current-fork captures and hardware acceptance are still required.
+caps the raw pitch at `0x3FFF`. An explicit zero-pitch write installs a minimum
+step of one when consumed. Zero or absent modulation input preserves the previous
+step, and key-on preserves pitch state. Gaussian key-on clears the window and seeds the counter at `0x30000`
+to prime it before output. Both Rust policies use a block-relative 16.16 counter
+with phase bits 8–15. `Published` retains three cleared history samples and
+freezes at zero pitch. `EmulatorReference` primes three decoded samples and
+uses a minimum increment of one. Its block-window counter starts at `0x20000`,
+which places the first output window at zero followed by those three samples.
+This matches the native interpolator's sample consumption and phase for supplied
+valid looping blocks. Batch/write
+timing, end/fetch ordering, complete mute/noise integration, CPU/sample alignment, mixed PCM
+agreement and hardware fidelity remain open.
 
 ### ADSR envelope
 
-Published envelope equations, with the unresolved reference differences retained
-in the [Rust ADSR models](#rust-adsr-state-and-evidence-models):
+Published envelope equations, used by the separately selected
+[Rust published model](#rust-adsr-state-and-evidence-models):
 
 ```text
 AdsrCycles = 1 << max(0, shift - 11)
@@ -3622,9 +3785,10 @@ if exponential AND decreasing:
 The current [native ADSR implementation](../../../third_party/pcsx-redux-agentic/src/spu/adsr.cc)
 uses numerator/denominator rate tables, an inclusive `level >= 0x6000` knee and
 `min(rate + 8, 127)` above that knee. Decay compares the upper four level bits
-with the sustain field. Shared register layouts do not establish identical
-slow-rate, phase-boundary or write behavior. The retained host models still need
-current-fork comparison and independent hardware evidence.
+with the sustain field. Rust `EmulatorReference` follows these native arithmetic
+and phase rules. `Published` retains the equations above. Arithmetic agreement
+does not establish register-write latency, CPU/sample alignment, complete PCM
+agreement or hardware fidelity.
 
 | Phase | Mode | Direction | Step |
 | --- | --- | --- | --- |
@@ -3756,21 +3920,23 @@ nibbles decode to alternating `224, 0` with repeat flags. Its encoded SHA-256 is
 `d761d406af2a4a5a15f67c924378ed88d1f85c13f1a37fc7366f59789b3bcd65`.
 Zero voice gains suppress its output; no zero-filled waveform is inferred.
 
-Repeated calls require a falling SPUCNT bit-15 transition. The interconnect now
-accepts an explicitly configured `DisableModel::EmulatorReference`: active
-envelopes become off with zero level at the accepted control write. Already-off
-manual ENVX, pending keys, sample history/position, gains and ENDX are retained.
-Transfer/IRQ validation precedes envelope changes, so a rejected write cannot
-partially silence the device. The [source and limits](../../reference/spu-samples.md#disable-transition)
-remain distinct from independently reproduced hardware evidence.
+Repeated calls require a falling SPUCNT bit-15 transition. With voices configured,
+the interconnect requires explicit `DisableModel::EmulatorReference` selection
+for that transition. Scheduling a voice frame while bit 15 is clear also
+requires that model. Accepted control writes preserve active
+and off envelopes, manual ENVX, pending keys, sample state, gains and ENDX.
+Transfer/IRQ checks still reject invalid writes before control changes.
+Caller-scheduled disabled frames consume pending keys and advance voices and
+capture. The mixer does not add a bit-15 gate to the voice mix. Bit-14 mute
+timing remains a separate limitation. The [native source and observations](../../reference/spu-samples.md#disable-transition)
+do not establish hardware disable behavior.
 
 The test services at most one FIFO halfword after each integer instruction as
 an explicit transaction schedule, without clock or voice-frame simulation.
 Consequently the written key masks do not establish latch timing or audible
-initialization. Disabled-frame execution still rejects. Full startup continues
-to stop at BIOS `A0:72`; this direct callee check neither skips that call in the
-bootstrap path nor supplies missing BIOS state. CPU/SPU timing, IRQ9, disabled
-capture/CD behavior and independent trace/audio acceptance remain required.
+initialization. This direct callee check does not cover BIOS `A0:72` or supply
+BIOS state for the bootstrap path. CPU/SPU and IRQ9 timing, disabled CD behavior,
+bit-14 mute timing and independent trace/audio acceptance remain required.
 
 ### Rust system control and critical sections
 
@@ -4663,7 +4829,7 @@ owned initialization and transfer routines, and resolve their state from linked
 symbols. Layout candidates run in isolated scratch RAM; the selected layout is
 then installed on the playback machine. Music rendering binds both loop-store
 instructions and the end-event entry, preserving pre-execution observations.
-Its `bof3.psx-render/v2` report records owned startup instead of BIOS boot.
+Its `bof3.psx-render/v4` report records owned startup instead of BIOS boot.
 The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 `machine::reference` retains explicit original EXE/BIOS preparation and rendering
 for development comparisons and the current compiled player. Other production
@@ -4698,7 +4864,7 @@ for a game cue in the otherwise empty machine. Output has exactly the requested
 body and tail frames. The fixed tail includes call-boundary delay and guest
 release and can end before silence.
 
-The `bof3.psx-effects-render/v1` report records the bank and artifact identities,
+The `bof3.psx-effects-render/v3` report records the bank and artifact identities,
 selection, cold history, initialization, play, poll and release calls, voice
 snapshots, cutoff frames and output clock. WAV and report publication use the
 existing verified transaction. Optional Ogg delivery uses the accepted quality
@@ -5332,9 +5498,9 @@ latches remain separate from pending output-frame keys.
 
 The readback cursor follows guest start, repeat, pitch, loop flags and SPU RAM.
 A pitch-modulated voice retains the fork's untracked-cursor convention until
-retriggered. Active ADSR register changes and release with fractional ADSR state
-reject precisely. Other rates retain the selected arithmetic model's documented
-disagreements. Configuration does not reconstruct preexisting voice history or
+retriggered. Active ADSR register changes and release with a nonzero ADSR counter
+remain rejected by this development reader. Configuration does not reconstruct
+preexisting voice history or
 prove sample-fetch, mixer or hardware timing. The production output clock and
 frame-driven voice state remain separate.
 

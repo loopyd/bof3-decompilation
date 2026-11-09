@@ -4,6 +4,7 @@ use bof3_audio::machine::{
     executable::Executable,
     interconnect::Interconnect,
     spu_mixer::Inputs,
+    spu_noise::State as NoiseState,
     spu_sample::Model,
 };
 
@@ -39,7 +40,7 @@ fn fixture() -> Interconnect {
 }
 
 #[test]
-fn explicit_disable_model_preserves_inactive_state_and_rejects_atomically() {
+fn explicit_disable_model_preserves_voice_state_and_rejects_atomically() {
     use bof3_audio::machine::spu_voice_ports::DisableModel;
     let mut bus = fixture();
     bus.write(0x1f801d88, Width::Word, 0x0055_5555).unwrap();
@@ -74,14 +75,10 @@ fn explicit_disable_model_preserves_inactive_state_and_rejects_atomically() {
     assert_eq!(bus.read(0x1f801daa, Width::Half).unwrap(), 0xc010);
     bus.service_spu(1).unwrap();
     half(&mut bus, 0x1f801daa, 0x10);
-    assert!(
-        bus.step_spu_voices().is_err(),
-        "disabled-frame scheduling is still unverified"
-    );
     for voice in 0..24 {
         assert_eq!(
             bus.read(0x1f801c0c + voice * 16, Width::Half).unwrap(),
-            if voice % 2 == 0 { 0 } else { 0x4000 + voice }
+            0x4000 + voice
         );
         assert_eq!(
             bus.read(0x1f801c00 + voice * 16, Width::Word).unwrap(),
@@ -93,18 +90,19 @@ fn explicit_disable_model_preserves_inactive_state_and_rejects_atomically() {
         );
     }
     assert_eq!(bus.read(0x1f801d9c, Width::Word).unwrap(), endx);
-    // A second write with enable already clear has no force-off effect.
-    half(&mut bus, 0x1f801c0c, 0x1234);
-    half(&mut bus, 0x1f801daa, 0x10);
-    assert_eq!(bus.read(0x1f801c0c, Width::Half).unwrap(), 0x1234);
-    half(&mut bus, 0x1f801daa, 0xc010);
     let frame = bus.step_spu_voices().unwrap();
     assert_eq!(frame.voices[1].fetched_address, Some(0x1000));
     assert_eq!(
         bus.read(0x1f801c1c, Width::Half).unwrap(),
         0,
-        "pending KON consumed after re-enable"
+        "pending KON consumed at the explicit disabled frame"
     );
+    // A second write with enable already clear also preserves ENVX.
+    half(&mut bus, 0x1f801c0c, 0x1234);
+    half(&mut bus, 0x1f801daa, 0x10);
+    assert_eq!(bus.read(0x1f801c0c, Width::Half).unwrap(), 0x1234);
+    half(&mut bus, 0x1f801daa, 0xc010);
+    bus.step_spu_voices().unwrap();
 }
 
 #[test]
@@ -118,8 +116,14 @@ fn shared_noise_is_independent_of_pitch_and_ignores_adpcm_end_mute() {
         .unwrap_err()
         .to_string()
         .contains("noise"));
-    bus.configure_spu_noise(0x1234, 0x20000).unwrap();
-    assert!(bus.configure_spu_noise(0, 0).is_err());
+    bus.configure_spu_noise(NoiseState::Published {
+        level: 0x1234,
+        timer: 0x20000,
+    })
+    .unwrap();
+    assert!(bus
+        .configure_spu_noise(NoiseState::Published { level: 0, timer: 0 })
+        .is_err());
     let first = bus.step_spu_voices().unwrap();
     assert_eq!(first.noise_level, Some(0x1234));
     for (i, voice) in first.voices.iter().enumerate() {
@@ -145,7 +149,8 @@ fn shared_noise_is_independent_of_pitch_and_ignores_adpcm_end_mute() {
 fn noise_clocks_once_per_frame_even_without_selected_voices_and_keys_do_not_reset_it() {
     let mut bus = fixture();
     half(&mut bus, 0x1f801daa, 0xff10); // Fastest noise clock.
-    bus.configure_spu_noise(0, 0).unwrap();
+    bus.configure_spu_noise(NoiseState::Published { level: 0, timer: 0 })
+        .unwrap();
     assert_eq!(bus.step_spu_voices().unwrap().noise_level, Some(0));
     bus.write(0x1f801d94, Width::Word, 0x00ff_ffff).unwrap();
     bus.write(0x1f801d88, Width::Word, 0x00ff_ffff).unwrap();
@@ -160,7 +165,11 @@ fn noise_clocks_once_per_frame_even_without_selected_voices_and_keys_do_not_rese
 #[test]
 fn final_output_captures_before_pan_mute_and_cd_input_gain() {
     let mut bus = fixture();
-    bus.configure_spu_noise(0x1234, 0x20000).unwrap();
+    bus.configure_spu_noise(NoiseState::Published {
+        level: 0x1234,
+        timer: 0x20000,
+    })
+    .unwrap();
     half(&mut bus, 0x1f801d94, 10);
     half(&mut bus, 0x1f801d88, 10);
     // Muted stereo volume on voice 3 must not mute its capture.
@@ -173,12 +182,21 @@ fn final_output_captures_before_pan_mute_and_cd_input_gain() {
         cd: [12000, -12000],
         external: [0; 2],
     };
-    assert_eq!(bus.step_spu_output(inputs).unwrap(), [0; 2]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(inputs).unwrap()),
+        [0; 2]
+    );
     half(&mut bus, 0x1f801c1c, 0x4000);
     half(&mut bus, 0x1f801c3c, 0x4000);
-    assert_eq!(bus.step_spu_output(inputs).unwrap(), [582, -583]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(inputs).unwrap()),
+        [582, -583]
+    );
     half(&mut bus, 0x1f801daa, 0x8011); // Mute voices, enable CD.
-    assert_eq!(bus.step_spu_output(inputs).unwrap(), [3000, -3000]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(inputs).unwrap()),
+        [3000, -3000]
+    );
     for (base, expected) in [(0, 12000i16), (0x400, -12000), (0x800, 2330), (0xc00, 2330)] {
         for frame in [1, 2] {
             assert_eq!(
@@ -227,7 +245,11 @@ fn unsupported_reverb_and_capture_modes_reject_before_consuming_pending_keys() {
 #[test]
 fn voice_and_main_sweeps_use_old_gain_then_advance_without_key_reset() {
     let mut bus = fixture();
-    bus.configure_spu_noise(0x1234, 0x20000).unwrap();
+    bus.configure_spu_noise(NoiseState::Published {
+        level: 0x1234,
+        timer: 0x20000,
+    })
+    .unwrap();
     half(&mut bus, 0x1f801d94, 2);
     half(&mut bus, 0x1f801d88, 2);
     bus.step_spu_voices().unwrap();
@@ -236,20 +258,26 @@ fn voice_and_main_sweeps_use_old_gain_then_advance_without_key_reset() {
     half(&mut bus, 0x1f801c12, 0x9000); // Right increase from -16384.
     bus.write(0x1f801d80, Width::Word, 0x20002000).unwrap();
     half(&mut bus, 0x1f801d80, 0x8000);
-    assert_eq!(bus.step_spu_output(Inputs::default()).unwrap(), [582, -583]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap()),
+        [582, -583]
+    );
     assert_eq!(bus.read(0x1f801e04, Width::Word).unwrap(), 0x80007800);
     assert_eq!(bus.read(0x1f801db8, Width::Half).unwrap(), 30720);
     assert_eq!(
-        bus.step_spu_output(Inputs::default()).unwrap(),
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap()),
         [2047, -1165]
     );
     assert_eq!(bus.read(0x1f801e04, Width::Word).unwrap(), 0x80007fff);
     assert_eq!(
-        bus.step_spu_output(Inputs::default()).unwrap(),
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap()),
         [2328, -1165]
     );
     half(&mut bus, 0x1f801d88, 2);
-    assert_eq!(bus.step_spu_output(Inputs::default()).unwrap(), [0; 2]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap()),
+        [0; 2]
+    );
     assert_eq!(bus.read(0x1f801e04, Width::Word).unwrap(), 0x80007fff);
 }
 
@@ -305,7 +333,8 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
     bus.write(0x1f801d80, Width::Word, 0x20002000).unwrap();
     bus.write(0x1f801d84, Width::Word, 0x40004000).unwrap();
     for frame in 0..58 {
-        let sample = bus.step_spu_output(Inputs::default()).unwrap();
+        let sample =
+            bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap());
         if frame > 40 {
             assert_eq!(
                 sample,
@@ -320,8 +349,8 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
     assert_eq!(&bus.spu_transfer().ram()[0x60000..0x60040], before);
     assert_eq!(bus.spu_transfer().capture_position(), 116);
     half(&mut bus, 0x1f801daa, 0xc090);
-    bus.step_spu_output(Inputs::default()).unwrap();
-    bus.step_spu_output(Inputs::default()).unwrap();
+    bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap());
+    bof3_audio::interchange::wave::pcm16(bus.step_spu_output(Inputs::default()).unwrap());
     // Aliased APF2 restores the sample read before APF1 clears the cell.
     assert_eq!(
         &bus.spu_transfer().ram()[0x6003a..0x6003c],
@@ -361,12 +390,13 @@ fn decoded_xa_passes_drive_routing_before_spu_gain_and_capture() {
     let mut signal = false;
     for (frame, input) in frames.into_iter().take(300).enumerate() {
         let cd = volume.apply_xa(input);
-        let output = bus
-            .step_spu_output(Inputs {
+        let output = bof3_audio::interchange::wave::pcm16(
+            bus.step_spu_output(Inputs {
                 cd,
                 external: [0; 2],
             })
-            .unwrap();
+            .unwrap(),
+        );
         assert_eq!(output, cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16));
         signal |= output != [0; 2];
         for (channel, sample) in cd.into_iter().enumerate() {

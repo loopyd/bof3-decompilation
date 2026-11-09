@@ -116,10 +116,21 @@ fn physical_tone_slots_preserve_original_skips_and_undeclared_playable_tones() -
         })?;
         assert_eq!(calls, expected, "{path}");
         assert_eq!(results, returns, "{path}");
-        let mut pcm = p.execution.take_audio_frames()?;
+        let mut pcm = p
+            .execution
+            .take_audio_frames()?
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>();
         while p.execution.output().unwrap().frames() < 1024 {
             p.execution.call(0x801753dc, [0; 4], 100_000)?;
-            pcm.extend(p.execution.take_audio_frames()?);
+            pcm.extend(
+                p.execution
+                    .take_audio_frames()?
+                    .into_iter()
+                    .map(bof3_audio::interchange::wave::pcm16)
+                    .collect::<Vec<_>>(),
+            );
         }
         assert_eq!(pcm.iter().flatten().any(|&v| v != 0), audible, "{path}");
     }

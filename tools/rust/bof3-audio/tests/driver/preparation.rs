@@ -85,7 +85,12 @@ fn preparation_observer_preserves_machine_state_and_playback() {
             let mut pcm = Vec::new();
             while e.output().unwrap().frames() < 8192 {
                 e.call(0x801753dc, [0; 4], 100000)?;
-                pcm.extend(e.take_audio_frames()?);
+                pcm.extend(
+                    e.take_audio_frames()?
+                        .into_iter()
+                        .map(bof3_audio::interchange::wave::pcm16)
+                        .collect::<Vec<_>>(),
+                );
             }
             Ok(pcm)
         };

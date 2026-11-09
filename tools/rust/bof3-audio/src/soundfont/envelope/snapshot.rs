@@ -13,7 +13,8 @@ pub(crate) fn is_known_stop(row: &KeyTuning) -> bool {
             .is_none_or(|lookup| lookup.region.is_pitch_table())
 }
 
-/// Phase zero with three cleared history samples and Gaussian coefficient -1.
+/// Published phase zero with three cleared history samples and coefficient -1.
+/// Native-reference playback primes decoded samples and advances at zero pitch.
 /// This is not the value held when an already advancing voice changes to zero.
 pub(crate) fn held_sample(first_decoded: i16) -> i16 {
     (-i32::from(first_decoded)).div_euclid(32768) as i16

@@ -1,7 +1,7 @@
 //! PSX SPU ADPCM sample decoding, before pitch interpolation, ADSR or mixing.
 //! Sample data has no intrinsic playback rate. Unsupported header values fail.
 //! Predictor coefficients and separate product shifts match PCSX-Redux Agentic.
-//! This decoder saturates each sample to i16; native predictor history is wider.
+//! History saturates each sample to i16; NativeHistory retains wide raw values.
 //! Hardware/rendering acceptance remains separate.
 
 pub mod encoder;
@@ -30,20 +30,7 @@ impl History {
     /// Decode one physical block; flags are the caller's control-flow concern.
     /// Validation happens before changing history.
     pub fn decode_block(&mut self, block: &[u8; BLOCK_BYTES]) -> Result<[i16; BLOCK_FRAMES]> {
-        let filter = usize::from(block[0] >> 4);
-        let shift = block[0] & 15;
-        if filter >= FILTERS.len() {
-            return Err(format!("unsupported PSX ADPCM predictor {filter}").into());
-        }
-        if shift > 12 {
-            return Err(format!(
-                "unsupported PSX ADPCM shift {shift}; reserved hardware behavior is not modeled"
-            )
-            .into());
-        }
-        if block[1] & !7 != 0 {
-            return Err(format!("unsupported PSX ADPCM flag bits {:#04x}", block[1] & !7).into());
-        }
+        let (filter, shift) = validate_block(block)?;
         let mut pcm = [0; BLOCK_FRAMES];
         let mut previous = i32::from(self.previous);
         let mut older = i32::from(self.previous_previous);
@@ -65,6 +52,60 @@ impl History {
         }
         self.previous = previous as i16;
         self.previous_previous = older as i16;
+        Ok(pcm)
+    }
+}
+
+fn validate_block(block: &[u8; BLOCK_BYTES]) -> Result<(usize, u8)> {
+    let filter = usize::from(block[0] >> 4);
+    let shift = block[0] & 15;
+    if filter >= FILTERS.len() {
+        return Err(format!("unsupported PSX ADPCM predictor {filter}").into());
+    }
+    if shift > 12 {
+        return Err(format!(
+            "unsupported PSX ADPCM shift {shift}; reserved hardware behavior is not modeled"
+        )
+        .into());
+    }
+    if block[1] & !7 != 0 {
+        return Err(format!("unsupported PSX ADPCM flag bits {:#04x}", block[1] & !7).into());
+    }
+    Ok((filter, shift))
+}
+
+/// Current native decoder history, before the interpolator clips each sample.
+/// This is separate from the published saturating codec and hardware acceptance.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
+pub struct NativeHistory {
+    pub previous: i32,
+    pub previous_previous: i32,
+}
+
+impl NativeHistory {
+    /// Retain raw decoded values and history. Invalid headers or i32 arithmetic
+    /// overflow fail before changing state; native overflow is not qualified.
+    pub fn decode_block(&mut self, block: &[u8; BLOCK_BYTES]) -> Result<[i32; BLOCK_FRAMES]> {
+        let (filter, shift) = validate_block(block)?;
+        let (first, second) = FILTERS[filter];
+        let mut pcm = [0; BLOCK_FRAMES];
+        let mut previous = self.previous;
+        let mut older = self.previous_previous;
+        for (index, sample) in pcm.iter_mut().enumerate() {
+            let nibble = (block[2 + index / 2] >> ((index % 2) * 4)) & 15;
+            let residual = i32::from((u16::from(nibble) << 12) as i16) >> shift;
+            let value = previous
+                .checked_mul(first)
+                .zip(older.checked_mul(second))
+                .and_then(|(a, b)| (a >> 6).checked_add(b >> 6))
+                .and_then(|prediction| residual.checked_add(prediction))
+                .ok_or("native-reference ADPCM predictor arithmetic exceeds i32")?;
+            *sample = value;
+            older = previous;
+            previous = value;
+        }
+        self.previous = previous;
+        self.previous_previous = older;
         Ok(pcm)
     }
 }

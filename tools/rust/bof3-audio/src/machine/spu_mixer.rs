@@ -1,7 +1,28 @@
-//! Integer SPU mixer routing, before/after the separately owned reverb engine.
+//! SPU stream routing, integer gain and explicit native float output.
 //! Ordering follows the inspected emulator; hardware acceptance remains open.
-use super::{adsr::Model, spu_voice_ports::Frame, spu_volume::Volume};
+use super::{
+    adsr::Model, spu_sample::Model as SampleModel, spu_voice_ports::Frame, spu_volume::Volume,
+};
 use crate::Result;
+use serde::{Deserialize, Serialize};
+
+/// Fixed host settings for an explicitly selected native-reference context.
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct NativeSettings {
+    pub volume: u8,
+    pub mono: bool,
+    pub muted: bool,
+}
+
+impl NativeSettings {
+    fn divisor(self) -> Result<i32> {
+        if self.volume > 3 {
+            return Err("native SPU host volume must be in 0..=3".into());
+        }
+        Ok(4 - i32::from(self.volume))
+    }
+}
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Inputs {
@@ -10,21 +31,45 @@ pub struct Inputs {
     pub external: [i16; 2],
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Sends {
     pub dry: [i32; 2],
     pub reverb: [i32; 2],
+    /// Native CD stream before host division; published CD is already in dry.
+    pub cd: [i16; 2],
 }
 
 #[derive(Clone, Debug, Default)]
 pub struct Mixer {
     main: [Volume; 2],
+    main_latches: [u16; 4],
+    native: Option<NativeSettings>,
     reverb: [i16; 2],
     cd: [i16; 2],
     external: [i16; 2],
 }
 
 impl Mixer {
+    pub fn configure_native(&mut self, settings: NativeSettings) -> Result<()> {
+        settings.divisor()?;
+        if self.native.is_some() {
+            return Err("native SPU output settings already configured".into());
+        }
+        self.native = Some(settings);
+        Ok(())
+    }
+
+    pub fn native_settings(&self) -> Option<NativeSettings> {
+        self.native
+    }
+
+    pub fn require_model(&self, sample: SampleModel) -> Result<()> {
+        if (sample == SampleModel::EmulatorReference) != self.native.is_some() {
+            return Err("SPU output policy must match the configured sample model; native output requires explicit host settings".into());
+        }
+        Ok(())
+    }
+
     pub fn configure_sweeps(&mut self, model: Model) -> Result<()> {
         for volume in &mut self.main {
             volume.configure(model)?;
@@ -38,10 +83,12 @@ impl Mixer {
             return Err("unaligned SPU mixer register".into());
         }
         Ok(match offset & !2 {
+            0x180 if self.native.is_some() => self.main_latches[channel],
             0x180 => self.main[channel].register(),
             0x184 => self.reverb[channel] as u16,
             0x1b0 => self.cd[channel] as u16,
             0x1b4 => self.external[channel] as u16,
+            0x1b8 if self.native.is_some() => self.main_latches[2 + channel],
             0x1b8 => self.main[channel].level() as u16,
             _ => return Err(format!("unsupported SPU mixer register {offset:#x}").into()),
         })
@@ -55,12 +102,20 @@ impl Mixer {
         }
         match offset & !2 {
             0x180 => {
-                self.main[channel].write(value)?;
+                if self.native.is_none() {
+                    self.main[channel].write(value)?;
+                }
+                self.main_latches[channel] = value;
             }
             0x184 => self.reverb[channel] = value as i16,
             0x1b0 => self.cd[channel] = value as i16,
             0x1b4 => self.external[channel] = value as i16,
-            0x1b8 => self.main[channel].write_level(value),
+            0x1b8 => {
+                if self.native.is_none() {
+                    self.main[channel].write_level(value);
+                }
+                self.main_latches[2 + channel] = value;
+            }
             _ => return Err(format!("unsupported SPU mixer register {offset:#x}").into()),
         }
         Ok(())
@@ -75,18 +130,33 @@ impl Mixer {
         Ok(())
     }
 
-    pub fn prepare(&self, voices: &Frame, control: u16, inputs: Inputs) -> Sends {
+    pub fn prepare(&self, voices: &Frame, control: u16, inputs: Inputs) -> Result<Sends> {
+        self.require_model(voices.sample_model)?;
+        if self.native.is_some() && inputs.external != [0; 2] {
+            return Err("native SPU output has no external input source".into());
+        }
         let mut dry = [0i32; 2];
         let mut wet = [0i32; 2];
-        if control & 0xc000 == 0xc000 {
+        if voices.sample_model == SampleModel::EmulatorReference || control & 0x4000 != 0 {
             for (index, voice) in voices.voices.iter().enumerate() {
                 for channel in 0..2 {
-                    dry[channel] += i32::from(voice.stereo[channel]);
+                    dry[channel] = dry[channel]
+                        .checked_add(voice.stereo[channel])
+                        .ok_or("SPU dry voice sum exceeds signed 32-bit domain")?;
                     if voices.reverb_mask & (1 << index) != 0 {
-                        wet[channel] += i32::from(voice.stereo[channel]);
+                        wet[channel] = wet[channel]
+                            .checked_add(voice.stereo[channel])
+                            .ok_or("SPU reverb voice sum exceeds signed 32-bit domain")?;
                     }
                 }
             }
+        }
+        if self.native.is_some() {
+            return Ok(Sends {
+                dry,
+                reverb: wet,
+                cd: inputs.cd,
+            });
         }
         for (enable, reverb, samples, gain) in [
             (1, 4, inputs.cd, self.cd),
@@ -102,17 +172,40 @@ impl Mixer {
                 }
             }
         }
-        Sends { dry, reverb: wet }
+        Ok(Sends {
+            dry,
+            reverb: wet,
+            cd: [0; 2],
+        })
     }
 
     pub fn reverb_gain(&self) -> [i16; 2] {
         self.reverb
     }
 
-    /// Reverb return already includes wet gain before interpolation. Clamp the
-    /// accumulated mix before main gain. The sole +32768 full-negative-gain rail
-    /// is unverified on hardware and fails explicitly rather than inventing wrap.
-    pub fn finish(&mut self, sends: Sends, reverb_return: [i32; 2]) -> Result<[i16; 2]> {
+    /// Reverb already includes wet gain. Published output clips before Q15 main
+    /// gain; native output divides and symmetrically clips the SPU stream, then
+    /// adds the separate CD stream as float samples without a final clamp.
+    pub fn finish(&mut self, sends: Sends, reverb_return: [i32; 2]) -> Result<[f32; 2]> {
+        if let Some(settings) = self.native {
+            let divisor = settings.divisor()?;
+            let mut result = [0.0; 2];
+            for channel in 0..2 {
+                let sum = sends.dry[channel]
+                    .checked_add(reverb_return[channel])
+                    .ok_or("native SPU final sum exceeds signed 32-bit domain")?;
+                let spu = (sum / divisor).clamp(-32767, 32767);
+                let cd = i32::from(sends.cd[channel]) / divisor;
+                result[channel] = spu as f32 / 32767.0 + cd as f32 / 32767.0;
+            }
+            if settings.muted {
+                result = [0.0; 2];
+            }
+            if settings.mono {
+                result = [(result[0] + result[1]) * 0.5; 2];
+            }
+            return Ok(result);
+        }
         let mut result = [0; 2];
         for channel in 0..2 {
             let sum = i64::from(sends.dry[channel]) + i64::from(reverb_return[channel]);
@@ -124,7 +217,7 @@ impl Mixer {
         for volume in &mut self.main {
             volume.tick();
         }
-        Ok(result)
+        Ok(result.map(|sample| f32::from(sample) / 32767.0))
     }
 }
 

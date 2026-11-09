@@ -251,7 +251,14 @@ fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain()
         } // Mute future admission, not tail.
         let expected = cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16);
         clock.advance(&mut bus, &mut transfer, 768).unwrap();
-        assert_eq!(clock.take_frames(), [expected]);
+        assert_eq!(
+            clock
+                .take_frames()
+                .into_iter()
+                .map(bof3_audio::interchange::wave::pcm16)
+                .collect::<Vec<_>>(),
+            [expected]
+        );
         for (channel, sample) in cd.into_iter().enumerate() {
             let at = channel * 1024 + index * 2;
             assert_eq!(&bus.spu_transfer().ram()[at..at + 2], &sample.to_le_bytes());
@@ -337,7 +344,11 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
             // 44100 / 150. Phase is an explicit fixture input.
             let cd = expected.pop_front().expect("reference input exhausted");
             clock.advance(&mut bus, &mut transfer, 768).unwrap();
-            let frames = clock.take_frames();
+            let frames = clock
+                .take_frames()
+                .into_iter()
+                .map(bof3_audio::interchange::wave::pcm16)
+                .collect::<Vec<_>>();
             assert_eq!(frames.len(), 1);
             let output = frames[0];
             assert_eq!(output, cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16));

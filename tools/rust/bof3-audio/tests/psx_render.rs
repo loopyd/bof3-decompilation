@@ -126,7 +126,7 @@ fn owned_driver_cli_publishes_exact_duration_tail_and_qualified_evidence() {
         String::from_utf8_lossy(&result.stderr)
     );
     let report: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
-    assert_eq!(report["schema"], "bof3.psx-render/v2");
+    assert_eq!(report["schema"], "bof3.psx-render/v4");
     assert_eq!(
         report["identity"]["archive_sha256"],
         "e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91"

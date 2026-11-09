@@ -37,6 +37,12 @@ fn effects_banks_upload_nonzero_id_and_play_explicit_voices_without_sequences() 
             .iter()
             .all(|c| c.result == 0xffff_fffe));
         p.execution.call(0x8015ce70, [0; 4], 100_000)?;
+        // Initialization leaves background voices armed. Isolate this note's gain.
+        for voice in 0..24 {
+            p.execution
+                .bus
+                .write(0x1f801c00 + voice * 16, Width::Word, 0)?;
+        }
         p.execution
             .enable_output(output_clock::Model::PcsxReduxNtsc)?;
         let sp = p.execution.cpu.register(29);
@@ -69,7 +75,12 @@ fn effects_banks_upload_nonzero_id_and_play_explicit_voices_without_sequences() 
         let mut keyed = 0;
         while e.output().unwrap().frames() < 1024 {
             e.call(0x801753dc, [0; 4], 100_000)?;
-            pcm.extend(e.take_audio_frames()?);
+            pcm.extend(
+                e.take_audio_frames()?
+                    .into_iter()
+                    .map(bof3_audio::interchange::wave::pcm16)
+                    .collect::<Vec<_>>(),
+            );
             // Later flushes write zero: collect latches throughout playback.
             keyed |=
                 e.bus.read(0x1f801d88, Width::Half)? | (e.bus.read(0x1f801d8a, Width::Half)? << 16);
@@ -91,7 +102,12 @@ fn effects_banks_upload_nonzero_id_and_play_explicit_voices_without_sequences() 
         let mut released = 0;
         while e.output().unwrap().frames() < end {
             e.call(0x801753dc, [0; 4], 100_000)?;
-            tail.extend(e.take_audio_frames()?);
+            tail.extend(
+                e.take_audio_frames()?
+                    .into_iter()
+                    .map(bof3_audio::interchange::wave::pcm16)
+                    .collect::<Vec<_>>(),
+            );
             released |=
                 e.bus.read(0x1f801d8c, Width::Half)? | (e.bus.read(0x1f801d8e, Width::Half)? << 16);
         }

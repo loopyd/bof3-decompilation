@@ -1,10 +1,13 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        spu_sample::{interpolate, pitch_step, Model, Player},
+        spu_pitch::Pitch,
+        spu_sample::{interpolate, Model, Player, Signal},
         spu_transfer::RAM_BYTES,
     },
 };
+
+const SIGNAL: Signal = Signal::Ordinary { unmuted: true };
 
 fn block(ram: &mut [u8], address: usize, header: u8, flags: u8, data: u8) {
     ram[address..address + 16].fill(data);
@@ -16,6 +19,7 @@ fn block(ram: &mut [u8], address: usize, header: u8, flags: u8, data: u8) {
 fn interpolation_matches_independently_calculated_phase_and_signed_boundary_vectors() {
     // Python integer-floor vectors, all 256 phases; coefficients cross-checked
     // between published numeric ROM data and a separate emulator's table.
+    // Native-reference output is from the unchanged current native interpolator.
     for (model, expected) in [
         (
             Model::Published,
@@ -23,7 +27,7 @@ fn interpolation_matches_independently_calculated_phase_and_signed_boundary_vect
         ),
         (
             Model::EmulatorReference,
-            "ebc7cd36a9b2ec1be648ec49e51597c37e2c85e0472818b876cfd31a072a4fa0",
+            "341d2f91a3787d49c6e67eae79eca1462fb3c5153315d544a4db5975686bed93",
         ),
     ] {
         let mut bytes = Vec::new();
@@ -45,21 +49,43 @@ fn interpolation_matches_independently_calculated_phase_and_signed_boundary_vect
 }
 
 #[test]
-fn modulation_retains_signed_pitch_wrap_and_explicit_ceiling_difference() {
-    for (model, ceiling) in [
-        (Model::Published, 0x4000),
-        (Model::EmulatorReference, 0x3fff),
+fn modulation_uses_selected_pitch_state_and_register_ceiling() {
+    let step = |raw, source, model| {
+        let mut pitch = Pitch::new(model);
+        pitch.write(raw);
+        pitch.tick(source).unwrap()
+    };
+    for (model, expected) in [
+        (
+            Model::Published,
+            [
+                0, 0x40000, 0, 0x8000, 0x18000, 0x1fff0, 16, 0x40000, 0x40000, 0x40000,
+            ],
+        ),
+        (
+            Model::EmulatorReference,
+            [
+                1, 0x3fff0, 14, 32768, 98304, 131042, 262114, 0x3fff0, 262114, 0x3fff0,
+            ],
+        ),
     ] {
-        assert_eq!(pitch_step(0, None, model), 0);
-        assert_eq!(pitch_step(0xffff, None, model), ceiling);
-        assert_eq!(pitch_step(0xffff, Some(-32768), model), 0);
-        assert_eq!(pitch_step(0x1000, Some(-16384), model), 0x800);
-        assert_eq!(pitch_step(0x1000, Some(16384), model), 0x1800);
-        assert_eq!(pitch_step(0x1000, Some(32767), model), 0x1fff);
-        assert_eq!(pitch_step(0x8000, Some(32767), model), 1);
-        assert_eq!(pitch_step(0x8000, Some(0), model), ceiling);
-        assert_eq!(pitch_step(0xffff, Some(32767), model), ceiling);
-        assert_eq!(pitch_step(0x4000, None, model), ceiling);
+        for ((raw, source), expected) in [
+            (0, None),
+            (0xffff, None),
+            (0xffff, Some(-32768)),
+            (0x1000, Some(-16384)),
+            (0x1000, Some(16384)),
+            (0x1000, Some(32767)),
+            (0x8000, Some(32767)),
+            (0x8000, Some(0)),
+            (0xffff, Some(32767)),
+            (0x4000, None),
+        ]
+        .into_iter()
+        .zip(expected)
+        {
+            assert_eq!(step(raw, source, model), expected);
+        }
     }
 }
 
@@ -75,22 +101,31 @@ fn block_and_loop_boundaries_keep_three_sample_interpolation_history() {
         ),
         (
             Model::EmulatorReference,
-            "ca1fff9af1c77290c41fc401a08a897d942a26fdbc385ce3e2ec11ce2c9f2a95",
+            "c35eed908ba34160f9a48120640e5399ae0a4bb7520091f3e3d2c62d160032da",
         ),
     ] {
         let mut player = Player::new(model);
-        player.key_on(0x41); // ignored low address bit
+        player.write_pitch(0x1000);
+        player.key_on(0x41); // both register policies ignore the low address bit
         let mut bytes = Vec::new();
         for frame in 0..84 {
-            let output = player.tick(&ram, 0x1000, None).unwrap();
-            bytes.extend(output.sample.to_le_bytes());
-            assert_eq!(output.loop_end, frame == 55);
+            let output = player.tick(&ram, None, SIGNAL).unwrap();
+            bytes.extend(i16::try_from(output.sample).unwrap().to_le_bytes());
+            let primed = model == Model::EmulatorReference;
+            assert_eq!(
+                output.loop_end,
+                if primed {
+                    matches!(frame, 26 | 82)
+                } else {
+                    frame == 55
+                }
+            );
             assert!(!output.mute);
             assert_eq!(
                 output.fetched_address,
-                match frame {
-                    0 | 56 => Some(0x200),
-                    28 => Some(0x210),
+                match (primed, frame) {
+                    (false, 0 | 56) | (true, 0 | 54) => Some(0x200),
+                    (false, 28) | (true, 26 | 82) => Some(0x210),
                     _ => None,
                 }
             );
@@ -107,26 +142,28 @@ fn live_repeat_register_mute_and_ram_wrap_affect_next_block() {
     block(&mut ram, 0, 12, 1, 0x22);
     block(&mut ram, 0x100, 12, 7, 0x33);
     let mut player = Player::new(Model::Published);
+    player.write_pitch(0x4000);
     player.key_on(0xffff);
     for _ in 0..7 {
-        player.tick(&ram, 0x4000, None).unwrap();
+        player.tick(&ram, None, SIGNAL).unwrap();
     }
-    assert_eq!(player.current_address(), 0);
+    assert_eq!(player.current_address(), Some(0));
     player.write_repeat_address(0x21);
     for i in 0..7 {
-        let frame = player.tick(&ram, 0x4000, None).unwrap();
+        let frame = player.tick(&ram, None, SIGNAL).unwrap();
         assert_eq!(frame.mute, i == 6);
         assert_eq!(frame.loop_end, i == 6);
     }
-    assert_eq!(player.current_address(), 0x20);
+    assert_eq!(player.current_address(), Some(0x20));
+    player.write_pitch(0);
     assert_eq!(
-        player.tick(&ram, 0, None).unwrap().fetched_address,
+        player.tick(&ram, None, SIGNAL).unwrap().fetched_address,
         Some(0x100)
     );
     assert_eq!(player.repeat_address(), 0x20); // new block's loop-start replaces manual register
     let counter = player.counter();
     for _ in 0..100 {
-        player.tick(&ram, 0, None).unwrap();
+        player.tick(&ram, None, SIGNAL).unwrap();
     }
     assert_eq!(player.counter(), counter);
 }
@@ -136,23 +173,24 @@ fn predictors_survive_loops_but_reset_on_key_on_and_failures_preserve_state() {
     let mut ram = vec![0; RAM_BYTES];
     block(&mut ram, 0, 0x1c, 7, 0x77);
     let mut player = Player::new(Model::Published);
+    player.write_pitch(0x1000);
     player.key_on(0);
     let first: Vec<_> = (0..28)
-        .map(|_| player.tick(&ram, 0x1000, None).unwrap().sample)
+        .map(|_| player.tick(&ram, None, SIGNAL).unwrap().sample)
         .collect();
     let second: Vec<_> = (0..28)
-        .map(|_| player.tick(&ram, 0x1000, None).unwrap().sample)
+        .map(|_| player.tick(&ram, None, SIGNAL).unwrap().sample)
         .collect();
     assert_ne!(first, second); // ADPCM loops re-decode with carried prediction
     player.key_on(0);
     let again: Vec<_> = (0..28)
-        .map(|_| player.tick(&ram, 0x1000, None).unwrap().sample)
+        .map(|_| player.tick(&ram, None, SIGNAL).unwrap().sample)
         .collect();
     assert_eq!(first, again);
     let state = (player.counter(), player.current_address(), player.history());
     ram[0] = 0x50;
     assert!(player
-        .tick(&ram, 0x1000, None)
+        .tick(&ram, None, SIGNAL)
         .unwrap_err()
         .to_string()
         .contains("byte 0x00000"));
@@ -160,7 +198,7 @@ fn predictors_survive_loops_but_reset_on_key_on_and_failures_preserve_state() {
         state,
         (player.counter(), player.current_address(), player.history())
     );
-    assert!(player.tick(&ram[..RAM_BYTES - 1], 0x1000, None).is_err());
+    assert!(player.tick(&ram[..RAM_BYTES - 1], None, SIGNAL).is_err());
 }
 
 #[test]
@@ -231,16 +269,17 @@ fn original_bgm_banks_match_linear_decode_through_two_loop_traversals() {
             let mut ram = vec![0; RAM_BYTES];
             ram[0x1000..0x1000 + encoded.len()].copy_from_slice(encoded);
             let mut player = Player::new(Model::Published);
+            player.write_pitch(0x1000);
             player.key_on(0x200);
             for frame in 0..expected.len() - 3 {
-                let actual = player.tick(&ram, 0x1000, None).unwrap();
+                let actual = player.tick(&ram, None, SIGNAL).unwrap();
                 assert_eq!(
                     actual.sample,
-                    interpolate(
+                    i32::from(interpolate(
                         expected[frame..frame + 4].try_into().unwrap(),
                         0,
                         Model::Published
-                    ),
+                    )),
                     "{} sample {} frame {frame}",
                     asset.id,
                     sample.sample_id
@@ -258,33 +297,47 @@ fn original_bgm_banks_match_linear_decode_through_two_loop_traversals() {
 }
 
 #[test]
-fn zero_pitch_holds_interpolation_state_and_does_not_mean_mute() {
+fn zero_pitch_uses_explicit_model_progression_and_does_not_mean_mute() {
     let mut ram = vec![0; RAM_BYTES];
     block(&mut ram, 0x200, 0, 1, 0x11);
     for model in [Model::Published, Model::EmulatorReference] {
         let mut player = Player::new(model);
+        player.write_pitch(0);
         player.key_on(0x40);
+        let native = model == Model::EmulatorReference;
         for frame in 0..100 {
-            let output = player.tick(&ram, 0, None).unwrap();
-            // First decoded sample is +4096. With three cleared history
-            // samples at phase zero, the -1 Gaussian coefficient gives -1.
-            assert_eq!(output.sample, -1);
+            let output = player.tick(&ram, None, SIGNAL).unwrap();
+            // Published starts with three cleared history samples. Native
+            // primes three decoded samples and advances one 16.16 unit.
+            assert_eq!(output.sample, if native { 3478 } else { -1 });
             assert_eq!(output.fetched_address, (frame == 0).then_some(0x200));
-            assert!(!output.loop_end && !output.mute);
-            assert_eq!(player.counter(), 0);
+            assert_eq!(output.loop_end, native && frame == 0);
+            assert!(!output.mute && !output.stopped);
+            assert_eq!(
+                player.counter(),
+                if native { 0x20000 + frame + 1 } else { 0 }
+            );
         }
+        player.write_pitch(0x1000);
         for _ in 0..8 {
-            player.tick(&ram, 0x1000, None).unwrap();
+            player.tick(&ram, None, SIGNAL).unwrap();
         }
         let position = player.counter();
-        let held = player.tick(&ram, 0, None).unwrap().sample;
+        player.write_pitch(0);
+        let held = player.tick(&ram, None, SIGNAL).unwrap().sample;
         assert!(held > 4000);
-        for _ in 0..100 {
-            assert_eq!(player.tick(&ram, 0, None).unwrap().sample, held);
-            assert_eq!(player.counter(), position);
+        for frame in 0..100 {
+            assert_eq!(player.tick(&ram, None, SIGNAL).unwrap().sample, held);
+            assert_eq!(
+                player.counter(),
+                position + if native { frame + 2 } else { 0 }
+            );
         }
         // A new key-on clears history; changing pitch alone did not.
         player.key_on(0x40);
-        assert_eq!(player.tick(&ram, 0, None).unwrap().sample, -1);
+        assert_eq!(
+            player.tick(&ram, None, SIGNAL).unwrap().sample,
+            if native { 3478 } else { -1 }
+        );
     }
 }

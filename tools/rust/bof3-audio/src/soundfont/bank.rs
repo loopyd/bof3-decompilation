@@ -417,7 +417,7 @@ pub fn bind(
                 zones.push(zone);
             }
             if !stopped_keys.is_empty() {
-                report.diagnostics.push(format!("{prefix}: stopped-pitch keys {stopped_keys:?} use silence at key-on. Later pitch changes can activate the PSX source while this SF2 approximation stays silent; original PCM is retained."));
+                report.diagnostics.push(format!("{prefix}: stopped-pitch keys {stopped_keys:?} use the published model's key-on silence approximation. Native-reference priming and its minimum nonzero step can produce sound at zero pitch. Later pitch changes can activate the PSX source while this SF2 approximation stays silent; original PCM is retained."));
             }
             let instrument = font.instruments.len();
             report.tones.push(ToneBinding {

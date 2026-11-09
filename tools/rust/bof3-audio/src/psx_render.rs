@@ -81,6 +81,9 @@ pub struct Report<P = driver::Evidence> {
     pub execution_instructions: u64,
     pub output_clock: serde_json::Value,
     pub peak_magnitude: u16,
+    pub pcm16_delivery: Delivery,
+    pub native_output_settings: Option<crate::machine::spu_mixer::NativeSettings>,
+    pub native_key_on_delay: Option<i32>,
     pub independent_pcm_validated: bool,
     pub limitations: Vec<&'static str>,
 }
@@ -136,7 +139,7 @@ pub(crate) fn render_prepared<P>(
         100_000,
         &mut |e| progress.observe(e),
     )?;
-    let mut pcm: Vec<i16> = execution
+    let mut pcm: Vec<f32> = execution
         .take_audio_frames()?
         .into_iter()
         .flatten()
@@ -190,10 +193,11 @@ pub(crate) fn render_prepared<P>(
             .checked_mul(2)
             .ok_or("PSX render: PCM size overflow")?,
     )?);
+    let (pcm, pcm16_delivery) = deliver_pcm16(pcm);
     let peak_magnitude = pcm.iter().map(|s| s.unsigned_abs()).max().unwrap_or(0);
     let clock = execution.output().unwrap();
     let report = Report {
-        schema: "bof3.psx-render/v2",
+        schema: "bof3.psx-render/v4",
         engine,
         sample_rate: SAMPLE_RATE,
         identity: runtime.identity,
@@ -214,6 +218,9 @@ pub(crate) fn render_prepared<P>(
         execution_instructions: execution.cpu.instructions() - instruction_start,
         output_clock: serde_json::to_value(clock)?,
         peak_magnitude,
+        pcm16_delivery,
+        native_output_settings: execution.bus.spu_native_output_settings(),
+        native_key_on_delay: execution.bus.spu_key_on_delay(),
         independent_pcm_validated: false,
         limitations,
     };
@@ -299,6 +306,9 @@ pub struct EffectsReport {
     pub execution_instructions: u64,
     pub output_clock: serde_json::Value,
     pub peak_magnitude: u16,
+    pub pcm16_delivery: Delivery,
+    pub native_output_settings: Option<crate::machine::spu_mixer::NativeSettings>,
+    pub native_key_on_delay: Option<i32>,
     pub independent_pcm_validated: bool,
     pub limitations: Vec<&'static str>,
 }
@@ -355,7 +365,7 @@ pub fn render_effects(
         EffectsSelection::SdkNote { .. } => None,
     };
     let state_after_play = cues::state(&runtime)?;
-    let mut pcm: Vec<i16> = runtime
+    let mut pcm: Vec<f32> = runtime
         .execution
         .take_audio_frames()?
         .into_iter()
@@ -393,6 +403,7 @@ pub fn render_effects(
             .checked_mul(2)
             .ok_or("PSX effects render: PCM size overflow")?,
     )?);
+    let (pcm, pcm16_delivery) = deliver_pcm16(pcm);
     let peak_magnitude = pcm
         .iter()
         .map(|sample| sample.unsigned_abs())
@@ -400,7 +411,7 @@ pub fn render_effects(
         .unwrap_or(0);
     let clock = runtime.execution.output().unwrap();
     let report = EffectsReport {
-        schema: "bof3.psx-effects-render/v1",
+        schema: "bof3.psx-effects-render/v3",
         stop_condition: "duration",
         cue_record,
         engine: "owned_us_driver",
@@ -426,6 +437,9 @@ pub fn render_effects(
         execution_instructions: runtime.execution.cpu.instructions() - instruction_start,
         output_clock: serde_json::to_value(clock)?,
         peak_magnitude,
+        pcm16_delivery,
+        native_output_settings: runtime.execution.bus.spu_native_output_settings(),
+        native_key_on_delay: runtime.execution.bus.spu_key_on_delay(),
         independent_pcm_validated: false,
         limitations: vec![
             "One event runs in a cold, host-staged bank. Repeated-event histories, cross-bank cues and original CD loading are unsupported.",
@@ -440,4 +454,33 @@ pub fn render_effects(
         wave: Wave::new(2, SAMPLE_RATE, pcm)?,
         report,
     })
+}
+
+/// Conversion at the file boundary; the output clock retains native floats.
+#[derive(Debug, Serialize)]
+pub struct Delivery {
+    pub encoding: &'static str,
+    pub normalized_units: u32,
+    pub clipped_samples: u64,
+    pub peak: f32,
+}
+
+fn deliver_pcm16(samples: Vec<f32>) -> (Vec<i16>, Delivery) {
+    let mut clipped_samples = 0;
+    let mut peak = 0.0f32;
+    let mut pcm = Vec::with_capacity(samples.len());
+    for &frame in samples.as_chunks::<2>().0 {
+        clipped_samples += crate::interchange::wave::pcm16_clipped(frame);
+        peak = peak.max(frame[0].abs()).max(frame[1].abs());
+        pcm.extend(crate::interchange::wave::pcm16(frame));
+    }
+    (
+        pcm,
+        Delivery {
+            encoding: "signed_pcm16",
+            normalized_units: 32767,
+            clipped_samples,
+            peak,
+        },
+    )
 }

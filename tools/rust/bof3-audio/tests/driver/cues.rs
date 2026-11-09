@@ -42,6 +42,12 @@ fn game_cues_preserve_ordered_layers_program_selection_and_silent_samples() -> R
         assert_eq!(table.address, 0x8014871c);
         assert_eq!(table.capacity, 124);
         p.execution.call(0x8015ce70, [0; 4], 100_000)?;
+        // Initialization leaves background voices armed. Isolate these cue layers.
+        for voice in 0..24 {
+            p.execution
+                .bus
+                .write(0x1f801c00 + voice * 16, Width::Word, 0)?;
+        }
         p.execution
             .enable_output(output_clock::Model::PcsxReduxNtsc)?;
         let mut notes = Vec::new();
@@ -74,7 +80,13 @@ fn game_cues_preserve_ordered_layers_program_selection_and_silent_samples() -> R
         let mut pcm = Vec::new();
         while p.execution.output().unwrap().frames() < 1024 {
             p.execution.call(0x801753dc, [0; 4], 100_000)?;
-            pcm.extend(p.execution.take_audio_frames()?);
+            pcm.extend(
+                p.execution
+                    .take_audio_frames()?
+                    .into_iter()
+                    .map(bof3_audio::interchange::wave::pcm16)
+                    .collect::<Vec<_>>(),
+            );
         }
         assert_eq!(
             pcm.iter().flatten().any(|&v| v != 0),

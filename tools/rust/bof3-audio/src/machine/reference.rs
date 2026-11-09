@@ -73,6 +73,14 @@ pub fn prepare_bank(
         spu_sample::Model::EmulatorReference,
         adsr::Model::EmulatorReference,
     )?;
+    execution.bus.configure_spu_key_on_delay(6)?;
+    execution
+        .bus
+        .configure_spu_native_output(super::spu_mixer::NativeSettings {
+            volume: 3,
+            mono: false,
+            muted: false,
+        })?;
     execution
         .bus
         .configure_spu_disable(DisableModel::EmulatorReference)?;

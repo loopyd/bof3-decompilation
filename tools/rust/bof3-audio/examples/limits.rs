@@ -106,18 +106,36 @@ fn main() -> Result<()> {
                 let error = result.err().map(|e| e.to_string());
                 let mut pcm = Vec::new();
                 let rendering = (|| -> Result<()> {
-                    pcm.extend(p.execution.take_audio_frames()?);
+                    pcm.extend(
+                        p.execution
+                            .take_audio_frames()?
+                            .into_iter()
+                            .map(bof3_audio::interchange::wave::pcm16)
+                            .collect::<Vec<_>>(),
+                    );
                     if error.is_none() {
                         while p.execution.output().unwrap().frames() < 1024 {
                             p.execution.call(0x801753dc, [0; 4], 100_000)?;
-                            pcm.extend(p.execution.take_audio_frames()?);
+                            pcm.extend(
+                                p.execution
+                                    .take_audio_frames()?
+                                    .into_iter()
+                                    .map(bof3_audio::interchange::wave::pcm16)
+                                    .collect::<Vec<_>>(),
+                            );
                         }
                         for voice in voices {
                             effects::key_off(&mut p, voice.try_into()?, &mut |_| Ok(()))?;
                         }
                         while p.execution.output().unwrap().frames() < 45124 {
                             p.execution.call(0x801753dc, [0; 4], 100_000)?;
-                            pcm.extend(p.execution.take_audio_frames()?);
+                            pcm.extend(
+                                p.execution
+                                    .take_audio_frames()?
+                                    .into_iter()
+                                    .map(bof3_audio::interchange::wave::pcm16)
+                                    .collect::<Vec<_>>(),
+                            );
                         }
                     }
                     Ok(())

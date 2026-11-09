@@ -46,6 +46,15 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
             adsr::Model::EmulatorReference,
         )
         .unwrap();
+    execution.bus.configure_spu_key_on_delay(6).unwrap();
+    execution
+        .bus
+        .configure_spu_native_output(bof3_audio::machine::spu_mixer::NativeSettings {
+            volume: 3,
+            mono: false,
+            muted: false,
+        })
+        .unwrap();
     execution
         .bus
         .configure_spu_disable(DisableModel::EmulatorReference)
@@ -214,7 +223,12 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
             .call(0x801753dc, [0; 4], 100_000)
             .unwrap()
             .interrupts;
-        let block = execution.take_audio_frames().unwrap();
+        let block = execution
+            .take_audio_frames()
+            .unwrap()
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>();
         frames += block.len();
         peak = peak.max(
             block
@@ -232,7 +246,12 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
             .call(0x801753dc, [0; 4], 100_000)
             .unwrap()
             .interrupts;
-        let block = execution.take_audio_frames().unwrap();
+        let block = execution
+            .take_audio_frames()
+            .unwrap()
+            .into_iter()
+            .map(bof3_audio::interchange::wave::pcm16)
+            .collect::<Vec<_>>();
         frames += block.len();
     }
     assert_eq!(irqs, 120);

@@ -7,8 +7,9 @@ use bof3_audio::machine::{
 
 fn voices(stereo: [i16; 2], mask: u32) -> Frame {
     Frame {
+        sample_model: bof3_audio::machine::spu_sample::Model::Published,
         voices: [Output {
-            stereo,
+            stereo: stereo.map(i32::from),
             ..Output::default()
         }; 24],
         reverb_mask: mask,
@@ -25,15 +26,22 @@ fn half_gain() -> Mixer {
 #[test]
 fn voice_sums_stay_wide_until_clipping_before_main_gain() {
     let mut mixer = half_gain();
-    let sends = mixer.prepare(
-        &voices([30000, -30000], 0x00ff_ffff),
-        0xc000,
-        Inputs::default(),
-    );
+    let sends = mixer
+        .prepare(
+            &voices([30000, -30000], 0x00ff_ffff),
+            0x4000,
+            Inputs::default(),
+        )
+        .unwrap();
     assert_eq!(sends.dry, [720000, -720000]);
     assert_eq!(sends.reverb, [720000, -720000]);
-    assert_eq!(mixer.finish(sends, [0; 2]).unwrap(), [16383, -16384]);
-    let sends = mixer.prepare(&voices([30000; 2], 1 << 23), 0xc000, Inputs::default());
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(mixer.finish(sends, [0; 2]).unwrap()),
+        [16383, -16384]
+    );
+    let sends = mixer
+        .prepare(&voices([30000; 2], 1 << 23), 0xc000, Inputs::default())
+        .unwrap();
     assert_eq!(sends.reverb, [30000; 2]);
 }
 
@@ -50,44 +58,51 @@ fn input_enable_and_reverb_routes_are_independent_of_voice_mute() {
         cd: [-10000, 10000],
         external: [20000; 2],
     };
-    let cd = mixer.prepare(&frame, 0x8005, inputs);
+    let cd = mixer.prepare(&frame, 0x8005, inputs).unwrap();
     assert_eq!(
         cd,
         Sends {
             dry: [-10000, 9999],
-            reverb: [-10000, 9999]
+            reverb: [-10000, 9999],
+            cd: [0; 2]
         }
     );
-    assert_eq!(mixer.finish(cd, [0; 2]).unwrap(), [-5000, 4999]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(mixer.finish(cd, [0; 2]).unwrap()),
+        [-5000, 4999]
+    );
     for control in [0x800c, 0x000c] {
         // Sends alone cannot enable either input.
         assert_eq!(
-            mixer.prepare(&frame, control, inputs),
+            mixer.prepare(&frame, control, inputs).unwrap(),
             Sends {
                 dry: [0; 2],
-                reverb: [0; 2]
+                reverb: [0; 2],
+                cd: [0; 2]
             }
         );
     }
-    let external = mixer.prepare(&frame, 0x800a, inputs);
+    let external = mixer.prepare(&frame, 0x800a, inputs).unwrap();
     assert_eq!(
         external,
         Sends {
             dry: [10000, -10000],
-            reverb: [10000, -10000]
+            reverb: [10000, -10000],
+            cd: [0; 2]
         }
     );
-    let both = mixer.prepare(&frame, 0x8003, inputs);
+    let both = mixer.prepare(&frame, 0x8003, inputs).unwrap();
     assert_eq!(
         both,
         Sends {
             dry: [0, -1],
-            reverb: [0; 2]
+            reverb: [0; 2],
+            cd: [0; 2]
         }
     );
-    // The mixer component also models CD routing with the voice engine disabled;
-    // the interconnect still rejects that unimplemented execution transition.
-    assert_eq!(mixer.prepare(&frame, 5, inputs), cd);
+    // Bit 15 does not alter CD routing. The interconnect requires an explicit
+    // native-reference policy before scheduling disabled voice frames.
+    assert_eq!(mixer.prepare(&frame, 5, inputs).unwrap(), cd);
 }
 
 #[test]
@@ -98,10 +113,14 @@ fn signed_reverb_return_and_main_registers_preserve_distinct_scales() {
     let sends = Sends {
         dry: [1000, -1000],
         reverb: [0; 2],
+        cd: [0; 2],
     };
     let gained_return =
         [20000, -20000].map(|sample| (sample * i32::from(mixer.reverb_gain()[0])) >> 15);
-    assert_eq!(mixer.finish(sends, gained_return).unwrap(), [5500, -5500]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(mixer.finish(sends, gained_return).unwrap()),
+        [5500, -5500]
+    );
     assert!(mixer.require_dry(0xc000).is_err()); // Disabled reverb can have a tail.
     mixer.write(0x184, 0).unwrap();
     mixer.write(0x186, 0).unwrap();
@@ -110,7 +129,10 @@ fn signed_reverb_return_and_main_registers_preserve_distinct_scales() {
     mixer.write(0x1b8, 0xe000).unwrap();
     assert_eq!(mixer.read(0x180).unwrap(), 0x2000);
     assert_eq!(mixer.read(0x1b8).unwrap(), 0xe000);
-    assert_eq!(mixer.finish(sends, [0; 2]).unwrap(), [-250, -500]);
+    assert_eq!(
+        bof3_audio::interchange::wave::pcm16(mixer.finish(sends, [0; 2]).unwrap()),
+        [-250, -500]
+    );
     assert!(mixer.write(0x180, 0x8000).is_err());
     assert_eq!(mixer.read(0x1b8).unwrap(), 0xe000);
     for offset in [0x181, 0x188, 0x1bc] {
@@ -124,6 +146,7 @@ fn signed_reverb_return_and_main_registers_preserve_distinct_scales() {
             Sends {
                 dry: [-32768, 0],
                 reverb: [0; 2],
+                cd: [0; 2],
             },
             [0; 2],
         )

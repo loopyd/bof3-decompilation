@@ -86,7 +86,11 @@ fn main() -> Result<()> {
         e.call_observed(0x801753dc, [0; 4], 100_000, &mut |e| {
             trace.observe(&exe, "Playback", e)
         })?;
-        pcm.extend(e.take_audio_frames()?.into_iter().flatten());
+        pcm.extend(
+            e.take_audio_frames()?
+                .into_iter()
+                .flat_map(bof3_audio::interchange::wave::pcm16),
+        );
     }
     let body_frames = e.output().unwrap().frames();
     let playing_registers = registers(e, note.voice)?;
@@ -98,9 +102,17 @@ fn main() -> Result<()> {
         e.call_observed(0x801753dc, [0; 4], 100_000, &mut |e| {
             trace.observe(&exe, "Tail", e)
         })?;
-        pcm.extend(e.take_audio_frames()?.into_iter().flatten());
+        pcm.extend(
+            e.take_audio_frames()?
+                .into_iter()
+                .flat_map(bof3_audio::interchange::wave::pcm16),
+        );
     }
-    pcm.extend(e.take_audio_frames()?.into_iter().flatten());
+    pcm.extend(
+        e.take_audio_frames()?
+            .into_iter()
+            .flat_map(bof3_audio::interchange::wave::pcm16),
+    );
     let released_registers = registers(e, note.voice)?;
     let peak = pcm.iter().map(|&v| i32::from(v).abs()).max().unwrap_or(0);
     let nonzero = pcm.iter().filter(|&&v| v != 0).count();
