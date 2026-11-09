@@ -48,7 +48,10 @@ relocation words it measured first-gate exact, owed no sweep variant and left no
 prototype or cell to declare, so `m2c`/`m2ctx` is not the next rung. Among siblings
 that carry the identical span, transcribe the one whose own gate measured exact: a
 span-equal sibling whose lift recorded a partial carries a spelling that reproduces
-its residual, so keep it a shape donor rather than the seed. A twin that is not
+its residual, so keep it a shape donor rather than the seed. That residual need not
+show as a score gap: a partial donor's spelling can reach the original's own byte
+count while dropping instructions, first difference a callee-saved register shift,
+so size parity never makes a partial seed the right one. A twin that is not
 byte-identical still seeds once every remaining differing word shifts by the span's
 own address delta, which is what an internal jump target does; a twin carrying one
 differing word more than that delta explains differs in a carried constant, so read
