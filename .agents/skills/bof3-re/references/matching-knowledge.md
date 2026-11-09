@@ -253,7 +253,10 @@ at the compare so a value below `lo` wraps into the reject range. Two signed com
 cannot emit the `addiu`/`sltiu` pair, and the failure arm stays the early return. A
 pair of adjacent discrete code values is that same single compare with `N = 2`, so
 write `((v + 0x100 - lo) & 0xFF) < 2`: the mask is what keeps the compare `sltiu`,
-while a lone code value in the same body stays its own `==` on the byte cast.
+while a lone code value in the same body stays its own `==` on the byte cast. The
+wrapped compare and a disjunction of `==` tests are one spelling: the equality run
+folded into one `addiu`/`andi`/`sltiu` pair per adjacent run plus the lone code's own
+compare, so take whichever the seed shows and owe no probe on the other.
 
 Unrelated reject tests around a block that itself calls are the opposite case: write
 them as one conjunction with a single `return 0` after that block. A ladder of early
