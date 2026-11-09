@@ -469,8 +469,15 @@ folded `lbu`, where the original builds the base once with `addiu` and reloads a
 `0(base)`, so write `volatile u8 *p = &cell;` and read `p[0]` at each use. One selector
 byte feeding three scaled index computations measured all three spellings: the plain
 cell folded the reads into one address, the bare volatile cell rebuilt the address per
-read, and the local pointer matched. The shared scratchpad work cell is the one place
-this is already decided: five byte-exact sources declare it `u8* volatile`, so when the original
+read, and the local pointer matched. Place that local at the original's own base
+materialisation: where the reads straddle a call and the base is built once after it,
+declare `u8 *p = &cell;` after that call and leave the earlier read on the symbol. A
+direct-read seed measured eight bytes short with `first=` on the prologue's `sw ra`
+slot, one local spanning every use seven instructions and four bytes short, and a
+`volatile` cell on the same reads 32 of 65 instructions at 24 bytes over; the split
+matched and the local's own slot restored the frame. The shared scratchpad work cell is
+the one place this is already decided: five byte-exact sources declare it `u8* volatile`,
+so when the original
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
 Reading or writing that cell from another target still owes this target its own
@@ -768,7 +775,9 @@ cell load or a record address computed from a cursor.
    global pseudos, each conflict set and the register each pseudo receives.
 3. Give the variables distinct names. GCC then keeps separate quantities, so each
    can take the register the original used. Renaming one variable in place does not
-   split it.
+   split it. Scope is not part of the split: the same second block written as an inner
+   scope with shadowed names measured identical to distinct sibling names, so scoping
+   owes no variant.
 4. Place each reload where the original has it. A second read after the first
    store also reproduces a load-delay `nop` that a merged read removes. Ordering
    against an unrelated store is part of that placement: with the cell read written
