@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801F36A0
   - - 2848
-    - asm
-    - func_801F3720
+    - c
+    - advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroAndOneWorld03Area14813_801F3720
+    - '@source: src/bof3/world/advanceHalfword30By8AndAdvanceWorkByte2WhenReached80ThenDrawSelectionsZeroAndOneWorld03Area14813_801F3720.c'
+    - '@behavior: Handler at word 2 of the state-byte-2 dispatch run based at 0x801F5024. Reads the work record pointer from the scratchpad cell 0x1F800044, raises the record halfword at 0x30 by 8 and stores it back, then advances the record dispatch byte at 2 by one when the signed halfword has reached 0x80. It then calls the quad drawing routine at 0x801F37B8 with selection 0 and signed byte mode -1, and again with selection 1 and mode 1. Takes no arguments, returns nothing and keeps a 0x18-byte frame whose only saved register is ra at 0x10.'
   - - 2952
     - c
     - setSharedByte1ThenDrawWorld03Area14813_801F3788

@@ -123,8 +123,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950.c'
     - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 5 in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7588
-    - asm
-    - func_801F49A4
+    - c
+    - setStatusFFFFAndStateEntry25ProgressFWhenGateClearWorld04Area17013_801F49A4
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntry25ProgressFWhenGateClearWorld04Area17013_801F49A4.c'
+    - '@behavior: Overlay state setter: stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is zero, runs the shared front-end startup helper at 0x8015C088 and then requests state entry 0x25 through the shared state byte at 0x801448EB with progress 0xF in the shared byte at 0x801448EC. The gate read with lb is hoisted above the status store, the 0x18-byte frame only keeps ra across the helper call, and the gate-clear path falls through its two byte stores into the epilogue.'
   - - 7672
     - asm
     - func_801F49F8

@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801D1F68
   - - 5256
-    - asm
-    - func_801D2088
+    - c
+    - drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088
+    - '@source: src/bof3/scenario/drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088.c'
+    - '@behavior: Overlay draw pass the four step handlers func_801D0F10, func_801D0FEC, func_801D106C and func_801D12A0 call after the record pass 0x801D1A60: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor g_PrimCursor, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table slot 2, fills the 0x20-byte projection scratch of its frame through 0x801AFE18, then walks all 0x20 records of the 0x2C-byte-stride table at 0x801D3B28 drawing each through 0x801D1CD4 and adding 0x10 to that record spin angle halfword at +0x24.'
   - - 5432
     - c
     - swapWords

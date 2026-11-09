@@ -274,8 +274,10 @@ segments:
     - c
     - invokeHelperScenarioScena0800_801F9668
   - - 10888
-    - asm
-    - func_801F9688
+    - c
+    - drawTranslucentGouraudRingOfSixteenQuadsAroundScreenCenterFadingFromBlackToWhiteScenarioScena0800_801F9688
+    - '@source: src/bof3/scenario/drawTranslucentGouraudRingOfSixteenQuadsAroundScreenCenterFadingFromBlackToWhiteScenarioScena0800_801F9688.c'
+    - '@behavior: Translucent Gouraud ring emitter that takes no arguments, reads no state and writes none: it publishes GetTPage(0, 2, 0x3C0, 0x100) at the primitive cursor through SetDrawMode with dfe 0, dtd 1 and a null texture window, appends that 0x0C-byte draw-mode packet through func_8014E5A0 under allocation class 1, and then runs sixteen iterations of one semi-transparent POLY_G4 emission. Each iteration re-reads g_PrimCursor, stamps the packet through SetPolyG4, marks it translucent, writes the inner and outer corners the previous iteration left in the two local pairs into the first two vertex pairs, advances the phase by 0x100 of the 0x1000-unit turn, and writes the corners sampled at that new phase into the third and fourth vertex pairs, so neighbouring quads share their edges and the sixteen close one turn. The inner corner is the screen centre 0xA0/0x78 offset by the sampler result scaled by 0x50 in x and 0x3C in y, the outer corner by 0xF0 and 0xB4, each product shifted right twelve; the first and third vertices carry black and the second and fourth carry white, so the band fades from black at the inner rim to white at the outer rim. Each quad is appended through func_8014E5A0 under allocation class 1 with the 0x24-byte POLY_G4 size. The 0x40-byte frame keeps ra and s0-s4 across the sampler calls plus the two 8-byte corner pairs.'
   - - 11372
     - asm
     - func_801F986C

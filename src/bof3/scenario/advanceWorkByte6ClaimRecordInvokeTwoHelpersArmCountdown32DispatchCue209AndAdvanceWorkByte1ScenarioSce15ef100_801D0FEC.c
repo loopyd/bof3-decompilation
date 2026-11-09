@@ -17,7 +17,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void func_801D2088(void);
+void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
 
 /* @source 0x801D0FEC
  * @behavior Entry 5 of the overlay's step-handler code-pointer run at
@@ -77,7 +77,7 @@ void advanceWorkByte6ClaimRecordInvokeTwoHelpersArmCountdown32DispatchCue209AndA
   if ((frame & 3) == 0) {
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
-  func_801D2088();
+  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
   countdown = D_1F800044;
   countdown[9] = 0x20;

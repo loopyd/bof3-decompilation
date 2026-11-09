@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801CE9D4
   - - 2080
-    - asm
-    - func_801CEC20
+    - c
+    - passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp46700_801CEC20
+    - '@source: src/bof3/plchar/passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp46700_801CEC20.c'
+    - '@behavior: Work byte 3 == 2 step of this overlay, the word 0x801CEC20 at 0x801D03D4, entry 10 of the twenty-eight-word code-pointer run based at 0x801D03AC and index 2 of the eight-word run based at 0x801D03CC that this target byte-3 dispatcher 0x801CE890 indexes with work byte 3 scaled by four, so no jal in this payload names it. When work byte 0x0B reads 1 it passes the 0x40-byte palette row at 0x80035600 selected by work byte 5 to the shared palette helper func_80166C48 with mode 0 and writes 2 into work byte 0x0B. It then re-reads the pointer cell and dispatches on byte 0x0B again: a zero byte polls the shared readiness helper func_8014DAEC and reports done as soon as that helper answers nonzero, while a nonzero byte takes one of two arms and both report done whenever the front-end phase byte 0x80143BB0 reads zero. Byte 2 polls the same helper and, once it answers nonzero, passes work byte 8 to the shared resource request helper func_8014D6B8 and writes 3 into work byte 0x0B, and every other value runs the shared no-argument update helper func_8014D978. When the done flag is set the body clears work byte 0x2B and then byte 0x12B of the record published at 0x80146250, re-reading the pointer cell before the first store. It takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra at 0x14 and the done flag at 0x10, the pointer cell is read ahead of frame creation, the two nonzero arms share the phase-byte test at 0x801CECDC, and every arm joins on one epilogue through the masked-flag test at 0x801CED10. The roles of work bytes 0x0B, 0x05, 0x08 and 0x2B and of record byte 0x12B are not established.'
   - - 2384
     - c
     - requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp46700_801CED50

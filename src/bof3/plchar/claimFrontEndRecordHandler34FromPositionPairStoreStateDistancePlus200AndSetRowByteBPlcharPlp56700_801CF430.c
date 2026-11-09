@@ -52,8 +52,8 @@ extern s32 func_8015477C(s32 x, s32 y);
 
 /* @source 0x801CF430
  * @behavior Claims one free front-end record and seeds it from a
- *           caller-supplied position pair. Five jal call sites inside
- *           func_801CF224 of this payload reach it, at 0x801CF28C and
+ *           caller-supplied position pair. Five jal call sites inside the
+ *           0x801CF224 map cell claim of this payload reach it, at 0x801CF28C and
  *           0x801CF2E4 with a zero state byte, at 0x801CF2B4 with state 4, at
  *           0x801CF314 with state 3 and at 0x801CF3B0 with state 2; each passes
  *           the sign-extended halves of that body's own first two arguments as

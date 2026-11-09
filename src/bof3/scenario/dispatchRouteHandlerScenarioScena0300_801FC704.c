@@ -6,7 +6,7 @@ s32 requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC(s32 arg
 s32 func_801FC8AC(s32 arg0, s32 arg1);
 s32 requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944(s32 arg0, s32 arg1);
 s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1);
-s32 func_801FCB4C(s32 arg0, s32 arg1);
+s32 requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C(s32 arg0, s32 arg1);
 s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8(s32 arg0, s32 arg1);
 
 /* @source 0x801FC704
@@ -19,7 +19,7 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
  * 0x33 runs
  * requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC, 0x45 runs
  * requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC
- * and 0x63 runs func_801FCB4C — and
+ * and 0x63 runs requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C — and
  * returns that handler's result sign-extended from its low byte (sll/sra 24).
  * Every other route value returns 0. Both incoming packed record words are
  * forwarded unchanged: the body never writes $a0 or $a1, and all six callees
@@ -56,7 +56,7 @@ s32 dispatchRouteHandlerScenarioScena0300_801FC704(s32 arg0, s32 arg1) {
     return (s8)requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(arg0, arg1);
 
   case 0x63:
-    return (s8)func_801FCB4C(arg0, arg1);
+    return (s8)requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C(arg0, arg1);
   }
 
   return 0;

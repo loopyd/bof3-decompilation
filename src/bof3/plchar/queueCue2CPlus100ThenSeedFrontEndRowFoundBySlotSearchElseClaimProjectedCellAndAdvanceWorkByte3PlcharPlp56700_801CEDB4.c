@@ -69,16 +69,18 @@ s8 func_801B5AE4(void);
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map cell claim of this payload, still an `asm` row at 0x801CF224: it
- * sign-extends its two signed halves, probes the map cell code through the shared
- * func_80166CB0 and claims a front-end record for the accepted codes. It answers
- * one when the claim succeeded and zero when it did not, and this body tests only
- * the low byte of that answer. Both cell offsets are signed sixteen-bit values,
- * so the original converts each retry index to that width before the call. Its
- * own Splat row sits before this one in the payload, so the symbol is defined
- * inside this payload and needs no foreign binding.
+/* Map cell claim of this payload at 0x801CF224, carried by the exact lift of its
+ * own row, measured after this body: it sign-extends its two signed halves,
+ * probes the map cell code through the shared func_80166CB0 and claims a
+ * front-end record for the accepted codes. It answers one when the claim
+ * succeeded and zero when it did not, and this body tests only the low byte of
+ * that answer. Both cell offsets are signed sixteen-bit values, so the original
+ * converts each retry index to that width before the call. Its own Splat row sits
+ * before this one in the payload, so the symbol is defined inside this payload
+ * and needs no foreign binding.
  */
-u8 func_801CF224(s16 col, s16 row);
+u8 claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+    s16 col, s16 row);
 
 /* @source 0x801CEDB4
  * @behavior Work byte 3 == 1 step of the second byte-3 dispatch group of this
@@ -163,13 +165,18 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = func_801CF224(cx, cy);
+        claimed =
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+                cx, cy);
         if ((claimed & 0xFF) == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = func_801CF224(cx + 1, cy);
+            claimed =
+                claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+                    cx + 1, cy);
           }
           if ((claimed & 0xFF) == 0 && (y & 0xFFFF) != 0) {
-            func_801CF224(cx, cy + 1);
+            claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp56700_801CF224(
+                cx, cy + 1);
           }
         }
       }

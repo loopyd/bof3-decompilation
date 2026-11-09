@@ -80,8 +80,9 @@ segments:
     - dispatchStateByte1Table545cWorld03Area14514_801F389C
     - '@source: src/bof3/world/area14514DispatchTables.c'
   - - 3296
-    - asm
-    - func_801F38E0
+    - c
+    - seedWorkCursorTripleAndAdvanceStateByte1World03Area14514_801F38E0
+    - '@source: src/bof3/world/seedWorkCursorTripleAndAdvanceStateByte1World03Area14514_801F38E0.c'
   - - 3384
     - c
     - drawWorkCursorQuadWorld03Area14514_801F3938

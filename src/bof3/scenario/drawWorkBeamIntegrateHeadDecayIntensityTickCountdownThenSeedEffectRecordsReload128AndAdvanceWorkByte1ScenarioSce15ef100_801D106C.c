@@ -19,7 +19,7 @@ void claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8(void);
  * is not consumed here. */
 u32 stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60(void);
 
-void func_801D2088(void);
+void drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088(void);
 void func_801D1678(u8* from, u8* to, u8 intensity);
 void func_801D1F68(u8* record);
 void swapWords(u32* arg0, u32* arg1);
@@ -110,7 +110,7 @@ void drawWorkBeamIntegrateHeadDecayIntensityTickCountdownThenSeedEffectRecordsRe
     claimFreeWorkRecordSeedPositionAt801D39A8ScenarioSce15ef100_801D19C8();
   }
   stepClaimedWorkRecordsDecrementLifePairClearExpiredAndDrawAt801D39A8ScenarioSce15ef100_801D1A60();
-  func_801D2088();
+  drawEffectRecordsAt801D3B28ThenAdvanceAngle24By10ScenarioSce15ef100_801D2088();
   point = D_1F800044;
   func_801D1678(point + 0x18, point + 0x34, 0x40);
   motion = D_1F800044;

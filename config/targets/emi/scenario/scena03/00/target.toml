@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C.c",
     "src/bof3/scenario/tickCountdownThenDrawIndexedRectAndAdvanceWorkByte1ScenarioScena0300_801F73BC.c",
     "src/bof3/scenario/drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C.c",
     "src/bof3/scenario/tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0.c",
