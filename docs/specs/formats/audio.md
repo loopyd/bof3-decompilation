@@ -5621,16 +5621,20 @@ latches remain separate from pending output-frame keys.
 
 The readback cursor follows guest start, repeat, pitch, loop flags and SPU RAM.
 A pitch-modulated voice retains the fork's untracked-cursor convention until
-retriggered. Active ADSR register changes and release with a nonzero ADSR counter
-remain rejected by this development reader. Configuration does not reconstruct
-preexisting voice history or
-prove sample-fetch, mixer or hardware timing. The production output clock and
-frame-driven voice state remain separate.
+retriggered. ADSR writes update configuration without advancing the readback
+checkpoint. The next reconstruction uses the latest configuration throughout
+the uncached interval since the preceding ENVX read or other checkpoint. ADSR
+writes and key-off preserve the native elapsed-frame counter. Configuration does
+not reconstruct preexisting voice history or establish native sample-fetch timing,
+audio-worker visibility, mixed PCM or hardware fidelity. The scheduled output
+clock and frame-driven voice state remain separate.
 
-The original-ROM reference clock does not schedule programmable root counters,
-GPU commands or PCM output. Enabling the separate output clock on that execution
-mode fails. Full device state, pending loads, complete CPU state and audible
-fidelity require separate comparisons.
+Original-ROM execution retains reference timer and blanking ownership.
+Functional PCM requires explicit activation through
+`enable_reference_output(first_sample_ticks)`, with 1 through 768 ticks until the
+first sample. `enable_output` remains unavailable in this mode. This supplied
+phase does not establish native CPU/sample alignment or audible fidelity.
+Full device state, pending loads and complete CPU state require separate comparisons.
 Host-directed initialization does not establish the game's natural loader
 lifecycle or BIOS-free startup.
 

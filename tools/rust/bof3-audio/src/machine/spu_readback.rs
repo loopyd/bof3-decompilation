@@ -106,11 +106,6 @@ impl Voice {
             if release.is_some_and(|step| key.steps >= step)
                 && !matches!(key.envelope.phase(), Phase::Release | Phase::Off)
             {
-                if key.envelope.counter() != 0 {
-                    return Err(
-                        "reference ENVX release with fractional ADSR state is unmodeled".into(),
-                    );
-                }
                 key.envelope.key_off();
             }
             key.envelope.tick();
@@ -168,14 +163,8 @@ impl Readback {
                 }
                 6 => voice.start = Some(usize::from(value & !1) * 8),
                 8 | 10 => {
-                    voice.advance(cycle, delay, ram)?;
-                    if voice
-                        .key
-                        .as_ref()
-                        .is_some_and(|key| !key.ended && key.envelope.phase() != Phase::Off)
-                    {
-                        return Err("reference ENVX active ADSR writes are unmodeled".into());
-                    }
+                    // Native ADSR writes leave the readback checkpoint intact.
+                    // Its next walk uses the latest rates for the uncached gap.
                     if offset & 15 == 8 {
                         voice.registers.adsr1 = value;
                     } else {
