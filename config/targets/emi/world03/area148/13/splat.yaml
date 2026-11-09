@@ -34,8 +34,10 @@ segments:
     - dispatchStateByte2Table4fc4World03Area14813_801F2C5C
     - '@source: src/bof3/world/area14813DispatchTables.c'
   - - 160
-    - asm
-    - func_801F2CA0
+    - c
+    - seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld03Area14813_801F2CA0
+    - '@source: src/bof3/world/seedRecordFromIndexTablesAdvanceStateAndStampReach80WithState3WhenCameraInsideThenDrawWorld03Area14813_801F2CA0.c'
+    - '@behavior: Byte-2 state handler at entry 0 of the dispatch run based at 0x801F4FC4. Seeds the work record at the scratchpad pointer cell 0x1F800044 from the per-index tables at 0x801F5004, 0x801F5005, 0x801F4FD8, 0x801F4FF0, 0x801F4FE4 and 0x801F5010 indexed by the signed record halfword at +0x36, records whether the halfword at +0x3A was zero in the record byte at +8, clears the halfword at +0x30 and advances the state byte at +2. It then picks its window axis from that route byte and stamps 0x80 into the record halfword at +0x30 and 3 into the state byte at +2 when the camera word lies within 0x8000 of the cell centre and within 0x10000 of either cell start, before drawing through 0x801F31AC with mode 0. Takes no arguments and returns nothing while keeping a 0x18-byte frame whose only saved register is ra at +0x10.'
   - - 612
     - asm
     - func_801F2E64

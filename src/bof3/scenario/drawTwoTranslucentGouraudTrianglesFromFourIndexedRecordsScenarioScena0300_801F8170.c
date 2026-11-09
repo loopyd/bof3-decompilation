@@ -3,7 +3,8 @@
 extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_801AFE18(void* arg0);
-void func_801F8200(u8* points, u8 first, u8 second, u8 third);
+void drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200(
+    u8* points, u8 first, u8 second, u8 third);
 
 /* @source 0x801F8170
  * @behavior Draws one translucent Gouraud quad of this overlay's work object.
@@ -13,7 +14,9 @@ void func_801F8200(u8* points, u8 first, u8 second, u8 third);
  * texture page, SetDrawMode installs it on the packet published at
  * g_PrimCursor with dfe 0 and dtd 1, func_8014E5A0 queues the 0xC-byte DR_MODE
  * under OT slot 1, and func_801AFE18 initialises the 0x20-byte sort scratch at
- * sp+0x18. It then calls the local 0x801F8200 twice with that same pointer,
+ * sp+0x18. It then calls the local
+ * drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200
+ * twice with that same pointer,
  * selecting the records indexed 0, 1 and 2 and then 0, 3 and 2, so the two
  * triangles fan across the four 16-byte vertices the work object carries from
  * offset 0x18 and share the diagonal 0-2. Each emission is a 0x1C-byte
@@ -58,6 +61,8 @@ void drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_8
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 1, tpage, 0);
   func_8014E5A0(1, 0xC);
   func_801AFE18(scratch);
-  func_801F8200(work, 0, 1, 2);
-  func_801F8200(work, 0, 3, 2);
+  drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200(
+      work, 0, 1, 2);
+  drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200(
+      work, 0, 3, 2);
 }

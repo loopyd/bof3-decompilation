@@ -153,8 +153,10 @@ segments:
     - asm
     - func_801F45EC
   - - 8432
-    - asm
-    - func_801F4CF0
+    - c
+    - stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0
+    - '@source: src/bof3/world/stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0.c'
+    - '@behavior: One step of the chained front-end effect driven by the shared step halfword at 0x801448EE. It queues the record pair spanning the fixed 16.16 point 0x428000/0x638000 and a second point on the same row whose x is 0x428000 minus the step times 0x10000 while the step stays under five and 0x3D8000 once it does not, so the pair grows one unit per step up to a fixed span of five units, and at step five it also queues cue 0x206. It answers 1 while the step stays under five and, from step five on, the answer of the payload stage drawer func_801F4DA4 for steps under 0x38 and the constant 2 once the step reaches 0x38.'
   - - 8612
     - asm
     - func_801F4DA4

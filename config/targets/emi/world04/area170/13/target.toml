@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/clearWorldFlags1010World04Area17013_801F4A9C.c",
     "src/bof3/world/setStatusFFFFAndByte801448EC37IfGateElse34World04Area17013_801F4A4C.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17013_801F3F84.c",
+    "src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area17013_801F3DE8.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28.c",
     "src/bof3/world/drawThreeGlyphPanelAndSelectionCursorWorld04Area17013_801F31DC.c",
     "src/bof3/world/drawGlyphCellMarkerWorld04Area17013_801F388C.c",

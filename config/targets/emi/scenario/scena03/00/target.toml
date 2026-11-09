@@ -71,5 +71,6 @@ support_sources = [
     "src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7334.c",
     "src/bof3/scenario/drawTwoTranslucentGouraudTrianglesFromFourIndexedRecordsScenarioScena0300_801F8170.c",
     "src/bof3/scenario/seedEffectRectWithRandomOffsetsAndAdvanceWorkByte1ScenarioScena0300_801F8490.c",
+    "src/bof3/scenario/drawTranslucentGouraudTriangleFromThreeIndexedRecordsScenarioScena0300_801F8200.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

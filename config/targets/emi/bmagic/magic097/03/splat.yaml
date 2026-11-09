@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF510
   - - 2500
-    - asm
-    - func_801EF5C4
+    - c
+    - drawSeventeenSliceJitteredFourLayerGouraudRibbonTintedByWorkByteAAtSixteenPhaseStepsBmagicMagic09703_801EF5C4
+    - '@source: src/bof3/bmagic/drawSeventeenSliceJitteredFourLayerGouraudRibbonTintedByWorkByteAAtSixteenPhaseStepsBmagicMagic09703_801EF5C4.c'
+    - '@behavior: Draws seventeen band slices of four translucent Gouraud quads each. Seeds the scratchpad scalar block from work bytes 0x0A and 0x0B and from the caller thickness arg0, the base vertical arg1 and the jitter mask arg2, samples the seed phase through func_801782FC and stores the first band top at 0x1F800016, links a 0xC-byte draw-mode packet at the record words 0x34 and 0x38 with kind 2, then per slice re-seeds the phase, the vertical cell 0x1F800000 and the thickness pair 0x1F80000A and 0x1F80000C, builds the four vertex halfwords of the scratchpad quad at 0x1F800014 from the previous band top and the previous thickness with the far edge at the running depth, projects and links one 0x24-byte POLY_G4 packet, then shifts the four band tops by the new and previous thickness and links three more packets, lowers the top by three thicknesses and the running depth by 0x40, and paints the first band two trailing vertices of every quad white.'
   - - 4612
     - asm
     - func_801EFE04

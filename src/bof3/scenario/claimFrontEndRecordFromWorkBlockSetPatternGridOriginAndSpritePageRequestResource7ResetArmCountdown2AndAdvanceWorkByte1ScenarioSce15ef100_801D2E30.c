@@ -116,13 +116,14 @@ extern void func_80196070(void);
  * @match 100.00
  * @residual none
  *
- * Shape note: the unlifted sibling func_801D21B4 at 0x801D21B4, entry 0 of the
- * same run, holds the same claim, the same 0x74-byte block copy, the same four
- * record seed bytes, the same pattern-grid origin pair and the same
- * publish/request/reset/restore sequence with extra guarded arms this body does
- * not have, so it is shape evidence rather than a seed; the copy loop, the
- * expression forms and the declaration style carry over with this function's
- * own address, its own 0x29 progress gate and its own resource 7 request.
+ * Shape note: the sibling at 0x801D21B4, entry 0 of the same run, carried the
+ * same claim, the same 0x74-byte block copy, the same four record seed bytes,
+ * the same pattern-grid origin pair and the same publish/request/reset/restore
+ * sequence with two extra guarded arms this body does not have, so it was
+ * shape evidence rather than a seed; the copy loop, the expression forms and
+ * the declaration style carried over with this function's own address, its own
+ * 0x29 progress gate and its own resource 7 request. That sibling later
+ * measured exact on its own gate.
  *
  * Shape note from the original bytes: the three cell reads are three separate
  * accesses, which is why only the value restored to the cell is kept in a local

@@ -125,8 +125,10 @@ segments:
     - c
     - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp67800_801CFEF0
   - - 7124
-    - asm
-    - func_801CFFD4
+    - c
+    - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp67800_801CFFD4
+    - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp67800_801CFFD4.c'
+    - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from func_801CF724 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1. It then probes the map code of the projected cell through func_80166CB0: the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero, and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2. It returns that answer as an unsigned byte and takes no arguments. The caller masks the returned byte and branches on it while stepping the work route: it calls this body once with the route byte moved back by one and once more with the route byte moved forward by two. The 0x30-byte frame keeps $ra at 0x28 and the six saved registers across the two shared calls, and the range constant is materialised before the projection tables are read. The 0x134-byte span is byte-identical to the exact lifts at 0x801CF940 of the plp247 overlay, 0x801CF724 of the plp27a overlay and 0x801CEFF8 of the plp012 overlay.'
   - - 7432
     - c
     - dispatchWorkByte2Table05b0PlcharPlp67800_801D0108

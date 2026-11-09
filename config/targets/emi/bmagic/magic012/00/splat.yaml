@@ -50,8 +50,9 @@ segments:
     - asm
     - func_801EF188
   - - 1988
-    - asm
-    - func_801EF3C4
+    - c
+    - advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4
+    - '@source: src/bof3/bmagic/advanceWorkByteAStepWorkPositionPairByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroAndDrawSpriteMode1BmagicMagic01200_801EF3C4.c'
   - - 2232
     - asm
     - func_801EF4B8

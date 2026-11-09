@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801F3C2C
   - - 4584
-    - asm
-    - func_801F3DE8
+    - c
+    - advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area17013_801F3DE8
+    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area17013_801F3DE8.c'
+    - '@behavior: Byte-2 state handler, entry 1 of the five-entry handler table at 0x801F588C: when the camera is inside the record coordinate window it plays cue 0x200 through the front-end phase gate and advances work byte 2, then draws.'
   - - 4904
     - c
     - advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17013_801F3F28

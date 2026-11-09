@@ -13,5 +13,6 @@ support_sources = [
     "src/bof3/bmagic/magic00603DispatchTables.c",
     "src/bof3/bmagic/copyWorkWordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic00603_801F05A4.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic00603_801F0644.c",
+    "src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic00603_801F05F4.c",
 ]
 psyq_source = "src/bof3/support/magic006_03_psyq.c"

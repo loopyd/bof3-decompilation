@@ -25,5 +25,6 @@ support_sources = [
     "src/bof3/support/area145_14_psyq.c",
     "src/bof3/world/advancePublishedHalfword0aBy3WhenSharedSelector0BIsSetWorld03Area14514_801F4304.c",
     "src/bof3/world/claimFrontEndRecordForPointPairAtDepth500000WithHandler3fWorld03Area14514_801F5190.c",
+    "src/bof3/world/stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0.c",
 ]
 psyq_source = "src/bof3/support/area145_14_psyq.c"
