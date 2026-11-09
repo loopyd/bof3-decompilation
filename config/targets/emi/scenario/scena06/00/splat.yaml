@@ -192,8 +192,14 @@ segments:
     - asm
     - func_801FDEA4
   - - 29692
-    - asm
-    - func_801FDFFC
+    - c
+    - armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FDFFC
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FDFFC.c'
+    - '@behavior: Word 4 (0-based) of the 22-word coordinate-lookup handler run
+      at 0x801FE48C. Re-arms the overlay effect group for ids 0, 1 and 5,
+      resets the entry-0 front script bank with the constant mode 0, invokes the
+      per-id helper for ids 0 and 5, and finishes with the shared no-argument
+      tail helper.'
   - - 29768
     - c
     - armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE048

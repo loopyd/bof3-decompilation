@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801EEE14
   - - 692
-    - asm
-    - func_801EEEB4
+    - c
+    - incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4
+    - '@source: src/bof3/bmagic/incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4.c'
   - - 964
     - c
     - incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4

@@ -36,7 +36,7 @@ armRecordLevel5AndSetRecordByte7WithinModeLimitThenRetreatHalfword0aWorld04Area1
 advanceCounter2By2World04Area18813_801F48E0 = 0x801F48E0;
 retreatCounter2By2World04Area18813_801F4908 = 0x801F4908;
 setTwoWorld04Area18813_801F4930 = 0x801F4930;
-func_801F494C = 0x801F494C;
+queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C = 0x801F494C;
 func_801F49A4 = 0x801F49A4;
 func_801F49FC = 0x801F49FC;
 func_801F4A54 = 0x801F4A54;

@@ -191,8 +191,10 @@ segments:
     - asm
     - func_800C305C
   - - 6452
-    - asm
-    - func_800C3134
+    - c
+    - copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordAndAdvanceWorkByte2WhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C3134
+    - '@source: src/bof3/boss/copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordAndAdvanceWorkByte2WhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C3134.c'
+    - '@behavior: Overlay step body, middle entry of the three alternative step bodies held by the payload table at 0x800C184C (0x800C305C, this function and 0x800C31F0) that dispatchStateByte2TableCopyBossBoss05516_800C2FFC selects with the work record''s state byte +2: it reads the shared battle work record pointer at 0x801EB4E0 before it adjusts the stack, copies the 10-byte step template at 0x800C1858 into its frame and, when that record''s unsigned byte +0xB is set, requests the template byte selected by the battle halfword 0x801463BE through 0x8014D6B8 and then advances the state byte +2 of the work record at scratchpad cell 0x1F800044 by one; when the byte is clear it requests and advances nothing. Either way it then calls 0x801E30F8, 0x8014D4E0 and this overlay''s own refresh 0x800C3284, discarding each result.'
   - - 6640
     - asm
     - func_800C31F0

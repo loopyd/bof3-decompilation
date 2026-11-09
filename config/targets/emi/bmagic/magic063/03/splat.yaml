@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F00F0
   - - 5664
-    - asm
-    - func_801F0220
+    - c
+    - stepWorkRecordAngleProjectPositionPairAddSixtyFourToAngleAndTwoToWorkByteBWhenGlobalWorkByte2IsThreeElseThirtyTwoAndOneThenCountDownWorkByte9DecrementGlobalWorkByteBAndClearRecordOnZeroBmagicMagic06303_801F0220
+    - '@source: src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairAddSixtyFourToAngleAndTwoToWorkByteBWhenGlobalWorkByte2IsThreeElseThirtyTwoAndOneThenCountDownWorkByte9DecrementGlobalWorkByteBAndClearRecordOnZeroBmagicMagic06303_801F0220.c'
+    - '@behavior: Step handler of the bmagic effect record published through the pointer cell at 0x801F1054. It reads the shared battle work byte 0x02 through 0x801EB4E0 and branches on that byte equalling three: when it does it adds two to the record byte 0x0B and 0x40 to the record halfword angle at offset 0x0E, otherwise it adds one to the record byte 0x0B and 0x20 to the same angle. Both arms mask the sum to twelve bits and store it back at offset 0x0E. The shared rotator at 0x801782FC receives that signed halfword and its result shifted left five is added to the shared battle word at offset 0x34 and stored in the record word at offset 0x10; the second shared rotator at 0x801783C8 receives the same signed halfword and its result shifted left five is added to the shared battle word at offset 0x38 and stored in the record word at offset 0x14. It then decrements the record byte at offset 0x09 and, when that countdown reaches zero, decrements the shared battle byte 0x0B and invokes the record clear at 0x801F03B0, all in a 0x18-byte frame that keeps only $ra.'
   - - 5972
     - c
     - reserveFirstFreeRecordBmagicMagic06303_801F0354

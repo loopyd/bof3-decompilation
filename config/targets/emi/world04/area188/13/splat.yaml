@@ -156,8 +156,9 @@ segments:
     - c
     - setTwoWorld04Area18813_801F4930
   - - 7500
-    - asm
-    - func_801F494C
+    - c
+    - queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C
+    - '@source: src/bof3/world/queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C.c'
   - - 7588
     - asm
     - func_801F49A4

@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EF2DC
   - - 2004
-    - asm
-    - func_801EF3D4
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07303_801EF3D4
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07303_801EF3D4.c'
+    - '@behavior: Per-frame handler of this overlay handler run. It reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, and for each of the record three counter bytes it re-reads the work object unsigned byte 0xA, scales it by the 12-byte record stride into a byte offset and increments the selected 0x80145BD6 record bytes 0x0/0x1/0x2 at byte width. It then re-reads the cell and decrements work byte 9 at byte width, testing the stored value against zero, and only when that countdown reaches zero it re-reads the cell and increments work byte 2 to move the dispatcher on work byte 2 to its next step. Leaf with no saved registers and no calls. The original reserves a 0x10-byte frame that no statement of the body touches, reproduced by one declared local of that size flagged for review.'
   - - 2276
     - c
     - setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07303_801EF4E4

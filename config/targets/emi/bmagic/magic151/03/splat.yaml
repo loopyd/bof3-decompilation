@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic15103_801EFA34.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 2 selects an entry of the six-entry code pointer table at 0x801EEC38 (0x801EFAAC, 0x801EFBAC, 0x801EFC68, 0x801EFD24, 0x801EFD80, 0x801EFDC0), and that entry is invoked with no arguments. The six table words are copied into this function''s own 0x30-byte frame first, so the call target is read back from the copy. It reads no other state and writes none.'
   - - 3756
-    - asm
-    - func_801EFAAC
+    - c
+    - copyRecordByte8SeedWorkTargetPairStoreDistanceClearWorkByteBSetWorkByte9To4AdvanceWorkByte2ThenQueueSlotSetByte1To2Flag9To1PublishWorkPointerIncrementWorkByteBInvokeHelperAt102BmagicMagic15103_801EFAAC
+    - '@source: src/bof3/bmagic/copyRecordByte8SeedWorkTargetPairStoreDistanceClearWorkByteBSetWorkByte9To4AdvanceWorkByte2ThenQueueSlotSetByte1To2Flag9To1PublishWorkPointerIncrementWorkByteBInvokeHelperAt102BmagicMagic15103_801EFAAC.c'
+    - '@behavior: Work byte 2 handler entry 0 of the six-word run at 0x801EEC38: reads the scratchpad work-object pointer cell at 0x1F800044, copies byte 0x08 of the record at 0x8014638C into work byte 0x08, installs 0x80143F24 and 0x80143F28 as the work target pair at 0x34/0x38 and stores func_8015477C''s signed-halfword answer in work halfword 0x3E, clears work byte 0x0B, sets work byte 0x09 to 4 and increments work byte 0x02. It then claims an action slot with func_801E590C(1, 0x44) and stamps entry byte +0x01 with 2, entry byte +0x09 with 1 and the work-object pointer into the pointer word at +0x74, increments work byte 0x0B and invokes func_8015D71C with 0x102. Frame 0x18 with $ra only; takes no arguments and returns nothing.'
   - - 4012
     - c
     - decrementWorkByte9ThenQueueSlotSetByte1To3PublishWorkPointerAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFBAC
