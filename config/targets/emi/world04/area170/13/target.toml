@@ -30,6 +30,7 @@ sources = [
     "src/bof3/world/startStateEntry25Progress0AOr14Or32Or3COr0WhenFrontSidePackedArgRangesWorld04Area17013_801F53A4.c",
     "src/bof3/world/raiseFlag79WhenClearWithRecord4BQueueCue106OrCue3ThenRunFrontEndStepDAndSetFrontEndPhase2World04Area17013_801F5708.c",
     "src/bof3/world/drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0.c",
+    "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

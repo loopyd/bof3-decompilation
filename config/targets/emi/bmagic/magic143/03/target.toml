@@ -13,5 +13,6 @@ support_sources = [
     "src/bof3/bmagic/magic14303DispatchTables.c",
     "src/bof3/bmagic/seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic14303_801EED24.c",
+    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14303_801EF100.c",
 ]
 psyq_source = "src/bof3/support/magic143_03_psyq.c"

@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801F45E4
   - - 6720
-    - asm
-    - func_801F4640
+    - c
+    - drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640
+    - '@source: src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640.c'
+    - '@behavior: Overlay draw routine of the byte-2 state handlers 0x801F453C, 0x801F4574 and 0x801F45E4, run once per frame with a variant flag. It links one 0x0C-byte draw mode and then, in a two-pass loop over the per-pass texture state table D_801F58C8, one 0x28-byte POLY_FT4, both through func_80155A08 with kind 2. The scratchpad vector deck at 0x1F800014 carries the quad: corners 0 and 2 take x = record halfword 0x30 - 0x3BC0 and corners 1 and 3 take x = record halfword 0x30 - 0x3AC0, corners 0 and 1 take y = -0x3880 - (pass << 4) and corners 2 and 3 take y = -0x3880. With the flag set the two depths of each column are -func_8015477C over ((x + 0x4000) << 9, (y + 0x4000) << 9) halved with the second corner of the column adding 0x180 on the first pass, the same distance call being repeated per corner; with the flag clear the first two depths are -0x480, corner 3 depth is -0x300 on the first pass and -0x480 on the second, and corner 2 copies it back out of the deck. RotTransPers4 projects the deck into the packet, func_80155560 fills the texture state from D_801F58C8[pass] with kind 1, and the draw mode uses the shared cursor with dfe 0, dtd 0, the depth chosen by GetGraphType (0x225 for graph types 1 and 2, 0x95 otherwise) and a zero fifth argument. Takes the variant flag and returns nothing; the 0x60-byte frame keeps ra at 0x5C, fp at 0x58 and s0 through s7.'
   - - 7504
     - c
     - setStatusFFFFAndStateEntry25Progress5WhenGateClearWorld04Area17013_801F4950

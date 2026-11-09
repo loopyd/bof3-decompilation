@@ -12,11 +12,13 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind bss */
 extern u8 D_80143BB0; /* @source 0x80143BB0 @kind unknown */
 
 /* Record builders of this overlay: the routine at 0x801F4798 takes the record
- * addresses +0x34 and +0x18, and the routine at 0x801F4614 runs the record
- * table update. Both were still asm subsegments of this target when this body
- * was seeded, so only prototypes are needed here. */
+ * addresses +0x34 and +0x18, the routine at 0x801F4614 runs the record table
+ * update and 0x801F45C8 builds the step tables. All three still sat on asm
+ * subsegments of this target except the update at 0x801F4614, which carries its
+ * own target-map row. */
 void func_801F4798(s32 arg0, s32 arg1);
-void func_801F4614(void);
+void updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614(
+    void);
 void func_801F45C8(void);
 
 /* @source 0x801F435C
@@ -62,7 +64,7 @@ void advanceWorkPositionThenRestartCountdownWithRandomPacingAndSetState2WhenPaci
   next = D_1F800044;
   FIELD_REF(s32, work, 0x1C) += FIELD_REF(s32, work, 0x10);
   func_801F4798((s32)(next + 0x34), (s32)(next + 0x18));
-  func_801F4614();
+  updateRecordTableFromProbeOffsetsAndStepFoundRecordOctantWorld03Area14813_801F4614();
   rec = D_1F800044;
   if (rec[9] != 0) {
     return;

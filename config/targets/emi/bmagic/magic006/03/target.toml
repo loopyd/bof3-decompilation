@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionAndAngleToward8014638CRearmByte9AndAdvanceWorkByte2BmagicMagic00603_801EEF28.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c",
     "src/bof3/bmagic/drawTranslucentGouraudQuadAroundWorkHalfwords2EAnd30WithHalfExtentsFromWorkBytes9AndAGradedBlackToDarkBlueBmagicMagic00603_801F0308.c",
+    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790.c",
 ]
 psyq_source = "src/bof3/support/magic006_03_psyq.c"

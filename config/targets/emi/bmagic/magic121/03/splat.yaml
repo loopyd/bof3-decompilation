@@ -33,8 +33,9 @@ segments:
     - asm
     - func_801EEC5C
   - - 520
-    - asm
-    - func_801EEE08
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12103_801EEE08
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12103_801EEE08.c'
   - - 616
     - c
     - dispatchStateByte1Table0c38BmagicMagic12103_801EEE68

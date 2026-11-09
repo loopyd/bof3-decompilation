@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034.c",
     "src/bof3/bmagic/decrementWorkCountdownThenSubtractFromRecordHalfwordsSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF430.c",
     "src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenEightBmagicMagic06903_801EF2AC.c",
+    "src/bof3/bmagic/drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104.c",
     "src/bof3/bmagic/oscillateWorkByte9UsingWorkByteBDirectionThenInvokeHelperAt101SetByte9To10AndAdvanceWorkByte2WhenGlobalWorkByteBIsOneBmagicMagic06903_801EF1D0.c",
     "src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c",
     "src/bof3/bmagic/queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274.c",

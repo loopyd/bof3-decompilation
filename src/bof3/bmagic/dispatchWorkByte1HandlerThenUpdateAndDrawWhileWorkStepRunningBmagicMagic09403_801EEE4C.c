@@ -31,11 +31,13 @@ extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 void projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654(
     void);
 
-/* This overlay's large draw step: samples the shared phase helpers
- * func_801782FC/func_801783C8/func_8017A97C, picks its draw-mode tpage from
- * GetGraphType and emits three-vertex primitives through SetDrawMode,
- * SetSemiTrans and RotTransPers3. Unlifted, so it keeps its raw name. */
-void func_801EF14C(void);
+/* This overlay's large draw step: runs six spiral bands of eight triangles
+ * from the work record's radius profile, sampling the shared phase helpers,
+ * picking its draw-mode tpage from GetGraphType and emitting three-vertex
+ * primitives through SetDrawMode, SetSemiTrans and RotTransPers3. Lifted exact
+ * at 0x801EF14C, and it takes no arguments. */
+void drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C(
+    void);
 
 /* This overlay's second draw step over the same shared helpers, emitting prims
  * through SetDrawMode and SetSemiTrans. Unlifted, so it keeps its raw name. */
@@ -95,7 +97,7 @@ void dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic094
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
     projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654();
-    func_801EF14C();
+    drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C();
     func_801EF710();
     PopMatrix();
   }

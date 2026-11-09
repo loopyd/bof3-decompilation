@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EEFD4
   - - 1252
-    - asm
-    - func_801EF0E4
+    - c
+    - drawTranslucentGouraudTriangleFromProjectedOriginAlongZAtTwoDepthStepsFadingFromWorkByteATimesSixToBlackBmagicMagic10703_801EF0E4
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudTriangleFromProjectedOriginAlongZAtTwoDepthStepsFadingFromWorkByteATimesSixToBlackBmagicMagic10703_801EF0E4.c'
+    - '@behavior: Translucent Gouraud triangle emitter of this overlay draw group: it reads no incoming register and takes no argument. The body picks the draw-mode tpage argument, 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0, dtd 1 and a null RECT, and links the 0xC-byte packet at the work record words 0x34 and 0x38 with kind 2. It then takes the cursor primitive, seeds it through func_8017AAC8 and marks it semi-transparent, clears the scratchpad vertex triplet at 0x1F800014 with the two later vertices at z 0x170 and 0x180 so the triangle runs from the projected origin along the current transform z axis, and projects it through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18. The colour word is work byte 0x0A times six, published to the scratchpad word 0x1F80000C and read back as the low byte of the r, g and b of the first two vertices, while the third vertex takes 1 in all three channels; func_80155A08 then links the 0x20-byte triangle at the same record words with kind 2. The 0x30-byte frame keeps $ra, $s0, the four outgoing RotTransPers3 words and its depth and flag results, and no in-image word of this payload names the span.'
   - - 1680
     - asm
     - func_801EF290

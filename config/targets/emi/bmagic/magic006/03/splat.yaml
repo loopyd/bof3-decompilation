@@ -128,8 +128,10 @@ segments:
     - projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0
     - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic00603_801F06E0.c'
   - - 7056
-    - asm
-    - func_801F0790
+    - c
+    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius100TintedByWorkByte9WeightedEightTwoOneBmagicMagic00603_801F0790.c'
+    - '@behavior: Emits a translucent radial fan of sixteen gouraud triangles from the scratchpad origin at the fixed radius 0x100, tinted by the work object byte 0x9 at the weights eight, two and one. It opens and closes the fan with two SetDrawMode packets under ordering-table slot 5, selecting texture page 0xA5 before and 0x25 after when GetGraphType returns 1 or 2 and 0x35 and 0x15 otherwise, and it runs sixteen passes whose phase advances by 0x100, carrying the previous pass sample pair into the second vertex of the next triangle. No payload word names 0x801F0790 as a call, jump or pointer target, so the overlay loader entry is its only route; it takes no arguments, returns nothing and keeps a 0x48-byte frame.'
   - - 7716
     - textbin
     - D_801F0A24

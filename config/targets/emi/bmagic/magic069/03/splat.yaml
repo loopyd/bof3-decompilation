@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801EFF14
   - - 5380
-    - asm
-    - func_801F0104
+    - c
+    - drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104
+    - '@source: src/bof3/bmagic/drawTranslucentGreyCrossOfTwoFlatLinesAtWorkHalfwords2EAnd30BmagicMagic06903_801F0104.c'
+    - '@behavior: Draw routine of the MAGIC069 work object, reached by the jal at 0x801EEFCC inside this overlay function func_801EEED4 when work byte 0 has bit 0 set and work byte 2 is at least 3. It takes no arguments and returns nothing. The body publishes 0x80 into the scratchpad shade halfword 0x1F800006 and copies the work object halfwords 0x2E and 0x30 into the scratchpad centre pair 0x1F80000C and 0x1F80000E, then emits two semi-transparent flat 0x10-byte line primitives through g_PrimCursor, each initialised by func_8017AA80 and SetSemiTrans with 1 and each queued with GpuAppendPrim(3, 0x10). The first line runs from (centre x - 4, centre y) to (centre x + 4, centre y) and the second from (centre x, centre y + 4) to (centre x, centre y - 4), so the pair draws one grey cross of four-pixel arms around the cached work screen pair. Takes no arguments and returns nothing.'
   - - 5748
     - c
     - queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274
