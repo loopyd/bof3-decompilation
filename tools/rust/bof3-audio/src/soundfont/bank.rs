@@ -98,6 +98,14 @@ impl ToneContext {
         envelope: Fit,
     ) -> Result<Self> {
         let tuning = reference.tone(tone, sample_rate)?;
+        let context = reference
+            .runtime_context()
+            .map_or_else(String::new, |context| {
+                format!(
+                    "; frozen runtime RAM SHA256={} adjacent data SHA256={}",
+                    context.ram_sha256, context.adjacent_data_sha256
+                )
+            });
         Ok(Self {
             program,
             tone: tone.index,
@@ -105,10 +113,11 @@ impl ToneContext {
             envelope,
             tuning,
             pitch_provenance: format!(
-                "{} SHA256={} entry={:#010x}; isolated original note-on routine, not full runtime",
+                "{} SHA256={} entry={:#010x}; isolated original note-on routine, not full runtime{}",
                 reference.profile().target,
                 reference.profile().exe_sha256,
-                reference.profile().pitch_entry
+                reference.profile().pitch_entry,
+                context
             ),
         })
     }

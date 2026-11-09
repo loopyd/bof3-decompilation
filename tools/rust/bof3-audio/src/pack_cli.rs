@@ -10,7 +10,8 @@ Audio packing:
   XA roots accept --xa-padding reject|zero (default reject) for shorter WAV input.
   Executable required for banks and recorded XA runtime metadata.
 Music packing:
-  pack --mode music --input FOLDER --executable PSX_EXE --output NEW_DIR [--json]
+  pack --mode music --input FOLDER --executable PSX_EXE --output NEW_DIR [--pitch-ram RAM_FILE] [--json]
+  Context-backed exports require the same whole RAM image used for extraction.
   Song folders/music roots support fixed-layout MIDI, SF2 PCM/loops and invertible tone gain/pan.
   Topology, tuning, envelope, timing/channel and inconsistent shared edits fail explicitly.
 ";
@@ -19,8 +20,14 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut input, mut executable, mut output) = (None, None, None, None);
     let mut json = false;
     let mut padding = None;
+    let mut pitch_ram = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
+            Some("--pitch-ram") if pitch_ram.is_none() => {
+                pitch_ram = Some(PathBuf::from(
+                    args.next().ok_or("--pitch-ram needs a path")?,
+                ));
+            }
             Some("--mode") if mode.is_none() => {
                 mode = Some(args.next().ok_or("--mode needs audio or music")?)
             }
@@ -56,11 +63,15 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     let input = input.ok_or("--input is required")?;
     let output = output.ok_or("--output is required")?;
+    if pitch_ram.is_some() && mode != "music" {
+        return Err("pack: --pitch-ram requires --mode music".into());
+    }
     if mode == "music" {
         if padding.is_some() {
             return Err("pack: --xa-padding applies only to XA extraction roots".into());
         }
         let report = crate::music::packing::songs(&pack::Options {
+            pitch_ram,
             input,
             output,
             executable: executable
@@ -144,6 +155,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         return Err("pack: --xa-padding applies only to XA extraction roots".into());
     }
     let report = pack::banks(&pack::Options {
+        pitch_ram: None,
         input,
         executable: executable.ok_or("--executable is required for runtime metadata validation")?,
         output,

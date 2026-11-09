@@ -16,6 +16,7 @@ pub struct Options {
     pub loops: Option<u32>,
     pub playback: pc_render::Options,
     pub allow_approximations: bool,
+    pub pitch_ram: Option<Vec<u8>>,
 }
 
 #[derive(Serialize)]
@@ -104,7 +105,7 @@ pub fn render(
         song,
         image,
         &mapping,
-        &mut Reference::from_executable(executable)?,
+        &mut Reference::from_input(executable, options.pitch_ram.as_deref())?,
         &mut BTreeMap::new(),
         Selection {
             loops,

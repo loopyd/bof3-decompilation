@@ -14,6 +14,7 @@ use std::{
 
 fn options(sequence: usize) -> Options {
     Options {
+        pitch_ram: None,
         sequence,
         loops: None,
         allow_approximations: true,
@@ -114,6 +115,7 @@ fn archive_defaults_match_export_once_and_sequences_are_independent() {
     let exported = bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![archive.clone()],
+        pitch_ram: None,
         executable: std::env::var_os("BOF3_AUDIO_EXE").unwrap().into(),
         output: d.0.join("export"),
         id: None,

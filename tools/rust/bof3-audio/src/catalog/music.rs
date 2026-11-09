@@ -9,6 +9,10 @@ use crate::{
 };
 use std::collections::{BTreeMap, BTreeSet};
 
+fn has_disc_path(source: &str, path: &str) -> bool {
+    source == path || source.ends_with(&format!("/{path}"))
+}
+
 pub const CUE_TABLE: u32 = 0x8018_1eb8;
 pub const FILE_TABLE: u32 = 0x8018_2444;
 pub const SUPPORTED_CUES: u16 = 165;
@@ -76,15 +80,24 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<MusicMa
             .filter(|source| {
                 source.bytes == file.bytes && source.sha256.as_deref() == Some(file.sha256.as_str())
             })
+            .filter(|source| {
+                // A known original file retains its identity when its identical
+                // peer is absent. Only unqualified paths offer content aliases.
+                let identified = evidence.files.iter().any(|known| {
+                    source.bytes == known.bytes
+                        && source.sha256.as_deref() == Some(known.sha256.as_str())
+                        && has_disc_path(&source.source, &known.path)
+                });
+                !identified || has_disc_path(&source.source, &file.path)
+            })
             .map(|source| source.source.as_str())
             .collect();
         // Distinct shipped filenames can have byte-identical contents (BGMBAT00/02).
         // Preserve a supplied disc-qualified identity before offering content aliases.
-        let suffix = format!("/{}", file.path);
         let qualified: BTreeSet<_> = sources
             .iter()
             .copied()
-            .filter(|source| *source == file.path || source.ends_with(&suffix))
+            .filter(|source| has_disc_path(source, &file.path))
             .collect();
         let path_matched = !qualified.is_empty();
         if path_matched {

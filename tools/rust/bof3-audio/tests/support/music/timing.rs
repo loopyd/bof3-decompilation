@@ -7,7 +7,10 @@ use std::fs;
 #[ignore = "requires BOF3_AUDIO_EXE; MIDI timing with resized SEP publication"]
 fn retimed_sequence_relocates_untouched_sequence_and_publishes_verified_archive() {
     let d = Directory::new();
-    let source = music_fixture::synthetic_archive(false);
+    let mut source = music_fixture::synthetic_archive(false);
+    // The VH selects slot 0, which has SEP capacity in every original layout.
+    // The shared fixture's slot 2 has no SEP allocation in layouts 1 and 2.
+    source[20..24].copy_from_slice(&0u32.to_le_bytes());
     let path = extract(&d.0, &source);
     let midi_path = path.parent().unwrap().join("sequence-000.mid");
     let mut midi = Midi::from_bytes(&fs::read(&midi_path).unwrap()).unwrap();

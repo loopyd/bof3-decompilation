@@ -49,7 +49,8 @@ pub fn songs(options: &Options) -> Result<Report> {
     let documents = crate::music::manifest::documents(&root)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
     Profile::identify(&executable)?;
-    let mut reference = Reference::from_executable(&executable)?;
+    let runtime_ram = options.pitch_ram.as_ref().map(fs::read).transpose()?;
+    let mut reference = Reference::from_input(&executable, runtime_ram.as_deref())?;
     let mut envelopes = BTreeMap::new();
     let mut pending = BTreeMap::<String, Pending>::new();
     let mut ids = BTreeSet::new();

@@ -44,6 +44,7 @@ fn options(root: &Path, name: &str) -> pack::Options {
     pack::Options {
         input: root.join("export"),
         output: root.join(name),
+        pitch_ram: None,
         executable: std::env::var_os("BOF3_AUDIO_EXE")
             .map(PathBuf::from)
             .unwrap_or_else(|| "absent-executable".into()),
@@ -60,6 +61,7 @@ fn extract(root: &Path, archive: &[u8]) -> PathBuf {
     bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![source.clone()],
+        pitch_ram: None,
         executable: opts.executable,
         output: opts.input.clone(),
         id: None,

@@ -17,6 +17,7 @@ pub struct Options {
     pub disc_root: Option<PathBuf>,
     pub archives: Vec<PathBuf>,
     pub executable: PathBuf,
+    pub pitch_ram: Option<PathBuf>,
     pub output: PathBuf,
     pub id: Option<String>,
     pub loops: u32,
@@ -53,7 +54,8 @@ pub fn songs(options: &Options) -> Result<Report> {
     if selected.is_empty() {
         return Err("music extract: no songs in selected sources".into());
     }
-    let mut reference = Reference::from_executable(&executable)?;
+    let runtime_ram = options.pitch_ram.as_ref().map(fs::read).transpose()?;
+    let mut reference = Reference::from_input(&executable, runtime_ram.as_deref())?;
     let mut envelopes = BTreeMap::new();
     let publication = Publication::new(&options.output)?;
     let mut root = String::from(

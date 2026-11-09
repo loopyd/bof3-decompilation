@@ -20,7 +20,7 @@ pub const HELP: &str = "
   [--timeout SECONDS] [--json]
 render --mode music --engine pc --archive EMI --executable PSX_EXE
   --sequence INDEX --allow-approximations --output NEW_DIR
-  [--duration SECONDS | --loops N] [--sample-rate HZ] [--tail SECONDS]
+  [--duration SECONDS | --loops N] [--sample-rate HZ] [--tail SECONDS] [--pitch-ram RAM_FILE]
   [--timeout SECONDS] [--json]
   render --mode music --engine psx --archive EMI --driver DIRECTORY
     --sequence INDEX --output NEW_DIR [--duration SECONDS | --loops N] [--layout 0|1|2]
@@ -66,9 +66,13 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut track, mut toc, mut xa_cue) = (None, None, None);
     let mut json = false;
     let mut allow_approximations = false;
+    let mut pitch_ram = None;
     while let Some(arg) = args.next() {
         let flag = arg.to_str().ok_or("render option must be UTF-8")?;
         match flag {
+            "--pitch-ram" if pitch_ram.is_none() => {
+                pitch_ram = Some(PathBuf::from(value(&mut args, flag)?));
+            }
             "--mode" if mode.is_none() => mode = Some(string(&mut args, flag)?),
             "--engine" if engine.is_none() => engine = Some(string(&mut args, flag)?),
             "--midi" if midi.is_none() => midi = Some(PathBuf::from(value(&mut args, flag)?)),
@@ -152,6 +156,13 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         return Err("render: --track, --toc and --cue require --mode xa".into());
     }
     let output = output.ok_or("render requires --output NEW_DIR")?;
+    if pitch_ram.is_some()
+        && !(mode.as_deref() == Some("music")
+            && engine.as_deref() == Some("pc")
+            && archive.is_some())
+    {
+        return Err("render: --pitch-ram requires a PC music archive input".into());
+    }
     publication::require_absent(&output)?;
     let rate = rate.unwrap_or(44100);
     let ogg = match format.as_deref().unwrap_or("wav") {
@@ -278,6 +289,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             return Err("PC archive render accepts --loops or --duration; MIDI/SoundFont/--repeats are a separate input mode, driver/layout are PSX-only".into());
         }
         let options = pc_archive::Options {
+            pitch_ram: pitch_ram.as_ref().map(std::fs::read).transpose()?,
             sequence: sequence
                 .ok_or("PC archive render requires --sequence INDEX, qualified by --archive")?,
             loops,

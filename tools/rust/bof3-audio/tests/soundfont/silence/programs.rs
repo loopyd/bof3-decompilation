@@ -101,6 +101,7 @@ fn original_runtime_and_pc_both_produce_silence_for_a_zero_tone_program() {
             "empty-program.emi",
             &archive,
             &pc_archive::Options {
+                pitch_ram: None,
                 sequence: 0,
                 loops: None,
                 allow_approximations: true,

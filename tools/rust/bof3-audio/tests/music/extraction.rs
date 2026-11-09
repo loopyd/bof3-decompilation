@@ -33,6 +33,7 @@ fn options(root: &Path, archive: PathBuf) -> Options {
     Options {
         disc_root: None,
         archives: vec![archive],
+        pitch_ram: None,
         executable: std::env::var_os("BOF3_AUDIO_EXE")
             .map(PathBuf::from)
             .unwrap_or_else(|| "missing-executable".into()),

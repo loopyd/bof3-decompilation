@@ -162,11 +162,11 @@ or unconditional claim about every gameplay state.
 ## Stopped-pitch approximation
 
 With explicit `allow_stopped_pitch_approximation`, the bank converter maps
-known in-table zero-step keys to a shared silent SF2 sample when the `Published`
+known-context zero-step keys to a shared silent SF2 sample when the `Published`
 key-on model holds zero. That model clears three interpolation history samples
 and evaluates `floor(-first_decoded_sample / 32768)`. Original PCM and identities
 remain in the font and preservation XML. Other keys retain ordinary tuning.
-Unknown lookup regions and nonzero published held values fail. Music extraction
+Unknown pitch contexts and nonzero published held values fail. Music extraction
 enables this policy through `--allow-approximations` and reports affected keys.
 
 This policy does not establish native-reference silence. Native-reference

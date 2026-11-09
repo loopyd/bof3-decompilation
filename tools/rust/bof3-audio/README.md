@@ -71,8 +71,20 @@ attribute reads and an in-bank physical sample reference. Zero references do
 not key on; out-of-bank references remain unresolved. A reference can select
 a silent tone. Roles do not establish active layout, loaded state, arbitration,
 audibility or independent PCM. Shared payloads do not transfer roles.
-Unreferenced samples and XA roles remain unresolved, and `--type vocals` fails
-until vocal-role evidence is available.
+Unreferenced samples remain unresolved.
+
+Use `index` or `query --mode audio --type vocals --executable PSX_EXE` to select
+observed vocal cues. Currently this selects only cue `0x2000` from the complete
+original US `BIN/SCE_XA/VOICE.STR`. Its whole-file SHA-256 is
+`f4f9d8ce9a2849501e8cd44dfcfee85aad4bc92cd9ff5113acde43c9362c65cc`.
+The `source_qualified_content_observation` role records the user's confirmation
+of Japanese vocals, the source and decoded WAV hashes, cue and sector identities,
+coding byte, language and decoder context. Renaming the complete source preserves
+its identity. Other cues, whole streams, altered sources and banks receive no
+vocal role. Content observation does not establish the active caller, game
+history, audible endpoint or native playback fidelity. Use an unfiltered index
+to inspect unresolved content. `extract --type vocals` remains unsupported;
+extract a qualified `--kind xa_cue --id ID` from the vocal index instead.
 
 `extract --mode audio --kind bank --type sfx` uses the same bank-role filter.
 Use a qualified bank `--id` from the index to select one bank. Extraction retains
@@ -256,6 +268,16 @@ available and now defaults to one file play, so already-expanded exports are not
 repeated again. Explicit `--repeats` requests whole-file restarts only in that
 input mode. After the requested file plays, extra fixed-duration time advances
 the final synth state without restarting.
+
+For music extraction or PC rendering from an archive, add
+`--pitch-ram RAM_FILE` to use a frozen pitch context from an exact 2 MiB RAM
+image. The original pitch routine and both tables must match the supplied
+executable; only the 86-byte intervening gap is imported. Reports and song XML
+retain the context hashes. Repack these exports with
+`pack --mode music --pitch-ram RAM_FILE` and the same executable. Missing RAM
+or a different whole RAM hash fails. Without this option, adjacent-data pitch
+lookups remain rejected. This mode does not establish gameplay reachability
+or native audio fidelity.
 
 Add `--format ogg` to a supported render mode to publish `render.ogg` alongside the
 inspectable WAV and report. Vorbis uses the pinned Rust encoder at quality 0.7,

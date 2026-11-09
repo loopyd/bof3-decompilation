@@ -60,9 +60,7 @@ pub fn banks(options: &Options) -> Result<Report> {
     reference_pitch(options.reference_rate)?;
     require_absent(&options.output)?;
     if options.role.as_deref().is_some_and(|role| role != "sfx") {
-        return Err(
-            "bank extract supports only --type sfx; vocal classification remains unresolved".into(),
-        );
+        return Err("bank extract supports only --type sfx; select observed vocal cues through index/query and extract their qualified XA cue IDs".into());
     }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;

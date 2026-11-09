@@ -16,7 +16,7 @@ pub(crate) const LIMITATIONS: &[&str] = &[
             "MIDI retains source programs and controller/bend values, but standard SF2 dynamic gain/pan and persistent channel bends do not reproduce tone-local and existing-voice-only game behavior",
             "initial programs equal their channel indices, as in the original US SEP initializer; channel volume/expression are full scale and pan is centered; other gameplay overrides remain unmodeled",
             "fixed PCM sample loops may approximate continuing ADPCM history; each independent sequence expands controller loops separately and must be rendered once",
-            "original archive bytes and complete binding/timeline evidence are retained in each song.xml; SF2 instrument reconstruction and full music semantic acceptance remain open",
+            "original archive bytes and complete binding/timeline evidence are retained in each song.xml; packing supports source-representable edits, while native timing and PCM fidelity remain unverified",
 ];
 
 #[derive(Debug, Serialize)]
@@ -26,6 +26,8 @@ pub struct SongReport {
     pub bank: String,
     pub source_sha256: String,
     pub soundfont_sha256: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pitch_context: Option<crate::voice::tuning::RuntimeContext>,
     pub sequences: Vec<SequenceReport>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub playback_approximations: Vec<String>,
@@ -173,6 +175,9 @@ pub(crate) fn prepare_selection(
         "<runtime profile=\"{}\" executable_sha256=\"{}\" complete_playback=\"unverified\"/>",
         mapping.profile.id, mapping.profile.exe_sha256
     )?;
+    if let Some(context) = reference.runtime_context() {
+        json_evidence(&mut document, "pitch_context", context)?;
+    }
     writeln!(document,"<export approximations=\"explicitly_allowed\" sample_rate=\"44100\" gain_model=\"rustysynth_1_3_6\" envelope_model=\"published\" reverb_send=\"0\" infinite_loop_traversals=\"{}\" render_repeats=\"1\" initial_programs=\"channel_index\" empty_programs=\"silent\"/>",loops)?;
     write_bank(&mut document, bank_id, &bound.report, &sf2_hash)?;
     document.push_str("<sequences>\n");
@@ -234,6 +239,7 @@ pub(crate) fn prepare_selection(
     writeln!(document,"<preservation encoding=\"hex\" scope=\"entire_source_archive\" bytes=\"{}\" sha256=\"{hash}\">{}</preservation>\n</song>",image.bytes().len(),xml::hex(image.bytes()))?;
     manifest::parse(&document, Default::default())?;
     let report = SongReport {
+        pitch_context: reference.runtime_context().cloned(),
         id: song.id.clone(),
         path: format!("{folder}/song.xml"),
         bank: bank_id.clone(),

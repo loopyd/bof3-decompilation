@@ -21,8 +21,9 @@ pub const HELP: &str =
  XA uses its encoded rate. Game seek/reset history is unverified; known truncated STRs fail.\n\
  Music: --mode music [--kind song] --allow-approximations --executable PSX_EXE\n\
    (--disc-root DIR | --archive FILE...) --output NEW_DIR [--id SONG_ID] [--loops N]\n\
+   [--pitch-ram RAM_FILE] selects a frozen 2 MiB pitch context, retained for packing.\n\
  One SF2 and independent format-1 MIDI files per song; loops default to two traversals.\n\
- Full playback fidelity and vocal classification remain unverified.\n";
+ Full playback fidelity remains unverified. Vocal observations are exposed by index/query.\n";
 
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut mode = None;
@@ -30,6 +31,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut disc_root = None;
     let mut archives = Vec::new();
     let mut executable = None;
+    let mut pitch_ram = None;
     let mut output = None;
     let mut id = None;
     let mut role = None;
@@ -41,6 +43,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut loops = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
+            Some("--pitch-ram") if pitch_ram.is_none() => {
+                pitch_ram = Some(PathBuf::from(value(&mut args, "--pitch-ram")?));
+            }
             Some("--mode") if mode.is_none() => mode = Some(string(&mut args, "--mode")?),
             Some("--kind") if kind.is_none() => kind = Some(string(&mut args, "--kind")?),
             Some("--disc-root") if disc_root.is_none() => {
@@ -92,9 +97,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         }
         match role.as_str() {
             "sfx" => {}
-            "vocals" => return Err("--type vocals: classification is not yet verified".into()),
+            "vocals" => return Err("bank extraction supports only --type sfx; use index/query --type vocals for observed XA cues and select a qualified XA cue ID for extraction".into()),
             _ => return Err("--type requires sfx or vocals".into()),
         }
+    }
+    if pitch_ram.is_some() && mode.as_deref() != Some("music") {
+        return Err("extract: --pitch-ram requires --mode music".into());
     }
     if mode.as_deref() == Some("music") {
         if kind.as_deref().is_some_and(|k| k != "song")
@@ -111,6 +119,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             disc_root,
             archives,
             executable: executable.ok_or("music extract requires --executable")?,
+            pitch_ram,
             output: output.ok_or("music extract requires --output")?,
             id,
             loops: loops.unwrap_or(2),
@@ -214,10 +223,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         for selection in &report.selected_banks {
             println!("Selected bank: {}", selection.bank);
             for role in &selection.roles {
-                println!(
-                    "Role: {} [{}] from {} rows {:?}; {}",
-                    role.role, role.scope, role.auxiliary_entry, role.reference_rows, role.playback
-                );
+                crate::catalog_cli::print_role(role);
             }
         }
         for assumption in report.assumptions {

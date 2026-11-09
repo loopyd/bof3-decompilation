@@ -58,16 +58,40 @@ pub struct Asset {
 pub struct Role {
     pub role: &'static str,
     pub scope: &'static str,
-    pub auxiliary_entry: String,
-    pub reference_rows: Vec<usize>,
-    pub target: &'static str,
-    pub dispatcher: u32,
-    pub dispatcher_file_offset: usize,
-    pub handler: u32,
-    pub handler_file_offset: usize,
-    #[serde(skip_serializing_if = "Vec::is_empty")]
-    pub sample_references: Vec<SampleReference>,
+    #[serde(flatten)]
+    pub evidence: RoleEvidence,
     pub playback: &'static str,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(untagged)]
+pub enum RoleEvidence {
+    LocalDispatch {
+        auxiliary_entry: String,
+        reference_rows: Vec<usize>,
+        target: &'static str,
+        dispatcher: u32,
+        dispatcher_file_offset: usize,
+        handler: u32,
+        handler_file_offset: usize,
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        sample_references: Vec<SampleReference>,
+    },
+    XaContentObservation {
+        source_sha256: &'static str,
+        reference_source: &'static str,
+        cue: XaCue,
+        coding: u8,
+        observer: &'static str,
+        observation: &'static str,
+        language: &'static str,
+        wav_sha256: &'static str,
+        pcm_frames: usize,
+        sample_rate: u32,
+        channels: u8,
+        initial_history: &'static str,
+        arithmetic: &'static str,
+    },
 }
 
 #[derive(Clone, Debug, Serialize)]

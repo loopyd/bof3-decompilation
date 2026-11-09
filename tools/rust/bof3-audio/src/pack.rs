@@ -17,6 +17,7 @@ use std::{
 pub struct Options {
     pub input: PathBuf,
     pub executable: PathBuf,
+    pub pitch_ram: Option<PathBuf>,
     pub output: PathBuf,
 }
 
@@ -37,6 +38,9 @@ pub struct BankReport {
 }
 
 pub fn banks(options: &Options) -> Result<Report> {
+    if options.pitch_ram.is_some() {
+        return Err("pack: runtime pitch RAM applies only to music".into());
+    }
     require_absent(&options.output)?;
     let root = options.input.canonicalize()?;
     if !root.is_dir() {

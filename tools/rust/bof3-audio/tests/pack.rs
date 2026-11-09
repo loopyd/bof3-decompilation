@@ -31,6 +31,7 @@ fn options(input: &Path, output: &Path) -> pack::Options {
     pack::Options {
         input: input.into(),
         output: output.into(),
+        pitch_ram: None,
         executable: std::env::var_os("BOF3_AUDIO_EXE")
             .map(PathBuf::from)
             .unwrap_or_else(|| PathBuf::from("missing-executable")),

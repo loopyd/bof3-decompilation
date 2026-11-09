@@ -1,7 +1,7 @@
-//! Source-qualified bank and sample references in the original effects dispatcher.
-//! References do not establish active context or accepted execution of a cue.
+//! Qualified effects references and directly observed XA content.
+//! Roles do not establish active context or accepted execution of a cue.
 
-use super::model::{AssetData, Association, Catalog, Layout, Role, SampleReference};
+use super::model::{AssetData, Association, Catalog, Layout, Role, RoleEvidence, SampleReference};
 use crate::machine::executable::Executable;
 use std::collections::BTreeMap;
 
@@ -86,14 +86,16 @@ pub(super) fn resolve(
         asset.roles.push(Role {
             role: "sfx",
             scope: "local_dispatch_reference",
-            auxiliary_entry: auxiliary.clone(),
-            reference_rows,
-            target,
-            dispatcher: DISPATCH,
-            dispatcher_file_offset: (DISPATCH - load_address) as usize + 0x800,
-            handler: HANDLERS[slot],
-            handler_file_offset: (HANDLERS[slot] - load_address) as usize + 0x800,
-            sample_references: Vec::new(),
+            evidence: RoleEvidence::LocalDispatch {
+                auxiliary_entry: auxiliary.clone(),
+                reference_rows,
+                target,
+                dispatcher: DISPATCH,
+                dispatcher_file_offset: (DISPATCH - load_address) as usize + 0x800,
+                handler: HANDLERS[slot],
+                handler_file_offset: (HANDLERS[slot] - load_address) as usize + 0x800,
+                sample_references: Vec::new(),
+            },
             playback: "unverified: active layout, loaded state, physical tone/sample selection, histories and independent PCM remain unresolved",
         });
     }
@@ -119,14 +121,22 @@ fn resolve_samples(catalog: &mut Catalog, executable: &Executable) {
         let Some(role) = bank.roles.first() else {
             continue;
         };
+        let RoleEvidence::LocalDispatch {
+            auxiliary_entry,
+            reference_rows,
+            ..
+        } = &role.evidence
+        else {
+            continue;
+        };
         let records = catalog
             .sources
             .iter()
             .flat_map(|source| &source.entries)
-            .find(|entry| entry.id == role.auxiliary_entry)
+            .find(|entry| &entry.id == auxiliary_entry)
             .and_then(|entry| entry.auxiliary_records.as_ref())
             .expect("bank role requires a bounded auxiliary table");
-        for &row in &role.reference_rows {
+        for &row in reference_rows {
             let record = records[row];
             let program_id = record[1] & 0x7f;
             let program = metadata
@@ -161,14 +171,24 @@ fn resolve_samples(catalog: &mut Catalog, executable: &Executable) {
                 let evidence = samples.entry(id).or_insert_with(|| {
                     let mut evidence = role.clone();
                     evidence.scope = "local_dispatch_sample_reference";
-                    evidence.reference_rows.clear();
+                    if let RoleEvidence::LocalDispatch { reference_rows, .. } = &mut evidence.evidence {
+                        reference_rows.clear();
+                    }
                     evidence.playback = "unverified: source-qualified physical sample reference only; active layout, loaded state, arbitration, audibility, histories and independent PCM remain unresolved";
                     evidence
                 });
-                if evidence.reference_rows.last() != Some(&row) {
-                    evidence.reference_rows.push(row);
+                let RoleEvidence::LocalDispatch {
+                    reference_rows,
+                    sample_references,
+                    ..
+                } = &mut evidence.evidence
+                else {
+                    unreachable!("sample references originate in the local dispatcher");
+                };
+                if reference_rows.last() != Some(&row) {
+                    reference_rows.push(row);
                 }
-                evidence.sample_references.push(SampleReference {
+                sample_references.push(SampleReference {
                     row,
                     layer,
                     program: program_id,
@@ -192,5 +212,52 @@ fn resolve_samples(catalog: &mut Catalog, executable: &Executable) {
             asset.content_type = "sfx";
             asset.roles.push(role);
         }
+    }
+}
+
+pub(super) fn resolve_vocals(catalog: &mut Catalog) {
+    const SOURCE_HASH: &str = "f4f9d8ce9a2849501e8cd44dfcfee85aad4bc92cd9ff5113acde43c9362c65cc";
+    for asset in &mut catalog.assets {
+        let AssetData::XaCue(cue) = &asset.data else {
+            continue;
+        };
+        let original = catalog.sources.iter().any(|source| {
+            source.source == asset.source && source.sha256.as_deref() == Some(SOURCE_HASH)
+        });
+        if !original
+            || (
+                cue.packed_id,
+                cue.filter_file,
+                cue.channel,
+                cue.sector_start,
+                cue.sector_stride,
+                cue.sector_count,
+                cue.last_sector,
+                cue.table_address,
+            ) != (0x2000, 1, 0, 0, 16, 71, 1120, 0x8018_3298)
+        {
+            continue;
+        }
+        asset.content_type = "vocals";
+        asset.roles.push(Role {
+            role: "vocals",
+            scope: "source_qualified_content_observation",
+            evidence: RoleEvidence::XaContentObservation {
+                source_sha256: SOURCE_HASH,
+                reference_source: cue.disc_path,
+                cue: cue.clone(),
+                coding: 0,
+                observer: "user",
+                observation: "Japanese vocals confirmed by listening to this exact cue on 2026-11-08",
+                language: "ja",
+                wav_sha256: "8c4421937c0d5b9f84bd94c4b6cb217fe4fd6df3c866d123ded7da6b1079a766",
+                pcm_frames: 286272,
+                sample_rate: 37800,
+                channels: 1,
+                initial_history: "zero_per_exported_asset",
+                arithmetic: "combined_rounded",
+            },
+            playback: "unverified: content observation only; active caller, game history, scheduler endpoint and independent playback remain unresolved",
+        });
     }
 }

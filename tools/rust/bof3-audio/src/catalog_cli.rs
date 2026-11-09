@@ -1,7 +1,9 @@
 //! Read-only catalog command surface.
 
 use crate::{
-    catalog::model::Asset, catalog::model::Catalog, machine::executable::Executable, Result,
+    catalog::model::{Asset, Catalog, Role, RoleEvidence},
+    machine::executable::Executable,
+    Result,
 };
 use serde::Serialize;
 use std::{ffi::OsString, path::PathBuf};
@@ -16,8 +18,9 @@ pub const HELP: &str =
  Numeric IDs: bank/song entry number, sample ID, SEP sequence ID, XA channel, packed XA cue ID (decimal or 0x-prefixed hex).\n\
  Ambiguous numbers require a qualified ID from index; sequence qualified IDs use sequence index.\n\
  Disc-root identities use relative paths; explicit archives use canonical absolute paths.\n\
- Audio index/query accept --type sfx with --executable for banks and physical samples referenced by local effects tables.\n\
- Roles identify references, not accepted playback. Unreferenced samples and vocal roles remain unresolved.\n\
+ Audio index/query accept --type sfx|vocals with --executable. SFX roles identify local bank/sample references.\n\
+ Vocals selects only source-qualified XA cues with direct listening evidence; other XA content remains unresolved.\n\
+ Roles do not establish active context or accepted playback.\n\
  Original music archives resolve by whole-file SHA-256. Other song identities,\n\
  active runtime layout, and XA scheduler endpoints remain unresolved.\n";
 
@@ -67,8 +70,18 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
         }
         match role.as_str() {
             "sfx" if executable.is_some() => {}
-            "sfx" => return Err("--type sfx requires --executable for original dispatcher evidence".into()),
-            "vocals" => return Err("--type vocals: classification is not yet verified; use an unfiltered inventory with explicit unresolved content types".into()),
+            "sfx" => {
+                return Err(
+                    "--type sfx requires --executable for original dispatcher evidence".into(),
+                )
+            }
+            "vocals" if executable.is_some() => {}
+            "vocals" => {
+                return Err(
+                    "--type vocals requires --executable for source-qualified XA cue evidence"
+                        .into(),
+                )
+            }
             _ => return Err("--type requires sfx or vocals".into()),
         }
     }
@@ -241,25 +254,63 @@ fn print_asset(asset: &Asset) {
         asset.game_song_ids
     );
     for evidence in &asset.roles {
-        println!(
+        print_role(evidence);
+    }
+}
+
+pub(crate) fn print_role(evidence: &Role) {
+    match &evidence.evidence {
+        RoleEvidence::LocalDispatch {
+            auxiliary_entry,
+            reference_rows,
+            target,
+            dispatcher,
+            dispatcher_file_offset,
+            handler,
+            handler_file_offset,
+            sample_references,
+        } => {
+            println!(
             "Role {}: {} via {} rows {:?}; {}@0x{:08X} (EXE +0x{:X}) -> 0x{:08X} (EXE +0x{:X}); {}",
             evidence.role,
             evidence.scope,
-            evidence.auxiliary_entry,
-            evidence.reference_rows,
-            evidence.target,
-            evidence.dispatcher,
-            evidence.dispatcher_file_offset,
-            evidence.handler,
-            evidence.handler_file_offset,
+            auxiliary_entry,
+            reference_rows,
+            target,
+            dispatcher,
+            dispatcher_file_offset,
+            handler,
+            handler_file_offset,
             evidence.playback
         );
-        for sample in &evidence.sample_references {
-            println!(
+            for sample in sample_references {
+                println!(
                 "Sample reference: row {}, layer {}, program {}, physical tone {}, VH +0x{:X}; {}@0x{:08X} (EXE +0x{:X})",
                 sample.row, sample.layer, sample.program, sample.tone, sample.header_offset,
-                evidence.target, sample.sample_reader, sample.sample_reader_file_offset
+                target, sample.sample_reader, sample.sample_reader_file_offset
             );
+            }
+        }
+        RoleEvidence::XaContentObservation {
+            source_sha256,
+            reference_source,
+            cue,
+            coding,
+            observer,
+            observation,
+            language,
+            wav_sha256,
+            pcm_frames,
+            sample_rate,
+            channels,
+            initial_history,
+            arithmetic,
+        } => {
+            println!("Role {}: {} via {} cue {:#06x}, file {}, channel {}, coding {:#04x}, sectors {}..={} stride {}; {}: {}; language {}; {}",
+                evidence.role, evidence.scope, reference_source, cue.packed_id, cue.filter_file,
+                cue.channel, coding, cue.sector_start, cue.last_sector, cue.sector_stride,
+                observer, observation, language, evidence.playback);
+            println!("Content evidence: source SHA-256 {source_sha256}; WAV SHA-256 {wav_sha256}; {pcm_frames} frames, {sample_rate} Hz, {channels} channel(s), {initial_history}, {arithmetic}");
         }
     }
 }

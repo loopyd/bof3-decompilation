@@ -366,10 +366,21 @@ uses the packed program block. The halfword reader at
 References beyond the declared sample allocations remain unresolved. Music's
 low-byte selection and zero-reference alias rules do not apply to this path.
 
-A reference can select a silent tone. Roles do not establish active layout,
-loaded state, accepted arbitration, audibility or PCM fidelity. Unreferenced
-samples and XA roles remain unresolved. `--type vocals` fails explicitly until
-source-qualified vocal evidence is available.
+A reference can select a silent tone. These SFX roles do not establish active
+layout, loaded state, accepted arbitration, audibility or PCM fidelity.
+Unreferenced samples remain unresolved.
+
+`index` and `query` accept `--mode audio --type vocals --executable EXE` for
+XA cue `0x2000` from the complete original US `BIN/SCE_XA/VOICE.STR`, identified
+by SHA-256
+`f4f9d8ce9a2849501e8cd44dfcfee85aad4bc92cd9ff5113acde43c9362c65cc`.
+The role records direct observation of Japanese vocals in that cue and retains
+the source hash, cue identity, sector selection, coding byte and decoded WAV
+identity. Renaming the complete source preserves its identity. Other XA cues and
+streams, banks, and altered or unrecognized sources receive no vocal role.
+Content observation does not establish the active caller, playback history,
+audible endpoint or native or hardware fidelity. `extract --type vocals` remains
+unsupported; extract a qualified XA cue ID from the vocal index instead.
 
 `extract --mode audio --kind bank --type sfx` applies the bank-role filter and
 exports every sample in each selected bank, including samples with unresolved
@@ -442,10 +453,11 @@ read all 26,115 selected sectors' subheaders from the original raw track.
 
 `index` and `query --mode audio --kind xa_cue --executable EXE` expose these
 source-qualified identities; `--id` accepts decimal or `0x`-prefixed packed IDs.
-These prefixes do not establish caller bounds beyond them. Other channels
-(including S_XA00 channels 4–7), SFX/vocal classification, scheduler stop timing
-and playback remain unresolved. Archive and stream preservation retains the
-unmapped sectors.
+These prefixes do not establish caller bounds beyond them. XA content roles
+other than the source-qualified vocal observation for cue `0x2000` remain
+unresolved. Other channels, including S_XA00 channels 4 through 7, scheduler
+stop timing and playback remain unresolved. Archive and stream preservation
+retains the unmapped sectors.
 
 ### US XA scheduler control flow
 
@@ -1497,10 +1509,11 @@ template's sample, envelope, pan, volume, velocity range and loop choices. Sampl
 header pitch correction must be zero for this calibration contract.
 
 The original routine can wrap its result to zero or index before its declared
-193-entry table. Zero steps, reads outside both verified pitch tables and excessive SF2 generator
-ranges remain explicit unsupported rows; requesting their zones fails. No key
-is silently omitted. Reading adjacent EXE bytes in isolated RAM does not prove
-their initialized-game state or give those accesses table authority.
+193-entry table. Strict tuning rejects zero steps and excessive SF2 generator
+ranges. The default isolated reference also rejects reads outside both verified
+pitch tables. Explicit frozen RAM contexts can supply the intervening gap as
+described below. No declared key is silently omitted. Readable adjacent EXE
+bytes alone do not establish initialized-game state.
 
 [Corpus checks](../../../tools/rust/bof3-audio/tests/voice/tuning.rs) cover 21,112 tones
 in 1,020 banks: 236,302 tone/key contexts, with 30,119 distinct key/center/shift
@@ -1537,7 +1550,7 @@ Current first failures are 137 pitch-table contexts and 41 zero pitches.
 #### Stopped-pitch SoundFont mapping
 
 Strict tuning continues to reject zero-step rows. Bank conversion can explicitly
-opt into key-on-only silence for known pitch-table zero steps whose `Published`
+opt into key-on-only silence for known-context zero steps whose `Published`
 key-on held sample is zero. Music extraction uses this under `--allow-approximations`.
 Native-reference priming and its minimum nonzero step can produce sound at zero
 pitch; this approximation does not establish sustained native silence.
@@ -1596,21 +1609,39 @@ unchanged; the active-snapshot follow-up below supports the earlier table.
 BGM000 program 2, tone 0, key 0 (center 83, shift 65) reads earlier-table
 address `0x8018430C` (offset `0xEE30C`, value 5,235, resulting pitch 81), while
 key 22 in the same declared range reads adjacent `0x8018444C` (`0xEE44C`).
-Thus the duplicate alone does not justify accepting this whole tone. Rejection
-diagnostics include the witness. Earlier-table reads are now supported per key;
-adjacent runtime-data reads remain rejected, and no declared keys are dropped.
-Scheduler-dependent values and sequence-reachable contexts remain required
-evidence for those remaining failures.
+The duplicate alone does not justify accepting this whole tone. Diagnostics
+include the witnessed lookup. Earlier-table reads are supported per key.
+Adjacent data remains rejected by the default isolated reference; accepting it
+requires an explicit frozen RAM context. All declared keys remain present.
+This explicit context does not establish sequence reachability or scheduler
+behavior.
 
 #### Verified earlier-table reads
 
-Both 193-halfword pitch tables are now checked against `US_PITCH_SHA256` when
+Both 193-halfword pitch tables are checked against `US_PITCH_SHA256` when
 constructing the exact-US tuning reference. A witnessed read inside either table
 can produce an SF2 mapping; its signed index relative to the note-on table and
-its actual address/region remain in the report. Reads into the intervening gap
-still fail. BGM000 program 2/tone 0/key 0 now maps original register 81 from
-`0x8018430C` (full EXE offset `0xEE30C`); its same-tone key 8 subsequently fails
-at `0x8018440C` (`0xEE40C`, adjacent data), so the bank is not silently accepted.
+actual address and region remain in the report. The default reference rejects
+the intervening gap. For example, BGM000 program 2/tone 0/key 0 maps register 81
+from `0x8018430C` at full EXE offset `0xEE30C`, but key 8 fails at adjacent
+address `0x8018440C` at `0xEE40C` without an explicit RAM context.
+
+Music extraction, PC rendering from a music archive and music packing accept
+`--pitch-ram RAM_FILE` alongside the original executable. The file must contain
+exactly 2 MiB of PSX RAM. Its 252-byte original pitch routine and both 386-byte
+pitch tables must match the executable. The reference imports only the 86-byte
+gap at `0x80184406..0x8018445C`; execution uses the original executable's code
+and tables.
+
+This mode evaluates a frozen supplied context. Song reports and song XML record
+the whole RAM, gap, routine and table hashes. Per-tone provenance identifies the
+RAM and gap; each lookup records its address, value, region and execution state.
+Packing requires the same whole RAM hash and regenerates the binding from
+preserved source bytes. Missing or different RAM fails. Strict tuning still
+rejects zero steps. `--allow-approximations` permits known-context zero steps
+only with a zero held initial sample under the `Published` model and the documented key-on-only silence
+limitation. Capture history, natural reachability, concurrent scheduling and
+PCM fidelity remain unverified.
 
 The extended [initialized-state probe](../../../tools/rust/bof3-audio/examples/tuning_init_probe.rs)
 executes original BGM004 sequence 0 for 1,700,000 reference-clock frames, watches
@@ -1821,6 +1852,12 @@ same bounded translation, including agreement between repeated source visits.
 SEP growth must fit the selected bank slot's sequence capacity in every known game
 layout because the active layout is unresolved. A layout that happens to fit does
 not establish the active context. Archive allocation capacity is checked separately.
+
+Loader slot records describe selected destinations for subsequent loads. They do
+not establish the placement of every resident bank or open sequence. Changing
+the records can leave an open sequence at a previous layout's destination.
+Mapping supplied media does not inspect that runtime history. Use the actual
+resident bytes and open sequence record to establish a live sequence context.
 
 Multiple songs sharing one bank/source merge their selected SEP, bank-header and
 sample-body replacements into one archive. Every selected song sharing a header
@@ -3462,7 +3499,7 @@ The exact US executable profile supplies verified loader associations. A bank
 needs one resolved body large enough for every declared sample; ambiguous or
 missing bodies fail before publication. `--type sfx` selects bank references
 under the [effects-role contract](#source-qualified-effects-references), retaining
-all samples in each selected bank. Vocal classification remains unresolved.
+all samples in each selected bank. `extract --type vocals` remains unsupported.
 Music uses `--mode music`; XA uses the separate stream/cue extraction surface.
 
 The root `audio.xml` (`bof3.audio-extraction/v1`) references relative bank
@@ -5818,7 +5855,9 @@ sequence indices and encoded sequence IDs remain separate. Full archive hashes
 support renamed originals; changed bytes require preserved identity evidence
 from interchange rather than filename guessing. Identical shipped archives
 (`BGMBAT00`/`BGMBAT02`) retain distinct identities by qualified disc path plus
-hash. Multiple supplied copies without that qualification require `--id`.
+hash, including when only one is supplied. An identified original file does not
+become its absent peer's content alias. Renamed unqualified inputs retain those
+aliases; multiple supplied copies without qualification require `--id`.
 
 ### PSF1 image contract
 

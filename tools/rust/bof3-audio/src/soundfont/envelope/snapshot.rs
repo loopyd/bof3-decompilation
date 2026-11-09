@@ -10,7 +10,7 @@ pub(crate) fn is_known_stop(row: &KeyTuning) -> bool {
         && row.sf2.is_none()
         && row
             .pitch_lookup
-            .is_none_or(|lookup| lookup.region.is_pitch_table())
+            .is_none_or(|lookup| lookup.has_known_context())
 }
 
 /// Published phase zero with three cleared history samples and coefficient -1.

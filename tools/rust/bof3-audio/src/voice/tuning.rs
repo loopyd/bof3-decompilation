@@ -16,6 +16,9 @@ use crate::{
 use serde::Serialize;
 use std::collections::BTreeMap;
 
+mod context;
+pub use context::RuntimeContext;
+
 const TONE_CONTEXT: u32 = 0x8001_0000;
 const RETURN: u32 = 0x8000_1000;
 
@@ -25,6 +28,7 @@ pub struct Reference {
     load_address: u32,
     text_size: usize,
     registers: BTreeMap<(u8, u8, u8), (u16, Lookup)>,
+    runtime_context: Option<RuntimeContext>,
 }
 
 /// A witnessed halfword load, not an arithmetic prediction of the address.
@@ -49,6 +53,14 @@ pub enum LookupRegion {
 impl LookupRegion {
     pub(crate) fn is_pitch_table(self) -> bool {
         matches!(self, Self::NoteOnPitchTable | Self::EarlierSpuPitchTable)
+    }
+}
+
+impl Lookup {
+    pub(crate) fn has_known_context(self) -> bool {
+        self.region.is_pitch_table()
+            || (self.execution_state == "frozen_runtime_gap"
+                && context::ADJACENT_RANGE.contains(&self.runtime_address))
     }
 }
 
@@ -105,6 +117,7 @@ impl Reference {
             load_address: exe.header().load_address,
             text_size: exe.header().text_size,
             registers: BTreeMap::new(),
+            runtime_context: None,
         })
     }
 
@@ -177,7 +190,11 @@ impl Reference {
             source_file_offset: offset + 0x800,
             value: table_value,
             region,
-            execution_state: "isolated_executable",
+            execution_state: if self.runtime_context.is_some() {
+                "frozen_runtime_gap"
+            } else {
+                "isolated_executable"
+            },
         };
         Ok((value, lookup))
     }
@@ -222,7 +239,7 @@ impl Reference {
             ((i64::from(lookup.runtime_address) - i64::from(self.profile.pitch_table)) / 2) as i32;
         row.pitch_table_index = Some(index);
         row.pitch_lookup = Some(lookup);
-        if !lookup.region.is_pitch_table() {
+        if !lookup.has_known_context() {
             row.sf2 = None;
             row.unsupported = Some("pitch routine reads outside verified pitch table; initialized game data context is required");
         }

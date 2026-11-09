@@ -35,11 +35,13 @@ fn current_policy_population_publication_and_original_runtime_playback() {
     let opts = pack::Options {
         input: root.0.join("export"),
         output: root.0.join("packed"),
+        pitch_ram: None,
         executable: exe_path.clone(),
     };
     bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![archive_path],
+        pitch_ram: None,
         executable: exe_path.clone(),
         output: opts.input.clone(),
         id: None,
@@ -79,6 +81,7 @@ fn current_policy_population_publication_and_original_runtime_playback() {
     let unchanged = pack::Options {
         output: root.0.join("unchanged"),
         input: opts.input.clone(),
+        pitch_ram: None,
         executable: opts.executable.clone(),
     };
     let report = bof3_audio::music::packing::songs(&unchanged).unwrap();
@@ -170,6 +173,7 @@ fn current_policy_population_publication_and_original_runtime_playback() {
             "program-population.emi",
             &media,
             &pc_archive::Options {
+                pitch_ram: None,
                 sequence: 0,
                 loops: None,
                 allow_approximations: true,
