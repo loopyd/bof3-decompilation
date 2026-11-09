@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EF300
   - - 2144
-    - asm
-    - func_801EF460
+    - c
+    - addWord0CToWord34AndWord10ToWord38And4ToTintTripletThenDecrementWorkByte9AndOnZeroDecrementGlobalWorkByteBOrClearFlag20ResetWorkAdvanceWorkByte2BmagicMagic01703_801EF460
+    - '@source: src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38And4ToTintTripletThenDecrementWorkByte9AndOnZeroDecrementGlobalWorkByteBOrClearFlag20ResetWorkAdvanceWorkByte2BmagicMagic01703_801EF460.c'
+    - '@behavior: Work byte 2 state 3 of this overlay, index 3 of the ten-word handler table at 0x801EEC10 (0x801EF11C, 0x801EF248, 0x801EF300, 0x801EF460, 0x801EF5FC, 0x801EF694, 0x801EF6EC, 0x801EF7E0, 0x801EF8B4, 0x801EF970) whose word at 0x801EEC1C is the only occurrence of this address in the payload; func_801EF058 copies that table into its frame and indexes it with scratchpad work-object byte 2. It adds step word 0xC into work word 0x34 and step word 0x10 into work word 0x38, adds 4 to the work colour triplet at bytes 0x5D/0x5E/0x5F, then decrements work countdown byte 9 and tests the truncated result. On zero it takes one of two exits: while work byte 0xB is non-zero it decrements shared battle work byte 0xB through the pointer cell at 0x801EB4E0 and invokes the helper at 0x801E5988, and otherwise it clears bit 0x20 of work byte 0, zeroes mode byte 0x5C, work byte 0x2B and the colour triplet, invokes the helper at 0x801E257C with the acting battler byte 0x80146374 and selector 2 when that byte is 3 or above, stores the byte helper 0x800AFF98 result into work byte 9 and increments work byte 2, selecting entry 4 at 0x801EF5FC. The 0x18-byte frame only keeps the return address at 0x10 across the two calls, and nothing is returned.'
   - - 2556
     - c
     - invokeHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroWhenGlobalWorkByteBIs1BmagicMagic01703_801EF5FC

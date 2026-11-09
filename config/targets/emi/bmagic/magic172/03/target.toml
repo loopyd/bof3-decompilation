@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/bmagic/raiseWorkByte9ByFourWhenBelow10InvokePointHelperStoreHeadingToward8014638CAndAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic17203_801EF650.c",
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusSixteenTintedByWorkByte9BmagicMagic17203_801EF7CC.c",
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908.c",
+    "src/bof3/bmagic/drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWithRadiusJitterBmagicMagic17203_801F02C8.c",
 ]
 psyq_source = "src/bof3/support/magic172_03_psyq.c"

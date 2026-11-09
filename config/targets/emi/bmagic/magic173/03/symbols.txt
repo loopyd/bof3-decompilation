@@ -5,7 +5,7 @@ forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17303_
 dispatchStateByte1Table0988BmagicMagic17303_801EEDF0 = 0x801EEDF0;
 T_801EEE34 = 0x801EEE34;
 func_801EEE3C = 0x801EEE3C;
-func_801EEEEC = 0x801EEEEC;
+seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC = 0x801EEEEC;
 func_801EF148 = 0x801EF148;
 func_801EF3D8 = 0x801EF3D8;
 func_801EF484 = 0x801EF484;

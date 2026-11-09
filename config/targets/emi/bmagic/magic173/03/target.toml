@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/bmagic/runReadinessHelperThenAdd4ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic17303_801F0648.c",
     "src/bof3/bmagic/runReadinessHelperTwiceThenAdvanceWorkByte2WhenReadyBmagicMagic17303_801F06B0.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17303_801EED90.c",
+    "src/bof3/bmagic/seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC.c",
 ]
 psyq_source = "src/bof3/support/magic173_03_psyq.c"

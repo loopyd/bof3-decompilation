@@ -113,8 +113,9 @@ segments:
     - asm
     - func_801F04EC
   - - 6744
-    - asm
-    - func_801F0658
+    - c
+    - addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenGlobalWorkByteBIs1AndChannelIsZeroBmagicMagic05603_801F0658
+    - '@source: src/bof3/bmagic/addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2WhenGlobalWorkByteBIs1AndChannelIsZeroBmagicMagic05603_801F0658.c'
   - - 6948
     - c
     - invokeHelperBmagicMagic05603_801F0724

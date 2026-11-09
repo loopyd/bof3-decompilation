@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF134
   - - 1524
-    - asm
-    - func_801EF1F4
+    - c
+    - incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and adds 1 to the work object byte 0x9, then adds 2 to the three counter bytes of the 12-byte counter record selected by the unsigned work byte 0xB, re-reading the cell and that byte for each group, and finally advances the work byte 2 dispatcher by incrementing work object byte 0x2 when the selected record byte 0x0 equals 0x10.'
   - - 1824
     - asm
     - func_801EF320

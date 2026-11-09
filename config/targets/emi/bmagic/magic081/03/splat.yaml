@@ -43,8 +43,10 @@ segments:
     - '@source: src/bof3/bmagic/publishSavedWorkPointerAdvancePreviousHandlerIndexWhenHelperReadyBmagicMagic08103_801EEE74.c'
     - '@behavior: Republishes the shared battle record word 0x74, its saved work-object pointer, through the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper at 0x8014DAEC, and when that helper returns a non-zero byte increments byte 0x1 of the previously published work object, the handler index this overlay dispatches on, before restoring the cell.'
   - - 732
-    - asm
-    - func_801EEEDC
+    - c
+    - claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC
+    - '@source: src/bof3/bmagic/claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC.c'
+    - '@behavior: Word 2 of the four-word handler pointer run at 0x801EEC04 that the frame dispatcher func_801EEC30 calls through work-object byte 1 scaled by four, so no jal in the payload names it. It claims one entry of the action-slot store through the shared allocator func_801E590C called with selector 1 and 0x42, scales the zero-extended low byte of the answer by the 0x78-byte record stride, clears record byte 1 and stores the scratchpad work-object pointer read from the cell 0x1F800044 into record word 0x74. It then republishes the shared battle record word 0x74 reached through the pointer cell 0x801EC2E0 through the scratchpad cell while keeping the cell previous value in a callee-saved register, calls the readiness helper func_8014DAEC, restores the cell, sets work byte 0xB to 1 and increments work byte 1, the handler index this overlay dispatches on. Takes no arguments and returns nothing.'
   - - 904
     - asm
     - func_801EEF88

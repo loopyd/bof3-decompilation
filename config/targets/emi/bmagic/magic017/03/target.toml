@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/bmagic/setWorkByte9To8AndAdvanceWorkByte2WhenHelperReadyBmagicMagic01703_801EF694.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy8ThenDecrementWorkByte9ThenCopyRecordTripletSetWorkByte9To8AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF7E0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenInvokeActingEnemyScriptSetFlag20Mode1SeedByte2BAndWorkColorTripletToC0SetWorkByte9To8AndAdvanceWorkByte2BmagicMagic01703_801EF6EC.c",
+    "src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38And4ToTintTripletThenDecrementWorkByte9AndOnZeroDecrementGlobalWorkByteBOrClearFlag20ResetWorkAdvanceWorkByte2BmagicMagic01703_801EF460.c",
 ]
 psyq_source = "src/bof3/support/magic017_03_psyq.c"

@@ -47,8 +47,10 @@ segments:
     - '@source: src/bof3/bmagic/drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1WhenPadStateSetBmagicMagic06000_801EEE84.c'
     - '@behavior: Result-panel step of the current battle target. Reads the selector byte D_80146384 and, when it is below 3 in an unsigned compare (sltiu 3), draws the party result panel through drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174; any larger selector takes the non-party path through func_801EF2DC instead, so exactly one arm runs. When the shared pressed-pad-state halfword D_80145AA8 is nonzero it then marks the scratchpad work-object byte at offset 0xB with 0x83 and advances that object byte at offset 0x1 by one, from two separate reads of the pointer cell 0x1F800044. Frame 0x18 holding ra, no arguments and no return value.'
   - - 772
-    - asm
-    - func_801EEF04
+    - c
+    - raiseFlag4AndInvokeHelperWhenWorkByteBIs80BmagicMagic06000_801EEF04
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBIs80BmagicMagic06000_801EEF04.c'
+    - '@behavior: Work-byte-1 handler of this overlay, index 4 of the five-entry code pointer run at 0x801EEC04 (0x801EECA4, 0x801EED68, 0x801EEE00, 0x801EEE84 and this address, terminated by a zero word) that the dispatcher func_801EEC34 copies into its 0x30-byte frame and selects with the scratchpad work object byte at offset 0x1 scaled by four. It reads the scratchpad work-object pointer cell 0x1F800044 once, before the 0x18-byte frame exists, and returns as soon as that object byte at offset 0xB is not 0x80, the immediate being materialised into a register ahead of the branch. Only on that equality does it raise bit 0x4 of the shared battle global halfword D_801462E8 (unsigned halfword load, ori, halfword store through one address register, the store filling the call delay slot) and then invoke the shared helper func_801E5988 with no arguments. The 0x18-byte frame only keeps ra at 0x10 across that call; nothing is returned and no other state is read or written.'
   - - 848
     - asm
     - func_801EEF50

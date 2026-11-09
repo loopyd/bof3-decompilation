@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801EEE3C
   - - 748
-    - asm
-    - func_801EEEEC
+    - c
+    - seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC
+    - '@source: src/bof3/bmagic/seedWorkMotionFromBattlerClassThenSetHeadingToward8014638CPublishHalfwordPairAndAdvanceWorkByte2BmagicMagic17303_801EEEEC.c'
+    - '@behavior: Entry 2 of the ten-entry code-pointer run based at 0x801F0988, indexed by scratchpad work-object byte 1: it reads the record pointer at 0x8014638C once, copies record byte 8 from the shared pointer at 0x801EB4E0 into work byte 8, selects the work motion triple at 0xC, 0x10 and 0x14 from the acting battler byte at 0x80146374 - 0x4000, 0 and 0xC00000 below 3, otherwise the kind byte of the 0x118-byte record at 0x801EB6AC indexed by that byte minus 3, with 0x38000, 0 and 0 for kind 0x61, 0x20000 when bit 2 of work byte 8 is set and 0x30000 otherwise with 0x800000 for kind 0x6C, and 0x10000 with 0x800000 for every other kind - then calls func_801DD350 with the work object, adds the battle record words 0x34, 0x38 and 0x3C into those same work words, stores func_8017A138 of the record-minus-work differences in words 0x34 and 0x38 into work word 0xC, clears work word 0x10, calls func_800AF764 with that clearing store in its delay slot, publishes the work halfword pair at 0x2E and 0x30 into the two leading halfword pairs of row work byte 4 of the 0x80-byte-row pair table at 0x801F09B0, clears work byte 0xB, sets work byte 9 to 0x10 and work byte 0xA to 1 and advances work byte 2 from a 0x18-byte frame that keeps the return address and the saved record pointer.'
   - - 1352
     - asm
     - func_801EF148

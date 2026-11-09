@@ -97,8 +97,10 @@ segments:
     - c
     - invokeHelperBmagicMagic05703_801EF81C
   - - 3132
-    - asm
-    - func_801EF83C
+    - c
+    - dispatchStateByte2Tableec44BmagicMagic05703_801EF83C
+    - '@source: src/bof3/bmagic/dispatchStateByte2Tableec44BmagicMagic05703_801EF83C.c'
+    - '@behavior: State-2 handler of the overlay work dispatcher func_801EF02C, entry 2 of the three-entry code pointer table at 0x801EEC20, whose work byte 1 selects it. It publishes 0x800C3800 into the global at 0x801459F0 and copies the three words at 0x801EEC44 (0x801EF900, 0x801EFA38, 0x801EFABC) into its own 0x28-byte frame, then invokes the entry the scratchpad work object unsigned byte 0x02 selects with no arguments. After the handler returns it re-reads the work-object pointer cell at 0x1F800044 and, when work byte 0 has bit 0 set and the shared record byte 0x0A at 0x801EB4E0 is zero, runs the shared main-executable service func_8014D290, then publishes 0x800D3800 into 0x801459F0. Byte 0x02 stays the dispatch index of the second-phase table and record byte 0x0A stays offset-anchored. Takes no arguments, returns nothing through the jr $ra at 0x801EF8F8 inside a 0x28-byte frame that keeps $ra at 0x20.'
   - - 3328
     - asm
     - func_801EF900

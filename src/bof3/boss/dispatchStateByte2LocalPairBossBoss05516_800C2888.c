@@ -2,7 +2,8 @@
 
 typedef void (*Boss05516Handler)(void);
 
-void func_800C28E0(void);
+void applyMainLookupRecord30CClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C28E0(
+    void);
 void func_800C2948(void);
 
 /* @source 0x800C2888
@@ -24,7 +25,9 @@ void func_800C2948(void);
  * @residual none
  */
 void dispatchStateByte2LocalPairBossBoss05516_800C2888(void) {
-  Boss05516Handler handlers[2] = { func_800C28E0, func_800C2948 };
+  Boss05516Handler handlers[2] = {
+      applyMainLookupRecord30CClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C28E0,
+      func_800C2948};
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

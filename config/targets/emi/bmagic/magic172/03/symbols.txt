@@ -17,7 +17,7 @@ drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusSixte
 func_801EFA2C = 0x801EFA2C;
 func_801EFD04 = 0x801EFD04;
 func_801EFFE8 = 0x801EFFE8;
-func_801F02C8 = 0x801F02C8;
+drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWithRadiusJitterBmagicMagic17203_801F02C8 = 0x801F02C8;
 func_801F05E8 = 0x801F05E8;
 drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusTwentyFourTintedByWorkByte9CoefficientsOfWorkByte0BBmagicMagic17203_801F0908 = 0x801F0908;
 D_801F0B74 = 0x801F0B74;
