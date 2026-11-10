@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801EF8F0
   - - 5128
-    - asm
-    - func_801F0008
+    - c
+    - dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F0008
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F0008.c'
+    - '@behavior: Dispatch work byte 2, call the shared helper, then call 0x801EF1B0, 0x801F043C, 0x801F070C and PopMatrix when active.'
   - - 5264
     - asm
     - func_801F0090

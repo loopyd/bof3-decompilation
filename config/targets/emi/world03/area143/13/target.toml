@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/spawnWorkRecordPairsFromActiveSeedCountdownsWorld03Area14313_801F30A0.c",
     "src/bof3/world/initialize16WorkRecordsFromSignedPairsWorld03Area14313_801F2FE0.c",
     "src/bof3/world/selectStatus4COr4BOrFFFFAndState8WhenGateClearWorld03Area14313_801F3AF4.c",
     "src/bof3/world/clearWorkFlagsWhenWorkTableIdleWorld03Area14313_801F2D08.c",

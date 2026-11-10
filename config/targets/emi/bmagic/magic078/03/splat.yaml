@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801F00A0
   - - 5356
-    - asm
-    - func_801F00EC
+    - c
+    - incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC
+    - '@source: src/bof3/bmagic/incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC.c'
+    - '@behavior: Tests work byte 9 against 8; invokes helper 0x8015D71C with 0x101 and increments work byte 2 on equality, otherwise increments byte 9. Reloads the scratchpad work pointer after the call. Takes no arguments and returns nothing.'
   - - 5452
     - asm
     - func_801F014C

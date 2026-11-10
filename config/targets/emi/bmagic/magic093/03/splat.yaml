@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF750
   - - 2988
-    - asm
-    - func_801EF7AC
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09303_801EF7AC
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09303_801EF7AC.c'
+    - '@behavior: Project the work record position, compose the shared matrix under zero rotation and install the transform.'
   - - 3164
     - asm
     - func_801EF85C

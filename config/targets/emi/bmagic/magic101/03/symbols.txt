@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-func_801EECCC = 0x801EECCC;
+seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC = 0x801EECCC;
 func_801EEE68 = 0x801EEE68;
 func_801EEED4 = 0x801EEED4;
 decrementWorkByteAAndAdvanceWorkByte1OnZeroBmagicMagic10103_801EEF20 = 0x801EEF20;

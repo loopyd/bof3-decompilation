@@ -59,8 +59,10 @@ segments:
     # @source 0x801F2FE0
     # @behavior Initializes 16 work records from signed coordinate pairs and random bytes.
   - - 1184
-    - asm
-    - func_801F30A0
+    - c
+    - spawnWorkRecordPairsFromActiveSeedCountdownsWorld03Area14313_801F30A0
+    # @source 0x801F30A0
+    # @behavior Spawns work-record pairs from active seed countdowns.
   - - 1516
     - c
     - dispatchStateByte2Table4314World03Area14313_801F31EC

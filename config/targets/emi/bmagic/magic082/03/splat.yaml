@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801EF0C4
   - - 1292
-    - asm
-    - func_801EF10C
+    - c
+    - decrementWorkByteARecordCountersThenQueueActionOnCountdownZeroBmagicMagic08203_801EF10C
+    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersThenQueueActionOnCountdownZeroBmagicMagic08203_801EF10C.c'
+    - '@behavior: Decrement work-byte-A record counters and countdown; on zero submit record, queue action slot and advance work bytes B and 1.'
   - - 1876
     - asm
     - func_801EF354

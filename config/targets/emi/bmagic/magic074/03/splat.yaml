@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801EFA50
   - - 3840
-    - asm
-    - func_801EFB00
+    - c
+    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07403_801EFB00
+    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07403_801EFB00.c'
+    - '@behavior: Advances record halfword C, accumulates sample and movement into halfwords 20 and 22, and decrements byte countdowns before clearing the record at zero.'
   - - 4068
     - asm
     - func_801EFBE4

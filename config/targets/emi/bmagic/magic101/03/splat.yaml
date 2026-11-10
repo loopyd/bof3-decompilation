@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC18
   - - 204
-    - asm
-    - func_801EECCC
+    - c
+    - seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC
+    - '@source: src/bof3/bmagic/seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC.c'
+    - '@behavior: Seed work byte 8 from the shared record, initialize work counters and queue sixteen action slots, then advance work byte 1.'
   - - 616
     - asm
     - func_801EEE68

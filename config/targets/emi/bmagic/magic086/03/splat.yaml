@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801EF9E0
   - - 5176
-    - asm
-    - func_801F0038
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic08603_801F0038
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic08603_801F0038.c'
+    - '@behavior: Dispatch the handler indexed by work byte 2, re-read the scratchpad work pointer and, when work bytes 0 and 2 are nonzero, invoke the local transform and draw helpers followed by PopMatrix.'
   - - 5312
     - c
     - incrementWorkByte2WhenGlobalWorkByteBIs1BmagicMagic08603_801F00C0
