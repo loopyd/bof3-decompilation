@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "6aada348dc88df3e4b92aff01996772df1aacaf5",
-  "published_at": "2026-11-10T21:49:25.955167+00:00",
+  "revision": "a442f53599fff688070965809a4745a6863fef80",
+  "published_at": "2026-11-10T22:36:49.725291+00:00",
   "counts": {
-    "completed": 5141,
+    "completed": 5142,
     "partial": 301,
-    "unlifted": 5089,
+    "unlifted": 5088,
     "invalid": 0,
     "total": 10531,
     "symbols": {
-      "named": 67658,
-      "raw": 55985,
+      "named": 67659,
+      "raw": 55984,
       "total": 123643
     }
   },
@@ -1297,14 +1297,14 @@
       "family": "bmagic",
       "archive": "magic105",
       "entry": "03",
-      "completed": 5,
+      "completed": 6,
       "partial": 1,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 166,
-        "raw": 135,
+        "named": 167,
+        "raw": 134,
         "total": 301
       }
     },
