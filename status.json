@@ -1,8 +1,8 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "d561df554aebf1ee9d080bf92bea2fc0af44d716",
-  "published_at": "2026-11-10T08:01:32.963638+00:00",
+  "revision": "da2b14be93de55d52917bcc35df3ad0600fc0750",
+  "published_at": "2026-11-10T08:02:02.865521+00:00",
   "counts": {
     "completed": 4856,
     "partial": 251,
