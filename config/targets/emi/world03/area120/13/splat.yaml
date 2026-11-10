@@ -89,8 +89,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkByte2WhenOverlayStateWordIs50005ThenDrawQuadWorld03Area12013_801F3B28.c'
     - '@behavior: reads the shared overlay state word at 0x80143B90 with one 32-bit load and compares it against the packed halfword pair 0x00050005; while that word matches it advances byte 0x02 of the scratchpad work record published through pointer cell 0x1F800044 by one, the record byte the work-byte-2 dispatcher table at 0x801F43E8 indexes, and it then calls the quad drawer func_801F3F5C with the fixed arguments (0x80, 0x40, 1, 0). Takes no arguments and returns nothing.'
   - - 3972
-    - asm
-    - func_801F3B84
+    - c
+    - redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3B84
+    - '@source: src/bof3/world/redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3B84.c'
+    - '@behavior: Step 2 of the work-byte-2 handler run this overlay dispatches through the local table at 0x801F43E8. While the shared overlay state halfword at 0x80143B90 reads 5 and the partner halfword at 0x80143B92 reads anything else, it decrements work record byte 0x02 through the scratchpad pointer cell 0x1F800044, which sends the next frame back to step 1, the handler at 0x801F3B28. It then folds the record pointer held at work offset 0x0C: the 32-bit word that pointer addresses is masked to 0x00FFFF00 and matched against five scene states, and a match rewrites work byte 0x02 with the step that state resumes at, 4 for 0x20800, 6 for 0x10600, 6 for 0x20600, 5 for 0x30600 and 3 for 0x40600, each matched through a fresh load of the scratchpad pointer cell. A masked word of 0x10300 instead replaces the first quad argument, otherwise 0x80, with six times the shared main-executable byte at 0x80146308, plus 0x3F and truncated to a multiple of 8. It then calls the quad drawer func_801F3F5C with the fixed arguments (0x40, 1, 0) beside that first argument. Takes no arguments and returns nothing.'
   - - 4372
     - asm
     - func_801F3D14

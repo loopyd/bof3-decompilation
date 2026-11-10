@@ -19,7 +19,7 @@ decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHal
 dispatchStateByte3Table52A0World01Area06513_801F36C4 = 0x801F36C4;
 func_801F3708 = 0x801F3708;
 func_801F3788 = 0x801F3788;
-func_801F3860 = 0x801F3860;
+advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World01Area06513_801F3860 = 0x801F3860;
 func_801F3960 = 0x801F3960;
 func_801F3A10 = 0x801F3A10;
 func_801F3B38 = 0x801F3B38;

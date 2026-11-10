@@ -17,6 +17,7 @@ support_sources = [
     "src/bof3/world/area04113DispatchTables.c",
     "src/bof3/world/setWorkStepWord4000RunAccumulatorArmCountdown7EnterHandlerOneAndConsumeSharedCountdownWorld01Area04113_801F3E80.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area04113_801F3CD4.c",
+    "src/bof3/world/setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48.c",
     "src/bof3/world/setHalfwordFF00AndTwoWorld01Area04113_801F3E00.c",
     "src/bof3/world/invokeHelperArgWorld01Area04113_801F4230.c",
     "src/bof3/world/queueSharedUiElementBlock40x27To28Size0World01Area04113_801F41F8.c",

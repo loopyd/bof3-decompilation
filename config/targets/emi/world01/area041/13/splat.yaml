@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F387C
   - - 3656
-    - asm
-    - func_801F3A48
+    - c
+    - setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48
+    - '@source: src/bof3/world/setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48.c'
+    - '@behavior: latches 0xFFFF into the shared status halfword D_801490A8, then reads the shared gate byte D_801490C7: while that byte is zero it runs the shared front-end step helper 0x801BE1B0 with 1 and stores 0x0A into the shared area status byte D_80146865, and once the gate byte is set it runs the same helper with 2 and stores 0x14 there instead.'
   - - 3744
     - asm
     - func_801F3AA0

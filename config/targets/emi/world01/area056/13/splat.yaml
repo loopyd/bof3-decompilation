@@ -74,8 +74,9 @@ segments:
     - asm
     - func_801F3194
   - - 1536
-    - asm
-    - func_801F3200
+    - c
+    - clearGateStatusQueueCue208AndArmFrontEndRequestGate2Type7AtScrollPairWhenGateClearAndFlagByte7fWorld01Area05613_801F3200
+    - '@source: src/bof3/world/clearGateStatusQueueCue208AndArmFrontEndRequestGate2Type7AtScrollPairWhenGateClearAndFlagByte7fWorld01Area05613_801F3200.c'
   - - 1668
     - c
     - dispatchWorkByte4Table3898World01Area05613_801F3284

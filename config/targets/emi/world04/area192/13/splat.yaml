@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F3118
   - - 1644
-    - asm
-    - func_801F326C
+    - c
+    - lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C
+    - '@source: src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C.c'
+    - '@behavior: Searches the caller code byte in the five-entry row table 0x801F3878, scales the found position by the nine-column stride and clamps the shared counter D_80144F56 to 8, then asks the shared wait helper 0x8015B5D4 about the main-RAM bank 0x80144EF8 with id 0x0A: while that wait is pending the answer comes from the sibling table lookup 0x801F33E4, otherwise the byte at +0x1A of the 164-byte field record at the D_80181B10 slot of the code byte selects the column of the 0x801F3818 rows, or of the 0x801F3848 rows when the id 2 wait on D_8014686C reports set.'
   - - 2020
     - c
     - lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4

@@ -97,8 +97,9 @@ segments:
     - decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928
     - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c'
   - - 3696
-    - asm
-    - func_801EFA70
+    - c
+    - applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70
+    - '@source: src/bof3/bmagic/applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70.c'
   - - 3796
     - c
     - invokeHelperBmagicMagic02003_801EFAD4

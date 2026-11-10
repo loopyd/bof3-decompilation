@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/invokeTwoHelpersWorld01Area06513_801F34D8.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld01Area06513_801F3544.c",
     "src/bof3/world/dispatchStateByte3Table52A0World01Area06513_801F36C4.c",
+    "src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World01Area06513_801F3860.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640.c",
     "src/bof3/support/area065_13_psyq.c",
 ]

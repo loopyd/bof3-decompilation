@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F3788
   - - 3168
-    - asm
-    - func_801F3860
+    - c
+    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World01Area06513_801F3860
+    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World01Area06513_801F3860.c'
+    - '@behavior: Byte-2 state handler 6 of the eight-entry handler table 0x801F5290. While work byte 0x0B is still zero it increments work byte 0x09 and, once that stored byte reaches 0x5A, increments work byte 0x0B through a second read of the scratchpad pointer cell 0x1F800044. It then increments state byte 0x03 through another read of the cell when the shared byte 0x801454F2 is nonzero and work byte 0x0B is nonzero, or the byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set. Finally it reads the cell again and passes 0x5C and the signed halfword at offset 0x30 to the local emitter 0x801F40FC. Takes no arguments and returns nothing.'
   - - 3424
     - asm
     - func_801F3960

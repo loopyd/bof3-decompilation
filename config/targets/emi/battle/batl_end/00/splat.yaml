@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801EF7B4
   - - 3184
-    - asm
-    - func_801EF870
+    - c
+    - gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870
+    - '@source: src/bof3/battle/gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870.c'
+    - '@behavior: Battle-end counted-list gate and phase change: once the EXE-side EMI loader reports ready at 0x80162D00, walks the counted list (length byte at 0x80146327, halfword ids at 0x80146334, per-id counts at 0x80146354) and passes every entry through the shared record gate 0x801650B4 as the id''s high byte, the id''s low byte and the entry''s count with a zero fourth argument, then sets the battle mode byte at 0x801462E1 to 4 and clears 0x801462E2, 0x801462E3 and 0x801462E4; the length byte is re-read every iteration.'
   - - 3368
     - asm
     - func_801EF928

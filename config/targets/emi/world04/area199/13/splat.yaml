@@ -51,8 +51,9 @@ segments:
     - asm
     - func_801F2E14
   - - 640
-    - asm
-    - func_801F2E80
+    - c
+    - drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80
+    - '@source: src/bof3/world/drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80.c'
   - - 1944
     - c
     - drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Area19913_801F3398
