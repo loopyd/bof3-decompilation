@@ -3015,7 +3015,7 @@ Queued and pending frames, timeout drops, muted sectors, consumption and empty
 output are counted separately. Malformed input fails on a private candidate
 without changing queue state. Host wait timing and hardware latency remain open.
 
-The native Audio ABI 7 journal pairs each XA/CDDA feed with mutex-protected
+The native Audio ABI 8 journal pairs each XA/CDDA feed with mutex-protected
 queue counts, the initial capacity predicate and elapsed host wait duration.
 These observations can supply admission outcomes for a Rust replay. They do not
 schedule production host output or convert a host duration into CPU cycles. See
@@ -3026,6 +3026,11 @@ pair and later changes at voice-source frames. Confirmed worker enqueue ranges
 can join those inputs to captured PCM. The left and right values come from
 separate mixer reads. They do not locate CPU writes or establish ADSR, reverb or
 host scheduling behavior.
+
+The envelope-input journal records the controls consumed by each ADSR phase,
+including later control and phase changes. It retains the native read order and
+contains no envelope level or counter. These observations can qualify supplied
+component inputs while CPU/sample phase remains separate.
 
 XA mute is sampled at sector admission. An admitted muted sector advances ADPCM
 predictor history, but does not resample or append output. Previously queued
