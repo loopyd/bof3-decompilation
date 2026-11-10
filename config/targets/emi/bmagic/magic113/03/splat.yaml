@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801EFDA0
   - - 5440
-    - asm
-    - func_801F0140
+    - c
+    - dispatchWorkByte2HandlerThenInvokeF440And02CCAndPopWhenWorkByte0NonzeroBmagicMagic11303_801F0140
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF440And02CCAndPopWhenWorkByte0NonzeroBmagicMagic11303_801F0140.c'
+    - '@behavior: Dispatches unsigned work byte 2 through table 0x801F0BCC, reloads the work pointer and, when byte 0 is nonzero, calls 0x801EF440, 0x801F02CC and PopMatrix.'
   - - 5560
     - c
     - incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8

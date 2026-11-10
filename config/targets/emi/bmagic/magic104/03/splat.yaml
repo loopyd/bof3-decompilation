@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EFA54
   - - 3884
-    - asm
-    - func_801EFB2C
+    - c
+    - drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C
+    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C.c'
+    - '@behavior: Draw thirty-two translucent Gouraud fan triangles using a sampled work-byte-9 radius and a work-state-3 origin fade; submit packets at work coordinates plus signed rim offsets.'
   - - 4660
     - asm
     - func_801EFE34

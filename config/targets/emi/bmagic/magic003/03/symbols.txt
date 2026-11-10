@@ -12,7 +12,7 @@ clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic
 func_801EF268 = 0x801EF268;
 dispatchWorkByte1LocalPairBmagicMagic00303_801EF2CC = 0x801EF2CC;
 func_801EF324 = 0x801EF324;
-func_801EF3C8 = 0x801EF3C8;
+decrementWorkByte9ThenSeedWorkMotionCopyTripletRearmFromHelperAFF98AndAdvanceWorkByte2BmagicMagic00303_801EF3C8 = 0x801EF3C8;
 func_801EF478 = 0x801EF478;
 func_801EF578 = 0x801EF578;
 func_801EF644 = 0x801EF644;

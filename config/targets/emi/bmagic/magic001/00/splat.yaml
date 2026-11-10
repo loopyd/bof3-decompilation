@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801EF408
   - - 2152
-    - asm
-    - func_801EF468
+    - c
+    - invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468
+    - '@source: src/bof3/bmagic/invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468.c'
+    - '@behavior: Calls helper 0x8014DAEC three times; when the third returned byte is nonzero, invokes helpers with 0x203 and the battle byte plus 0xC, decrements work byte 9, then reloads the scratchpad work pointer and subtracts 3 from work byte 2 while the countdown is nonzero or advances it otherwise.'
   - - 2328
     - asm
     - func_801EF518

@@ -46,8 +46,10 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic04003_801EEF48
     - '@source: src/emi/bmagic/magic040/03/magic04003DispatchTables.c'
   - - 908
-    - asm
-    - func_801EEF8C
+    - c
+    - dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C.c'
+    - '@behavior: Dispatch work byte 2 through four copied handlers, then invoke 0x801EF7FC and 0x801EF600 twice when active.'
   - - 1140
     - c
     - copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074

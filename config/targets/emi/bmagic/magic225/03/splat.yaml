@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801F0140
   - - 5660
-    - asm
-    - func_801F021C
+    - c
+    - stepWorkPositionPairGrowWords40And44CountdownByte9AndClearAtZeroBmagicMagic22503_801F021C
+    - '@source: src/bof3/bmagic/stepWorkPositionPairGrowWords40And44CountdownByte9AndClearAtZeroBmagicMagic22503_801F021C.c'
+    - '@behavior: Grows work words 0x40 and 0x44, steps position words 0x34 and 0x38 from angle word 0x14, and counts down byte 9 before clearing work bytes at zero.'
   - - 5844
     - c
     - reserveFirstFreeRecordBmagicMagic22503_801F02D4

@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EF324
   - - 1992
-    - asm
-    - func_801EF3C8
+    - c
+    - decrementWorkByte9ThenSeedWorkMotionCopyTripletRearmFromHelperAFF98AndAdvanceWorkByte2BmagicMagic00303_801EF3C8
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedWorkMotionCopyTripletRearmFromHelperAFF98AndAdvanceWorkByte2BmagicMagic00303_801EF3C8.c'
+    - '@behavior: Decrements work byte 9 and on zero seeds motion words, copies the word triplet, invokes helpers, rearms byte 9 and advances byte 2.'
   - - 2168
     - asm
     - func_801EF478

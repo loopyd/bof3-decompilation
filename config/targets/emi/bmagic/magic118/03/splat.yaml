@@ -70,8 +70,10 @@ segments:
     - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C.c'
     - '@behavior: Projects the work record position, builds a zero-angle rotation, composes the shared matrix and installs the transform.'
   - - 2748
-    - asm
-    - func_801EF6BC
+    - c
+    - drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC
+    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC.c'
+    - '@behavior: Draws thirty-two translucent Gouraud quads between radii 128 and 192 with the inner edge tinted by work byte 9 times six, linked at slot 5 between draw-mode packets.'
   - - 3612
     - c
     - drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C

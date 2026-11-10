@@ -11,6 +11,6 @@ func_801EF0A4 = 0x801EF0A4;
 func_801EF108 = 0x801EF108;
 func_801EF194 = 0x801EF194;
 projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C = 0x801EF60C;
-func_801EF6BC = 0x801EF6BC;
+drawThirtyTwoTranslucentGouraudQuadsBetweenRadii128And192TintingInnerEdgeByWorkByte9TimesSixBmagicMagic11803_801EF6BC = 0x801EF6BC;
 drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C = 0x801EFA1C;
 func_801EFCD4 = 0x801EFCD4;

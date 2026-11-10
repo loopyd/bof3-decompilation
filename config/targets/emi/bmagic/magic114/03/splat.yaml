@@ -119,8 +119,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C.c'
     - '@behavior: Seeds work header and parity, clears counters, advances byte 2, and calls resident helpers.'
   - - 8780
-    - asm
-    - func_801F0E4C
+    - c
+    - call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C
+    - '@source: src/bof3/bmagic/call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C.c'
+    - '@behavior: Calls helper 0x801E5988 when the shared readiness byte is nonzero, otherwise helper 0x8014D290.'
   - - 8848
     - asm
     - func_801F0E90
