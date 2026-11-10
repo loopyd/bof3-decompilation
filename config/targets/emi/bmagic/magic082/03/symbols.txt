@@ -22,6 +22,6 @@ func_801EFEF4 = 0x801EFEF4;
 func_801EFFE8 = 0x801EFFE8;
 func_801F00DC = 0x801F00DC;
 func_801F0260 = 0x801F0260;
-func_801F03E0 = 0x801F03E0;
+drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0 = 0x801F03E0;
 drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairAtRadiusArgumentWithGreyCentreBmagicMagic08203_801F0A84 = 0x801F0A84;
 D_801F0C9C = 0x801F0C9C;

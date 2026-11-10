@@ -110,8 +110,10 @@ segments:
     - asm
     - func_801F0260
   - - 6112
-    - asm
-    - func_801F03E0
+    - c
+    - drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0
+    - '@source: src/bof3/bmagic/drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0.c'
+    - '@behavior: Draw two four-triangle fans at opposite depths with work-byte-4 palettes and work-byte-9 phase.'
   - - 7812
     - c
     - drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairAtRadiusArgumentWithGreyCentreBmagicMagic08203_801F0A84

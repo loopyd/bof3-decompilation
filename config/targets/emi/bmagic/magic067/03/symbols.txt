@@ -14,7 +14,7 @@ advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96Bmagi
 func_801EF59C = 0x801EF59C;
 func_801EF688 = 0x801EF688;
 func_801EF79C = 0x801EF79C;
-func_801EFF24 = 0x801EFF24;
+dispatchWorkByte2HandlerThenInvoke00C4WhenWorkByte0NonzeroBmagicMagic06703_801EFF24 = 0x801EFF24;
 clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C = 0x801EFF8C;
 incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06703_801EFFCC = 0x801EFFCC;
 decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06703_801F001C = 0x801F001C;

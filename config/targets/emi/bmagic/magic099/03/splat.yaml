@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801EF6C4
   - - 3032
-    - asm
-    - func_801EF7D8
+    - c
+    - incrementWorkByteBAndWord0CProjectPositionPairAtRadius40ThenCountDownByteAAndAdvanceSourceByteBAndCallE5988BmagicMagic09903_801EF7D8
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius40ThenCountDownByteAAndAdvanceSourceByteBAndCallE5988BmagicMagic09903_801EF7D8.c'
+    - '@behavior: Project the work position pair at radius 40, count down byte A, then advance source byte B and call 0x801E5988 when zero.'
   - - 3312
     - asm
     - func_801EF8F0

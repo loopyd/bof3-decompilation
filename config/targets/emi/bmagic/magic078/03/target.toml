@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C.c",
     "src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228.c",
     "src/bof3/bmagic/incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC.c",
+    "src/bof3/bmagic/applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c",

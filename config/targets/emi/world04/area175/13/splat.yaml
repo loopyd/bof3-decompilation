@@ -135,8 +135,10 @@ segments:
     - setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3716
-    - asm
-    - func_801F3A84
+    - c
+    - setStatus77AndByte801F294D0AIfGateElseFFFFWorld04Area17513_801F3A84
+    - '@source: src/bof3/world/setStatus77AndByte801F294D0AIfGateElseFFFFWorld04Area17513_801F3A84.c'
+    - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0xFFFF into the shared status halfword D_801490A8. Otherwise stores 0x77 into that halfword and 0x0A into the byte at 0x801F294D.'
   - - 3784
     - asm
     - func_801F3AC8

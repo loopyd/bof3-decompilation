@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801EF79C
   - - 4900
-    - asm
-    - func_801EFF24
+    - c
+    - dispatchWorkByte2HandlerThenInvoke00C4WhenWorkByte0NonzeroBmagicMagic06703_801EFF24
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke00C4WhenWorkByte0NonzeroBmagicMagic06703_801EFF24.c'
+    - '@behavior: Dispatches work byte 2 through table 0x801F04D8, reloads the scratchpad work pointer, and invokes 0x801F00C4 when work byte 0 is nonzero.'
   - - 5004
     - c
     - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C

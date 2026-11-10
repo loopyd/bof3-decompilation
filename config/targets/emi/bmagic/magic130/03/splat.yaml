@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801EF3DC
   - - 2092
-    - asm
-    - func_801EF42C
+    - c
+    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C
+    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C.c'
+    - '@behavior: Decrement work byte 9 and advance work byte 2 when it reaches zero.'
   - - 2168
     - asm
     - func_801EF478

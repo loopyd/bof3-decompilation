@@ -8,6 +8,7 @@ splat = "config/targets/emi/bmagic/magic082/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
+    "src/bof3/bmagic/drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0.c",
     "src/bof3/bmagic/decrementWorkByteARecordCountersThenQueueActionOnCountdownZeroBmagicMagic08203_801EF10C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersAndPopWhenWorkByte0SetBmagicMagic08203_801EF5B0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic08203_801EF6C4.c",

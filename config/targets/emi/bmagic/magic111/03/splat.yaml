@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801EF870
   - - 3268
-    - asm
-    - func_801EF8C4
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4.c'
+    - '@behavior: Adds two modulo 256 to work byte 9 and, when it equals 0x10, re-reads the scratchpad work pointer and increments work byte 2.'
   - - 3348
     - asm
     - func_801EF914

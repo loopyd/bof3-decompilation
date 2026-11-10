@@ -101,8 +101,10 @@ segments:
     - asm
     - func_801EFD5C
   - - 5568
-    - asm
-    - func_801F01C0
+    - c
+    - dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0.c'
+    - '@behavior: Dispatches work byte 2, then calls helpers when work bytes 0 and 2 are nonzero.'
   - - 5696
     - asm
     - func_801F0240

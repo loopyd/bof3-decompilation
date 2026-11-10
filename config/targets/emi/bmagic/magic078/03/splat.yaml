@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC.c'
     - '@behavior: Tests work byte 9 against 8; invokes helper 0x8015D71C with 0x101 and increments work byte 2 on equality, otherwise increments byte 9. Reloads the scratchpad work pointer after the call. Takes no arguments and returns nothing.'
   - - 5452
-    - asm
-    - func_801F014C
+    - c
+    - applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C
+    - '@source: src/bof3/bmagic/applyHelper30AndAdd16ToWorkHalfword3EThenSetWorkByteATo30AndAdvanceWorkByte2OnRangeHitBmagicMagic07803_801F014C.c'
+    - '@behavior: Invokes helper 0x800AF2B4 with the shared record and 0x30, adds 16 to work halfword 0x3E, then tests range 0x1C000 and on a hit sets work byte 0xA to 30 and advances byte 2.'
   - - 5584
     - asm
     - func_801F01D0
