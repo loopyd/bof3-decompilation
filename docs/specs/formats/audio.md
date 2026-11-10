@@ -6811,13 +6811,15 @@ comparison remains within the same Rust machine; it is not independent fidelity
 evidence. Reproduce with `limits US_EXE BIOS CORPUS_ROOT COVERAGE_JSON`, using
 `driver-slots-coverage-final.json` as the prior receipt.
 
-The remaining case is `BPLCHAR/DRG04_00.EMI`, header 0, row 5. It selects sample
-3 from a bank declaring only two samples. Direct diagnostic dispatch returns
-success for voice 18, but playback reaches `0x5EE10`, exactly the end of the
-15,520-byte body uploaded at `0x5B170`, and fails on ADPCM predictor 5. The
-adapter rejects the sample reference before that tone is read. Required loaded
-bank/state context and the intended playback behavior remain unresolved; the
-decoder has not been weakened to consume unrelated RAM.
+`BPLCHAR/DRG04_00.EMI`, header 0, row 5, remains unsupported. It selects sample
+3 from a bank declaring only two samples. In the Rust machine, direct diagnostic
+dispatch returns success for voice 18, but playback reaches `0x5EE10`, exactly
+the end of the 15,520-byte body uploaded at `0x5B170`, and fails on ADPCM
+predictor 5. The adapter rejects the sample reference before that tone is read.
+The [native caller observation](#drg04_00-native-row-5-boundary) independently
+confirms the loaded bank and conditional cue selection. It stops before the
+unsafe SDK tone read and does not establish intended sample-3 playback. The
+decoder does not consume unrelated RAM.
 
 The updated corpus audit prepares all 904 tables and visits all 8,608 rows:
 8,607 dispatch successfully and only this missing-context case is rejected.
@@ -6883,10 +6885,45 @@ and `0x801DED54` publish the same record pointer to both `0x80146250` and
 therefore supplies `C + 0x2C` when those pointers alias. Its applicable live
 record during the DRG04 cast remains unknown.
 
-These conditional paths do not establish an original-game route, form identity,
-live table residency, the applicable `C + 0x2C` producer, completed upload, or row-5
-selection with DRG04 resident. The loaded sample history and intended sample-3
-playback remain unresolved.
+These static paths do not establish an original-game route, form identity or
+the applicable live `C + 0x2C` producer. The following native observation supplies
+that field explicitly and executes the conditional caller with DRG04 resident.
+
+#### DRG04_00 native row-5 boundary
+
+The development C89 test player prepares DRG04's exact VH, auxiliary and VB
+entries through original US audio routines under layout 1, bank 3. Original VH
+opening returns 3. Seven 2,048-byte uploads return -2, the final 1,184-byte upload
+returns 3, and each original completion wait returns 1. Captured SPU RAM matches
+the 15,520-byte VB and its 32 bytes of original DMA padding. The guest-produced
+address table contains sample starts `0x5B170` and `0x5ECB0`, then terminal
+`0x5EE10`; the third size remains zero. This executes audio-bank preparation,
+not the full disc resource loader.
+
+The player copies the complete original `BIN/BATTLE/BATTLE.EMI#3` payload to
+`0x801D0C00` and invokes its caller at `0x801E1888`. Both pointer cells,
+`0x1F800044` and `0x80146250`, receive the same aligned, owned, zeroed
+`0x140`-byte object. Thus `P + 9` and halfword `C + 0x2C` are supplied zeros.
+The original helper at `0x801DD858` receives row 5 and reads cue `0x305` from
+the original table at `0x801EAFEE`. The original dispatcher receives that cue.
+The captured overlay and observed original code match their source bytes.
+
+The dispatcher first calls `SsUtKeyOnV(19, 3, 2, 1, ...)`, whose sample-zero
+tone returns -1. It then calls `SsUtKeyOnV(18, 3, 2, 0, ...)`. Before the SDK's
+priority-byte read at `0x8016E5DC`, the selected tone pointer is `0x801279E0`.
+Captured tone bytes contain sample reference 3. Execution stops at that
+instruction, before either the priority read or the later sample-reference
+load. The second SDK call has no observed return. No sample-3 key-on or PCM
+result is accepted. Read-only CPU hooks record attempted SPU and DMA register
+writes before access; they are not a complete device or bus trace.
+
+This establishes conditional row-5 selection and the unsafe sample boundary
+with independently observed native bank preparation. It does not establish a
+natural-game route, form identity, the live context writer, the caller's later
+code or intended sample-3 playback. The terminal address is not another
+allocation. Production retains the invalid-sample guard and referenced physical
+tone slots; no neighboring bank, stale SPU contents or row pruning replaces
+the missing playback context.
 
 ### XA driver closure with supplied kernel inputs
 
