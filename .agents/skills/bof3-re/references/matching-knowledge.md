@@ -323,7 +323,9 @@ operand keeps that cell's load and its `jal` on the matching path, where the ori
 has them, instead of both landing ahead of the first test. Two guards on one byte whose
 misses reach a shared arm take the same chain, with the work between the tests written
 inline: as two `if` statements the first guard branches to the second test, where the
-original branches to that arm.
+original branches to that arm. A query the test asks twice (`f() == 1 || f() == 2`) writes
+both calls inline, the second behind the first test; the span's two `jal`s are the
+evidence that no cached answer local belongs ahead of it.
 
 ### Operation scopes and loop-note dependencies
 
