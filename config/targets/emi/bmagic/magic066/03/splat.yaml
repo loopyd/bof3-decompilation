@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801EF984
   - - 4296
-    - asm
-    - func_801EFCC8
+    - c
+    - drawUpToFourGreyRotatedTexturedQuadsScaledByPerSlotCounterBytesBmagicMagic06603_801EFCC8
+    - '@source: src/bof3/bmagic/drawUpToFourGreyRotatedTexturedQuadsScaledByPerSlotCounterBytesBmagicMagic06603_801EFCC8.c'
+    - '@behavior: Draws up to four semi-transparent grey textured quads of the transform the caller installed through 0x801EFFB0. Each of the four steps re-reads the scratchpad work-object pointer cell 0x1F800044 and draws only while three times the step index stays below that object byte 0x9 and the step counter byte at 0x801F00B0 stays below 0x10, then fills four scratchpad vectors at 0x1F800014 with half-extent counter times four plus 0x32 scaled phase samples at the 0x200, 0x600, 0xE00 and 0xA00 corners and negated depth counter times fifteen, stamps and projects a 0x28-byte POLY_FT4 with texture page 0x340, clut 0x1E2 and grey shade 0x41 minus four times half the counter byte, and links it at output list 3. Takes no arguments and returns nothing.'
   - - 5040
     - asm
     - func_801EFFB0

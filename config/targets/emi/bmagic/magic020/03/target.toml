@@ -17,6 +17,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720.c",
     "src/bof3/bmagic/drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02003_801EF31C.c",
     "src/bof3/support/magic020_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic020_03_psyq.c"

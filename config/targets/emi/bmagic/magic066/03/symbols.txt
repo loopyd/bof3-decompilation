@@ -17,6 +17,6 @@ clearSlotCountersAndWorkByte9ThenIncrementWorkByte2BmagicMagic06603_801EF878 = 0
 runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8 = 0x801EF8C8;
 add1ToWorkByte9AndInvokeHelperAt80BmagicMagic06603_801EF930 = 0x801EF930;
 func_801EF984 = 0x801EF984;
-func_801EFCC8 = 0x801EFCC8;
+drawUpToFourGreyRotatedTexturedQuadsScaledByPerSlotCounterBytesBmagicMagic06603_801EFCC8 = 0x801EFCC8;
 func_801EFFB0 = 0x801EFFB0;
 D_801F0064 = 0x801F0064;

@@ -47,5 +47,6 @@ support_sources = [
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusSixtyFourWideInSixtyFourStepsTintingOuterEdgeByWorkByte9TimesFifteenBmagicMagic15103_801F1E70.c",
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14PlusSixtyFourRadiusSixtyFourWideInSixtyFourStepsTintingInnerEdgeByWorkByte9TimesFifteenBmagicMagic15103_801F2188.c",
     "src/bof3/bmagic/drawSemiTransFlatQuadHemisphereOfEightLatitudeBandsSixteenLongitudeStepsAtRadiusWorkByte9TimesSixteenBmagicMagic15103_801F026C.c",
+    "src/bof3/bmagic/drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

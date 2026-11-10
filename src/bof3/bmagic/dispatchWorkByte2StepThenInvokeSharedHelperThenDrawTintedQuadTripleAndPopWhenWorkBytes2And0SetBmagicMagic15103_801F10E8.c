@@ -27,10 +27,12 @@ extern void (*D_801F24FC[])(void); /* @source 0x801F24FC @kind data */
 void projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic15103_801F1408(
     void);
 
-/* Shaded four-vertex polygon drawer of this overlay: it sets the draw mode,
- * draws one semi-transparent SetPolyG4 primitive and rotates its vertices with
- * RotTransPers4. Each call here passes its own three constant arguments. */
-void func_801F14D0(s32 arg0, s32 arg1, s32 arg2);
+/* Tinted four-layer quad ribbon of this overlay: it seeds the scratchpad band
+ * block from work bytes 0x0A and 0x0B and its three arguments, then walks
+ * seventeen passes that each project and link four translucent Gouraud quads
+ * with RotTransPers4. Each call here passes its own three constant arguments. */
+void drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0(
+    s32 arg0, u16 arg1, s32 arg2);
 
 /* @source 0x801F10E8
  * @behavior Frame wrapper around the work byte 2 step handlers of the scratchpad
@@ -43,14 +45,17 @@ void func_801F14D0(s32 arg0, s32 arg1, s32 arg2);
  *           offset 0x2 and the byte at offset 0x0 are both non-zero does the body
  *           run: the work-object transform installer of this overlay pushes the
  *           GTE matrix stack and installs the object transform, then work byte
- *           0xB is raised by four through its own cell read and func_801F14D0
- *           draws one tinted polygon, the byte is raised by four again through
+ *           0xB is raised by four through its own cell read and
+ *           drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0
+ *           draws the seventeen-pass four-layer quad ribbon, the byte is raised
+ *           by four again through
  *           another cell read before the second draw, lowered by eight through a
  *           fourth cell read before PopMatrix restores the matrix that installer
  *           pushed. The three draw calls pass
  *           the argument triples 0x20/0x20/0x7, 0x10/0x40/0xF and
- *           0x10/0x60/0x1F, and the tint byte returns to its entry value, so the
- *           ramp lasts for that triple only. Frame 0x18 with $ra only, because of
+ *           0x10/0x60/0x1F, so the thickness and the jitter mask shrink and the
+ *           base vertical position climbs while the tint byte returns to its
+ *           entry value. Frame 0x18 with $ra only, because of
  *           the calls; it takes no arguments, returns nothing and reads or writes
  *           no other state.
  * @status exact
@@ -69,13 +74,16 @@ void dispatchWorkByte2StepThenInvokeSharedHelperThenDrawTintedQuadTripleAndPopWh
   gate = g_battle_work;
   if (gate[2] != 0 && gate[0] != 0) {
     projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic15103_801F1408();
-    func_801F14D0(0x20, 0x20, 0x7);
+    drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0(
+        0x20, 0x20, 0x7);
     first_tint = g_battle_work;
     first_tint[0xB] += 4;
-    func_801F14D0(0x10, 0x40, 0xF);
+    drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0(
+        0x10, 0x40, 0xF);
     second_tint = g_battle_work;
     second_tint[0xB] += 4;
-    func_801F14D0(0x10, 0x60, 0x1F);
+    drawJitteredFourLayerQuadRibbonOfSeventeenSlicesSteppingDepthBySixtyFourTintedByWorkByteATimesFifteenWithShadeThirteenBmagicMagic15103_801F14D0(
+        0x10, 0x60, 0x1F);
     final_tint = g_battle_work;
     final_tint[0xB] -= 8;
     PopMatrix();

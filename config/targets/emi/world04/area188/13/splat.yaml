@@ -126,8 +126,10 @@ segments:
     - asm
     - func_801F40F4
   - - 6036
-    - asm
-    - func_801F4394
+    - c
+    - seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394
+    - '@source: src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394.c'
+    - '@behavior: Overlay effect entry seeder that the progress handler 0x801F3484 calls once for each of the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0 on the frame its countdown expires: it copies the 0x34 0x38 0x3C position words of the scratchpad work object behind 0x1F800044 into the entry words 0 4 and 8, seeds the corner offset SVECTORs at 0x10 and 0x18 from the shared angular pair 0x801783C8 and 0x801782FC at 0x10 and -0x10, takes three random Euler angles, builds the scratch rotation matrix through 0x801AFF64 and 0x80179C58 0x80179DF8 with the middle angle negated and 0x80179F98, rotates both offsets in place through ApplyMatrixSV, arms the scale halfword 0x28 with (rand() & 2) + 3, clears 0x20 0x22 and 0x24 and writes 0x20 into the shade halfword 0x2A that the draw pass 0x801F40F4 clamps into the red and green bytes of its primitive.'
   - - 6324
     - c
     - drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4

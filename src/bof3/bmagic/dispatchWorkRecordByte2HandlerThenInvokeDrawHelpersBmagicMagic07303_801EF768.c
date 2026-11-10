@@ -34,7 +34,8 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 
 /* File-local prototypes: the draw helpers are declared per caller. */
 void func_801F00C4(void);
-void func_801EFBF8(s32 arg0, s32 arg1);
+void drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8(
+    s32 arg0, s32 arg1);
 void func_801EFE2C(s32 arg0, s32 arg1);
 
 /* @source 0x801EF768
@@ -47,7 +48,9 @@ void func_801EFE2C(s32 arg0, s32 arg1);
  * when the record byte 0 has bit 0 set and its byte at offset 2 is non-zero,
  * the no-argument draw helper at 0x801F00C4 runs and then, when the record
  * unsigned halfword at 0xC has either low bit set, two draw helpers are called:
- * 0x801EFBF8 with the low 16 bits of the shared frame counter at 0x80143E6C
+ * the spoke drawing step now named
+ * drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8,
+ * at 0x801EFBF8, with the low 16 bits of the shared frame counter at 0x80143E6C
  * halved and with the record byte at offset 6, and 0x801EFE2C with that halved
  * counter plus four and with the record byte at offset 6 added to half of
  * itself. It returns nothing, keeps the return address and the copied table in
@@ -69,7 +72,8 @@ void dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF76
   if ((D_801F21F0[0] & 1u) && (D_801F21F0[2] != 0u)) {
     func_801F00C4();
     if (((u16 *)D_801F21F0)[6] & 3u) {
-      func_801EFBF8((u16)(D_80143E6C >> 1), D_801F21F0[6]);
+      drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8(
+          (u16)(D_80143E6C >> 1), D_801F21F0[6]);
       func_801EFE2C((u16)((D_80143E6C >> 1) + 4),
                     D_801F21F0[6] + (D_801F21F0[6] >> 1));
     }

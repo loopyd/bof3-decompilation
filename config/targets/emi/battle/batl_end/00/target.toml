@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/battle/advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC.c",
     "src/bof3/battle/advanceStateByte3BatlEnd00_801F07C0.c",
     "src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EF77C.c",
     "src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c",

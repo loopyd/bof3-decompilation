@@ -47,8 +47,9 @@ segments:
     - asm
     - func_801EF2A8
   - - 1820
-    - asm
-    - func_801EF31C
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic02003_801EF31C
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02003_801EF31C.c'
   - - 1872
     - asm
     - func_801EF350

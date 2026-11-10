@@ -15,5 +15,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic08803_801EF070.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic08803_801EF5EC.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08803_801EF59C.c",
+    "src/bof3/bmagic/resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C.c",
 ]
 psyq_source = "src/bof3/support/magic088_03_psyq.c"

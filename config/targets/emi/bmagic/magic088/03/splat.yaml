@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF300
   - - 1868
-    - asm
-    - func_801EF34C
+    - c
+    - resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C
+    - '@source: src/bof3/bmagic/resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C.c'
+    - '@behavior: Reads the battle state byte at 0x80146375 once. While it is not four it reads the battle kind halfword at 0x801463C0 and returns three, except for the kind 0x112, which it overwrites with 0x5A before returning zero. While the state byte is four it reads the kind halfword once and maps it through a sparse switch of eight cases: kinds 0x1E, 0x58 and 0xBE return one, kinds 0x1F, 0x59 and 0xBF return two, kinds 0x5A and 0xC0 return zero, and every other kind returns three.'
   - - 2096
     - asm
     - func_801EF430

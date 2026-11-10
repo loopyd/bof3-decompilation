@@ -104,8 +104,10 @@ segments:
     - asm
     - func_801F3CE4
   - - 4372
-    - asm
-    - func_801F3D14
+    - c
+    - setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14
+    - '@source: src/bof3/world/setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14.c'
+    - '@behavior: Overlay handler word at 0x801F4918 of the local pointer run based at 0x801F48F4: latches 0xFFFF into the shared status halfword 0x801490A8, then branches on the shared gate byte 0x801490C7 read with lb. When that byte reads zero it stores 5 into the shared scenario progress byte 0x80146864, runs the shared front-end step helper 0x801BE1B0 with 6, requests primary state 7 and seeds secondary sub-state 0x14 in the shared cells 0x80146874 and 0x80146875; when the gate byte is nonzero it runs only 0x801BE1B0 with 5 and leaves the progress and state cells alone.'
   - - 4480
     - textbin
     - D_801F3D80

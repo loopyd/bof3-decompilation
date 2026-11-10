@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801EF7E8
   - - 3984
-    - asm
-    - func_801EFB90
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic04603_801EFB90
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic04603_801EFB90.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the work record published at the scratchpad pointer cell 0x1F800044 once. It fills a translation halfword triplet with zeros, then builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and whose third element is half the negated signed halfword 0x3E of the shared battle record read through the main-RAM pointer cell 0x801EB4E0. RotTrans projects that triplet into the translation field of a 0x20-byte scratch matrix while storing a flag word beside it, RotMatrix turns the zeroed triplet into an identity rotation in that same matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and the result is published through SetRotMatrix and SetTransMatrix. Takes no arguments and returns nothing; the 0x50-byte frame keeps the return address at 0x4C and the saved register at 0x48 across the matrix calls, and the caller pairs it with a PopMatrix.'
   - - 4168
     - asm
     - func_801EFC48

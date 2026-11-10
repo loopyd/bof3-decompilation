@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic05803_801EFE9C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0.c",
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWordCRadiusOneTwentyEightWideInSixtyFourStepsTintingOuterEdgeGreyNinetySixBmagicMagic05803_801EF74C.c",
     "src/bof3/bmagic/pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78.c",
     "src/bof3/bmagic/recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05803_801EFE38.c",

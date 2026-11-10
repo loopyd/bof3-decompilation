@@ -16,11 +16,13 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * handed as arg2. */
 void func_801F38E0(void* point, s16 extent, s32 channels);
 
-/* Effect entry seeder at 0x801F4394, still an asm boundary in this payload. It
- * copies the work object's 0x34/0x38/0x3C position words into the 0x2C-byte
- * entry handed in $a0 and seeds the rest of that entry from the shared angular
- * pair and the work record. */
-void func_801F4394(u8* entry);
+/* Effect entry seeder at 0x801F4394, claimed by this target from
+ * src/bof3/world/seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394.c.
+ * It copies the work object's 0x34/0x38/0x3C position words into the 0x2C-byte
+ * entry handed in $a0, seeds the entry corner offsets from the shared angular
+ * pair with a random rotation, and arms its scale and shade halfwords. */
+void seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394(
+    u8* entry);
 
 /* Shared EXE-side cue dispatcher; the constant argument seeds a caller's
  * channel refresh, so the call-site width is the narrow constant form. */
@@ -132,7 +134,8 @@ void retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffec
     entry = PSX_PTR(u8, 0x800E48C0u);
     index = 0u;
     do {
-      func_801F4394(entry);
+      seedEffectEntryFromWorkPositionWithRandomCornerRotationAndScaleWorld04Area18813_801F4394(
+          entry);
       entry += 0x2Cu;
       index += 1u;
     } while (index < 0x10u);

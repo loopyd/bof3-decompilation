@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07303_801EFB14.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8.c",
     "src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic07303_801EF864.c",
+    "src/bof3/bmagic/drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8.c",
 ]
 psyq_source = "src/bof3/support/magic073_03_psyq.c"

@@ -21,5 +21,5 @@ func_801F3B24 = 0x801F3B24;
 claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC = 0x801F3BAC;
 publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78 = 0x801F3C78;
 func_801F3CE4 = 0x801F3CE4;
-func_801F3D14 = 0x801F3D14;
+setStatusFFFFAndRequestPrimaryState7Substate14WithProgress5AndStep6UnlessGateElseStep5World03Area14413_801F3D14 = 0x801F3D14;
 D_801F3D80 = 0x801F3D80;

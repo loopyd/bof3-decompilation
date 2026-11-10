@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EEF14
   - - 972
-    - asm
-    - func_801EEFCC
+    - c
+    - advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC
+    - '@source: src/bof3/battle/advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC.c'
+    - '@behavior: Battle handler-run advance: polls the EXE-side EMI loader and, once it reports ready, clears the battle state byte at 0x801462E5 and the run-local substate index at 0x801462E4, then increments the selection byte at 0x801462E3 that dispatches this overlay''s handler runs; the 0x18-byte frame only keeps $ra across the poll.'
   - - 1048
     - c
     - dispatchSubstateTable0cb8BatlEnd00_801EF018
