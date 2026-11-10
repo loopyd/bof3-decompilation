@@ -55,8 +55,10 @@ segments:
     - dispatchStateByte1Table08dcBmagicMagic12403_801EF270
     - '@source: src/bof3/bmagic/magic12403DispatchTables.c'
   - - 1716
-    - asm
-    - func_801EF2B4
+    - c
+    - dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4
+    - '@source: src/bof3/bmagic/dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4.c'
+    - '@behavior: Dispatches work byte 2, updates active work through the local helper, and queues a record every fourth work-byte-0xB tick while work byte 2 is 1 and byte 0xA is nonzero.'
   - - 2044
     - asm
     - func_801EF3FC

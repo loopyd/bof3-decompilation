@@ -115,8 +115,10 @@ segments:
     - asm
     - func_801F0278
   - - 5904
-    - asm
-    - func_801F0310
+    - c
+    - incrementWorkByte2WhenGlobalWorkByte2Is10ThenInvokeHelperBmagicMagic06403_801F0310
+    # @source 0x801F0310
+    # @behavior Increment work byte 2 when shared record byte 2 is 10, then call helper.
   - - 5988
     - asm
     - func_801F0364

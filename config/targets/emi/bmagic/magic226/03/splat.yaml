@@ -63,8 +63,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22603_801EF5F0.c'
     - '@behavior: Decrement work byte 9; on zero set flag 0x20 and mode 1, clear the tint triplet, and advance work byte 2.'
   - - 2712
-    - asm
-    - func_801EF698
+    - c
+    - decrementWorkByteABy2WhenNonzeroSubtractTintTripletBy8ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIs80BmagicMagic22603_801EF698
+    - '@source: src/bof3/bmagic/decrementWorkByteABy2WhenNonzeroSubtractTintTripletBy8ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIs80BmagicMagic22603_801EF698.c'
+    - '@behavior: Decrement nonzero work byte A by 2, subtract 8 from the tint triplet, and on channel 0x80 decrement global work byte B and invoke the helper.'
   - - 2908
     - asm
     - func_801EF75C

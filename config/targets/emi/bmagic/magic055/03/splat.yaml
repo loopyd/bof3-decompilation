@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801EF700
   - - 2992
-    - asm
-    - func_801EF7B0
+    - c
+    - drawTranslucentGouraudFanOfEightTrianglesAtWorkScreenPairRadiusTwiceWorkByte9Plus32TintedByWorkByte9TimesTenBmagicMagic05503_801EF7B0
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAtWorkScreenPairRadiusTwiceWorkByte9Plus32TintedByWorkByte9TimesTenBmagicMagic05503_801EF7B0.c'
+    - '@behavior: Draw eight translucent Gouraud fan triangles with radius twice work byte 9 plus 32 and centre red ten times work byte 9.'
   - - 3556
     - asm
     - func_801EF9E4

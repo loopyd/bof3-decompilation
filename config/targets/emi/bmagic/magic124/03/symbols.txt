@@ -1,3 +1,5 @@
+D_1F800008 = 0x1F800008;
+D_1F80000A = 0x1F80000A;
 g_battle_work = 0x1F800044;
 func_801EEC14 = 0x801EEC14;
 func_801EEDD8 = 0x801EEDD8;
@@ -7,7 +9,7 @@ func_801EF050 = 0x801EF050;
 func_801EF0B0 = 0x801EF0B0;
 noopHandlerBmagicMagic12403_801EF268 = 0x801EF268;
 dispatchStateByte1Table08dcBmagicMagic12403_801EF270 = 0x801EF270;
-func_801EF2B4 = 0x801EF2B4;
+dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4 = 0x801EF2B4;
 func_801EF3FC = 0x801EF3FC;
 add4ToWorkByteAAndAdvanceWorkByte2At16BmagicMagic12403_801EF588 = 0x801EF588;
 func_801EF5D8 = 0x801EF5D8;

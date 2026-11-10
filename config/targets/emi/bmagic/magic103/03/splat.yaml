@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801EFC70
   - - 4340
-    - asm
-    - func_801EFCF4
+    - c
+    - callAF764IncrementWorkByte9SubtractHalfPreviousByte9Minus8FromHalfword30ThenAdvanceWorkByte2At28BmagicMagic10303_801EFCF4
+    - '@source: src/bof3/bmagic/callAF764IncrementWorkByte9SubtractHalfPreviousByte9Minus8FromHalfword30ThenAdvanceWorkByte2At28BmagicMagic10303_801EFCF4.c'
+    - '@behavior: Calls 0x800AF764, increments work byte 9, subtracts half of the signed previous byte 9 minus eight from work halfword 0x30 with rounding toward zero, and advances work byte 2 when the incremented byte equals 28.'
   - - 4468
     - asm
     - func_801EFD74

@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801F0164
   - - 6128
-    - asm
-    - func_801F03F0
+    - c
+    - ../../../../../src/bof3/bmagic/drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0
+    - '@source: 0x801F03F0'
+    - '@behavior: Draws a grey 12-pixel glyph at the work screen pair using an indexed CLUT and texture column.'
   - - 6480
     - asm
     - func_801F0550

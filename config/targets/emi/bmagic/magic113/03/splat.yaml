@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EF0F0
   - - 1528
-    - asm
-    - func_801EF1F8
+    - c
+    - invokeD104AndD228ThenQueueSixSlotsCopyWorkPoseClearByteBAndAdvanceWorkByte1WhenByteBIs5BmagicMagic11303_801EF1F8
+    - '@source: src/bof3/bmagic/invokeD104AndD228ThenQueueSixSlotsCopyWorkPoseClearByteBAndAdvanceWorkByte1WhenByteBIs5BmagicMagic11303_801EF1F8.c'
+    - '@behavior: Calls helpers 0x8015D104 and 0x8015D228, then when work byte B is 5 queues six slots with paired ordinals, copies the work pose, clears byte B and advances work byte 1.'
   - - 1884
     - c
     - setWorkByteBTo84AndIncrementWorkByte1WhenWorkByteBIs6BmagicMagic11303_801EF35C

@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EF4A0
   - - 2352
-    - asm
-    - func_801EF530
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530.c'
+    - '@behavior: When work byte B is 0x80, decrement global work byte B and invoke helper 0x801E5988.'
   - - 2432
     - asm
     - func_801EF580

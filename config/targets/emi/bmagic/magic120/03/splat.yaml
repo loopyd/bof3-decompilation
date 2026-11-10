@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F0008
   - - 5188
-    - asm
-    - func_801F0044
+    - c
+    - invokeHelpers4D978And4D290ThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0044
+    - '@source: src/bof3/bmagic/invokeHelpers4D978And4D290ThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0044.c'
+    - '@behavior: Invokes shared helpers 0x8014D978 and 0x8014D290, decrements work byte 9, and invokes shared helper 0x801E5988 on zero.'
   - - 5276
     - c
     - runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic12003_801F009C
