@@ -127,8 +127,10 @@ segments:
     - dispatchStateByte1Table5320World01Area06513_801F41B0
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 5620
-    - asm
-    - func_801F41F4
+    - c
+    - seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld01Area06513_801F41F4
+    - '@source: src/bof3/world/seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld01Area06513_801F41F4.c'
+    - '@behavior: Unless gated by shared byte 0x80146871, seeds random front-end records when the shared tick word low ten bits are clear.'
   - - 5936
     - c
     - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld01Area06513_801F4330

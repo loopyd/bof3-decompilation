@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801EFC98
   - - 5048
-    - asm
-    - func_801EFFB8
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8.c'
+    - '@behavior: Dispatches work byte 2 through the table at 0x801F049C, re-reads the scratchpad work pointer, and only when work bytes 0 and 2 are nonzero invokes the transform installer at 0x801F0138, the draw pass at 0x801F01E8 and PopMatrix.'
   - - 5184
     - c
     - offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040

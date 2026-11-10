@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801F3584
   - - 3464
-    - asm
-    - func_801F3988
+    - c
+    - selectStatus525354AndMode6World03Area14313_801F3988
+    - '@source: src/bof3/world/selectStatus525354AndMode6World03Area14313_801F3988.c'
+    - '@behavior: Stores status 0x54 when the gate byte is nonzero, or 0x53 when the gate is zero and D_80145548 differs from 0x3FFFF, also storing mode 6 on both paths; otherwise stores status 0x52 without changing mode.'
   - - 3556
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld03Area14313_801F39E4

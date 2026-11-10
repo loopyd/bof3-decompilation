@@ -23,5 +23,5 @@ func_801F00A0 = 0x801F00A0;
 incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0 = 0x801F00F0;
 decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134 = 0x801F0134;
 func_801F01D0 = 0x801F01D0;
-func_801F046C = 0x801F046C;
+reserveFirstFreeRecordBmagicMagic14403_801F046C = 0x801F046C;
 T_801F04D0 = 0x801F04D0;

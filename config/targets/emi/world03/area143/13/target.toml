@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/selectStatus525354AndMode6World03Area14313_801F3988.c",
     "src/bof3/world/requestFrontSelectorContextWorld03Area14313_801F3C10.c",
     "src/bof3/world/area14313DispatchTables.c",
     "src/bof3/world/area14313_gate_status.c",

@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F3D4C
   - - 4496
-    - asm
-    - func_801F3D90
+    - c
+    - callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90
+    - '@source: src/bof3/world/callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90.c'
+    - '@behavior: Calls 0x801F3F04 with work byte 9, increments it, and at 8 clears it and advances work byte 2.'
   - - 4632
     - c
     - incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18

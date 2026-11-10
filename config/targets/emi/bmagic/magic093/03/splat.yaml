@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801F00F0
   - - 5468
-    - asm
-    - func_801F015C
+    - c
+    - incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C
+    - '@source: src/bof3/bmagic/incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C.c'
+    - '@behavior: Increments work byte 9 and decrements bytes A and B; at zero B decrements global record byte B and clears work bytes 0 through 4.'
   - - 5616
     - asm
     - func_801F01F0

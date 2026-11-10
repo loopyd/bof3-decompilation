@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801F2C38
   - - 208
-    - asm
-    - func_801F2CD0
+    - c
+    - queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0
+    - '@source: src/bof3/world/queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0.c'
+    - '@behavior: Queues shared UI elements at (0x11, 0x15), (0x11, 0x16) and (0x12, 0x16), all with size zero, through func_801A4BC0.'
   - - 280
     - asm
     - func_801F2D18

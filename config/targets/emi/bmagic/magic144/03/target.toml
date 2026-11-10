@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134.c",
+    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic14403_801F046C.c",
 ]
 support_sources = [
     "src/bof3/support/magic144_03_psyq.c",
