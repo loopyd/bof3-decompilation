@@ -7,6 +7,7 @@ name = "bof3-audio"
 version = "0.1.0"
 dependencies = [
  "emi-ex-v2",
+ "oxideav-core",
  "oxideav-mp3",
  "oxideav-vorbis",
  "roxmltree",

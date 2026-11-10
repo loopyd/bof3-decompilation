@@ -8,6 +8,7 @@ description = "BOF3 audio preservation, interchange, and runtime tools"
 
 [dependencies]
 emi-ex-v2 = { path = "../emi-ex" }
+oxideav-core = "=0.1.36"
 oxideav-mp3 = "=0.1.3"
 oxideav-vorbis = "=0.0.12"
 roxmltree = "=0.21.1"
