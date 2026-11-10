@@ -50,8 +50,9 @@ segments:
     - asm
     - func_801EF28C
   - - 2220
-    - asm
-    - func_801EF4AC
+    - c
+    - incrementWorkByteBAndWorkByte9DecrementWorkByteAThenClearWorkBytesAtZeroElseInvokeHelperAtEF9E0BmagicMagic12303_801EF4AC
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndWorkByte9DecrementWorkByteAThenClearWorkBytesAtZeroElseInvokeHelperAtEF9E0BmagicMagic12303_801EF4AC.c'
   - - 2384
     - c
     - decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550

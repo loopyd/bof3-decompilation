@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC28
   - - 328
-    - asm
-    - func_801EED48
+    - c
+    - clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48.c'
+    - '@behavior: Clear record pool bytes 0 to 2, copy the battle-state answer to work byte 4 and the shared record byte 8 and word triplet to the work object, rearm work byte 9 to 0x3C, claim one slot with allocator code 0x62, copy the two halfword tables with bit 15 set, store 1 into the shared byte 0x80145988 and advance work byte 1.'
   - - 860
     - asm
     - func_801EEF5C

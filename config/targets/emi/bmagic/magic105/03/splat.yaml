@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic10503_801EFC8C.c'
     - '@behavior: Reserves the first free record in the 64-record pool and returns its index or 0xFF.'
   - - 4336
-    - asm
-    - func_801EFCF0
+    - c
+    - drawCountedSemiTransSpriteStreamAtWorkHalfwords2EAnd30FromTilePairTableClutFromByte27PageFromByte5CAndTintFrom5DTo5FBmagicMagic10503_801EFCF0
+    - '@source: src/bof3/bmagic/drawCountedSemiTransSpriteStreamAtWorkHalfwords2EAnd30FromTilePairTableClutFromByte27PageFromByte5CAndTintFrom5DTo5FBmagicMagic10503_801EFCF0.c'
+    - '@behavior: Draws the counted stream of semi-transparent SPRT primitives of one pool record at the work halfwords 2E and 30, sizing each from the tile pair table at 801F0080 by the low nibble of the record flags byte and mirroring it when flag 80 and work byte 2A are set.'
   - - 5192
     - textbin
     - D_801F0048

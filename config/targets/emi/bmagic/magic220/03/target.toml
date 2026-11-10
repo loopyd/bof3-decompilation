@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic220/03.bin"
 splat = "config/targets/emi/bmagic/magic220/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40.c",
+]
 support_sources = [
     "src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesThreeCountdownByte9AndAdvanceWorkByte2AtZeroBmagicMagic22003_801F010C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0284And0334AndPopWhenWorkBytes0And2SetBmagicMagic22003_801EFFA4.c",

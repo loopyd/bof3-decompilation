@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F3E30
   - - 5208
-    - asm
-    - func_801F4058
+    - c
+    - testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058
+    - '@source: src/bof3/world/testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058.c'
+    - '@behavior: Returns 1 when the shared movement probe at 0x801A1AE4 accepts the work area read through 0x80146884 and the map cell at the supplied signed column and row holds a code other than 0x89, and 0 otherwise.'
   - - 5312
     - asm
     - func_801F40C0

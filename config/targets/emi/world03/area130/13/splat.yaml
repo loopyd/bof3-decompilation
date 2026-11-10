@@ -108,8 +108,10 @@ segments:
     - asm
     - func_801F38F0
   - - 3452
-    - asm
-    - func_801F397C
+    - c
+    - publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F397C
+    - '@source: src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F397C.c'
+    - '@behavior: Publishes the second shared work base at 0x80145FD0 as the scratchpad work cursor, then seeds one kind-1 front-end record through 0x8015CB18 with the mode-table byte D_801F3F00[D_80144F5B] and the base halfwords at 0x80145FFE/0x80146000, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 3580
     - asm
     - func_801F39FC

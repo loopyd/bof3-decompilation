@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801F46F8
   - - 7012
-    - asm
-    - func_801F4764
+    - c
+    - setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword, and while the shared gate byte equals 3 runs the shared front-end startup helper and writes state entry 0x0A with progress 5 and companion byte 0xFF, then copies the gated row pair from the payload row table into record words 0x18 and 0x1C.'
   - - 7176
     - c
     - setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808

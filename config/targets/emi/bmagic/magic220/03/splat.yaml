@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801EF9F0
   - - 4160
-    - asm
-    - func_801EFC40
+    - c
+    - drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40.c'
+    - '@behavior: Last draw helper of this overlay work-byte-2 handler group: sets the draw mode from GetGraphType, reads the scratchpad work record byte 0xB as the inner radius and byte 0x5D times four as the grey tint, then draws sixty-four translucent Gouraud quads stepping one sixty-fourth of a turn each between that radius and its double, grading white at the outer edge to the tint at the inner edge and linking one 0x24-byte packet per pass at output slot 5.'
   - - 4960
     - c
     - dispatchStateByte1Table0700BmagicMagic22003_801EFF60

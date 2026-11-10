@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC28 = 0x801EEC28;
-func_801EED48 = 0x801EED48;
+clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48 = 0x801EED48;
 func_801EEF5C = 0x801EEF5C;
 func_801EF00C = 0x801EF00C;
 setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C = 0x801EF11C;

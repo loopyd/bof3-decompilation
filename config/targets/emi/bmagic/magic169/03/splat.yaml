@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801EFA18
   - - 4036
-    - asm
-    - func_801EFBC4
+    - c
+    - growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4
+    - '@source: src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4.c'
+    - '@behavior: Advances a staged rotation: adds two to work word 0x0C, publishes (work byte 0xB and 15) shifted left eight to scratchpad halfword 4, accumulates two 0x801782FC/0x801783C8 samples times work word 0x0C onto shared record words 0x34 and 0x38 into work words 0x34 and 0x38, subtracts work word 0x20 from word 0x14 and accumulates the remainder into word 0x3C when word 0x14 is larger, then adds two to work byte 9 and advances work byte 2 when byte 9 reaches 16.'
   - - 4340
     - asm
     - func_801EFCF4

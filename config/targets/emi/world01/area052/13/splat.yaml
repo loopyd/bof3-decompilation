@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801F4290
   - - 5916
-    - asm
-    - func_801F431C
+    - c
+    - claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C
+    - '@source: src/bof3/world/claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C.c'
+    - '@behavior: Claims a front-end record at 0x80143FC8 and seeds handler 0x48 with the fixed position pair 0x890000/0x118000, the distance word scaled left by eight and row byte 0x0B = 0x10.'
   - - 6064
     - asm
     - func_801F43B0

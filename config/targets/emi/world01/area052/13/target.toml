@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C.c",
     "src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894.c",
     "src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8.c",
     "src/bof3/world/anyWorkPositionInModeBoundsWorld01Area05213_801F3D44.c",
