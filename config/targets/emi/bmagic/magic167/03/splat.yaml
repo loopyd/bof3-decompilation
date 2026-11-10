@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801EF708
   - - 3512
-    - asm
-    - func_801EF9B8
+    - c
+    - dispatchWorkByte2HandlerThenInvokeF228FC44And05C8PairAndPopWhenWorkBytes0And2SetBmagicMagic16703_801EF9B8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF228FC44And05C8PairAndPopWhenWorkBytes0And2SetBmagicMagic16703_801EF9B8.c'
+    - '@behavior: Dispatches work byte 2, then invokes the guarded F228 and FC44 helpers, the 05C8 pair, and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 3696
     - asm
     - func_801EFA70

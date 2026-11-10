@@ -255,8 +255,10 @@ segments:
     - asm
     - func_801F5608
   - - 10988
-    - asm
-    - func_801F56EC
+    - c
+    - startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC
+    - '@source: src/bof3/world/startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC.c'
+    - '@behavior: tests shared flag 4 using the bank word at 0x8014686C, requests action 8 when set or action 3 when clear through 0x80150224, then sets frontend mode byte 0x80143BB0 to 2.'
   - - 11060
     - textbin
     - D_801F5734

@@ -36,3 +36,4 @@ scalePaletteChannelsWorld02Area08213_801F5388 = 0x801F5388;
 func_801F5428 = 0x801F5428;
 advanceHalfword0aByWorkByte79World02Area08213_801F5594 = 0x801F5594;
 setWorkWord5World02Area08213_801F55F4 = 0x801F55F4;
+startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC = 0x801F56EC;

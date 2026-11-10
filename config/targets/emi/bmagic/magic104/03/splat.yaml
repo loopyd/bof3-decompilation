@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801EF178
   - - 1564
-    - asm
-    - func_801EF21C
+    - c
+    - incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C
+    - '@source: src/bof3/bmagic/incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C.c'
+    - '@behavior: Increments work byte 0x9 modulo 256; when the stored value equals 8, reloads the work pointer to clear byte 0xA, then reloads it again to increment dispatch byte 0x2. Takes no arguments and returns nothing.'
   - - 1660
     - asm
     - func_801EF27C

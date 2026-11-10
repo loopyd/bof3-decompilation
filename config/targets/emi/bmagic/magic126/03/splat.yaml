@@ -98,8 +98,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EFCE4.c'
     - '@behavior: Increments work byte 9 and decrements byte 0xA, then decrements shared record byte B and calls helper 801E5988 when byte 0xA is zero.'
   - - 4444
-    - asm
-    - func_801EFD5C
+    - c
+    - drawTranslucentTexturedQuadPairAtWorkScreenPairWithHalfWidth40AndWorkByte9HeightBmagicMagic12603_801EFD5C
+    - '@source: src/bof3/bmagic/drawTranslucentTexturedQuadPairAtWorkScreenPairWithHalfWidth40AndWorkByte9HeightBmagicMagic12603_801EFD5C.c'
+    - '@behavior: Draws two translucent textured quad bands at the work screen pair with half-width 40 and upper height from work byte 9.'
   - - 5568
     - c
     - dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0

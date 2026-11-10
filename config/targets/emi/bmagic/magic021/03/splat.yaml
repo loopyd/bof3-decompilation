@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF104
   - - 1544
-    - asm
-    - func_801EF208
+    - c
+    - forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208
+    - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208.c'
+    - '@behavior: When the readiness helper returns a nonzero byte, forwards the battle byte to a helper and increments work byte 2.'
   - - 1632
     - c
     - invokeHelperAndAdd4ToWorkByte9Below12ElseAdvanceWorkByte2BmagicMagic02103_801EF260

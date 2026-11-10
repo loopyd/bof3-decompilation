@@ -245,8 +245,10 @@ segments:
     - c
     - startWorkCountdownMode1World04Area17513_801F4248
   - - 5740
-    - asm
-    - func_801F426C
+    - c
+    - decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C
+    - '@source: src/bof3/world/decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C.c'
+    - '@behavior: Decrements work byte 0x0A, applies signed phase-table steps to words 0x34 and 0x38 and consumes shared countdown halfword 0x7E while nonzero, otherwise clears handler byte 0x04.'
   - - 5916
     - asm
     - func_801F431C

@@ -123,8 +123,10 @@ segments:
     - asm
     - func_801F0764
   - - 7272
-    - asm
-    - func_801F0868
+    - c
+    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868
+    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868.c'
+    - '@behavior: Decrements work byte 9 and, when the stored byte becomes zero, reloads the scratchpad work pointer and increments byte 2.'
   - - 7348
     - asm
     - func_801F08B4

@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801EEF44
   - - 1020
-    - asm
-    - func_801EEFFC
+    - c
+    - decrementWorkByte9AdvanceWorkByte1OnZeroOtherwiseCall801F0FBCBmagicMagic11403_801EEFFC
+    - '@source: src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte1OnZeroOtherwiseCall801F0FBCBmagicMagic11403_801EEFFC.c'
+    - '@behavior: Decrement work byte 9, advance state byte 1 on zero, otherwise call helper at 0x801F0FBC.'
   - - 1120
     - c
     - decrementWorkByteAAdvanceWorkByte1AndSetWorkByte9To40OnZeroBmagicMagic11403_801EF060

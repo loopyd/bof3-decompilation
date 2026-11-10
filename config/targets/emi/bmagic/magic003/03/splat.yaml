@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EF12C
   - - 1532
-    - asm
-    - func_801EF1FC
+    - c
+    - clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic00303_801EF1FC
+    - '@source: src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic00303_801EF1FC.c'
+    - '@behavior: When work byte B is zero, clears record flag 40, calls helper 0x800AEF98 with 4 and 0, then reloads the work pointer and increments byte 1.'
   - - 1640
     - asm
     - func_801EF268
