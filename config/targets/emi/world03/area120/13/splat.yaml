@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2CB4
   - - 320
-    - asm
-    - func_801F2D40
+    - c
+    - step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40
+    - '@source: src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c'
+    - '@behavior: Step 2 of the run the handler table at 0x801F43C0 dispatches. The body runs the target-local work-table routine at 0x801F36B0 and ignores its result, then, only when the shared scenario progress byte at 0x80146864 equals 0x11, queues cue 0x203 and then cue 0x202 through the same-binary dispatcher func_8015DF18, stores 2 into byte 0x06 of the scratchpad work record published through pointer cell 0x1F800044 and advances that record byte 0x01, the byte the table dispatcher indexes. Takes no arguments and returns nothing.'
   - - 432
     - asm
     - func_801F2DB0

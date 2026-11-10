@@ -89,8 +89,10 @@ segments:
     - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld00Area03313_801F34EC.c'
     - '@behavior: When the shared mode byte at 0x801454F2 reads 2, writes 3 to byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local drawer 0x801F3A34 with 0x10 and the signed halfword at record offset 0x2E. Takes no arguments and returns nothing.'
   - - 2364
-    - asm
-    - func_801F353C
+    - c
+    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C
+    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C.c'
+    - '@behavior: Byte-2 state handler 3 of the byte-2 handler table based at 0x801F4F80 in this overlay, and entry 5 of the byte-1 table based at 0x801F4F78, for the work record published at the scratchpad pointer cell 0x1F800044. Subtracts 0x10 from the halfword at record offset 0x2E and stores the truncated halfword. While the stored signed value stays below -0x2F it writes 0 to state byte 0x02; unless the shared mode byte at 0x801454F2 is 2 it then writes 1 to state byte 0x02 through a second read of the pointer cell. Finally it reads that cell once more and calls the local drawer 0x801F3A34 with 0x10 and the signed halfword at record offset 0x2E, discarding any result. Takes no arguments, uses no result and saves only the return address in its 0x18-byte frame.'
   - - 2496
     - c
     - dispatchStateByte3Table4f90World00Area03313_801F35C0

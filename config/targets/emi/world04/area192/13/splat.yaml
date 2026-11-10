@@ -74,8 +74,10 @@ segments:
     - c
     - invokeHelperWorld04Area19213_801F3424
   - - 2116
-    - asm
-    - func_801F3444
+    - c
+    - activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444
+    - '@source: src/bof3/world/activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444.c'
+    - '@behavior: Reads the code byte at 0x80144982 and returns without activating anything when the shared wait helper 0x8015B5D4 reports the flag 0x77 of the main-RAM bank D_80144F28 as set; otherwise it folds the helper''s id 0x0A answer over the bank D_80144EF8, that code byte and the shared counter D_80144F56 into a selector of one of the three record banks that the payload''s own table 0x801F3A08 points at, walks the six 0x11-byte records of that bank, publishes each answer of the random helper 0x8015CA48 in the scratchpad halfword 0x1F800000, and activates the record through 0x801A4D54 whenever that answer is not 0xFF.'
   - - 2376
     - c
     - resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548

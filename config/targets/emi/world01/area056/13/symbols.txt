@@ -19,6 +19,6 @@ seedWork34383eFromPositionPlus7d0SetHandlerOneResetMotionAndConsumeSharedCountdo
 func_801F3354 = 0x801F3354;
 clearWorldFlagAndWorkByte4World01Area05613_801F3440 = 0x801F3440;
 noopHandlerWorld01Area05613_801F3464 = 0x801F3464;
-func_801F346C = 0x801F346C;
+setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C = 0x801F346C;
 D_801F34DC = 0x801F34DC;
 workByte4HandlersWorld01Area05613 = 0x801F3898;

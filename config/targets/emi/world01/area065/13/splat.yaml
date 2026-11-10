@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801F2F24
   - - 1176
-    - asm
-    - func_801F3098
+    - c
+    - prepareWorkRecordForLookup53AndArmState1World01Area06513_801F3098
+    - '@source: src/bof3/world/prepareWorkRecordForLookup53AndArmState1World01Area06513_801F3098.c'
   - - 1316
     - asm
     - func_801F3124

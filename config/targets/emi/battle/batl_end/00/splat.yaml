@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EEEE0
   - - 788
-    - asm
-    - func_801EEF14
+    - c
+    - applyAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EEF14
+    - '@source: src/bof3/battle/applyAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EEF14.c'
+    - '@behavior: Battle-end accumulated-amount drain: the pad state word at 0x80145AA4 reading nonzero together with the EXE-side EMI loader reporting ready at 0x80162D00 finishes the drain at once, passing the whole remaining amount in the accumulator at 0x8014632C to the shared template accumulator at 0x801DD59C, clearing that accumulator and advancing the substate index byte at 0x801462E4 by one; otherwise, while the amount still exceeds the per-call step published at 0x801463B0, only that step is passed to 0x801DD59C and subtracted from the accumulator and the substate index stays put, and once the remainder fits inside one step it is drained whole the same way the skip path does. Both the accumulator word and the step halfword are re-read for the subtraction that follows the call.'
   - - 972
     - c
     - advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC

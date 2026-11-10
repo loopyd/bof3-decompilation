@@ -10,6 +10,6 @@ func_801F3118 = 0x801F3118;
 lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C = 0x801F326C;
 lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4 = 0x801F33E4;
 invokeHelperWorld04Area19213_801F3424 = 0x801F3424;
-func_801F3444 = 0x801F3444;
+activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444 = 0x801F3444;
 resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548 = 0x801F3548;
 stampFrontHalfword1E0ClearFrontBytesAndStateBit0ThenResetWorkAreaWhenFlag77SetWorld04Area19213_801F3678 = 0x801F3678;

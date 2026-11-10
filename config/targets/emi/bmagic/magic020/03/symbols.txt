@@ -21,7 +21,7 @@ decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWo
 applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70 = 0x801EFA70;
 invokeHelperBmagicMagic02003_801EFAD4 = 0x801EFAD4;
 func_801EFAF4 = 0x801EFAF4;
-func_801EFBA0 = 0x801EFBA0;
+decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0 = 0x801EFBA0;
 func_801EFD10 = 0x801EFD10;
 func_801EFD88 = 0x801EFD88;
 D_801EFEB8 = 0x801EFEB8;

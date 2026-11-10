@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444.c",
     "src/bof3/world/invokeHelperWorld04Area19213_801F3424.c",
     "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C.c",
     "src/bof3/world/lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4.c",

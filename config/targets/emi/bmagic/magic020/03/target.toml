@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0.c",
     "src/bof3/bmagic/applyHelper60ToBattleRecordThenAdvanceWorkByte2WhenWorkWithin20000OfRecordBmagicMagic02003_801EFA70.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC.c",

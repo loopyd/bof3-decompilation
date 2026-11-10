@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic088_03_psyq.c",
     "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius240TintedByWorkByte9TimesTwelveAtOriginAndOneAtRimBmagicMagic08803_801EF68C.c",
+    "src/bof3/bmagic/drawSemiTransFlatQuadBandOfSixRingsSixtyFourStepsOfSixtyFourthTurnAtThirtyTwoUnitRadialStepsTintedByPaletteRowAtWorkByte4ScaledByHalfWorkByte9BmagicMagic08803_801EFB34.c",
     "src/bof3/bmagic/magic08803DispatchTables.c",
     "src/bof3/bmagic/decrementWorkByte9ByTwoAndInvokeHelperWhenZeroBmagicMagic08803_801EFA94.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic08803_801EEEF4.c",

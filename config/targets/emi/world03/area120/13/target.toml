@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/world/advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12013_801F3DF0.c",
     "src/bof3/world/setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350.c",
     "src/bof3/world/redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3B84.c",
+    "src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"

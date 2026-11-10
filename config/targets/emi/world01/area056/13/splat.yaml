@@ -95,8 +95,9 @@ segments:
     - c
     - noopHandlerWorld01Area05613_801F3464
   - - 2156
-    - asm
-    - func_801F346C
+    - c
+    - setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C
+    - '@source: src/bof3/world/setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C.c'
   - - 2268
     - textbin
     - D_801F34DC

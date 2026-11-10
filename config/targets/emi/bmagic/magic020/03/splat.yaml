@@ -107,8 +107,9 @@ segments:
     - asm
     - func_801EFAF4
   - - 4000
-    - asm
-    - func_801EFBA0
+    - c
+    - decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0.c'
   - - 4368
     - asm
     - func_801EFD10
