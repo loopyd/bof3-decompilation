@@ -82,7 +82,7 @@ fn mono_expands_after_interpolation_and_unsupported_contexts_fail_explicitly() {
         assert!(frames.iter().all(|f| f[0] == f[1]));
     }
     assert!(Resampler::new(Format::from_coding(4).unwrap(), Model::Published37800).is_err());
-    assert!(Resampler::new(Format::from_coding(0x40).unwrap(), Model::EmulatorReference).is_err());
+    assert!(Resampler::new(Format::from_coding(0x40).unwrap(), Model::Published37800).is_err());
 }
 
 fn sector(coding: u8) -> Vec<u8> {

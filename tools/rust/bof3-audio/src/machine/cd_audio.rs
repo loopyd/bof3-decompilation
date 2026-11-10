@@ -9,8 +9,25 @@ use crate::{
 pub enum Model {
     /// Published 37.8 kHz indexing. No published 18.9 kHz algorithm is established.
     Published37800,
-    /// Native ring alignment, with midpoint insertion for 18.9 kHz input.
+    /// Native ring alignment and 18.9 kHz midpoint insertion. Like the native
+    /// decoder, this model accepts emphasis bit 6 without de-emphasis filtering.
     EmulatorReference,
+}
+
+impl Model {
+    fn decoder(
+        self,
+        stream: Stream,
+        arithmetic: Arithmetic,
+        histories: Histories,
+    ) -> Result<Decoder> {
+        match self {
+            Self::Published37800 => Decoder::new(stream, arithmetic, histories),
+            Self::EmulatorReference => {
+                Decoder::new_emulator_reference(stream, arithmetic, histories)
+            }
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -27,7 +44,7 @@ impl Resampler {
     /// Zero history, position zero and phase six are an explicit reset context,
     /// not evidence that an original seek/channel transition resets the device.
     pub fn new(format: Format, model: Model) -> Result<Self> {
-        if format.emphasis() {
+        if format.emphasis() && model == Model::Published37800 {
             return Err("XA emphasis filtering is not implemented".into());
         }
         if format.sample_rate() == 18900 && model == Model::Published37800 {
@@ -54,9 +71,6 @@ impl Resampler {
         }
         if self.model != Model::EmulatorReference {
             return Err("XA coding transitions require the emulator-reference resampler".into());
-        }
-        if format.emphasis() {
-            return Err("XA emphasis filtering not implemented".into());
         }
         // The reference device shares its ring, cursor and phase between
         // coding modes; changing the sector format is not a decoder reset.
@@ -127,9 +141,17 @@ impl XaAudio {
     /// Configure the first selected sector after a runtime predictor reset.
     /// A changed frequency, depth or channel count resets both predictors.
     pub(crate) fn configure_stream(&mut self, stream: Stream) -> Result<()> {
-        let mut decoder =
-            Decoder::new(stream, self.decoder.arithmetic(), self.decoder.histories())?;
-        if decoder.format() != self.decoder.format() {
+        let mut decoder = self.resampler.model.decoder(
+            stream,
+            self.decoder.arithmetic(),
+            self.decoder.histories(),
+        )?;
+        let previous = self.decoder.format();
+        let next = decoder.format();
+        if next.sample_rate() != previous.sample_rate()
+            || next.bits_per_sample() != previous.bits_per_sample()
+            || next.channels() != previous.channels()
+        {
             decoder.reset(Histories::default());
         }
         self.resampler.change_format(decoder.format())?;
@@ -143,7 +165,7 @@ impl XaAudio {
         histories: Histories,
         model: Model,
     ) -> Result<Self> {
-        let decoder = Decoder::new(stream, arithmetic, histories)?;
+        let decoder = model.decoder(stream, arithmetic, histories)?;
         let resampler = Resampler::new(decoder.format(), model)?;
         Ok(Self { decoder, resampler })
     }

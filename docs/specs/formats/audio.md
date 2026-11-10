@@ -2984,7 +2984,10 @@ Other formats and histories, clipping, output left queued in other intervals and
 hardware fidelity remain unaccepted. Both models require explicit selection. See
 [coefficient provenance and differences](../../reference/cd-audio.md).
 Malformed stereo input or failed sector decoding leaves processing state intact.
-Emphasis remains unsupported.
+`EmulatorReference` accepts coding bit 6 and deliberately omits de-emphasis,
+matching the native decoder. `Published37800`, the strict `Decoder`, extraction
+and packing reject emphasis. This does not establish de-emphasis filtering or
+hardware fidelity.
 
 Drive volume is separate from SPU input gain. Its four staged coefficients cover
 both direct and crossed routes and latch together on ADPCTL apply.
@@ -3265,7 +3268,7 @@ This is a functional routing comparison, not independent native PCM acceptance.
 
 See [CD references](../../reference/cd-audio.md#decoder-reset-and-command-mute)
 for native source and bounded observations. General command overlap, DMA
-cancellation, native coding selection, emphasis, original
+cancellation, native coding selection, de-emphasis filtering, original
 runtime bootstrap, clocks and independent PCM remain acceptance obligations.
 
 ## Rust XA selection and EOF
@@ -3293,22 +3296,25 @@ the format as described below. Full reset establishes a fresh decoder/filter con
 
 [Selection checks](../../../tools/rust/bof3-audio/tests/cd_selection.rs) cover
 filter routing, EOF/EOR, matching channel 255 rejection, retained histories and
-output, invalid data and emphasis rejection. The original media check explicitly
-filters file 1/channel 0 across the full VOICE extent and compares continuous
+output, invalid data and published-model emphasis rejection. The original media
+check explicitly filters file 1/channel 0 across the full VOICE extent and compares
+continuous
 same-model PCM. Same-coding native guest observations qualify routing separately
 from clock and signal acceptance. See
 [selection references](../../reference/cd-audio.md#xa-selection-and-eof).
-Emphasis, runtime bootstrap, device clocks and independent audio validation remain
-open.
+De-emphasis filtering, runtime bootstrap, device clocks and independent audio
+validation remain open.
 
 ## Rust XA coding transitions
 
 The runtime queue parses coding on the first successful selected decode. Supported
-initial coding bytes are `00/01/04/05/10/11/14/15` hex, covering mono/stereo,
-37.8/18.9 kHz and 4/8-bit ADPCM. Later coding bytes are ignored, including reserved
-fields and emphasis. Already-selected file/channel identities can change without
-resetting histories. The public `Decoder` and `XaAudio` export paths retain their
-strict fixed-stream contract.
+initial formats cover mono/stereo, 37.8/18.9 kHz and 4/8-bit ADPCM.
+`EmulatorReference` also accepts bit 6 and retains the emphasis flag in `Format`,
+while applying no de-emphasis. `Published37800` rejects emphasis. Later coding
+bytes are ignored, including reserved fields and emphasis. Already-selected
+file/channel identities can change without resetting histories. The public
+`Decoder` and `XaAudio` retain their fixed-stream identity contract. The strict
+`Decoder`, extraction and packing reject emphasis.
 
 Successful muted and pending submissions establish the latch. Mute advances only
 predictors; output timeouts retain advanced predictor and interpolation histories.
@@ -3316,10 +3322,12 @@ Malformed input cannot establish or alter the latch. ReadN/ReadS and realtime
 enable reset both predictors and reopen format selection while preserving the
 interpolation ring, cursor, phase, previous samples and queued output. Pause,
 SeekL/P, Init and Setfilter retain the latch. A newly selected frequency, depth or
-channel count also resets both predictors. Mono updates only the left predictor
-and fills both interpolation rings with the left input.
+channel count also resets both predictors; an emphasis-only difference does not.
+Mono updates only the left predictor and fills both interpolation rings with the
+left input.
 
-Initial reserved coding fields, emphasis and malformed units remain unsupported.
+Initial reserved coding fields and malformed units remain unsupported. Emphasis
+is accepted only by `EmulatorReference`, without filtering.
 An actual format change after reset requires `EmulatorReference`; the separate
 `Published37800` resampler rejects it. A later ignored coding byte cannot trigger
 that rejection.
@@ -3340,8 +3348,9 @@ Bounded native guest observations confirm retained coding across changed and
 reserved later bytes and a new format after Read restart. Independent interpolation
 of the captured decoded PCM agrees with queued output across that restart. See
 [coding references](../../reference/cd-audio.md#xa-coding-transitions). These
-observations do not establish malformed-first native failure behavior, emphasis,
-automatic clocks, host wait timing or independent original-game audio acceptance.
+observations do not establish malformed-first native failure behavior, de-emphasis
+filtering, automatic clocks, host wait timing or independent original-game audio
+acceptance.
 
 ## PS1 SPU emulation
 

@@ -104,8 +104,27 @@ impl Decoder {
     /// Initial history is an explicit playback/export context. Zero is a useful
     /// standalone export convention, not proof of the game's seek/reset state.
     pub fn new(stream: Stream, arithmetic: Arithmetic, histories: Histories) -> Result<Self> {
+        Self::with_emphasis_policy(stream, arithmetic, histories, false)
+    }
+
+    /// The native reference decoder ignores bit 6. This is deliberate omission
+    /// of de-emphasis, not a filtered export or hardware model.
+    pub(crate) fn new_emulator_reference(
+        stream: Stream,
+        arithmetic: Arithmetic,
+        histories: Histories,
+    ) -> Result<Self> {
+        Self::with_emphasis_policy(stream, arithmetic, histories, true)
+    }
+
+    fn with_emphasis_policy(
+        stream: Stream,
+        arithmetic: Arithmetic,
+        histories: Histories,
+        omit_emphasis: bool,
+    ) -> Result<Self> {
         let format = Format::from_coding(stream.coding)?;
-        if format.emphasis {
+        if format.emphasis && !omit_emphasis {
             return Err(
                 "XA emphasis filtering is not implemented; refusing silent omission".into(),
             );

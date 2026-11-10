@@ -225,7 +225,14 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
 
 #[test]
 fn rejected_eof_and_unsupported_coding_preserve_audio_state() {
-    let mut q = queue();
+    let mut q = Queue::new(
+        stream(0),
+        Arithmetic::SplitFloor,
+        Histories::default(),
+        Resampling::Published37800,
+        Model::EmulatorReference,
+    )
+    .unwrap();
     q.sector(&sector(0, 0x64, 0x12), false, &volume(), 0)
         .unwrap();
     let before = q.statistics();

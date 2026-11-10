@@ -121,7 +121,11 @@ XA extraction requires `--xa-arithmetic split-floor|combined-rounded` and
 `--xa-history zero|continuous`. Zero history starts each asset independently.
 Continuous history carries a zero-start decode of preceding sectors of the selected
 file/channel/coding stream. Both are export contexts; game seek/reset behavior
-remains unverified. XA asset XML uses `bof3.xa-asset/v2`, records initial channel
+remains unverified. Strict XA decoding, extraction and packing reject emphasis.
+Native-reference playback accepts coding bit 6 and deliberately omits de-emphasis;
+this does not establish hardware fidelity.
+
+XA asset XML uses `bof3.xa-asset/v2`, records initial channel
 histories, and validates them against the preserved source during packing. Regenerate
 older manifests. Edited partial cues require matching continuous entry history and
 original exit history before following audio. Packing rejects shorter WAV input

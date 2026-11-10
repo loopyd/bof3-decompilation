@@ -154,7 +154,12 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
         let mut q = queue(1, resampling);
         let mut reference = queue(1, resampling);
         let before = q.statistics();
-        for bytes in [sector(0x40, 2), sector(2, 2)] {
+        let unsupported = if resampling == Resampling::Published37800 {
+            0x40
+        } else {
+            0x80
+        };
+        for bytes in [sector(unsupported, 2), sector(2, 2)] {
             assert!(q.sector(&bytes, false, &volume(), 0).is_err());
             assert_eq!(q.statistics(), before);
         }
