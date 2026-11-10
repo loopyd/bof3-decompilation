@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801EF1B0
   - - 1636
-    - asm
-    - func_801EF264
+    - c
+    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic09903_801EF264
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic09903_801EF264.c'
+    - '@behavior: Dispatch work byte 2, call the shared helper, then draw and pop the matrix when active.'
   - - 1772
     - c
     - seedRandomWorkByteBClearBytes9AndAThenCopyRecordTripletAndAdvanceWorkByte2BmagicMagic09903_801EF2EC

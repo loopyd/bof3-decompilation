@@ -62,8 +62,10 @@ segments:
     - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic14403_801EF1E4.c'
     - '@behavior: Projects the work-record position, builds zero rotation, composes the shared matrix and installs the transform.'
   - - 1684
-    - asm
-    - func_801EF294
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic14403_801EF294
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic14403_801EF294.c'
+    - '@behavior: Draws eight translucent gouraud triangles from the origin at radius 384, with work-byte-9 tint times eight capped at 128 and rim RGB (1,1,1).'
   - - 2320
     - c
     - dispatchStateByte1Table04e4BmagicMagic14403_801EF510

@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801EF108
   - - 1636
-    - asm
-    - func_801EF264
+    - c
+    - forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264
+    - '@source: src/bof3/bmagic/forwardWorkByte3SubmitSelectedRecordAndAdvanceWorkByte2WhenGlobalByteBBelow8BmagicMagic09303_801EF264.c'
+    - '@behavior: Forward work byte 3, submit its selected record and advance work byte 2 when global record byte B is below eight.'
   - - 1956
     - asm
     - func_801EF3A4

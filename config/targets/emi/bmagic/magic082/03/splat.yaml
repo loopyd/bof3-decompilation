@@ -61,8 +61,10 @@ segments:
     - dispatchStateByte1Table0d14BmagicMagic08203_801EF56C
     - '@source: src/bof3/bmagic/magic08203DispatchTables.c'
   - - 2480
-    - asm
-    - func_801EF5B0
+    - c
+    - dispatchWorkByte2HandlerThenInvokeHelpersAndPopWhenWorkByte0SetBmagicMagic08203_801EF5B0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersAndPopWhenWorkByte0SetBmagicMagic08203_801EF5B0.c'
+    - '@behavior: Dispatch work byte 2; when work byte 0 is nonzero invoke helpers 0x801EF4BC, 0x801EFA00, 0x801EF720 and PopMatrix.'
   - - 2608
     - c
     - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08203_801EF630

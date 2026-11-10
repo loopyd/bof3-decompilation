@@ -104,8 +104,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkBytes9AThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At10BmagicMagic08603_801EF8EC.c'
     - '@behavior: Decrement work bytes 9 then A; when byte 9 equals 0x10, set global work byte B to two and advance work byte 2.'
   - - 3444
-    - asm
-    - func_801EF974
+    - c
+    - decrementWorkByte9IfNonZeroThenDecrementWorkByteAAndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic08603_801EF974
+    - '@source: src/bof3/bmagic/decrementWorkByte9IfNonZeroThenDecrementWorkByteAAndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic08603_801EF974.c'
+    - '@behavior: Decrement work byte 9 if nonzero, then byte A; at zero set global work byte B to FF and invoke the shared helper.'
   - - 3552
     - asm
     - func_801EF9E0

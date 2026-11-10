@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EF690
   - - 2816
-    - asm
-    - func_801EF700
+    - c
+    - accumulateHalfByteAIntoByteBAndStepWordsThenDecrementGlobalByteBAndInvokeHelperAtZeroBmagicMagic10103_801EF700
+    - '@source: src/bof3/bmagic/accumulateHalfByteAIntoByteBAndStepWordsThenDecrementGlobalByteBAndInvokeHelperAtZeroBmagicMagic10103_801EF700.c'
+    - '@behavior: Accumulate half byte A into byte B, step words 1C and 10, and decrement the shared record byte B and invoke the helper when byte A reaches zero.'
   - - 2956
     - asm
     - func_801EF78C

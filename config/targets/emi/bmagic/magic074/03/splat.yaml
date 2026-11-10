@@ -70,8 +70,10 @@ segments:
     - dispatchStateByte1Table0558BmagicMagic07403_801EF710
     - '@source: src/bof3/bmagic/dispatchStateByte1Table0558BmagicMagic07403_801EF710.c'
   - - 2900
-    - asm
-    - func_801EF754
+    - c
+    - dispatchRecordByte2AndRunFlaggedCallbacksBmagicMagic07403_801EF754
+    - '@source: src/bof3/bmagic/dispatchRecordByte2AndRunFlaggedCallbacksBmagicMagic07403_801EF754.c'
+    - '@behavior: Dispatches copied handlers by record byte 2 and runs callbacks guarded by record flags.'
   - - 3152
     - asm
     - func_801EF850
