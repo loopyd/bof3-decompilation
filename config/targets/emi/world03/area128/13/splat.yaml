@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F30BC
   - - 1412
-    - asm
-    - func_801F3184
+    - c
+    - setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184
+    - '@source: src/bof3/world/setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184.c'
+    - '@behavior: Calls the shared front-end startup helper, sets state-entry byte 0x801448EB to 0x38, clears progress byte 0x801448EC, and increments the supplied work record halfword at +0x7E.'
   - - 1488
     - asm
     - func_801F31D0

@@ -139,8 +139,10 @@ segments:
     - asm
     - func_801F40F0
   - - 5676
-    - asm
-    - func_801F422C
+    - c
+    - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C
+    - '@source: 0x801F422C'
+    - '@behavior: Seeds the facing-selected step pair and shared position, adjusts position halfwords, advances mode byte 0x01 and requests the facing-selected resource.'
   - - 6236
     - asm
     - func_801F445C

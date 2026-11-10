@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF784
   - - 3028
-    - asm
-    - func_801EF7D4
+    - c
+    - incrementWorkBytesA9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2At18BmagicMagic08603_801EF7D4
+    - '@source: src/bof3/bmagic/incrementWorkBytesA9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2At18BmagicMagic08603_801EF7D4.c'
+    - '@behavior: Increment work byte A then byte 9; when the stored byte 9 equals 0x18, set global work byte B to one and advance work byte 2.'
   - - 3152
     - asm
     - func_801EF850

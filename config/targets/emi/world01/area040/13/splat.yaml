@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801F3570
   - - 2716
-    - asm
-    - func_801F369C
+    - c
+    - queueSharedUiElementBlock94To97x20To23Size0World01Area04013_801F369C
+    - '@source: src/bof3/world/queueSharedUiElementBlock94To97x20To23Size0World01Area04013_801F369C.c'
+    - '@behavior: queues the sixteen shared UI elements at x = 0x94..0x97 and y = 0x20..0x23 through 0x801A4BC0 with size 0, visiting all four x positions for each successive y position.'
   - - 2860
     - c
     - queueSharedUiElementSize50AtShiftedCellInsideMarkerBlockWorld01Area04013_801F372C

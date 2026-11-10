@@ -139,8 +139,10 @@ segments:
     - asm
     - func_801F3F48
   - - 5012
-    - asm
-    - func_801F3F94
+    - c
+    - drawWorkCursorQuadWorld03Area14313_801F3F94
+    - '@source: src/bof3/world/drawWorkCursorQuadWorld03Area14313_801F3F94.c'
+    - '@behavior: Copies the work cursor triple at offsets 0x34, 0x38 and 0x3C into a local point and passes it to the overlay renderer at 0x801F3FDC.'
   - - 5084
     - asm
     - func_801F3FDC

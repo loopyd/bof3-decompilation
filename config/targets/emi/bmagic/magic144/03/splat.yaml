@@ -65,8 +65,10 @@ segments:
     - dispatchStateByte1Table04e4BmagicMagic14403_801EF510
     - '@source: src/bof3/bmagic/magic14403DispatchTables.c'
   - - 2388
-    - asm
-    - func_801EF554
+    - c
+    - dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EF554.c'
+    - '@behavior: Dispatches the handler indexed by work byte 2 at 0x801F04EC, then re-reads the work pointer and calls 0x800AF764 and 0x801EF818 when work bytes 0 and 2 are nonzero.'
   - - 2516
     - c
     - clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4

@@ -115,8 +115,10 @@ segments:
     - dispatchStateByte2Table4634WorldWorld03Area11913_801F3D08
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 4428
-    - asm
-    - func_801F3D4C
+    - c
+    - clearWorkByte9QueueCue202AndAdvanceWorkByte2World03Area11913_801F3D4C
+    - '@source: src/bof3/world/clearWorkByte9QueueCue202AndAdvanceWorkByte2World03Area11913_801F3D4C.c'
+    - '@behavior: Clears work byte 9, queues cue 0x202, then reloads the work-record pointer and increments work byte 2.'
   - - 4496
     - c
     - callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90
