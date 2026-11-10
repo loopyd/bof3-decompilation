@@ -63,8 +63,9 @@ segments:
     - asm
     - func_801F311C
   - - 1348
-    - asm
-    - func_801F3144
+    - c
+    - setStatusThirteenIfGateElseFFFFWorld01Area05613_801F3144
+    - '@source: src/bof3/world/area05613_gate_status.c'
   - - 1388
     - asm
     - func_801F316C

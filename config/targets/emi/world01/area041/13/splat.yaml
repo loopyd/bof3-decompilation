@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801F3290
   - - 1788
-    - asm
-    - func_801F32FC
+    - c
+    - advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC
+    - '@source: src/bof3/world/advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC.c'
+    - '@behavior: increments the work record''s tick byte at 0x09, stores 0xFFFFD480 plus eight times that byte''s low bit into the position word at 0x34, and on the tick that reaches 8 also clears the tick byte, restores 0xFFFFD480 and bumps the state byte at 0x02; then calls the local polygon helpers at 0x801F2EFC and 0x801F3064.'
   - - 1932
     - asm
     - func_801F338C

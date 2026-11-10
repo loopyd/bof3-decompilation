@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8.c",
     "src/bof3/bmagic/decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic07303_801EF864.c",
     "src/bof3/bmagic/drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8.c",
+    "src/bof3/bmagic/drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C.c",
 ]
 psyq_source = "src/bof3/support/magic073_03_psyq.c"

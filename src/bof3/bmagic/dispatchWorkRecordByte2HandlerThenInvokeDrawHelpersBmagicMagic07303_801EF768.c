@@ -36,7 +36,8 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 void func_801F00C4(void);
 void drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8(
     s32 arg0, s32 arg1);
-void func_801EFE2C(s32 arg0, s32 arg1);
+void drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C(
+    s32 arg0, s32 arg1);
 
 /* @source 0x801EF768
  * @behavior Dispatches one step of the current bmagic work record and then runs
@@ -51,7 +52,9 @@ void func_801EFE2C(s32 arg0, s32 arg1);
  * the spoke drawing step now named
  * drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8,
  * at 0x801EFBF8, with the low 16 bits of the shared frame counter at 0x80143E6C
- * halved and with the record byte at offset 6, and 0x801EFE2C with that halved
+ * halved and with the record byte at offset 6, and
+ * drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C,
+ * at 0x801EFE2C, with that halved
  * counter plus four and with the record byte at offset 6 added to half of
  * itself. It returns nothing, keeps the return address and the copied table in
  * the frame, and reads or writes no other state. No in-image caller names this
@@ -74,8 +77,9 @@ void dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF76
     if (((u16 *)D_801F21F0)[6] & 3u) {
       drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8(
           (u16)(D_80143E6C >> 1), D_801F21F0[6]);
-      func_801EFE2C((u16)((D_80143E6C >> 1) + 4),
-                    D_801F21F0[6] + (D_801F21F0[6] >> 1));
+      drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C(
+          (u16)((D_80143E6C >> 1) + 4),
+          D_801F21F0[6] + (D_801F21F0[6] >> 1));
     }
   }
 }

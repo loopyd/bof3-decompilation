@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area19213_801F3424.c",
     "src/bof3/world/lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4.c",
+    "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548.c",
     "src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19213_801F2CFC.c",
     "src/bof3/support/area192_13_psyq.c",
 ]

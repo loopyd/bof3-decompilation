@@ -1,12 +1,11 @@
 #include "bof3/bof3.h"
 #include "gpu/prim.h"
 
-/* Effect entry draw pass at 0x801F40F4, still an asm boundary in this payload,
- * so it keeps its address anchor. It stamps the shared primitive cursor and
- * draws one 0x2C-byte effect entry handed in $a0; its first instructions are
- * addiu $sp,$sp,-0x38, sw $s2,0x30($sp), lui/lw of g_PrimCursor 0x8014598C,
- * sw $s0,0x28($sp), addu $s0,$a0,$zero. */
-void func_801F40F4(u8* entry);
+/* Effect entry draw pass at 0x801F40F4, claimed by the source of that address
+ * in this payload. It stamps the shared primitive cursor and draws one
+ * 0x2C-byte effect entry handed in $a0. */
+void drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4(
+    u8* entry);
 
 /* Shared projection setup at 0x801AFE18: fills the 0x20-byte projection
  * scratch handed in $a0. Bound by the generated undefined_funcs_auto.txt row. */
@@ -77,7 +76,8 @@ void drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4(void) {
   index = 0u;
 
   do {
-    func_801F40F4(entry);
+    drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4(
+        entry);
     FIELD_REF(u16, entry, 0x24u) = (u16)(FIELD_REF(u16, entry, 0x24u) + 0x10);
     entry += 0x2cu;
     index += 1u;

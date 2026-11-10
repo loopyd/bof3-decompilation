@@ -30,5 +30,5 @@ dispatchPanelStateLocalTableBatlEnd00_801F097C = 0x801F097C;
 advanceStateByte3BatlEnd00_801F09D4 = 0x801F09D4;
 func_801F09F4 = 0x801F09F4;
 func_801F0A74 = 0x801F0A74;
-func_801F0BB0 = 0x801F0BB0;
+sumRemainingLevelExpBatlEnd00_801F0BB0 = 0x801F0BB0;
 D_801F0C98 = 0x801F0C98;

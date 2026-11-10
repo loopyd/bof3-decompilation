@@ -67,8 +67,9 @@ segments:
     - asm
     - func_801EF518
   - - 2468
-    - asm
-    - func_801EF5A4
+    - c
+    - invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic02003_801EF5A4
+    - '@source: src/bof3/bmagic/invokeHelperThenDecrementWorkByte9AndAdvanceWorkByte2WhenZeroBmagicMagic02003_801EF5A4.c'
   - - 2568
     - asm
     - func_801EF608

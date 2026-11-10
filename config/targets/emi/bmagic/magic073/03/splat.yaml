@@ -98,8 +98,9 @@ segments:
     - '@source: src/bof3/bmagic/drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic07303_801EFBF8.c'
     - '@behavior: Draw step of this overlay run, reached only from the draw branch of the dispatcher at 0x801EF768, which passes half of the shared frame counter at 0x80143E6C masked to 16 bits and work record byte 6. It publishes the record halfwords 0x20 and 0x22 from the cell at 0x801F21F0 into scratchpad cells 0x1F800000 and 0x1F800002, then six times record byte 5 into 0x1F800008, 0x1F80000A and 0x1F80000C. The draw-mode tpage is 0xA5 when GetGraphType returns 1 and again when it returns 2, and 0x35 otherwise; SetDrawMode is seeded at g_PrimCursor with dfe 0 and dtd 1 and a 0xC-byte draw-mode packet is linked at record words 0x14 and 0x18 with kind 2. It then runs four iterations from the first argument masked to 16 bits in steps of 8, writing the low five bits of the counter shifted left 7 into the phase cell at 0x1F800006, and each iteration takes a fresh g_PrimCursor primitive, seeds it through 0x8017AA94, marks it semi-transparent, copies the published centre into primitive halfwords 0x08 and 0x0A, adds the 0x801783C8 and 0x801782FC samples of the phase cell scaled by the second argument and shifted right 12 into primitive halfwords 0x10 and 0x12, writes the tint triplet into primitive bytes 0x04, 0x05 and 0x06, stores 1 into bytes 0x0C, 0x0D and 0x0E, and links the 0x20-byte packet at record words 0x14 and 0x18 with kind 2. It keeps a 0x38-byte frame and returns nothing.'
   - - 4652
-    - asm
-    - func_801EFE2C
+    - c
+    - drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C
+    - '@source: src/bof3/bmagic/drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C.c'
   - - 5316
     - asm
     - func_801F00C4

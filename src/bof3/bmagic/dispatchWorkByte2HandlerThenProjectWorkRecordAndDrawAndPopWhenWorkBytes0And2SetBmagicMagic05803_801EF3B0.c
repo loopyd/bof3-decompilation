@@ -33,7 +33,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * inside that transform. Neither pops, so the pop stays in this dispatcher.
  */
 void func_801EF69C(void);
-void func_801EFA78(void);
+void drawTranslucentGouraudQuadRingAtWorkWordCRadiusSixtyFourWideInSixteenStepsTintingOuterEdgeByWorkByteATimesSixBmagicMagic05803_801EFA78(
+    void);
 
 /* @source 0x801EF3B0
  * @behavior Dispatches one frame of the overlay work handler from the scratchpad
@@ -68,7 +69,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
   handlers.handlers[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     func_801EF69C();
-    func_801EFA78();
+    drawTranslucentGouraudQuadRingAtWorkWordCRadiusSixtyFourWideInSixteenStepsTintingOuterEdgeByWorkByteATimesSixBmagicMagic05803_801EFA78();
     PopMatrix();
   }
 }

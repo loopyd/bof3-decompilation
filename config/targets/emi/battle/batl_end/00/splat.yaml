@@ -146,8 +146,10 @@ segments:
     - asm
     - func_801F0A74
   - - 8112
-    - asm
-    - func_801F0BB0
+    - c
+    - sumRemainingLevelExpBatlEnd00_801F0BB0
+    - '@source: src/bof3/battle/sumRemainingLevelExpBatlEnd00_801F0BB0.c'
+    - '@behavior: Battle-end remaining-experience readout for one local battler: maps byte +0x79 of the battler''s 0x140-byte battle work record through the EXE state-byte lookup 0x801DD7AC (value seven becomes zero), sums the u16 thresholds of the shared level table 0x801CB8DC from index zero through N inclusive, where N is byte +0x06 of the row''s 164-byte record re-read every iteration from 0x8014496E, and returns the sum minus the row''s u32 experience word 0x80144970 when the sum is the larger, otherwise zero; the 0x18-byte frame keeps $ra and $s0 across the lookup call.'
   - - 8344
     - textbin
     - D_801F0C98

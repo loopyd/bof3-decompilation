@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EFA2C
   - - 3732
-    - asm
-    - func_801EFA94
+    - c
+    - decrementWorkByte9ByTwoAndInvokeHelperWhenZeroBmagicMagic08803_801EFA94
+    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoAndInvokeHelperWhenZeroBmagicMagic08803_801EFA94.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044, subtracts two from the object''s countdown byte 0x9 at byte width, then re-reads the cell and loads byte 0x9 again, so the reloaded byte rather than the stored register supplies the tested value. Only when that byte is zero does it call the shared helper at 0x801E5988. The pointer-cell load precedes frame creation and the 0x18-byte frame only keeps the return address across the call; it takes no arguments, returns nothing and reads or writes no other state. Its address is entry 3 of the four-entry handler run at 0x801F005C that ends the reviewed textbin row D_801EFFE0, and no instruction in this payload materialises that run base.'
   - - 3816
     - c
     - incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8
