@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801D0C98
   - - 244
-    - asm
-    - func_801D0CF4
+    - c
+    - initializeCommuUiAndArmStateByteUnlessFrontendMode2
+    - '@source: src/bof3/ui/initializeCommuUiAndArmStateByteUnlessFrontendMode2.c'
+    - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise begins one shared front-end frame/update slice through func_80158E50, initialises the commu UI work block through initializeCommuUiState, stores 4 into the state byte at 0x801D1774 and advances the overlay step byte at 0x801F294D by one without returning a value. Word 1 of this overlay''s handler run based at 0x801D1758.'
   - - 332
     - asm
     - func_801D0D4C

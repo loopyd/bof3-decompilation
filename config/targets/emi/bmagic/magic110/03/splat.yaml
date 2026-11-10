@@ -100,8 +100,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8.c'
     - '@behavior: Entry 2 of the six-word work-byte-2 handler run at 0x801F048C, which 0x801EF7B4 selects with scratchpad work byte 2; reads the shared battle work pointer 0x801EB4E0 once, and only while work record byte 0xB stays below three under an unsigned bound it reads the scratchpad work pointer cell 0x1F800044 once and increments work byte 2 by one.'
   - - 3388
-    - asm
-    - func_801EF93C
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11003_801EF93C.c'
+    - '@behavior: Entry 11 of the fourteen-word byte-1 handler table at 0x801F046C, index 3 of the six-word work-byte-2 run at 0x801F048C; reads the scratchpad work pointer cell 0x1F800044 once, decrements unsigned work byte 9 in place and tests the truncated stored byte, and only when it reaches zero reads the shared battle work pointer 0x801EB4E0, decrements record byte 0xB and invokes the shared helper 0x801E5988 with the store filling the call delay slot.'
   - - 3480
     - asm
     - func_801EF998

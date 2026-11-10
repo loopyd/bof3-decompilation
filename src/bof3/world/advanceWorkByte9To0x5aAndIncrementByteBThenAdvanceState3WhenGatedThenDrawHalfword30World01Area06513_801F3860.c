@@ -5,9 +5,8 @@ extern u8 D_801454F2;
 extern u8 D_80143BB0;
 extern u16 D_80146258;
 
-/* The local emitter at 0x801F40FC narrows both arguments with `sll`/`sra 16`
- * in its own body and the call site consumes no result. */
-void func_801F40FC(s16 arg0, s16 arg1);
+void drawSpriteFrameAndMainRamTexture2World01Area06513_801F40FC(s16 arg0,
+                                                               s16 arg1);
 
 /* @source 0x801F3860
  * @behavior Byte-2 state handler 6 of the eight-entry handler table based at
@@ -47,5 +46,6 @@ void advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHa
     D_1F800044[3]++;
   }
   emitter = D_1F800044;
-  func_801F40FC(0x5C, FIELD_REF(s16, emitter, 0x30));
+  drawSpriteFrameAndMainRamTexture2World01Area06513_801F40FC(
+      0x5C, FIELD_REF(s16, emitter, 0x30));
 }

@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F34AC
   - - 2820
-    - asm
-    - func_801F3704
+    - c
+    - drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704
+    - '@source: src/bof3/world/drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704.c'
+    - '@behavior: draws the overlay three-by-two grid of six textured quads: each loop step stamps a POLY_FT4 at the shared primitive cursor with SetPolyFT4 and SetShadeTex off, fills the four scratchpad vectors at 0x1F800014 with the current cell corners taken from the cell byte pair (first column byte times 128 minus 0x3FC0 or 0x4040 for the last two vectors, second column byte the same way for the y lanes) and depth -0x88, projects them into the primitive x0 to x3 words through RotTransPers4, hands the primitive to 0x80155560 with the word 0xBD500000 carrying the step byte out of the six-byte table at 0x801F4370 and mode 1, and queues it through 0x80155A08 with both column bytes shifted up sixteen bits, selector 0 and size 0x28; both column pointers advance by two per step.'
   - - 3196
     - asm
     - func_801F387C

@@ -1,6 +1,6 @@
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 = 0x801EEC48;
-func_801EECC0 = 0x801EECC0;
+seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0 = 0x801EECC0;
 func_801EF0F8 = 0x801EF0F8;
 drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234 = 0x801EF234;
 func_801EF2A8 = 0x801EF2A8;

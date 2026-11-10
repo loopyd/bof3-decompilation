@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/world/clearWorldFlagAndWorkByte4World01Area05613_801F3440.c",
     "src/bof3/world/area05613_gate_status.c",
     "src/bof3/world/dispatchWorkByte4Table3898World01Area05613_801F3284.c",
+    "src/bof3/world/advanceWorkMotionAndSelectHandler2PastWork3eThenHandHalfword3eToSharedUnlessByte5OrFlag8SetAndConsumeSharedCountdownWorld01Area05613_801F3354.c",
     "src/bof3/world/setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C.c",
     "src/bof3/support/area056_13_psyq.c",
 ]

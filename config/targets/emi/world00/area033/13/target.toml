@@ -19,6 +19,7 @@ support_sources = [
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld00Area03313_801F353C.c",
     "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld00Area03313_801F3490.c",
     "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684.c",
+    "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158.c",
     "src/bof3/support/area033_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area033_13_psyq.c"

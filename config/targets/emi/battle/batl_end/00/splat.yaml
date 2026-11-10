@@ -143,15 +143,17 @@ segments:
     - c
     - dispatchPanelStateLocalTableBatlEnd00_801F097C
     - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801F097C.c'
-    - '@behavior: Battle-end panel state dispatch through a two-entry local handler table: seeds a two-word table on the stack at 0x10($sp) with entry 0 = advanceStateByte3BatlEnd00_801F09D4 and entry 1 = func_801F09F4, then reads the object published at 0x80148648, takes its byte +0x03, scales it by four and calls the entry at that index with no arguments; the index is unbounded and this span is the word at 0x801EEC3C, the last of the six panel handler pointers that dispatchPanelTaskTableEc28BatlEnd00_801EFD98 copies from 0x801EEC28 and indexes by byte +0x02 of the same object.'
+    - '@behavior: Battle-end panel state dispatch through a two-entry local handler table: seeds a two-word table on the stack at 0x10($sp) with entry 0 = advanceStateByte3BatlEnd00_801F09D4 and entry 1 = drawAmountStripBatlEnd00_801F09F4, then reads the object published at 0x80148648, takes its byte +0x03, scales it by four and calls the entry at that index with no arguments; the index is unbounded and this span is the word at 0x801EEC3C, the last of the six panel handler pointers that dispatchPanelTaskTableEc28BatlEnd00_801EFD98 copies from 0x801EEC28 and indexes by byte +0x02 of the same object.'
   - - 7636
     - c
     - advanceStateByte3BatlEnd00_801F09D4
     - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c'
     - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F07C0.'
   - - 7668
-    - asm
-    - func_801F09F4
+    - c
+    - drawAmountStripBatlEnd00_801F09F4
+    - '@source: src/bof3/battle/drawAmountStripBatlEnd00_801F09F4.c'
+    - '@behavior: Battle-end amount strip: draws the narrow message-panel strip at (0x6E, 0x28) through the EXE drawer 0x801D8270, formats the shared main-RAM money word 0x80144F50 through the overlay format 0x801EEC4C ("%7d") into the shared 0x80149118 text buffer, submits that buffer at (0x7E, 0x2A) through the shared text drawer 0x8014FF0C, then submits the overlay one-character run at 0x801F0CD0 at (0xB6, 0x2A) with a zero third argument and 0xFF as the shading value through 0x8014F800. The 0x20-byte frame keeps $ra and $s0 across the four calls and holds the fifth argument of the last call at 0x10($sp).'
   - - 7796
     - asm
     - func_801F0A74

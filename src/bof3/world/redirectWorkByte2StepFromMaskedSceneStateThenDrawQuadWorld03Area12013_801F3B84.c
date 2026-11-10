@@ -27,13 +27,14 @@ extern u8 D_80146308;
  */
 extern u8* D_1F800044;
 
-/* Quad drawer at 0x801F3F5C, still unlifted assembly inside this target, so
- * only its prototype is declared. Its head adds the third argument to the work
+/* Quad drawer of this target at 0x801F3F5C, lifted after this handler, so only
+ * its prototype is declared here. Its head adds the third argument to the work
  * record byte at 0x0A, and its body builds a textured four-point polygon
  * through SetPolyFT4, SetShadeTex and RotTransPers4. Its fourth argument is
  * subtracted from the horizontal and vertical extents it derives from the work
  * halfwords 0x36 and 0x3A. */
-void func_801F3F5C(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
+void drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C(
+    u32 arg0, u32 arg1, u32 arg2, u32 arg3);
 
 /* @source 0x801F3B84
  * @behavior Step 2 of the work-byte-2 handler run this overlay dispatches
@@ -50,8 +51,8 @@ void func_801F3F5C(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
  *           fresh load of the scratchpad pointer cell. A masked word of 0x10300
  *           instead replaces the first quad argument, otherwise 0x80, with six
  *           times the shared main-executable byte at 0x80146308, plus 0x3F and
- *           truncated to a multiple of 8. It then calls the quad drawer
- *           func_801F3F5C with the fixed arguments (0x40, 1, 0) beside that
+ *           truncated to a multiple of 8. It then calls the quad drawer at
+ *           0x801F3F5C with the fixed arguments (0x40, 1, 0) beside that
  *           first argument. Takes no arguments, returns nothing, and its
  *           0x18-byte frame holds only the saved return address at 0x10. The
  *           roles of the masked scene states beyond the steps they select stay
@@ -89,7 +90,7 @@ void redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3
   if ((*(u32*)*(u32*)(work + 0xC) & 0xFFFF00) == 0x40600) {
     work[2] = 3;
   }
-  func_801F3F5C(
+  drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C(
       (*(u32*)*(u32*)(D_1F800044 + 0xC) & 0xFFFF00) == 0x10300
           ? ((D_80146308 * 6) + 0x3F) & 0xF8
           : 0x80,

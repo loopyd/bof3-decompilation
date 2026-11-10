@@ -1,12 +1,13 @@
 #include "bof3/bof3.h"
 
-/* Quad drawer at 0x801F3F5C, still unlifted assembly inside this target, so
- * only its prototype is declared. Its head adds the third argument to the work
- * record byte at 0x0A, and its body builds a textured four-point polygon
- * through SetPolyFT4, SetShadeTex and RotTransPers4. Its fourth argument is
- * subtracted from the horizontal and vertical extents it derives from the work
- * halfwords 0x36 and 0x3A. */
-void func_801F3F5C(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
+/* Quad drawer of this target at 0x801F3F5C, lifted after this handler, so only
+ * its prototype is declared here. Its head adds the third argument to the work
+ * record byte at 0x0A and wraps it modulo 0x0C, and its body builds a textured
+ * four-point polygon through SetPolyFT4, SetShadeTex and RotTransPers4. Its
+ * fourth argument is subtracted from the horizontal and vertical extents it
+ * derives from the work halfwords 0x36 and 0x3A. */
+void drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C(
+    u32 arg0, u32 arg1, u32 arg2, u32 arg3);
 
 /* Scratchpad work-object pointer cell. The original materialises the cell
  * address with `lui` plus an offset load for every access, reloads it after
@@ -26,7 +27,7 @@ extern u8* D_1F800044;
  *           subtracted from 8 and the difference is taken as a magnitude, so
  *           the ramp peaks where the byte passes 8, and that magnitude is
  *           subtracted from 8 again, negated and shifted left by four, which
- *           makes the fourth argument of the quad drawer func_801F3F5C run 0 at
+ *           makes the fourth argument of the quad drawer at 0x801F3F5C run 0 at
  *           byte 0, -0x80 at byte 8 and back to 0 at byte 0x10. The call itself
  *           passes the fixed arguments (0x80, 0x40, 1) beside that ramp. Once
  *           the byte read back has reached 0x10 the handler also clears work
@@ -59,5 +60,6 @@ void advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03A
     resetWork = D_1F800044;
     resetWork[2] = 2;
   }
-  func_801F3F5C(0x80, 0x40, 1, -ramp << 4);
+  drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C(
+      0x80, 0x40, 1, -ramp << 4);
 }

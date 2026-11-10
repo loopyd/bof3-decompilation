@@ -14,7 +14,7 @@ advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorl
 func_801F338C = 0x801F338C;
 func_801F3400 = 0x801F3400;
 func_801F34AC = 0x801F34AC;
-func_801F3704 = 0x801F3704;
+drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704 = 0x801F3704;
 func_801F387C = 0x801F387C;
 setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48 = 0x801F3A48;
 setStatusFFFFAndAreaStatus1EOr28ByGateWithFrontEndStep3Or4ClearRecordByte0World01Area04113_801F3AA0 = 0x801F3AA0;
@@ -39,3 +39,5 @@ invokeHelperArgWorld01Area04113_801F4230 = 0x801F4230;
 func_801F4250 = 0x801F4250;
 func_801F4288 = 0x801F4288;
 D_801F42C8 = 0x801F42C8;
+D_801F4365 = 0x801F4365;
+D_801F4370 = 0x801F4370;

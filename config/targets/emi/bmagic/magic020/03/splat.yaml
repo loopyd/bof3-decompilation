@@ -34,8 +34,10 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic02003_801EEC48
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic02003_801EEC48.c'
   - - 192
-    - asm
-    - func_801EECC0
+    - c
+    - seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0
+    - '@source: src/bof3/bmagic/seedWorkObjectFromBattleRecordThenCopyActingBattlerRecordsIntoFiveQueuedSlotsStampMirroredOrdinalsPublishRecordBytes24And27And28AndRaiseFlag40BmagicMagic02003_801EECC0.c'
+    - '@behavior: Work byte 1 state 0 of this overlay, entry 0 of the six-word handler table at 0x801EEC04 that dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies into its frame and indexes with scratchpad work byte 1. Copies the shared battle work record byte 8 and word triplet 0x34/0x38/0x3C into the work object, clears work bytes 0xB and 9, raises work byte 1 and dispatches event 0xC with value 2, then makes four passes that claim a queued slot through func_801E590C(1, 0x2E), copy the acting battler record head selected by 0x80146374 (party 0x80145E90 stride 0x140, enemy 0x801EB630 stride 0x118 indexed by selector minus 3) into the slot and stamp entry bytes 1/2/5/6/9/0xB and the work pointer at +0x74, fills one more slot the same way without ordinal bytes, publishes record bytes 0x27/0x28/0x24, raises record bit 0x40 and calls func_800AFC98(2, 0) only for a party selector.'
   - - 1272
     - asm
     - func_801EF0F8

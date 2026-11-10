@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenWorkBytes0And9SetBmagicMagic01303_801EFDF8.c'
     - '@behavior: Overlay work-byte-2 dispatcher that then draws the active record: reads the work-object pointer cell at 0x1F800044, takes its unsigned byte at offset 2, scales it by four and calls that entry of the code-pointer run word at 0x801F03DC with no arguments; reads the cell again afterwards and, when the record bytes at offsets 0 and 9 are both non-zero, calls the projection at 0x801F00A8, the draw step at 0x801F0164 and PopMatrix. Stores nothing; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 4736
-    - asm
-    - func_801EFE80
+    - c
+    - countDownWorkByte9ThenSeedAngleFromByteBAddHalvedRotatorStepsToWords34And38CopyWord3CSetWord14ToRandPlus128Word20ToMinus12ResetByte9To16AndAdvanceWorkByte2BmagicMagic01303_801EFE80
+    - '@source: src/bof3/bmagic/countDownWorkByte9ThenSeedAngleFromByteBAddHalvedRotatorStepsToWords34And38CopyWord3CSetWord14ToRandPlus128Word20ToMinus12ResetByte9To16AndAdvanceWorkByte2BmagicMagic01303_801EFE80.c'
+    - '@behavior: Overlay work-handler step at entry 1 of the three-entry code-pointer run at 0x801F03D8 that the byte-1 dispatcher at 0x801EFDB4 indexes with the work object byte 0x1, and the word the byte-2 dispatcher reaches as index 0 of its base 0x801F03DC; no word in this payload addresses it, so it takes no arguments and returns nothing. It reads the work-object pointer cell at 0x1F800044, decrements the record byte 0x9 at byte width and returns through the branch delay slot while the masked result is non-zero. When that countdown reaches zero it stores work byte 0xB scaled by 0x80 into the scratchpad angle cell at 0x1F800004, reads the battle record pointer at 0x8014638C into a saved register across three calls, and adds the first rotator func_801782FC result shifted left by eight and right by nine into work word 0x34 over one fresh cell read and the same shifted form of the second rotator func_801783C8 result into work word 0x38 over a second fresh read, which also copies the record word 0x3C into work word 0x3C. The cell is then read once more, held across the next store and kept for the closing increment: work word 0x14 takes (rand() & 7) plus 0x80, work byte 0x9 is reset to 0x10, work word 0x20 takes -0xC and work byte 0x2 is incremented by one, the handler index the byte-2 dispatcher uses. The 0x20-byte frame keeps $ra, $s1 and $s0.'
   - - 5000
     - asm
     - func_801EFF88
