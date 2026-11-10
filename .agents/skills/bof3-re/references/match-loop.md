@@ -126,7 +126,11 @@ same residual measured exact as their union, and neither delta predicted it, so 
 two variants are neutral on the same residual the composed spelling is the next probe.
 Partial gains compose the same way: two order levers that each closed one instruction
 and neither finished measured exact as their union, so a retained partial gain is
-input to the next composed variant, not a lever to re-test alone.
+input to the next composed variant, not a lever to re-test alone. Three attributable
+variants that each moved a different residual are the point to cross those axes in one
+sweep instead of composing two at a time: the deciding axis can be two at once, and
+four of ten rows in one grid measured exact, so gate a grid hit natively rather than
+attributing it to a single class.
 Compare the full result, not score alone. Restore neutral/regressive probes.
 Retain a strict coherent partial improvement only after semantic review and truthful
 metadata; retention is not exact acceptance or exhaustion. Near-exact allocation

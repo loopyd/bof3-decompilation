@@ -67,7 +67,10 @@ status is a measurement from when the seed was written, so write it in the past
 tense with the measurement it rests on, because a sibling or callee lifted exact
 afterwards falsifies the present tense and returns as a comment-only edit and
 re-gate.
-Later source/binding edit requires renewed gate.
+Later source/binding edit requires renewed gate, and a rename that reaches another
+claimed span's declaration, initializer or `@behavior` leaves that span's measurement
+stale the same way: gate it in the same batch where the lane owns it, otherwise report
+the staleness instead of citing the earlier pass.
 
 ## Gate batch (one pass, after all edits)
 
