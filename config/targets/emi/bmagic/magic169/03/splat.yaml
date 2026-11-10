@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF444
   - - 2300
-    - asm
-    - func_801EF4FC
+    - c
+    - incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC.c'
+    - '@behavior: Increment the stride-12 counters selected by work byte 0xA; on countdown zero invoke helper 0x8015D71C and advance work byte 2.'
   - - 2624
     - c
     - setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic16903_801EF640

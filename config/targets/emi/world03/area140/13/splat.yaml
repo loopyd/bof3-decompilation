@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801F37C4
   - - 3268
-    - asm
-    - func_801F38C4
+    - c
+    - stepWorkHalfword3eWorld03Area14013_801F38C4
+    - '@source: src/bof3/world/stepWorkHalfword3eWorld03Area14013_801F38C4.c'
+    - '@behavior: Subtracts 16 from work halfword +0x3E, advances state on expiry and calls 0x801F3950.'
   - - 3408
     - asm
     - func_801F3950

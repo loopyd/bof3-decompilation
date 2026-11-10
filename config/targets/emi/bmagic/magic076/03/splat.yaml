@@ -71,8 +71,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4.c'
     - '@behavior: Decrement work byte 9; on zero copy record byte 4 and triplet, bias word 0x3C, rearm and advance byte 2.'
   - - 2216
-    - asm
-    - func_801EF4A8
+    - c
+    - incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8.c'
+    - '@behavior: Increment work byte 9; at 16 allocate table-count entries, initialize their fields and advance work byte 2.'
   - - 2544
     - asm
     - func_801EF5F0

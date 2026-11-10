@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801F35A0
   - - 2984
-    - asm
-    - func_801F37A8
+    - c
+    - updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8
+    - '@source: src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8.c'
+    - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3220
     - asm
     - func_801F3894

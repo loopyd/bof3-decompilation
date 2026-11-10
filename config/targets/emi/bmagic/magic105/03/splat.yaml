@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EFB68
   - - 4236
-    - asm
-    - func_801EFC8C
+    - c
+    - reserveFirstFreeRecordBmagicMagic10503_801EFC8C
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic10503_801EFC8C.c'
+    - '@behavior: Reserves the first free record in the 64-record pool and returns its index or 0xFF.'
   - - 4336
     - asm
     - func_801EFCF0

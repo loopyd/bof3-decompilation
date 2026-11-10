@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c",
     "src/bof3/world/advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C.c",
     "src/bof3/world/invokeHelperArgWorld03Area13013_801F3C7C.c",
     "src/bof3/world/area13013DispatchTables.c",

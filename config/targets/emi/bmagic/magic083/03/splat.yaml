@@ -90,8 +90,10 @@ segments:
     - asm
     - func_801EFEDC
   - - 5136
-    - asm
-    - func_801F0010
+    - c
+    - drawRandomizedEffectIntegrateWorkMotionAndResetCountdownBmagicMagic08303_801F0010
+    - '@source: src/bof3/bmagic/drawRandomizedEffectIntegrateWorkMotionAndResetCountdownBmagicMagic08303_801F0010.c'
+    - '@behavior: Draws with randomized scale, integrates work motion, and resets the expired countdown before advancing work byte 2.'
   - - 5380
     - asm
     - func_801F0104

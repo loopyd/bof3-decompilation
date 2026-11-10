@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801F36BC
   - - 2876
-    - asm
-    - func_801F373C
+    - c
+    - invokeTwoZeroArgsWorld03Area13013_801F373C
+    - '@source: src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c'
+    - '@behavior: Calls 0x8015D404 with both arguments zero, then returns.'
   - - 2912
     - asm
     - func_801F3760
