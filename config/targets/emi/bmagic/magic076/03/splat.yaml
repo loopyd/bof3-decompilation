@@ -46,8 +46,10 @@ segments:
     - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C
     - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C.c'
   - - 1376
-    - asm
-    - func_801EF160
+    - c
+    - decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07603_801EF160
+    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersAndWorkByte9ThenSubmitRecordAndAdvanceWorkByte1OnZeroBmagicMagic07603_801EF160.c'
+    - '@behavior: Decrement work-byte-A record counters and work byte 9; on zero submit the published record and advance work byte 1.'
   - - 1672
     - asm
     - func_801EF288

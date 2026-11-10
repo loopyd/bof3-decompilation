@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F35F8
   - - 2872
-    - asm
-    - func_801F3738
+    - c
+    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738.c'
+    - '@behavior: Adds 0x10 to work halfword +0x30, advances byte +2 at signed 0x80, then calls helper 0x801F3914.'
   - - 2964
     - asm
     - func_801F3794

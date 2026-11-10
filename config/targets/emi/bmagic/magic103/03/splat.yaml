@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801EF128
   - - 1496
-    - asm
-    - func_801EF1D8
+    - c
+    - drawEightBandsOfThirtyTwoTranslucentTexturedQuadsWithWorkByte9FadeBmagicMagic10303_801EF1D8
+    - '@source: src/bof3/bmagic/drawEightBandsOfThirtyTwoTranslucentTexturedQuadsWithWorkByte9FadeBmagicMagic10303_801EF1D8.c'
+    - '@behavior: Draws eight bands of 32 translucent textured quads with work-byte-9 edge fade, work-byte-A texture rows and projected scratchpad vectors.'
   - - 3020
     - asm
     - func_801EF7CC

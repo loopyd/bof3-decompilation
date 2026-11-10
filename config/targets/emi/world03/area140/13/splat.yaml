@@ -115,8 +115,10 @@ segments:
     - armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4
     - '@source: src/bof3/world/armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4.c'
   - - 6920
-    - asm
-    - func_801F4708
+    - c
+    - decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708
+    - '@source: src/bof3/world/decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708.c'
+    - '@behavior: Decrements work byte 9 and sets state byte 1 to 2 on expiry or game state 5.'
   - - 7020
     - asm
     - func_801F476C

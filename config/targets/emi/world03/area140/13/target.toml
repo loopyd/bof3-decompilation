@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area140_13_psyq.c",
     "src/bof3/world/area14013DispatchTables.c",
     "src/bof3/world/armCountdownByte9To210AndAdvanceWorkByte1World03Area14013_801F46E4.c",
+    "src/bof3/world/decrementWorkByte9AndSetState2OnExpiryOrGameState5World03Area14013_801F4708.c",
 ]
 psyq_source = "src/bof3/support/area140_13_psyq.c"

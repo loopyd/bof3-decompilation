@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801EF55C
   - - 2884
-    - asm
-    - func_801EF744
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic08303_801EF744
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic08303_801EF744.c'
+    - '@behavior: Decrements shared work byte 0xB and invokes the helper when scratchpad work byte 0xB is zero.'
   - - 2964
     - asm
     - func_801EF794

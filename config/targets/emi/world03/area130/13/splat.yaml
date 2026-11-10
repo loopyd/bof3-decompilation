@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F3284
   - - 1852
-    - asm
-    - func_801F333C
+    - c
+    - advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C
+    - '@source: src/bof3/world/advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C.c'
+    - '@behavior: Advances the seed halfword by 0xF00, invokes 0x801F3400, and ticks the work countdown and state.'
   - - 1996
     - asm
     - func_801F33CC

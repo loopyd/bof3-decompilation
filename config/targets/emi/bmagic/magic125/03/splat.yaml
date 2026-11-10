@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801EF960
   - - 3760
-    - asm
-    - func_801EFAB0
+    - c
+    - decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0
+    - '@source: src/bof3/bmagic/decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0.c'
+    - '@behavior: Decrement signed word 0x14 above 8; on odd frames count down byte 9, then decrement record byte 0xB and invoke 0x801E5988 on zero.'
   - - 3912
     - c
     - dispatchStateByte1Table05f8BmagicMagic12503_801EFB48

@@ -89,8 +89,10 @@ segments:
     - c
     - invokeHelperWorld01Area05213_801F3D24
   - - 4420
-    - asm
-    - func_801F3D44
+    - c
+    - anyWorkPositionInModeBoundsWorld01Area05213_801F3D44
+    - '@source: src/bof3/world/anyWorkPositionInModeBoundsWorld01Area05213_801F3D44.c'
+    - '@behavior: Tests work position halfwords against mode-selected modular bounds.'
   - - 4628
     - asm
     - func_801F3E14
