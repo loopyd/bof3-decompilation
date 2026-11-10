@@ -366,8 +366,9 @@ impl Image {
         })
     }
 
-    /// Configure owned devices before the first startup instruction. Host audio
-    /// waits use the supplied resolver without resetting startup or CPU state.
+    /// Configure owned devices before the first startup instruction. The supplied
+    /// scheduler runs after every advanced startup transition, including Ready,
+    /// without resetting startup or CPU state. Errors retain advanced state.
     pub fn start_scheduled(
         &self,
         configure: &mut impl FnMut(&mut Execution) -> Result<()>,

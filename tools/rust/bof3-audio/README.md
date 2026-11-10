@@ -434,11 +434,18 @@ The retained timer access or counter pass resumes once. The owned image executes
 `WaitEvent` through its guest body and preserves the selected record across IRQ
 save and return. Raw host-service polling remains unsupported in this mode.
 
-Use `Image::start_scheduled` to select this configuration before service startup.
-Its resolver handles audio waits; `Execution::call_scheduled` accepts the same
-resolver for subsequent calls. Each wait poll counts toward the supplied call
-limit. The resolver must retain the CPU and device configuration while advancing
-the selected producer and consumer operations.
+Use `Image::start_scheduled` to configure devices before service startup and
+`Execution::call_scheduled` for later calls. The scheduler runs after every
+advanced transition, including `DeviceProgress::Ready` and the instruction that
+returns to the stop address. The stopped check has no scheduler callback; the
+observer runs before execution. Every transition, including a blocked wait poll,
+counts toward the call limit.
+
+The scheduler may advance independent producer and consumer work at `Ready` or
+release an audio wait. It must preserve CPU, clock and cache configuration.
+Scheduler errors terminate the call with advanced state retained and prevent
+further owned execution. The default scheduler uses `progress.require_ready()`,
+which does nothing for `Ready`.
 
 `begin_audio_capture` starts retaining delivered callback frames without changing
 synthesis or queue state. Drain them with `take_audio_frames`; collection holds at

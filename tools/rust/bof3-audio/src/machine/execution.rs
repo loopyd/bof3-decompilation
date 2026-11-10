@@ -444,10 +444,12 @@ impl Execution {
         })
     }
 
-    /// Execute a bounded call with an explicit host-audio wait resolver. The
-    /// resolver may advance producer/consumer work and release device waits;
+    /// Execute a bounded call with an explicit host-audio scheduler. It runs
+    /// after every advanced transition, including Ready and the return to the
+    /// stop address. It may advance producer/consumer work and release waits;
     /// it must preserve the retained CPU, clock and cache configuration.
-    /// Each poll still consumes one transition from the supplied safety limit.
+    /// Each transition, including a wait poll, counts toward the supplied limit.
+    /// Scheduler errors retain advanced state and terminate the call.
     pub fn call_scheduled(
         &mut self,
         entry: u32,
@@ -501,11 +503,7 @@ impl Execution {
         for _ in 0..limit {
             match self.transition(observer, Some(RETURN))? {
                 Transition::Stopped => break,
-                Transition::Advanced(step) => {
-                    if step.devices != DeviceProgress::Ready {
-                        schedule(self, step.devices)?;
-                    }
-                }
+                Transition::Advanced(step) => schedule(self, step.devices)?,
             }
         }
         if self.cpu.pc() != RETURN {
