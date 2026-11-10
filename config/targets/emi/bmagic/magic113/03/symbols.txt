@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC24 = 0x801EEC24;
 forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0 = 0x801EECE0;
-func_801EEE24 = 0x801EEE24;
+incrementWorkByte9ThenQueueTwoSlotsCopyWorkPoseDispatchCue101AndAdvanceWorkByte1At16BmagicMagic11303_801EEE24 = 0x801EEE24;
 func_801EF000 = 0x801EF000;
 func_801EF0F0 = 0x801EF0F0;
 func_801EF1F8 = 0x801EF1F8;

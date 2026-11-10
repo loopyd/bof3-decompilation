@@ -87,8 +87,10 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC.c'
     - '@behavior: Adds two to work byte 0xA and four to work byte 9, then advances work byte 2 when byte 9 equals 0x10.'
   - - 5992
-    - asm
-    - func_801F0368
+    - c
+    - incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhenZeroBmagicMagic12403_801F0368
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenSubtract4FromByte9AndDecrementGlobalByteBAndClearWhenZeroBmagicMagic12403_801F0368.c'
+    - '@behavior: Increments work byte 0xA and subtracts four from byte 9, then on zero decrements global work byte 0xB and clears work bytes 0 through 4.'
   - - 6112
     - asm
     - func_801F03E0

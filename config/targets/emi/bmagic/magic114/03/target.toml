@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80.c",
     "src/bof3/bmagic/seedOffsetFromModeThenProjectWorkPositionAndInstallAxisQuarterTurnBmagicMagic11403_801F0E90.c",
     "src/bof3/bmagic/drawEightScaledEndpointTrianglesAndSubmitBmagicMagic11403_801EF128.c",
     "src/bof3/bmagic/call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C.c",

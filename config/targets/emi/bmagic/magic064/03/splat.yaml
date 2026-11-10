@@ -104,8 +104,10 @@ segments:
     - asm
     - func_801F009C
   - - 5572
-    - asm
-    - func_801F01C4
+    - c
+    - clearWorkByteBSetWorkByte9To64InvokeHelperThenAdvanceWorkByte2BmagicMagic06403_801F01C4
+    # @source 0x801F01C4
+    # @behavior Clears work byte B, sets byte 9 to 64, invokes the local helper, then advances byte 2.
   - - 5652
     - asm
     - func_801F0214

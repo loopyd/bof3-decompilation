@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF7CC
   - - 3856
-    - asm
-    - func_801EFB10
+    - c
+    - dispatchWorkByte2HandlerThenCallFE20WhenWorkBytes0And2SetBmagicMagic10303_801EFB10
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallFE20WhenWorkBytes0And2SetBmagicMagic10303_801EFB10.c'
+    - '@behavior: Dispatches the work-byte-2 handler, reloads the work pointer and calls 0x801EFE20 when work bytes 0 and 2 are nonzero.'
   - - 3976
     - c
     - decrementWorkByte9ThenAddIndexedTripletToRecordClearBytes9AAndAdvanceWorkByte2BmagicMagic10303_801EFB88

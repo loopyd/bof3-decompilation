@@ -111,8 +111,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkWordCMinus2000ClearWord10ThenInvokeHelpersAndAdvanceWorkByte2BmagicMagic00303_801EF9AC.c'
     - '@behavior: Seeds work word C with -0x2000, clears word 10, invokes both helpers, reloads the work pointer and increments byte 2.'
   - - 3580
-    - asm
-    - func_801EF9FC
+    - c
+    - stepWorkWordPairThenSubmitAtTargetDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic00303_801EF9FC
+    - '@source: src/bof3/bmagic/stepWorkWordPairThenSubmitAtTargetDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic00303_801EF9FC.c'
+    - '@behavior: Steps work words 0x34 and 0x38; at their targets submits the work record, decrements shared work byte B and invokes helper 0x801E5988.'
   - - 3740
     - c
     - dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C

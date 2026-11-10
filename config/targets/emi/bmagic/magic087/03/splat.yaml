@@ -80,8 +80,10 @@ segments:
     - incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0.c'
   - - 4320
-    - asm
-    - func_801EFCE0
+    - c
+    - decrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytes0Through4OnZeroBmagicMagic08703_801EFCE0
+    - '@source: src/bof3/bmagic/decrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytes0Through4OnZeroBmagicMagic08703_801EFCE0.c'
+    - '@behavior: Decrement work byte A; on zero decrement global work byte B and clear work bytes 0 through 4.'
   - - 4476
     - asm
     - func_801EFD7C

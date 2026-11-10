@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801F01C0
   - - 5668
-    - asm
-    - func_801F0224
+    - c
+    - invokeHelper08ACThenDecrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic12003_801F0224
+    # @source 0x801F0224
+    # @behavior Invokes helper 0x801F08AC, decrements work byte 9, and invokes shared helper 0x801E5988 on zero.
   - - 5748
     - asm
     - func_801F0274

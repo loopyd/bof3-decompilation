@@ -79,8 +79,10 @@ segments:
     - dispatchStateByte1Table0c60BmagicMagic22603_801EFD84
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 4552
-    - asm
-    - func_801EFDC8
+    - c
+    - dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic22603_801EFDC8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic22603_801EFDC8.c'
+    - '@behavior: Dispatch work byte 2, then invoke helpers when work bytes 0 and 2 are nonzero.'
   - - 4680
     - asm
     - func_801EFE48

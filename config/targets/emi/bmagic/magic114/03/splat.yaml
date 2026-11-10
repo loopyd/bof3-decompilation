@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801EF8C0
   - - 3712
-    - asm
-    - func_801EFA80
+    - c
+    - drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80.c'
+    - '@behavior: Draw a semi-transparent Gouraud quad using transformed work-byte-9 offsets and RotAverage4.'
   - - 4568
     - c
     - dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8
