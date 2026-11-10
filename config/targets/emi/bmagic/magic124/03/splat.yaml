@@ -82,8 +82,10 @@ segments:
     - seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C
     - '@source: src/bof3/bmagic/seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C.c'
   - - 5884
-    - asm
-    - func_801F02FC
+    - c
+    - add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC
+    - '@source: src/bof3/bmagic/add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC.c'
+    - '@behavior: Adds two to work byte 0xA and four to work byte 9, then advances work byte 2 when byte 9 equals 0x10.'
   - - 5992
     - asm
     - func_801F0368

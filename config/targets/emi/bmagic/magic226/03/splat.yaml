@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF540
   - - 2544
-    - asm
-    - func_801EF5F0
+    - c
+    - decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22603_801EF5F0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetFlag20Mode1ClearTintTripletAndAdvanceWorkByte2BmagicMagic22603_801EF5F0.c'
+    - '@behavior: Decrement work byte 9; on zero set flag 0x20 and mode 1, clear the tint triplet, and advance work byte 2.'
   - - 2712
     - asm
     - func_801EF698

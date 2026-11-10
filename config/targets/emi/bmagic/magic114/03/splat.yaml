@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EF0BC
   - - 1320
-    - asm
-    - func_801EF128
+    - c
+    - drawEightScaledEndpointTrianglesAndSubmitBmagicMagic11403_801EF128
+    # @source 0x801EF128
+    # @behavior Draw eight scaled-endpoint triangles, submit packets and restore the matrix.
   - - 1664
     - asm
     - func_801EF280

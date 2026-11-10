@@ -69,8 +69,10 @@ segments:
     - dispatchStateByte1Table05c8BmagicMagic12903_801EFF40
     - '@source: src/bof3/bmagic/magic12903DispatchTables.c'
   - - 4996
-    - asm
-    - func_801EFF84
+    - c
+    - dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagic12903_801EFF84
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFanBetweenGraphTypeDrawModesWhenActiveBmagicMagic12903_801EFF84.c'
+    - '@behavior: Dispatches work byte 2, then draws the fan between graph-type draw modes when work bytes 0 and 2 are nonzero.'
   - - 5332
     - c
     - decrementWorkByte9ThenSeedRandomizedPositionTintAndAdvanceStateBmagicMagic12903_801F00D4

@@ -15,5 +15,5 @@ func_801EF388 = 0x801EF388;
 func_801EF430 = 0x801EF430;
 func_801EF600 = 0x801EF600;
 func_801EF7FC = 0x801EF7FC;
-func_801EFA3C = 0x801EFA3C;
+drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C = 0x801EFA3C;
 D_801EFC6C = 0x801EFC6C;

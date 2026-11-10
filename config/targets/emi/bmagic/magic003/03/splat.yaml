@@ -96,8 +96,10 @@ segments:
     - asm
     - func_801EF708
   - - 2984
-    - asm
-    - func_801EF7A8
+    - c
+    - decrementWorkByte9SeedMotionTripletSetFlag20SubmitIndexedEffectAdvanceWorkByte2BmagicMagic00303_801EF7A8
+    # @source 0x801EF7A8
+    # @behavior Decrement work byte 9, seed motion triplet, set flag 0x20, submit indexed effect and advance byte 2.
   - - 3352
     - c
     - stepWorkWordTripletAndWord14ThenInvokeHelperAdvanceWorkByte2AtWord44BmagicMagic00303_801EF918

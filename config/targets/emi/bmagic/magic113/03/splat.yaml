@@ -138,8 +138,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868.c'
     - '@behavior: Decrements work byte 9 and, when the stored byte becomes zero, reloads the scratchpad work pointer and increments byte 2.'
   - - 7348
-    - asm
-    - func_801F08B4
+    - c
+    - seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4
+    - '@source: src/bof3/bmagic/seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4.c'
+    - '@behavior: Seeds work header and tint fields, conditionally adds to word 0x3C, advances byte 2 and invokes resident helpers.'
   - - 7808
     - asm
     - func_801F0A80

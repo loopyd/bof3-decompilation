@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchStateByte2Table03b0BmagicMagic22503_801EFE50.c'
     - '@behavior: Publishes the dispatch context, calls the table at 0x801F03B0 indexed by work byte 2, invokes the shared service when work bytes 0 and 2 are nonzero, and restores the context.'
   - - 4840
-    - asm
-    - func_801EFEE8
+    - c
+    - countDownWorkByte9ThenSeedPositionHeadingAndHeaderAndAdvanceWorkByte2BmagicMagic22503_801EFEE8
+    - '@source: src/bof3/bmagic/countDownWorkByte9ThenSeedPositionHeadingAndHeaderAndAdvanceWorkByte2BmagicMagic22503_801EFEE8.c'
+    - '@behavior: Counts down work byte 9, seeds position and randomized heading and header at zero, and advances work byte 2.'
   - - 5440
     - asm
     - func_801F0140

@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF7FC
   - - 3644
-    - asm
-    - func_801EFA3C
+    - c
+    - drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C
+    - '@source: src/bof3/bmagic/drawTranslucentGreyCircleOfThirtyTwoFlatLinesAtWorkHalfwords2EAnd30RadiusWorkByte9ShadeWorkByteABmagicMagic04003_801EFA3C.c'
+    - '@behavior: Draw 32 translucent grey flat lines around the work screen pair using work byte 9 as radius and byte 0xA as shade, wrapped in draw-mode packets.'
   - - 4204
     - textbin
     - D_801EFC6C

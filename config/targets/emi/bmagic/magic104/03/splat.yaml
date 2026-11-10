@@ -89,8 +89,10 @@ segments:
     - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C.c'
     - '@behavior: Draw thirty-two translucent Gouraud fan triangles using a sampled work-byte-9 radius and a work-state-3 origin fade; submit packets at work coordinates plus signed rim offsets.'
   - - 4660
-    - asm
-    - func_801EFE34
+    - c
+    - drawThirtyTwoTranslucentGouraudRingQuadsWithSampledWorkByte9RadiiAndFadeAfter8BmagicMagic10403_801EFE34
+    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudRingQuadsWithSampledWorkByte9RadiiAndFadeAfter8BmagicMagic10403_801EFE34.c'
+    - '@behavior: Draw thirty-two translucent Gouraud ring quads using sampled work-byte-9 radii, phase steps of 0x100 and first-edge fade after work byte 9 exceeds eight; append at slot 5.'
   - - 5644
     - asm
     - func_801F020C
