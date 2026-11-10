@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF1C8
   - - 2104
-    - asm
-    - func_801EF438
+    - c
+    - drawSixteenStepJitteredGouraudRingWithWorkByteARadiiAndWorkByte9TintBmagicMagic12603_801EF438
+    - '@source: src/bof3/bmagic/drawSixteenStepJitteredGouraudRingWithWorkByteARadiiAndWorkByte9TintBmagicMagic12603_801EF438.c'
+    - '@behavior: Draws a sixteen-step translucent Gouraud ring with jittered work-byte-A radii and work-byte-9 tint.'
   - - 2980
     - asm
     - func_801EF7A4

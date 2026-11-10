@@ -108,8 +108,10 @@ segments:
     - asm
     - func_801F0140
   - - 5560
-    - asm
-    - func_801F01B8
+    - c
+    - incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo5AndAdvanceWorkByte2At31BmagicMagic11303_801F01B8.c'
+    - '@behavior: Increments work byte 9 modulo 256 and, at 0x31, stores 5 into shared battle work byte 0xB, reloads the scratchpad work pointer and increments byte 2.'
   - - 5656
     - asm
     - func_801F0218

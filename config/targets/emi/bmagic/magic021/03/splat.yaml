@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EF0BC
   - - 1284
-    - asm
-    - func_801EF104
+    - c
+    - invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104
+    - '@source: src/bof3/bmagic/invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104.c'
+    - '@behavior: Calls helper and counts down work byte 9; on zero queues twelve pool records with paired step values and work pointers, then advances work byte 2.'
   - - 1544
     - c
     - forwardBattleByteAndAdvanceWorkByte2WhenHelperReadyBmagicMagic02103_801EF208

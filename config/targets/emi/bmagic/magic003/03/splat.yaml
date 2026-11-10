@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801EF7A8
   - - 3352
-    - asm
-    - func_801EF918
+    - c
+    - stepWorkWordTripletAndWord14ThenInvokeHelperAdvanceWorkByte2AtWord44BmagicMagic00303_801EF918
+    # @source 0x801EF918
+    # @behavior Step work word triplet and word 0x14, invoke helper, and advance byte 2 at word 0x44.
   - - 3500
     - asm
     - func_801EF9AC

@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801EFA80
   - - 4568
-    - asm
-    - func_801EFDD8
+    - c
+    - dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8.c'
+    - '@behavior: Dispatch work byte 2, then call 0x801F093C, 0x801F04D4 with work byte B, and 0x801F0004 when work bytes 0 and 2 are nonzero.'
   - - 4720
     - asm
     - func_801EFE70

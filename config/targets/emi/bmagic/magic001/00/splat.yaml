@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EF0E8
   - - 1380
-    - asm
-    - func_801EF164
+    - c
+    - invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164
+    - '@source: src/bof3/bmagic/invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164.c'
+    - '@behavior: When the readiness helper succeeds, invoke battle helpers, seed work words 0x14 and 0x20, and advance work byte 2.'
   - - 1484
     - asm
     - func_801EF1CC

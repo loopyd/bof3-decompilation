@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F020C
   - - 5876
-    - asm
-    - func_801F02F4
+    - c
+    - setWorkByte9To8Add200ToHalfword3EAndAdvanceByte2WhenByteAZeroElseDecrementByteABmagicMagic10403_801F02F4
+    - '@source: src/bof3/bmagic/setWorkByte9To8Add200ToHalfword3EAndAdvanceByte2WhenByteAZeroElseDecrementByteABmagicMagic10403_801F02F4.c'
+    - '@behavior: Tests work byte 0xA before changing it; if zero sets byte 0x9 to 8, adds 0x200 to halfword 0x3E, and advances byte 0x2 through a reloaded work pointer; otherwise decrements byte 0xA.'
   - - 5964
     - asm
     - func_801F034C

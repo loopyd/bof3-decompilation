@@ -115,8 +115,10 @@ segments:
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F576C (eight shipped entries, 0x801F3BA0 through 0x801F4334, ending where the overlay byte data begins at 0x801F578C); takes no arguments and forwards none.'
   - - 4000
-    - asm
-    - func_801F3BA0
+    - c
+    - initializeWorkFieldsQueueCue204AdvanceWorkByte2AndDrawAtScenarioProgress5World02Area08213_801F3BA0
+    - '@source: src/bof3/world/initializeWorkFieldsQueueCue204AdvanceWorkByte2AndDrawAtScenarioProgress5World02Area08213_801F3BA0.c'
+    - '@behavior: at scenario progress 5, calls shared helper 0x8015B580 with block 0x80144ED8 and index 4, initializes the scratch work fields and rebases the saved position pair, clears work byte 9, queues cue 0x204, advances work byte 2 and draws through 0x801F4430.'
   - - 4220
     - asm
     - func_801F3C7C

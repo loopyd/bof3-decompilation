@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC1C = 0x801EEC1C;
 func_801EEC94 = 0x801EEC94;
-func_801EEE88 = 0x801EEE88;
+decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88 = 0x801EEE88;
 func_801EEF38 = 0x801EEF38;
 incrementWorkByte1WhenWorkByteBBelow2BmagicMagic16703_801EF048 = 0x801EF048;
 func_801EF080 = 0x801EF080;

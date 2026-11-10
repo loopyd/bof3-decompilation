@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC94
   - - 648
-    - asm
-    - func_801EEE88
+    - c
+    - decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88.c'
+    - '@behavior: Decrements work byte 9; at zero submits the record cell through both helpers, stores the effect in byte A, sets byte 9 to 8 and advances byte 1.'
   - - 824
     - asm
     - func_801EEF38

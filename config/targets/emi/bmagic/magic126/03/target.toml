@@ -8,6 +8,7 @@ splat = "config/targets/emi/bmagic/magic126/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
+    "src/bof3/bmagic/drawSixteenStepJitteredGouraudRingWithWorkByteARadiiAndWorkByte9TintBmagicMagic12603_801EF438.c",
     "src/bof3/bmagic/drawTranslucentTexturedQuadPairAtWorkScreenPairWithHalfWidth40AndWorkByte9HeightBmagicMagic12603_801EFD5C.c",
     "src/bof3/bmagic/projectRecordPositionPairAccumulateWord18IncrementByte6AndAdvanceAt16BmagicMagic12603_801F0B34.c",
     "src/bof3/bmagic/stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C.c",
