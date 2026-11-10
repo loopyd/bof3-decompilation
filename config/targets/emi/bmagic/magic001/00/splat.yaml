@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF1CC
   - - 1664
-    - asm
-    - func_801EF280
+    - c
+    - integrateWorkWord14IntoHalfword3EAndDecrementByte9ThenInvokeHelpersAndAdvanceAtZeroBmagicMagic00100_801EF280
+    - '@source: src/bof3/bmagic/integrateWorkWord14IntoHalfword3EAndDecrementByte9ThenInvokeHelpersAndAdvanceAtZeroBmagicMagic00100_801EF280.c'
+    - '@behavior: Integrate work words 0x14 and 0x20 into halfword 0x3E, decrement byte 9, then invoke three helpers and advance byte 2 when the countdown reaches zero.'
   - - 1828
     - asm
     - func_801EF324

@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801EF27C
   - - 1784
-    - asm
-    - func_801EF2F8
+    - c
+    - incrementWorkBytesAAnd9ThenCopyByteBToGlobalWorkAndInvokeHelperAt18BmagicMagic10403_801EF2F8
+    - '@source: src/bof3/bmagic/incrementWorkBytesAAnd9ThenCopyByteBToGlobalWorkAndInvokeHelperAt18BmagicMagic10403_801EF2F8.c'
+    - '@behavior: Increments work bytes 0xA and 0x9 through separately loaded work pointers; when the stored byte 0x9 equals 0x18, copies work byte 0xB to byte 0xB of the record published at 0x801EB4E0 and invokes the helper at 0x801E5988. Takes no arguments and returns nothing.'
   - - 1904
     - asm
     - func_801EF370

@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-func_801EECD4 = 0x801EECD4;
+copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4 = 0x801EECD4;
 func_801EEE20 = 0x801EEE20;
 incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C = 0x801EEE8C;
 func_801EEEC0 = 0x801EEEC0;

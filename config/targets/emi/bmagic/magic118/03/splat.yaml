@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC18
   - - 212
-    - asm
-    - func_801EECD4
+    - c
+    - copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4
+    - '@source: src/bof3/bmagic/copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4.c'
+    - '@behavior: Copies the record triplet into work, queues eight slots with ordinal times four and the work pointer, copies two fifteen-halfword bands with bit 15 set, invokes the helper at 0x100 and advances work byte 1.'
   - - 544
     - asm
     - func_801EEE20

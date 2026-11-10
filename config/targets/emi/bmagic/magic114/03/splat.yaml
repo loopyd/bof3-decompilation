@@ -88,8 +88,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall093c04d4And0004WhenWorkBytes0And2SetBmagicMagic11403_801EFDD8.c'
     - '@behavior: Dispatch work byte 2, then call 0x801F093C, 0x801F04D4 with work byte B, and 0x801F0004 when work bytes 0 and 2 are nonzero.'
   - - 4720
-    - asm
-    - func_801EFE70
+    - c
+    - decrementWorkByte9ThenOffsetChannelPairClearByteBRearmByte9ClearWords14And20AndAdvanceWorkByte2BmagicMagic11403_801EFE70
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenOffsetChannelPairClearByteBRearmByte9ClearWords14And20AndAdvanceWorkByte2BmagicMagic11403_801EFE70.c'
+    - '@behavior: Decrement byte 9; on zero invoke helper at 0x8015D71C with 0x102, offset the channel pair, clear byte B, rearm byte 9, clear words 14 and 20, and advance byte 2.'
   - - 4892
     - asm
     - func_801EFF1C

@@ -124,8 +124,10 @@ segments:
     - asm
     - func_801EFD4C
   - - 4808
-    - asm
-    - func_801EFEC8
+    - c
+    - queueFourActingBattlerSlotsCopyRecordHeadStampOrdinalAndStepPublishWorkIncrementByteBBmagicMagic00303_801EFEC8
+    - '@source: src/bof3/bmagic/queueFourActingBattlerSlotsCopyRecordHeadStampOrdinalAndStepPublishWorkIncrementByteBBmagicMagic00303_801EFEC8.c'
+    - '@behavior: Claims four queued slots, copies the acting battler record head, stamps ordinal fields, publishes the work pointer and increments work byte B.'
   - - 5240
     - c
     - claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078

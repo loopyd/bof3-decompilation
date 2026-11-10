@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EF454
   - - 2224
-    - asm
-    - func_801EF4B0
+    - c
+    - drawSixteenTranslucentGouraudFanTrianglesWithScratchWord004TintBmagicMagic16703_801EF4B0
+    - '@source: src/bof3/bmagic/drawSixteenTranslucentGouraudFanTrianglesWithScratchWord004TintBmagicMagic16703_801EF4B0.c'
+    - '@behavior: Draws sixteen translucent Gouraud fan triangles with unsigned phase samples scaled by three over 64 and colors from signed scratch word 0x1F800004.'
   - - 2824
     - asm
     - func_801EF708

@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawSixteenTranslucentGouraudFanTrianglesWithScratchWord004TintBmagicMagic16703_801EF4B0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF228FC44And05C8PairAndPopWhenWorkBytes0And2SetBmagicMagic16703_801EF9B8.c",
     "src/bof3/bmagic/add2ToWorkByteBIncrementByte9IncrementByteAWhenBelow10ThenAdvanceByte2At18BmagicMagic16703_801EFACC.c",

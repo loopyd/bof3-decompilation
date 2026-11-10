@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801F030C
   - - 6400
-    - asm
-    - func_801F0500
+    - c
+    - reserveFirstFreeRecordBmagicMagic12903_801F0500
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12903_801F0500.c'
+    - '@behavior: Reserves the first free record among 64 records with stride 0x78, returning its index or 0xFF.'
   - - 6500
     - c
     - clearWorkBytesBmagicMagic12903_801F0564
