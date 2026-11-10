@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F3124
   - - 1628
-    - asm
-    - func_801F325C
+    - c
+    - setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld01Area06513_801F325C
+    - '@source: src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld01Area06513_801F325C.c'
+    - '@behavior: Byte-1 work routine for the work record published at the scratchpad pointer cell 0x1F800044. It first calls the local helper at 0x801F3438, which writes 0xA0 to record halfword 0x2E and 0x50 to record halfword 0x30, then decrements record byte 0x09 and advances the word at record offset 0x40 by 0x2000. It reads the pointer cell again and, once byte 0x09 has reached zero, clears record byte 0x48 and writes 3 to the state byte at record offset 0x01 through a third read of the cell. Finally it calls the shared resident helper at 0x8014D4E0. Takes no arguments and returns nothing.'
   - - 1752
     - asm
     - func_801F32D8

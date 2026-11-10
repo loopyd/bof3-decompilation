@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801F3630
   - - 2736
-    - asm
-    - func_801F36B0
+    - c
+    - advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0
+    - '@source: src/bof3/world/advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0.c'
+    - '@behavior: Per-frame sweep of the 256 entries of the 0x1C-byte-stride effect table at 0x800E4800, the work area this overlay shares with the world and scenario overlays. For every entry whose lead byte at offset 0 is non-zero it runs the state the byte at +0x02 selects through the five-entry jump table at 0x801F2C04: state 0 seeds the entry from the work record published through pointer cell 0x1F800044, copying that record word +0x34 into the entry word +0x0C, adding the record word +0x38 with a 0x28000 spread whose sign the direction byte at +0x03 picks into +0x10, adding 0x1800000 to the record word +0x3C into +0x14, storing (rand & 0x1FF) - 0x180 shifted left sixteen and divided by 32 into +0x04, setting the countdown at +0x01 to 0x20 and advancing the state; state 1 subtracts 0x2C00 from +0x0C, adds plus or minus 0xC00 to +0x10 by the direction byte, adds the +0x04 speed word to the +0x14 word and, once the countdown reaches zero, rewrites the angle at +0x08 with (rand & 0x1F) and 0x400 or 0xFC00 by direction, reloads the countdown with 0x20 and advances the state by work-record byte 0x06 plus one; states 2 and 3 place +0x0C and +0x10 from the work-record origin added to sixteen times the two angle lookups at +0x08 and lower +0x0C by 0x58000, rotate +0x08 by plus or minus 0x80 by direction inside 0xFFF, and then diverge: state 2 retires the entry by clearing the lead byte once the countdown expires, while state 3 reseeds +0x04 with (rand & 0x7F) + 0x80, the countdown with 0x10 and advances the state when work byte 0x06 reads 2; state 4 integrates +0x0C and +0x10 by the +0x04 speed times the angle lookups shifted right four and retires the entry once the countdown expires. Every live entry is then passed to the emitter at 0x801F3468 and marks the frame handled. Returns 1 when at least one entry was live and 0 otherwise, takes no arguments and uses a 0x40-byte frame.'
   - - 3640
     - c
     - dispatchStateByte2Table43e8World03Area12013_801F3A38

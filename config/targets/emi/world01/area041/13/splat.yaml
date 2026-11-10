@@ -92,8 +92,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld01Area04113_801F3B08.c'
     - '@behavior: stores 0xFFFF into the shared status halfword D_801490A8 on every path; when the shared gate byte D_801490C7 is zero it writes the state-entry tuple D_801448EB = 0x0A, D_801448EC = 0 and D_801448ED = 0xFF.'
   - - 3912
-    - asm
-    - func_801F3B48
+    - c
+    - setStatus54OrFFFFFromGateTableThenWaitFlag6Cue106ClaimAndSetFlagWorld01Area04113_801F3B48
+    - '@source: src/bof3/world/setStatus54OrFFFFFromGateTableThenWaitFlag6Cue106ClaimAndSetFlagWorld01Area04113_801F3B48.c'
+    - '@behavior: indexes the two-entry halfword status table 0x801F5678 with the shared gate byte D_801490C7 and stores the result (0x54 when the gate is clear, 0xFFFF when it is set) into the shared status halfword D_801490A8; on the clear-gate arm it waits on shared scenario flag 6 of the flag word D_8014686C and, once that flag reads clear, sends sound cue 0x106, runs the availability gate func_801650B4(0, 0x28, 1, 0) with a discarded result and sets flag 6 again.'
   - - 4044
     - asm
     - func_801F3BCC

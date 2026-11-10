@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World01Area06513_801F3860.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640.c",
     "src/bof3/support/area065_13_psyq.c",
+    "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld01Area06513_801F325C.c",
 ]
 psyq_source = "src/bof3/support/area065_13_psyq.c"

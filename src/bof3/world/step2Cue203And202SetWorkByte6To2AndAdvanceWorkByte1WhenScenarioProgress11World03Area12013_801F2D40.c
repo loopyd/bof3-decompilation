@@ -7,11 +7,11 @@ extern u8 g_ScenarioProgress;
  * 0x801F2C18 and 0x801F2DE4 read the shared work record the same way. */
 extern u8 *D_1F800044;
 
-/* Work-table routine at 0x801F36B0, still unlifted assembly inside this
- * target, so only its prototype is declared. Its head opens a 0x40-byte frame,
- * calls func_801AFE18 and then walks the shared 0x800E4800 work table. This
- * handler ignores whatever it returns. */
-void func_801F36B0(void);
+/* Work-table routine at 0x801F36B0, lifted from this target's assembly after
+ * this handler was seeded, so only its prototype is declared here. Its head
+ * opens a 0x40-byte frame, calls func_801AFE18 and then walks the shared
+ * 0x800E4800 work table. This handler ignores whatever it returns. */
+s32 advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0(void);
 
 /* Same-binary cue dispatcher at 0x8015DF18, which the generated
  * undefined_funcs_auto file of this target binds for comparison. */
@@ -22,7 +22,8 @@ extern void func_8015DF18(u32 cue);
  *           table at 0x801F43C0: the dispatcher at 0x801F2C18 indexes that
  *           table with work-record byte 0x01, and entry 2 of the table holds
  *           this address. The body first runs the target-local work-table
- *           routine func_801F36B0 and ignores its result. It then reads the
+ *           routine advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0
+ *           and ignores its result. It then reads the
  *           shared scenario progress byte g_ScenarioProgress with one
  *           unsigned byte load and compares it against 0x11; only on a match
  *           does it queue cue 0x203 and then cue 0x202 through the
@@ -42,7 +43,7 @@ extern void func_8015DF18(u32 cue);
  */
 void step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40(
     void) {
-  func_801F36B0();
+  advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0();
   if (g_ScenarioProgress == 0x11) {
     func_8015DF18(0x203);
     func_8015DF18(0x202);

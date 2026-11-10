@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801D1568
   - - 2600
-    - asm
-    - func_801D1628
+    - c
+    - startAction63AndSetFrontendMode2
+    - '@source: src/bof3/ui/startAction63AndSetFrontendMode2.c'
+    - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise starts action 0x63 through func_80150224 and latches that mode byte to 2 without returning a value. Last word of this overlay''s handler run at 0x801D1750.'
   - - 2672
     - c
     - advanceFairyProgressUnlessFrontendMode2

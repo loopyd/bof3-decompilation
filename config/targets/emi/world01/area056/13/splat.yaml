@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801F2F50
   - - 1020
-    - asm
-    - func_801F2FFC
+    - c
+    - armFrontEndRequestWhenGateClearSetFlagBankEWhenGateOneQueueCue208UnlessGateTwoWorld01Area05613_801F2FFC
+    - '@source: src/bof3/world/armFrontEndRequestWhenGateClearSetFlagBankEWhenGateOneQueueCue208UnlessGateTwoWorld01Area05613_801F2FFC.c'
+    - '@behavior: stores the no-gate sentinel 0xFFFF into the shared status halfword D_801490A8, then re-reads the shared gate byte D_801490C7 per test: a zero gate arms the shared front-end request record (gate byte to 2, type byte to 7, selector byte to 0) and calls func_8015507C over the shared scroll pair D_80145EC6/D_80145ECA, a gate of 1 submits the shared flag bank D_80144EA0 bit 0x0E through func_8015B580, and any gate other than 2 queues front-end cue 0x208 through func_8015DF18.'
   - - 1188
     - c
     - setStatusNineUnlessGateWorld01Area05613_801F30A4

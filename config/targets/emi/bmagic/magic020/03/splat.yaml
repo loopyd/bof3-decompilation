@@ -111,8 +111,9 @@ segments:
     - decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0
     - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkObjectFromRecordSeedByte27FromByteBTableRequestResourceAndAdvanceWorkByte2BmagicMagic02003_801EFBA0.c'
   - - 4368
-    - asm
-    - func_801EFD10
+    - c
+    - invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10
+    - '@source: src/bof3/bmagic/invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10.c'
   - - 4488
     - asm
     - func_801EFD88

@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/setStatus54OrFFFFFromGateTableThenWaitFlag6Cue106ClaimAndSetFlagWorld01Area04113_801F3B48.c",
     "src/bof3/world/advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68.c",
     "src/bof3/world/advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC.c",
     "src/bof3/world/clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290.c",

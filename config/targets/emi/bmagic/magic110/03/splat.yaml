@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF43C
   - - 2268
-    - asm
-    - func_801EF4DC
+    - c
+    - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC
+    - '@source: src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC.c'
+    - '@behavior: Entry 3 of the fourteen-word byte-1 handler table at 0x801F046C: reads the scratchpad work pointer cell 0x1F800044 once, decrements work byte 9 modulo 256, and only when it reaches zero re-reads the cell and increments work byte 2 to advance the work-byte-2 dispatcher step.'
   - - 2344
     - asm
     - func_801EF528

@@ -18,5 +18,12 @@ support_sources = [
     "src/bof3/world/setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350.c",
     "src/bof3/world/redirectWorkByte2StepFromMaskedSceneStateThenDrawQuadWorld03Area12013_801F3B84.c",
     "src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c",
+    "src/bof3/world/advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F36B0
+section = ".rodata"
+address = 0x801F2C04
+size = 0x14

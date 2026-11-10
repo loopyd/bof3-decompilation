@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/bmagic/magic01303DispatchTables.c'
     - '@behavior: Overlay work-byte-1 dispatcher: reads the scratchpad work object through pointer slot 0x1F800044, takes its unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local three-entry code-pointer run at 0x801F03D8 (entries 0x801EFDF8, 0x801EFE80 and 0x801EFF88) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 4600
-    - asm
-    - func_801EFDF8
+    - c
+    - dispatchWorkByte2HandlerThenDrawAndPopWhenWorkBytes0And9SetBmagicMagic01303_801EFDF8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenWorkBytes0And9SetBmagicMagic01303_801EFDF8.c'
+    - '@behavior: Overlay work-byte-2 dispatcher that then draws the active record: reads the work-object pointer cell at 0x1F800044, takes its unsigned byte at offset 2, scales it by four and calls that entry of the code-pointer run word at 0x801F03DC with no arguments; reads the cell again afterwards and, when the record bytes at offsets 0 and 9 are both non-zero, calls the projection at 0x801F00A8, the draw step at 0x801F0164 and PopMatrix. Stores nothing; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 4736
     - asm
     - func_801EFE80

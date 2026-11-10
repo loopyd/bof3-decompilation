@@ -14,5 +14,6 @@ support_sources = [
     "src/bof3/bmagic/offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844.c",
     "src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11003_801EF8F8.c",
+    "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11003_801EF4DC.c",
 ]
 psyq_source = "src/bof3/support/magic110_03_psyq.c"

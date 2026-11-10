@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EF77C.c'
     - '@behavior: Battle substate advance on input: while the shared pad state word at 0x80145AA4 reads nonzero, clears the battle state byte at 0x801462E5 and increments the substate index byte at 0x801462E4; leaf function, no frame and no arguments.'
   - - 2996
-    - asm
-    - func_801EF7B4
+    - c
+    - drainAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EF7B4
+    - '@source: src/bof3/battle/drainAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EF7B4.c'
+    - '@behavior: Battle-end accumulated-amount drain: the pad state word at 0x80145AA4 reading nonzero together with the EXE-side EMI loader at 0x80162D00 reporting ready passes the whole remaining amount in the accumulator at 0x80146330 to the shared helper at 0x8016666C with a zero second argument, clears that accumulator and advances the substate index byte at 0x801462E4; otherwise, while the amount still exceeds the step halfword at 0x801463B0, only that step is passed and subtracted, and the remainder is drained whole the same way the skip path does; the accumulator and the step are both re-read after the call.'
   - - 3184
     - c
     - gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870

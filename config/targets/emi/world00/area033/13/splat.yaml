@@ -102,8 +102,10 @@ segments:
     - setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604
     - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld00Area03313_801F3604.c'
   - - 2692
-    - asm
-    - func_801F3684
+    - c
+    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684
+    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World00Area03313_801F3684.c'
+    - '@behavior: Subtracts 0x0A from the work halfword at offset 0x30 of the record published at the scratchpad pointer cell 0x1F800044 and stores the truncated halfword, then increments work state byte 0x03 once that stored signed value falls below 0xC9. When the shared mode byte 0x801454F2 and work byte 0x0B are both nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it writes 3 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 2908
     - asm
     - func_801F375C
