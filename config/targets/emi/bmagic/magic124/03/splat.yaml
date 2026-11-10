@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801F03E0
   - - 6580
-    - asm
-    - func_801F05B4
+    - c
+    - drawTranslucentGouraudRingOfEightQuadsWithWorkScaledRadiiAndTintBmagicMagic12403_801F05B4
+    # @source 0x801F05B4
+    # @behavior Emits eight translucent Gouraud ring quads with work-scaled radii and tint.
   - - 7208
     - c
     - reserveFirstFreeRecordBmagicMagic12403_801F0828

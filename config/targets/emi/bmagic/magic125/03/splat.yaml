@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF508
   - - 3080
-    - asm
-    - func_801EF808
+    - c
+    - dispatchWorkByte2HandlerThenInvokeF1A8AndF508AndPopWhenWorkBytes0And2SetBmagicMagic12503_801EF808
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF1A8AndF508AndPopWhenWorkBytes0And2SetBmagicMagic12503_801EF808.c'
+    - '@behavior: Dispatch work byte 2, then invoke 0x801EF1A8, 0x801EF508 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 3216
     - c
     - decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890

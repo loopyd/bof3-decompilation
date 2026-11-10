@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EEF98
   - - 1204
-    - asm
-    - func_801EF0B4
+    - c
+    - decrementWorkByteARecordCountersBy2ThenQueueActionOnCountdownZeroBmagicMagic04303_801EF0B4
+    - '@source: src/bof3/bmagic/decrementWorkByteARecordCountersBy2ThenQueueActionOnCountdownZeroBmagicMagic04303_801EF0B4.c'
+    - '@behavior: Subtracts two from three selected record counters; on countdown zero queues an action or resets the countdown and steps work byte 1.'
   - - 1792
     - asm
     - func_801EF300

@@ -75,8 +75,10 @@ segments:
     - dispatchStateByte2Table4ba0World04Area16813_801F3D6C
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 4528
-    - asm
-    - func_801F3DB0
+    - c
+    - seedWork20ClearWork303eAndAdvanceStepThenCallPairWorld04Area16813_801F3DB0
+    - '@source: src/bof3/world/seedWork20ClearWork303eAndAdvanceStepThenCallPairWorld04Area16813_801F3DB0.c'
+    - '@behavior: Seeds work fields, advances step byte 2, and calls helper 0x801F4158 twice.'
   - - 4632
     - asm
     - func_801F3E18

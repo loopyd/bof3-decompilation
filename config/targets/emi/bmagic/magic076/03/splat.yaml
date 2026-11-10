@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801EF5F0
   - - 2620
-    - asm
-    - func_801EF63C
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic07603_801EF63C
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic07603_801EF63C.c'
+    - '@behavior: Decrement work byte 9; on zero decrement shared record byte B and invoke helper.'
   - - 2712
     - asm
     - func_801EF698

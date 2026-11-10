@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801EFE20
   - - 5820
-    - asm
-    - func_801F02BC
+    - c
+    - dispatchWorkByte2HandlerThenCallF128And04E0AndPopWhenWorkBytes0And2SetBmagicMagic10303_801F02BC
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF128And04E0AndPopWhenWorkBytes0And2SetBmagicMagic10303_801F02BC.c'
+    - '@behavior: Dispatches the work-byte-2 handler through 0x801F07D4, reloads the work pointer and calls 0x801EF128, 0x801F04E0 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 5956
     - c
     - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801F0344

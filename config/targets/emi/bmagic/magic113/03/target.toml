@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawFiveProjectedPartialStarEdgesTintedByWorkByteABmagicMagic11303_801EFDA0.c",
     "src/bof3/bmagic/drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944.c",
     "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764.c",
     "src/bof3/bmagic/incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80.c",

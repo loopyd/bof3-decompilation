@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801F0274
   - - 6320
-    - asm
-    - func_801F04B0
+    - c
+    - drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0
+    - '@source: src/bof3/bmagic/drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0.c'
+    - '@behavior: Draw up to six grey textured quads scaled by slot counter bytes.'
   - - 7052
     - c
     - projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C

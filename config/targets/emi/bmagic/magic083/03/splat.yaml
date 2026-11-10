@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801F0BA8
   - - 8640
-    - asm
-    - func_801F0DC0
+    - c
+    - reserveFirstFreeRecordBmagicMagic08303_801F0DC0
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic08303_801F0DC0.c'
+    - '@behavior: Reserves the first free record in the 24-entry pool, or returns 0xFF.'
   - - 8740
     - c
     - clearWorkBytesBmagicMagic08303_801F0E24
