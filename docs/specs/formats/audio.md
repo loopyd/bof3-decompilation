@@ -2398,10 +2398,11 @@ current-level write does not rearm it. Key-on does not reset stereo gain.
 Published voices use current gains before advancing sweeps. Published mixing
 advances main sweeps after output; `configure_spu_voices` binds their arithmetic
 as well as voice envelopes. Standalone published mixer sweeps require explicit
-configuration; fixed published main gain needs no model. Native-reference output
-retains main-volume register latches but does not apply or clock main sweeps. `VoiceVolume` selects the native
-Q14 decoder for native-reference voices, folding each sweep write into a fixed
-level that remains unchanged until another write. Signed products divide by
+configuration. Fixed published main gain needs no model. Native-reference
+output applies the signed Q15 current main levels to the summed float streams
+before mono conversion. Fixed writes update the current level, and sweep writes
+preserve it. `VoiceVolume` selects the native Q14 decoder for native-reference
+voices, folding each sweep write into a fixed level. Signed products divide by
 `0x4000` toward zero and remain wide through stereo accumulation.
 
 Published current voice-volume reads at `0x1F801E00..0x1F801E5F` expose Q15
@@ -3056,9 +3057,10 @@ frames remain available. Unmuted admission applies the active drive matrix
 after interpolation, before insertion. Later volume latches do not rescale the
 queued or pending tail. `Interconnect::step_spu_cd_output` passes those frames
 through the selected output policy. Published output applies SPU CD gain,
-routing, reverb sends and final main gain. Native-reference output keeps CD
-separate from those SPU paths and applies its explicit host settings at float
-output. Capture sees post-drive samples before either output policy.
+routing, reverb sends and final main gain. Native-reference output queues CD
+separately from voices and reverb, then applies the current main gain to the
+summed float output. CD capture sees post-drive samples before either output
+policy.
 A bounded native original stereo comparison
 confirms unity and asymmetric crossed gain across a guest latch with old output
 still queued. Clipping and other matrices remain unaccepted against native output.

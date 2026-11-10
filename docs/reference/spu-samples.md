@@ -137,11 +137,11 @@ flags and the four capture rings. The
 [native mixer](../../third_party/pcsx-redux-agentic/src/spu/spu.cc) applies noise
 before ADSR, captures voices 1/3 after ADSR and before voice gain, and adds reverb
 before output clipping. CD audio enters a separate stream through
-[FeedXA](../../third_party/pcsx-redux-agentic/src/spu/xa.cc). The native register
-handler leaves main and external input gain writes unimplemented. Native-reference
-output retains main-volume register latches without applying main gain or sweeps.
-Explicit host settings select volume division, mono and mute. CD remains separate
-from SPU gain and reverb paths, and the combined float callback is unclamped.
+[FeedXA](../../third_party/pcsx-redux-agentic/src/spu/xa.cc). The native float
+callback sums both streams, applies signed Q15 main gain and then folds to mono
+when configured. It leaves the result unclamped. Sweep writes retain the current
+main gain. Explicit host settings select volume division, mono and mute.
+CD bypasses the voice and reverb path. External input is unimplemented.
 PCM16 export rounds and saturates at the file boundary. The unresolved `+32768`
 final-gain rail remains a Published-policy rejection.
 

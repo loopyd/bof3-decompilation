@@ -43,7 +43,8 @@ pub struct Sends {
 #[derive(Clone, Debug, Default)]
 pub struct Mixer {
     main: [Volume; 2],
-    main_latches: [u16; 4],
+    native_main_registers: [u16; 2],
+    native_main_levels: [i16; 2],
     native: Option<NativeSettings>,
     reverb: [i16; 2],
     cd: [i16; 2],
@@ -84,12 +85,12 @@ impl Mixer {
             return Err("unaligned SPU mixer register".into());
         }
         Ok(match offset & !2 {
-            0x180 if self.native.is_some() => self.main_latches[channel],
+            0x180 if self.native.is_some() => self.native_main_registers[channel],
             0x180 => self.main[channel].register(),
             0x184 => self.reverb[channel] as u16,
             0x1b0 => self.cd[channel] as u16,
             0x1b4 => self.external[channel] as u16,
-            0x1b8 if self.native.is_some() => self.main_latches[2 + channel],
+            0x1b8 if self.native.is_some() => self.native_main_levels[channel] as u16,
             0x1b8 => self.main[channel].level() as u16,
             _ => return Err(format!("unsupported SPU mixer register {offset:#x}").into()),
         })
@@ -103,19 +104,24 @@ impl Mixer {
         }
         match offset & !2 {
             0x180 => {
-                if self.native.is_none() {
+                if self.native.is_some() {
+                    self.native_main_registers[channel] = value;
+                    if value & 0x8000 == 0 {
+                        self.native_main_levels[channel] = (value << 1) as i16;
+                    }
+                } else {
                     self.main[channel].write(value)?;
                 }
-                self.main_latches[channel] = value;
             }
             0x184 => self.reverb[channel] = value as i16,
             0x1b0 => self.cd[channel] = value as i16,
             0x1b4 => self.external[channel] = value as i16,
             0x1b8 => {
-                if self.native.is_none() {
+                if self.native.is_some() {
+                    self.native_main_levels[channel] = value as i16;
+                } else {
                     self.main[channel].write_level(value);
                 }
-                self.main_latches[2 + channel] = value;
             }
             _ => return Err(format!("unsupported SPU mixer register {offset:#x}").into()),
         }
@@ -233,12 +239,12 @@ impl Mixer {
             .ok_or("native callback requires explicit mixer settings")?;
         let divisor = settings.divisor()?;
         let mut result = [0.0; 2];
-        for channel in 0..2 {
-            let cd = i32::from(cd[channel]) / divisor;
-            result[channel] = f32::from(voice[channel]) / 32767.0 + cd as f32 / 32767.0;
-        }
-        if settings.muted {
-            result = [0.0; 2];
+        if !settings.muted {
+            for channel in 0..2 {
+                let cd = i32::from(cd[channel]) / divisor;
+                let sum = f32::from(voice[channel]) / 32767.0 + cd as f32 / 32767.0;
+                result[channel] = sum * (f32::from(self.native_main_levels[channel]) / 32768.0);
+            }
         }
         if settings.mono {
             result = [(result[0] + result[1]) * 0.5; 2];

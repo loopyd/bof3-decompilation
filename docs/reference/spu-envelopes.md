@@ -74,10 +74,10 @@ its Q15 level with an arithmetic shift and clips the result. Stereo sends remain
 the native Q14 level. It does not establish native current-volume bus readback.
 The separate `Volume` component retains its Q15 counters, selected threshold/floor
 rules and frozen `0x7F` rate for Published voice sweeps and Published main gain.
-Native-reference final output bypasses main gain and sweeps. The standalone
-`adsr::Model::EmulatorReference` rate policy remains distinct from native
-voice-volume decoding and final output. Bus timing, hardware fidelity and full PCM remain separate
-obligations.
+Native-reference final output applies fixed Q15 main gain, and sweep writes
+retain the current level. The standalone `adsr::Model::EmulatorReference`
+rate policy governs envelope steps. Bus timing, hardware fidelity and full PCM
+remain separate obligations.
 
 [Implementation and validation](../specs/formats/audio.md#rust-spu-volume-sweeps)
 retain these boundaries. The independent integer-vector hashes include 512
