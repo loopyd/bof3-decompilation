@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawSixteenTranslucentGouraudQuadsWithWorkSelectedPhaseAndAlternatingZBmagicMagic01303_801EFAA8.c",
     "src/bof3/support/magic013_03_psyq.c",
     "src/bof3/bmagic/magic01303DispatchTables.c",
     "src/bof3/bmagic/add2ToWorkByte4AndAdvanceWorkByte2At10BmagicMagic01303_801EF1A0.c",

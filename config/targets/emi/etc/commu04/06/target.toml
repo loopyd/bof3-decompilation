@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = []
 support_sources = [
+    "src/bof3/ui/drawCommuPanelAndSelectBankEntry.c",
     "src/bof3/ui/startFairySlotBattleRecordUnlessFrontendMode2.c",
     "src/bof3/ui/advanceFairyProgressUnlessFrontendMode2.c",
     "src/bof3/ui/dispatchByte1f294dTable1758Commu0406_801D0C5C.c",

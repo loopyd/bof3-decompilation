@@ -31,6 +31,6 @@ func_801F41F4 = 0x801F41F4;
 seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld01Area06513_801F4330 = 0x801F4330;
 stepWorkPositionPairAndRunSharedUpdatesWorld01Area06513_801F4560 = 0x801F4560;
 dispatchStateByte1Table5344World01Area06513_801F4604 = 0x801F4604;
-func_801F4648 = 0x801F4648;
+initializeWorkAndStampMapA0UnlessGatedWorld01Area06513_801F4648 = 0x801F4648;
 invokeTwoHelpersWorld01Area06513_801F4778 = 0x801F4778;
 func_801F47A0 = 0x801F47A0;

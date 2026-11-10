@@ -144,8 +144,10 @@ segments:
     - dispatchStateByte1Table5344World01Area06513_801F4604
     - '@source: src/bof3/world/area06513DispatchTables.c'
   - - 6728
-    - asm
-    - func_801F4648
+    - c
+    - initializeWorkAndStampMapA0UnlessGatedWorld01Area06513_801F4648
+    - '@source: src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld01Area06513_801F4648.c'
+    - '@behavior: Initializes work bytes, stamps map byte 0xA0 and arms state 1 unless gated.'
   - - 7032
     - c
     - invokeTwoHelpersWorld01Area06513_801F4778

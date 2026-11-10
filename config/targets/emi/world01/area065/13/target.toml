@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld01Area06513_801F4648.c",
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld01Area06513_801F4330.c",
     "src/bof3/world/prepareWorkRecordForLookup53AndArmState1World01Area06513_801F3098.c",
     "src/bof3/world/area06513_work_state.c",

@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF79C
   - - 3752
-    - asm
-    - func_801EFAA8
+    - c
+    - drawSixteenTranslucentGouraudQuadsWithWorkSelectedPhaseAndAlternatingZBmagicMagic01303_801EFAA8
+    - '@source: src/bof3/bmagic/drawSixteenTranslucentGouraudQuadsWithWorkSelectedPhaseAndAlternatingZBmagicMagic01303_801EFAA8.c'
+    - '@behavior: Draws sixteen semi-transparent Gouraud quads using work-byte-8-selected phase, work-byte-4 grey level, 128-unit radial steps and an 80-unit z edge offset; projects and links size-36 packets at work words 0x34 and 0x38.'
   - - 4532
     - c
     - dispatchWorkByte1HandlerBmagicMagic01303_801EFDB4
