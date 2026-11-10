@@ -1,4 +1,4 @@
-//! Development-only ENVX observations at interpreter access cycles, not PCM time.
+//! Native-reference ENVX observations at interpreter access cycles, not PCM time.
 use crate::machine::{
     spu::transfer::RAM_BYTES,
     spu::voice::envelope::{Adsr, Model, Phase},

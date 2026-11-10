@@ -3,6 +3,7 @@ use super::Interconnect;
 use crate::{
     machine::{
         spu::mixer::Inputs,
+        spu::readback::Settings as ReadbackSettings,
         spu::sample::Model,
         spu::voice::envelope,
         spu::voice::ports::Frame,
@@ -253,6 +254,10 @@ impl Interconnect {
             );
         }
         self.configure_native_spu_producer()?;
+        self.configure_spu_readback(ReadbackSettings {
+            key_on_delay: self.spu_key_on_delay().unwrap(),
+            interpolation: 2,
+        })?;
         self.configure_reference_timers()
     }
 

@@ -5755,7 +5755,9 @@ reconstructs ENVX at the CPU read cycle and no longer forces that value.
 `Execution::configure_reference_spu` enables a separate
 [CPU readback owner](../../../tools/rust/bof3-audio/src/machine/spu/readback.rs)
 before guest SPU initialization. Supply the effective native `key_on_delay` and
-`interpolation` settings. The voice owner must already use the explicit emulator
+`interpolation` settings. `enable_native_audio`, including the cooperative
+context, enables this owner with the configured key-on delay and Gaussian
+interpolation mode 2. The voice owner must already use the explicit emulator
 ADSR model. Each interpreter data transaction supplies its access cycle before
 the MMIO handler; unstamped host ENVX reads and SPU writes reject in this mode.
 Key-on starts a zero envelope. The owner subtracts the configured startup delay

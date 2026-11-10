@@ -461,6 +461,11 @@ for the opcode's device pass to complete; host staging and call boundaries add n
 opcodes. Queue state and the retirement remainder persist across guest calls.
 Manual actor operations and functional host services reject in this mode.
 
+Native audio contexts reconstruct guest ENVX reads at the CPU access cycle with
+the configured key-on delay and Gaussian interpolation mode 2. CPU status polling
+therefore advances independently of the synthesis producer's envelope position.
+Unstamped host ENVX reads and SPU writes reject in these contexts.
+
 `audio_frames` counts delivered frames for either output model. `audio_clock`
 reports the selected model; cooperative reports use
 `model: "pcsx_redux_cooperative"` and retain quantum, chunk and actor counters.
