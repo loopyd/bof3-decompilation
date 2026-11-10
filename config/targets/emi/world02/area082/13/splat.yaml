@@ -213,8 +213,10 @@ segments:
     - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress37World02Area08213_801F5068.c'
     - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x37, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 9412
-    - asm
-    - func_801F50C4
+    - c
+    - fillScreenWhiteQueueCues202And200ClearWorkByte9AdvanceWorkByte2World02Area08213_801F50C4
+    - '@source: src/bof3/world/fillScreenWhiteQueueCues202And200ClearWorkByte9AdvanceWorkByte2World02Area08213_801F50C4.c'
+    - '@behavior: clears palette-stage byte 0x8014933A, fills the screen with packed white -1, queues cues 0x202 and 0x200, clears scratch work byte +0x09, then re-reads the work pointer and increments byte +0x02.'
   - - 9508
     - c
     - fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124

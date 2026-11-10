@@ -135,8 +135,10 @@ segments:
     - asm
     - func_801F09E0
   - - 7988
-    - asm
-    - func_801F0B34
+    - c
+    - projectRecordPositionPairAccumulateWord18IncrementByte6AndAdvanceAt16BmagicMagic12603_801F0B34
+    - '@source: src/bof3/bmagic/projectRecordPositionPairAccumulateWord18IncrementByte6AndAdvanceAt16BmagicMagic12603_801F0B34.c'
+    - '@behavior: Projects the record position pair, accumulates word 18, increments byte 6, and advances byte 2 at 16.'
   - - 8316
     - c
     - stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C

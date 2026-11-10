@@ -121,8 +121,10 @@ segments:
     - setStatus63IfGateElse62World04Area17513_801F3970
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3480
-    - asm
-    - func_801F3998
+    - c
+    - setStatus5FAndIncrementByte801F294CIfGateElseFFFFAndClearByte801F294DWorld04Area17513_801F3998
+    - '@source: src/bof3/world/setStatus5FAndIncrementByte801F294CIfGateElseFFFFAndClearByte801F294DWorld04Area17513_801F3998.c'
+    - '@behavior: When D_801490C7 is zero, stores 0xFFFF into D_801490A8 and clears D_801F294D; otherwise stores 0x5F into D_801490A8 and increments D_801F294C modulo 256.'
   - - 3564
     - c
     - setStatus6EAndPtrByte7AFFIfGateElse7AWorld04Area17513_801F39EC

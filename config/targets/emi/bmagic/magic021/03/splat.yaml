@@ -77,8 +77,10 @@ segments:
     - '@source: src/bof3/bmagic/magic02103DispatchTables.c'
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler run based at 0x801EFE04 (four in-image code pointers, entry 0 = 0x801EF578 through entry 3 = 0x801EF7A0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2424
-    - asm
-    - func_801EF578
+    - c
+    - dispatchWorkByte2AndCallHelpersIfWorkBytes0And2NonzeroBmagicMagic02103_801EF578
+    - '@source: src/bof3/bmagic/dispatchWorkByte2AndCallHelpersIfWorkBytes0And2NonzeroBmagicMagic02103_801EF578.c'
+    - '@behavior: Dispatches work byte 2, then calls three helpers when work bytes 0 and 2 are nonzero.'
   - - 2560
     - asm
     - func_801EF600

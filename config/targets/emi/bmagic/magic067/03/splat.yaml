@@ -54,8 +54,10 @@ segments:
     - dispatchStateByte1Table04b8BmagicMagic06703_801EF2D0
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 1812
-    - asm
-    - func_801EF314
+    - c
+    - dispatchWorkByte2HandlerThenInvoke0688And079CAndPopWhenWorkByte0NonzeroBmagicMagic06703_801EF314
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0688And079CAndPopWhenWorkByte0NonzeroBmagicMagic06703_801EF314.c'
+    - '@behavior: Dispatches unsigned work byte 2 through table 0x801F04C8, reloads the scratchpad work pointer, and invokes 0x801EF688, 0x801EF79C, and PopMatrix when work byte 0 is nonzero.'
   - - 1932
     - asm
     - func_801EF38C
