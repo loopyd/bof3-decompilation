@@ -112,7 +112,11 @@ fn shared_payloads_keep_distinct_game_ids_and_reject_ambiguous_or_short_bodies()
         Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
     let mut catalog = Catalog::read(Some(&directory.0), &[]).unwrap();
-    let report = loader::resolve(&mut catalog, &exe).unwrap();
+    let report = loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     assert_eq!(report.shared_banks.len(), 1);
     assert_eq!(
         report.shared_banks[0].banks,
@@ -144,14 +148,22 @@ fn shared_payloads_keep_distinct_game_ids_and_reject_ambiguous_or_short_bodies()
     // Re-resolving an edited body must clear its prior content identity and grouping.
     directory.write("same.EMI", &archive(1, 127, 2, &[vec![1; 16]], 0xa5));
     let mut changed = Catalog::read(Some(&directory.0), &[]).unwrap();
-    let changed_report = loader::resolve(&mut changed, &exe).unwrap();
+    let changed_report = loader::resolve(
+        &mut changed,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     let group = changed_report
         .shared_banks
         .iter()
         .find(|g| g.banks.iter().any(|id| id == "same.EMI#entry=0"))
         .unwrap();
     assert_eq!(group.banks, ["body.EMI#entry=0", "same.EMI#entry=0"]);
-    loader::resolve(&mut changed, &exe).unwrap();
+    loader::resolve(
+        &mut changed,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     for asset in changed.assets {
         if let AssetData::Bank {
             content: Some(content),

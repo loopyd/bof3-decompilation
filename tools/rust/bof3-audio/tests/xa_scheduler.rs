@@ -2,7 +2,7 @@
 //! These checks establish control flow, not hardware response timing or PCM.
 use bof3_audio::{
     machine::bus::Bus, machine::bus::Ram, machine::bus::Width, machine::cd_position::CdPosition,
-    machine::cpu::Cpu, machine::executable::Executable, xa::cue,
+    machine::cpu::Cpu, machine::executable::Executable,
 };
 
 const RETURN: u32 = 0x8000_1000;
@@ -73,7 +73,7 @@ fn cd_positions_cover_lead_in_boundaries_and_reject_invalid_bcd() {
 #[ignore = "requires BOF3_AUDIO_EXE original US executable"]
 fn position_conversion_and_cue_initialization_agree_with_linked_sdk() {
     let exe = exe();
-    let cues = cue::read_cues(&exe).unwrap();
+    let cues = bof3_audio::machine::reference::mapping::read_cues(&exe).unwrap();
     let mut positions = vec![-150, -1, 0, 74, 75, 4350, CdPosition::MAX_LBA];
     for cue in &cues {
         positions.extend([
@@ -117,7 +117,7 @@ fn position_conversion_and_cue_initialization_agree_with_linked_sdk() {
 #[ignore = "requires BOF3_AUDIO_EXE original US executable"]
 fn original_poll_enters_pause_state_at_threshold_for_every_supported_cue() {
     let exe = exe();
-    for cue in cue::read_cues(&exe).unwrap() {
+    for cue in bof3_audio::machine::reference::mapping::read_cues(&exe).unwrap() {
         for delta in [-1i32, 0, 1] {
             let position = cue.runtime_stop_threshold_lba as i32 + delta;
             let mut ram = Ram::from_executable(&exe);

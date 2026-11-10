@@ -41,7 +41,10 @@ pub fn songs(options: &Options) -> Result<Report> {
     require_absent(&options.output)?;
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
-    let mapping = loader::resolve(&mut catalog, &executable)?;
+    let mapping = loader::resolve(
+        &mut catalog,
+        &crate::machine::reference::mapping::read(&executable)?,
+    )?;
     let selected = if let Some(id) = &options.id {
         vec![catalog.select("music", Some("song"), id)?]
     } else {

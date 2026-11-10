@@ -1,11 +1,14 @@
 //! US music cue lookup with independently verified disc-file identities.
-//! Original executable/media are supplied by the user; no payloads are embedded.
+//! Media identities and owned cue records preserve original source provenance.
 
 use crate::catalog::model::{Cue, DiscEvidence, MusicMap};
 use crate::{
-    catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus, machine::bus::Ram,
-    machine::bus::Width, machine::executable::Executable, machine::profile::Profile,
-    machine::profile::US_EXE_SHA256, Result,
+    catalog::{
+        mapping::Mapping,
+        model::{AssetData, Catalog},
+    },
+    machine::profile::US_EXE_SHA256,
+    Result,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -39,34 +42,25 @@ pub fn disc_evidence() -> Result<DiscEvidence> {
     Ok(evidence)
 }
 
-pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<MusicMap> {
-    let profile = Profile::identify(executable)?;
+pub fn resolve(catalog: &mut Catalog, mapping: &Mapping) -> Result<MusicMap> {
+    let profile = &mapping.profile;
     let evidence = disc_evidence()?;
     for asset in &mut catalog.assets {
         asset.game_song_ids.clear();
     }
-    let mut ram = Ram::from_executable(executable);
     let files: BTreeMap<_, _> = evidence
         .files
         .iter()
         .map(|file| (file.slot, file))
         .collect();
-    for file in &evidence.files {
-        if ram.read(FILE_TABLE + u32::from(file.slot) * 4, Width::Word)? != file.lba {
-            return Err(format!(
-                "music file slot {} disagrees with verified ISO extent",
-                file.slot
-            )
-            .into());
-        }
-    }
     let mut cues = Vec::new();
     let mut reached_files = BTreeSet::new();
     for game_song_id in 0..SUPPORTED_CUES {
         let address = CUE_TABLE + u32::from(game_song_id) * 4;
-        let file_slot = ram.read(address, Width::Half)? as u16;
-        let bank = ram.read(address + 2, Width::Byte)? as u8;
-        let sequence = ram.read(address + 3, Width::Byte)? as u8;
+        let at = usize::from(game_song_id) * 4;
+        let file_slot = u16::from_le_bytes(mapping.music[at..at + 2].try_into()?);
+        let bank = mapping.music[at + 2];
+        let sequence = mapping.music[at + 3];
         let file = files
             .get(&file_slot)
             .ok_or("US cue points outside the verified music file slots")?;
@@ -147,7 +141,7 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<MusicMa
     if reached_files.len() != 81 {
         return Err("US supported cues do not cover all verified music files".into());
     }
-    let next_slot = ram.read(CUE_TABLE + u32::from(SUPPORTED_CUES) * 4, Width::Half)? as u16;
+    let next_slot = u16::from_le_bytes(mapping.music[660..662].try_into()?);
     if files.contains_key(&next_slot) {
         return Err("US cue prefix ends before another recognized music record".into());
     }

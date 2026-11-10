@@ -82,7 +82,10 @@ pub fn banks(options: &Options) -> Result<Report> {
         let image = ArchiveImage::from_bytes(bytes)?;
         let source = node.attribute("source")?;
         let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
-        let mapping = loader::resolve(&mut catalog, &executable)?;
+        let mapping = loader::resolve(
+            &mut catalog,
+            &crate::machine::reference::mapping::read(&executable)?,
+        )?;
         let validated = crate::bank::manifest::validate(&node, &catalog, &mapping)?;
         if !ids.insert(validated.asset.id.clone()) {
             return Err(format!("pack: duplicate bank identity {}", validated.asset.id).into());

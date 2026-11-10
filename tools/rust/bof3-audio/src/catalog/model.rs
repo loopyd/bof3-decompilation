@@ -330,7 +330,7 @@ pub struct XaMap {
     pub scheduler: SchedulerEvidence,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct SchedulerEvidence {
     pub start_entry: u32,
     pub completion_callback: u32,

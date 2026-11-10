@@ -141,7 +141,7 @@ fn main() -> Result<()> {
         Ok(entries[0])
     };
     let (vh, vb, sep) = (unique(&[6])?, unique(&[7])?, unique(&[9, 10])?);
-    let layout = loader::initialize_layout(&executable, 0)?;
+    let layout = bof3_audio::machine::reference::mapping::initialize_layout(&executable, 0)?;
     let slot = layout
         .slots
         .get(archive.entries()[vh].ram_ptr as usize)

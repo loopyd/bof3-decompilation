@@ -1,10 +1,10 @@
 //! Original-instruction checks. Stopping at SDK/CD calls does not validate those calls.
 
 use bof3_audio::{
-    catalog::loader::initialize_layout, catalog::loader::resolve,
-    catalog::loader::LAYOUT_INITIALIZE, catalog::loader::LOADER_TABLE, catalog::model::AssetData,
-    catalog::model::Catalog, machine::bus::Bus, machine::bus::Ram, machine::bus::Width,
-    machine::cpu::Cpu, machine::executable::Executable,
+    catalog::loader::resolve, catalog::loader::LAYOUT_INITIALIZE, catalog::loader::LOADER_TABLE,
+    catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus, machine::bus::Ram,
+    machine::bus::Width, machine::cpu::Cpu, machine::executable::Executable,
+    machine::reference::mapping::initialize_layout,
 };
 use std::{path::PathBuf, process::Command};
 
@@ -144,7 +144,11 @@ fn original_loader_argument_paths_use_toc_for_vh_then_selected_slot_for_payloads
 fn local_corpus_loader_mapping_resolves_every_bank_without_using_header_ids() {
     let root = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").expect("set BOF3_AUDIO_CORPUS"));
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
-    let mapping = resolve(&mut catalog, &exe()).unwrap();
+    let mapping = resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert_eq!(mapping.associations.len(), 1020);
     assert!(mapping
         .associations
@@ -274,7 +278,11 @@ fn mapping_uses_loader_order_and_leaves_orphan_payloads_unresolved() {
             entry.load_argument = 0xdead_beef;
         }
     }
-    let mapping = resolve(&mut catalog, &exe()).unwrap();
+    let mapping = resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert_eq!(mapping.associations.len(), 1);
     assert_eq!(mapping.associations[0].body_entries.len(), 1);
     assert_eq!(mapping.associations[0].songs.len(), 1);
@@ -283,7 +291,11 @@ fn mapping_uses_loader_order_and_leaves_orphan_payloads_unresolved() {
     orphan.sources[0]
         .entries
         .retain(|entry| entry.file_type != 6);
-    let mapping = resolve(&mut orphan, &exe()).unwrap();
+    let mapping = resolve(
+        &mut orphan,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert!(mapping.associations.is_empty());
     assert_eq!(mapping.unresolved.len(), 5);
     assert!(orphan

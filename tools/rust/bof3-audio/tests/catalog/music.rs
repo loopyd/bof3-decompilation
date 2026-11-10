@@ -32,7 +32,7 @@ fn compiled_music_metadata_is_complete_and_contains_no_payloads() {
 }
 
 #[test]
-fn cue_cli_requires_a_single_selector_music_mode_and_executable_evidence() {
+fn cue_cli_requires_a_single_selector_music_mode_and_driver_data() {
     for options in [
         vec!["--mode", "music", "--cue", "0"],
         vec![
@@ -40,8 +40,8 @@ fn cue_cli_requires_a_single_selector_music_mode_and_executable_evidence() {
             "audio",
             "--cue",
             "0",
-            "--executable",
-            "missing.exe",
+            "--driver",
+            "missing-driver",
         ],
         vec![
             "--mode",
@@ -50,8 +50,8 @@ fn cue_cli_requires_a_single_selector_music_mode_and_executable_evidence() {
             "0",
             "--cue",
             "0",
-            "--executable",
-            "missing.exe",
+            "--driver",
+            "missing-driver",
         ],
         vec![
             "--mode",
@@ -60,8 +60,8 @@ fn cue_cli_requires_a_single_selector_music_mode_and_executable_evidence() {
             "0",
             "--kind",
             "bank",
-            "--executable",
-            "missing.exe",
+            "--driver",
+            "missing-driver",
         ],
     ] {
         let output = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
@@ -153,11 +153,15 @@ fn compiled_file_paths_and_lbas_match_independent_iso_directory_records() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
+#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_DRIVER and BOF3_AUDIO_CORPUS"]
 fn original_cue_file_selection_and_lba_lookup_match_all_supported_media_records() {
     let executable = executable();
     let mut catalog = Catalog::read(Some(&corpus()), &[]).unwrap();
-    let report = loader::resolve(&mut catalog, &executable).unwrap();
+    let report = loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&executable).unwrap(),
+    )
+    .unwrap();
     assert_eq!(report.music.cues.len(), usize::from(SUPPORTED_CUES));
     for cue in &report.music.cues {
         assert_eq!(cue.resolution, "disc_path_and_whole_file_identity_match");
@@ -200,7 +204,7 @@ fn original_cue_file_selection_and_lba_lookup_match_all_supported_media_records(
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
+#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_DRIVER and BOF3_AUDIO_CORPUS"]
 fn cue_queries_accept_renamed_originals_reject_edits_and_require_ambiguous_sources_to_be_qualified()
 {
     struct Temp(PathBuf);
@@ -215,18 +219,22 @@ fn cue_queries_accept_renamed_originals_reject_edits_and_require_ambiguous_sourc
     let bytes = std::fs::read(corpus().join("BIN/BGM/BGM000.EMI")).unwrap();
     std::fs::write(&renamed, &bytes).unwrap();
     let mut catalog = Catalog::read(None, std::slice::from_ref(&renamed)).unwrap();
-    let mapping = loader::resolve(&mut catalog, &executable()).unwrap();
+    let mapping = loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&executable()).unwrap(),
+    )
+    .unwrap();
     catalog.runtime_mapping = Some(mapping);
     let asset = catalog.select_cue(0).unwrap();
     assert!(
         matches!(&asset.data, AssetData::Sequence { metadata, .. } if metadata.sequence_index == 0)
     );
-    let exe_path = std::env::var_os("BOF3_AUDIO_EXE").unwrap();
+    let driver_path = std::env::var_os("BOF3_AUDIO_DRIVER").unwrap();
     let output = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["query", "--mode", "music", "--cue", "0", "--archive"])
         .arg(&renamed)
-        .arg("--executable")
-        .arg(&exe_path)
+        .arg("--driver")
+        .arg(&driver_path)
         .arg("--json")
         .output()
         .unwrap();
@@ -236,7 +244,11 @@ fn cue_queries_accept_renamed_originals_reject_edits_and_require_ambiguous_sourc
     let duplicate = dir.0.join("duplicate.EMI");
     std::fs::write(&duplicate, &bytes).unwrap();
     let mut catalog = Catalog::read(None, &[renamed.clone(), duplicate]).unwrap();
-    let mapping = loader::resolve(&mut catalog, &executable()).unwrap();
+    let mapping = loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&executable()).unwrap(),
+    )
+    .unwrap();
     catalog.runtime_mapping = Some(mapping);
     assert!(catalog
         .select_cue(0)
@@ -247,7 +259,11 @@ fn cue_queries_accept_renamed_originals_reject_edits_and_require_ambiguous_sourc
     *changed.last_mut().unwrap() ^= 1;
     std::fs::write(&renamed, changed).unwrap();
     let mut catalog = Catalog::read(None, &[renamed]).unwrap();
-    let mapping = loader::resolve(&mut catalog, &executable()).unwrap();
+    let mapping = loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&executable()).unwrap(),
+    )
+    .unwrap();
     catalog.runtime_mapping = Some(mapping);
     assert!(catalog
         .select_cue(0)

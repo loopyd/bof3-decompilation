@@ -268,7 +268,7 @@ impl Image {
         ])
     }
 
-    fn data(&self, name: &str, bytes: u32) -> Result<u32> {
+    pub(crate) fn data(&self, name: &str, bytes: u32) -> Result<u32> {
         let address = self.symbol(name)?;
         let end = self.symbol("audio_kernel_bss_end")?;
         if address < self.symbol("audio_kernel_image")?

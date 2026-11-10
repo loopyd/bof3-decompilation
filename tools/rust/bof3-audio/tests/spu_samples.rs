@@ -218,7 +218,11 @@ fn original_bgm_banks_match_linear_decode_through_two_loop_traversals() {
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
     let mut catalog = Catalog::read(None, &paths).unwrap();
-    loader::resolve(&mut catalog, &exe).unwrap();
+    loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     let mut samples = 0;
     let mut loops = 0;
     let mut frames = 0;

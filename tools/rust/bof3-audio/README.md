@@ -51,8 +51,15 @@ bin/harness audio verify --mode audio --archive /path/to/archive.EMI --json
 bin/harness audio render --help
 ```
 
+`map` requires `--driver DIRECTORY`. The same option adds US loader, music cue
+and XA cue mapping to `index` and `query`. Use
+`query --mode music --cue NUMBER --driver DIRECTORY` for music cues `0`–`164`.
+These commands use the built owned driver and supplied media. They reject
+`--executable` and `--bios`. Reported original addresses and EXE offsets identify
+source provenance; they do not require opening that executable.
+
 For bank and sample references used by the original local effects dispatcher, use
-`index --mode audio --type sfx --executable PSX_EXE` with your media selection.
+`index --mode audio --type sfx --driver out/audio/driver` with your media selection.
 Add `--kind bank` or `--kind sample` to select one asset kind. `query` accepts
 the same filter and a qualified `--id` from the index. Numeric IDs fail when
 several selected assets match.
@@ -73,7 +80,7 @@ a silent tone. Roles do not establish active layout, loaded state, arbitration,
 audibility or independent PCM. Shared payloads do not transfer roles.
 Unreferenced samples remain unresolved.
 
-Use `index` or `query --mode audio --type vocals --executable PSX_EXE` to select
+Use `index` or `query --mode audio --type vocals --driver out/audio/driver` to select
 observed vocal cues. Currently this selects only cue `0x2000` from the complete
 original US `BIN/SCE_XA/VOICE.STR`. Its whole-file SHA-256 is
 `f4f9d8ce9a2849501e8cd44dfcfee85aad4bc92cd9ff5113acde43c9362c65cc`.

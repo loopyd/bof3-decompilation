@@ -187,7 +187,11 @@ fn corpus_stopped_note_approximation_preserves_all_constructible_bank_bytes() {
             .unwrap();
     let mut reference = Reference::from_executable(&exe).unwrap();
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
-    loader::resolve(&mut catalog, &exe).unwrap();
+    loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     let mut envelopes = BTreeMap::new();
     let mut options = common::options();
     options.allow_predictor_loop_approximation = true;

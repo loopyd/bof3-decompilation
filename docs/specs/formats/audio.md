@@ -333,7 +333,7 @@ Python TOC parsing and `hashlib` grouping agree with every Rust group; the
 compares each group's header/body bytes directly. Local comparison evidence is
 `out/audio-migration/bank-content-reference.json`.
 
-`map` emits `shared_banks`; `index`/`query` with a verified executable annotate
+`map` emits `shared_banks`; `index`/`query` with a validated owned driver annotate
 each resolved bank's `content`. Archive-qualified identities, game bank IDs,
 load slots and playback contexts remain separate even when payloads match.
 [Edited-fixture tests](../../../tools/rust/bof3-audio/tests/catalog/content.rs)
@@ -343,7 +343,7 @@ This is byte-content evidence, not SFX/vocal classification or PCM equivalence.
 
 ### Source-qualified effects references
 
-With the verified US executable, `index --mode audio --type sfx` and `query`
+With `--driver DIRECTORY`, `index --mode audio --type sfx` and `query`
 select source-qualified bank and sample references in the original local effects
 dispatcher. Use `--kind bank` or `--kind sample` and a qualified `--id` to narrow
 selection. [Role resolution](../../../tools/rust/bof3-audio/src/catalog/roles.rs)
@@ -370,7 +370,7 @@ A reference can select a silent tone. These SFX roles do not establish active
 layout, loaded state, accepted arbitration, audibility or PCM fidelity.
 Unreferenced samples remain unresolved.
 
-`index` and `query` accept `--mode audio --type vocals --executable EXE` for
+`index` and `query` accept `--mode audio --type vocals --driver DIRECTORY` for
 XA cue `0x2000` from the complete original US `BIN/SCE_XA/VOICE.STR`, identified
 by SHA-256
 `f4f9d8ce9a2849501e8cd44dfcfee85aad4bc92cd9ff5113acde43c9362c65cc`.
@@ -451,7 +451,7 @@ cue IDs from their filenames. Multiple matching sources require qualified IDs.
 [Disc-backed tests](../../../tools/rust/bof3-audio/tests/xa/cue.rs) independently
 read all 26,115 selected sectors' subheaders from the original raw track.
 
-`index` and `query --mode audio --kind xa_cue --executable EXE` expose these
+`index` and `query --mode audio --kind xa_cue --driver DIRECTORY` expose these
 source-qualified identities; `--id` accepts decimal or `0x`-prefixed packed IDs.
 These prefixes do not establish caller bounds beyond them. XA content roles
 other than the source-qualified vocal observation for cue `0x2000` remain
@@ -5971,7 +5971,18 @@ for this bank but retain separate whole-file identities. This caller establishes
 one loaded context; it does not assign a universal layout or history to either
 archive.
 
-`query --mode music --cue NUMBER --executable PSX_EXE` resolves cues `0`–`164`
+`map --mode audio|music --driver DIRECTORY` uses the validated owned driver
+and supplied media. `index` and `query` accept the same driver option for
+loader associations, music cue IDs, XA extents and qualified SFX or vocal roles.
+All three commands reject `--executable` and `--bios`. Source addresses,
+EXE offsets and the pinned executable hash in reports remain original
+provenance. Layout rows report the owned driver's relocated RAM allocations.
+The driver contains the 165 four-byte music records and their
+non-music boundary halfword, the SFX lookup and complete XA selector tables.
+Its three XA base LBAs match the original US ISO directory extents. Mapping
+does not execute playback or establish a loaded game history.
+
+`query --mode music --cue NUMBER --driver DIRECTORY` resolves cues `0`–`164`
 against supplied canonical archives, without inspecting resident runtime state.
 Song bundles retain multiple `game_song_ids`; SEP
 sequence indices and encoded sequence IDs remain separate. Full archive hashes

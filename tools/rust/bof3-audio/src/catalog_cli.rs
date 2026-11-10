@@ -2,7 +2,7 @@
 
 use crate::{
     catalog::model::{Asset, Catalog, Role, RoleEvidence},
-    machine::executable::Executable,
+    machine::driver::Image,
     Result,
 };
 use serde::Serialize;
@@ -11,14 +11,14 @@ use std::{ffi::OsString, path::PathBuf};
 pub const HELP: &str =
     "\n index --mode audio|music (--disc-root DIR | --archive FILE...) [--kind KIND] [--json]\n\
  query --mode audio|music (--disc-root DIR | --archive FILE...) --id ID [--kind KIND] [--json]\n\
- map --mode audio|music (--disc-root DIR | --archive FILE...) --executable PSX_EXE [--json]\n\
- Optional --executable PSX_EXE adds verified US loader associations to index/query.\n\
- Music query accepts --cue NUMBER instead of --id, with --executable; supported US cues: 0..164.\n\
- KIND: bank, sample, song, sequence, xa_stream, xa_cue (requires --executable). Repeat --archive for multiple files.\n\
+ map --mode audio|music (--disc-root DIR | --archive FILE...) --driver DIRECTORY [--json]\n\
+ Optional --driver DIRECTORY adds verified US loader associations to index/query.\n\
+ Music query accepts --cue NUMBER instead of --id, with --driver; supported US cues: 0..164.\n\
+ KIND: bank, sample, song, sequence, xa_stream, xa_cue (requires --driver). Repeat --archive for multiple files.\n\
  Numeric IDs: bank/song entry number, sample ID, SEP sequence ID, XA channel, packed XA cue ID (decimal or 0x-prefixed hex).\n\
  Ambiguous numbers require a qualified ID from index; sequence qualified IDs use sequence index.\n\
  Disc-root identities use relative paths; explicit archives use canonical absolute paths.\n\
- Audio index/query accept --type sfx|vocals with --executable. SFX roles identify local bank/sample references.\n\
+ Audio index/query accept --type sfx|vocals with --driver. SFX roles identify local bank/sample references.\n\
  Vocals selects only source-qualified XA cues with direct listening evidence; other XA content remains unresolved.\n\
  Roles do not establish active context or accepted playback.\n\
  Original music archives resolve by whole-file SHA-256. Other song identities,\n\
@@ -32,7 +32,7 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
     let mut role = None;
     let mut id = None;
     let mut cue = None;
-    let mut executable = None;
+    let mut driver = None;
     let mut json = false;
     while let Some(arg) = args.next() {
         match arg.to_str() {
@@ -44,8 +44,12 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
             Some("--kind") if operation != "map" && kind.is_none() => {
                 kind = Some(string_value(&mut args, "--kind")?)
             }
-            Some("--executable") if executable.is_none() => {
-                executable = Some(PathBuf::from(value(&mut args, "--executable")?))
+            Some("--executable" | "--bios") => return Err(
+                "catalog commands no longer accept --executable or --bios; use --driver DIRECTORY"
+                    .into(),
+            ),
+            Some("--driver") if driver.is_none() => {
+                driver = Some(PathBuf::from(value(&mut args, "--driver")?))
             }
             Some("--id") if operation == "query" && id.is_none() => {
                 id = Some(string_value(&mut args, "--id")?)
@@ -69,17 +73,12 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
             return Err("--type requires --mode audio".into());
         }
         match role.as_str() {
-            "sfx" if executable.is_some() => {}
-            "sfx" => {
-                return Err(
-                    "--type sfx requires --executable for original dispatcher evidence".into(),
-                )
-            }
-            "vocals" if executable.is_some() => {}
+            "sfx" if driver.is_some() => {}
+            "sfx" => return Err("--type sfx requires --driver for owned dispatcher data".into()),
+            "vocals" if driver.is_some() => {}
             "vocals" => {
                 return Err(
-                    "--type vocals requires --executable for source-qualified XA cue evidence"
-                        .into(),
+                    "--type vocals requires --driver for source-qualified XA cue evidence".into(),
                 )
             }
             _ => return Err("--type requires sfx or vocals".into()),
@@ -101,24 +100,23 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
         return Err("query requires exactly one of --id or --cue".into());
     }
     if cue.is_some()
-        && (mode != "music"
-            || executable.is_none()
-            || kind.as_deref().is_some_and(|k| k != "sequence"))
+        && (mode != "music" || driver.is_none() || kind.as_deref().is_some_and(|k| k != "sequence"))
     {
         return Err(
-            "--cue requires --mode music, --executable, and sequence kind (if specified)".into(),
+            "--cue requires --mode music, --driver, and sequence kind (if specified)".into(),
         );
     }
-    if operation == "map" && executable.is_none() {
-        return Err("map requires --executable to identify a verified runtime profile".into());
+    if operation == "map" && driver.is_none() {
+        return Err("map requires --driver to load validated mapping data".into());
     }
-    if kind.as_deref() == Some("xa_cue") && executable.is_none() {
-        return Err("--kind xa_cue requires --executable for verified cue extents".into());
+    if kind.as_deref() == Some("xa_cue") && driver.is_none() {
+        return Err("--kind xa_cue requires --driver for verified cue extents".into());
     }
     let mut catalog = Catalog::read(root.as_deref(), &archives)?;
-    if let Some(path) = executable {
-        let exe = Executable::from_bytes(std::fs::read(path)?)?;
-        let mapping = crate::catalog::loader::resolve(&mut catalog, &exe)?;
+    if let Some(path) = driver {
+        let image = Image::read(&path)?;
+        let inputs = crate::catalog::mapping::Mapping::read(&image)?;
+        let mapping = crate::catalog::loader::resolve(&mut catalog, &inputs)?;
         catalog
             .unresolved
             .retain(|message| !message.starts_with("game bank/song IDs"));
@@ -129,7 +127,7 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
         let mapping = catalog
             .runtime_mapping
             .as_ref()
-            .expect("required executable was parsed");
+            .expect("required driver was parsed");
         if json {
             println!("{}", serde_json::to_string_pretty(mapping)?);
         } else {

@@ -206,7 +206,12 @@ pub fn assets(options: &Options) -> Result<Report> {
         let mut catalog = Catalog::from_media(&source, MediaImage::Xa(image.clone()))?;
         let runtime = executable
             .as_ref()
-            .map(|exe| loader::resolve(&mut catalog, exe))
+            .map(|exe| {
+                loader::resolve(
+                    &mut catalog,
+                    &crate::machine::reference::mapping::read(exe)?,
+                )
+            })
             .transpose()?;
         let mut requested = BTreeMap::<usize, (Vec<u8>, String)>::new();
         let mut contexts = Vec::new();

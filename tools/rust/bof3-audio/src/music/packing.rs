@@ -84,7 +84,10 @@ pub fn songs(options: &Options) -> Result<Report> {
         let image = ArchiveImage::from_bytes(bytes)?;
         let source = node.attribute("source")?;
         let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
-        let mapping = loader::resolve(&mut catalog, &executable)?;
+        let mapping = loader::resolve(
+            &mut catalog,
+            &crate::machine::reference::mapping::read(&executable)?,
+        )?;
         let song = catalog.select("music", Some("song"), node.attribute("id")?)?;
         if !ids.insert(song.id.clone()) {
             return Err(format!("music pack: duplicate song identity {}", song.id).into());

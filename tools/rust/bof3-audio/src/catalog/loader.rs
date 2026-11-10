@@ -1,57 +1,19 @@
-//! Executable-backed loader associations, not playback fidelity evidence.
+//! Source-independent loader associations, not playback fidelity evidence.
 
-use crate::catalog::model::{Association, Layout, Reference, Report, Slot};
-use crate::{
-    catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus, machine::bus::Ram,
-    machine::bus::Width, machine::cpu::Cpu, machine::executable::Executable,
-    machine::profile::Profile, Result,
+use crate::catalog::{
+    mapping::Mapping,
+    model::{AssetData, Association, Catalog, Reference, Report},
 };
+use crate::Result;
 use std::collections::BTreeMap;
 
 pub const LAYOUT_INITIALIZE: u32 = 0x8016_1808;
 pub const LOADER_TABLE: u32 = 0x8014_677c;
 pub const LOADER_SLOTS: usize = 7;
 
-/// Execute the original leaf routine without substituting game/SDK calls.
-/// These rows describe possible layouts, not the active gameplay mode.
-pub fn initialize_layout(executable: &Executable, selector: u8) -> Result<Layout> {
-    Profile::identify(executable)?;
-    if selector > 2 {
-        return Err("US audio layout selector must be 0, 1, or 2".into());
-    }
-    let mut ram = Ram::from_executable(executable);
-    let mut cpu = Cpu::new(LAYOUT_INITIALIZE);
-    cpu.set_register(4, u32::from(selector));
-    cpu.set_register(31, 0x8000_1000);
-    let instructions = cpu.run_until(&mut ram, 0x8000_1000, 1000)?;
-    let mut slots = Vec::new();
-    for index in 0..LOADER_SLOTS {
-        let address = LOADER_TABLE + index as u32 * 20;
-        let table_index = u32::from(selector) * 28 + index as u32 * 4;
-        slots.push(Slot {
-            index,
-            spu_base: ram.read(address, Width::Word)?,
-            header_address: ram.read(address + 4, Width::Word)?,
-            auxiliary_address: ram.read(address + 8, Width::Word)?,
-            sequence_address: ram.read(address + 12, Width::Word)?,
-            vab_id: ram.read(address + 16, Width::Half)? as u16,
-            flags: ram.read(address + 18, Width::Half)? as u16,
-            header_capacity: ram.read(0x8018_239c + table_index, Width::Word)?,
-            sequence_capacity: ram.read(0x8018_23f0 + table_index, Width::Word)?,
-        });
-    }
-    Ok(Layout {
-        selector,
-        instructions,
-        slots,
-    })
-}
-
-pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<Report> {
-    let profile = Profile::identify(executable)?;
-    let layouts = (0..3)
-        .map(|selector| initialize_layout(executable, selector))
-        .collect::<Result<Vec<_>>>()?;
+pub fn resolve(catalog: &mut Catalog, mapping: &Mapping) -> Result<Report> {
+    let profile = mapping.profile.clone();
+    let layouts = mapping.layouts.clone();
     for layout in &layouts {
         if layout
             .slots
@@ -133,7 +95,15 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<Report>
         }
     }
     let shared_banks = crate::catalog::content::resolve(catalog, &associations, &mut unresolved);
-    super::roles::resolve(catalog, &associations, &layouts, profile.target, executable);
+    super::roles::resolve(
+        catalog,
+        &associations,
+        &layouts,
+        profile.target,
+        mapping.source_load_address,
+        &mapping.lookup,
+        mapping.auxiliary_end,
+    );
     let mut references = Vec::new();
     for (address, symbol, role) in [
         (LAYOUT_INITIALIZE, None, "initializes seven audio slots from one of three layout rows"),
@@ -158,11 +128,11 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<Report>
         (crate::catalog::music::FILE_TABLE, None, "original file-slot LBA table checked against ISO directory evidence"),
     ] {
         references.push(Reference { target: profile.target, address,
-            executable_file_offset: (address - executable.header().load_address) as usize + 0x800,
+            executable_file_offset: (address - mapping.source_load_address) as usize + 0x800,
             symbol, role });
     }
-    let music = crate::catalog::music::resolve(catalog, executable)?;
-    let xa = crate::xa::cue::resolve(catalog, executable)?;
+    let music = crate::catalog::music::resolve(catalog, mapping)?;
+    let xa = crate::xa::cue::resolve(catalog, mapping)?;
     super::roles::resolve_vocals(catalog);
     Ok(Report {
         schema: "bof3.audio-mapping/v1",

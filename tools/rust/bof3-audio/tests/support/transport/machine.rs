@@ -361,7 +361,7 @@ pub(crate) fn reading_fixture_with_irq(
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
     Profile::identify(&exe).unwrap();
-    let cue = cue::read_cues(&exe)
+    let cue = bof3_audio::machine::reference::mapping::read_cues(&exe)
         .unwrap()
         .into_iter()
         .find(|c| c.packed_id == packed_id)

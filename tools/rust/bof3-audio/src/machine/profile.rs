@@ -32,10 +32,14 @@ impl Profile {
         if hash != US_EXE_SHA256 {
             return Err(format!("unsupported runtime profile: executable SHA-256 {hash}; only original US SLUS_004.22 is identified").into());
         }
-        Ok(Self {
+        Ok(Self::us())
+    }
+
+    pub(crate) fn us() -> Self {
+        Self {
             id: "bof3-us-slus-00422",
             target: "exe/slus_004_22",
-            exe_sha256: hash,
+            exe_sha256: US_EXE_SHA256.into(),
             pitch_entry: 0x8017_1b20,
             pitch_table: 0x8018_445c,
             pitch_table_entries: 193,
@@ -46,6 +50,6 @@ impl Profile {
             sequence_table_setup: 0x8016_d7ec,
             set_tick_mode: 0x8016_d9cc,
             bootstrap: "bios_audio_reference_clock_available_fidelity_unverified",
-        })
+        }
     }
 }

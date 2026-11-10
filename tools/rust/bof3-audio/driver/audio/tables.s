@@ -141,3 +141,183 @@ audio_xa_voice_table:
 .globl audio_xa_voice_table_end
 audio_xa_voice_table_end:
 .balign 4
+
+# US music cue prefix at 0x80181EB8..0x8018214C, followed by its
+# non-music boundary halfword. Records contain file slot, bank and sequence.
+.balign 4
+.globl audio_music_cue_table
+.globl audio_music_cue_table_end
+audio_music_cue_table:
+    .byte 209, 0, 0, 0
+    .byte 209, 0, 0, 1
+    .byte 213, 0, 0, 1
+    .byte 210, 0, 0, 0
+    .byte 211, 0, 0, 0
+    .byte 212, 0, 0, 0
+    .byte 213, 0, 0, 0
+    .byte 214, 0, 0, 0
+    .byte 215, 0, 0, 0
+    .byte 216, 0, 0, 2
+    .byte 216, 0, 0, 0
+    .byte 216, 0, 0, 1
+    .byte 217, 0, 0, 0
+    .byte 217, 0, 0, 1
+    .byte 214, 0, 0, 1
+    .byte 218, 0, 0, 0
+    .byte 219, 0, 0, 0
+    .byte 219, 0, 0, 1
+    .byte 219, 0, 0, 2
+    .byte 220, 0, 0, 0
+    .byte 220, 0, 0, 1
+    .byte 222, 0, 0, 0
+    .byte 222, 0, 0, 1
+    .byte 223, 0, 0, 0
+    .byte 224, 0, 0, 0
+    .byte 224, 0, 0, 1
+    .byte 224, 0, 0, 2
+    .byte 225, 0, 0, 0
+    .byte 225, 0, 0, 1
+    .byte 225, 0, 0, 2
+    .byte 226, 0, 0, 0
+    .byte 226, 0, 0, 1
+    .byte 226, 0, 0, 2
+    .byte 227, 0, 0, 0
+    .byte 227, 0, 0, 1
+    .byte 228, 0, 0, 0
+    .byte 233, 0, 0, 1
+    .byte 228, 0, 0, 1
+    .byte 228, 0, 0, 2
+    .byte 233, 0, 0, 2
+    .byte 229, 0, 0, 0
+    .byte 229, 0, 0, 1
+    .byte 229, 0, 0, 2
+    .byte 230, 0, 0, 0
+    .byte 231, 0, 0, 0
+    .byte 232, 0, 0, 0
+    .byte 233, 0, 0, 0
+    .byte 234, 0, 0, 0
+    .byte 235, 0, 0, 0
+    .byte 237, 0, 0, 0
+    .byte 237, 0, 0, 1
+    .byte 33, 1, 0, 0
+    .byte 239, 0, 0, 0
+    .byte 239, 0, 0, 1
+    .byte 240, 0, 0, 0
+    .byte 240, 0, 0, 1
+    .byte 241, 0, 0, 0
+    .byte 241, 0, 0, 1
+    .byte 247, 0, 0, 2
+    .byte 241, 0, 0, 2
+    .byte 2, 1, 0, 0
+    .byte 2, 1, 0, 1
+    .byte 1, 1, 0, 0
+    .byte 235, 0, 0, 1
+    .byte 235, 0, 0, 2
+    .byte 236, 0, 0, 0
+    .byte 244, 0, 0, 0
+    .byte 3, 1, 0, 0
+    .byte 247, 0, 0, 0
+    .byte 247, 0, 0, 1
+    .byte 255, 0, 0, 1
+    .byte 249, 0, 0, 0
+    .byte 4, 1, 0, 2
+    .byte 4, 1, 0, 3
+    .byte 253, 0, 0, 0
+    .byte 253, 0, 0, 3
+    .byte 243, 0, 0, 0
+    .byte 242, 0, 0, 0
+    .byte 253, 0, 0, 2
+    .byte 253, 0, 0, 1
+    .byte 255, 0, 0, 0
+    .byte 4, 1, 0, 0
+    .byte 4, 1, 0, 1
+    .byte 236, 0, 0, 1
+    .byte 235, 0, 0, 3
+    .byte 237, 0, 0, 2
+    .byte 255, 0, 0, 2
+    .byte 250, 0, 0, 0
+    .byte 250, 0, 0, 1
+    .byte 251, 0, 0, 0
+    .byte 6, 1, 0, 0
+    .byte 252, 0, 0, 0
+    .byte 252, 0, 0, 1
+    .byte 252, 0, 0, 2
+    .byte 6, 1, 0, 1
+    .byte 9, 1, 0, 0
+    .byte 19, 1, 0, 2
+    .byte 10, 1, 0, 0
+    .byte 19, 1, 0, 0
+    .byte 19, 1, 0, 1
+    .byte 221, 0, 0, 0
+    .byte 221, 0, 0, 1
+    .byte 254, 0, 0, 0
+    .byte 244, 0, 0, 1
+    .byte 230, 0, 0, 1
+    .byte 241, 0, 0, 3
+    .byte 254, 0, 0, 1
+    .byte 8, 1, 0, 0
+    .byte 8, 1, 0, 1
+    .byte 8, 1, 0, 2
+    .byte 8, 1, 0, 3
+    .byte 14, 1, 0, 0
+    .byte 17, 1, 0, 0
+    .byte 16, 1, 0, 0
+    .byte 20, 1, 0, 0
+    .byte 218, 0, 0, 1
+    .byte 223, 0, 0, 1
+    .byte 238, 0, 0, 0
+    .byte 238, 0, 0, 1
+    .byte 245, 0, 0, 0
+    .byte 246, 0, 0, 0
+    .byte 1, 1, 0, 1
+    .byte 0, 1, 0, 0
+    .byte 3, 1, 0, 1
+    .byte 248, 0, 0, 0
+    .byte 248, 0, 0, 1
+    .byte 220, 0, 0, 2
+    .byte 221, 0, 0, 2
+    .byte 5, 1, 0, 0
+    .byte 5, 1, 0, 1
+    .byte 18, 1, 0, 1
+    .byte 11, 1, 0, 0
+    .byte 11, 1, 0, 1
+    .byte 11, 1, 0, 2
+    .byte 12, 1, 0, 0
+    .byte 12, 1, 0, 1
+    .byte 12, 1, 0, 2
+    .byte 12, 1, 0, 3
+    .byte 13, 1, 0, 0
+    .byte 13, 1, 0, 1
+    .byte 15, 1, 0, 0
+    .byte 32, 1, 0, 0
+    .byte 18, 1, 0, 0
+    .byte 21, 1, 0, 0
+    .byte 21, 1, 0, 1
+    .byte 22, 1, 0, 0
+    .byte 7, 1, 0, 0
+    .byte 7, 1, 0, 1
+    .byte 7, 1, 0, 2
+    .byte 16, 1, 0, 1
+    .byte 31, 1, 0, 0
+    .byte 24, 1, 0, 0
+    .byte 25, 1, 0, 0
+    .byte 26, 1, 0, 0
+    .byte 27, 1, 0, 0
+    .byte 28, 1, 0, 0
+    .byte 29, 1, 0, 0
+    .byte 30, 1, 0, 0
+    .byte 15, 1, 0, 1
+    .byte 29, 1, 0, 3
+    .byte 31, 1, 0, 1
+    .byte 9, 1, 0, 1
+    .byte 23, 1, 0, 0
+    .byte 233, 0, 0, 3
+    .byte 245, 0, 0, 1
+    .half 3096
+audio_music_cue_table_end:
+
+# US ISO directory LBAs for slots 681, 434 and 682, in stream order.
+.balign 4
+.globl audio_xa_disc_lbas
+audio_xa_disc_lbas:
+    .word 65798, 20081, 106214

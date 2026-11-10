@@ -2,7 +2,6 @@
 //! Roles do not establish active context or accepted execution of a cue.
 
 use super::model::{AssetData, Association, Catalog, Layout, Role, RoleEvidence, SampleReference};
-use crate::machine::executable::Executable;
 use std::collections::BTreeMap;
 
 const DISPATCH: u32 = 0x8015_df18;
@@ -21,9 +20,10 @@ pub(super) fn resolve(
     associations: &[Association],
     layouts: &[Layout],
     target: &'static str,
-    executable: &Executable,
+    load_address: u32,
+    lookup: &[u8; 256],
+    auxiliary_end: u32,
 ) {
-    let load_address = executable.header().load_address;
     for asset in &mut catalog.assets {
         let AssetData::Bank {
             metadata, content, ..
@@ -58,7 +58,7 @@ pub(super) fn resolve(
                 let end = layout
                     .slots
                     .get(slot + 1)
-                    .map_or(0x8014_8a04, |next| next.auxiliary_address);
+                    .map_or(auxiliary_end, |next| next.auxiliary_address);
                 start.checked_add(entry.bytes).is_none_or(|last| last > end)
             })
         {
@@ -99,13 +99,13 @@ pub(super) fn resolve(
             playback: "unverified: active layout, loaded state, physical tone/sample selection, histories and independent PCM remain unresolved",
         });
     }
-    resolve_samples(catalog, executable);
+    resolve_samples(catalog, load_address, lookup);
 }
 
-fn resolve_samples(catalog: &mut Catalog, executable: &Executable) {
+fn resolve_samples(catalog: &mut Catalog, load_address: u32, lookup: &[u8; 256]) {
     let halfword = |address: u32| {
-        let at = (address - executable.header().load_address) as usize;
-        u16::from_le_bytes(executable.text()[at..at + 2].try_into().unwrap()) as usize
+        let at = (address - 0x8018_21e0) as usize;
+        u16::from_le_bytes(lookup[at..at + 2].try_into().unwrap()) as usize
     };
     let mut samples = BTreeMap::<String, Role>::new();
     for bank in &catalog.assets {
@@ -195,9 +195,7 @@ fn resolve_samples(catalog: &mut Catalog, executable: &Executable) {
                     tone,
                     header_offset: 0x820 + program.tone_block * 512 + tone * 32 + 22,
                     sample_reader: 0x8016_e5e8,
-                    sample_reader_file_offset: (0x8016_e5e8 - executable.header().load_address)
-                        as usize
-                        + 0x800,
+                    sample_reader_file_offset: (0x8016_e5e8 - load_address) as usize + 0x800,
                 });
             }
         }

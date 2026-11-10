@@ -2,6 +2,7 @@
 
 pub mod content;
 pub mod loader;
+pub mod mapping;
 pub mod model;
 pub mod music;
 mod roles;
@@ -25,7 +26,7 @@ impl Catalog {
         Self { schema: "bof3.audio-catalog/v1", sources: Vec::new(), assets: Vec::new(), runtime_mapping: None,
             unresolved: vec![
                 "game bank/song IDs and bank-to-body/sequence associations require runtime evidence; candidates are not resolved links",
-                "local SFX bank/sample references and observed XA vocal cues require a verified executable; unreferenced samples and unobserved XA content remain unresolved; XA cue extents require known media",
+                "local SFX bank/sample references and observed XA vocal cues require a validated driver; unreferenced samples and unobserved XA content remain unresolved; XA cue extents require known media",
                 "shared header hashes show byte-identical headers, not necessarily identical sample bodies",
                 "sequence event semantics and sample playback are not validated by inventory",
             ] }
@@ -35,7 +36,7 @@ impl Catalog {
         let mapping = self
             .runtime_mapping
             .as_ref()
-            .ok_or("cue selection requires --executable")?;
+            .ok_or("cue selection requires --driver")?;
         let cue = mapping
             .music
             .cues

@@ -66,7 +66,10 @@ pub fn banks(options: &Options) -> Result<Report> {
     }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
-    let mapping = loader::resolve(&mut catalog, &executable)?;
+    let mapping = loader::resolve(
+        &mut catalog,
+        &crate::machine::reference::mapping::read(&executable)?,
+    )?;
     if let Some(role) = &options.role {
         catalog.assets.retain(|asset| {
             asset.kind() != "bank" || asset.roles.iter().any(|evidence| evidence.role == role)
@@ -140,7 +143,10 @@ pub fn banks(options: &Options) -> Result<Report> {
             Entry::Occupied(entry) => entry.into_mut(),
             Entry::Vacant(entry) => {
                 let mut local = Catalog::from_media(&asset.source, MediaImage::Emi(image.clone()))?;
-                loader::resolve(&mut local, &executable)?;
+                loader::resolve(
+                    &mut local,
+                    &crate::machine::reference::mapping::read(&executable)?,
+                )?;
                 entry.insert(
                     local
                         .assets

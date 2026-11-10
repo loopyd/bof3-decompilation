@@ -13,7 +13,7 @@ fn all_supported_xa_extents_agree_with_original_selector() {
         std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").expect("set BOF3_AUDIO_EXE")).unwrap(),
     )
     .unwrap();
-    let cues = bof3_audio::xa::cue::read_cues(&exe).unwrap();
+    let cues = bof3_audio::machine::reference::mapping::read_cues(&exe).unwrap();
     assert_eq!(cues.len(), 896);
     for (stream, count) in [(0, 11), (1, 880), (2, 5)] {
         assert_eq!(cues.iter().filter(|c| c.stream == stream).count(), count);

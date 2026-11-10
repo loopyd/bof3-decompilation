@@ -1,11 +1,10 @@
 //! Encoded XA cue extents from the pinned US selector tables.
 //! The selector's stop threshold is exposed separately; scheduler timing is unverified.
 
-use crate::catalog::model::{Binding, CueMapping, SchedulerEvidence, XaCue, XaMap};
+use crate::catalog::model::{Binding, CueMapping, XaCue, XaMap};
 use crate::{
     catalog::model::Asset, catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus,
-    machine::bus::Ram, machine::bus::Width, machine::cd_position::CdPosition,
-    machine::executable::Executable, machine::profile::Profile, Result,
+    machine::bus::Width, machine::cd_position::CdPosition, Result,
 };
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -16,43 +15,6 @@ pub const START: u32 = 0x8016_36a0;
 pub const CALLBACK: u32 = 0x8016_3858;
 pub const TICK: u32 = 0x8016_38b0;
 pub const STATE_TABLE: u32 = 0x8018_3274;
-
-fn scheduler(executable: &Executable) -> Result<SchedulerEvidence> {
-    let mut ram = Ram::from_executable(executable);
-    let mut entries = [0; 9];
-    for (state, entry) in entries.iter_mut().enumerate() {
-        *entry = ram.read(STATE_TABLE + state as u32 * 4, Width::Word)?;
-    }
-    Ok(SchedulerEvidence {
-        start_entry: START,
-        completion_callback: CALLBACK,
-        tick_entry: TICK,
-        state_table: STATE_TABLE,
-        state_entries: entries,
-        position_poll_period_ticks: 2,
-        watchdog_threshold_ticks: 181,
-        stop_condition: "state 5 enters state 6 when a completed GetlocL response converts to LBA >= runtime_stop_threshold_lba; state 6 reduces the CD mix to zero and requests Pause",
-        timing_evidence: "original initialization, callback, position comparison, cancellation and watchdog paths tested with injected responses; drive/IRQ latency, tick frequency, buffered PCM and audible endpoints remain unverified",
-    })
-}
-
-pub fn read_cues(executable: &Executable) -> Result<Vec<XaCue>> {
-    Profile::identify(executable)?;
-    let mut ram = Ram::from_executable(executable);
-    let mut bases = [0; 3];
-    for (stream, table, _, _, _, file_slot) in streams() {
-        if ram.read(TABLE_POINTERS + u32::from(stream) * 4, Width::Word)? != table
-            || ram.read(FILE_SLOTS + u32::from(stream) * 4, Width::Word)? != u32::from(file_slot)
-        {
-            return Err("US XA stream tables disagree with supported profile".into());
-        }
-        bases[usize::from(stream)] = ram.read(
-            crate::catalog::music::FILE_TABLE + u32::from(file_slot) * 4,
-            Width::Word,
-        )?;
-    }
-    read_tables(&mut ram, [0x8018_39c4, 0x8018_32c4, 0x8018_3298], bases)
-}
 
 /// Read complete reviewed selector data from the built owned image. Media LBAs
 /// come from the supplied disc directory, independently of original EXE data.
@@ -110,7 +72,7 @@ pub fn read_owned_cues(
     read_tables(&mut ram, tables, bases)
 }
 
-fn streams() -> [(u8, u32, u32, u16, &'static str, u16); 3] {
+pub(crate) fn streams() -> [(u8, u32, u32, u16, &'static str, u16); 3] {
     [
         (0, 0x8018_39c4, 15, 11, "BIN/SCE_XA/S_XA00.STR", 681),
         (1, 0x8018_32c4, 896, 880, "BIN/BMAG_XA/MAGIC00.STR", 434),
@@ -118,7 +80,11 @@ fn streams() -> [(u8, u32, u32, u16, &'static str, u16); 3] {
     ]
 }
 
-fn read_tables(ram: &mut impl Bus, tables: [u32; 3], bases: [u32; 3]) -> Result<Vec<XaCue>> {
+pub(crate) fn read_tables(
+    ram: &mut impl Bus,
+    tables: [u32; 3],
+    bases: [u32; 3],
+) -> Result<Vec<XaCue>> {
     let mut cues = Vec::new();
     for (stream, original_table, words, expected_count, path, file_slot) in streams() {
         let table = tables[usize::from(stream)];
@@ -175,8 +141,8 @@ fn read_tables(ram: &mut impl Bus, tables: [u32; 3], bases: [u32; 3]) -> Result<
     Ok(cues)
 }
 
-pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<XaMap> {
-    let cues = read_cues(executable)?;
+pub fn resolve(catalog: &mut Catalog, mapping: &crate::catalog::mapping::Mapping) -> Result<XaMap> {
+    let cues = mapping.xa_cues.clone();
     catalog
         .assets
         .retain(|asset| !matches!(asset.data, AssetData::XaCue(_)));
@@ -250,5 +216,5 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<XaMap> 
     catalog.assets.extend(assets);
     Ok(XaMap { selector: SELECTOR, file_slots: FILE_SLOTS, table_pointers: TABLE_POINTERS,
         extent_evidence: "supported positive-range table prefixes; all selected sectors checked against supplied recognized media; scheduler endpoints and other XA channels remain unresolved",
-        cues: mappings, scheduler: scheduler(executable)? })
+        cues: mappings, scheduler: mapping.xa_scheduler.clone() })
 }

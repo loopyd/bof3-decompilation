@@ -73,7 +73,10 @@ pub fn render(
 ) -> Result<Rendered> {
     options.validate()?;
     let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
-    let mapping = loader::resolve(&mut catalog, executable)?;
+    let mapping = loader::resolve(
+        &mut catalog,
+        &crate::machine::reference::mapping::read(executable)?,
+    )?;
     let songs: Vec<_> = catalog
         .assets
         .iter()

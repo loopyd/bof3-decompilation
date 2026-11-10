@@ -255,7 +255,11 @@ fn corpus_binding_reports_supported_structure_and_rejects_unmapped_contexts() {
             .unwrap();
     let mut reference = Reference::from_executable(&exe).unwrap();
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
-    loader::resolve(&mut catalog, &exe).unwrap();
+    loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     let mut fits = BTreeMap::new();
     let mut accepted = 0;
     let mut rejected = BTreeMap::<String, usize>::new();

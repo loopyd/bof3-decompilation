@@ -36,17 +36,11 @@ fn exe() -> Executable {
 }
 
 #[test]
-fn xa_cue_cli_requires_audio_mode_and_executable() {
+fn xa_cue_cli_requires_audio_mode_and_driver() {
     for args in [
         vec!["index", "--mode", "audio", "--kind", "xa_cue"],
         vec![
-            "index",
-            "--mode",
-            "music",
-            "--kind",
-            "xa_cue",
-            "--executable",
-            "missing",
+            "index", "--mode", "music", "--kind", "xa_cue", "--driver", "missing",
         ],
     ] {
         let output = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
@@ -59,7 +53,7 @@ fn xa_cue_cli_requires_audio_mode_and_executable() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_TRACK original media"]
+#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_DRIVER and BOF3_AUDIO_TRACK original media"]
 fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
     let track = PathBuf::from(std::env::var_os("BOF3_AUDIO_TRACK").unwrap());
     let mut disc = DiscImage::open(&track).unwrap();
@@ -75,7 +69,11 @@ fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
     }
     let mut catalog = Catalog::read(Some(&directory.0), &[]).unwrap();
     let original_streams = catalog.assets.len();
-    let report = cue::resolve(&mut catalog, &exe()).unwrap();
+    let report = cue::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert_eq!(report.cues.len(), 896);
     assert_eq!(catalog.assets.len(), original_streams + 896);
     let mut raw = File::open(track).unwrap();
@@ -120,7 +118,11 @@ fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
         }
     }
     assert_eq!(sector_counts, [10962, 14856, 297]);
-    cue::resolve(&mut catalog, &exe()).unwrap();
+    cue::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert_eq!(
         catalog.assets.len(),
         original_streams + 896,
@@ -140,8 +142,8 @@ fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
             "--archive",
         ])
         .arg(&voice)
-        .arg("--executable")
-        .arg(std::env::var_os("BOF3_AUDIO_EXE").unwrap())
+        .arg("--driver")
+        .arg(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap())
         .arg("--json")
         .output()
         .unwrap();
@@ -157,7 +159,11 @@ fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
     let duplicate = directory.0.join("renamed.STR");
     fs::copy(&voice, &duplicate).unwrap();
     let mut duplicated = Catalog::read(None, &[voice.clone(), duplicate.clone()]).unwrap();
-    cue::resolve(&mut duplicated, &exe()).unwrap();
+    cue::resolve(
+        &mut duplicated,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert!(duplicated
         .select("audio", Some("xa_cue"), "0x2004")
         .unwrap_err()
@@ -178,7 +184,11 @@ fn complete_disc_cues_cover_only_matching_raw_audio_sectors() {
     edited[32] ^= 1;
     fs::write(&duplicate, edited).unwrap();
     let mut unknown = Catalog::read(None, &[duplicate]).unwrap();
-    let unknown_map = cue::resolve(&mut unknown, &exe()).unwrap();
+    let unknown_map = cue::resolve(
+        &mut unknown,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     assert!(unknown_map.cues.iter().all(|c| c.bindings.is_empty()));
     assert!(unknown.assets.iter().all(|a| a.kind() != "xa_cue"));
 }
@@ -196,7 +206,11 @@ fn truncated_sources_report_missing_sectors_without_inventing_complete_cues() {
     .map(|path| root.join(path))
     .collect();
     let mut catalog = Catalog::read(None, &sources).unwrap();
-    let report = cue::resolve(&mut catalog, &exe()).unwrap();
+    let report = cue::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe()).unwrap(),
+    )
+    .unwrap();
     let mut missing_by_stream = [0usize; 3];
     for record in report.cues {
         assert_eq!(record.bindings.len(), 1);

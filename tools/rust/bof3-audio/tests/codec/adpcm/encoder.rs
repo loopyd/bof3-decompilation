@@ -291,7 +291,11 @@ fn corpus_edited_sample_excerpts_encode_and_report_loss_within_original_capacity
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
-    loader::resolve(&mut catalog, &exe).unwrap();
+    loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )
+    .unwrap();
     let mut seen = BTreeSet::new();
     let (mut samples, mut frames, mut peak, mut squared_error) = (0, 0, 0, 0f64);
     for asset in &catalog.assets {

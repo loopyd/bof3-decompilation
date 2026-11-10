@@ -22,7 +22,10 @@ fn main() -> bof3_audio::Result<()> {
     let mut reference = Reference::from_executable(&exe)?;
     let root = PathBuf::from(&args[1]);
     let mut catalog = Catalog::read(Some(&root), &[])?;
-    bof3_audio::catalog::loader::resolve(&mut catalog, &exe)?;
+    bof3_audio::catalog::loader::resolve(
+        &mut catalog,
+        &bof3_audio::machine::reference::mapping::read(&exe).unwrap(),
+    )?;
     let mut ram = vec![0; RAM_BYTES];
     let mut samples = BTreeMap::new();
     let mut tones = Vec::new();

@@ -75,7 +75,10 @@ pub fn extract(options: &Options) -> Result<Report> {
         .as_ref()
         .map(|path| -> Result<_> {
             let executable = Executable::from_bytes(fs::read(path)?)?;
-            loader::resolve(&mut catalog, &executable)
+            loader::resolve(
+                &mut catalog,
+                &crate::machine::reference::mapping::read(&executable)?,
+            )
         })
         .transpose()?;
     let selected = if let Some(id) = &options.id {

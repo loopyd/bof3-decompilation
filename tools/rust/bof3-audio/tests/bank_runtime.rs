@@ -31,7 +31,7 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
         sha256_hex(archive.bytes()),
         "e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91"
     );
-    let layout = loader::initialize_layout(&exe, 0).unwrap();
+    let layout = bof3_audio::machine::reference::mapping::initialize_layout(&exe, 0).unwrap();
     let slot = &layout.slots[0];
     let machine = boot::load_us(rom, &exe, 3_000_000).unwrap();
     let mut execution = Execution::new(machine.cpu, machine.bus);

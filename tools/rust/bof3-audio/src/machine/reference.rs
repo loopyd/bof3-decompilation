@@ -3,7 +3,8 @@ use super::{
     adsr, bank, boot, driver::Audio, executable::Executable, execution::Execution, firmware::Image,
     profile::Profile, spu_reverb, spu_sample, spu_voice_ports::DisableModel,
 };
-use crate::{catalog::loader, Result};
+pub mod mapping;
+use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 
 pub const KEY_ON: u32 = 0x8016e400;
@@ -50,7 +51,7 @@ pub fn plan_bank<'a>(
 ) -> Result<bank::Plan<'a>> {
     Profile::identify(executable)?;
     bank::plan_with_layout(archive, options, |selector| {
-        loader::initialize_layout(executable, selector)
+        mapping::initialize_layout(executable, selector)
     })
 }
 
