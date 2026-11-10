@@ -206,7 +206,8 @@ fn predictors_survive_loops_but_reset_on_key_on_and_failures_preserve_state() {
 fn original_bgm_banks_match_linear_decode_through_two_loop_traversals() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-        codec::adpcm::decode_sample, codec::adpcm::Termination, machine::executable::Executable,
+        codec::adpcm::decode_sample, codec::adpcm::Termination,
+        machine::image::executable::Executable,
     };
     use std::path::PathBuf;
     let root = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());

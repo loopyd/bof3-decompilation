@@ -1,7 +1,7 @@
 //! Local auxiliary corpus audit; original dispatch only, not PCM fidelity.
 use bof3_audio::{
     digest::sha256_hex,
-    machine::{bank, cues, executable::Executable, firmware::Image},
+    machine::{bank, cues, image::executable::Executable, image::firmware::Image},
     Result,
 };
 use emi_ex_v2::image::ArchiveImage;

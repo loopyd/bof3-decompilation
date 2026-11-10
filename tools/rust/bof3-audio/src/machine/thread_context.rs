@@ -2,7 +2,7 @@
 use super::{
     bus::{Bus, Width},
     cpu::Cpu,
-    executable::ram_offset,
+    image::executable::ram_offset,
 };
 use crate::Result;
 

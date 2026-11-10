@@ -8,7 +8,7 @@ use crate::{
         bus::{Bus, BusError, Ram, Width},
         cpu::Cpu,
         driver::Image,
-        profile::Profile,
+        image::profile::Profile,
     },
     soundfont::Zone,
     Result,
@@ -42,9 +42,9 @@ pub(crate) struct Bindings {
 
 pub(crate) fn validate_tables(ram: &Ram, addresses: [u32; 2]) -> Result<()> {
     for address in addresses {
-        let offset = crate::machine::executable::ram_offset(address, 386)?;
+        let offset = crate::machine::image::executable::ram_offset(address, 386)?;
         if sha256_hex(&ram.bytes()[offset..offset + 386])
-            != crate::machine::profile::US_PITCH_SHA256
+            != crate::machine::image::profile::US_PITCH_SHA256
         {
             return Err("tuning: verified pitch-table identity changed".into());
         }

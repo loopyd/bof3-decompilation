@@ -3,7 +3,7 @@
 use bof3_audio::{
     catalog::loader::resolve, catalog::loader::LAYOUT_INITIALIZE, catalog::loader::LOADER_TABLE,
     catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus, machine::bus::Ram,
-    machine::bus::Width, machine::cpu::Cpu, machine::executable::Executable,
+    machine::bus::Width, machine::cpu::Cpu, machine::image::executable::Executable,
     machine::reference::mapping::initialize_layout,
 };
 use std::{path::PathBuf, process::Command};

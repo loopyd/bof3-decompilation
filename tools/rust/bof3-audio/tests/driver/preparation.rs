@@ -1,5 +1,7 @@
 use bof3_audio::{
-    machine::{bank::Stage, executable::Executable, firmware::Image, music, output_clock},
+    machine::{
+        bank::Stage, image::executable::Executable, image::firmware::Image, music, output_clock,
+    },
     Result,
 };
 use emi_ex_v2::image::ArchiveImage;

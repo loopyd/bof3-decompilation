@@ -1,7 +1,7 @@
 use bof3_audio::machine::{
     adsr,
     bus::{Bus, Ram, Width},
-    clock,
+    cpu::clock,
     interconnect::Interconnect,
     output_clock::{Clock, Model},
     spu_sample,

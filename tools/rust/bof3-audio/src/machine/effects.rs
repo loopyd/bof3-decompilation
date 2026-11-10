@@ -4,8 +4,8 @@
 use super::{
     bank::Prepared,
     bus::{Bus, Width},
-    executable::ram_offset,
     execution::{Call, Execution},
+    image::executable::ram_offset,
 };
 use crate::Result;
 use serde::Serialize;

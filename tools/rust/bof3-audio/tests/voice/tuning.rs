@@ -79,8 +79,8 @@ fn calibrated_single_key_zones_retain_non_pitch_tone_parameters() {
 #[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS original inputs"]
 fn every_corpus_tone_key_executes_original_pitch_and_reports_sf2_error() {
     use bof3_audio::{
-        catalog::model::AssetData, catalog::model::Catalog, machine::executable::Executable,
-        machine::profile::Profile, voice::tuning::LookupRegion,
+        catalog::model::AssetData, catalog::model::Catalog, machine::image::executable::Executable,
+        machine::image::profile::Profile, voice::tuning::LookupRegion,
     };
     use std::collections::{BTreeMap, BTreeSet};
     let exe =

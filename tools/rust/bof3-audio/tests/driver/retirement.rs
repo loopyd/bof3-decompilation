@@ -3,8 +3,8 @@ use bof3_audio::{
     machine::{
         bus::{Bus, Width},
         cpu::Cpu,
-        executable::Executable,
-        firmware::{Image, ROM_BYTES},
+        image::executable::Executable,
+        image::firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
     },
 };

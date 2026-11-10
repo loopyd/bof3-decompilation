@@ -3,11 +3,12 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        adsr, boot, clock,
+        adsr, boot,
+        cpu::clock,
         cpu::{Cpu, FaultKind},
-        executable::Executable,
-        firmware::Image,
-        profile::Profile,
+        image::executable::Executable,
+        image::firmware::Image,
+        image::profile::Profile,
         spu_reverb, spu_sample,
         spu_voice_ports::DisableModel,
     },

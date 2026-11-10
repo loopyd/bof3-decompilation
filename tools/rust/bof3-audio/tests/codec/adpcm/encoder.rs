@@ -283,7 +283,7 @@ fn independent_vag_consumer_accepts_encoder_output_with_documented_decoder_diffe
 fn corpus_edited_sample_excerpts_encode_and_report_loss_within_original_capacity() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-        digest::sha256_hex, machine::executable::Executable,
+        digest::sha256_hex, machine::image::executable::Executable,
     };
     use std::{collections::BTreeSet, path::PathBuf};
     let root = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());

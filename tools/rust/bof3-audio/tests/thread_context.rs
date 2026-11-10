@@ -1,9 +1,9 @@
 use bof3_audio::machine::{
     bus::{Bus, BusError, Ram, Width},
     cpu::Cpu,
-    executable::Executable,
+    image::executable::Executable,
+    image::profile::Profile,
     kernel::Kernel,
-    profile::Profile,
     thread_context::Context,
 };
 const PCB: u32 = 0x8000_3000;

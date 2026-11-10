@@ -5,10 +5,11 @@
 //! PCM output uses a separate explicit clock.
 mod native;
 use super::{
-    boot, clock,
+    boot,
+    cpu::clock,
     cpu::{Cpu, FaultKind, Step},
     exception_calls::Environment,
-    executable::ram_offset,
+    image::executable::ram_offset,
     interconnect::{DeviceProgress, Interconnect},
     kernel::Kernel,
     output_clock,

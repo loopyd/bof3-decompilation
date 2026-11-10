@@ -2,9 +2,9 @@ use bof3_audio::machine::{
     adsr,
     bus::{Bus, Width},
     cpu::Cpu,
-    executable::Executable,
+    image::executable::Executable,
+    image::profile::Profile,
     interconnect::Interconnect,
-    profile::Profile,
     spu_sample::Model,
 };
 

@@ -1,5 +1,5 @@
 //! Explicit frozen adjacent data for isolated pitch evaluation.
-use crate::{digest::sha256_hex, machine::profile::US_PITCH_SHA256, Result};
+use crate::{digest::sha256_hex, machine::image::profile::US_PITCH_SHA256, Result};
 use serde::{Deserialize, Serialize};
 use std::ops::Range;
 
@@ -52,7 +52,7 @@ impl FrozenPitchContext {
     }
 
     pub(crate) fn from_capture(ram: &[u8]) -> Result<Self> {
-        let offset = crate::machine::executable::ram_offset(ADJACENT_RANGE.start, 86)?;
+        let offset = crate::machine::image::executable::ram_offset(ADJACENT_RANGE.start, 86)?;
         let adjacent_data = ram[offset..offset + 86].to_vec();
         let document = Document {
             schema: "bof3.audio-pitch-context/v1".into(),

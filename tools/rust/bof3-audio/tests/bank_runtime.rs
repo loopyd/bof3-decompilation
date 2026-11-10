@@ -1,7 +1,7 @@
 use bof3_audio::{
     catalog::loader, digest::sha256_hex, machine::adsr, machine::boot, machine::bus::Bus,
-    machine::bus::Width, machine::executable::Executable, machine::execution::Execution,
-    machine::firmware::Image, machine::spu_reverb, machine::spu_sample,
+    machine::bus::Width, machine::execution::Execution, machine::image::executable::Executable,
+    machine::image::firmware::Image, machine::spu_reverb, machine::spu_sample,
     machine::spu_voice_ports::DisableModel,
 };
 use emi_ex_v2::image::ArchiveImage;

@@ -1,7 +1,7 @@
 //! Evidence categories are independent: a valid container does not prove playback.
 
 use crate::archive::MediaImage;
-use crate::{digest::sha256_hex, machine::profile::Profile};
+use crate::{digest::sha256_hex, machine::image::profile::Profile};
 use serde::Serialize;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]

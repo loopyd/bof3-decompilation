@@ -1,7 +1,7 @@
 use bof3_audio::{
     archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
     codec::adpcm::decode_sample, codec::adpcm::SampleLoop, codec::adpcm::Termination,
-    digest::sha256_hex, machine::executable::Executable,
+    digest::sha256_hex, machine::image::executable::Executable,
 };
 use std::{collections::HashMap, path::PathBuf};
 

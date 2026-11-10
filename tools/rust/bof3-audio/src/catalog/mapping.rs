@@ -5,7 +5,7 @@ use crate::{
     machine::{
         bus::{Bus, Width},
         driver::Image,
-        profile::Profile,
+        image::profile::Profile,
     },
     Result,
 };

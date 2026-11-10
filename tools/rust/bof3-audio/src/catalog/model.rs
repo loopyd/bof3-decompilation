@@ -2,7 +2,7 @@
 
 use crate::{
     bank::{Bank, Sample},
-    machine::profile::Profile,
+    machine::image::profile::Profile,
     sequence::{Sequence, SequenceSet},
 };
 use serde::{Deserialize, Serialize};

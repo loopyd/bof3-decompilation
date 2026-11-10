@@ -9,9 +9,9 @@ use bof3_audio::{
         cd_host::Command,
         cd_position::CdPosition,
         cpu::Cpu,
-        executable::Executable,
+        image::executable::Executable,
+        image::profile::Profile,
         interconnect::Interconnect,
-        profile::Profile,
     },
     xa::{Arithmetic, Histories, Stream},
 };

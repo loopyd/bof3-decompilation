@@ -164,8 +164,8 @@ fn owned_driver_cli_publishes_exact_duration_tail_and_qualified_evidence() {
 #[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
 fn ambiguous_entries_and_manifest_body_conflicts_fail_before_bios_boot() {
     use bof3_audio::machine::{
-        executable::Executable,
-        firmware::{Image, ROM_BYTES},
+        image::executable::Executable,
+        image::firmware::{Image, ROM_BYTES},
     };
     use emi_ex_v2::image::ArchiveImage;
     let exe =
@@ -203,7 +203,7 @@ fn ambiguous_entries_and_manifest_body_conflicts_fail_before_bios_boot() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
 fn automatic_layout_fits_large_archives_without_cue_or_filename_rules() {
-    use bof3_audio::machine::{executable::Executable, firmware::Image};
+    use bof3_audio::machine::{image::executable::Executable, image::firmware::Image};
     use emi_ex_v2::image::ArchiveImage;
     let exe =
         Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())

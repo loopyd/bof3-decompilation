@@ -1,6 +1,6 @@
 use bof3_audio::{
     catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-    machine::executable::Executable,
+    machine::image::executable::Executable,
 };
 use std::{
     fs,

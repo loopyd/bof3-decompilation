@@ -4,8 +4,8 @@ use bof3_audio::{
     digest::sha256_hex,
     machine::{
         bank, cues, effects,
-        executable::{ram_offset, Executable},
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
         output_clock,
     },
     Result,

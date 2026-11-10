@@ -1,6 +1,6 @@
 use bof3_audio::{
     driver::closure::{audit, location, Root},
-    machine::executable::Executable,
+    machine::image::executable::Executable,
 };
 const BASE: u32 = 0x80010000;
 fn executable(words: &[u32]) -> Executable {

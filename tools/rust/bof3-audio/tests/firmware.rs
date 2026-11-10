@@ -3,8 +3,8 @@ use bof3_audio::{
     machine::{
         bus::{Bus, Ram, Width},
         cpu::{Cpu, FaultKind},
-        executable::RAM_BYTES,
-        firmware::{Image, ROM_BYTES},
+        image::executable::RAM_BYTES,
+        image::firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
     },
 };
@@ -273,7 +273,7 @@ fn original_us_bios_executes_reset_memory_and_cache_setup_to_spu_setup() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS pointing to verified US SCPH-5501 ROM"]
 fn original_us_bios_uploads_spu_data_through_immediate_ports() {
-    use bof3_audio::machine::{adsr, clock, spu_reverb, spu_sample, spu_voice_ports};
+    use bof3_audio::machine::{adsr, cpu::clock, spu_reverb, spu_sample, spu_voice_ports};
     let bytes = std::fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
     assert_eq!(
         sha256_hex(&bytes),

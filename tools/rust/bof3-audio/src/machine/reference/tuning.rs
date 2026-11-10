@@ -1,6 +1,6 @@
 //! Original EXE/RAM pitch evaluation and frozen-context conversion for development.
 use crate::{
-    machine::{bus::Ram, executable::Executable, profile::Profile},
+    machine::{bus::Ram, image::executable::Executable, image::profile::Profile},
     voice::tuning::{validate_tables, Bindings, FrozenPitchContext, Reference},
     Result,
 };
@@ -34,7 +34,7 @@ pub fn frozen_context(exe: &Executable, runtime_ram: &[u8]) -> Result<FrozenPitc
         (profile.pitch_table, 386),
         (profile.spu_pitch_table, 386),
     ] {
-        let start = crate::machine::executable::ram_offset(address, size)?;
+        let start = crate::machine::image::executable::ram_offset(address, size)?;
         if runtime_ram[start..start + size] != original.bytes()[start..start + size] {
             return Err(format!(
                 "tuning context: original routine/table bytes differ at 0x{address:08X}"

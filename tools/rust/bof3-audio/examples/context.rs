@@ -1,5 +1,5 @@
 //! Convert an independently supplied original RAM capture to a frozen pitch context.
-use bof3_audio::machine::{executable::Executable, reference::tuning};
+use bof3_audio::machine::{image::executable::Executable, reference::tuning};
 
 fn main() -> bof3_audio::Result<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();

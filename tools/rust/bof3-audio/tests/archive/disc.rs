@@ -130,7 +130,7 @@ fn original_disc_stream_extents_include_audio_missing_from_older_extractions() {
     assert_eq!(disc.files().len(), 887);
     assert_eq!(
         sha256_hex(&disc.read_file("SLUS_004.22").unwrap()),
-        bof3_audio::machine::profile::US_EXE_SHA256
+        bof3_audio::machine::image::profile::US_EXE_SHA256
     );
     for (path, count, digest) in [
         (

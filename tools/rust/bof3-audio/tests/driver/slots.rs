@@ -3,7 +3,7 @@ use bof3_audio::{
     machine::{
         bus::{Bus, Width},
         cues,
-        executable::ram_offset,
+        image::executable::ram_offset,
         output_clock,
     },
     Result,

@@ -1,11 +1,11 @@
 //! Original XA guest calls with explicitly selected kernel/drive inputs.
-use bof3_audio::machine::{boot, firmware::Image};
+use bof3_audio::machine::{boot, image::firmware::Image};
 use bof3_audio::{
     machine::bus::Bus, machine::bus::BusError, machine::bus::Width, machine::cd_drive::Activity,
     machine::cd_drive::Drive, machine::cd_drive::Response, machine::cd_position::CdPosition,
     machine::cpu::Cpu, machine::cpu::FaultKind, machine::exception_calls::Environment,
-    machine::exception_calls::MissingHook, machine::executable::Executable,
-    machine::interconnect::Interconnect, machine::kernel::Kernel, machine::profile::Profile,
+    machine::exception_calls::MissingHook, machine::image::executable::Executable,
+    machine::image::profile::Profile, machine::interconnect::Interconnect, machine::kernel::Kernel,
     xa::cue,
 };
 
@@ -95,7 +95,7 @@ impl Fixture {
         let mut ram = self.bus.inner.ram().bytes().to_vec();
         // Normalize only the two declared fixture substitutions.
         for (address, word) in [(0x80174720, 0x8c500000u32), (0x80174724, 0x8c620000)] {
-            let at = bof3_audio::machine::executable::ram_offset(address, 4).unwrap();
+            let at = bof3_audio::machine::image::executable::ram_offset(address, 4).unwrap();
             ram[at..at + 4].copy_from_slice(&word.to_le_bytes());
         }
         Proof {

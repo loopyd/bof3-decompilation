@@ -2,7 +2,7 @@
 mod graphics;
 
 use crate::{
-    machine::{bank, executable::Executable, profile::Profile},
+    machine::{bank, image::executable::Executable, image::profile::Profile},
     publication::{self, Publication},
     sequence::SequenceSet,
     Result,

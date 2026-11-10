@@ -1,7 +1,8 @@
 use bof3_audio::{
     catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
     catalog::music::disc_evidence, catalog::music::SUPPORTED_CUES, machine::bus::Bus,
-    machine::bus::Ram, machine::bus::Width, machine::cpu::Cpu, machine::executable::Executable,
+    machine::bus::Ram, machine::bus::Width, machine::cpu::Cpu,
+    machine::image::executable::Executable,
 };
 use std::{
     collections::BTreeMap,

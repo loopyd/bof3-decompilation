@@ -1,8 +1,8 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
     cpu::Cpu,
-    executable::Executable,
-    profile::Profile,
+    image::executable::Executable,
+    image::profile::Profile,
 };
 use bof3_audio::{bank::Bank, sample::reference::resolve_us_pcm};
 

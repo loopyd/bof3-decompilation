@@ -7,7 +7,7 @@ use crate::{
         mapping::Mapping,
         model::{AssetData, Catalog},
     },
-    machine::profile::US_EXE_SHA256,
+    machine::image::profile::US_EXE_SHA256,
     Result,
 };
 use std::collections::{BTreeMap, BTreeSet};

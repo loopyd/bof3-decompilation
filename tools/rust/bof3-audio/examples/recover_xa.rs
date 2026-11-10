@@ -16,9 +16,10 @@ fn main() -> Result<()> {
         return Err("output directory already exists; refusing to replace it".into());
     }
     let mut disc = DiscImage::open(&track)?;
-    let executable =
-        bof3_audio::machine::executable::Executable::from_bytes(disc.read_file("SLUS_004.22")?)?;
-    bof3_audio::machine::profile::Profile::identify(&executable)?;
+    let executable = bof3_audio::machine::image::executable::Executable::from_bytes(
+        disc.read_file("SLUS_004.22")?,
+    )?;
+    bof3_audio::machine::image::profile::Profile::identify(&executable)?;
     let mut streams = Vec::new();
     let mut report = Vec::new();
     for path in [

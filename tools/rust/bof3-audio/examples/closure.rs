@@ -5,7 +5,8 @@ use bof3_audio::{
         trace::Trace,
     },
     machine::{
-        bank::Stage, executable::Executable, firmware::Image, output_clock, profile::Profile,
+        bank::Stage, image::executable::Executable, image::firmware::Image,
+        image::profile::Profile, output_clock,
     },
     Result,
 };

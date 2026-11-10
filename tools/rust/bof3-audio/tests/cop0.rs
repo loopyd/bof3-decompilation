@@ -21,7 +21,7 @@ fn bios_can_disable_debug_control_but_cannot_enable_unmodeled_breakpoints() {
         (9, u32::MAX),
         (11, 0xffff_fffc),
     ] {
-        let mut cop0 = bof3_audio::machine::cop0::Cop0::default();
+        let mut cop0 = bof3_audio::machine::cpu::cop0::Cop0::default();
         cop0.write(register, value).unwrap();
         assert_eq!(cop0.read(register).unwrap(), value);
         assert_eq!(cop0.read(7).unwrap(), 0);
@@ -182,7 +182,7 @@ fn unsupported_execution_and_syscalls_do_not_become_success() {
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE"]
 fn original_game_critical_section_wrappers_execute_through_syscalls() {
-    use bof3_audio::machine::{executable::Executable, profile::Profile};
+    use bof3_audio::machine::{image::executable::Executable, image::profile::Profile};
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();

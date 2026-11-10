@@ -2,11 +2,11 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
     cpu::Cpu,
-    executable::Executable,
+    image::executable::Executable,
 };
 use bof3_audio::{
     digest::sha256_hex,
-    machine::profile::{Profile, US_PITCH_SHA256},
+    machine::image::profile::{Profile, US_PITCH_SHA256},
 };
 
 #[test]

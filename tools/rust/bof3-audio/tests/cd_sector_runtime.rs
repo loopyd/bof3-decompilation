@@ -3,9 +3,9 @@ use bof3_audio::machine::{
     bus::{Bus, Width},
     cd_data::Model,
     cpu::Cpu,
-    executable::Executable,
+    image::executable::Executable,
+    image::profile::Profile,
     interconnect::Interconnect,
-    profile::Profile,
 };
 
 fn executable() -> Executable {

@@ -2,9 +2,9 @@
 use bof3_audio::machine::{
     bus::{Bus, BusError, Width},
     cpu::Cpu,
-    executable::Executable,
+    image::executable::Executable,
+    image::profile::Profile,
     interconnect::Interconnect,
-    profile::Profile,
 };
 
 // Explicit input for VSync(-1)'s unconditional status read. This supplies no

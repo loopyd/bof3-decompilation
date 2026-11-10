@@ -2,9 +2,9 @@ use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
     cpu::{Cpu, FaultKind},
     exception_chains::Table,
-    executable::Executable,
+    image::executable::Executable,
+    image::profile::Profile,
     kernel::Kernel,
-    profile::Profile,
 };
 
 const BASE: u32 = 0x8000_3000;

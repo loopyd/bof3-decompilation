@@ -2,7 +2,7 @@ use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
     cpu::Cpu,
     dma::Dma,
-    executable::Executable,
+    image::executable::Executable,
     interconnect::Interconnect,
     interrupts::{Interrupts, Source},
     kernel::Kernel,

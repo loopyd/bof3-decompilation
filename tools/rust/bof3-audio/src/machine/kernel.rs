@@ -12,7 +12,7 @@ use super::{
         Calls as ExceptionCalls, Dispatch, Environment, GuestBoundary, MissingHook, HANDLER_RETURN,
     },
     exception_chains::Table as ExceptionChains,
-    executable::ram_offset,
+    image::executable::ram_offset,
 };
 use crate::Result;
 

@@ -1,6 +1,6 @@
 use crate::fixture;
 use bof3_audio::{
-    bank::Bank, machine::executable::Executable, soundfont::bank as binding,
+    bank::Bank, machine::image::executable::Executable, soundfont::bank as binding,
     soundfont::bank::Bound, soundfont::bank::Gain, soundfont::gain::Model,
     soundfont::packing::sample, soundfont::reader::Font, voice::tuning::Reference,
 };

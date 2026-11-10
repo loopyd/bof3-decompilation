@@ -4,7 +4,7 @@ use bof3_audio::{
         bus::{Bus, Ram, Width},
         cd_audio::{Model as Resampling, Resampler, XaAudio},
         cd_queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
-        clock,
+        cpu::clock,
         interconnect::Interconnect,
         output_clock, spu_sample,
     },

@@ -3,7 +3,7 @@ use super::{
     bus::{Bus, Width},
     cpu::{Cpu, Step},
     exception_chains::Table,
-    executable::ram_offset,
+    image::executable::ram_offset,
 };
 use crate::Result;
 use std::collections::BTreeSet;

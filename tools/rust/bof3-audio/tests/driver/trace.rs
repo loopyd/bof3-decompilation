@@ -3,7 +3,7 @@ use bof3_audio::{
     machine::{
         bus::{Bus, Width},
         cpu::Cpu,
-        executable::Executable,
+        image::executable::Executable,
         interconnect::Interconnect,
     },
 };

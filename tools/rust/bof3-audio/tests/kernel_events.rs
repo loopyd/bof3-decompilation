@@ -180,7 +180,7 @@ fn guest_table_errors_unknown_modes_and_out_of_range_handles_do_not_mutate_ram()
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE"]
 fn original_event_wrappers_execute_with_explicit_guest_table_context() {
-    use bof3_audio::machine::{executable::Executable, profile::Profile};
+    use bof3_audio::machine::{image::executable::Executable, image::profile::Profile};
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();

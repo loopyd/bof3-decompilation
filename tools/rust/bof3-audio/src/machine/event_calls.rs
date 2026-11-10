@@ -4,7 +4,7 @@ use super::{
     cpu::{Cpu, Step},
     events::{Delivery, Table, CALLBACK, POLLING, RECORD_BYTES},
     exception_calls::HANDLER_RETURN,
-    executable::ram_offset,
+    image::executable::ram_offset,
 };
 use crate::Result;
 

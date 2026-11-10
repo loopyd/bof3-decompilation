@@ -3,7 +3,7 @@
 use super::flow::{decode, Flow};
 use crate::{
     digest::sha256_hex,
-    machine::executable::{ram_offset, Executable},
+    machine::image::executable::{ram_offset, Executable},
     Result,
 };
 use serde::Serialize;

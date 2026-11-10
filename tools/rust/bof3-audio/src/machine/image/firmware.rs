@@ -1,5 +1,5 @@
 //! Immutable retail-size BIOS storage. Identification is not runtime acceptance.
-use super::bus::{BusError, Width};
+use super::super::bus::{BusError, Width};
 use crate::{digest::sha256_hex, Result};
 
 pub const ROM_BYTES: usize = 512 * 1024;

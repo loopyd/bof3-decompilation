@@ -411,7 +411,9 @@ fn malformed_graphs_abi_failures_nesting_and_limits_fail_without_claiming_comple
 #[test]
 #[ignore = "requires BOF3_AUDIO_EXE; original US handlers with explicit synthetic device state"]
 fn original_us_priority_one_handlers_check_vblank_and_clear_sio_control() {
-    use bof3_audio::machine::{bus::BusError, executable::Executable, profile::Profile};
+    use bof3_audio::machine::{
+        bus::BusError, image::executable::Executable, image::profile::Profile,
+    };
     struct Device {
         ram: Ram,
         mask: u32,

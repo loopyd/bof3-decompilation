@@ -35,7 +35,7 @@ pub struct Prepared<P = driver::Evidence> {
     pub bank: Bank,
 }
 fn copy(execution: &mut Execution, address: u32, bytes: &[u8]) -> Result<()> {
-    super::executable::ram_offset(address, bytes.len())?;
+    super::image::executable::ram_offset(address, bytes.len())?;
     for (offset, &byte) in bytes.iter().enumerate() {
         execution
             .bus

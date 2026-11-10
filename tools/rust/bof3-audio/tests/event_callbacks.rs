@@ -192,7 +192,7 @@ fn bad_callbacks_and_recursive_delivery_fail_explicitly() {
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE"]
 fn original_game_registration_routine_executes_as_a_guest_callback() {
-    use bof3_audio::machine::{executable::Executable, profile::Profile};
+    use bof3_audio::machine::{image::executable::Executable, image::profile::Profile};
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();

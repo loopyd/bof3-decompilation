@@ -3,9 +3,9 @@ use crate::{
     driver::closure,
     machine::{
         cpu::Cpu,
-        executable::{ram_offset, Executable},
         execution::Execution,
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
         interconnect::Interconnect,
     },
     Result,

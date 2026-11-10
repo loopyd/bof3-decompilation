@@ -21,7 +21,7 @@ fn target(bytes: &mut [u8], preset: usize, instrument: u16) {
 fn current_policy_population_publication_and_original_runtime_playback() {
     use bof3_audio::{
         bank::Bank,
-        machine::{executable::Executable, firmware::Image},
+        machine::{image::executable::Executable, image::firmware::Image},
         pc_archive, pc_render, psx_render,
     };
     use emi_ex_v2::image::ArchiveImage;

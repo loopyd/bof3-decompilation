@@ -1,7 +1,7 @@
 use bof3_audio::machine::{
     adsr,
     bus::{Bus, Width},
-    executable::Executable,
+    image::executable::Executable,
     interconnect::Interconnect,
     spu_mixer::Inputs,
     spu_noise::State as NoiseState,

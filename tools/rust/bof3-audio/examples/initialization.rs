@@ -3,8 +3,8 @@ use bof3_audio::{
     driver::closure::{self, Root},
     machine::{
         bank::Stage,
-        executable::{ram_offset, Executable},
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
     },
     Result,
 };

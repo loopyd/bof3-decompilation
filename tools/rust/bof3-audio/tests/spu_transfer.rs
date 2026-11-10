@@ -1,6 +1,6 @@
 use bof3_audio::machine::{
     bus::{Bus, Width},
-    executable::Executable,
+    image::executable::Executable,
     interconnect::Interconnect,
     spu_transfer::{Transfer, RAM_BYTES},
 };
@@ -240,7 +240,7 @@ fn unstable_read_bus_configuration_and_unsupported_port_accesses_fail() {
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE"]
 fn original_dispatcher_uploads_and_downloads_rounded_blocks_without_code_substitution() {
-    use bof3_audio::machine::{cpu::Cpu, profile::Profile};
+    use bof3_audio::machine::{cpu::Cpu, image::profile::Profile};
     let exe = Executable::from_bytes(
         std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").expect("set BOF3_AUDIO_EXE")).unwrap(),
     )

@@ -4,8 +4,8 @@ use crate::{
     driver::closure,
     machine::{
         cpu::{Cpu, Step},
-        executable::{ram_offset, Executable},
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
     },
     Result,
 };

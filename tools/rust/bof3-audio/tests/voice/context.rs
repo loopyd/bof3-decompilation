@@ -2,8 +2,8 @@
 //! These deliberately isolate calls; they are not a game boot or PCM reference.
 use bof3_audio::{
     digest::sha256_hex, machine::bus::Bus, machine::bus::Ram, machine::bus::Width,
-    machine::cpu::Cpu, machine::executable::Executable, machine::profile::Profile,
-    machine::profile::US_PITCH_SHA256, soundfont::Zone, voice::tuning::LookupRegion,
+    machine::cpu::Cpu, machine::image::executable::Executable, machine::image::profile::Profile,
+    machine::image::profile::US_PITCH_SHA256, soundfont::Zone, voice::tuning::LookupRegion,
 };
 
 fn input() -> (Executable, Profile) {

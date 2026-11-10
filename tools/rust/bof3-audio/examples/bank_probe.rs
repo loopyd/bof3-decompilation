@@ -5,11 +5,11 @@ use bof3_audio::{
     catalog::loader,
     digest::sha256_hex,
     machine::bus::{Bus, Width},
-    machine::executable::{ram_offset, Executable},
     machine::execution::Execution,
+    machine::image::executable::{ram_offset, Executable},
+    machine::image::profile::Profile,
     machine::kernel::Kernel,
     machine::output_clock,
-    machine::profile::Profile,
     sequence::SequenceSet,
     Result,
 };
@@ -67,7 +67,7 @@ fn prepare_kernel(
 }
 
 fn copy(execution: &mut Execution, address: u32, data: &[u8]) -> Result<()> {
-    bof3_audio::machine::executable::ram_offset(address, data.len())?;
+    bof3_audio::machine::image::executable::ram_offset(address, data.len())?;
     for (i, &value) in data.iter().enumerate() {
         execution
             .bus

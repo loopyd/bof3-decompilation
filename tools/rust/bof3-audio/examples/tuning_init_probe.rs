@@ -2,7 +2,7 @@
 //! This does not establish stable scheduling contexts or independent PCM fidelity.
 use bof3_audio::{
     catalog::model::AssetData, catalog::model::Catalog, digest::sha256_hex, machine::bus::Bus,
-    machine::bus::Width, machine::executable::Executable, machine::firmware::Image,
+    machine::bus::Width, machine::image::executable::Executable, machine::image::firmware::Image,
     machine::output_clock, voice::tuning::KeyTuning,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -48,7 +48,7 @@ fn main() -> bof3_audio::Result<()> {
         let mut observer =
             |e: &bof3_audio::machine::execution::Execution| -> bof3_audio::Result<()> {
                 let pc = e.cpu.pc();
-                let code = match bof3_audio::machine::executable::ram_offset(pc, 4) {
+                let code = match bof3_audio::machine::image::executable::ram_offset(pc, 4) {
                     Ok(at) => &e.bus.ram().bytes()[at..at + 4],
                     Err(_) => {
                         let address = pc & 0x1fff_ffff;
@@ -96,7 +96,7 @@ fn main() -> bof3_audio::Result<()> {
     for address in [profile.pitch_table, profile.spu_pitch_table] {
         let offset = (address & 0x1fffffff) as usize;
         let hash = sha256_hex(&execution.bus.ram().bytes()[offset..offset + 386]);
-        if hash != bof3_audio::machine::profile::US_PITCH_SHA256 {
+        if hash != bof3_audio::machine::image::profile::US_PITCH_SHA256 {
             return Err("initialized pitch table changed".into());
         }
         table_hashes.push(serde_json::json!({"address":address,"sha256":hash}));
@@ -143,14 +143,14 @@ fn main() -> bof3_audio::Result<()> {
             100,
             &mut |e| {
                 let ram = e.bus.ram().bytes();
-                let pc = bof3_audio::machine::executable::ram_offset(e.cpu.pc(), 4)?;
+                let pc = bof3_audio::machine::image::executable::ram_offset(e.cpu.pc(), 4)?;
                 let opcode = u32::from_le_bytes(ram[pc..pc + 4].try_into().unwrap());
                 if opcode >> 26 == 0x25 {
                     let address = e
                         .cpu
                         .register(((opcode >> 21) & 31) as usize)
                         .wrapping_add((opcode as i16 as i32) as u32);
-                    let at = bof3_audio::machine::executable::ram_offset(address, 2)?;
+                    let at = bof3_audio::machine::image::executable::ram_offset(address, 2)?;
                     reads.push((
                         address,
                         u16::from_le_bytes(ram[at..at + 2].try_into().unwrap()),

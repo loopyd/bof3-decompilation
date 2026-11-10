@@ -2,8 +2,8 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
     cpu::Cpu,
-    executable::Executable,
-    profile::Profile,
+    image::executable::Executable,
+    image::profile::Profile,
 };
 
 #[test]

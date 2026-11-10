@@ -2,8 +2,8 @@
 use bof3_audio::machine::{
     bus::{Bus, BusError, Ram, Width},
     cpu::Cpu,
-    executable::{ram_offset, Executable},
-    profile::Profile,
+    image::executable::{ram_offset, Executable},
+    image::profile::Profile,
 };
 
 const ENTRY: u32 = 0x80174700;

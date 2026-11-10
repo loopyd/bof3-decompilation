@@ -229,7 +229,7 @@ fn room_impulses_and_disabled_tail_match_native_integer_reference() {
 #[test]
 #[ignore = "requires exact US BOF3_AUDIO_EXE; preset identity, not runtime/audio acceptance"]
 fn original_us_room_preset_matches_published_register_values() {
-    use bof3_audio::machine::{executable::Executable, profile::Profile};
+    use bof3_audio::machine::{image::executable::Executable, image::profile::Profile};
     let bytes = std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap();
     Profile::identify(&Executable::from_bytes(bytes.clone()).unwrap()).unwrap();
     let expected: Vec<u8> = ROOM.into_iter().flat_map(u16::to_le_bytes).collect();

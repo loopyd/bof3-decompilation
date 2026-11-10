@@ -2,9 +2,9 @@
 use bof3_audio::{
     bank::Bank,
     machine::{
-        executable::{ram_offset, Executable},
         execution::Execution,
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
         output_clock,
     },
     Result,

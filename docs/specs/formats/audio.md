@@ -2035,7 +2035,7 @@ independent audio-fidelity oracle.
 512 KiB sound RAM. Manual data-port reads and writes take effect immediately in
 every SPUCNT transfer mode. Each halfword advances the transfer address, wrapping
 within sound RAM. TSA reads expose that advancing address in eight-byte units.
-The [elapsed clock](../../../tools/rust/bof3-audio/src/machine/clock.rs) counts
+The [elapsed clock](../../../tools/rust/bof3-audio/src/machine/cpu/clock.rs) counts
 supplied CPU cycles without servicing transfers.
 
 DMA4 accepts exact active CHCR values `0x01000200` for SPU-to-RAM and `0x01000201`
@@ -4063,7 +4063,7 @@ its first call reaches the BIOS B0/0x4C memory-card routine. The map is unchange
 The Rust bootstrap probe executes original game/libsnd instructions and modeled
 kernel services; it currently stops at unsupported BIOS CD-ROM removal `A0:72`
 after 4,550 integer instructions. It does not skip this service or claim playback.
-See the [Rust profile](../../../tools/rust/bof3-audio/src/machine/profile.rs) and
+See the [Rust profile](../../../tools/rust/bof3-audio/src/machine/image/profile.rs) and
 [runtime checks](../../../tools/rust/bof3-audio/tests/runtime.rs) for this bounded
 probe. Independent sound-state, timing and PCM acceptance, complete driver closure
 and standalone initialization remain open.
@@ -4111,8 +4111,8 @@ bit-14 mute timing and independent trace/audio acceptance remain required.
 
 ### Rust system control and critical sections
 
-[COP0 state](../../../tools/rust/bof3-audio/src/machine/cop0.rs) and the
-[CPU](../../../tools/rust/bof3-audio/src/machine/cpu.rs) now implement status/cause
+[COP0 state](../../../tools/rust/bof3-audio/src/machine/cpu/cop0.rs) and the
+[CPU](../../../tools/rust/bof3-audio/src/machine/cpu/mod.rs) now implement status/cause
 transfers, delayed MFC0 loads and RFE. Explicit exception delivery records EPC,
 branch-delay/direction, target and bad-address information, and shifts the status
 stack. The scheduler can supply an external interrupt line at an instruction
@@ -5637,7 +5637,7 @@ boot-state evidence gap remain explicit.
 
 ### Rust BIOS ROM execution probe
 
-[Firmware storage](../../../tools/rust/bof3-audio/src/machine/firmware.rs) accepts
+[Firmware storage](../../../tools/rust/bof3-audio/src/machine/image/firmware.rs) accepts
 exactly 512 KiB, preserves every byte and records SHA-256. The interconnect can
 attach one immutable image at the physical/cached/uncached BIOS windows. Byte,
 halfword and word reads require alignment and bounds. Missing ROM, replacement,

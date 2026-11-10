@@ -173,7 +173,7 @@ fn opt_in_does_not_accept_unverified_lookup_or_nonzero_held_pcm() {
 fn corpus_stopped_note_approximation_preserves_all_constructible_bank_bytes() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-        machine::adsr::Model, machine::adsr::Registers, machine::executable::Executable,
+        machine::adsr::Model, machine::adsr::Registers, machine::image::executable::Executable,
         soundfont::envelope, soundfont::envelope::Probe, soundfont::gain,
     };
     use std::{
@@ -414,7 +414,7 @@ fn source_archive() -> emi_ex_v2::image::ArchiveImage {
 #[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn original_runtime_pitch_bend_activates_a_note_that_started_at_zero_step() {
     use bof3_audio::{
-        machine::{executable::Executable, firmware::Image},
+        machine::{image::executable::Executable, image::firmware::Image},
         psx_render::{Body, Options},
     };
     use std::fs;

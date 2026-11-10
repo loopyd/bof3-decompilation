@@ -134,7 +134,7 @@ fn cpu_isolation_is_confined_to_cpu_transactions_even_after_faults() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS pointing to verified US SCPH-5501 ROM"]
 fn original_bios_clears_dirty_cache_without_clearing_main_ram() {
-    use bof3_audio::{digest::sha256_hex, machine::firmware::Image};
+    use bof3_audio::{digest::sha256_hex, machine::image::firmware::Image};
     let rom = std::fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
     assert_eq!(
         sha256_hex(&rom),

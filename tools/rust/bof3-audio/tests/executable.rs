@@ -1,4 +1,4 @@
-use bof3_audio::machine::executable::{ram_offset, Executable, RAM_BYTES};
+use bof3_audio::machine::image::executable::{ram_offset, Executable, RAM_BYTES};
 
 fn image() -> Vec<u8> {
     let mut bytes = vec![0; 0x808];
@@ -69,7 +69,7 @@ fn malformed_images_are_rejected_before_loading() {
 #[test]
 fn valid_but_unknown_executable_is_not_a_supported_profile() {
     let exe = Executable::from_bytes(image()).unwrap();
-    let error = bof3_audio::machine::profile::Profile::identify(&exe)
+    let error = bof3_audio::machine::image::profile::Profile::identify(&exe)
         .unwrap_err()
         .to_string();
     assert!(error.contains("unsupported runtime profile"));

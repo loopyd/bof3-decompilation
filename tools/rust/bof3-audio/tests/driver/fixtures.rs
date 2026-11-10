@@ -1,4 +1,4 @@
-use bof3_audio::machine::{bank, executable::Executable, firmware::Image};
+use bof3_audio::machine::{bank, image::executable::Executable, image::firmware::Image};
 use emi_ex_v2::image::ArchiveImage;
 use std::{fs, path::PathBuf};
 

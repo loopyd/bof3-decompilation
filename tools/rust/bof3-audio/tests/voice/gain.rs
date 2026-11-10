@@ -51,8 +51,8 @@ mod original {
     use bof3_audio::machine::{
         bus::{Bus, BusError, Ram, Width},
         cpu::Cpu,
-        executable::Executable,
-        profile::Profile,
+        image::executable::Executable,
+        image::profile::Profile,
     };
 
     const HEADER: u32 = 0x8001_0000;

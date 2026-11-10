@@ -2,7 +2,7 @@
 //! Native-reference arithmetic retains this schedule; it does not select native
 //! worker batching, host-queue pacing or CPU stalls. Original-ROM execution
 //! retains its counter owner and requires an explicit functional sample phase.
-use super::{clock, interconnect::Interconnect};
+use super::{cpu::clock, interconnect::Interconnect};
 use crate::Result;
 use serde::Serialize;
 

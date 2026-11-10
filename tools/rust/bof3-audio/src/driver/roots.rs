@@ -1,7 +1,8 @@
 //! Supported-US root candidates and bounded dispatch-table snapshot evidence.
 use super::closure::{location, Location, Root};
 use crate::{
-    machine::executable::Executable, machine::profile::Profile, machine::reference, xa::cue, Result,
+    machine::image::executable::Executable, machine::image::profile::Profile, machine::reference,
+    xa::cue, Result,
 };
 use serde::Serialize;
 #[derive(Debug, Serialize)]

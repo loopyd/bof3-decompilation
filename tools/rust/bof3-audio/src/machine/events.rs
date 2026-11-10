@@ -2,7 +2,7 @@
 //! https://psx-spx.consoledev.net/kernelbios/#bios-event-functions
 use super::{
     bus::{Bus, Width},
-    executable::ram_offset,
+    image::executable::ram_offset,
 };
 use crate::Result;
 

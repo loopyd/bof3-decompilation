@@ -1,5 +1,5 @@
 //! Read-only observations at explicitly bound sequence loop/end instructions.
-use super::{executable::ram_offset, execution::Execution};
+use super::{execution::Execution, image::executable::ram_offset};
 use crate::Result;
 use serde::Serialize;
 

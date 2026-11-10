@@ -15,7 +15,7 @@ Rust execution observations do not establish acceptance of the current fork.
 | [OpenBIOS CD driver](../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/cdrom.c) | `_96_remove` comparison: critical section, five event closures, handler removal | Replacement BIOS behavior is not original Sony BIOS equivalence. |
 
 The native interpreter stores the full MTC0 status value and replaces cause with
-`value & ~0xFC00`. The [Rust COP0 model](../../tools/rust/bof3-audio/src/machine/cop0.rs)
+`value & ~0xFC00`. The [Rust COP0 model](../../tools/rust/bof3-audio/src/machine/cpu/cop0.rs)
 retains status mask `0xF27FFF3F` and updates only cause bits `0x300`. These rules
 remain distinct; native comparison cannot silently replace the Rust policy or
 close its hardware evidence gate.
@@ -236,7 +236,7 @@ and the [PCSX-Redux Agentic register array](../../third_party/pcsx-redux-agentic
 `0x800543B4` and reads key-on state after configuring voices; the previous
 write-only model rejected that valid access.
 
-[The elapsed clock](../../tools/rust/bof3-audio/src/machine/clock.rs) counts
+[The elapsed clock](../../tools/rust/bof3-audio/src/machine/cpu/clock.rs) counts
 supplied cycles without advancing devices. This probe adds two base ticks per
 executed instruction or entered syscall. Manual SPU accesses take effect
 immediately. DMA payload copying occurs during its start-register write.

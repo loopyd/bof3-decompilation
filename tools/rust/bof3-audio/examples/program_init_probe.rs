@@ -1,9 +1,9 @@
 //! Original SEP-open channel programs and subsequent note-on arguments.
 use bof3_audio::{
     machine::{
-        executable::{ram_offset, Executable},
         execution::Execution,
-        firmware::Image,
+        image::executable::{ram_offset, Executable},
+        image::firmware::Image,
         output_clock,
     },
     Result,

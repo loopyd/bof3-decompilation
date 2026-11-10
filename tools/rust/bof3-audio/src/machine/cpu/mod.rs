@@ -4,8 +4,11 @@
 //!
 //! ISA evidence: https://psx-spx.consoledev.net/cpuspecifications/
 
+pub mod clock;
+pub mod cop0;
+
 use super::bus::{Bus, BusError, Width};
-use super::cop0::Cop0;
+use cop0::Cop0;
 use std::fmt;
 
 #[derive(Clone, Debug, PartialEq, Eq)]

@@ -4,10 +4,10 @@
 use super::{
     bus::Ram,
     cpu::{Cpu, FaultKind},
-    executable::Executable,
-    firmware::{Image, US_SHA256},
+    image::executable::Executable,
+    image::firmware::{Image, US_SHA256},
+    image::profile::Profile,
     interconnect::Interconnect,
-    profile::Profile,
 };
 use crate::{digest::sha256_hex, Result};
 use serde::Serialize;

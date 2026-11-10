@@ -1,6 +1,6 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
-    clock::Clock,
+    cpu::clock::Clock,
     interconnect::Interconnect,
 };
 

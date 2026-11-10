@@ -1,7 +1,8 @@
 //! Explicit original EXE/BIOS development execution. Production callers use driver::Image.
 use super::{
-    adsr, bank, boot, driver::Audio, executable::Executable, execution::Execution, firmware::Image,
-    profile::Profile, spu_reverb, spu_sample, spu_voice_ports::DisableModel,
+    adsr, bank, boot, driver::Audio, execution::Execution, image::executable::Executable,
+    image::firmware::Image, image::profile::Profile, spu_reverb, spu_sample,
+    spu_voice_ports::DisableModel,
 };
 pub mod mapping;
 pub mod tuning;

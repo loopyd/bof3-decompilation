@@ -4,10 +4,10 @@ use bof3_audio::{
     machine::{
         adsr,
         bus::Ram,
-        clock,
+        cpu::clock,
         cpu::{Cpu, FaultKind},
-        executable::RAM_BYTES,
-        firmware::{Image, ROM_BYTES},
+        image::executable::RAM_BYTES,
+        image::firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
         spu_reverb, spu_sample,
         spu_voice_ports::DisableModel,

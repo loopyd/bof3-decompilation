@@ -1,7 +1,7 @@
 //! Width-aware memory transactions. MMIO implementations must see the full store
 //! register and byte-enable mask; splitting a word into four writes is incorrect.
 
-use super::executable::{ram_offset, Executable, RAM_BYTES};
+use super::image::executable::{ram_offset, Executable, RAM_BYTES};
 use std::fmt;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

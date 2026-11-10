@@ -3,8 +3,8 @@
 use super::{
     bank::Prepared,
     bus::{Bus, Width},
-    executable::ram_offset,
     execution::{Call, Execution},
+    image::executable::ram_offset,
 };
 use crate::{catalog::loader, digest::sha256_hex, Result};
 use emi_ex_v2::image::ArchiveImage;
