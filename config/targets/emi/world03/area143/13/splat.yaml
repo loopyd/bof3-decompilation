@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F3304
   - - 2436
-    - asm
-    - func_801F3584
+    - c
+    - draw32TexturedRingStripsWorld03Area14313_801F3584
+    - '@source: src/bof3/world/draw32TexturedRingStripsWorld03Area14313_801F3584.c'
+    - '@behavior: Projects and submits 32 textured strips between two caller-sized rings using scratchpad vertices and the selected texture pair.'
   - - 3464
     - c
     - selectStatus525354AndMode6World03Area14313_801F3988

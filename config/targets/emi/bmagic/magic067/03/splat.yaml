@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF44C
   - - 2292
-    - asm
-    - func_801EF4F4
+    - c
+    - advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4
+    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4.c'
+    - '@behavior: Adds one plus work byte 9 shifted right by six to byte B, decrements byte A when bit 0 of 0x80143E6C is set, subtracts two from byte 9, and advances byte 2 when the stored byte is 0x60.'
   - - 2460
     - asm
     - func_801EF59C

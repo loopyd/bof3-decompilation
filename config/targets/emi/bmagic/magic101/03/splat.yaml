@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EEFCC
   - - 1148
-    - asm
-    - func_801EF07C
+    - c
+    - drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C
+    - '@source: src/bof3/bmagic/drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C.c'
+    - '@behavior: Draw eight translucent Gouraud fan triangles with a phase-pulsed radius and six times work byte A as centre tint.'
   - - 1808
     - c
     - dispatchStateByte1TablefcbcBmagicMagic10103_801EF310

@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EF024
   - - 1384
-    - asm
-    - func_801EF168
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic08603_801EF168
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic08603_801EF168.c'
+    - '@behavior: When scratchpad work byte B is FF, forward the shared battle byte, set mask 0x4 in the shared battle halfword and invoke the shared helper.'
   - - 1480
     - asm
     - func_801EF1C8

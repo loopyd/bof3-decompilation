@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F03E0
   - - 7812
-    - asm
-    - func_801F0A84
+    - c
+    - drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairAtRadiusArgumentWithGreyCentreBmagicMagic08203_801F0A84
+    # @source 0x801F0A84
+    # @behavior Draw eight translucent Gouraud triangles at the radius argument around the work screen pair.
   - - 8348
     - textbin
     - D_801F0C9C

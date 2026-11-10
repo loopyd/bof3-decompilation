@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801EF0E0
   - - 1324
-    - asm
-    - func_801EF12C
+    - c
+    - setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C
+    - '@source: src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C.c'
+    - '@behavior: Computes helper 0x8017A138 of record-minus-work words 0x38 and 0x34 using record pointer 0x8014638C; compares signed work word 0xC divided by 64 with the masked helper heading divided by 64, then writes 15 to byte 0xA and reloads the pointer cell to increment byte 2 on equality. Takes no arguments and returns nothing.'
   - - 1484
     - asm
     - func_801EF1CC

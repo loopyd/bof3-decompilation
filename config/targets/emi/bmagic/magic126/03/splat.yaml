@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801EFAF4
   - - 3956
-    - asm
-    - func_801EFB74
+    - c
+    - decrementWorkByte9ThenInvokeHelperCopyRecordTripletClearByteBRearmByte9ClearByteAAndAdvanceWorkByte2BmagicMagic12603_801EFB74
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperCopyRecordTripletClearByteBRearmByte9ClearByteAAndAdvanceWorkByte2BmagicMagic12603_801EFB74.c'
+    - '@behavior: Decrements work byte 9; on zero invokes helper at 0x100, copies record triplet, clears B, rearms 9, clears A and advances byte 2.'
   - - 4136
     - c
     - incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28

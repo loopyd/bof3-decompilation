@@ -50,9 +50,11 @@ segments:
   - - 1112
     - asm
     - func_801EF058
+  # @source 0x801EF2C8
+  # @behavior Select record by work byte 4; count down byte 9, submit effect at zero and advance byte 2.
   - - 1736
-    - asm
-    - func_801EF2C8
+    - c
+    - decrementWorkByte9ThenSubmitSelectedRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte2BmagicMagic07403_801EF2C8
   - - 1984
     - asm
     - func_801EF3C0
