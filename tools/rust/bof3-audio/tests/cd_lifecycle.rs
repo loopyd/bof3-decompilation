@@ -1,11 +1,11 @@
 use bof3_audio::{
     machine::{
         bus::{Bus, Ram, Width},
-        cd_audio::Model as Resampling,
-        cd_drive::{Activity, AppliedCommand, Drive},
-        cd_host::Command,
-        cd_position::CdPosition,
-        cd_queue::{Admission, Model, Queue},
+        cd::audio::Model as Resampling,
+        cd::drive::{Activity, AppliedCommand, Drive},
+        cd::host::Command,
+        cd::position::CdPosition,
+        cd::queue::{Admission, Model, Queue},
         interconnect::Interconnect,
     },
     xa::{Arithmetic, Histories, Stream},
@@ -18,8 +18,8 @@ fn stream(channel: u8, coding: u8) -> Stream {
         coding,
     }
 }
-fn volume() -> bof3_audio::machine::cd_audio::Volume {
-    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+fn volume() -> bof3_audio::machine::cd::audio::Volume {
+    bof3_audio::machine::cd::audio::Volume::new([128, 0, 128, 0]).unwrap()
 }
 
 fn queue(channel: u8, coding: u8) -> Queue {
@@ -46,7 +46,7 @@ fn context() -> (Interconnect, Drive) {
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_cd_host([128, 0, 128, 0]).unwrap();
     bus.configure_cd_audio(queue(0, 0)).unwrap();
-    bus.configure_cd_data(bof3_audio::machine::cd_data::Model::EmulatorReference)
+    bus.configure_cd_data(bof3_audio::machine::cd::data::Model::EmulatorReference)
         .unwrap();
     let drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0xc8, [1, 0]).unwrap();
     (bus, drive)

@@ -1,9 +1,9 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        spu_pitch::Pitch,
-        spu_sample::{interpolate, Model, Player, Signal},
-        spu_transfer::RAM_BYTES,
+        spu::pitch::Pitch,
+        spu::sample::{interpolate, Model, Player, Signal},
+        spu::transfer::RAM_BYTES,
     },
 };
 

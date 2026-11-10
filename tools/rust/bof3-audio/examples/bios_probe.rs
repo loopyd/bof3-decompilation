@@ -2,15 +2,16 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        adsr,
         bus::Ram,
         cpu::clock,
         cpu::{Cpu, FaultKind},
         image::executable::RAM_BYTES,
         image::firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
-        spu_reverb, spu_sample,
-        spu_voice_ports::DisableModel,
+        spu::reverb,
+        spu::sample,
+        spu::voice::envelope,
+        spu::voice::ports::DisableModel,
     },
     Result,
 };
@@ -37,10 +38,10 @@ struct Context {
 #[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct SpuModels {
-    sample: spu_sample::Model,
-    envelope: adsr::Model,
+    sample: sample::Model,
+    envelope: envelope::Model,
     disable: Option<DisableModel>,
-    reverb: Option<spu_reverb::Model>,
+    reverb: Option<reverb::Model>,
 }
 
 #[derive(Serialize)]

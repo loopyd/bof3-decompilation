@@ -1,7 +1,7 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
-    cd_data::Model,
-    cd_host::Host,
+    cd::data::Model,
+    cd::host::Host,
     interconnect::Interconnect,
 };
 

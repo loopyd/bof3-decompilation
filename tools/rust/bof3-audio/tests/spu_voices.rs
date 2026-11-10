@@ -1,5 +1,6 @@
 use bof3_audio::machine::{
-    adsr::Model as EnvelopeModel, spu_sample::Model, spu_transfer::RAM_BYTES, spu_voices::Voices,
+    spu::sample::Model, spu::transfer::RAM_BYTES, spu::voice::envelope::Model as EnvelopeModel,
+    spu::voice::Voices,
 };
 
 fn fixture() -> (Voices, Vec<u8>) {

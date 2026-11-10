@@ -1,8 +1,8 @@
 //! Original XA guest calls with explicitly selected kernel/drive inputs.
 use bof3_audio::machine::{boot, image::firmware::Image};
 use bof3_audio::{
-    machine::bus::Bus, machine::bus::BusError, machine::bus::Width, machine::cd_drive::Activity,
-    machine::cd_drive::Drive, machine::cd_drive::Response, machine::cd_position::CdPosition,
+    machine::bus::Bus, machine::bus::BusError, machine::bus::Width, machine::cd::drive::Activity,
+    machine::cd::drive::Drive, machine::cd::drive::Response, machine::cd::position::CdPosition,
     machine::cpu::Cpu, machine::cpu::FaultKind, machine::exception_calls::Environment,
     machine::exception_calls::MissingHook, machine::image::executable::Executable,
     machine::image::profile::Profile, machine::interconnect::Interconnect, machine::kernel::Kernel,
@@ -393,13 +393,13 @@ pub(crate) fn reading_fixture_with_irq(
     }
     if dispatch == Dispatch::Initialized {
         bus.inner
-            .configure_cd_host_reset(bof3_audio::machine::cd_host::Model::EmulatorReference)
+            .configure_cd_host_reset(bof3_audio::machine::cd::host::Model::EmulatorReference)
             .unwrap();
     } else {
         bus.inner.configure_cd_host([128, 0, 128, 0]).unwrap();
     }
     bus.inner
-        .configure_cd_data(bof3_audio::machine::cd_data::Model::EmulatorReference)
+        .configure_cd_data(bof3_audio::machine::cd::data::Model::EmulatorReference)
         .unwrap();
     if dispatch != Dispatch::Initialized {
         bus.write(0x1f801800, Width::Byte, 1).unwrap();

@@ -1,7 +1,7 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        adsr, boot,
+        boot,
         bus::{Bus, Ram, Width},
         cpu::Cpu,
         execution::Execution,
@@ -9,8 +9,10 @@ use bof3_audio::{
         image::firmware::{Image, ROM_BYTES},
         image::profile::Profile,
         interconnect::Interconnect,
-        spu_reverb, spu_sample,
-        spu_voice_ports::DisableModel,
+        spu::reverb,
+        spu::sample,
+        spu::voice::envelope,
+        spu::voice::ports::DisableModel,
         thread_context,
     },
 };
@@ -179,8 +181,8 @@ fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (Execution, 
     machine
         .bus
         .configure_spu_voices(
-            spu_sample::Model::EmulatorReference,
-            adsr::Model::EmulatorReference,
+            sample::Model::EmulatorReference,
+            envelope::Model::EmulatorReference,
         )
         .unwrap();
     machine
@@ -189,7 +191,7 @@ fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (Execution, 
         .unwrap();
     machine
         .bus
-        .configure_spu_reverb(spu_reverb::Model::EmulatorReference)
+        .configure_spu_reverb(reverb::Model::EmulatorReference)
         .unwrap();
     for _ in 0..100_000 {
         if machine.cpu.pc() == 0x80010000 {

@@ -6,9 +6,9 @@ use super::super::{
 use crate::{
     machine::{
         bus::Bus,
-        cd_drive::{Activity, AudioCompletion, Delivery, Drive, Response},
-        cd_media::{DataSector, Media},
-        cd_queue::{Admission, WaitOutcome},
+        cd::drive::{Activity, AudioCompletion, Delivery, Drive, Response},
+        cd::media::{DataSector, Media},
+        cd::queue::{Admission, WaitOutcome},
     },
     Result,
 };
@@ -229,7 +229,7 @@ impl Interconnect {
         if self
             .cd_host
             .as_ref()
-            .is_some_and(crate::machine::cd_host::Host::irq_line)
+            .is_some_and(crate::machine::cd::host::Host::irq_line)
         {
             self.interrupts
                 .set_line(crate::machine::interrupts::Source::Cdrom, false);
@@ -459,7 +459,7 @@ impl Interconnect {
             None
         };
         let (delivery, completion) = controller.drive.begin_play_sector(
-            crate::machine::cd_position::CdPosition::from_lba(controller.drive.next_lba())?,
+            crate::machine::cd::position::CdPosition::from_lba(controller.drive.next_lba())?,
             raw.as_ref().map(|bytes| &bytes[..]),
             cycle as u32,
         )?;

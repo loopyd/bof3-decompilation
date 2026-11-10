@@ -5,7 +5,7 @@
 pub(crate) mod snapshot;
 
 use crate::{
-    machine::adsr::{Adsr, Model, Phase, Registers},
+    machine::spu::voice::envelope::{Adsr, Model, Phase, Registers},
     soundfont::Envelope,
     Result,
 };

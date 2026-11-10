@@ -1,8 +1,8 @@
 use bof3_audio::{
-    catalog::loader, digest::sha256_hex, machine::adsr, machine::boot, machine::bus::Bus,
-    machine::bus::Width, machine::execution::Execution, machine::image::executable::Executable,
-    machine::image::firmware::Image, machine::spu_reverb, machine::spu_sample,
-    machine::spu_voice_ports::DisableModel,
+    catalog::loader, digest::sha256_hex, machine::boot, machine::bus::Bus, machine::bus::Width,
+    machine::execution::Execution, machine::image::executable::Executable,
+    machine::image::firmware::Image, machine::spu::reverb, machine::spu::sample,
+    machine::spu::voice::envelope, machine::spu::voice::ports::DisableModel,
 };
 use emi_ex_v2::image::ArchiveImage;
 
@@ -38,14 +38,14 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
     execution
         .bus
         .configure_spu_voices(
-            spu_sample::Model::EmulatorReference,
-            adsr::Model::EmulatorReference,
+            sample::Model::EmulatorReference,
+            envelope::Model::EmulatorReference,
         )
         .unwrap();
     execution.bus.configure_spu_key_on_delay(6).unwrap();
     execution
         .bus
-        .configure_spu_native_output(bof3_audio::machine::spu_mixer::NativeSettings {
+        .configure_spu_native_output(bof3_audio::machine::spu::mixer::NativeSettings {
             volume: 3,
             mono: false,
             muted: false,
@@ -57,7 +57,7 @@ fn original_bank_transfer_preserves_body_padding_and_uses_bios_interrupts() {
         .unwrap();
     execution
         .bus
-        .configure_spu_reverb(spu_reverb::Model::EmulatorReference)
+        .configure_spu_reverb(reverb::Model::EmulatorReference)
         .unwrap();
     execution.call(0x8015cd00, [0; 4], 1_000_000).unwrap();
     execution

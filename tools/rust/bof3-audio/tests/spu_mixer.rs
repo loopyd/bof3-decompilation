@@ -1,13 +1,13 @@
 use bof3_audio::machine::{
-    spu_mixer::{Inputs, Mixer, Sends},
-    spu_transfer::Transfer,
-    spu_voice_ports::Frame,
-    spu_voices::Output,
+    spu::mixer::{Inputs, Mixer, Sends},
+    spu::transfer::Transfer,
+    spu::voice::ports::Frame,
+    spu::voice::Output,
 };
 
 fn voices(stereo: [i16; 2], mask: u32) -> Frame {
     Frame {
-        sample_model: bof3_audio::machine::spu_sample::Model::Published,
+        sample_model: bof3_audio::machine::spu::sample::Model::Published,
         voices: [Output {
             stereo: stereo.map(i32::from),
             ..Output::default()

@@ -3,9 +3,9 @@ pub(super) mod clock;
 use super::{error, Interconnect};
 use crate::machine::{
     bus::{Bus, BusError, Width},
-    cd_data,
-    cd_drive::{Activity, AppliedCommand, Drive},
-    cd_host,
+    cd::data,
+    cd::drive::{Activity, AppliedCommand, Drive},
+    cd::host,
     interrupts::Source,
 };
 
@@ -14,7 +14,7 @@ impl Interconnect {
     /// and command mute are coupled through apply_cd_drive_command.
     pub fn configure_cd_audio(
         &mut self,
-        queue: crate::machine::cd_queue::Queue,
+        queue: crate::machine::cd::queue::Queue,
     ) -> crate::Result<()> {
         if self.cd_audio.is_some() {
             return Err("CD audio already configured".into());
@@ -23,7 +23,7 @@ impl Interconnect {
         self.cd_audio = Some(queue);
         Ok(())
     }
-    pub fn cd_audio(&self) -> crate::Result<&crate::machine::cd_queue::Queue> {
+    pub fn cd_audio(&self) -> crate::Result<&crate::machine::cd::queue::Queue> {
         self.cd_audio
             .as_ref()
             .ok_or_else(|| "CD audio is not configured".into())
@@ -41,7 +41,7 @@ impl Interconnect {
         &mut self,
         sector: &[u8],
         cycle: u64,
-    ) -> crate::Result<crate::machine::cd_queue::Admission> {
+    ) -> crate::Result<crate::machine::cd::queue::Admission> {
         let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
         self.cd_audio
             .as_mut()
@@ -53,7 +53,7 @@ impl Interconnect {
         &mut self,
         sector: &[u8],
         cycle: u64,
-    ) -> crate::Result<crate::machine::cd_queue::Admission> {
+    ) -> crate::Result<crate::machine::cd::queue::Admission> {
         let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
         self.cd_audio
             .as_mut()
@@ -63,8 +63,8 @@ impl Interconnect {
     /// Complete a pending XA/CDDA submission after supplied output/wait boundaries.
     pub fn finish_cd_audio_submission(
         &mut self,
-        outcome: crate::machine::cd_queue::WaitOutcome,
-    ) -> crate::Result<crate::machine::cd_queue::Admission> {
+        outcome: crate::machine::cd::queue::WaitOutcome,
+    ) -> crate::Result<crate::machine::cd::queue::Admission> {
         if self.device_progress() == super::DeviceProgress::WaitingForCdAudio {
             return Err("resume the suspended CD callback through resume_cd_audio".into());
         }
@@ -87,14 +87,14 @@ impl Interconnect {
             .as_ref()
             .ok_or("configure SPU voices before output")?
             .sample_model();
-        let capture = if sample == crate::machine::spu_sample::Model::EmulatorReference {
+        let capture = if sample == crate::machine::spu::sample::Model::EmulatorReference {
             self.cd_audio.as_ref().unwrap().preview_capture(cycle)
         } else {
             Some(cd)
         };
         let output =
             self.step_spu_output_with_capture(super::SpuInputs { cd, external }, capture)?;
-        if sample == crate::machine::spu_sample::Model::EmulatorReference {
+        if sample == crate::machine::spu::sample::Model::EmulatorReference {
             self.cd_audio.as_mut().unwrap().consume_capture();
         }
         self.cd_audio.as_mut().unwrap().consume();
@@ -117,7 +117,7 @@ impl Interconnect {
     pub fn apply_cd_drive_command(
         &mut self,
         drive: &mut Drive,
-        command: &cd_host::Command,
+        command: &host::Command,
         cycle: u32,
     ) -> crate::Result<AppliedCommand> {
         self.require_manual_cd()?;
@@ -170,27 +170,27 @@ impl Interconnect {
         if self.cd_host.is_some() {
             return Err("CD host already configured".into());
         }
-        self.cd_host = Some(cd_host::Host::new(volume)?);
+        self.cd_host = Some(host::Host::new(volume)?);
         Ok(())
     }
-    pub fn configure_cd_host_reset(&mut self, model: cd_host::Model) -> crate::Result<()> {
+    pub fn configure_cd_host_reset(&mut self, model: host::Model) -> crate::Result<()> {
         if self.cd_host.is_some() {
             return Err("CD host already configured".into());
         }
-        self.cd_host = Some(cd_host::Host::from_reset(model)?);
+        self.cd_host = Some(host::Host::from_reset(model)?);
         Ok(())
     }
-    pub fn cd_host(&self) -> crate::Result<&cd_host::Host> {
+    pub fn cd_host(&self) -> crate::Result<&host::Host> {
         self.cd_host
             .as_ref()
             .ok_or_else(|| "CD host is not configured".into())
     }
-    fn cd_mut(&mut self) -> crate::Result<&mut cd_host::Host> {
+    fn cd_mut(&mut self) -> crate::Result<&mut host::Host> {
         self.cd_host
             .as_mut()
             .ok_or_else(|| "CD host is not configured".into())
     }
-    pub fn configure_cd_data(&mut self, model: cd_data::Model) -> crate::Result<()> {
+    pub fn configure_cd_data(&mut self, model: data::Model) -> crate::Result<()> {
         self.cd_mut()?.configure_data(model)
     }
     pub fn present_cd_data(&mut self, bytes: &[u8]) -> crate::Result<()> {
@@ -202,7 +202,7 @@ impl Interconnect {
         self.update_cd_irq();
         Ok(displaced)
     }
-    pub fn service_cd_fifo(&mut self) -> crate::Result<Option<cd_host::Command>> {
+    pub fn service_cd_fifo(&mut self) -> crate::Result<Option<host::Command>> {
         self.require_manual_cd()?;
         let command = self.cd_mut()?.service_fifo();
         self.update_cd_irq();
@@ -225,7 +225,7 @@ impl Interconnect {
         Ok(())
     }
     fn update_cd_irq(&mut self) {
-        let active = self.cd_host.as_ref().is_some_and(cd_host::Host::irq_line);
+        let active = self.cd_host.as_ref().is_some_and(host::Host::irq_line);
         self.interrupts.set_line(Source::Cdrom, active);
     }
 

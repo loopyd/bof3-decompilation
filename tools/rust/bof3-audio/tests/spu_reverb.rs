@@ -1,8 +1,8 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        spu_reverb::{Model, Reverb},
-        spu_transfer::RAM_BYTES,
+        spu::reverb::{Model, Reverb},
+        spu::transfer::RAM_BYTES,
     },
 };
 

@@ -1,6 +1,6 @@
 use bof3_audio::{
     digest::sha256_hex,
-    machine::{adsr::Model, spu_volume::Volume},
+    machine::{spu::voice::envelope::Model, spu::volume::Volume},
 };
 
 #[test]

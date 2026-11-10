@@ -1,6 +1,6 @@
 use bof3_audio::{
-    machine::adsr::Model, machine::adsr::Registers, soundfont::envelope,
-    soundfont::envelope::Parameters, soundfont::envelope::Probe,
+    machine::spu::voice::envelope::Model, machine::spu::voice::envelope::Registers,
+    soundfont::envelope, soundfont::envelope::Parameters, soundfont::envelope::Probe,
 };
 
 #[test]

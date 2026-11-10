@@ -1,21 +1,21 @@
 use bof3_audio::machine::{
-    adsr,
     bus::{Bus, Ram, Width},
     cpu::clock,
     interconnect::Interconnect,
     output_clock::{Clock, Model},
-    spu_sample,
+    spu::sample,
+    spu::voice::envelope,
 };
 
 fn fixture() -> (Interconnect, clock::Clock, Clock) {
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_spu_voices(
-        spu_sample::Model::EmulatorReference,
-        adsr::Model::EmulatorReference,
+        sample::Model::EmulatorReference,
+        envelope::Model::EmulatorReference,
     )
     .unwrap();
     bus.configure_spu_key_on_delay(0).unwrap();
-    bus.configure_spu_native_output(bof3_audio::machine::spu_mixer::NativeSettings {
+    bus.configure_spu_native_output(bof3_audio::machine::spu::mixer::NativeSettings {
         volume: 3,
         mono: false,
         muted: false,

@@ -1,7 +1,8 @@
 use bof3_audio::{
-    bank::Bank, machine::adsr::Model, machine::adsr::Registers, soundfont::bank::Gain,
-    soundfont::bank::Identity, soundfont::bank::Options, soundfont::bank::ToneContext,
-    soundfont::envelope, soundfont::envelope::Probe, voice::tuning::KeyTuning,
+    bank::Bank, machine::spu::voice::envelope::Model, machine::spu::voice::envelope::Registers,
+    soundfont::bank::Gain, soundfont::bank::Identity, soundfont::bank::Options,
+    soundfont::bank::ToneContext, soundfont::envelope, soundfont::envelope::Probe,
+    voice::tuning::KeyTuning,
 };
 
 pub fn fixture() -> (Vec<u8>, Vec<u8>) {

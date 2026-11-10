@@ -1,17 +1,9 @@
 //! PSX executable loading and (eventually) original-runtime execution.
 //! Parsing an executable does not establish a supported runtime profile.
 
-pub mod adsr;
 pub mod boot;
 pub mod bus;
-pub mod cd_audio;
-pub mod cd_data;
-pub mod cd_dma;
-pub mod cd_drive;
-pub mod cd_host;
-pub mod cd_media;
-pub mod cd_position;
-pub mod cd_queue;
+pub mod cd;
 mod console;
 pub mod cpu;
 pub mod dma;
@@ -21,7 +13,6 @@ pub mod events;
 pub mod exception_calls;
 pub mod exception_chains;
 pub mod execution;
-mod gaussian;
 pub mod gpu_status;
 pub mod image;
 pub mod interconnect;
@@ -32,20 +23,9 @@ pub mod music_progress;
 pub mod native_queue;
 pub mod output_clock;
 pub mod reference;
-pub mod spu_dma;
-pub mod spu_mixer;
-pub mod spu_noise;
-pub mod spu_pitch;
-pub mod spu_readback;
-pub mod spu_reverb;
-pub mod spu_sample;
-pub mod spu_transfer;
-pub mod spu_voice_ports;
-pub mod spu_voices;
-pub mod spu_volume;
+pub mod spu;
 pub mod thread_context;
 pub mod timers;
-mod xa_filter;
 
 pub mod bank;
 pub mod cues;

@@ -14,7 +14,7 @@ All 512 numeric coefficients agree between the published table and the fork's
 `gauss512` table. Encoded as
 little-endian signed 16-bit values, their SHA-256 is
 `3e221a5b25de34ca9ad1ea945ad90fbe8171c5e3f7c52af15b232f9c36fbd40d`.
-The [Rust ROM data](../../tools/rust/bof3-audio/src/machine/gaussian.rs) preserves
+The [Rust ROM data](../../tools/rust/bof3-audio/src/machine/spu/coefficients.rs) preserves
 those values literally. Replacing them with a mathematical Gaussian approximation
 would change the output.
 
@@ -29,7 +29,7 @@ Rust exposes two interpolation arithmetic policies:
   that value to a separate 16.16 step. Phase accumulation and block timing can
   differ. Zero-step behavior is described below.
 
-[The Rust reader](../../tools/rust/bof3-audio/src/machine/spu_sample.rs) requires an
+[The Rust reader](../../tools/rust/bof3-audio/src/machine/spu/sample.rs) requires an
 explicit arithmetic model. Its block snapshots and scheduled retriggers remain
 component policies. Neither model reproduces the full native reader or
 claims complete hardware behavior.
@@ -93,7 +93,7 @@ The existing [ADSR source differences](spu-envelopes.md) remain independently
 selectable. A future accepted PSX renderer must resolve these discrepancies from
 independent traces/audio, rather than silently choose whichever source passes.
 
-The [pitch owner](../../tools/rust/bof3-audio/src/machine/spu_pitch.rs) retains
+The [pitch owner](../../tools/rust/bof3-audio/src/machine/spu/pitch.rs) retains
 published signed pitch interpretation and low-16-bit wrapping before clamping.
 Native-reference pitch uses the clamped raw register and a supplied signed
 post-envelope source. Nonzero input scales raw pitch by `(32768 + source) / 32768`
@@ -163,7 +163,7 @@ The 39 coefficients sum to 32766. The twenty even-index coefficients sum to
 The [native reverb unit](../../third_party/pcsx-redux-agentic/src/spu/reverb.cc)
 supplies the current comparison for signed rounding, saturation, alternating
 left/right calculations and FIR phase. The
-[Rust reference model](../../tools/rust/bof3-audio/src/machine/spu_reverb.rs)
+[Rust reference model](../../tools/rust/bof3-audio/src/machine/spu/reverb.rs)
 keeps sends and interpolated returns wide, applies signed wet gain before
 interpolation, and preserves immediate RAM alias ordering. Signed offsets fold
 repeatedly inside the work area. The lower fold adds `0x3ffff-base`, while the

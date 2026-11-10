@@ -1,4 +1,4 @@
-use bof3_audio::machine::adsr::{Adsr, Model, Phase, Registers};
+use bof3_audio::machine::spu::voice::envelope::{Adsr, Model, Phase, Registers};
 
 fn start(adsr1: u16, adsr2: u16, model: Model) -> Adsr {
     let mut envelope = Adsr::new(Registers { adsr1, adsr2 }, model);

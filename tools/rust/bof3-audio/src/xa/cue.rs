@@ -4,7 +4,7 @@
 use crate::catalog::model::{Binding, CueMapping, XaCue, XaMap};
 use crate::{
     catalog::model::Asset, catalog::model::AssetData, catalog::model::Catalog, machine::bus::Bus,
-    machine::bus::Width, machine::cd_position::CdPosition, Result,
+    machine::bus::Width, machine::cd::position::CdPosition, Result,
 };
 use std::collections::{BTreeMap, BTreeSet};
 

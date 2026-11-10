@@ -6,14 +6,16 @@ use crate::{
     interchange::wave::Wave,
     machine::{
         bus::{Bus, Width},
-        cd_audio, cd_data,
-        cd_drive::{Drive, Toc, Track, TrackKind},
-        cd_media::Media,
-        cd_position::CdPosition,
-        cd_queue::{self, Queue},
+        cd::audio,
+        cd::data,
+        cd::drive::{Drive, Toc, Track, TrackKind},
+        cd::media::Media,
+        cd::position::CdPosition,
+        cd::queue::{self, Queue},
         driver,
         execution::{Call, Execution},
-        output_clock, spu_transfer,
+        output_clock,
+        spu::transfer,
     },
     psx_render::{self, Delivery, SAMPLE_RATE},
     xa::{self, Arithmetic, Histories, Stream},
@@ -253,16 +255,16 @@ pub fn render(
     };
     let started = image.start_cd(drive, Some(Media::new(media, vec![])?), &mut observe)?;
     let mut e = started.services.execution;
-    e.bus.configure_cd_data(cd_data::Model::EmulatorReference)?;
+    e.bus.configure_cd_data(data::Model::EmulatorReference)?;
     e.bus.configure_cd_audio(Queue::new(
         stream,
         Arithmetic::CombinedRounded,
         Histories::default(),
-        cd_audio::Model::EmulatorReference,
-        cd_queue::Model::EmulatorReference,
+        audio::Model::EmulatorReference,
+        queue::Model::EmulatorReference,
     )?)?;
     e.bus
-        .configure_spu_ram_control(spu_transfer::RamControlModel::EmulatorReference)?;
+        .configure_spu_ram_control(transfer::RamControlModel::EmulatorReference)?;
     e.enable_output(
         output_clock::Model::PcsxReduxNtsc,
         output_clock::Collection::Discard,

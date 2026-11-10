@@ -1,7 +1,7 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
-    cd_data::{Fifo, Model},
-    cd_dma::Channel,
+    cd::data::{Fifo, Model},
+    cd::dma::Channel,
     interconnect::Interconnect,
 };
 

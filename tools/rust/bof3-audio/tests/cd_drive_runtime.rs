@@ -4,10 +4,10 @@ use bof3_audio::{
     archive::disc::DiscImage,
     machine::{
         bus::{Bus, BusError, Width},
-        cd_audio::{Model, XaAudio},
-        cd_drive::{Delivery, Drive, Response},
-        cd_host::Command,
-        cd_position::CdPosition,
+        cd::audio::{Model, XaAudio},
+        cd::drive::{Delivery, Drive, Response},
+        cd::host::Command,
+        cd::position::CdPosition,
         cpu::Cpu,
         image::executable::Executable,
         image::profile::Profile,
@@ -86,7 +86,7 @@ fn context() -> (FixtureBus, DiscImage, u32) {
     let mut bus = FixtureBus(Interconnect::from_executable(&exe));
     bus.0.configure_cd_host([128, 0, 128, 0]).unwrap();
     bus.0
-        .configure_cd_data(bof3_audio::machine::cd_data::Model::EmulatorReference)
+        .configure_cd_data(bof3_audio::machine::cd::data::Model::EmulatorReference)
         .unwrap();
     // Explicit previous completion establishes the SDK's idle state through
     // original instructions; no SDK completion flag is patched.

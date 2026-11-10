@@ -2,11 +2,11 @@
 use super::Interconnect;
 use crate::{
     machine::{
-        adsr,
-        spu_mixer::Inputs,
-        spu_sample::Model,
-        spu_voice_ports::Frame,
-        spu_voices::{ModulationRole, NativeCapture, NativeChannel, Output, VOICES},
+        spu::mixer::Inputs,
+        spu::sample::Model,
+        spu::voice::envelope,
+        spu::voice::ports::Frame,
+        spu::voice::{ModulationRole, NativeCapture, NativeChannel, Output, VOICES},
     },
     Result,
 };
@@ -289,7 +289,7 @@ impl Interconnect {
             .ok_or("configure SPU voices before producer")?;
         voices.require_native_context()?;
         if voices.sample_model() != Model::EmulatorReference
-            || voices.envelope_model() != adsr::Model::EmulatorReference
+            || voices.envelope_model() != envelope::Model::EmulatorReference
         {
             return Err("native SPU producer requires native sample and envelope models".into());
         }

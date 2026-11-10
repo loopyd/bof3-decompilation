@@ -12,7 +12,7 @@ Hardware descriptions and the current native comparator:
 
 ## Arithmetic models and boundaries
 
-[The Rust ADSR component](../../tools/rust/bof3-audio/src/machine/adsr.rs)
+[The Rust ADSR component](../../tools/rust/bof3-audio/src/machine/spu/voice/envelope.rs)
 requires an explicit arithmetic model. `Published` retains its Q15 accumulator,
 strict `level > 0x6000` exponential-increase threshold and frozen-rate rules.
 It applies its minimum counter increment after exponential adjustment.
@@ -53,7 +53,7 @@ direction; exponential decrease computes its step independently of phase, but
 phase still selects the saturation range. Fixed-to-sweep writes require a
 hardware delay that the frame-driven Rust component does not establish.
 
-The [Rust sweep component](../../tools/rust/bof3-audio/src/machine/spu_volume.rs)
+The [Rust sweep component](../../tools/rust/bof3-audio/src/machine/spu/volume.rs)
 preserves current gain on sweep setup, resets its counter, stops at the relevant
 endpoint and clocks gains after applying them to output. Published current-main-volume
 writes change level without rearming a stopped sweep; current voice-volume writes

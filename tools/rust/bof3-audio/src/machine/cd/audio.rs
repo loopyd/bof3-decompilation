@@ -1,5 +1,5 @@
 //! CD-to-SPU sample processing at caller-selected boundaries; no drive scheduler.
-use super::xa_filter::ZIGZAG;
+use crate::machine::cd::filter::ZIGZAG;
 use crate::{
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
     Result,

@@ -1,7 +1,8 @@
 use bof3_audio::{
-    bank::Bank, machine::adsr::Model, machine::adsr::Registers, soundfont::bank as binding,
-    soundfont::bank::Gain, soundfont::bank::Identity, soundfont::bank::ToneContext,
-    soundfont::envelope, soundfont::envelope::Probe, voice::tuning::KeyTuning,
+    bank::Bank, machine::spu::voice::envelope::Model, machine::spu::voice::envelope::Registers,
+    soundfont::bank as binding, soundfont::bank::Gain, soundfont::bank::Identity,
+    soundfont::bank::ToneContext, soundfont::envelope, soundfont::envelope::Probe,
+    voice::tuning::KeyTuning,
 };
 
 #[path = "../support/corpus/assignment.rs"]

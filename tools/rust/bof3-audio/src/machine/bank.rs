@@ -71,10 +71,9 @@ pub fn prepare(
     let plan = plan(image, archive, options)?;
     let audio = image.audio()?;
     let mut started = image.start(&mut |e| observer(Stage::Initialization, e))?;
-    started
-        .execution
-        .bus
-        .configure_spu_ram_control(super::spu_transfer::RamControlModel::EmulatorReference)?;
+    started.execution.bus.configure_spu_ram_control(
+        crate::machine::spu::transfer::RamControlModel::EmulatorReference,
+    )?;
     started.execution.enable_output(
         super::output_clock::Model::PcsxReduxNtsc,
         super::output_clock::Collection::Discard,

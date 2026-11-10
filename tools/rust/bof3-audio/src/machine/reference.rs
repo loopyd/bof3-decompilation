@@ -1,8 +1,8 @@
 //! Explicit original EXE/BIOS development execution. Production callers use driver::Image.
 use super::{
-    adsr, bank, boot, driver::Audio, execution::Execution, image::executable::Executable,
-    image::firmware::Image, image::profile::Profile, spu_reverb, spu_sample,
-    spu_voice_ports::DisableModel,
+    bank, boot, driver::Audio, execution::Execution, image::executable::Executable,
+    image::firmware::Image, image::profile::Profile, spu::reverb, spu::sample,
+    spu::voice::envelope, spu::voice::ports::DisableModel,
 };
 pub mod mapping;
 pub mod tuning;
@@ -80,13 +80,13 @@ fn prepare_bank_output(
     let machine = boot::load_us(firmware, executable, 3_000_000)?;
     let mut execution = Execution::new(machine.cpu, machine.bus);
     execution.bus.configure_spu_voices(
-        spu_sample::Model::EmulatorReference,
-        adsr::Model::EmulatorReference,
+        sample::Model::EmulatorReference,
+        envelope::Model::EmulatorReference,
     )?;
     execution.bus.configure_spu_key_on_delay(6)?;
     execution
         .bus
-        .configure_spu_native_output(super::spu_mixer::NativeSettings {
+        .configure_spu_native_output(crate::machine::spu::mixer::NativeSettings {
             volume: 3,
             mono: false,
             muted: false,
@@ -96,11 +96,11 @@ fn prepare_bank_output(
         .configure_spu_disable(DisableModel::EmulatorReference)?;
     execution
         .bus
-        .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
+        .configure_spu_reverb(reverb::Model::EmulatorReference)?;
     if continuous_output {
-        execution
-            .bus
-            .configure_spu_ram_control(super::spu_transfer::RamControlModel::EmulatorReference)?;
+        execution.bus.configure_spu_ram_control(
+            crate::machine::spu::transfer::RamControlModel::EmulatorReference,
+        )?;
         execution.enable_output(
             super::output_clock::Model::PcsxReduxNtsc,
             super::output_clock::Collection::Discard,

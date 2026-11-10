@@ -477,7 +477,7 @@ to `exe/slus_004_22`; full executable offsets are `address - 0x80096800 + 0x800`
 | `0x80175ADC` | `0xDFADC` | Linked SDK logical-sector to BCD position conversion |
 | `0x80175BE0` | `0xDFBE0` | Linked SDK BCD position to logical-sector conversion |
 
-[CD position conversion](../../../tools/rust/bof3-audio/src/machine/cd_position.rs)
+[CD position conversion](../../../tools/rust/bof3-audio/src/machine/cd/position.rs)
 adds/removes the 150-sector lead-in, validates BCD digits, seconds below 60 and
 sector numbers below 75, and rejects unrepresentable positions. It agrees with
 the linked SDK for all supported cue starts/thresholds and boundary cases;
@@ -1676,7 +1676,7 @@ This does not close bank conversion or independent runtime-fidelity gates.
 
 ### Rust ADSR state and evidence models
 
-[The Rust ADSR component](../../../tools/rust/bof3-audio/src/machine/adsr.rs)
+[The Rust ADSR component](../../../tools/rust/bof3-audio/src/machine/spu/voice/envelope.rs)
 advances explicit attack/decay/sustain/release state once per output-frame call.
 Callers choose `Published` or `EmulatorReference` arithmetic. `Published` retains
 its Q15 accumulator, frozen-rate and transition rules. `EmulatorReference`
@@ -2029,8 +2029,8 @@ independent audio-fidelity oracle.
 
 ## Rust SPU RAM transfers and DMA4
 
-[SPU transfer state](../../../tools/rust/bof3-audio/src/machine/spu_transfer.rs),
-[DMA4](../../../tools/rust/bof3-audio/src/machine/spu_dma.rs) and the
+[SPU transfer state](../../../tools/rust/bof3-audio/src/machine/spu/transfer.rs),
+[DMA4](../../../tools/rust/bof3-audio/src/machine/spu/dma.rs) and the
 [interconnect](../../../tools/rust/bof3-audio/src/machine/interconnect.rs) share
 512 KiB sound RAM. Manual data-port reads and writes take effect immediately in
 every SPUCNT transfer mode. Each halfword advances the transfer address, wrapping
@@ -2133,7 +2133,7 @@ the source fixtures.
 
 ## Rust SPU sample and voice execution
 
-[The sample reader](../../../tools/rust/bof3-audio/src/machine/spu_sample.rs)
+[The sample reader](../../../tools/rust/bof3-audio/src/machine/spu/sample.rs)
 fetches ADPCM blocks from shared 512 KiB SPU RAM and preserves decoder and
 interpolation history across blocks and loops. Both models ignore the low
 start-address bit. Native-reference construction uses fresh-open address defaults.
@@ -2185,7 +2185,7 @@ step through key-on and zero or absent modulation input, after pending writes. [
 and [retained research](../../reference/spu-samples.md) describe the remaining
 reader and integration limits. Neither model establishes hardware fidelity.
 
-[Voice execution](../../../tools/rust/bof3-audio/src/machine/spu_voices.rs) connects
+[Voice execution](../../../tools/rust/bof3-audio/src/machine/spu/voice/mod.rs) connects
 24 sample readers to explicitly selected ADSR models, manual envelope writes,
 fixed signed stereo gain, key-on/off and end flags. Pitch modulation uses the
 preceding voice's post-envelope signal before stereo gain; voice zero is excluded.
@@ -2194,7 +2194,7 @@ the native Q14 register decoder, including its fixed sweep approximation, and
 divide signed stereo products by `0x4000` toward zero. Published voices retain
 their Q15 sweeps, input clipping and arithmetic-shift gain. Per-voice stereo sends
 are `i32` through accumulation; capture remains clipped to `i16` before routing.
-The [pitch owner](../../../tools/rust/bof3-audio/src/machine/spu_pitch.rs) accepts
+The [pitch owner](../../../tools/rust/bof3-audio/src/machine/spu/pitch.rs) accepts
 scheduled writes through `Player::write_pitch()`; frame calls consume that state.
 For native-reference arithmetic, a supplied nonzero source scales raw pitch by
 `(32768 + source) / 32768` with division toward zero, clamps the result to
@@ -2296,7 +2296,7 @@ full flush-function execution and final audio fidelity are not established.
 
 ## Rust SPU noise, mixing and capture
 
-[The noise component](../../../tools/rust/bof3-audio/src/machine/spu_noise.rs)
+[The noise component](../../../tools/rust/bof3-audio/src/machine/spu/noise.rs)
 implements a shared generator with a six-bit SPUCNT clock.
 `Interconnect::configure_spu_noise(spu_noise::State)` and `Noise::new` require
 model-qualified initial state. `Published { level, timer }` uses a 16-bit level
@@ -2317,7 +2317,7 @@ modulation. The published and native fractional rates differ; selecting a model
 does not establish hardware agreement. See
 [retained noise and mixer research](../../reference/spu-samples.md#noise-mixing-and-capture).
 
-[The mixer](../../../tools/rust/bof3-audio/src/machine/spu_mixer.rs) preserves wide
+[The mixer](../../../tools/rust/bof3-audio/src/machine/spu/mixer.rs) preserves wide
 voice sums and separate reverb sends. Published output retains its input routing,
 signed gains, main sweeps, clipping order and bit-14 send gate.
 
@@ -2384,7 +2384,7 @@ original-game runtime acceptance remain required.
 
 ## Rust SPU volume sweeps
 
-[The volume component](../../../tools/rust/bof3-audio/src/machine/spu_volume.rs)
+[The volume component](../../../tools/rust/bof3-audio/src/machine/spu/volume.rs)
 owns separate published voice sweeps and native voice gain. Its `Volume` type
 retains raw registers, signed current gains, rate counters and terminal state for
 Published voices and Published main output. Fixed writes expand signed
@@ -2433,7 +2433,7 @@ reference-audio fidelity.
 
 ## Rust SPU reverb execution
 
-[The reverb engine](../../../tools/rust/bof3-audio/src/machine/spu_reverb.rs)
+[The reverb engine](../../../tools/rust/bof3-audio/src/machine/spu/reverb.rs)
 implements stereo reflections, four comb paths and two all-pass stages through
 the shared SPU RAM. The interconnect maps ESA and all 32 preset registers after
 `configure_spu_reverb(EmulatorReference)`. This explicit model selects inspected
@@ -2487,7 +2487,7 @@ unconfigured audible reverb path still fails.
 
 ## Rust CD decoder host registers
 
-[The host interface](../../../tools/rust/bof3-audio/src/machine/cd_host.rs) maps
+[The host interface](../../../tools/rust/bof3-audio/src/machine/cd/host.rs) maps
 the four banked byte registers at `0x1F801800..0x1F801803` after explicit
 `Interconnect::configure_cd_host` configuration. The supplied volume coefficients
 and empty FIFO/interrupt state are a test/execution context, not recovered BIOS
@@ -2681,7 +2681,7 @@ execution, scheduler timing and independent audio fidelity remain open.
 
 ## Rust CD sector data and DMA3
 
-[The data FIFO](../../../tools/rust/bof3-audio/src/machine/cd_data.rs) accepts an
+[The data FIFO](../../../tools/rust/bof3-audio/src/machine/cd/data.rs) accepts an
 explicitly supplied 2,048- or 2,340-byte block. It does not select sectors or
 schedule their arrival. Configuration selects `Model::EmulatorReference`: repeated
 BFRD assertion preserves the read cursor, clearing BFRD rewinds a partial block,
@@ -2694,7 +2694,7 @@ Unavailable data and overreads fail explicitly, without fabricated padding. The
 about overread values; this model is not hardware acceptance.
 
 Without an attached controller,
-[DMA3](../../../tools/rust/bof3-audio/src/machine/cd_dma.rs) supports burst-mode
+[DMA3](../../../tools/rust/bof3-audio/src/machine/cd/dma.rs) supports burst-mode
 device-to-RAM transfers, incrementing or decrementing addresses, explicit DPCR
 enable and existing DICR/IRQ acknowledgement. Zero BCR count means 65,536 words;
 non-chopped bursts preserve visible MADR/BCR while the internal cursor advances.
@@ -2774,7 +2774,7 @@ full BIOS startup. Independent drive timing and audio fidelity remain open.
 
 ## Rust CD drive commands and sector routing
 
-[The functional drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
+[The functional drive](../../../tools/rust/bof3-audio/src/machine/cd/drive.rs)
 requires an explicit already-authenticated, closed, spinning disc context,
 including position, mode and filter. It implements Getstat, Setloc, Setmode,
 Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS, Pause, Init and
@@ -2957,7 +2957,7 @@ external buffer-selection evidence is retained in
 
 ## Rust CD/XA sample processing
 
-[The CD audio component](../../../tools/rust/bof3-audio/src/machine/cd_audio.rs)
+[The CD audio component](../../../tools/rust/bof3-audio/src/machine/cd/audio.rs)
 connects selected XA sectors to stereo 44.1 kHz frames through the existing
 explicit decoder arithmetic and retained filter history. It supports mono/stereo
 and 4/8-bit sectors at both encoded rates, with no implicit channel switch, EOF
@@ -3015,7 +3015,7 @@ de-emphasis and independent hardware audio remain required.
 
 ## Rust XA audio queue and SPU consumption
 
-[The XA queue](../../../tools/rust/bof3-audio/src/machine/cd_queue.rs) connects
+[The XA queue](../../../tools/rust/bof3-audio/src/machine/cd/queue.rs) connects
 sector decoding/resampling to frame consumption. `Model::EmulatorReference`
 uses the native stream-1 ring predicate: queued plus incoming frames must be
 less than 16,384. A batch that cannot fit returns `Admission::Pending` without
@@ -5735,7 +5735,7 @@ value to hardcode or a reason to mask RAM. The current fork's
 reconstructs ENVX at the CPU read cycle and no longer forces that value.
 
 `Execution::configure_reference_spu` enables a separate
-[CPU readback owner](../../../tools/rust/bof3-audio/src/machine/spu_readback.rs)
+[CPU readback owner](../../../tools/rust/bof3-audio/src/machine/spu/readback.rs)
 before guest SPU initialization. Supply the effective native `key_on_delay` and
 `interpolation` settings. The voice owner must already use the explicit emulator
 ADSR model. Each interpreter data transaction supplies its access cycle before
@@ -6934,7 +6934,7 @@ bounded `driver-startup-*-rizin.txt` listings.
 
 ### Original CD reset and host reset state
 
-The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
+The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd/drive.rs)
 implements Init (`0x0A`) as a caller-completed transition. It stops reading,
 resets the current and seek positions to `00:02:00` (LBA 0), clears pending
 Setloc. It preserves XA ended state, the raw mode byte, command mute,
@@ -6967,7 +6967,7 @@ signal parity with the current
 [XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc).
 Mechanical timing and hardware fidelity remain unverified.
 
-The [host reset constructor](../../../tools/rust/bof3-audio/src/machine/cd_host.rs)
+The [host reset constructor](../../../tools/rust/bof3-audio/src/machine/cd/host.rs)
 explicitly selects the emulator-reference reset state: interrupt mask `0x1F`,
 active volume matrix `(128,0,128,0)`, empty parameter/response queues and no pending
 interrupt or command. It seeds neither media nor an SDK completion response.

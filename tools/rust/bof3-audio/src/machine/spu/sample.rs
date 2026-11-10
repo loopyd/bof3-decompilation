@@ -1,5 +1,5 @@
 //! Frame-driven SPU sample reader. The interconnect owns fetch IRQ comparisons.
-use super::{gaussian::GAUSS, spu_pitch::Pitch, spu_transfer::RAM_BYTES};
+use crate::machine::{spu::coefficients::GAUSS, spu::pitch::Pitch, spu::transfer::RAM_BYTES};
 use crate::{
     codec::adpcm::{History, NativeHistory},
     Result,

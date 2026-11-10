@@ -273,7 +273,9 @@ fn original_us_bios_executes_reset_memory_and_cache_setup_to_spu_setup() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS pointing to verified US SCPH-5501 ROM"]
 fn original_us_bios_uploads_spu_data_through_immediate_ports() {
-    use bof3_audio::machine::{adsr, cpu::clock, spu_reverb, spu_sample, spu_voice_ports};
+    use bof3_audio::machine::{
+        cpu::clock, spu::reverb, spu::sample, spu::voice::envelope, spu::voice::ports,
+    };
     let bytes = std::fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
     assert_eq!(
         sha256_hex(&bytes),
@@ -283,13 +285,13 @@ fn original_us_bios_uploads_spu_data_through_immediate_ports() {
     bus.attach_firmware(Image::from_bytes(bytes).unwrap())
         .unwrap();
     bus.configure_spu_voices(
-        spu_sample::Model::EmulatorReference,
-        adsr::Model::EmulatorReference,
+        sample::Model::EmulatorReference,
+        envelope::Model::EmulatorReference,
     )
     .unwrap();
-    bus.configure_spu_disable(spu_voice_ports::DisableModel::EmulatorReference)
+    bus.configure_spu_disable(ports::DisableModel::EmulatorReference)
         .unwrap();
-    bus.configure_spu_reverb(spu_reverb::Model::EmulatorReference)
+    bus.configure_spu_reverb(reverb::Model::EmulatorReference)
         .unwrap();
     let mut clock = clock::Clock::default();
     let mut cpu = Cpu::pcsx_redux_reset();

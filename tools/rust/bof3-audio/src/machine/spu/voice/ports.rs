@@ -1,9 +1,9 @@
 //! Voice MMIO latches; the execution owner explicitly schedules frame boundaries.
-use super::{
-    adsr,
-    spu_noise::{Noise, State as NoiseState},
-    spu_sample,
-    spu_voices::{NativeCapture, NativeChannel, NativeInput, Output, Voices, VOICES},
+use crate::machine::{
+    spu::noise::{Noise, State as NoiseState},
+    spu::sample,
+    spu::voice::envelope,
+    spu::voice::{NativeCapture, NativeChannel, NativeInput, Output, Voices, VOICES},
 };
 use crate::Result;
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,7 @@ pub enum DisableModel {
 
 pub struct Ports {
     voices: Voices,
-    envelope_model: adsr::Model,
+    envelope_model: envelope::Model,
     on: u32,
     off: u32,
     key_latches: [u32; 2],
@@ -35,7 +35,7 @@ pub struct Ports {
 #[derive(Debug)]
 pub struct Frame {
     /// Native bit-14 mute is already applied at ordinary sample stores.
-    pub sample_model: spu_sample::Model,
+    pub sample_model: sample::Model,
     pub voices: [Output; VOICES],
     /// Native sends latch at key-on; published sends use the live register.
     /// Modulation sources have zero stereo sends.
@@ -55,7 +55,7 @@ pub(crate) struct NativeSample {
 }
 
 impl Ports {
-    pub fn new(sample: spu_sample::Model, envelope: adsr::Model) -> Self {
+    pub fn new(sample: sample::Model, envelope: envelope::Model) -> Self {
         Self {
             voices: Voices::new(sample, envelope),
             envelope_model: envelope,
@@ -73,11 +73,11 @@ impl Ports {
         }
     }
 
-    pub(crate) fn sample_model(&self) -> spu_sample::Model {
+    pub(crate) fn sample_model(&self) -> sample::Model {
         self.voices.sample_model()
     }
 
-    pub(crate) fn envelope_model(&self) -> adsr::Model {
+    pub(crate) fn envelope_model(&self) -> envelope::Model {
         self.envelope_model
     }
 
@@ -111,8 +111,8 @@ impl Ports {
     }
 
     pub(crate) fn require_native_context(&self) -> Result<()> {
-        if self.voices.sample_model() != spu_sample::Model::EmulatorReference
-            || self.envelope_model != adsr::Model::EmulatorReference
+        if self.voices.sample_model() != sample::Model::EmulatorReference
+            || self.envelope_model != envelope::Model::EmulatorReference
         {
             return Err(
                 "native channel processing requires native-reference samples and ADSR".into(),
@@ -199,7 +199,7 @@ impl Ports {
     /// not voice activity or pending keys consumed at a frame boundary.
     pub fn read(&self, offset: u32) -> Result<u16> {
         if (0x200..0x260).contains(&offset) && offset & 1 == 0 {
-            if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+            if self.voices.sample_model() == sample::Model::EmulatorReference {
                 return Ok(self.current_volume_mirrors[((offset - 0x200) / 2) as usize]);
             }
             return self
@@ -229,16 +229,14 @@ impl Ports {
     }
     pub fn write(&mut self, offset: u32, value: u16) -> Result<()> {
         if (0x200..0x260).contains(&offset) && offset & 1 == 0 {
-            if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+            if self.voices.sample_model() == sample::Model::EmulatorReference {
                 self.current_volume_mirrors[((offset - 0x200) / 2) as usize] = value;
                 return Ok(());
             }
             return Err("SPU current voice-volume writes are not hardware-verified".into());
         }
         if offset < 0x180 {
-            if offset & 15 == 12
-                && self.voices.sample_model() == spu_sample::Model::EmulatorReference
-            {
+            if offset & 15 == 12 && self.voices.sample_model() == sample::Model::EmulatorReference {
                 return Ok(());
             }
             return self
@@ -256,7 +254,7 @@ impl Ports {
                 let index = ((offset - 0x188) / 4) as usize;
                 self.key_latches[index] =
                     (self.key_latches[index] & !(0xffff << shift)) | (u32::from(value) << shift);
-                if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+                if self.voices.sample_model() == sample::Model::EmulatorReference {
                     let mask = (u32::from(value) << shift) & 0x00ff_ffff;
                     if index == 0 {
                         self.on |= self.voices.accept_native_key_on(mask);
@@ -278,7 +276,7 @@ impl Ports {
             // Native ENDX reads live flags and ignores writes. Published writes
             // retain their temporary readback without changing loop-end latches.
             0x19c => {
-                if self.voices.sample_model() == spu_sample::Model::Published {
+                if self.voices.sample_model() == sample::Model::Published {
                     self.end_readback = Some(merge(
                         self.end_readback.unwrap_or_else(|| self.voices.end_flags()),
                     ));
@@ -304,13 +302,13 @@ impl Ports {
             .as_mut()
             .map(|noise| noise.sample(((control >> 8) & 63) as u8))
             .transpose()?;
-        if self.voices.sample_model() == spu_sample::Model::EmulatorReference {
+        if self.voices.sample_model() == sample::Model::EmulatorReference {
             let armed = if control & 0x80 != 0 { self.reverb } else { 0 };
             self.active_reverb = (self.active_reverb & !self.on) | (armed & self.on);
         }
         match self.voices.sample_model() {
-            spu_sample::Model::Published => self.voices.apply_keys(self.on, self.off)?,
-            spu_sample::Model::EmulatorReference => self.voices.start_keys(self.on, self.off)?,
+            sample::Model::Published => self.voices.apply_keys(self.on, self.off)?,
+            sample::Model::EmulatorReference => self.voices.start_keys(self.on, self.off)?,
         }
         self.on = 0;
         self.off = 0;
@@ -324,8 +322,8 @@ impl Ports {
             sample_model: self.voices.sample_model(),
             voices,
             reverb_mask: match self.voices.sample_model() {
-                spu_sample::Model::Published => self.reverb,
-                spu_sample::Model::EmulatorReference => self.active_reverb,
+                sample::Model::Published => self.reverb,
+                sample::Model::EmulatorReference => self.active_reverb,
             },
             noise_level,
         })

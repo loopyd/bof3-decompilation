@@ -70,8 +70,8 @@ fn stopped_key_mapping_requires_opt_in_retains_pcm_and_preserves_unchanged_pack(
     // priming and its minimum step do not establish the same initial silence.
     // A later positive step activates this source; the static SF2 zone stays silent.
     use bof3_audio::machine::{
-        spu_sample::{Model, Player, Signal},
-        spu_transfer::RAM_BYTES,
+        spu::sample::{Model, Player, Signal},
+        spu::transfer::RAM_BYTES,
     };
     let mut ram = vec![0; RAM_BYTES];
     ram[..body.len()].copy_from_slice(&body);
@@ -173,8 +173,9 @@ fn opt_in_does_not_accept_unverified_lookup_or_nonzero_held_pcm() {
 fn corpus_stopped_note_approximation_preserves_all_constructible_bank_bytes() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-        machine::adsr::Model, machine::adsr::Registers, machine::image::executable::Executable,
-        soundfont::envelope, soundfont::envelope::Probe, soundfont::gain,
+        machine::image::executable::Executable, machine::spu::voice::envelope::Model,
+        machine::spu::voice::envelope::Registers, soundfont::envelope, soundfont::envelope::Probe,
+        soundfont::gain,
     };
     use std::{
         collections::{BTreeMap, BTreeSet},

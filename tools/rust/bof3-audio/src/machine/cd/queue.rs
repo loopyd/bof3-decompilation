@@ -1,6 +1,6 @@
 //! XA/CDDA-to-SPU queue. Caller supplies selected sectors and output boundaries.
 mod capture;
-use super::cd_audio::{Model as Resampling, Volume, XaAudio};
+use crate::machine::cd::audio::{Model as Resampling, Volume, XaAudio};
 use crate::{
     xa::{Arithmetic, Histories, Stream},
     Result,

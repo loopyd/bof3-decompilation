@@ -247,9 +247,9 @@ impl Evidence {
 }
 
 pub fn configure_spu(bus: &mut Interconnect) {
-    use bof3_audio::machine::{adsr, spu_sample};
+    use bof3_audio::machine::{spu::sample, spu::voice::envelope};
     // Explicit dry SPU input, not BIOS initialization or game mixer acceptance.
-    bus.configure_spu_voices(spu_sample::Model::Published, adsr::Model::Published)
+    bus.configure_spu_voices(sample::Model::Published, envelope::Model::Published)
         .unwrap();
     for (address, value) in [
         (0x1f801dac, 4),

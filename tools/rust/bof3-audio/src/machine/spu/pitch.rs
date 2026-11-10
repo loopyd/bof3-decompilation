@@ -1,5 +1,5 @@
 //! Scheduled pitch writes and per-frame steps. Native batch timing is separate.
-use super::spu_sample::Model;
+use crate::machine::spu::sample::Model;
 use crate::Result;
 
 #[derive(Clone, Copy, Debug)]

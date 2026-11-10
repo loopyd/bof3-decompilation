@@ -1,8 +1,8 @@
 //! Development-only ENVX observations at interpreter access cycles, not PCM time.
-use super::{
-    adsr::{Adsr, Model, Phase},
-    spu_transfer::RAM_BYTES,
-    spu_voices::VOICES,
+use crate::machine::{
+    spu::transfer::RAM_BYTES,
+    spu::voice::envelope::{Adsr, Model, Phase},
+    spu::voice::VOICES,
 };
 use crate::Result;
 

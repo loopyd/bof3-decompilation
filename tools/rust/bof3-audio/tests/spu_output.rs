@@ -1,11 +1,11 @@
 use bof3_audio::machine::{
-    adsr,
     bus::{Bus, Width},
     image::executable::Executable,
     interconnect::Interconnect,
-    spu_mixer::Inputs,
-    spu_noise::State as NoiseState,
-    spu_sample::Model,
+    spu::mixer::Inputs,
+    spu::noise::State as NoiseState,
+    spu::sample::Model,
+    spu::voice::envelope,
 };
 
 fn half(bus: &mut Interconnect, address: u32, value: u16) {
@@ -18,7 +18,7 @@ fn fixture() -> Interconnect {
         bytes[at..at + 4].copy_from_slice(&value.to_le_bytes());
     }
     let mut bus = Interconnect::from_executable(&Executable::from_bytes(bytes).unwrap());
-    bus.configure_spu_voices(Model::Published, adsr::Model::Published)
+    bus.configure_spu_voices(Model::Published, envelope::Model::Published)
         .unwrap();
     half(&mut bus, 0x1f801da6, 0x200); // Keep sample data above capture buffers.
     half(&mut bus, 0x1f801dac, 4);
@@ -40,7 +40,7 @@ fn fixture() -> Interconnect {
 
 #[test]
 fn explicit_disable_model_preserves_voice_state_and_rejects_atomically() {
-    use bof3_audio::machine::spu_voice_ports::DisableModel;
+    use bof3_audio::machine::spu::voice::ports::DisableModel;
     let mut bus = fixture();
     bus.write(0x1f801d88, Width::Word, 0x0055_5555).unwrap();
     bus.step_spu_voices().unwrap();
@@ -307,7 +307,7 @@ fn current_voice_volume_ports_preserve_signed_values_and_clock_inactive_sweeps()
 
 #[test]
 fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disabled() {
-    use bof3_audio::machine::spu_reverb::Model as ReverbModel;
+    use bof3_audio::machine::spu::reverb::Model as ReverbModel;
     let mut bus = fixture();
     assert!(bus.write(0x1f801da2, Width::Half, 0xc000).is_err());
     bus.configure_spu_reverb(ReverbModel::EmulatorReference)
@@ -360,7 +360,7 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
 #[test]
 fn decoded_xa_passes_drive_routing_before_spu_gain_and_capture() {
     use bof3_audio::{
-        machine::cd_audio::{Model as CdModel, Volume as CdVolume, XaAudio},
+        machine::cd::audio::{Model as CdModel, Volume as CdVolume, XaAudio},
         xa::{Arithmetic, Histories, Stream},
     };
     let mut bytes = vec![0; 2336];

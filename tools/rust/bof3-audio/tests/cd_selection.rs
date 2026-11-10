@@ -2,11 +2,11 @@ use bof3_audio::{
     archive::disc::DiscImage,
     machine::{
         bus::Ram,
-        cd_audio::{Model as Resampling, XaAudio},
-        cd_drive::{Delivery, Drive},
-        cd_host::Command,
-        cd_position::CdPosition,
-        cd_queue::{Admission, Model, Queue, WaitOutcome},
+        cd::audio::{Model as Resampling, XaAudio},
+        cd::drive::{Delivery, Drive},
+        cd::host::Command,
+        cd::position::CdPosition,
+        cd::queue::{Admission, Model, Queue, WaitOutcome},
         interconnect::Interconnect,
     },
     xa::{Arithmetic, Histories, Stream},
@@ -20,8 +20,8 @@ fn stream(channel: u8) -> Stream {
     }
 }
 
-fn volume() -> bof3_audio::machine::cd_audio::Volume {
-    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+fn volume() -> bof3_audio::machine::cd::audio::Volume {
+    bof3_audio::machine::cd::audio::Volume::new([128, 0, 128, 0]).unwrap()
 }
 
 fn queue() -> Queue {
@@ -193,7 +193,7 @@ fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission()
         q.sector(&next, false, &volume(), 0).unwrap();
         let normalized = sector(0, 0x64, 0x34);
         let expected = if admission == 1 {
-            use bof3_audio::{machine::cd_audio::Resampler, xa::Decoder};
+            use bof3_audio::{machine::cd::audio::Resampler, xa::Decoder};
             let mut decoder =
                 Decoder::new(stream(0), Arithmetic::SplitFloor, Histories::default()).unwrap();
             let mut resampler =

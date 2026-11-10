@@ -1,6 +1,6 @@
 //! Functional CD drive transactions with caller-supplied mechanical boundaries.
 //! No BIOS defaults, authentication, media clock or response latency is inferred.
-use super::{cd_host::Command, cd_position::CdPosition};
+use crate::machine::{cd::host::Command, cd::position::CdPosition};
 use crate::{codec::edc, Result};
 
 /// Explicit program and pregap boundaries; no image metadata is inferred.

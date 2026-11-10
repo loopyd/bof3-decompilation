@@ -1,6 +1,6 @@
 //! CD decoder host registers; caller schedules the separate drive MCU responses.
 //! No disc-command semantics, sector delivery or clock timing are inferred here.
-use super::{cd_audio::Volume, cd_data};
+use crate::machine::{cd::audio::Volume, cd::data};
 use crate::Result;
 
 #[derive(Clone, Copy, Debug)]
@@ -25,7 +25,7 @@ pub struct Host {
     awaiting_interrupt: bool,
     interrupt_enable: u8,
     volume: Volume,
-    data: Option<cd_data::Fifo>,
+    data: Option<data::Fifo>,
 }
 
 #[derive(Default)]
@@ -116,11 +116,11 @@ impl Host {
             && self.pending_response.is_none()
             && !self.awaiting_interrupt
     }
-    pub fn configure_data(&mut self, model: cd_data::Model) -> Result<()> {
+    pub fn configure_data(&mut self, model: data::Model) -> Result<()> {
         if self.data.is_some() {
             return Err("CD data already configured".into());
         }
-        self.data = Some(cd_data::Fifo::new(model));
+        self.data = Some(data::Fifo::new(model));
         Ok(())
     }
     pub fn present_data(&mut self, bytes: &[u8]) -> Result<()> {
@@ -150,7 +150,7 @@ impl Host {
             .dma_bytes(limit))
     }
     pub fn data_ready(&self) -> bool {
-        self.data.as_ref().is_some_and(cd_data::Fifo::ready)
+        self.data.as_ref().is_some_and(data::Fifo::ready)
     }
     /// Atomically select data and publish INT1 at an explicit delivery boundary.
     /// Prior command/response/IRQ work must be fully drained. An unrequested

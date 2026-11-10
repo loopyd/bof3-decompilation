@@ -1,6 +1,6 @@
 use bof3_audio::{
     digest::sha256_hex,
-    machine::cd_audio::{Model, Resampler, Volume, XaAudio},
+    machine::cd::audio::{Model, Resampler, Volume, XaAudio},
     xa::{Arithmetic, Format, Histories, Stream},
 };
 

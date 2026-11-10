@@ -259,7 +259,7 @@ verification open.
 
 ## XA queue admission and output
 
-The [Rust queue](../../tools/rust/bof3-audio/src/machine/cd_queue.rs) follows
+The [Rust queue](../../tools/rust/bof3-audio/src/machine/cd/queue.rs) follows
 native stream-1 whole-batch admission: queued plus incoming frames must be less
 than the 16,384-frame ring size. Decoding and interpolation advance before the
 batch waits. A full queue returns `Admission::Pending`; the caller supplies

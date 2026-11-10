@@ -1,6 +1,6 @@
 //! Explicitly selected, frame-driven reverb arithmetic; not hardware acceptance.
 //! Register names follow psx-spx; arithmetic follows the current native unit.
-use super::spu_transfer::RAM_BYTES;
+use crate::machine::spu::transfer::RAM_BYTES;
 use crate::Result;
 use serde::{Deserialize, Serialize};
 

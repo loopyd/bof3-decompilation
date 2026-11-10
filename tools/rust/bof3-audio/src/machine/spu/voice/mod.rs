@@ -1,10 +1,13 @@
 //! Scheduled voice register operations and 24 per-frame outputs, before final mix.
 //! This component does not schedule MMIO, keys, capture, IRQs or reverb.
-use super::{
-    adsr::{Adsr, Model as EnvelopeModel},
-    spu_sample::{Model as SampleModel, Player, Signal},
-    spu_transfer::RAM_BYTES,
-    spu_volume::VoiceVolume,
+pub mod envelope;
+pub mod ports;
+
+use crate::machine::{
+    spu::sample::{Model as SampleModel, Player, Signal},
+    spu::transfer::RAM_BYTES,
+    spu::voice::envelope::{Adsr, Model as EnvelopeModel},
+    spu::volume::VoiceVolume,
 };
 use crate::Result;
 
@@ -259,7 +262,7 @@ impl Voices {
             voice.started = true;
             voice.startup_remaining = delay;
         }
-        let silent = voice.envelope.phase() == super::adsr::Phase::Off;
+        let silent = voice.envelope.phase() == crate::machine::spu::voice::envelope::Phase::Off;
         if !silent {
             voice.player.install_pending_frequency();
         }
@@ -458,7 +461,7 @@ impl Voices {
                 continue;
             }
             if self.sample_model == SampleModel::EmulatorReference
-                && voice.envelope.phase() == super::adsr::Phase::Off
+                && voice.envelope.phase() == crate::machine::spu::voice::envelope::Phase::Off
             {
                 let frame = voice
                     .player

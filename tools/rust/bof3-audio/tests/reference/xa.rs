@@ -2,7 +2,7 @@
 //! Ring indexing and half-rate midpoints follow native feed/output observations.
 //! Shares only numeric FIR coefficients, never production decoding or queue state.
 
-#[path = "../../src/machine/xa_filter.rs"]
+#[path = "../../src/machine/cd/filter.rs"]
 mod coefficients;
 use bof3_audio::digest::sha256_hex;
 

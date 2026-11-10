@@ -1,7 +1,8 @@
 //! SPU stream routing, integer gain and explicit native float output.
 //! Ordering follows the inspected emulator; hardware acceptance remains open.
-use super::{
-    adsr::Model, spu_sample::Model as SampleModel, spu_voice_ports::Frame, spu_volume::Volume,
+use crate::machine::{
+    spu::sample::Model as SampleModel, spu::voice::envelope::Model, spu::voice::ports::Frame,
+    spu::volume::Volume,
 };
 use crate::Result;
 use serde::{Deserialize, Serialize};

@@ -1,8 +1,9 @@
 use bof3_audio::{
-    bank::Bank, codec::adpcm, machine::adsr::Model, machine::adsr::Registers,
-    soundfont::bank as binding, soundfont::bank::Bound, soundfont::bank::Gain,
-    soundfont::bank::Identity, soundfont::bank::Options, soundfont::bank::ToneContext,
-    soundfont::envelope, soundfont::envelope::Probe, soundfont::gain, voice::tuning::KeyTuning,
+    bank::Bank, codec::adpcm, machine::spu::voice::envelope::Model,
+    machine::spu::voice::envelope::Registers, soundfont::bank as binding, soundfont::bank::Bound,
+    soundfont::bank::Gain, soundfont::bank::Identity, soundfont::bank::Options,
+    soundfont::bank::ToneContext, soundfont::envelope, soundfont::envelope::Probe, soundfont::gain,
+    voice::tuning::KeyTuning,
 };
 use rustysynth::{SoundFont, Synthesizer, SynthesizerSettings};
 use std::{io::Cursor, sync::Arc};

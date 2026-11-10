@@ -1,12 +1,12 @@
 use bof3_audio::machine::{
     bus::{Bus, Ram, Width},
-    cd_host::{Command, Host},
+    cd::host::{Command, Host},
     interconnect::Interconnect,
 };
 
 #[test]
 fn emulator_reset_has_enabled_interrupts_but_no_seeded_response_or_completion() {
-    use bof3_audio::machine::cd_host::Model;
+    use bof3_audio::machine::cd::host::Model;
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_cd_host_reset(Model::EmulatorReference)
         .unwrap();
@@ -19,8 +19,8 @@ fn emulator_reset_has_enabled_interrupts_but_no_seeded_response_or_completion() 
     assert_eq!(bus.read(0x1f801803, Width::Byte).unwrap(), 0xe0);
     bus.write(0x1f801800, Width::Byte, 0).unwrap();
     bus.configure_cd_controller(
-        bof3_audio::machine::cd_drive::Drive::ready(
-            bof3_audio::machine::cd_position::CdPosition::from_lba(0).unwrap(),
+        bof3_audio::machine::cd::drive::Drive::ready(
+            bof3_audio::machine::cd::position::CdPosition::from_lba(0).unwrap(),
             0,
             [0, 0],
         )

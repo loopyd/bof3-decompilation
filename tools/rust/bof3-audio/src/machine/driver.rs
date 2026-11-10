@@ -1,10 +1,9 @@
 //! Validated owned guest image and cold service startup.
 use super::{
-    adsr,
     bus::{Bus, Ram, Width},
-    cd_drive::Drive,
-    cd_host,
-    cd_media::Media,
+    cd::drive::Drive,
+    cd::host,
+    cd::media::Media,
     cpu::Cpu,
     event_calls::Service,
     exception_calls::{Dispatch, Environment, MissingHook},
@@ -12,8 +11,10 @@ use super::{
     image::executable::ram_offset,
     interconnect::{DeviceProgress, Interconnect},
     kernel::Kernel,
-    spu_reverb, spu_sample,
-    spu_voice_ports::DisableModel,
+    spu::reverb,
+    spu::sample,
+    spu::voice::envelope,
+    spu::voice::ports::DisableModel,
 };
 use crate::{digest::sha256_hex, Result};
 use serde::{Deserialize, Serialize};
@@ -339,7 +340,7 @@ impl Image {
         let execution = &mut services.execution;
         execution
             .bus
-            .configure_cd_host_reset(cd_host::Model::EmulatorReference)?;
+            .configure_cd_host_reset(host::Model::EmulatorReference)?;
         execution
             .bus
             .configure_cd_controller(drive, execution.clock.ticks())?;
@@ -423,13 +424,13 @@ impl Image {
             },
         )?;
         execution.bus.configure_spu_voices(
-            spu_sample::Model::EmulatorReference,
-            adsr::Model::EmulatorReference,
+            sample::Model::EmulatorReference,
+            envelope::Model::EmulatorReference,
         )?;
         execution.bus.configure_spu_key_on_delay(6)?;
         execution
             .bus
-            .configure_spu_native_output(super::spu_mixer::NativeSettings {
+            .configure_spu_native_output(crate::machine::spu::mixer::NativeSettings {
                 volume: 3,
                 mono: false,
                 muted: false,
@@ -439,7 +440,7 @@ impl Image {
             .configure_spu_disable(DisableModel::EmulatorReference)?;
         execution
             .bus
-            .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
+            .configure_spu_reverb(reverb::Model::EmulatorReference)?;
         configure(&mut execution)?;
         let initialization_limit =
             u64::from(self.symbol("audio_kernel_state_end")? - self.symbol("audio_kernel_bss")?)

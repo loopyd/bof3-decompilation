@@ -1,12 +1,13 @@
 use bof3_audio::{
     machine::{
-        adsr,
         bus::{Bus, Ram, Width},
-        cd_audio::{Model as Resampling, Resampler, XaAudio},
-        cd_queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
+        cd::audio::{Model as Resampling, Resampler, XaAudio},
+        cd::queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
         cpu::clock,
         interconnect::Interconnect,
-        output_clock, spu_sample,
+        output_clock,
+        spu::sample,
+        spu::voice::envelope,
     },
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
 };
@@ -18,8 +19,8 @@ fn stream() -> Stream {
         coding: 0,
     }
 }
-fn volume() -> bof3_audio::machine::cd_audio::Volume {
-    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+fn volume() -> bof3_audio::machine::cd::audio::Volume {
+    bof3_audio::machine::cd::audio::Volume::new([128, 0, 128, 0]).unwrap()
 }
 
 fn queue() -> Queue {
@@ -77,7 +78,7 @@ fn bus(queue: Queue) -> Interconnect {
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_cd_host([128, 0, 128, 0]).unwrap();
     bus.configure_cd_audio(queue).unwrap();
-    bus.configure_spu_voices(spu_sample::Model::Published, adsr::Model::Published)
+    bus.configure_spu_voices(sample::Model::Published, envelope::Model::Published)
         .unwrap();
     for (address, value) in [
         (0x1f801dac, 4),
@@ -307,8 +308,8 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     use bof3_audio::{
         archive::disc::DiscImage,
         machine::{
-            cd_drive::{Delivery, Drive},
-            cd_position::CdPosition,
+            cd::drive::{Delivery, Drive},
+            cd::position::CdPosition,
         },
     };
     let path = std::path::PathBuf::from(std::env::var_os("BOF3_AUDIO_TRACK").unwrap());
@@ -318,7 +319,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
         Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc8, [1, 0]).unwrap();
     drive
         .command(
-            &bof3_audio::machine::cd_host::Command {
+            &bof3_audio::machine::cd::host::Command {
                 opcode: 0x1b,
                 parameters: vec![],
             },

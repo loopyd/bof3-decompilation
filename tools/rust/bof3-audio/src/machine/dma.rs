@@ -60,8 +60,8 @@ pub struct Dma {
     master: bool,
     interrupt_control: u32,
     interrupt_flags: u8,
-    pub(crate) spu: super::spu_dma::Channel,
-    pub(crate) cd: super::cd_dma::Channel,
+    pub(crate) spu: crate::machine::spu::dma::Channel,
+    pub(crate) cd: crate::machine::cd::dma::Channel,
 }
 
 impl Default for Dma {
@@ -71,8 +71,8 @@ impl Default for Dma {
             master: false,
             interrupt_control: 0,
             interrupt_flags: 0,
-            spu: super::spu_dma::Channel::default(),
-            cd: super::cd_dma::Channel::default(),
+            spu: crate::machine::spu::dma::Channel::default(),
+            cd: crate::machine::cd::dma::Channel::default(),
         }
     }
 }

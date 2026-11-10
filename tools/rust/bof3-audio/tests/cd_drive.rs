@@ -1,9 +1,9 @@
 use bof3_audio::{
     codec::edc,
     machine::{
-        cd_drive::{Activity, Delivery, Drive, Response},
-        cd_host::{Command, Host},
-        cd_position::CdPosition,
+        cd::drive::{Activity, Delivery, Drive, Response},
+        cd::host::{Command, Host},
+        cd::position::CdPosition,
     },
 };
 

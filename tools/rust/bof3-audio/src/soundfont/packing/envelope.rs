@@ -1,7 +1,7 @@
 //! Invert complete fitted SF2 envelopes through bounded source ADSR field searches.
 use crate::{
     bank::Bank,
-    machine::adsr::Registers,
+    machine::spu::voice::envelope::Registers,
     soundfont::{bank as binding, envelope, envelope::Fit, reader::model::Zone, reader::Font},
     Result,
 };

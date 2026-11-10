@@ -1,13 +1,13 @@
 //! Original US low-level SPU initialization with immediate RAM-port transfers.
 use bof3_audio::machine::{
-    adsr,
     bus::{Bus, Width},
     cpu::Cpu,
     image::executable::Executable,
     image::profile::Profile,
     interconnect::Interconnect,
-    spu_sample,
-    spu_voice_ports::DisableModel,
+    spu::sample,
+    spu::voice::envelope,
+    spu::voice::ports::DisableModel,
 };
 
 fn initialize(bus: &mut Interconnect, stack: u32, argument: u32) -> u32 {
@@ -45,7 +45,7 @@ fn original_hardware_initializer_uploads_dummy_block_and_sets_all_voice_register
     .unwrap();
     Profile::identify(&exe).unwrap();
     let mut bus = Interconnect::from_executable(&exe);
-    bus.configure_spu_voices(spu_sample::Model::Published, adsr::Model::Published)
+    bus.configure_spu_voices(sample::Model::Published, envelope::Model::Published)
         .unwrap();
     let stack = exe.stack_pointer().unwrap();
     let count = initialize(&mut bus, stack, 0);

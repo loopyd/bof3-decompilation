@@ -10,17 +10,17 @@ pub use scheduler::DeviceProgress;
 
 use super::{
     bus::{Bus, BusError, Ram, Width},
-    cd_host,
+    cd::host,
     dma::Dma,
     image::executable::Executable,
     image::firmware::Image as Firmware,
     interrupts::{Interrupts, Source},
-    spu_mixer::{Inputs as SpuInputs, Mixer},
-    spu_noise::Noise,
-    spu_readback::{Readback, Settings as ReadbackSettings},
-    spu_reverb::{Model as ReverbModel, Reverb},
-    spu_transfer::Transfer as SpuTransfer,
-    spu_voice_ports,
+    spu::mixer::{Inputs as SpuInputs, Mixer},
+    spu::noise::Noise,
+    spu::readback::{Readback, Settings as ReadbackSettings},
+    spu::reverb::{Model as ReverbModel, Reverb},
+    spu::transfer::Transfer as SpuTransfer,
+    spu::voice::ports,
     timers::Timers,
 };
 
@@ -30,9 +30,9 @@ pub struct Interconnect {
     post_status: Option<u8>,
     ram: Ram,
     firmware: Option<Firmware>,
-    cd_host: Option<cd_host::Host>,
+    cd_host: Option<host::Host>,
     cd_controller: Option<cd::clock::Controller>,
-    cd_audio: Option<super::cd_queue::Queue>,
+    cd_audio: Option<crate::machine::cd::queue::Queue>,
     cd_command_muted: bool,
     cd_bus_control: u32,
     common_delay: u32,
@@ -44,7 +44,7 @@ pub struct Interconnect {
     gpu_status: Option<super::gpu_status::Status>,
     spu_transfer: SpuTransfer,
     dma_observation: Option<super::dma::Observation>,
-    spu_voices: Option<spu_voice_ports::Ports>,
+    spu_voices: Option<ports::Ports>,
     spu_readback: Option<Readback>,
     reference_access: Option<u64>,
     scheduler: scheduler::Scheduler,
@@ -144,33 +144,33 @@ impl Interconnect {
     /// Explicit evidence-model selection; never silently reset a configured device.
     pub fn configure_spu_voices(
         &mut self,
-        sample: super::spu_sample::Model,
-        envelope: super::adsr::Model,
+        sample: crate::machine::spu::sample::Model,
+        envelope: crate::machine::spu::voice::envelope::Model,
     ) -> crate::Result<()> {
         if self.spu_voices.is_some() {
             return Err("SPU voices already configured".into());
         }
         self.spu_mixer.configure_sweeps(envelope)?;
-        self.spu_voices = Some(spu_voice_ports::Ports::new(sample, envelope));
+        self.spu_voices = Some(ports::Ports::new(sample, envelope));
         Ok(())
     }
 
     /// Select immutable host settings before rendering native-reference output.
     pub fn configure_spu_native_output(
         &mut self,
-        settings: super::spu_mixer::NativeSettings,
+        settings: crate::machine::spu::mixer::NativeSettings,
     ) -> crate::Result<()> {
         let voices = self
             .spu_voices
             .as_ref()
             .ok_or("configure SPU voices before native output")?;
-        if voices.sample_model() != super::spu_sample::Model::EmulatorReference {
+        if voices.sample_model() != crate::machine::spu::sample::Model::EmulatorReference {
             return Err("native output requires native-reference sample voices".into());
         }
         self.spu_mixer.configure_native(settings)
     }
 
-    pub fn spu_native_output_settings(&self) -> Option<super::spu_mixer::NativeSettings> {
+    pub fn spu_native_output_settings(&self) -> Option<crate::machine::spu::mixer::NativeSettings> {
         self.spu_mixer.native_settings()
     }
 
@@ -198,7 +198,8 @@ impl Interconnect {
             .spu_voices
             .as_ref()
             .ok_or("configure SPU voices before reference readback")?;
-        if voices.envelope_model() != super::adsr::Model::EmulatorReference {
+        if voices.envelope_model() != crate::machine::spu::voice::envelope::Model::EmulatorReference
+        {
             return Err("SPU reference readback requires the explicit emulator ADSR model".into());
         }
         self.spu_readback = Some(Readback::new(settings));
@@ -291,7 +292,7 @@ impl Interconnect {
 
     /// Per-voice signals before main gain, mixing, capture, CD and reverb. The
     /// caller supplies frame boundaries; CPU/device clock synchronization is open.
-    pub fn step_spu_voices(&mut self) -> crate::Result<spu_voice_ports::Frame> {
+    pub fn step_spu_voices(&mut self) -> crate::Result<ports::Frame> {
         if self.spu_producer.is_some() {
             return Err("functional SPU frames cannot advance the native producer".into());
         }
@@ -315,13 +316,16 @@ impl Interconnect {
         Ok(frame)
     }
 
-    pub fn configure_spu_irq(&mut self, model: super::spu_transfer::IrqModel) -> crate::Result<()> {
+    pub fn configure_spu_irq(
+        &mut self,
+        model: crate::machine::spu::transfer::IrqModel,
+    ) -> crate::Result<()> {
         self.spu_transfer.configure_irq(model)
     }
 
     pub fn configure_spu_ram_control(
         &mut self,
-        model: super::spu_transfer::RamControlModel,
+        model: crate::machine::spu::transfer::RamControlModel,
     ) -> crate::Result<()> {
         self.spu_transfer.configure_ram_control(model)
     }
@@ -336,17 +340,17 @@ impl Interconnect {
         }
     }
 
-    pub fn configure_spu_noise(&mut self, state: super::spu_noise::State) -> crate::Result<()> {
+    pub fn configure_spu_noise(
+        &mut self,
+        state: crate::machine::spu::noise::State,
+    ) -> crate::Result<()> {
         self.spu_voices
             .as_mut()
             .ok_or("configure SPU voices before noise")?
             .configure_noise(Noise::new(state)?)
     }
 
-    pub fn configure_spu_disable(
-        &mut self,
-        model: spu_voice_ports::DisableModel,
-    ) -> crate::Result<()> {
+    pub fn configure_spu_disable(&mut self, model: ports::DisableModel) -> crate::Result<()> {
         self.spu_voices
             .as_mut()
             .ok_or("configure SPU voices before disable behavior")?
@@ -379,7 +383,9 @@ impl Interconnect {
             .ok_or("configure SPU voices before output")?
             .sample_model();
         self.spu_mixer.require_model(sample)?;
-        if sample == super::spu_sample::Model::EmulatorReference && inputs.external != [0; 2] {
+        if sample == crate::machine::spu::sample::Model::EmulatorReference
+            && inputs.external != [0; 2]
+        {
             return Err("native SPU output has no external input source".into());
         }
         let control = self.spu_transfer.read(10)?;
@@ -564,7 +570,7 @@ impl Interconnect {
         if width == Width::Byte
             && (0x1f80_1e00..0x1f80_1e60).contains(&offset)
             && self.spu_voices.as_ref().is_some_and(|ports| {
-                ports.sample_model() == super::spu_sample::Model::EmulatorReference
+                ports.sample_model() == crate::machine::spu::sample::Model::EmulatorReference
             })
         {
             let shift = (offset & 1) * 8;

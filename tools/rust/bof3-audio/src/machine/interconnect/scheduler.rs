@@ -143,7 +143,7 @@ impl Interconnect {
     /// No device output, guest instruction or CPU cycle runs here.
     pub fn resume_cd_audio(
         &mut self,
-        outcome: crate::machine::cd_queue::WaitOutcome,
+        outcome: crate::machine::cd::queue::WaitOutcome,
     ) -> Result<DeviceProgress> {
         if self.scheduler.dispatch.is_none() {
             return Err("no suspended CD audio dispatch".into());

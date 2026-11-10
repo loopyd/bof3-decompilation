@@ -5,7 +5,7 @@ mod transport;
 use bof3_audio::{
     machine::{
         bus::{Bus, Width},
-        cd_drive::{Activity, Delivery},
+        cd::drive::{Activity, Delivery},
     },
     xa::cue,
 };
@@ -38,8 +38,8 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
     use bof3_audio::{
         archive::disc::DiscImage,
         machine::{
-            cd_audio::{Model, Resampler},
-            cd_queue::Queue,
+            cd::audio::{Model, Resampler},
+            cd::queue::Queue,
         },
         xa::{Arithmetic, Decoder, Histories, Stream},
     };
@@ -60,7 +60,7 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
                 Arithmetic::SplitFloor,
                 Histories::default(),
                 Model::EmulatorReference,
-                bof3_audio::machine::cd_queue::Model::EmulatorReference,
+                bof3_audio::machine::cd::queue::Model::EmulatorReference,
             )
             .unwrap(),
         )
@@ -336,8 +336,8 @@ fn run_cue_comparison(
     use bof3_audio::{
         archive::disc::DiscImage,
         machine::{
-            cd_audio::Model,
-            cd_queue::{Admission, Queue},
+            cd::audio::Model,
+            cd::queue::{Admission, Queue},
         },
         xa::{Arithmetic, Histories, Stream},
     };
@@ -389,7 +389,7 @@ fn run_cue_comparison(
                                             Arithmetic::SplitFloor,
                                             Histories::default(),
                                             Model::EmulatorReference,
-                                            bof3_audio::machine::cd_queue::Model::EmulatorReference,
+                                            bof3_audio::machine::cd::queue::Model::EmulatorReference,
                                         )
                                         .unwrap(),
                                     )

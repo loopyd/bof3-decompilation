@@ -1,6 +1,6 @@
 //! Scheduled fixed/swept SPU gain. Register bus latency remains caller-owned.
-use super::adsr::{Model, Rate};
-use super::spu_sample::Model as SampleModel;
+use crate::machine::spu::sample::Model as SampleModel;
+use crate::machine::spu::voice::envelope::{Model, Rate};
 use crate::Result;
 
 /// Per-voice gain policy. Native-reference voices use the native fixed sweep

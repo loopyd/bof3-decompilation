@@ -2,7 +2,7 @@ use bof3_audio::machine::{
     bus::{Bus, Width},
     image::executable::Executable,
     interconnect::Interconnect,
-    spu_transfer::{Transfer, RAM_BYTES},
+    spu::transfer::{Transfer, RAM_BYTES},
 };
 
 fn bus() -> Interconnect {

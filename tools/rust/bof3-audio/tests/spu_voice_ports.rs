@@ -1,11 +1,11 @@
 use bof3_audio::machine::{
-    adsr,
     bus::{Bus, Width},
     cpu::Cpu,
     image::executable::Executable,
     image::profile::Profile,
     interconnect::Interconnect,
-    spu_sample::Model,
+    spu::sample::Model,
+    spu::voice::envelope,
 };
 
 fn executable() -> Executable {
@@ -20,7 +20,7 @@ fn half(bus: &mut Interconnect, address: u32, value: u16) {
     bus.write(address, Width::Half, u32::from(value)).unwrap();
 }
 fn configure(bus: &mut Interconnect) {
-    bus.configure_spu_voices(Model::Published, adsr::Model::Published)
+    bus.configure_spu_voices(Model::Published, envelope::Model::Published)
         .unwrap();
     // Upload a real ADPCM block through the existing manual FIFO path.
     half(bus, 0x1f801da6, 0);
@@ -98,7 +98,7 @@ fn mmio_requires_models_handles_widths_and_applies_pending_keys_once() {
     assert!(bus.step_spu_voices().is_err());
     configure(&mut bus);
     assert!(bus
-        .configure_spu_voices(Model::Published, adsr::Model::Published)
+        .configure_spu_voices(Model::Published, envelope::Model::Published)
         .is_err());
     bus.write(0xbf801c00, Width::Byte, 0x1234).unwrap();
     bus.write(0xbf801c01, Width::Byte, 0xff).unwrap();

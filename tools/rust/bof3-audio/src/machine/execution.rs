@@ -120,7 +120,7 @@ impl Execution {
     /// Settings come from the retained native capture; no PCM clock is enabled.
     pub fn configure_reference_spu(
         &mut self,
-        settings: super::spu_readback::Settings,
+        settings: crate::machine::spu::readback::Settings,
     ) -> Result<()> {
         if self.reference.is_none() {
             return Err("reference SPU observations require original-BIOS timing".into());
@@ -156,7 +156,7 @@ impl Execution {
     /// Finish a suspended device pass without CPU, timer or output-clock work.
     pub fn resume_cd_audio(
         &mut self,
-        outcome: super::cd_queue::WaitOutcome,
+        outcome: crate::machine::cd::queue::WaitOutcome,
     ) -> Result<DeviceProgress> {
         self.require_execution()?;
         let result = self.bus.resume_cd_audio(outcome);

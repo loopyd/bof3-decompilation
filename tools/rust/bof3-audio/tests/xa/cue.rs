@@ -1,6 +1,6 @@
 use bof3_audio::{
     archive::disc::DiscImage, catalog::model::AssetData, catalog::model::Catalog,
-    machine::cd_position::CdPosition, machine::image::executable::Executable, xa::cue,
+    machine::cd::position::CdPosition, machine::image::executable::Executable, xa::cue,
 };
 use std::{
     fs::{self, File},

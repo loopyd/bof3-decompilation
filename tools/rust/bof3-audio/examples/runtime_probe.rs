@@ -3,14 +3,16 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        adsr, boot,
+        boot,
         cpu::clock,
         cpu::{Cpu, FaultKind},
         image::executable::Executable,
         image::firmware::Image,
         image::profile::Profile,
-        spu_reverb, spu_sample,
-        spu_voice_ports::DisableModel,
+        spu::reverb,
+        spu::sample,
+        spu::voice::envelope,
+        spu::voice::ports::DisableModel,
     },
     Result,
 };
@@ -68,15 +70,15 @@ fn main() -> Result<()> {
         machine.cpu = cpu;
     }
     machine.bus.configure_spu_voices(
-        spu_sample::Model::EmulatorReference,
-        adsr::Model::EmulatorReference,
+        sample::Model::EmulatorReference,
+        envelope::Model::EmulatorReference,
     )?;
     machine
         .bus
         .configure_spu_disable(DisableModel::EmulatorReference)?;
     machine
         .bus
-        .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
+        .configure_spu_reverb(reverb::Model::EmulatorReference)?;
     let mut clock = clock::Clock::default();
     let initial_instructions = machine.cpu.instructions();
     let initial_registers: Vec<_> = (0..32).map(|r| machine.cpu.register(r)).collect();

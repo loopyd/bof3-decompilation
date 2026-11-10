@@ -1,7 +1,7 @@
 //! Original scheduler instructions with explicit injected CD responses.
 //! These checks establish control flow, not hardware response timing or PCM.
 use bof3_audio::{
-    machine::bus::Bus, machine::bus::Ram, machine::bus::Width, machine::cd_position::CdPosition,
+    machine::bus::Bus, machine::bus::Ram, machine::bus::Width, machine::cd::position::CdPosition,
     machine::cpu::Cpu, machine::image::executable::Executable,
 };
 

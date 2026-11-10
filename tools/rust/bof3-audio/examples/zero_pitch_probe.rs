@@ -5,8 +5,8 @@ use bof3_audio::{
     catalog::model::Catalog,
     codec::adpcm::History,
     machine::image::executable::Executable,
-    machine::spu_sample::{Model, Player, Signal},
-    machine::spu_transfer::RAM_BYTES,
+    machine::spu::sample::{Model, Player, Signal},
+    machine::spu::transfer::RAM_BYTES,
     soundfont::bank::Gain,
     soundfont::gain,
 };

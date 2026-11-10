@@ -1,10 +1,11 @@
 //! Canonical song preparation shared by extraction and manifest validation.
 use crate::{
     catalog::model::Asset, catalog::model::AssetData, catalog::model::Catalog, digest::sha256_hex,
-    document::manifest, document::xml, interchange::midi::Midi, machine::adsr::Model,
-    machine::adsr::Registers, pc_render, sequence::midi as translation, sequence::timeline::Limits,
-    soundfont::bank as binding, soundfont::bank::Gain, soundfont::bank::ToneContext,
-    soundfont::envelope, soundfont::gain, voice::tuning::Reference, Result,
+    document::manifest, document::xml, interchange::midi::Midi,
+    machine::spu::voice::envelope::Model, machine::spu::voice::envelope::Registers, pc_render,
+    sequence::midi as translation, sequence::timeline::Limits, soundfont::bank as binding,
+    soundfont::bank::Gain, soundfont::bank::ToneContext, soundfont::envelope, soundfont::gain,
+    voice::tuning::Reference, Result,
 };
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;

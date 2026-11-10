@@ -1,6 +1,6 @@
 use bof3_audio::{
     digest::sha256_hex,
-    machine::spu_noise::{Noise, State},
+    machine::spu::noise::{Noise, State},
 };
 
 #[test]

@@ -1,7 +1,7 @@
 //! Original CdGetSector with explicitly supplied output blocks and service steps.
 use bof3_audio::machine::{
     bus::{Bus, Width},
-    cd_data::Model,
+    cd::data::Model,
     cpu::Cpu,
     image::executable::Executable,
     image::profile::Profile,
@@ -84,7 +84,7 @@ fn original_voice_prefix_bytes_survive_sector_dma() {
         let sector = disc.read_sector(lba).unwrap();
         assert_eq!(
             &sector[12..15],
-            &bof3_audio::machine::cd_position::CdPosition::from_lba(lba as i32)
+            &bof3_audio::machine::cd::position::CdPosition::from_lba(lba as i32)
                 .unwrap()
                 .bcd()
         );

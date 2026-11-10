@@ -1,8 +1,8 @@
 use bof3_audio::{
     digest::sha256_hex,
     machine::{
-        cd_audio::Model as Resampling,
-        cd_queue::{Admission, Model, Queue, WaitOutcome},
+        cd::audio::Model as Resampling,
+        cd::queue::{Admission, Model, Queue, WaitOutcome},
     },
     xa::{Arithmetic, Histories, Stream},
 };
@@ -17,8 +17,8 @@ struct Vector {
     sha256: String,
 }
 
-fn volume() -> bof3_audio::machine::cd_audio::Volume {
-    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+fn volume() -> bof3_audio::machine::cd::audio::Volume {
+    bof3_audio::machine::cd::audio::Volume::new([128, 0, 128, 0]).unwrap()
 }
 
 fn queue(coding: u8, resampling: Resampling) -> Queue {
