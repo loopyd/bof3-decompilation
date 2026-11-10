@@ -3,6 +3,7 @@
 //! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
 //! mechanical/media timing and graphics processing remain unmodeled.
 //! PCM output uses a separate explicit clock.
+mod native;
 use super::{
     boot, clock,
     cpu::{Cpu, FaultKind, Step},
@@ -13,6 +14,7 @@ use super::{
     output_clock,
 };
 use crate::Result;
+pub use native::{ConsumerClock, NativeProducerProgress};
 use serde::Serialize;
 
 const RETURN: u32 = 0x8000_1000;
@@ -37,6 +39,7 @@ pub struct Execution {
     reference: Option<boot::timing::Clock>,
     instruction: Option<boot::timing::Clock>,
     kernel: Option<Services>,
+    native: Option<native::Audio>,
 }
 
 struct Services {
@@ -70,6 +73,7 @@ impl Execution {
             reference: None,
             instruction: None,
             kernel: None,
+            native: None,
         }
     }
 
@@ -135,8 +139,8 @@ impl Execution {
     /// service complete. The observer runs at the selected pre-execution
     /// boundary, so it can retain address registers for retirement evidence.
     /// Syscalls and host service transitions have no retired instruction.
-    /// During a CD audio wait, repeated calls execute nothing and report no
-    /// instruction. Resume with resume_cd_audio before further guest work.
+    /// Audio waits report no further instruction until released. Resume a CD
+    /// wait with resume_cd_audio. A native CPU goal requires consumer advancement.
     /// Errors retain advanced state; owned execution cannot resume.
     pub fn step_retired(
         &mut self,
@@ -190,6 +194,13 @@ impl Execution {
         observer: &mut impl FnMut(&Self) -> Result<()>,
         stop: Option<u32>,
     ) -> Result<Transition> {
+        if self
+            .native
+            .as_ref()
+            .is_some_and(native::Audio::has_continuation)
+        {
+            return self.resume_native();
+        }
         if self.bus.device_progress() == DeviceProgress::WaitingForCdAudio {
             return Ok(Transition::Advanced(StepOutcome {
                 retired: None,
@@ -204,7 +215,11 @@ impl Execution {
         {
             return Ok(Transition::Stopped);
         }
-        let interrupt = match &self.reference {
+        let interrupt = match self
+            .reference
+            .as_ref()
+            .or(self.instruction.as_ref().filter(|_| self.native.is_some()))
+        {
             Some(clock) => clock.admit_interrupt(&mut self.cpu, &self.bus),
             None => self.cpu.take_interrupt(self.bus.interrupts().pending()),
         };
@@ -251,35 +266,61 @@ impl Execution {
             }
             None
         } else {
-            let step = match &mut self.reference {
-                Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
-                None => match &mut self.instruction {
-                    Some(clock) => clock.step_instruction(&mut self.cpu, &mut self.bus),
-                    None => self.cpu.step(&mut self.bus),
-                },
+            let step = if self.native.is_some() {
+                let Some(step) = self.prepare_native_instruction(before.unwrap())? else {
+                    return Ok(Transition::Advanced(StepOutcome {
+                        retired: None,
+                        devices: DeviceProgress::WaitingForSpu,
+                    }));
+                };
+                step
+            } else {
+                match &mut self.reference {
+                    Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
+                    None => match &mut self.instruction {
+                        Some(clock) => clock.step_instruction(&mut self.cpu, &mut self.bus),
+                        None => self.cpu.step(&mut self.bus),
+                    },
+                }
             };
-            match step {
-                Ok(step) => {
-                    if let Some(services) = &mut self.kernel {
-                        services.kernel.complete_exception_step(&self.cpu, &step)?;
-                    }
-                    Some(step)
-                }
-                Err(fault) if fault.kind == FaultKind::Syscall => {
-                    self.cpu.enter_exception(&fault)?;
-                    self.syscalls += 1;
-                    if let Some(services) = &mut self.kernel {
-                        services.kernel.begin_exception(
-                            &mut self.cpu,
-                            &mut self.bus,
-                            services.environment,
-                        )?;
-                    }
-                    None
-                }
-                Err(fault) => return Err(fault.into()),
-            }
+            self.accept_instruction(step)?
         };
+        self.finish_transition(before, retired, waiting)
+    }
+
+    fn accept_instruction(
+        &mut self,
+        step: std::result::Result<Step, super::cpu::Fault>,
+    ) -> Result<Option<Step>> {
+        Ok(match step {
+            Ok(step) => {
+                if let Some(services) = &mut self.kernel {
+                    services.kernel.complete_exception_step(&self.cpu, &step)?;
+                }
+                Some(step)
+            }
+            Err(fault) if fault.kind == FaultKind::Syscall => {
+                self.cpu.enter_exception(&fault)?;
+                self.syscalls += 1;
+                if let Some(services) = &mut self.kernel {
+                    services.kernel.begin_exception(
+                        &mut self.cpu,
+                        &mut self.bus,
+                        services.environment,
+                    )?;
+                }
+                None
+            }
+            Err(fault) => return Err(fault.into()),
+        })
+    }
+
+    fn finish_transition(
+        &mut self,
+        before: Option<u64>,
+        retired: Option<Step>,
+        waiting: bool,
+    ) -> Result<Transition> {
         let branch_boundary = retired.as_ref().is_some_and(|step| step.in_delay_slot);
         let ticks = before.map_or(2, |before| {
             (self
@@ -295,18 +336,26 @@ impl Execution {
             output.advance(&mut self.bus, &mut self.clock, ticks)?;
         } else {
             self.clock.advance(ticks)?;
-            if self.reference.is_none() {
+            if self.reference.is_none() && self.native.is_none() {
                 self.bus.advance_cpu(ticks)?;
             }
+        }
+        if self.native.is_some() && self.native_branch_wait(branch_boundary)? {
+            return Ok(Transition::Advanced(StepOutcome {
+                retired,
+                devices: DeviceProgress::WaitingForSpu,
+            }));
+        }
+        if self.native.is_some() {
+            self.bus
+                .advance_native_time(self.instruction.as_ref().unwrap().cycles(), branch_boundary);
         }
         let devices = self.bus.advance_devices(
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;
-        if waiting && self.reference.is_some() {
-            return Err(
-                "original-BIOS reference timing does not implement owned WaitEvent polling".into(),
-            );
+        if waiting && (self.reference.is_some() || self.native.is_some()) {
+            return Err("native counter timing does not implement owned WaitEvent polling".into());
         }
         Ok(Transition::Advanced(StepOutcome { retired, devices }))
     }
@@ -320,6 +369,9 @@ impl Execution {
     ) -> Result<()> {
         if self.reference.is_some() {
             return Err("original-BIOS output requires an explicit reference sample phase".into());
+        }
+        if self.native.is_some() {
+            return Err("native audio already owns output timing".into());
         }
         if self.output.is_some() {
             return Err("output clock already enabled".into());
@@ -350,12 +402,18 @@ impl Execution {
         self.output.as_ref()
     }
     pub fn begin_audio_capture(&mut self) -> Result<u64> {
+        if self.native.is_some() {
+            return self.begin_native_capture();
+        }
         self.output
             .as_mut()
             .ok_or("output clock is not enabled")?
             .begin_capture()
     }
     pub fn take_audio_frames(&mut self) -> Result<Vec<[f32; 2]>> {
+        if self.native.is_some() {
+            return self.take_native_frames();
+        }
         Ok(self
             .output
             .as_mut()
@@ -367,8 +425,8 @@ impl Execution {
     /// RETURN is a stop address only; no instruction or trampoline is written.
     /// The limit counts transitions, including BIOS calls and blocked wait polls.
     /// Errors may leave guest execution advanced; callers must not retry calls.
-    /// These synchronous helpers have no host audio wait resolver. A full CD
-    /// queue is terminal here; use stepped execution for resumable host waits.
+    /// These synchronous helpers have no host audio wait resolver. A CD feed or
+    /// native CPU goal wait is terminal here; use stepped execution to resume.
     pub fn call(&mut self, entry: u32, arguments: [u32; 4], limit: u64) -> Result<Call> {
         self.call_observed(entry, arguments, limit, &mut |_| Ok(()))
     }
@@ -391,6 +449,13 @@ impl Execution {
             services.kernel.require_plain_context()?;
         }
         self.bus.device_progress().require_ready()?;
+        if self
+            .native
+            .as_ref()
+            .is_some_and(native::Audio::has_continuation)
+        {
+            return Err("finish the native CPU audio wait before entering a guest call".into());
+        }
         let result = self.run_call(entry, arguments, limit, observer);
         if result.is_err() {
             if let Some(services) = &mut self.kernel {

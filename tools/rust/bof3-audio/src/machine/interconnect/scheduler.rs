@@ -2,12 +2,13 @@
 use super::Interconnect;
 use crate::Result;
 
-/// A host audio wait suspends a branch-dispatch pass without advancing CPU time.
+/// An audio wait retains a CPU access, counter pass or CD device dispatch.
 #[must_use]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DeviceProgress {
     Ready,
     WaitingForCdAudio,
+    WaitingForSpu,
 }
 
 impl DeviceProgress {
@@ -17,6 +18,9 @@ impl DeviceProgress {
             Self::Ready => Ok(()),
             Self::WaitingForCdAudio => {
                 Err("CD audio host wait requires an explicit queue wake or timeout outcome".into())
+            }
+            Self::WaitingForSpu => {
+                Err("CPU audio goal requires an explicit consumer advancement".into())
             }
         }
     }

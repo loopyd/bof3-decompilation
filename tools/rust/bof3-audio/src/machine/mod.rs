@@ -32,6 +32,7 @@ pub mod interrupts;
 pub mod kernel;
 pub mod music;
 pub mod music_progress;
+pub mod native_queue;
 pub mod output_clock;
 pub mod profile;
 pub mod reference;

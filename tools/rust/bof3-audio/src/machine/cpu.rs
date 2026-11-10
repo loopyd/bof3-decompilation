@@ -71,6 +71,99 @@ struct Effects {
     cop0: Option<Cop0>,
 }
 
+/// One data transaction retained before its bus effects. Instruction fetch is
+/// already complete; stores preserve the complete source register and mask.
+pub(crate) enum MemoryRequest {
+    Read {
+        address: u32,
+        width: Width,
+    },
+    Write {
+        address: u32,
+        width: Width,
+        value: u32,
+    },
+    WriteMasked {
+        address: u32,
+        value: u32,
+        lanes: u8,
+    },
+}
+
+impl MemoryRequest {
+    fn perform(&self, bus: &mut impl Bus) -> Result<u32, BusError> {
+        match *self {
+            Self::Read { address, width } => bus.read(address, width),
+            Self::Write {
+                address,
+                width,
+                value,
+            } => bus.write(address, width, value).map(|()| 0),
+            Self::WriteMasked {
+                address,
+                value,
+                lanes,
+            } => bus.write_masked(address, value, lanes).map(|()| 0),
+        }
+    }
+}
+
+enum LoadValue {
+    SignedByte,
+    Byte,
+    SignedHalf,
+    Half,
+    Word,
+    Left { old: u32, shift: u32 },
+    Right { old: u32, shift: u32 },
+}
+
+impl LoadValue {
+    fn apply(self, memory: u32) -> u32 {
+        match self {
+            Self::SignedByte => memory as u8 as i8 as i32 as u32,
+            Self::Byte => memory & 0xff,
+            Self::SignedHalf => memory as u16 as i16 as i32 as u32,
+            Self::Half => memory & 0xffff,
+            Self::Word => memory,
+            Self::Left { old, shift } => (old & !(u32::MAX << shift)) | (memory << shift),
+            Self::Right { old, shift } => (old & !(u32::MAX >> shift)) | (memory >> shift),
+        }
+    }
+}
+
+struct PendingAccess {
+    request: MemoryRequest,
+    load: Option<(usize, LoadValue)>,
+}
+
+/// An instruction awaiting its data access and architectural retirement.
+/// The execution owner must retain CPU state unchanged until completion.
+pub(crate) struct PreparedStep {
+    pc: u32,
+    next_pc: u32,
+    instruction: u32,
+    in_delay_slot: bool,
+    isolated: bool,
+    effects: Effects,
+    access: Option<PendingAccess>,
+}
+
+impl PreparedStep {
+    pub(crate) fn pc(&self) -> u32 {
+        self.pc
+    }
+    pub(crate) fn instruction(&self) -> u32 {
+        self.instruction
+    }
+    pub(crate) fn isolated(&self) -> bool {
+        self.isolated
+    }
+    pub(crate) fn request(&self) -> Option<&MemoryRequest> {
+        self.access.as_ref().map(|access| &access.request)
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct Cpu {
     registers: [u32; 32],
@@ -223,6 +316,36 @@ impl Cpu {
     }
 
     pub fn step(&mut self, bus: &mut impl Bus) -> Result<Step, Fault> {
+        self.begin_transaction(bus)?;
+        let result = self
+            .prepare_body(bus)
+            .and_then(|prepared| self.complete_body(prepared, bus));
+        self.end_transaction(bus, result)
+    }
+
+    /// Fetch and prepare without performing the instruction's data transaction.
+    /// Isolation is cleared before returning so device/host work can run while
+    /// the owner retains the instruction. A wait does not become a CPU fault.
+    pub(crate) fn prepare_step(&mut self, bus: &mut impl Bus) -> Result<PreparedStep, Fault> {
+        self.begin_transaction(bus)?;
+        let result = self.prepare_body(bus);
+        self.end_transaction(bus, result)
+    }
+
+    /// Perform the retained access once and retire the same instruction. No
+    /// instruction fetch, register operand read or load merge is repeated.
+    pub(crate) fn complete_step(
+        &mut self,
+        prepared: PreparedStep,
+        bus: &mut impl Bus,
+    ) -> Result<Step, Fault> {
+        bus.set_cache_isolation(prepared.isolated)
+            .map_err(|detail| self.fault(None, FaultKind::UnsupportedSystemControl(detail)))?;
+        let result = self.complete_body(prepared, bus);
+        self.end_transaction(bus, result)
+    }
+
+    fn begin_transaction(&self, bus: &mut impl Bus) -> Result<(), Fault> {
         if self.cop0.status() & 2 != 0 {
             return Err(self.fault(
                 None,
@@ -230,8 +353,10 @@ impl Cpu {
             ));
         }
         bus.set_cache_isolation(self.cop0.status() & (1 << 16) != 0)
-            .map_err(|detail| self.fault(None, FaultKind::UnsupportedSystemControl(detail)))?;
-        let result = self.step_body(bus);
+            .map_err(|detail| self.fault(None, FaultKind::UnsupportedSystemControl(detail)))
+    }
+
+    fn end_transaction<T>(&self, bus: &mut impl Bus, result: Result<T, Fault>) -> Result<T, Fault> {
         // Isolation applies to this CPU transaction, not to host/DMA reads.
         let clear = bus.set_cache_isolation(false);
         result.and_then(|step| {
@@ -241,25 +366,57 @@ impl Cpu {
         })
     }
 
-    fn step_body(&mut self, bus: &mut impl Bus) -> Result<Step, Fault> {
+    fn prepare_body(&mut self, bus: &mut impl Bus) -> Result<PreparedStep, Fault> {
         let instruction = self.fetch(bus)?;
-        let result = self.execute(bus, instruction).and_then(|effects| {
+        let result = self.execute(instruction).and_then(|(effects, access)| {
             if self.delay_slot && effects.branch {
                 Err(FaultKind::BranchInDelaySlot)
             } else {
-                Ok(effects)
+                Ok((effects, access))
             }
         });
-        let effects = match result {
-            Ok(effects) => effects,
+        let (effects, access) = match result {
+            Ok(prepared) => prepared,
             Err(kind) => {
-                // An older load is not undone by a fault in the following instruction.
-                if let Some(load) = self.load.take() {
-                    self.set_register(load.register, load.value);
-                }
-                return Err(self.fault(Some(instruction), kind));
+                return Err(self.execution_fault(instruction, kind));
             }
         };
+        Ok(PreparedStep {
+            pc: self.pc,
+            next_pc: self.next_pc,
+            instruction,
+            in_delay_slot: self.delay_slot,
+            isolated: self.cop0.status() & (1 << 16) != 0,
+            effects,
+            access,
+        })
+    }
+
+    fn execution_fault(&mut self, instruction: u32, kind: FaultKind) -> Fault {
+        // An older load is not undone by a fault in the following instruction.
+        if let Some(load) = self.load.take() {
+            self.set_register(load.register, load.value);
+        }
+        self.fault(Some(instruction), kind)
+    }
+
+    fn complete_body(
+        &mut self,
+        mut prepared: PreparedStep,
+        bus: &mut impl Bus,
+    ) -> Result<Step, Fault> {
+        if let Some(access) = prepared.access {
+            let memory = access.request.perform(bus).map_err(|error| {
+                self.execution_fault(prepared.instruction, FaultKind::Bus(error))
+            })?;
+            if let Some((register, value)) = access.load {
+                prepared.effects.load = Some(RegisterWrite {
+                    register,
+                    value: value.apply(memory),
+                });
+            }
+        }
+        let effects = prepared.effects;
         let committed_load = self.load.take().filter(|old| {
             old.register != 0
                 && effects
@@ -285,19 +442,19 @@ impl Cpu {
             self.cop0 = cop0;
         }
         let step = Step {
-            pc: self.pc,
-            instruction,
-            in_delay_slot: self.delay_slot,
+            pc: prepared.pc,
+            instruction: prepared.instruction,
+            in_delay_slot: prepared.in_delay_slot,
             committed_load,
             register_write: effects.write.filter(|write| write.register != 0),
             scheduled_load: effects.load.filter(|load| load.register != 0),
             branch_target: effects.target,
         };
         self.load = step.scheduled_load;
-        self.pc = self.next_pc;
+        self.pc = prepared.next_pc;
         self.next_pc = effects
             .target
-            .unwrap_or_else(|| self.next_pc.wrapping_add(4));
+            .unwrap_or_else(|| prepared.next_pc.wrapping_add(4));
         self.delay_slot = effects.branch;
         self.branch_taken = effects.target.is_some();
         self.instructions += 1;
@@ -332,7 +489,7 @@ impl Cpu {
         })
     }
 
-    fn execute(&self, bus: &mut impl Bus, word: u32) -> Result<Effects, FaultKind> {
+    fn execute(&self, word: u32) -> Result<(Effects, Option<PendingAccess>), FaultKind> {
         let opcode = word >> 26;
         let rs = ((word >> 21) & 31) as usize;
         let rt = ((word >> 16) & 31) as usize;
@@ -342,6 +499,7 @@ impl Cpu {
         let b = self.registers[rt];
         let immediate = (word as u16 as i16 as i32) as u32;
         let mut effects = Effects::default();
+        let mut access = None;
         let mut write = |register, value| effects.write = Some(RegisterWrite { register, value });
         match opcode {
             0 => match word & 63 {
@@ -470,49 +628,46 @@ impl Cpu {
             }
             0x20..=0x26 => {
                 let address = a.wrapping_add(immediate);
-                let value = match opcode {
-                    0x20 | 0x24 => {
-                        let byte = bus.read(address, Width::Byte).map_err(FaultKind::Bus)?;
-                        if opcode == 0x20 {
-                            byte as u8 as i8 as i32 as u32
-                        } else {
-                            byte & 0xff
-                        }
-                    }
+                let (address, width, value) = match opcode {
+                    0x20 => (address, Width::Byte, LoadValue::SignedByte),
+                    0x24 => (address, Width::Byte, LoadValue::Byte),
                     0x21 | 0x25 => {
                         aligned(address, Width::Half, false)?;
-                        let half = bus.read(address, Width::Half).map_err(FaultKind::Bus)?;
-                        if opcode == 0x21 {
-                            half as u16 as i16 as i32 as u32
-                        } else {
-                            half & 0xffff
-                        }
+                        (
+                            address,
+                            Width::Half,
+                            if opcode == 0x21 {
+                                LoadValue::SignedHalf
+                            } else {
+                                LoadValue::Half
+                            },
+                        )
                     }
                     0x23 => {
                         aligned(address, Width::Word, false)?;
-                        bus.read(address, Width::Word).map_err(FaultKind::Bus)?
+                        (address, Width::Word, LoadValue::Word)
                     }
                     0x22 | 0x26 => {
-                        let memory = bus
-                            .read(address & !3, Width::Word)
-                            .map_err(FaultKind::Bus)?;
                         let old = self
                             .load
                             .filter(|load| load.register == rt)
                             .map_or(b, |load| load.value);
                         let shift = (address & 3) * 8;
-                        if opcode == 0x22 {
-                            let shift = 24 - shift;
-                            (old & !(u32::MAX << shift)) | (memory << shift)
+                        let value = if opcode == 0x22 {
+                            LoadValue::Left {
+                                old,
+                                shift: 24 - shift,
+                            }
                         } else {
-                            (old & !(u32::MAX >> shift)) | (memory >> shift)
-                        }
+                            LoadValue::Right { old, shift }
+                        };
+                        (address & !3, Width::Word, value)
                     }
                     _ => unreachable!(),
                 };
-                effects.load = Some(RegisterWrite {
-                    register: rt,
-                    value,
+                access = Some(PendingAccess {
+                    request: MemoryRequest::Read { address, width },
+                    load: Some((rt, value)),
                 });
             }
             0x28 | 0x29 | 0x2b => {
@@ -523,7 +678,14 @@ impl Cpu {
                 };
                 let address = a.wrapping_add(immediate);
                 aligned(address, width, true)?;
-                bus.write(address, width, b).map_err(FaultKind::Bus)?;
+                access = Some(PendingAccess {
+                    request: MemoryRequest::Write {
+                        address,
+                        width,
+                        value: b,
+                    },
+                    load: None,
+                });
             }
             0x2a | 0x2e => {
                 let address = a.wrapping_add(immediate);
@@ -533,12 +695,18 @@ impl Cpu {
                 } else {
                     (b << (lane * 8), (15u8 << lane) & 15)
                 };
-                bus.write_masked(address & !3, value, lanes)
-                    .map_err(FaultKind::Bus)?;
+                access = Some(PendingAccess {
+                    request: MemoryRequest::WriteMasked {
+                        address: address & !3,
+                        value,
+                        lanes,
+                    },
+                    load: None,
+                });
             }
             _ => return Err(FaultKind::UnsupportedInstruction),
         }
-        Ok(effects)
+        Ok((effects, access))
     }
 }
 

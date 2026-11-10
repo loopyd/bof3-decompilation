@@ -183,28 +183,34 @@ impl Mixer {
         self.reverb
     }
 
+    /// Complete the producer's signed16 voice stream. Callback mute, mono and
+    /// the independently queued CD stream are applied only by its consumer.
+    pub(crate) fn finish_native_voice(
+        &self,
+        sends: Sends,
+        reverb_return: [i32; 2],
+    ) -> Result<[i16; 2]> {
+        let divisor = self
+            .native
+            .ok_or("native SPU producer requires explicit mixer settings")?
+            .divisor()?;
+        let mut result = [0; 2];
+        for channel in 0..2 {
+            let sum = sends.dry[channel]
+                .checked_add(reverb_return[channel])
+                .ok_or("native SPU final sum exceeds signed 32-bit domain")?;
+            result[channel] = (sum / divisor).clamp(-32767, 32767) as i16;
+        }
+        Ok(result)
+    }
+
     /// Reverb already includes wet gain. Published output clips before Q15 main
     /// gain; native output divides and symmetrically clips the SPU stream, then
     /// adds the separate CD stream as float samples without a final clamp.
     pub fn finish(&mut self, sends: Sends, reverb_return: [i32; 2]) -> Result<[f32; 2]> {
-        if let Some(settings) = self.native {
-            let divisor = settings.divisor()?;
-            let mut result = [0.0; 2];
-            for channel in 0..2 {
-                let sum = sends.dry[channel]
-                    .checked_add(reverb_return[channel])
-                    .ok_or("native SPU final sum exceeds signed 32-bit domain")?;
-                let spu = (sum / divisor).clamp(-32767, 32767);
-                let cd = i32::from(sends.cd[channel]) / divisor;
-                result[channel] = spu as f32 / 32767.0 + cd as f32 / 32767.0;
-            }
-            if settings.muted {
-                result = [0.0; 2];
-            }
-            if settings.mono {
-                result = [(result[0] + result[1]) * 0.5; 2];
-            }
-            return Ok(result);
+        if self.native.is_some() {
+            let voice = self.finish_native_voice(sends, reverb_return)?;
+            return self.finish_native_callback(voice, sends.cd);
         }
         let mut result = [0; 2];
         for channel in 0..2 {
@@ -218,6 +224,25 @@ impl Mixer {
             volume.tick();
         }
         Ok(result.map(|sample| f32::from(sample) / 32767.0))
+    }
+
+    pub(crate) fn finish_native_callback(&self, voice: [i16; 2], cd: [i16; 2]) -> Result<[f32; 2]> {
+        let settings = self
+            .native
+            .ok_or("native callback requires explicit mixer settings")?;
+        let divisor = settings.divisor()?;
+        let mut result = [0.0; 2];
+        for channel in 0..2 {
+            let cd = i32::from(cd[channel]) / divisor;
+            result[channel] = f32::from(voice[channel]) / 32767.0 + cd as f32 / 32767.0;
+        }
+        if settings.muted {
+            result = [0.0; 2];
+        }
+        if settings.mono {
+            result = [(result[0] + result[1]) * 0.5; 2];
+        }
+        Ok(result)
     }
 }
 

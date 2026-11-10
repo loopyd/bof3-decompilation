@@ -408,3 +408,34 @@ CPU/worker write visibility or infer a native sample phase. Reference output
 leaves the output clock's synthetic line and VBlank counts at zero; the original
 root counters retain their own phase. `enable_output` rejects execution created
 by `from_boot`; use `enable_reference_output` for this explicit activation.
+
+### Development native audio scheduling
+
+`enable_native_audio(ConsumerClock, Collection)` selects a fresh owned execution
+context before any instructions or SPU frames. Configure native sample, ADSR,
+noise, disable, reverb, delay and host-output settings first, along with GPU
+status and SPU RAM access. This mode owns root counters and keeps the functional
+768-tick output clock separate. It does not restore a running native snapshot.
+
+The caller orders guest steps, `step_native_producer` operations and
+`native_audio_callback(frames, speed)` chunks. Synthesis admits keys and ordinary
+pitch separately for each channel and produces 45-frame batches. Eighteen batches
+form an 810-frame submission. Admission requires the queued total to remain below
+2048 frames. A blocked submission retains its samples; finish its supplied wait
+outcome with `resume_native_enqueue` before producing more samples.
+
+Callback chunks contain 1 through 2048 frames. They consume voice and CD streams,
+fill underflow with zeros and discard extra source runs at the selected speed.
+`ConsumerClock::Callback` advances the master there. With `ConsumerClock::Null`,
+advance it separately through `advance_native_null_clock`. Queue coordinates and
+the CPU goal remain available through `native_audio_queue`. A CPU audio wait
+returns `DeviceProgress::WaitingForSpu`; advance its consumer clock and step again.
+The retained timer access or counter pass resumes once. Owned `WaitEvent` polling
+is unsupported in this mode and fails explicitly.
+
+`begin_audio_capture` starts retaining delivered callback frames without changing
+synthesis or queue state. Drain them with `take_audio_frames`; collection holds at
+most 4096 frames. `native_delivered_frames` counts callback output, including
+underflow, independently of producer and master counters. These explicit
+operations do not choose a host schedule. Production music and effects still use
+the functional clock pending native timing and continuous PCM acceptance.

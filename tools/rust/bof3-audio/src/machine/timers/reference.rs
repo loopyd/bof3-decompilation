@@ -67,6 +67,10 @@ impl Counters {
         self.cycle >= self.next
     }
 
+    pub(crate) fn due_at(&self, cycle: u64) -> bool {
+        cycle >= self.next
+    }
+
     fn count(&self, index: usize) -> u64 {
         self.cycle.wrapping_sub(self.counters[index].origin) / self.counters[index].rate
     }

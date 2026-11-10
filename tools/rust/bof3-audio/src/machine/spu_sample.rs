@@ -235,6 +235,16 @@ impl Player {
         self.pitch.install_pending_frequency();
     }
 
+    pub(crate) fn prepare_native_channel(&mut self) -> Result<()> {
+        let native = self
+            .native
+            .as_mut()
+            .ok_or("native channels require the native-reference sample reader")?;
+        self.pitch.prepare_native_channel()?;
+        native.position = 0;
+        Ok(())
+    }
+
     /// Render one 44.1 kHz frame. Fetches snapshot whole ADPCM blocks; concurrent
     /// RAM writes, bus arbitration, IRQs and key-on latency are not modeled here.
     /// Invalid blocks fail before player state changes; the caller must stop.
@@ -315,12 +325,28 @@ impl Player {
         preceding_voice: Option<i32>,
         signal: Signal,
     ) -> Result<Frame> {
-        self.advance_native(ram, preceding_voice, Some(signal))
+        self.advance_native(ram, preceding_voice, Some(signal), true)
+    }
+
+    /// One sample after the owner has admitted ordinary pitch at channel entry.
+    pub(crate) fn native_channel_sample(
+        &mut self,
+        ram: &[u8],
+        preceding_voice: Option<i32>,
+        signal: Signal,
+    ) -> Result<Frame> {
+        if self.native.is_none() {
+            return Err("native channel samples require the native-reference model".into());
+        }
+        if ram.len() != RAM_BYTES {
+            return Err("SPU sample reader requires exactly 512 KiB RAM".into());
+        }
+        self.advance_native(ram, preceding_voice, Some(signal), false)
     }
 
     /// Released native voices discard samples while retaining installed pitch.
     pub(crate) fn tick_silent(&mut self, ram: &[u8]) -> Result<Frame> {
-        self.advance_native(ram, None, None)
+        self.advance_native(ram, None, None, false)
     }
 
     fn advance_native(
@@ -328,6 +354,7 @@ impl Player {
         ram: &[u8],
         preceding_voice: Option<i32>,
         signal: Option<Signal>,
+        install_frequency: bool,
     ) -> Result<Frame> {
         let native = self.native.as_mut().unwrap();
         if native.ended {
@@ -338,7 +365,8 @@ impl Player {
         }
         let mut pitch = self.pitch;
         let step = match signal {
-            Some(_) => pitch.tick(preceding_voice)?,
+            Some(_) if install_frequency => pitch.tick(preceding_voice)?,
+            Some(_) => pitch.native_sample_step(preceding_voice)?,
             None => pitch.step(),
         };
 

@@ -31,6 +31,7 @@ pub struct Transfer {
     ram_control: u16,
     ram_control_model: Option<RamControlModel>,
     capture_position: u16,
+    capture_irq_position: u16,
     cd_capture_position: u16,
     irq_model: Option<IrqModel>,
     irq_flag: bool,
@@ -48,6 +49,7 @@ impl Default for Transfer {
             ram_control: 0,
             ram_control_model: None,
             capture_position: 0,
+            capture_irq_position: 0,
             cd_capture_position: 0,
             irq_model: None,
             irq_flag: false,
@@ -147,7 +149,46 @@ impl Transfer {
             }
         }
         self.capture_position = (self.capture_position + 2) & 1023;
+        self.capture_irq_position = self.capture_position;
         Ok(())
+    }
+    pub(crate) fn native_capture_voice(
+        &mut self,
+        voice: usize,
+        start: u16,
+        sample: usize,
+        value: i16,
+    ) -> Result<()> {
+        self.require_ram_control()?;
+        let region = match voice {
+            1 => 2,
+            3 => 3,
+            _ => return Err("native voice capture requires voice 1 or 3".into()),
+        };
+        let offset = region * 1024 + (usize::from(start) + sample * 2) % 1024;
+        self.ram[offset..offset + 2].copy_from_slice(&value.to_le_bytes());
+        Ok(())
+    }
+    pub(crate) fn native_capture_cd(&mut self, cd: [i16; 2]) -> Result<()> {
+        self.require_ram_control()?;
+        for (channel, value) in cd.into_iter().enumerate() {
+            let offset = channel * 1024 + usize::from(self.cd_capture_position);
+            self.ram[offset..offset + 2].copy_from_slice(&value.to_le_bytes());
+        }
+        self.cd_capture_position = (self.cd_capture_position + 2) & 1023;
+        Ok(())
+    }
+    pub(crate) fn native_capture_advance(&mut self, frames: u16) {
+        self.capture_position = (self.capture_position + frames * 2) & 1023;
+    }
+    pub(crate) fn native_capture_irq(&mut self) {
+        for channel in 0..4 {
+            let offset = channel * 1024 + usize::from(self.capture_irq_position);
+            if usize::from(self.irq_address) * 8 == offset {
+                self.trigger_irq();
+            }
+        }
+        self.capture_irq_position = (self.capture_irq_position + 2) & 1023;
     }
     pub fn current_address(&self) -> usize {
         self.current_address

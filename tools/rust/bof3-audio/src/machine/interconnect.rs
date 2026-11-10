@@ -3,7 +3,9 @@ mod cache;
 mod cd;
 mod mapped;
 mod memory;
+mod producer;
 mod scheduler;
+pub use producer::{NativeBatch, ProducerProgress};
 pub use scheduler::DeviceProgress;
 
 use super::{
@@ -48,6 +50,8 @@ pub struct Interconnect {
     scheduler: scheduler::Scheduler,
     spu_mixer: Mixer,
     spu_reverb: Option<Reverb>,
+    spu_producer: Option<Box<producer::Producer>>,
+    spu_work_started: bool,
     // Only the linked runtime's two normal bus configurations are supported.
     // Retained for read/modify/write; bus wait-state timing is not modeled.
     spu_bus_control: u32,
@@ -85,6 +89,8 @@ impl Interconnect {
             scheduler: scheduler::Scheduler::default(),
             spu_mixer: Mixer::default(),
             spu_reverb: None,
+            spu_producer: None,
+            spu_work_started: false,
             spu_bus_control: 0,
         }
     }
@@ -229,6 +235,44 @@ impl Interconnect {
         }
     }
 
+    pub(crate) fn reference_update_due(&self, cycle: u64) -> bool {
+        self.reference_timers
+            .as_ref()
+            .is_some_and(|timers| timers.due_at(cycle))
+    }
+
+    pub(crate) fn reference_access_updates(
+        &self,
+        request: &super::cpu::MemoryRequest,
+        isolated: bool,
+    ) -> bool {
+        use super::cpu::MemoryRequest;
+        let (address, width, write) = match *request {
+            MemoryRequest::Read { address, width } => (address, width, false),
+            MemoryRequest::Write { address, width, .. } => (address, width, true),
+            MemoryRequest::WriteMasked { .. } => return false,
+        };
+        if self.reference_timers.is_none()
+            || (isolated && matches!(address >> 29, 0 | 4))
+            || width == Width::Byte
+            || address & 3 != 0
+        {
+            return false;
+        }
+        let physical = Self::physical(address);
+        (0x1f80_1100..0x1f80_1130).contains(&physical)
+            && matches!(physical & 15, 0 | 4 | 8)
+            && (write || physical & 15 != 8)
+    }
+
+    pub(crate) fn advance_native_time(&mut self, cycle: u64, branch: bool) {
+        self.advance_reference_time(cycle, branch);
+        if branch && self.spu_transfer.take_irq_request() {
+            self.interrupts.set_line(Source::Spu, true);
+            self.interrupts.set_line(Source::Spu, false);
+        }
+    }
+
     /// Attach reset-state NTSC status/control before starting its frame clock.
     /// This enables no graphics, VRAM transfers or GPU DMA.
     pub fn configure_gpu_status(&mut self) -> crate::Result<()> {
@@ -248,6 +292,9 @@ impl Interconnect {
     /// Per-voice signals before main gain, mixing, capture, CD and reverb. The
     /// caller supplies frame boundaries; CPU/device clock synchronization is open.
     pub fn step_spu_voices(&mut self) -> crate::Result<spu_voice_ports::Frame> {
+        if self.spu_producer.is_some() {
+            return Err("functional SPU frames cannot advance the native producer".into());
+        }
         let voices = self
             .spu_voices
             .as_mut()
@@ -256,6 +303,7 @@ impl Interconnect {
             voices.require_disable_model()?;
         }
         let control = self.spu_transfer.read(10)?;
+        self.spu_work_started = true;
         let frame = voices.tick(self.spu_transfer.ram(), control)?;
         for voice in &frame.voices {
             if let Some(address) = voice.fetched_address {
@@ -279,6 +327,9 @@ impl Interconnect {
     }
 
     fn deliver_spu_irq(&mut self) {
+        if self.spu_producer.is_some() {
+            return;
+        }
         if self.spu_transfer.take_irq_request() {
             self.interrupts.set_line(Source::Spu, true);
             self.interrupts.set_line(Source::Spu, false);

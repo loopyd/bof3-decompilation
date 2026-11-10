@@ -1,9 +1,9 @@
 //! Voice MMIO latches; the execution owner explicitly schedules frame boundaries.
 use super::{
     adsr,
-    spu_noise::Noise,
+    spu_noise::{Noise, State as NoiseState},
     spu_sample,
-    spu_voices::{Output, Voices, VOICES},
+    spu_voices::{NativeCapture, NativeChannel, NativeInput, Output, Voices, VOICES},
 };
 use crate::Result;
 use serde::{Deserialize, Serialize};
@@ -42,6 +42,16 @@ pub struct Frame {
     pub reverb_mask: u32,
     /// Shared pre-envelope noise level used for this frame, when configured.
     pub noise_level: Option<i16>,
+}
+
+pub(crate) struct NativeSample {
+    pub output: Output,
+    /// Unclipped post-ADSR output for the shared modulation buffer.
+    pub modulation: i32,
+    pub modulation_consumed: bool,
+    pub capture: NativeCapture,
+    pub finished: bool,
+    pub reverb_active: bool,
 }
 
 impl Ports {
@@ -98,6 +108,92 @@ impl Ports {
         }
         self.noise = Some(noise);
         Ok(())
+    }
+
+    pub(crate) fn require_native_context(&self) -> Result<()> {
+        if self.voices.sample_model() != spu_sample::Model::EmulatorReference
+            || self.envelope_model != adsr::Model::EmulatorReference
+        {
+            return Err(
+                "native channel processing requires native-reference samples and ADSR".into(),
+            );
+        }
+        if !matches!(
+            self.noise.as_ref().map(Noise::state),
+            Some(NoiseState::EmulatorReference { .. })
+        ) {
+            return Err(
+                "native channel processing requires explicit native-reference noise state".into(),
+            );
+        }
+        Ok(())
+    }
+
+    /// Clock one prelude sample, including when no voice currently selects noise.
+    pub(crate) fn native_noise_sample(&mut self, control: u16) -> Result<i16> {
+        self.require_native_context()?;
+        self.noise
+            .as_mut()
+            .ok_or("native channel processing requires explicit native-reference noise state")?
+            .sample(((control >> 8) & 63) as u8)
+    }
+
+    /// Admit one channel's pending start and ordinary pitch before its sample loop.
+    pub(crate) fn begin_native_channel(
+        &mut self,
+        index: usize,
+        control: u16,
+    ) -> Result<NativeChannel> {
+        self.require_native_context()?;
+        if index >= VOICES {
+            return Err("SPU voice index outside 0..24".into());
+        }
+        let bit = 1 << index;
+        let start = self.on & bit != 0;
+        let channel = self
+            .voices
+            .begin_native_channel(index, self.noise_mask & bit != 0, start)?;
+        if start {
+            let armed = if control & 0x80 != 0 { self.reverb } else { 0 };
+            self.active_reverb = (self.active_reverb & !bit) | (armed & bit);
+            self.on &= !bit;
+            self.off &= !bit;
+        }
+        self.end_readback = None;
+        Ok(channel)
+    }
+
+    /// Consume one sample from the selected channel. Pending starts for all
+    /// channels remain pending until their next channel-entry admission.
+    pub(crate) fn native_channel_sample(
+        &mut self,
+        channel: &mut NativeChannel,
+        ram: &[u8],
+        control: u16,
+        noise_level: i16,
+        modulation: Option<i32>,
+    ) -> Result<NativeSample> {
+        self.require_native_context()?;
+        let bit = 1 << channel.voice();
+        let off = &self.off;
+        let value = self.voices.native_channel_sample(
+            channel,
+            ram,
+            NativeInput {
+                control,
+                noise_level,
+                modulation,
+            },
+            || *off & bit != 0,
+        )?;
+        Ok(NativeSample {
+            output: value.output,
+            modulation: value.modulation,
+            modulation_consumed: value.modulation_consumed,
+            capture: value.capture,
+            finished: value.finished,
+            reverb_active: self.active_reverb & bit != 0,
+        })
     }
     /// Relative to 0x1f801c00. Key reads expose the last register writes,
     /// not voice activity or pending keys consumed at a frame boundary.

@@ -29,6 +29,60 @@ pub struct Output {
     pub fetched_loop_address: Option<u32>,
 }
 
+/// Dispatch choices retained while one native channel produces its 45 samples.
+#[derive(Debug)]
+pub(crate) struct NativeChannel {
+    voice: usize,
+    role: ModulationRole,
+    noise: bool,
+    silent: bool,
+    terminated: bool,
+    started: bool,
+    installed_step: u32,
+}
+
+impl NativeChannel {
+    pub(crate) fn voice(&self) -> usize {
+        self.voice
+    }
+
+    pub(crate) fn role(&self) -> ModulationRole {
+        self.role
+    }
+
+    pub(crate) fn started(&self) -> bool {
+        self.started
+    }
+
+    pub(crate) fn installed_step(&self) -> u32 {
+        self.installed_step
+    }
+}
+
+pub(crate) struct NativeInput {
+    pub control: u16,
+    pub noise_level: i16,
+    pub modulation: Option<i32>,
+}
+
+#[derive(Clone, Copy, Default)]
+pub(crate) enum NativeCapture {
+    #[default]
+    Sample,
+    DeferredSilence,
+    SilenceAll,
+    SilenceRemainder,
+}
+
+#[derive(Default)]
+pub(crate) struct NativeOutput {
+    pub output: Output,
+    pub modulation: i32,
+    pub modulation_consumed: bool,
+    pub capture: NativeCapture,
+    pub finished: bool,
+}
+
 #[derive(Clone, Debug)]
 struct Voice {
     volumes: [VoiceVolume; 2],
@@ -38,6 +92,7 @@ struct Voice {
     player: Player,
     started: bool,
     startup_remaining: i32,
+    native_channel_prepared: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -62,6 +117,7 @@ impl Voices {
                 player: Player::new(sample_model),
                 started: false,
                 startup_remaining: 0,
+                native_channel_prepared: false,
             }),
             sample_model,
             end_flags: 0,
@@ -168,6 +224,164 @@ impl Voices {
             }
         }
         Ok(())
+    }
+
+    pub(crate) fn begin_native_channel(
+        &mut self,
+        index: usize,
+        noise: bool,
+        start: bool,
+    ) -> Result<NativeChannel> {
+        if self.sample_model != SampleModel::EmulatorReference {
+            return Err("native channels require native-reference samples".into());
+        }
+        let delay = self.require_key_on_delay()?;
+        let voice = self
+            .voices
+            .get_mut(index)
+            .ok_or("SPU voice index outside 0..24")?;
+        if voice.envelope.model() != EnvelopeModel::EmulatorReference {
+            return Err("native channels require native-reference ADSR".into());
+        }
+        if !voice.native_channel_prepared {
+            if voice.started {
+                return Err(
+                    "native channels must be selected before functional voice execution".into(),
+                );
+            }
+            voice.player.prepare_native_channel()?;
+            voice.native_channel_prepared = true;
+        }
+        let role = self.modulation[index];
+        if start {
+            voice.player.start(voice.start);
+            voice.envelope.key_on();
+            voice.started = true;
+            voice.startup_remaining = delay;
+        }
+        let silent = voice.envelope.phase() == super::adsr::Phase::Off;
+        if !silent {
+            voice.player.install_pending_frequency();
+        }
+        Ok(NativeChannel {
+            voice: index,
+            role,
+            noise,
+            silent,
+            terminated: false,
+            started: start,
+            installed_step: voice.player.pitch().step(),
+        })
+    }
+
+    /// Consume one selected channel sample. Stop, ADSR controls and dry gains
+    /// remain live; dispatch roles and the entry on/off branch stay latched.
+    pub(crate) fn native_channel_sample(
+        &mut self,
+        channel: &mut NativeChannel,
+        ram: &[u8],
+        input: NativeInput,
+        stop: impl FnOnce() -> bool,
+    ) -> Result<NativeOutput> {
+        if ram.len() != RAM_BYTES {
+            return Err("SPU voices require exactly 512 KiB RAM".into());
+        }
+        if channel.terminated {
+            return Err("native channel already completed".into());
+        }
+        let index = channel.voice;
+        let voice = &mut self.voices[index];
+        if !channel.silent && voice.startup_remaining > 0 {
+            voice.startup_remaining -= 1;
+            return Ok(NativeOutput::default());
+        }
+        let source = channel.role == ModulationRole::Source;
+        let modulation_consumed = !channel.silent
+            && channel.role == ModulationRole::Target
+            && input.modulation.is_some_and(|value| value != 0);
+        let frame = if channel.silent {
+            voice.player.tick_silent(ram)
+        } else {
+            voice.player.native_channel_sample(
+                ram,
+                if channel.role == ModulationRole::Target {
+                    input.modulation
+                } else {
+                    None
+                },
+                if source {
+                    Signal::ModulationSource
+                } else {
+                    Signal::Ordinary {
+                        unmuted: input.control & 0x4000 != 0,
+                    }
+                },
+            )
+        }
+        .map_err(|error| format!("SPU voice {index}: {error}"))?;
+        if frame.loop_end {
+            self.end_flags |= 1 << index;
+        }
+        let mut output = Output {
+            fetched_address: frame.fetched_address,
+            fetched_loop_address: frame.fetched_loop_address,
+            ..Output::default()
+        };
+        if frame.stopped {
+            channel.terminated = true;
+            if !channel.silent {
+                voice.envelope.force_off();
+            }
+            return Ok(NativeOutput {
+                output,
+                modulation_consumed,
+                capture: if channel.silent {
+                    NativeCapture::SilenceAll
+                } else {
+                    NativeCapture::SilenceRemainder
+                },
+                finished: true,
+                ..NativeOutput::default()
+            });
+        }
+        if channel.silent {
+            return Ok(NativeOutput {
+                output,
+                capture: NativeCapture::DeferredSilence,
+                ..NativeOutput::default()
+            });
+        }
+        if stop() {
+            voice.envelope.key_off();
+        }
+        let raw = if channel.noise {
+            i32::from(input.noise_level)
+        } else {
+            frame.sample
+        };
+        let sample = raw
+            .checked_mul(i32::from(voice.envelope.sample()))
+            .ok_or_else(|| {
+                format!("SPU voice {index}: envelope product exceeds signed 32-bit domain")
+            })?
+            >> 15;
+        output.mono = sample.clamp(i32::from(i16::MIN), i32::from(i16::MAX)) as i16;
+        if source {
+            return Ok(NativeOutput {
+                output,
+                modulation: sample,
+                ..NativeOutput::default()
+            });
+        }
+        output.stereo = [
+            voice.volumes[0].apply(sample)?,
+            voice.volumes[1].apply(sample)?,
+        ];
+        Ok(NativeOutput {
+            output,
+            modulation_consumed,
+            ..NativeOutput::default()
+        })
     }
 
     /// Halfword register offsets relative to this voice's sixteen-byte MMIO bank.
