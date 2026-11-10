@@ -69,8 +69,10 @@ ownership/ABI or failed native gates stop matching. Require final byte match and
 independent review. Diagnosis requires existing C.
 
 Exact metadata: `@status exact`, `@match 100.00`, `@residual none`. Notes on separate
-lines, never semicolon suffix in tag. Naming repair needs fresh exact proof;
-never weaken parser or repair unrelated rows to admit selected function.
+lines, never semicolon suffix in tag. A name refused after the body matched is a
+name-only repair: keep the matched body and its proof, change the name, re-gate in the
+same batch. Never re-lift a matched body to satisfy a name, weaken parser or repair
+unrelated rows to admit selected function.
 
 ## Terminal ladder
 

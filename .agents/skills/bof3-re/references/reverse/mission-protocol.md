@@ -22,7 +22,9 @@ the size with the one unused local of the missing size. One seed can draw on sev
 8. Retry reaches exact: report decisive experiment and prior partial diff for
    reusable-rule review. A fresh lift that needed a rung above representation owes
    that same report, naming the first gate's miss class and the rung that closed
-   it. Never generalize register coincidence.
+   it. A fresh lift that matched at rung 1 names the lever that carried it, because an
+   empty attempt ledger leaves the next sibling nothing to reuse. Never generalize
+   register coincidence.
 
 ## Banned
 
