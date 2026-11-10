@@ -14,6 +14,7 @@ sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic08303_801EF744.c",
     "src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic08303_801EF528.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic08303_801F0DC0.c",
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingOfSixteenQuadsSteppingSixteenthTurnBetweenRadius128And256TintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic08303_801EFB24.c",
 ]
 support_sources = [
     "src/bof3/support/magic083_03_psyq.c",

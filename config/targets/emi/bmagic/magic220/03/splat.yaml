@@ -103,8 +103,10 @@ segments:
     - '@source: src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesThreeCountdownByte9AndAdvanceWorkByte2AtZeroBmagicMagic22003_801F010C.c'
     - '@behavior: Seeds scratch angle from work byte 0xB, steps words 0x34 and 0x38 by three times the angular samples, counts byte 9 down and advances byte 2 at zero.'
   - - 5576
-    - asm
-    - func_801F01C8
+    - c
+    - stepWorkPositionPairByWorkByteBAngleTimesTwoCountdownByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkAtZeroBmagicMagic22003_801F01C8
+    - '@source: src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesTwoCountdownByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkAtZeroBmagicMagic22003_801F01C8.c'
+    - '@behavior: Entry 12 of the handler table based at 0x801F06DC: seeds the scratchpad halfword at 0x1F800004 from work byte 0xB shifted left eight, adds twice the angular sample from 0x801782FC to work word 0x34 and twice that from 0x801783C8 to work word 0x38, decrements work byte 0xA by two and, at zero, decrements the shared battle work byte 0xB and clears work record bytes 0 through 4.'
   - - 5764
     - asm
     - func_801F0284

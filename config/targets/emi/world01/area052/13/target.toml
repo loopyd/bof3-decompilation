@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/invokeHelperWorld01Area05213_801F3D24.c",
     "src/bof3/world/area05213DispatchTables.c",
     "src/bof3/world/clearWorkTableByte15At800E4800World01Area05213_801F3194.c",
+    "src/bof3/world/clearSharedFlagBit25World01Area05213_801F4268.c",
     "src/bof3/support/area052_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area052_13_psyq.c"

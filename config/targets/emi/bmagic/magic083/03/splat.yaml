@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EF844
   - - 3876
-    - asm
-    - func_801EFB24
+    - c
+    - drawTranslucentGouraudQuadRingOfSixteenQuadsSteppingSixteenthTurnBetweenRadius128And256TintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic08303_801EFB24
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingOfSixteenQuadsSteppingSixteenthTurnBetweenRadius128And256TintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic08303_801EFB24.c'
+    - '@behavior: Draws a translucent gouraud ring of sixteen quads that steps a 12-bit turn in sixteenths between radius 128 and 256, tinting the inner vertices by the palette row selected by work byte 4 and scaled by work byte 9 and the outer vertices with the constant one.'
   - - 4692
     - c
     - dispatchStateByte1Table0f04BmagicMagic08303_801EFE54

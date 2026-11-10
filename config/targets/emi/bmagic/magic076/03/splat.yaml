@@ -105,8 +105,10 @@ segments:
     # @source 0x801EFC30
     # @behavior Grow work word 0x0C, project position pair, decay word 0x14 into word 0x3C and advance byte 2 at byte 9 value 16.
   - - 4448
-    - asm
-    - func_801EFD60
+    - c
+    - incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60
+    - '@source: src/bof3/bmagic/incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60.c'
+    - '@behavior: Increment work word 0x0C, project the position pair from scratchpad angle samples and decay word 0x14 into word 0x3C; on frame-counter parity decrement work byte 9 and, at zero, shared record byte 0xB and work bytes 0x00 through 0x04.'
   - - 4776
     - asm
     - func_801EFEA8

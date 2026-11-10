@@ -130,8 +130,9 @@ segments:
     - asm
     - func_801F4920
   - - 7552
-    - asm
-    - func_801F4980
+    - c
+    - setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c'
   - - 7636
     - asm
     - func_801F49D4

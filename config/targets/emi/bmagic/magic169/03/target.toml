@@ -16,5 +16,6 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic16903_801EF254.c",
     "src/bof3/support/magic169_03_psyq.c",
     "src/bof3/bmagic/magic16903DispatchTables.c",
+    "src/bof3/bmagic/clearRecordPoolBytes0To2InvokeSharedHelperAddC00000ToWorkWord3CCopy256HalfwordsSettingBit15SetByte80145988ToOneCopyFirstHalfwordInvokeHelperAt100ClearWorkBytes9AndBAdvanceWorkByte1BmagicMagic16903_801EED8C.c",
 ]
 psyq_source = "src/bof3/support/magic169_03_psyq.c"

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC14
   - - 284
-    - asm
-    - func_801EED1C
+    - c
+    - clearRecordPoolBytes0To2SeedWorkPoseAndDirectionClaimSevenSlotsCopy16HalfwordsSettingBit15SetByte80145988ToOneInvokeHelperAt100ThenAdvanceWorkByte1BmagicMagic10503_801EED1C
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2SeedWorkPoseAndDirectionClaimSevenSlotsCopy16HalfwordsSettingBit15SetByte80145988ToOneInvokeHelperAt100ThenAdvanceWorkByte1BmagicMagic10503_801EED1C.c'
+    - '@behavior: Clears bytes 0 to 2 of all 64 records of the 0x78-byte pool at 0x801F00A0, seeds work words 0x0C and 0x10, projects work words 0x34 and 0x38 from the shared pair at 0x80149308 and 0x8014930C and stores the direction back into word 0x0C, claims seven action slots publishing the work pointer, copies 16 halfwords with bit 15 set, sets byte 0x80145988 to 1, invokes helper 0x8015D71C with 0x100 and advances work byte 1.'
   - - 792
     - asm
     - func_801EEF18

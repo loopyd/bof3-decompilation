@@ -66,8 +66,10 @@ segments:
     - '@source: src/bof3/world/advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C.c'
     - '@behavior: Advances the seed halfword by 0xF00, invokes 0x801F3400, and ticks the work countdown and state.'
   - - 1996
-    - asm
-    - func_801F33CC
+    - c
+    - publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC
+    - '@source: src/bof3/world/publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC.c'
+    - '@behavior: Copies the work record halfword at +0x32 into the shared seed halfword at 0x801469EA, then calls the reset helper at 0x80196070.'
   - - 2048
     - asm
     - func_801F3400

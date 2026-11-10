@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F33FC
   - - 2292
-    - asm
-    - func_801F34F4
+    - c
+    - advanceWorkHalfword3eBy10AndStepHalfwordPair36And3aAt80ThenAdvanceWorkByte2AndDrawWorld03Area14013_801F34F4
+    - '@source: src/bof3/world/advanceWorkHalfword3eBy10AndStepHalfwordPair36And3aAt80ThenAdvanceWorkByte2AndDrawWorld03Area14013_801F34F4.c'
+    - '@behavior: Adds 0x10 to work halfword +0x3E, and once its signed value reaches 0x80 steps the halfword pair +0x36/+0x3A and advances state byte +2 before drawing through 0x801F3950.'
   - - 2480
     - asm
     - func_801F35B0

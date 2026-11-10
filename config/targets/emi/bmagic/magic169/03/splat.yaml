@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC38
   - - 396
-    - asm
-    - func_801EED8C
+    - c
+    - clearRecordPoolBytes0To2InvokeSharedHelperAddC00000ToWorkWord3CCopy256HalfwordsSettingBit15SetByte80145988ToOneCopyFirstHalfwordInvokeHelperAt100ClearWorkBytes9AndBAdvanceWorkByte1BmagicMagic16903_801EED8C
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2InvokeSharedHelperAddC00000ToWorkWord3CCopy256HalfwordsSettingBit15SetByte80145988ToOneCopyFirstHalfwordInvokeHelperAt100ClearWorkBytes9AndBAdvanceWorkByte1BmagicMagic16903_801EED8C.c'
+    - '@behavior: Entry stage 0 of this overlay: clears bytes 0x00 to 0x02 of all 80 stride-0x78 records at 0x801F0424, calls helper 0x800AFD9C, adds 0xC00000 to work word 0x3C, copies 256 halfwords from 0x80036C00 to 0x8003AC00 with bit 15 set and restores entry 0 without it, stores 1 at byte 0x80145988, calls helper 0x8015D71C with 0x100, then clears work bytes 9 and 0xB and advances work byte 1.'
   - - 688
     - asm
     - func_801EEEB0

@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801EFE8C
   - - 5064
-    - asm
-    - func_801EFFC8
+    - c
+    - drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8
+    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8.c'
+    - '@behavior: Publish work byte 0xA as the radius and the signed work bytes 0x5D through 0x5F shifted left four as the rim tint, then emit eight translucent Gouraud triangles around work halfwords 0x2E and 0x30 from the phase-zero rim point at 0x1F800014 with centre colour 0xF0.'
   - - 5644
     - asm
     - func_801F020C
