@@ -1010,7 +1010,13 @@ volatility: a `volatile` named cell read on both sides of a call puts the post-c
 reload's base in `$a0` where the original builds `$v1`, and no regrouping of
 named-cell locals moved it (31 or 32 of 40 across three arrangements). The plain
 accessor matched, with one `slots = SPAD_PTR_TABLE(u8)` base taken before the call
-and `slots[N]` re-indexed after it. One body can mix both: keep a
+and `slots[N]` re-indexed after it. A pointer cell outside the scratchpad has no
+such accessor and takes the same arrangement through a local bound to the cell's own
+address, one indirection deeper than the cell's type (`u8 **cell = &D_<ADDRESS>;`,
+then `f(*cell, ...)` at each use): that keeps the base in the saved register across
+the call and still re-reads the value, where the named symbol folds the base into
+every load and a value local (`u8 *p = D_<ADDRESS>`) replays the first load instead
+of re-reading a cell the call may republish. One body can mix both: keep a
 read-modify-write pair on one pointer local and re-spell the named cell for each
 later access, because a store through that local may alias the cell and the
 original re-reads it there. Read each access's own `lui`/`lw` pair; running one
