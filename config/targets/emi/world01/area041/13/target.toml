@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68.c",
     "src/bof3/world/advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC.c",
+    "src/bof3/world/clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290.c",
     "src/bof3/world/dispatchStateByte4Table567cWorld01Area04113_801F3E3C.c",
     "src/bof3/world/setTwoWorld01Area04113_801F3E20.c",
     "src/bof3/world/area04113DispatchTables.c",

@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801EECD0
   - - 424
-    - asm
-    - func_801EEDA8
+    - c
+    - countEligibleBattlersBatlEnd00_801EEDA8
+    - '@source: src/bof3/battle/countEligibleBattlersBatlEnd00_801EEDA8.c'
+    - '@behavior: Counts the party slots below the volatile count byte at 0x801462F0 that pass both eligibility tests: the per-slot availability test at 0x801DB524 reports the slot available (zero), and bit 0x400 of the flags word at the start of that slot''s 0x140-byte record in D_80145FB8 is clear; the count byte is re-read on every loop test, so the loop stops as soon as it shrinks below the running index, and the 0x20-byte frame keeps $ra and $s0-$s2 across the per-slot call.'
   - - 588
     - asm
     - func_801EEE4C

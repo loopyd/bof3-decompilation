@@ -27,10 +27,11 @@ s32 func_801783C8(s32 arg0);
  * arguments and reads no result. */
 void func_800AF764(void);
 
-/* This overlay draw routine at 0x801EF7E8, the last entry of the same
- * three-entry table and still an asm boundary in this target. It is invoked
- * after the drift words are advanced and takes no arguments here. */
-void func_801EF7E8(void);
+/* This overlay draw routine at 0x801EF7E8 was still an asm boundary in this
+ * target when this caller was lifted and is now lifted as
+ * drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30WithRadiusSixTimesWorkByte9PlusOneOrTwiceWorkByte9Plus32AndTintTwentyTimesWorkByteABmagicMagic04603_801EF7E8. It is invoked after the
+ * drift words are advanced and takes no arguments here. */
+void drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30WithRadiusSixTimesWorkByte9PlusOneOrTwiceWorkByte9Plus32AndTintTwentyTimesWorkByteABmagicMagic04603_801EF7E8(void);
 
 /* @source 0x801EF540
  * @behavior Frame handler of the second stage of this overlay draw state
@@ -72,7 +73,7 @@ void publishPhaseFromWorkBytes9PlusBAdvanceWorkWord0CFromWord14ThenDriftWorkWord
   sample = func_801783C8(*(s32 *)(g_battle_work + 0xC));
   *(s32 *)(g_battle_work + 0x38) += (sample * 0x7000) >> 12;
   func_800AF764();
-  func_801EF7E8();
+  drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30WithRadiusSixTimesWorkByte9PlusOneOrTwiceWorkByte9Plus32AndTintTwentyTimesWorkByteABmagicMagic04603_801EF7E8();
   if ((g_battle_work[9] += 1) == 0x10) {
     g_battle_work[2]++;
   }

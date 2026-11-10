@@ -102,8 +102,10 @@ segments:
     - drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C
     - '@source: src/bof3/bmagic/drawFourRotatedTrianglesFromPublishedCenterWithHalfAndFullRadiusTintedByWorkByte5BmagicMagic07303_801EFE2C.c'
   - - 5316
-    - asm
-    - func_801F00C4
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesFromPublishedCenterAtRadiusWorkByte6PlusRandomTintFromTableOfWorkBytes3And4TimesWorkByte5BmagicMagic07303_801F00C4
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromPublishedCenterAtRadiusWorkByte6PlusRandomTintFromTableOfWorkBytes3And4TimesWorkByte5BmagicMagic07303_801F00C4.c'
+    - '@behavior: Draw step of this overlay run, reached only from the draw branch of the dispatcher at 0x801EF768, which calls it with no arguments when record byte 0 has bit 0 set and byte 2 is non-zero. It selects the draw-mode texture page 0xA5 when the shared graphic type is 1 or 2 and 0x35 otherwise, installs it at g_PrimCursor with dfe 0 and dtd 1, and links a 0xC-byte draw-mode packet at the record words 0x14 and 0x18 with kind 2. It then publishes the burst into the scratchpad: the radius cell 0x1F800004 takes record byte 0x06 plus a rand result masked with 3, the centre cells 0x1F800000 and 0x1F800002 take record halfwords 0x20 and 0x22, the tint triplet 0x1F800008, 0x1F80000A and 0x1F80000C takes the colour-table triple at index record byte 0x03 times three plus byte 0x04 times twelve multiplied by record byte 0x05, and the alpha cell 0x1F80000E takes record byte 0x05 alone. It emits eight triangles, one per 0x200 step of the 0x1000 circle, each a semi-transparent gouraud POLY_G3 seeded by 0x8017A97C whose first vertex is the published centre and whose second and third are that centre plus the 0x801782FC and 0x801783C8 samples of the current and next phase scaled by the signed radius cell and shifted right 12. The first vertex takes the published tint triplet, the other two take the published alpha byte in all three colour components, and every iteration links a 0x1C-byte packet at the record words 0x14 and 0x18 with kind 2. It keeps a 0x30-byte frame and returns nothing.'
   - - 6120
     - c
     - reserveFirstFreeRecordBmagicMagic07303_801F03E8

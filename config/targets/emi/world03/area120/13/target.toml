@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/area120_13_psyq.c",
     "src/bof3/world/area12013DispatchTables.c",
+    "src/bof3/world/advanceWorkByte2WhenOverlayStateWordIs50005ThenDrawQuadWorld03Area12013_801F3B28.c",
     "src/bof3/world/setStatusFFFFAndScenarioProgress14IfGateElse0AWorld03Area12013_801F42F0.c",
     "src/bof3/world/setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350.c",
 ]

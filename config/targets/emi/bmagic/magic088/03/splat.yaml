@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EECA4
   - - 756
-    - asm
-    - func_801EEEF4
+    - c
+    - decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic08803_801EEEF4
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic08803_801EEEF4.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. Reads the battle record pointer cell at 0x8014638C into a saved register, then pre-decrements the scratchpad work object countdown byte at offset 0x9 at byte width and returns while the truncated value stays nonzero. Only when the countdown reaches zero does it set the record byte 0x5C to one, submit that record through the shared helper at 0x80196718, submit its positional effect through the shared helper at 0x8019651C with the 0/0/0 offsets and mode 1 and store the returned effect byte in the work object byte 0xA, set the work object byte 0x9 to 8, and advance its state byte 0x1 at byte width. The work-object cell is re-read for each of the three tail stores, so the original keeps three separate cell loads after the countdown group. The 0x20-byte frame holds $ra, $s0 and the stack slot of the fifth helper argument. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 928
     - asm
     - func_801EEFA0

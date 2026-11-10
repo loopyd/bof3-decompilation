@@ -88,8 +88,9 @@ segments:
     - c
     - invokeHelperBmagicMagic02003_801EF874
   - - 3220
-    - asm
-    - func_801EF894
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF894.c'
   - - 3368
     - c
     - decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928

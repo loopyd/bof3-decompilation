@@ -49,3 +49,19 @@ void setStatusThirteenIfGateElseFFFFWorld01Area05613_801F3144(void) {
     D_801490A8 = 0xFFFF;
   }
 }
+
+/* @source 0x801F316C
+ * @behavior Loads the shared gate byte D_801490C7 and, when it equals 1,
+ * stores 0xE into the shared status halfword D_801490A8; when the gate byte
+ * differs from 1 it stores 0xFFFF into D_801490A8 instead.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void setStatusFourteenIfGateElseFFFFWorld01Area05613_801F316C(void) {
+  if (D_801490C7 == 1) {
+    D_801490A8 = 0xE;
+  } else {
+    D_801490A8 = 0xFFFF;
+  }
+}

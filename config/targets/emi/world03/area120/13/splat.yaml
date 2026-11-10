@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801F3A7C
   - - 3880
-    - asm
-    - func_801F3B28
+    - c
+    - advanceWorkByte2WhenOverlayStateWordIs50005ThenDrawQuadWorld03Area12013_801F3B28
+    - '@source: src/bof3/world/advanceWorkByte2WhenOverlayStateWordIs50005ThenDrawQuadWorld03Area12013_801F3B28.c'
+    - '@behavior: reads the shared overlay state word at 0x80143B90 with one 32-bit load and compares it against the packed halfword pair 0x00050005; while that word matches it advances byte 0x02 of the scratchpad work record published through pointer cell 0x1F800044 by one, the record byte the work-byte-2 dispatcher table at 0x801F43E8 indexes, and it then calls the quad drawer func_801F3F5C with the fixed arguments (0x80, 0x40, 1, 0). Takes no arguments and returns nothing.'
   - - 3972
     - asm
     - func_801F3B84

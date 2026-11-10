@@ -53,8 +53,9 @@ segments:
     - asm
     - func_801F31F0
   - - 1680
-    - asm
-    - func_801F3290
+    - c
+    - clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290
+    - '@source: src/bof3/world/clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290.c'
   - - 1788
     - c
     - advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC

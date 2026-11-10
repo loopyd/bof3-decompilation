@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801F2DBC
   - - 580
-    - asm
-    - func_801F2E44
+    - c
+    - runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19213_801F2E44
+    - '@source: src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19213_801F2E44.c'
+    - '@behavior: Entry 6 of the target handler table at 0x801F37AC: runs the shared front-end startup helper 0x8015C088, clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884 with an `andi 0xFE` read-modify-write, then increments the unsigned halfword at offset 0x7E of that record in place.'
   - - 664
     - asm
     - func_801F2E98
