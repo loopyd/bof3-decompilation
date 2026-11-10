@@ -1,7 +1,7 @@
 ---
 name: bof3-namer
 description: Prepare target-scoped BOF3 naming evidence without applying identities
-model: ninerouter/gpt-combo
+model: ninerouter/qwen-combo
 thinking: high
 tools: read,grep,find,ls,bash,edit,write,contact_supervisor
 systemPromptMode: replace

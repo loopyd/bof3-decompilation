@@ -1,7 +1,7 @@
 ---
 name: bof3-reviewer
 description: Independently verify BOF3 lifts, identity transactions and their project contracts
-model: ninerouter/gpt-combo
+model: ninerouter/qwen-combo
 thinking: high
 tools: read,grep,find,ls,bash,contact_supervisor
 systemPromptMode: replace

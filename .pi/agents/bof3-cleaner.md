@@ -1,7 +1,7 @@
 ---
 name: bof3-cleaner
 description: Apply one reviewed BOF3 identity or byte-safe cleanup transaction
-model: ninerouter/gpt-combo
+model: ninerouter/qwen-combo
 thinking: high
 tools: read,grep,find,ls,bash,edit,contact_supervisor
 systemPromptMode: replace

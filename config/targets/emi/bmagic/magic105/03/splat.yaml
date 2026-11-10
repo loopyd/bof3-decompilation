@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801EF930
   - - 3944
-    - asm
-    - func_801EFB68
+    - c
+    - advanceWorkByteAAccumulateSamplePairIntoPositionWordsSubtract8FromHalfword3EThenDecrementGlobalWorkByteBAndClearWorkAtHelperReadyOrBelowWord14BmagicMagic10503_801EFB68
+    - '@source: src/bof3/bmagic/advanceWorkByteAAccumulateSamplePairIntoPositionWordsSubtract8FromHalfword3EThenDecrementGlobalWorkByteBAndClearWorkAtHelperReadyOrBelowWord14BmagicMagic10503_801EFB68.c'
+    - '@behavior: Advances work byte 0xA, accumulates the two rotator samples into position words 0x34 and 0x38, subtracts 8 from halfword 0x3E, then decrements global work byte 0xB and clears work bytes 0, 1 and 2 when the readiness helper reports ready or halfword 0x3E falls below word 0x14.'
   - - 4236
     - c
     - reserveFirstFreeRecordBmagicMagic10503_801EFC8C

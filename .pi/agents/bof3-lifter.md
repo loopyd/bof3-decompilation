@@ -1,7 +1,7 @@
 ---
 name: bof3-lifter
 description: Lift one target-qualified BOF3 function with live byte evidence
-model: ninerouter/gpt-combo
+model: ninerouter/qwen-combo
 thinking: high
 tools: read,grep,find,ls,bash,edit,write,contact_supervisor
 systemPromptMode: replace
