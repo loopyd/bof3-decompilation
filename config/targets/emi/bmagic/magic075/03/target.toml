@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500.c",
     "src/bof3/support/magic075_03_psyq.c",
     "src/bof3/bmagic/magic07503DispatchTables.c",
     "src/bof3/bmagic/drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4.c",

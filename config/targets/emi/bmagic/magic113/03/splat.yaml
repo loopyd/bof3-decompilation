@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EF8E4.c'
     - '@behavior: Increments scratchpad work byte 0xA modulo 256 and, when the stored byte equals 12, decrements shared battle work byte 0xB and calls the helper at 0x801E5988.'
   - - 3396
-    - asm
-    - func_801EF944
+    - c
+    - drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944
+    - '@source: src/bof3/bmagic/drawProjectedPartialRingOfThirtyTwoFlatLinesTintedByWorkByteABmagicMagic11303_801EF944.c'
+    - '@behavior: Draws projected ring lines for steps below work byte 9, with state-dependent tint and semi-transparency, enclosed by draw-mode packets at ordering-table slot 5.'
   - - 4136
     - asm
     - func_801EFC28

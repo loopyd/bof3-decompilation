@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F04B0
   - - 7052
-    - asm
-    - func_801F078C
+    - c
+    - projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C
+    - '@source: src/bof3/bmagic/projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C.c'
+    - '@behavior: Projects the work position and installs an axis turn selected by work byte 8.'
   - - 7340
     - asm
     - func_801F08AC

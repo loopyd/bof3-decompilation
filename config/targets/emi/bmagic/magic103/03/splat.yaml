@@ -115,8 +115,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At1EBmagicMagic10303_801F0410.c'
     - '@behavior: Increments work byte 9 through the pointer cell at 0x1F800044, tests the truncated byte against 0x1E, and only on equality re-reads the pointer cell and increments work byte 2.'
   - - 6240
-    - asm
-    - func_801F0460
+    - c
+    - incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic10303_801F0460
+    - '@source: src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic10303_801F0460.c'
+    - '@behavior: Increments work byte 9 unless it equals 0x2E, reloads the work pointer and decrements byte 0xA, then on zero decrements byte 0xB through pointer cell 0x801EB4E0 and calls helper 0x801E5988.'
   - - 6368
     - asm
     - func_801F04E0

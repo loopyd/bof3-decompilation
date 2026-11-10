@@ -8,5 +8,5 @@ dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038 = 0x801EF038;
 func_801EF0D0 = 0x801EF0D0;
 func_801EF2A8 = 0x801EF2A8;
 drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4 = 0x801EF2F4;
-func_801EF500 = 0x801EF500;
+drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500 = 0x801EF500;
 func_801EF7A0 = 0x801EF7A0;

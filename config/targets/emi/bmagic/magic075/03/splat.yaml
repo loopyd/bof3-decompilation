@@ -62,8 +62,10 @@ segments:
     - '@source: src/bof3/bmagic/drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4.c'
     - '@behavior: Draw sixteen translucent Gouraud triangles around work halfwords 0x2E and 0x30, using the incoming radius plus bit zero of D_80143E6C and a grey centre with blue rim vertices.'
   - - 2304
-    - asm
-    - func_801EF500
+    - c
+    - drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500
+    - '@source: src/bof3/bmagic/drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500.c'
+    - '@behavior: Draw sixteen translucent Gouraud ring quads around work halfwords 0x2E and 0x30 between two incoming radii plus bit zero of D_80143E6C, fading from blue-grey to RGB one.'
   - - 2976
     - asm
     - func_801EF7A0

@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/projectWorkPositionAndInstallAxisTurnFromWorkByte8BmagicMagic12003_801F078C.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8.c",
     "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20.c",
     "src/bof3/support/magic120_03_psyq.c",

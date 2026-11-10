@@ -13,5 +13,5 @@ incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801
 addWorkMotionPairIncrementByte9DecrementByteABy2ThenClearWorkBytes0To4AndDecrementGlobalWorkByteBBmagicMagic04303_801EF64C = 0x801EF64C;
 func_801EF72C = 0x801EF72C;
 func_801EF7F8 = 0x801EF7F8;
-func_801EFC24 = 0x801EFC24;
+reserveFirstFreeRecordBmagicMagic04303_801EFC24 = 0x801EFC24;
 T_801EFC88 = 0x801EFC88;

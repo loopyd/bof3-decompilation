@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EF7F8
   - - 4132
-    - asm
-    - func_801EFC24
+    - c
+    - reserveFirstFreeRecordBmagicMagic04303_801EFC24
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic04303_801EFC24.c'
+    - '@behavior: Reserves the first of 64 stride-0x78 records whose flags bit 0 is clear, sets the bit and returns its index or 0xFF when full.'
   - - 4232
     - textbin
     - T_801EFC88
