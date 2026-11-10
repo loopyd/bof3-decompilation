@@ -6835,6 +6835,29 @@ See `driver-context-loader-rizin.txt` and `driver-context-test.log` for the new
 bounded evidence. Whether the game selects this row, or supplies additional
 state when doing so, remains unproven; it cannot yet be pruned or substituted.
 
+#### DRG04_00 conditional load and cast paths
+
+Original US `BIN/BATTLE/BATTLE.EMI#15` has two pointers at
+`0x800B499C + 8 * 11`, both `0x800B4B5C`. The list's first halfword is file
+slot 545, or `0x221`. Its LBA 57306 identifies `BIN/BPLCHAR/DRG04_00.EMI`,
+whose VH, auxiliary and VB entries use resource slot 3.
+
+At `BIN/BMAGIC/MAGIC151.EMI#3@0x801EF388`, scratch-work byte `+0x0B` equal to
+one and selector byte `0x801463C9` equal to eleven request that first entry
+through original loader `0x80161FDC`. Both pointer sides select the same entry.
+This path reads the first halfword without the list index at `0x80145024`.
+
+The conditional cast caller at `BIN/BATTLE/BATTLE.EMI#3@0x801E1888` selects
+row 5 when scratch-work byte `+9` is zero. With context pointer `C` from
+`0x80146250` and halfword `C + 0x2C` equal to zero, it selects cue `0x305`.
+Its class-table predecessor at `0x801E16B4` advances to another stage when mask
+`0x800` is set in the kind record at
+`0x801CA71C + 20 * *(u16 *)0x801463C0`.
+
+These conditional paths do not establish an original-game route, form identity,
+live table residency, the producer of `C + 0x2C`, completed upload, or row-5
+selection with DRG04 resident. The loaded sample history and intended sample-3
+playback remain unresolved.
 
 ### XA driver closure with supplied kernel inputs
 
