@@ -438,6 +438,23 @@ impl Execution {
         limit: u64,
         observer: &mut impl FnMut(&Self) -> Result<()>,
     ) -> Result<Call> {
+        self.call_scheduled(entry, arguments, limit, observer, &mut |_, progress| {
+            progress.require_ready()
+        })
+    }
+
+    /// Execute a bounded call with an explicit host-audio wait resolver. The
+    /// resolver may advance producer/consumer work and release device waits;
+    /// it must preserve the retained CPU, clock and cache configuration.
+    /// Each poll still consumes one transition from the supplied safety limit.
+    pub fn call_scheduled(
+        &mut self,
+        entry: u32,
+        arguments: [u32; 4],
+        limit: u64,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+        schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
+    ) -> Result<Call> {
         ram_offset(entry, 4)?;
         if entry & 3 != 0 || entry == RETURN || !(1..=10_000_000).contains(&limit) {
             return Err("guest call requires aligned RAM entry and limit 1..=10000000".into());
@@ -456,7 +473,7 @@ impl Execution {
         {
             return Err("finish the native CPU audio wait before entering a guest call".into());
         }
-        let result = self.run_call(entry, arguments, limit, observer);
+        let result = self.run_call(entry, arguments, limit, observer, schedule);
         if result.is_err() {
             if let Some(services) = &mut self.kernel {
                 services.failed = true;
@@ -471,6 +488,7 @@ impl Execution {
         arguments: [u32; 4],
         limit: u64,
         observer: &mut impl FnMut(&Self) -> Result<()>,
+        schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
     ) -> Result<Call> {
         let (instructions, syscalls, interrupts) =
             (self.cpu.instructions(), self.syscalls, self.interrupts);
@@ -482,7 +500,11 @@ impl Execution {
         for _ in 0..limit {
             match self.transition(observer, Some(RETURN))? {
                 Transition::Stopped => break,
-                Transition::Advanced(step) => step.devices.require_ready()?,
+                Transition::Advanced(step) => {
+                    if step.devices != DeviceProgress::Ready {
+                        schedule(self, step.devices)?;
+                    }
+                }
             }
         }
         if self.cpu.pc() != RETURN {
@@ -491,6 +513,14 @@ impl Execution {
                 self.cpu.pc()
             )
             .into());
+        }
+        self.bus.device_progress().require_ready()?;
+        if self
+            .native
+            .as_ref()
+            .is_some_and(native::Audio::has_continuation)
+        {
+            return Err("guest call transition safety limit during native CPU audio wait".into());
         }
         if let Some(services) = &self.kernel {
             services.kernel.require_plain_context()?;

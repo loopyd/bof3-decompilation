@@ -430,8 +430,15 @@ fill underflow with zeros and discard extra source runs at the selected speed.
 advance it separately through `advance_native_null_clock`. Queue coordinates and
 the CPU goal remain available through `native_audio_queue`. A CPU audio wait
 returns `DeviceProgress::WaitingForSpu`; advance its consumer clock and step again.
-The retained timer access or counter pass resumes once. Owned `WaitEvent` polling
-is unsupported in this mode and fails explicitly.
+The retained timer access or counter pass resumes once. The owned image executes
+`WaitEvent` through its guest body and preserves the selected record across IRQ
+save and return. Raw host-service polling remains unsupported in this mode.
+
+Use `Image::start_scheduled` to select this configuration before service startup.
+Its resolver handles audio waits; `Execution::call_scheduled` accepts the same
+resolver for subsequent calls. Each wait poll counts toward the supplied call
+limit. The resolver must retain the CPU and device configuration while advancing
+the selected producer and consumer operations.
 
 `begin_audio_capture` starts retaining delivered callback frames without changing
 synthesis or queue state. Drain them with `take_audio_frames`; collection holds at

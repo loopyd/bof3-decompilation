@@ -10,7 +10,7 @@ use super::{
     exception_calls::{Dispatch, Environment, MissingHook},
     executable::ram_offset,
     execution::{Call, Execution},
-    interconnect::Interconnect,
+    interconnect::{DeviceProgress, Interconnect},
     kernel::Kernel,
     spu_reverb, spu_sample,
     spu_voice_ports::DisableModel,
@@ -261,12 +261,13 @@ impl Image {
         Ok(())
     }
 
-    fn vector_bindings(&self) -> Result<[(u32, u32); 4]> {
+    fn vector_bindings(&self) -> Result<[(u32, u32); 5]> {
         let a0 = self.symbol("audio_a0_services")?;
         let b0 = self.symbol("audio_b0_services")?;
         Ok([
             (a0 + 0x72 * 4, self.entry("audio_cd_remove")?),
             (b0 + 0x07 * 4, self.entry("audio_event_deliver")?),
+            (b0 + 0x0a * 4, self.entry("audio_event_wait")?),
             (b0 + 0x17 * 4, self.entry("audio_exception_return")?),
             (b0 + 0x18 * 4, self.entry("audio_exception_reset")?),
         ])
@@ -359,6 +360,19 @@ impl Image {
     /// Initialize services in zeroed RAM. Audio initialization remains an
     /// explicit subsequent guest call, before layout selection and bank upload.
     pub fn start(&self, observer: &mut impl FnMut(&Execution) -> Result<()>) -> Result<Started> {
+        self.start_scheduled(&mut |_| Ok(()), observer, &mut |_, progress| {
+            progress.require_ready()
+        })
+    }
+
+    /// Configure owned devices before the first startup instruction. Host audio
+    /// waits use the supplied resolver without resetting startup or CPU state.
+    pub fn start_scheduled(
+        &self,
+        configure: &mut impl FnMut(&mut Execution) -> Result<()>,
+        observer: &mut impl FnMut(&Execution) -> Result<()>,
+        schedule: &mut impl FnMut(&mut Execution, DeviceProgress) -> Result<()>,
+    ) -> Result<Started> {
         let mut bus = Interconnect::from_ram(self.ram()?);
         bus.configure_gpu_status()?;
         let base = self.symbol("audio_kernel_image")?;
@@ -374,6 +388,7 @@ impl Image {
             callback: self.entry("audio_event_callback")?,
             return_jump: self.entry("audio_event_return")?,
         })?;
+        kernel.configure_event_wait(self.entry("audio_event_wait")?)?;
         kernel.configure_exception_dispatch(Dispatch {
             entry: self.entry("audio_exception_vector")?,
             priority: self.entry("audio_exception_priority")?,
@@ -425,14 +440,20 @@ impl Image {
         execution
             .bus
             .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
+        configure(&mut execution)?;
         let initialization_limit =
             u64::from(self.symbol("audio_kernel_state_end")? - self.symbol("audio_kernel_bss")?)
                 + 1_000
                 + 157 * 5
                 + 8 * 5
                 + 6;
-        let initialization =
-            execution.call_observed(initialize, [0; 4], initialization_limit, observer)?;
+        let initialization = execution.call_scheduled(
+            initialize,
+            [0; 4],
+            initialization_limit,
+            observer,
+            schedule,
+        )?;
         if initialization.result != 0 {
             return Err(
                 "owned driver: service initialization returned an unexpected result".into(),
@@ -463,7 +484,7 @@ impl Image {
         }
         // Disable automatic PAD acknowledgement before enabling interrupts.
         execution.cpu.set_register(9, 0x5b);
-        execution.call(0xb0, [0; 4], 1)?;
+        execution.call_scheduled(0xb0, [0; 4], 1, &mut |_| Ok(()), schedule)?;
         execution.cpu.set_register(28, 0);
         execution.cpu.set_register(29, FOREGROUND_STACK);
         execution

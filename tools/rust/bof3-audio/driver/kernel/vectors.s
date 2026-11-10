@@ -63,6 +63,8 @@ audio_a0_services:
 audio_b0_services:
     .space 7 * 4
     .word audio_event_deliver
-    .space (0x17 - 8) * 4
+    .space (0x0a - 8) * 4
+    .word audio_event_wait
+    .space (0x17 - 0x0b) * 4
     .word audio_exception_return
     .word audio_exception_reset

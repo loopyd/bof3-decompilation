@@ -90,3 +90,38 @@ audio_event_return:
 audio_event_return_delay:
     addiu $sp, $sp, 64
 .end audio_event_deliver
+
+# WaitEvent retains the selected record in v1 throughout its busy loop. IRQ
+# capture and return preserve that guest register without resolving EvCB again.
+.balign 4
+.globl audio_event_wait
+.ent audio_event_wait
+audio_event_wait:
+    andi $t0, $a0, 0xffff
+    sll $t1, $t0, 3
+    subu $t1, $t1, $t0
+    sll $t1, $t1, 2
+    lui $v1, 0xa000
+    lw $v1, 0x120($v1)
+    nop
+    addu $v1, $v1, $t1
+    lw $t0, 4($v1)
+    addiu $t1, $zero, 0x4000
+    beq $t0, $t1, .Lwait_ready
+    addiu $v0, $zero, 0
+    addiu $t1, $zero, 0x2000
+    bne $t0, $t1, .Lwait_return
+    nop
+.Lwait_busy:
+    lw $t0, 4($v1)
+    addiu $t1, $zero, 0x4000
+    bne $t0, $t1, .Lwait_busy
+    nop
+.Lwait_ready:
+    addiu $t0, $zero, 0x2000
+    sw $t0, 4($v1)
+    addiu $v0, $zero, 1
+.Lwait_return:
+    jr $ra
+    nop
+.end audio_event_wait

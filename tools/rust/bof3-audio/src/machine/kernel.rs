@@ -31,6 +31,7 @@ pub struct Kernel {
     cd_removal: Option<u32>,
     guest_vectors: bool,
     event_delivery: Option<EventService>,
+    event_wait: Option<u32>,
     event_completed: bool,
     exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
@@ -73,6 +74,7 @@ impl Default for Kernel {
             cd_removal: None,
             guest_vectors: false,
             event_delivery: None,
+            event_wait: None,
             event_completed: false,
             exception_dispatch: None,
             exception_hook: None,
@@ -292,6 +294,18 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind an owned WaitEvent body. Its instructions retain the selected EvCB
+    /// pointer and execute the wait through ordinary guest IRQ save and return.
+    pub fn configure_event_wait(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.event_wait.is_some() {
+            return Err("owned WaitEvent entry already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.event_wait = Some(entry);
+        Ok(())
+    }
+
     /// Bind the linked vector, scanner boundaries and initialized stack cell.
     /// The CPU loop calls prepare_exception_step before selecting each service
     /// or instruction. Guest instructions resolve the live PCB/TCB and capture
@@ -351,6 +365,17 @@ impl Kernel {
             if self.returning.is_some() {
                 return Ok(());
             }
+        }
+        if self.event_wait == Some(cpu.pc()) {
+            // ANDI consumes A0 before this instruction retires an incoming load.
+            Events::read(bus)?.address(cpu.register(4))?;
+            let mut incoming = cpu.clone();
+            incoming.synchronize_load();
+            let return_pc = incoming.register(31);
+            if return_pc & 3 != 0 || self.event_wait == Some(return_pc) {
+                return Err("owned WaitEvent requires an external aligned return address".into());
+            }
+            ram_offset(return_pc, 4)?;
         }
         if let Some(binding) = self.event_delivery {
             self.event_calls.prepare_guest_step(
@@ -545,6 +570,9 @@ impl Kernel {
                         .any(|address| ram_offset(address, 4).ok() == Some(offset))
                 })
             })
+            || self
+                .event_wait
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self.exception_dispatch.is_some_and(|binding| {
                 binding.addresses().is_ok_and(|addresses| {
                     addresses.into_iter().enumerate().any(|(index, address)| {
@@ -1053,16 +1081,17 @@ impl Kernel {
         )
     }
 
-    /// The owned initializer installs A0/B0 vectors and tables for these four
+    /// The owned initializer installs A0/B0 vectors and tables for these five
     /// complete services. Their normal entry guards still run at each body.
     pub(crate) fn configure_guest_vectors(&mut self) -> Result<()> {
         self.require_plain_context()?;
         if self.cd_removal.is_none()
             || self.event_delivery.is_none()
+            || self.event_wait.is_none()
             || self.exception_return.is_none()
             || self.exception_reset.is_none()
         {
-            return Err("owned vectors require all four guest service bindings".into());
+            return Err("owned vectors require all five guest service bindings".into());
         }
         self.guest_vectors = true;
         Ok(())
@@ -1078,7 +1107,7 @@ impl Kernel {
         incoming.synchronize_load();
         matches!(
             (incoming.pc() & 0x1fff_ffff, incoming.register(9)),
-            (0xa0, 0x72) | (0xb0, 0x07 | 0x17 | 0x18)
+            (0xa0, 0x72) | (0xb0, 0x07 | 0x0a | 0x17 | 0x18)
         )
     }
 

@@ -33,14 +33,27 @@ hashes, required symbols and allocation bounds, then starts services in zeroed
 RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
 Startup also owns RAM `0xA0..0xC0` for the A0/B0 entry vectors and
-`0x100..0x128` for kernel descriptors. A0/72 and B0/07,17,18 execute those
+`0x100..0x128` for kernel descriptors. A0/72 and B0/07,0A,17,18 execute those
 vectors and relocated service tables before their owned guest bodies. The
-loader requires the current vector symbols, checks their four table bindings
+loader requires the current vector symbols, checks their five table bindings
 and verifies the installed bytes. Direct body guards remain active.
 After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
+
+B0/0A `WaitEvent` validates the handle against the live event allocation before
+entering its guest body. READY becomes BUSY and returns 1. Initial BUSY waits on
+the selected record until READY; other initial states return 0. The loop keeps
+that record pointer across IRQ save and return, including after descriptor
+relocation, disable or close. Delivery still requires an enabled matching event.
+
+`Image::start_scheduled` accepts device configuration before the first startup
+instruction and a resolver for audio waits. The resolver orders producer and
+consumer work without restarting the guest call. `Execution::call_scheduled`
+uses the same resolver for later bounded calls. Each wait poll counts toward
+the call's transition limit. These APIs require the caller to supply a schedule;
+they do not establish native startup timing.
 
 `Image::start_cd` also attaches a reset CD host and the caller's paused `Drive`.
 Its optional `Media` input attaches raw backing before any scheduled work.
