@@ -117,8 +117,10 @@ segments:
     - dispatchRecordByte1Table12a8BmagicMagic12603_801F091C
     - '@source: src/bof3/bmagic/dispatchRecordByte1Table12a8BmagicMagic12603_801F091C.c'
   - - 7520
-    - asm
-    - func_801F0960
+    - c
+    - dispatchRecordByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F0960
+    - '@source: src/bof3/bmagic/dispatchRecordByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F0960.c'
+    - '@behavior: Dispatches record byte 2, then calls helpers when record bytes 0 and 2 are nonzero.'
   - - 7648
     - asm
     - func_801F09E0

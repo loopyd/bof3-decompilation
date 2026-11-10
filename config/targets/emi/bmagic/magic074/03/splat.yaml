@@ -43,8 +43,10 @@ segments:
     - dispatchStateByte1Table0554BmagicMagic07403_801EEF9C
     - '@source: src/bof3/bmagic/magic07403DispatchTables.c'
   - - 992
-    - asm
-    - func_801EEFE0
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic07403_801EEFE0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic07403_801EEFE0.c'
+    - '@behavior: Copies six handler pointers from 0x801EEC04 into the frame and invokes the entry selected by scratchpad work-record byte 2.'
   - - 1112
     - asm
     - func_801EF058

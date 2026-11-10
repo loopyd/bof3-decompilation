@@ -91,8 +91,10 @@ segments:
     - '@source: src/bof3/world/drawPulsingQuadsForCode50MarkerBlockWorld01Area04013_801F37D4.c'
     - '@behavior: draws pulsing semitransparent quads for code-0x50 cells in the four-by-four marker block at x=0x94..0x97 and y=0x20..0x23.'
   - - 3584
-    - asm
-    - func_801F3A00
+    - c
+    - updateUiBlocksAndClearFlag27BySharedModesWorld01Area04013_801F3A00
+    - '@source: src/bof3/world/updateUiBlocksAndClearFlag27BySharedModesWorld01Area04013_801F3A00.c'
+    - '@behavior: updates the two UI blocks by shared mode bytes, clears flag 0x27 and scenario progress on the 6/2 mode pair, and visits nonzero entries of the four-by-four table at 0x801F4960 in mode 4.'
   - - 4104
     - textbin
     - D_801F3C08

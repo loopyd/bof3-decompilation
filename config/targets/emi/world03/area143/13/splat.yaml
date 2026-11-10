@@ -101,8 +101,10 @@ segments:
     - setStatus4AIfGateElse49World03Area14313_801F3ACC
     - '@source: src/bof3/world/area14313_gate_status.c'
   - - 3828
-    - asm
-    - func_801F3AF4
+    - c
+    - selectStatus4COr4BOrFFFFAndState8WhenGateClearWorld03Area14313_801F3AF4
+    - '@source: src/bof3/world/selectStatus4COr4BOrFFFFAndState8WhenGateClearWorld03Area14313_801F3AF4.c'
+    - '@behavior: Selects status 0x4C when gated; otherwise starts primary state 8, selects substate 8 and status 0x4B with a work-halfword increment from status 0x44, or substate 0xA and status 0xFFFF.'
   - - 3980
     - c
     - setStatusFFFFAndStateEntryWhenGateClearWorld03Area14313_801F3B8C

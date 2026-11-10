@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/selectStatus4COr4BOrFFFFAndState8WhenGateClearWorld03Area14313_801F3AF4.c",
     "src/bof3/world/clearWorkFlagsWhenWorkTableIdleWorld03Area14313_801F2D08.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area14313_801F3C40.c",
     "src/bof3/world/drawWorkCursorQuadWorld03Area14313_801F3F94.c",

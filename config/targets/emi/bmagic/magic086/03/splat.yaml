@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F0100
   - - 5460
-    - asm
-    - func_801F0154
+    - c
+    - addWorkWord20ToWord14AccumulateIntoHalfword3EAndInvokeHelperBelowMinus16BmagicMagic08603_801F0154
+    - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateIntoHalfword3EAndInvokeHelperBelowMinus16BmagicMagic08603_801F0154.c'
+    - '@behavior: Add work word 0x20 into word 0x14, accumulate the updated word into halfword 0x3E, and invoke the shared helper when the re-read signed word 0x14 is below -16.'
   - - 5544
     - asm
     - func_801F01A8
