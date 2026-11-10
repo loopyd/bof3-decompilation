@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic058_03_psyq.c",
     "src/bof3/bmagic/magic05803DispatchTables.c",
+    "src/bof3/bmagic/clearRecordPoolBytes0To2AndByteTableThenPublishRecordPoseClearWorkByteBAdvanceWorkByte1ClaimSlotAt3FClearSlotByte1StoreWorkPointerIncrementWorkByteBInvokeHelperAt100BmagicMagic05803_801EED30.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic05803_801EFE9C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0.c",

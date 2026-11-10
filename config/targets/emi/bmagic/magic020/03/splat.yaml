@@ -40,8 +40,9 @@ segments:
     - asm
     - func_801EF0F8
   - - 1588
-    - asm
-    - func_801EF234
+    - c
+    - drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234
+    - '@source: src/bof3/bmagic/drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBmagicMagic02003_801EF234.c'
   - - 1704
     - asm
     - func_801EF2A8

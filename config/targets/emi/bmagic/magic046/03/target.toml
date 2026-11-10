@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic04603_801EF304.c",
     "src/bof3/bmagic/magic04603DispatchTables.c",
     "src/bof3/bmagic/publishPhaseFromWorkBytes9PlusBAdvanceWorkWord0CFromWord14ThenDriftWorkWords34And38BySevenTimesSampledTurnAdvanceWorkByte9AndByte2At16BmagicMagic04603_801EF540.c",
+    "src/bof3/bmagic/publishSampledPhaseTurnAdvanceWorkWord0CFromWord14DriftWorkWords34And38ThenIncrementWorkByte9CountDownByteAThenDecrementGlobalWorkByteBAndClearWorkAtZeroBmagicMagic04603_801EF660.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic04603_801EFED0.c",
     "src/bof3/support/magic046_03_psyq.c",
 ]

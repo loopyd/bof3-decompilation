@@ -110,8 +110,10 @@ segments:
     - asm
     - func_801F039C
   - - 6736
-    - asm
-    - func_801F0650
+    - c
+    - drawCountedListPanelBatlEnd00_801F0650
+    - '@source: src/bof3/battle/drawCountedListPanelBatlEnd00_801F0650.c'
+    - '@behavior: Battle-end panel task handler 1 of the overlay handler run at 0x801EEC28: draws the counted-list panel by calling the overlay frame drawer 0x801F039C with the signed halfwords +0x04 and +0x06 of the object published at 0x80148648, the width 0x118 and byte +0x09 as the height, then walks the counted list (length byte at 0x80146327, halfword ids at 0x80146334, per-id counts at 0x80146354) and draws every non-zero id through 0x801F0A74 in two columns: column (index & 1) steps 138 pixels with a 5-pixel inset and row (index >> 1) steps 13 pixels with a 4-pixel inset, passing the id split into its high byte and its low byte plus the per-id count. The length byte is re-read every iteration and a zero id is skipped without drawing.'
   - - 7016
     - c
     - dispatchPanelStateLocalTableBatlEnd00_801F0768

@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F3E7C
   - - 4912
-    - asm
-    - func_801F3F30
+    - c
+    - drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30
+    - '@source: src/bof3/world/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30.c'
+    - '@behavior: Overlay record render pass that the per-frame record pass 0x801F3E7C calls once per active record of the 8-entry 0x18-byte-stride record table at 0x800E4800. It arms the primitive list with GetTPage(0, 1, 0x3C0, 0) on the packet published at g_PrimCursor through SetDrawMode with dfe 0 and dtd 1, appends the 0xC-byte draw-mode packet under ordering table slot 2, converts the record halfword at 0x14 at the depth of the position triple at 0x04 through 0x801AFFD8, projects that triple through 0x801AFF04, and adds the per-frame counter bit D_80143E6C & 1 to the converted extent. It then emits 32 semi-transparent 0x1C-byte POLY_G3 packets under the same slot, each spanning the projected centre, the centre plus the extent rotated by a phase that advances 0x80 per pass, and the centre plus the extent rotated by the already advanced phase, using 0x801783C8 for x and 0x801782FC for y, so the last pass closes the disc one 0x1000-unit turn after the first. The first colour triplet takes record byte 0x16 in red and green and the second and third take record byte 0x17, with blue clear.'
   - - 5364
     - asm
     - func_801F40F4

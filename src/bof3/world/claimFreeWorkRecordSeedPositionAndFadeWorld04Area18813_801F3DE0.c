@@ -23,10 +23,14 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * record's life runs out. Bytes 2 and 0x14 are that record's life pair: the
  * same pass subtracts 1 from byte 2 and 0x10 from the halfword at 0x14 on every
  * active record, so the 0x10 and the 0x100 written here expire together after
- * 0x10 frames; the halfword is the fade level the render pass func_801F3F30
- * reads with lhu 0x14 while it draws the record from the position triple at
- * 0x04. The roles of byte 1, byte 0x16 and byte 0x17 are not localised by this
- * payload, so they stay described by offset.
+ * 0x10 frames; the halfword is the extent the render pass
+ * drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30
+ * converts at the depth of the position triple at 0x04 and uses as the radius
+ * of the translucent fan it draws around that projected point. Bytes 0x16 and
+ * 0x17 are that pass's two tints: the 0x40 written here lights the shared
+ * centre vertex of the fan and the 0 written here leaves the two rim vertices
+ * dark. The role of byte 1 is still not localised by this payload, so it stays
+ * described by offset.
  *
  * Evidence: payload asm at 0x801F3DE0 - lui/ori of 0x800E4800 into $v1 and of
  * 0x800E4817 into $a0, the loop-invariant literals 1/0x10/0x100/0x40 hoisted

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC28
   - - 304
-    - asm
-    - func_801EED30
+    - c
+    - clearRecordPoolBytes0To2AndByteTableThenPublishRecordPoseClearWorkByteBAdvanceWorkByte1ClaimSlotAt3FClearSlotByte1StoreWorkPointerIncrementWorkByteBInvokeHelperAt100BmagicMagic05803_801EED30
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2AndByteTableThenPublishRecordPoseClearWorkByteBAdvanceWorkByte1ClaimSlotAt3FClearSlotByte1StoreWorkPointerIncrementWorkByteBInvokeHelperAt100BmagicMagic05803_801EED30.c'
+    - '@behavior: Init stage 0 of this overlay, word 0 of the nine-word code pointer run the payload header holds at 0x801EEC04 that the frame dispatcher func_801EEC28 calls through work byte 1 scaled by four, so no jal names it. It clears bytes 0 through 2 of all 36 records of the 0x78-byte-stride pool at 0x801EFEF4, then the eleven bytes of the table at 0x801F0FD4, then publishes the battle record pose into the scratchpad work object at 0x1F800044: work byte 0x08 takes record byte 0x08 and work words 0x34, 0x38 and 0x3C take the record words at the same offsets, with work byte 0x0B cleared between the last two stores. It advances work byte 0x01, claims one queued action slot through the shared allocator func_801E590C called with 1 and 0x3F, clears slot byte 0x01 and stores the work pointer in slot word 0x74 at that index times 0x78, advances work byte 0x0B and invokes the main-executable helper func_8015D71C with 0x100. Keeps ra at 0x10 in a 0x18-byte frame, takes no arguments and returns nothing.'
   - - 632
     - c
     - pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78

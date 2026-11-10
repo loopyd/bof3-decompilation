@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801F3B24
   - - 4012
-    - asm
-    - func_801F3BAC
+    - c
+    - claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC
+    - '@source: src/bof3/world/claimFrontEndRecordSetHandler85AndStoreWorkRecordIndexElseLowerHalfword0aBy2World03Area14413_801F3BAC.c'
+    - '@behavior: Overlay handler word at 0x801F490C of the local pointer run based at 0x801F48F4: asks the shared free-record selector func_8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record at 0x80143FC8 occupied, writes handler selector 0x85 into record byte 0x05 and stores into record byte 0x06 the index of the current work record, the 0x80146884 minus 0x80146888 pointer difference over the 0x98-byte stride; when the selector answers 0xFF it lowers the work record halfword 0x0A published at 0x80148210 by 2.'
   - - 4216
     - c
     - publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78

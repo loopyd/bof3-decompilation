@@ -104,8 +104,10 @@ segments:
     - asm
     - func_801EFA94
   - - 3816
-    - asm
-    - func_801EFAE8
+    - c
+    - incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8
+    - '@source: src/bof3/bmagic/incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8.c'
+    - '@behavior: Walks the six words of this payload table at 0x801F003C (words 0x801F003C through 0x801F0050) with one pointer that advances by four bytes, adds one to every even-indexed word and subtracts one from every odd-indexed word, and stores each result back to the cell it came from. The base address is materialised once before the loop and the index bound is the immediate six, so the body is a leaf with no frame, takes no arguments and returns nothing, and reads or writes no other state. No jal in this payload reaches it and no pointer word in the extracted corpus names it, so its caller is the overlay loader or a script-invoked callback.'
   - - 3892
     - asm
     - func_801EFB34

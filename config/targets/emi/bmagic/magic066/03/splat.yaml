@@ -46,8 +46,9 @@ segments:
     - dispatchStateByte1Table0064BmagicMagic06603_801EEEBC
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 768
-    - asm
-    - func_801EEF00
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhileWorkStepRunningBmagicMagic06603_801EEF00
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhileWorkStepRunningBmagicMagic06603_801EEF00.c'
   - - 888
     - asm
     - func_801EEF78
