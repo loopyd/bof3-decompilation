@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EF0A8
   - - 1452
-    - asm
-    - func_801EF1AC
+    - c
+    - queueActionSlotSetByte4Byte9AndByteAAndPublishWorkPointerThenCountWorkByteBAndIncrementWorkByte1BmagicMagic08803_801EF1AC
+    - '@source: src/bof3/bmagic/queueActionSlotSetByte4Byte9AndByteAAndPublishWorkPointerThenCountWorkByteBAndIncrementWorkByte1BmagicMagic08803_801EF1AC.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044 and returns while the object byte 0xB is nonzero. Otherwise it calls the selection helper at 0x800AED5C with the byte table entry at 0x800B6BF0 selected by the object byte 0x4 and the shared battle target byte at 0x80146384, truncating the answer to a byte. Both arms claim an action slot through the allocator at 0x801E590C with the arguments 1 and 0x48, truncate the returned index and scale it by the 0x78-byte slot stride: the nonzero-selection arm publishes the re-read work-object pointer into the slot word 0x74 first and then writes the slot kind byte 0x04 with the object byte 0x4 plus 4, the slot byte 0x09 with one and the slot byte 0x0A with zero, while the zero-selection arm writes kind byte 8, byte 0x09 one, byte 0x0A zero and then the single pre-read work-object pointer. The tail re-reads the pointer cell for each of its two byte-width increments, work byte 0xB and work byte 0x1. The 0x18-byte frame holds $ra. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 1792
     - asm
     - func_801EF300

@@ -147,8 +147,10 @@ segments:
     - asm
     - func_801F4118
   - - 5624
-    - asm
-    - func_801F41F8
+    - c
+    - queueSharedUiElementBlock40x27To28Size0World01Area04113_801F41F8
+    - '@source: src/bof3/world/queueSharedUiElementBlock40x27To28Size0World01Area04113_801F41F8.c'
+    - '@behavior: queues the two shared UI elements at x = 0x40 with y = 0x28 and then 0x27, both at size 0, through the shared marker queue at 0x801A4BC0.'
   - - 5680
     - c
     - invokeHelperArgWorld01Area04113_801F4230

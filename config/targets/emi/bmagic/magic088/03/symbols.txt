@@ -5,7 +5,7 @@ decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To
 func_801EEFA0 = 0x801EEFA0;
 incrementWorkByte1WhenWorkByteBBelow2BmagicMagic08803_801EF070 = 0x801EF070;
 func_801EF0A8 = 0x801EF0A8;
-func_801EF1AC = 0x801EF1AC;
+queueActionSlotSetByte4Byte9AndByteAAndPublishWorkPointerThenCountWorkByteBAndIncrementWorkByte1BmagicMagic08803_801EF1AC = 0x801EF1AC;
 func_801EF300 = 0x801EF300;
 resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C = 0x801EF34C;
 func_801EF430 = 0x801EF430;

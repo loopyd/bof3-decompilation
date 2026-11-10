@@ -81,8 +81,9 @@ segments:
     - dispatchWorkByte4Table3898World01Area05613_801F3284
     - '@source: src/bof3/world/dispatchWorkByte4Table3898World01Area05613_801F3284.c'
   - - 1736
-    - asm
-    - func_801F32C8
+    - c
+    - seedWork34383eFromPositionPlus7d0SetHandlerOneResetMotionAndConsumeSharedCountdownWorld01Area05613_801F32C8
+    - '@source: src/bof3/world/seedWork34383eFromPositionPlus7d0SetHandlerOneResetMotionAndConsumeSharedCountdownWorld01Area05613_801F32C8.c'
   - - 1876
     - asm
     - func_801F3354

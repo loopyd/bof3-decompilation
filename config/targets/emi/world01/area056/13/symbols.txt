@@ -1,3 +1,4 @@
+D_1F800044 = 0x1F800044;
 func_801F2C04 = 0x801F2C04;
 func_801F2CAC = 0x801F2CAC;
 func_801F2D54 = 0x801F2D54;
@@ -14,7 +15,7 @@ setStatusFourteenIfGateElseFFFFWorld01Area05613_801F316C = 0x801F316C;
 func_801F3194 = 0x801F3194;
 func_801F3200 = 0x801F3200;
 dispatchWorkByte4Table3898World01Area05613_801F3284 = 0x801F3284;
-func_801F32C8 = 0x801F32C8;
+seedWork34383eFromPositionPlus7d0SetHandlerOneResetMotionAndConsumeSharedCountdownWorld01Area05613_801F32C8 = 0x801F32C8;
 func_801F3354 = 0x801F3354;
 clearWorldFlagAndWorkByte4World01Area05613_801F3440 = 0x801F3440;
 noopHandlerWorld01Area05613_801F3464 = 0x801F3464;

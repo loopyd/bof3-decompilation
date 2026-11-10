@@ -58,8 +58,9 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic02003_801EF398
     - '@source: src/emi/bmagic/magic020/03/magic02003DispatchTables.c'
   - - 2012
-    - asm
-    - func_801EF3DC
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic02003_801EF3DC.c'
   - - 2200
     - asm
     - func_801EF498

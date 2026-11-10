@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801EF348
   - - 2752
-    - asm
-    - func_801EF6C0
+    - c
+    - anyAvailableLocalBattlerIdentityIs7BatlEnd00_801EF6C0
+    - '@source: src/bof3/battle/anyAvailableLocalBattlerIdentityIs7BatlEnd00_801EF6C0.c'
+    - '@behavior: Local battler identity scan: walks the slots below the volatile count byte at 0x801462F0, skips each slot whose availability test func_801DB524 reports nonzero, and returns 1 as soon as identity byte +0x86 or +0x87 of that slot''s 0x140-byte work record (0x80145F16/0x80145F17 plus slot*0x140) reads 7; returns 0 when the count byte is zero or no walked slot matches, and the 0x20-byte frame keeps $ra and $s0-$s2 across the per-slot call.'
   - - 2940
     - c
     - advanceSubstateWhenPadActiveBatlEnd00_801EF77C

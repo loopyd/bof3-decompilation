@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801F2E80
   - - 1944
-    - asm
-    - func_801F3398
+    - c
+    - drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Area19913_801F3398
+    - '@source: src/bof3/world/drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Area19913_801F3398.c'
+    - '@behavior: Two-layer sample trail of textured quads: for each of the two layers it advances the 0x98-byte-stride overlay state record, and when the integer part of that record''s fixed-point clock has moved past the phase byte held in the layer''s current slot it steps the layer''s push cursor through the thirty-two slots of the trail buffer, writing the new phase, the record halfword at +6 as the sample row and the toggled flip flag into the new slot; it then walks all thirty-two slots, stamps the shared primitive cursor with SetPolyFT4 and SetShadeTex(kind 1) for every slot whose cell the shared grid lookup returns a record for, copies the record''s four projected position words from +8, +0x10, +0x18 and +0x20, fills the texture window from the packed state word 0x25808000 plus the slot''s flip flag and the layer''s own byte offset and links the 0x28-byte packet through func_80155A08 with both sample bytes shifted left by 16, then repeats once more one row along the layer''s row step with the layer''s second byte offset.'
   - - 2780
     - asm
     - func_801F36DC

@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F3D94
   - - 4592
-    - asm
-    - func_801F3DF0
+    - c
+    - advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12013_801F3DF0
+    - '@source: src/bof3/world/advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12013_801F3DF0.c'
+    - '@behavior: Step 5 of the work-byte-2 handler run this overlay dispatches through the table at 0x801F43E8. It post-increments work record byte 9 and reads that byte back through a fresh load of the scratchpad pointer cell 0x1F800044, so it works from the incremented value. It folds a ramp from that byte: the byte is subtracted from 8, the difference is taken as a magnitude, and the result is subtracted from 8 again, negated and shifted left by four, which makes the fourth argument of the quad drawer func_801F3F5C run 0 at byte 0, -0x80 at byte 8 and back to 0 at byte 0x10. The call passes the fixed arguments (0x80, 0x40, 1) beside that ramp. Once the byte read back has reached 0x10 the handler also clears work byte 9 and requests work-byte-2 handler 2 through the record byte at offset 0x02, so the counter restarts and the run continues at 0x801F3B84.'
   - - 4732
     - asm
     - func_801F3E7C

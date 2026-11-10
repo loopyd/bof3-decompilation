@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801F35F0
   - - 2624
-    - asm
-    - func_801F3640
+    - c
+    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640
+    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640.c'
+    - '@behavior: Byte-2 state handler 3 of the byte-2 handler table 0x801F5290. Subtracts 0x10 from the signed halfword at record offset 0x2E of the work record published at scratchpad pointer cell 0x1F800044, clears state byte 0x02 while the stored value stays below -0x2F, writes 1 to state byte 0x02 through a second read of the cell unless the shared byte 0x801454F2 is 2, then reads the cell again and calls the local helper at 0x801F3B38 with 0x10 and the signed halfword at offset 0x2E. Takes no arguments and returns nothing.'
   - - 2756
     - c
     - dispatchStateByte3Table52A0World01Area06513_801F36C4
