@@ -6859,6 +6859,15 @@ one and selector byte `0x801463C9` equal to eleven request that first entry
 through original loader `0x80161FDC`. Both pointer sides select the same entry.
 This path reads the first halfword without the list index at `0x80145024`.
 
+The original selector producer at `BATTLE.EMI#15@0x800A6C00` copies byte
+`0x800B6F58` to `0x801463C9`. Its resolver at `0x800A6C2C` checks three-byte
+rows at `0x800B4D58` against the selected IDs at `0x801463C4`, counted by
+`0x801463C7`. A row byte `0xFF` satisfies the predicate without a selected ID.
+Exactly two selected IDs, `0x03` and `0x0E` in either order, reach row 7,
+`[0x03, 0x0E, 0xFF]`. The caller adds four to that result and stores selector
+11. A third selected ID can make an earlier row match. These are static input
+conditions, not an observed selection or a form identity.
+
 The conditional cast caller at `BIN/BATTLE/BATTLE.EMI#3@0x801E1888` selects
 row 5 when scratch-work byte `+9` is zero. With context pointer `C` from
 `0x80146250` and halfword `C + 0x2C` equal to zero, it selects cue `0x305`.
@@ -6866,8 +6875,16 @@ Its class-table predecessor at `0x801E16B4` advances to another stage when mask
 `0x800` is set in the kind record at
 `0x801CA71C + 20 * *(u16 *)0x801463C0`.
 
+At `exe/slus_004_22@0x8014DE1C`, the main lookup helper writes byte 7 of a
+matching eight-byte lookup record into scratch-work halfword `+0x2C`. It reads
+the table pointer from `0x801459F4`. BATTLE entry 3's loops at `0x801DECE0`
+and `0x801DED54` publish the same record pointer to both `0x80146250` and
+`0x1F800044`, using base `0x80145E90` and stride `0x140`. The lookup helper
+therefore supplies `C + 0x2C` when those pointers alias. Its applicable live
+record during the DRG04 cast remains unknown.
+
 These conditional paths do not establish an original-game route, form identity,
-live table residency, the producer of `C + 0x2C`, completed upload, or row-5
+live table residency, the applicable `C + 0x2C` producer, completed upload, or row-5
 selection with DRG04 resident. The loaded sample history and intended sample-3
 playback remain unresolved.
 
