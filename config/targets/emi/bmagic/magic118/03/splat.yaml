@@ -73,8 +73,10 @@ segments:
     - asm
     - func_801EF6BC
   - - 3612
-    - asm
-    - func_801EFA1C
+    - c
+    - drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C
+    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C.c'
+    - '@behavior: Draws thirty-two translucent Gouraud fan triangles at radius 128 with work byte 9 scaled by four and six as tint, linked at slot 5 between draw-mode packets.'
   - - 4308
     - asm
     - func_801EFCD4

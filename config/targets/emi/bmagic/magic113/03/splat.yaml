@@ -101,8 +101,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs84BmagicMagic11303_801EFD00.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB equals 0x84, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 4416
-    - asm
-    - func_801EFD40
+    - c
+    - incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EFD40
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperAt12BmagicMagic11303_801EFD40.c'
+    - '@behavior: Increments scratchpad work byte 0xA modulo 256 and, when the stored byte equals 12, decrements shared battle work byte 0xB and calls the helper at 0x801E5988.'
   - - 4512
     - asm
     - func_801EFDA0

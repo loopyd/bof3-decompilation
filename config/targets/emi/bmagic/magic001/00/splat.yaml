@@ -127,8 +127,10 @@ segments:
     - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateWord14IntoHalfword3EAndDecrementByteAThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To15AndAdvanceWorkByte2BmagicMagic00100_801EFC54.c'
     - '@behavior: Per-frame field integrator for the scratchpad work object. It reads the pointer cell at 0x1F800044 once, adds work word 0x20 into work word 0x14, adds the new word 0x14 into the halfword at 0x3E and decrements work byte 0xA while it is nonzero. It then re-reads the cell and returns while the new word 0x14 is still nonzero; when word 0x14 has reached zero it copies words 0x34 and 0x38 of the record published at 0x8014638C into the same offsets of the work object, sets work byte 9 to 0xF, subtracts from work word 0x3C the difference between word 0x3C of the record published at 0x801EB4E0 and word 0x3C of the 0x8014638C record, and advances work byte 2. Leaf with no frame; takes no arguments and returns nothing.'
   - - 4392
-    - asm
-    - func_801EFD28
+    - c
+    - integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28
+    - '@source: src/bof3/bmagic/integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28.c'
+    - '@behavior: Integrates work word 0x14 into halfword 0x3E, grows byte 0xA to 8 and decrements byte 9. On zero, invokes helpers, seeds motion words, sets heading toward the 0x801EB4E0 record, forwards the battle byte, rearms byte 9 and advances handler byte 2.'
   - - 4664
     - asm
     - func_801EFE38

@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801EFF84
   - - 5332
-    - asm
-    - func_801F00D4
+    - c
+    - decrementWorkByte9ThenSeedRandomizedPositionTintAndAdvanceStateBmagicMagic12903_801F00D4
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedRandomizedPositionTintAndAdvanceStateBmagicMagic12903_801F00D4.c'
+    - '@behavior: Decrements work byte 9, then seeds randomized position and tint and advances state on zero.'
   - - 5692
     - asm
     - func_801F023C

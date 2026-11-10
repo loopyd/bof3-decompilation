@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EEF8C
   - - 1140
-    - asm
-    - func_801EF074
+    - c
+    - copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074
+    - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074.c'
+    - '@behavior: Copy record byte 8 and word triplet, invoke 0x801EF430, clear work bytes 9 and 0xA, then advance byte 2.'
   - - 1300
     - asm
     - func_801EF114

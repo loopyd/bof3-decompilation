@@ -114,8 +114,10 @@ segments:
     - dispatchStateByte2Table123cBmagicMagic11403_801F0D08
     - '@source: src/bof3/bmagic/dispatchStateByte2Table123cBmagicMagic11403_801F0D08.c'
   - - 8556
-    - asm
-    - func_801F0D6C
+    - c
+    - seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C
+    - '@source: src/bof3/bmagic/seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C.c'
+    - '@behavior: Seeds work header and parity, clears counters, advances byte 2, and calls resident helpers.'
   - - 8780
     - asm
     - func_801F0E4C

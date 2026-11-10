@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EF31C
   - - 2052
-    - asm
-    - func_801EF404
+    - c
+    - setEligibleBattlerByte29ToTwoAndInitializeWorkBmagicMagic22503_801EF404
+    - '@source: src/bof3/bmagic/setEligibleBattlerByte29ToTwoAndInitializeWorkBmagicMagic22503_801EF404.c'
+    - '@behavior: Sets byte 0x29 to 2 for available battlers on the selected side, initializes work bytes 0x29, 0xB, 9 and 0xA, and advances work byte 2.'
   - - 2424
     - asm
     - func_801EF578

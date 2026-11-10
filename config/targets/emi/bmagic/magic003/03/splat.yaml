@@ -120,8 +120,10 @@ segments:
     - asm
     - func_801EFB8C
   - - 4344
-    - asm
-    - func_801EFCF8
+    - c
+    - invokeHelperTwiceThenDecrementGlobalWorkByteBAndClearWorkOnNonzeroBmagicMagic00303_801EFCF8
+    - '@source: src/bof3/bmagic/invokeHelperTwiceThenDecrementGlobalWorkByteBAndClearWorkOnNonzeroBmagicMagic00303_801EFCF8.c'
+    - '@behavior: Calls helper 0x8014DAEC twice, then decrements shared work byte B and clears scratchpad work bytes 0 through 4 when the second returned byte is nonzero.'
   - - 4428
     - asm
     - func_801EFD4C

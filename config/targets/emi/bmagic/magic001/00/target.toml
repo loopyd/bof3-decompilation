@@ -17,6 +17,7 @@ support_sources = [
     "src/bof3/bmagic/seedWorkWordsAndCopyRecordByte27ClearByte9SetByteATo16ThenAdvanceWorkByte2BmagicMagic00100_801EFBEC.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EF72C.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EEC64.c",
+    "src/bof3/bmagic/integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28.c",
     "src/bof3/support/magic001_00_psyq.c",
     "src/bof3/bmagic/magic00100DispatchTables.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EF5CC.c",
