@@ -3108,6 +3108,16 @@ The output clock supplies each functional frame's cycle to capture. Native
 workers sample that cycle once per batch; per-frame scheduling does not establish
 native underflow behavior, worker phase or hardware timing.
 
+The [native SPU worker](../../../third_party/pcsx-redux-agentic/src/spu/spu.cc)
+processes each voice across a 45-frame batch and submits 810 frames after 18
+batches. Its 2,048-frame voice queue waits for host callback consumption to
+release room. CPU progress is separately paced by the audio master's elapsed-frame
+goal. A guest-cycle interval therefore does not determine native worker key
+admission. `EmulatorReference` selects native DSP policies while the output clock
+retains its per-frame guest-cycle schedule. Matching guest write intervals does
+not establish native key admission or PCM timing; worker admission requires
+separate validation.
+
 [Queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
 exercise strict whole-batch capacity, pending retry and timeout, advanced histories
 after timeout, rollback on errors, mute before admission, buffered volume changes,
