@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
 func_801EEC88 = 0x801EEC88;
-func_801EEDD0 = 0x801EEDD0;
+incrementWorkByteARecordCountersThenSetGlobalWorkByte29To2AndAdvanceWorkByte1WhenWorkByte9Is10BmagicMagic13203_801EEDD0 = 0x801EEDD0;
 func_801EEEF4 = 0x801EEEF4;
 func_801EF03C = 0x801EF03C;
 func_801EF0A4 = 0x801EF0A4;

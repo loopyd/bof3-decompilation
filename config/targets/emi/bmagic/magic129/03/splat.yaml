@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801F023C
   - - 5788
-    - asm
-    - func_801F029C
+    - c
+    - decrementWorkByteAIntegrateWords14And3CThenDecrementGlobalWorkByteBAndClearAtZeroBmagicMagic12903_801F029C
+    - '@source: src/bof3/bmagic/decrementWorkByteAIntegrateWords14And3CThenDecrementGlobalWorkByteBAndClearAtZeroBmagicMagic12903_801F029C.c'
+    - '@behavior: Decrements work byte 0xA, integrates words 0x14 and 0x3C, and at zero decrements global work byte 0xB and clears work bytes 0 through 4.'
   - - 5900
     - asm
     - func_801F030C

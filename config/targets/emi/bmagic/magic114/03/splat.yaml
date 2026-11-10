@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenOffsetChannelPairClearByteBRearmByte9ClearWords14And20AndAdvanceWorkByte2BmagicMagic11403_801EFE70.c'
     - '@behavior: Decrement byte 9; on zero invoke helper at 0x8015D71C with 0x102, offset the channel pair, clear byte B, rearm byte 9, clear words 14 and 20, and advance byte 2.'
   - - 4892
-    - asm
-    - func_801EFF1C
+    - c
+    - decrementWorkWord20Call800A9610AtWord14Equals30ThenAdd2AndAdvanceWorkByte2AtC0BmagicMagic11403_801EFF1C
+    - '@source: src/bof3/bmagic/decrementWorkWord20Call800A9610AtWord14Equals30ThenAdd2AndAdvanceWorkByte2AtC0BmagicMagic11403_801EFF1C.c'
+    - '@behavior: Subtract 5 from work word 20, call 0x800A9610 at word 14 equal to 0x30, then add 2 and set byte B and advance byte 2 at 0xC0.'
   - - 5040
     - asm
     - func_801EFFB0

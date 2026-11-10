@@ -34,8 +34,10 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic00100_801EEC64
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00100_801EEC64.c'
   - - 196
-    - asm
-    - func_801EECC4
+    - c
+    - seedWorkFromRecordQueueSelectedBattlerSlot49PublishRecordBytesRaiseFlag40AndAdvanceWorkByte1BmagicMagic00100_801EECC4
+    - '@source: src/bof3/bmagic/seedWorkFromRecordQueueSelectedBattlerSlot49PublishRecordBytesRaiseFlag40AndAdvanceWorkByte1BmagicMagic00100_801EECC4.c'
+    - '@behavior: Seed work fields, queue selected battler slot 0x49, publish record bytes, raise flag 0x40 and advance work byte 1.'
   - - 820
     - asm
     - func_801EEF34

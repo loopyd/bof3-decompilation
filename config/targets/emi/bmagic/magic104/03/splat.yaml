@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EF160
   - - 1400
-    - asm
-    - func_801EF178
+    - c
+    - decrementWorkByteAThenInvokeHelperByByteBParityClearBytes9AndAAndAdvanceByte2BmagicMagic10403_801EF178
+    - '@source: src/bof3/bmagic/decrementWorkByteAThenInvokeHelperByByteBParityClearBytes9AndAAndAdvanceByte2BmagicMagic10403_801EF178.c'
+    - '@behavior: Decrements work byte 0xA modulo 256; on zero calls helper 0x8015D71C with 0x101 for odd work byte 0xB or 0x100 otherwise, clears bytes 9 and 0xA, and advances byte 2 through separately reloaded work pointers. Takes no arguments and returns nothing.'
   - - 1564
     - c
     - incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C

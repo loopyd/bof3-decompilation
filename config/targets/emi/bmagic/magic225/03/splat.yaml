@@ -79,8 +79,10 @@ segments:
     - dispatchStateByte1Table03acBmagicMagic22503_801EFE0C
     - '@source: src/bof3/bmagic/magic22503DispatchTables.c'
   - - 4688
-    - asm
-    - func_801EFE50
+    - c
+    - dispatchStateByte2Table03b0BmagicMagic22503_801EFE50
+    - '@source: src/bof3/bmagic/dispatchStateByte2Table03b0BmagicMagic22503_801EFE50.c'
+    - '@behavior: Publishes the dispatch context, calls the table at 0x801F03B0 indexed by work byte 2, invokes the shared service when work bytes 0 and 2 are nonzero, and restores the context.'
   - - 4840
     - asm
     - func_801EFEE8
