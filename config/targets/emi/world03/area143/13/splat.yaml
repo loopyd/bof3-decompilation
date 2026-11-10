@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801F3E00
   - - 4704
-    - asm
-    - func_801F3E60
+    - c
+    - shiftPaletteBlocksChannelsWorld03Area14313_801F3E60
+    - '@source: src/bof3/world/shiftPaletteBlocksChannelsWorld03Area14313_801F3E60.c'
+    - '@behavior: Walks 11 consecutive 0x100-halfword palette blocks from the source window at 0x80033E00 into the mirror window at 0x80037E00, splits every halfword into its three 5-bit channels, shifts each channel right by the caller count with an arithmetic shift, packs the three shifted channels back beside bit 15 of the source halfword and, after the last block, stores 1 into the shared palette-stage byte at 0x80145988.'
   - - 4868
     - c
     - dispatchStateByte1Table5308World03Area14313_801F3F04
