@@ -20,6 +20,18 @@ audio_kernel_initialize:
     bne $t0, $t1, .Lclear_state
     nop
 
+    lui $t0, %hi(audio_exception_vector)
+    addiu $t0, $t0, %lo(audio_exception_vector)
+    addiu $t1, $zero, 0x80
+    lui $t2, %hi(audio_exception_vector_end)
+    addiu $t2, $t2, %lo(audio_exception_vector_end)
+.Lcopy_exception_vector:
+    lw $t3, 0($t0)
+    addiu $t0, $t0, 4
+    sw $t3, 0($t1)
+    bne $t0, $t2, .Lcopy_exception_vector
+    addiu $t1, $t1, 4
+
     lui $t0, %hi(audio_entry_vectors)
     addiu $t0, $t0, %lo(audio_entry_vectors)
     addiu $t1, $zero, 0xa0

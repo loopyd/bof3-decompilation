@@ -105,6 +105,16 @@ impl Calls {
         self.frames.len()
     }
 
+    pub fn functional_return_pending(&self) -> bool {
+        matches!(
+            self.frames.last(),
+            Some(Frame::Host(Host {
+                callback_stack: Some(_),
+                ..
+            }))
+        )
+    }
+
     pub fn start(
         &mut self,
         cpu: &mut Cpu,

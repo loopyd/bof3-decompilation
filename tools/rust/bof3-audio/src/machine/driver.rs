@@ -22,6 +22,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, path::Path};
 
 const FOREGROUND_STACK: u32 = 0x801f_ff00;
+const EXCEPTION_VECTOR: u32 = 0x8000_0080;
 const FOREGROUND_STACK_START: u32 = 0x801f_0000;
 
 #[derive(Deserialize)]
@@ -232,6 +233,7 @@ impl Image {
             ("audio_exception_stack_pointer", 4),
             ("audio_exception_default_hook", 48),
             ("audio_entry_vectors", 48),
+            ("audio_exception_vector", 16),
             ("audio_a0_services", 0x73 * 4),
             ("audio_b0_services", 0x5c * 4),
             ("audio_c0_services", 0x0b * 4),
@@ -252,6 +254,13 @@ impl Image {
             != Some(48)
         {
             return Err("owned driver: vector metadata is inconsistent".into());
+        }
+        if self
+            .symbol("audio_exception_vector_end")?
+            .checked_sub(self.symbol("audio_exception_vector")?)
+            != Some(16)
+        {
+            return Err("owned driver: exception vector metadata is inconsistent".into());
         }
         self.entry("audio_a0_dispatch")?;
         self.entry("audio_b0_dispatch")?;
@@ -416,7 +425,7 @@ impl Image {
             undeliver: self.entry("audio_event_undeliver")?,
         })?;
         kernel.configure_exception_dispatch(Dispatch {
-            entry: self.entry("audio_exception_vector")?,
+            entry: EXCEPTION_VECTOR,
             priority: self.entry("audio_exception_priority")?,
             node: self.entry("audio_exception_node")?,
             verifier: self.entry("audio_exception_verifier")?,
@@ -491,6 +500,14 @@ impl Image {
         if initialization.result != 0 {
             return Err(
                 "owned driver: service initialization returned an unexpected result".into(),
+            );
+        }
+        let vector = (self.symbol("audio_exception_vector")? - base) as usize;
+        let installed = ram_offset(EXCEPTION_VECTOR, 16)?;
+        if execution.bus.ram().bytes()[installed..installed + 16] != self.bytes[vector..vector + 16]
+        {
+            return Err(
+                "owned driver: exception vector installation differs from its source bytes".into(),
             );
         }
         let vectors = (self.symbol("audio_entry_vectors")? - base) as usize;

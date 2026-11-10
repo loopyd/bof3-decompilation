@@ -256,7 +256,7 @@ impl Execution {
             && !self
                 .kernel
                 .as_ref()
-                .is_some_and(|services| services.kernel.executes_vector(&self.cpu));
+                .is_some_and(|services| services.kernel.executes_guest(&self.cpu));
         let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
             waiting = services
                 .kernel

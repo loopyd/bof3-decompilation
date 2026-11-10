@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 # Owned supported exception vector, capture and ExCB scanner. Startup loads the
-# code and data, initializes the stack-pointer cell, and links the explicit GP.
+# code and data, copies the four-instruction vector to RAM 0x80, initializes the
+# stack-pointer cell, and links the explicit GP.
 # The host preflights the supported EPC/COP2 domain, then observes the exported
 # instruction boundaries without changing guest registers or charging traps.
 .set noreorder
@@ -15,6 +16,8 @@ audio_exception_vector:
     jr $k0
     nop
 .end audio_exception_vector
+.globl audio_exception_vector_end
+audio_exception_vector_end:
 
 .globl audio_exception_dispatch
 .ent audio_exception_dispatch

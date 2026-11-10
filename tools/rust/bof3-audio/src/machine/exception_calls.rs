@@ -123,6 +123,10 @@ impl Calls {
         self.guest && matches!(self.cursor, Cursor::Guest) && self.saved.is_none()
     }
 
+    pub fn functional_return_pending(&self) -> bool {
+        !self.guest && self.saved.is_some()
+    }
+
     pub fn validate_guest_stack(&self, bus: &mut impl Bus, binding: Dispatch) -> Result<()> {
         if bus.read(binding.stack_pointer, Width::Word)? != self.stack {
             return Err(

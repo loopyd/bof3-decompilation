@@ -1252,7 +1252,19 @@ impl Kernel {
         Ok(())
     }
 
-    pub(crate) fn executes_vector(&self, cpu: &Cpu) -> bool {
+    pub(crate) fn executes_guest(&self, cpu: &Cpu) -> bool {
+        // A functional return trap owns its ROM address only during its call.
+        // Otherwise firmware instructions at that address execute normally.
+        match cpu.pc() {
+            CALLBACK_RETURN => return !self.event_calls.functional_return_pending(),
+            HANDLER_RETURN => {
+                return self
+                    .exception_calls
+                    .as_ref()
+                    .is_none_or(|calls| !calls.functional_return_pending());
+            }
+            _ => {}
+        }
         if !self.guest_vectors {
             return false;
         }
