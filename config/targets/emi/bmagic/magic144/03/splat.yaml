@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EF11C
   - - 1364
-    - asm
-    - func_801EF154
+    - c
+    - decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154.c'
+    - '@behavior: Decrements nonzero work byte 9, then when work byte 0xB equals 0x80 submits the published record, forwards the battle byte, decrements global work byte 0xB and invokes 0x801E5988.'
   - - 1508
     - asm
     - func_801EF1E4

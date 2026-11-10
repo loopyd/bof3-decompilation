@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c",
     "src/bof3/bmagic/dispatchStateByte2Table0478BmagicMagic11003_801EF43C.c",
     "src/bof3/support/magic110_03_psyq.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8.c",

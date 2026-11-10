@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/clearRecordBytes0Through3BmagicMagic12603_801F116C.c",
     "src/bof3/bmagic/dispatchRecordByte1Table12a8BmagicMagic12603_801F091C.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At96BmagicMagic12603_801EFC94.c",
+    "src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28.c",
 ]
 support_sources = [
     "src/bof3/support/magic126_03_psyq.c",

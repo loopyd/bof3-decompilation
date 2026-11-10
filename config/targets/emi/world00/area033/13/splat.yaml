@@ -159,8 +159,10 @@ segments:
     - c
     - invokeTwoHelpersWorld00Area03313_801F4674
   - - 6812
-    - asm
-    - func_801F469C
+    - c
+    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld00Area03313_801F469C
+    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld00Area03313_801F469C.c'
+    - '@behavior: Projects a pulsing textured panel and scrolling cell grid near the shared focus.'
 - - 8368
   - bin
   - tail

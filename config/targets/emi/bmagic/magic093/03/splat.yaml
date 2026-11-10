@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801EF4BC
   - - 2248
-    - asm
-    - func_801EF4C8
+    - c
+    - seedRandomRadiusAndProjectWorkPositionPairThenAdvanceBmagicMagic09303_801EF4C8
+    # @source 0x801EF4C8
+    # @behavior Seed random radius and angle, project work position pair, copy word 0x3C and advance byte 2.
   - - 2560
     - c
     - projectWorkPositionPairFromByte9AndByteAAtByte4AngleThenAdvanceAt16BmagicMagic09303_801EF600

@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F307C
   - - 1212
-    - asm
-    - func_801F30BC
+    - c
+    - releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC
+    - '@source: src/bof3/world/releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC.c'
+    - '@behavior: For signed progress 0 or 0xA and phase byte not 2, releases the shared front end and sets block bit 0x88 or 0x89, respectively; progress 0 requests step 6, progress 0xA requests selector context (0x79, 0x2A0000, 0x1A0000, 7), and both handled paths clear the state-entry and progress bytes.'
   - - 1412
     - c
     - setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184

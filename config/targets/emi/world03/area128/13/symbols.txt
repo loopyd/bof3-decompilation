@@ -6,7 +6,7 @@ setStatusFFFFAndWorkHalfword7E0BProgressFSubstate3IfGateElseSubstate8World03Area
 setStateEntry38ProgressAAndStatus49WhenGateClearElseStatusFFFFWorld03Area12813_801F2FD8 = 0x801F2FD8;
 seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030 = 0x801F3030;
 func_801F307C = 0x801F307C;
-func_801F30BC = 0x801F30BC;
+releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC = 0x801F30BC;
 setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184 = 0x801F3184;
 func_801F31D0 = 0x801F31D0;
 D_801F32E0 = 0x801F32E0;

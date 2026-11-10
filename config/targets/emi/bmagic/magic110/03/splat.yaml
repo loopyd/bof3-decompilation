@@ -119,8 +119,10 @@ segments:
     - '@source: src/bof3/bmagic/drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48.c'
     - '@behavior: Draws sixty-four translucent Gouraud triangles from the origin at the radius in work word 0x14, tinted by work byte 9 times four, stepping phase by 64 and linking each packet at ordering-table slot 2.'
   - - 4248
-    - asm
-    - func_801EFC98
+    - c
+    - drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c'
+    - '@behavior: Draws sixty-four translucent Gouraud quads between work word 0x14 radius and that radius plus 0x80, tinting the outer edge by work byte 9 times four and linking at ordering-table slot 2.'
   - - 5048
     - c
     - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic11003_801EFFB8

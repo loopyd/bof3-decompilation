@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801EF3A0
   - - 2016
-    - asm
-    - func_801EF3E0
+    - c
+    - decrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic08603_801EF3E0
+    - '@source: src/bof3/bmagic/decrementWorkByte9AndInvokeHelperWhenZeroBmagicMagic08603_801EF3E0.c'
+    - '@behavior: Decrement work byte 9 and invoke the shared helper at 0x801E5988 when the stored byte reaches zero.'
   - - 2084
     - asm
     - func_801EF424

@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F2E24
   - - 632
-    - asm
-    - func_801F2E78
+    - c
+    - queueSharedUiBlock41To44x3To9ByModeWorld01Area04013_801F2E78
+    - '@source: src/bof3/world/queueSharedUiBlock41To44x3To9ByModeWorld01Area04013_801F2E78.c'
+    - '@behavior: queues the shared UI block x = 0x41..0x44, y = 3..9 with size 0 and returns 1 when the low nibble of 0x80144EA9 is 5; otherwise queues it with size 0xA4 and returns 0.'
   - - 896
     - asm
     - func_801F2F80

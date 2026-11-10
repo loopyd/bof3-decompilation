@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2CB4
   - - 264
-    - asm
-    - func_801F2D08
+    - c
+    - clearWorkFlagsWhenWorkTableIdleWorld03Area14313_801F2D08
+    - '@source: src/bof3/world/clearWorkFlagsWhenWorkTableIdleWorld03Area14313_801F2D08.c'
+    - '@behavior: Updates the local work table and clears work flags when no active record was processed.'
   - - 316
     - asm
     - func_801F2D3C

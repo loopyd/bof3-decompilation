@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EFB74
   - - 4136
-    - asm
-    - func_801EFC28
+    - c
+    - incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28
+    - '@source: src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28.c'
+    - '@behavior: Increments work bytes 9 and 0xA, then increments byte 2 when the resulting byte 0xA is 0x10.'
   - - 4244
     - c
     - add2ToWorkByte9AndAdvanceWorkByte2At96BmagicMagic12603_801EFC94

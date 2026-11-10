@@ -78,8 +78,10 @@ segments:
     - '@source: src/bof3/world/setWorkState2To4WhenCameraOutsideFixedCoordinateWindowWorld03Area11913_801F3170.c'
     - '@behavior: When the shared overlay state byte at 0x8014933B reads zero, compares the shared camera coordinate words D_80145EC4 and D_80145EC8 with the fixed coordinate window (0x428000 on the first word, 0x3E0000 and 0x3F0000 on the second) at a 0x18000 threshold and stores 4 into byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044 when the camera lies outside that window. Takes no arguments, calls nothing and returns nothing.'
   - - 1552
-    - asm
-    - func_801F3210
+    - c
+    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210
+    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210.c'
+    - '@behavior: Increments work halfword 0x30 by 0x20; when nonnegative calls the camera-window handler, returns on state 2, otherwise sets state 1 and conditionally queues cue 0x201, then draws.'
   - - 1688
     - asm
     - func_801F3298
