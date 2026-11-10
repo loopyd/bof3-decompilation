@@ -22,7 +22,7 @@ const SAVED: [usize; 12] = [31, 29, 30, 16, 17, 18, 19, 20, 21, 22, 23, 28];
 pub struct Kernel {
     console: Option<Console>,
     entry_hook: EntryHook,
-    pad_auto_ack: u32,
+    pad_auto_ack: PadFlag,
     counter_auto_ack: CounterFlags,
     counter_handlers: Option<[[u32; 2]; 4]>,
     generic_handler: Option<(u32, u32)>,
@@ -33,6 +33,7 @@ pub struct Kernel {
     event_delivery: Option<EventService>,
     event_wait: Option<u32>,
     event_controls: Option<EventControls>,
+    bootstrap: Option<Bootstrap>,
     event_completed: bool,
     exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
@@ -66,7 +67,7 @@ impl Default for Kernel {
         Self {
             console: None,
             entry_hook: EntryHook::Functional(None),
-            pad_auto_ack: 1,
+            pad_auto_ack: PadFlag::Functional(1),
             counter_auto_ack: CounterFlags::Functional([1; 4]),
             counter_handlers: None,
             generic_handler: None,
@@ -77,6 +78,7 @@ impl Default for Kernel {
             event_delivery: None,
             event_wait: None,
             event_controls: None,
+            bootstrap: None,
             event_completed: false,
             exception_dispatch: None,
             exception_hook: None,
@@ -114,6 +116,53 @@ enum ExceptionDelivery {
 enum EntryHook {
     Functional(Option<u32>),
     Guest(u32),
+}
+
+#[derive(Clone, Debug)]
+enum PadFlag {
+    Functional(u32),
+    Guest(u32),
+}
+
+impl PadFlag {
+    fn read(&self, bus: &mut impl Bus) -> Result<u32> {
+        match self {
+            Self::Functional(value) => Ok(*value),
+            Self::Guest(address) => Ok(bus.read(*address, Width::Word)?),
+        }
+    }
+
+    fn exchange(&mut self, bus: &mut impl Bus, value: u32) -> Result<u32> {
+        let old = self.read(bus)?;
+        match self {
+            Self::Functional(flag) => *flag = value,
+            Self::Guest(address) => bus.write(*address, Width::Word, value)?,
+        }
+        Ok(old)
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub(crate) struct Bootstrap {
+    pub setjmp: u32,
+    pub hook: u32,
+    pub clear_pad: u32,
+    pub clear_counter: u32,
+    pub dequeue: u32,
+    pub pad_flag: u32,
+}
+
+impl Bootstrap {
+    fn addresses(self) -> [u32; 6] {
+        [
+            self.setjmp,
+            self.hook,
+            self.clear_pad,
+            self.clear_counter,
+            self.dequeue,
+            self.pad_flag,
+        ]
+    }
 }
 
 impl EntryHook {
@@ -327,6 +376,73 @@ impl Kernel {
         Ok(())
     }
 
+    pub(crate) fn configure_bootstrap(&mut self, binding: Bootstrap) -> Result<()> {
+        self.require_plain_context()?;
+        if self.bootstrap.is_some()
+            || !matches!(self.entry_hook, EntryHook::Guest(_))
+            || !matches!(self.counter_auto_ack, CounterFlags::Guest(_))
+        {
+            return Err("owned bootstrap services require unbound entries and guest state".into());
+        }
+        let mut offsets = Vec::new();
+        for address in binding.addresses() {
+            let offset = self.validate_owned_handler(address)?;
+            if offsets.contains(&offset) {
+                return Err("owned bootstrap services require distinct RAM identities".into());
+            }
+            offsets.push(offset);
+        }
+        self.pad_auto_ack = PadFlag::Guest(binding.pad_flag);
+        self.bootstrap = Some(binding);
+        Ok(())
+    }
+
+    fn prepare_bootstrap(&self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {
+        let Some(binding) = self.bootstrap else {
+            return Ok(());
+        };
+        if !binding.addresses()[..5].contains(&cpu.pc()) {
+            return Ok(());
+        }
+        let mut incoming = cpu.clone();
+        incoming.synchronize_load();
+        if cpu.pc() == binding.setjmp {
+            // The first SW reads the old A0 and RA; later stores see the load.
+            let first = cpu.register(4);
+            if first & 3 != 0 {
+                return Err("owned setjmp requires an aligned buffer".into());
+            }
+            ram_offset(first, 4)?;
+            validate_buffer(incoming.register(4))?;
+        }
+        if cpu.pc() == binding.hook {
+            validate_buffer(incoming.register(4))?;
+        }
+        if cpu.pc() == binding.dequeue {
+            ExceptionChains::read(bus)?.validate_dequeue(bus, incoming.register(4))?;
+            let stack = incoming.register(29);
+            if stack & 3 != 0 {
+                return Err("owned SysDeqIntRP requires an aligned frame".into());
+            }
+            ram_offset(
+                stack
+                    .checked_sub(8)
+                    .ok_or("owned SysDeqIntRP stack underflow")?,
+                8,
+            )?;
+        }
+        if cpu.pc() == binding.clear_counter {
+            self.counter_auto_ack
+                .read(bus, incoming.register(4) as usize)?;
+        }
+        let return_pc = incoming.register(31);
+        if return_pc & 3 != 0 || binding.addresses()[..5].contains(&return_pc) {
+            return Err("owned bootstrap service requires an external aligned return".into());
+        }
+        ram_offset(return_pc, 4)?;
+        Ok(())
+    }
+
     /// Bind the linked vector, scanner boundaries and initialized stack cell.
     /// The CPU loop calls prepare_exception_step before selecting each service
     /// or instruction. Guest instructions resolve the live PCB/TCB and capture
@@ -390,6 +506,7 @@ impl Kernel {
         if let Some(binding) = self.event_controls {
             binding.prepare(cpu, bus)?;
         }
+        self.prepare_bootstrap(cpu, bus)?;
         if self.event_wait == Some(cpu.pc()) {
             // ANDI consumes A0 before this instruction retires an incoming load.
             Events::read(bus)?.address(cpu.register(4))?;
@@ -598,6 +715,12 @@ impl Kernel {
                 .event_wait
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self.event_controls.is_some_and(|binding| {
+                binding
+                    .addresses()
+                    .into_iter()
+                    .any(|address| ram_offset(address, 4).ok() == Some(offset))
+            })
+            || self.bootstrap.is_some_and(|binding| {
                 binding
                     .addresses()
                     .into_iter()
@@ -1111,7 +1234,7 @@ impl Kernel {
         )
     }
 
-    /// The owned initializer installs A0/B0 vectors and tables for these eleven
+    /// The owned initializer installs A0/B0/C0 vectors and tables for these sixteen
     /// complete services. Their normal entry guards still run at each body.
     pub(crate) fn configure_guest_vectors(&mut self) -> Result<()> {
         self.require_plain_context()?;
@@ -1119,10 +1242,11 @@ impl Kernel {
             || self.event_delivery.is_none()
             || self.event_wait.is_none()
             || self.event_controls.is_none()
+            || self.bootstrap.is_none()
             || self.exception_return.is_none()
             || self.exception_reset.is_none()
         {
-            return Err("owned vectors require all eleven guest service bindings".into());
+            return Err("owned vectors require all sixteen guest service bindings".into());
         }
         self.guest_vectors = true;
         Ok(())
@@ -1138,7 +1262,9 @@ impl Kernel {
         incoming.synchronize_load();
         matches!(
             (incoming.pc() & 0x1fff_ffff, incoming.register(9)),
-            (0xa0, 0x72) | (0xb0, 0x07..=0x0d | 0x17 | 0x18 | 0x20)
+            (0xa0, 0x13 | 0x72)
+                | (0xb0, 0x07..=0x0d | 0x17..=0x19 | 0x20 | 0x5b)
+                | (0xc0, 0x03 | 0x0a)
         )
     }
 
@@ -1148,8 +1274,8 @@ impl Kernel {
     pub fn pending_callbacks(&self) -> usize {
         self.event_calls.depth()
     }
-    pub fn pad_auto_ack(&self) -> u32 {
-        self.pad_auto_ack
+    pub fn pad_auto_ack(&self, bus: &mut impl Bus) -> Result<u32> {
+        self.pad_auto_ack.read(bus)
     }
     pub fn counter_auto_ack(&self, bus: &mut impl Bus) -> Result<[u32; 4]> {
         Ok([
@@ -1378,8 +1504,7 @@ impl Kernel {
                 "UnDeliverEvent"
             }
             (0xb0, 0x5b) => {
-                let old = self.pad_auto_ack;
-                self.pad_auto_ack = argument;
+                let old = self.pad_auto_ack.exchange(bus, argument)?;
                 cpu.set_register(2, old);
                 "ChangeClearPAD"
             }

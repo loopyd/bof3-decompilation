@@ -32,10 +32,10 @@ The Rust [`machine::driver::Image`](../src/machine/driver.rs) validates artifact
 hashes, required symbols and allocation bounds, then starts services in zeroed
 RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
-Startup also owns RAM `0xA0..0xC0` for the A0/B0 entry vectors and
-`0x100..0x128` for kernel descriptors. A0/72 and B0/07..0D,17,18,20 execute those
-vectors and relocated service tables before their owned guest bodies. The
-loader requires the current vector symbols, checks their eleven table bindings
+Startup also owns RAM `0xA0..0xD0` for the A0/B0/C0 entry vectors and
+`0x100..0x128` for kernel descriptors. A0/13,72, B0/07..0D,17..19,20,5B and
+C0/03,0A execute those vectors and relocated service tables before their owned
+guest bodies. The loader requires the current vector symbols, checks their sixteen table bindings
 and verifies the installed bytes. Direct body guards remain active.
 After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
@@ -56,6 +56,15 @@ words above SP. Entry guards reject malformed descriptors, out-of-range handles,
 unsupported open modes and invalid frames or return addresses before the first
 body instruction. The instruction that consumes an argument determines which
 side of an incoming delayed load the guard validates.
+
+The guest `setjmp` body preserves the original twelve stores. Its first store
+uses A0 and RA before an incoming delayed load; later stores use the retired
+values. Hook registration writes the live hook-pointer cell without changing V0.
+PAD and counter acknowledgement controls exchange their owned RAM flags. Startup
+initializes PAD acknowledgement to 1 and executes its guest control to select 0
+before enabling interrupts. SysDeqIntRP follows the live finite exception chain,
+compares exact pointer values and leaves the detached node's next link intact.
+Entry guards retain buffer, frame, priority, counter-index and chain limits.
 
 `Image::start_scheduled` accepts device configuration before the first startup
 instruction and a resolver for audio waits. The resolver orders producer and

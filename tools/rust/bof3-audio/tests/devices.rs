@@ -178,7 +178,7 @@ fn kernel_auto_ack_controls_keep_state_and_return_previous_counter_setting() {
     cpu.set_register(9, 0x5b);
     cpu.set_register(4, 0);
     kernel.dispatch(&mut cpu, &mut bus).unwrap();
-    assert_eq!(kernel.pad_auto_ack(), 0);
+    assert_eq!(kernel.pad_auto_ack(&mut bus).unwrap(), 0);
     cpu.resume_at(0xc0);
     cpu.set_register(9, 0x0a);
     cpu.set_register(4, 4);

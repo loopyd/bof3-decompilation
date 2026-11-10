@@ -127,6 +127,12 @@ impl Table {
         }
         Err("BIOS SysDeqIntRP: chain changed after validation".into())
     }
+
+    pub(crate) fn validate_dequeue(&self, bus: &mut impl Bus, priority: u32) -> Result<()> {
+        let head = self.head(bus, priority)?;
+        self.chain(bus, head)?;
+        Ok(())
+    }
 }
 
 fn overlaps(a: usize, a_len: usize, b: usize, b_len: usize) -> bool {

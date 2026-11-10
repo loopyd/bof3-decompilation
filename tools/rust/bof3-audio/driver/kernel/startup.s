@@ -111,6 +111,10 @@ audio_kernel_initialize:
     bne $t1, $zero, .Lgeneric_flags
     addiu $t0, $t0, 4
 
+    lui $t0, %hi(audio_pad_auto_ack)
+    addiu $t1, $zero, 1
+    sw $t1, %lo(audio_pad_auto_ack)($t0)
+
     lui $t0, %hi(audio_cd_removal_state)
     addiu $t0, $t0, %lo(audio_cd_removal_state)
     sw $zero, 0($t0)

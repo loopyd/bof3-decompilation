@@ -11,7 +11,7 @@ use super::{
     execution::{Call, Execution},
     image::executable::ram_offset,
     interconnect::{DeviceProgress, Interconnect},
-    kernel::Kernel,
+    kernel::{Bootstrap, Kernel},
     spu::reverb,
     spu::sample,
     spu::voice::envelope,
@@ -231,9 +231,10 @@ impl Image {
             ("audio_exception_hook_pointer", 4),
             ("audio_exception_stack_pointer", 4),
             ("audio_exception_default_hook", 48),
-            ("audio_entry_vectors", 32),
+            ("audio_entry_vectors", 48),
             ("audio_a0_services", 0x73 * 4),
-            ("audio_b0_services", 0x21 * 4),
+            ("audio_b0_services", 0x5c * 4),
+            ("audio_c0_services", 0x0b * 4),
         ] {
             let address = self.symbol(name)?;
             if address & 3 != 0
@@ -248,12 +249,13 @@ impl Image {
         if self
             .symbol("audio_entry_vectors_end")?
             .checked_sub(self.symbol("audio_entry_vectors")?)
-            != Some(32)
+            != Some(48)
         {
             return Err("owned driver: vector metadata is inconsistent".into());
         }
         self.entry("audio_a0_dispatch")?;
         self.entry("audio_b0_dispatch")?;
+        self.entry("audio_c0_dispatch")?;
         for (slot, entry) in self.vector_bindings()? {
             let at = (slot - base) as usize;
             if u32::from_le_bytes(self.bytes[at..at + 4].try_into().unwrap()) != entry {
@@ -263,10 +265,12 @@ impl Image {
         Ok(())
     }
 
-    fn vector_bindings(&self) -> Result<[(u32, u32); 11]> {
+    fn vector_bindings(&self) -> Result<[(u32, u32); 16]> {
         let a0 = self.symbol("audio_a0_services")?;
         let b0 = self.symbol("audio_b0_services")?;
+        let c0 = self.symbol("audio_c0_services")?;
         Ok([
+            (a0 + 0x13 * 4, self.entry("audio_kernel_setjmp")?),
             (a0 + 0x72 * 4, self.entry("audio_cd_remove")?),
             (b0 + 0x07 * 4, self.entry("audio_event_deliver")?),
             (b0 + 0x08 * 4, self.entry("audio_event_open")?),
@@ -277,7 +281,11 @@ impl Image {
             (b0 + 0x0d * 4, self.entry("audio_event_disable")?),
             (b0 + 0x17 * 4, self.entry("audio_exception_return")?),
             (b0 + 0x18 * 4, self.entry("audio_exception_reset")?),
+            (b0 + 0x19 * 4, self.entry("audio_kernel_hook_entry")?),
             (b0 + 0x20 * 4, self.entry("audio_event_undeliver")?),
+            (b0 + 0x5b * 4, self.entry("audio_kernel_clear_pad")?),
+            (c0 + 0x03 * 4, self.entry("audio_kernel_dequeue")?),
+            (c0 + 0x0a * 4, self.entry("audio_kernel_clear_counter")?),
         ])
     }
 
@@ -426,6 +434,14 @@ impl Image {
             self.entry("audio_exception_return_rfe")?,
         )?;
         kernel.configure_exception_reset(self.entry("audio_exception_reset")?)?;
+        kernel.configure_bootstrap(Bootstrap {
+            setjmp: self.entry("audio_kernel_setjmp")?,
+            hook: self.entry("audio_kernel_hook_entry")?,
+            clear_pad: self.entry("audio_kernel_clear_pad")?,
+            clear_counter: self.entry("audio_kernel_clear_counter")?,
+            dequeue: self.entry("audio_kernel_dequeue")?,
+            pad_flag: self.data("audio_pad_auto_ack", 4)?,
+        })?;
         kernel.configure_guest_vectors()?;
         let initialize = self.entry("audio_kernel_initialize")?;
         let mut cpu = Cpu::new(initialize);
@@ -478,9 +494,9 @@ impl Image {
             );
         }
         let vectors = (self.symbol("audio_entry_vectors")? - base) as usize;
-        let installed = ram_offset(0xa0, 32)?;
-        if execution.bus.ram().bytes()[installed..installed + 32]
-            != self.bytes[vectors..vectors + 32]
+        let installed = ram_offset(0xa0, 48)?;
+        if execution.bus.ram().bytes()[installed..installed + 48]
+            != self.bytes[vectors..vectors + 48]
         {
             return Err("owned driver: vector installation differs from its source bytes".into());
         }
@@ -502,7 +518,7 @@ impl Image {
         }
         // Disable automatic PAD acknowledgement before enabling interrupts.
         execution.cpu.set_register(9, 0x5b);
-        execution.call_scheduled(0xb0, [0; 4], 1, &mut |_| Ok(()), schedule)?;
+        execution.call_scheduled(0xb0, [0; 4], 64, &mut |_| Ok(()), schedule)?;
         execution.cpu.set_register(28, 0);
         execution.cpu.set_register(29, FOREGROUND_STACK);
         execution

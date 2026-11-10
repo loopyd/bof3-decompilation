@@ -47,8 +47,8 @@ SECTIONS
     }
     ASSERT(audio_kernel_bss_end <= 0x80050000,
            "kernel allocation exceeds the owned arena")
-    ASSERT(audio_entry_vectors_end - audio_entry_vectors == 32,
-           "A0/B0 vector installation size changed")
+    ASSERT(audio_entry_vectors_end - audio_entry_vectors == 48,
+           "A0/B0/C0 vector installation size changed")
     ASSERT(audio_sequence_scheduler == 0x8016C548 &&
            audio_sequence_scheduler_end == 0x8016C7BC &&
            SIZEOF(.audio_sequence_scheduler) == 628,
