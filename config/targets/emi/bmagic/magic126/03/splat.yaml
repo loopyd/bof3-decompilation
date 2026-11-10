@@ -106,8 +106,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0.c'
     - '@behavior: Dispatches work byte 2, then calls helpers when work bytes 0 and 2 are nonzero.'
   - - 5696
-    - asm
-    - func_801F0240
+    - c
+    - decrementWorkByte9ThenSeedFrom8014637CStepPositionSetHeadingToward801EB4E0AndAdvanceWorkByte2BmagicMagic12603_801F0240
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedFrom8014637CStepPositionSetHeadingToward801EB4E0AndAdvanceWorkByte2BmagicMagic12603_801F0240.c'
+    - '@behavior: Decrements work byte 9, seeds and steps position on zero, sets heading toward the record at 0x801EB4E0 and advances byte 2.'
   - - 6012
     - asm
     - func_801F037C

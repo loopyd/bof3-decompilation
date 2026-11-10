@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC70
   - - 524
-    - asm
-    - func_801EEE0C
+    - c
+    - decrementWorkByte9RaiseBattleTargetFlag10AndAdvanceWorkByte1OnZeroBmagicMagic13003_801EEE0C
+    - '@source: src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag10AndAdvanceWorkByte1OnZeroBmagicMagic13003_801EEE0C.c'
+    - '@behavior: Decrement work byte 9; on zero raise battle target flag 0x10 and advance work byte 1.'
   - - 628
     - asm
     - func_801EEE74

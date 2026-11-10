@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801EF318
   - - 4628
-    - asm
-    - func_801EFE14
+    - c
+    - initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14
+    - '@source: src/bof3/bmagic/initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14.c'
+    - '@behavior: Initializes a semitransparent LINE_F4 with RGB (0x40, 0x40, 0xC0), projects four by-value SVECTORs into its coordinate pairs with RotAverage4 and writes the returned average depth through argument two.'
   - - 4792
     - asm
     - func_801EFEB8

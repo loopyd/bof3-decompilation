@@ -194,8 +194,10 @@ segments:
     - '@source: src/bof3/world/fillScreenRampDownColorDimPaletteSetChannelBiasIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4DC8.c'
     - '@behavior: overlay step handler, entry index 7 of the sixteen-pointer step table based at 0x801F57D0; reads the scratchpad work record published through 0x1F800044 and fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428 with a colour packed from record byte +0x09 (blue = 0x1F - level*27/100, green = 0x19 - level*27/100, red = level/17, bit 28 set) after clearing the shared palette-stage byte at 0x8014933A, re-reads the cell and rescales the palette window through 0x801F5388 with the unity scale 0x80 minus the level/3, reads the cell a third time and stores the negated signed level/3 into the shared bytes 0x80145EEF, 0x80145EEE and 0x80145EED, advances that record byte +0x09, and, once a fresh cell read shows it has reached 0x5B, clears byte +0x09 and advances the record dispatch byte +0x02 by one.'
   - - 9000
-    - asm
-    - func_801F4F28
+    - c
+    - fillScreenGradientAdvanceWorkByte2QueueCue201AtScenarioProgress35World02Area08213_801F4F28
+    - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2QueueCue201AtScenarioProgress35World02Area08213_801F4F28.c'
+    - '@behavior: clears palette-stage byte 0x8014933A and fills the screen with gradient color 0x10001805; at scenario progress 0x35, advances scratchpad work record byte +0x02 then queues sound cue 0x201.'
   - - 9096
     - c
     - setScratchVectorsDrawQuadBandFillScreenGradientIncrementWorkByte9At8World02Area08213_801F4F88

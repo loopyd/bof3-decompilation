@@ -112,8 +112,10 @@ segments:
     - '@source: 0x801F0200'
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 16, then count down byte 9 and advance byte 2 at zero.'
   - - 5908
-    - asm
-    - func_801F0314
+    - c
+    - incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314
+    - '@source: 0x801F0314'
+    - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 24, subtract two from byte A, then advance source byte B and call 0x801E5988 when byte A re-reads zero.'
   - - 6204
     - asm
     - func_801F043C

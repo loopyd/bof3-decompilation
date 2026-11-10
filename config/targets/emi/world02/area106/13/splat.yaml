@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801F2D0C
   - - 476
-    - asm
-    - func_801F2DDC
+    - c
+    - advanceWorkBytes9And10WithTableCallsThenResetAt49World02Area10613_801F2DDC
+    - '@source: src/bof3/world/advanceWorkBytes9And10WithTableCallsThenResetAt49World02Area10613_801F2DDC.c'
+    - '@behavior: Advances work bytes +9 and +10 with table-indexed calls, then resets at 49.'
   - - 824
     - asm
     - func_801F2F38

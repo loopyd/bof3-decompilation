@@ -115,8 +115,10 @@ segments:
     - dispatchWorkByte2HandlerBmagicMagic06703_801F038C
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c'
   - - 6124
-    - asm
-    - func_801F03EC
+    - c
+    - clearWorkBytesBAnd9Invoke8014D6B8With3ThenAdvanceWorkByte2BmagicMagic06703_801F03EC
+    - '@source: src/bof3/bmagic/clearWorkBytesBAnd9Invoke8014D6B8With3ThenAdvanceWorkByte2BmagicMagic06703_801F03EC.c'
+    - '@behavior: Clears work bytes 0xB and 9, invokes 0x8014D6B8 with 3, then increments work byte 2, reloading the scratchpad work pointer for each operation.'
   - - 6204
     - asm
     - func_801F043C

@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EF330
   - - 3064
-    - asm
-    - func_801EF7F8
+    - c
+    - dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8.c'
+    - '@behavior: Dispatches the work byte 2 handler at table 0x801EFAB8, reloads the scratchpad work pointer and calls local draw routine 0x801EF970 when work bytes 0 and 2 are both nonzero.'
   - - 3184
     - asm
     - func_801EF870

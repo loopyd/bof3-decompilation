@@ -13,7 +13,7 @@ clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF2
 func_801EF278 = 0x801EF278;
 func_801EF2CC = 0x801EF2CC;
 func_801EF318 = 0x801EF318;
-func_801EFE14 = 0x801EFE14;
+initializeAndProjectSemitransparentBlueLineF4BmagicMagic07803_801EFE14 = 0x801EFE14;
 func_801EFEB8 = 0x801EFEB8;
 func_801EFF84 = 0x801EFF84;
 T_801EFFE4 = 0x801EFFE4;

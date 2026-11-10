@@ -22,7 +22,7 @@ dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F
 func_801F0090 = 0x801F0090;
 func_801F01AC = 0x801F01AC;
 incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200 = 0x801F0200;
-func_801F0314 = 0x801F0314;
+incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314 = 0x801F0314;
 func_801F043C = 0x801F043C;
 func_801F070C = 0x801F070C;
 func_801F0994 = 0x801F0994;

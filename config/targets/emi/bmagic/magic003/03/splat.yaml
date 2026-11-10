@@ -133,9 +133,11 @@ segments:
   - - 7088
     - asm
     - func_801F07B0
+  # @source 0x801F09C4
+  # @behavior Reserves the first free 0x78-byte record among 32 slots.
   - - 7620
-    - asm
-    - func_801F09C4
+    - c
+    - reserveFirstFreeRecordBmagicMagic00303_801F09C4
   - - 7720
     - c
     - clearWorkBytesBmagicMagic00303_801F0A28
