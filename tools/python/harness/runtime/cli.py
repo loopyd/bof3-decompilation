@@ -40,10 +40,16 @@ def build_parser() -> argparse.ArgumentParser:
     selection.add_argument("--script", type=Path)
     selection.add_argument("--mission")
     command.add_argument("--executable", type=Path, help="optional PS-X EXE to load")
-    command.add_argument(
+    audio = command.add_mutually_exclusive_group()
+    audio.add_argument(
         "--audio-cold-capture",
         metavar="SAMPLES,BLOCKS,EVENTS",
         help="record from the first SPU worker after initial reset, with explicit limits",
+    )
+    audio.add_argument(
+        "--audio-cooperative-capture",
+        metavar="SAMPLES,BLOCKS,EVENTS,QUANTUM,CHUNK",
+        help="select serialized native audio turns with an explicit CPU quantum and callback chunk",
     )
     command.add_argument(
         "--origin",
@@ -110,6 +116,7 @@ def run_runtime(args: argparse.Namespace) -> int:
             replacements=args.replacement,
             origin=args.origin,
             audio_cold_capture=args.audio_cold_capture,
+            audio_cooperative_capture=args.audio_cooperative_capture,
         )
     print(json.dumps(report, indent=2))
     return int(report.get("status") == "failed")

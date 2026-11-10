@@ -56,19 +56,30 @@ def parse_arguments(values: Sequence[str] | None) -> dict[str, str]:
     return parameters
 
 
-def parse_cold_capture(value: str | None) -> tuple[int, int, int] | None:
-    """Validate the explicit fresh-worker audio capture capacities."""
+def parse_audio_capture(
+    value: str | None, *, cooperative: bool = False
+) -> tuple[int, ...] | None:
+    """Validate cold capture capacities and optional cooperative actor inputs."""
 
     if value is None:
         return None
-    if re.fullmatch(r"[0-9]+,[0-9]+,[0-9]+", value) is None:
-        raise ValueError("cold audio capture requires SAMPLES,BLOCKS,EVENTS")
-    limits = tuple(map(int, value.split(",")))
-    if any(
-        not 1 <= limit <= maximum
-        for limit, maximum in zip(limits, (2_646_000, 65_536, 65_536), strict=True)
+    maxima = (2_646_000, 65_536, 65_536)
+    fields = "SAMPLES,BLOCKS,EVENTS"
+    if cooperative:
+        maxima += (1_000_000, 2048)
+        fields += ",QUANTUM,CHUNK"
+    parts = value.split(",")
+    if len(parts) != len(maxima) or any(
+        re.fullmatch(r"[1-9][0-9]*", part) is None for part in parts
     ):
-        raise ValueError("cold audio limits must be 1..2646000,1..65536,1..65536")
+        raise ValueError(f"audio capture requires positive decimal {fields}")
+    limits = tuple(map(int, parts))
+    if any(
+        not 1 <= limit <= maximum for limit, maximum in zip(limits, maxima, strict=True)
+    ):
+        raise ValueError(
+            "audio capture limits must be " + ",".join(f"1..{n}" for n in maxima)
+        )
     return limits
 
 
@@ -80,12 +91,15 @@ def emulator_arguments(
     mission: str | None = None,
     executable: str | None = None,
     media_cue: str | None = None,
-    audio_cold_capture: tuple[int, int, int] | None = None,
+    audio_cold_capture: tuple[int, ...] | None = None,
+    audio_cooperative_capture: tuple[int, ...] | None = None,
 ) -> list[str]:
     """The exact maintained flag set for one mission, with no caller additions."""
 
     if (script is None) == (mission is None):
         raise ValueError("Select exactly one builtin mission or external script")
+    if audio_cold_capture is not None and audio_cooperative_capture is not None:
+        raise ValueError("Select only one cold or cooperative audio capture context")
     command = [
         "-portable",
         str(output),
@@ -100,12 +114,22 @@ def emulator_arguments(
             if audio_cold_capture is not None
             else []
         ),
+        *(
+            [
+                "-audio-cooperative-capture",
+                ",".join(map(str, audio_cooperative_capture)),
+            ]
+            if audio_cooperative_capture is not None
+            else []
+        ),
     ]
     return command
 
 
 def launch_settings(
-    source: str, audio_cold_capture: tuple[int, int, int] | None = None
+    source: str,
+    audio_cold_capture: tuple[int, ...] | None = None,
+    audio_cooperative_capture: tuple[int, ...] | None = None,
 ) -> dict:
     """The recorded launch-settings description, never an effective-settings claim."""
 
@@ -125,6 +149,17 @@ def launch_settings(
             "blocks": audio_cold_capture[1],
             "events": audio_cold_capture[2],
             "context": "first SPU worker deferred until initial reset and recorder begin",
+        }
+    if audio_cooperative_capture is not None:
+        settings["audio_cooperative_capture"] = {
+            "samples": audio_cooperative_capture[0],
+            "blocks": audio_cooperative_capture[1],
+            "events": audio_cooperative_capture[2],
+            "quantum": audio_cooperative_capture[3],
+            "chunk": audio_cooperative_capture[4],
+            "context": "cold serialized native producer and consumer turns",
+            "order": "prime-fill;post-quantum-consume-fill;wait-consume-fill",
+            "retirement_boundary": "after-delayed-load-and-counters/before-debugger",
         }
     return settings
 

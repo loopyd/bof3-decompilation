@@ -30,7 +30,7 @@ from harness.runtime.launch import (
     launch_settings,
     mission_environment,
     parse_arguments,
-    parse_cold_capture,
+    parse_audio_capture,
 )
 from harness.runtime.origin import verify_origin, validate_selection
 from harness.toolchain.pcsx import PcsxReduxToolchain
@@ -429,6 +429,7 @@ def run_session(
     replacements: list[str] | None = None,
     origin: Path | None = None,
     audio_cold_capture: str | None = None,
+    audio_cooperative_capture: str | None = None,
 ) -> dict:
     if not 1024 <= output_limit <= 16 * 1024 * 1024:
         raise ValueError("runtime output limit must be 1024..16777216 bytes")
@@ -437,7 +438,16 @@ def run_session(
             "Select one builtin mission or external script; modules require external selection"
         )
     parameters = parse_arguments(arguments)
-    cold_capture = parse_cold_capture(audio_cold_capture)
+    cold_capture = parse_audio_capture(audio_cold_capture)
+    cooperative_capture = parse_audio_capture(
+        audio_cooperative_capture, cooperative=True
+    )
+    if cooperative_capture is not None and (
+        cold_capture is not None or origin is not None
+    ):
+        raise ValueError(
+            "cooperative capture excludes ordinary cold capture and saved-state origins"
+        )
     assets = collect_assets(modules or [], files or [])
     media, cue = collect_disc(disc)
     replacement_media = collect_replacements(replacements or [], media)
@@ -498,6 +508,7 @@ def run_session(
             executable=inputs["executable"]["path"] if executable is not None else None,
             media_cue=str(output / "disc" / "media.cue") if media else None,
             audio_cold_capture=cold_capture,
+            audio_cooperative_capture=cooperative_capture,
         )
     )
     receipt = {
@@ -519,7 +530,9 @@ def run_session(
         "arguments": parameters,
         "origin": provenance,
         "settings": launch_settings(
-            "fixed harness launch flags and fresh portable directory", cold_capture
+            "fixed harness launch flags and fresh portable directory",
+            cold_capture,
+            cooperative_capture,
         ),
         "output_limit": output_limit,
         "status": "running",
