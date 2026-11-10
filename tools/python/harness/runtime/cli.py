@@ -41,6 +41,11 @@ def build_parser() -> argparse.ArgumentParser:
     selection.add_argument("--mission")
     command.add_argument("--executable", type=Path, help="optional PS-X EXE to load")
     command.add_argument(
+        "--audio-cold-capture",
+        metavar="SAMPLES,BLOCKS,EVENTS",
+        help="record from the first SPU worker after initial reset, with explicit limits",
+    )
+    command.add_argument(
         "--origin",
         type=Path,
         help="verify saved-state capture receipt and tool/media identities",
@@ -104,6 +109,7 @@ def run_runtime(args: argparse.Namespace) -> int:
             disc=args.disc,
             replacements=args.replacement,
             origin=args.origin,
+            audio_cold_capture=args.audio_cold_capture,
         )
     print(json.dumps(report, indent=2))
     return int(report.get("status") == "failed")

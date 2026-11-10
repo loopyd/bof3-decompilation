@@ -56,6 +56,22 @@ def parse_arguments(values: Sequence[str] | None) -> dict[str, str]:
     return parameters
 
 
+def parse_cold_capture(value: str | None) -> tuple[int, int, int] | None:
+    """Validate the explicit fresh-worker audio capture capacities."""
+
+    if value is None:
+        return None
+    if re.fullmatch(r"[0-9]+,[0-9]+,[0-9]+", value) is None:
+        raise ValueError("cold audio capture requires SAMPLES,BLOCKS,EVENTS")
+    limits = tuple(map(int, value.split(",")))
+    if any(
+        not 1 <= limit <= maximum
+        for limit, maximum in zip(limits, (2_646_000, 65_536, 65_536), strict=True)
+    ):
+        raise ValueError("cold audio limits must be 1..2646000,1..65536,1..65536")
+    return limits
+
+
 def emulator_arguments(
     *,
     output: Path,
@@ -64,6 +80,7 @@ def emulator_arguments(
     mission: str | None = None,
     executable: str | None = None,
     media_cue: str | None = None,
+    audio_cold_capture: tuple[int, int, int] | None = None,
 ) -> list[str]:
     """The exact maintained flag set for one mission, with no caller additions."""
 
@@ -78,14 +95,21 @@ def emulator_arguments(
         *(["-exe", executable] if executable is not None else []),
         *(["-mission", mission] if mission is not None else ["-dofile", script]),
         *(["-iso", media_cue] if media_cue is not None else []),
+        *(
+            ["-audio-cold-capture", ",".join(map(str, audio_cold_capture))]
+            if audio_cold_capture is not None
+            else []
+        ),
     ]
     return command
 
 
-def launch_settings(source: str) -> dict:
+def launch_settings(
+    source: str, audio_cold_capture: tuple[int, int, int] | None = None
+) -> dict:
     """The recorded launch-settings description, never an effective-settings claim."""
 
-    return {
+    settings = {
         "schema": SETTINGS_SCHEMA,
         "source": source,
         "cpu": "interpreter",
@@ -95,6 +119,14 @@ def launch_settings(source: str) -> dict:
         "defaults": "pinned emulator build; no preexisting portable configuration",
         "limits": list(SETTINGS_LIMITATIONS),
     }
+    if audio_cold_capture is not None:
+        settings["audio_cold_capture"] = {
+            "samples": audio_cold_capture[0],
+            "blocks": audio_cold_capture[1],
+            "events": audio_cold_capture[2],
+            "context": "first SPU worker deferred until initial reset and recorder begin",
+        }
+    return settings
 
 
 def mission_environment(
