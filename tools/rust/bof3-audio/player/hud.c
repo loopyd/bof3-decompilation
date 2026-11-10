@@ -1,7 +1,9 @@
 #include "config.h"
 #include "hud.h"
 #include "graphics.h"
+#include "sfx.h"
 
+#if !PLAYER_MODE_SFX
 static u8 levels[AUDIO_CHANNELS];
 static u8 peaks[AUDIO_CHANNELS];
 static u8 peak_hold[AUDIO_CHANNELS];
@@ -10,6 +12,7 @@ static const struct MusicTiming {
     u32 numerator;
     u32 denominator_power;
 } timing[PLAYER_SEQUENCE_COUNT] = PLAYER_TIMING;
+#endif
 
 static void timecode(u32 frames)
 {
@@ -43,6 +46,7 @@ static void decimal(char *destination, u32 value, u32 digits)
     }
 }
 
+#if !PLAYER_MODE_SFX
 static void musical_position(u32 ticks)
 {
     u32 quarter, denominator, beats, remainder;
@@ -138,13 +142,59 @@ void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
     graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PAUSE  SQUARE RESTART", 6, 6);
 }
+#else
+void hud_sfx(void)
+{
+    char number[4];
+    graphics_panel(176, 16, 132, 78, 0x180818, 0x080008, 1);
+    graphics_logo();
+    graphics_text(184, 22, "PLAYER " PLAYER_VERSION);
+    graphics_text_scaled(184, 32, "SFX BANK VIEW", 6, 6);
+    graphics_text(184, 42, "deitydragon");
+    timecode(player_status.position_frames);
+    graphics_panel(10, 96, 300, 116, 0x281028, 0x100010, 1);
+    graphics_text(18, 104, sfx_bank()->name);
+    graphics_text(18, 124, "BANK");
+    decimal(number, player_status.bank + 1, 3);
+    number[3] = 0;
+    graphics_text(58, 124, number);
+    graphics_text(98, 124, "SLOT");
+    decimal(number, sfx_bank()->asset.bank, 3);
+    graphics_text(138, 124, number);
+    graphics_text(18, 144, "SAMPLE");
+    decimal(number, player_status.sample + 1, 3);
+    graphics_text(74, 144, number);
+    graphics_text(114, 144, "OF");
+    decimal(number, sfx_bank()->sample_count, 3);
+    graphics_text(138, 144, number);
+    graphics_text(18, 164, sfx_sample()->resolved ? "SDK NOTE READY" : "TONE BINDING UNRESOLVED");
+    graphics_text_scaled(18, 180, "CUE AND VOCAL ROLE: UNRESOLVED", 6, 6);
+    graphics_text(18, 196, player_status.error ? "DRIVER ERROR" :
+        (player_status.playing ? "PLAYING SAMPLE" : "IDLE"));
+    if (player_status.playing && !player_status.error) {
+        decimal(number, player_status.playing_sample, 3);
+        graphics_text(138, 196, number);
+    }
+    graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
+    graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
+    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PLAY  SQUARE HALT", 6, 6);
+}
+#endif
 
 void hud_help(void)
 {
     graphics_panel(32, 42, 256, 152, 0x602040, 0x301020, 1);
+#if PLAYER_MODE_SFX
+    graphics_text(48, 56, "SFX CONTROLS");
+    graphics_text(48, 80, "LEFT/RIGHT SWITCH BANK");
+    graphics_text(48, 100, "UP/DOWN SELECT SAMPLE");
+    graphics_text(48, 120, "CROSS   PLAY SAMPLE");
+    graphics_text(48, 140, "SQUARE  HALT");
+#else
     graphics_text(48, 56, "MUSIC CONTROLS");
     graphics_text(48, 80, "UP/DOWN PREV/NEXT TRACK");
     graphics_text(48, 104, "CROSS   PLAY/PAUSE");
     graphics_text(48, 128, "SQUARE  RESTART TRACK");
+#endif
     graphics_text(48, 174, "L1      CLOSE CONTROLS");
 }

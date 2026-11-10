@@ -2,19 +2,38 @@
 #include "controls.h"
 #include "graphics.h"
 #include "hud.h"
+#include "config.h"
+#include "sfx.h"
 
 void player_main(void)
 {
-    u32 first_frame, ticks, buttons;
+    u32 first_frame, buttons;
+#if !PLAYER_MODE_SFX
+    u32 ticks;
     u8 amplitudes[AUDIO_CHANNELS];
+#endif
     graphics_initialize();
+#if PLAYER_MODE_SFX
+    sfx_initialize();
+#else
     audio_initialize();
+#endif
     controls_initialize();
     first_frame = (u32)CALL(0x80174700, -1, 0, 0, 0);
     player_status.phase = 4;
     for (;;) {
         CALL(0x80174700, 0, 0, 0, 0);
         player_status.frames = (u32)CALL(0x80174700, -1, 0, 0, 0) - first_frame;
+#if PLAYER_MODE_SFX
+        sfx_update();
+        buttons = controls_read();
+        if (buttons & BUTTON_LEFT) sfx_select_bank(-1);
+        else if (buttons & BUTTON_RIGHT) sfx_select_bank(1);
+        if (buttons & BUTTON_UP) sfx_select_sample(-1);
+        else if (buttons & BUTTON_DOWN) sfx_select_sample(1);
+        if (buttons & BUTTON_CROSS) sfx_play();
+        if (buttons & BUTTON_SQUARE) sfx_halt();
+#else
         audio_update();
         buttons = controls_read();
         if (buttons & BUTTON_UP) audio_select(-1);
@@ -23,9 +42,16 @@ void player_main(void)
         if (buttons & BUTTON_SQUARE) audio_restart();
         ticks = audio_ticks();
         audio_levels(amplitudes);
+#endif
         graphics_begin_frame(player_status.frames);
         if (player_controls.help) hud_help();
-        else hud_draw(player_status.position_frames, ticks, amplitudes);
+        else {
+#if PLAYER_MODE_SFX
+            hud_sfx();
+#else
+            hud_draw(player_status.position_frames, ticks, amplitudes);
+#endif
+        }
         graphics_present();
     }
 }

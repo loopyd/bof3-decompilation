@@ -5,5 +5,6 @@
 
 void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS]);
 void hud_help(void);
+void hud_sfx(void);
 
 #endif

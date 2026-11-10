@@ -1,12 +1,15 @@
 #include "config.h"
 #include "audio.h"
+#include "bank.h"
 
 extern const u8 player_header[], player_body[], player_sequence[];
 typedef int (*NoteCall)(u32, u32, u32, u32, u32, u32);
 static u32 player_record;
+#if !PLAYER_MODE_SFX
 static int sequence_handle;
 static int pending_start;
 static u32 last_frame;
+#endif
 static u8 voice_tracks[24];
 volatile struct PlayerStatus player_status;
 
@@ -27,43 +30,22 @@ int player_note_on(u32 id, u32 bank, u32 program, u32 note, u32 velocity, u32 pa
     return mask;
 }
 
-static void copy(u8 *destination, const u8 *source, u32 bytes)
-{
-    while (bytes-- != 0) *destination++ = *source++;
-}
-
-static void fail(int error)
-{
-    player_status.error = error;
-    player_status.phase = 255;
-    for (;;) CALL(0x80174700, 0, 0, 0, 0);
-}
-
+#if !PLAYER_MODE_SFX
 void audio_initialize(void)
 {
-    u32 offset, bytes;
-    int result, handle;
+    static const struct BankAsset asset = {
+        PLAYER_LAYOUT, PLAYER_BANK, PLAYER_SPU_BASE, PLAYER_HEADER_ADDRESS,
+        PLAYER_HEADER_BYTES, PLAYER_BODY_BYTES, 0, player_header, player_body, 0, 0
+    };
+    u32 offset;
+    int handle;
     for (offset = 0; offset < 24; ++offset) voice_tracks[offset] = 255;
     player_status.phase = 1;
     CALL(0x8015cd00, 0, 0, 0, 0);
-    CALL(0x80161808, PLAYER_LAYOUT, 0, 0, 0);
-    if (PLAYER_SPU_BASE + ((PLAYER_BODY_BYTES + 63) & ~63u) >
-        (u32)HALF(0x1f801da2) * 8) fail(-4);
-    copy((u8 *)PLAYER_HEADER_ADDRESS, player_header, PLAYER_HEADER_BYTES);
-    copy((u8 *)PLAYER_SEQUENCE_ADDRESS, player_sequence, PLAYER_SEQUENCE_BYTES);
-    player_status.phase = 2;
-    result = CALL(0x80173c50, PLAYER_HEADER_ADDRESS, PLAYER_BANK, PLAYER_SPU_BASE, 0);
-    if (result != PLAYER_BANK) fail(result);
-    for (offset = 0; offset < PLAYER_BODY_BYTES; offset += bytes) {
-        bytes = PLAYER_BODY_BYTES - offset;
-        if (bytes > 2048) bytes = 2048;
-        result = CALL(0x80174354, player_body + offset, bytes, PLAYER_BANK, 0);
-        if (result != (offset + bytes == PLAYER_BODY_BYTES ? PLAYER_BANK : -2)) fail(result);
-        if (CALL(0x80174598, 1, 0, 0, 0) != 1) fail(-3);
-    }
-    player_status.phase = 3;
+    bank_load(&asset);
+    bank_copy((u8 *)PLAYER_SEQUENCE_ADDRESS, player_sequence, PLAYER_SEQUENCE_BYTES);
     handle = CALL(0x8016b38c, PLAYER_SEQUENCE_ADDRESS, PLAYER_BANK, PLAYER_SEQUENCE_COUNT, 0);
-    if (handle < 0 || handle >= 2) fail(handle);
+    if (handle < 0 || handle >= 2) bank_fail(handle);
     CALL(0x8015ce70, 0, 0, 0, 0);
     player_record = WORD(0x80190308 + handle * 4) + PLAYER_SEQUENCE_INDEX * 0xac;
     sequence_handle = handle;
@@ -153,3 +135,4 @@ void audio_levels(u8 current[AUDIO_CHANNELS])
         if (level > current[track]) current[track] = (u8)level;
     }
 }
+#endif

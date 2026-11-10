@@ -14,6 +14,10 @@ struct PlayerStatus {
     u32 track;
     u32 paused;
     u32 position_frames;
+    u32 bank;
+    u32 sample;
+    u32 playing;
+    u32 playing_sample;
 };
 extern volatile struct PlayerStatus player_status;
 

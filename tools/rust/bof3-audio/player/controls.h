@@ -8,6 +8,8 @@
 #define BUTTON_SQUARE 0x0080
 #define BUTTON_UP 0x1000
 #define BUTTON_DOWN 0x4000
+#define BUTTON_LEFT 0x8000
+#define BUTTON_RIGHT 0x2000
 
 struct ControlsState {
     u32 held;
