@@ -79,8 +79,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenAddIndexedTripletToRecordClearBytes9AAndAdvanceWorkByte2BmagicMagic10303_801EFB88.c'
     - '@behavior: Decrements work byte 9 and on zero adds an indexed triplet to record words 0x34, 0x38 and 0x3C, clears work bytes 9 and 0xA and increments work byte 2.'
   - - 4208
-    - asm
-    - func_801EFC70
+    - c
+    - callAF764IncrementWorkByteAByTwoThenIncrementWorkByte9AndAdvanceWorkByte2At8BmagicMagic10303_801EFC70
+    - '@source: src/bof3/bmagic/callAF764IncrementWorkByteAByTwoThenIncrementWorkByte9AndAdvanceWorkByte2At8BmagicMagic10303_801EFC70.c'
+    - '@behavior: Calls 0x800AF764, adds two to work byte 0xA, increments work byte 9 and advances work byte 2 when the truncated byte 9 equals eight, re-reading the pointer cell between updates.'
   - - 4340
     - c
     - callAF764IncrementWorkByte9SubtractHalfPreviousByte9Minus8FromHalfword30ThenAdvanceWorkByte2At28BmagicMagic10303_801EFCF4

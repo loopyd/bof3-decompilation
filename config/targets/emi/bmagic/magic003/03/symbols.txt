@@ -31,7 +31,7 @@ queueFourActingBattlerSlotsCopyRecordHeadStampOrdinalAndStepPublishWorkIncrement
 claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078 = 0x801F0078;
 func_801F0164 = 0x801F0164;
 drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0 = 0x801F03F0;
-func_801F0550 = 0x801F0550;
+drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550 = 0x801F0550;
 func_801F07B0 = 0x801F07B0;
 reserveFirstFreeRecordBmagicMagic00303_801F09C4 = 0x801F09C4;
 clearWorkBytesBmagicMagic00303_801F0A28 = 0x801F0A28;

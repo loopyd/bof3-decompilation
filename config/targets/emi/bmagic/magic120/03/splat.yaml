@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF44C
   - - 4384
-    - asm
-    - func_801EFD20
+    - c
+    - setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20
+    - '@source: src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerBmagicMagic12003_801EFD20.c'
+    - '@behavior: Sets draw mode, appends its packet, and dispatches the work-byte-2 handler between shared context publications.'
   - - 4564
     - asm
     - func_801EFDD4

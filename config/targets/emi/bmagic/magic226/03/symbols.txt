@@ -24,7 +24,7 @@ decrementWorkByte9ThenCopyRecordFieldsSeedWord14AndRearmBytes9AThenAdvanceWorkBy
 func_801F061C = 0x801F061C;
 func_801F068C = 0x801F068C;
 func_801F0724 = 0x801F0724;
-func_801F07D4 = 0x801F07D4;
+drawThirtyTwoTranslucentGouraudQuadsWithWorkByte9RadiiAndWorkByteATintBmagicMagic22603_801F07D4 = 0x801F07D4;
 func_801F0B8C = 0x801F0B8C;
 clearWorkBytesBmagicMagic22603_801F0BF0 = 0x801F0BF0;
 D_801F0C40 = 0x801F0C40;

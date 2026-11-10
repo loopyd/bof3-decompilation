@@ -149,8 +149,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkHeaderTintAndConditionalWord3CThenAdvanceWorkByte2BmagicMagic11303_801F08B4.c'
     - '@behavior: Seeds work header and tint fields, conditionally adds to word 0x3C, advances byte 2 and invokes resident helpers.'
   - - 7808
-    - asm
-    - func_801F0A80
+    - c
+    - incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80
+    - '@source: src/bof3/bmagic/incrementWorkByte9WhenReadyThenIncrementGlobalByteBAt3OrToggleByte2AAndDispatchCueBmagicMagic11303_801F0A80.c'
+    - '@behavior: When ready, increments work byte 9, advances shared byte B at 3 or toggles byte 0x2A and invokes helpers and conditional cues.'
   - - 8084
     - textbin
     - D_801F0B94

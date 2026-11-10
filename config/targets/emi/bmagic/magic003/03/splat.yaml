@@ -154,8 +154,10 @@ segments:
     - '@source: 0x801F03F0'
     - '@behavior: Draws a grey 12-pixel glyph at the work screen pair using an indexed CLUT and texture column.'
   - - 6480
-    - asm
-    - func_801F0550
+    - c
+    - drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550
+    - '@source: src/bof3/bmagic/drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550.c'
+    - '@behavior: Draws the byte remainder by ten and optional nonzero quotient as grey 12-pixel glyphs left of the work screen pair.'
   - - 7088
     - asm
     - func_801F07B0

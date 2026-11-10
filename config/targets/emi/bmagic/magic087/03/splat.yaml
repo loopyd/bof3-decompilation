@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF324
   - - 2208
-    - asm
-    - func_801EF4A0
+    - c
+    - incrementWorkByte9ThenAdvanceWorkByte2At16ElseIncrementWorkByte4CallAF764AndInvokeF580With0And15BmagicMagic08703_801EF4A0
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAdvanceWorkByte2At16ElseIncrementWorkByte4CallAF764AndInvokeF580With0And15BmagicMagic08703_801EF4A0.c'
+    - '@behavior: Increment work byte 9; at 16 advance byte 2, otherwise increment byte 4 and call 0x800AF764 then 0x801EF580 with 0 and 15.'
   - - 2352
     - c
     - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530

@@ -60,8 +60,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9AddTwoToWorkByteBIncrementWorkByteAThenSetGlobalWorkByteBToFFAndInvokeHelperAt10BmagicMagic05503_801EF1B8.c'
     - '@behavior: Decrement work byte 9, add two to byte B, increment byte A and at 0x10 set global work byte B to 0xFF and invoke helper 0x801E5988.'
   - - 1600
-    - asm
-    - func_801EF240
+    - c
+    - drawThirtyTwoProjectedTranslucentTexturedRingQuadsFromWorkBytes9AB_BmagicMagic05503_801EF240
+    - '@source: src/bof3/bmagic/drawThirtyTwoProjectedTranslucentTexturedRingQuadsFromWorkBytes9AB_BmagicMagic05503_801EF240.c'
+    - '@behavior: Draw 32 projected translucent textured ring quads from work bytes 9, A and B.'
   - - 2816
     - asm
     - func_801EF700
