@@ -8,11 +8,13 @@
  * supplied may alias the cell object. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 
-/* Full-screen fade-tile drawer of this overlay, still an asm boundary in this
- * target, so it keeps its raw name. Its body selects the semi-transparent draw
- * mode, emits a 320x240 tile at the primitive cursor and scales work-object byte
- * 0x9 by 15 into the tile RGB bytes. */
-void func_801EFD88(void);
+/* Full-screen fade-tile drawer of this overlay at 0x801EFD88, lifted under this
+ * name: it selects the draw-mode word by graph type, emits a semi-transparent
+ * 320x240 tile at the primitive cursor that scales work-object byte 0x9 by 15
+ * into the tile RGB bytes, then re-arms the draw mode for the primitives that
+ * follow. */
+void drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88(
+    void);
 
 /* @source 0x801EF234
  * @behavior Third entry, index 2, of the six-pointer work-step run at
@@ -21,7 +23,7 @@ void func_801EFD88(void);
  *           dispatchWorkByte1HandlerBmagicMagic02003_801EEC48 copies into its
  *           own 0x30-byte frame and indexes with work-object unsigned byte 1, so
  *           this body runs with no arguments and returns no value. It first calls
- *           the fade-tile drawer at 0x801EFD88 with no arguments. It then loads
+ *           the full-screen fade-tile drawer at 0x801EFD88 with no arguments. It then loads
  *           the work-object pointer cell at 0x1F800044 once and tests work byte
  *           0x0B for zero with an equality test on the loaded byte; while that
  *           byte is non-zero it returns through the jr $ra at 0x801EF2A0 having
@@ -50,7 +52,7 @@ void drawFadeTileThenDecrementWorkByte9AndAdvanceWorkByte1WhenWorkByteBIsZeroBma
   u8 countdown;
   u8 *object;
 
-  func_801EFD88();
+  drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88();
   work = D_1F800044;
   if (work[0xB] == 0) {
     countdown = work[9] - 1;

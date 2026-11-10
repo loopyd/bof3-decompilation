@@ -52,8 +52,10 @@ segments:
     - setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158
     - '@source: src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld00Area03313_801F3158.c'
   - - 1492
-    - asm
-    - func_801F31D4
+    - c
+    - seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld00Area03313_801F31D4
+    - '@source: src/bof3/world/seedWorkHalfwordsThenResetRecordWhenEntryDiffersOrModeIs5ThenStepFrameWorld00Area03313_801F31D4.c'
+    - '@behavior: Seeds the work halfwords at record offsets 0x2E and 0x30 through the local 0x801F3334 helper. Then, unless the shared state halfword 0x80143B90 reads 1, resets the work record published at scratchpad pointer slot 0x44 when its byte 0x0B differs from its byte 0x07, or the shared mode byte 0x80143BB0 reads 5, or byte 0x0B reads 1 while the record word at 0x18 differs from the shared context seed 0x80143F10. The reset writes 2 to record byte 0x48, 8 to byte 0x09 and 4 to record byte 0x01, each through a fresh read of the pointer slot. Finally the shared helper 0x8014D4E0 runs. Takes no arguments, uses no result and saves only the return address in its 0x18-byte frame.'
   - - 1684
     - asm
     - func_801F3294

@@ -50,8 +50,9 @@ segments:
     - asm
     - func_801D12C8
   - - 2408
-    - asm
-    - func_801D1568
+    - c
+    - startFairySlotBattleRecordUnlessFrontendMode2
+    - '@source: src/bof3/ui/startFairySlotBattleRecordUnlessFrontendMode2.c'
   - - 2600
     - c
     - startAction63AndSetFrontendMode2

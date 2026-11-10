@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/battle/dispatchSubstateTable0cb8BatlEnd00_801EF018.c",
     "src/bof3/battle/dispatchSubstateTable0cc0BatlEnd00_801EF30C.c",
     "src/bof3/battle/drawCountedListPanelBatlEnd00_801F0650.c",
+    "src/bof3/battle/drawCountedListEntryBatlEnd00_801F0A74.c",
     "src/bof3/battle/gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870.c",
     "src/bof3/battle/sumRemainingLevelExpBatlEnd00_801F0BB0.c",
     "src/bof3/battle/anyAvailableLocalBattlerIdentityIs7BatlEnd00_801EF6C0.c",

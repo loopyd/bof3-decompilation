@@ -20,6 +20,7 @@ support_sources = [
     "src/bof3/world/step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40.c",
     "src/bof3/world/advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0.c",
     "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C.c",
+    "src/bof3/world/drawProjectedEffectDotAndTileWorld03Area12013_801F3468.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"
 

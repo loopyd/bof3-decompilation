@@ -117,8 +117,16 @@ segments:
     - invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10
     - '@source: src/bof3/bmagic/invokeHelperThenForwardBattleByteWhenWorkByteBIs7AndDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic02003_801EFD10.c'
   - - 4488
-    - asm
-    - func_801EFD88
+    - c
+    - drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88
+    - '@behavior: Full-screen fade tile of this overlay. Picks the draw-mode word by
+      graph type, 0xA5 for types 1 and 2 and 0x35 otherwise, seeds SetDrawMode at
+      g_PrimCursor with dfe 0 and dtd 1, appends the 0xC-byte draw-mode packet,
+      emits a semi-transparent 320x240 TILE whose three colour bytes are 15 times
+      work byte 9, appends the 0x10-byte tile, then re-arms the draw mode with
+      0x25 for types 1 and 2 and 0x15 otherwise and appends a second 0xC-byte
+      draw-mode packet.'
+    - '@source: src/bof3/bmagic/drawFullscreenFadeTileTintedByWorkByte9TimesFifteenThenRearmGraphTypeDrawModeBmagicMagic02003_801EFD88.c'
   - - 4792
     - textbin
     - D_801EFEB8

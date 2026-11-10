@@ -155,8 +155,10 @@ segments:
     - '@source: src/bof3/battle/drawAmountStripBatlEnd00_801F09F4.c'
     - '@behavior: Battle-end amount strip: draws the narrow message-panel strip at (0x6E, 0x28) through the EXE drawer 0x801D8270, formats the shared main-RAM money word 0x80144F50 through the overlay format 0x801EEC4C ("%7d") into the shared 0x80149118 text buffer, submits that buffer at (0x7E, 0x2A) through the shared text drawer 0x8014FF0C, then submits the overlay one-character run at 0x801F0CD0 at (0xB6, 0x2A) with a zero third argument and 0xFF as the shading value through 0x8014F800. The 0x20-byte frame keeps $ra and $s0 across the four calls and holds the fifth argument of the last call at 0x10($sp).'
   - - 7796
-    - asm
-    - func_801F0A74
+    - c
+    - drawCountedListEntryBatlEnd00_801F0A74
+    - '@source: src/bof3/battle/drawCountedListEntryBatlEnd00_801F0A74.c'
+    - '@behavior: Battle-end counted-list entry drawer: refuses to draw unless both the item index and the per-id count are non-zero, then draws one entry of the counted list. The palette byte the overlay table 0x801F0CD4 holds for the entry (indexed by 0x80165E04 over the id split into its high byte and its low byte) is handed to 0x801AEA80 together with the entry anchor, the anchor''s row stepped down by two and the caller''s last byte; the name 0x80165D48 answers for the same split id is submitted at the anchor stepped right by ten through 0x8014F800, with the id''s high byte as the alignment and 0x801AF20C of the name as the shading value. When the count is two or more it is formatted through the overlay "*%2d" at 0x801EEC50 into the shared text buffer 0x80145AD4 and that buffer is submitted at the anchor stepped right by 0x6D on the row stepped down by two through 0x80150098, once more with the id''s high byte as the alignment; the 0x40-byte frame keeps $ra and $s0-$s7 across the six calls and carries no stack arguments of its own.'
   - - 8112
     - c
     - sumRemainingLevelExpBatlEnd00_801F0BB0

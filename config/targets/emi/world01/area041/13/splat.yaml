@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801F3400
   - - 2220
-    - asm
-    - func_801F34AC
+    - c
+    - drawSevenTickSizedTexturedQuadsFromByteColumnTablesAfterTickTableHelperOrGridThenAdvanceTickAndStepStateWorld01Area04113_801F34AC
+    - '@source: src/bof3/world/drawSevenTickSizedTexturedQuadsFromByteColumnTablesAfterTickTableHelperOrGridThenAdvanceTickAndStepStateWorld01Area04113_801F34AC.c'
+    - '@behavior: indexes the local byte table 0x801F4334 with the work record''s tick byte at 0x09 and calls the local rotated quad helper 0x801F387C with that byte shifted left four when the entry is nonzero, otherwise the local three-by-two grid drawer 0x801F3704; then draws seven textured quads whose corners are the projected record position at 0x34/0x38 plus the 0x801F4344/0x801F4345 cell bytes times 128 plus the 0x801F4354/0x801F4355 signed spread bytes times the tick byte times eight, each quad sized by the tick byte and queued through 0x80155560 and 0x80155A08; afterwards increments the tick byte and bumps the state byte at 0x02 once the tick reaches 0x0E.'
   - - 2820
     - c
     - drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704

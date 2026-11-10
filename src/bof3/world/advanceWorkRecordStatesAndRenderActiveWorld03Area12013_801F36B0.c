@@ -34,7 +34,8 @@ void func_801AFE18(void *arg0);
 
 /* 0x801F3468 - this overlay's per-record emitter. It builds its draw mode from
  * the record word pair at +0x0C and +0x10, so it takes the entry pointer. */
-void func_801F3468(Area12013EffectRecord *record);
+void drawProjectedEffectDotAndTileWorld03Area12013_801F3468(
+    Area12013EffectRecord *record);
 
 /* 0x801783C8 and 0x801782FC - the main executable's angle pair. Both take the
  * record angle halfword and return the 0x10000-scaled offset the states scale
@@ -143,7 +144,7 @@ s32 advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0(void) {
         }
         break;
       }
-      func_801F3468(record);
+      drawProjectedEffectDotAndTileWorld03Area12013_801F3468(record);
       handled = 1;
     }
     record++;

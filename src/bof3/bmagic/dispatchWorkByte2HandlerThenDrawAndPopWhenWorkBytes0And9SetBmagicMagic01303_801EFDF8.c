@@ -22,10 +22,11 @@ extern void (*D_801F03DC[])(void); /* @source 0x801F03DC @kind data */
  * 0x1F800044 and builds the rotation from its byte 9 and its words 0x34, 0x38
  * and halfword 0x3E through RotTrans, RotMatrix and MulMatrix2, then arms
  * SetRotMatrix and SetTransMatrix. */
-extern void func_801F00A8(void);
+extern void projectWorkObjectPositionAndInstallTransformWithWorkByte9AngleBmagicMagic01303_801F00A8(
+    void);
 
-/* Draws the work record's geometry under the transform installed by
- * func_801F00A8, choosing the draw mode from GetGraphType. */
+/* Draws the work record's geometry under the transform installed by the
+ * projection at 0x801F00A8, choosing the draw mode from GetGraphType. */
 extern void func_801F0164(void);
 
 /* @source 0x801EFDF8
@@ -55,7 +56,7 @@ void dispatchWorkByte2HandlerThenDrawAndPopWhenWorkBytes0And9SetBmagicMagic01303
   D_801F03DC[step_record[2]]();
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[9] != 0) {
-    func_801F00A8();
+    projectWorkObjectPositionAndInstallTransformWithWorkByte9AngleBmagicMagic01303_801F00A8();
     func_801F0164();
     PopMatrix();
   }

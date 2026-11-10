@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F3298
   - - 2152
-    - asm
-    - func_801F3468
+    - c
+    - drawProjectedEffectDotAndTileWorld03Area12013_801F3468
+    - '@source: src/bof3/world/drawProjectedEffectDotAndTileWorld03Area12013_801F3468.c'
+    - '@behavior: Per-record emitter of the effect sweep at 0x801F36B0, which calls it once for every live entry of the 0x1C-byte table at 0x800E4800. It first writes the draw mode at the shared primitive cursor from texture page 0x380/0x100 with both flags clear and no texture window, links that 0x0C-byte packet through func_80155A08 with kind 0, then projects the entry position pair at +0x0C/+0x10 into a local screen point. The first pass stamps the fixed one-pixel tile at the cursor, tags it translucent, places it on the projected point and stores 0x80 as its red and green components and the random low bit shifted left seven as its blue component, and links it at 0x0C bytes. The second pass stamps the size-carrying tile at the cursor, tags it translucent, places its corner one pixel up and left of the projected point, sets both its width and height to 3, stores 0x20 as its red and green components and the random low bit shifted left five as its blue, and links it at 0x10 bytes. Both links pass kind 0 and the entry''s own position pair. Takes the entry pointer and returns nothing.'
   - - 2488
     - asm
     - func_801F35B8

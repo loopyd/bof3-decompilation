@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF528
   - - 2632
-    - asm
-    - func_801EF648
+    - c
+    - setRandomWorkWord2ENearA0DecrementWorkWord30By2AdvanceWorkWord44By2000AndAdvanceWorkByte2Past17FFFBmagicMagic11003_801EF648
+    - '@source: src/bof3/bmagic/setRandomWorkWord2ENearA0DecrementWorkWord30By2AdvanceWorkWord44By2000AndAdvanceWorkByte2Past17FFFBmagicMagic11003_801EF648.c'
+    - '@behavior: Entry 5 of the fourteen-word byte-1 handler table at 0x801F046C: reads the scratchpad work pointer cell 0x1F800044 once, stores the low two bits of rand() plus 0x9F into work halfword 0x2E, subtracts two from work halfword 0x30, advances signed work word 0x44 by 0x2000 and stores it in the branch delay slot, then advances work byte 2 when the new word is greater than 0x17FFF.'
   - - 2740
     - asm
     - func_801EF6B4

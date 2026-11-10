@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EFF88
   - - 5288
-    - asm
-    - func_801F00A8
+    - c
+    - projectWorkObjectPositionAndInstallTransformWithWorkByte9AngleBmagicMagic01303_801F00A8
+    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithWorkByte9AngleBmagicMagic01303_801F00A8.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the scratchpad work-object pointer cell 0x1F800044 once. Fills a halfword triplet whose first two elements are zero and whose third is work byte 0x9 shifted left by six, then a second triplet from work words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and half the negated signed halfword 0x3E. RotTrans projects that second triplet into the translation field of a 0x20-byte scratch matrix with a flag word beside it, RotMatrix turns the zero-and-angle triplet into that matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish it. Takes no arguments, returns nothing, and the 0x50-byte frame keeps $ra at 0x4C and $s0 at 0x48 across the matrix calls.'
   - - 5476
     - asm
     - func_801F0164

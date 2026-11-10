@@ -98,8 +98,10 @@ segments:
     - incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0.c'
   - - 5428
-    - asm
-    - func_801F0134
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic14403_801F0134.c'
+    - '@behavior: Entry 14 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F04D0, whose word 0x801F0508 is the only word in this payload that holds this address, so no jal names this body. It decrements work byte 9 through the pointer cell at 0x1F800044 and tests the stored byte truncated to eight bits; only when that countdown reaches zero does it decrement byte 0xB of the shared record at 0x801EB4E0 and then clear work bytes 0x00 through 0x04, each clear re-reading the pointer cell. Leaf with no frame that takes no arguments and returns nothing through the jr $ra at 0x801F01C8; work bytes 9 and 0x00..0x04 and record byte 0xB stay offset-anchored.'
   - - 5584
     - asm
     - func_801F01D0

@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/support/area065_13_psyq.c",
     "src/bof3/world/setWorkHalfwordsDecrementByte9AdvanceWord40By2000ThenSetState1To3WhenByte9ExpiresWorld01Area06513_801F325C.c",
     "src/bof3/world/drawSpriteFrameAndMainRamTexture2World01Area06513_801F40FC.c",
+    "src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld01Area06513_801F4560.c",
 ]
 psyq_source = "src/bof3/support/area065_13_psyq.c"

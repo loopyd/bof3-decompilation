@@ -12,14 +12,17 @@ extern u8 D_80146354[]; /* @source 0x80146354 @kind data */
  * here for its address. */
 extern void func_801F039C(s16 x, s16 y, s32 width, u8 height);
 
-/* The overlay per-entry drawer at 0x801F0A74: hands the two halves of the id
- * to the shared equipment record base 0x80165D48 (item type and item index),
- * draws the entry icon with the palette byte the overlay table at 0x801F0CD4
+/* The overlay per-entry drawer at 0x801F0A74, lifted as
+ * drawCountedListEntryBatlEnd00_801F0A74: hands the two halves of the id to
+ * the shared equipment record base 0x80165D48 (item type and item index),
+ * draws the entry icon with the palette byte the overlay table 0x801F0CD4
  * holds for it together with the entry name, and prints the per-id count
  * through the overlay format 0x801EEC50 ("*%2d") when the count is above one.
- * Still an address-anchored asm span, so it is declared here for its address. */
-extern void func_801F0A74(s16 x, s16 y, s32 flags, u32 item_type,
-                          u32 item_index, u32 count, u32 arg6);
+ * Its own source loads the last three arguments as single bytes, so they are
+ * declared here at the width that source reads. */
+extern void drawCountedListEntryBatlEnd00_801F0A74(s16 x, s16 y, s32 flags,
+                                                   u32 item_type, u8 item_index,
+                                                   u8 count, u8 arg6);
 
 /* @source 0x801F0650
  * @behavior Battle-end panel task handler 1 of the overlay handler run at
@@ -28,7 +31,7 @@ extern void func_801F0A74(s16 x, s16 y, s32 flags, u32 item_type,
  *   object published at 0x80148648, the width 0x118 and byte +0x09 as the
  *   height, then walks the counted list (length byte at 0x80146327, halfword
  *   ids at 0x80146334, per-id counts at 0x80146354) and draws every non-zero
- *   id through func_801F0A74 in two columns: column (index & 1) steps 138
+ *   id through 0x801F0A74 in two columns: column (index & 1) steps 138
  *   pixels with a 5-pixel inset, row (index >> 1) steps 13 pixels with a
  *   4-pixel inset, and the call passes the id split into its high byte and its
  *   low byte plus the per-id count. The length byte is re-read every iteration
@@ -62,10 +65,10 @@ void drawCountedListPanelBatlEnd00_801F0650(void) {
     if (id != 0) {
       x_inset = (i & 1) * 138 + 5;
       y_inset = (i >> 1) * 13 + 4;
-      func_801F0A74((s16)(*(u16 *)((u8 *)D_80148648 + 4) + x_inset),
-                    (s16)(*(u16 *)((u8 *)D_80148648 + 6) + y_inset), 0,
-                    id >> 8, id & 0xff,
-                    D_80146354[i], 0);
+      drawCountedListEntryBatlEnd00_801F0A74(
+          (s16)(*(u16 *)((u8 *)D_80148648 + 4) + x_inset),
+          (s16)(*(u16 *)((u8 *)D_80148648 + 6) + y_inset), 0, id >> 8, id & 0xff,
+          D_80146354[i], 0);
     }
     i += 1;
   } while (i < *((u8 *)ids - 0xd));
