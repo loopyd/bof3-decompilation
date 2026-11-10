@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
 func_801EEC04 = 0x801EEC04;
-func_801EECFC = 0x801EECFC;
+queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC = 0x801EECFC;
 func_801EEE84 = 0x801EEE84;
 dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4 = 0x801EEEE4;
 func_801EEF28 = 0x801EEF28;

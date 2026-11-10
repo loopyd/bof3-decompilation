@@ -34,8 +34,10 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic09903_801EEC18
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09903_801EEC18.c'
   - - 136
-    - asm
-    - func_801EEC88
+    - c
+    - seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88
+    - '@source: src/bof3/bmagic/seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88.c'
+    - '@behavior: Seed work pose, submit record, queue nine action slots and advance work byte 1.'
   - - 624
     - asm
     - func_801EEE70

@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 dispatchWorkByte1HandlerBmagicMagic09903_801EEC18 = 0x801EEC18;
-func_801EEC88 = 0x801EEC88;
+seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88 = 0x801EEC88;
 func_801EEE70 = 0x801EEE70;
 func_801EEF98 = 0x801EEF98;
 func_801EEFDC = 0x801EEFDC;

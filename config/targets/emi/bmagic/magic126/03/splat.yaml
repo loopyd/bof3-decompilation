@@ -138,8 +138,10 @@ segments:
     - asm
     - func_801F0B34
   - - 8316
-    - asm
-    - func_801F0C7C
+    - c
+    - stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C
+    - '@source: src/bof3/bmagic/stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C.c'
+    - '@behavior: Steps record word 8, projects the position pair, and advances byte 2 above the signed limit.'
   - - 8612
     - asm
     - func_801F0DA4

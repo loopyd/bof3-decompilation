@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801EEC04
   - - 252
-    - asm
-    - func_801EECFC
+    - c
+    - queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC
+    - '@source: src/bof3/bmagic/queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC.c'
+    - '@behavior: Claims two linked queued slots, copies record word triplets with distinct last-word biases, invokes helper 0x8015D71C(0x100), clears work byte B and advances work byte 1.'
   - - 644
     - asm
     - func_801EEE84

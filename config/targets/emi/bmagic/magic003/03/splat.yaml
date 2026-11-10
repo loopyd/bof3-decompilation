@@ -37,8 +37,10 @@ segments:
     - clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14
     - '@source: src/bof3/bmagic/clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14.c'
   - - 428
-    - asm
-    - func_801EEDAC
+    - c
+    - runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC
+    - '@source: src/bof3/bmagic/runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC.c'
+    - '@behavior: Calls both overlay helpers with 1, decrements work byte 9 and rearms it to 30 while advancing byte 1 on zero.'
   - - 552
     - asm
     - func_801EEE28

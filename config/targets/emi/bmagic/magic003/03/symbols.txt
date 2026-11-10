@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC28 = 0x801EEC28;
 clearRecordBytes0To2SeedWorkMotionPairSetCountdownClearBytesABAdvanceWorkByte1BmagicMagic00303_801EED14 = 0x801EED14;
-func_801EEDAC = 0x801EEDAC;
+runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC = 0x801EEDAC;
 func_801EEE28 = 0x801EEE28;
 func_801EEEA4 = 0x801EEEA4;
 func_801EEF4C = 0x801EEF4C;

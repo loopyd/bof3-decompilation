@@ -48,8 +48,10 @@ segments:
     - dispatchStateByte1Tablefa44BmagicMagic13003_801EEED4
     - '@source: src/bof3/bmagic/magic13003DispatchTables.c'
   - - 792
-    - asm
-    - func_801EEF18
+    - c
+    - dispatchStateByte2Tablefa4cBmagicMagic13003_801EEF18
+    - '@source: src/bof3/bmagic/dispatchStateByte2Tablefa4cBmagicMagic13003_801EEF18.c'
+    - '@behavior: Publish dispatch context, dispatch work byte 2, conditionally invoke the shared service, and restore context.'
   - - 948
     - asm
     - func_801EEFB4

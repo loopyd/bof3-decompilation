@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC7C
   - - 836
-    - asm
-    - func_801EEF44
+    - c
+    - invokeHelperThenClearRecordFlag40ForwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic11103_801EEF44
+    - '@source: src/bof3/bmagic/invokeHelperThenClearRecordFlag40ForwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic11103_801EEF44.c'
+    - '@behavior: When work byte 0xB is zero, calls helper 0x800AEF98 with 4 and 0, clears record flag 0x40, forwards battle byte 0x80146384 to helper 0x800A9820 and advances work byte 1.'
   - - 964
     - asm
     - func_801EEFC4

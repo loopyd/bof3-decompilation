@@ -124,8 +124,10 @@ segments:
     - asm
     - func_801F3998
   - - 3564
-    - asm
-    - func_801F39EC
+    - c
+    - setStatus6EAndPtrByte7AFFIfGateElse7AWorld04Area17513_801F39EC
+    - '@source: src/bof3/world/setStatus6EAndPtrByte7AFFIfGateElse7AWorld04Area17513_801F39EC.c'
+    - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x7A into the shared status halfword D_801490A8. Otherwise stores 0x6E into that halfword and 0xFF into byte 0x7A of the pointer held at D_80148208.'
   - - 3636
     - c
     - setStatus70IfGateElseFFFFWorld04Area17513_801F3A34
