@@ -74,8 +74,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890.c'
     - '@behavior: Decrement byte 9; on zero copy the record triplet, seed tint and work fields, and advance byte 2.'
   - - 3424
-    - asm
-    - func_801EF960
+    - c
+    - subtractWorkWord20From14ThenSeedSixtyFourRecordsAndAdvanceWorkByte2BmagicMagic12503_801EF960
+    - '@source: src/bof3/bmagic/subtractWorkWord20From14ThenSeedSixtyFourRecordsAndAdvanceWorkByte2BmagicMagic12503_801EF960.c'
+    - '@behavior: Subtract work word 0x20 from 0x14; below 0x30 seed 64 records and advance work byte 2.'
   - - 3760
     - c
     - decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0

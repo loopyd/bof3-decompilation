@@ -43,8 +43,10 @@ segments:
     - dispatchStateByte1Table0048BmagicMagic10503_801EEF78
     - '@source: src/bof3/bmagic/magic10503DispatchTables.c'
   - - 956
-    - asm
-    - func_801EEFBC
+    - c
+    - dispatchWorkByte2HandlerThenInvokeHelpersAndPopUnless3WhenActiveBmagicMagic10503_801EEFBC
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersAndPopUnless3WhenActiveBmagicMagic10503_801EEFBC.c'
+    - '@behavior: Copies four handlers, dispatches work byte 2, then invokes helpers and PopMatrix when byte 0 is nonzero and byte 2 is not 3.'
   - - 1132
     - c
     - copyWorkTripletSeedOffsetPairAndAdvanceWorkByte2BmagicMagic10503_801EF06C

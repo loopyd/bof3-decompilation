@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F0104
   - - 5624
-    - asm
-    - func_801F01F8
+    - c
+    - drawRandomizedEffectAdvanceWorkRateAndFinishCountdownBmagicMagic08303_801F01F8
+    - '@source: src/bof3/bmagic/drawRandomizedEffectAdvanceWorkRateAndFinishCountdownBmagicMagic08303_801F01F8.c'
+    - '@behavior: Draws with randomized scale, advances the work rate every eighth tick and finishes the countdown before advancing byte 2.'
   - - 6028
     - asm
     - func_801F038C

@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F002C
   - - 5388
-    - asm
-    - func_801F010C
+    - c
+    - stepWorkPositionPairByWorkByteBAngleTimesThreeCountdownByte9AndAdvanceWorkByte2AtZeroBmagicMagic22003_801F010C
+    - '@source: src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesThreeCountdownByte9AndAdvanceWorkByte2AtZeroBmagicMagic22003_801F010C.c'
+    - '@behavior: Seeds scratch angle from work byte 0xB, steps words 0x34 and 0x38 by three times the angular samples, counts byte 9 down and advances byte 2 at zero.'
   - - 5576
     - asm
     - func_801F01C8

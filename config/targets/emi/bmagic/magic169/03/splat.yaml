@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801EF2CC
   - - 2116
-    - asm
-    - func_801EF444
+    - c
+    - decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444.c'
+    - '@behavior: Decrement work byte 9; on zero submit the indexed record, store effect byte A, reset countdown to 8 and advance work byte 2.'
   - - 2300
     - c
     - incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC

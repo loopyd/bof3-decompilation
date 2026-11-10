@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F2EC0
   - - 892
-    - asm
-    - func_801F2F7C
+    - c
+    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C
+    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c'
+    - '@behavior: Adds 0x20 to work halfword +0x30, sets state byte +2 to 1 when nonnegative and draws.'
   - - 1004
     - asm
     - func_801F2FEC

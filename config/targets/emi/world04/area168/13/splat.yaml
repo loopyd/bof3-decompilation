@@ -64,8 +64,10 @@ segments:
     - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738.c'
     - '@behavior: Adds 0x10 to work halfword +0x30, advances byte +2 at signed 0x80, then calls helper 0x801F3914.'
   - - 2964
-    - asm
-    - func_801F3794
+    - c
+    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794
+    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794.c'
+    - '@behavior: Advances work byte +2 when the camera is outside the record coordinate window, then calls helper 0x801F3914.'
   - - 3236
     - asm
     - func_801F38A4

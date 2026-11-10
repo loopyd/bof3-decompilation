@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c'
     - '@behavior: Calls 0x8015D404 with both arguments zero, then returns.'
   - - 2912
-    - asm
-    - func_801F3760
+    - c
+    - invokeFourConstantArgsWorld03Area13013_801F3760
+    - '@source: src/bof3/world/invokeFourConstantArgsWorld03Area13013_801F3760.c'
+    - '@behavior: Calls 0x8015D300 with arguments 0, 1, 100 and 100, then returns.'
   - - 2956
     - asm
     - func_801F378C

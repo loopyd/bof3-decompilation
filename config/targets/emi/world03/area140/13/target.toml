@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c",
     "src/bof3/world/stepWorkHalfword3eWorld03Area14013_801F38C4.c",
     "src/bof3/support/area140_13_psyq.c",
     "src/bof3/world/area14013DispatchTables.c",

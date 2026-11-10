@@ -14,6 +14,7 @@ sources = [
     "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBZeroBmagicMagic07603_801EF11C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4.c",
     "src/bof3/bmagic/incrementWorkByte9ThenAllocateTableCountEntriesAndAdvanceWorkByte2BmagicMagic07603_801EF4A8.c",
+    "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic07603_801EFC30.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic07603_801F0438.c",

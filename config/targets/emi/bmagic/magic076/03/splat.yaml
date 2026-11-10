@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801EFA60
   - - 4144
-    - asm
-    - func_801EFC30
+    - c
+    - growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic07603_801EFC30
+    # @source 0x801EFC30
+    # @behavior Grow work word 0x0C, project position pair, decay word 0x14 into word 0x3C and advance byte 2 at byte 9 value 16.
   - - 4448
     - asm
     - func_801EFD60
