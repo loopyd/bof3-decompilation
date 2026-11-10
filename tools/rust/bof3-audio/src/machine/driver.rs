@@ -6,6 +6,7 @@ use super::{
     cd::media::Media,
     cpu::Cpu,
     event_calls::Service,
+    events::Controls,
     exception_calls::{Dispatch, Environment, MissingHook},
     execution::{Call, Execution},
     image::executable::ram_offset,
@@ -232,7 +233,7 @@ impl Image {
             ("audio_exception_default_hook", 48),
             ("audio_entry_vectors", 32),
             ("audio_a0_services", 0x73 * 4),
-            ("audio_b0_services", 0x19 * 4),
+            ("audio_b0_services", 0x21 * 4),
         ] {
             let address = self.symbol(name)?;
             if address & 3 != 0
@@ -262,15 +263,21 @@ impl Image {
         Ok(())
     }
 
-    fn vector_bindings(&self) -> Result<[(u32, u32); 5]> {
+    fn vector_bindings(&self) -> Result<[(u32, u32); 11]> {
         let a0 = self.symbol("audio_a0_services")?;
         let b0 = self.symbol("audio_b0_services")?;
         Ok([
             (a0 + 0x72 * 4, self.entry("audio_cd_remove")?),
             (b0 + 0x07 * 4, self.entry("audio_event_deliver")?),
+            (b0 + 0x08 * 4, self.entry("audio_event_open")?),
+            (b0 + 0x09 * 4, self.entry("audio_event_close")?),
             (b0 + 0x0a * 4, self.entry("audio_event_wait")?),
+            (b0 + 0x0b * 4, self.entry("audio_event_test")?),
+            (b0 + 0x0c * 4, self.entry("audio_event_enable")?),
+            (b0 + 0x0d * 4, self.entry("audio_event_disable")?),
             (b0 + 0x17 * 4, self.entry("audio_exception_return")?),
             (b0 + 0x18 * 4, self.entry("audio_exception_reset")?),
+            (b0 + 0x20 * 4, self.entry("audio_event_undeliver")?),
         ])
     }
 
@@ -391,6 +398,15 @@ impl Image {
             return_jump: self.entry("audio_event_return")?,
         })?;
         kernel.configure_event_wait(self.entry("audio_event_wait")?)?;
+        kernel.configure_event_controls(Controls {
+            free: self.entry("audio_event_free")?,
+            open: self.entry("audio_event_open")?,
+            close: self.entry("audio_event_close")?,
+            test: self.entry("audio_event_test")?,
+            enable: self.entry("audio_event_enable")?,
+            disable: self.entry("audio_event_disable")?,
+            undeliver: self.entry("audio_event_undeliver")?,
+        })?;
         kernel.configure_exception_dispatch(Dispatch {
             entry: self.entry("audio_exception_vector")?,
             priority: self.entry("audio_exception_priority")?,

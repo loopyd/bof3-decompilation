@@ -7,7 +7,7 @@ use super::{
     console::Console,
     cpu::{Cpu, Fault, FaultKind, Step},
     event_calls::{Calls as EventCalls, Service as EventService, CALLBACK_RETURN},
-    events::{Table as Events, BUSY},
+    events::{Controls as EventControls, Table as Events, BUSY},
     exception_calls::{
         Calls as ExceptionCalls, Dispatch, Environment, GuestBoundary, MissingHook, HANDLER_RETURN,
     },
@@ -32,6 +32,7 @@ pub struct Kernel {
     guest_vectors: bool,
     event_delivery: Option<EventService>,
     event_wait: Option<u32>,
+    event_controls: Option<EventControls>,
     event_completed: bool,
     exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
@@ -75,6 +76,7 @@ impl Default for Kernel {
             guest_vectors: false,
             event_delivery: None,
             event_wait: None,
+            event_controls: None,
             event_completed: false,
             exception_dispatch: None,
             exception_hook: None,
@@ -306,6 +308,25 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind complete guest event controls. Unbound development kernels use the
+    /// functional services; owned startup executes these instruction bodies.
+    pub fn configure_event_controls(&mut self, binding: EventControls) -> Result<()> {
+        self.require_plain_context()?;
+        if self.event_controls.is_some() {
+            return Err("owned event controls already configured".into());
+        }
+        let mut offsets = Vec::new();
+        for address in binding.addresses() {
+            let offset = self.validate_owned_handler(address)?;
+            if offsets.contains(&offset) {
+                return Err("owned event controls require distinct RAM entries".into());
+            }
+            offsets.push(offset);
+        }
+        self.event_controls = Some(binding);
+        Ok(())
+    }
+
     /// Bind the linked vector, scanner boundaries and initialized stack cell.
     /// The CPU loop calls prepare_exception_step before selecting each service
     /// or instruction. Guest instructions resolve the live PCB/TCB and capture
@@ -365,6 +386,9 @@ impl Kernel {
             if self.returning.is_some() {
                 return Ok(());
             }
+        }
+        if let Some(binding) = self.event_controls {
+            binding.prepare(cpu, bus)?;
         }
         if self.event_wait == Some(cpu.pc()) {
             // ANDI consumes A0 before this instruction retires an incoming load.
@@ -573,6 +597,12 @@ impl Kernel {
             || self
                 .event_wait
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self.event_controls.is_some_and(|binding| {
+                binding
+                    .addresses()
+                    .into_iter()
+                    .any(|address| ram_offset(address, 4).ok() == Some(offset))
+            })
             || self.exception_dispatch.is_some_and(|binding| {
                 binding.addresses().is_ok_and(|addresses| {
                     addresses.into_iter().enumerate().any(|(index, address)| {
@@ -1081,17 +1111,18 @@ impl Kernel {
         )
     }
 
-    /// The owned initializer installs A0/B0 vectors and tables for these five
+    /// The owned initializer installs A0/B0 vectors and tables for these eleven
     /// complete services. Their normal entry guards still run at each body.
     pub(crate) fn configure_guest_vectors(&mut self) -> Result<()> {
         self.require_plain_context()?;
         if self.cd_removal.is_none()
             || self.event_delivery.is_none()
             || self.event_wait.is_none()
+            || self.event_controls.is_none()
             || self.exception_return.is_none()
             || self.exception_reset.is_none()
         {
-            return Err("owned vectors require all five guest service bindings".into());
+            return Err("owned vectors require all eleven guest service bindings".into());
         }
         self.guest_vectors = true;
         Ok(())
@@ -1107,7 +1138,7 @@ impl Kernel {
         incoming.synchronize_load();
         matches!(
             (incoming.pc() & 0x1fff_ffff, incoming.register(9)),
-            (0xa0, 0x72) | (0xb0, 0x07 | 0x0a | 0x17 | 0x18)
+            (0xa0, 0x72) | (0xb0, 0x07..=0x0d | 0x17 | 0x18 | 0x20)
         )
     }
 

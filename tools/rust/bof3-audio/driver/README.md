@@ -33,9 +33,9 @@ hashes, required symbols and allocation bounds, then starts services in zeroed
 RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
 Startup also owns RAM `0xA0..0xC0` for the A0/B0 entry vectors and
-`0x100..0x128` for kernel descriptors. A0/72 and B0/07,0A,17,18 execute those
+`0x100..0x128` for kernel descriptors. A0/72 and B0/07..0D,17,18,20 execute those
 vectors and relocated service tables before their owned guest bodies. The
-loader requires the current vector symbols, checks their five table bindings
+loader requires the current vector symbols, checks their eleven table bindings
 and verifies the installed bytes. Direct body guards remain active.
 After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
@@ -47,6 +47,15 @@ entering its guest body. READY becomes BUSY and returns 1. Initial BUSY waits on
 the selected record until READY; other initial states return 0. The loop keeps
 that record pointer across IRQ save and return, including after descriptor
 relocation, disable or close. Delivery still requires an enabled matching event.
+
+OpenEvent, CloseEvent, TestEvent, EnableEvent, DisableEvent and UnDeliverEvent
+execute guest instructions against the live event allocation. OpenEvent scans
+for the lowest free slot through its guest helper and preserves the original
+record write order and 48-byte frame. Its caller supplies four writable argument
+words above SP. Entry guards reject malformed descriptors, out-of-range handles,
+unsupported open modes and invalid frames or return addresses before the first
+body instruction. The instruction that consumes an argument determines which
+side of an incoming delayed load the guard validates.
 
 `Image::start_scheduled` accepts device configuration before the first startup
 instruction and a resolver for audio waits. The resolver orders producer and

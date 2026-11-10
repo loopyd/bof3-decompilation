@@ -2,6 +2,7 @@
 //! https://psx-spx.consoledev.net/kernelbios/#bios-event-functions
 use super::{
     bus::{Bus, Width},
+    cpu::Cpu,
     image::executable::ram_offset,
 };
 use crate::Result;
@@ -12,6 +13,65 @@ pub const BUSY: u32 = 0x2000;
 pub const READY: u32 = 0x4000;
 pub const CALLBACK: u32 = 0x1000;
 pub const POLLING: u32 = 0x2000;
+
+/// Linked guest bodies for event allocation, polling and control.
+#[derive(Clone, Copy, Debug)]
+pub struct Controls {
+    pub free: u32,
+    pub open: u32,
+    pub close: u32,
+    pub test: u32,
+    pub enable: u32,
+    pub disable: u32,
+    pub undeliver: u32,
+}
+
+impl Controls {
+    pub(crate) fn addresses(self) -> [u32; 7] {
+        [
+            self.free,
+            self.open,
+            self.close,
+            self.test,
+            self.enable,
+            self.disable,
+            self.undeliver,
+        ]
+    }
+
+    pub(crate) fn prepare(self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {
+        if !self.addresses().contains(&cpu.pc()) {
+            return Ok(());
+        }
+        let table = Table::read(bus)?;
+        if [self.close, self.test, self.enable, self.disable].contains(&cpu.pc()) {
+            // The first ANDI reads A0 before retiring an incoming delayed load.
+            table.address(cpu.register(4))?;
+        }
+        let mut incoming = cpu.clone();
+        incoming.synchronize_load();
+        if cpu.pc() == self.open {
+            if !matches!(incoming.register(6), CALLBACK | POLLING) {
+                return Err("owned OpenEvent: unsupported mode".into());
+            }
+            // The first ADDIU consumes the old SP and cancels any delayed SP.
+            let stack = cpu.register(29);
+            let frame = stack
+                .checked_sub(48)
+                .ok_or("owned OpenEvent: stack frame underflow")?;
+            if stack & 3 != 0 {
+                return Err("owned OpenEvent: unaligned stack".into());
+            }
+            ram_offset(frame, 64)?;
+        }
+        let return_pc = incoming.register(31);
+        if return_pc & 3 != 0 || self.addresses().contains(&return_pc) {
+            return Err("owned event control requires an external aligned return address".into());
+        }
+        ram_offset(return_pc, 4)?;
+        Ok(())
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct Table {
