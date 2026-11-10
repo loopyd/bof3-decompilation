@@ -1,7 +1,7 @@
 //! Source-preserving song folders with independent MIDI sequences and paired SF2.
 use crate::{
     archive::MediaImage, catalog::loader, catalog::model::Catalog, document::manifest,
-    document::xml, machine::executable::Executable, music::document::SongReport,
+    document::xml, machine::driver::Image, music::document::SongReport,
     publication::require_absent, publication::write_new, publication::Publication,
     voice::tuning::Reference, Result,
 };
@@ -16,8 +16,8 @@ use std::{
 pub struct Options {
     pub disc_root: Option<PathBuf>,
     pub archives: Vec<PathBuf>,
-    pub executable: PathBuf,
-    pub pitch_ram: Option<PathBuf>,
+    pub driver: PathBuf,
+    pub pitch_context: Option<PathBuf>,
     pub output: PathBuf,
     pub id: Option<String>,
     pub loops: u32,
@@ -40,10 +40,10 @@ pub fn songs(options: &Options) -> Result<Report> {
     }
     require_absent(&options.output)?;
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
-    let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
+    let driver = Image::read(&options.driver)?;
     let mapping = loader::resolve(
         &mut catalog,
-        &crate::machine::reference::mapping::read(&executable)?,
+        &crate::catalog::mapping::Mapping::read(&driver)?,
     )?;
     let selected = if let Some(id) = &options.id {
         vec![catalog.select("music", Some("song"), id)?]
@@ -57,8 +57,12 @@ pub fn songs(options: &Options) -> Result<Report> {
     if selected.is_empty() {
         return Err("music extract: no songs in selected sources".into());
     }
-    let runtime_ram = options.pitch_ram.as_ref().map(fs::read).transpose()?;
-    let mut reference = Reference::from_input(&executable, runtime_ram.as_deref())?;
+    let context = options
+        .pitch_context
+        .as_ref()
+        .map(|path| crate::voice::tuning::FrozenPitchContext::from_bytes(&fs::read(path)?))
+        .transpose()?;
+    let mut reference = Reference::from_driver(&driver, context.as_ref())?;
     let mut envelopes = BTreeMap::new();
     let publication = Publication::new(&options.output)?;
     let mut root = String::from(

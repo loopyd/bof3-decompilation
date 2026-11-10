@@ -208,11 +208,11 @@ fn verified_program_mode_and_explicit_tone_reverb_policy_keep_source_identity() 
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE; gain remains a synthetic context"]
 fn original_pitch_context_binds_every_key_without_changing_source_identities() {
-    use bof3_audio::{machine::executable::Executable, voice::tuning::Reference};
+    use bof3_audio::machine::executable::Executable;
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     let (vh, vb) = fixture();
     let mut context = contexts(&vh);
     for program in Bank::parse(&vh).unwrap().programs {
@@ -246,14 +246,14 @@ fn original_pitch_context_binds_every_key_without_changing_source_identities() {
 fn corpus_binding_reports_supported_structure_and_rejects_unmapped_contexts() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-        machine::executable::Executable, voice::tuning::Reference,
+        machine::executable::Executable,
     };
     use std::{collections::BTreeMap, io::Cursor, path::PathBuf};
     let root = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
     loader::resolve(
         &mut catalog,

@@ -2,7 +2,7 @@
 use crate::{
     archive::packing, archive::packing::ArchiveReport, archive::packing::Pending,
     archive::MediaImage, catalog::loader, catalog::model::Catalog, digest::sha256_hex,
-    document::manifest, document::manifest::Element, machine::executable::Executable,
+    document::manifest, document::manifest::Element, machine::driver::Image,
     publication::require_absent, publication::write_new, publication::Publication, Result,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -16,8 +16,8 @@ use std::{
 
 pub struct Options {
     pub input: PathBuf,
-    pub executable: PathBuf,
-    pub pitch_ram: Option<PathBuf>,
+    pub driver: PathBuf,
+    pub pitch_context: Option<PathBuf>,
     pub output: PathBuf,
 }
 
@@ -43,8 +43,8 @@ struct Documents {
 }
 
 pub fn banks(options: &Options) -> Result<Report> {
-    if options.pitch_ram.is_some() {
-        return Err("pack: runtime pitch RAM applies only to music".into());
+    if options.pitch_context.is_some() {
+        return Err("pack: frozen pitch context applies only to music".into());
     }
     require_absent(&options.output)?;
     let root = options.input.canonicalize()?;
@@ -55,8 +55,7 @@ pub fn banks(options: &Options) -> Result<Report> {
         banks: documents,
         mut pending,
     } = documents(&root)?;
-    let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
-    crate::machine::profile::Profile::identify(&executable)?;
+    let driver = Image::read(&options.driver)?;
     let mut ids = BTreeSet::new();
     let mut report = Report {
         schema: "bof3.audio-pack-report/v1", output: options.output.display().to_string(), archives: Vec::new(), banks: Vec::new(),
@@ -84,7 +83,7 @@ pub fn banks(options: &Options) -> Result<Report> {
         let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
         let mapping = loader::resolve(
             &mut catalog,
-            &crate::machine::reference::mapping::read(&executable)?,
+            &crate::catalog::mapping::Mapping::read(&driver)?,
         )?;
         let validated = crate::bank::manifest::validate(&node, &catalog, &mapping)?;
         if !ids.insert(validated.asset.id.clone()) {

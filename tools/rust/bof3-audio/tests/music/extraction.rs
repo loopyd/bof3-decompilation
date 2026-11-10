@@ -33,10 +33,10 @@ fn options(root: &Path, archive: PathBuf) -> Options {
     Options {
         disc_root: None,
         archives: vec![archive],
-        pitch_ram: None,
-        executable: std::env::var_os("BOF3_AUDIO_EXE")
+        pitch_context: None,
+        driver: std::env::var_os("BOF3_AUDIO_DRIVER")
             .map(PathBuf::from)
-            .unwrap_or_else(|| "missing-executable".into()),
+            .unwrap_or_else(|| "missing-driver".into()),
         output: root.join("export"),
         id: None,
         loops: 2,
@@ -151,7 +151,7 @@ fn check_export(root: &Path, expected: &[u8]) -> usize {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE; independent SEP files, layering/mappings and RustySynth consumption"]
+#[ignore = "requires BOF3_AUDIO_DRIVER; independent SEP files, layering/mappings and RustySynth consumption"]
 fn separate_sequences_and_preserved_archive_survive_music_extraction() {
     let d = Directory::new();
     let source = d.0.join("song & 'é'.EMI");
@@ -221,7 +221,7 @@ fn separate_sequences_and_preserved_archive_survive_music_extraction() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; original supported song and rejected pitch contexts"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; original supported song and rejected pitch contexts"]
 fn original_song_cli_exports_playable_interchange_and_rejects_unverified_ranges() {
     let d = Directory::new();
     let corpus = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
@@ -230,8 +230,8 @@ fn original_song_cli_exports_playable_interchange_and_rejects_unverified_ranges(
     let result = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["extract", "--mode", "music", "--archive"])
         .arg(&source)
-        .arg("--executable")
-        .arg(&opts.executable)
+        .arg("--driver")
+        .arg(&opts.driver)
         .arg("--output")
         .arg(&opts.output)
         .args(["--allow-approximations", "--json"])
@@ -256,7 +256,7 @@ fn original_song_cli_exports_playable_interchange_and_rejects_unverified_ranges(
             .to_string();
         assert!(error.contains("outside verified pitch table"), "{error}");
         assert!(error.contains("lookup 0x8018"), "{error}");
-        assert!(error.contains("isolated_executable"), "{error}");
+        assert!(error.contains("isolated_owned_driver"), "{error}");
         if name == "BGM000.EMI" {
             assert!(error.contains("0x8018440C"), "{error}");
             assert!(error.contains("AdjacentData"), "{error}");

@@ -10,7 +10,7 @@ use crate::{
     digest::sha256_hex,
     document::xml,
     interchange::wave,
-    machine::executable::Executable,
+    machine::driver::Image,
     publication::require_absent,
     publication::write_new,
     publication::Publication,
@@ -27,7 +27,7 @@ use std::{
 pub struct Options {
     pub disc_root: Option<PathBuf>,
     pub archives: Vec<PathBuf>,
-    pub executable: PathBuf,
+    pub driver: PathBuf,
     pub output: PathBuf,
     pub id: Option<String>,
     pub role: Option<String>,
@@ -65,10 +65,10 @@ pub fn banks(options: &Options) -> Result<Report> {
         return Err("bank extract supports only --type sfx; select observed vocal cues through index/query and extract their qualified XA cue IDs".into());
     }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
-    let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
+    let driver = Image::read(&options.driver)?;
     let mapping = loader::resolve(
         &mut catalog,
-        &crate::machine::reference::mapping::read(&executable)?,
+        &crate::catalog::mapping::Mapping::read(&driver)?,
     )?;
     if let Some(role) = &options.role {
         catalog.assets.retain(|asset| {
@@ -145,7 +145,7 @@ pub fn banks(options: &Options) -> Result<Report> {
                 let mut local = Catalog::from_media(&asset.source, MediaImage::Emi(image.clone()))?;
                 loader::resolve(
                     &mut local,
-                    &crate::machine::reference::mapping::read(&executable)?,
+                    &crate::catalog::mapping::Mapping::read(&driver)?,
                 )?;
                 entry.insert(
                     local

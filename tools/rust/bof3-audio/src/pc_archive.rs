@@ -1,7 +1,7 @@
 //! Selected-SEP PC rendering through the canonical editable MIDI/SF2 translation.
 use crate::{
     archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
-    interchange::wave::Wave, machine::executable::Executable, music::document::Selection,
+    interchange::wave::Wave, machine::driver::Image, music::document::Selection,
     music::document::SongReport, pc_render, sequence::midi as translation,
     sequence::timeline::Limits, sequence::timeline::Stop, sequence::Sequence,
     voice::tuning::Reference, Result,
@@ -16,7 +16,7 @@ pub struct Options {
     pub loops: Option<u32>,
     pub playback: pc_render::Options,
     pub allow_approximations: bool,
-    pub pitch_ram: Option<Vec<u8>>,
+    pub pitch_context: Option<Vec<u8>>,
 }
 
 #[derive(Serialize)]
@@ -66,16 +66,21 @@ impl Options {
 }
 
 pub fn render(
-    executable: &Executable,
+    driver: &Image,
     source: &str,
     image: &ArchiveImage,
     options: &Options,
 ) -> Result<Rendered> {
     options.validate()?;
     let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
+    let context = options
+        .pitch_context
+        .as_ref()
+        .map(|bytes| crate::voice::tuning::FrozenPitchContext::from_bytes(bytes))
+        .transpose()?;
     let mapping = loader::resolve(
         &mut catalog,
-        &crate::machine::reference::mapping::read(executable)?,
+        &crate::catalog::mapping::Mapping::read(driver)?,
     )?;
     let songs: Vec<_> = catalog
         .assets
@@ -108,7 +113,7 @@ pub fn render(
         song,
         image,
         &mapping,
-        &mut Reference::from_input(executable, options.pitch_ram.as_deref())?,
+        &mut Reference::from_driver(driver, context.as_ref())?,
         &mut BTreeMap::new(),
         Selection {
             loops,

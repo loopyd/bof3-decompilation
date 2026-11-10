@@ -43,7 +43,7 @@ fn options(directory: &Directory, archive: PathBuf) -> Options {
     Options {
         disc_root: None,
         archives: vec![archive],
-        executable: None,
+        driver: None,
         output: directory.0.join("export"),
         id: None,
         kind: Kind::Stream,
@@ -167,11 +167,12 @@ fn invalid_sectors_and_inapplicable_options_cannot_publish_output() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_TRACK, BOF3_AUDIO_EXE, BOF3_AUDIO_CORPUS and Rust/FFmpeg consumers"]
+#[ignore = "requires BOF3_AUDIO_TRACK, BOF3_AUDIO_DRIVER, BOF3_AUDIO_EXE, BOF3_AUDIO_CORPUS and Rust/FFmpeg consumers"]
 fn complete_original_streams_and_all_cues_export_with_independent_pcm_and_table_checks() {
     let directory = Directory::new();
     let media = directory.0.join("media");
     fs::create_dir(&media).unwrap();
+    let driver = PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap());
     let exe = PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap());
     let mut disc = DiscImage::open(&PathBuf::from(
         std::env::var_os("BOF3_AUDIO_TRACK").unwrap(),
@@ -192,7 +193,7 @@ fn complete_original_streams_and_all_cues_export_with_independent_pcm_and_table_
     let mut options = Options {
         disc_root: Some(media.clone()),
         archives: vec![],
-        executable: Some(exe.clone()),
+        driver: Some(driver),
         output: directory.0.join("streams"),
         id: None,
         kind: Kind::Stream,

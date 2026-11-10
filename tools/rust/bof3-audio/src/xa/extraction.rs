@@ -3,9 +3,9 @@
 use crate::{
     archive::MediaImage, archive::XaImage, catalog::loader, catalog::model::Asset,
     catalog::model::AssetData, catalog::model::Catalog, catalog::model::XaCue, digest::sha256_hex,
-    document::xml, interchange::wave::Wave, machine::executable::Executable,
-    publication::require_absent, publication::write_new, publication::Publication,
-    xa::selection::InitialHistory, xa::Arithmetic, xa::Decoder, xa::Stream, Result,
+    document::xml, interchange::wave::Wave, machine::driver::Image, publication::require_absent,
+    publication::write_new, publication::Publication, xa::selection::InitialHistory,
+    xa::Arithmetic, xa::Decoder, xa::Stream, Result,
 };
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt::Write, fs, path::PathBuf};
@@ -36,7 +36,7 @@ impl Kind {
 pub struct Options {
     pub disc_root: Option<PathBuf>,
     pub archives: Vec<PathBuf>,
-    pub executable: Option<PathBuf>,
+    pub driver: Option<PathBuf>,
     pub output: PathBuf,
     pub id: Option<String>,
     pub kind: Kind,
@@ -61,8 +61,8 @@ pub struct Report {
 
 pub fn extract(options: &Options) -> Result<Report> {
     require_absent(&options.output)?;
-    if matches!(options.kind, Kind::Cue | Kind::Views) && options.executable.is_none() {
-        return Err("XA cue extraction requires --executable for verified cue tables".into());
+    if matches!(options.kind, Kind::Cue | Kind::Views) && options.driver.is_none() {
+        return Err("XA cue extraction requires --driver for owned cue tables".into());
     }
     if matches!(options.kind, Kind::Views) && options.history != InitialHistory::Continuous {
         return Err(
@@ -71,13 +71,13 @@ pub fn extract(options: &Options) -> Result<Report> {
     }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let runtime = options
-        .executable
+        .driver
         .as_ref()
         .map(|path| -> Result<_> {
-            let executable = Executable::from_bytes(fs::read(path)?)?;
+            let driver = Image::read(path)?;
             loader::resolve(
                 &mut catalog,
-                &crate::machine::reference::mapping::read(&executable)?,
+                &crate::catalog::mapping::Mapping::read(&driver)?,
             )
         })
         .transpose()?;

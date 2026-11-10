@@ -2,10 +2,9 @@
 use crate::{
     archive::packing, archive::packing::ArchiveReport, archive::packing::Pending,
     archive::MediaImage, catalog::loader, catalog::model::Catalog, digest::sha256_hex,
-    document::manifest, interchange::midi::Midi, machine::executable::Executable,
-    machine::profile::Profile, pack::Options, publication::require_absent, publication::write_new,
-    publication::Publication, sequence::editing, sequence::timeline::Limits,
-    voice::tuning::Reference, Result,
+    document::manifest, interchange::midi::Midi, machine::driver::Image, pack::Options,
+    publication::require_absent, publication::write_new, publication::Publication,
+    sequence::editing, sequence::timeline::Limits, voice::tuning::Reference, Result,
 };
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
@@ -47,10 +46,13 @@ pub fn songs(options: &Options) -> Result<Report> {
         return Err("music pack: --input must be a song folder or music root".into());
     }
     let documents = crate::music::manifest::documents(&root)?;
-    let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
-    Profile::identify(&executable)?;
-    let runtime_ram = options.pitch_ram.as_ref().map(fs::read).transpose()?;
-    let mut reference = Reference::from_input(&executable, runtime_ram.as_deref())?;
+    let driver = Image::read(&options.driver)?;
+    let context = options
+        .pitch_context
+        .as_ref()
+        .map(|path| crate::voice::tuning::FrozenPitchContext::from_bytes(&fs::read(path)?))
+        .transpose()?;
+    let mut reference = Reference::from_driver(&driver, context.as_ref())?;
     let mut envelopes = BTreeMap::new();
     let mut pending = BTreeMap::<String, Pending>::new();
     let mut ids = BTreeSet::new();
@@ -86,7 +88,7 @@ pub fn songs(options: &Options) -> Result<Report> {
         let mut catalog = Catalog::from_media(source, MediaImage::Emi(image.clone()))?;
         let mapping = loader::resolve(
             &mut catalog,
-            &crate::machine::reference::mapping::read(&executable)?,
+            &crate::catalog::mapping::Mapping::read(&driver)?,
         )?;
         let song = catalog.select("music", Some("song"), node.attribute("id")?)?;
         if !ids.insert(song.id.clone()) {

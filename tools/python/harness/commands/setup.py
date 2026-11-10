@@ -79,7 +79,6 @@ def _build_local_tools(layout: RepoLayout) -> None:
         (layout.harness_disk_src, layout.harness_disk_bin.parent.parent),
         (layout.emi_ex_src, layout.emi_ex_bin.parent.parent),
         (layout.bof3_text_src, layout.bof3_text_bin.parent.parent),
-        (root / "tools/rust/bof3-audio", layout.out_dir / "audio"),
     ):
         _run(
             [
@@ -95,6 +94,11 @@ def _build_local_tools(layout: RepoLayout) -> None:
             cwd=root,
             quiet=True,
         )
+    from .audio import build_binary as build_audio
+
+    if build_audio(layout.root) is None:
+        raise RuntimeError("owned audio host and guest driver build failed")
+
     from .textures import build_binary
 
     build_binary(layout)
@@ -305,12 +309,23 @@ def _textures(state: SetupState) -> str:
     return str(build_binary(state.layout))
 
 
+def _audio(state: SetupState) -> str:
+    from .audio import build_binary
+
+    binary = build_binary(state.layout.root)
+    if binary is None:
+        raise RuntimeError("owned audio host and guest driver build failed")
+    return str(binary)
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     state = SetupState(root=root, layout=repo_layout(root), args=args)
     selection = {"bios": _bios, "pcsx-redux": _pcsx}
     tasks = (
-        [Check("textures", _textures)]
+        [Check("audio", _audio)]
+        if args.component == "audio"
+        else [Check("textures", _textures)]
         if args.component == "textures"
         else TASKS
         if args.component == "all"
@@ -351,6 +366,7 @@ def build_parser() -> argparse.ArgumentParser:
             "rz-psxdec",
             "decomp-permuter",
             "textures",
+            "audio",
         ),
         default="all",
         help="prepare everything or one toolchain component",

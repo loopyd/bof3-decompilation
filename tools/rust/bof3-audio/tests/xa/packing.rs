@@ -45,7 +45,7 @@ fn extract(
     bof3_audio::xa::extraction::extract(&bof3_audio::xa::extraction::Options {
         disc_root: None,
         archives: vec![input.into()],
-        executable: exe,
+        driver: exe,
         output: output.into(),
         id: None,
         kind,
@@ -94,7 +94,7 @@ fn streams_pack_without_original_sources_and_preserve_interleaving_and_opaque_by
         let mut options = bof3_audio::xa::packing::Options {
             padding: bof3_audio::xa::packing::Padding::Reject,
             input: export.clone(),
-            executable: None,
+            driver: None,
             output: directory.0.join("unchanged"),
         };
         let report = bof3_audio::xa::packing::assets(&options).unwrap();
@@ -147,7 +147,7 @@ fn manifest_conflicts_capacity_failures_and_bad_metadata_do_not_publish() {
     let opts = bof3_audio::xa::packing::Options {
         padding: bof3_audio::xa::packing::Padding::Reject,
         input: export.clone(),
-        executable: None,
+        driver: None,
         output: directory.0.join("failed"),
     };
     let asset = assets(&export).remove(0);
@@ -228,7 +228,7 @@ fn cli_dispatches_xa_roots_without_an_executable_and_preserves_existing_output()
         bof3_audio::xa::packing::assets(&bof3_audio::xa::packing::Options {
             padding: bof3_audio::xa::packing::Padding::Reject,
             input: export,
-            executable: None,
+            driver: None,
             output: output.clone()
         })
         .unwrap_err()
@@ -239,11 +239,11 @@ fn cli_dispatches_xa_roots_without_an_executable_and_preserves_existing_output()
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_TRACK and BOF3_AUDIO_EXE; complete stream and cue XML/WAV round trips"]
+#[ignore = "requires BOF3_AUDIO_TRACK and BOF3_AUDIO_DRIVER; complete stream and cue XML/WAV round trips"]
 fn complete_original_xa_sources_pack_stream_and_cue_exports_byte_exactly() {
     use bof3_audio::archive::disc::DiscImage;
     let directory = Directory::new();
-    let exe = PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap());
+    let exe = PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap());
     let mut disc =
         DiscImage::open(Path::new(&std::env::var_os("BOF3_AUDIO_TRACK").unwrap())).unwrap();
     let mut streams = 0;
@@ -271,7 +271,7 @@ fn complete_original_xa_sources_pack_stream_and_cue_exports_byte_exactly() {
             let report = bof3_audio::xa::packing::assets(&bof3_audio::xa::packing::Options {
                 padding: bof3_audio::xa::packing::Padding::Reject,
                 input: export.clone(),
-                executable: Some(exe.clone()),
+                driver: Some(exe.clone()),
                 output: packed.clone(),
             })
             .unwrap_or_else(|e| panic!("{name} {}: {e}", kind.name()));
@@ -296,11 +296,11 @@ fn complete_original_xa_sources_pack_stream_and_cue_exports_byte_exactly() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_TRACK and BOF3_AUDIO_EXE; edited original cue and runtime metadata validation"]
+#[ignore = "requires BOF3_AUDIO_TRACK and BOF3_AUDIO_DRIVER; edited original cue and runtime metadata validation"]
 fn original_cue_edit_preserves_other_sectors_and_rejects_runtime_conflicts() {
     use bof3_audio::archive::disc::DiscImage;
     let directory = Directory::new();
-    let executable = PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap());
+    let executable = PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap());
     let mut disc =
         DiscImage::open(Path::new(&std::env::var_os("BOF3_AUDIO_TRACK").unwrap())).unwrap();
     let image = disc.read_xa("BIN/BMAG_XA/MAGIC00.STR").unwrap();
@@ -310,7 +310,7 @@ fn original_cue_edit_preserves_other_sectors_and_rejects_runtime_conflicts() {
     bof3_audio::xa::extraction::extract(&bof3_audio::xa::extraction::Options {
         disc_root: None,
         archives: vec![source],
-        executable: Some(executable.clone()),
+        driver: Some(executable.clone()),
         output: export.clone(),
         id: Some("4096".into()),
         kind: Kind::Cue,
@@ -337,7 +337,7 @@ fn original_cue_edit_preserves_other_sectors_and_rejects_runtime_conflicts() {
     let mut options = bof3_audio::xa::packing::Options {
         padding: bof3_audio::xa::packing::Padding::Reject,
         input: export,
-        executable: Some(executable),
+        driver: Some(executable),
         output: directory.0.join("edited"),
     };
     let report = bof3_audio::xa::packing::assets(&options).unwrap();

@@ -1,13 +1,14 @@
 //! CLI dispatch. Incomplete migration operations fail before creating output.
 
-use crate::machine::{executable::Executable, profile::Profile};
+use crate::machine::driver::Image;
 use crate::{archive::MediaImage, verify::Report, Result};
 use std::{ffi::OsString, path::PathBuf};
 
 const HELP: &str = "bof3-audio — BOF3 audio migration\n\
-usage: bof3-audio <index|query|map|extract|render|pack|compile|verify> --mode audio|music [OPTIONS]\n\
+usage: bof3-audio <index|query|map|extract|render|pack|verify|doctor|compile> [OPTIONS]\n\
 \nAvailable during foundation development:\n\
-  verify --mode audio|music --archive FILE [--against ORIGINAL] [--executable PSX_EXE] [--json]\n\
+  doctor --driver DIRECTORY [--json]\n\
+  verify --mode audio|music --archive FILE [--against ORIGINAL] [--driver DIRECTORY] [--json]\n\
     Check EMI/XA container structure and optional whole-file byte equality.\n\
  Audio payloads, identities, translation, encoding, and rendering are not yet verified.\n\
  Known truncated XA snapshots fail a separate media-completeness check.\n\
@@ -29,7 +30,7 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     let operation = command.to_str().ok_or("operation must be UTF-8")?;
     if ![
-        "index", "query", "map", "extract", "render", "pack", "compile", "verify",
+        "index", "query", "map", "extract", "render", "pack", "compile", "verify", "doctor",
     ]
     .contains(&operation)
     {
@@ -45,6 +46,9 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
             crate::player::HELP
         );
         return Ok(0);
+    }
+    if operation == "doctor" {
+        return diagnose(args);
     }
     if operation == "index" || operation == "query" || operation == "map" {
         return crate::catalog_cli::run(operation, args);
@@ -69,10 +73,16 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut mode = None;
     let mut archive = None;
     let mut against = None;
-    let mut executable = None;
+    let mut driver = None;
     let mut json = false;
     while let Some(arg) = args.next() {
         match arg.to_str() {
+            Some("--executable" | "--bios") => {
+                return Err(
+                    "verify no longer accepts --executable or --bios; use --driver DIRECTORY"
+                        .into(),
+                )
+            }
             Some("--mode") if mode.is_none() => {
                 mode = Some(args.next().ok_or("--mode needs audio or music")?)
             }
@@ -83,10 +93,8 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
                 against = Some(PathBuf::from(args.next().ok_or("--against needs a path")?))
             }
             Some("--json") if !json => json = true,
-            Some("--executable") if executable.is_none() => {
-                executable = Some(PathBuf::from(
-                    args.next().ok_or("--executable needs a path")?,
-                ));
+            Some("--driver") if driver.is_none() => {
+                driver = Some(PathBuf::from(args.next().ok_or("--driver needs a path")?));
             }
             _ => return Err(format!("unknown or repeated option {arg:?}").into()),
         }
@@ -102,9 +110,9 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     let original = against.as_ref().map(std::fs::read).transpose()?;
     let mut report = Report::inspect(path.display().to_string(), &image, original.as_deref());
-    if let Some(executable) = executable {
-        let image = Executable::from_bytes(std::fs::read(executable)?)?;
-        report.runtime_profile = Some(Profile::identify(&image)?);
+    if let Some(driver) = driver {
+        let image = Image::read(&driver)?;
+        report.source_profile = Some(crate::catalog::mapping::Mapping::read(&image)?.profile);
     }
     if json {
         println!("{}", serde_json::to_string_pretty(&report)?);
@@ -134,12 +142,47 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
         } else {
             println!("Media completeness: not checked (unrecognized whole-file identity)");
         }
-        if let Some(profile) = &report.runtime_profile {
+        if let Some(profile) = &report.source_profile {
             println!(
-                "runtime profile: {}; bootstrap: {}",
+                "owned driver source profile: {}; mapping scope: {}",
                 profile.id, profile.bootstrap
             );
         }
     }
     Ok(u8::from(report.checks.has_failures()))
+}
+
+fn diagnose(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
+    let mut directory = None;
+    let mut json = false;
+    while let Some(arg) = args.next() {
+        match arg.to_str() {
+            Some("--driver") if directory.is_none() => {
+                directory = Some(PathBuf::from(
+                    args.next().ok_or("--driver needs a directory")?,
+                ))
+            }
+            Some("--json") if !json => json = true,
+            _ => {
+                return Err(format!(
+                    "unknown, repeated or inapplicable audio doctor option {arg:?}"
+                )
+                .into())
+            }
+        }
+    }
+    let image = Image::read(&directory.ok_or("audio doctor requires --driver DIRECTORY")?)?;
+    let mapping = crate::catalog::mapping::Mapping::read(&image)?;
+    crate::voice::tuning::Reference::from_driver(&image, None)?;
+    let report = serde_json::json!({
+        "schema": "bof3.audio-doctor/v1", "driver": image.evidence(),
+        "source_profile": mapping.profile,
+        "scope": "owned artifact, catalog mapping and isolated pitch readiness; playback fidelity is not established",
+    });
+    if json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        println!("owned audio driver: mapping and pitch inputs verified");
+    }
+    Ok(0)
 }

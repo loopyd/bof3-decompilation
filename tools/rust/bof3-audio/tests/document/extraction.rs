@@ -47,7 +47,7 @@ fn xa_extraction_paths_preservation_sector_metadata_and_wave_survive_xml_reading
     bof3_audio::xa::extraction::extract(&Options {
         disc_root: None,
         archives: vec![source.clone()],
-        executable: None,
+        driver: None,
         output: output.clone(),
         id: None,
         kind: Kind::Stream,
@@ -119,7 +119,7 @@ fn xa_extraction_paths_preservation_sector_metadata_and_wave_survive_xml_reading
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; reads freshly extracted original bank XML/WAV"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; reads freshly extracted original bank XML/WAV"]
 fn original_bank_xml_preservation_metadata_and_wav_content_agree_with_source() {
     use bof3_audio::{
         bank::extraction::{self, Options},
@@ -135,7 +135,7 @@ fn original_bank_xml_preservation_metadata_and_wav_content_agree_with_source() {
     let report = extraction::banks(&Options {
         disc_root: None,
         archives: vec![source],
-        executable: PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap()),
+        driver: PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap()),
         output: output.clone(),
         id: None,
         role: None,

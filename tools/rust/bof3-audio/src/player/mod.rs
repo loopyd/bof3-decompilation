@@ -11,6 +11,7 @@ use emi_ex_v2::image::ArchiveImage;
 use std::{ffi::OsString, fs, path::PathBuf, process::Command};
 
 pub const HELP: &str = "
+  Development compiler (uses the original US runtime):
   compile --mode music --archive EMI --executable PSX_EXE --sequence INDEX
     --output NEW_DIR [--layout 0|1|2] [--repo-root REPOSITORY] [--disc-root ROOT] [--json]
   Build player.exe with canonical GCC 2.7.2. Output includes the rebuildable C89

@@ -1,10 +1,10 @@
-//! Explicit frozen adjacent data for isolated original-instruction evaluation.
-use super::Reference;
-use crate::{digest::sha256_hex, machine::executable::Executable, Result};
-use serde::Serialize;
+//! Explicit frozen adjacent data for isolated pitch evaluation.
+use crate::{digest::sha256_hex, machine::profile::US_PITCH_SHA256, Result};
+use serde::{Deserialize, Serialize};
 use std::ops::Range;
 
-pub(super) const ADJACENT_RANGE: Range<u32> = 0x8018_4406..0x8018_445c;
+pub(crate) const ADJACENT_RANGE: Range<u32> = 0x8018_4406..0x8018_445c;
+const ROUTINE_SHA256: &str = "7d0ddc9ba2af236e6c483444f6def9d03bf4917d10906ce1060d4785144b9679";
 
 #[derive(Clone, Debug, Serialize)]
 pub struct RuntimeContext {
@@ -15,62 +15,67 @@ pub struct RuntimeContext {
     pub scope: &'static str,
 }
 
-impl Reference {
-    /// The caller identifies the capture's history. Bytes establish only this
-    /// frozen context, not initialization, natural reachability or invariance.
-    /// Only the verified 86-byte gap is imported; code and tables stay original.
-    pub fn from_runtime_ram(exe: &Executable, runtime_ram: &[u8]) -> Result<Self> {
-        let mut reference = Self::from_executable(exe)?;
-        if runtime_ram.len() != 2 * 1024 * 1024 {
-            return Err("tuning context: expected exactly 2 MiB of PSX RAM".into());
+#[derive(Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct Document {
+    schema: String,
+    ram_sha256: String,
+    adjacent_data_sha256: String,
+    pitch_routine_sha256: String,
+    pitch_table_sha256: String,
+    adjacent_data: Vec<u8>,
+}
+
+pub struct FrozenPitchContext(Document);
+
+impl FrozenPitchContext {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self> {
+        let document: Document = serde_json::from_slice(bytes)?;
+        if document.schema != "bof3.audio-pitch-context/v1"
+            || document.adjacent_data.len() != 86
+            || document.ram_sha256.len() != 64
+            || !document
+                .ram_sha256
+                .bytes()
+                .all(|byte| byte.is_ascii_hexdigit())
+            || document.adjacent_data_sha256 != sha256_hex(&document.adjacent_data)
+            || document.pitch_routine_sha256 != ROUTINE_SHA256
+            || document.pitch_table_sha256 != US_PITCH_SHA256
+        {
+            return Err("tuning context: invalid frozen US pitch context".into());
         }
-        let original = reference.ram.bytes();
-        let mut routine_hash = String::new();
-        for (address, size) in [
-            (reference.profile.pitch_entry, 252),
-            (reference.profile.pitch_table, 386),
-            (reference.profile.spu_pitch_table, 386),
-        ] {
-            let start = crate::machine::executable::ram_offset(address, size)?;
-            let range = start..start + size;
-            if runtime_ram[range.clone()] != original[range.clone()] {
-                return Err(format!(
-                    "tuning context: original routine/table bytes differ at 0x{address:08X}"
-                )
-                .into());
-            }
-            if address == reference.profile.pitch_entry {
-                routine_hash = sha256_hex(&runtime_ram[range]);
-            }
-        }
-        let start = crate::machine::executable::ram_offset(ADJACENT_RANGE.start, 86)?;
-        let adjacent = &runtime_ram[start..start + 86];
-        for (i, &value) in adjacent.iter().enumerate() {
-            use crate::machine::bus::{Bus, Width};
-            reference.ram.write(
-                ADJACENT_RANGE.start + i as u32,
-                Width::Byte,
-                u32::from(value),
-            )?;
-        }
-        reference.runtime_context = Some(RuntimeContext {
-            ram_sha256: sha256_hex(runtime_ram),
-            adjacent_data_sha256: sha256_hex(adjacent),
-            pitch_routine_sha256: routine_hash,
-            pitch_table_sha256: crate::machine::profile::US_PITCH_SHA256,
-            scope: "isolated original routine with a frozen supplied runtime gap; capture history, natural reachability, concurrent scheduling and PCM fidelity are unverified",
-        });
-        Ok(reference)
+        Ok(Self(document))
     }
 
-    pub fn runtime_context(&self) -> Option<&RuntimeContext> {
-        self.runtime_context.as_ref()
+    pub fn to_bytes(&self) -> Result<Vec<u8>> {
+        Ok(serde_json::to_vec_pretty(&self.0)?)
     }
 
-    pub fn from_input(exe: &Executable, runtime_ram: Option<&[u8]>) -> Result<Self> {
-        match runtime_ram {
-            Some(ram) => Self::from_runtime_ram(exe, ram),
-            None => Self::from_executable(exe),
+    pub(crate) fn from_capture(ram: &[u8]) -> Result<Self> {
+        let offset = crate::machine::executable::ram_offset(ADJACENT_RANGE.start, 86)?;
+        let adjacent_data = ram[offset..offset + 86].to_vec();
+        let document = Document {
+            schema: "bof3.audio-pitch-context/v1".into(),
+            ram_sha256: sha256_hex(ram),
+            adjacent_data_sha256: sha256_hex(&adjacent_data),
+            pitch_routine_sha256: ROUTINE_SHA256.into(),
+            pitch_table_sha256: US_PITCH_SHA256.into(),
+            adjacent_data,
+        };
+        Self::from_bytes(&serde_json::to_vec(&document)?)
+    }
+
+    pub(super) fn adjacent(&self) -> &[u8] {
+        &self.0.adjacent_data
+    }
+
+    pub(super) fn evidence(&self) -> RuntimeContext {
+        RuntimeContext {
+            ram_sha256: self.0.ram_sha256.clone(),
+            adjacent_data_sha256: self.0.adjacent_data_sha256.clone(),
+            pitch_routine_sha256: self.0.pitch_routine_sha256.clone(),
+            pitch_table_sha256: US_PITCH_SHA256,
+            scope: "isolated source-qualified pitch routine with a frozen supplied runtime gap; capture history, natural reachability, concurrent scheduling and PCM fidelity are unverified",
         }
     }
 }

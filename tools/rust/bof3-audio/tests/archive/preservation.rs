@@ -62,7 +62,7 @@ fn container_success_does_not_claim_runtime_or_semantic_acceptance() {
     let image = MediaImage::Xa(XaImage::from_bytes(stream()).unwrap());
     let report = Report::inspect("stream.str".into(), &image, None);
     use bof3_audio::verify::Status;
-    assert_eq!(report.schema, "bof3.audio-verification/v2");
+    assert_eq!(report.schema, "bof3.audio-verification/v3");
     assert_eq!(report.checks.structure.status, Status::Pass);
     for (_, check) in report.checks.categories().into_iter().skip(1) {
         assert_eq!(check.status, Status::MissingEvidence);

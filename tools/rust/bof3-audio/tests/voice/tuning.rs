@@ -80,7 +80,7 @@ fn calibrated_single_key_zones_retain_non_pitch_tone_parameters() {
 fn every_corpus_tone_key_executes_original_pitch_and_reports_sf2_error() {
     use bof3_audio::{
         catalog::model::AssetData, catalog::model::Catalog, machine::executable::Executable,
-        machine::profile::Profile, voice::tuning::LookupRegion, voice::tuning::Reference,
+        machine::profile::Profile, voice::tuning::LookupRegion,
     };
     use std::collections::{BTreeMap, BTreeSet};
     let exe =
@@ -88,7 +88,7 @@ fn every_corpus_tone_key_executes_original_pitch_and_reports_sf2_error() {
             .unwrap();
     let profile = Profile::identify(&exe).unwrap();
     let ram = exe.load_ram();
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     assert_eq!(reference.profile().exe_sha256, profile.exe_sha256);
     assert!(reference.pitch_register(128, 60, 0).is_err());
     for (key, expected) in [

@@ -177,7 +177,7 @@ fn verification_reports_truncation_even_when_all_compared_bytes_are_equal() {
         .unwrap();
     assert_eq!(output.status.code(), Some(1));
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(report["schema"], "bof3.audio-verification/v2");
+    assert_eq!(report["schema"], "bof3.audio-verification/v3");
     assert_eq!(report["checks"]["whole_file"]["status"], "pass");
     assert_eq!(report["checks"]["completeness"]["status"], "fail");
     assert_eq!(report["checks"]["rendering"]["status"], "missing_evidence");

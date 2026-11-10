@@ -174,7 +174,7 @@ fn corpus_stopped_note_approximation_preserves_all_constructible_bank_bytes() {
     use bof3_audio::{
         archive::MediaImage, catalog::loader, catalog::model::AssetData, catalog::model::Catalog,
         machine::adsr::Model, machine::adsr::Registers, machine::executable::Executable,
-        soundfont::envelope, soundfont::envelope::Probe, soundfont::gain, voice::tuning::Reference,
+        soundfont::envelope, soundfont::envelope::Probe, soundfont::gain,
     };
     use std::{
         collections::{BTreeMap, BTreeSet},
@@ -185,7 +185,7 @@ fn corpus_stopped_note_approximation_preserves_all_constructible_bank_bytes() {
     let exe =
         Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     let mut catalog = Catalog::read(Some(&root), &[]).unwrap();
     loader::resolve(
         &mut catalog,

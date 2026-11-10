@@ -181,8 +181,8 @@ fn validate_runtime(
         }
         return Ok(());
     }
-    let runtime = runtime
-        .ok_or("XA pack: --executable is required to validate recorded runtime/cue metadata")?;
+    let runtime =
+        runtime.ok_or("XA pack: --driver is required to validate recorded runtime/cue metadata")?;
     leaf(
         declared,
         &json!({"profile": runtime.profile.id, "executable_sha256": runtime.profile.exe_sha256, "selector": runtime.xa.selector}),

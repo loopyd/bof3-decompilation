@@ -4,7 +4,6 @@ use bof3_audio::{
     digest::sha256_hex, machine::bus::Bus, machine::bus::Ram, machine::bus::Width,
     machine::cpu::Cpu, machine::executable::Executable, machine::profile::Profile,
     machine::profile::US_PITCH_SHA256, soundfont::Zone, voice::tuning::LookupRegion,
-    voice::tuning::Reference,
 };
 
 fn input() -> (Executable, Profile) {
@@ -31,7 +30,7 @@ fn call(ram: &mut Ram, exe: &Executable, entry: u32, args: [u32; 4]) -> u32 {
 fn earlier_table_has_an_original_consumer_and_negative_reads_use_verified_table_bytes() {
     let (exe, profile) = input();
     let mut ram = Ram::from_executable(&exe);
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     for address in [profile.pitch_table, profile.spu_pitch_table] {
         let start = address as usize - 0x8000_0000;
         assert_eq!(
@@ -99,7 +98,7 @@ fn original_tick_mode_changes_an_adjacent_pitch_lookup_and_its_result() {
     ] {
         ram.write(address, width, value).unwrap();
     }
-    let row = Reference::from_executable(&exe)
+    let row = bof3_audio::machine::reference::tuning::from_executable(&exe)
         .unwrap()
         .key(0, 61, 16, 44100)
         .unwrap();

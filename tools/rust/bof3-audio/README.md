@@ -45,6 +45,13 @@ builds both and forwards arguments to Rust. `audio build OPERATION ...` remains 
 `audio package [OUT]` writes a deterministic source ZIP, defaulting to
 `out/bof3-audio-source.zip`; publication failures preserve an existing ZIP.
 
+`bin/harness setup --component audio` builds the Rust host and owned guest driver.
+`bin/harness doctor --component audio` validates the existing host and driver
+artifacts without building or requiring BIOS. Production operations are `index`,
+`query`, `map`, `extract`, `render`, `pack` and `verify`. Their driver option is
+`--driver DIRECTORY`. The separate `compile` development command retains its
+original executable input.
+
 ```sh
 bin/harness audio index --mode music --disc-root out/extracted --json
 bin/harness audio verify --mode audio --archive /path/to/archive.EMI --json
@@ -123,13 +130,13 @@ with zero targets to the original capacity and reports input and padding loss
 separately per channel. Longer input fails. Sector count, cue placement, history
 boundaries and overlapping-sector agreement still apply.
 
-Use `extract --kind xa_views --xa-history continuous --executable PSX_EXE`
+Use `extract --kind xa_views --xa-history continuous --driver DIRECTORY`
 to retain streams and verified cues in one XA root. Without `--id`, it exports
 both kinds; a qualified ID selects one view. Packing accepts both kinds in that
 root and publishes one STR only when overlapping views request identical sector
 bytes and retain their source-derived entry histories after merging. Update every
 selected view of an edited sector consistently. Mixed roots require continuous
-history and the executable during extraction and packing.
+history and the owned driver during extraction and packing.
 
 Bank and SoundFont sample packing reports include `loop_reconstruction` with
 original and output loop metadata and the applied policy. Unchanged samples use
@@ -139,7 +146,7 @@ repeat on every traversal. This can replace the original changing loop trajector
 encoding loss measures the supplied first-pass PCM. Removing a loop or editing a
 nonlooping sample uses `reencode_without_loop`.
 
-`verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
+`verify --json` writes `bof3.audio-verification/v3`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
 `reason` describing the evidence or limitation.
 
@@ -155,8 +162,9 @@ each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
 
 `byte_equality` retains comparison sizes and the first differing byte.
 `media_completeness` retains the known extent and missing-sector details.
-An optional `runtime_profile` identifies the executable, not the archive's asset
-bindings. Matching bytes do not override a completeness failure. Unknown media
+An optional `source_profile` records original US provenance supplied by the
+validated owned driver. It does not establish the archive's asset bindings.
+Matching bytes do not override a completeness failure. Unknown media
 and omitted comparisons report `missing_evidence`. Exit code 1 indicates a failed
 check; exit code 0 means no performed check failed and does not establish accepted
 playback. Invalid inputs fail before an evidence report is produced.
@@ -277,7 +285,7 @@ The 60 Hz functional tick cadence and guest idle do not establish native timing,
 the original audible endpoint or independent PCM agreement.
 
 PC rendering accepts the same archive/sequence with `--engine pc`,
-`--executable` and `--allow-approximations`, without BIOS or layout. It shares
+`--driver DIRECTORY` and `--allow-approximations`, without BIOS or layout. It shares
 music extraction's MIDI/SF2 translation, defaults to two infinite-loop traversals,
 retains the intro once and preserves finite loop counts. `--duration` instead
 expands enough loops for the requested body. PC MIDI/SoundFont input remains
@@ -286,15 +294,20 @@ repeated again. Explicit `--repeats` requests whole-file restarts only in that
 input mode. After the requested file plays, extra fixed-duration time advances
 the final synth state without restarting.
 
-For music extraction or PC rendering from an archive, add
-`--pitch-ram RAM_FILE` to use a frozen pitch context from an exact 2 MiB RAM
-image. The original pitch routine and both tables must match the supplied
-executable; only the 86-byte intervening gap is imported. Reports and song XML
-retain the context hashes. Repack these exports with
-`pack --mode music --pitch-ram RAM_FILE` and the same executable. Missing RAM
-or a different whole RAM hash fails. Without this option, adjacent-data pitch
-lookups remain rejected. This mode does not establish gameplay reachability
-or native audio fidelity.
+Music extraction, PC rendering from an archive and music packing accept
+`--pitch-context CONTEXT_JSON` with the owned driver. The
+`bof3.audio-pitch-context/v1` document contains the 86-byte intervening pitch-data
+gap and its source hashes. Production validates the document and imports only
+that gap; it does not load a full RAM image.
+
+The development [`context` example](examples/context.rs) converts a supported US
+executable and validated 2 MiB RAM image into this JSON. It checks the original
+pitch routine and both tables before writing the context. Reports and song XML
+retain the whole RAM, gap, routine and table hashes. Packing requires the matching
+context and regenerates the binding from preserved source bytes. Missing or
+different context evidence fails. Without this option, adjacent-data pitch
+lookups remain rejected. Capture history, gameplay reachability and native audio
+fidelity remain unverified.
 
 Add `--format ogg` to a supported render mode to publish `render.ogg` alongside the
 inspectable WAV and report. Vorbis uses the pinned Rust encoder at quality 0.7,

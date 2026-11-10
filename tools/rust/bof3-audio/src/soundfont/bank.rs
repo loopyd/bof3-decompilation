@@ -113,7 +113,7 @@ impl ToneContext {
             envelope,
             tuning,
             pitch_provenance: format!(
-                "{} SHA256={} entry={:#010x}; isolated original note-on routine, not full runtime{}",
+                "{} SHA256={} original entry={:#010x}; isolated source-qualified note-on routine, not full runtime{}",
                 reference.profile().target,
                 reference.profile().exe_sha256,
                 reference.profile().pitch_entry,

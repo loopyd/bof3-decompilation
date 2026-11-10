@@ -3,7 +3,7 @@
 use bof3_audio::{
     catalog::model::AssetData, catalog::model::Catalog, digest::sha256_hex, machine::bus::Bus,
     machine::bus::Width, machine::executable::Executable, machine::firmware::Image,
-    machine::output_clock, voice::tuning::KeyTuning, voice::tuning::Reference,
+    machine::output_clock, voice::tuning::KeyTuning,
 };
 use emi_ex_v2::image::ArchiveImage;
 use std::{
@@ -25,7 +25,7 @@ fn main() -> bof3_audio::Result<()> {
     let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
     let mut prepared =
         bof3_audio::machine::reference::prepare_music(&exe, firmware, &archive, None, 0)?;
-    let mut reference = Reference::from_executable(&exe)?;
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe)?;
     let profile = reference.profile().clone();
     let execution = &mut prepared.execution;
     let playback_frames = args

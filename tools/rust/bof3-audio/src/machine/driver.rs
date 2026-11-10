@@ -141,6 +141,10 @@ impl Image {
         Ok(image)
     }
 
+    pub(crate) fn evidence(&self) -> &Evidence {
+        &self.evidence
+    }
+
     pub fn symbol(&self, name: &str) -> Result<u32> {
         self.symbols
             .get(name)

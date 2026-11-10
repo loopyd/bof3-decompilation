@@ -5,6 +5,23 @@ emulator observations for the Rust audio runtime. Production audio rendering and
 comparison remain Rust. Source preparation or successful execution does not
 establish Rust parity, audio fidelity or complete hardware coverage.
 
+## Production audio setup
+
+```sh
+bin/harness setup --component audio
+bin/harness doctor --component audio
+```
+
+Setup builds the Rust host and owned guest driver under `out/audio/`.
+Doctor validates the existing host and driver artifacts, source mapping and
+isolated pitch readiness. It does not build, download or require BIOS.
+These checks do not establish playback fidelity.
+
+Production audio operations use `--driver DIRECTORY`; frozen tuning uses
+`--pitch-context CONTEXT_JSON`. Original EXE and RAM inputs belong to the
+development context converter and original-reference tools. The BIOS and
+PCSX-Redux instructions below support separate emulator observations.
+
 ## Build and inspect
 
 ```sh

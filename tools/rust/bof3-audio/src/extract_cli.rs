@@ -8,21 +8,21 @@ use std::{ffi::OsString, path::PathBuf};
 
 pub const HELP: &str =
     "\n extract --mode audio --kind bank (--disc-root DIR | --archive FILE...)\n\
-   --executable PSX_EXE --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]\n\
+   --driver DIRECTORY --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]\n\
  Writes one WAV/XML folder per selected bank and a root audio.xml manifest.\n\
  --type sfx selects source-qualified bank references; every sample in each bank is exported.\n\
  Default reference rate: 44100 Hz (SPU pitch 4096); unity note 60 is an export convention.\n\
  Full original EMI bytes are preserved inside each bank.xml. Output must not exist.\n\
  Unfiltered extraction also preserves supplied EMI files without audio assets in audio.xml.\n\
  XA: --kind xa_stream|xa_cue|xa_views --xa-arithmetic split-floor|combined-rounded\n\
-     --xa-history zero|continuous --output NEW_DIR [--id ID] [--executable PSX_EXE]\n\
- XA cues require the executable; streams can use it to retain known cue placement.\n\
- xa_views exports both kinds and requires the executable and continuous history.\n\
+     --xa-history zero|continuous --output NEW_DIR [--id ID] [--driver DIRECTORY]\n\
+ XA cues require the owned driver; streams can use it to retain known cue placement.\n\
+ xa_views exports both kinds and requires the owned driver and continuous history.\n\
  XA history is zero per asset or carried from preceding sectors of the selected coded stream.\n\
  XA uses its encoded rate. Game seek/reset history is unverified; known truncated STRs fail.\n\
- Music: --mode music [--kind song] --allow-approximations --executable PSX_EXE\n\
+ Music: --mode music [--kind song] --allow-approximations --driver DIRECTORY\n\
    (--disc-root DIR | --archive FILE...) --output NEW_DIR [--id SONG_ID] [--loops N]\n\
-   [--pitch-ram RAM_FILE] selects a frozen 2 MiB pitch context, retained for packing.\n\
+   [--pitch-context CONTEXT_JSON] supplies a frozen 86-byte pitch gap, retained for packing.\n\
  One SF2 and independent format-1 MIDI files per song; loops default to two traversals.\n\
  Full playback fidelity remains unverified. Vocal observations are exposed by index/query.\n";
 
@@ -31,8 +31,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut kind = None;
     let mut disc_root = None;
     let mut archives = Vec::new();
-    let mut executable = None;
-    let mut pitch_ram = None;
+    let mut driver = None;
+    let mut pitch_context = None;
     let mut output = None;
     let mut id = None;
     let mut role = None;
@@ -44,8 +44,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut loops = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
-            Some("--pitch-ram") if pitch_ram.is_none() => {
-                pitch_ram = Some(PathBuf::from(value(&mut args, "--pitch-ram")?));
+            Some("--executable" | "--bios" | "--pitch-ram") => return Err("removed original-input option; use --driver DIRECTORY and, for frozen tuning, --pitch-context JSON".into()),
+            Some("--pitch-context") if pitch_context.is_none() => {
+                pitch_context = Some(PathBuf::from(value(&mut args, "--pitch-context")?));
             }
             Some("--mode") if mode.is_none() => mode = Some(string(&mut args, "--mode")?),
             Some("--kind") if kind.is_none() => kind = Some(string(&mut args, "--kind")?),
@@ -53,8 +54,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                 disc_root = Some(PathBuf::from(value(&mut args, "--disc-root")?))
             }
             Some("--archive") => archives.push(PathBuf::from(value(&mut args, "--archive")?)),
-            Some("--executable") if executable.is_none() => {
-                executable = Some(PathBuf::from(value(&mut args, "--executable")?))
+            Some("--driver") if driver.is_none() => {
+                driver = Some(PathBuf::from(value(&mut args, "--driver")?))
             }
             Some("--output") if output.is_none() => {
                 output = Some(PathBuf::from(value(&mut args, "--output")?))
@@ -102,8 +103,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             _ => return Err("--type requires sfx or vocals".into()),
         }
     }
-    if pitch_ram.is_some() && mode.as_deref() != Some("music") {
-        return Err("extract: --pitch-ram requires --mode music".into());
+    if pitch_context.is_some() && mode.as_deref() != Some("music") {
+        return Err("extract: --pitch-context requires --mode music".into());
     }
     if mode.as_deref() == Some("music") {
         if kind.as_deref().is_some_and(|k| k != "song")
@@ -119,8 +120,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         let report = crate::music::extraction::songs(&crate::music::extraction::Options {
             disc_root,
             archives,
-            executable: executable.ok_or("music extract requires --executable")?,
-            pitch_ram,
+            driver: driver.ok_or("music extract requires --driver")?,
+            pitch_context,
             output: output.ok_or("music extract requires --output")?,
             id,
             loops: loops.unwrap_or(2),
@@ -158,7 +159,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         let report = crate::xa::extraction::extract(&crate::xa::extraction::Options {
             disc_root,
             archives,
-            executable,
+            driver,
             output: output.ok_or("extract requires --output")?,
             id,
             kind: match kind.as_deref() {
@@ -204,7 +205,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let report = extraction::banks(&Options {
         disc_root,
         archives,
-        executable: executable.ok_or("extract requires --executable")?,
+        driver: driver.ok_or("extract requires --driver")?,
         output: output.ok_or("extract requires --output")?,
         id,
         role,

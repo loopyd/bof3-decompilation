@@ -52,7 +52,7 @@ fn empty_presets_are_silent_source_preserving_and_reject_unrepresented_edits() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
+#[ignore = "requires BOF3_AUDIO_DRIVER, BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn original_runtime_and_pc_both_produce_silence_for_a_zero_tone_program() {
     use bof3_audio::{
         machine::{executable::Executable, firmware::Image},
@@ -97,11 +97,14 @@ fn original_runtime_and_pc_both_produce_silence_for_a_zero_tone_program() {
         )
         .unwrap();
         let pc = pc_archive::render(
-            &exe,
+            &bof3_audio::machine::driver::Image::read(&std::path::PathBuf::from(
+                std::env::var_os("BOF3_AUDIO_DRIVER").unwrap(),
+            ))
+            .unwrap(),
             "empty-program.emi",
             &archive,
             &pc_archive::Options {
-                pitch_ram: None,
+                pitch_context: None,
                 sequence: 0,
                 loops: None,
                 allow_approximations: true,

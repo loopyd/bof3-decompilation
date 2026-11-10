@@ -4,29 +4,30 @@ use std::{ffi::OsString, path::PathBuf};
 
 pub const HELP: &str = "
 Audio packing:
-  pack --mode audio --input FOLDER [--executable PSX_EXE] --output NEW_DIR [--json]
+  pack --mode audio --input FOLDER [--driver DIRECTORY] --output NEW_DIR [--json]
   Bank folders/roots and XA roots preserve unchanged EMI/STR bytes.
   Unfiltered bank roots also retain supplied EMI archives without audio assets.
   WAV edits must fit allocations; XA cues require compatible history boundaries.
   XA roots accept --xa-padding reject|zero (default reject) for shorter WAV input.
-  Executable required for banks and recorded XA runtime metadata.
+  Owned driver required for banks and recorded XA runtime metadata.
 Music packing:
-  pack --mode music --input FOLDER --executable PSX_EXE --output NEW_DIR [--pitch-ram RAM_FILE] [--json]
-  Context-backed exports require the same whole RAM image used for extraction.
+  pack --mode music --input FOLDER --driver DIRECTORY --output NEW_DIR [--pitch-context CONTEXT_JSON] [--json]
+  Context-backed exports require the same frozen pitch context used for extraction.
   Song folders/music roots support fixed-layout MIDI, SF2 PCM/loops and invertible tone gain/pan.
   Topology, tuning, envelope, timing/channel and inconsistent shared edits fail explicitly.
 ";
 
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
-    let (mut mode, mut input, mut executable, mut output) = (None, None, None, None);
+    let (mut mode, mut input, mut driver, mut output) = (None, None, None, None);
     let mut json = false;
     let mut padding = None;
-    let mut pitch_ram = None;
+    let mut pitch_context = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
-            Some("--pitch-ram") if pitch_ram.is_none() => {
-                pitch_ram = Some(PathBuf::from(
-                    args.next().ok_or("--pitch-ram needs a path")?,
+            Some("--executable" | "--bios" | "--pitch-ram") => return Err("removed original-input option; use --driver DIRECTORY and, for frozen tuning, --pitch-context JSON".into()),
+            Some("--pitch-context") if pitch_context.is_none() => {
+                pitch_context = Some(PathBuf::from(
+                    args.next().ok_or("--pitch-context needs a path")?,
                 ));
             }
             Some("--mode") if mode.is_none() => {
@@ -35,9 +36,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             Some("--input") if input.is_none() => {
                 input = Some(PathBuf::from(args.next().ok_or("--input needs a folder")?))
             }
-            Some("--executable") if executable.is_none() => {
-                executable = Some(PathBuf::from(
-                    args.next().ok_or("--executable needs a path")?,
+            Some("--driver") if driver.is_none() => {
+                driver = Some(PathBuf::from(
+                    args.next().ok_or("--driver needs a path")?,
                 ))
             }
             Some("--output") if output.is_none() => {
@@ -64,19 +65,18 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     let input = input.ok_or("--input is required")?;
     let output = output.ok_or("--output is required")?;
-    if pitch_ram.is_some() && mode != "music" {
-        return Err("pack: --pitch-ram requires --mode music".into());
+    if pitch_context.is_some() && mode != "music" {
+        return Err("pack: --pitch-context requires --mode music".into());
     }
     if mode == "music" {
         if padding.is_some() {
             return Err("pack: --xa-padding applies only to XA extraction roots".into());
         }
         let report = crate::music::packing::songs(&pack::Options {
-            pitch_ram,
+            pitch_context,
             input,
             output,
-            executable: executable
-                .ok_or("--executable is required for music metadata validation")?,
+            driver: driver.ok_or("--driver is required for music metadata validation")?,
         })?;
         if json {
             println!("{}", serde_json::to_string_pretty(&report)?);
@@ -114,7 +114,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         if matches!(root.attribute("kind")?, "xa_stream" | "xa_cue" | "xa_views") {
             let report = crate::xa::packing::assets(&crate::xa::packing::Options {
                 input,
-                executable,
+                driver,
                 output,
                 padding: padding.unwrap_or_default(),
             })?;
@@ -156,9 +156,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         return Err("pack: --xa-padding applies only to XA extraction roots".into());
     }
     let report = pack::banks(&pack::Options {
-        pitch_ram: None,
+        pitch_context: None,
         input,
-        executable: executable.ok_or("--executable is required for runtime metadata validation")?,
+        driver: driver.ok_or("--driver is required for runtime metadata validation")?,
         output,
     })?;
     if json {

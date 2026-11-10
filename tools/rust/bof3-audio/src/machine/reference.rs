@@ -4,6 +4,7 @@ use super::{
     profile::Profile, spu_reverb, spu_sample, spu_voice_ports::DisableModel,
 };
 pub mod mapping;
+pub mod tuning;
 use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 

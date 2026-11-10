@@ -1,5 +1,5 @@
-//! SF2 note-on tuning measured by executing the identified game's pitch routine.
-//! This isolates one original routine, not a full sound-runtime boot or PCM oracle.
+//! SF2 note-on tuning through the owned, source-qualified pitch routine.
+//! Isolated execution does not establish full runtime or PCM fidelity.
 
 use crate::{
     bank::Tone,
@@ -7,17 +7,17 @@ use crate::{
     machine::{
         bus::{Bus, BusError, Ram, Width},
         cpu::Cpu,
-        executable::Executable,
+        driver::Image,
         profile::Profile,
     },
     soundfont::Zone,
     Result,
 };
 use serde::Serialize;
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, ops::Range};
 
 mod context;
-pub use context::RuntimeContext;
+pub use context::{FrozenPitchContext, RuntimeContext};
 
 const TONE_CONTEXT: u32 = 0x8001_0000;
 const RETURN: u32 = 0x8000_1000;
@@ -25,13 +25,34 @@ const RETURN: u32 = 0x8000_1000;
 pub struct Reference {
     profile: Profile,
     ram: Ram,
-    load_address: u32,
-    text_size: usize,
+    bindings: Bindings,
     registers: BTreeMap<(u8, u8, u8), (u16, Lookup)>,
     runtime_context: Option<RuntimeContext>,
 }
 
-/// A witnessed halfword load, not an arithmetic prediction of the address.
+pub(crate) struct Bindings {
+    pub entry: u32,
+    pub tone_block: u32,
+    pub tone_index: u32,
+    pub tone_pointer: u32,
+    pub lookup_range: Range<u32>,
+    pub source_base: u32,
+    pub state: &'static str,
+}
+
+pub(crate) fn validate_tables(ram: &Ram, addresses: [u32; 2]) -> Result<()> {
+    for address in addresses {
+        let offset = crate::machine::executable::ram_offset(address, 386)?;
+        if sha256_hex(&ram.bytes()[offset..offset + 386])
+            != crate::machine::profile::US_PITCH_SHA256
+        {
+            return Err("tuning: verified pitch-table identity changed".into());
+        }
+    }
+    Ok(())
+}
+
+/// A witnessed halfword load translated into original-source coordinates.
 #[derive(Clone, Copy, Debug, Serialize)]
 pub struct Lookup {
     pub runtime_address: u32,
@@ -94,31 +115,67 @@ pub struct Parameters {
 }
 
 impl Reference {
-    pub fn from_executable(exe: &Executable) -> Result<Self> {
-        let profile = Profile::identify(exe)?;
-        let mut ram = Ram::from_executable(exe);
-        for address in [profile.pitch_table, profile.spu_pitch_table] {
-            let size = profile.pitch_table_entries * 2;
-            let offset = crate::machine::executable::ram_offset(address, size)?;
-            if sha256_hex(&ram.bytes()[offset..offset + size])
-                != crate::machine::profile::US_PITCH_SHA256
-            {
-                return Err("tuning: verified pitch-table identity changed".into());
-            }
+    pub fn from_driver(image: &Image, context: Option<&FrozenPitchContext>) -> Result<Self> {
+        let mut profile = Profile::us();
+        profile.bootstrap = "owned_driver_isolated_pitch_playback_unverified";
+        let mut ram = image.ram()?;
+        let earlier = image.data("audio_spu_pitch_table", 386)?;
+        let gap = image.data("audio_sequence_pitch_adjacent_data", 86)?;
+        let table = image.data("audio_sequence_pitch_table", 386)?;
+        if image.symbol("audio_spu_pitch_table_end")? != earlier + 386
+            || gap != earlier + 386
+            || table != gap + 86
+            || image.symbol("audio_sequence_pitch_suffix")? != table + 386
+        {
+            return Err("tuning: owned pitch tables have an invalid relative layout".into());
         }
-        // Select physical tone block 0 / tone 0 in the original pitch routine's
-        // globals. All other memory, including code/table bytes, is from the EXE.
-        ram.write(0x8018_e7df, Width::Byte, 0)?;
-        ram.write(0x8018_e7e4, Width::Byte, 0)?;
-        ram.write(0x8018_e25c, Width::Word, TONE_CONTEXT)?;
+        validate_tables(&ram, [earlier, table])?;
+        // This isolated numeric lookup must retain the source default, rather
+        // than consuming the live driver's relocated function pointer.
+        ram.write(gap + 0x42, Width::Word, 0x8016c548)?;
+        let bindings = Bindings {
+            entry: image.entry("audio_sequence_note_to_pitch")?,
+            tone_block: image.data("audio_sequence_selected_tone_block", 1)?,
+            tone_index: image.data("audio_sequence_allocation_mask", 24)? + 20,
+            tone_pointer: image.data("audio_sequence_selected_tones", 4)?,
+            lookup_range: earlier..table + 386,
+            source_base: profile.spu_pitch_table,
+            state: "isolated_owned_driver",
+        };
+        let mut reference = Self::new(profile, ram, bindings)?;
+        if let Some(context) = context {
+            reference.apply_context(context)?;
+        }
+        Ok(reference)
+    }
+
+    pub(crate) fn new(profile: Profile, mut ram: Ram, bindings: Bindings) -> Result<Self> {
+        ram.write(bindings.tone_block, Width::Byte, 0)?;
+        ram.write(bindings.tone_index, Width::Byte, 0)?;
+        ram.write(bindings.tone_pointer, Width::Word, TONE_CONTEXT)?;
         Ok(Self {
             profile,
             ram,
-            load_address: exe.header().load_address,
-            text_size: exe.header().text_size,
+            bindings,
             registers: BTreeMap::new(),
             runtime_context: None,
         })
+    }
+
+    pub(crate) fn apply_context(&mut self, context: &FrozenPitchContext) -> Result<()> {
+        let gap = self.bindings.lookup_range.start
+            + (context::ADJACENT_RANGE.start - self.bindings.source_base);
+        for (index, byte) in context.adjacent().iter().enumerate() {
+            self.ram
+                .write(gap + index as u32, Width::Byte, u32::from(*byte))?;
+        }
+        self.registers.clear();
+        self.runtime_context = Some(context.evidence());
+        Ok(())
+    }
+
+    pub fn runtime_context(&self) -> Option<&RuntimeContext> {
+        self.runtime_context.as_ref()
     }
 
     pub fn profile(&self) -> &Profile {
@@ -151,7 +208,7 @@ impl Reference {
             .write(TONE_CONTEXT + 4, Width::Byte, u32::from(center))?;
         self.ram
             .write(TONE_CONTEXT + 5, Width::Byte, u32::from(shift))?;
-        let mut cpu = Cpu::new(self.profile.pitch_entry);
+        let mut cpu = Cpu::new(self.bindings.entry);
         cpu.set_register(4, u32::from(key));
         cpu.set_register(5, 0);
         cpu.set_register(31, RETURN);
@@ -161,18 +218,25 @@ impl Reference {
             lookup: None,
         };
         cpu.run_until(&mut observed, RETURN, 100).map_err(|e| {
-            format!("tuning key={key} center={center} shift={shift}: original pitch execution failed: {e}")
+            format!("tuning key={key} center={center} shift={shift}: pitch execution failed: {e}")
         })?;
         let value = u16::try_from(cpu.register(2))
-            .map_err(|_| "tuning: original pitch return exceeds verified 16-bit contract")?;
+            .map_err(|_| "tuning: pitch return exceeds verified 16-bit contract")?;
         if observed.reads != 1 {
-            return Err("tuning: original routine must perform exactly one halfword lookup".into());
+            return Err("tuning: pitch routine must perform exactly one halfword lookup".into());
         }
         let (address, table_value) = observed.lookup.ok_or("tuning: missing lookup witness")?;
+        if address < self.bindings.lookup_range.start
+            || address
+                .checked_add(2)
+                .is_none_or(|end| end > self.bindings.lookup_range.end)
+        {
+            return Err("tuning: lookup is outside source-qualified pitch data".into());
+        }
+        let address = self.bindings.source_base + (address - self.bindings.lookup_range.start);
         let offset = address
-            .checked_sub(self.load_address)
-            .filter(|offset| (*offset as usize) + 2 <= self.text_size)
-            .ok_or("tuning: lookup is outside supplied executable data")?;
+            .checked_sub(0x80096800)
+            .ok_or("tuning: lookup precedes original source")?;
         let table_bytes = self.profile.pitch_table_entries as u32 * 2;
         let region = if (self.profile.pitch_table..self.profile.pitch_table + table_bytes)
             .contains(&address)
@@ -193,7 +257,7 @@ impl Reference {
             execution_state: if self.runtime_context.is_some() {
                 "frozen_runtime_gap"
             } else {
-                "isolated_executable"
+                self.bindings.state
             },
         };
         Ok((value, lookup))

@@ -1,8 +1,8 @@
 #[path = "support/music/mod.rs"]
 mod fixture;
 use bof3_audio::{
-    interchange::wave::Wave, machine::executable::Executable, pc_archive, pc_archive::Options,
-    pc_render, sequence::SequenceSet,
+    interchange::wave::Wave, machine::driver::Image, pc_archive, pc_archive::Options, pc_render,
+    sequence::SequenceSet,
 };
 use emi_ex_v2::image::ArchiveImage;
 use std::{
@@ -14,7 +14,7 @@ use std::{
 
 fn options(sequence: usize) -> Options {
     Options {
-        pitch_ram: None,
+        pitch_context: None,
         sequence,
         loops: None,
         allow_approximations: true,
@@ -24,8 +24,11 @@ fn options(sequence: usize) -> Options {
         },
     }
 }
-fn executable() -> Executable {
-    Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap()).unwrap()
+fn driver() -> Image {
+    Image::read(&PathBuf::from(
+        std::env::var_os("BOF3_AUDIO_DRIVER").unwrap(),
+    ))
+    .unwrap()
 }
 struct Directory(PathBuf);
 impl Directory {
@@ -72,7 +75,7 @@ fn invalid_controls_fail_before_media_reads_or_publication() {
         ),
         (
             vec!["--allow-approximations", "--bios", "absent"],
-            "unknown or duplicate render option",
+            "no longer accepts original-input options",
         ),
     ] {
         let r = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
@@ -86,7 +89,7 @@ fn invalid_controls_fail_before_media_reads_or_publication() {
                 "absent",
                 "--sequence",
                 "0",
-                "--executable",
+                "--driver",
                 "absent",
                 "--output",
             ])
@@ -105,9 +108,9 @@ fn invalid_controls_fail_before_media_reads_or_publication() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE"]
+#[ignore = "requires BOF3_AUDIO_DRIVER"]
 fn archive_defaults_match_export_once_and_sequences_are_independent() {
-    let exe = executable();
+    let exe = driver();
     let d = Directory::new();
     let image = ArchiveImage::from_bytes(fixture::synthetic_archive(false)).unwrap();
     let archive = d.0.join("source.emi");
@@ -115,8 +118,8 @@ fn archive_defaults_match_export_once_and_sequences_are_independent() {
     let exported = bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![archive.clone()],
-        pitch_ram: None,
-        executable: std::env::var_os("BOF3_AUDIO_EXE").unwrap().into(),
+        pitch_context: None,
+        driver: std::env::var_os("BOF3_AUDIO_DRIVER").unwrap().into(),
         output: d.0.join("export"),
         id: None,
         loops: 2,
@@ -169,9 +172,9 @@ fn with_intro(image: &ArchiveImage) -> ArchiveImage {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE"]
+#[ignore = "requires BOF3_AUDIO_DRIVER"]
 fn loops_keep_intro_once_and_fixed_duration_continues_without_file_restarts() {
-    let exe = executable();
+    let exe = driver();
     let image = with_intro(&ArchiveImage::from_bytes(fixture::synthetic_archive(false)).unwrap());
     let mut outputs = Vec::new();
     for loops in [1, 2, 3] {
@@ -218,7 +221,7 @@ fn loops_keep_intro_once_and_fixed_duration_continues_without_file_restarts() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE"]
+#[ignore = "requires BOF3_AUDIO_DRIVER"]
 fn cli_publishes_verified_wave_and_preserves_existing_output() {
     let d = Directory::new();
     let archive = d.0.join("source.emi");
@@ -228,8 +231,8 @@ fn cli_publishes_verified_wave_and_preserves_existing_output() {
         Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
             .args(["render", "--mode", "music", "--engine", "pc", "--archive"])
             .arg(&archive)
-            .arg("--executable")
-            .arg(std::env::var_os("BOF3_AUDIO_EXE").unwrap())
+            .arg("--driver")
+            .arg(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap())
             .args([
                 "--sequence",
                 "1",

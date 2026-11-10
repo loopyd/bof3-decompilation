@@ -20,7 +20,7 @@ CRATES = ("bof3-audio", "emi-ex")
 PACKAGE_ROOT = "bof3-audio"
 
 
-def build_binary() -> Path | None:
+def build_binary(root: Path | None = None) -> Path | None:
     """Build the host and owned guest driver with the project toolchains."""
     mise = shutil.which("mise")
     if mise is None:
@@ -29,7 +29,7 @@ def build_binary() -> Path | None:
             file=sys.stderr,
         )
         return None
-    root = repo_layout().root
+    root = root.resolve() if root is not None else repo_layout().root
     config = root / "tools/rust/bof3-audio/mise.toml"
     if not config.is_file():
         print(

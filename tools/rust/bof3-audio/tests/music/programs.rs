@@ -17,7 +17,7 @@ fn target(bytes: &mut [u8], preset: usize, instrument: u16) {
     bytes[at + 2..at + 4].copy_from_slice(&instrument.to_le_bytes());
 }
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
+#[ignore = "requires BOF3_AUDIO_DRIVER, BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn current_policy_population_publication_and_original_runtime_playback() {
     use bof3_audio::{
         bank::Bank,
@@ -35,14 +35,14 @@ fn current_policy_population_publication_and_original_runtime_playback() {
     let opts = pack::Options {
         input: root.0.join("export"),
         output: root.0.join("packed"),
-        pitch_ram: None,
-        executable: exe_path.clone(),
+        pitch_context: None,
+        driver: PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap()),
     };
     bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![archive_path],
-        pitch_ram: None,
-        executable: exe_path.clone(),
+        pitch_context: None,
+        driver: PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap()),
         output: opts.input.clone(),
         id: None,
         loops: 2,
@@ -81,8 +81,8 @@ fn current_policy_population_publication_and_original_runtime_playback() {
     let unchanged = pack::Options {
         output: root.0.join("unchanged"),
         input: opts.input.clone(),
-        pitch_ram: None,
-        executable: opts.executable.clone(),
+        pitch_context: None,
+        driver: opts.driver.clone(),
     };
     let report = bof3_audio::music::packing::songs(&unchanged).unwrap();
     assert!(report.archives[0].byte_equal);
@@ -169,11 +169,11 @@ fn current_policy_population_publication_and_original_runtime_playback() {
         .unwrap();
         assert_eq!(psx.wave.pcm.iter().any(|&v| v != 0), audible);
         let pc = pc_archive::render(
-            &executable,
+            &bof3_audio::machine::driver::Image::read(&opts.driver).unwrap(),
             "program-population.emi",
             &media,
             &pc_archive::Options {
-                pitch_ram: None,
+                pitch_context: None,
                 sequence: 0,
                 loops: None,
                 allow_approximations: true,

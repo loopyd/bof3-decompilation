@@ -9,8 +9,7 @@ use crate::{
     digest::sha256_hex,
     document::manifest,
     document::manifest::Element,
-    machine::executable::Executable,
-    machine::profile::Profile,
+    machine::driver::Image,
     publication::require_absent,
     publication::write_new,
     publication::Publication,
@@ -36,7 +35,7 @@ pub enum Padding {
 
 pub struct Options {
     pub input: PathBuf,
-    pub executable: Option<PathBuf>,
+    pub driver: Option<PathBuf>,
     pub output: PathBuf,
     pub padding: Padding,
 }
@@ -100,17 +99,13 @@ pub fn assets(options: &Options) -> Result<Report> {
         &[],
         &[],
     )?;
-    let executable = options
-        .executable
+    let driver = options
+        .driver
         .as_ref()
-        .map(|path| -> Result<_> {
-            let exe = Executable::from_bytes(fs::read(path)?)?;
-            Profile::identify(&exe)?;
-            Ok(exe)
-        })
+        .map(|path| -> Result<_> { Image::read(path) })
         .transpose()?;
-    if matches!(kind, "xa_cue" | "xa_views") && executable.is_none() {
-        return Err("XA pack: cue manifests require --executable".into());
+    if matches!(kind, "xa_cue" | "xa_views") && driver.is_none() {
+        return Err("XA pack: cue manifests require --driver".into());
     }
     let mut sources = BTreeMap::new();
     let mut paths = BTreeSet::new();
@@ -130,9 +125,9 @@ pub fn assets(options: &Options) -> Result<Report> {
         link.shape(&["id", "path"], &[], false)?;
         let path = manifest::relative_file(&root, &root, link.attribute("path")?)?;
         let node = manifest::read(&path)?;
-        if node.child("runtime")?.attributes.contains_key("profile") && executable.is_none() {
+        if node.child("runtime")?.attributes.contains_key("profile") && driver.is_none() {
             return Err(
-                "XA pack: --executable is required to validate recorded runtime metadata".into(),
+                "XA pack: --driver is required to validate recorded runtime metadata".into(),
             );
         }
         let id = node.attribute("id")?;
@@ -204,12 +199,12 @@ pub fn assets(options: &Options) -> Result<Report> {
         link.scalars(&json!({"id": source, "sha256": hash}), &[], &["path"])?;
         drop(snapshot);
         let mut catalog = Catalog::from_media(&source, MediaImage::Xa(image.clone()))?;
-        let runtime = executable
+        let runtime = driver
             .as_ref()
-            .map(|exe| {
+            .map(|image| {
                 loader::resolve(
                     &mut catalog,
-                    &crate::machine::reference::mapping::read(exe)?,
+                    &crate::catalog::mapping::Mapping::read(image)?,
                 )
             })
             .transpose()?;

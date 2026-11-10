@@ -31,8 +31,8 @@ fn options(input: &Path, output: &Path) -> pack::Options {
     pack::Options {
         input: input.into(),
         output: output.into(),
-        pitch_ram: None,
-        executable: std::env::var_os("BOF3_AUDIO_EXE")
+        pitch_context: None,
+        driver: std::env::var_os("BOF3_AUDIO_DRIVER")
             .map(PathBuf::from)
             .unwrap_or_else(|| PathBuf::from("missing-executable")),
     }
@@ -100,7 +100,7 @@ fn cli_rejects_unsupported_modes_and_repeated_arguments() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; full folder packing and failure publication"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; full folder packing and failure publication"]
 fn original_bank_folders_pack_standalone_and_as_root_with_verified_edits() {
     let directory = Directory::new();
     let corpus = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
@@ -122,7 +122,7 @@ fn original_bank_folders_pack_standalone_and_as_root_with_verified_edits() {
     extraction::banks(&extraction::Options {
         disc_root: Some(input.clone()),
         archives: vec![],
-        executable: opts.executable.clone(),
+        driver: opts.driver.clone(),
         output: export.clone(),
         id: None,
         role: None,
@@ -232,8 +232,8 @@ fn original_bank_folders_pack_standalone_and_as_root_with_verified_edits() {
     let result = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["pack", "--mode", "audio", "--input"])
         .arg(&opts.input)
-        .arg("--executable")
-        .arg(&opts.executable)
+        .arg("--driver")
+        .arg(&opts.driver)
         .arg("--output")
         .arg(&opts.output)
         .arg("--json")
@@ -252,7 +252,7 @@ fn original_bank_folders_pack_standalone_and_as_root_with_verified_edits() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; extracts and packs every original EMI with a bank"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; extracts and packs every original EMI with a bank"]
 fn entire_bank_corpus_round_trips_whole_emi_files() {
     let directory = Directory::new();
     let corpus = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
@@ -269,7 +269,7 @@ fn entire_bank_corpus_round_trips_whole_emi_files() {
         let extraction = extraction::banks(&extraction::Options {
             disc_root: None,
             archives: vec![corpus.join(&source.source)],
-            executable: opts.executable.clone(),
+            driver: opts.driver.clone(),
             output: export.clone(),
             id: None,
             role: None,
@@ -297,7 +297,7 @@ fn entire_bank_corpus_round_trips_whole_emi_files() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; shared-source edits and preservation conflicts"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; shared-source edits and preservation conflicts"]
 fn multiple_banks_merge_edits_but_reject_conflicting_preservation() {
     use bof3_audio::digest::sha256_hex;
     use emi_ex_v2::image::ArchiveImage;
@@ -333,7 +333,7 @@ fn multiple_banks_merge_edits_but_reject_conflicting_preservation() {
     extraction::banks(&extraction::Options {
         disc_root: None,
         archives: vec![source],
-        executable: opts.executable.clone(),
+        driver: opts.driver.clone(),
         output: export.clone(),
         id: None,
         role: None,

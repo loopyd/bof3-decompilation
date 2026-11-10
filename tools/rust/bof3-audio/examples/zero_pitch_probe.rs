@@ -9,7 +9,6 @@ use bof3_audio::{
     machine::spu_transfer::RAM_BYTES,
     soundfont::bank::Gain,
     soundfont::gain,
-    voice::tuning::Reference,
 };
 use std::{collections::BTreeMap, fs, path::PathBuf};
 
@@ -19,7 +18,7 @@ fn main() -> bof3_audio::Result<()> {
         return Err("usage: zero_pitch_probe US_EXE CORPUS_ROOT".into());
     }
     let exe = Executable::from_bytes(fs::read(&args[0])?)?;
-    let mut reference = Reference::from_executable(&exe)?;
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe)?;
     let root = PathBuf::from(&args[1]);
     let mut catalog = Catalog::read(Some(&root), &[])?;
     bof3_audio::catalog::loader::resolve(

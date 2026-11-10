@@ -249,22 +249,22 @@ file/channel/coding streams and independently selected verified game cues:
 ```sh
 bof3-audio extract --mode audio --kind xa_stream --archive FILE.STR \
   --xa-arithmetic combined-rounded --xa-history zero \
-  --output NEW_DIR [--executable SLUS_004.22]
+  --output NEW_DIR [--driver DIRECTORY]
 bof3-audio extract --mode audio --kind xa_cue --archive FILE.STR \
-  --executable SLUS_004.22 --xa-arithmetic split-floor --xa-history continuous \
+  --driver DIRECTORY --xa-arithmetic split-floor --xa-history continuous \
   --output NEW_DIR [--id ID]
 ```
 
 `--kind xa_views` exports streams and verified cues together. It requires the
-executable and `--xa-history continuous`; arithmetic remains explicit. Without
-`--id`, both asset kinds are selected. A qualified `--id` selects one stream or cue
+validated owned driver and `--xa-history continuous`. Arithmetic remains explicit.
+Without `--id`, both asset kinds are selected. A qualified `--id` selects one stream or cue
 view. Asset manifests retain their actual `xa_stream` or `xa_cue` kind, while the
 root names `xa_views`. Keep source snapshots when removing unneeded asset links
 from a root.
 
 Repeated archives and `--disc-root` are supported. `--id` uses the catalog's
 qualified identities or unambiguous numeric channel/cue IDs. Cues require the
-verified executable and recognized media. Streams can omit the executable;
+validated owned driver and recognized media. Streams can omit the driver;
 their cue placement then remains unresolved. Known truncated STR snapshots fail
 before publication, including snapshots whose remaining audio happens to be
 complete. Reports identify unrecognized extents and sources without selected
@@ -293,7 +293,7 @@ channel histories from the selected policy and preserved source, rejecting edite
 history values. Version 1 asset manifests must be regenerated. Keep the extraction root
 together; individual XA folders refer to its shared source snapshots.
 
-With executable evidence, asset manifests retain cue IDs, table addresses,
+With a validated owned driver, asset manifests retain cue IDs, table addresses,
 sector ranges/strides, WAV frame ranges, start positions and scheduler thresholds.
 Encoded extents and audible endpoints remain distinct: XML labels the latter
 unverified. Source snapshots are pinned to inventory hashes. The exporter shares
@@ -318,7 +318,7 @@ history and hardware playback remain unaccepted.
 
 ### Byte-identical VAB payload groups
 
-After the executable-backed loader resolves a single VB entry for a VH,
+After the owned-driver mapping resolves a single VB entry for a VH,
 [bank content comparison](../../../tools/rust/bof3-audio/src/catalog/content.rs)
 checks that all declared samples fit the body. It groups banks only when both
 VH and VB payload lengths and SHA-256 values match. The complete declared VB
@@ -948,8 +948,9 @@ sample reading, not those rejected contexts or arbitrary external SF2 semantics.
 
 [The sample inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/sample.rs)
 compares an edited SF2 against a fresh binding/export regenerated from preserved
-VAB bytes and the supported executable. The sample-only API accepts fixed-length
-PCM edits and shared-consistent nonlooping or continuous loops. It retains sample
+VAB bytes, the validated owned driver and the selected pitch context.
+The sample-only API accepts fixed-length PCM edits and shared-consistent
+nonlooping or continuous loops. It retains sample
 count, storage positions, allocations and instrument structure. Sample headers
 other than loop points, generator/modulator records other than sample mode,
 metadata, opaque chunks, terminals and padding must remain unchanged.
@@ -1045,10 +1046,11 @@ inverse may first reconstruct a separately validated contiguous key range. There
 is no nearest-pitch fallback. Sample-header pitch/rate, scale tuning,
 topology, modulators and unrelated generator records remain fixed.
 
-The bank API takes an optional original-executable `tuning::Reference`; a pitch
-edit requires it. Music-folder packing supplies its existing identified US
-reference. The inverse first re-executes original center/shift over the source
-key range to validate baseline semantics. It then searches all 256 center bytes
+The bank API takes an optional `tuning::Reference`; a pitch edit requires it.
+Music-folder packing constructs that reference from the validated owned driver
+and the selected frozen pitch context, when present. The inverse first
+re-executes original center/shift over the source key range to validate baseline
+semantics. It then searches all 256 center bytes
 and 32 distinct shift groups by executing the original pitch routine, including
 each candidate's actual table lookup. Reads outside both verified tables, zero steps and SF2
 tuning-range failures cannot become candidates.
@@ -1490,13 +1492,16 @@ and consumer evidence, not a completed archive round trip or game-audio oracle.
 ### SF2 note-on tuning calibration
 
 [The tuning reference](../../../tools/rust/bof3-audio/src/voice/tuning.rs) executes
-`exe/slus_004_22@0x80171B20` (full EXE offset `0xDBB20`) in private Rust-machine
-RAM loaded from the exact-hash executable. It selects tone block/tone zero through
-globals at `0x8018E7DF`, `0x8018E7E4`, `0x8018E25C` (file offsets `0xF87DF`,
-`0xF87E4`, `0xF825C`) and supplies a synthetic tone record at `0x80010000`.
-Each bounded call uses fine argument zero and runs original instructions through
-return; no pitch callee or lookup table is substituted. This is isolated note-on
-calibration, not a boot of the complete game audio runtime.
+the owned driver's relocated `audio_sequence_note_to_pitch` entry in private
+Rust-machine RAM. It obtains tone-selection globals and both verified pitch
+tables from driver symbols and supplies a synthetic tone record at `0x80010000`.
+The source entry is `exe/slus_004_22@0x80171B20`, full EXE offset `0xDBB20`.
+Original tone-selection globals are `0x8018E7DF`, `0x8018E7E4` and `0x8018E25C`,
+at file offsets `0xF87DF`, `0xF87E4` and `0xF825C`.
+These addresses, offsets and the source EXE hash identify provenance.
+Production does not load that executable. Each bounded call uses fine argument
+zero and executes through return. This is isolated note-on calibration, not a
+boot of the complete game audio runtime.
 
 The report retains the original 16-bit result, witnessed lookup address/value,
 declared-table index, unmodulated SPU step, chosen SF2 sample rate,
@@ -1511,7 +1516,7 @@ header pitch correction must be zero for this calibration contract.
 The original routine can wrap its result to zero or index before its declared
 193-entry table. Strict tuning rejects zero steps and excessive SF2 generator
 ranges. The default isolated reference also rejects reads outside both verified
-pitch tables. Explicit frozen RAM contexts can supply the intervening gap as
+pitch tables. Explicit frozen pitch contexts can supply the intervening gap as
 described below. No declared key is silently omitted. Readable adjacent EXE
 bytes alone do not establish initialized-game state.
 
@@ -1597,8 +1602,8 @@ claim. The full initializer still stops at unsupported BIOS `A0:72` after 4,550
 instructions in the current developer probe.
 
 [Pitch-context checks](../../../tools/rust/bof3-audio/tests/voice/context.rs)
-pin both consumers and this state-dependent counterexample. Tuning now witnesses
-the actual halfword read and records its runtime address, full EXE offset, value,
+pin both consumers and this state-dependent counterexample. The original-reference
+probe witnesses the actual halfword read and records its runtime address, full EXE offset, value,
 region and `isolated_executable` state. It requires exactly one such load; the
 table index is derived from that observed address rather than repeated host
 pitch arithmetic. The complete tone/key corpus splits into **219,016** note-on
@@ -1612,7 +1617,7 @@ key 22 in the same declared range reads adjacent `0x8018444C` (`0xEE44C`).
 The duplicate alone does not justify accepting this whole tone. Diagnostics
 include the witnessed lookup. Earlier-table reads are supported per key.
 Adjacent data remains rejected by the default isolated reference; accepting it
-requires an explicit frozen RAM context. All declared keys remain present.
+requires an explicit frozen pitch context. All declared keys remain present.
 This explicit context does not establish sequence reachability or scheduler
 behavior.
 
@@ -1624,21 +1629,24 @@ can produce an SF2 mapping; its signed index relative to the note-on table and
 actual address and region remain in the report. The default reference rejects
 the intervening gap. For example, BGM000 program 2/tone 0/key 0 maps register 81
 from `0x8018430C` at full EXE offset `0xEE30C`, but key 8 fails at adjacent
-address `0x8018440C` at `0xEE40C` without an explicit RAM context.
+address `0x8018440C` at `0xEE40C` without an explicit pitch context.
 
 Music extraction, PC rendering from a music archive and music packing accept
-`--pitch-ram RAM_FILE` alongside the original executable. The file must contain
-exactly 2 MiB of PSX RAM. Its 252-byte original pitch routine and both 386-byte
-pitch tables must match the executable. The reference imports only the 86-byte
-gap at `0x80184406..0x8018445C`; execution uses the original executable's code
-and tables.
+`--pitch-context CONTEXT_JSON` with the owned driver. The
+`bof3.audio-pitch-context/v1` document contains the 86-byte gap at
+`0x80184406..0x8018445C` and its source hashes. Production validates the document
+and imports only that gap; it does not load a full RAM image.
 
-This mode evaluates a frozen supplied context. Song reports and song XML record
-the whole RAM, gap, routine and table hashes. Per-tone provenance identifies the
-RAM and gap; each lookup records its address, value, region and execution state.
-Packing requires the same whole RAM hash and regenerates the binding from
-preserved source bytes. Missing or different RAM fails. Strict tuning still
-rejects zero steps. `--allow-approximations` permits known-context zero steps
+The development [`context` example](../../../tools/rust/bof3-audio/examples/context.rs)
+converts a supported US executable and validated 2 MiB RAM image into this JSON.
+It checks the 252-byte original pitch routine and both 386-byte tables before
+writing the context. Song reports and song XML retain the whole RAM, gap, routine
+and table hashes.
+Per-tone provenance identifies the RAM and gap; each lookup records its original
+address, value, region and execution state. Packing requires the matching
+context and regenerates the binding from preserved source bytes. Missing or
+different context evidence fails. Strict tuning still rejects zero steps.
+`--allow-approximations` permits known-context zero steps
 only with a zero held initial sample under the `Published` model and the documented key-on-only silence
 limitation. Capture history, natural reachability, concurrent scheduling and
 PCM fidelity remain unverified.
@@ -1745,7 +1753,7 @@ probes, sample termination and gain/pan/mixer behavior remain separate work.
 catalog/runtime associations, bank-to-SF2 binding and independent SEP translation:
 
 ```sh
-bof3-audio extract --mode music --archive BGM004.EMI --executable SLUS_004.22 \
+bof3-audio extract --mode music --archive BGM004.EMI --driver DIRECTORY \
   --output NEW_DIRECTORY --allow-approximations --json
 ```
 
@@ -1767,7 +1775,7 @@ evidence are escaped JSON text within named XML elements. Every song manifest
 also retains the complete source EMI, including unrelated entries and padding.
 The root `extract.json` uses `bof3.music-extract-report/v1`.
 
-The supported US executable supplies loader associations and isolated original
+The validated owned driver supplies loader associations and isolated original
 note-on pitch execution for every tone key. SoundFont construction preserves
 layers and shared samples, uses bank 0 plus explicit bank-128 percussion aliases,
 and rejects unsupported tone/sample/pitch contexts. The initial approximation
@@ -1827,11 +1835,11 @@ semantic music packing and full playback acceptance remain required.
 
 ### Music-folder packing
 
-`pack --mode music --input FOLDER --executable PSX_EXE --output NEW_DIR [--json]`
+`pack --mode music --input FOLDER --driver DIRECTORY --output NEW_DIR [--pitch-context CONTEXT_JSON] [--json]`
 accepts one `song.xml` folder or a `music.xml` extraction root.
-[The packer](../../../tools/rust/bof3-audio/src/music/packing.rs) needs the original
-supported executable but can reconstruct without the original EMI files: the
-complete archive is retained in each song manifest. Paths resolve under the input
+[The packer](../../../tools/rust/bof3-audio/src/music/packing.rs) uses the validated
+owned driver and selected pitch context. Each song manifest retains the complete
+archive, so packing does not need the original EMI files. Paths resolve under the input
 root; MIDI/SF2 references may be renamed. Duplicate manifest paths, duplicate song
 identities, duplicate MIDI paths, ambiguous root/folder manifests and disagreeing
 preserved copies of one source archive fail before publication.
@@ -1839,8 +1847,8 @@ preserved copies of one source archive fail before publication.
 [Shared preparation](../../../tools/rust/bof3-audio/src/music/document.rs) owns
 the exporter and packer's original-source bank binding, SoundFont construction,
 sequence translation and canonical song metadata. Packing regenerates these from
-the preserved archive, supported executable and declared positive loop limit;
-XML mapping claims cannot authorize an edit. The
+the preserved archive, validated owned driver, selected pitch context and declared
+positive loop limit. XML mapping claims cannot authorize an edit. The
 [manifest validator](../../../tools/rust/bof3-audio/src/music/manifest.rs) checks
 schema, runtime/export contexts, qualified identities, sequence headers, source
 hashes, generated setup counts, bank/program/tone/sample mappings and complete
@@ -1961,12 +1969,12 @@ BOF3-to-SF2 translation or PC/PSX differences.
 
 The [archive adapter](../../../tools/rust/bof3-audio/src/pc_archive.rs) shares
 canonical music preparation with extraction. It requires one song entry in the
-selected EMI, its supported US executable, an independent SEP index, and explicit
+selected EMI, the validated owned driver, an independent SEP index, and explicit
 acceptance of the same MIDI/SF2 approximations:
 
 ```sh
 bof3-audio render --mode music --engine pc --archive BGM004.EMI \
-  --executable SLUS_004.22 --sequence 0 --allow-approximations \
+  --driver DIRECTORY --sequence 0 --allow-approximations \
   --loops 2 --output new-render --json
 ```
 
@@ -1982,10 +1990,11 @@ The common release tail and output safety limit still apply.
 Only the selected sequence is translated and checked for playable presets;
 unsupported events in another independently selectable sequence cannot block it.
 Bank conversion still validates the complete bank. MIDI/SF2 inputs and whole-file
-`--repeats` form a separate input mode; BIOS and layout are PSX-only options.
-Archive output uses `bof3.audio.pc-archive-render/v1`, retaining source/executable
-hashes, qualified song/bank/sequence IDs, translation stop reason and mappings,
-expanded loop limit, approximations and the nested PC rendering report.
+`--repeats` form a separate input mode. Layout is a PSX-only option. Both engines
+reject BIOS input. Archive output uses `bof3.audio.pc-archive-render/v1`.
+It retains source hashes and the original EXE hash as provenance, qualified
+song/bank/sequence IDs, translation stop reason and mappings, expanded loop limit,
+approximations and the nested PC rendering report.
 
 [Archive rendering checks](../../../tools/rust/bof3-audio/tests/pc_archive.rs)
 compare PCM against extracted MIDI/SF2 played once, retain independent sequence
@@ -3583,14 +3592,14 @@ now records those differences; edited archive reconstruction remains unimplement
 
 ```sh
 bof3-audio extract --mode audio --kind bank --archive FILE.EMI \
-  --executable SLUS_004.22 --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]
+  --driver DIRECTORY --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]
 ```
 
 Use repeated `--archive` arguments or `--disc-root` for direct media input.
 Omitting `--id` selects every bank matching the optional role filter.
 Numeric selections must be unambiguous;
 qualified identities use the catalog's source and header-entry identity.
-The exact US executable profile supplies verified loader associations. A bank
+The validated owned driver supplies source-qualified loader associations. A bank
 needs one resolved body large enough for every declared sample; ambiguous or
 missing bodies fail before publication. `--type sfx` selects bank references
 under the [effects-role contract](#source-qualified-effects-references), retaining
@@ -3712,12 +3721,13 @@ an extraction root:
 
 ```sh
 bof3-audio pack --mode audio --input EXTRACTED_FOLDER \
-  --executable SLUS_004.22 --output NEW_DIRECTORY --json
+  --driver DIRECTORY --output NEW_DIRECTORY --json
 ```
 
-The supplied US executable validates runtime profile, slot layouts and song
-associations. Original EMI files are not needed: the catalog is reconstructed
-from XML preservation bytes. [Bank schema validation](../../../tools/rust/bof3-audio/src/bank/manifest.rs)
+The validated owned driver supplies the source profile, relocated slot layouts
+and song associations. The catalog is reconstructed from XML preservation bytes,
+so packing does not need the original EMI files.
+[Bank schema validation](../../../tools/rust/bof3-audio/src/bank/manifest.rs)
 checks identities, header/body selection, programs, tones, diagnostics, loader
 layouts, auxiliary/song links and export context against that catalog. Unknown,
 missing, duplicate or conflicting fields fail explicitly. Cue lists use the same
@@ -3791,14 +3801,14 @@ XA manifests use the separate path below.
 ### Rust XA manifest packing
 
 [`xa_pack`](../../../tools/rust/bof3-audio/src/xa/packing.rs) is selected by
-`pack --mode audio --input EXTRACTION_ROOT --output NEW_DIRECTORY [--executable
-SLUS_004.22] [--xa-padding reject|zero] [--json]` when `audio.xml` names
+`pack --mode audio --input EXTRACTION_ROOT --output NEW_DIRECTORY [--driver
+DIRECTORY] [--xa-padding reject|zero] [--json]` when `audio.xml` names
 `xa_stream`, `xa_cue` or `xa_views`. The root must
 retain its source snapshots; an isolated asset folder without that root is not a
-self-contained input. The executable is required for cue/mixed roots and any recorded
-runtime metadata. Mixed roots accept stream and cue asset manifests and require
-continuous selected-stream history for every view. Stream roots exported without runtime metadata can pack without
-an executable. Original STR paths need not exist.
+self-contained input. The owned driver is required for cue/mixed roots and any
+recorded runtime metadata. Mixed roots require continuous selected-stream history
+for every view. Stream roots exported without runtime metadata can pack without
+a driver. Original STR paths need not exist.
 
 Source manifests validate complete preserved bytes, hashes, extent status and
 sector counts. Known truncated extents fail; unrecognized extents remain explicitly
@@ -6160,8 +6170,8 @@ source controls and recorded model. Envelope edits use the existing
 field families and selection order described above. Attack, decay, sustain and
 release amounts may change only when a complete fitted tuple matches. Delay and
 hold stay fixed. Each range-changing instrument selects its own uniform fit.
-Pitch edits use the existing original-executable inverse over the validated output key range, retaining
-original center/shift provenance, candidate ranking and table-read restrictions.
+Pitch edits use the tuning inverse from the owned driver over the validated output
+key range, retaining original center/shift provenance, candidate ranking and table-read restrictions.
 Each selected row must match the complete ordered keys, sample-rate context and
 requested combined cents. Legal equivalent root/coarse/fine encodings are accepted
 only after their bounds and combined pitch match that forward-verified selection.
@@ -6254,7 +6264,7 @@ Original raw instrument-table prefixes and opaque terminal fields remain checked
 The `independent_instruments` report records the selected source, matching-source
 count, selected `key_min` and `key_max`, row hash before destination owner-word
 substitution, and reconstructed raw controls. `pitch_reference_sha256` identifies
-the executable used for a new source key range and is null for retained source
+the original source EXE for a new key range and is null for retained source
 keys. Isolated pitch-routine measurements do not establish initialized-game or
 native playback fidelity.
 

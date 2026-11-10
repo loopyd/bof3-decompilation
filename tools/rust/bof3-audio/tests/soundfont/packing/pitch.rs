@@ -85,7 +85,7 @@ fn original_pitch_inverts_layers_equivalent_encodings_and_rejects_nonrepresentab
     let exe =
         Executable::from_bytes(std::fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
             .unwrap();
-    let mut reference = Reference::from_executable(&exe).unwrap();
+    let mut reference = bof3_audio::machine::reference::tuning::from_executable(&exe).unwrap();
     let (mut header, body) = fixture::fixture();
     header.extend(b"opaque tail survives tuning edits");
     header[0x825] = 5;

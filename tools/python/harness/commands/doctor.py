@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import tempfile
 import tomllib
@@ -155,6 +156,27 @@ def _textures(root: Path) -> str:
     return diagnose(repo_layout(root))
 
 
+@register_check("audio", TASKS)
+def _audio(root: Path) -> str:
+    output = root / "out/audio"
+    binary = output / "release/bof3-audio"
+    result = subprocess.run(
+        [str(binary), "doctor", "--driver", str(output / "driver"), "--json"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode:
+        raise RuntimeError(
+            result.stderr.strip() or "owned audio artifact validation failed"
+        )
+    report = json.loads(result.stdout)
+    if report.get("schema") != "bof3.audio-doctor/v1":
+        raise ValueError("unexpected owned audio doctor report")
+    return f"owned mapping and pitch ready; image SHA256={report['driver']['image_sha256']}"
+
+
 def _managed_component(root: Path, component: str) -> str:
     return ", ".join(
         managed_lifecycle(repo_layout(root), verify_only=True, component=component)
@@ -164,7 +186,9 @@ def _managed_component(root: Path, component: str) -> str:
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     tasks = (
-        [Check("textures", _textures)]
+        [Check("audio", _audio)]
+        if args.component == "audio"
+        else [Check("textures", _textures)]
         if args.component == "textures"
         else TASKS
         if args.component == "all"
@@ -194,7 +218,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     parser.add_argument(
         "--component",
-        choices=("all", "psyqo", "rz-psxdec", "decomp-permuter", "textures"),
+        choices=("all", "psyqo", "rz-psxdec", "decomp-permuter", "textures", "audio"),
         default="all",
     )
     parser.set_defaults(handler=run)

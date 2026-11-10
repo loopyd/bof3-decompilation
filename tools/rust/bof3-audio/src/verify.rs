@@ -91,7 +91,7 @@ pub struct Report {
     pub entries_or_sectors: usize,
     pub checks: Checks,
     pub byte_equality: Option<ByteComparison>,
-    pub runtime_profile: Option<Profile>,
+    pub source_profile: Option<Profile>,
     pub media_completeness: Option<crate::xa::reference::Completeness>,
 }
 
@@ -137,7 +137,7 @@ impl Report {
             },
         };
         Self {
-            schema: "bof3.audio-verification/v2",
+            schema: "bof3.audio-verification/v3",
             source,
             container,
             bytes: image.bytes().len(),
@@ -150,7 +150,7 @@ impl Report {
                 },
                 identity: Check {
                     status: Status::MissingEvidence,
-                    reason: "Qualified asset bindings are not verified; an executable profile alone does not establish them.",
+                    reason: "Qualified asset bindings are not verified; a source profile alone does not establish them.",
                 },
                 completeness,
                 whole_file,
@@ -168,7 +168,7 @@ impl Report {
                 },
             },
             byte_equality,
-            runtime_profile: None,
+            source_profile: None,
             media_completeness,
         }
     }

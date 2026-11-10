@@ -64,7 +64,7 @@ fn options(directory: &Directory, archive: PathBuf) -> Options {
     Options {
         disc_root: None,
         archives: vec![archive],
-        executable: PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap()),
+        driver: PathBuf::from(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap()),
         output: directory.0.join("export"),
         id: None,
         role: None,
@@ -73,7 +73,7 @@ fn options(directory: &Directory, archive: PathBuf) -> Options {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE original US profile and Rust XML/RIFF consumer"]
+#[ignore = "requires BOF3_AUDIO_DRIVER original US profile and Rust XML/RIFF consumer"]
 fn bank_folder_preserves_archive_layers_loops_and_xml_path_characters() {
     let directory = Directory::new();
     let input = directory.0.join("a&<\"'\t\n.EMI");
@@ -104,8 +104,8 @@ fn bank_folder_preserves_archive_layers_loops_and_xml_path_characters() {
     let result = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["extract", "--mode", "audio", "--kind", "bank", "--archive"])
         .arg(&options.archives[0])
-        .arg("--executable")
-        .arg(&options.executable)
+        .arg("--driver")
+        .arg(&options.driver)
         .arg("--output")
         .arg(directory.0.join("cli-export"))
         .arg("--json")
@@ -122,7 +122,7 @@ fn bank_folder_preserves_archive_layers_loops_and_xml_path_characters() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE original US profile"]
+#[ignore = "requires BOF3_AUDIO_DRIVER original US profile"]
 fn invalid_samples_xml_and_ambiguous_ids_do_not_publish_or_leave_staging() {
     let directory = Directory::new();
     let first = directory.0.join("first.EMI");
@@ -158,7 +158,7 @@ fn invalid_surface_rate_and_existing_output_fail_before_media_access() {
     let mut options = Options {
         disc_root: None,
         archives: vec![],
-        executable: "missing".into(),
+        driver: "missing".into(),
         output: directory.0.clone(),
         id: None,
         role: None,
@@ -192,14 +192,14 @@ fn invalid_surface_rate_and_existing_output_fail_before_media_access() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_CORPUS and Rust XML/RIFF consumer"]
+#[ignore = "requires BOF3_AUDIO_DRIVER, BOF3_AUDIO_CORPUS and Rust XML/RIFF consumer"]
 fn all_original_banks_export_exact_archive_snapshots_and_independent_pcm_reference() {
     let directory = Directory::new();
     let root = PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
     let options = Options {
         disc_root: Some(root.clone()),
         archives: vec![],
-        executable: std::env::var_os("BOF3_AUDIO_EXE").unwrap().into(),
+        driver: std::env::var_os("BOF3_AUDIO_DRIVER").unwrap().into(),
         output: directory.0.join("corpus"),
         id: None,
         role: None,

@@ -3,7 +3,7 @@ use crate::{
     codec::vorbis,
     digest::sha256_hex,
     interchange::wave::Wave,
-    machine::{driver::Image, effects::Note, executable::Executable},
+    machine::{driver::Image, effects::Note},
     pc_archive,
     pc_render::{self, Options},
     psx_render,
@@ -18,9 +18,9 @@ pub const HELP: &str = "
   render --mode music --engine pc --midi FILE --soundfont FILE --output NEW_DIR
     [--sample-rate HZ] [--repeats N] [--duration SECONDS] [--tail SECONDS]
   [--timeout SECONDS] [--json]
-render --mode music --engine pc --archive EMI --executable PSX_EXE
+render --mode music --engine pc --archive EMI --driver DIRECTORY
   --sequence INDEX --allow-approximations --output NEW_DIR
-  [--duration SECONDS | --loops N] [--sample-rate HZ] [--tail SECONDS] [--pitch-ram RAM_FILE]
+  [--duration SECONDS | --loops N] [--sample-rate HZ] [--tail SECONDS] [--pitch-context CONTEXT_JSON]
   [--timeout SECONDS] [--json]
   render --mode music --engine psx --archive EMI --driver DIRECTORY
     --sequence INDEX --output NEW_DIR [--duration SECONDS | --loops N] [--layout 0|1|2]
@@ -53,7 +53,7 @@ PSX uses the verified US profile and explicit reference clocks at 44100 Hz.
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut engine) = (None, None);
     let (mut midi, mut font, mut output) = (None, None, None);
-    let (mut archive, mut executable, mut driver) = (None, None, None);
+    let (mut archive, mut driver) = (None, None);
     let (mut sequence, mut layout, mut loops) = (None, None, None);
     let (mut rate, mut repeats) = (None, None);
     let (mut duration, mut tail, mut timeout) = (None, None, None);
@@ -66,12 +66,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut track, mut toc, mut xa_cue) = (None, None, None);
     let mut json = false;
     let mut allow_approximations = false;
-    let mut pitch_ram = None;
+    let mut pitch_context = None;
     while let Some(arg) = args.next() {
         let flag = arg.to_str().ok_or("render option must be UTF-8")?;
         match flag {
-            "--pitch-ram" if pitch_ram.is_none() => {
-                pitch_ram = Some(PathBuf::from(value(&mut args, flag)?));
+            "--pitch-context" if pitch_context.is_none() => {
+                pitch_context = Some(PathBuf::from(value(&mut args, flag)?));
             }
             "--mode" if mode.is_none() => mode = Some(string(&mut args, flag)?),
             "--engine" if engine.is_none() => engine = Some(string(&mut args, flag)?),
@@ -81,9 +81,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "--archive" if archive.is_none() => {
                 archive = Some(PathBuf::from(value(&mut args, flag)?))
             }
-            "--executable" if executable.is_none() => {
-                executable = Some(PathBuf::from(value(&mut args, flag)?))
-            }
+            "--executable" | "--bios" | "--pitch-ram" => return Err("render no longer accepts original-input options; use --driver DIRECTORY and optional --pitch-context JSON".into()),
             "--driver" if driver.is_none() => driver = Some(PathBuf::from(value(&mut args, flag)?)),
             "--track" if track.is_none() => track = Some(PathBuf::from(value(&mut args, flag)?)),
             "--toc" if toc.is_none() => toc = Some(PathBuf::from(value(&mut args, flag)?)),
@@ -156,12 +154,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         return Err("render: --track, --toc and --cue require --mode xa".into());
     }
     let output = output.ok_or("render requires --output NEW_DIR")?;
-    if pitch_ram.is_some()
+    if pitch_context.is_some()
         && !(mode.as_deref() == Some("music")
             && engine.as_deref() == Some("pc")
             && archive.is_some())
     {
-        return Err("render: --pitch-ram requires a PC music archive input".into());
+        return Err("render: --pitch-context requires a PC music archive input".into());
     }
     publication::require_absent(&output)?;
     let rate = rate.unwrap_or(44100);
@@ -191,7 +189,6 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         if midi.is_some()
             || font.is_some()
             || archive.is_some()
-            || executable.is_some()
             || sequence.is_some()
             || layout.is_some()
             || loops.is_some()
@@ -231,7 +228,6 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     } else if sfx {
         if midi.is_some()
             || font.is_some()
-            || executable.is_some()
             || sequence.is_some()
             || loops.is_some()
             || repeats.is_some()
@@ -280,16 +276,11 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         let rendered = psx_render::render_effects(&image, &archive, &options)?;
         (rendered.wave, serde_json::to_value(rendered.report)?)
     } else if let (Some("pc"), Some(path)) = (engine.as_deref(), archive.as_ref()) {
-        if midi.is_some()
-            || font.is_some()
-            || driver.is_some()
-            || layout.is_some()
-            || repeats.is_some()
-        {
-            return Err("PC archive render accepts --loops or --duration; MIDI/SoundFont/--repeats are a separate input mode, driver/layout are PSX-only".into());
+        if midi.is_some() || font.is_some() || layout.is_some() || repeats.is_some() {
+            return Err("PC archive render accepts --loops or --duration; MIDI/SoundFont/--repeats are a separate input mode, layout is PSX-only".into());
         }
         let options = pc_archive::Options {
-            pitch_ram: pitch_ram.as_ref().map(std::fs::read).transpose()?,
+            pitch_context: pitch_context.as_ref().map(std::fs::read).transpose()?,
             sequence: sequence
                 .ok_or("PC archive render requires --sequence INDEX, qualified by --archive")?,
             loops,
@@ -303,15 +294,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             },
         };
         options.validate()?;
-        let executable = Executable::from_bytes(std::fs::read(
-            executable.ok_or("PC archive render requires --executable")?,
-        )?)?;
+        let driver = Image::read(&driver.ok_or("PC archive render requires --driver DIRECTORY")?)?;
         let image = ArchiveImage::from_bytes(std::fs::read(path)?)?;
-        let rendered = pc_archive::render(&executable, &path.to_string_lossy(), &image, &options)?;
+        let rendered = pc_archive::render(&driver, &path.to_string_lossy(), &image, &options)?;
         (rendered.wave, serde_json::to_value(rendered.report)?)
     } else if engine.as_deref() == Some("pc") {
-        if executable.is_some()
-            || driver.is_some()
+        if driver.is_some()
             || sequence.is_some()
             || layout.is_some()
             || loops.is_some()
@@ -353,9 +341,6 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             safety_frames,
         };
         options.validate()?;
-        if executable.is_some() {
-            return Err("PSX render no longer accepts --executable; use --driver DIRECTORY".into());
-        }
         let image = Image::read(&driver.ok_or("PSX render requires --driver DIRECTORY")?)?;
         let archive = ArchiveImage::from_bytes(std::fs::read(
             archive.ok_or("PSX render requires --archive")?,

@@ -44,8 +44,8 @@ fn options(root: &Path, name: &str) -> pack::Options {
     pack::Options {
         input: root.join("export"),
         output: root.join(name),
-        pitch_ram: None,
-        executable: std::env::var_os("BOF3_AUDIO_EXE")
+        pitch_context: None,
+        driver: std::env::var_os("BOF3_AUDIO_DRIVER")
             .map(PathBuf::from)
             .unwrap_or_else(|| "absent-executable".into()),
     }
@@ -61,8 +61,8 @@ fn extract(root: &Path, archive: &[u8]) -> PathBuf {
     bof3_audio::music::extraction::songs(&bof3_audio::music::extraction::Options {
         disc_root: None,
         archives: vec![source.clone()],
-        pitch_ram: None,
-        executable: opts.executable,
+        pitch_context: None,
+        driver: opts.driver,
         output: opts.input.clone(),
         id: None,
         loops: 2,
@@ -120,7 +120,7 @@ fn root_validation_and_cli_fail_without_publishing() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE; original executable with synthetic layered bank and two independent sequences"]
+#[ignore = "requires BOF3_AUDIO_DRIVER; original executable with synthetic layered bank and two independent sequences"]
 fn song_root_and_standalone_folder_pack_original_and_edited_sequences() {
     let d = Directory::new();
     let original = music_fixture::synthetic_archive(false);
@@ -186,8 +186,8 @@ fn song_root_and_standalone_folder_pack_original_and_edited_sequences() {
         .arg(&opts.input)
         .arg("--output")
         .arg(&opts.output)
-        .arg("--executable")
-        .arg(&opts.executable)
+        .arg("--driver")
+        .arg(&opts.driver)
         .arg("--json")
         .output()
         .unwrap();
@@ -276,7 +276,7 @@ fn song_root_and_standalone_folder_pack_original_and_edited_sequences() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE; conflicting manifests, unsupported edits and failed publication"]
+#[ignore = "requires BOF3_AUDIO_DRIVER; conflicting manifests, unsupported edits and failed publication"]
 fn conflicts_and_unsupported_edits_leave_no_output() {
     let d = Directory::new();
     let path = extract(&d.0, &music_fixture::synthetic_archive(false));
@@ -359,7 +359,7 @@ fn conflicts_and_unsupported_edits_leave_no_output() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_EXE; original BGM004 song root round trip"]
+#[ignore = "requires BOF3_AUDIO_CORPUS and BOF3_AUDIO_DRIVER; original BGM004 song root round trip"]
 fn original_song_archive_round_trips_without_source_media() {
     let d = Directory::new();
     let original = fs::read(
@@ -425,7 +425,7 @@ fn original_song_archive_round_trips_without_source_media() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_EXE; two songs sharing one bank and source preservation conflicts"]
+#[ignore = "requires BOF3_AUDIO_DRIVER; two songs sharing one bank and source preservation conflicts"]
 fn shared_bank_songs_merge_and_conflicting_archive_copies_fail() {
     let d = Directory::new();
     let (image, original) = assignment_music::fixture();
