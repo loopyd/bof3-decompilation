@@ -88,8 +88,9 @@ segments:
     - asm
     - func_801EF894
   - - 3368
-    - asm
-    - func_801EF928
+    - c
+    - decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c'
   - - 3696
     - asm
     - func_801EFA70

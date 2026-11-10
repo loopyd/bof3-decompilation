@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EF3B8
   - - 2368
-    - asm
-    - func_801EF540
+    - c
+    - publishPhaseFromWorkBytes9PlusBAdvanceWorkWord0CFromWord14ThenDriftWorkWords34And38BySevenTimesSampledTurnAdvanceWorkByte9AndByte2At16BmagicMagic04603_801EF540
+    - '@source: src/bof3/bmagic/publishPhaseFromWorkBytes9PlusBAdvanceWorkWord0CFromWord14ThenDriftWorkWords34And38BySevenTimesSampledTurnAdvanceWorkByte9AndByte2At16BmagicMagic04603_801EF540.c'
+    - '@behavior: Frame handler of the second stage of this overlay draw state machine, entry 1 of the three-entry code pointer table at 0x801EEC1C that func_801EF324 indexes by work byte 0x2. It reads the work object published at the scratchpad pointer cell 0x1F800044, forms a twelve-bit turn from work byte 0x9 plus work byte 0xB masked with 0x3F and shifted left six, publishes it as a halfword into the scratchpad cell 0x1F800002 and passes the same turn to the sampler at 0x801782FC, stores work word 0x0C as work word 0x14 advanced by that sample times 300 shifted right twelve, samples 0x801782FC again at the new word 0x0C and adds seven times the sample into work word 0x34, samples 0x801783C8 at that same turn and adds seven times its sample into work word 0x38, invokes the main-executable helper at 0x800AF764 with no arguments, calls the overlay draw routine at 0x801EF7E8 with no arguments, and then increments work byte 0x9 modulo 256 and, once that byte reaches 0x10, increments the dispatch byte 0x2 the table index reads. Takes no arguments and returns nothing.'
   - - 2656
     - asm
     - func_801EF660

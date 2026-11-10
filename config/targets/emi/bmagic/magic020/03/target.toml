@@ -14,6 +14,7 @@ support_sources = [
     "src/emi/bmagic/magic020/03/magic02003DispatchTables.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic02003_801EF874.c",
     "src/bof3/bmagic/addWorkColorTripletBy16ThenSetGlobalWorkByteBToFFAndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic02003_801EF7D0.c",
+    "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic02003_801EF720.c",
     "src/bof3/support/magic020_03_psyq.c",
 ]

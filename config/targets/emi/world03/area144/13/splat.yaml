@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801F3BAC
   - - 4216
-    - asm
-    - func_801F3C78
+    - c
+    - publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78
+    - '@source: src/bof3/world/publishWorkViewTripletAndViewModeThenRecomputeViewForMode3World03Area14413_801F3C78.c'
+    - '@behavior: Overlay handler word at 0x801F4910 of the local pointer run based at 0x801F48F4: publishes the scratchpad work record words 0x34, 0x38 and 0x3C into the shared view cells 0x80143F7C, 0x80143F80 and 0x80143F84, copies byte 4 of the record at 0x80148210 into the view-mode byte 0x80143FC0, sets the view-offset term byte 0x80143FC3 to 1 and calls the shared view routine at 0x801C5DFC with mode 3.'
   - - 4324
     - asm
     - func_801F3CE4

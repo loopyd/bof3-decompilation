@@ -8,6 +8,7 @@ splat = "config/targets/emi/bmagic/magic151/03/splat.yaml"
 load_address = 0x801EEC00
 sources = []
 support_sources = [
+    "src/bof3/bmagic/drawTranslucentJitteredLineRingAroundWorkWords34And38SteppingWorkWordCPhaseCountedByWorkByteATintedByWorkByte5dTimesTwelveBmagicMagic15103_801F0D0C.c",
     "src/bof3/bmagic/dispatchWorkByte2StepThenInvokeSharedHelperThenDrawTintedQuadTripleAndPopWhenWorkBytes2And0SetBmagicMagic15103_801F10E8.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenAdvanceWorkByte9AndWordCThenDrawShadePairAndPopWhenWorkBytes0And2SetBmagicMagic15103_801F0AC8.c",
     "src/bof3/bmagic/decrementWorkTintChannel5DWhenSetAndChannel5EThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannel5EIsZeroBmagicMagic15103_801F013C.c",

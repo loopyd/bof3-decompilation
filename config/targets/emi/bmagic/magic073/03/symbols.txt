@@ -1,5 +1,5 @@
 func_801EEC28 = 0x801EEC28;
-func_801EED18 = 0x801EED18;
+clearRecordPoolBytes0To2AndWorkBytes4AndBThenQueueSlotPerEligibleEnemyOrPartyBattlerClearByte1SetByte4ClaimOrdinalByte9AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic07303_801EED18 = 0x801EED18;
 func_801EEF50 = 0x801EEF50;
 dispatchStateByte1Table0668BmagicMagic07303_801EEFB0 = 0x801EEFB0;
 func_801EEFF4 = 0x801EEFF4;

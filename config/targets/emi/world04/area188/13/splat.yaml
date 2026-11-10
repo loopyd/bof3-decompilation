@@ -187,8 +187,10 @@ segments:
     - '@source: src/bof3/world/claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24.c'
     - '@behavior: Overlay record seed: asks the shared free-record selector 0x8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record of the shared table 0x80143FC8 occupied with record byte +0 = 1 and stores handler selector 0xB9 in record byte +5.'
   - - 8064
-    - asm
-    - func_801F4B80
+    - c
+    - dispatchSharedModeByteTable2C04World04Area18813_801F4B80
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World04Area18813_801F4B80.c'
+    - '@behavior: Steps the shared front-end mode byte 0x801448EC through this overlay area-entry sequence, selecting the arm from the 14-slot jump table the payload keeps at 0x801F2C04; modes 0, 1, 2, 10, 11, 12 and 13 have bodies and the remaining slots return untouched. Mode 0 queries the shared selector predicate 0x80166140 with 6 and advances to 10 when its masked answer is nonzero, else to 1. Mode 1 waits until the shared phase byte 0x80143BB0 differs from 2, requests master action 0x83 through 0x80150224, latches that phase byte to 2 and advances to 2. Mode 2 waits for the same phase difference and resets the shared state-entry tuple 0x801448EB, 0x801448EC and 0x801448ED before the shared front-end step 0x8015C058 runs. Mode 10 takes the same phase wait, requests action 0x82, latches the phase byte to 2, sets bit 0x69 of the shared main-RAM flag bank 0x80144F28 through the shared setter 0x8015B5F4 and advances to 11. Mode 11 waits for the phase difference and runs the shared helper 0x801BE1B0 with 6 before advancing to 12. Mode 12 waits for the shared byte 0x80146867 to read 0x28 and requests one of two front-selector contexts through 0x8019FA28 with action 0xBC: 0x80000 and 0x220000 as kind 0x88 when byte 0x801448ED is set, otherwise 0x330000 and 0x470000 as kind 0x87; it advances to 13. Mode 13 waits for 0x80146867 to read zero, runs 0x8015C058 and clears the same three state-entry bytes.'
   - - 8584
     - c
     - selectCrossedFrontSideStateWorld04Area18813_801F4D88

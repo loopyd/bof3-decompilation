@@ -1,7 +1,8 @@
 g_battle_work = 0x1F800044;
+pushUiRingTriple = 0x801DE8C0;
 func_801EEC28 = 0x801EEC28;
 func_801EED30 = 0x801EED30;
-func_801EEE78 = 0x801EEE78;
+pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78 = 0x801EEE78;
 func_801EEEDC = 0x801EEEDC;
 dispatchStateByte1TablefeecBmagicMagic05803_801EEF30 = 0x801EEF30;
 func_801EEF74 = 0x801EEF74;

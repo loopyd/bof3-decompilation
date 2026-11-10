@@ -17,7 +17,7 @@ subtractWorkColorTripletBy8ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs
 addWorkColorTripletBy16ThenSetGlobalWorkByteBToFFAndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic02003_801EF7D0 = 0x801EF7D0;
 invokeHelperBmagicMagic02003_801EF874 = 0x801EF874;
 func_801EF894 = 0x801EF894;
-func_801EF928 = 0x801EF928;
+decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic02003_801EF928 = 0x801EF928;
 func_801EFA70 = 0x801EFA70;
 invokeHelperBmagicMagic02003_801EFAD4 = 0x801EFAD4;
 func_801EFAF4 = 0x801EFAF4;

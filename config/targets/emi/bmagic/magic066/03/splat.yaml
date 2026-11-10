@@ -83,8 +83,10 @@ segments:
     - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8.c'
     - '@behavior: Runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x60, and only on that match re-reads the pointer cell at 0x1F800044 and increments the work-object byte at offset 0x2; takes no arguments and returns nothing.'
   - - 3376
-    - asm
-    - func_801EF930
+    - c
+    - add1ToWorkByte9AndInvokeHelperAt80BmagicMagic06603_801EF930
+    - '@source: src/bof3/bmagic/add1ToWorkByte9AndInvokeHelperAt80BmagicMagic06603_801EF930.c'
+    - '@behavior: Entry 2 of this overlay three-address work-byte-2 handler table based at 0x801F0080, so it runs while the work object byte 2 holds 2. It runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x80, and only on that match invokes the shared battle helper at 0x801E5988; takes no arguments and returns nothing.'
   - - 3460
     - asm
     - func_801EF984

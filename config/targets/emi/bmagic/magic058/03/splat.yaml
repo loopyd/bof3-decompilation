@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED30
   - - 632
-    - asm
-    - func_801EEE78
+    - c
+    - pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78
+    - '@source: src/bof3/bmagic/pushUiRingTripleThenAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05803_801EEE78.c'
+    - '@behavior: Overlay step body, word 1 of the nine-word step-handler table the payload header holds at 0x801EEC04 and the byte-2 step dispatcher reads, so no jal in this payload reaches it. It reads the scratchpad work-object pointer cell at 0x1F800044 once and tests the work object byte at offset 0x0B against zero with a branch on the loaded byte, so the arm runs only when that byte is zero. In the arm it calls the shared texture-handle lookup at 0x801502D0 with the colour index 0x14, pushes one UI ring triple (1, 0x3C, that handle) through the shared producer at 0x801DE8C0, re-reads the cell because the push may alias it, and increments the work byte at offset 0x1 by one at byte width. It keeps the return address at 0x10 in a 0x18-byte frame, takes no arguments and returns nothing.'
   - - 732
     - asm
     - func_801EEEDC

@@ -125,8 +125,10 @@ segments:
     - '@source: src/bof3/world/dispatchStateByte4Table567cWorld01Area04113_801F3E3C.c'
     - '@behavior: reads the state byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that index of the local handler table based at 0x801F567C.'
   - - 4736
-    - asm
-    - func_801F3E80
+    - c
+    - setWorkStepWord4000RunAccumulatorArmCountdown7EnterHandlerOneAndConsumeSharedCountdownWorld01Area04113_801F3E80
+    - '@source: src/bof3/world/setWorkStepWord4000RunAccumulatorArmCountdown7EnterHandlerOneAndConsumeSharedCountdownWorld01Area04113_801F3E80.c'
+    - '@behavior: stores 0x4000 into the work-record step word at 0x0C of the record published at the scratchpad pointer cell 0x1F800044, runs the shared accumulator step at 0x801F4118, arms the countdown byte at 0x0A with 7 and the state byte at 0x04 with 1, then consumes two units of the halfword at 0x122 of the record published through 0x80146250.'
   - - 4836
     - asm
     - func_801F3EE4
