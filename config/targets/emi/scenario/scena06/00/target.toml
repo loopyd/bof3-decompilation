@@ -52,6 +52,7 @@ support_sources = [
     "src/bof3/scenario/waitFlag27ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0DScenarioScena0600_801FDE34.c",
     "src/bof3/scenario/advanceCursorDepthOrResnapAndClearHandlerIndexScenarioScena0600_801FD748.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState17ScenarioScena0600_801FC718.c",
+    "src/bof3/scenario/waitFlag27ElseMainRamFlags5Or6ElseFlag2CThenClearProgressAndSharedStateBytesAndRequestPrimaryState0FSubstate1EOr5ScenarioScena0600_801FDEA4.c",
 ]
 psyq_source = "src/bof3/support/scena06_00_psyq.c"
 

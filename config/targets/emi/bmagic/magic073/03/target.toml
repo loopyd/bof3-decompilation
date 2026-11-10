@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07303_801EF3D4.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic07303_801F03E8.c",
     "src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768.c",
+    "src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64.c",
 ]
 psyq_source = "src/bof3/support/magic073_03_psyq.c"

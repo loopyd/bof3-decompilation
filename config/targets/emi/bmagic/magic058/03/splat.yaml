@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF3B0
   - - 2132
-    - asm
-    - func_801EF454
+    - c
+    - decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454.c'
+    - '@behavior: Overlay step body, word 6 of the nine-word step table the payload header holds at 0x801EEC04, dispatched between func_801EF338 and func_801EF5D4. It decrements work byte 0x09 and returns while the countdown is non-zero; when it reaches zero it seeds the work coordinate triplet from a battler action record selected by work byte 0x0B, taking the 0x140-byte party row at 0x80145EC4 while the slot is below 3 and the 0x118-byte enemy row at 0x801EB664 at slot minus three otherwise, and copies the row words 0, 4 and 8 into work words 0x34, 0x38 and 0x3C. It then sets work byte 0x0A to 0x10, the work words 0x0C and 0x18 to 0x10, and advances work byte 0x02 twice. Leaf with no frame.'
   - - 2516
     - asm
     - func_801EF5D4

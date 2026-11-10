@@ -72,8 +72,9 @@ segments:
     - add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358
     - '@source: src/bof3/bmagic/add4ToWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF358.c'
   - - 2000
-    - asm
-    - func_801EF3D0
+    - c
+    - dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF3D0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF3D0.c'
   - - 2180
     - c
     - copyWorkWordTripletAndClearByte9ThenAdvanceWorkByte2BmagicMagic04103_801EF484

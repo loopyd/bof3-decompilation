@@ -79,8 +79,9 @@ segments:
     - asm
     - func_801EF864
   - - 3684
-    - asm
-    - func_801EFA64
+    - c
+    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64
+    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64.c'
   - - 3860
     - asm
     - func_801EFB14

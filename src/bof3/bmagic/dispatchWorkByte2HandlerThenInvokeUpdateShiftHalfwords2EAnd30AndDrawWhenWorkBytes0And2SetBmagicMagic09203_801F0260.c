@@ -24,13 +24,16 @@ extern void (*D_801F07E8[])(void); /* @source 0x801F07E8 @kind data */
  * undefined_funcs_auto.txt row for that address binds it. */
 void func_800AF764(void);
 
-/* This overlay's own translucent textured draw pass at 0x801F04BC, still an asm
- * row in this target: it seeds a random primitive shade from rand, selects a
- * draw mode from GetGraphType, installs it with SetDrawMode on the primitive
- * cursor and emits semi-transparent primitives through SetSemiTrans, reading
- * the work record halfwords 0x2E and 0x30 as the position pair. This body is
- * its only in-image caller, and it takes no arguments and returns nothing. */
-void func_801F04BC(void);
+/* This overlay's own translucent Gouraud fan draw pass at 0x801F04BC, lifted
+ * exact as
+ * drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC:
+ * it seeds a random radius from rand, selects a draw mode from GetGraphType,
+ * installs it with SetDrawMode on the primitive cursor and emits eight
+ * semi-transparent triangles through SetSemiTrans, reading the work record
+ * halfwords 0x2E and 0x30 as the position pair. This body is its only in-image
+ * caller, and it takes no arguments and returns nothing. */
+void
+drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC(void);
 
 /* @source 0x801F0260
  * @behavior Entry 6 of the fifteen non-zero words of the in-image
@@ -46,7 +49,8 @@ void func_801F04BC(void);
  *   moves the unsigned halfword at offset 0x2E by minus 0x10 when the record
  *   byte at offset 0xB equals 1 and by plus 0x10 otherwise, subtracts 0xC from
  *   the unsigned halfword at offset 0x30 and then calls this overlay's draw pass
- *   func_801F04BC with the 0x30 store filling that call delay slot. The 0x18-byte
+ *   drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC with the 0x30 store filling that call delay
+ *   slot. The 0x18-byte
  *   frame keeps only the return address at 0x10 and the cell load precedes frame
  *   creation; the 0xC0-byte span takes no arguments and returns nothing through
  *   the jr $ra at 0x801F0318. Work bytes 0x0B and 0x00..0x04 and halfwords 0x2E
@@ -83,6 +87,6 @@ void dispatchWorkByte2HandlerThenInvokeUpdateShiftHalfwords2EAnd30AndDrawWhenWor
     y -= 0xC;
     *(u16 *)(shiftWork + 0x2E) = x;
     *(u16 *)(shiftWork + 0x30) = y;
-    func_801F04BC();
+    drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC();
   }
 }

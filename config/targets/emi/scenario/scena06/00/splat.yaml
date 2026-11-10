@@ -189,8 +189,22 @@ segments:
     - c
     - waitFlag27ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0DScenarioScena0600_801FDE34
   - - 29348
-    - asm
-    - func_801FDEA4
+    - c
+    - waitFlag27ElseMainRamFlags5Or6ElseFlag2CThenClearProgressAndSharedStateBytesAndRequestPrimaryState0FSubstate1EOr5ScenarioScena0600_801FDEA4
+    - '@source: src/bof3/scenario/waitFlag27ElseMainRamFlags5Or6ElseFlag2CThenClearProgressAndSharedStateBytesAndRequestPrimaryState0FSubstate1EOr5ScenarioScena0600_801FDEA4.c'
+    - '@behavior: Word 3 (0-based) of the 22-word code-pointer run at 0x801FE48C,
+      whose word is the only image mention of the address.
+      dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14 indexes the run
+      with the answer of func_801A7AD8 and calls the entry with jalr, so the
+      handler takes no arguments and answers 1. It probes shared flag 0x27 in
+      the scenario flag word D_8014686C; a zero answer runs the shared front-end
+      startup helper func_8015C088, clears the progress byte and the three
+      shared state bytes plus sub-state byte D_80146875, and joins the tail. A
+      non-zero answer probes flags 5 and 6 in the main-RAM flag bank at
+      0x80144F28, and either zero answer repeats that startup and clear run.
+      Otherwise flag 0x2C in D_8014686C decides between arming sub-state 0x1E
+      and arming sub-state 5 with the four cleared bytes. Every arm then stores
+      primary scene state 0x0F in D_80146874 and answers 1.'
   - - 29692
     - c
     - armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FDFFC

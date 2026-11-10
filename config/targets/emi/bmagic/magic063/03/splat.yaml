@@ -33,8 +33,9 @@ segments:
     - asm
     - func_801EEC18
   - - 248
-    - asm
-    - func_801EECF8
+    - c
+    - clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8.c'
   - - 740
     - asm
     - func_801EEEE4

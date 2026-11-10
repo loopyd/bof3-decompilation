@@ -20,6 +20,7 @@ support_sources = [
     "src/bof3/world/clearWorkTableByte0At800E4800World04Area18813_801F3DB4.c",
     "src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0.c",
     "src/bof3/world/claimWorkRecordEveryFourthTickThenArmWorkByte9AndAdvanceWorkByte1World04Area18813_801F364C.c",
+    "src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4.c",
     "src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World04Area18813_801F3598.c",
     "src/bof3/world/selectCrossedFrontSideStateWorld04Area18813_801F4D88.c",
     "src/bof3/world/claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24.c",

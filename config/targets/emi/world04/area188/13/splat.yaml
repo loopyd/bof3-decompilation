@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801F4394
   - - 6324
-    - asm
-    - func_801F44B4
+    - c
+    - drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4
+    - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4.c'
+    - '@behavior: Overlay effect draw pass: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor 0x8014598C, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table index 2, fills the 0x20-byte projection scratch at frame offset 0x18 through 0x801AFE18 and then walks the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0, drawing each entry through 0x801F40F4 and adding 0x10 to the unsigned halfword at entry byte 0x24.'
   - - 6504
     - asm
     - func_801F4568

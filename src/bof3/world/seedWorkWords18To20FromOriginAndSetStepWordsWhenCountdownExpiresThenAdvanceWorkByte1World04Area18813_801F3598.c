@@ -15,7 +15,7 @@ void claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0(void);
  * iterations of func_801F40F4 over the 0x2C-stride entries while advancing the
  * halfword at 0x800E48E4 by 0x10. 0x801F3E7C is the record pass over the
  * 0x800E4800 table that ticks and draws the active records. */
-void func_801F44B4(void);
+void drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4(void);
 void func_801F3E7C(void);
 
 /* @source 0x801F3598
@@ -86,7 +86,7 @@ void seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvance
   if ((tick & 3) == 0) {
     claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0();
   }
-  func_801F44B4();
+  drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4();
   func_801F3E7C();
   if (--D_1F800044[9] == 0) {
     work = D_1F800044;

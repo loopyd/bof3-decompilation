@@ -20,10 +20,12 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * carries the address. */
 extern void (*D_801F24FC[])(void); /* @source 0x801F24FC @kind data */
 
-/* Pushes the GTE matrix stack and installs the work-object transform. It stays
- * an asm boundary of this target, so it keeps its raw name and needs no
- * declaration header. */
-void func_801F1408(void);
+/* Pushes the GTE matrix stack and installs the work-object transform, with the
+ * rotation triplet third element set to a 0x400 quarter turn when work byte 0x08
+ * has bit 0 set. It is lifted beside this caller, so the declaration carries its
+ * evidenced name instead of a raw boundary spelling. */
+void projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic15103_801F1408(
+    void);
 
 /* Shaded four-vertex polygon drawer of this overlay: it sets the draw mode,
  * draws one semi-transparent SetPolyG4 primitive and rotates its vertices with
@@ -39,12 +41,13 @@ void func_801F14D0(s32 arg0, s32 arg1, s32 arg2);
  *           main-executable helper func_800AF764 is then called unconditionally.
  *           After it the cell is read again and only when the object byte at
  *           offset 0x2 and the byte at offset 0x0 are both non-zero does the body
- *           run: func_801F1408 pushes the GTE matrix stack and installs the
- *           object transform, then work byte 0xB is raised by four through its
- *           own cell read and func_801F14D0 draws one tinted polygon, the byte
- *           is raised by four again through another cell read before the second
- *           draw, lowered by eight through a fourth cell read before PopMatrix
- *           restores the matrix func_801F1408 pushed. The three draw calls pass
+ *           run: the work-object transform installer of this overlay pushes the
+ *           GTE matrix stack and installs the object transform, then work byte
+ *           0xB is raised by four through its own cell read and func_801F14D0
+ *           draws one tinted polygon, the byte is raised by four again through
+ *           another cell read before the second draw, lowered by eight through a
+ *           fourth cell read before PopMatrix restores the matrix that installer
+ *           pushed. The three draw calls pass
  *           the argument triples 0x20/0x20/0x7, 0x10/0x40/0xF and
  *           0x10/0x60/0x1F, and the tint byte returns to its entry value, so the
  *           ramp lasts for that triple only. Frame 0x18 with $ra only, because of
@@ -65,7 +68,7 @@ void dispatchWorkByte2StepThenInvokeSharedHelperThenDrawTintedQuadTripleAndPopWh
   func_800AF764();
   gate = g_battle_work;
   if (gate[2] != 0 && gate[0] != 0) {
-    func_801F1408();
+    projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic15103_801F1408();
     func_801F14D0(0x20, 0x20, 0x7);
     first_tint = g_battle_work;
     first_tint[0xB] += 4;

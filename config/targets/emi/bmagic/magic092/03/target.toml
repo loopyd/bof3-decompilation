@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeUpdateShiftHalfwords2EAnd30AndDrawWhenWorkBytes0And2SetBmagicMagic09203_801F0260.c",
     "src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkCountThenQueueSlotPerEligibleBattlerCopyTripletSetByte3StepByte9AndWorkPointerThenCopy15HalfwordsSettingBit15SetGlobalByte80145988AndAdvanceWorkByte1BmagicMagic09203_801EED04.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0.c",
+    "src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC.c",
 ]
 psyq_source = "src/bof3/support/magic092_03_psyq.c"

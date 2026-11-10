@@ -2,7 +2,7 @@
 
 typedef void (*Boss05516Handler)(void);
 
-void func_800C2ECC(void);
+void applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplate1840ThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C2ECC(void);
 void callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4(void);
 
 /* @source 0x800C2E74
@@ -29,7 +29,7 @@ void callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWor
  * @residual none
  */
 void dispatchStateByte2LocalPairBossBoss05516_800C2E74(void) {
-  Boss05516Handler handlers[2] = { func_800C2ECC, callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4 };
+  Boss05516Handler handlers[2] = { applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplate1840ThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C2ECC, callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4 };
 
   handlers[SPAD_PTR_SLOT(u8, 0x44u)[2]]();
 }

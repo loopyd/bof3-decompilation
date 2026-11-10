@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-func_801EECF8 = 0x801EECF8;
+clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8 = 0x801EECF8;
 func_801EEEE4 = 0x801EEEE4;
 dispatchStateByte1Table0400BmagicMagic06303_801EEF30 = 0x801EEF30;
 dispatchWorkByte2HandlerBmagicMagic06303_801EEF74 = 0x801EEF74;

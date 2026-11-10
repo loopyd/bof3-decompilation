@@ -22,6 +22,6 @@ func_801F0320 = 0x801F0320;
 func_801F038C = 0x801F038C;
 incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic09203_801F03DC = 0x801F03DC;
 decrementWorkByte9ThenDecrementGlobalWorkByteBAndClearWorkBytes0To4BmagicMagic09203_801F0420 = 0x801F0420;
-func_801F04BC = 0x801F04BC;
+drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC = 0x801F04BC;
 reserveFirstFreeRecordBmagicMagic09203_801F0758 = 0x801F0758;
 T_801F07BC = 0x801F07BC;
