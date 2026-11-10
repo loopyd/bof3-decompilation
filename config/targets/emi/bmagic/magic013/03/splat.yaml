@@ -73,8 +73,10 @@ segments:
     - asm
     - func_801EF484
   - - 2288
-    - asm
-    - func_801EF4F0
+    - c
+    - projectWorkObjectPositionAndInstallTransformWithWorkByte8SelectedAxisAndWorkByte9AngleBmagicMagic01303_801EF4F0
+    - '@source: src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithWorkByte8SelectedAxisAndWorkByte9AngleBmagicMagic01303_801EF4F0.c'
+    - '@behavior: Overlay transform installer that pushes the GTE matrix stack, reads the scratchpad work-object pointer cell 0x1F800044 and selects one of four rotation arms with unsigned work byte 0x8 - arm 0 zeroes rotation element 0 and sets element 1 to 0x1000 minus the angle, arm 1 zeroes element 1 and sets element 0 to the angle, arm 2 zeroes element 0 and sets element 1 to the angle, and arm 3 zeroes element 1 and sets element 0 to 0x1000 minus the angle, where the angle is work byte 0x9 shifted left by six. All arms fall through to a shared third rotation element of zero and a second read of the cell, then build the position triplet from work words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and from half the negation of the signed halfword 0x3E plus 0x20. RotTrans projects that triplet into the translation field of the 0x20-byte scratch matrix with a flag word beside it, RotMatrix turns the selected rotation triplet into the same matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish it. Takes no arguments, returns nothing, and the 0x50-byte frame keeps $ra at 0x4C and $s0 at 0x48 across the matrix calls.'
   - - 2632
     - asm
     - func_801EF648

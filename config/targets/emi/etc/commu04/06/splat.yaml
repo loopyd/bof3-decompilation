@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801D0D4C
   - - 1500
-    - asm
-    - func_801D11DC
+    - c
+    - drawSlidingPanelAndStartAction5FUnlessUiModeSet
+    - '@source: src/bof3/ui/drawSlidingPanelAndStartAction5FUnlessUiModeSet.c'
+    - '@behavior: Advances the panel step byte at 0x801D1774 while it is below 4, then paints one framed panel at that step through func_801AE3F0 (0x118 by 0x13 at x 0x14) and func_801AED54 (0x113 by 0xF at x 0x16), both at y 0x12 minus twelve times the step, and, while the shared UI work block head byte at 0x80148333 reads zero, begins one shared front-end frame/update slice through func_80158E50, starts action 0x5F, latches the shared frontend mode byte at 0x80143BB0 to 2 and advances the overlay step byte at 0x801F294C by one without returning a value. Word 5 of this overlay''s handler run based at 0x801D1758.'
   - - 1736
     - asm
     - func_801D12C8

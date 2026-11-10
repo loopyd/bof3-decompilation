@@ -78,8 +78,9 @@ segments:
     - asm
     - func_801EF6A4
   - - 2872
-    - asm
-    - func_801EF738
+    - c
+    - decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738
+    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoIncrementWorkByteAOnFrameParityThenDecrementGlobalWorkByteBAndClearWorkBytes0To4AtOneBmagicMagic14403_801EF738.c'
   - - 3096
     - asm
     - func_801EF818

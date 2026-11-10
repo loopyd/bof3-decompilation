@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/ui/initializeCommuUiAndArmStateByteUnlessFrontendMode2.c",
     "src/bof3/ui/initializeCommuUiState.c",
     "src/bof3/ui/startAction63AndSetFrontendMode2.c",
+    "src/bof3/ui/drawSlidingPanelAndStartAction5FUnlessUiModeSet.c",
     "src/bof3/support/commu04_06_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu04_06_psyq.c"

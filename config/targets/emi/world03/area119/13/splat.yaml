@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F3D90
   - - 4632
-    - asm
-    - func_801F3E18
+    - c
+    - incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18
+    - '@source: src/bof3/world/incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18.c'
+    - '@behavior: Third entry of the handler table based at 0x801F4634, which the byte-2 dispatcher dispatchStateByte2Table4634WorldWorld03Area11913_801F3D08 indexes with the work record state byte at offset 0x02; calls 0x801F3F04 with 7, then increments the record countdown byte at offset 0x09 and, once it reaches 0x1F, saturates it there and advances the record state byte at offset 0x02 to reach the 0x801F3E94 entry. Takes no arguments and returns nothing.'
   - - 4756
     - asm
     - func_801F3E94

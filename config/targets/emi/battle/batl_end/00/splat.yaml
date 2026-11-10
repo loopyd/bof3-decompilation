@@ -137,8 +137,10 @@ segments:
     - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F07C0.c'
     - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F09D4.'
   - - 7136
-    - asm
-    - func_801F07E0
+    - c
+    - drawBattlerExpListPanelBatlEnd00_801F07E0
+    - '@source: src/bof3/battle/drawBattlerExpListPanelBatlEnd00_801F07E0.c'
+    - '@behavior: Draws the battler experience list: each of the local battler count rows prints its battler name from the 0x140-byte work records at 0x80145E90 and the accumulated amount published through 0x80148648, advancing the row cursor by the list line height.'
   - - 7548
     - c
     - dispatchPanelStateLocalTableBatlEnd00_801F097C
