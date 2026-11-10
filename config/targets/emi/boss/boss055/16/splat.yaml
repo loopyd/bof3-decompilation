@@ -90,8 +90,10 @@ segments:
     - c
     - zeroResultBossBoss05516_800C24D8
   - - 3296
-    - asm
-    - func_800C24E0
+    - c
+    - refreshActivePartyRecordsThenSetStepByte0FAndInitModeTuple530BossBoss05516_800C24E0
+    - '@source: src/bof3/boss/refreshActivePartyRecordsThenSetStepByte0FAndInitModeTuple530BossBoss05516_800C24E0.c'
+    - '@behavior: Battle-hook step handler published into the shared hook slot 0x801463A4: while bit 0x2 of D_80146328 is set it refreshes the three 0x140-stride local work records at 0x80145E90, and per active record (byte +0x00 bit 0x1, tested through the record address it also publishes into scratchpad cell 0x1F800044) it clears the battler action flags with the record byte +0x05 index, reads the party-flag halfword +0x80 and calls func_8014D5F0 with 0x800F0800 and 0x1800 on the record byte +0x08 plus 0x1C when bit 0x4000 is set or plus 0x04 when it is clear; it then stores 0x0F into the step byte 0x80146875, runs initModeTuple530 and stamps 0xFF into 0x80145029, and with bit 0x2 clear it runs initModeTuple520 instead.'
   - - 3764
     - c
     - invokeZeroArgBossBoss05516_800C26B4

@@ -46,8 +46,10 @@ segments:
     - c
     - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30
   - - 876
-    - asm
-    - func_801F2F6C
+    - c
+    - toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C
+    - '@source: src/bof3/world/toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C.c'
+    - '@behavior: Overlay shade pass, entry 1 of the two-entry handler run at 0x801F4DF4: post-increments work byte 9 and, once its pre-increment value reaches 0x10, re-seeds the payload shade byte 0x801F68A0 from the byte table 0x801F4DF0 at the selector 0x801F689C, clears work byte 9 and clamps that selector back to 0; then opens the primitive cursor 0x8014598C as a draw-mode packet through SetDrawMode with dfe 0, dtd 1 and GetTPage(2, 2, 0x140, 0x140), reserves 0xC bytes at index 6 through 0x8014E5A0 and stamps a 0x24-byte POLY_G4 spanning (0, 0) to (0x140, 0x140) whose red bytes all carry the shade while green and blue stay clear, closing with SetSemiTrans and 0x8014E5A0(2, 0x24).'
   - - 1224
     - c
     - dispatchStateByte1Table4dfcWorld04Area18813_801F30C8

@@ -26,11 +26,14 @@ extern void (*D_801F07D8[])(void); /* @source 0x801F07D8 @kind data */
  * undefined_funcs_auto.txt row for that address binds it. */
 void func_800AF764(void);
 
-/* This overlay's own draw pass at 0x801EFB04, still an asm row in this target:
- * it selects a draw mode from GetGraphType, installs it with SetDrawMode on the
- * primitive cursor, links packets and emits clut- and tpage-sourced textured
- * quads through SetSemiTrans, GetClut and GetTPage. */
-void func_801EFB04(void);
+/* This overlay's own draw pass at 0x801EFB04, lifted exact in
+ * src/bof3/bmagic/drawTranslucentTexturedQuadBandOfFourQuadsPerRowSteppingSixTexelsFromRowFourToThirtyOneScaledByWorkByte9AndWorkByteABmagicMagic09203_801EFB04.c:
+ * one jal at 0x801EF8A8 is the only word of this payload that holds the
+ * address. It selects a draw mode from GetGraphType, installs it with
+ * SetDrawMode on the primitive cursor, links packets and emits clut- and
+ * tpage-sourced textured quads through SetSemiTrans, GetClut and GetTPage. */
+void drawTranslucentTexturedQuadBandOfFourQuadsPerRowSteppingSixTexelsFromRowFourToThirtyOneScaledByWorkByte9AndWorkByteABmagicMagic09203_801EFB04(
+    void);
 
 /* @source 0x801EF840
  * @behavior Dispatches one step of the overlay work handler and then updates and
@@ -41,7 +44,9 @@ void func_801EFB04(void);
  *   cell is then re-read and the record's bytes at offsets 0x0 and 0x2 are
  *   tested in that order, so only when both are non-zero does the arm run: it
  *   calls the shared main-executable update pass func_800AF764 and then this
- *   overlay's own draw pass func_801EFB04, both with no arguments. The cell is
+ *   overlay's own draw pass
+ *   drawTranslucentTexturedQuadBandOfFourQuadsPerRowSteppingSixTexelsFromRowFourToThirtyOneScaledByWorkByte9AndWorkByteABmagicMagic09203_801EFB04,
+ *   both with no arguments. The cell is
  *   re-read rather than kept live because the dispatched handler may republish
  *   it, which is why the original materialises it twice. The 0x18-byte frame
  *   only keeps $ra at 0x10, and the pointer-cell load is issued before frame
@@ -57,6 +62,6 @@ void dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicM
   D_801F07D8[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     func_800AF764();
-    func_801EFB04();
+    drawTranslucentTexturedQuadBandOfFourQuadsPerRowSteppingSixTexelsFromRowFourToThirtyOneScaledByWorkByte9AndWorkByteABmagicMagic09203_801EFB04();
   }
 }

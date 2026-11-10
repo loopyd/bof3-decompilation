@@ -9,7 +9,7 @@ seedWorkFromRecordCopyByte8AndWordTripletSetByteATo16AndWordCTo8ThenAdvanceWorkB
 func_801EF080 = 0x801EF080;
 func_801EF338 = 0x801EF338;
 dispatchStateByte1Tablefef0BmagicMagic05803_801EF36C = 0x801EF36C;
-func_801EF3B0 = 0x801EF3B0;
+dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0 = 0x801EF3B0;
 decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454 = 0x801EF454;
 func_801EF5D4 = 0x801EF5D4;
 func_801EF61C = 0x801EF61C;

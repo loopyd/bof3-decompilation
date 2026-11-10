@@ -1,6 +1,7 @@
+g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
 func_801EEC28 = 0x801EEC28;
-func_801EED28 = 0x801EED28;
+clearRecordPoolBytes0To2PublishRecordPoseClaimSlotClearByte1StoreWorkPointerSecondSlotWhen801462EAAndF029SetBit15On16HalfInvokeHelperAt100SetByteBAdvanceByte1BmagicMagic04603_801EED28 = 0x801EED28;
 func_801EEF10 = 0x801EEF10;
 dispatchStateByte1Tableff34BmagicMagic04603_801EEF70 = 0x801EEF70;
 dispatchWorkByte2HandlerBmagicMagic04603_801EEFB4 = 0x801EEFB4;

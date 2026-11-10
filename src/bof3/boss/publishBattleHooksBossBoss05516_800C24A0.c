@@ -5,7 +5,8 @@ typedef void (*Boss05516Handler)(void);
 /* Overlay entrypoints this installer publishes; the first returns void, the
  * second calls the main-program helper at 0x800AC844 with argument zero, and
  * the third is the overlay's zero-result accessor. */
-void func_800C24E0(void);
+void refreshActivePartyRecordsThenSetStepByte0FAndInitModeTuple530BossBoss05516_800C24E0(
+    void);
 void invokeZeroArgBossBoss05516_800C26B4(void);
 s32  zeroResultBossBoss05516_800C24D8(void);
 
@@ -31,7 +32,7 @@ extern Boss05516Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss05516_800C24A0(void) {
-  D_801463A4 = func_800C24E0;
+  D_801463A4 = refreshActivePartyRecordsThenSetStepByte0FAndInitModeTuple530BossBoss05516_800C24E0;
   D_801463A8 = invokeZeroArgBossBoss05516_800C26B4;
   D_801463AC = (Boss05516Handler)zeroResultBossBoss05516_800C24D8;
 }

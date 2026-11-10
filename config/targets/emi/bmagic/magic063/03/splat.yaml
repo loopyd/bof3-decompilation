@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994.c'
     - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F1054 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 3676
-    - asm
-    - func_801EFA5C
+    - c
+    - drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic06303_801EFA5C
+    - '@source: src/bof3/bmagic/drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic06303_801EFA5C.c'
+    - '@behavior: Battle-magic drawing step of the record published through the pointer cell at 0x801F1054; its jal sites at 0x801EF3EC and 0x801EFDE4 reach it inside an installed transform. It picks the draw-mode tpage 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, seeds SetDrawMode at g_PrimCursor with dfe 0 and dtd 1, links the 0xC-byte cell at the record words 0x10 and 0x14 with kind 2, publishes the products of record bytes 0x05, 0x06 and 0x07 with byte 0x09 into the scratchpad colour triplet at 0x1F80000A, and fills the scalar block at 0x1F800000 from the four halfword phase tables plus record byte 0x0B jittered by the 0x801F043C byte table, masked to four bits and shifted left eight. Four iterations each take a fresh g_PrimCursor primitive, seed it through 0x8017A97C, mark it semi-transparent, fill two vertices from the 0x801782FC and 0x801783C8 samples of the phase cells scaled by the radius cells and shifted right 12 with a shared z shifted right 7, project through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18, write the colour bytes in b/g/r order for the first vertex and r/g/b for the two later ones, and link the 0x1C-byte cell at the same record words.'
   - - 4476
     - asm
     - func_801EFD7C

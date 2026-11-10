@@ -17,7 +17,8 @@ extern u8 D_801F689C;
  * 0x9($v0); lui/lw of the same cell again, li 1, sb $v0,0x1($v1); li 0xF,
  * sb $v0,%lo(D_801F68A0); sb $zero,%lo(D_801F689C); jr $ra. 0x801F2F30 is
  * entry 0 of the payload handler pointer table at 0x801F4DF4, whose entry 1 is
- * func_801F2F6C: that handler steps work byte 9 up to 0x10, loads the byte at
+ * toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C:
+ * that handler steps work byte 9 up to 0x10, loads the byte at
  * 0x801F4DF0 indexed by 0x801F689C into 0x801F68A0 and copies 0x801F68A0 into
  * the red component of a POLY_G4 primitive, which is the shade/selector pair
  * written here.

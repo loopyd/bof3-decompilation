@@ -78,8 +78,10 @@ segments:
     - c
     - clearSlotCountersAndWorkByte9ThenIncrementWorkByte2BmagicMagic06603_801EF878
   - - 3272
-    - asm
-    - func_801EF8C8
+    - c
+    - runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8
+    - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic06603_801EF8C8.c'
+    - '@behavior: Runs the target-local slot-grid draw routine at 0x801EF984 through a 0x18-byte frame that keeps only the return address, then adds one to the scratchpad work-object byte at offset 0x9 modulo 256 and tests that truncated byte for equality with 0x60, and only on that match re-reads the pointer cell at 0x1F800044 and increments the work-object byte at offset 0x2; takes no arguments and returns nothing.'
   - - 3376
     - asm
     - func_801EF930

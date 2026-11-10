@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF52C
   - - 2744
-    - asm
-    - func_801EF6B8
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenInvokeHelperBmagicMagic07303_801EF6B8.c'
+    - '@behavior: Handler of the scratchpad work object, the sixth and last of the six code pointers in the run at 0x801EEC04 that the byte-2 dispatcher func_801EEFF4 copies into its own 0x30-byte frame and indexes with the work object unsigned byte 2, so it runs with no arguments; the word at 0x801EEC18 names this address and no jal in the payload does. It loads the work-object pointer cell at 0x1F800044 once before the 0x18-byte frame is created and tests work byte 0x0B for zero. Only when that byte is zero it loads the shared battle work record pointer at 0x801EB4E0 and decrements that record byte 0x0B at byte width, the stored value never tested, then re-reads the 0x1F800044 cell because the record store may alias the cell object and passes work byte 0x04 to the main-executable helper at 0x800A9820, and finally invokes the shared helper at 0x801E5988 with no arguments. The frame keeps only $ra at 0x10 and the body returns through the jr $ra at 0x801EF71C. The roles of work byte 0x0B, work byte 0x04 and record byte 0x0B are not established, so they stay offset-anchored.'
   - - 2852
     - c
     - dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724

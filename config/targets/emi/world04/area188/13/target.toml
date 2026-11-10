@@ -34,5 +34,6 @@ support_sources = [
     "src/bof3/world/queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54.c",
     "src/bof3/support/area188_13_psyq.c",
     "src/bof3/world/drawSemiTransFlatLineBetweenProjectedPointsTintedShadeWorld04Area18813_801F4568.c",
+    "src/bof3/world/toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

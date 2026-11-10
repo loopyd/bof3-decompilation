@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC28
   - - 296
-    - asm
-    - func_801EED28
+    - c
+    - clearRecordPoolBytes0To2PublishRecordPoseClaimSlotClearByte1StoreWorkPointerSecondSlotWhenGlobal801462EAAndEnemyByteF029Publish80145988SetBit15On16HalfwordsInvokeHelperAt100SetWorkByteBAdvanceWorkByte1BmagicMagic04603_801EED28
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2PublishRecordPoseClaimSlotClearByte1StoreWorkPointerSecondSlotWhenGlobal801462EAAndEnemyByteF029Publish80145988SetBit15On16HalfwordsInvokeHelperAt100SetWorkByteBAdvanceWorkByte1BmagicMagic04603_801EED28.c'
+    - '@behavior: Init stage 0 of this overlay, entry 0 of the two-word handler table the frame dispatcher func_801EEC28 builds on its own frame and calls through work byte 0x1 scaled by four. It clears bytes 0x00, 0x01 and 0x02 of all 48 records of the 0x78-byte-stride pool at 0x801EFF3C with one sb per byte from a masked byte counter, publishes record byte 0x08 and record words 0x34, 0x38 and 0x3C of the queued work record at the pointer cell 0x801EB4E0 into the scratchpad work object at the cell 0x1F800044, claims one entry of the queued action slot store through func_801E590C(1, 0x32) and writes its scaled index to clear slot byte 0x01 and store the work pointer in slot word 0x74, claims a second entry the same way when the shared main-RAM byte 0x801462EA is not zero and byte 0xF0 of the enemy work record at the cell 0x801EB4E8 equals 0x29, publishing slot byte 0x01 as 1 and the same work pointer, then publishes 1 into the shared main-RAM byte 0x80145988, copies the sixteen unsigned halfwords of the table at 0x80036C00 into the table at 0x8003AC00 with bit 15 set and restores entry 0 without it, invokes the main-executable helper func_8015D71C with 0x100, sets work byte 0x0B to 1 and increments work byte 0x1, the handler index this overlay dispatches on. Takes no arguments and returns nothing.'
   - - 784
     - asm
     - func_801EEF10

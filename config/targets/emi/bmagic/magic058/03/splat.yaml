@@ -64,8 +64,10 @@ segments:
     - dispatchStateByte1Tablefef0BmagicMagic05803_801EF36C
     - '@source: src/bof3/bmagic/magic05803DispatchTables.c'
   - - 1968
-    - asm
-    - func_801EF3B0
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05803_801EF3B0.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object and then draws the work record. The work-object pointer cell at 0x1F800044 is read before frame creation; its unsigned byte at offset 2 selects an entry of the three-entry code pointer run at 0x801EEC1C (0x801EF454, 0x801EF5D4, 0x801EF61C, the last three words of the nine-word run at 0x801EEC04), and that entry is invoked with no arguments. The three table words are copied into the frame first, so the call target is read back from the copy and the selector is not bounds-checked. After the handler returns the cell is re-read and, when the work object byte 0 is non-zero and its byte at offset 2 is non-zero, the project helper at 0x801EF69C runs, which pushes the matrix and installs the work object transform, the draw helper at 0x801EFA78 draws under it, and PopMatrix restores the matrix. It keeps the return address at 0x20 in a 0x28-byte frame, takes no arguments and returns nothing. The second word of the two-word run at 0x801EFEEC holds this address, so a data table in this payload names the span and no jal reaches it.'
   - - 2132
     - c
     - decrementWorkByte9ThenOnZeroSeedWorkCoordTripletByBattlerSlotSetByteATo16WordsCAnd18To16AdvanceWorkByte2TwiceBmagicMagic05803_801EF454
