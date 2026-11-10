@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EECB0
   - - 532
-    - asm
-    - func_801EEE14
+    - c
+    - decrementWorkByte9ThenSubmitRecordStoreEffectByte9AndAdvanceWorkByte1OnZeroBmagicMagic04103_801EEE14
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByte9AndAdvanceWorkByte1OnZeroBmagicMagic04103_801EEE14.c'
+    - '@behavior: Decrements the scratchpad work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it submits the battle record published at 0x8014638C through func_80196718, stores the low return byte of func_8019651C called with the 0/0/0 offsets and mode 1 back into work byte 0x9, then advances the work object state byte at offset 0x1. Reached through word 1 of the overlay pointer run at 0x801EEC04.'
   - - 692
     - c
     - incrementWorkByte9RecordCountersThenAdvanceWorkByteAAndWorkByte1WhenWorkByteAIs8BmagicMagic04103_801EEEB4

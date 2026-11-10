@@ -91,8 +91,10 @@ segments:
     - recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4
     - '@source: src/bof3/bmagic/recordWithinWorkPositionRadiusBmagicMagic05803_801EFDD4.c'
   - - 4664
-    - asm
-    - func_801EFE38
+    - c
+    - reserveFirstFreeRecordBmagicMagic05803_801EFE38
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05803_801EFE38.c'
+    - '@behavior: Reserves the first of the 36 records in the pool at 0x801EFEF4 whose flags byte has bit 0 clear, sets that bit and returns its index. Records have stride 0x78, so the pool spans 0x801EFEF4 to 0x801F0FD4, the byte table the reset clears after the pool. The original re-materializes the pool address for the flags load and again for the store, and returns 0xFF once all 36 records are occupied. The two callers at 0x801EF134 and 0x801EF24C mask the result to a byte and index the same pool with it to fill record bytes 0x1, 0x9 and 0xB, the sweep at 0x801EEC90 treats that same bit 0 as the in-use flag and the reset at 0x801EED40 clears bytes 0 through 2 of every record, so a zero-extended byte result is what they consume. Takes no arguments.'
   - - 4764
     - c
     - clearWorkBytesBmagicMagic05803_801EFE9C

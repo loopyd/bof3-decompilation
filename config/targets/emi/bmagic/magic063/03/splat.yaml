@@ -90,8 +90,10 @@ segments:
     - asm
     - func_801EF880
   - - 3476
-    - asm
-    - func_801EF994
+    - c
+    - projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994.c'
+    - '@behavior: Pushes the GTE matrix stack, reads the work record through the pointer cell at 0x801F1054 once, builds a zeroed translation triplet whose third element is record byte 0x03 shifted left seven minus the sum of record halfword 0x0E and 0x800 within 0x1000, and a rotation triplet whose first two elements are record words 0x10 and 0x14 shifted right nine and biased by minus 0x4000 and whose third element is half the negated record signed halfword 0x1A. It projects the rotation through RotTrans into a scratch matrix translation field, builds that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes it through SetRotMatrix and SetTransMatrix.'
   - - 3676
     - asm
     - func_801EFA5C

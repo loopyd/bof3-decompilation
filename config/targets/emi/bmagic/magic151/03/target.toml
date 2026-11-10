@@ -43,5 +43,6 @@ support_sources = [
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F01BC.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic15103_801F1408.c",
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusSixtyFourWideInSixtyFourStepsTintingOuterEdgeByWorkByte9TimesFifteenBmagicMagic15103_801F1E70.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

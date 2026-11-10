@@ -31,14 +31,14 @@ void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic0920
     void);
 
 /* This overlay's own draw pass at 0x801EF580: it picks a draw mode from
- * GetGraphType, installs it with SetDrawMode on the primitive cursor, refreshes
- * the scratchpad screen scale through func_801782FC and func_801783C8 and then
- * emits the work-record effect with SetSemiTrans, func_8017A97C and
- * RotTransPers3 under a second draw mode. Still an asm row in this target, so it
- * keeps its raw name; it draws under the matrix
+ * GetGraphType, installs it with SetDrawMode on the primitive cursor and emits
+ * a translucent radial fan of eight gouraud triangles around the origin at the
+ * fixed scratchpad radius 0x180, tinted by work byte 9, under a second draw
+ * mode. It draws under the matrix
  * projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
  * installed and does not pop it. */
-void func_801EF580(void);
+void drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580(
+    void);
 
 /* @source 0x801EF044
  * @behavior Dispatches one step of the overlay work handler: the work record is
@@ -50,7 +50,7 @@ void func_801EF580(void);
  *   when both are non-zero does the arm run: it installs the work record's
  *   transform with
  *   projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0,
- *   draws the effect with func_801EF580 and then
+ *   draws the effect with the eight-triangle fan at 0x801EF580 and then
  *   restores the GTE matrix stack with PopMatrix. The cell is re-read rather
  *   than kept live because the dispatched handler may republish it, which is
  *   why the original materialises it twice. The 0x18-byte frame only keeps $ra
@@ -68,7 +68,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
   D_801F07C0[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0();
-    func_801EF580();
+    drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580();
     PopMatrix();
   }
 }

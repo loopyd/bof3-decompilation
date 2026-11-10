@@ -83,8 +83,10 @@ segments:
     - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64
     - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenAdvanceByte2AtByte6LimitBmagicMagic07303_801EFA64.c'
   - - 3860
-    - asm
-    - func_801EFB14
+    - c
+    - advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07303_801EFB14
+    - '@source: src/bof3/bmagic/advanceRecordHalfwordCAndAccumulateSampleIntoHalfwords20And22ThenDecrementByte6EveryFourthFrameDecrementByte5ClearRecordAtZeroBmagicMagic07303_801EFB14.c'
+    - '@behavior: Step handler of this overlay stage walk, third of the three code pointers at 0x801EEC1C that the dispatcher at 0x801EF768 copies into its frame and indexes with work record byte 2. It increments the record halfword at 0xC, publishes its low six bits shifted left 6 into the scratchpad halfword at 0x1F800006, passes the same shifted value to 0x801782FC and adds that result scaled by 0x18 and shifted right 12 into the record halfword at 0x8 stored at 0x20, then adds record halfword 0xA into record halfword 0x22. Only when the shared frame counter at 0x80143E6C has its low two bits clear does it decrement record byte 6, and it always decrements record byte 5, where a zero countdown decrements shared record byte 0xB at 0x801EB4E0 and calls the record-clearing helper at 0x801F0454.'
   - - 4088
     - asm
     - func_801EFBF8

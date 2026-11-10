@@ -25,5 +25,6 @@ support_sources = [
     "src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkCountThenQueueSlotPerEligibleBattlerCopyTripletSetByte3StepByte9AndWorkPointerThenCopy15HalfwordsSettingBit15SetGlobalByte80145988AndAdvanceWorkByte1BmagicMagic09203_801EED04.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0.c",
     "src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithRandomRadiusTintedByWorkByte9TimesTenBmagicMagic09203_801F04BC.c",
+    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580.c",
 ]
 psyq_source = "src/bof3/support/magic092_03_psyq.c"

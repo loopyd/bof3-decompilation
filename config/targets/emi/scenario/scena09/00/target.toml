@@ -82,6 +82,7 @@ support_sources = [
     "src/bof3/scenario/waitFlags0C0E0DForParty5ThenRequestPrimaryState6Substate2Or3Or1EOr5ScenarioScena0900_801FD388.c",
     "src/bof3/scenario/waitFlags0D100FForParty5ThenRequestPrimaryState6Substate2Or3Or6ElseSetSharedByte3ScenarioScena0900_801FD7F4.c",
     "src/bof3/scenario/waitProgress15ThenSeedFrontSelectorContextsAndResetStateScenarioScena0900_801FAC88.c",
+    "src/bof3/scenario/waitFlags0E100FForParty5ThenRequestPrimaryState6Substate2Or3Or28Or5ScenarioScena0900_801FD498.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"
 

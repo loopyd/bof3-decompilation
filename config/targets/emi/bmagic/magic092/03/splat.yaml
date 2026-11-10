@@ -45,7 +45,7 @@ segments:
     - c
     - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044.c'
-    - '@behavior: Entry 0 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which the byte-1 dispatcher at 0x801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It dispatches one step on scratchpad work byte 2 through the handler-pointer word at 0x801F07C0, then, only when the reloaded work bytes 0 and 2 are both set, installs the work-record transform with projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0, draws the effect with func_801EF580 and restores the GTE matrix stack with PopMatrix. Frame 0x18 keeps $ra at 0x10; work bytes 0 and 2 stay offset-anchored.'
+    - '@behavior: Entry 0 of the fifteen non-zero words of the in-image handler-pointer run based at 0x801F07BC, which the byte-1 dispatcher at 0x801EF000 indexes with scratchpad work byte 1 scaled by four, so no jal names this body. It dispatches one step on scratchpad work byte 2 through the handler-pointer word at 0x801F07C0, then, only when the reloaded work bytes 0 and 2 are both set, installs the work-record transform with projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0, draws the effect with drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580 and restores the GTE matrix stack with PopMatrix. Frame 0x18 keeps $ra at 0x10; work bytes 0 and 2 stay offset-anchored.'
   - - 1228
     - c
     - decrementWorkByte9ThenClaimThreePoolRecordsSeedingSlotOrdinalAndWorkPointerInvokeHelperAt100AndAdvanceWorkByte2WhenZeroBmagicMagic09203_801EF0CC
@@ -65,8 +65,10 @@ segments:
     - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
     - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0.c'
   - - 2432
-    - asm
-    - func_801EF580
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadius384TintedByWorkByte9TimesEightCappedAt128BmagicMagic09203_801EF580.c'
+    - '@behavior: Translucent radial fan of eight gouraud triangles around the origin at the fixed scratchpad radius 0x180, drawn by the draw branch of dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic09203_801EF044 under the work-record transform. Two draw-mode selectors over GetGraphType, a 0xC-byte packet before and after, eight POLY_G3 triangles stepping 0x200 of the 0x1000 circle, tint from work byte 9 shifted left three and capped at 0x80.'
   - - 3068
     - c
     - dispatchStateByte1Table07d0BmagicMagic09203_801EF7FC

@@ -19,9 +19,13 @@ extern void (*workByte2HandlerTable[])(void); /* @source 0x801F250C @kind data *
 void projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0(
     void);
 
-/* Draws the first quad of the active work record through SetPolyG4,
- * SetSemiTrans and RotTransPers4. */
-void func_801F1E70(void);
+/* Draws the first quad ring of the active work record: sixty-four
+ * semi-transparent Gouraud quads between radius work word 0x14 and that radius
+ * plus 0x40 through SetPolyG4, SetSemiTrans and RotTransPers4, tinted by work
+ * byte 0x09 times fifteen on the outer edge. It is lifted beside this caller,
+ * so the declaration carries its evidenced name. */
+void drawTranslucentGouraudQuadRingAtWorkWord14RadiusSixtyFourWideInSixtyFourStepsTintingOuterEdgeByWorkByte9TimesFifteenBmagicMagic15103_801F1E70(
+    void);
 
 /* Draws the second quad of the active work record through the same calls with a
  * different vertex-colour seed. */
@@ -39,7 +43,10 @@ void func_801F2188(void);
  *           projectWorkObjectPositionAndInstallTransformWithZeroTranslation
  *           BmagicMagic15103_801F1DC0, which pushes the GTE matrix stack and
  *           installs the record's transform,
- *           then the two quad drawers func_801F1E70 and func_801F2188, then
+ *           then the two quad drawers
+ *           drawTranslucentGouraudQuadRingAtWorkWord14RadiusSixtyFourWide
+ *           InSixtyFourStepsTintingOuterEdgeByWorkByte9TimesFifteen
+ *           BmagicMagic15103_801F1E70 and func_801F2188, then
  *           PopMatrix, restoring the stack it pushed. Reads no other state,
  *           stores nothing directly and returns nothing; the 0x18-byte frame
  *           only keeps $ra across the calls. The range is one 0x90-byte
@@ -60,7 +67,7 @@ void dispatchWorkByte2HandlerThenDrawQuadPairAndPopWhenWorkBytes0And2SetBmagicMa
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[2] != 0) {
     projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0();
-    func_801F1E70();
+    drawTranslucentGouraudQuadRingAtWorkWord14RadiusSixtyFourWideInSixtyFourStepsTintingOuterEdgeByWorkByte9TimesFifteenBmagicMagic15103_801F1E70();
     func_801F2188();
     PopMatrix();
   }

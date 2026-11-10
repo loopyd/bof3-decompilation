@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/bmagic/stepWorkRecordAngleProjectPositionPairAddSixtyFourToAngleAndTwoToWorkByteBWhenGlobalWorkByte2IsThreeElseThirtyTwoAndOneThenCountDownWorkByte9DecrementGlobalWorkByteBAndClearRecordOnZeroBmagicMagic06303_801F0220.c",
     "src/bof3/bmagic/seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountingWorkByteBThenAdvanceWorkByte2BmagicMagic06303_801EF1C8.c",
     "src/bof3/bmagic/clearRecordPoolBytes0To2AndWorkBytesBAnd9ThenQueueSlotPerEligibleEnemyAndPartyBattlerClearByte1SetBattlerByte4AndWorkPointerCountWorkByteBAdvanceWorkByte1InvokeHelperAt100BmagicMagic06303_801EECF8.c",
+    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformBmagicMagic06303_801EF994.c",
 ]
 psyq_source = "src/bof3/support/magic063_03_psyq.c"

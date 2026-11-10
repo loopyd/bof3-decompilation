@@ -130,8 +130,10 @@ segments:
     - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4.c'
     - '@behavior: Overlay effect draw pass: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor 0x8014598C, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table index 2, fills the 0x20-byte projection scratch at frame offset 0x18 through 0x801AFE18 and then walks the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0, drawing each entry through 0x801F40F4 and adding 0x10 to the unsigned halfword at entry byte 0x24.'
   - - 6504
-    - asm
-    - func_801F4568
+    - c
+    - drawSemiTransFlatLineBetweenProjectedPointsTintedShadeWorld04Area18813_801F4568
+    - '@source: src/bof3/world/drawSemiTransFlatLineBetweenProjectedPointsTintedShadeWorld04Area18813_801F4568.c'
+    - '@behavior: Overlay line emitter: reads the shared primitive cursor 0x8014598C once, stamps it through 0x8017AA80 as a line packet and flags it semi-transparent through SetSemiTrans, projects the two points handed as its first two arguments through 0x801AFF04 into one four-byte stack pair and writes them as the packet halfwords at 0x08/0x0A and 0x0C/0x0E, fills the red and green bytes at 0x04 and 0x05 with the shade argument and clears the blue byte at 0x06, then appends 0x10 bytes at ordering-table index 2 through 0x8014E5A0.'
   - - 6680
     - c
     - setStatusFFFFAndStateEntry2BWhenGateClearWorld04Area18813_801F4618

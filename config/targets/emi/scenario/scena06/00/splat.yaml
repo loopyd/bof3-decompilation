@@ -72,8 +72,22 @@ segments:
     - asm
     - func_801FA3D0
   - - 15200
-    - asm
-    - func_801FA760
+    - c
+    - runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760.c'
+    - '@behavior: Word 10 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through seven states gated on
+      the shared front-end progress byte g_ScenarioProgress: state 0 arms
+      progress 1 and secondary state 1 unless the front-end phase byte
+      D_80143BB0 reads 2; state 1 opens the shared front-end transition for
+      selector 0x42; state 2 closes it once the transition predicate reports a
+      nonzero low byte and arms progress 9; state 3 releases the overlay and
+      clears the secondary and primary state bytes; state 5 arms progress
+      through func_801BE1B0 mode 8 and sets flag bit 0x24 of D_8014686C; state 6
+      releases the overlay, clears bytes 0x80146865 to 0x80146867 and clears the
+      secondary and primary state bytes.'
   - - 15596
     - asm
     - func_801FA8EC

@@ -194,8 +194,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2TableCopyBossBoss05516_800C2FFC.c'
     - '@behavior: Overlay step dispatch that copies the three payload handler words at 0x800C184C into its frame and calls the entry selected by the unsigned state byte at +2 of the work record published at scratchpad cell 0x1F800044.'
   - - 6236
-    - asm
-    - func_800C305C
+    - c
+    - applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplate1858ThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C305C
+    - '@source: src/bof3/boss/applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplate1858ThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C305C.c'
+    - '@behavior: Alternative step body and entry 0 of the three-word payload table at 0x800C184C (0x800C305C, 0x800C3134, 0x800C31F0) that dispatchStateByte2TableCopyBossBoss05516_800C2FFC copies into its frame and selects with the unsigned state byte +2 of the work record published at scratchpad pointer cell 0x1F800044: it copies the 10-byte step template at 0x800C1858 into its frame, applies main lookup record 0x318 through 0x8014DD3C, clears that work record at byte +0x48, byte +0x24 and word +0x3C, requests the template byte selected by the battle halfword 0x801463BE through 0x8014D6B8 without any guard on the shared battle work record at 0x801EB4E0, calls 0x801E30F8, 0x8014D4E0 and this overlay own work refresh 0x800C3284 in that order, and finally advances work byte +2 by one.'
   - - 6452
     - c
     - copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordAndAdvanceWorkByte2WhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C3134
