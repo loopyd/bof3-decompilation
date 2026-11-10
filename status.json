@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "d74e545ef700bdb1570291e55c5ae2ef435dd046",
-  "published_at": "2026-11-10T13:08:14.811553+00:00",
+  "revision": "5acd23ba801113947b86a239e21c2731cb939370",
+  "published_at": "2026-11-10T13:29:12.523471+00:00",
   "counts": {
-    "completed": 4933,
-    "partial": 264,
-    "unlifted": 5334,
+    "completed": 4942,
+    "partial": 265,
+    "unlifted": 5324,
     "invalid": 0,
     "total": 10531,
     "symbols": {
-      "named": 67408,
-      "raw": 56220,
+      "named": 67418,
+      "raw": 56210,
       "total": 123628
     }
   },
@@ -736,14 +736,14 @@
       "family": "bmagic",
       "archive": "magic067",
       "entry": "03",
-      "completed": 5,
+      "completed": 6,
       "partial": 0,
-      "unlifted": 24,
+      "unlifted": 23,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 164,
-        "raw": 148,
+        "named": 165,
+        "raw": 147,
         "total": 312
       }
     },
@@ -855,14 +855,14 @@
       "family": "bmagic",
       "archive": "magic074",
       "entry": "03",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 22,
       "symbols": {
-        "named": 162,
-        "raw": 143,
+        "named": 163,
+        "raw": 142,
         "total": 305
       }
     },
@@ -974,14 +974,14 @@
       "family": "bmagic",
       "archive": "magic082",
       "entry": "03",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 19,
+      "unlifted": 18,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 165,
-        "raw": 143,
+        "named": 166,
+        "raw": 142,
         "total": 308
       }
     },
@@ -1008,14 +1008,14 @@
       "family": "bmagic",
       "archive": "magic086",
       "entry": "03",
-      "completed": 10,
+      "completed": 11,
       "partial": 0,
-      "unlifted": 19,
+      "unlifted": 18,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 169,
-        "raw": 142,
+        "named": 170,
+        "raw": 141,
         "total": 311
       }
     },
@@ -1093,14 +1093,14 @@
       "family": "bmagic",
       "archive": "magic093",
       "entry": "03",
-      "completed": 8,
+      "completed": 9,
       "partial": 3,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 173,
-        "raw": 139,
+        "named": 174,
+        "raw": 138,
         "total": 312
       }
     },
@@ -1195,14 +1195,14 @@
       "family": "bmagic",
       "archive": "magic099",
       "entry": "03",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 24,
+      "unlifted": 23,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 163,
-        "raw": 147,
+        "named": 164,
+        "raw": 146,
         "total": 310
       }
     },
@@ -1229,14 +1229,14 @@
       "family": "bmagic",
       "archive": "magic101",
       "entry": "03",
-      "completed": 2,
+      "completed": 3,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 161,
-        "raw": 139,
+        "named": 162,
+        "raw": 138,
         "total": 300
       }
     },
@@ -1620,14 +1620,14 @@
       "family": "bmagic",
       "archive": "magic126",
       "entry": "03",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 29,
+      "unlifted": 28,
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 165,
-        "raw": 154,
+        "named": 166,
+        "raw": 153,
         "total": 319
       }
     },
@@ -1756,14 +1756,14 @@
       "family": "bmagic",
       "archive": "magic144",
       "entry": "03",
-      "completed": 12,
+      "completed": 13,
       "partial": 0,
-      "unlifted": 13,
+      "unlifted": 12,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 172,
-        "raw": 136,
+        "named": 173,
+        "raw": 135,
         "total": 308
       }
     },
@@ -5854,13 +5854,13 @@
       "archive": "area143",
       "entry": "13",
       "completed": 16,
-      "partial": 0,
-      "unlifted": 20,
+      "partial": 1,
+      "unlifted": 19,
       "invalid": 0,
       "total": 36,
       "symbols": {
-        "named": 176,
-        "raw": 146,
+        "named": 177,
+        "raw": 145,
         "total": 322
       }
     },
