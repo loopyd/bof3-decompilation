@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF4C8
   - - 2560
-    - asm
-    - func_801EF600
+    - c
+    - projectWorkPositionPairFromByte9AndByteAAtByte4AngleThenAdvanceAt16BmagicMagic09303_801EF600
+    # @source 0x801EF600
+    # @behavior Project work position pair from byte-derived radius and angle; advance byte 2 at byte 9 = 16.
   - - 2832
     - asm
     - func_801EF710

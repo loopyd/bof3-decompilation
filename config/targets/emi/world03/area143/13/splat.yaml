@@ -112,8 +112,10 @@ segments:
     - c
     - requestFrontSelectorContextWorld03Area14313_801F3C10
   - - 4160
-    - asm
-    - func_801F3C40
+    - c
+    - clearWorkByte48ThenSubmitRecordWorld03Area14313_801F3C40
+    # @source 0x801F3C40
+    # @behavior Clears work byte 0x48 and submits the reloaded work record.
   - - 4212
     - asm
     - func_801F3C74

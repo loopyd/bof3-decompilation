@@ -120,8 +120,10 @@ segments:
     - asm
     - func_801F385C
   - - 3340
-    - asm
-    - func_801F390C
+    - c
+    - emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C
+    - '@source: src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C.c'
+    - '@behavior: Emits a semi-transparent flat-grey sprite at signed x and y using an indexed four-byte width, height and texture-coordinate record at 0x801F4FA0; appends its draw mode and sprite at ordering-table index 1.'
   - - 3636
     - asm
     - func_801F3A34

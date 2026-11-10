@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801EF998
   - - 3656
-    - asm
-    - func_801EFA48
+    - c
+    - drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixtyFourGouraudTrianglesAtWorkWord14RadiusTintedByWorkByte9TimesFourBmagicMagic11003_801EFA48.c'
+    - '@behavior: Draws sixty-four translucent Gouraud triangles from the origin at the radius in work word 0x14, tinted by work byte 9 times four, stepping phase by 64 and linking each packet at ordering-table slot 2.'
   - - 4248
     - asm
     - func_801EFC98

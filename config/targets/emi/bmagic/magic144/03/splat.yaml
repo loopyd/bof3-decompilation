@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801EF818
   - - 4980
-    - asm
-    - func_801EFF74
+    - c
+    - dispatchWorkByte2HandlerThenShiftHalfwords2EAnd30BetweenHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EFF74
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenShiftHalfwords2EAnd30BetweenHelpersWhenWorkBytes0And2SetBmagicMagic14403_801EFF74.c'
+    - '@behavior: Dispatches by work byte 2, then when bytes 0 and 2 are nonzero calls 0x800AF764, shifts work halfwords 0x2E and 0x30, and calls 0x801F01D0.'
   - - 5172
     - c
     - clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034

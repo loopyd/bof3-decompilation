@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByteBThenIncrementWorkByte2WhenZeroBmagicMagic08603_801EF8A0.c'
     - '@behavior: Per-frame countdown step of the work object published at the scratchpad pointer cell 0x1F800044. It loads that cell once, decrements the object byte at offset 0xB by one at byte width and compares the truncated stored value with zero; only when that byte reaches zero it re-materializes the cell with its own lui/lw pair and increments the object byte at offset 0x2 by one at byte width. Takes no arguments, returns nothing, keeps no frame and writes no other state; no in-image pointer run, table or jal in the payload references this entry.'
   - - 3308
-    - asm
-    - func_801EF8EC
+    - c
+    - decrementWorkBytes9AThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At10BmagicMagic08603_801EF8EC
+    - '@source: src/bof3/bmagic/decrementWorkBytes9AThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At10BmagicMagic08603_801EF8EC.c'
+    - '@behavior: Decrement work bytes 9 then A; when byte 9 equals 0x10, set global work byte B to two and advance work byte 2.'
   - - 3444
     - asm
     - func_801EF974

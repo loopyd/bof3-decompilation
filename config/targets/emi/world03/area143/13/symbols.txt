@@ -1,3 +1,4 @@
+scratchWorkRecordPointer_1F800044 = 0x1F800044;
 paletteStageSerial = 0x80145988;
 D_801490A8 = 0x801490A8;
 D_801490C7 = 0x801490C7;
@@ -27,7 +28,7 @@ func_801F3AF4 = 0x801F3AF4;
 setStatusFFFFAndStateEntryWhenGateClearWorld03Area14313_801F3B8C = 0x801F3B8C;
 func_801F3BCC = 0x801F3BCC;
 requestFrontSelectorContextWorld03Area14313_801F3C10 = 0x801F3C10;
-func_801F3C40 = 0x801F3C40;
+clearWorkByte48ThenSubmitRecordWorld03Area14313_801F3C40 = 0x801F3C40;
 func_801F3C74 = 0x801F3C74;
 func_801F3D38 = 0x801F3D38;
 func_801F3D78 = 0x801F3D78;
