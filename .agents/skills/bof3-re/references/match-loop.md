@@ -54,8 +54,11 @@ count while dropping instructions, first difference a callee-saved register shif
 so size parity never makes a partial seed the right one. A partial donor also reproduces its residual exactly: a seed taken from a 120/127 donor measured 120/127 at another target with the same block's slots differing, so a seed that lands on the donor's own score names the donor's spelling as the residual, not this body. A twin that is not
 byte-identical still seeds once every remaining differing word shifts by the span's
 own address delta, which is what an internal jump target does; a twin carrying one
-differing word more than that delta explains differs in a carried constant, so read
-it as a different variant of the body and not as the donor. Obtain a live
+differing word more than that delta explains differs in a carried constant, so it is
+no clone source, yet it still seeds transcription: keep its statement shape and write
+every constant from this span's own bytes, which measured exact on the first gate for
+siblings differing only in a cell address, in a pool base together with its bound, and
+in a set of literal ids. Obtain a live
 [native diff](native-execution.md) before another edit. Missing-source errors supply
 no baseline; seeds grant no score or acceptance. Unresolved
 ownership/ABI or failed native gates stop matching. Require final byte match and
