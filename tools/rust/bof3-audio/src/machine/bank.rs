@@ -70,13 +70,25 @@ pub fn prepare(
 ) -> Result<Prepared> {
     let plan = plan(image, archive, options)?;
     let audio = image.audio()?;
-    let mut started = image.start(&mut |e| observer(Stage::Initialization, e))?;
-    started.execution.bus.configure_spu_ram_control(
-        crate::machine::spu::transfer::RamControlModel::EmulatorReference,
-    )?;
-    started.execution.enable_output(
-        super::output_clock::Model::PcsxReduxNtsc,
-        super::output_clock::Collection::Discard,
+    let started = image.start_scheduled(
+        &mut |execution| {
+            use super::spu::{
+                noise,
+                transfer::{IrqModel, RamControlModel},
+            };
+            execution
+                .bus
+                .configure_spu_noise(noise::State::EmulatorReference { value: 1, count: 0 })?;
+            execution
+                .bus
+                .configure_spu_ram_control(RamControlModel::EmulatorReference)?;
+            execution
+                .bus
+                .configure_spu_irq(IrqModel::EmulatorReference)?;
+            execution.enable_cooperative_audio()
+        },
+        &mut |e| observer(Stage::Initialization, e),
+        &mut |_, progress| progress.require_ready(),
     )?;
     load(
         started.execution,

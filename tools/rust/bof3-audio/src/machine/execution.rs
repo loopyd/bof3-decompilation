@@ -3,6 +3,7 @@
 //! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
 //! mechanical/media timing and graphics processing remain unmodeled.
 //! PCM output uses a separate explicit clock.
+mod cooperative;
 mod native;
 use super::{
     boot,
@@ -15,6 +16,7 @@ use super::{
     output_clock,
 };
 use crate::Result;
+pub use cooperative::Clock as CooperativeClock;
 pub use native::{ConsumerClock, NativeProducerProgress};
 use serde::Serialize;
 
@@ -41,6 +43,14 @@ pub struct Execution {
     instruction: Option<boot::timing::Clock>,
     kernel: Option<Services>,
     native: Option<native::Audio>,
+    cooperative: Option<cooperative::Schedule>,
+}
+
+#[derive(Serialize)]
+#[serde(untagged)]
+pub enum AudioClock<'a> {
+    Functional(&'a output_clock::Clock),
+    Cooperative(&'a CooperativeClock),
 }
 
 struct Services {
@@ -75,6 +85,7 @@ impl Execution {
             instruction: None,
             kernel: None,
             native: None,
+            cooperative: None,
         }
     }
 
@@ -185,7 +196,17 @@ impl Execution {
         stop: Option<u32>,
     ) -> Result<Transition> {
         self.require_execution()?;
-        let result = self.advance(observer, stop);
+        let result = self.advance(observer, stop).and_then(|mut transition| {
+            if let Transition::Advanced(step) = &mut transition {
+                if let Some(mut schedule) = self.cooperative.take() {
+                    let result = schedule.advance(self, step.devices);
+                    self.cooperative = Some(schedule);
+                    result?;
+                    step.devices = DeviceProgress::Ready;
+                }
+            }
+            Ok(transition)
+        });
         self.retain_failure(&result);
         result
     }
@@ -258,6 +279,9 @@ impl Execution {
                 .as_ref()
                 .is_some_and(|services| services.kernel.executes_guest(&self.cpu));
         let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
+            if self.cooperative.is_some() {
+                return Err("cooperative audio does not admit functional host services".into());
+            }
             waiting = services
                 .kernel
                 .dispatch(&mut self.cpu, &mut self.bus)?
@@ -401,6 +425,26 @@ impl Execution {
     }
     pub fn output(&self) -> Option<&output_clock::Clock> {
         self.output.as_ref()
+    }
+
+    pub fn audio_frames(&self) -> Result<u64> {
+        if self.native.is_some() {
+            return self.native_delivered_frames();
+        }
+        Ok(self
+            .output
+            .as_ref()
+            .ok_or("output clock is not enabled")?
+            .frames())
+    }
+
+    pub fn audio_clock(&self) -> Result<AudioClock<'_>> {
+        if let Some(schedule) = &self.cooperative {
+            return Ok(AudioClock::Cooperative(&schedule.clock));
+        }
+        Ok(AudioClock::Functional(
+            self.output.as_ref().ok_or("output clock is not enabled")?,
+        ))
     }
     pub fn begin_audio_capture(&mut self) -> Result<u64> {
         if self.native.is_some() {

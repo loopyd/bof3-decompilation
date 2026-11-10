@@ -136,8 +136,7 @@ impl Progress {
                 self.boundary = Some(Boundary {
                     reason,
                     frame: execution
-                        .output()
-                        .map_or(0, |c| c.frames())
+                        .audio_frames()?
                         .checked_sub(self.capture_start_frame)
                         .ok_or("music progress: output frame precedes capture origin")?,
                     instruction: cpu.instructions(),

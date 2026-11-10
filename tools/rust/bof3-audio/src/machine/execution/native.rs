@@ -125,6 +125,7 @@ impl Execution {
 
     /// Advance one native synthesis operation without CPU or consumer work.
     pub fn step_native_producer(&mut self) -> Result<NativeProducerProgress> {
+        self.require_manual_native_schedule()?;
         self.require_execution()?;
         let result = self.advance_native_producer();
         self.retain_failure(&result);
@@ -150,6 +151,7 @@ impl Execution {
     }
 
     pub fn resume_native_enqueue(&mut self, outcome: EnqueueOutcome) -> Result<ProducerState> {
+        self.require_manual_native_schedule()?;
         self.require_execution()?;
         let result = self
             .native
@@ -165,6 +167,7 @@ impl Execution {
     /// The native null-clock context still drains here but advances its master
     /// only through advance_native_null_clock. Producer work never runs here.
     pub fn native_audio_callback(&mut self, frames: usize, speed: i32) -> Result<()> {
+        self.require_manual_native_schedule()?;
         self.require_execution()?;
         let result = self.consume_native_audio(frames, speed);
         self.retain_failure(&result);
@@ -201,6 +204,7 @@ impl Execution {
     }
 
     pub fn advance_native_null_clock(&mut self, frames: u32, speed: i32) -> Result<MasterAdvance> {
+        self.require_manual_native_schedule()?;
         self.require_execution()?;
         let audio = self.native.as_mut().ok_or("native audio is not enabled")?;
         if audio.clock != ConsumerClock::Null {

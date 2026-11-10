@@ -192,9 +192,9 @@ records the float peak before conversion and `clipped_samples` counts channel
 samples saturated for PCM16 delivery. The renderer fixes native settings to
 volume 3, stereo and unmuted. Reports include `native_key_on_delay`, the
 configured signed delay in output frames. Production rendering uses six frames.
-The output clock starts after owned kernel startup and before game sound
-initialization. DSP, captures, transfers, timers and scanlines advance during
-bank upload and callback preparation; only PCM collection is discarded.
+The cooperative output context starts before owned kernel startup. CPU timing,
+synthesis, transfers and counters advance during sound initialization, bank
+upload and callback preparation; only PCM collection is discarded.
 Collection begins before play without resetting phase or device state.
 `capture_start_frame` records that absolute frame origin. Body, progress, stop
 and `executed_frames` counts are relative to it; `output_clock` retains absolute
@@ -451,5 +451,19 @@ which does nothing for `Ready`.
 synthesis or queue state. Drain them with `take_audio_frames`; collection holds at
 most 4096 frames. `native_delivered_frames` counts callback output, including
 underflow, independently of producer and master counters. These explicit
-operations do not choose a host schedule. Production music and effects still use
-the functional clock pending native timing and continuous PCM acceptance.
+operations leave scheduling to the caller.
+
+Production music and cold-bank effects select `enable_cooperative_audio` before
+the first owned instruction. This fixed context primes the producer, then runs
+consumer-before-producer turns every 200,000 retired opcodes and at CPU audio-goal
+waits. Each consumer turn delivers 441 frames at speed 1. Retirement credit waits
+for the opcode's device pass to complete; host staging and call boundaries add no
+opcodes. Queue state and the retirement remainder persist across guest calls.
+Manual actor operations and functional host services reject in this mode.
+
+`audio_frames` counts delivered frames for either output model. `audio_clock`
+reports the selected model; cooperative reports use
+`model: "pcsx_redux_cooperative"` and retain quantum, chunk and actor counters.
+`output()` exposes the separate functional clock. Cooperative scheduling defines
+a reproducible reference context. Complete native timing and music, SFX and XA
+history acceptance remain open.

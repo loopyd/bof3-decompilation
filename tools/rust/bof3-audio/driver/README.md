@@ -45,6 +45,12 @@ After service initialization, the host selects GP zero, foreground SP
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
 
+The production bank loader selects the cooperative audio context before service
+startup. It primes synthesis before the first instruction and retains producer,
+consumer and CPU retirement state across initialization, upload and playback.
+The [audio README](../README.md#development-native-audio-scheduling) defines its
+fixed quantum, consumer chunk and ownership rules.
+
 B0/0A `WaitEvent` validates the handle against the live event allocation before
 entering its guest body. READY becomes BUSY and returns 1. Initial BUSY waits on
 the selected record until READY; other initial states return 0. The loop keeps

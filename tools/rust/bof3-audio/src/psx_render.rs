@@ -103,9 +103,9 @@ pub fn render(
     options.validate()?;
     let runtime = music::prepare(image, archive, options.layout, options.sequence)?;
     render_prepared(runtime, options, "owned_us_driver", vec![
-        "Instruction fetch, data access and multiply/divide costs use the reference interpreter model. Host kernel services retain two functional ticks per dispatch; their latency and hardware sub-frame timing are unverified.",
+        "The cooperative reference context uses 200000 retired opcodes per CPU quantum and 441 frames per consumer turn. It primes a fresh producer before startup, preserves audio-goal waits and admits no functional host services.",
         "Host stages one VAB/SEP archive into the owned layout; original CD transport and multi-bank selection are not implemented.",
-        "The functional output clock starts before game sound initialization. PCM collection begins before play without resetting sample or scanline phase. Native timing and independent PCM agreement remain unverified.",
+        "Producer and consumer state persists through owned service startup, sound initialization and bank upload. PCM collection begins before play without resetting phase. Complete native timing and independent PCM agreement remain unverified.",
         "Duration or the observed loop/end boundary selects the body cutoff. Stop runs at the next safe guest-call boundary; tail includes that delay and the guest key-off/voice flush.",
         "CD/XA input and SFX playback contexts are outside this music rendering path.",
     ])
@@ -148,7 +148,7 @@ pub(crate) fn render_prepared<P>(
         .flatten()
         .collect();
     let body_frames = loop {
-        let frames = execution.output().unwrap().frames() - capture_start_frame;
+        let frames = execution.audio_frames()? - capture_start_frame;
         match options.body {
             Body::Duration(limit) if frames >= limit => break limit,
             Body::Loops(_) => {
@@ -173,7 +173,7 @@ pub(crate) fn render_prepared<P>(
     };
     let total = body_frames + options.release_frames;
     let sequence_flags_at_cutoff = execution.bus.read(runtime.record + 0x90, Width::Word)?;
-    let stop_call_started_at_frame = execution.output().unwrap().frames() - capture_start_frame;
+    let stop_call_started_at_frame = execution.audio_frames()? - capture_start_frame;
     let stop_call = execution.call_observed(
         runtime.audio.stop,
         [runtime.handle, options.sequence as u32, 0, 0],
@@ -181,11 +181,11 @@ pub(crate) fn render_prepared<P>(
         &mut |e| progress.observe(e),
     )?;
     pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
-    let stop_call_returned_at_frame = execution.output().unwrap().frames() - capture_start_frame;
+    let stop_call_returned_at_frame = execution.audio_frames()? - capture_start_frame;
     if execution.bus.read(runtime.record + 0x90, Width::Word)? & 1 != 0 {
         return Err("PSX render: sequence stop left playback active".into());
     }
-    while (execution.output().unwrap().frames() - capture_start_frame) < total {
+    while (execution.audio_frames()? - capture_start_frame) < total {
         execution.call_observed(runtime.audio.idle, [0; 4], 100_000, &mut |e| {
             progress.observe(e)
         })?;
@@ -198,7 +198,7 @@ pub(crate) fn render_prepared<P>(
     )?);
     let (pcm, pcm16_delivery) = deliver_pcm16(pcm);
     let peak_magnitude = pcm.iter().map(|s| s.unsigned_abs()).max().unwrap_or(0);
-    let clock = execution.output().unwrap();
+    let clock = execution.audio_clock()?;
     let report = Report {
         schema: "bof3.psx-render/v5",
         engine,
@@ -219,7 +219,7 @@ pub(crate) fn render_prepared<P>(
         sequence_flags_at_cutoff,
         capture_start_frame,
         ram_control_model: execution.bus.spu_transfer().ram_control_model(),
-        executed_frames: clock.frames() - capture_start_frame,
+        executed_frames: execution.audio_frames()? - capture_start_frame,
         execution_instructions: execution.cpu.instructions() - instruction_start,
         output_clock: serde_json::to_value(clock)?,
         peak_magnitude,
@@ -376,9 +376,7 @@ pub fn render_effects(
         .into_iter()
         .flatten()
         .collect();
-    while (runtime.execution.output().unwrap().frames() - capture_start_frame)
-        < options.duration_frames
-    {
+    while (runtime.execution.audio_frames()? - capture_start_frame) < options.duration_frames {
         runtime
             .execution
             .call(runtime.audio.idle, [0; 4], 100_000)?;
@@ -391,17 +389,15 @@ pub fn render_effects(
         EffectsSelection::SdkNote { note } => vec![note.voice],
         EffectsSelection::GameCue { .. } => (0..24).collect(),
     };
-    let stop_call_started_at_frame =
-        runtime.execution.output().unwrap().frames() - capture_start_frame;
+    let stop_call_started_at_frame = runtime.execution.audio_frames()? - capture_start_frame;
     let mut stop_calls = Vec::new();
     for &voice in &release_voices {
         stop_calls.push(effects::key_off(&mut runtime, voice, &mut |_| Ok(()))?);
         pcm.extend(runtime.execution.take_audio_frames()?.into_iter().flatten());
     }
-    let stop_call_returned_at_frame =
-        runtime.execution.output().unwrap().frames() - capture_start_frame;
+    let stop_call_returned_at_frame = runtime.execution.audio_frames()? - capture_start_frame;
     let total = options.duration_frames + options.release_frames;
-    while (runtime.execution.output().unwrap().frames() - capture_start_frame) < total {
+    while (runtime.execution.audio_frames()? - capture_start_frame) < total {
         runtime
             .execution
             .call(runtime.audio.idle, [0; 4], 100_000)?;
@@ -418,7 +414,7 @@ pub fn render_effects(
         .map(|sample| sample.unsigned_abs())
         .max()
         .unwrap_or(0);
-    let clock = runtime.execution.output().unwrap();
+    let clock = runtime.execution.audio_clock()?;
     let report = EffectsReport {
         schema: "bof3.psx-effects-render/v4",
         stop_condition: "duration",
@@ -444,7 +440,7 @@ pub fn render_effects(
         stop_call_returned_at_frame,
         capture_start_frame,
         ram_control_model: runtime.execution.bus.spu_transfer().ram_control_model(),
-        executed_frames: clock.frames() - capture_start_frame,
+        executed_frames: runtime.execution.audio_frames()? - capture_start_frame,
         execution_instructions: runtime.execution.cpu.instructions() - instruction_start,
         output_clock: serde_json::to_value(clock)?,
         peak_magnitude,
@@ -457,7 +453,7 @@ pub fn render_effects(
             "SDK notes use the explicit voice, program, tone, key, fine pitch and channel volumes; this does not recover a game cue mapping or classify a bank sample.",
             "Game cues use the selected local table row and guest allocation. Voice status is polled before playback and after the body. Release calls key off all 24 voices in the otherwise empty machine.",
             "The fixed tail includes safe-call cutoff delay and guest release. It may end before the sound becomes silent.",
-            "The functional output clock runs through game sound initialization, bank upload and callback preparation. PCM collection begins before play without resetting phase. Functional service latency, native timing and independent PCM agreement remain unverified.",
+            "The cooperative reference context uses 200000 retired opcodes per CPU quantum and 441 frames per consumer turn, starting before owned service initialization. It preserves producer and consumer state through preparation and excludes functional host services. Complete native timing and independent PCM agreement remain unverified.",
             "Vocal/XA streaming and multi-bank playback remain unsupported.",
         ],
     };

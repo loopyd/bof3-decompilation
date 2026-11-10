@@ -5001,17 +5001,35 @@ symbols. Layout candidates run in isolated scratch RAM; the selected layout is
 then installed on the playback machine. Music rendering binds both loop-store
 instructions and the end-event entry, preserving pre-execution observations.
 Its `bof3.psx-render/v5` report records owned startup instead of BIOS boot.
-The functional output clock starts after owned kernel startup, before game sound
-initialization, and runs through upload and callback preparation. Only PCM
-collection is discarded. Starting collection before play preserves DSP state,
-RAM captures, transfer work and sample/scanline phase. `capture_start_frame` is
+The cooperative audio context starts before owned kernel startup and runs through
+sound initialization, upload and callback preparation. Only PCM collection is
+discarded. Starting collection before play preserves DSP, transfer, queue and
+counter state. `capture_start_frame` is
 the absolute frame origin; body, progress, stop and `executed_frames` counts are
 relative to it, while `output_clock` counters remain absolute. Both music and
 effects reports retain this origin and `ram_control_model`. The explicit
 `emulator_reference` RAM policy preserves the raw register latch and permits
 512 KiB accesses regardless of its value, matching the native implementation.
 The unconfigured component still requires `0x0004`. Hardware RAM-control modes,
-owned kernel startup phase and native CPU/worker alignment remain unverified.
+complete startup phase and native CPU/worker acceptance remain unverified.
+
+Production music and cold-bank effects use the fixed cooperative context selected
+by `Execution::enable_cooperative_audio`. A fresh producer fill precedes instruction
+zero. Every 200,000 retired opcodes, the consumer delivers 441 frames at speed 1,
+then the producer runs until queue admission waits. CPU audio-goal waits use the
+same consumer-before-producer order until the trigger generation changes. A
+waiting opcode receives retirement credit after its device pass completes.
+Actual instructions and syscalls count; host staging and call boundaries do not.
+The schedule preserves pending submissions and its retirement remainder across
+guest calls. Functional host services and manual producer, consumer, enqueue and
+null-clock operations reject while the cooperative schedule owns the actors.
+
+`Execution::audio_frames` reports delivered frames for either model.
+`audio_clock` preserves the functional clock report or returns cooperative model
+`pcsx_redux_cooperative`, its quantum and chunk, completed and pending opcode
+counts, consumer frames and actor counters. The functional 768-tick model remains
+separate. This declared context does not establish ordinary threaded scheduling
+or complete music, SFX and XA history acceptance.
 The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 `machine::reference` retains explicit original EXE/BIOS preparation and rendering
 for development comparisons and the current compiled player. Its music renderer
