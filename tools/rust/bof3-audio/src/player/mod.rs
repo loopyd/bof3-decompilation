@@ -1,6 +1,7 @@
 //! Build the C89 player with the canonical repository compiler and original US runtime.
 mod graphics;
 mod sfx;
+mod vocal;
 
 use crate::{
     machine::{bank, image::executable::Executable, image::profile::Profile},
@@ -17,13 +18,18 @@ pub const HELP: &str = "
     --output NEW_DIR [--layout 0|1|2] [--repo-root REPOSITORY] [--disc-root ROOT] [--json]
   compile --mode sfx --archive EMI [--archive EMI ...] --executable PSX_EXE
     --output NEW_DIR [--layout 0|1|2] [--repo-root REPOSITORY] [--disc-root ROOT] [--json]
+  compile --mode vocal --disc CUE --executable PSX_EXE
+    --output NEW_DIR [--repo-root REPOSITORY] [--disc-root ROOT] [--json]
   SFX mode loads banks without a SEP. Left/Right switches banks, Up/Down selects
   physical samples, Cross plays a uniquely bound SDK tone, and Square halts.
   Missing or ambiguous tone and cue bindings remain unresolved.
+  Vocal mode plays the qualified Japanese XA cue 0x2000 from the original US disc.
+  Mount the qualified CUE during playback. Cross plays or retriggers, Circle
+  stops, and Square toggles repeat. --disc-root supplies graphics assets.
   Build player.exe with canonical GCC 2.7.2. Output includes the rebuildable C89
   project and supplied runtime/song bytes. The US runtime is retained in full.
   Up/Down select tracks, Cross toggles play/pause, Square restarts, and L1 toggles
-  controls help. The player repeats forever. BIOS is supplied by the console or emulator.
+  controls help. Music repeats forever. BIOS is supplied by the console or emulator.
 ";
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -31,6 +37,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut executable, mut output) = (None, None, None);
     let mut archive_paths = Vec::new();
     let (mut sequence, mut layout, mut root, mut disc) = (None, None, None, None);
+    let mut cue_sheet = None;
     let mut json = false;
     while let Some(arg) = args.next() {
         let value = |args: &mut dyn Iterator<Item = OsString>| -> Result<OsString> {
@@ -61,28 +68,46 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                 )
             }
             Some("--disc-root") if disc.is_none() => disc = Some(PathBuf::from(value(&mut args)?)),
+            Some("--disc") if cue_sheet.is_none() => {
+                cue_sheet = Some(PathBuf::from(value(&mut args)?))
+            }
             Some("--repo-root") if root.is_none() => root = Some(PathBuf::from(value(&mut args)?)),
             Some("--json") if !json => json = true,
             _ => return Err(format!("unknown or repeated compile option {arg:?}").into()),
         }
     }
-    let effects = match mode.as_deref().and_then(|value| value.to_str()) {
-        Some("music") => false,
-        Some("sfx") => true,
-        _ => return Err("compile requires --mode music or --mode sfx".into()),
+    let mode = match mode.as_deref().and_then(|value| value.to_str()) {
+        Some(mode @ ("music" | "sfx" | "vocal")) => mode,
+        _ => return Err("compile requires --mode music, sfx or vocal".into()),
     };
-    if archive_paths.is_empty() || (!effects && archive_paths.len() != 1) {
-        return Err("compile requires one music archive or one or more SFX archives".into());
+    let (music, effects) = (mode == "music", mode == "sfx");
+    if mode == "vocal" {
+        if cue_sheet.is_none()
+            || !archive_paths.is_empty()
+            || sequence.is_some()
+            || layout.is_some()
+        {
+            return Err(
+                "compile vocal requires --disc CUE and rejects --archive, --sequence and --layout"
+                    .into(),
+            );
+        }
+    } else {
+        if cue_sheet.is_some() {
+            return Err("compile --disc is for vocal mode; use --disc-root for graphics".into());
+        }
+        if archive_paths.is_empty() || (music && archive_paths.len() != 1) {
+            return Err("compile requires one music archive or one or more SFX archives".into());
+        }
     }
-    let sequence = if effects {
+    let sequence = if music {
+        sequence.ok_or("compile music requires --sequence INDEX")?
+    } else {
         if sequence.is_some() {
             return Err("compile SFX does not accept --sequence".into());
         }
         0
-    } else {
-        sequence.ok_or("compile music requires --sequence INDEX")?
     };
-    let archive_path = &archive_paths[0];
     let output = output.ok_or("compile requires --output NEW_DIR")?;
     publication::require_absent(&output)?;
     let executable = executable.ok_or("compile requires --executable")?;
@@ -94,6 +119,10 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }))?;
     let exe = Executable::from_bytes(fs::read(&executable)?)?;
     let profile = Profile::identify(&exe)?;
+    let vocal = cue_sheet
+        .as_deref()
+        .map(|sheet| vocal::prepare(&exe, sheet))
+        .transpose()?;
     let archives: Vec<_> = archive_paths
         .iter()
         .map(|path| Ok(ArchiveImage::from_bytes(fs::read(path)?)?))
@@ -121,13 +150,13 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             )
         })
         .collect::<Result<_>>()?;
-    let plan = &plans[0];
-    let sequences = if effects {
-        Vec::new()
+    let plan = plans.first();
+    let sequences = if music {
+        SequenceSet::parse(plan.unwrap().sequence)?.sequences
     } else {
-        SequenceSet::parse(plan.sequence)?.sequences
+        Vec::new()
     };
-    if !effects && (sequence >= sequences.len() || sequences.len() > 4) {
+    if music && (sequence >= sequences.len() || sequences.len() > 4) {
         return Err(
             "compile sequence must select an existing index within four US SEP slots".into(),
         );
@@ -168,6 +197,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         ("bank.h", include_bytes!("../../player/bank.h").as_slice()),
         ("sfx.c", include_bytes!("../../player/sfx.c").as_slice()),
         ("sfx.h", include_bytes!("../../player/sfx.h").as_slice()),
+        ("vocal.c", include_bytes!("../../player/vocal.c").as_slice()),
+        ("vocal.h", include_bytes!("../../player/vocal.h").as_slice()),
         (
             "controls.c",
             include_bytes!("../../player/controls.c").as_slice(),
@@ -213,41 +244,59 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let banks = if effects {
         sfx::stage(path, &exe, &archives, &plans, &names)?
     } else {
-        for (name, bytes) in [
-            ("bank.vh", plan.header),
-            ("bank.vb", plan.transfer),
-            ("song.sep", plan.sequence),
-        ] {
-            publication::write_new(&path.join(name), bytes)?;
+        if let Some(plan) = plan {
+            for (name, bytes) in [
+                ("bank.vh", plan.header),
+                ("bank.vb", plan.transfer),
+                ("song.sep", plan.sequence),
+            ] {
+                publication::write_new(&path.join(name), bytes)?;
+            }
+            publication::write_new(&path.join("banks.s"), b".balign 64\n.globl player_header\nplayer_header: .incbin \"bank.vh\"\n.balign 64\n.globl player_body\nplayer_body: .incbin \"bank.vb\"\n.balign 4\n.globl player_sequence\nplayer_sequence: .incbin \"song.sep\"\n")?;
+        } else {
+            publication::write_new(&path.join("banks.s"), b"")?;
         }
-        publication::write_new(&path.join("banks.s"), b".balign 64\n.globl player_header\nplayer_header: .incbin \"bank.vh\"\n.balign 64\n.globl player_body\nplayer_body: .incbin \"bank.vb\"\n.balign 4\n.globl player_sequence\nplayer_sequence: .incbin \"song.sep\"\n")?;
         serde_json::Value::Null
     };
     publication::write_new(
         &path.join("runtime.s"),
-        if effects {
-            b".incbin \"runtime.bin\"\n".as_slice()
-        } else {
+        if music {
             b".incbin \"runtime.bin\", 0, 0xd421c\n.word __note_call\n.incbin \"runtime.bin\", 0xd4220\n".as_slice()
+        } else {
+            b".incbin \"runtime.bin\"\n".as_slice()
         },
     )?;
-    let slot = &plan.identity.slot;
     let mut config = String::new();
     for (name, value) in [
+        ("MODE_MUSIC", u32::from(music)),
         ("MODE_SFX", u32::from(effects)),
+        ("MODE_VOCAL", u32::from(vocal.is_some())),
         ("BANK_COUNT", plans.len() as u32),
-        ("LAYOUT", u32::from(plan.identity.layout)),
-        ("BANK", u32::from(slot.vab_id)),
-        ("SPU_BASE", slot.spu_base),
-        ("HEADER_ADDRESS", slot.header_address),
-        ("SEQUENCE_ADDRESS", slot.sequence_address),
-        ("HEADER_BYTES", plan.header.len() as u32),
-        ("BODY_BYTES", plan.identity.body_bytes as u32),
-        ("SEQUENCE_BYTES", plan.sequence.len() as u32),
         ("SEQUENCE_COUNT", sequences.len() as u32),
         ("SEQUENCE_INDEX", sequence as u32),
     ] {
         config.push_str(&format!("#define PLAYER_{name} {value:#x}\n"));
+    }
+    if let Some(plan) = plan {
+        let slot = &plan.identity.slot;
+        for (name, value) in [
+            ("LAYOUT", u32::from(plan.identity.layout)),
+            ("BANK", u32::from(slot.vab_id)),
+            ("SPU_BASE", slot.spu_base),
+            ("HEADER_ADDRESS", slot.header_address),
+            ("SEQUENCE_ADDRESS", slot.sequence_address),
+            ("HEADER_BYTES", plan.header.len() as u32),
+            ("BODY_BYTES", plan.identity.body_bytes as u32),
+            ("SEQUENCE_BYTES", plan.sequence.len() as u32),
+        ] {
+            config.push_str(&format!("#define PLAYER_{name} {value:#x}\n"));
+        }
+    }
+    if let Some(media) = &vocal {
+        config.push_str(&format!(
+            "#define PLAYER_VOCAL_CUE {id:#06x}\n#define PLAYER_VOCAL_ID \"{id:04X}\"\n#define PLAYER_VOCAL_FORMAT \"FILE {}  CHANNEL {}  CODING {:02X}\"\n",
+            media.cue.filter_file, media.cue.channel, media.coding, id = media.cue.packed_id,
+        ));
     }
     let timing: Vec<_> = sequences
         .iter()
@@ -262,7 +311,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         "#define PLAYER_TIMING {{{}}}\n",
         timing.join(", ")
     ));
-    let literal = literal(&names[0]);
+    let source = vocal
+        .as_ref()
+        .map(|media| media.cue.disc_path)
+        .or_else(|| names.first().map(String::as_str))
+        .ok_or("compile requires a source")?;
+    let literal = literal(source);
     config.push_str(&format!(
         "#define PLAYER_SONG {literal}\n#define PLAYER_VERSION \"{VERSION}\"\n"
     ));
@@ -293,20 +347,20 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     let report = serde_json::json!({
         "schema": "bof3.audio-player/v1", "version": VERSION, "author": "deitydragon",
-        "song": archive_path.file_name().ok_or("archive needs a filename")?.to_string_lossy(),
+        "song": source,
         "graphics": graphics.identity,
-        "timecode": {"smpte": "30_ndf", "midi": if effects { None } else { Some("bar:beat:tick") }, "glyph_sizes": [[8,8],[6,6]]},
-        "mode": if effects { "sfx" } else { "music" },
-        "sequence": if effects { None } else { Some(sequence) }, "bank": plan.identity, "banks": banks, "runtime_sha256": profile.exe_sha256,
+        "timecode": {"smpte": "30_ndf", "midi": music.then_some("bar:beat:tick"), "glyph_sizes": [[8,8],[6,6]]},
+        "mode": mode, "vocal": vocal,
+        "sequence": music.then_some(sequence), "bank": plan.map(|plan| &plan.identity), "banks": banks, "runtime_sha256": profile.exe_sha256,
         "tracks": sequences.len(),
-        "controls": if effects {
-            serde_json::json!({"left_right": "bank", "up_down": "physical_sample", "cross": "play_sdk_note", "square": "halt", "l1": "modal_help"})
-        } else {
-            serde_json::json!({"up_down": "track", "cross": "play_pause", "square": "restart", "l1": "modal_help"})
+        "controls": match mode {
+            "sfx" => serde_json::json!({"left_right": "bank", "up_down": "physical_sample", "cross": "play_sdk_note", "square": "halt", "l1": "modal_help"}),
+            "vocal" => serde_json::json!({"left_right": "none", "up_down": "single_qualified_cue", "cross": "play_retrigger", "circle": "stop", "square": "toggle_repeat", "l1": "modal_help"}),
+            _ => serde_json::json!({"up_down": "track", "cross": "play_pause", "square": "restart", "l1": "modal_help"}),
         },
         "executable_sha256": crate::digest::sha256_hex(result.bytes()),
-        "compiler": "gcc-2.7.2-psx", "playback": if effects { "manual_sdk_note" } else { "repeat_forever" },
-        "runtime_patches": if effects { Vec::<&str>::new() } else { vec!["midi_voice_meter_note_call"] },
+        "compiler": "gcc-2.7.2-psx", "playback": match mode { "sfx" => "manual_sdk_note", "vocal" => "original_xa", _ => "repeat_forever" },
+        "runtime_patches": if music { vec!["midi_voice_meter_note_call"] } else { Vec::<&str>::new() },
         "runtime": "complete_original_us_image", "independent_fidelity_validated": false,
     });
     publication::write_new(

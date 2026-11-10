@@ -2,8 +2,9 @@
 #include "hud.h"
 #include "graphics.h"
 #include "sfx.h"
+#include "vocal.h"
 
-#if !PLAYER_MODE_SFX
+#if PLAYER_MODE_MUSIC
 static u8 levels[AUDIO_CHANNELS];
 static u8 peaks[AUDIO_CHANNELS];
 static u8 peak_hold[AUDIO_CHANNELS];
@@ -38,6 +39,7 @@ static void timecode(u32 frames)
     graphics_text(184, 64, digits);
 }
 
+#if PLAYER_MODE_MUSIC || PLAYER_MODE_SFX
 static void decimal(char *destination, u32 value, u32 digits)
 {
     while (digits != 0) {
@@ -45,8 +47,9 @@ static void decimal(char *destination, u32 value, u32 digits)
         value /= 10;
     }
 }
+#endif
 
-#if !PLAYER_MODE_SFX
+#if PLAYER_MODE_MUSIC
 static void musical_position(u32 ticks)
 {
     u32 quarter, denominator, beats, remainder;
@@ -142,7 +145,7 @@ void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
     graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PAUSE  SQUARE RESTART", 6, 6);
 }
-#else
+#elif PLAYER_MODE_SFX
 void hud_sfx(void)
 {
     char number[4];
@@ -179,6 +182,33 @@ void hud_sfx(void)
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
     graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PLAY  SQUARE HALT", 6, 6);
 }
+#elif PLAYER_MODE_VOCAL
+void hud_vocal(void)
+{
+    const char *state;
+    if (player_status.error) state = "CD INIT FAILED";
+    else if (!player_status.playing) state = "IDLE";
+    else if (vocal_status.state >= 6) state = "STOPPING";
+    else if (vocal_status.state == 5) state = "PLAYING XA";
+    else state = "STARTING";
+
+    graphics_panel(176, 16, 132, 78, 0x180818, 0x080008, 1);
+    graphics_logo();
+    graphics_text(184, 22, "PLAYER " PLAYER_VERSION);
+    graphics_text_scaled(184, 32, "VOCAL VIEW", 6, 6);
+    graphics_text(184, 42, "deitydragon");
+    timecode(player_status.position_frames);
+    graphics_panel(10, 96, 300, 116, 0x281028, 0x100010, 1);
+    graphics_text(18, 104, PLAYER_SONG);
+    graphics_text(18, 124, "CUE " PLAYER_VOCAL_ID);
+    graphics_text(18, 144, "JAPANESE VOCALS");
+    graphics_text_scaled(18, 164, PLAYER_VOCAL_FORMAT, 6, 6);
+    graphics_text(18, 184, state);
+    graphics_text_scaled(188, 185, vocal_status.repeat ? "REPEAT ON" : "REPEAT OFF", 6, 6);
+    graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
+    graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
+    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PLAY  CIRCLE STOP", 6, 6);
+}
 #endif
 
 void hud_help(void)
@@ -190,6 +220,12 @@ void hud_help(void)
     graphics_text(48, 100, "UP/DOWN SELECT SAMPLE");
     graphics_text(48, 120, "CROSS   PLAY SAMPLE");
     graphics_text(48, 140, "SQUARE  HALT");
+#elif PLAYER_MODE_VOCAL
+    graphics_text(48, 56, "VOCAL CONTROLS");
+    graphics_text(48, 80, "CROSS   PLAY/RETRIGGER");
+    graphics_text(48, 100, "CIRCLE  STOP");
+    graphics_text(48, 120, "SQUARE  TOGGLE REPEAT");
+    graphics_text(48, 140, "ONE QUALIFIED CUE");
 #else
     graphics_text(48, 56, "MUSIC CONTROLS");
     graphics_text(48, 80, "UP/DOWN PREV/NEXT TRACK");

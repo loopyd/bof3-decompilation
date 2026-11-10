@@ -5,8 +5,8 @@ AS = $(REPO)/bin/as
 LD = $(REPO)/bin/ld
 OBJCOPY = $(REPO)/bin/objcopy
 CFLAGS = -O2 -G0 -msoft-float -fno-builtin -fno-pic -ansi -pedantic -Wall -W
-OBJECTS = start.o player.o audio.o bank.o sfx.o controls.o graphics.o hud.o assets.o
-HEADERS = psx.h audio.h bank.h sfx.h controls.h graphics.h hud.h config.h $(wildcard banks.h)
+OBJECTS = start.o player.o audio.o bank.o sfx.o vocal.o controls.o graphics.o hud.o assets.o
+HEADERS = psx.h audio.h bank.h sfx.h vocal.h controls.h graphics.h hud.h config.h $(wildcard banks.h)
 
 .PHONY: all clean
 all: player.exe

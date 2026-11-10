@@ -1,9 +1,10 @@
 # Standalone audio player
 
-Run `bof3-audio compile` to generate a complete C89 player project from your
-original US executable, EMI banks or song, and extracted font and logo assets. This source
-directory contains no game media. The generated directory includes `config.h`,
-the supplied assets, a PS-X EXE, ELF symbols, a linker map, and build metadata.
+Run `bof3-audio compile` to generate a C89 player project from the original US
+executable and extracted font and logo assets. Supply a song or banks for music
+or SFX mode, or a raw US CUE sheet for vocal mode. The generated directory includes
+`config.h`, the embedded assets, a PS-X EXE, ELF symbols, a linker map, and build
+metadata.
 
 Rebuild from the generated directory using the full repository's GCC 2.7.2 and
 existing assembler and linker wrappers:
@@ -14,7 +15,8 @@ make REPO=/absolute/path/to/rebof3-simple clean all
 
 `player.c` coordinates the frame loop. `audio.c` owns music sequencing, pause, restarts, musical ticks, and SPU channel
 levels. `bank.c` loads embedded banks through the original routines. `sfx.c` owns
-effects bank and sample selection and direct SDK-note auditions. `controls.c`
+effects bank and sample selection and direct SDK-note auditions. `vocal.c`
+services original XA playback and handles play, stop, and repeat. `controls.c`
 reads the original PAD routines and handles button edges and modal help.
 `graphics.c` owns GPU commands,
 assets, glyphs, the animated background, and frame buffers. `hud.c` owns layout,
@@ -51,9 +53,32 @@ closing the bank and replacing sample memory. A release that exceeds 600 VBlanks
 leaves the old bank in place and reports an error.
 
 The effects view displays source, runtime slot, physical sample, elapsed time and
-playback state. It uses the same background and controls popup as music. It does
-not open a SEP or require PPQN or a time signature. Qualified game-cue dispatch
-and XA vocal playback remain unavailable. `--disc-root` supplies graphics assets.
+playback state. It uses the same background and controls popup as music. Effects
+builds use no SEP, PPQN or time signature. The selected sample's game cue remains
+unresolved.
+
+Build the Japanese vocal view with the original two-file US CUE sheet and both
+of its raw BINARY tracks:
+
+```sh
+bof3-audio compile --mode vocal \
+  --disc 'inputs/external/Breath of Fire III (USA).cue' \
+  --executable out/extracted/SLUS_004.22 --disc-root out/extracted \
+  --output out/vocal-player
+```
+
+Mount the same disc when running `player.exe`. The build verifies the two tracks
+and the original `BIN/SCE_XA/VOICE.STR` extent, then records the CUE, TOC,
+source hashes, packed cue, file, channel and coding in `player.json`.
+`--disc-root` supplies graphics assets. The CUE and tracks stay outside the
+generated project. Vocal builds use the original CD initialization, XA starter,
+completion callback and foreground service at a two-VBlank cadence.
+
+Cross plays cue `0x2000` or stops and retriggers it. Circle stops playback.
+Square toggles repeat, which starts the cue again after the original transport
+returns to idle. Left and Right have no effect. Up and Down keep the single
+qualified cue selected. The displayed time measures elapsed transport time
+from the start call in VBlanks.
 
 L1 toggles the controls popup. Its translucent purple gradient and beveled gray
 border appear over the animated background. While help is open, playback keeps
@@ -73,8 +98,8 @@ uses a stack below it. The linker rejects player assets that exceed the reserved
 low-memory region. The runtime's original sound initialization, bank transfers,
 SDK scheduler and glyph renderer remain in use. Music uses SEP callbacks and a
 note-call hook that records the MIDI channel associated with each allocated SPU
-voice for the meters. Effects builds retain the original runtime without that
-patch and start its scheduler with no open SEP.
+voice for the meters. Effects and vocal builds retain the unpatched runtime.
+Effects builds start the SDK scheduler with no open SEP.
 
 `graphics_text_scaled(x, y, string, width, height)` takes glyph dimensions in
 screen pixels. It uses the original glyph renderer to produce positions and texture UVs,

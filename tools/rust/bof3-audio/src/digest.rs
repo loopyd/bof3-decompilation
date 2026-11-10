@@ -1,6 +1,11 @@
 //! SHA-256 for media/profile identity without invoking an external executable.
 //! Algorithm: NIST FIPS 180-4 sections 4.1.2, 4.2.2, 5, and 6.2.
 
+use std::{
+    fs::File,
+    io::{self, Read},
+};
+
 const INITIAL: [u32; 8] = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ];
@@ -21,11 +26,15 @@ pub fn sha256(bytes: &[u8]) -> [u8; 32] {
     for block in blocks {
         compress(&mut state, block);
     }
+    finish(state, rest, bytes.len() as u64)
+}
+
+fn finish(mut state: [u32; 8], rest: &[u8], bytes: u64) -> [u8; 32] {
     let mut tail = [0; 128];
     tail[..rest.len()].copy_from_slice(rest);
     tail[rest.len()] = 0x80;
     let length = if rest.len() < 56 { 64 } else { 128 };
-    tail[length - 8..length].copy_from_slice(&(bytes.len() as u64 * 8).to_be_bytes());
+    tail[length - 8..length].copy_from_slice(&bytes.wrapping_mul(8).to_be_bytes());
     for block in tail[..length].as_chunks::<64>().0 {
         compress(&mut state, block);
     }
@@ -37,9 +46,35 @@ pub fn sha256(bytes: &[u8]) -> [u8; 32] {
 }
 
 pub fn sha256_hex(bytes: &[u8]) -> String {
+    hex(sha256(bytes))
+}
+
+pub(crate) fn sha256_file(mut file: File, bytes: u64) -> io::Result<String> {
+    let mut state = INITIAL;
+    let mut buffer = [0; 64 * 1024];
+    let mut remaining = bytes;
+    while remaining >= 64 {
+        let length = (remaining / 64 * 64).min(buffer.len() as u64) as usize;
+        file.read_exact(&mut buffer[..length])?;
+        for block in buffer[..length].as_chunks::<64>().0 {
+            compress(&mut state, block);
+        }
+        remaining -= length as u64;
+    }
+    file.read_exact(&mut buffer[..remaining as usize])?;
+    if file.read(&mut [0])? != 0 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "file grew while hashing",
+        ));
+    }
+    Ok(hex(finish(state, &buffer[..remaining as usize], bytes)))
+}
+
+fn hex(digest: [u8; 32]) -> String {
     use std::fmt::Write;
     let mut text = String::with_capacity(64);
-    for byte in sha256(bytes) {
+    for byte in digest {
         write!(text, "{byte:02x}").expect("string formatting");
     }
     text

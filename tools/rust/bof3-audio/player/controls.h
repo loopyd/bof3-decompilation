@@ -4,6 +4,7 @@
 #include "psx.h"
 
 #define BUTTON_L1 0x0004
+#define BUTTON_CIRCLE 0x0020
 #define BUTTON_CROSS 0x0040
 #define BUTTON_SQUARE 0x0080
 #define BUTTON_UP 0x1000

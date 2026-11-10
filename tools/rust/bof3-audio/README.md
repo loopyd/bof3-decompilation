@@ -336,13 +336,19 @@ bin/harness audio compile --mode music \
   --disc-root out/extracted --output out/music-player --json
 ```
 
-The new output directory contains `player.exe`, build sources, supplied media,
-`player.json`, and `build.log`. The player needs no disc after loading; the console
-or emulator supplies its BIOS. The extracted disc root must contain the original
+The new output directory contains `player.exe`, build sources, embedded assets,
+`player.json`, and `build.log`. Music and SFX play from embedded assets. Vocal mode
+uses the original US disc, declared with `--disc CUE` and mounted at playback.
+The console or emulator supplies the BIOS. The extracted disc root must contain the original
 US `BIN/ETC/FIRST.EMI` and `BIN/ETC/DEMO.EMI` for the font and title logo. It defaults
 to the executable's directory. The executable must match the supported US profile.
 Use `--repo-root PATH` when running a source-package build outside the full checkout.
 `--layout 0|1|2` uses the same capacity rules as PSX rendering.
+
+Use `--mode sfx` with one or more DRG EMI banks for the effects view.
+Use `--mode vocal --disc CUE` to play the qualified Japanese vocal cue `0x2000`
+through the original XA driver. See the [player build instructions](player/README.md)
+for the supported media layout, controls, and rebuild commands.
 
 The C89 player retains the original runtime image and calls its audio driver and
 8x8 glyph renderer. One note-call hook associates SPU voices with the selected

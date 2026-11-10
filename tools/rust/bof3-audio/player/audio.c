@@ -5,7 +5,7 @@
 extern const u8 player_header[], player_body[], player_sequence[];
 typedef int (*NoteCall)(u32, u32, u32, u32, u32, u32);
 static u32 player_record;
-#if !PLAYER_MODE_SFX
+#if PLAYER_MODE_MUSIC
 static int sequence_handle;
 static int pending_start;
 static u32 last_frame;
@@ -30,7 +30,7 @@ int player_note_on(u32 id, u32 bank, u32 program, u32 note, u32 velocity, u32 pa
     return mask;
 }
 
-#if !PLAYER_MODE_SFX
+#if PLAYER_MODE_MUSIC
 void audio_initialize(void)
 {
     static const struct BankAsset asset = {
