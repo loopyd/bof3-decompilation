@@ -71,8 +71,10 @@ segments:
     - dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724
     - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724.c'
   - - 2920
-    - asm
-    - func_801EF768
+    - c
+    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768.c'
+    - '@behavior: Per-frame step dispatcher of this overlay handler run. It copies the three code pointers at 0x801EEC1C into its own 0x28-byte frame, indexes that copy with the published work record unsigned byte 2 and calls the selected entry with no arguments. It then re-reads the record cell at 0x801F21F0 and, when record byte 0 has bit 0 set and byte 2 is non-zero, calls the no-argument draw helper at 0x801F00C4; when the record unsigned halfword at 0xC has either low bit set it calls 0x801EFBF8 with the halved shared frame counter at 0x80143E6C masked to 16 bits and with record byte 6, then 0x801EFE2C with that halved counter plus four and with record byte 6 plus half of itself. It returns nothing and stores no state of its own.'
   - - 3172
     - asm
     - func_801EF864

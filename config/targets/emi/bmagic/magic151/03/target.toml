@@ -42,5 +42,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenQueueSlotClearByte1PublishWorkPointerIncrementWorkByteBInvokeHelperAt103RearmByte9To20AndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFC68.c",
     "src/bof3/bmagic/copyRecordByte8SeedWorkTargetPairStoreDistanceClearWorkByteBSetWorkByte9To4AdvanceWorkByte2ThenQueueSlotSetByte1To2Flag9To1PublishWorkPointerIncrementWorkByteBInvokeHelperAt102BmagicMagic15103_801EFAAC.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F01BC.c",
+    "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

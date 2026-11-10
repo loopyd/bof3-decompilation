@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EEF74
   - - 1032
-    - asm
-    - func_801EF008
+    - c
+    - seedWorkFromRecordCopyByte8AndWordTripletSetByteATo16AndWordCTo8ThenAdvanceWorkByte2BmagicMagic05803_801EF008
+    - '@source: src/bof3/bmagic/seedWorkFromRecordCopyByte8AndWordTripletSetByteATo16AndWordCTo8ThenAdvanceWorkByte2BmagicMagic05803_801EF008.c'
+    - '@behavior: Overlay step body that no word and no jal in this payload holds: it seeds the scratchpad work object published at the pointer cell 0x1F800044 from the battle record published at 0x801EB4E0. Work byte 0x08 takes the record byte 0x08; both cells are read again so work words 0x34, 0x38 and 0x3C take the record words at the same offsets, with the 0x3C word held in a local so its load precedes the byte 0x0A store. Work byte 0x0A takes 0x10, the work cell is read once more after that store, work word 0x0C takes 8, the held record word lands at work offset 0x3C, and the body advances work byte 0x02 by one. Leaf with no frame.'
   - - 1152
     - asm
     - func_801EF080

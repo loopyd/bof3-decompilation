@@ -16,7 +16,8 @@ extern void (*workByte2HandlerTable[])(void); /* @source 0x801F250C @kind data *
 
 /* Installs the work record's transform: pushes the GTE matrix stack, builds the
  * record's translation and rotation and sets both GTE matrices. */
-void func_801F1DC0(void);
+void projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0(
+    void);
 
 /* Draws the first quad of the active work record through SetPolyG4,
  * SetSemiTrans and RotTransPers4. */
@@ -34,8 +35,10 @@ void func_801F2188(void);
  *           0x801F1D28, 0x801F1D60) and that entry is invoked with no
  *           arguments. After the handler returns the pointer cell is read a
  *           second time; only when the record byte at offset 0x0 and the byte
- *           at offset 0x2 are both non-zero does it call func_801F1DC0, which
- *           pushes the GTE matrix stack and installs the record's transform,
+ *           at offset 0x2 are both non-zero does it call
+ *           projectWorkObjectPositionAndInstallTransformWithZeroTranslation
+ *           BmagicMagic15103_801F1DC0, which pushes the GTE matrix stack and
+ *           installs the record's transform,
  *           then the two quad drawers func_801F1E70 and func_801F2188, then
  *           PopMatrix, restoring the stack it pushed. Reads no other state,
  *           stores nothing directly and returns nothing; the 0x18-byte frame
@@ -56,7 +59,7 @@ void dispatchWorkByte2HandlerThenDrawQuadPairAndPopWhenWorkBytes0And2SetBmagicMa
   workByte2HandlerTable[step_record[2]]();
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[2] != 0) {
-    func_801F1DC0();
+    projectWorkObjectPositionAndInstallTransformWithZeroTranslationBmagicMagic15103_801F1DC0();
     func_801F1E70();
     func_801F2188();
     PopMatrix();

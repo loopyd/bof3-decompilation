@@ -164,8 +164,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2CD4.c'
     - '@behavior: Overlay step dispatch that seeds a local two-entry handler array with 0x800C2D2C and 0x800C2E04 and calls the entry selected by the unsigned state byte at +2 of the work record published at scratchpad cell 0x1F800044.'
   - - 5420
-    - asm
-    - func_800C2D2C
+    - c
+    - applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplateThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C2D2C
+    - '@source: src/bof3/boss/applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplateThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C2D2C.c'
+    - '@behavior: Overlay step body, entry 0 of the two-entry handler pair that dispatchStateByte2LocalPairBossBoss05516_800C2CD4 seeds with 0x800C2D2C then 0x800C2E04: it copies the 10-byte step template at 0x800C1834 into its frame and then applies main lookup record 0x318 through 0x8014DD3C, clears the work record at scratchpad cell 0x1F800044 at byte +0x48, byte +0x24 and word +0x3C, requests the template byte selected by the battle halfword 0x801463BE through 0x8014D6B8 without any guard on the shared battle work record at 0x801EB4E0, calls 0x801E3160, 0x8014D4E0 and this overlay own work refresh 0x800C3284 in that order, and finally advances work byte +2 by one to move the pair dispatcher to entry 1.'
   - - 5636
     - c
     - advanceGlobalWorkByte1ClearWorkByte2AndCallHelperWhenEnemyReadyElseBattleUpdateAndRefreshWorkBossBoss05516_800C2E04

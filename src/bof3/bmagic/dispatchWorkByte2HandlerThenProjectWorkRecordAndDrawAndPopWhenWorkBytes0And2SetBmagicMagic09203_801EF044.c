@@ -26,17 +26,18 @@ extern void (*D_801F07C0[])(void); /* @source 0x801F07C0 @kind data */
  * builds the record's translation and rotation triplets from the record words
  * 0x34 and 0x38 and signed halfword 0x3E, projects them with RotTrans, composes
  * the shared screen matrix at 0x801492E8 through MulMatrix2 and sets both GTE
- * matrices, leaving the pushed matrix for this function's PopMatrix. Still an
- * asm row in this target, so it keeps its raw name. */
-void func_801EF4D0(void);
+ * matrices, leaving the pushed matrix for this function's PopMatrix. */
+void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0(
+    void);
 
 /* This overlay's own draw pass at 0x801EF580: it picks a draw mode from
  * GetGraphType, installs it with SetDrawMode on the primitive cursor, refreshes
  * the scratchpad screen scale through func_801782FC and func_801783C8 and then
  * emits the work-record effect with SetSemiTrans, func_8017A97C and
  * RotTransPers3 under a second draw mode. Still an asm row in this target, so it
- * keeps its raw name; it draws under the matrix func_801EF4D0 installed and
- * does not pop it. */
+ * keeps its raw name; it draws under the matrix
+ * projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0
+ * installed and does not pop it. */
 void func_801EF580(void);
 
 /* @source 0x801EF044
@@ -47,7 +48,9 @@ void func_801EF580(void);
  *   the original does not bound the index. The cell is then re-read and the
  *   record's bytes at offsets 0x0 and 0x2 are tested in that order, so only
  *   when both are non-zero does the arm run: it installs the work record's
- *   transform with func_801EF4D0, draws the effect with func_801EF580 and then
+ *   transform with
+ *   projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0,
+ *   draws the effect with func_801EF580 and then
  *   restores the GTE matrix stack with PopMatrix. The cell is re-read rather
  *   than kept live because the dispatched handler may republish it, which is
  *   why the original materialises it twice. The 0x18-byte frame only keeps $ra
@@ -64,7 +67,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
     void) {
   D_801F07C0[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801EF4D0();
+    projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0();
     func_801EF580();
     PopMatrix();
   }

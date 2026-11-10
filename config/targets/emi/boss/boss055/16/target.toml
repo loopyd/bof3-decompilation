@@ -35,6 +35,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C29E8.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2B48.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2CD4.c",
+    "src/bof3/boss/applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplateThenRequestByteAtIndexedByBattleHalfwordCallEnemyReadyBattleUpdateAndRefreshWorkThenAdvanceWorkByte2BossBoss05516_800C2D2C.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2E74.c",
     "src/bof3/boss/refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284.c",
     "src/bof3/boss/callEnemyReadyThenFoldHalfword96RaiseFlag800ClearModeByteAndAdvanceWorkByte2BossBoss05516_800C2158.c",

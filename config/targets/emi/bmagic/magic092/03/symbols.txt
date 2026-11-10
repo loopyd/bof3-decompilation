@@ -8,7 +8,7 @@ decrementWorkByte9ThenClaimThreePoolRecordsSeedingSlotOrdinalAndWorkPointerInvok
 func_801EF1F0 = 0x801EF1F0;
 incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic09203_801EF350 = 0x801EF350;
 func_801EF388 = 0x801EF388;
-func_801EF4D0 = 0x801EF4D0;
+projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic09203_801EF4D0 = 0x801EF4D0;
 func_801EF580 = 0x801EF580;
 dispatchStateByte1Table07d0BmagicMagic09203_801EF7FC = 0x801EF7FC;
 dispatchWorkByte2HandlerThenInvokeUpdateAndDrawWhenWorkBytes0And2SetBmagicMagic09203_801EF840 = 0x801EF840;

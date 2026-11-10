@@ -57,8 +57,9 @@ segments:
     - dispatchStateByte1Tablefd8cBmagicMagic04103_801EF190
     - '@source: src/bof3/bmagic/magic04103DispatchTables.c'
   - - 1492
-    - asm
-    - func_801EF1D4
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c'
   - - 1660
     - asm
     - func_801EF27C

@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF190
   - - 1480
-    - asm
-    - func_801EF1C8
+    - c
+    - seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountingWorkByteBThenAdvanceWorkByte2BmagicMagic06303_801EF1C8
+    - '@source: src/bof3/bmagic/seedRandomByteAndFortyComplementInEveryFreeWorkRecordCountingWorkByteBThenAdvanceWorkByte2BmagicMagic06303_801EF1C8.c'
+    - '@behavior: Work byte 2 entry 3 of the five-word handler run at 0x801EEC04: reads the scratchpad work-object pointer cell at 0x1F800044 before its 0x20-byte frame and returns at once unless work byte 0xB is zero; the pass then claims pool records at 0x801F0454 through reserveFirstFreeRecordBmagicMagic06303_801F0354 0x5C times, and for each claim clears the record byte 1, writes the pass counter into byte 4, stores the work-object pointer in the record word 0x1C, seeds record byte 0x0A with one plus the low four bits of rand() added to the counter halved and masked with 0x70 and record byte 8 with 0x40 minus that value, and increments work byte 0xB through a fresh cell read; it then invokes the shared helper at 0x8015D71C with 0x101 and 0x102 and advances work byte 2, all in a 0x20-byte frame that keeps $ra, $s1 and $s0.'
   - - 1764
     - c
     - invokeHelperA9820WithWorkByte4WhenWorkByteBIsZeroThenDecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06303_801EF2E4

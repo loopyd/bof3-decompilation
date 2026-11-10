@@ -10,7 +10,7 @@ setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07303_801EF4E4
 func_801EF52C = 0x801EF52C;
 func_801EF6B8 = 0x801EF6B8;
 dispatchWorkRecordByte1HandlerBmagicMagic07303_801EF724 = 0x801EF724;
-func_801EF768 = 0x801EF768;
+dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic07303_801EF768 = 0x801EF768;
 func_801EF864 = 0x801EF864;
 func_801EFA64 = 0x801EFA64;
 func_801EFB14 = 0x801EFB14;

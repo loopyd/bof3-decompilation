@@ -168,8 +168,10 @@ segments:
     - '@source: src/bof3/world/queueSharedUiElementBlock1CTo1Dx3Size0And1Fx15To16Size50World04Area18813_801F49FC.c'
     - '@behavior: Queues two runs of shared UI elements through the shared marker queue 0x801A4BC0: the two elements at y = 3 of x = 0x1C and 0x1D with size 0, then the two elements at x = 0x1F of y = 0x15 and 0x16 with size 0x50.'
   - - 7764
-    - asm
-    - func_801F4A54
+    - c
+    - queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54
+    - '@source: src/bof3/world/queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54.c'
+    - '@behavior: Queues two runs of shared UI elements through the shared marker queue 0x801A4BC0: the two elements at y = 3 of x = 0x1C and 0x1D with size 0xC0, then the two elements at x = 0x20 of y = 0x15 and 0x16 with size 0xA1.'
   - - 7852
     - asm
     - func_801F4AAC
