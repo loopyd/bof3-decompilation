@@ -6,7 +6,12 @@ use super::{
     execution::{Call, Execution},
     image::executable::ram_offset,
 };
-use crate::{catalog::loader, digest::sha256_hex, Result};
+use crate::{
+    Result,
+    bank::{Bank, Program},
+    catalog::loader,
+    digest::sha256_hex,
+};
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 
@@ -61,6 +66,38 @@ pub struct Table {
     pub address: u32,
     pub capacity: usize,
     pub records: Vec<[u8; 4]>,
+}
+
+pub(crate) struct LocalCue {
+    pub first_tone: usize,
+    pub extra_layers: usize,
+    pub first_voice: u8,
+}
+
+pub(crate) fn local_cue<'a>(
+    record: &[u8; 4],
+    bank: &'a Bank,
+) -> std::result::Result<(LocalCue, &'a Program), &'static str> {
+    if record[0] != 0 || record[3] & 0x80 != 0 {
+        return Err("PSX cues: cross-bank or unverified record flags require runtime context");
+    }
+    let cue = LocalCue {
+        first_tone: usize::from(record[2] >> 4),
+        extra_layers: usize::from((record[3] >> 5) & 3),
+        first_voice: record[3] & 31,
+    };
+    if cue.first_voice >= 24 {
+        return Err("PSX cues: first voice exceeds the hardware voice range");
+    }
+    let program = bank
+        .programs
+        .iter()
+        .find(|p| p.program == record[1] & 0x7f)
+        .ok_or("PSX cues: referenced program is empty")?;
+    if cue.first_tone + cue.extra_layers >= 16 {
+        return Err("PSX cues: layered tones exceed the physical program block");
+    }
+    Ok((cue, program))
 }
 
 /// Host staging of the type-8 payload, as with VAB/SEP preparation. This does
@@ -155,35 +192,16 @@ pub fn dispatch<P>(
         .records
         .get(row)
         .ok_or("PSX cues: row outside auxiliary table")?;
-    if record[0] != 0 || record[3] & 0x80 != 0 {
-        return Err(
-            "PSX cues: cross-bank or unverified record flags require runtime context".into(),
-        );
-    }
-    let program_id = record[1] & 0x7f;
-    let tone = usize::from(record[2] >> 4);
-    let count = usize::from((record[3] >> 5) & 3) + 1;
-    if record[3] & 31 >= 24 {
-        return Err("PSX cues: first voice exceeds the hardware voice range".into());
-    }
-    prepared
-        .bank
-        .programs
-        .iter()
-        .find(|p| p.program == program_id)
-        .ok_or("PSX cues: referenced program is empty")?;
-    if tone + count > 16 {
-        return Err("PSX cues: layered tones exceed the physical program block".into());
-    }
+    let (cue, program) = local_cue(record, &prepared.bank)?;
     let e = &mut prepared.execution;
     let offset = e.bus.read(
-        prepared.audio.cue_lookup + u32::from(program_id) * 2,
+        prepared.audio.cue_lookup + u32::from(program.program) * 2,
         Width::Half,
     )?;
     // Cue attributes and SDK playback selection are separate original paths.
     // In particular the fixed cue offset table need not select the program's
     // packed VAB block. Preserve the guest lookup, but bound all attribute reads.
-    for index in tone..tone + count {
+    for index in cue.first_tone..=cue.first_tone + cue.extra_layers {
         let tone_offset = e.bus.read(
             prepared.audio.cue_lookup + 8 + index as u32 * 2,
             Width::Half,

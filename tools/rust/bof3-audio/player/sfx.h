@@ -3,8 +3,11 @@
 
 #include "bank.h"
 
+enum SfxPlayback { SFX_UNRESOLVED, SFX_SDK_NOTE, SFX_GAME_CUE, SFX_AMBIGUOUS };
+
 struct SfxSample {
-    u32 resolved, program, tone, key;
+    enum SfxPlayback playback;
+    u32 program, tone, key, cue, voices;
 };
 struct SfxBank {
     struct BankAsset asset;

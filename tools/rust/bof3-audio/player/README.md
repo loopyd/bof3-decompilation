@@ -41,21 +41,24 @@ bof3-audio compile --mode sfx \
 ```
 
 Repeat `--archive` to supply the bank list. Each input must have one VH, VB and
-auxiliary entry owned by the same runtime bank slot. Left and Right switch banks;
-Up and Down select physical samples. Selection stops at list boundaries and does
-not play sound. Cross auditions the selected sample only when it has one
-unambiguous, in-bounds SDK tone. It uses voice 0, the tone's center key, fine 0,
-and left/right volumes 127. Multiple tone candidates and missing bindings remain
-visible as unresolved; Cross does nothing for them. These auditions do not
-establish game cue mappings or vocal roles. Square releases the voice. Switching
-banks flushes key-off and waits for the old voice's envelope to reach zero before
-closing the bank and replacing sample memory. A release that exceeds 600 VBlanks
-leaves the old bank in place and reports an error.
+auxiliary entry owned by the same runtime bank slot. Left and Right switch banks.
+Up and Down select physical samples. Selection stops at list boundaries and
+leaves playback alone.
 
-The effects view displays source, runtime slot, physical sample, elapsed time and
-playback state. It uses the same background and controls popup as music. Effects
-builds use no SEP, PPQN or time signature. The selected sample's game cue remains
-unresolved.
+Cross plays the selected sample through the original dispatcher when exactly
+one local cue binds all of its layers to that physical sample. The HUD shows the
+packed game cue ID. When no such cue exists and the sample has a single valid SDK
+tone, Cross auditions that tone on voice 0 at its center key, with fine 0 and
+left/right volumes of 127. The HUD labels this path `SDK NOTE`. Multiple cue
+bindings or a missing playback binding leave Cross inactive. The build report
+lists the cue candidates and the reasons individual rows are unresolved.
+
+Square releases the voices from the current play. Before retriggering or
+switching banks, the player flushes key-off and waits for every affected
+envelope to reach zero. A release that exceeds 600 VBlanks leaves the old bank
+in place and reports an error. The effects view shows the source, runtime slot,
+physical sample, cue, elapsed time and playback state. It shares the music
+background and controls popup and requires no SEP.
 
 Build the Japanese vocal view with the original two-file US CUE sheet and both
 of its raw BINARY tracks:

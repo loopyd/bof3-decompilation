@@ -4,10 +4,10 @@ mod sfx;
 mod vocal;
 
 use crate::{
+    Result,
     machine::{bank, image::executable::Executable, image::profile::Profile},
     publication::{self, Publication},
     sequence::SequenceSet,
-    Result,
 };
 use emi_ex_v2::image::ArchiveImage;
 use std::{ffi::OsString, fs, path::PathBuf, process::Command};
@@ -354,12 +354,12 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         "sequence": music.then_some(sequence), "bank": plan.map(|plan| &plan.identity), "banks": banks, "runtime_sha256": profile.exe_sha256,
         "tracks": sequences.len(),
         "controls": match mode {
-            "sfx" => serde_json::json!({"left_right": "bank", "up_down": "physical_sample", "cross": "play_sdk_note", "square": "halt", "l1": "modal_help"}),
+            "sfx" => serde_json::json!({"left_right": "bank", "up_down": "physical_sample", "cross": "play_selected_sample", "square": "halt", "l1": "modal_help"}),
             "vocal" => serde_json::json!({"left_right": "none", "up_down": "single_qualified_cue", "cross": "play_retrigger", "circle": "stop", "square": "toggle_repeat", "l1": "modal_help"}),
             _ => serde_json::json!({"up_down": "track", "cross": "play_pause", "square": "restart", "l1": "modal_help"}),
         },
         "executable_sha256": crate::digest::sha256_hex(result.bytes()),
-        "compiler": "gcc-2.7.2-psx", "playback": match mode { "sfx" => "manual_sdk_note", "vocal" => "original_xa", _ => "repeat_forever" },
+        "compiler": "gcc-2.7.2-psx", "playback": match mode { "sfx" => "manual_game_cue_or_sdk_note", "vocal" => "original_xa", _ => "repeat_forever" },
         "runtime_patches": if music { vec!["midi_voice_meter_note_call"] } else { Vec::<&str>::new() },
         "runtime": "complete_original_us_image", "independent_fidelity_validated": false,
     });

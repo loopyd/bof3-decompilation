@@ -149,6 +149,9 @@ void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
 void hud_sfx(void)
 {
     char number[4];
+    const struct SfxSample *sample;
+    static const char hex[] = "0123456789ABCDEF";
+    sample = sfx_sample();
     graphics_panel(176, 16, 132, 78, 0x180818, 0x080008, 1);
     graphics_logo();
     graphics_text(184, 22, "PLAYER " PLAYER_VERSION);
@@ -170,8 +173,17 @@ void hud_sfx(void)
     graphics_text(114, 144, "OF");
     decimal(number, sfx_bank()->sample_count, 3);
     graphics_text(138, 144, number);
-    graphics_text(18, 164, sfx_sample()->resolved ? "SDK NOTE READY" : "TONE BINDING UNRESOLVED");
-    graphics_text_scaled(18, 180, "CUE AND VOCAL ROLE: UNRESOLVED", 6, 6);
+    if (sample->playback == SFX_GAME_CUE) {
+        number[0] = hex[(sample->cue >> 8) & 15];
+        number[1] = hex[(sample->cue >> 4) & 15];
+        number[2] = hex[sample->cue & 15];
+        graphics_text(18, 164, "GAME CUE");
+        graphics_text(98, 164, number);
+    } else if (sample->playback == SFX_SDK_NOTE) {
+        graphics_text(18, 164, "SDK NOTE");
+        graphics_text_scaled(18, 180, "CUE UNRESOLVED", 6, 6);
+    } else graphics_text(18, 164, sample->playback == SFX_AMBIGUOUS ?
+        "MULTIPLE CUE BINDINGS" : "SAMPLE BINDING UNRESOLVED");
     graphics_text(18, 196, player_status.error ? "DRIVER ERROR" :
         (player_status.playing ? "PLAYING SAMPLE" : "IDLE"));
     if (player_status.playing && !player_status.error) {

@@ -1,5 +1,6 @@
 //! Original-file inputs for development comparisons and pending production migrations.
 use crate::{
+    Result,
     catalog::{
         loader::{LAYOUT_INITIALIZE, LOADER_SLOTS, LOADER_TABLE},
         mapping::Mapping,
@@ -12,7 +13,6 @@ use crate::{
         image::profile::Profile,
     },
     xa::cue,
-    Result,
 };
 
 /// Execute the original leaf routine without substituting game/SDK calls.
@@ -69,6 +69,14 @@ pub fn read_cues(executable: &Executable) -> Result<Vec<XaCue>> {
     cue::read_tables(&mut ram, [0x8018_39c4, 0x8018_32c4, 0x8018_3298], bases)
 }
 
+pub(crate) fn read_cue_lookup(ram: &mut Ram) -> Result<[u8; 256]> {
+    let mut lookup = [0; 256];
+    for (index, byte) in lookup.iter_mut().enumerate() {
+        *byte = ram.read(0x8018_21e0 + index as u32, Width::Byte)? as u8;
+    }
+    Ok(lookup)
+}
+
 pub fn read(executable: &Executable) -> Result<Mapping> {
     let profile = Profile::identify(executable)?;
     let mut ram = Ram::from_executable(executable);
@@ -89,10 +97,7 @@ pub fn read(executable: &Executable) -> Result<Mapping> {
     for (index, byte) in music.iter_mut().enumerate() {
         *byte = ram.read(crate::catalog::music::CUE_TABLE + index as u32, Width::Byte)? as u8;
     }
-    let mut lookup = [0; 256];
-    for (index, byte) in lookup.iter_mut().enumerate() {
-        *byte = ram.read(0x801821e0 + index as u32, Width::Byte)? as u8;
-    }
+    let lookup = read_cue_lookup(&mut ram)?;
     let mut handlers = [0; 9];
     for (state, entry) in handlers.iter_mut().enumerate() {
         *entry = ram.read(cue::STATE_TABLE + state as u32 * 4, Width::Word)?;

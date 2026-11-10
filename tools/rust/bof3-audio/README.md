@@ -345,7 +345,8 @@ to the executable's directory. The executable must match the supported US profil
 Use `--repo-root PATH` when running a source-package build outside the full checkout.
 `--layout 0|1|2` uses the same capacity rules as PSX rendering.
 
-Use `--mode sfx` with one or more DRG EMI banks for the effects view.
+Use `--mode sfx` with one or more DRG EMI banks for the effects view. Cross
+dispatches an unambiguous local game cue for the selected physical sample.
 Use `--mode vocal --disc CUE` to play the qualified Japanese vocal cue `0x2000`
 through the original XA driver. See the [player build instructions](player/README.md)
 for the supported media layout, controls, and rebuild commands.
