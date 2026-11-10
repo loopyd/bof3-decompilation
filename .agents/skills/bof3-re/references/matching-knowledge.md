@@ -97,6 +97,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | One output record filled field by field; first difference is where the computation behind a later field group sits | Write the fields in the original's store order and place a dependent lookup at the field that consumes it: the lookup and the neighbouring store group share scheduler slots, so moving those writes later merges the lookup into the wrong group. One fill measured 75/81 at 328 bytes with the dependent writes moved after a neighbouring field write, and 81/81 at 324 bytes with them at their own fields |
 | First difference is a store's `lui` base where the build has the shift or product computing the stored value, and that offset survives every reordering of the block | The original sets that store's base up before computing the value, so store the value back into its cell immediately after the statement that computes it, and let the later copies that read that cell follow in the original's order. Keeping that store at the end of the group measured 120/127, moving it among the neighbouring stores without the adjacency 116/127, and computing, storing, then the neighbouring pair reordered matched: the store's position relative to its own computation is the lever, and the pair's order is a second decision that shows only once the first is in place |
 | Byte size equal and the first difference is the register a later call's argument setup leaves a product in (`mflo` into the neighbouring register) | Assign that product's local above the neighbouring record store. Written between that store and the `+=` that consumes it the same body measured 88 of 99 instructions at the original size; the same local assigned before the store matched, so read this signature as statement position, not as a multiply or argument-order defect |
+| Four bytes under, first difference the register of a `lui` base, where one masked byte sum is shifted once for a halfword store and once for a call argument | Declare that value local at the store cell's width (`u16` for a halfword cell), not `s32`. The word local collapses the shift pair into one shifted quantity and drops the base the second one materialised; the `u16` local keeps both, one into the argument register and one feeding the store, and matched at the original size where `s32`, a second width local, an explicit truncation at the store and an `s16 *` view of that cell each measured the same four bytes short |
 | Body short with the first difference at the point the loop's running value is established | When that value arrives as a parameter and the body only advances it, advance the parameter in place (`phase += K;`) instead of copying it into a local. Four local forms measured the same two instructions short at that same first difference, over both widths (`s32`, `u32`) and either declaration position, with chained and with separate stores, so the copy, not the local's width or position, is the lever |
 
 Named extern-array indexing can emit folded `lw table(index)` and assembler
@@ -1413,6 +1414,14 @@ extra bytes.
 array symbol for both row uses, then the named product. The named product also
 shrank the frame from 32 to the original 24 bytes, which no body instruction had
 shown.
+
+When the name is already right and the residual is the register that carries the
+product rather than the frame or the base, sweep the constant's own decomposition
+before the declaration. A named stride of the form `(2^k - 1) << j` measured short at
+the original size as one `x * STRIDE`, as `(x * m) << j`, and with that product
+written inside the consuming call, while one statement per shift
+(`x <<= k; x -= x; x <<= j;`) matched. That chain is the pseudo set GCC 2.7.2 lowers
+the multiply to, and the `.lreg` dump names the accumulator each spelling allocates.
 
 The mirror is not a lever: a sum the original recomputes at each use stays inline.
 One local both edge stores read measured a hunk short at a wider frame, rewriting
