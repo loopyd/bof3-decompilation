@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801EF4D4
   - - 2864
-    - asm
-    - func_801EF730
+    - c
+    - drawEightTranslucentGouraudRingQuadsAtWorkHalfwords2EAnd30BmagicMagic13003_801EF730
+    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudRingQuadsAtWorkHalfwords2EAnd30BmagicMagic13003_801EF730.c'
+    - '@behavior: Emit eight translucent Gouraud ring quads centred on work halfwords 0x2E and 0x30.'
   - - 3652
     - textbin
     - D_801EFA44

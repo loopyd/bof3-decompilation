@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801EFACC
   - - 3932
-    - asm
-    - func_801EFB5C
+    - c
+    - add2ToWorkByteBIncrementByte9DecrementByteAThenAdvanceByte2At28BmagicMagic16703_801EFB5C
+    - '@source: src/bof3/bmagic/add2ToWorkByteBIncrementByte9DecrementByteAThenAdvanceByte2At28BmagicMagic16703_801EFB5C.c'
+    - '@behavior: Adds two to work byte B, increments byte 9, decrements byte A, and advances byte 2 when byte 9 is 0x28.'
   - - 4068
     - asm
     - func_801EFBE4

@@ -131,8 +131,10 @@ segments:
     - '@source: src/bof3/world/incrementWorkByte9QueueCue201AdvanceWorkByte2At17ThenDrawWorld02Area08213_801F3D8C.c'
     - '@behavior: entry 3 of the work-byte-2 handler table at 0x801F576C; increments work byte +0x09, and at unsigned count 17 clears it, queues cue 0x201 through 0x8015DF18 and advances work byte +0x02; always draws through 0x801F4430.'
   - - 4616
-    - asm
-    - func_801F3E08
+    - c
+    - drawRotatingQuadBandsAndCornersAdvanceWorkByte2QueueCue200At8World02Area08213_801F3E08
+    - '@source: src/bof3/world/drawRotatingQuadBandsAndCornersAdvanceWorkByte2QueueCue200At8World02Area08213_801F3E08.c'
+    - '@behavior: work-byte-2 handler 4; draws rotating quad bands and, from count three, four corner bands; draws the work record, increments byte +0x09, then advances byte +0x02 and queues cue 0x200 at count eight.'
   - - 5128
     - c
     - drawFourCornerQuadBandsDrawWorkRecordIncrementWorkByte9At16AdvanceScenarioProgressAdvanceWorkByte2World02Area08213_801F4008

@@ -202,8 +202,10 @@ segments:
     - c
     - publishGateByteSlot1World04Area17513_801F3DB8
   - - 4572
-    - asm
-    - func_801F3DDC
+    - c
+    - setStatusF7AndByte801F294C4IfGateElseFFFFAndByte0World04Area17513_801F3DDC
+    - '@source: src/bof3/world/setStatusF7AndByte801F294C4IfGateElseFFFFAndByte0World04Area17513_801F3DDC.c'
+    - '@behavior: Reads the shared gate byte D_801490C7. When zero, stores 0xFFFF into D_801490A8 and clears D_801F294C. Otherwise stores 0xF7 into D_801490A8 and 4 into D_801F294C.'
   - - 4648
     - c
     - setStatusF8IfGateElseF9World04Area17513_801F3E28

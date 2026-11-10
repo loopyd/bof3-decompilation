@@ -143,8 +143,10 @@ segments:
     - '@source: src/bof3/bmagic/stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C.c'
     - '@behavior: Steps record word 8, projects the position pair, and advances byte 2 above the signed limit.'
   - - 8612
-    - asm
-    - func_801F0DA4
+    - c
+    - projectRecordPositionPairAccumulateWord18CountDownByte6AndClearAtZeroBmagicMagic12603_801F0DA4
+    - '@source: src/bof3/bmagic/projectRecordPositionPairAccumulateWord18CountDownByte6AndClearAtZeroBmagicMagic12603_801F0DA4.c'
+    - '@behavior: Projects record position pair, accumulates word 18, counts down byte 6, and clears at zero.'
   - - 8912
     - asm
     - func_801F0ED0

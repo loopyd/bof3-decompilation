@@ -25,6 +25,6 @@ func_801F01D0 = 0x801F01D0;
 func_801F0230 = 0x801F0230;
 incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4 = 0x801F02B4;
 func_801F02FC = 0x801F02FC;
-func_801F07C8 = 0x801F07C8;
+projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8 = 0x801F07C8;
 func_801F0878 = 0x801F0878;
 D_801F0898 = 0x801F0898;

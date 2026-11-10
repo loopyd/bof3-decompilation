@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/stepRecordWord8ProjectPositionPairAndAdvanceAtLimitBmagicMagic12603_801F0C7C.c",
+    "src/bof3/bmagic/projectRecordPositionPairAccumulateWord18CountDownByte6AndClearAtZeroBmagicMagic12603_801F0DA4.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSeedFrom8014637CStepPositionSetHeadingToward801EB4E0AndAdvanceWorkByte2BmagicMagic12603_801F0240.c",
     "src/bof3/bmagic/dispatchWorkByte2ThenHelpersWhenBytes0And2SetBmagicMagic12603_801F01C0.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EF0BC.c",

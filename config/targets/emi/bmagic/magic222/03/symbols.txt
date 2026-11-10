@@ -32,7 +32,7 @@ seedWorkHalfwordPairFromRecordRaiseFlag10RearmWorkBytesAndAdvanceWorkByte2Bmagic
 add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C = 0x801F061C;
 func_801F066C = 0x801F066C;
 add4ToWorkByteBThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801F06C8 = 0x801F06C8;
-func_801F0730 = 0x801F0730;
+add4ToWorkByteBAndDecrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801F0730 = 0x801F0730;
 func_801F07A8 = 0x801F07A8;
 func_801F0D54 = 0x801F0D54;
 func_801F0D94 = 0x801F0D94;

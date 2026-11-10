@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801EFEC8
   - - 5240
-    - asm
-    - func_801F0078
+    - c
+    - claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078
+    - '@source: src/bof3/bmagic/claimRecordsForGlobalWorkByteASeedOrdinalFieldsAndWorkPointerIncrementByteBBmagicMagic00303_801F0078.c'
+    - '@behavior: Claims records up to shared work byte A, seeds ordinal fields and work pointers, and increments work byte B.'
   - - 5476
     - asm
     - func_801F0164

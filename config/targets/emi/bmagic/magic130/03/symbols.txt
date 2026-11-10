@@ -15,5 +15,5 @@ func_801EF3DC = 0x801EF3DC;
 decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic13003_801EF42C = 0x801EF42C;
 func_801EF478 = 0x801EF478;
 func_801EF4D4 = 0x801EF4D4;
-func_801EF730 = 0x801EF730;
+drawEightTranslucentGouraudRingQuadsAtWorkHalfwords2EAnd30BmagicMagic13003_801EF730 = 0x801EF730;
 D_801EFA44 = 0x801EFA44;

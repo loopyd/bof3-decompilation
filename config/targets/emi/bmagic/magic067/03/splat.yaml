@@ -110,8 +110,10 @@ segments:
     - asm
     - func_801F02E4
   - - 5948
-    - asm
-    - func_801F033C
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C.c'
+    - '@behavior: When scratchpad work byte 0xB is zero, decrements byte 0xB of the record selected by 0x801EB4E0 and invokes 0x801E5988.'
   - - 6028
     - c
     - dispatchWorkByte2HandlerBmagicMagic06703_801F038C

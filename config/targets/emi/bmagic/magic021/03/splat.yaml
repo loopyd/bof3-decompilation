@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF208
   - - 1632
-    - asm
-    - func_801EF260
+    - c
+    - invokeHelperAndAdd4ToWorkByte9Below12ElseAdvanceWorkByte2BmagicMagic02103_801EF260
+    # @source 0x801EF260
+    # @behavior Calls helper and adds four to work byte 9 below 12; otherwise advances work byte 2.
   - - 1740
     - asm
     - func_801EF2CC

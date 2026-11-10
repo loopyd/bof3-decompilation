@@ -144,8 +144,10 @@ segments:
     - add4ToWorkByteBThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801F06C8
     - '@source: src/bof3/bmagic/add4ToWorkByteBThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801F06C8.c'
   - - 6960
-    - asm
-    - func_801F0730
+    - c
+    - add4ToWorkByteBAndDecrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801F0730
+    - '@source: src/bof3/bmagic/add4ToWorkByteBAndDecrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801F0730.c'
+    - '@behavior: Work-byte-2 handler, entry 4 of the five-entry table at 0x801F0D98. Adds four to work byte 0xB, re-reads the scratchpad work pointer and decrements unsigned work byte 9. When the stored byte reaches zero, decrements byte 0xB of the shared record addressed by 0x801EB4E0 and calls the helper at 0x801E5988. Takes no arguments and returns nothing.'
   - - 7080
     - asm
     - func_801F07A8

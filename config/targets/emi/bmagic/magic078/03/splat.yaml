@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F02FC
   - - 7112
-    - asm
-    - func_801F07C8
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8.c'
+    - '@behavior: Pushes the matrix stack, projects work-record position words 0x34 and 0x38 and signed halfword 0x3E, builds a zero-angle rotation, composes matrix 0x801492E8, and installs the rotation and translation. Takes no arguments and returns nothing.'
   - - 7288
     - textbin
     - func_801F0878
