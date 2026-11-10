@@ -5030,6 +5030,18 @@ null-clock operations reject while the cooperative schedule owns the actors.
 counts, consumer frames and actor counters. The functional 768-tick model remains
 separate. This declared context does not establish ordinary threaded scheduling
 or complete music, SFX and XA history acceptance.
+
+A bounded development comparison runs the same authored reset ROM and guest
+program in Rust and native PCSX-Redux Agentic under this schedule. The guest
+uploads the original BGM004 and COMN_SE banks in layout 0 using 2 KiB chunks,
+then overlaps music with cue playback, early key-off requests, retriggering and
+an explicit SDK voice, followed by a release tail and music stop. Checkpoint RAM,
+registers, PC, cycles and actor state agree, as does the continuous stereo float
+PCM. Staging copies and routine calls execute as guest instructions in this
+comparison. Production still stages archives and enters routines from the host.
+Original-game loading and timing, XA playback and wider bank histories remain
+unverified.
+
 The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 `machine::reference` retains explicit original EXE/BIOS preparation and rendering
 for development comparisons and the current compiled player. Its music renderer
