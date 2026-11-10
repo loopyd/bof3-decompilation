@@ -7,6 +7,6 @@ dispatchStateByte1Tablef7a0BmagicMagic07503_801EEFF4 = 0x801EEFF4;
 dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038 = 0x801EF038;
 func_801EF0D0 = 0x801EF0D0;
 func_801EF2A8 = 0x801EF2A8;
-func_801EF2F4 = 0x801EF2F4;
+drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4 = 0x801EF2F4;
 func_801EF500 = 0x801EF500;
 func_801EF7A0 = 0x801EF7A0;

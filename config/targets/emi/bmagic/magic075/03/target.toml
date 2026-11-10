@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic075_03_psyq.c",
     "src/bof3/bmagic/magic07503DispatchTables.c",
+    "src/bof3/bmagic/drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038.c",
 ]
 psyq_source = "src/bof3/support/magic075_03_psyq.c"

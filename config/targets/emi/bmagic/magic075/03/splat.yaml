@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EF2A8
   - - 1780
-    - asm
-    - func_801EF2F4
+    - c
+    - drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4
+    - '@source: src/bof3/bmagic/drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4.c'
+    - '@behavior: Draw sixteen translucent Gouraud triangles around work halfwords 0x2E and 0x30, using the incoming radius plus bit zero of D_80143E6C and a grey centre with blue rim vertices.'
   - - 2304
     - asm
     - func_801EF500

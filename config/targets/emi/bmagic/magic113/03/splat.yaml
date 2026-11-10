@@ -136,8 +136,10 @@ segments:
     - asm
     - func_801F02CC
   - - 7012
-    - asm
-    - func_801F0764
+    - c
+    - setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764
+    - '@source: src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerAndRestoreDrawModeBmagicMagic11303_801F0764.c'
+    - '@behavior: Sets draw mode, dispatches the handler indexed by work byte 2, and restores draw mode.'
   - - 7272
     - c
     - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic11303_801F0868

@@ -25,5 +25,5 @@ func_801F04B0 = 0x801F04B0;
 func_801F078C = 0x801F078C;
 func_801F08AC = 0x801F08AC;
 func_801F0974 = 0x801F0974;
-func_801F0BF8 = 0x801F0BF8;
+projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic12003_801F0BF8 = 0x801F0BF8;
 D_801F0CA8 = 0x801F0CA8;

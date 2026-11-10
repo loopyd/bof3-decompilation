@@ -62,8 +62,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4.c'
     - '@behavior: Dispatches work byte 2, updates active work through the local helper, and queues a record every fourth work-byte-0xB tick while work byte 2 is 1 and byte 0xA is nonzero.'
   - - 2044
-    - asm
-    - func_801EF3FC
+    - c
+    - countDownWorkByte9ThenCopyRecordPairSetJitteredHeadingAndRearmWorkBmagicMagic12403_801EF3FC
+    - '@source: src/bof3/bmagic/countDownWorkByte9ThenCopyRecordPairSetJitteredHeadingAndRearmWorkBmagicMagic12403_801EF3FC.c'
+    - '@behavior: Counts down work byte 9, copies the record halfword pair, sets a jittered heading, rearms work and advances byte 2.'
   - - 2440
     - c
     - add4ToWorkByteAAndAdvanceWorkByte2At16BmagicMagic12403_801EF588

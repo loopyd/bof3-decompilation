@@ -114,8 +114,10 @@ segments:
     # @source 0x801F0214
     # @behavior Calls the local helper, decrements work byte 9, then advances work byte 2 on zero.
   - - 5752
-    - asm
-    - func_801F0278
+    - c
+    - invokeHelperThenAdvanceWorkByteBOrBothRecordByte2BmagicMagic06403_801F0278
+    # @source 0x801F0278
+    # @behavior Calls helper then, with global bit 0 clear, advances work byte 0xB below 24 or both record byte-2 states otherwise.
   - - 5904
     - c
     - incrementWorkByte2WhenGlobalWorkByte2Is10ThenInvokeHelperBmagicMagic06403_801F0310

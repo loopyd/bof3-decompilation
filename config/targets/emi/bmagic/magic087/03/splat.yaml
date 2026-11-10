@@ -71,8 +71,10 @@ segments:
     - dispatchStateByte1Table0520BmagicMagic08703_801EF958
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 3484
-    - asm
-    - func_801EF99C
+    - c
+    - dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C.c'
+    - '@behavior: Dispatch work byte 2, then call 0x801EFF50, 0x801F0014 and PopMatrix when byte 0 is nonzero and byte 2 is neither 0 nor 3.'
   - - 3628
     - asm
     - func_801EFA2C

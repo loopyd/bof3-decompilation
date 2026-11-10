@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF374
   - - 2036
-    - asm
-    - func_801EF3F4
+    - c
+    - decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte4AndTripletAddC00000ClearByte9SetATo3CAndAdvanceWorkByte2BmagicMagic07603_801EF3F4.c'
+    - '@behavior: Decrement work byte 9; on zero copy record byte 4 and triplet, bias word 0x3C, rearm and advance byte 2.'
   - - 2216
     - asm
     - func_801EF4A8

@@ -11,7 +11,7 @@ incrementWorkByte9ThenAdvanceWorkByte2At16ElseIncrementWorkByte4CallAF764AndInvo
 decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBIs80BmagicMagic08703_801EF530 = 0x801EF530;
 func_801EF580 = 0x801EF580;
 dispatchStateByte1Table0520BmagicMagic08703_801EF958 = 0x801EF958;
-func_801EF99C = 0x801EF99C;
+dispatchWorkByte2HandlerThenInvokeFF50And0014AndPopWhenWorkByte0SetAndByte2Neither0Nor3BmagicMagic08703_801EF99C = 0x801EF99C;
 func_801EFA2C = 0x801EFA2C;
 func_801EFAD4 = 0x801EFAD4;
 incrementWorkByte2WhenGlobalWorkByteBIs82BmagicMagic08703_801EFCA0 = 0x801EFCA0;

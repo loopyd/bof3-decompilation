@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EEFF4
   - - 1172
-    - asm
-    - func_801EF094
+    - c
+    - setScratchHalfword0FromWorkByte9Times4PlusC0IncrementBytesA9ThenDecrementGlobalByteBAndCall5988At28BmagicMagic10303_801EF094
+    - '@source: src/bof3/bmagic/setScratchHalfword0FromWorkByte9Times4PlusC0IncrementBytesA9ThenDecrementGlobalByteBAndCall5988At28BmagicMagic10303_801EF094.c'
+    - '@behavior: Writes work byte 9 times four plus 0xC0 to scratchpad halfword zero, increments work bytes 0xA and 9, and at byte 9 equal to 0x28 decrements record byte 0xB through 0x801EB4E0 and calls 0x801E5988.'
   - - 1320
     - asm
     - func_801EF128

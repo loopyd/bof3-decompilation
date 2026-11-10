@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801EF808
   - - 3216
-    - asm
-    - func_801EF890
+    - c
+    - decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890.c'
+    - '@behavior: Decrement byte 9; on zero copy the record triplet, seed tint and work fields, and advance byte 2.'
   - - 3424
     - asm
     - func_801EF960
