@@ -19,6 +19,6 @@ add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02
 func_801F0368 = 0x801F0368;
 func_801F03E0 = 0x801F03E0;
 func_801F05B4 = 0x801F05B4;
-func_801F0828 = 0x801F0828;
+reserveFirstFreeRecordBmagicMagic12403_801F0828 = 0x801F0828;
 clearWorkBytesBmagicMagic12403_801F088C = 0x801F088C;
 T_801F08DC = 0x801F08DC;

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC24
   - - 224
-    - asm
-    - func_801EECE0
+    - c
+    - forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0
+    - '@source: src/bof3/bmagic/forwardBattleByteAndRaiseFlag4OrCopyPoseAnd16HalfwordsThenAdvanceWorkByte1BmagicMagic11303_801EECE0.c'
+    - '@behavior: Forwards the battle byte and raises flag 4 when both classification bytes are on the same side of 3; otherwise copies the pose and sixteen halfwords, clears work bytes B and 9 and advances byte 1.'
   - - 548
     - asm
     - func_801EEE24

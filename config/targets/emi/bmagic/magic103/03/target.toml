@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/decrementWorkByte9ThenAddIndexedTripletToRecordClearBytes9AAndAdvanceWorkByte2BmagicMagic10303_801EFB88.c",
     "src/bof3/support/magic103_03_psyq.c",
     "src/bof3/bmagic/magic10303DispatchTables.c",
     "src/bof3/bmagic/copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94.c",

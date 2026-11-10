@@ -176,9 +176,7 @@ segments:
   - - 9276
     - asm
     - func_801F103C
-  - - 9912
-    - asm
-    - func_801F12B8
+  - [9912, c, writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8] # @source 0x801F12B8 @behavior Converts diagonal offsets to valid nonzero map-cell coordinates or writes zero bytes.
   - - 10124
     - textbin
     - D_801F138C

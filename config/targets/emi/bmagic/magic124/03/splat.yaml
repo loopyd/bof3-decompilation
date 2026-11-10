@@ -96,8 +96,10 @@ segments:
     - asm
     - func_801F05B4
   - - 7208
-    - asm
-    - func_801F0828
+    - c
+    - reserveFirstFreeRecordBmagicMagic12403_801F0828
+    # @source 0x801F0828
+    # @behavior Reserves the first free record flag among 64 records of stride 0x78, or returns 0xFF.
   - - 7308
     - c
     - clearWorkBytesBmagicMagic12403_801F088C

@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801EFB10
   - - 3976
-    - asm
-    - func_801EFB88
+    - c
+    - decrementWorkByte9ThenAddIndexedTripletToRecordClearBytes9AAndAdvanceWorkByte2BmagicMagic10303_801EFB88
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenAddIndexedTripletToRecordClearBytes9AAndAdvanceWorkByte2BmagicMagic10303_801EFB88.c'
+    - '@behavior: Decrements work byte 9 and on zero adds an indexed triplet to record words 0x34, 0x38 and 0x3C, clears work bytes 9 and 0xA and increments work byte 2.'
   - - 4208
     - asm
     - func_801EFC70

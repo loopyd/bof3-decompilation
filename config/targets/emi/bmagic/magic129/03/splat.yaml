@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF4F0
   - - 2380
-    - asm
-    - func_801EF54C
+    - c
+    - drawFourLayerTranslucentGouraudRibbonAlongWorkVelocityBmagicMagic12903_801EF54C
+    - '@source: src/bof3/bmagic/drawFourLayerTranslucentGouraudRibbonAlongWorkVelocityBmagicMagic12903_801EF54C.c'
+    - '@behavior: Draws four translucent Gouraud ribbon layers per work-byte-A segment along work velocity with sampled widths and phase offsets.'
   - - 4928
     - c
     - dispatchStateByte1Table05c8BmagicMagic12903_801EFF40

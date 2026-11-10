@@ -46,5 +46,5 @@ incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50 = 0x801F0E50;
 func_801F0E90 = 0x801F0E90;
 func_801F0EEC = 0x801F0EEC;
 func_801F103C = 0x801F103C;
-func_801F12B8 = 0x801F12B8;
+writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8 = 0x801F12B8;
 D_801F138C = 0x801F138C;
