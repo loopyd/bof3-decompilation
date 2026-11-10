@@ -151,10 +151,22 @@ void graphics_logo(void)
     gpu(xy(160, 80));
 }
 
-void graphics_shade(u32 x, u32 y, u32 width, u32 height)
+void graphics_panel(u32 x, u32 y, u32 width, u32 height,
+                    u32 top, u32 bottom, int border)
 {
+    if (x >= 320 || y >= 240 || width == 0 || height == 0) return;
+    if (width > 320 - x) width = 320 - x;
+    if (height > 240 - y) height = 240 - y;
     gpu(0xe1000200);
-    gpu(0x62000000); gpu(xy(x, y)); gpu(xy(width, height));
+    gpu(0x3a000000 | (top & 0xffffff)); gpu(xy(x, y));
+    gpu(top & 0xffffff); gpu(xy(x + width, y));
+    gpu(bottom & 0xffffff); gpu(xy(x, y + height));
+    gpu(bottom & 0xffffff); gpu(xy(x + width, y + height));
+    if (!border) return;
+    graphics_rectangle(x, y, width, 1, 0xb0b0b0);
+    graphics_rectangle(x, y, 1, height, 0xb0b0b0);
+    graphics_rectangle(x, y + height - 1, width, 1, 0x404040);
+    graphics_rectangle(x + width - 1, y, 1, height, 0x404040);
 }
 
 void graphics_begin_frame(u32 frames)

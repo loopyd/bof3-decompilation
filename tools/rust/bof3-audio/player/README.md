@@ -13,11 +13,32 @@ make REPO=/absolute/path/to/rebof3-simple clean all
 ```
 
 `player.c` coordinates the frame loop. `audio.c` owns driver calls, sequence
-restarts, musical ticks, and SPU channel levels. `graphics.c` owns GPU commands,
+selection, pause, restarts, musical ticks, and SPU channel levels. `controls.c`
+reads the original PAD routines and handles button edges and modal help.
+`graphics.c` owns GPU commands,
 assets, glyphs, the animated background, and frame buffers. `hud.c` owns layout,
 time formatting, meter animation, and the small `Capcom C 1993` driver credit.
-The audio, graphics, and HUD interfaces have matching headers. `psx.h` defines
+The audio, controls, graphics, and HUD interfaces have matching headers. `psx.h` defines
 shared PSX types and hardware access.
+
+Up and Down select the previous and next sequence in the compiled SEP. Selection
+stops at the first and last track. Cross toggles play and pause. Square restarts
+the selected track. Track changes and restarts preserve pause state. Pause uses
+the original sequence routine, which releases active notes and retains the event
+cursor for resume. SMPTE position and musical ticks stop advancing while paused.
+
+L1 toggles the controls popup. Its translucent purple gradient and beveled gray
+border appear over the animated background. While help is open, playback keeps
+its current state and every other control is blocked. L1 has priority on opening
+and closing frames. Other buttons need a fresh press after help closes.
+
+`graphics_panel(x, y, width, height, top, bottom, border)` draws a translucent
+vertical gradient. Colors use the GPU's `0xBBGGRR` packing. Callers choose any two
+colors and the panel size. The optional gray bevel stays inside the requested
+bounds, with light top and left edges and dark bottom and right edges. Panels
+clip at the 320x240 viewport; zero-sized panels and origins outside it draw
+nothing. The HUD and popup share this routine for panels over the cube, meter
+wells, transport information, and controls.
 
 The player loads at `0x80010000`, keeps the original runtime at `0x80096800`, and
 uses a stack below it. The linker rejects player assets that exceed the reserved
@@ -36,6 +57,8 @@ and time signature. Bars and beats start at 1, ticks at 0; controller loops adva
 musical time, while whole-sequence restarts reset it.
 
 `player_status` exposes the initialization phase, elapsed VBlank count, number of
-whole-sequence restarts, error code, and musical tick count for debugger inspection. Phase 4 means
+whole-sequence restarts, error code, musical tick count, selected track, pause
+state, and music position in VBlanks for debugger inspection. `player_controls`
+exposes held buttons, accepted button edges, and popup visibility. Phase 4 means
 playback started; phase 255 means initialization failed. Native sequence loops
 do not increment the whole-sequence restart counter.

@@ -5,6 +5,8 @@ extern const u8 player_header[], player_body[], player_sequence[];
 typedef int (*NoteCall)(u32, u32, u32, u32, u32, u32);
 static u32 player_record;
 static int sequence_handle;
+static int pending_start;
+static u32 last_frame;
 static u8 voice_tracks[24];
 volatile struct PlayerStatus player_status;
 
@@ -65,15 +67,57 @@ void audio_initialize(void)
     CALL(0x8015ce70, 0, 0, 0, 0);
     player_record = WORD(0x80190308 + handle * 4) + PLAYER_SEQUENCE_INDEX * 0xac;
     sequence_handle = handle;
+    player_status.track = PLAYER_SEQUENCE_INDEX;
     CALL(0x8016b9cc, handle, PLAYER_SEQUENCE_INDEX, 1, 1);
 }
 
 void audio_update(void)
 {
+    u32 delta;
+    delta = player_status.frames - last_frame;
+    last_frame = player_status.frames;
+    if (player_status.paused) return;
+    player_status.position_frames += delta;
     if ((WORD(player_record + 0x90) & 1) == 0) {
-        CALL(0x8016b9cc, sequence_handle, PLAYER_SEQUENCE_INDEX, 1, 1);
+        CALL(0x8016b9cc, sequence_handle, player_status.track, 1, 1);
         ++player_status.restarts;
     }
+}
+
+void audio_pause(void)
+{
+    if (!player_status.paused) {
+        CALL(0x8016b968, sequence_handle, player_status.track, 0, 0);
+        player_status.paused = 1;
+        return;
+    }
+    if (pending_start) {
+        CALL(0x8016b9cc, sequence_handle, player_status.track, 1, 1);
+        pending_start = 0;
+    } else CALL(0x8016bb6c, sequence_handle, player_status.track, 0, 0);
+    player_status.paused = 0;
+}
+
+void audio_restart(void)
+{
+    CALL(0x8016d6c4, sequence_handle, player_status.track, 0, 0);
+    player_status.position_frames = 0;
+    pending_start = player_status.paused != 0;
+    if (!pending_start) CALL(0x8016b9cc, sequence_handle, player_status.track, 1, 1);
+    ++player_status.restarts;
+}
+
+void audio_select(int direction)
+{
+    u32 track;
+    track = player_status.track;
+    if (direction < 0 && track != 0) --track;
+    if (direction > 0 && track + 1 < PLAYER_SEQUENCE_COUNT) ++track;
+    if (track == player_status.track) return;
+    CALL(0x8016d6c4, sequence_handle, player_status.track, 0, 0);
+    player_status.track = track;
+    player_record = WORD(0x80190308 + sequence_handle * 4) + track * 0xac;
+    audio_restart();
 }
 
 u32 audio_ticks(void)

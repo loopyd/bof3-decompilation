@@ -5,6 +5,11 @@
 static u8 levels[AUDIO_CHANNELS];
 static u8 peaks[AUDIO_CHANNELS];
 static u8 peak_hold[AUDIO_CHANNELS];
+static const struct MusicTiming {
+    u32 resolution;
+    u32 numerator;
+    u32 denominator_power;
+} timing[PLAYER_SEQUENCE_COUNT] = PLAYER_TIMING;
 
 static void timecode(u32 frames)
 {
@@ -41,14 +46,16 @@ static void decimal(char *destination, u32 value, u32 digits)
 static void musical_position(u32 ticks)
 {
     u32 quarter, denominator, beats, remainder;
+    const struct MusicTiming *selected;
     char digits[16];
-    quarter = PLAYER_RESOLUTION * 4;
-    denominator = 1u << PLAYER_DENOMINATOR_POWER;
+    selected = &timing[player_status.track];
+    quarter = selected->resolution * 4;
+    denominator = 1u << selected->denominator_power;
     remainder = ticks % quarter * denominator;
     beats = ticks / quarter * denominator + remainder / quarter;
-    decimal(digits, beats / PLAYER_NUMERATOR + 1, 4);
+    decimal(digits, beats / selected->numerator + 1, 4);
     digits[4] = ':';
-    decimal(digits + 5, beats % PLAYER_NUMERATOR + 1, 3);
+    decimal(digits + 5, beats % selected->numerator + 1, 3);
     digits[8] = ':';
     decimal(digits + 9, remainder % quarter / denominator, 6);
     digits[15] = 0;
@@ -89,9 +96,7 @@ static void meters(const u8 current[AUDIO_CHANNELS])
         } else if (peak_hold[track] != 0) --peak_hold[track];
         else if (peaks[track] != 0) --peaks[track];
         x = 17 + track * 18;
-        graphics_shade(x - 1, 116, 13, 95);
-        graphics_rectangle(x - 1, 116, 1, 95, 0x100610);
-        graphics_rectangle(x + 11, 116, 1, 95, 0x100610);
+        graphics_panel(x - 1, 116, 13, 95, 0x100610, 0x080308, 0);
         color = level != 0 ? fire[level / 8] : 0x100818;
         graphics_rectangle(x + 2, 118, 7, 7, color);
         for (bar = 0; bar < 16; ++bar) {
@@ -114,14 +119,32 @@ static void meters(const u8 current[AUDIO_CHANNELS])
 
 void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
 {
-    graphics_shade(176, 16, 132, 78);
-    graphics_shade(10, 92, 300, 18);
+    char track[3];
+    graphics_panel(176, 16, 132, 78, 0x180818, 0x080008, 1);
+    graphics_panel(10, 92, 300, 18, 0x180818, 0x080008, 0);
     graphics_logo();
     graphics_text(184, 22, "PLAYER " PLAYER_VERSION);
+    graphics_text_scaled(184, 32, player_status.paused ? "PAUSED" : "PLAYING", 6, 6);
+    decimal(track, player_status.track + 1, 2);
+    track[2] = 0;
+    graphics_text_scaled(240, 32, "TRACK", 6, 6);
+    graphics_text_scaled(276, 32, track, 6, 6);
     graphics_text(184, 42, "deitydragon");
     timecode(frames);
     musical_position(ticks);
     graphics_text(16, 96, PLAYER_SONG);
     meters(amplitudes);
-    graphics_text_scaled(82, 230, "Audio driver: Capcom C 1993", 6, 6);
+    graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
+    graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
+    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PAUSE  SQUARE RESTART", 6, 6);
+}
+
+void hud_help(void)
+{
+    graphics_panel(32, 42, 256, 152, 0x602040, 0x301020, 1);
+    graphics_text(48, 56, "MUSIC CONTROLS");
+    graphics_text(48, 80, "UP/DOWN PREV/NEXT TRACK");
+    graphics_text(48, 104, "CROSS   PLAY/PAUSE");
+    graphics_text(48, 128, "SQUARE  RESTART TRACK");
+    graphics_text(48, 174, "L1      CLOSE CONTROLS");
 }

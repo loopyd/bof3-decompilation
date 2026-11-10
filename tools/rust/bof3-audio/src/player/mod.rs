@@ -16,7 +16,8 @@ pub const HELP: &str = "
     --output NEW_DIR [--layout 0|1|2] [--repo-root REPOSITORY] [--disc-root ROOT] [--json]
   Build player.exe with canonical GCC 2.7.2. Output includes the rebuildable C89
   project and supplied runtime/song bytes. The US runtime is retained in full.
-  The player repeats forever. BIOS is supplied by the console or emulator.
+  Up/Down select tracks, Cross toggles play/pause, Square restarts, and L1 toggles
+  controls help. The player repeats forever. BIOS is supplied by the console or emulator.
 ";
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -106,13 +107,17 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "compile sequence must select an existing index within four US SEP slots".into(),
         );
     }
-    let selected = &sequences.sequences[sequence];
-    if selected.resolution == 0
-        || selected.resolution > 32767
-        || selected.time_numerator == 0
-        || selected.time_denominator_power > 7
-    {
-        return Err("compile requires PPQN 1..32767 and a valid MIDI time signature".into());
+    for selected in &sequences.sequences {
+        if selected.resolution == 0
+            || selected.resolution > 32767
+            || selected.time_numerator == 0
+            || selected.time_denominator_power > 7
+        {
+            return Err(
+                "compile requires PPQN 1..32767 and a valid MIDI time signature for every track"
+                    .into(),
+            );
+        }
     }
     let root = fs::canonicalize(
         root.unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")),
@@ -134,6 +139,14 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         ("psx.h", include_bytes!("../../player/psx.h").as_slice()),
         ("audio.c", include_bytes!("../../player/audio.c").as_slice()),
         ("audio.h", include_bytes!("../../player/audio.h").as_slice()),
+        (
+            "controls.c",
+            include_bytes!("../../player/controls.c").as_slice(),
+        ),
+        (
+            "controls.h",
+            include_bytes!("../../player/controls.h").as_slice(),
+        ),
         (
             "graphics.c",
             include_bytes!("../../player/graphics.c").as_slice(),
@@ -184,15 +197,23 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         ("SEQUENCE_BYTES", plan.sequence.len() as u32),
         ("SEQUENCE_COUNT", sequences.sequences.len() as u32),
         ("SEQUENCE_INDEX", sequence as u32),
-        ("RESOLUTION", u32::from(selected.resolution)),
-        ("NUMERATOR", u32::from(selected.time_numerator)),
-        (
-            "DENOMINATOR_POWER",
-            u32::from(selected.time_denominator_power),
-        ),
     ] {
         config.push_str(&format!("#define PLAYER_{name} {value:#x}\n"));
     }
+    let timing: Vec<_> = sequences
+        .sequences
+        .iter()
+        .map(|track| {
+            format!(
+                "{{{}, {}, {}}}",
+                track.resolution, track.time_numerator, track.time_denominator_power
+            )
+        })
+        .collect();
+    config.push_str(&format!(
+        "#define PLAYER_TIMING {{{}}}\n",
+        timing.join(", ")
+    ));
     let song = archive_path
         .file_name()
         .and_then(|s| s.to_str())
@@ -244,6 +265,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         "graphics": graphics.identity,
         "timecode": {"smpte": "30_ndf", "midi": "bar:beat:tick", "glyph_sizes": [[8,8],[6,6]]},
         "sequence": sequence, "bank": plan.identity, "runtime_sha256": profile.exe_sha256,
+        "tracks": sequences.sequences.len(),
+        "controls": {"up_down": "track", "cross": "play_pause", "square": "restart", "l1": "modal_help"},
         "executable_sha256": crate::digest::sha256_hex(result.bytes()),
         "compiler": "gcc-2.7.2-psx", "playback": "repeat_forever",
         "runtime": "complete_original_us_image", "independent_fidelity_validated": false,
