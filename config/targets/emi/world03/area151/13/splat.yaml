@@ -94,8 +94,9 @@ segments:
     - asm
     - func_801F36C0
   - - 2968
-    - asm
-    - func_801F3798
+    - c
+    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area15113_801F3798
+    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area15113_801F3798.c'
   - - 3224
     - asm
     - func_801F3898

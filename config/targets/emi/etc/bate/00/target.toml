@@ -20,6 +20,7 @@ sources = [
     "src/bof3/ui/setFrontLocalMode3AndAdvanceUiSubstep.c",
     "src/bof3/ui/emitPanelIconPrimBate00_801D4678.c",
     "src/bof3/ui/commitBateSlotSnapshotIntoSharedFieldRecord.c",
+    "src/bof3/ui/drawSemiTransGreyCrossPrimBate00_801D26E0.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

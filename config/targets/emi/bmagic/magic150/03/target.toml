@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic150/03.bin"
 splat = "config/targets/emi/bmagic/magic150/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC.c",
+]
 support_sources = [
     "src/bof3/support/magic150_03_psyq.c",
     "src/bof3/bmagic/resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0.c",

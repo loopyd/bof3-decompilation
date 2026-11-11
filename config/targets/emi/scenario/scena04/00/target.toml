@@ -37,6 +37,7 @@ sources = [
     "src/bof3/scenario/claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenStepActiveWorkRecordsScenarioScena0400_801F7BC0.c",
     "src/bof3/scenario/armEffectGroupInvalidateModeRecordEntriesClearCountAndResetEffectSlots0And1ScenarioScena0400_801FA0B4.c",
     "src/bof3/scenario/stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0.c",
+    "src/bof3/scenario/armEffectGroupClearCountAndResetEffectSlots0And1And5ScenarioScena0400_801FA12C.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

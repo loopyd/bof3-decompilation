@@ -330,6 +330,7 @@ sources = [
     "src/bof3/battle/startSelectionEmiStreamAndAdvanceState.c",
     "src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c",
     "src/bof3/battle/drawBattlerCountdownEntries.c",
+    "src/bof3/battle/drawBattlerCountdownTile.c",
     "src/bof3/battle/drawBattlePanelStrip.c",
     "src/bof3/battle/drawBattlerStatusPanel.c",
     "src/bof3/battle/drawColorTilePrim.c",

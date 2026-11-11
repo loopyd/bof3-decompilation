@@ -172,8 +172,10 @@ segments:
     - asm
     - func_801D835C
   - - 31824
-    - asm
-    - func_801D8850
+    - c
+    - drawPanelFrameShisu00_801D8850
+    - '@source: src/bof3/ui/drawPanelFrameShisu00_801D8850.c'
+    - '@behavior: Panel frame of the SHISU overlay: takes the frame origin and the two cell counts of the grid it encloses, installs the texture page GetTPage(0, 0, 0x380, 0x100) as the draw-mode packet at g_PrimCursor with dfe 0, dtd 0 and no texture window appended at slot 1 as 0xC bytes, and then draws the border of an 8-pixel cell grid as eight border-piece sprites at slot 1: for every column below the column count the top piece 0x29 at x plus (column + 1) * 8 and y and the bottom piece 0x2E at the same x and y plus (height + 1) * 8, for every row below the row count the left piece 0x2B at x and the row y and the right piece 0x2C at x plus (width + 1) * 8 and the same row y, and the corners 0x28 at (x, y), 0x2A at the right x and y, 0x2D at x and the bottom y and 0x2F at the right x and the bottom y. Both counts are read as bytes, so a zero count skips that edge walk while the four corners are always drawn. No jal and no table word of this payload names this body, so it is an overlay entry called from outside the payload. The same 552-byte body sits at 0x801D78A8 in emi/etc/bate/00 and at 0x801DD350 in emi/etc/shop/00 with all 138 words equal, and the shop emitters describe it as the panel frame drawer. Its 0x38-byte frame keeps the seven saved registers s0 through s6 and $ra and the epilogue returns no value.'
   - - 32376
     - asm
     - func_801D8A78

@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2F20
   - - 1172
-    - asm
-    - func_801F3094
+    - c
+    - prepareWorkRecordForLookup156AndArmState1World02Area08713_801F3094
+    - '@source: src/bof3/world/prepareWorkRecordForLookup156AndArmState1World02Area08713_801F3094.c'
+    - '@behavior: entry 0 of the overlay state-1 handler table at 0x801F5734: stores 0x80 in work byte 0x24, applies main lookup entry 0x156 through the resident func_8014DD3C helper, stores 5 in work byte 0x29, clears work bytes 0x2A and 0x5D..0x5F, then arms the state byte at 0x01 with 1.'
   - - 1312
     - asm
     - func_801F3120

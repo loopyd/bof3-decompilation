@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801F3C68
   - - 4520
-    - asm
-    - func_801F3DA8
+    - c
+    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area13913_801F3DA8
+    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area13913_801F3DA8.c'
+    - '@behavior: Byte-2 state handler entry 2 of the five-entry handler table based at 0x801F4448, the table the overlay dispatcher at 0x801F3A8C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x20 from that record unsigned halfword at offset 0x30, stores the truncated halfword, and, once the stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 at 0x801F3E04; it then calls the payload record draw routine at 0x801F3F84, which imports SetDrawMode, SetPolyFT4, SetShadeTex and RotTransPers4.'
   - - 4612
     - asm
     - func_801F3E04

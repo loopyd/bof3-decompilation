@@ -8,6 +8,7 @@ splat = "config/targets/emi/scenario/scena13/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
+    "src/bof3/scenario/armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248.c",
     "src/bof3/scenario/bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C.c",
     "src/bof3/scenario/clampPaletteChannelsScenarioScena1300_801FB0B8.c",
     "src/bof3/scenario/copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164.c",

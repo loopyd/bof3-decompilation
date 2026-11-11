@@ -1,7 +1,8 @@
+g_battle_work = 0x1F800044;
 func_801EEC20 = 0x801EEC20;
 func_801EECA4 = 0x801EECA4;
 func_801EED60 = 0x801EED60;
-func_801EEDCC = 0x801EEDCC;
+stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC = 0x801EEDCC;
 func_801EEE24 = 0x801EEE24;
 func_801EEEC4 = 0x801EEEC4;
 func_801EEF80 = 0x801EEF80;

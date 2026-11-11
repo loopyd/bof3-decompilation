@@ -86,8 +86,25 @@ segments:
     - asm
     - func_801D259C
   - - 6880
+    - c
+    - drawSemiTransGreyCrossPrimBate00_801D26E0
+    - '@source: src/bof3/ui/drawSemiTransGreyCrossPrimBate00_801D26E0.c'
+    - '@behavior: draws a mid-grey semi-transparent cross marker of two 0x10-byte LINE_F2 primitives taken from g_PrimCursor: the first stroke runs from (x + 5, y) to (x + 5, y + 10) and the second, after a fresh cursor read, from (x, y + 5) to (x + 10, y + 5); each packet is initialised, marked semi transparent, coloured 0x80 at bytes 0x04 to 0x06 and appended at ordering-table slot 1 as a 0x10-byte primitive'
+  - - 7108
     - asm
-    - func_801D26E0
+    - func_801D27C4
+  - - 8236
+    - asm
+    - func_801D2C2C
+  - - 9060
+    - asm
+    - func_801D2F64
+  - - 9648
+    - asm
+    - func_801D31B0
+  - - 10116
+    - asm
+    - func_801D3384
   - - 10520
     - asm
     - func_801D3518

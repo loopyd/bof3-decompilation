@@ -196,10 +196,12 @@ segments:
     - c
     - drawBattlerCountdownEntries
     - '@source: src/bof3/battle/drawBattlerCountdownEntries.c'
-    - '@behavior: Draws one countdown-scaled panel entry per battler around the panel anchor: battlers zero through four except the selected one, then the selected battler, then the extra battlers five and six while their countdown bytes are non-zero, through func_801644D8 or func_801D7D10.'
+    - '@behavior: Draws one countdown-scaled panel entry per battler around the panel anchor: battlers zero through four except the selected one, then the selected battler, then the extra battlers five and six while their countdown bytes are non-zero, through func_801644D8 or drawBattlerCountdownTile.'
   - - 28944
-    - asm
-    - func_801D7D10
+    - c
+    - drawBattlerCountdownTile
+    - '@source: src/bof3/battle/drawBattlerCountdownTile.c'
+    - '@behavior: Draws the countdown tile of battler arg0 at (arg1, arg2) stretched to arg3 by arg4 pixels through one POLY_FT4 opened by SetDrawMode and SetPolyFT4: the corners (arg1, arg2), (arg1 + arg3, arg2), (arg1, arg2 + arg4) and (arg1 + arg3, arg2 + arg4), the tint byte arg5 in r0/g0/b0, the 24-pixel tile of arg0 from texel (arg0 * 0x18, 0xE0) to (arg0 * 0x18 + 0x18, 0xF8), the texture page GetTPage(0, 0, 0x100, 0x100) at +0x16 and the CLUT at +0x0E built from palette entry arg0 of the overlay table D_801D0C64 masked to six bits over the 0x7800 base, appended under ordering-table index 1 as a 0x28-byte primitive.'
   - - 29360
     - c
     - drawBattlePanelStrip

@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801EED60
   - - 460
-    - asm
-    - func_801EEDCC
+    - c
+    - stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC
+    - '@source: src/bof3/bmagic/stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC.c'
+    - '@behavior: Magic-150 effect handler at the entry 0x801EEC0C of the overlay handler table 0x801EEC04, index 2 of its seven words. It creates a 0x18-byte frame with ra at +0x10 and calls the slot update 0x801EF8EC with no arguments; while the low byte of that answer is nonzero it returns untouched. When that byte reads zero it re-reads the work-object pointer from scratchpad cell 0x1F800044, stores 4 into work-object byte 9 through it, re-reads the same cell and increments work-object byte 1, moving the overlay handler step to the next table entry. Those are its only two stores, it has no loop and it returns nothing.'
   - - 548
     - asm
     - func_801EEE24

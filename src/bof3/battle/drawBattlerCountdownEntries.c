@@ -17,8 +17,9 @@ extern u8 countdownEntryYOffsets[];
  * for the selected battler while that byte is below five and, when that
  * battler's countdown is zero, submits the same func_801644D8 entry without the
  * countdown inset and size 0x10; otherwise, and for the extra battlers five and
- * six while their countdown bytes are non-zero, it draws through func_801D7D10
- * the same inset position with countdown plus 0x10 as size.
+ * six while their countdown bytes are non-zero, it draws through
+ * drawBattlerCountdownTile the same inset position with countdown plus 0x10 as
+ * size.
  * @status partial
  * @match 97.22
  * @residual The extra battlers five and six re-materialise the constant byte
@@ -67,7 +68,7 @@ void drawBattlerCountdownEntries(s16 anchorX, s16 anchorY) {
                   anchorY + countdownEntryYOffsets[D_801462F4 * 2], 0x10, 0x10,
                   mode);
   } else {
-    func_801D7D10(D_801462F4,
+    drawBattlerCountdownTile(D_801462F4,
                   (u16)(anchorX + countdownEntryXOffsets[D_801462F4 * 2] -
                         (countdown >> 1)),
                   (u16)(anchorY + countdownEntryYOffsets[D_801462F4 * 2] -
@@ -78,14 +79,14 @@ void drawBattlerCountdownEntries(s16 anchorX, s16 anchorY) {
   extra = &D_801462FC[5];
   countdown = extra[0];
   if (countdown != 0u) {
-    func_801D7D10(5,
+    drawBattlerCountdownTile(5,
                   (u16)(anchorX + countdownEntryXOffsets[10] - (countdown >> 1)),
                   (u16)(anchorY + countdownEntryYOffsets[10] - (countdown >> 1)),
                   (u8)(countdown + 0x10), (u8)(countdown + 0x10), 0x80);
   }
   countdown = extra[1];
   if (countdown != 0u) {
-    func_801D7D10(6,
+    drawBattlerCountdownTile(6,
                   (u16)(anchorX + countdownEntryXOffsets[12] - (countdown >> 1)),
                   (u16)(anchorY + countdownEntryYOffsets[12] - (countdown >> 1)),
                   (u8)(countdown + 0x10), (u8)(countdown + 0x10), 0x80);
