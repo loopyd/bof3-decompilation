@@ -173,8 +173,10 @@ segments:
     - asm
     - func_801D7AD0
   - - 30216
-    - asm
-    - func_801D8208
+    - c
+    - drawThreeIconStatusRowPanelBate00_801D8208
+    - '@source: src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c'
+    - '@behavior: three-icon status row panel of the BATE overlay, the same 0x300-byte body as the exact lift at 0x801D91B0 in emi/etc/shisu/00: it insets the 200 by 48 panel through func_801AE3F0 at (x + 8, y) with the shade 0 and the shared CLUT-bank byte D_80144952 and a null record skips the rest of the body, re-reads the graph type when that answer is not 1, installs the draw mode at g_PrimCursor with dfe 0, dtd 0, the texture page 0xF and no texture window, emits the 16 by 16 icon through emitPanelIconPrimBate00_801D4678 at (x + 9, y + 5) with the icon id plus 3, the texture row 0x1E, the clut GetClut(0x10, 0x1E0) and the attribute 0x80, draws the three sprite kinds of the record through func_801D3518 at (x + 0x56 plus 41 per slot, y + 2) skipping a 0xFF slot, submits the five-glyph name run through func_8014F800 at (x + 0x15, y + 3) with the count 5, formats the record byte +0x08 with the payload string 0x801D0D80 and the bytes +0x0C and +0x0D with 0x801D0D84 through sprintf into the shared buffer 0x80145AD4 and draws them through func_80150098 at (x + 0x1F, y + 0x18) and (x + 0x27, y + 0x25) beside the label row 0x801D0D90 at y + 0x24 and y + 0x27, hands the record byte +0x08 and word +0x10 to func_801D4730 at (x + 0x14, y + 0x12), and outside that guard submits the sprite-record stream 0x801D8A3C through func_801AF390 at the row origin with the flag 2 when the record and its byte +0x14 are both set and appends the sprite 0x3D through func_801AF2A0 at (x + 0x32, y + 0x16)'
   - - 30984
     - c
     - drawTwoRowNumberedPanelBate00_801D8508

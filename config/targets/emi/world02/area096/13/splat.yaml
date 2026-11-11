@@ -49,8 +49,9 @@ segments:
     - asm
     - func_801F3078
   - - 1416
-    - asm
-    - func_801F3188
+    - c
+    - seedFrontEndRecordHandler37AtFixedPositionQueueCue202RaiseFlagBank20To22ByPendingWorldElseBumpCountdown7EWorld02Area09613_801F3188
+    - '@source: src/bof3/world/seedFrontEndRecordHandler37AtFixedPositionQueueCue202RaiseFlagBank20To22ByPendingWorldElseBumpCountdown7EWorld02Area09613_801F3188.c'
   - - 1788
     - asm
     - func_801F32FC

@@ -180,8 +180,10 @@ segments:
     - asm
     - func_801F4E58
   - - 9352
-    - asm
-    - func_801F5088
+    - c
+    - stepWorkPositionPairAndRunSharedUpdatesWorld02Area08813_801F5088
+    - '@source: src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld02Area08813_801F5088.c'
+    - '@behavior: Overlay state handler 2 of the local state-1 handler table 0x801F624C, selected by the dispatcher 0x801F4CD8 through work byte 0x01; reads the work record published at the scratchpad pointer cell 0x1F800044, calls the shared 0x80196070 helper and returns while work byte 0x0B is non-zero and bit 0x80 of work byte 0x00 is set, stores 1 in work byte 0x0B while that byte is zero and the bit is clear, then reads the cell again and adds work word 0x0C to the word at 0x34 and work word 0x10 to the word at 0x38 before calling the shared 0x8014D978 and 0x8014D290 helpers in that order.'
   - - 9516
     - c
     - dispatchStateByte1Table6270WorldWorld02Area08813_801F512C

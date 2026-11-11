@@ -105,8 +105,10 @@ segments:
     - '@source: src/bof3/world/seedWorkDistancePairArmCountdownAndAdvanceStepWorld02Area07714_801F4078.c'
     - '@behavior: reads the work pointer from the non-volatile scratchpad cell 0x1F800044, stores the position pair 0x740000/0x60000 in work words +0x34/+0x38, publishes the func_8015477C distance of that pair scaled by 0x10000 in work word +0x3C, arms the countdown word +0x0C with 300 and advances the dispatch byte +0x01.'
   - - 5332
-    - asm
-    - func_801F40D4
+    - c
+    - stepCountdownQueueCue20BAndDrawEffectWorld02Area07714_801F40D4
+    - '@source: src/bof3/world/stepCountdownQueueCue20BAndDrawEffectWorld02Area07714_801F40D4.c'
+    - '@behavior: reads the work pointer from the non-volatile scratchpad cell 0x1F800044 and, whenever the signed countdown word at offset 0x0C is a multiple of 30, dispatches the front-end cue 0x20B through func_8015DF18; reloads the work pointer and, while that countdown modulo 30 stays below 15, runs the overlay draw helper at 0x801F4B80; reloads the work pointer once more, decrements the countdown and calls func_80196070 to reset the scratchpad work area when it reaches zero.'
   - - 5556
     - c
     - seedWorkTable64World02Area07714_801F41B4

@@ -29,6 +29,7 @@ sources = [
     "src/bof3/ui/drawPanelFrameBate00_801D78A8.c",
     "src/bof3/ui/drawTwoRowNumberedPanelBate00_801D8508.c",
     "src/bof3/ui/drawPartyMemberStatusBoxBate00_801D27C4.c",
+    "src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

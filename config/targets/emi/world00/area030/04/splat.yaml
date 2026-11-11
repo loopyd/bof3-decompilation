@@ -154,8 +154,10 @@ segments:
     - '@source: src/bof3/world/drawMirroredPanelCellQuadWorld00Area03004_801D2C34.c'
     - '@behavior: emits one 16 by 8 textured quad of the AREA030 panel cell texture into the primitive cursor: SetPolyFT4 stamps the tag, the texture page is 0x229 in graphics modes 1 and 2 and 0x99 otherwise, the CLUT is 0x7A40 and the three colour bytes are the grey 0x80, the quad spans x from arg0 less eight to arg0 plus eight and y from arg1 to arg1 plus eight, and its texture cell is the sixteen-wide, eight-high slice at v 0x58..0x60 whose u pair is (0x28,0x38) or, mirrored to (0x38,0x28), selected by the low byte of the flag arg2; func_8014E5A0 then appends the 0x28-byte primitive under the caller ot index arg3.'
   - - 8564
-    - asm
-    - func_801D2D74
+    - c
+    - clearWorkBytes9ToBAndHalfword30ThenAdvanceStateByte1World00Area03004_801D2D74
+    - '@source: src/bof3/world/clearWorkBytes9ToBAndHalfword30ThenAdvanceStateByte1World00Area03004_801D2D74.c'
+    - '@behavior: entry 1 of the local handler table at 0x801E1D80, chosen by the work record step byte at +0x1 of the record published at the scratchpad pointer cell 0x1F800044: clears the record bytes at +0x9, +0xA and +0xB and the halfword at +0x30, then increments that step byte so the next frame dispatches the following entry func_801D2DC4; no arguments, no calls, no frame.'
   - - 8644
     - asm
     - func_801D2DC4

@@ -196,6 +196,7 @@ sources = [
     "src/bof3/world/drawStretchedPanelColumnWorld00Area03004_801D8248.c",
     "src/bof3/world/drawMirroredPanelCellQuadWorld00Area03004_801D2C34.c",
     "src/bof3/world/drawArea030CompactPanel.c",
+    "src/bof3/world/clearWorkBytes9ToBAndHalfword30ThenAdvanceStateByte1World00Area03004_801D2D74.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

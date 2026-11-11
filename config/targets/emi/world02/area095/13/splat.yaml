@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F30E8
   - - 1528
-    - asm
-    - func_801F31F8
+    - c
+    - claimFrontEndRecordSetHandler37QueueCue202AndSetFlagBank20Or21Or22ByRoute60AndScenarioElseLowerWorkHalfword7eBy2World02Area09513_801F31F8
+    - '@source: src/bof3/world/claimFrontEndRecordSetHandler37QueueCue202AndSetFlagBank20Or21Or22ByRoute60AndScenarioElseLowerWorkHalfword7eBy2World02Area09513_801F31F8.c'
+    - '@behavior: Overlay step handler: claims a 0x74-byte front-end record row, writes handler selector 0x37 and the recorded field set, queues cue 0x202, then sets shared flag bank bit 0x20, 0x21 or 0x22 by the route halfword and the signed scenario byte, or lowers work halfword 0x7E by 2 when no row is free.'
   - - 1900
     - asm
     - func_801F336C

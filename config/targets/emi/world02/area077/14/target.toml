@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world02/area077/14.bin"
 splat = "config/targets/emi/world02/area077/14/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/stepCountdownQueueCue20BAndDrawEffectWorld02Area07714_801F40D4.c",
+]
 support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC.c",
     "src/bof3/world/selectPaletteBlocksByFlagMatchWorld02Area07714_801F4D20.c",

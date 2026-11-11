@@ -175,8 +175,10 @@ segments:
     - asm
     - func_801FBA34
   - - 20344
-    - asm
-    - func_801FBB78
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78.c'
+    - '@behavior: Overlay per-record callback, entry 4 of the thirteen-entry callback-pointer table at 0x801FBFB8 inside the in-image pointer run D_801FBEF0, so its only image word is the word at 0x801FBFC8. It re-arms the overlay effect group for the ids 7, 5 and 6 through func_80166E88(7, 5, 6, 0), clears the shared live-local work-record count byte D_80146254 to zero, and then runs the per-id effect teardown func_801C187C for ids 7, 6 and 5 in that order. It takes no arguments, returns nothing, reads no memory of its own and writes only that D_80146254 byte; the 0x18-byte frame only keeps $ra across the four calls, the three leading arm immediates are materialised in $a0/$a1/$a2 before the first jal with the zero fourth one in that jal delay slot, and each teardown id is materialised in $a0 inside its own jal delay slot.'
   - - 20420
     - asm
     - func_801FBBC4

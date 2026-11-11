@@ -144,8 +144,10 @@ segments:
     - asm
     - func_801F4914
   - - 7664
-    - asm
-    - func_801F49F0
+    - c
+    - setHalfword932c980StateEntry20Progress1EWhenFrontSideByte0AndFlag8FSet90ClearWorld04Area16713_801F49F0
+    - '@source: src/bof3/world/setHalfword932c980StateEntry20Progress1EWhenFrontSideByte0AndFlag8FSet90ClearWorld04Area16713_801F49F0.c'
+    - '@behavior: Requests the shared state entry 0x20 with progress 0x1E and stores 0x980 into the shared halfword 0x8014932C only while front-side byte 0x80143F03 reads zero and, through the shared flag tester 0x8015B5D4, bit 0x8F of the main-RAM flag bank 0x80144F28 is set and bit 0x90 is clear.'
   - - 7784
     - textbin
     - D_801F4A68

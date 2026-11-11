@@ -1121,8 +1121,10 @@ segments:
     - '@source: src/bof3/battle/func_800A6CF8_battle15.c'
     - '@behavior: Reads the 3-byte row selected by the two index bytes from the lookup table at 0x800B4D58 and reports whether that entry is the 0xFF sentinel or appears in the active byte list at 0x801463C4.'
   - - 66948
-    - asm
+    - c
     - func_800A6D84
+    - '@source: src/bof3/battle/func_800A6D84_battle15.c'
+    - '@behavior: Returns zero unless the active byte list at 0x801463C4 holds the entry 0x10 while the party counter byte 0x801462F1 equals 3, in which case it runs func_800A805C and returns the low byte of its result.'
   - - 67092
     - asm
     - func_800A6E14

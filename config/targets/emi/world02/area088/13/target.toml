@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4.c",
     "src/bof3/world/snapshotWorkByteBThenRequestResourceForSeedKeyOrModeAndArmState2World02Area08813_801F3C50.c",
+    "src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld02Area08813_801F5088.c",
 ]
 support_sources = [
     "src/bof3/world/area08813_work_state.c",

@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/publishPositionPairDistanceMinus32WhenEqualToWord80149318ThenAdd2ToStatusByte80149333World02Area09613_801F35A8.c",
+    "src/bof3/world/seedFrontEndRecordHandler37AtFixedPositionQueueCue202RaiseFlagBank20To22ByPendingWorldElseBumpCountdown7EWorld02Area09613_801F3188.c",
 ]
 support_sources = [
     "src/bof3/support/area096_13_psyq.c",
