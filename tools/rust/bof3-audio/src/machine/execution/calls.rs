@@ -17,6 +17,40 @@ pub(crate) struct Guest {
     pub arguments: u32,
 }
 
+impl Execution {
+    pub(crate) fn copy_input(
+        &mut self,
+        entry: u32,
+        address: u32,
+        bytes: &[u8],
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+    ) -> Result<Option<super::Call>> {
+        ram_offset(address, bytes.len())?;
+        if bytes.is_empty() {
+            return Ok(None);
+        }
+        if bytes.len() > crate::machine::inputs::MEDIA_BYTES {
+            return Err("owned guest copy exceeds media input capacity".into());
+        }
+        self.stage_media_input(bytes)?;
+        let copied = self.call_observed(
+            entry,
+            [
+                address,
+                crate::machine::inputs::MEDIA,
+                bytes.len() as u32,
+                0,
+            ],
+            1_000_000,
+            observer,
+        )?;
+        if copied.result != address {
+            return Err("owned guest copy returned a different destination".into());
+        }
+        Ok(Some(copied))
+    }
+}
+
 pub(super) struct Boundary {
     pub returned: u32,
     pub resuming: bool,

@@ -5134,19 +5134,26 @@ hash. These checks identify the selected source, not the whole DATA track.
 Edited or unrecognized sources require further runtime acceptance.
 
 `--duration SECONDS` selects a positive fixed body. At its boundary, the host
-pulses the caller-owned cancellation input for one tick. The guest owns recovery,
+pulses the caller-owned cancellation input for one tick through guest copies
+from the read-only media port. The guest owns recovery,
 gain ramp, Pause and callback teardown. Without `--duration`, the body ends when
 guest idle is first observed. `--tail` defaults to two seconds. `--timeout`
 defaults to, and cannot exceed, 600 seconds; body and tail must fit. Publication
 waits for guest idle and retains exactly body plus tail frames. An insufficient
 safety limit publishes no render, including when cancellation outlasts the tail.
 
-The `bof3.xa-render/v1` report records source and TOC identity, cue selection,
+The `bof3.xa-render/v2` report records source and TOC identity, cue selection,
 cold history, owned startup and guest calls, tick-return states, cancellation
 and idle observations, commands, queue statistics, clock coordinates and PCM16
 delivery. `capture_start_frame` is the absolute origin. Body, cancellation,
 idle and executed-frame counts are relative to it. WAV, JSON and optional Ogg
 use the existing verified publication transaction and fixed quality 0.7 policy.
+`initialization_calls` includes three guest copies of the disc-location bindings.
+`cancellation_calls` contains both one-byte pulse copies for a requested stop,
+or is empty when the cue completes without cancellation. These copies use
+`audio_staging_copy` and advance the selected CPU and audio clocks.
+`render::xa::render_observed` supplies read-only observations before each guest
+instruction throughout the same production rendering path, starting at reset.
 
 The renderer uses `require_ready` and fails without publication if a controller
 callback requires a host audio wait. This bounded path supplies no resumable

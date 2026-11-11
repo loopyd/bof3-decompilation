@@ -154,6 +154,7 @@ pub struct Report {
     pub startup: driver::Evidence,
     pub initialization_calls: Vec<Call>,
     pub play_call: Call,
+    pub cancellation_calls: Vec<Call>,
     pub requested_duration_frames: Option<u64>,
     pub body_frames: u64,
     pub release_frames: u64,
@@ -185,6 +186,18 @@ pub fn render(
     track: &Path,
     toc: &DiscToc,
     options: &Options,
+) -> Result<Rendered> {
+    render_observed(image, track, toc, options, &mut |_| Ok(()))
+}
+
+/// Observe the production path before each guest instruction, including reset,
+/// CD initialization and caller-input copies. Observation cannot mutate execution.
+pub fn render_observed(
+    image: &driver::Image,
+    track: &Path,
+    toc: &DiscToc,
+    options: &Options,
+    observer: &mut impl FnMut(&Execution) -> Result<()>,
 ) -> Result<Rendered> {
     options.validate()?;
     let media = File::open(track)?;
@@ -251,7 +264,7 @@ pub fn render(
         if e.cpu.pc() == command {
             commands.push(e.cpu.register(4) as u8);
         }
-        Ok(())
+        observer(e)
     };
     let started = image.start_cd(
         drive,
@@ -289,12 +302,14 @@ pub fn render(
         100_000,
         &mut observe,
     )?);
+    let copy = image.entry("audio_staging_copy")?;
     for (index, slot) in [681, 434, 682].into_iter().enumerate() {
-        e.bus.write(
+        initialization_calls.extend(e.copy_input(
+            copy,
             image.symbol("audio_xa_file_lbas")? + slot * 4,
-            Width::Word,
-            bases[index],
-        )?;
+            &bases[index].to_le_bytes(),
+            &mut observe,
+        )?);
     }
     let state = image.symbol("audio_xa_state")?;
     let foreground = image.entry("audio_xa_foreground")?;
@@ -315,6 +330,7 @@ pub fn render(
     let mut pcm = Vec::new();
     let mut body_frames = options.duration_frames;
     let mut stop_request_frame = None;
+    let mut cancellation_calls = Vec::new();
     let mut cancellation_pending = false;
     let mut idle_frame = None;
     let mut transitions = Vec::new();
@@ -335,7 +351,7 @@ pub fn render(
             if frames >= body && current != 0 && stop_request_frame.is_none() {
                 // Original caller-owned cancellation input. The guest tick owns
                 // recovery, gain ramp, Pause and completion callback teardown.
-                e.bus.write(state + 0x20, Width::Byte, 1)?;
+                cancellation_calls.extend(e.copy_input(copy, state + 0x20, &[1], &mut observe)?);
                 stop_request_frame = Some(frames);
                 cancellation_pending = true;
             }
@@ -354,7 +370,7 @@ pub fn render(
             if cancellation_pending {
                 // This is a caller input pulse. Leaving it asserted would make
                 // the tick postamble restart recovery after state 7 reaches idle.
-                e.bus.write(state + 0x20, Width::Byte, 0)?;
+                cancellation_calls.extend(e.copy_input(copy, state + 0x20, &[0], &mut observe)?);
                 cancellation_pending = false;
             }
             tick_calls += 1;
@@ -403,9 +419,9 @@ pub fn render(
     let (pcm, pcm16_delivery) = psx_render::deliver_pcm16(pcm);
     let queue = e.bus.cd_audio()?.statistics();
     let report = Report {
-        schema: "bof3.xa-render/v1", engine: "owned_us_driver", sample_rate: SAMPLE_RATE,
+        schema: "bof3.xa-render/v2", engine: "owned_us_driver", sample_rate: SAMPLE_RATE,
         source, toc: toc.clone(), cue, history: options.history, startup: started.services.evidence,
-        initialization_calls, play_call, requested_duration_frames: options.duration_frames,
+        initialization_calls, play_call, cancellation_calls, requested_duration_frames: options.duration_frames,
         body_frames, release_frames: options.release_frames, output_frames, safety_frames: options.safety_frames,
         capture_start_frame, stop_request_frame, idle_frame: idle_frame.unwrap(), tick_period_cpu_cycles: TICK_PERIOD,
         tick_calls, states_at_tick_return: transitions, commands,

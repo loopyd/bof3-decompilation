@@ -295,8 +295,13 @@ positive fixed body and pulses the guest cancellation input at its boundary.
 Without it, the body ends at guest idle after Pause. `--tail` defaults to two
 seconds; `--timeout` defaults to, and cannot exceed, 600 seconds. Publication
 waits for idle, retains exactly body plus tail frames and fails on timeout.
-The fixed tail may cut queued audio. The `bof3.xa-render/v1` report records
+The fixed tail may cut queued audio. The `bof3.xa-render/v2` report records
 source and TOC identity, cue, commands, cancellation, idle, queue and clock state.
+Guest copies supply the three disc-location bindings and both edges of the
+cancellation pulse through the read-only media port. `initialization_calls`
+includes the binding copies, and `cancellation_calls` records the pulse copies.
+`render::xa::render_observed` observes execution before every guest instruction,
+including reset and these copies, without granting mutable access.
 XA rendering uses the cooperative audio clock through startup and playback.
 Its report retains the retirement quantum, consumer chunk and actor counts.
 XA ticks use a 564,480-interpreter-cycle cadence at safe foreground boundaries.

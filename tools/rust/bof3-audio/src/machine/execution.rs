@@ -137,7 +137,7 @@ impl Execution {
         Ok(())
     }
 
-    pub(crate) fn stage_media_input(&mut self, bytes: &[u8]) -> Result<()> {
+    fn stage_media_input(&mut self, bytes: &[u8]) -> Result<()> {
         if self
             .calls
             .is_none_or(|calls| self.cpu.pc() != calls.returned)

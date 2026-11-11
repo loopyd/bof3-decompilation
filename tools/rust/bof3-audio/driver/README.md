@@ -71,10 +71,10 @@ Calls cannot target the dispatcher itself. Invalid stack state, failed observers
 and unfinished calls terminate owned execution, retaining its advanced state.
 
 The host supplies media bytes through the read-only port at
-`0x1F710000..0x1F720000`. Header, sequence
-and auxiliary cue copies into their layout addresses execute `audio_staging_copy`, a
+`0x1F710000..0x1F720000`. Header, sequence, auxiliary cue, XA disc-location
+and cancellation-input copies execute `audio_staging_copy`, a
 forward byte copy with A0 destination, A1 source, A2 length and V0 destination.
-Each copy appears in the preparation call report and its instructions reach the
+Each copy appears in its initialization or control call report, and its instructions reach the
 read-only observer and audio scheduler. Media admission requires the dispatcher
 return boundary. The host rejects lengths above 64 KiB; guest reads must be
 aligned and within the supplied bytes, and stores to either input port fail.

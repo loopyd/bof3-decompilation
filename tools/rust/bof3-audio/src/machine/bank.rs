@@ -67,23 +67,7 @@ impl Staging {
             write(execution, address, bytes)?;
             return Ok(None);
         };
-        if bytes.is_empty() {
-            return Ok(None);
-        }
-        if bytes.len() > super::inputs::MEDIA_BYTES {
-            return Err("PSX bank: guest copy exceeds media input capacity".into());
-        }
-        execution.stage_media_input(bytes)?;
-        let copied = execution.call_observed(
-            entry,
-            [address, super::inputs::MEDIA, bytes.len() as u32, 0],
-            1_000_000,
-            observer,
-        )?;
-        if copied.result != address {
-            return Err("PSX bank: guest copy returned a different destination".into());
-        }
-        Ok(Some(copied))
+        execution.copy_input(entry, address, bytes, observer)
     }
 
     fn samples(
