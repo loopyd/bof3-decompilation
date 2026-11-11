@@ -322,8 +322,10 @@ segments:
     - c
     - invokeHelperArgWorld02Area07714_801F60A4
   - - 13508
-    - asm
-    - func_801F60C4
+    - c
+    - dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4
+    - '@source: src/bof3/world/dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4.c'
+    - '@behavior: state handler reached only through the code pointer word at 0x801F6AC8 of the payload textbin run; selects the world record table entry 0x8017F974[0x80143F00], indexes that record''s offset-0x10 pointer table with work byte 0x03 of the record published at pointer cell 0x80148210, offsets by that record''s halfword 0x0A, reads the byte at plus 0x02 as an index into the twelve signed-byte offset pairs at 0x801F6B60, dispatches the pair with attribute 0x40 and fixed arguments (-0x400, 4, 0) through the resident dispatcher 0x801FD34C, and then steps the halfword 0x0A back by two on a nonzero answer or forward by one otherwise, storing the func_8015477C distance between the scratch work position words at 0x34/0x38 into halfword 0x3E and queueing id 0 through func_8014D6B8 when the selected entry index is 4.'
   - - 13788
     - c
     - setWorld02Area07714_801F61DC

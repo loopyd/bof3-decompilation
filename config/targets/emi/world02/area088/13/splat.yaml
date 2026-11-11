@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801F3798
   - - 3664
-    - asm
-    - func_801F3A50
+    - c
+    - projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A50
+    - '@source: src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A50.c'
+    - '@behavior: Projects the shared scroll offsets at 0x80145E9C and 0x80145EA0, scaled by the shared byte at 0x80145E99, onto the scratch words at offsets 0x0C and 0x10 of the work record published at the scratchpad pointer cell 0x1F800044, selects record byte 0x0B from three successive readings of the map probe 0x80166CB0 at that projected position (0xA1, 0xA0 and 0xAE), otherwise 4 when bit 0x1000 of the shared halfword 0x8014625A is set, otherwise 0, and finally dispatches record byte 0x01 through the local handler table 0x801F61A0; every record access follows a fresh read of the pointer cell.'
   - - 4036
     - c
     - prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4

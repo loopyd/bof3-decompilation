@@ -27,8 +27,10 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414,
  * words 4, 5 the still-anchored func_801FBB78 and func_801FBBC4, word 6
  * armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88,
- * words 7, 8, 9 the still-anchored func_801FBCC4, func_801FBD84 and
- * func_801FBDD8, word 10 invokeHelperArgThenHelperScenarioScena1300_801FBE98,
+ * word 7
+ * armEffectGroupFromPartyMirrorThenResetWorkCountAndPublishPartyListScenarioScena1300_801FBCC4,
+ * words 8, 9 the still-anchored func_801FBD84 and func_801FBDD8, word 10
+ * invokeHelperArgThenHelperScenarioScena1300_801FBE98,
  * word 11 invokeHelperArgThenHelperScenarioScena1300_801FBEC0 and word 12
  * noopHandlerScenarioScena1300_801FBEE8), passing the record pointer unchanged
  * as the first argument and the word held in the shared main-RAM scenario flag

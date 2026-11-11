@@ -186,8 +186,10 @@ segments:
     - c
     - armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88
   - - 20676
-    - asm
-    - func_801FBCC4
+    - c
+    - armEffectGroupFromPartyMirrorThenResetWorkCountAndPublishPartyListScenarioScena1300_801FBCC4
+    - '@source: src/bof3/scenario/armEffectGroupFromPartyMirrorThenResetWorkCountAndPublishPartyListScenarioScena1300_801FBCC4.c'
+    - '@behavior: Overlay per-record callback, entry 7 of the thirteen-entry callback-pointer table at 0x801FBFB8 that dispatchRecordCallbackScenarioScena1300_801FB350 selects with the record byte 0x7A. It snapshots the first three slots of the D_80144908 party mirror into a stack array, re-arms the overlay effect group through func_80166E88 with those three ids and a zero fourth argument, clears the shared live work-record count byte D_80146254, runs the per-id helper func_801C187C for the three snapshot ids in order, and then publishes the mirror slots 3..5 into the shared party-id list D_80144F5A.'
   - - 20868
     - asm
     - func_801FBD84

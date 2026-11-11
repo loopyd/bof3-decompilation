@@ -35,6 +35,7 @@ sources = [
     "src/bof3/ui/drawExpRowPanelShisu00_801D4158.c",
     "src/bof3/ui/drawRotatingIconSlotPanelShisu00_801D4DC0.c",
     "src/bof3/ui/drawPartyMemberAttributesAndExpPanelShisu00_801D4754.c",
+    "src/bof3/ui/drawPartyMemberParameterPanelShisu00_801D3BD4.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

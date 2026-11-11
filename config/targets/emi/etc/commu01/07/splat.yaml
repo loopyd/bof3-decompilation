@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801D3038
   - - 10644
-    - asm
-    - func_801D3594
+    - c
+    - drawWindowFrameCommu0107_801D3594
+    - '@source: src/bof3/ui/drawWindowFrameCommu0107_801D3594.c'
+    - '@behavior: draws the window frame whose top-left corner sits at (x, y) from the eight window tiles occupying pieces 6 through 13 of the six-byte sprite rect table at 0x801D4CE0, spanning 0x118 by 0xB0, with thirty-three repeated top and bottom edge pieces on an eight-pixel horizontal step and twenty repeated side pieces on an eight-pixel vertical step'
   - - 11004
     - asm
     - func_801D36FC

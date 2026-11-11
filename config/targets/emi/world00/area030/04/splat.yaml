@@ -686,8 +686,10 @@ segments:
     - asm
     - func_801DC0CC
   - - 46664
-    - asm
-    - func_801DC248
+    - c
+    - advanceEntrySlideAndSelectStateWorld00Area03004_801DC248
+    - '@source: src/bof3/world/advanceEntrySlideAndSelectStateWorld00Area03004_801DC248.c'
+    - '@behavior: advances slide byte 9 of the scratch work-record cursor (0x1F800044) and draws the sliding entry row, then selects work state 11 or 1 when the slide count reaches 4.'
   - - 47220
     - c
     - func_801DC474

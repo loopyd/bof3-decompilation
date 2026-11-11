@@ -80,7 +80,7 @@ publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area07714_801F5F84 
 publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F6004 = 0x801F6004;
 invokeHelperArgWorld02Area07714_801F6084 = 0x801F6084;
 invokeHelperArgWorld02Area07714_801F60A4 = 0x801F60A4;
-func_801F60C4 = 0x801F60C4;
+dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4 = 0x801F60C4;
 setWorld02Area07714_801F61DC = 0x801F61DC;
 markSelectedFrontEndRecordActiveWithValueWorld02Area07714_801F61F0 = 0x801F61F0;
 D_801F6250 = 0x801F6250;

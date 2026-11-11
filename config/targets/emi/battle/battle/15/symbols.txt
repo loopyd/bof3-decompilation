@@ -61,6 +61,7 @@ func_8009B794 = 0x8009B794;
 dispatchSubstateTable44e4 = 0x8009B964;
 clearStateWhenGateClear = 0x8009BA7C;
 func_8009BBE8 = 0x8009BBE8;
+func_8009C794 = 0x8009C794;
 testEntryBitE1 = 0x8009C868;
 setEntryBitE1 = 0x8009C87C;
 func_8009C8AC = 0x8009C8AC;

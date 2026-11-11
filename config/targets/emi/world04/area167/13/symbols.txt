@@ -31,6 +31,6 @@ setWorld04Area16713_801F446C = 0x801F446C;
 setWorld04Area16713_801F4480 = 0x801F4480;
 func_801F4494 = 0x801F4494;
 func_801F48B4 = 0x801F48B4;
-func_801F4914 = 0x801F4914;
+setTriggerRecordFlagThenStartFrontEndStateEntry20Progress5OnMatchedArgumentsWorld04Area16713_801F4914 = 0x801F4914;
 setHalfword932c980StateEntry20Progress1EWhenFrontSideByte0AndFlag8FSet90ClearWorld04Area16713_801F49F0 = 0x801F49F0;
 D_801F4A68 = 0x801F4A68;

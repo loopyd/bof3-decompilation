@@ -141,8 +141,10 @@ segments:
     - asm
     - func_801F48B4
   - - 7444
-    - asm
-    - func_801F4914
+    - c
+    - setTriggerRecordFlagThenStartFrontEndStateEntry20Progress5OnMatchedArgumentsWorld04Area16713_801F4914
+    - '@source: src/bof3/world/setTriggerRecordFlagThenStartFrontEndStateEntry20Progress5OnMatchedArgumentsWorld04Area16713_801F4914.c'
+    - '@behavior: Matches the two zero-extended word arguments and the shared game-mode byte 0x80145E98 against the one record of the trigger table this payload carries in the last word of its data span at 0x801F68B4, accepting it when its first byte equals the first argument, its second byte equals the second argument and the low nibble of its third byte equals the game-mode byte, and then sets that record fourth byte 0x47 as a bit of the shared main-RAM flag bank 0x80144F28 through the shared setter 0x8015B5F4, runs the shared front-end startup helper 0x8015C088, requests shared state entry 0x20 through 0x801448EB with progress 5 in 0x801448EC and returns 1; a run that reads the record without acceptance returns 0 and calls nothing.'
   - - 7664
     - c
     - setHalfword932c980StateEntry20Progress1EWhenFrontSideByte0AndFlag8FSet90ClearWorld04Area16713_801F49F0

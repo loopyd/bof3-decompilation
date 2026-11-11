@@ -309,8 +309,10 @@ segments:
     - asm
     - func_8009BFC4
   - - 24468
-    - asm
+    - c
     - func_8009C794
+    - '@source: src/bof3/battle/func_8009C794_battle15.c'
+    - '@behavior: Reports whether the local panel slots of a battler record other than the given one are usable: each such slot must not read the 0x63 class-rule sentinel at class-row offset 0x34 + slot*0x10 and must have its record byte 0xE1 slot bit set.'
   - - 24680
     - c
     - testEntryBitE1

@@ -204,8 +204,10 @@ segments:
     - asm
     - func_801F5834
   - - 11508
-    - asm
-    - func_801F58F4
+    - c
+    - initArea10313State
+    - '@source: src/bof3/world/initArea10313State.c'
+    - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 8 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED as the overlay state-entry tuple, where 0x801448EB is the front-end state selector, 0x801448EC its progress byte and 0x801448ED its substate byte; takes no arguments and returns nothing.'
   - - 11572
     - textbin
     - D_801F5934
