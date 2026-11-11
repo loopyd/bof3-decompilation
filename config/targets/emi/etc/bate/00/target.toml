@@ -7,7 +7,9 @@ binary = "out/binaries/emi/etc/bate/00.bin"
 splat = "config/targets/emi/etc/bate/00/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/ui/buildEquipStatComparison.c",
+]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",
     "src/bof3/ui/initializeBateUiState.c",

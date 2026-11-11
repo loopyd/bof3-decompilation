@@ -13,6 +13,7 @@ sources = [
     "src/bof3/ui/sumLevelExpShisu00_801D5F78.c",
     "src/bof3/ui/advanceShisuUiWordThenStepUpdateShisu00_801D2C50.c",
     "src/bof3/ui/alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84.c",
+    "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionShisu00_801D460C.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

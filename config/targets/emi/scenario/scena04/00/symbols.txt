@@ -1,7 +1,7 @@
 func_80196070 = 0x80196070;
 dispatchWorkByte1HandlerScenarioScena0400_801F6D00 = 0x801F6D00;
 seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44 = 0x801F6D44;
-func_801F6DD4 = 0x801F6DD4;
+advanceFrameWordsDrawSegmentsAndQuadsTickCountdownArmCountdown64AndAdvanceWorkByte1ScenarioScena0400_801F6DD4 = 0x801F6DD4;
 func_801F6EA4 = 0x801F6EA4;
 func_801F6F2C = 0x801F6F2C;
 drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8 = 0x801F6FF8;

@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/clearWorkByte74Bit0ThenSetSharedFlagBankBitDWhenMappedStateIs1World01Area04813_801F4804.c",
     "src/bof3/world/clearWorkByte74Bit0ThenIncrementModeByteBelow8AndQueueCue20DWhenMappedStateIs1World01Area04813_801F4864.c",
+    "src/bof3/world/clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c",

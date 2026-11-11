@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801D1048
   - - 1692
-    - asm
-    - func_801D129C
+    - c
+    - drawFairySectionRowsCommu0507
+    - '@source: src/bof3/ui/drawFairySectionRowsCommu0507.c'
+    - '@behavior: Submits the header and entry grid of the second of this overlay''s three list sections: the section image and a second header image through func_8014F800 with the 0x80010000 table halfwords at 0x8001006E and 0x80010076, icon 0 through drawRowIconSpriteCommu0507, the count byte at 0x80145E5C printed through the overlay format at 0x801D0C0C into 0x80145AD4 and submitted through func_8014FF0C, and the title at 0x801D196C (plural "faeries") or 0x801D1974 (singular "fairy") with mask 7; then walks up to 0x14 entries in three columns of seven rows, stopping at the first position arg2 * 20 + i the count does not reach, each entry submitted with mask 5 carrying the 0x801457E8 label its byte at 0x80145E48 + arg2 * 15 + i selects.'
   - - 2248
     - c
     - drawPendingNotificationRowsCommu0507

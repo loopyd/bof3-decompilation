@@ -80,8 +80,9 @@ segments:
     - asm
     - func_801F3BE4
   - - 4336
-    - asm
-    - func_801F3CF0
+    - c
+    - testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0
+    - '@source: src/bof3/world/testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0.c'
   - - 4628
     - c
     - dispatchStateByte1Table493cWorld02Area11213_801F3E14

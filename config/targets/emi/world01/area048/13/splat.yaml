@@ -88,8 +88,10 @@ segments:
     - dispatchStateByte2Table4e54World01Area04813_801F3D60
     - '@source: src/bof3/world/area04813DispatchTables.c'
   - - 4516
-    - asm
-    - func_801F3DA4
+    - c
+    - clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4
+    - '@source: src/bof3/world/clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4.c'
+    - '@behavior: entry 0 of the six-handler work-byte-+0x02 run based at 0x801F4E54; clears work byte +0x09, then draws one 8 by 0x78 move block through the emitter at 0x801F41F0 with the record halfword +0x36 as its row and column 0, or, while that halfword is zero and bit 0xD of the shared main-RAM flag bank 0x80144F28 reads set through the shared tester 0x8015B5D4, with row 0 and column 3, and stores dispatch state 1 or 3 into the record byte +0x02 accordingly.'
   - - 4664
     - asm
     - func_801F3E38

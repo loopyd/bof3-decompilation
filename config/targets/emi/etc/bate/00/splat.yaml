@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_801D0C04
   - - 3768
-    - asm
-    - func_801D1AB8
+    - c
+    - buildEquipStatComparison
+    - '@source: src/bof3/ui/buildEquipStatComparison.c'
+    - '@behavior: builds two four-halfword equipment stat blocks from a base stat block and a per-stat comparison code: the first adds the equipped weapon power to the first stat and the armor power to the second, copies the third, stores the fourth minus both weights floored at zero; the second repeats the build with the candidate record index the last argument holds in the weapon slot when the mode argument is one and in the armor slot otherwise; it then writes two per stat where the first block is below the second, one where it is above and zero where equal'
   - - 4240
     - c
     - initializeBateUiState

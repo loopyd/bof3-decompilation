@@ -697,8 +697,10 @@ segments:
     - '@source: src/bof3/battle/storeHalvedSelectedValueWhenRollAccepted.c'
     - '@behavior: Runs the battle selection roll func_800A3A10 for the current battler byte D_80146374 and selection byte D_80146394; when the roll accepts, stores half of the selected battler''s leading halfword (0x140-stride party record above 0x80145F18 below index 3, 0x118-stride enemy record above 0x801EB6C4 rebased by -3 otherwise) into the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record.'
   - - 39656
-    - asm
-    - func_800A02E8
+    - c
+    - clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh
+    - '@source: src/bof3/battle/clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh.c'
+    - '@behavior: Applies the 0x800 input mask to the battle selection for the selected battler byte D_80146394 when that battler''s flag word at 0x80145FB8 (stride 0x140) has neither low bit set. On that path it first clears byte +0x0F of the record when the selection byte is below three (party side only). querySelectionApplyInput reports whether the mask was applied; when it was not, the handler runs the selection refresh pass func_800A3F28 and returns. Otherwise, and whenever the flag word carries a low bit, it stores 1 in byte +0x08 of the selection record pointer D_8014639C.record.'
   - - 39800
     - c
     - storeSelectedValueSetRecordByte8To1WhenRollRejected

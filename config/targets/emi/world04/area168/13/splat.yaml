@@ -111,8 +111,10 @@ segments:
     - dispatchStateByte2Table4bb8World04Area16813_801F44B0
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 6388
-    - asm
-    - func_801F44F4
+    - c
+    - setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4
+    - '@source: src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4.c'
+    - '@behavior: Entry 0 of the state-byte-2 handler run based at 0x801F4BB8: republishes the record halfwords +0x36 and +0x3A from the stride-2 byte row table at 0x801F4B7C and 0x801F4B7D, stores the halved negated distance of the record word pair +0x34 and +0x38 minus 0x801F4B5C into halfword +0x3E, seeds word +0x20 and byte +0x0B from the row tables at 0x801F4B68 and 0x801F4BC8, queues two shared world markers at the republished halfword pair with the row size from 0x801F4BDC, then advances byte +0x02 and calls the step helper 0x801F3914.'
   - - 6708
     - asm
     - func_801F4634
