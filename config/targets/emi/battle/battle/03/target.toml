@@ -145,6 +145,7 @@ sources = [
     "src/bof3/battle/func_801DB5CC.c",
     "src/bof3/battle/func_801DB6F4.c",
     "src/bof3/battle/func_801DB844_battle03.c",
+    "src/bof3/battle/resolveBattlerDamageAmount.c",
     "src/bof3/battle/func_801DC73C.c",
     "src/bof3/battle/func_801DCCB0.c",
     "src/bof3/battle/func_801DCD50.c",

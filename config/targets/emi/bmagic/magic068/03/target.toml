@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/decrementWorkByte9AfterHelpersAndDecrementGlobalWorkByteBAndInvokeHelperOnZeroBmagicMagic06803_801EF9D0.c",
+    "src/bof3/bmagic/decrementWorkByte9ResetToFDecrementWorkByteAInvokeHelper100Or101SetByteBToCAdvanceWorkByte2OnZeroBmagicMagic06803_801EF908.c",
 ]
 support_sources = [
     "src/bof3/support/magic068_03_psyq.c",

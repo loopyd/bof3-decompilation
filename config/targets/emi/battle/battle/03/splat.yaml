@@ -391,8 +391,10 @@ segments:
     - asm
     - func_801DBB78
   - - 46148
-    - asm
-    - func_801DC044
+    - c
+    - resolveBattlerDamageAmount
+    - '@source: src/bof3/battle/resolveBattlerDamageAmount.c'
+    - '@behavior: Resolves the damage amount one attacker deals to one target: seeds the scratchpad damage-kind halfword from the caller mask or the attacker kind table, scales and clears the defence accumulator 0x801EC30C from the attacker guard flag 0x40 and guard byte, doubles the func_801DCAD8 base amount for the attacker kind pairs 0x13/0x17/0x33 and 0x16/0x35/0x40, applies the target status bits 0x64 through func_800A36F0 and 0x801463DA (or routes a clear status through func_801DC73C and resolveEnemyTargetDamageThroughGates), rolls the 0x32/0x3C/0x46 percent band on the target guard bit 2, adds the full-damage bonus plus a quarter, drops a quarter for a party target while 0x80144F58 reads 2 and for status bit 0x80, zeroes on the target guard word bit 0x10000, and clamps to 9999 and -9999.'
   - - 47932
     - c
     - func_801DC73C

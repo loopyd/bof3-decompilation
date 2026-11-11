@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801F37AC
   - - 3288
-    - asm
-    - func_801F38D8
+    - c
+    - dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8.c'
+    - '@behavior: dispatches the shared front-end mode byte 0x801448EC through the five-slot jump table at 0x801F2C1C: mode 0 runs func_801C601C with 0 and advances to 1; mode 1 seeds a front-end row of the table at 0x80143FC8 with occupancy 1, handler selector 0x9B and the position words 0x460000 and 0x340000 once the scenario progress byte reads 1, then arms the countdown 0x801448EE with 0x1E and advances to 2; mode 2 steps that countdown and at zero advances to 3 and increments the progress byte; mode 3 runs func_80150224 with 3, raises the shared phase byte 0x80143BB0 to 2 and advances to 4; mode 4 runs func_8015C058 and clears 0x801448EB and the mode byte once the phase byte leaves 2.'
   - - 3692
     - asm
     - func_801F3A6C

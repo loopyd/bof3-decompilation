@@ -80,8 +80,9 @@ segments:
     - asm
     - func_801F3590
   - - 2540
-    - asm
-    - func_801F35EC
+    - c
+    - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC
+    - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC.c'
   - - 2620
     - asm
     - func_801F363C

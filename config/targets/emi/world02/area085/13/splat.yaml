@@ -70,8 +70,10 @@ segments:
     - asm
     - func_801F373C
   - - 3008
-    - asm
-    - func_801F37C0
+    - c
+    - clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0
+    - '@source: src/bof3/world/clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0.c'
+    - '@behavior: Overlay step: reads the shared primary-state and sub-state byte pair at 0x80146874 as one halfword and, when it is 0x0C06, clears bit 0x40 of work byte 0 of the record behind scratchpad cell 0x1F800044, runs the transition helper 0x801C1254 with 2 and 2 and requests resource 1 through 0x8014D6B8; otherwise it walks the 0x140-byte work records counted by 0x80146254 and copies the word triplet 0x34, 0x38, 0x3C of every record whose state byte 0x79 reads 2 into the scratch work record, then lowers halfword 0x0A of the record at 0x80148210 by 2.'
   - - 3280
     - c
     - setWorkByte6ClearWorkByte92World02Area08513_801F38D0

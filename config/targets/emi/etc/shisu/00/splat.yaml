@@ -179,8 +179,10 @@ segments:
     - asm
     - func_801D91B0
   - - 34992
-    - asm
-    - func_801D94B0
+    - c
+    - drawTwoRowNumberedPanelShisu00_801D94B0
+    - '@source: src/bof3/ui/drawTwoRowNumberedPanelShisu00_801D94B0.c'
+    - '@behavior: Two-row numbered panel of the SHISU overlay: draws the 7 by 4 cell backing through the overlay panel drawer func_801D7418 with the counts 7 and 4, the 16 by 16 icon 0x14 through func_801644D8 at (x + 7, y + 5) with the size pair 16/16 and the attribute 128, and the caption through func_8014F800 at (x + 42, y + 7) with the shade 0 and the 0xFF mask, whose handle is func_801502D0(0x1C) or, when the variant byte read from the caller stack word is zero, func_801502D0(0x1B). It then draws the two rows at y + 25 and y + 41, each emitting the label func_801502D0(0x85) through func_8014F800 at x + 6 with the shade 0 when the matching bit of the flags word is set and 7 otherwise plus the 0xFF mask, and its value through func_8014FF0C at x + 94 with the same shade, the string "1" at 0x801D0D78 for the first row and "2" at 0x801D0D7C for the second. Finally it submits the row marker through func_801647C4 at (x + 8, row * 16 + y + 28). No jal and no table word of this payload names this body, so it is an overlay entry called from outside the payload; its 0x40-byte frame keeps eight saved registers and $ra and the epilogue leaves the cursor helper result in $v0.'
   - - 35464
     - textbin
     - T_801D9688

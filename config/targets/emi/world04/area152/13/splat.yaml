@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F3420
   - - 2172
-    - asm
-    - func_801F347C
+    - c
+    - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C
+    - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C.c'
+    - '@behavior: Byte-2 step of the handler run in this overlay: when shared mode byte 0x801454F2 reads 2 it stores 3 into byte 0x02 of the work record published at the scratchpad pointer slot 0x44, then reloads that slot and calls the local drawer 0x801F39C4 with 0x10 and the signed halfword at record offset 0x2E.'
   - - 2252
     - asm
     - func_801F34CC

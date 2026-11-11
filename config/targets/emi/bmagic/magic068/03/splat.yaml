@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF884
   - - 3336
-    - asm
-    - func_801EF908
+    - c
+    - decrementWorkByte9ResetToFDecrementWorkByteAInvokeHelper100Or101SetByteBToCAdvanceWorkByte2OnZeroBmagicMagic06803_801EF908
+    - '@source: src/bof3/bmagic/decrementWorkByte9ResetToFDecrementWorkByteAInvokeHelper100Or101SetByteBToCAdvanceWorkByte2OnZeroBmagicMagic06803_801EF908.c'
+    - '@behavior: Step handler published by entry 3 of this overlay''s byte-1 handler run at 0x801EFCC8 and entry 2 of its byte-2 run at 0x801EFCCC, so no jal in this payload names it. Decrements work byte 0x9 at byte width and tests the stored value; when that countdown reaches zero it stores 0xF back into byte 0x9 and decrements work byte 0xA the same way, then calls the main-executable helper 0x8015D71C with 0x100 and decrements work byte 2 while byte 0xA stays nonzero, or calls that helper with 0x101, stores 0xC into work byte 0xB and increments work byte 2 when it also reaches zero. Takes no arguments, returns nothing, and its 0x18-byte frame only keeps the return address at 0x10.'
   - - 3536
     - c
     - decrementWorkByte9AfterHelpersAndDecrementGlobalWorkByteBAndInvokeHelperOnZeroBmagicMagic06803_801EF9D0

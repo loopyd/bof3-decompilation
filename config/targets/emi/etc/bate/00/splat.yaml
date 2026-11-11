@@ -40,8 +40,10 @@ segments:
     - '@source: src/bof3/ui/initializeBateUiState.c'
     - '@behavior: initializes the shared BATE UI work block (head state bytes, panel origin and extent halfwords, the three panel records at 0x80148354/0x80148378/0x8014839C, the cursor block and the published record pointer D_801D8EE0) and publishes the index of the first of the first three shared party ids 0x80144F5A that is zero or seven into the cell at 0x8014833C'
   - - 4748
-    - asm
-    - func_801D1E8C
+    - c
+    - commitBateSlotSnapshotIntoSharedFieldRecord
+    - '@source: src/bof3/ui/commitBateSlotSnapshotIntoSharedFieldRecord.c'
+    - '@behavior: commits the pending six-slot snapshot of the BATE overlay into the six shared slot bytes 0x80144DF2 through 0x80144DF7 of the field record 0x80144DE4 and then rebuilds that record through func_80164A44; a slot whose snapshot byte is zero or already equal to its shared slot byte is skipped, and a differing slot calls the main-exe slot setter func_801665A0 with its helper group from the six-byte table 0x801D875C, the snapshot byte, 1 and 0, then the main-exe gate func_801650B4 with the same group and the shared byte the store has not replaced yet, and only then stores the snapshot byte into the shared slot byte'
   - - 5024
     - c
     - publishBateMaskFlagAndSnapshotSharedFields

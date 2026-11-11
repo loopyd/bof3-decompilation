@@ -23,6 +23,7 @@ sources = [
     "src/bof3/ui/drawMenuCommandRowShisu00_801D5C7C.c",
     "src/bof3/ui/readKindRecordValueShisu00_801D5EC4.c",
     "src/bof3/ui/drawSpritePrimTpageFromGraphTypeShisu00_801D550C.c",
+    "src/bof3/ui/drawTwoRowNumberedPanelShisu00_801D94B0.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
