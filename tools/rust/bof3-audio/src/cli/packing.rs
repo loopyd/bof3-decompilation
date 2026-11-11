@@ -1,0 +1,196 @@
+//! Command-line bank, XA and music packing from preserved extraction manifests.
+use crate::document::manifest;
+use crate::packing as pack;
+use crate::Result;
+use std::{ffi::OsString, path::PathBuf};
+
+pub const HELP: &str = "
+Audio packing:
+  pack --mode audio --input FOLDER [--driver DIRECTORY] --output NEW_DIR [--json]
+  Bank folders/roots and XA roots preserve unchanged EMI/STR bytes.
+  Unfiltered bank roots also retain supplied EMI archives without audio assets.
+  WAV edits must fit allocations; XA cues require compatible history boundaries.
+  XA roots accept --xa-padding reject|zero (default reject) for shorter WAV input.
+  Owned driver required for banks and recorded XA runtime metadata.
+Music packing:
+  pack --mode music --input FOLDER --driver DIRECTORY --output NEW_DIR [--pitch-context CONTEXT_JSON] [--json]
+  Context-backed exports require the same frozen pitch context used for extraction.
+  Song folders/music roots support fixed-layout MIDI, SF2 PCM/loops and invertible tone gain/pan.
+  Topology, tuning, envelope, timing/channel and inconsistent shared edits fail explicitly.
+";
+
+pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
+    let (mut mode, mut input, mut driver, mut output) = (None, None, None, None);
+    let mut json = false;
+    let mut padding = None;
+    let mut pitch_context = None;
+    while let Some(arg) = args.next() {
+        match arg.to_str() {
+            Some("--executable" | "--bios" | "--pitch-ram") => return Err("removed original-input option; use --driver DIRECTORY and, for frozen tuning, --pitch-context JSON".into()),
+            Some("--pitch-context") if pitch_context.is_none() => {
+                pitch_context = Some(PathBuf::from(
+                    args.next().ok_or("--pitch-context needs a path")?,
+                ));
+            }
+            Some("--mode") if mode.is_none() => {
+                mode = Some(args.next().ok_or("--mode needs audio or music")?)
+            }
+            Some("--input") if input.is_none() => {
+                input = Some(PathBuf::from(args.next().ok_or("--input needs a folder")?))
+            }
+            Some("--driver") if driver.is_none() => {
+                driver = Some(PathBuf::from(
+                    args.next().ok_or("--driver needs a path")?,
+                ))
+            }
+            Some("--output") if output.is_none() => {
+                output = Some(PathBuf::from(
+                    args.next().ok_or("--output needs a new directory")?,
+                ))
+            }
+            Some("--xa-padding") if padding.is_none() => {
+                padding = Some(
+                    match args.next().and_then(|v| v.into_string().ok()).as_deref() {
+                        Some("reject") => crate::xa::packing::Padding::Reject,
+                        Some("zero") => crate::xa::packing::Padding::Zero,
+                        _ => return Err("pack: --xa-padding requires reject or zero".into()),
+                    },
+                );
+            }
+            Some("--json") if !json => json = true,
+            _ => return Err(format!("pack: unknown or repeated option {arg:?}").into()),
+        }
+    }
+    let mode = mode.ok_or("--mode audio or music is required")?;
+    if mode != "audio" && mode != "music" {
+        return Err("pack: unsupported mode; choose audio or music".into());
+    }
+    let input = input.ok_or("--input is required")?;
+    let output = output.ok_or("--output is required")?;
+    if pitch_context.is_some() && mode != "music" {
+        return Err("pack: --pitch-context requires --mode music".into());
+    }
+    if mode == "music" {
+        if padding.is_some() {
+            return Err("pack: --xa-padding applies only to XA extraction roots".into());
+        }
+        let report = crate::music::packing::songs(&pack::Options {
+            pitch_context,
+            input,
+            output,
+            driver: driver.ok_or("--driver is required for music metadata validation")?,
+        })?;
+        if json {
+            println!("{}", serde_json::to_string_pretty(&report)?);
+        } else {
+            println!(
+                "Published {} EMI archives from {} songs to {}",
+                report.archives.len(),
+                report.songs.len(),
+                report.output
+            );
+            for archive in &report.archives {
+                println!(
+                    "{} -> {}: byte equality {}; {} changed entries",
+                    archive.source,
+                    archive.path,
+                    archive.byte_equal,
+                    archive.changed_entries.len()
+                );
+            }
+            println!(
+                "Reconstruction and verification details: {}/pack.json",
+                report.output
+            );
+            for limitation in report.limitations {
+                println!("Limitation: {limitation}");
+            }
+        }
+        return Ok(0);
+    }
+    if input.join("audio.xml").exists() && input.join("bank.xml").exists() {
+        return Err("pack: folder contains both audio.xml and bank.xml; input is ambiguous".into());
+    }
+    if input.join("audio.xml").exists() {
+        let root = manifest::read(&manifest::relative_file(&input, &input, "audio.xml")?)?;
+        if matches!(root.attribute("kind")?, "xa_stream" | "xa_cue" | "xa_views") {
+            let report = crate::xa::packing::assets(&crate::xa::packing::Options {
+                input,
+                driver,
+                output,
+                padding: padding.unwrap_or_default(),
+            })?;
+            if json {
+                println!("{}", serde_json::to_string_pretty(&report)?);
+            } else {
+                println!(
+                    "Published {} STR sources from {} assets to {}",
+                    report.sources.len(),
+                    report.assets.len(),
+                    report.output
+                );
+                for source in &report.sources {
+                    println!(
+                        "{} -> {}: byte equality {}; {} changed sectors",
+                        source.source,
+                        source.path,
+                        source.byte_equal,
+                        source.changed_sectors.len()
+                    );
+                }
+                for asset in &report.assets {
+                    if let Some(padding) = &asset.padding {
+                        println!("{}: {} input frames, {} zero-padding frames; per-channel losses in pack.json", asset.id, padding.input_frames, padding.padded_frames);
+                    }
+                }
+                println!(
+                    "Encoding loss and verification details: {}/pack.json",
+                    report.output
+                );
+                for limitation in report.limitations {
+                    println!("Limitation: {limitation}");
+                }
+            }
+            return Ok(0);
+        }
+    }
+    if padding.is_some() {
+        return Err("pack: --xa-padding applies only to XA extraction roots".into());
+    }
+    let report = pack::banks(&pack::Options {
+        pitch_context: None,
+        input,
+        driver: driver.ok_or("--driver is required for runtime metadata validation")?,
+        output,
+    })?;
+    if json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        let changed = report
+            .banks
+            .iter()
+            .flat_map(|b| &b.samples)
+            .filter(|s| s.changed)
+            .count();
+        println!(
+            "Published {} EMI archives from {} banks to {}; {changed} samples encoded",
+            report.archives.len(),
+            report.banks.len(),
+            report.output
+        );
+        for archive in &report.archives {
+            println!(
+                "{} -> {}: byte equality {}",
+                archive.source, archive.path, archive.byte_equal
+            );
+        }
+        println!(
+            "Encoding loss and verification details: {}/pack.json",
+            report.output
+        );
+        for limitation in report.limitations {
+            println!("Limitation: {limitation}");
+        }
+    }
+    Ok(0)
+}

@@ -1,13 +1,11 @@
 //! Development evidence for BIOS services used by original audio preparation.
-use bof3_audio::{
-    driver::closure::{self, Root},
-    machine::{
-        bank::Stage,
-        image::executable::{ram_offset, Executable},
-        image::firmware::Image,
-    },
-    Result,
-};
+use bof3_audio::driver::closure;
+use bof3_audio::driver::closure::Root;
+use bof3_audio::machine::audio::bank::Stage;
+use bof3_audio::machine::image::executable::ram_offset;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 use std::{

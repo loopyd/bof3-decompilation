@@ -2,14 +2,12 @@
 use super::{
     native::OUTPUT_LIMIT, ConsumerClock, DeviceProgress, Execution, NativeProducerProgress,
 };
-use crate::{
-    machine::{
-        cd::queue::{WaitOutcome, CAPACITY as CD_QUEUE_CAPACITY},
-        native_queue::{EnqueueOutcome, ProducerState},
-        output_clock::Collection,
-    },
-    Result,
-};
+use crate::machine::cd::queue::WaitOutcome;
+use crate::machine::cd::queue::CAPACITY as CD_QUEUE_CAPACITY;
+use crate::machine::clock::Collection;
+use crate::machine::native_queue::EnqueueOutcome;
+use crate::machine::native_queue::ProducerState;
+use crate::Result;
 use serde::Serialize;
 
 const RETIREMENT_QUANTUM: u64 = 200_000;

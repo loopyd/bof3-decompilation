@@ -5,9 +5,6 @@ mod mapped;
 mod memory;
 mod producer;
 mod scheduler;
-pub use producer::{NativeBatch, ProducerProgress};
-pub use scheduler::DeviceProgress;
-
 use super::{
     bus::{Bus, BusError, Ram, Width},
     cd::host,
@@ -23,6 +20,8 @@ use super::{
     spu::voice::ports,
     timers::Timers,
 };
+pub use producer::{NativeBatch, ProducerProgress};
+pub use scheduler::DeviceProgress;
 
 pub struct Interconnect {
     cache: cache::Cache,

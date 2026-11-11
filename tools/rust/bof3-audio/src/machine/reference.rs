@@ -1,9 +1,15 @@
 //! Explicit original EXE/BIOS development execution. Production callers use driver::Image.
-use super::{
-    bank, boot, driver::Audio, execution::Execution, image::executable::Executable,
-    image::firmware::Image, image::profile::Profile, spu::reverb, spu::sample,
-    spu::voice::envelope, spu::voice::ports::DisableModel,
-};
+use crate::machine::audio::bank;
+use crate::machine::boot;
+use crate::machine::driver::Audio;
+use crate::machine::execution::Execution;
+use crate::machine::image::executable::Executable;
+use crate::machine::image::firmware::Image;
+use crate::machine::image::profile::Profile;
+use crate::machine::spu::reverb;
+use crate::machine::spu::sample;
+use crate::machine::spu::voice::envelope;
+use crate::machine::spu::voice::ports::DisableModel;
 pub mod mapping;
 pub mod tuning;
 use crate::Result;
@@ -102,8 +108,8 @@ fn prepare_bank_output(
             crate::machine::spu::transfer::RamControlModel::EmulatorReference,
         )?;
         execution.enable_output(
-            super::output_clock::Model::PcsxReduxNtsc,
-            super::output_clock::Collection::Discard,
+            crate::machine::clock::Model::PcsxReduxNtsc,
+            crate::machine::clock::Collection::Discard,
         )?;
     }
     bank::load(
@@ -123,7 +129,7 @@ pub fn prepare_music(
     archive: &ArchiveImage,
     layout: Option<u8>,
     sequence: usize,
-) -> Result<super::music::Prepared<boot::Evidence>> {
+) -> Result<crate::machine::audio::music::Prepared<boot::Evidence>> {
     prepare_music_observed(
         executable,
         firmware,
@@ -141,15 +147,19 @@ pub fn prepare_music_observed(
     layout: Option<u8>,
     sequence: usize,
     observer: &mut impl FnMut(bank::Stage, &Execution) -> Result<()>,
-) -> Result<super::music::Prepared<boot::Evidence>> {
+) -> Result<crate::machine::audio::music::Prepared<boot::Evidence>> {
     Profile::identify(executable)?;
-    super::music::prepare_with(archive, layout, sequence, observer, |options, observer| {
-        prepare_bank(executable, firmware, archive, options, observer)
-    })
+    crate::machine::audio::music::prepare_with(
+        archive,
+        layout,
+        sequence,
+        observer,
+        |options, observer| prepare_bank(executable, firmware, archive, options, observer),
+    )
 }
 
-pub fn progress_instructions() -> super::music_progress::Instructions {
-    super::music_progress::Instructions {
+pub fn progress_instructions() -> crate::machine::audio::progress::Instructions {
+    crate::machine::audio::progress::Instructions {
         loop_start: 0x8016a308,
         infinite_loop: 0x8016a374,
         end: 0x8016cf1c,
@@ -160,10 +170,10 @@ pub fn render_music(
     executable: &Executable,
     firmware: Image,
     archive: &ArchiveImage,
-    options: &crate::psx_render::Options,
-) -> Result<crate::psx_render::Rendered<boot::Evidence>> {
+    options: &crate::render::psx::Options,
+) -> Result<crate::render::psx::Rendered<boot::Evidence>> {
     options.validate()?;
-    let runtime = super::music::prepare_with(
+    let runtime = crate::machine::audio::music::prepare_with(
         archive,
         options.layout,
         options.sequence,
@@ -172,7 +182,7 @@ pub fn render_music(
             prepare_bank_output(executable, firmware, archive, options, true, observer)
         },
     )?;
-    crate::psx_render::render_prepared(runtime, options, "original_us_runtime", vec![
+    crate::render::psx::render_prepared(runtime, options, "original_us_runtime", vec![
         "Development original EXE/BIOS execution with host-fed archive buffers and explicit functional clocks.",
         "Functional output advances from before sound initialization; retained PCM begins before play without resetting device phase. Independent PCM/native timing acceptance remains separate.",
     ])

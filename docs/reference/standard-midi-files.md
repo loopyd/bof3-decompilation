@@ -101,7 +101,7 @@ and cents. These assignments come from the
 
 ### Repository application and limits
 
-The [PC renderer](../../tools/rust/bof3-audio/src/pc_render.rs) accepts notes,
+The [PC renderer](../../tools/rust/bof3-audio/src/render/pc/mod.rs) accepts notes,
 program changes, bends and a checked subset of controllers. Its current bank
 selection uses CC0; CC32, pressure, RPN/NRPN and SysEx playback are rejected.
 The parser can preserve messages that the renderer cannot execute. The
@@ -169,7 +169,7 @@ duration; it does not establish game playback fidelity.
 | SMF parsing, preservation and edited serialization | [interchange/midi.rs](../../tools/rust/bof3-audio/src/interchange/midi.rs) |
 | Game sequence execution order and finite loop expansion | [sequence/timeline.rs](../../tools/rust/bof3-audio/src/sequence/timeline.rs) |
 | SEP-to-format-1 translation | [sequence/midi.rs](../../tools/rust/bof3-audio/src/sequence/midi.rs) |
-| Accepted playback events and sample-frame timing | [pc_render.rs](../../tools/rust/bof3-audio/src/pc_render.rs) |
+| Accepted playback events and sample-frame timing | [render/pc/mod.rs](../../tools/rust/bof3-audio/src/render/pc/mod.rs) |
 | Accompanying instrument format and synthesis differences | [SoundFont reference](soundfont.md) |
 
 Keep publisher rules, observed BOF3 behavior and current implementation limits

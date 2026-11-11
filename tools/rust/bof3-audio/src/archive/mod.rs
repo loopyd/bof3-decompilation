@@ -2,7 +2,6 @@
 
 pub mod disc;
 pub(crate) mod packing;
-
 use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::path::Path;

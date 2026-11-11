@@ -1,4 +1,6 @@
-use bof3_audio::{document::manifest, pack, soundfont::reader::Font};
+use bof3_audio::document::manifest;
+use bof3_audio::packing as pack;
+use bof3_audio::soundfont::reader::Font;
 use std::{fs, path::PathBuf};
 struct Directory(PathBuf);
 impl Drop for Directory {
@@ -19,11 +21,12 @@ fn target(bytes: &mut [u8], preset: usize, instrument: u16) {
 #[test]
 #[ignore = "requires BOF3_AUDIO_DRIVER, BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn current_policy_population_publication_and_original_runtime_playback() {
-    use bof3_audio::{
-        bank::Bank,
-        machine::{image::executable::Executable, image::firmware::Image},
-        pc_archive, pc_render, psx_render,
-    };
+    use bof3_audio::bank::Bank;
+    use bof3_audio::machine::image::executable::Executable;
+    use bof3_audio::machine::image::firmware::Image;
+    use bof3_audio::render::pc as pc_render;
+    use bof3_audio::render::pc::archive as pc_archive;
+    use bof3_audio::render::psx as psx_render;
     use emi_ex_v2::image::ArchiveImage;
     let root =
         Directory(std::env::temp_dir().join(format!("bof3-music-programs-{}", std::process::id())));

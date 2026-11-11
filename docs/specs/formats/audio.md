@@ -14,42 +14,26 @@ banks + SEP sequences) driven by the PsyQ `libsnd`/`libspu` runtime.
 ## Quick start
 
 ```sh
-bin/harness audio build list                        # browse all 81 BGM tracks
-bin/harness audio build play BGM000                 # play by track name (auto-resolves)
-bin/harness audio build play BGMBAT02 --gain 0.7    # adjust playback/render volume
-bin/harness audio build render BGMBAT04 -o track.ogg # Ogg output (requires vorbis/ogg development libs; see build requirements below)
-bin/harness audio build render BGMBAT04 -o track.flac # FLAC output (requires FLAC development lib; see build requirements below)
-bin/harness audio build render BGMBAT04 -o track.wav
-bin/harness audio build play out/extracted/BIN/BGM/BGM000.EMI        # play directly from EMI without prior extraction
-bin/harness audio build play BGM000 -o out.wav                       # render to WAV instead of speakers
-bin/harness audio build play out/extracted/BIN/SCE_XA/VOICE.STR -c 0 # play XA voice channel 0
-bin/harness audio build render out/extracted/BIN/BGM/BGM000.EMI -o out.wav
-bin/harness audio build vab2sf2 out/extracted/BIN/BGM/BGM000.EMI -o bank.sf2
-bin/harness audio build emi-inspect out/extracted/BIN/BGM/BGM000.EMI
-bin/harness audio build psf-pack out/extracted/SLUS_004.22 -o out/audio/bof3.psflib
-bin/harness audio build psf-inspect out/audio/bof3.psflib
-bin/harness audio build psf-run out/audio/bof3.psflib -n 100000
-bin/harness audio build --examples
+bin/harness audio build
+bin/harness audio index --mode music --disc-root out/extracted --json
+bin/harness audio verify --mode audio --archive out/extracted/BIN/BGM/BGM000.EMI --json
+bin/harness audio render --help
+bin/harness audio compile --help
+bin/harness audio package out/bof3-audio-source.zip
 ```
 
-> **Build requirements:** `bin/harness audio build` is the stable surface. On
-> first use it configures the tracked CMake source and builds `bof3-audio` into
-> ignored `tools/c/psx-audio/build/`; later calls perform an incremental build.
-> Setup requires CMake, a C compiler, and zlib development files. Ogg/Vorbis
-> and FLAC support are independent build-time options, enabled when their
-> development libraries are detected; ALSA is linked when found.
-> Configure/build failures print a setup diagnostic and leave tracked source
-> unchanged; no prebuilt audio executable is stored in Git.
+The harness builds the Rust host and owned guest driver, using the audio
+project's pinned Rust toolchain and the approved MIPS GNU binutils. Host output
+is `out/audio/release/bof3-audio`; driver output is `out/audio/driver/`.
+Production operations use supplied media and `--driver DIRECTORY`; they do not
+require a game executable or BIOS. The separate `compile` development command
+builds a PlayStation test player from original executable code.
 
-Bare track names (`BGM000`) auto-resolve through the extracted track
-catalog; bare `.EMI`/`.STR` paths such as `BGM000.EMI` or `VOICE.STR` do
-**not** resolve — `play`, `render`, `vab2sf2`, and `emi-inspect` treat the
-argument as an existing file path, so the examples above use the generated
-extraction locations (`out/extracted/BIN/BGM/`, `out/extracted/BIN/SCE_XA/`;
-see “Generated extraction outputs” below).
-
-`bin/harness audio build` is the only supported audio surface; a previous Python wrapper
-(`bin/bof3-audio`) was removed and no longer exists.
+See the [audio tool instructions](../../../tools/rust/bof3-audio/README.md) for
+setup, command options, supported edits, codec settings and declared playback
+limits. Use explicit media paths or qualified IDs from `index` and `query`.
+The replacement command surface excludes live playback, TUI, standalone PSF
+commands and FLAC.
 
 ## Audio content on disc
 
@@ -404,7 +388,7 @@ of 2048 reproduces their sector counts. Original files were preserved.
 | CAPCOM30 | 1,155 | 1,013 | 18 |
 
 [Rust disc access](../../../tools/rust/bof3-audio/src/archive/disc.rs) reads the full
-extents; the [recovery example](../../../tools/rust/bof3-audio/examples/recover_xa.rs)
+extents; the [recovery example](../../../tools/rust/bof3-audio/examples/recovery.rs)
 validates the supplied US executable and writes only to a new output directory.
 Local complete references are under `out/audio-migration/full-disc-streams`.
 Independent raw-track/hash comparison and
@@ -426,7 +410,7 @@ moving to the next cue. Low 15 bits are interleave-unit offsets, with stride 8
 for stream 0 and 16 for streams 1/2. The original leaf routine selects filter
 file 1 and computes a start LBA plus a separate stop threshold 150 sectors below
 the next offset's LBA. This threshold is not yet accepted as an audible endpoint.
-[Original-instruction checks](../../../tools/rust/bof3-audio/tests/xa_runtime.rs)
+[Original-instruction checks](../../../tools/rust/bof3-audio/tests/reference/transport/calls.rs)
 verify all 896 supported positive-range records against the original selector's
 file, channel, start/current LBA and raw stop-threshold fields:
 
@@ -461,7 +445,7 @@ retains the unmapped sectors.
 
 ### US XA scheduler control flow
 
-The [scheduler tests](../../../tools/rust/bof3-audio/tests/xa_scheduler.rs) execute
+The [scheduler tests](../../../tools/rust/bof3-audio/tests/reference/transport/scheduler.rs) execute
 original US instructions with explicitly injected CD responses. They establish
 control flow, not response latency or audible duration. Addresses below belong
 to `exe/slus_004_22`; full executable offsets are `address - 0x80096800 + 0x800`.
@@ -886,7 +870,7 @@ placement and signed scaling limits. The
 triples all 476 sequences' ticks, checks every reconstructed event and verifies
 tripled duration through RustySynth: 240,915 deltas change and 117 entries resize.
 All 119 original SEP entries still round-trip byte-exactly.
-[Original-US execution](../../../tools/rust/bof3-audio/tests/common/timing_runtime.rs)
+[Original-US execution](../../../tools/rust/bof3-audio/tests/support/runtime/timing.rs)
 checks 15 streams through delta reader `0x8016AAD4` and dispatcher `0x8016D0E0`,
 including relocated loop targets and requested ticks. These synthetic RAM probes
 do not establish original scheduler timing or independent audio fidelity.
@@ -1281,9 +1265,10 @@ now raises construction to 842 banks / 15,095 zones, each loaded in RustySynth.
 The other 178 banks are rejected: 133 reads outside the verified pitch table,
 41 zero-pitch contexts and four unrepresentable tuning ranges. Counts
 classify the first rejection per bank, not all unsupported tones. These are
-structural construction results, not full bank/song playback acceptance. Dynamic
-controls, rejected contexts, reverb fidelity and music-folder publication remain
-open; synthetic interoperability cannot authorize removing the C tool.
+structural construction results, not full bank/song playback acceptance. Use the
+[current workflow contract](../../../tools/rust/bof3-audio/README.md) for supported
+edits, rendering contexts and explicit refusals. Synthetic interoperability alone
+does not establish native playback or hardware fidelity.
 
 ### US runtime sample-reference resolution
 
@@ -1651,7 +1636,7 @@ only with a zero held initial sample under the `Published` model and the documen
 limitation. Capture history, natural reachability, concurrent scheduling and
 PCM fidelity remain unverified.
 
-The extended [initialized-state probe](../../../tools/rust/bof3-audio/examples/tuning_init_probe.rs)
+The extended [initialized-state probe](../../../tools/rust/bof3-audio/examples/tuning.rs)
 executes original BGM004 sequence 0 for 1,700,000 reference-clock frames, watches
 CPU store attempts overlapping either table, and checks both hashes afterward.
 The final observer decodes instructions in RAM and immutable BIOS ROM; other
@@ -1700,7 +1685,7 @@ configuration: sustain level 15 and decreasing sustain, while both raw ADSR
 register mirrors remain zero. An ADSR1 or ADSR2 write replaces only its own
 parameters and mirror. Key-on resets envelope progress and retains configuration.
 
-[Existing checks](../../../tools/rust/bof3-audio/tests/adsr.rs) cover phase traces,
+[Existing checks](../../../tools/rust/bof3-audio/tests/machine/spu/voice/envelope.rs) cover phase traces,
 rate intervals, model differences, component injection and key/register changes.
 The opt-in corpus probe compares VAB register pairs over 250 ms held notes and
 250 ms release. It compares level and phase because the models use different
@@ -1904,8 +1889,8 @@ C retirement remains gated.
 
 ## Rust PC interchange rendering
 
-The [PC renderer](../../../tools/rust/bof3-audio/src/pc_render.rs) and
-[CLI](../../../tools/rust/bof3-audio/src/render_cli.rs) synthesize supplied SMF/SF2
+The [PC renderer](../../../tools/rust/bof3-audio/src/render/pc/mod.rs) and
+[CLI](../../../tools/rust/bof3-audio/src/cli/rendering.rs) synthesize supplied SMF/SF2
 through the approved, pinned RustySynth 1.3.6. This is an executable playback path
 for interchange assets, including the explicitly approximate song export above.
 Complete game-to-PC playback acceptance remains unfinished.
@@ -1960,7 +1945,7 @@ See the [codec contract](../../reference/audio-codecs.md) for numerical quality
 acceptance and its representative-content limits. Other Vorbis qualities and
 MP3 bitrates remain unsupported. The harness forwards audio commands to Rust.
 
-[PC renderer tests and the opt-in consumer check](../../../tools/rust/bof3-audio/tests/pc_render.rs)
+[PC renderer tests and the opt-in consumer check](../../../tools/rust/bof3-audio/tests/render/pc/mod.rs)
 cover tempo/order and fractional-frame accumulation, 100/200 Hz synthetic output,
 repeat equality, live pan/bend changes, release, clipping, rejected events/presets/durations, CLI cutoff,
 publication conflicts and absence of output on failure. The independent engine
@@ -1971,7 +1956,7 @@ BOF3-to-SF2 translation or PC/PSX differences.
 
 ### Direct PC archive rendering
 
-The [archive adapter](../../../tools/rust/bof3-audio/src/pc_archive.rs) shares
+The [archive adapter](../../../tools/rust/bof3-audio/src/render/pc/archive.rs) shares
 canonical music preparation with extraction. It requires one song entry in the
 selected EMI, the validated owned driver, an independent SEP index, and explicit
 acceptance of the same MIDI/SF2 approximations:
@@ -2000,7 +1985,7 @@ It retains source hashes and the original EXE hash as provenance, qualified
 song/bank/sequence IDs, translation stop reason and mappings, expanded loop limit,
 approximations and the nested PC rendering report.
 
-[Archive rendering checks](../../../tools/rust/bof3-audio/tests/pc_archive.rs)
+[Archive rendering checks](../../../tools/rust/bof3-audio/tests/render/pc/archive.rs)
 compare PCM against extracted MIDI/SF2 played once, retain independent sequence
 selection, verify intro/finite/infinite-loop and fixed-duration behavior, and
 exercise option failures and verified publication. These establish shared
@@ -2133,7 +2118,7 @@ eventually returns `-2` without launching DMA. A rounded upload includes bytes
 beyond the requested length, so future callers must establish readable padding;
 the test initializes that entire range deliberately.
 
-[Seven synthetic tests plus an opt-in original-executable test](../../../tools/rust/bof3-audio/tests/spu_transfer.rs)
+[Seven synthetic tests plus an opt-in original-executable test](../../../tools/rust/bof3-audio/tests/machine/spu/transfer.rs)
 cover these transfers and explicit failures. The original dispatcher and its
 callees execute unchanged for 16 upload/download pairs: lengths 1, 63, 64, 65,
 127, 128, 129 and 256, each at an ordinary address and across the RAM boundary.
@@ -2288,17 +2273,17 @@ initial inactive fetches and CPU/device synchronization remain open. An executio
 error can follow earlier voices' updates; callers must stop rather than retry a
 partially executed frame.
 
-[Sample checks](../../../tools/rust/bof3-audio/tests/spu_samples.rs) cover all 256
+[Sample checks](../../../tools/rust/bof3-audio/tests/machine/spu/sample.rs) cover all 256
 interpolation phases with independently calculated signed boundary vectors,
 modulation glitches, block/loop transitions, zero pitch, address wrap, retrigger
-history and malformed data. [Voice checks](../../../tools/rust/bof3-audio/tests/spu_voices.rs)
+history and malformed data. [Voice checks](../../../tools/rust/bof3-audio/tests/machine/spu/voice/mod.rs)
 cover all 24 voices, gain polarity, envelope ordering, modulation before panning,
 release and mute. BGM000/BGM004 checks traverse 37 original samples, including
 10 repeated loops, for 808,388 frames, comparing sample progression against
 linear decoding. This uses reference pitch `0x1000`, not verified game playback
 contexts or independent reference audio.
 
-[MMIO checks](../../../tools/rust/bof3-audio/tests/spu_voice_ports.rs) execute the
+[MMIO checks](../../../tools/rust/bof3-audio/tests/machine/spu/voice/ports.rs) execute the
 original US final register-flush block at `exe/slus_004_22@0x801709C4` through
 `0x80170A34` (exclusive; full EXE offset `0xDA9C4`). It loads staged key-off masks
 from `0x80190C58/5A`, key-on masks from `0x8018DB50/52` and reverb masks from
@@ -2383,13 +2368,13 @@ capture cadence remain unverified. Published queue output and direct `SpuInputs`
 retain their supplied CD frames. Sample reads precede these scheduled writes.
 The [selected IRQ model](#rust-spu-ram-transfers-and-dma4) follows the voice cursor.
 
-[Noise tests](../../../tools/rust/bof3-audio/tests/spu_noise.rs) compare 65,536
+[Noise tests](../../../tools/rust/bof3-audio/tests/machine/spu/noise.rs) compare 65,536
 frames at each of 64 clocks against an independently calculated Python integer
 trace (little-endian samples SHA-256
 `734409073f749d57a47b078e194d6f9377bd137aff6d3a635f9d3aa843f363c7`).
-[Mixer/capture tests](../../../tools/rust/bof3-audio/tests/spu_mixer.rs) cover
+[Mixer/capture tests](../../../tools/rust/bof3-audio/tests/machine/spu/mixer.rs) cover
 clipping order, signed gains, mute/input/send routing, tails, register failures
-and ring wrap. [Output integration tests](../../../tools/rust/bof3-audio/tests/spu_output.rs)
+and ring wrap. [Output integration tests](../../../tools/rust/bof3-audio/tests/machine/spu/output.rs)
 exercise all 24 noise voices at different pitches, continued ENDX without noise
 muting, per-frame clocking, capture before pan/mute/input gain and rejection before
 pending keys are consumed. These ten new checks validate component behavior;
@@ -2437,11 +2422,11 @@ does not run a sweep envelope. Native worker write timing and hardware fidelity
 remain separate obligations. See
 [retained sweep research](../../reference/spu-envelopes.md#volume-sweeps).
 
-[Sweep checks](../../../tools/rust/bof3-audio/tests/spu_volume.rs) cover all eight
+[Sweep checks](../../../tools/rust/bof3-audio/tests/machine/spu/volume.rs) cover all eight
 modes, 128 rates and five signed starting levels across 512 frames per context,
 against separately calculated integer traces for both models. Literal checks
 cover saturation, frozen rates, reset/rearm behavior and model boundaries.
-[Integration checks](../../../tools/rust/bof3-audio/tests/spu_output.rs) verify
+[Integration checks](../../../tools/rust/bof3-audio/tests/machine/spu/output.rs) verify
 voice/main output ordering, key preservation and all 24 current-volume register
 pairs. Passing these checks does not establish original runtime timing or
 reference-audio fidelity.
@@ -2480,7 +2465,7 @@ adds `0x3ffff-base`, so this model is not ordinary modulo by work-area size.
 RAM writes take effect immediately. Later aliased reads, including the second
 all-pass stage, observe those writes.
 
-[Reverb checks](../../../tools/rust/bof3-audio/tests/spu_reverb.rs) cover signed
+[Reverb checks](../../../tools/rust/bof3-audio/tests/machine/spu/reverb.rs) cover signed
 rounding, cross-channel reflection, write-disabled output, FIR gain/phase,
 cursor wrap, history retention, alias order and the `-32768` reflection
 coefficient. Host comparisons against the unchanged native C++ unit cover
@@ -2490,7 +2475,7 @@ The exact-hash US executable contains the 32 published Room register values at
 full-file offset `0xEE024`, runtime `exe/slus_004_22@0x80184024`. This is preset
 identity, not proof that a game path selected or executed that preset.
 
-[Output integration checks](../../../tools/rust/bof3-audio/tests/spu_output.rs)
+[Output integration checks](../../../tools/rust/bof3-audio/tests/machine/spu/output.rs)
 upload stored audio through immediate SPU RAM ports, observe wet/main gain and preserve RAM
 with writes disabled. A bounded native mixed-PCM capture agrees with steady
 stored-RAM reverb output after the separately identified native host Volume,
@@ -2673,12 +2658,12 @@ timing and broader IRQ phase remain acceptance obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 
-[Host checks](../../../tools/rust/bof3-audio/tests/cd_host.rs) exercise FIFO
+[Host checks](../../../tools/rust/bof3-audio/tests/machine/cd/host.rs) exercise FIFO
 capacity/wrap, command readiness, queued response retention, automatic reset-host
 command execution, manual mask/partial acknowledgement, IRQ relatching, volume
 application/mute and rejected accesses.
 The
-[original US driver check](../../../tools/rust/bof3-audio/tests/cd_host_runtime.rs)
+[original US driver check](../../../tools/rust/bof3-audio/tests/machine/cd/host/runtime.rs)
 runs command submission at `exe/slus_004_22@0x80176734` (full EXE `0xE0734`)
 for Getstat, Setloc, Setmode and Setfilter. It verifies parameter bytes and return
 values, then executes response handling at `0x80175C60` (`0xDFC60`) to drain and
@@ -2773,10 +2758,10 @@ COM_DELAY=`0x1325`. The Rust bus accepts those observed control configurations;
 other bus timings are not inferred. Bounded Rizin 1.0.0 listings end at helper
 address `0x80177250` and use `out/audio-migration/cd-sector-*-rizin.json`.
 
-[Six device tests](../../../tools/rust/bof3-audio/tests/cd_sector.rs) cover mixed
+[Six device tests](../../../tools/rust/bof3-audio/tests/machine/cd/sector.rs) cover mixed
 access widths, rewind/exhaustion, zero count, address wrapping, priority gating,
 budgets, RAM aliases, IRQ acknowledgement and failure preservation.
-[Original routine tests](../../../tools/rust/bof3-audio/tests/cd_sector_runtime.rs)
+[Original routine tests](../../../tools/rust/bof3-audio/tests/machine/cd/sector/runtime.rs)
 execute 12 combinations of block size, service budget and whole/split transfers.
 They also copy the first 16 raw VOICE sectors' 2,340-byte data fields exactly:
 37,440 bytes, read through `DiscImage::read_sector` from `BOF3_AUDIO_TRACK`.
@@ -2885,10 +2870,10 @@ The CDDA-read bit `0x01` and 2,328-byte sector bit `0x10` reject explicitly.
 Report `0x04` and autopause `0x02` control Play; Play does not require the
 CDDA-read bit. Read-error retry behaviour remains unsupported.
 
-[Existing checks](../../../tools/rust/bof3-audio/tests/cd_drive.rs) cover
+[Existing checks](../../../tools/rust/bof3-audio/tests/machine/cd/drive.rs) cover
 command errors, seek/read/pause/restart transitions, routing, header progression,
 malformed sectors and the existing host acknowledgement contract.
-[Original US SDK checks](../../../tools/rust/bof3-audio/tests/cd_drive_runtime.rs)
+[Original US SDK checks](../../../tools/rust/bof3-audio/tests/machine/cd/drive/runtime.rs)
 submit commands through `0x80176734` (full EXE `0xE0734`) and consume drive-produced
 responses through `0x80175C60` (`0xDFC60`). The explicit prior completion and
 GPUSTAT input remain as documented for the host-register fixture. Mode `0xC8`,
@@ -2914,7 +2899,7 @@ seek/sector/IRQ timing, SPU scheduling, BIOS startup and reference audio remain 
 
 ## Original XA scheduler with drive responses
 
-[The integrated fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+[The integrated fixture](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 executes the US cue initializer `exe/slus_004_22@0x801636A0` (full EXE `0xCD6A0`),
 tick dispatcher `0x801638B0` (`0xCD8B0`), their state handlers, SDK command path
 and game completion callback against the functional drive. It does not patch
@@ -2957,7 +2942,7 @@ work must be drained. The method reports displaced unread bytes when the old blo
 BFRD read remains protected. Clearing BFRD explicitly releases/rewinds that old
 selection. Missing configuration, invalid sizes and pending work fail before
 replacing data or publishing a response. Four
-[delivery tests](../../../tools/rust/bof3-audio/tests/cd_delivery.rs) cover these
+[delivery tests](../../../tools/rust/bof3-audio/tests/machine/cd/delivery.rs) cover these
 transitions, atomic failures and IRQ wiring. Direct `present_cd_data` retains
 its strict no-replacement contract. This serialized path does not implement
 multiple pending sectors, buffer overruns or asynchronous retry timing.
@@ -3017,13 +3002,13 @@ same post-clamp coefficient; its selected-sector path bypasses interpolation.
 The CD host register owner above decodes the bank and offset writes;
 drive-command execution, sector scheduling and FIFO/audio lifecycle remain open.
 
-[CD processing checks](../../../tools/rust/bof3-audio/tests/cd_audio.rs) compare
+[CD processing checks](../../../tools/rust/bof3-audio/tests/machine/cd/audio.rs) compare
 three signed resampling vectors against a separate integer calculation, preserve
 sample-by-sample versus whole-buffer equivalence, exercise all eight coding
 combinations, and cover gain staging, mono, swap, mute, saturation and failures.
 A bounded original VOICE prefix provides 16 selected sectors and 75,264 output
 frames at coding `0x00`; this is not complete stream/cue playback evidence.
-[SPU integration](../../../tools/rust/bof3-audio/tests/spu_output.rs) confirms
+[SPU integration](../../../tools/rust/bof3-audio/tests/machine/spu/output.rs) confirms
 that drive-routed XA reaches capture before SPU CD gain and final main gain.
 Actual game seek/filter/mute state, timed delivery, buffer underflow/overflow,
 de-emphasis and independent hardware audio remain required.
@@ -3102,7 +3087,7 @@ use the same 33,868,800 Hz domain. Callback-output consumption remains separate
 from the capture ring below.
 
 Native-reference CD capture uses a separate
-[16,384-frame ring](../../../tools/rust/bof3-audio/src/machine/cd_queue/capture.rs).
+[16,384-frame ring](../../../tools/rust/bof3-audio/src/machine/cd/queue/capture.rs).
 Unmuted XA/CDDA frames enter it after drive gain, before callback-output admission
 or waiting. Callback consumption and timeout drops do not consume or discard
 capture data. Both ring indices wrap modulo 16,384; equal indices mean empty,
@@ -3112,7 +3097,7 @@ strictly below `33_868_800 * 4 / 75`. Otherwise it supplies zero. Cycle zero is
 the inactive timestamp sentinel. `consume_capture` commits a buffered frame after
 successful output. `Queue::reset` clears this feed ring and timestamp.
 
-[The output clock](../../../tools/rust/bof3-audio/src/machine/output_clock.rs)
+[The output clock](../../../tools/rust/bof3-audio/src/machine/clock.rs)
 consumes configured CD audio at each 768-CPU-tick sample boundary, including when
 advanced by `Execution`. It uses the same capture, routing and gain path as
 `step_spu_cd_output`. An absent or empty callback-output source supplies zero; external input
@@ -3134,7 +3119,7 @@ retains its per-frame guest-cycle schedule. Matching guest write intervals does
 not establish native key admission or PCM timing; worker admission requires
 separate validation.
 
-[Queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
+[Queue checks](../../../tools/rust/bof3-audio/tests/machine/cd/queue.rs)
 exercise strict whole-batch capacity, pending retry and timeout, advanced histories
 after timeout, rollback on errors, mute before admission, buffered volume changes,
 capture staging, empty output and failed SPU consumption. A raw-disc check feeds
@@ -3282,10 +3267,10 @@ A bounded native guest comparison qualifies response bytes, phase positions,
 SeekP adjustment and cached-header validity under supplied cycles. It does not
 establish automatic drive scheduling, broader command overlap or natural startup.
 
-[Lifecycle checks](../../../tools/rust/bof3-audio/tests/cd_lifecycle.rs) cover
+[Lifecycle checks](../../../tools/rust/bof3-audio/tests/machine/cd/lifecycle.rs) cover
 fresh context, preserved buffers, invalid/DMA-active failures, independent mute
 sources and restarted-Read predictor resets. The
-[original scheduler fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+[original scheduler fixture](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 applies the same command effects. Its cue restart retains previously queued
 output and selected data. Located ReadS resets predictors once, and the new
 channel decodes through the retained interpolation state. Output agrees with
@@ -3320,7 +3305,7 @@ submissions. EOF has no queue-level binding effect. Malformed or unsupported
 selected input rejects without queue mutation. The first successful decode latches
 the format as described below. Full reset establishes a fresh decoder/filter context.
 
-[Selection checks](../../../tools/rust/bof3-audio/tests/cd_selection.rs) cover
+[Selection checks](../../../tools/rust/bof3-audio/tests/machine/cd/selection.rs) cover
 filter routing, EOF/EOR, matching channel 255 rejection, retained histories and
 output, invalid data and published-model emphasis rejection. The original media
 check explicitly filters file 1/channel 0 across the full VOICE extent and compares
@@ -3397,67 +3382,51 @@ where possible, original bytes or hardware traces.
 
 ### Renderer architecture
 
-`render_bgm()` is the current rendering seam. It is a direct SEP/VAB renderer,
-not execution of BOF3's linked sound runtime; it must be described as an
-approximate offline renderer rather than a game-faithful engine.
+The Rust tool has two explicit rendering engines. The PSX engine executes the
+owned guest driver and kernel services. The PC engine translates the supported
+sequence and bank interchange into SoundFont synthesis. Their reports identify
+the selected engine and its evidence limits.
 
-The exact path is split below that seam:
+| Owner | Contract |
+| --- | --- |
+| [Guest driver](../../../tools/rust/bof3-audio/driver/README.md) | Relocated game audio routines, required constants and bounded kernel services |
+| [Machine](../../../tools/rust/bof3-audio/src/machine/) | R3000 execution, memory, interrupts, timers, SPU, DMA and CD devices |
+| [Audio orchestration](../../../tools/rust/bof3-audio/src/machine/audio/) | Bank transfer, music preparation, effects and cue calls |
+| [PSX rendering](../../../tools/rust/bof3-audio/src/render/psx.rs) | Owned music and effects execution, duration, controls and output collection |
+| [XA rendering](../../../tools/rust/bof3-audio/src/render/xa.rs) | Owned selector and CD/XA playback through the shared machine |
+| [PC rendering](../../../tools/rust/bof3-audio/src/render/pc/) | Supported archive and interchange rendering with explicit translation limits |
 
-| Module | Contract | Current state |
-| --- | --- | --- |
-| `psf.c` | PSF1/MiniPSF load, overlay, CRC, PC/SP, and package | Implemented and tested |
-| `psx_machine.c` | Bounded R3000 execution and PSF hardware boundary | Partial vertical slice |
-| `spu_device.c` | SPU registers, 24 voices, live ADPCM, pitch, Gaussian interpolation, ADSR, sound RAM, FIFO/DMA | Implemented (noise, pitch modulation, volume sweeps, and reverb included); register-timing exactness incomplete |
-| `render.c` | Direct SEP/VAB scheduling into `spu_device.c` | Implemented `fast` engine with 24-voice stealing; renders through the live SPU device |
-
-The machine intentionally faults on unsupported instructions, BIOS calls, and
-hardware addresses. The complete game PSF currently reaches its first CD-ROM
-register access at `PC=0x80176E80` after 33,470 interpreted instructions. PSF1
-does not provide CD-ROM hardware, so the exact player requires a bootstrap that
-installs audio assets before entering the game sound runtime; emulating the full
-game boot is not the target architecture.
+Production operations use the owned driver without opening an original game
+executable or BIOS. Development reference providers retain those inputs for
+comparisons. Unsupported instructions, device accesses and guest operations fail
+explicitly.
 
 ### Hardware coverage
 
-The SPU advances at 44.1 kHz, or once per `0x300` CPU clocks. Voice and main
-register changes are therefore sample-clocked on hardware; the current device
-applies most writes immediately. This timing difference matters to exact game
-execution but not to an offline `fast` event scheduled on output frames.
+The [SPU model](../../../tools/rust/bof3-audio/src/machine/spu/) owns 24 voices,
+512 KiB sound RAM, live ADPCM decoding, interpolation, ADSR, volume sweeps, noise,
+pitch modulation and half-rate reverb. Transfer, DMA and IRQ models preserve
+register and sound-RAM behavior separately from synthesis. The
+[CD model](../../../tools/rust/bof3-audio/src/machine/cd/) owns command delivery,
+sectors, XA filtering and queued audio mixed through the SPU.
 
-| Hardware contract | Register-driven `spu_device.c` | Direct `fast` renderer |
-| --- | --- | --- |
-| 24 equivalent voices | Implemented | Implemented; oldest voice is stolen when full |
-| 512 KiB SPU RAM and 8-byte address units | Implemented with wrapping | Uses the same register-driven SPU RAM |
-| 16-byte ADPCM blocks, 28 samples | Live decode | Uses the same live decoder |
-| Loop start/end/repeat flags and ENDX | Implemented | Uses the same flag and ENDX path |
-| Predictor and interpolation history across loops | Preserved by live decode | Preserved by live decode |
-| Zero interpolation history on key-on | Implemented | Implemented by zero-padding before sample index zero |
-| `VxPitch`: `0x1000` = 44.1 kHz, clamp above `0x4000` | Implemented | Equivalent ratio after PsyQ note conversion |
-| 4-point, 512-entry Gaussian interpolation | Implemented | Uses the same implementation |
-| ADSR attack/decay/sustain/release | Implemented | Uses the same implementation |
-| Signed fixed voice/main volume | Implemented | Writes fixed SPU voice/main volume registers |
-| Volume sweep mode | Implemented; sweep levels step per the sweep envelope | Implemented via the shared live device path |
-| KON, KOFF, ENDX | Implemented | Modeled as note events, not registers |
-| Pitch modulation (PMON) | Implemented; voice N modulates from voice N−1 | Implemented via the shared live device path |
-| Noise source (NON) | Implemented; shared noise source replaces ADPCM | Implemented via the shared live device path |
-| Per-voice and master reverb | Implemented; half-rate SPU-RAM feedback pipeline | Implemented; enabled when a tone requests reverb |
-| SPUCNT enable/mute and delayed status | Registers stored; behavior/timing incomplete | Not applicable |
-| Manual/DMA transfer FIFO timing and IRQ | Data transfer implemented; FIFO timing and IRQ incomplete | Not applicable |
-| CD/XA and external-input mixing/capture | Not implemented | Separate XA decoder; not mixed through SPU |
+The functional output clock advances a sample every 768 CPU ticks. Production
+playback selects the cooperative native-reference context before the first guest
+instruction. It preserves producer and consumer queue state across guest calls;
+its explicit scheduling contract is documented in the
+[audio tool guide](../../../tools/rust/bof3-audio/README.md#development-native-audio-scheduling).
 
-The current fork's [voice start](../../../third_party/pcsx-redux-agentic/src/spu/spu.cc)
-resets ADSR and ADPCM history; [interpolator key-on](../../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
-clears its sample window. Zero interpolation history on key-on remains a BOF3
-playback requirement. Native priming and startup-delay settings still need a
-timed comparison. The fast path decodes loop starts again with predictor and Gaussian history
-retained from the loop end instead of replaying a cached PCM loop.
+Bounded comparisons cover cold music, repeated SFX and combined vocal/XA
+playback against the emulator fork. They do not establish arbitrary incoming
+game state, other scheduling workloads or hardware fidelity. Offline sample
+export and PC synthesis have separate arithmetic and translation contracts.
 
 ### ADPCM decode
 
-The host decoder uses this integer predictor formula. The current
+The offline sample decoder uses this integer predictor formula. The current
 [native SPU decoder](../../../third_party/pcsx-redux-agentic/src/spu/adpcm.cc)
 uses the same five coefficients and separate product shifts, but retains wider,
-unclipped predictor history. The host C and Rust decoders clip each sample before
+unclipped predictor history. The offline Rust decoder clips each sample before
 retaining history, so this formula does not establish native or hardware parity:
 
 ```c
@@ -3751,7 +3720,7 @@ packing still requires schema-specific edit decisions and reconstruction.
 
 ### Rust bank packing
 
-[`pack`](../../../tools/rust/bof3-audio/src/pack.rs) accepts one bank folder or
+[`pack`](../../../tools/rust/bof3-audio/src/packing.rs) accepts one bank folder or
 an extraction root:
 
 ```sh
@@ -3806,7 +3775,7 @@ Published files use `archives/<SHA-256-of-source-identity>.EMI`; historical sour
 paths never become output paths. `pack.json` (`bof3.audio-pack-report/v1`) maps
 identities to files and separates byte equality, changed entries, sample encoding
 loss and limitations. [Sample tests](../../../tools/rust/bof3-audio/tests/bank/packing.rs)
-and [packing tests](../../../tools/rust/bof3-audio/tests/pack.rs) cover unchanged
+and [packing tests](../../../tools/rust/bof3-audio/tests/packing.rs) cover unchanged
 and edited samples, loops, capacity/metadata failures, standalone/root use,
 missing original inputs, combined bank edits, preservation conflicts and CLI
 publication. The opt-in whole-corpus check uses `BOF3_AUDIO_CORPUS` and
@@ -4013,10 +3982,10 @@ bits7-6=sustain_step, bit5=release_mode, bits4-0=release_shift.
 PMON modulates voice `n` from voice `n-1`; voice 0 cannot be modulated. NON
 replaces ADPCM with a shared hardware noise source, so `VxPitch` does not set
 noise frequency. Reverb is a half-rate SPU-RAM feedback pipeline with per-voice
-send bits and master enable/output controls. These features are implemented in
-`spu_device.c` as coherent units (noise via the shared noise source, PMON from
-the previous voice output, per-voice send bits, and the half-rate reverb
-pipeline); they are not approximated by post-render DSP.
+send bits and master enable/output controls. The Rust
+[SPU model](../../../tools/rust/bof3-audio/src/machine/spu/) implements the shared
+noise source, modulation from the preceding voice, per-voice sends and half-rate
+reverb feedback during synthesis.
 
 ## Runtime loading
 
@@ -4080,7 +4049,7 @@ The Rust bootstrap probe executes original game/libsnd instructions and modeled
 kernel services; it currently stops at unsupported BIOS CD-ROM removal `A0:72`
 after 4,550 integer instructions. It does not skip this service or claim playback.
 See the [Rust profile](../../../tools/rust/bof3-audio/src/machine/image/profile.rs) and
-[runtime checks](../../../tools/rust/bof3-audio/tests/runtime.rs) for this bounded
+[runtime checks](../../../tools/rust/bof3-audio/tests/reference/execution.rs) for this bounded
 probe. Independent sound-state, timing and PCM acceptance, complete driver closure
 and standalone initialization remain open.
 
@@ -4093,7 +4062,7 @@ returns through `0x80168604`. These addresses belong to `exe/slus_004_22` and
 the exact profile identified above. Bounded Rizin 1.0.0 inspection and execution
 use unchanged original instructions; no symbol-table names were promoted.
 
-The [initializer check](../../../tools/rust/bof3-audio/tests/spu_bootstrap.rs)
+The [initializer check](../../../tools/rust/bof3-audio/tests/machine/spu/bootstrap.rs)
 starts at this low-level entry in an explicit zeroed device context. Argument
 zero uploads the sixteen-byte dummy block at `0x80183AF0` (file `0xEDAF0`) to
 SPU byte address `0x1000`, sets all 24 voices to zero gain/ADSR parameter registers, pitch `0x3FFF`
@@ -4136,7 +4105,7 @@ boundary; mask/current-enable checks decide delivery. This API does not advance
 device time or establish interrupt latency. New CPUs start with zero status for
 bounded loaded-program execution, not a claimed hardware-reset/BIOS-boot state.
 
-The [kernel](../../../tools/rust/bof3-audio/src/machine/kernel.rs) handles BIOS
+The [kernel](../../../tools/rust/bof3-audio/src/machine/kernel/mod.rs) handles BIOS
 critical-section syscalls 1 and 2 through those transitions. Entry returns the
 prior enable state; exit preserves the return-value register. The original US
 wrappers at `exe/slus_004_22@0x8017EE0C` and `0x8017EE1C` (full EXE offsets
@@ -4152,7 +4121,7 @@ returns the old word. It uses the active functional or configured guest RAM
 allocation. Startup must establish the required flag state separately
 from these service-return semantics.
 
-[Checks](../../../tools/rust/bof3-audio/tests/cop0.rs) also cover transfer delay,
+[Checks](../../../tools/rust/bof3-audio/tests/machine/cpu/cop0.rs) also cover transfer delay,
 cause write masks, taken/untaken delay-slot exceptions, RFE in a return jump's
 delay slot, address errors, hardware/software interrupt masks and ROM-vector
 selection. Cache-isolated/user execution, unsupported COP0 registers/commands,
@@ -4990,11 +4959,11 @@ every counter. Reset writes only the count halfword. These leaves preserve the
 device write order; callback registration and elapsed timer timing are separate
 requirements.
 
-The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
+The [`bank`](../../../tools/rust/bof3-audio/examples/bank.rs)
 development example consumes the linked component directly:
 
 ```text
-bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
+bank DRIVER_DIRECTORY US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
 ```
 
 The maintained [driver loader](../../../tools/rust/bof3-audio/src/machine/driver.rs)
@@ -5184,7 +5153,7 @@ and hardware fidelity remain outside this path.
 
 ### Rust BIOS event state
 
-[Event operations](../../../tools/rust/bof3-audio/src/machine/events.rs) use the
+[Event operations](../../../tools/rust/bof3-audio/src/machine/kernel/event/mod.rs) use the
 guest EvCB descriptor at RAM `0x120` (base pointer) and `0x124` (byte size).
 Each `0x1C`-byte record retains class, status, spec, mode, handler and two opaque
 words. No host-only event registry or assumed BIOS allocation is installed.
@@ -5209,7 +5178,7 @@ The developer probe reports a pending wait instead of spinning or claiming
 completion. BIOS race timing and general thread/interrupt scheduling are not
 modeled by this state transition API.
 
-[Checks](../../../tools/rust/bof3-audio/tests/kernel_events.rs) cover RAM layout,
+[Checks](../../../tools/rust/bof3-audio/tests/machine/kernel/event/mod.rs) cover RAM layout,
 capacity/reuse, opaque fields, handle aliases, exact delivery matching,
 readiness consumption, waiting, relocation, malformed inputs and callback yielding.
 Original `exe/slus_004_22` wrappers execute in a synthetic table context:
@@ -5228,7 +5197,7 @@ below.
 
 ### Rust BIOS event callbacks
 
-[Delivery continuations](../../../tools/rust/bof3-audio/src/machine/event_calls.rs)
+[Delivery continuations](../../../tools/rust/bof3-audio/src/machine/kernel/event/calls.rs)
 yield each matching callback to the normal guest CPU loop. Delivery captures the
 table range, class and spec, but reads later records after each handler returns.
 A handler can therefore enable or close a later record before it is examined.
@@ -5283,7 +5252,7 @@ does both and reports pending continuations. The bounded exception dispatcher
 below permits explicit `B0:17` unwinding of callbacks created within that exception.
 Other nonlocal callback completion and timed event scheduling remain unsupported.
 
-[Callback checks](../../../tools/rust/bof3-audio/tests/event_callbacks.rs) cover
+[Callback checks](../../../tools/rust/bof3-audio/tests/machine/kernel/event/calls.rs) cover
 live later-record changes, descriptor rebinding, nested delivery, callback waits,
 stack home-area isolation, invalid handlers, ABI violations, nesting limits and
 guest faults. The optional original-executable check runs US `0x80161DC8` and its
@@ -5294,7 +5263,7 @@ reference evidence. Full runtime fidelity remains an acceptance gate.
 
 ### Rust BIOS exception-chain registration
 
-[ExCB operations](../../../tools/rust/bof3-audio/src/machine/exception_chains.rs)
+[ExCB operations](../../../tools/rust/bof3-audio/src/machine/kernel/exception/chains.rs)
 read the guest descriptor at `0x100`/`0x104` and require four eight-byte priority
 records. C0 service `02` inserts a sixteen-byte node at the selected head and
 returns zero; service `03` removes the exact matching pointer from any chain
@@ -5347,7 +5316,7 @@ owned implementation details. Original BIOS allocation/content, complete
 standalone startup and the full reproducible driver build remain separate
 obligations.
 
-Four default [checks](../../../tools/rust/bof3-audio/tests/exception_chains.rs)
+Four default [checks](../../../tools/rust/bof3-audio/tests/machine/kernel/exception/chains.rs)
 cover all priorities, alias identity, opaque state, rebinding, malformed graphs
 and bounded traversal. The optional US check executes original wrappers at
 `exe/slus_004_22@0x8017F39C` / `0x8017F3AC` (full EXE `0xE939C` / `0xE93AC`),
@@ -5359,7 +5328,7 @@ BIOS initial state, exception dispatch, CD removal, interrupt timing or audio.
 
 ### Rust BIOS thread exception contexts
 
-[Thread contexts](../../../tools/rust/bof3-audio/src/machine/thread_context.rs)
+[Thread contexts](../../../tools/rust/bof3-audio/src/machine/kernel/thread.rs)
 resolve the guest PCB descriptor at RAM `0x108`/`0x10C`, then its current-thread
 pointer into the TCB allocation described at `0x110`/`0x114`. Each TCB occupies
 `0xC0` bytes. Missing descriptors, overlapping metadata, invalid aliases/ranges,
@@ -5387,7 +5356,7 @@ exception dispatch, explicit `B0:17` can discard its owned continuations after
 successful restoration, as described below. General nested exception handling
 and thread scheduling remain open.
 
-[Checks](../../../tools/rust/bof3-audio/tests/thread_context.rs) cover register and
+[Checks](../../../tools/rust/bof3-audio/tests/machine/kernel/thread.rs) cover register and
 opaque-state preservation, live aliases/descriptor rebinding, saved-state edits,
 branch restart, pending loads, malformed contexts, read-fault atomicity, COP2
 rejection and outstanding-continuation guards. The original US wrapper at
@@ -5401,9 +5370,9 @@ explicit event and chain state, as described above.
 
 ### Rust BIOS priority-chain execution
 
-[`Kernel::begin_exception`](../../../tools/rust/bof3-audio/src/machine/kernel.rs)
+[`Kernel::begin_exception`](../../../tools/rust/bof3-audio/src/machine/kernel/mod.rs)
 captures the current guest thread after architectural exception entry, then
-[dispatches](../../../tools/rust/bof3-audio/src/machine/exception_calls.rs) the four
+[dispatches](../../../tools/rust/bof3-audio/src/machine/kernel/exception/calls.rs) the four
 ExCB priorities in order. The caller supplies an aligned RAM stack, GP and an
 explicit missing-hook policy. Functional handlers get a sixteen-byte O32
 argument home area and return through reserved trap `0xBFC00104`. Handlers run
@@ -5636,7 +5605,7 @@ exception dispatch. Guest `B0:17` may end the chain early and discard callbacks
 or waits created within it, only after successful TCB restoration. Failed
 restoration retains them. Nested exceptions/syscalls remain unsupported.
 
-Five default [tests](../../../tools/rust/bof3-audio/tests/exception_dispatch.rs)
+Five default [tests](../../../tools/rust/bof3-audio/tests/machine/kernel/exception/calls.rs)
 cover ordering, conditional calls, live link/table changes, hook exit, normal
 event callback return, explicit early return, failed restoration, malformed
 graphs, bounds, ABI errors and guest faults. The optional US check executes
@@ -5656,7 +5625,7 @@ BIOS tables or automatically dispatch interrupts.
 
 ### Original SDK CD interrupt hook integration
 
-The [XA scheduler fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+The [XA scheduler fixture](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 now also exercises COP0 interrupt entry and the existing BIOS context bridge,
 with the original SDK hook dispatching CD callbacks. Target is verified US
 `exe/slus_004_22`; full EXE offsets are runtime address minus `0x80096000`.
@@ -5710,7 +5679,7 @@ store rejection is a modeling limit, not a claim that hardware raises that fault
 accepts exactly 2 MiB. Constructing the bus from RAM leaves devices at model
 defaults and does not restore an emulator save-state.
 
-The bounded developer [bios_probe](../../../tools/rust/bof3-audio/examples/bios_probe.rs)
+The bounded developer [firmware](../../../tools/rust/bof3-audio/examples/firmware.rs)
 executes every instruction through the CPU, including RAM BIOS vectors and ROM
 addresses reserved as traps by the separate HLE kernel. It does not call that
 kernel. Syscalls enter the architectural exception vector and execute supplied
@@ -5720,7 +5689,7 @@ real ROM addresses as HLE continuation traps.
 
 ```sh
 cargo run --locked --manifest-path tools/rust/bof3-audio/Cargo.toml \
-  --example bios_probe -- /local/BIOS.bin /local/context.json
+  --example firmware -- /local/BIOS.bin /local/context.json
 ```
 
 The context is strict JSON with schema `bof3.bios-probe-context/v1` and fields:
@@ -5743,7 +5712,7 @@ CPU state, final RAM hash and the last sixteen transitions. BIOS revision,
 clocks, hardware reset and audio fidelity remain unverified. Reaching `stop_pc`
 is only the selected execution boundary, never automatic runtime acceptance.
 
-Four [tests](../../../tools/rust/bof3-audio/tests/firmware.rs) cover byte identity,
+Four [tests](../../../tools/rust/bof3-audio/tests/machine/image/firmware.rs) cover byte identity,
 mapping/bounds, immutable attachment, raw RAM/device separation, RAM-vector ROM
 calls, and syscall/RFE execution from the ROM exception vector. Eight additional
 probe checks cover successful calls, HLE-trap-address collisions, syscall entry,
@@ -5780,7 +5749,7 @@ the interpreter's branch-delay boundary. An attached
 branch boundaries for FIFO service. These are reference-emulator costs,
 not physical CPU timing.
 
-The bounded [initializer comparison](../../../tools/rust/bof3-audio/tests/boot.rs)
+The bounded [initializer comparison](../../../tools/rust/bof3-audio/tests/machine/boot.rs)
 sets PC, RA=`0x80010000` and zero A0..A3. It compares all 2 MiB RAM, 32 GPRs, PC
 and the return cycle for callback initialization at `0x801748E4` and sound
 initialization at `0x8015CD00`. Sound initialization crosses VBlank and invokes
@@ -6087,113 +6056,34 @@ hash, including when only one is supplied. An identified original file does not
 become its absent peer's content alias. Renamed unqualified inputs retain those
 aliases; multiple supplied copies without qualification require `--id`.
 
-### PSF1 image contract
-
-The PSF1 module enforces:
-
-- PSF version `0x01`, compressed-program CRC, and bounded zlib expansion.
-- A valid PS-X EXE program no larger than the PSF1 limit.
-- Text overlays fully contained in 2 MiB PlayStation RAM.
-- `_lib` recursion limited to 10 levels.
-- `_lib`, current image, then contiguous `_lib2` and later overlay order.
-- Initial PC/SP inherited from the first/deepest base image.
-- First applicable `_refresh` tag, otherwise the outer EXE region marker.
-
-For the local BOF3 executable, `psf-pack` followed by `psf-inspect` reports:
-
-```text
-PC:      0x8014AA0C
-SP:      0x801FFFF0
-RAM:     0x96800-0x1F7000
-refresh: 60Hz
-```
-
 ## Tooling
 
-### Evidence and limits
+The [Rust audio tool](../../../tools/rust/bof3-audio/README.md) owns preservation,
+interchange, rendering and verification. Its [guest driver](../../../tools/rust/bof3-audio/driver/README.md)
+owns the bounded game audio runtime and required kernel services. The seven
+production operations are `index`, `query`, `map`, `extract`, `render`, `pack`
+and `verify`. Use `--help` for the current arguments. Reports distinguish
+structural and byte-preservation checks from independent playback evidence.
 
-| User-visible capability | Evidence | Limit |
-| --- | --- | --- |
-| PSF pack/inspect and bounded `psf-run` | native `psf_test`; native `psx_machine_test` | The machine faults on unsupported CPU/BIOS/hardware paths and does not bootstrap BOF3's audio scheduler. |
-| Direct BGM render | `spu_device_test` covers live voice looping, key-off, and pitch cap; source audit in `audio_audit.c` | It is an approximate offline SEP/VAB renderer; it does not execute the game runtime. |
-| XA decode to WAV | native `xa_test` decodes a synthetic audio sector and parses its WAV output | CD/XA is not mixed or captured through the SPU. |
-| VAB WAV/SF2 and SEP MIDI export | CLI paths are implemented in `vab.c`, `sf2.c`, `sep.c`, and `export.c` | No fixture or retail-media golden output is claimed. |
-| Ogg/FLAC output | writers in `ogg.c`/`flac.c` (build-time feature detection) | Codec support depends on the libraries detected by CMake on the build host; no codec-output golden is claimed. |
+Native comparison covers declared cold and combined music, repeated SFX and
+vocal/XA contexts. Agreement with the emulator fork does not establish hardware
+fidelity or arbitrary incoming game state. Development examples retain explicit
+original executable and BIOS inputs for reference comparisons.
 
-The SPU's reverb, noise, pitch modulation, and volume sweeps are implemented
-in `spu_device.c` and used by the `fast` renderer; exact DMA/FIFO/IRQ timing and
-CD/XA mixing/capture remain unsupported, and no command claims hardware-fidelity
-timing.
+FFmpeg, Xiph tools, mpg123 and FluidSynth serve as independent test consumers.
+They are not production codec or playback dependencies.
 
-
-### C tool (`tools/c/psx-audio/`)
-
-The C11 library and CLI use miniaudio for playback. Gaussian and ADSR comparisons
-use the current PCSX-Redux Agentic fork under the [evidence boundary](#evidence-boundary).
-Hardware fidelity remains open.
-
-```sh
-bin/harness audio build <command>           # incrementally builds, then runs ignored build/bof3-audio
-```
-
-| Command | Description |
-| --- | --- |
-| `play <vh> <vb> <sep>` | Render BGM + play through speakers |
-| `play-xa <str> [-c CH]` | Decode XA + play |
-| `play-vag <vh> <vb> [-v N]` | Play VAG sample(s) |
-| `render <vh> <vb> <sep> -o out.wav` | Render BGM to WAV |
-| `xa-decode <str> -o out.wav [-c CH]` | Decode XA to WAV |
-| `xa-inspect <str>` | List XA streams |
-| `vab-extract <vh> <vb> -o DIR` | Extract VAGs to WAV |
-| `vab-inspect <vh>` | Show VAB info |
-| `sep-inspect <sep> [--programs] [--notes]` | Show SEP info and optional program/note histograms |
-| `sep2mid <sep> -o out.mid` | Export to Standard MIDI |
-| `psf-pack <PS-X EXE> -o out.psflib` | Package a PSF1 executable |
-| `psf-inspect <file.psf>` | Validate and compose a PSF1/MiniPSF image |
-| `psf-run <file.psf> [-n N]` | Run a bounded machine diagnostic |
-
-The CLI exposes only the direct SEP/VAB renderer. BOF3 linked-runtime
-execution is not a supported render mode: the bounded PSF machine is a
-separate diagnostic, and its missing game-owned scheduler/table bootstrap
-prevents it from producing audio.
-
-### ffmpeg validation
-
-ffmpeg has `adpcm_xa`, `adpcm_psx` decoders and `psxstr` demuxer for
-cross-validating our output:
-
-```sh
-ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
-```
-
-## File locations
+### File locations
 
 | Path | Content |
 | --- | --- |
-| `tools/c/psx-audio/` | C library + CLI source |
-| `tools/c/psx-audio/util.h` | Shared helpers and Gaussian table |
-| `tools/c/psx-audio/adpcm.c` | ADPCM decode core |
-| `tools/c/psx-audio/spu.c` | ADSR envelope |
-| `tools/c/psx-audio/spu_device.c` | Register-driven SPU device (live decoder, sweeps, noise, PMON, reverb) |
-| `tools/c/psx-audio/psx_machine.c` | Bounded PSF1 R3000 runtime under construction |
-| `tools/c/psx-audio/psf.c` | PSF1/MiniPSF image loader and writer |
-| `tools/c/psx-audio/render.c` | Approximate `fast` BGM renderer |
-| `tools/c/psx-audio/third_party/miniaudio.h` | Audio playback (v0.11.25) |
-| `bin/harness audio build` | C tool wrapper |
+| `tools/rust/bof3-audio/src/` | Host operations, formats, codecs and PSX runtime |
+| `tools/rust/bof3-audio/driver/` | Authored guest audio and kernel code |
+| `tools/rust/bof3-audio/player/` | PlayStation test-player source |
+| `tools/rust/bof3-audio/tests/` | Rust component, workflow and reference checks |
+| `bin/harness audio` | Build, package and command integration |
 | `out/extracted/BIN/BGM/` | Extracted BGM archives |
 | `out/extracted/BIN/SCE_XA/` | Extracted XA streams |
-| `out/extracted/BIN/**/emi.json` | Per-archive EMI entry manifests |
-
-## Open questions
-
-- Standalone bootstrap: recover the EMI-populated bank/sequence tables needed
-  by `0x80161C20` and the callback cadence that services active sequences.
-- Linked sequence calls: prove names and signatures for `0x8016AE7C`,
-  `0x8016B9CC`, `0x8016D6C4`, and `0x8016DBA0` from game-binary callers.
-- Type-8 semantics: ADSR override table structure plausible but unconfirmed.
-- SPU RAM layout: VAB base addresses not documented.
-- Area→BGM mapping: lives in scenario controller code, not yet lifted.
-
 
 ## Initial channel programs and editable program layers
 
@@ -6459,7 +6349,7 @@ authorizes pruning or standalone acceptance.
 
 ### Driver preparation dependencies
 
-The [music preparation observer](../../../tools/rust/bof3-audio/src/machine/music.rs)
+The [music preparation observer](../../../tools/rust/bof3-audio/src/machine/audio/music.rs)
 now labels every guest instruction in six stages: initialization, layout, VAB
 header, sample upload, SEP open and callback registration. It runs after IRQ
 admission and cannot mutate the machine. The ordinary preparation entry uses
@@ -6522,7 +6412,7 @@ No BIOS path was removed or replaced by a service-success stub in this step.
 
 ### Explicit SFX tone execution
 
-[Shared bank preparation](../../../tools/rust/bof3-audio/src/machine/bank.rs)
+[Shared bank preparation](../../../tools/rust/bof3-audio/src/machine/audio/bank.rs)
 initializes and uploads VABs without a SEP; music uses the same implementation
 before opening its sequence. It checks header/body and optional sequence ownership,
 layout capacities, DMA padding and transferred SPU bytes. Existing music checks
@@ -6534,7 +6424,7 @@ confirms the final result; expecting zero only worked for bank zero. Both effect
 archives below load into runtime bank 1 despite having VH header ID zero, and
 their final transfers return 1.
 
-The [explicit-tone adapter](../../../tools/rust/bof3-audio/src/machine/effects.rs)
+The [explicit-tone adapter](../../../tools/rust/bof3-audio/src/machine/audio/effects.rs)
 calls original `SsUtKeyOnV` at `0x8016E400` (EXE offset `0xD8400`). Its arguments
 are voice, bank, program, tone, note, fine, left volume and right volume. The
 first four use argument registers, the others caller SP+16..+28. The adapter
@@ -6585,7 +6475,7 @@ are not independent fidelity evidence or acceptance of standalone startup.
 
 ### Game SFX cue dispatch
 
-The [cue adapter](../../../tools/rust/bof3-audio/src/machine/cues.rs) now stages
+The [cue adapter](../../../tools/rust/bof3-audio/src/machine/audio/cues.rs) now stages
 source-qualified type-8 records and executes the original dispatcher at
 `exe/slus_004_22@0x8015DF18` (full EXE offset `0xC7F18`). The first validated
 path supported local-bank records for runtime slot 1;
@@ -6677,7 +6567,7 @@ service alone does not refresh it. `exe/slus_004_22@0x8015D044` (full EXE offset
 with masks `1 << voice`, and stores each result in the word array at
 `0x8018E140 + voice*4`. Its original callsite is `0x8014AB68` (EXE offset
 `0xB4B68`). This proves a separate poll dependency, not its full gameplay cadence.
-The [cue adapter](../../../tools/rust/bof3-audio/src/machine/cues.rs) exposes this
+The [cue adapter](../../../tools/rust/bof3-audio/src/machine/audio/cues.rs) exposes this
 original call explicitly and reads the snapshot without altering it; dispatch
 does not silently poll or synthesize activity from PCM.
 
@@ -6960,7 +6850,7 @@ the missing playback context.
 
 ### XA driver closure with supplied kernel inputs
 
-The [XA runtime fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+The [XA runtime fixture](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 now uses a [read-only observer](../../../tools/rust/bof3-audio/src/driver/trace.rs)
 and [transport evidence collector](../../../tools/rust/bof3-audio/tests/support/transport.rs)
 to audit original `exe/slus_004_22` instructions during callback setup and the
@@ -7001,7 +6891,7 @@ BIOS independence or dead-code proof. No instruction is pruned and the report's
 data-closure/pruning flags remain false.
 
 Reproduce with the project-scoped mise toolchain and original media:
-`cargo test --locked --offline --test xa_loop_runtime original_xa_stream_families_have_bounded_instruction_closures -- --ignored --nocapture`,
+`cargo test --locked --offline --test reference original_xa_stream_families_have_bounded_instruction_closures -- --ignored --nocapture`,
 setting `BOF3_AUDIO_EXE` and `BOF3_AUDIO_TRACK`. JSON lines use
 `bof3.audio.driver-transport/v1`; local receipts are
 `out/audio-migration/driver-transport-{0000,1000,2000}-{1,4}.json`.
@@ -7064,7 +6954,7 @@ Reproduce from the repository root with `BOF3_AUDIO_EXE`, `BOF3_AUDIO_BIOS` and
 `BOF3_AUDIO_TRACK` set to absolute local media paths:
 
 ```sh
-mise -C tools/rust/bof3-audio exec -- cargo test --locked --offline   --test xa_loop_runtime original_xa_scheduler_uses_booted_rom_kernel_state   -- --ignored --nocapture
+mise -C tools/rust/bof3-audio exec -- cargo test --locked --offline   --test reference original_xa_scheduler_uses_booted_rom_kernel_state   -- --ignored --nocapture
 ```
 
 The report schema is `bof3.audio.driver-transport/v2`, identifying the kernel
@@ -7119,7 +7009,7 @@ replacing an active host. With mask zero, the original initializer reaches
 `exe/slus_004_22@0x80176A1C` and exhausts the bounded wait after Getstat; that
 negative diagnostic is retained in `driver-reset-empty-host.log`.
 
-The [full-reset runtime case](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+The [full-reset runtime case](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 boots the verified US BIOS, loads the verified game image and calls the original
 `0x80175534` dispatcher with mode 1. It executes Getstat `0x01`, Init `0x0A` and
 Demute `0x0C` through the original SDK and ROM interrupt paths, returns 1, and
@@ -7157,12 +7047,12 @@ Reproduce with absolute `BOF3_AUDIO_EXE`, `BOF3_AUDIO_BIOS` and
 `BOF3_AUDIO_TRACK` paths:
 
 ```sh
-mise -C tools/rust/bof3-audio exec -- cargo test --locked --offline --test xa_loop_runtime original_cd_reset_establishes_readiness_before_xa_playback -- --ignored --nocapture
+mise -C tools/rust/bof3-audio exec -- cargo test --locked --offline --test reference original_cd_reset_establishes_readiness_before_xa_playback -- --ignored --nocapture
 ```
 
-Three new checks in [drive](../../../tools/rust/bof3-audio/tests/cd_drive.rs),
-[host](../../../tools/rust/bof3-audio/tests/cd_host.rs) and
-[lifecycle](../../../tools/rust/bof3-audio/tests/cd_lifecycle.rs) cover reset
+Three new checks in [drive](../../../tools/rust/bof3-audio/tests/machine/cd/drive.rs),
+[host](../../../tools/rust/bof3-audio/tests/machine/cd/host.rs) and
+[lifecycle](../../../tools/rust/bof3-audio/tests/machine/cd/lifecycle.rs) cover reset
 boundaries, retained state/buffers and host reset/IRQ behavior. Runtime receipts
 are `out/audio-migration/driver-reset-{0000,1000,2000}-{1,4}.json` and
 `driver-reset-final-corpus.log`; earlier failed diagnostics remain separate.
@@ -7227,7 +7117,7 @@ mise -C tools/rust/bof3-audio exec -- cargo test --locked --offline --test drive
 ```
 
 For the complete comparison, also set `BOF3_AUDIO_BIOS` and `BOF3_AUDIO_TRACK`,
-then run `--test xa_loop_runtime original_audio_vsync_calls_do_not_depend_on_gpu_status_bits`
+then run `--test reference original_audio_vsync_calls_do_not_depend_on_gpu_status_bits`
 with `-- --ignored --nocapture`. Receipts are
 `out/audio-migration/driver-vsync-{0000,1000,2000}-{1,4}.json`,
 `driver-vsync-rizin.txt`, `driver-vsync-peripherals.log` and
@@ -7235,7 +7125,7 @@ with `-- --ignored --nocapture`. Receipts are
 
 ### Negative VSync candidate through original interrupts
 
-The [XA replay check](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+The [XA replay check](../../../tools/rust/bof3-audio/tests/reference/transport/loops.rs)
 now compares the same two fixture-only NOP substitutions through full original
 CD reset, booted-ROM exception dispatch and the six first-cue XA scenarios.
 The unmodified baseline supplies GPUSTAT `0x14802000`; the candidate rejects
@@ -7275,7 +7165,7 @@ authorized by this result.
 Receipts are `out/audio-migration/driver-candidate-comparison.json`, the six
 `driver-candidate-original-{0000,1000,2000}-{1,4}.json` baseline reports and
 `driver-candidate-suite.log`. The comparison receipt includes original EXE/BIOS
-hashes and both substituted words. Run `--test xa_loop_runtime
+hashes and both substituted words. Run `--test reference
 negative_vsync_candidate_preserves_full_reset_and_interrupt_execution` with
 `-- --ignored --nocapture` and the same absolute EXE/BIOS/track variables as
 the preceding checks.

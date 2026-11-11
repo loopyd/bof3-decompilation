@@ -1,12 +1,23 @@
 //! Canonical song preparation shared by extraction and manifest validation.
-use crate::{
-    catalog::model::Asset, catalog::model::AssetData, catalog::model::Catalog, digest::sha256_hex,
-    document::manifest, document::xml, interchange::midi::Midi,
-    machine::spu::voice::envelope::Model, machine::spu::voice::envelope::Registers, pc_render,
-    sequence::midi as translation, sequence::timeline::Limits, soundfont::bank as binding,
-    soundfont::bank::Gain, soundfont::bank::ToneContext, soundfont::envelope, soundfont::gain,
-    voice::tuning::Reference, Result,
-};
+use crate::catalog::model::Asset;
+use crate::catalog::model::AssetData;
+use crate::catalog::model::Catalog;
+use crate::digest::sha256_hex;
+use crate::document::manifest;
+use crate::document::xml;
+use crate::interchange::midi::Midi;
+use crate::machine::spu::voice::envelope::Model;
+use crate::machine::spu::voice::envelope::Registers;
+use crate::render::pc as pc_render;
+use crate::sequence::midi as translation;
+use crate::sequence::timeline::Limits;
+use crate::soundfont::bank as binding;
+use crate::soundfont::bank::Gain;
+use crate::soundfont::bank::ToneContext;
+use crate::soundfont::envelope;
+use crate::soundfont::gain;
+use crate::voice::tuning::Reference;
+use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt::Write as _, io::Cursor};

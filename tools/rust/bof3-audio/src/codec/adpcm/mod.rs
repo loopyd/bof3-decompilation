@@ -5,7 +5,6 @@
 //! Hardware/rendering acceptance remains separate.
 
 pub mod encoder;
-
 use crate::Result;
 use serde::Serialize;
 

@@ -1,13 +1,10 @@
 use super::fixtures::prepare;
-use bof3_audio::{
-    machine::{
-        bus::{Bus, Width},
-        cues,
-        image::executable::ram_offset,
-        output_clock,
-    },
-    Result,
-};
+use bof3_audio::machine::audio::cues;
+use bof3_audio::machine::bus::Bus;
+use bof3_audio::machine::bus::Width;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::image::executable::ram_offset;
+use bof3_audio::Result;
 
 #[test]
 #[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]

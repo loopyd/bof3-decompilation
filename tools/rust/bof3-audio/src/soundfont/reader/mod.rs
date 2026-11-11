@@ -1,6 +1,5 @@
 //! Preservation-aware SF2 structure and PCM reader. Parsing does not approve game edits.
 pub mod model;
-
 use crate::soundfont::reader::model::{Instrument, Preset, Sample};
 use crate::{soundfont::tables, soundfont::tables::u16_at, soundfont::tables::u32_at, Result};
 use std::{collections::BTreeMap, ops::Range};

@@ -1,5 +1,5 @@
 //! Original US FIRST font and DEMO logo panels, tiled as the game's type-3 uploads.
-use crate::{Result, digest::sha256_hex};
+use crate::{digest::sha256_hex, Result};
 use emi_ex_v2::image::ArchiveImage;
 use std::{fs, path::Path};
 

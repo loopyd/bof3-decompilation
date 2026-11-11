@@ -8,7 +8,6 @@ pub mod midi;
 pub mod termination;
 pub mod timeline;
 pub mod timing;
-
 use crate::Result;
 use serde::Serialize;
 

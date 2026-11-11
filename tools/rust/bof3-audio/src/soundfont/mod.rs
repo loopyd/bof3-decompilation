@@ -10,7 +10,6 @@ pub mod packing;
 pub mod reader;
 pub mod silence;
 pub(crate) mod tables;
-
 use crate::Result;
 use std::collections::BTreeSet;
 use std::ops::Range;

@@ -2,7 +2,6 @@
 //! This component does not schedule MMIO, keys, capture, IRQs or reverb.
 pub mod envelope;
 pub mod ports;
-
 use crate::machine::{
     spu::sample::{Model as SampleModel, Player, Signal},
     spu::transfer::RAM_BYTES,

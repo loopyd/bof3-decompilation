@@ -9,7 +9,7 @@ use bof3_audio::machine::{
 const BASE: u32 = 0x8002_0000;
 const DATA: u32 = 0x8001_0000;
 const RETURN: u32 = 0x8000_1000;
-#[path = "../common/timing_runtime.rs"]
+#[path = "../support/runtime/timing.rs"]
 mod timing_runtime;
 
 fn call(ram: &mut Ram, entry: u32, args: &[u32], stop: u32) -> Cpu {
@@ -276,10 +276,9 @@ fn original_loop_controllers_match_sequence_wide_state_and_jump_delays() {
 #[test]
 #[ignore = "requires original US executable in BOF3_AUDIO_EXE"]
 fn original_event_cursor_replays_count_and_program_without_reloading_loop_count() {
-    use bof3_audio::{
-        sequence::events::Kind,
-        sequence::timeline::{self, Limits},
-    };
+    use bof3_audio::sequence::events::Kind;
+    use bof3_audio::sequence::timeline;
+    use bof3_audio::sequence::timeline::Limits;
     let mut ram = fixture();
     for count in [0, 1, 2, 3, 127] {
         for offset in 0..0xac {
@@ -557,5 +556,5 @@ fn original_scheduler_matches_delay_batching_and_slow_counter_updates() {
     assert_eq!(ram.read(state + 0x2d, Width::Byte).unwrap(), 9);
 }
 
-#[path = "../common/music_progress_runtime.rs"]
+#[path = "../support/runtime/progress.rs"]
 mod music_progress_runtime;

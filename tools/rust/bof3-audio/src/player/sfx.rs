@@ -1,12 +1,14 @@
 //! Source-qualified embedded effects banks for the existing development player.
-use crate::{
-    Result,
-    machine::{bank::Plan, bus::Ram, cues, image::executable::Executable, reference::mapping},
-    publication,
-};
+use crate::machine::audio::bank::Plan;
+use crate::machine::audio::cues;
+use crate::machine::bus::Ram;
+use crate::machine::image::executable::Executable;
+use crate::machine::reference::mapping;
+use crate::publication;
+use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use std::{fmt::Write, path::Path};
 
 #[derive(Serialize)]

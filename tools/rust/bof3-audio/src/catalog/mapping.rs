@@ -73,7 +73,7 @@ impl Mapping {
             profile,
             source_load_address: 0x80096800,
             layouts: (0..3)
-                .map(|selector| crate::machine::bank::layout(image, selector))
+                .map(|selector| crate::machine::audio::bank::layout(image, selector))
                 .collect::<Result<_>>()?,
             auxiliary_end: image.audio()?.auxiliary_end,
             lookup,

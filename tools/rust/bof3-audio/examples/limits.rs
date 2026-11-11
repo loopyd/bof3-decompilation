@@ -1,15 +1,14 @@
 //! Investigate rejected source cues by observing the bounded original runtime.
 //! Compares direct dispatch with cue preflight; it is not a render fallback.
-use bof3_audio::{
-    digest::sha256_hex,
-    machine::{
-        bank, cues, effects,
-        image::executable::{ram_offset, Executable},
-        image::firmware::Image,
-        output_clock,
-    },
-    Result,
-};
+use bof3_audio::digest::sha256_hex;
+use bof3_audio::machine::audio::bank;
+use bof3_audio::machine::audio::cues;
+use bof3_audio::machine::audio::effects;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::image::executable::ram_offset;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde_json::{json, Value};
 use std::{collections::BTreeSet, fs, path::Path};

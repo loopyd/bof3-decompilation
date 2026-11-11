@@ -1,13 +1,10 @@
 use super::fixtures::prepare_entries;
-use bof3_audio::{
-    machine::{
-        bus::{Bus, Width},
-        cues,
-        image::executable::ram_offset,
-        output_clock,
-    },
-    Result,
-};
+use bof3_audio::machine::audio::cues;
+use bof3_audio::machine::bus::Bus;
+use bof3_audio::machine::bus::Width;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::image::executable::ram_offset;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::{fs, path::PathBuf};
 

@@ -2,13 +2,15 @@
 mod graphics;
 mod sfx;
 mod vocal;
-
-use crate::{
-    Result,
-    machine::{bank, image::executable::Executable, image::profile::Profile},
-    publication::{self, Publication},
-    sequence::{SequenceSet, events::Kind, timeline},
-};
+use crate::machine::audio::bank;
+use crate::machine::image::executable::Executable;
+use crate::machine::image::profile::Profile;
+use crate::publication;
+use crate::publication::Publication;
+use crate::sequence::events::Kind;
+use crate::sequence::timeline;
+use crate::sequence::SequenceSet;
+use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::{ffi::OsString, fs, path::PathBuf, process::Command};
 

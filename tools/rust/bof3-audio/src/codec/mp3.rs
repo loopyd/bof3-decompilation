@@ -3,7 +3,6 @@
 mod allocation;
 mod quality;
 pub mod stream;
-
 use crate::{interchange::wave::Wave, Result};
 use oxideav_mp3::{
     demuxer::XingTagId,

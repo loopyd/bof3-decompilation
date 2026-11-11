@@ -1,9 +1,10 @@
 //! Local auxiliary corpus audit; original dispatch only, not PCM fidelity.
-use bof3_audio::{
-    digest::sha256_hex,
-    machine::{bank, cues, image::executable::Executable, image::firmware::Image},
-    Result,
-};
+use bof3_audio::digest::sha256_hex;
+use bof3_audio::machine::audio::bank;
+use bof3_audio::machine::audio::cues;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde_json::{json, Value};
 use std::{fs, path::Path};

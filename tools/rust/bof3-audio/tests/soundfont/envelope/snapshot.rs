@@ -414,10 +414,10 @@ fn source_archive() -> emi_ex_v2::image::ArchiveImage {
 #[test]
 #[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn original_runtime_pitch_bend_activates_a_note_that_started_at_zero_step() {
-    use bof3_audio::{
-        machine::{image::executable::Executable, image::firmware::Image},
-        psx_render::{Body, Options},
-    };
+    use bof3_audio::machine::image::executable::Executable;
+    use bof3_audio::machine::image::firmware::Image;
+    use bof3_audio::render::psx::Body;
+    use bof3_audio::render::psx::Options;
     use std::fs;
     let exe =
         Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())

@@ -1,6 +1,5 @@
 //! Original-file inputs for development comparisons and pending production migrations.
 use crate::{
-    Result,
     catalog::{
         loader::{LAYOUT_INITIALIZE, LOADER_SLOTS, LOADER_TABLE},
         mapping::Mapping,
@@ -13,6 +12,7 @@ use crate::{
         image::profile::Profile,
     },
     xa::cue,
+    Result,
 };
 
 /// Execute the original leaf routine without substituting game/SDK calls.

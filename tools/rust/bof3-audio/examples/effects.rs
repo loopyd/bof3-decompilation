@@ -1,23 +1,21 @@
 //! Development evidence for an explicit original-runtime SFX tone.
-use bof3_audio::{
-    digest::sha256_hex,
-    driver::closure::{self, Root},
-    interchange::wave::Wave,
-    machine::{
-        bank,
-        bus::{Bus, Width},
-        effects::{self, Note},
-        execution::Execution,
-        image::executable::Executable,
-        image::firmware::Image,
-        output_clock,
-    },
-    Result,
-};
+use bof3_audio::digest::sha256_hex;
+use bof3_audio::driver::closure;
+use bof3_audio::driver::closure::Root;
+use bof3_audio::driver::trace::Trace;
+use bof3_audio::interchange::wave::Wave;
+use bof3_audio::machine::audio::bank;
+use bof3_audio::machine::audio::effects;
+use bof3_audio::machine::audio::effects::Note;
+use bof3_audio::machine::bus::Bus;
+use bof3_audio::machine::bus::Width;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::execution::Execution;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::{collections::BTreeSet, fs};
-
-use bof3_audio::driver::trace::Trace;
 
 fn registers(e: &mut Execution, voice: u8) -> Result<Vec<u32>> {
     (0..8)

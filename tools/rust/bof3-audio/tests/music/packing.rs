@@ -9,10 +9,13 @@ mod timing_music;
 mod tone_controls;
 #[path = "../support/music/activation.rs"]
 mod unmute_music;
-use bof3_audio::{
-    document::manifest, interchange::midi::Message, interchange::midi::Midi, pack,
-    sequence::midi as translation, sequence::timeline::Limits, sequence::SequenceSet,
-};
+use bof3_audio::document::manifest;
+use bof3_audio::interchange::midi::Message;
+use bof3_audio::interchange::midi::Midi;
+use bof3_audio::packing as pack;
+use bof3_audio::sequence::midi as translation;
+use bof3_audio::sequence::timeline::Limits;
+use bof3_audio::sequence::SequenceSet;
 use emi_ex_v2::image::ArchiveImage;
 use std::{
     fs,

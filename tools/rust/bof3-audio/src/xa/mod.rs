@@ -8,7 +8,6 @@ pub mod packing;
 pub mod reconstruction;
 pub mod reference;
 pub mod selection;
-
 use crate::{archive::XA_SECTOR_BYTES, codec::adpcm::History, Result};
 use serde::Serialize;
 
