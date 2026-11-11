@@ -55,16 +55,14 @@ void player_main(void)
         audio_levels(amplitudes);
 #endif
         graphics_begin_frame(player_status.frames);
-        if (player_controls.help) hud_help();
-        else {
 #if PLAYER_MODE_SFX
-            hud_sfx();
+        hud_sfx();
 #elif PLAYER_MODE_VOCAL
-            hud_vocal();
+        hud_vocal();
 #else
-            hud_draw(player_status.position_frames, ticks, amplitudes);
+        hud_draw(player_status.position_frames, ticks, amplitudes);
 #endif
-        }
+        if (player_controls.help) hud_help();
         graphics_present();
     }
 }

@@ -233,7 +233,9 @@ void hud_vocal(void)
 
 void hud_help(void)
 {
-    graphics_panel(32, 42, 256, 152, 0x602040, 0x301020, 1);
+    const u32 x = 32, y = 42, width = 256, height = 152;
+    graphics_panel(x, y, width, height, 0, 0, 0);
+    graphics_panel(x, y, width, height, 0x602040, 0x301020, 1);
 #if PLAYER_MODE_SFX
     graphics_text(48, 56, "SFX CONTROLS");
     graphics_text(48, 80, TEXT_BUTTON_LEFT "/" TEXT_BUTTON_RIGHT "  SWITCH BANK");

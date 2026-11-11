@@ -97,9 +97,10 @@ qualified cue selected. The displayed time measures elapsed transport time
 from the start call in VBlanks.
 
 L1 toggles the controls popup. Its translucent purple gradient and beveled gray
-border appear over the animated background. While help is open, playback keeps
-its current state and every other control is blocked. L1 has priority on opening
-and closing frames. Other buttons need a fresh press after help closes.
+border appear over the live HUD and animated background. While help is open,
+playback keeps its current state and every other control is blocked. L1 has
+priority on opening and closing frames. Other buttons need a fresh press after
+help closes.
 
 `graphics_panel(x, y, width, height, top, bottom, border)` draws a translucent
 vertical gradient. Colors use the GPU's `0xBBGGRR` packing. Callers choose any two
