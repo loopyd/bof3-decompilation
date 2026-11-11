@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F2E10
   - - 1088
-    - asm
-    - func_801F3040
+    - c
+    - drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040
+    - '@source: src/bof3/world/drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040.c'
+    - '@behavior: Seeds one translucent POLY_G4 at the shared primitive cursor, writes the two screen pairs and lays each far vertex on the 0x801783C8/0x801782FC rotator samples of its own angle scaled by its own signed amplitude, tints the two near vertices from the shade triple at 0x801F4B2C + 3 * work byte 6 with the far shades black, links the 0x24-byte packet through 0x80155A08 over the 0xC/0x10 position pair with kind 1, then copies the packet one size class on, rewrites its two far vertices half a turn round and links it again.'
   - - 2016
     - c
     - dispatchStateByte2Table4b88World04Area16813_801F33E0

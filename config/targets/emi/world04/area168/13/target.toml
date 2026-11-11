@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntry3BProgress0SetSharedFlagBit8FWhenGateClearWorld04Area16813_801F4920.c",
     "src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4.c",
     "src/bof3/world/dispatchSharedModeByteTable2C04World04Area16813_801F4A0C.c",
+    "src/bof3/world/drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040.c",
 ]
 psyq_source = "src/bof3/support/area168_13_psyq.c"
 

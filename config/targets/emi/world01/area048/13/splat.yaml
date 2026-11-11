@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/world/clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4.c'
     - '@behavior: entry 0 of the six-handler work-byte-+0x02 run based at 0x801F4E54; clears work byte +0x09, then draws one 8 by 0x78 move block through the emitter at 0x801F41F0 with the record halfword +0x36 as its row and column 0, or, while that halfword is zero and bit 0xD of the shared main-RAM flag bank 0x80144F28 reads set through the shared tester 0x8015B5D4, with row 0 and column 3, and stores dispatch state 1 or 3 into the record byte +0x02 accordingly.'
   - - 4664
-    - asm
-    - func_801F3E38
+    - c
+    - queueCue20DThenClearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDSetOrNonzeroWithModeByteSetWorld01Area04813_801F3E38
+    - '@source: src/bof3/world/queueCue20DThenClearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDSetOrNonzeroWithModeByteSetWorld01Area04813_801F3E38.c'
+    - '@behavior: entry 1 of the six-handler work-byte-+0x02 run based at 0x801F4E54; tests the scratch work record signed halfword +0x36 and gates on bit 0xD of the shared main-RAM flag bank 0x80144F28 through the shared tester 0x8015B5D4 while that halfword is zero and on the shared mode byte 0x8014686B while it is nonzero, and when either gate holds requests frontend cue 0x20D through the shared frontend cue dispatcher 0x8015DF18, clears work byte +0x09 and advances the record dispatch state byte +0x02 by one, selecting entry 2 of the same run, otherwise returning without touching the record.'
   - - 4836
     - asm
     - func_801F3EE4

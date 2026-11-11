@@ -291,6 +291,7 @@ sources = [
     "src/bof3/battle/setState8WhenReady.c",
     "src/bof3/battle/setWorkBytes20.c",
     "src/bof3/battle/setupAllLocalWork.c",
+    "src/bof3/battle/startHintVariantEmiStreamAndAdvanceByte1.c",
     "src/bof3/battle/storeLocalReady2Result.c",
     "src/bof3/battle/storeQueuedIndexByte.c",
     "src/bof3/battle/stubHandler1Adc.c",

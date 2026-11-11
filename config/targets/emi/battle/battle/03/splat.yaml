@@ -1470,8 +1470,10 @@ segments:
     - '@source: src/bof3/battle/countdownOrFlag40Advance2.c'
     - '@behavior: Decrements the active work countdown or flags it and advances scratchpad work.'
   - - 93512
-    - asm
-    - func_801E7948
+    - c
+    - startHintVariantEmiStreamAndAdvanceByte1
+    - '@source: src/bof3/battle/startHintVariantEmiStreamAndAdvanceByte1.c'
+    - '@behavior: While bit 0x8000 of the shared battle halfword 0x801462E8 is set, starts the EMI stream slot selected by the shared hint byte 0x80145024 and work byte +0x08 of D_801EB4E0, then increments scratchpad work byte +0x01.'
   - - 94004
     - c
     - func_801E7B34

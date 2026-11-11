@@ -97,8 +97,10 @@ segments:
     - c
     - clearWorkTableByte25AndAdvanceWorkByte1ScenarioScena0400_801F7AC8
   - - 3840
-    - asm
-    - func_801F7B00
+    - c
+    - claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0400_801F7B00
+    - '@source: src/bof3/scenario/claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0400_801F7B00.c'
+    - '@behavior: Entry 1 of this overlay''s eight-word work-object handler run at 0x801FA1E4, reached only through the indirect call in dispatchWorkObjectHandlerScenarioScena0400_801F7A84, which indexes that run with byte 0x1 of the scratch work object at pointer slot 0x1F800044: on frames whose shared frame counter D_80143E6C reads zero in its low three bits it claims one free record through the scan at 0x801F7FF8 and seeds it from the shared saved triplet, +0x00 from D_80146954, +0x04 from D_80146958, +0x08 from the arithmetic shift right by 8 of D_8014695C, zero at +0x10, +0x14 and +0x18, 0x800 at +0x20 and the claim marker 0x80 in bytes 0x24 and 0x25; it then runs the record stepper func_801F7EC0 and, only when the shared scenario progress byte g_ScenarioProgress reads 3, increments work byte 1 so the next frame dispatches entry 2 at 0x801F7BC0. Its only image word is 0x801FA1E8, word 1 of that run, so no jal names it; it takes no arguments, returns nothing and its 0x28-byte frame only keeps $ra across the two calls.'
   - - 4032
     - asm
     - func_801F7BC0

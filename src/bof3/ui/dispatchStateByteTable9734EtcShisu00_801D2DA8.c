@@ -9,9 +9,10 @@
 extern void (*D_801D9734[])(void); /* @source 0x801D9734 @kind data */
 
 /* The overlay state byte, part of the work block 0x801DA028..0x801DA12D:
- * func_801D27BC clears it while setting up that block, and this dispatcher turns
- * its value into a handler index. No other code of this payload writes it, so
- * the steps that advance it live outside the overlay.
+ * initializeShisuUiWorkRecordsShisu00_801D27BC clears it while setting up that
+ * block, and this dispatcher turns its value into a handler index. No other
+ * code of this payload writes it, so the steps that advance it live outside
+ * the overlay.
  */
 extern u8 D_801DA0C1; /* @source 0x801DA0C1 @kind data */
 

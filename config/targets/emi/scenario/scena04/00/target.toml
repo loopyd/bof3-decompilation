@@ -27,6 +27,7 @@ sources = [
     "src/bof3/scenario/drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8.c",
     "src/bof3/scenario/advanceFrameWordsDrawSegmentsAndQuadsTickCountdownArmCountdown64AndAdvanceWorkByte1ScenarioScena0400_801F6DD4.c",
     "src/bof3/scenario/advanceWorkWordsDrawQuadsAndSegmentsTickCountdownArmCountdown32AndAdvanceWorkByte1ScenarioScena0400_801F6F2C.c",
+    "src/bof3/scenario/claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0400_801F7B00.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

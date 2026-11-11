@@ -154,6 +154,7 @@ runSelectionPassThenSetSelectedRecordFlag10000 = 0x800A1A30;
 setRecordByte8To2StoreIndexedModifierField6 = 0x800A1AD0;
 storeSelectedValueWhenRollAccepted = 0x800A1B38;
 storeKind1EstimateMinusSelectedHalfwordClampZero = 0x800A1BE4;
+runSelectionPassSetAllLocalFlag400ThenClearSelected = 0x800A1CB4;
 runSelectionPassSetSelectedFlag1000ThenCallA9BD8 = 0x800A2120;
 runSelectionRollSetRecordByte8OrFlag800ThenRefresh = 0x800A21D0;
 runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8 = 0x800A22CC;

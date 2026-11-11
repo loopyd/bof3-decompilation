@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801D2308
   - - 7100
-    - asm
-    - func_801D27BC
+    - c
+    - initializeShisuUiWorkRecordsShisu00_801D27BC
+    - '@source: src/bof3/ui/initializeShisuUiWorkRecordsShisu00_801D27BC.c'
+    - '@behavior: Initializes both 0x78-byte UI work records of the SHISU work block, the first based at 0x801DA048 and the second at 0x801DA0C0, from the shared position at 0x80149308 and 0x8014930C. Each record publishes the shared pointer cell 0x801F501C at offset 0x54, the second record that word plus 8, and the field at +4 of that published pointer into offset 0x50; each takes the two shared coordinates into offsets 0x34 and 0x38, seeds the 16.16 cell at offset 0x40 with 0x1000, zeroes the byte at offset 0x48, the words at 0x64, 0x68 and 0x6C and the three channel bytes at 0x5D through 0x5F to -0x80, and closes by storing the answer of the shared distance helper func_8015477C, shifted left 16 and biased by 0xFE000000 in the first record and by 0x02000000 in the second, into offset 0x3C. The first record byte at offset 1 is the state byte that the overlay step dispatch at 0x801D2C0C keys its handler run on. No jal or table word of this payload names this body, so it is an overlay entry called from outside the payload; its 0x28-byte frame keeps $ra at 0x24 above five saved registers and it returns nothing.'
   - - 7544
     - asm
     - func_801D2978

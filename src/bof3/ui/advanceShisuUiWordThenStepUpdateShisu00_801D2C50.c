@@ -15,11 +15,11 @@
 extern void func_801D2978(void);
 
 /* The overlay's step accumulator, part of the work block 0x801DA028..0x801DA12D:
- * func_801D27BC clears it while setting up that block, this handler at
- * 0x801D2C50 raises it by 0x20 per step, and the handler at 0x801D2C84 reads it
- * back, keeps bits 6 through 11 of it and tests bits 0 through 11 before it sets
- * or clears the byte 0x801DA04E. Those three bodies are its only references in
- * this payload. */
+ * initializeShisuUiWorkRecordsShisu00_801D27BC clears it while setting up that
+ * block, this handler at 0x801D2C50 raises it by 0x20 per step, and the handler
+ * at 0x801D2C84 reads it back, keeps bits 6 through 11 of it and tests bits 0
+ * through 11 before it sets or clears the byte 0x801DA04E. Those three bodies
+ * are its only references in this payload. */
 extern u32 D_801DA0B4; /* @source 0x801DA0B4 @kind data */
 
 /* @source 0x801D2C50

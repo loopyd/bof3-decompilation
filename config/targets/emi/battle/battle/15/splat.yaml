@@ -804,8 +804,10 @@ segments:
     - '@source: src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c'
     - '@behavior: Stores into the selection-record halfword at byte +0x04 the func_800A4294 kind-1 estimate minus the selected battler''s work-record halfword - the 0x140-stride party record halfword at 0x80145F26 for battler bytes below 3, otherwise the 0x118-stride enemy record halfword at 0x801EB6C4 + 0x12 rebased by -3 - after re-reading the battler byte D_80146394 in each arm, then clamps the stored halfword to zero when it is negative.'
   - - 46260
-    - asm
-    - func_800A1CB4
+    - c
+    - runSelectionPassSetAllLocalFlag400ThenClearSelected
+    - '@source: src/bof3/battle/runSelectionPassSetAllLocalFlag400ThenClearSelected.c'
+    - '@behavior: Runs the battle selection refresh pass func_800A3F28, then, while the selected battler byte at 0x80146394 is below three, raises flag 0x400 in the flag word of every local battler record below the volatile count byte at 0x801462F0 (records at 0x80145FB8, stride 0x140) and clears flag 0x400 in the selected battler''s own record.'
   - - 46468
     - asm
     - func_800A1D84

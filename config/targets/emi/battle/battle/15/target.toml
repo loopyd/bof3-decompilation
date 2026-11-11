@@ -292,6 +292,7 @@ sources = [
     "src/bof3/battle/storePendingDamage9999OrEstimateThenClampZero.c",
     "src/bof3/battle/doubleEnemyRecordHalfwordsClampedToFFFF.c",
     "src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c",
+    "src/bof3/battle/runSelectionPassSetAllLocalFlag400ThenClearSelected.c",
     "src/bof3/battle/storeKind2EstimateMinusSelectedHalfwordClampZero.c",
     "src/bof3/battle/countdownWorkByte9SeedAxesFromBattlerRecordAndAdvanceStage.c",
     "src/bof3/battle/claimOwnerSlotsInModeRowThenSeedCountdown.c",

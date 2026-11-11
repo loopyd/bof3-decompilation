@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801F3558
   - - 2616
-    - asm
-    - func_801F3638
+    - c
+    - clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638
+    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638.c'
+    - '@behavior: Clears byte 0x48 of the scratchpad work record and submits the reloaded record through func_80196718.'
   - - 2668
     - asm
     - func_801F366C

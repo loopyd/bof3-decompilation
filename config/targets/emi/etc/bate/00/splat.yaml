@@ -43,8 +43,13 @@ segments:
     - asm
     - func_801D1E8C
   - - 5024
+    - c
+    - publishBateMaskFlagAndSnapshotSharedFields
+    - '@source: src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c'
+    - '@behavior: publishes the inverse of bit zero of the func_80165EC0 answer for the two shared mask bytes 0x80148338 and 0x8014833D into the flag byte 0x80148511, copies the six shared field bytes 0x80144DF2 through 0x80144DF7 into the six-byte overlay snapshot table 0x801D8EE0 with its fifth slot written twice so the last of those stores lands on the same byte, and then stores the 0x8014833D mask byte into that snapshot table at the index the cell 0x8014835E holds'
+  - - 5232
     - asm
-    - func_801D1FA0
+    - func_801D2070
   - - 5892
     - asm
     - func_801D2304

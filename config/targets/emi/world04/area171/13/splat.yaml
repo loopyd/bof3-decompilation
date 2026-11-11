@@ -75,8 +75,10 @@ segments:
     - findWorkPositionBoundsIndexWorld04Area17113_801F379C
     - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area17113_801F379C.c'
   - - 3176
-    - asm
-    - func_801F3868
+    - c
+    - syncWorkRecordsAgainstBoundsTableAndMirrorKindChangeWorld04Area17113_801F3868
+    - '@source: src/bof3/world/syncWorkRecordsAgainstBoundsTableAndMirrorKindChangeWorld04Area17113_801F3868.c'
+    - '@behavior: Per-frame work-record sync of this area. Clears bit 0x2000 of the shared world flags D_80146258, keeps the incoming scratchpad work cursor 0x1F800044 in a register and walks the D_80146254 live records of the 0x140-byte array at D_80145E90. Each iteration publishes that record as D_80146250 and as the scratch cursor and asks the payload query 0x801F379C for the five-byte bounds record holding it; a 0xFF answer makes the record absent, which only costs it its bit in the saved cursor bitmask byte 0x0B and in D_8014625A. A record whose bit is clear in both masks is activated by raising both bits, setting shared work mode D_80146250[0x11C] to 2, clearing countdown byte 9, copying kind byte D_801F418C of its bounds record into byte 8 and handing that byte to func_8014D8D4. An already active record runs the shared step func_801C2538 and, for index 0 only, func_801C2710 while its countdown reads zero; otherwise it re-derives byte 8 the same way and, when the kind changed, mirrors the motion words +0x0C, +0x10 and +0x14 and reflects the countdown as 8 minus itself. Every active path then runs func_801B0DFC, steps the countdown down by one, releases the shared hold through func_8014D978 and raises bit 0x2000 of D_80146258. The saved cursor is restored last, and the trailing guard clears bit 0x2000 again when D_80143BB0 holds 5. Takes no arguments and returns nothing.'
   - - 3916
     - asm
     - func_801F3B4C
