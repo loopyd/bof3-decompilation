@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F38F0
   - - 3572
-    - asm
-    - func_801F39F4
+    - c
+    - publishFrontEndRecordIndexToWorkByteBThenSeedHandler47RowClearRowByteBAndQueueCue200World02Area08513_801F39F4
+    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandler47RowClearRowByteBAndQueueCue200World02Area08513_801F39F4.c'
+    - '@behavior: Overlay step: stores the shared free-record selector''s row index into work byte +0x0B of the record behind scratchpad cell 0x1F800044, then, unless that byte reads 0xFF, seeds the selected 0x74-byte front-end row at 0x80143FC8 with occupancy 1, handler selector 0x47 and a cleared row byte 0x0B, and queues cue 0x200; on a full table it subtracts 2 from the halfword at +0x0A of the record published at 0x80148210.'
   - - 3832
     - c
     - applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8

@@ -1457,8 +1457,10 @@ segments:
     - '@source: src/bof3/battle/startWorkVariantEmiStreamAndAdvanceByte1.c'
     - '@behavior: Starts an EMI stream slot selected by work halfword +0x2C and byte +0x08, then increments scratchpad work byte +0x01.'
   - - 92724
-    - asm
-    - func_801E7634
+    - c
+    - refreshSelectedBattlerRecordAndAdvanceSavedWork
+    - '@source: src/bof3/battle/refreshSelectedBattlerRecordAndAdvanceSavedWork.c'
+    - '@behavior: Publishes the work record at D_801EB4E0 as the current scratchpad work, requests its resource, submits its selected D_80145E90 record, palette row and positional effect, uploads the palette, clears the counting bit of the selected record and rebuilds the local work bands, then restores the previous work pointer and advances its mode byte.'
   - - 93048
     - c
     - func_801E7778

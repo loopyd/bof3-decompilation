@@ -10,6 +10,6 @@ func_801F3030 = 0x801F3030;
 func_801F3850 = 0x801F3850;
 func_801F38C0 = 0x801F38C0;
 startActionForFirstPresentPartyCandidateActions01To04World04Area19613_801F3F90 = 0x801F3F90;
-func_801F4054 = 0x801F4054;
+startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4054 = 0x801F4054;
 setWorld04Area19613_801F4118 = 0x801F4118;
 D_801F412C = 0x801F412C;

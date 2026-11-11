@@ -51,8 +51,10 @@ segments:
     - '@source: src/bof3/world/initArea10513State.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 9 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 1408
-    - asm
-    - func_801F3180
+    - c
+    - stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180
+    - '@source: src/bof3/world/stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180.c'
+    - '@behavior: steps the shared front-end mode byte 0x801448EC through this overlay''s two-mode area-entry sequence; mode 0 requests area action 1 through func_80150224, latches the shared phase byte 0x80143BB0 to 2 and advances the mode byte to 1, and mode 1, once that phase byte differs from 2, releases the overlay through func_8015C058 and clears the shared state-entry byte 0x801448EB together with the mode byte.'
   - - 1552
     - asm
     - func_801F3210

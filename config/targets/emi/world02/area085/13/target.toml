@@ -18,6 +18,7 @@ support_sources = [
     "src/bof3/world/invokeHelperArgWorld02Area08513_801F3C1C.c",
     "src/bof3/world/offsetPaletteChannelsWorld02Area08513_801F3C3C.c",
     "src/bof3/world/applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8.c",
+    "src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandler47RowClearRowByteBAndQueueCue200World02Area08513_801F39F4.c",
     "src/bof3/support/area085_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area085_13_psyq.c"

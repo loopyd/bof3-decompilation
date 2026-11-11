@@ -15,6 +15,7 @@ sources = [
     "src/bof3/ui/dispatchUiSubStepTableBate00_801D20AC.c",
     "src/bof3/ui/drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298.c",
     "src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c",
+    "src/bof3/ui/stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190.c",
     "src/bof3/ui/setFrontLocalMode3AndAdvanceUiSubstep.c",
 ]
 support_sources = [

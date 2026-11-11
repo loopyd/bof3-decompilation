@@ -68,8 +68,10 @@ segments:
     - '@source: src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c'
     - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay state table through func_801D259C, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
   - - 5520
-    - asm
-    - func_801D2190
+    - c
+    - stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190
+    - '@source: src/bof3/ui/stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190.c'
+    - '@behavior: second handler of the BATE overlay phase handler table D_801D8764 that first redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that then ramps the six-slot panel values: while the shared cursor-kind byte 0x80148658 is below six, the slot step byte D_801D8778 raises the slot value D_801D8F00 and, once that value reaches its limit D_801D8EE8 or the shared pad low byte 0x80145AA8 is set, the value snaps to the limit and the slot index advances by one; when the slot index has reached six, a set pad low byte requests frontend-local mode 2 through func_8014ECAC and advances the shared UI phase byte 0x80148651 by one'
   - - 5784
     - c
     - drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298

@@ -60,8 +60,9 @@ segments:
     - dispatchStateByte2TablefcccBmagicMagic06803_801EF780
     - '@source: src/bof3/bmagic/magic06803DispatchTables.c'
   - - 3012
-    - asm
-    - func_801EF7C4
+    - c
+    - copyRecordByte8AndWordTripletPlus2000000InvokeHelpersSetByte9ToFByteATo3ClearByteBAndAdvanceWorkByte2BmagicMagic06803_801EF7C4
+    - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletPlus2000000InvokeHelpersSetByte9ToFByteATo3ClearByteBAndAdvanceWorkByte2BmagicMagic06803_801EF7C4.c'
   - - 3204
     - asm
     - func_801EF884

@@ -345,6 +345,7 @@ sources = [
     "src/bof3/battle/emitBattlerStatusAccentSprite.c",
     "src/bof3/battle/drawSpritePrim8x8Clut.c",
     "src/bof3/battle/drawSpritePrimFt4Clut.c",
+    "src/bof3/battle/refreshSelectedBattlerRecordAndAdvanceSavedWork.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

@@ -65,8 +65,10 @@ segments:
     - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions01To04World04Area19613_801F3F90.c'
     - '@behavior: walks the four candidate bytes of the table at 0x801F42F4 and, for each candidate, scans the D_80146254 live 0x140-byte-stride local work records for one whose party byte at 0x80145F09 equals it; on the first match it starts that candidate action through func_80150224 with the paired halfword of the table at 0x801F42F8, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns, and with no match it returns after both loops.'
   - - 5204
-    - asm
-    - func_801F4054
+    - c
+    - startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4054
+    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions05To08World04Area19613_801F4054.c'
+    - '@behavior: walks the four candidate bytes of the table at 0x801F4300 and, for each candidate, scans the D_80146254 live 0x140-byte-stride local work records for one whose party byte at 0x80145F09 equals it; on the first match it starts that candidate action through func_80150224 with the paired halfword of the table at 0x801F4304, publishes phase 2 in the shared front-end phase byte D_80143BB0 and returns, and with no match it returns after both loops.'
   - - 5400
     - c
     - setWorld04Area19613_801F4118
