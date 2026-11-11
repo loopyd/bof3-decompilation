@@ -91,8 +91,9 @@ segments:
     - asm
     - func_801F3E58
   - - 4772
-    - asm
-    - func_801F3EA4
+    - c
+    - drawWorkCursorQuadWorld02Area11213_801F3EA4
+    - '@source: src/bof3/world/drawWorkCursorQuadWorld02Area11213_801F3EA4.c'
   - - 4844
     - asm
     - func_801F3EEC

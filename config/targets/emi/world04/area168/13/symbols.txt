@@ -30,5 +30,5 @@ setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0DAndSetOverlayByteBit1World0
 setStatusFFFFAndStateEntry3BProgress0SetSharedFlagBit8FWhenGateClearWorld04Area16813_801F4920 = 0x801F4920;
 setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980 = 0x801F4980;
 func_801F49D4 = 0x801F49D4;
-func_801F4A0C = 0x801F4A0C;
+dispatchSharedModeByteTable2C04World04Area16813_801F4A0C = 0x801F4A0C;
 D_801F4B2C = 0x801F4B2C;

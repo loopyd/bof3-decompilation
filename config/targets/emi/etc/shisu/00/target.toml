@@ -14,6 +14,7 @@ sources = [
     "src/bof3/ui/advanceShisuUiWordThenStepUpdateShisu00_801D2C50.c",
     "src/bof3/ui/alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84.c",
     "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionShisu00_801D460C.c",
+    "src/bof3/ui/rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

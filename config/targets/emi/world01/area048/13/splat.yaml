@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F4258
   - - 7056
-    - asm
-    - func_801F4790
+    - c
+    - setStatusFFFFThenProgressBAndQueueCue205WhenGateBit0ClearElseProgress1ReleaseOverlayAndClearSharedStateBytesWorld01Area04813_801F4790
+    - '@source: src/bof3/world/setStatusFFFFThenProgressBAndQueueCue205WhenGateBit0ClearElseProgress1ReleaseOverlayAndClearSharedStateBytesWorld01Area04813_801F4790.c'
+    - '@behavior: entry 0 of the eight-word handler run based at 0x801F6398; publishes 0xFFFF into the shared status halfword 0x801490A8, then tests bit 0 of the shared gate byte 0x801490C7: while that bit reads clear it stores 0xB into the shared scenario progress byte g_ScenarioProgress and requests frontend cue 0x205 through the shared frontend cue dispatcher 0x8015DF18, and while it reads set it stores 1 into g_ScenarioProgress, runs the shared overlay release helper 0x8015C058 and clears the shared primary state byte 0x80146874 and its substate byte 0x80146875; takes no arguments and returns nothing.'
   - - 7172
     - c
     - clearWorkByte74Bit0ThenSetSharedFlagBankBitDWhenMappedStateIs1World01Area04813_801F4804

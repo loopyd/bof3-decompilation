@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801D2978
   - - 7900
-    - asm
-    - func_801D2ADC
+    - c
+    - rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC
+    - '@source: src/bof3/ui/rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC.c'
+    - '@behavior: Drawing step of the SHISU overlay for its second work record at 0x801DA0C0: it stores the 16.16 word that the work byte 0x801DA033 indexes in the fixed-point table based at T_801D9688 into the record cell 0x801DA100, saves the record''s three channel bytes 0x801DA11D through 0x801DA11F on its frame, steps the first and third down by three times the panel byte 0x801DA02F to a floor of zero and the second up by the same amount to a ceiling of 0xFF, calls the shared drawing routine func_801D2308 with the record at 0x801DA0C0, and writes the three saved bytes back, so the stepping reaches the drawing call while the record keeps its stored values. This payload reaches it from the five jal sites at 0x801D2E08, 0x801D2E68, 0x801D2F2C, 0x801D2F50 and 0x801D2F84, all in the second record''s step handlers, and no word or jal names it from outside; its 0x20-byte frame only keeps $ra at 0x18 across the drawing call and the epilogue leaves that call''s result in $v0.'
   - - 8204
     - c
     - dispatchStateByteTable9720EtcShisu00_801D2C0C

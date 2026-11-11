@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801F3EBC
   - - 4900
-    - asm
-    - func_801F3F24
+    - c
+    - setSharedStateByteAndRequestPair1c4aThenQueueCue109World04Area17113_801F3F24
+    - '@source: src/bof3/world/setSharedStateByteAndRequestPair1c4aThenQueueCue109World04Area17113_801F3F24.c'
+    - '@behavior: Overlay handler entered by the overlay loader, since no jal and no table word of this payload names 0x801F3F24; sets the shared overlay state byte D_8014933B to 1, passes the pair 0x1C and 0x4A to the shared request helper func_8015507C, then queues the fixed sound cue 0x109 through the shared cue dispatcher func_8015DF18. Takes no arguments and returns nothing.'
   - - 4956
     - textbin
     - D_801F3F5C

@@ -143,6 +143,7 @@ runSelectionRollSetRecordByte8OrFlag2000ThenRefresh = 0x800A0564;
 doubleEnemyRecordHalfwordsClampedToFFFF = 0x800A07D0;
 func_800A0A04 = 0x800A0A04;
 setFlag2000StoreDecrementedSlotCounter = 0x800A0A40;
+storeDecrementedSelectedValueWhenRollAccepted = 0x800A0B2C;
 func_800A0BF4 = 0x800A0BF4;
 func_800A0C44 = 0x800A0C44;
 storeScaledAttackMinusSelectedHalfwordClampZero = 0x800A0D64;

@@ -338,6 +338,7 @@ sources = [
     "src/bof3/battle/submitWorkAndSeedGravity.c",
     "src/bof3/battle/countdownGroupSelectionAndRefreshTarget.c",
     "src/bof3/battle/rebuildLocalWorkBandsFromFieldRecords.c",
+    "src/bof3/battle/drawBattlerStatusColumns.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

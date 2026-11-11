@@ -739,8 +739,10 @@ segments:
     - '@source: src/bof3/battle/setFlag2000StoreDecrementedSlotCounter.c'
     - '@behavior: Arms flag 0x2000, then stores one less than the selected battler''s slot counter into the active record halfword +0x04 and resets that slot counter to 1.'
   - - 41772
-    - asm
-    - func_800A0B2C
+    - c
+    - storeDecrementedSelectedValueWhenRollAccepted
+    - '@source: src/bof3/battle/storeDecrementedSelectedValueWhenRollAccepted.c'
+    - '@behavior: Runs the battle selection roll func_800A3A10 for the current battler byte D_80146374 and selection byte D_80146394; when the roll accepts, stores one less than the selected battler''s leading work-record halfword (0x140-stride party record above 0x80145F18 below index 3, 0x118-stride enemy record above 0x801EB6C4 rebased by -3 otherwise) into the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record, or zero when that halfword is 1.'
   - - 41972
     - c
     - func_800A0BF4

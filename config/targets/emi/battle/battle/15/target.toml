@@ -297,6 +297,7 @@ sources = [
     "src/bof3/battle/claimOwnerSlotsInModeRowThenSeedCountdown.c",
     "src/bof3/battle/panelStepLeftOrRightSettle42.c",
     "src/bof3/battle/clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh.c",
+    "src/bof3/battle/storeDecrementedSelectedValueWhenRollAccepted.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

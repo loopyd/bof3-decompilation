@@ -155,8 +155,10 @@ segments:
     - asm
     - func_801F49D4
   - - 7692
-    - asm
-    - func_801F4A0C
+    - c
+    - dispatchSharedModeByteTable2C04World04Area16813_801F4A0C
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World04Area16813_801F4A0C.c'
+    - '@behavior: Steps the shared front-end mode byte 0x801448EC through the 13-slot jump table at 0x801F2C04: mode 0 advances to 1 once the shared phase byte 0x80143BB0 leaves 2, mode 1 seeds one front-selector context through 0x8019FA28 (0xA7, 0xB0000, 0x698000, 0x89) and then clears the state-entry tuple 0x801448EB/0x801448EC, mode 10 runs 0x801C601C(0) and advances to 11, mode 11 queues cue 0x204 and sets bit 0x91 of the shared flag bank 0x80144F28 through 0x8015B580 once the scenario progress byte reads 1 and advances to 12, and mode 12 runs the shared front-end step 0x8015C058 and clears both the scenario progress byte and the state-entry tuple once that byte reads 2.'
   - - 7980
     - textbin
     - D_801F4B2C
