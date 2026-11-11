@@ -68,6 +68,10 @@ impl Cop0 {
         self.cause = (self.cause & !0x400) | (u32::from(asserted) << 10);
     }
 
+    pub(crate) fn replace_exception_pending(&mut self, pending: u32) {
+        self.cause = (self.cause & !0xff00) | (pending & 0xff00);
+    }
+
     pub fn interrupt_pending(&self) -> bool {
         self.status & 1 != 0 && self.status & self.cause & 0xff00 != 0
     }

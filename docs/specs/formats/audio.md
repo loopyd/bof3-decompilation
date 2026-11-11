@@ -2078,11 +2078,21 @@ cursor in `0x000..0xFFF`, independently of the CD cursor or a held CD capture.
 Address zero is valid. Transfers and reverb accesses do not
 trigger this emulator-reference comparator.
 
-Comparisons follow the existing explicit frame and block-fetch schedule. This
-schedule does not reproduce native mixer batches, inactive or stopped voice
-fetches, sample/CPU phase, IRQ delivery timing, or RAM arbitration.
-Disabled-frame execution remains unsupported, and hardware IRQ timing remains
-unverified.
+Explicit frame and block-fetch calls compare addresses on the caller's schedule;
+they do not establish native sample/CPU phase or interrupt latency. Cooperative
+execution instead compares addresses during its owned producer batches, then
+publishes the pending request to the controller at a CPU branch boundary. CPU
+acceptance requires an unmasked controller request and Status bits `0x401`.
+Quiet or masked branch checks retain stored Cause. Native-timed interrupt entry
+sets its pending field to `0x400`; syscall entry clears that field. Architectural
+CPU execution retains its separate pending-bit rules.
+
+Bounded native comparisons cover two capture-ring addresses, a voice-block
+fetch, acknowledgement and rearm, masked delivery, and a syscall after IRQ
+return. They compare CPU state, full RAM and producer state through the guest
+callback manager. They do not establish hardware IRQ timing, concurrent RAM
+arbitration or wider original-game IRQ histories. Disabled-frame execution
+remains unsupported.
 
 DMA RAM observation is disabled by default. Call
 `Interconnect::enable_dma_observation(limit)` with a limit of 1–1,000,000

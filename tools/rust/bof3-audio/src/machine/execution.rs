@@ -366,7 +366,11 @@ impl Execution {
                 Some(step)
             }
             Err(fault) if fault.kind == FaultKind::Syscall => {
-                self.cpu.enter_exception(&fault)?;
+                if self.reference.is_some() || self.native.is_some() {
+                    self.cpu.enter_native_exception(&fault)?;
+                } else {
+                    self.cpu.enter_exception(&fault)?;
+                }
                 self.syscalls += 1;
                 if let Some(services) = &mut self.kernel {
                     services.kernel.begin_exception(

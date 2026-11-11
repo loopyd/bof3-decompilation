@@ -281,6 +281,21 @@ impl Cpu {
         true
     }
 
+    /// Native exception entry replaces the pending bits in stored Cause.
+    pub(crate) fn enter_native_exception(&mut self, fault: &Fault) -> Result<(), &'static str> {
+        self.enter_exception(fault)?;
+        self.cop0.replace_exception_pending(0);
+        Ok(())
+    }
+
+    pub(crate) fn take_native_interrupt(&mut self) -> bool {
+        if !self.take_interrupt(true) {
+            return false;
+        }
+        self.cop0.replace_exception_pending(0x400);
+        true
+    }
+
     fn raise_exception(&mut self, code: u32, bad_address: Option<u32>) {
         let vector = self.cop0.enter(
             code,

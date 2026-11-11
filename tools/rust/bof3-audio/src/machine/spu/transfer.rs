@@ -9,8 +9,8 @@ pub const RAM_BYTES: usize = 512 * 1024;
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum IrqModel {
-    /// Current native comparisons and latch semantics at caller-scheduled
-    /// fetch/capture boundaries. Native batch and CPU delivery phase remain open.
+    /// Native comparisons and latch semantics. The execution owner schedules
+    /// producer batches and CPU delivery; explicit frame calls use caller time.
     EmulatorReference,
 }
 

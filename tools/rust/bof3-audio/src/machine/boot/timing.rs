@@ -43,7 +43,12 @@ impl Clock {
     }
 
     pub(crate) fn admit_interrupt(&self, cpu: &mut Cpu, bus: &Interconnect) -> bool {
-        self.branch_boundary && cpu.take_interrupt(bus.interrupts().pending())
+        // Native branchTest samples the controller only for an enabled hardware
+        // exception. Quiet or masked branches leave the stored Cause untouched.
+        self.branch_boundary
+            && bus.interrupts().pending()
+            && cpu.cop0().status() & 0x401 == 0x401
+            && cpu.take_native_interrupt()
     }
 
     pub(crate) fn step(&mut self, cpu: &mut Cpu, bus: &mut Interconnect) -> Result<Step, Fault> {
