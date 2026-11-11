@@ -34,9 +34,9 @@ RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses
 1,024-byte initialization stack and separate 4,096-byte exception stack.
 Startup owns RAM `0x80..0x90` for the CPU exception vector,
 `0xA0..0xD0` for the A0/B0/C0 entry vectors and
-`0x100..0x128` for kernel descriptors. A0/13,72, B0/07..0D,17..19,20,5B and
+`0x100..0x128` for kernel descriptors. A0/13,3F,72, B0/07..0D,17..19,20,3F,5B and
 C0/03,0A execute those vectors and relocated service tables before their owned
-guest bodies. The loader requires the current vector symbols, checks their sixteen table bindings
+guest bodies. The loader requires the current vector symbols, checks their eighteen table bindings
 and verifies the installed bytes. Direct body guards remain active.
 CPU exceptions enter the installed vector before the linked scanner. Functional
 callback return traps claim their ROM addresses only while their calls are active.
@@ -44,6 +44,17 @@ After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
+
+Owned diagnostic `puts` and `printf` execute guest instructions and emit byte
+writes at the PCSX-Redux debug-character port `0x1F802080`. Startup configures a
+64 KiB capture, available through `Interconnect::diagnostic_output`. Entry guards
+validate RAM strings, formats and the 96-byte aligned printf frame. Strings must
+terminate within 4,096 bytes. `puts` accepts printable ASCII, CR and LF and preserves
+V0. `printf` accepts `%d`, `%02x`, `%04x`, `%08x`, `%s` and `%%`. A null format is
+empty and a null `%s` prints `(null)`. Its V0 counts expanded fields and `%%` bytes.
+Literal format bytes are excluded from that count. Unsupported formats, invalid
+buffers and capture overflow fail execution. This ABI captures diagnostics through
+the emulator port and has its own guest instruction timing.
 
 The production bank loader selects the cooperative audio context before service
 startup. It primes synthesis before the first instruction and retains producer,
@@ -83,7 +94,8 @@ the call's transition limit. These APIs require the caller to supply a schedule;
 they do not establish native startup timing.
 
 `Image::start_cd` also attaches a reset CD host and the caller's paused `Drive`.
-Its optional `Media` input attaches raw backing before any scheduled work.
+Its optional `Media` input attaches raw backing, then the caller's configuration
+callback selects device models and audio scheduling before the first startup instruction.
 The automatic controller starts at the owned execution clock's current tick.
 The method executes `audio_cd_initialize(1)` with a 3,000,000-transition limit,
 running guest callback registration, Nop, Init, Demute, IRQ draining and SPU CD setup.
@@ -92,8 +104,10 @@ An active drive, failed guest call or unsuccessful initializer returns an error.
 The supplied drive declares an authenticated, closed, spinning disc context;
 startup does not establish authentication. XA decoder history and media LBAs
 require separate explicit bindings. The image supplies the US selector tables
-and their pointers. PCM output is not enabled during
-startup, and these functional calls do not establish native timing.
+and their pointers. Production XA rendering primes the cooperative producer
+before startup and discards callbacks until capture begins. Its clock continues
+through service, CD and sound initialization. The API requires explicit audio
+configuration and retains the selected context across later guest calls.
 
 The `audio_xa_select_cue` leaf takes a packed cue ID in A0. The signed upper
 value `A0 >> 12` must be 0, 1 or 2; the low 12 bits select the cue. The three live

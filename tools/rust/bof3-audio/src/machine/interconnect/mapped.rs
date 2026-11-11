@@ -145,6 +145,17 @@ impl Interconnect {
             self.post_status = Some(value as u8);
             return Ok(());
         }
+        if physical == 0x1f80_2080 {
+            if width != Width::Byte {
+                return Err(error(address, "diagnostic output requires a byte write"));
+            }
+            return self
+                .diagnostic
+                .as_mut()
+                .ok_or_else(|| error(address, "diagnostic output is not configured"))?
+                .write_byte(value as u8)
+                .map_err(|e| error(address, &e.to_string()));
+        }
         if Self::is_cd_port(physical) {
             return self.write_cd_port(address, width, value);
         }

@@ -14,7 +14,7 @@ use crate::{
         cd::queue::{self, Queue},
         driver,
         execution::{Call, Execution},
-        output_clock,
+        spu::noise,
         spu::transfer,
     },
     psx_render::{self, Delivery, SAMPLE_RATE},
@@ -253,22 +253,29 @@ pub fn render(
         }
         Ok(())
     };
-    let started = image.start_cd(drive, Some(Media::new(media, vec![])?), &mut observe)?;
-    let mut e = started.services.execution;
-    e.bus.configure_cd_data(data::Model::EmulatorReference)?;
-    e.bus.configure_cd_audio(Queue::new(
-        stream,
-        Arithmetic::CombinedRounded,
-        Histories::default(),
-        audio::Model::EmulatorReference,
-        queue::Model::EmulatorReference,
-    )?)?;
-    e.bus
-        .configure_spu_ram_control(transfer::RamControlModel::EmulatorReference)?;
-    e.enable_output(
-        output_clock::Model::PcsxReduxNtsc,
-        output_clock::Collection::Discard,
+    let started = image.start_cd(
+        drive,
+        Some(Media::new(media, vec![])?),
+        &mut |e| {
+            e.bus.configure_cd_data(data::Model::EmulatorReference)?;
+            e.bus.configure_cd_audio(Queue::new(
+                stream,
+                Arithmetic::CombinedRounded,
+                Histories::default(),
+                audio::Model::EmulatorReference,
+                queue::Model::EmulatorReference,
+            )?)?;
+            e.bus
+                .configure_spu_noise(noise::State::EmulatorReference { value: 1, count: 0 })?;
+            e.bus
+                .configure_spu_ram_control(transfer::RamControlModel::EmulatorReference)?;
+            e.bus
+                .configure_spu_irq(transfer::IrqModel::EmulatorReference)?;
+            e.enable_cooperative_audio()
+        },
+        &mut observe,
     )?;
+    let mut e = started.services.execution;
     let mut initialization_calls = vec![started.services.initialization, started.initialization];
     initialization_calls.push(e.call_observed(
         image.entry("audio_sound_initialize")?,
@@ -315,7 +322,7 @@ pub fn render(
     let mut next_tick = e.clock.ticks();
     loop {
         pcm.extend(e.take_audio_frames()?.into_iter().flatten());
-        let frames = e.output().unwrap().frames() - capture_start_frame;
+        let frames = e.audio_frames()? - capture_start_frame;
         let current = e.bus.read(state + 0x21, Width::Byte)? as u8;
         if current > 8 {
             return Err("XA render: guest state escaped the nine-state dispatcher".into());
@@ -358,7 +365,7 @@ pub fn render(
             {
                 transitions.push(Transition {
                     state: current,
-                    frame: e.output().unwrap().frames() - capture_start_frame,
+                    frame: e.audio_frames()? - capture_start_frame,
                 });
             }
             next_tick += TICK_PERIOD;
@@ -370,18 +377,20 @@ pub fn render(
             _ => options.safety_frames,
         };
         e.cpu.resume_at(foreground);
-        while (e.clock.ticks() < next_tick
-            && e.output().unwrap().frames() - capture_start_frame < boundary)
+        let mut collected_frame = e.audio_frames()?;
+        while (e.clock.ticks() < next_tick && e.audio_frames()? - capture_start_frame < boundary)
             || e.cpu.pc() != foreground
         {
             e.step_retired(&mut observe)?.devices.require_ready()?;
-            if e.output().unwrap().frames() - capture_start_frame > options.safety_frames {
-                return Err("XA render: safety limit reached during foreground continuation; no output published".into());
-            }
-            // Calls are bounded below the 4096-frame queue capacity. Drain the
-            // foreground loop in smaller chunks without changing device state.
-            if e.output().unwrap().frames() % 1024 == 0 {
+            let advanced_frames = e.audio_frames()?;
+            if advanced_frames != collected_frame {
                 pcm.extend(e.take_audio_frames()?.into_iter().flatten());
+                collected_frame = advanced_frames;
+            }
+            if advanced_frames - capture_start_frame >= options.safety_frames {
+                // The final callback can cross a frame limit. The outer loop
+                // checks idle and exact body/tail coverage before publication.
+                break;
             }
         }
     }
@@ -408,13 +417,13 @@ pub fn render(
             "dropped_sectors":queue.dropped_sectors,"consumed_frames":queue.consumed_frames,
             "empty_frames":queue.empty_frames,"resets":queue.resets,"predictor_resets":queue.predictor_resets,
             "reset_discarded_frames":queue.reset_discarded_frames}),
-        executed_frames: e.output().unwrap().frames() - capture_start_frame,
+        executed_frames: e.audio_frames()? - capture_start_frame,
         execution_instructions: e.cpu.instructions() - instruction_start,
-        output_clock: serde_json::to_value(e.output().unwrap())?, pcm16_delivery,
+        output_clock: serde_json::to_value(e.audio_clock()?)?, pcm16_delivery,
         independent_pcm_validated: false,
         limitations: vec![
             "Cold playback uses a supplied authenticated, closed and spinning disc context, a complete recognized US XA source and the original packed cue ID. Repeated or incoming playback histories are unsupported.",
-            "XA ticks run every 564480 functional CPU cycles, at safe foreground boundaries. This 60 Hz host cadence, service latency and CPU/sample phase are not independently accepted native timing.",
+            "XA ticks run every 564480 interpreter CPU cycles, at safe foreground boundaries. This host cadence, service latency and production host-call phase are not independently accepted native timing.",
             "The cue's encoded extent and guest GetlocL stop threshold differ. Cue completion means the guest reaches idle after Pause; it does not establish the original audible endpoint. The requested tail may cut queued audio.",
             "The SPU clock runs through game sound initialization. Capture starts before XA START without resetting its phase. Independent runtime PCM agreement and hardware fidelity remain unverified.",
             "The supplied TOC controls track and position metadata. Only the first raw DATA track is attached; CDDA playback and disc authentication are outside this path.",

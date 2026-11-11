@@ -15,6 +15,7 @@ SECTIONS
     .rodata ALIGN(4) : {
         *(.rodata.audio_kernel_chains)
         *(.rodata.audio_kernel_vectors)
+        *(.rodata.audio_diagnostic)
     }
     .data ALIGN(4) : {
         *(.data)

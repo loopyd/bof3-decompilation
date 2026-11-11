@@ -76,7 +76,9 @@ audio_entry_vectors_end:
 audio_a0_services:
     .space 0x13 * 4
     .word audio_kernel_setjmp
-    .space (0x72 - 0x14) * 4
+    .space (0x3f - 0x14) * 4
+    .word audio_diagnostic_printf
+    .space (0x72 - 0x40) * 4
     .word audio_cd_remove
 .globl audio_b0_services
 audio_b0_services:
@@ -94,7 +96,9 @@ audio_b0_services:
     .word audio_kernel_hook_entry
     .space (0x20 - 0x1a) * 4
     .word audio_event_undeliver
-    .space (0x5b - 0x21) * 4
+    .space (0x3f - 0x21) * 4
+    .word audio_diagnostic_puts
+    .space (0x5b - 0x40) * 4
     .word audio_kernel_clear_pad
 .globl audio_c0_services
 audio_c0_services:

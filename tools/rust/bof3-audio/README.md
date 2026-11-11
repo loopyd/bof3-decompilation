@@ -285,8 +285,11 @@ seconds; `--timeout` defaults to, and cannot exceed, 600 seconds. Publication
 waits for idle, retains exactly body plus tail frames and fails on timeout.
 The fixed tail may cut queued audio. The `bof3.xa-render/v1` report records
 source and TOC identity, cue, commands, cancellation, idle, queue and clock state.
-The 60 Hz functional tick cadence and guest idle do not establish native timing,
-the original audible endpoint or independent PCM agreement.
+XA rendering uses the cooperative audio clock through startup and playback.
+Its report retains the retirement quantum, consumer chunk and actor counts.
+XA ticks use a 564,480-interpreter-cycle cadence at safe foreground boundaries.
+Production host-call phase, the original audible endpoint and independent PCM
+agreement remain unaccepted.
 
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--driver DIRECTORY` and `--allow-approximations`, without BIOS or layout. It shares

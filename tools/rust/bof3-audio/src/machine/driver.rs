@@ -274,12 +274,13 @@ impl Image {
         Ok(())
     }
 
-    fn vector_bindings(&self) -> Result<[(u32, u32); 16]> {
+    fn vector_bindings(&self) -> Result<[(u32, u32); 18]> {
         let a0 = self.symbol("audio_a0_services")?;
         let b0 = self.symbol("audio_b0_services")?;
         let c0 = self.symbol("audio_c0_services")?;
         Ok([
             (a0 + 0x13 * 4, self.entry("audio_kernel_setjmp")?),
+            (a0 + 0x3f * 4, self.entry("audio_diagnostic_printf")?),
             (a0 + 0x72 * 4, self.entry("audio_cd_remove")?),
             (b0 + 0x07 * 4, self.entry("audio_event_deliver")?),
             (b0 + 0x08 * 4, self.entry("audio_event_open")?),
@@ -292,6 +293,7 @@ impl Image {
             (b0 + 0x18 * 4, self.entry("audio_exception_reset")?),
             (b0 + 0x19 * 4, self.entry("audio_kernel_hook_entry")?),
             (b0 + 0x20 * 4, self.entry("audio_event_undeliver")?),
+            (b0 + 0x3f * 4, self.entry("audio_diagnostic_puts")?),
             (b0 + 0x5b * 4, self.entry("audio_kernel_clear_pad")?),
             (c0 + 0x03 * 4, self.entry("audio_kernel_dequeue")?),
             (c0 + 0x0a * 4, self.entry("audio_kernel_clear_counter")?),
@@ -351,26 +353,37 @@ impl Image {
     }
 
     /// Start owned services and execute the full CD initializer with a caller's
-    /// paused drive. Optional media attaches before scheduling; XA cue bindings
-    /// remain separate caller inputs.
+    /// paused drive. Attach media, then configure devices and audio scheduling
+    /// before the first startup instruction. XA cue bindings are caller inputs.
     pub fn start_cd(
         &self,
         drive: Drive,
         media: Option<Media>,
+        configure: &mut impl FnMut(&mut Execution) -> Result<()>,
         observer: &mut impl FnMut(&Execution) -> Result<()>,
     ) -> Result<CdStarted> {
         let initialize = self.entry("audio_cd_initialize")?;
-        let mut services = self.start(observer)?;
+        let mut context = Some((drive, media));
+        let mut services = self.start_scheduled(
+            &mut |execution| {
+                let (drive, media) = context
+                    .take()
+                    .ok_or("owned driver: CD context is already attached")?;
+                execution
+                    .bus
+                    .configure_cd_host_reset(host::Model::EmulatorReference)?;
+                execution
+                    .bus
+                    .configure_cd_controller(drive, execution.clock.ticks())?;
+                if let Some(media) = media {
+                    execution.bus.configure_cd_media(media)?;
+                }
+                configure(execution)
+            },
+            observer,
+            &mut |_, progress| progress.require_ready(),
+        )?;
         let execution = &mut services.execution;
-        execution
-            .bus
-            .configure_cd_host_reset(host::Model::EmulatorReference)?;
-        execution
-            .bus
-            .configure_cd_controller(drive, execution.clock.ticks())?;
-        if let Some(media) = media {
-            execution.bus.configure_cd_media(media)?;
-        }
         let initialization =
             execution.call_observed(initialize, [1, 0, 0, 0], 3_000_000, observer)?;
         if initialization.result != 1 {
@@ -404,7 +417,7 @@ impl Image {
         let base = self.symbol("audio_kernel_image")?;
         bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
         let mut kernel = Kernel::default();
-        kernel.configure_console(64 * 1024)?;
+        bus.configure_diagnostic_output(64 * 1024)?;
         kernel.configure_counter_flags(self.symbol("audio_counter_flags")?)?;
         kernel.configure_cd_removal(self.entry("audio_cd_remove")?)?;
         kernel.configure_event_delivery(Service {
@@ -449,6 +462,8 @@ impl Image {
             clear_pad: self.entry("audio_kernel_clear_pad")?,
             clear_counter: self.entry("audio_kernel_clear_counter")?,
             dequeue: self.entry("audio_kernel_dequeue")?,
+            puts: self.entry("audio_diagnostic_puts")?,
+            printf: self.entry("audio_diagnostic_printf")?,
             pad_flag: self.data("audio_pad_auto_ack", 4)?,
         })?;
         kernel.configure_guest_vectors()?;

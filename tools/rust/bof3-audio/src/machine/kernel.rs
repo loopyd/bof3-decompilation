@@ -149,17 +149,21 @@ pub(crate) struct Bootstrap {
     pub clear_pad: u32,
     pub clear_counter: u32,
     pub dequeue: u32,
+    pub puts: u32,
+    pub printf: u32,
     pub pad_flag: u32,
 }
 
 impl Bootstrap {
-    fn addresses(self) -> [u32; 6] {
+    fn addresses(self) -> [u32; 8] {
         [
             self.setjmp,
             self.hook,
             self.clear_pad,
             self.clear_counter,
             self.dequeue,
+            self.puts,
+            self.printf,
             self.pad_flag,
         ]
     }
@@ -401,7 +405,7 @@ impl Kernel {
         let Some(binding) = self.bootstrap else {
             return Ok(());
         };
-        if !binding.addresses()[..5].contains(&cpu.pc()) {
+        if !binding.addresses()[..7].contains(&cpu.pc()) {
             return Ok(());
         }
         let mut incoming = cpu.clone();
@@ -435,8 +439,22 @@ impl Kernel {
             self.counter_auto_ack
                 .read(bus, incoming.register(4) as usize)?;
         }
+        if cpu.pc() == binding.puts {
+            Console::new(1024 * 1024)?.puts(&incoming, bus)?;
+        }
+        if cpu.pc() == binding.printf {
+            Console::new(1024 * 1024)?.printf(&incoming, bus)?;
+            let stack = incoming.register(29);
+            if stack & 7 != 0 {
+                return Err("owned diagnostic printf requires an aligned frame".into());
+            }
+            ram_offset(
+                stack.checked_sub(96).ok_or("diagnostic stack underflow")?,
+                112,
+            )?;
+        }
         let return_pc = incoming.register(31);
-        if return_pc & 3 != 0 || binding.addresses()[..5].contains(&return_pc) {
+        if return_pc & 3 != 0 || binding.addresses()[..7].contains(&return_pc) {
             return Err("owned bootstrap service requires an external aligned return".into());
         }
         ram_offset(return_pc, 4)?;
@@ -1234,7 +1252,7 @@ impl Kernel {
         )
     }
 
-    /// The owned initializer installs A0/B0/C0 vectors and tables for these sixteen
+    /// The owned initializer installs A0/B0/C0 vectors and tables for these eighteen
     /// complete services. Their normal entry guards still run at each body.
     pub(crate) fn configure_guest_vectors(&mut self) -> Result<()> {
         self.require_plain_context()?;
@@ -1246,7 +1264,7 @@ impl Kernel {
             || self.exception_return.is_none()
             || self.exception_reset.is_none()
         {
-            return Err("owned vectors require all sixteen guest service bindings".into());
+            return Err("owned vectors require all eighteen guest service bindings".into());
         }
         self.guest_vectors = true;
         Ok(())
@@ -1274,8 +1292,8 @@ impl Kernel {
         incoming.synchronize_load();
         matches!(
             (incoming.pc() & 0x1fff_ffff, incoming.register(9)),
-            (0xa0, 0x13 | 0x72)
-                | (0xb0, 0x07..=0x0d | 0x17..=0x19 | 0x20 | 0x5b)
+            (0xa0, 0x13 | 0x3f | 0x72)
+                | (0xb0, 0x07..=0x0d | 0x17..=0x19 | 0x20 | 0x3f | 0x5b)
                 | (0xc0, 0x03 | 0x0a)
         )
     }

@@ -80,7 +80,7 @@ fn bind_cue(
     }
     let sample = sample.ok_or("cue contains no physical sample")?;
     let allocation = &plan.bank.samples[usize::from(sample - 1)];
-    if allocation.encoded_bytes == 0 || allocation.encoded_bytes % 16 != 0 {
+    if allocation.encoded_bytes == 0 || !allocation.encoded_bytes.is_multiple_of(16) {
         return Err("cue sample lacks nonempty whole ADPCM blocks");
     }
     Ok(CueBinding {

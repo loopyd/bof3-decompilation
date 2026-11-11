@@ -37,6 +37,14 @@ impl Console {
         &self.bytes
     }
 
+    pub(super) fn write_byte(&mut self, byte: u8) -> Result<()> {
+        if self.bytes.len() == self.capacity {
+            return Err("diagnostic output capacity exceeded".into());
+        }
+        self.bytes.push(byte);
+        Ok(())
+    }
+
     /// Capture logical diagnostic bytes for owned callers that discard V0.
     /// This does not emulate BIOS stdout, putchar state or its return value.
     pub(super) fn puts(&mut self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {

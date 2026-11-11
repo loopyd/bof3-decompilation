@@ -280,7 +280,12 @@ impl Execution {
                 .is_some_and(|services| services.kernel.executes_guest(&self.cpu));
         let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
             if self.cooperative.is_some() {
-                return Err("cooperative audio does not admit functional host services".into());
+                return Err(format!(
+                    "cooperative audio does not admit functional host service {:#04x}/{:#04x}",
+                    self.cpu.pc() & 0x1fff_ffff,
+                    self.cpu.register(9),
+                )
+                .into());
             }
             waiting = services
                 .kernel
@@ -470,8 +475,8 @@ impl Execution {
     /// RETURN is a stop address only; no instruction or trampoline is written.
     /// The limit counts transitions, including BIOS calls and blocked wait polls.
     /// Errors may leave guest execution advanced; callers must not retry calls.
-    /// These synchronous helpers have no host audio wait resolver. A CD feed or
-    /// native CPU goal wait is terminal here; use stepped execution to resume.
+    /// The cooperative context resolves its audio waits. Manual native contexts
+    /// require call_scheduled or stepped execution to resolve audio waits.
     pub fn call(&mut self, entry: u32, arguments: [u32; 4], limit: u64) -> Result<Call> {
         self.call_observed(entry, arguments, limit, &mut |_| Ok(()))
     }

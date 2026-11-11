@@ -28,6 +28,7 @@ pub struct Interconnect {
     cache: cache::Cache,
     memory_control: memory::Control,
     post_status: Option<u8>,
+    diagnostic: Option<super::console::Console>,
     ram: Ram,
     firmware: Option<Firmware>,
     cd_host: Option<host::Host>,
@@ -67,6 +68,7 @@ impl Interconnect {
             cache: cache::Cache::default(),
             memory_control: memory::Control::default(),
             post_status: None,
+            diagnostic: None,
             ram,
             firmware: None,
             cd_host: None,
@@ -93,6 +95,19 @@ impl Interconnect {
             spu_work_started: false,
             spu_bus_control: 0,
         }
+    }
+
+    /// Capture guest byte writes to the PCSX-Redux debug-character port.
+    pub fn configure_diagnostic_output(&mut self, capacity: usize) -> crate::Result<()> {
+        if self.diagnostic.is_some() {
+            return Err("diagnostic output is already configured".into());
+        }
+        self.diagnostic = Some(super::console::Console::new(capacity)?);
+        Ok(())
+    }
+
+    pub fn diagnostic_output(&self) -> Option<&[u8]> {
+        self.diagnostic.as_ref().map(super::console::Console::bytes)
     }
     pub fn attach_firmware(&mut self, firmware: Firmware) -> crate::Result<()> {
         if self.firmware.is_some() {
