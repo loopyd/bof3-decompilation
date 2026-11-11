@@ -1,7 +1,10 @@
 //! Serialized CPU, synthesis-producer and output-consumer scheduling.
-use super::{ConsumerClock, DeviceProgress, Execution, NativeProducerProgress};
+use super::{
+    native::OUTPUT_LIMIT, ConsumerClock, DeviceProgress, Execution, NativeProducerProgress,
+};
 use crate::{
     machine::{
+        cd::queue::{WaitOutcome, CAPACITY as CD_QUEUE_CAPACITY},
         native_queue::{EnqueueOutcome, ProducerState},
         output_clock::Collection,
     },
@@ -11,6 +14,10 @@ use serde::Serialize;
 
 const RETIREMENT_QUANTUM: u64 = 200_000;
 const CONSUMER_CHUNK: usize = 441;
+// A single CD continuation can drain the full ring before the caller can take
+// PCM. Reserve that many whole chunks and the following retirement turn.
+const COOPERATIVE_OUTPUT_LIMIT: usize =
+    OUTPUT_LIMIT + CD_QUEUE_CAPACITY.next_multiple_of(CONSUMER_CHUNK) + CONSUMER_CHUNK;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct Clock {
@@ -22,6 +29,7 @@ pub struct Clock {
     pub pending_opcodes: u64,
     pub quantum_turns: u64,
     pub wait_turns: u64,
+    pub cd_wait_turns: u64,
     pub producer_commands: u64,
     pub synthesis_batches: u64,
     pub consumer_commands: u64,
@@ -44,6 +52,7 @@ impl Schedule {
                 pending_opcodes: 0,
                 quantum_turns: 0,
                 wait_turns: 0,
+                cd_wait_turns: 0,
                 producer_commands: 0,
                 synthesis_batches: 0,
                 consumer_commands: 0,
@@ -91,10 +100,28 @@ impl Schedule {
     }
 
     fn service(&mut self, execution: &mut Execution) -> Result<()> {
-        execution.native_audio_callback(CONSUMER_CHUNK, 1)?;
+        execution.consume_native_audio(CONSUMER_CHUNK, 1, COOPERATIVE_OUTPUT_LIMIT)?;
         self.clock.consumer_commands += 1;
         self.clock.frames = execution.native_delivered_frames()?;
         self.fill(execution)
+    }
+
+    fn service_cd_wait(&mut self, execution: &mut Execution) -> Result<()> {
+        loop {
+            let before = execution.bus.cd_audio()?.statistics();
+            if before.pending_frames >= CD_QUEUE_CAPACITY {
+                return Err("cooperative audio: CD submission cannot fit in its queue".into());
+            }
+            self.clock.cd_wait_turns += 1;
+            self.service(execution)?;
+            if execution.bus.cd_audio()?.statistics().queued_frames >= before.queued_frames {
+                return Err("cooperative audio: CD wait did not drain its queue".into());
+            }
+            let progress = execution.resume_cd_audio(WaitOutcome::Retry)?;
+            if progress != DeviceProgress::WaitingForCdAudio {
+                return progress.require_ready();
+            }
+        }
     }
 
     pub(super) fn advance(
@@ -119,7 +146,11 @@ impl Schedule {
             }
             return Err("cooperative audio: CPU wait service limit reached".into());
         }
-        progress.require_ready()?;
+        if progress == DeviceProgress::WaitingForCdAudio {
+            self.service_cd_wait(execution)?;
+        } else {
+            progress.require_ready()?;
+        }
         if self.clock.pending_opcodes > 1 {
             return Err("cooperative audio: multiple opcodes await completion".into());
         }
@@ -137,8 +168,9 @@ impl Schedule {
 impl Execution {
     /// Select the fixed cooperative reference context before the first owned
     /// instruction. Prime the producer once, then serialize consumer-before-
-    /// producer turns at retirement quanta and CPU audio-goal waits. Host call
-    /// boundaries contribute no opcodes. Manual actor operations are excluded.
+    /// producer turns at retirement quanta, CPU audio-goal waits and CD queue
+    /// waits. Host call boundaries contribute no opcodes. Manual actor
+    /// operations are excluded.
     pub fn enable_cooperative_audio(&mut self) -> Result<()> {
         self.enable_native_audio(ConsumerClock::Callback, Collection::Discard)?;
         let mut schedule = Schedule::fresh();

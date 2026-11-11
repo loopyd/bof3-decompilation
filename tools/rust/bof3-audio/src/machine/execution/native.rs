@@ -9,7 +9,7 @@ use crate::{
     Result,
 };
 
-const OUTPUT_LIMIT: usize = 4096;
+pub(super) const OUTPUT_LIMIT: usize = 4096;
 
 /// Select which caller-scheduled operation advances the native master counter.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -169,17 +169,25 @@ impl Execution {
     pub fn native_audio_callback(&mut self, frames: usize, speed: i32) -> Result<()> {
         self.require_manual_native_schedule()?;
         self.require_execution()?;
-        let result = self.consume_native_audio(frames, speed);
+        let result = self.consume_native_audio(frames, speed, OUTPUT_LIMIT);
         self.retain_failure(&result);
         result
     }
 
-    fn consume_native_audio(&mut self, frames: usize, speed: i32) -> Result<()> {
+    pub(super) fn consume_native_audio(
+        &mut self,
+        frames: usize,
+        speed: i32,
+        collection_limit: usize,
+    ) -> Result<()> {
         let audio = self.native.as_mut().ok_or("native audio is not enabled")?;
         if !(1..=2048).contains(&frames)
-            || (audio.collection == Collection::Retain && audio.pcm.len() + frames > OUTPUT_LIMIT)
+            || (audio.collection == Collection::Retain
+                && audio.pcm.len() + frames > collection_limit)
         {
-            return Err("native callback requires 1..=2048 frames and room in the 4096-frame PCM collection".into());
+            return Err(format!(
+                "native callback requires 1..=2048 frames and room in the {collection_limit}-frame PCM collection"
+            ).into());
         }
         let next = audio
             .delivered
