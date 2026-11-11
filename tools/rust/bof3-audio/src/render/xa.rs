@@ -187,17 +187,20 @@ pub fn render(
     toc: &DiscToc,
     options: &Options,
 ) -> Result<Rendered> {
-    render_observed(image, track, toc, options, &mut |_| Ok(()))
+    render_observed(image, track, toc, options, &mut |_| Ok(()), &mut |_| Ok(()))
 }
 
 /// Observe the production path before each guest instruction, including reset,
 /// CD initialization and caller-input copies. Observation cannot mutate execution.
+/// After completion checks, observe all retained stereo float PCM before frame
+/// trimming and PCM16 conversion. Either observer may stop the render with an error.
 pub fn render_observed(
     image: &driver::Image,
     track: &Path,
     toc: &DiscToc,
     options: &Options,
     observer: &mut impl FnMut(&Execution) -> Result<()>,
+    pcm_observer: &mut impl FnMut(&[f32]) -> Result<()>,
 ) -> Result<Rendered> {
     options.validate()?;
     let media = File::open(track)?;
@@ -412,10 +415,12 @@ pub fn render_observed(
     if output_frames > options.safety_frames {
         return Err("XA render: cue completion plus tail exceeds the safety limit".into());
     }
-    pcm.truncate(usize::try_from(output_frames * 2)?);
-    if pcm.len() != usize::try_from(output_frames * 2)? {
+    let output_samples = usize::try_from(output_frames * 2)?;
+    if pcm.len() < output_samples {
         return Err("XA render: retained PCM is shorter than the requested body and tail".into());
     }
+    pcm_observer(&pcm)?;
+    pcm.truncate(output_samples);
     let (pcm, pcm16_delivery) = psx_render::deliver_pcm16(pcm);
     let queue = e.bus.cd_audio()?.statistics();
     let report = Report {

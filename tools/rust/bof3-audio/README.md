@@ -302,6 +302,9 @@ cancellation pulse through the read-only media port. `initialization_calls`
 includes the binding copies, and `cancellation_calls` records the pulse copies.
 `render::xa::render_observed` observes execution before every guest instruction,
 including reset and these copies, without granting mutable access.
+Its separate PCM observer receives all retained stereo float samples after
+completion checks, before frame trimming and PCM16 conversion. Either observer
+can stop rendering with an error before a result is returned.
 XA rendering uses the cooperative audio clock through startup and playback.
 Its report retains the retirement quantum, consumer chunk and actor counts.
 XA ticks use a 564,480-interpreter-cycle cadence at safe foreground boundaries.
