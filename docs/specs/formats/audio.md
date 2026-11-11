@@ -4208,8 +4208,11 @@ The execution loop must enter owned exception delivery for IRQs and syscalls,
 prepare before selecting each service or instruction, reread PC after preparation,
 and complete guards after successful instruction retirement. The linker and
 loader reserve `0x80020000..0x80050000` for the owned image, state and stacks.
-Host media staging remains in `0x80010000..0x80020000`. Callers must exclude the
-owned allocation from media, other code and foreground stacks. This development
+Production commands and media use read-only input ports at `0x1F700000` and
+`0x1F710000`. Media input holds at most 64 KiB; guest instructions copy it into
+the selected RAM layout. The original-EXE development path retains direct RAM
+staging at `0x80010000..0x80020000`. Callers must exclude the
+owned allocation from other code and foreground stacks. This development
 profile does not load the original BIOS shell or standalone player alongside it.
 This service allocation
 does not initialize game audio state, admit device timing, or establish complete
@@ -5016,8 +5019,8 @@ relative to it, while `output_clock` counters remain absolute. Both music and
 effects reports retain this origin and `ram_control_model`. The explicit
 `emulator_reference` RAM policy preserves the raw register latch and permits
 512 KiB accesses regardless of its value, matching the native implementation.
-The unconfigured component still requires `0x0004`. Hardware RAM-control modes,
-complete startup phase and native CPU/worker acceptance remain unverified.
+The unconfigured component still requires `0x0004`. Hardware RAM-control modes
+and complete playback-history acceptance remain unverified.
 
 Production music and cold-bank effects use the fixed cooperative context selected
 by `Execution::enable_cooperative_audio`. A fresh producer fill precedes instruction

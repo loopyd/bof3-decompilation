@@ -58,30 +58,39 @@ the selected audio clock.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
 
-At `audio_call_return`, the host supplies an entry and eight argument words in
-the 36-byte `audio_call_arguments` buffer. The guest branch enters
+At `audio_call_return`, the host supplies an entry and eight argument words through
+the read-only `audio_call_arguments` port at `0x1F700000..0x1F700024`. The guest branch enters
 `audio_call_enter`, reserves a 32-byte o32 outgoing frame, copies four stack
 arguments, loads A0 through A3 and executes JALR. The dispatcher restores SP
 before reaching `audio_call_return` again. Four-argument calls supply zeros for
 the stack arguments. The callee must preserve the o32 stack and return through
 RA. The host verifies SP restoration and does not reset PC or call registers.
+The port accepts aligned word reads. Another command requires all nine words to
+have been read and execution to have returned to the dispatcher.
 Calls cannot target the dispatcher itself. Invalid stack state, failed observers
 and unfinished calls terminate owned execution, retaining its advanced state.
 
-The host supplies media bytes through `0x80010000..0x80020000`. Header, sequence
+The host supplies media bytes through the read-only port at
+`0x1F710000..0x1F720000`. Header, sequence
 and auxiliary cue copies into their layout addresses execute `audio_staging_copy`, a
 forward byte copy with A0 destination, A1 source, A2 length and V0 destination.
 Each copy appears in the preparation call report and its instructions reach the
-read-only observer and audio scheduler. The host rejects lengths above 64 KiB
-and destinations overlapping that staging window before writing the source.
+read-only observer and audio scheduler. Media admission requires the dispatcher
+return boundary. The host rejects lengths above 64 KiB; guest reads must be
+aligned and within the supplied bytes, and stores to either input port fail.
 VB chunks retain their original guest DMA transfers and preserved padding.
 Each chunk first executes `audio_staging_copy` into the cleared,
 64-byte-aligned `audio_staging_transfer` buffer. This buffer holds 2,048 bytes
 inside the owned arena. The copy includes DMA padding, appears in preparation
 reports and advances the selected instruction and audio clocks before DMA.
-Source and command-descriptor admission remain host work with no guest cycle
-cost. Complete production startup phase is still unqualified. Explicit original
-EXE development execution retains its separate host-entry and direct-copy context.
+These ports are an owned host input ABI. Publishing inputs adds no guest cycles;
+their reads, argument loads and RAM copies execute through the CPU and selected
+clocks. No host RAM or register edits admit production commands or media. Native
+comparisons can supply the same immutable inputs through the existing unknown
+memory read hook. This does not model physical expansion hardware or establish
+complete music, SFX and XA history acceptance. Explicit original EXE development
+execution retains its separate host-entry and direct-copy context, including
+the RAM transfer window at `0x80010000`.
 
 Owned diagnostic `puts` and `printf` execute guest instructions and emit byte
 writes at the PCSX-Redux debug-character port `0x1F802080`. Startup configures a

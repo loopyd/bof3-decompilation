@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Forward byte copy for host-supplied media in the declared staging window.
+# Forward byte copy from the read-only host media input to guest RAM.
 # A0 destination, A1 source, A2 byte count. V0 returns the destination.
 .set noreorder
 .set noat

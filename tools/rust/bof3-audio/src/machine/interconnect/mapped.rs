@@ -3,6 +3,13 @@ use super::*;
 
 impl Interconnect {
     pub(super) fn read_mapped(&mut self, address: u32, width: Width) -> Result<u32, BusError> {
+        if super::super::inputs::contains(Self::physical(address)) {
+            return self
+                .inputs
+                .as_mut()
+                .ok_or_else(|| error(address, "owned input ABI is not configured"))?
+                .read(Self::physical(address), width);
+        }
         if (0x1f00_0000..0x1f08_0000).contains(&Self::physical(address)) {
             return self.memory_control.read_empty_expansion(address, width);
         }
@@ -112,6 +119,9 @@ impl Interconnect {
         width: Width,
         value: u32,
     ) -> Result<(), BusError> {
+        if super::super::inputs::contains(Self::physical(address)) {
+            return Err(error(address, "owned input ports are read-only"));
+        }
         if Firmware::offset(address).is_some() {
             return Err(error(address, "BIOS ROM stores are unsupported"));
         }
@@ -238,6 +248,9 @@ impl Interconnect {
         value: u32,
         lanes: u8,
     ) -> Result<(), BusError> {
+        if super::super::inputs::contains(Self::physical(address)) {
+            return Err(error(address, "owned input ports are read-only"));
+        }
         if Firmware::offset(address).is_some() {
             return Err(error(address, "BIOS ROM masked stores are unsupported"));
         }

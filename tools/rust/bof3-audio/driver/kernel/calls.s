@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: MIT
 # Owned host-command dispatcher. The host supplies one entry and eight o32
-# argument words while stopped at audio_call_return. Guest instructions own
+# argument words through read-only ports at audio_call_return. Guest instructions own
 # register setup, the outgoing frame, JALR, frame restoration and continuation.
 .set noreorder
 .set noat
@@ -46,8 +46,5 @@ audio_call_return:
 audio_calls_end:
 .end audio_call_enter
 
-.section .data
-.balign 4
 .globl audio_call_arguments
-audio_call_arguments:
-    .space 36
+.equ audio_call_arguments, 0x1f700000

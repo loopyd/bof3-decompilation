@@ -197,14 +197,16 @@ The CPU starts with zeroed RAM and executes the owned ROM loader before kernel
 startup. CPU timing, synthesis, transfers and counters advance during image
 loading, sound initialization, bank
 upload and callback preparation; only PCM collection is discarded.
-Header, sequence and auxiliary cue copies from the host-fed staging window to
+Header, sequence and auxiliary cue copies from the read-only host media port to
 their live layout addresses execute guest instructions. Each padded sample
 chunk also executes a guest copy into the owned 2,048-byte transfer buffer
 before guest DMA uploads it. Preparation reports
 include those calls. Owned routine entry, argument loads, the o32 outgoing frame,
 call and return execute through the guest dispatcher. Call reports include four
-register arguments and, for eight-word calls, `stack_arguments`. Source and
-command-descriptor admission remain host work and add no guest cycles.
+register arguments and, for eight-word calls, `stack_arguments`. The host publishes
+commands at `0x1F700000` and media at `0x1F710000` only at a dispatcher return.
+Publication adds no guest cycles; CPU reads and copies advance the selected
+clocks. The input ABI requires no host RAM or register edits.
 Collection begins before play without resetting phase or device state.
 `capture_start_frame` records that absolute frame origin. Body, progress, stop
 and `executed_frames` counts are relative to it; `output_clock` retains absolute

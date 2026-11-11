@@ -79,15 +79,16 @@ pub(super) fn prepare(
             return Err("owned call cannot target its dispatcher".into());
         }
         frame(execution)?;
-        for (i, value) in std::iter::once(entry)
-            .chain(arguments)
-            .chain(stack_arguments.unwrap_or([0; 4]))
-            .enumerate()
-        {
-            execution
-                .bus
-                .write(guest.arguments + i as u32 * 4, Width::Word, value)?;
-        }
+        let mut words = [0; 9];
+        words[0] = entry;
+        words[1..5].copy_from_slice(&arguments);
+        words[5..].copy_from_slice(&stack_arguments.unwrap_or([0; 4]));
+        execution
+            .bus
+            .inputs
+            .as_mut()
+            .ok_or("owned input ABI is not configured")?
+            .command(words)?;
         return Ok(Boundary {
             returned: guest.returned,
             resuming: true,

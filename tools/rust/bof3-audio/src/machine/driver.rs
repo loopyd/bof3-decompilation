@@ -252,7 +252,6 @@ impl Image {
             ("audio_a0_services", 0x73 * 4),
             ("audio_b0_services", 0x5c * 4),
             ("audio_c0_services", 0x0b * 4),
-            ("audio_call_arguments", 36),
         ] {
             let address = self.symbol(name)?;
             if address & 3 != 0
@@ -329,6 +328,7 @@ impl Image {
             arguments: self.symbol("audio_call_arguments")?,
         };
         if calls.start != self.symbol("audio_kernel_image")?
+            || calls.arguments != super::inputs::COMMANDS
             || calls.enter != calls.start + 16
             || calls.enter >= calls.returned
             || calls.returned.checked_add(8) != Some(calls.end)

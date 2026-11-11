@@ -15,6 +15,7 @@ pub mod exception_chains;
 pub mod execution;
 pub mod gpu_status;
 pub mod image;
+pub mod inputs;
 pub mod interconnect;
 pub mod interrupts;
 pub mod kernel;

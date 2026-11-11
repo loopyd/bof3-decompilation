@@ -31,6 +31,7 @@ pub struct Interconnect {
     diagnostic: Option<super::console::Console>,
     ram: Ram,
     firmware: Option<Firmware>,
+    pub(crate) inputs: Option<super::inputs::Inputs>,
     cd_host: Option<host::Host>,
     cd_controller: Option<cd::clock::Controller>,
     cd_audio: Option<crate::machine::cd::queue::Queue>,
@@ -71,6 +72,7 @@ impl Interconnect {
             diagnostic: None,
             ram,
             firmware: None,
+            inputs: None,
             cd_host: None,
             cd_controller: None,
             cd_audio: None,
@@ -143,6 +145,10 @@ impl Interconnect {
     }
     pub fn ram(&self) -> &Ram {
         &self.ram
+    }
+    /// Observe supplied input bytes without reading guest ports or advancing actors.
+    pub fn host_input(&self) -> Option<super::inputs::Observation<'_>> {
+        self.inputs.as_ref()?.observation()
     }
     pub(crate) fn load_executable(&mut self, executable: &Executable) -> crate::Result<()> {
         self.ram.load_executable(executable)

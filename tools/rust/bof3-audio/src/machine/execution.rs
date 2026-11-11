@@ -129,8 +129,26 @@ impl Execution {
         {
             return Err("owned call dispatcher requires untouched cold service execution".into());
         }
+        if calls.arguments != super::inputs::COMMANDS || self.bus.inputs.is_some() {
+            return Err("owned call dispatcher requires its read-only input ABI".into());
+        }
+        self.bus.inputs = Some(super::inputs::Inputs::default());
         self.calls = Some(calls);
         Ok(())
+    }
+
+    pub(crate) fn stage_media_input(&mut self, bytes: &[u8]) -> Result<()> {
+        if self
+            .calls
+            .is_none_or(|calls| self.cpu.pc() != calls.returned)
+        {
+            return Err("owned media admission requires the dispatcher return boundary".into());
+        }
+        self.bus
+            .inputs
+            .as_mut()
+            .ok_or("owned input ABI is not configured")?
+            .media(bytes)
     }
 
     /// Preserve the original BIOS interpreter's absolute NTSC phase for

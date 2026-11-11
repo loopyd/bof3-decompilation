@@ -50,7 +50,7 @@ pub fn prepare(
 }
 
 /// Observe owned preparation, including guest header, sequence and sample copies.
-/// Source bytes enter the staging window from the host. Observation is read-only.
+/// Source bytes arrive through the read-only host media input.
 pub fn prepare_observed(
     image: &driver::Image,
     archive: &ArchiveImage,
@@ -58,12 +58,32 @@ pub fn prepare_observed(
     sequence: usize,
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared> {
+    prepare_configured(
+        image,
+        archive,
+        requested_layout,
+        sequence,
+        &mut |_| Ok(()),
+        observer,
+    )
+}
+
+/// Configure observation before the first reset instruction. Preparation and
+/// playback bindings use the same devices, guest loader and dispatcher.
+pub fn prepare_configured(
+    image: &driver::Image,
+    archive: &ArchiveImage,
+    requested_layout: Option<u8>,
+    sequence: usize,
+    configure: &mut impl FnMut(&mut Execution) -> Result<()>,
+    observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
+) -> Result<Prepared> {
     prepare_with(
         archive,
         requested_layout,
         sequence,
         observer,
-        |options, observer| bank::prepare(image, archive, options, observer),
+        |options, observer| bank::prepare_configured(image, archive, options, configure, observer),
     )
 }
 

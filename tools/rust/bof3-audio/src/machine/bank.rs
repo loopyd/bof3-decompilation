@@ -62,7 +62,7 @@ impl Staging {
         bytes: &[u8],
         observer: &mut impl FnMut(&Execution) -> Result<()>,
     ) -> Result<Option<Call>> {
-        let destination = super::image::executable::ram_offset(address, bytes.len())?;
+        super::image::executable::ram_offset(address, bytes.len())?;
         let Self::Guest { copy: entry, .. } = *self else {
             write(execution, address, bytes)?;
             return Ok(None);
@@ -70,13 +70,13 @@ impl Staging {
         if bytes.is_empty() {
             return Ok(None);
         }
-        if bytes.len() > 0x10000 || (destination < 0x20000 && destination + bytes.len() > 0x10000) {
-            return Err("PSX bank: guest copy exceeds or overlaps media staging".into());
+        if bytes.len() > super::inputs::MEDIA_BYTES {
+            return Err("PSX bank: guest copy exceeds media input capacity".into());
         }
-        write(execution, MEDIA_WINDOW, bytes)?;
+        execution.stage_media_input(bytes)?;
         let copied = execution.call_observed(
             entry,
-            [address, MEDIA_WINDOW, bytes.len() as u32, 0],
+            [address, super::inputs::MEDIA, bytes.len() as u32, 0],
             1_000_000,
             observer,
         )?;
@@ -131,6 +131,19 @@ pub fn prepare(
     options: &Options,
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared> {
+    prepare_configured(image, archive, options, &mut |_| Ok(()), observer)
+}
+
+/// Configure observation before the first reset instruction, after selecting
+/// the production devices and cooperative actors. Source and command inputs
+/// still pass through the same owned preparation path.
+pub fn prepare_configured(
+    image: &driver::Image,
+    archive: &ArchiveImage,
+    options: &Options,
+    configure: &mut impl FnMut(&mut Execution) -> Result<()>,
+    observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
+) -> Result<Prepared> {
     let plan = plan(image, archive, options)?;
     let audio = image.audio()?;
     let staging = Staging::Guest {
@@ -152,7 +165,8 @@ pub fn prepare(
             execution
                 .bus
                 .configure_spu_irq(IrqModel::EmulatorReference)?;
-            execution.enable_cooperative_audio()
+            execution.enable_cooperative_audio()?;
+            configure(execution)
         },
         &mut |e| observer(Stage::Initialization, e),
         &mut |_, progress| progress.require_ready(),
