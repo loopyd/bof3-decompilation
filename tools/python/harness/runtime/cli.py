@@ -43,12 +43,12 @@ def build_parser() -> argparse.ArgumentParser:
     audio = command.add_mutually_exclusive_group()
     audio.add_argument(
         "--audio-cold-capture",
-        metavar="SAMPLES,BLOCKS,EVENTS",
+        metavar="SAMPLES,BLOCKS,EVENTS,SCHEDULING",
         help="record from the first SPU worker after initial reset, with explicit limits",
     )
     audio.add_argument(
         "--audio-cooperative-capture",
-        metavar="SAMPLES,BLOCKS,EVENTS,QUANTUM,CHUNK",
+        metavar="SAMPLES,BLOCKS,EVENTS,SCHEDULING,QUANTUM,CHUNK",
         help="select serialized native audio turns with an explicit CPU quantum and callback chunk",
     )
     command.add_argument(

@@ -63,8 +63,8 @@ def parse_audio_capture(
 
     if value is None:
         return None
-    maxima = (2_646_000, 65_536, 65_536)
-    fields = "SAMPLES,BLOCKS,EVENTS"
+    maxima = (2_646_000, 65_536, 65_536, 1_048_576)
+    fields = "SAMPLES,BLOCKS,EVENTS,SCHEDULING"
     if cooperative:
         maxima += (1_000_000, 2048)
         fields += ",QUANTUM,CHUNK"
@@ -148,6 +148,7 @@ def launch_settings(
             "samples": audio_cold_capture[0],
             "blocks": audio_cold_capture[1],
             "events": audio_cold_capture[2],
+            "scheduling": audio_cold_capture[3],
             "context": "first SPU worker deferred until initial reset and recorder begin",
         }
     if audio_cooperative_capture is not None:
@@ -155,8 +156,9 @@ def launch_settings(
             "samples": audio_cooperative_capture[0],
             "blocks": audio_cooperative_capture[1],
             "events": audio_cooperative_capture[2],
-            "quantum": audio_cooperative_capture[3],
-            "chunk": audio_cooperative_capture[4],
+            "scheduling": audio_cooperative_capture[3],
+            "quantum": audio_cooperative_capture[4],
+            "chunk": audio_cooperative_capture[5],
             "context": "cold serialized native producer and consumer turns",
             "order": "prime-fill;post-quantum-consume-fill;wait-consume-fill",
             "retirement_boundary": "after-delayed-load-and-counters/before-debugger",
