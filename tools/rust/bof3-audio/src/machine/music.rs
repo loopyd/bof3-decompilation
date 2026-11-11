@@ -49,7 +49,7 @@ pub fn prepare(
     })
 }
 
-/// Observe owned preparation, including guest header and sequence copies.
+/// Observe owned preparation, including guest header, sequence and sample copies.
 /// Source bytes enter the staging window from the host. Observation is read-only.
 pub fn prepare_observed(
     image: &driver::Image,

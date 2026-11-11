@@ -9,6 +9,9 @@ use crate::{bank::Bank, catalog::loader, digest::sha256_hex, Result};
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 
+const MEDIA_WINDOW: u32 = 0x8001_0000;
+const TRANSFER_BYTES: usize = 2048;
+
 #[derive(Debug, Serialize)]
 pub struct Identity {
     pub archive_sha256: String,
@@ -48,7 +51,7 @@ fn write(execution: &mut Execution, address: u32, bytes: &[u8]) -> Result<()> {
 /// Direct writes belong to original EXE development execution only.
 pub(crate) enum Staging {
     Direct,
-    Guest(u32),
+    Guest { copy: u32, transfer: u32 },
 }
 
 impl Staging {
@@ -60,7 +63,7 @@ impl Staging {
         observer: &mut impl FnMut(&Execution) -> Result<()>,
     ) -> Result<Option<Call>> {
         let destination = super::image::executable::ram_offset(address, bytes.len())?;
-        let Self::Guest(entry) = *self else {
+        let Self::Guest { copy: entry, .. } = *self else {
             write(execution, address, bytes)?;
             return Ok(None);
         };
@@ -70,10 +73,10 @@ impl Staging {
         if bytes.len() > 0x10000 || (destination < 0x20000 && destination + bytes.len() > 0x10000) {
             return Err("PSX bank: guest copy exceeds or overlaps media staging".into());
         }
-        write(execution, 0x80010000, bytes)?;
+        write(execution, MEDIA_WINDOW, bytes)?;
         let copied = execution.call_observed(
             entry,
-            [address, 0x80010000, bytes.len() as u32, 0],
+            [address, MEDIA_WINDOW, bytes.len() as u32, 0],
             1_000_000,
             observer,
         )?;
@@ -81,6 +84,26 @@ impl Staging {
             return Err("PSX bank: guest copy returned a different destination".into());
         }
         Ok(Some(copied))
+    }
+
+    fn samples(
+        &self,
+        execution: &mut Execution,
+        bytes: &[u8],
+        observer: &mut impl FnMut(&Execution) -> Result<()>,
+    ) -> Result<(u32, Option<Call>)> {
+        if bytes.len() > TRANSFER_BYTES {
+            return Err("PSX bank: sample staging exceeds its transfer buffer".into());
+        }
+        match *self {
+            Self::Guest { transfer, .. } => {
+                Ok((transfer, self.copy(execution, transfer, bytes, observer)?))
+            }
+            Self::Direct => {
+                write(execution, MEDIA_WINDOW, bytes)?;
+                Ok((MEDIA_WINDOW, None))
+            }
+        }
     }
 }
 
@@ -110,7 +133,10 @@ pub fn prepare(
 ) -> Result<Prepared> {
     let plan = plan(image, archive, options)?;
     let audio = image.audio()?;
-    let staging = Staging::Guest(image.entry("audio_staging_copy")?);
+    let staging = Staging::Guest {
+        copy: image.entry("audio_staging_copy")?,
+        transfer: image.data("audio_staging_transfer", TRANSFER_BYTES as u32)?,
+    };
     let started = image.start_scheduled(
         &mut |execution| {
             use super::spu::{
@@ -200,34 +226,30 @@ pub(crate) fn load<P>(
             observer(Stage::Sequence, e)
         })?,
     );
-    let mut call = |execution: &mut Execution, stage: Stage, entry, arguments, limit| {
-        execution.call_observed(entry, arguments, limit, &mut |e| observer(stage, e))
-    };
     let id = u32::from(slot.vab_id);
-    let opened = call(
-        &mut execution,
-        Stage::Header,
+    let opened = execution.call_observed(
         audio.open_head,
         [slot.header_address, id, slot.spu_base, 0],
         100_000,
+        &mut |e| observer(Stage::Header, e),
     )?;
     if opened.result != id {
         return Err(format!("PSX bank: VAB open returned {:#x}", opened.result).into());
     }
     calls.push(opened);
-    for (index, chunk) in body.chunks(2048).enumerate() {
-        let start = index * 2048;
-        write(
+    for (index, chunk) in body.chunks(TRANSFER_BYTES).enumerate() {
+        let start = index * TRANSFER_BYTES;
+        let (source_address, copied) = staging.samples(
             &mut execution,
-            0x80010000,
             &source[start..start + chunk.len().div_ceil(64) * 64],
+            &mut |e| observer(Stage::Samples, e),
         )?;
-        let transfer = call(
-            &mut execution,
-            Stage::Samples,
+        calls.extend(copied);
+        let transfer = execution.call_observed(
             audio.transfer,
-            [0x80010000, chunk.len() as u32, id, 0],
+            [source_address, chunk.len() as u32, id, 0],
             100_000,
+            &mut |e| observer(Stage::Samples, e),
         )?;
         let expected = if start + chunk.len() == body.len() {
             id
@@ -242,13 +264,9 @@ pub(crate) fn load<P>(
             .into());
         }
         calls.push(transfer);
-        let wait = call(
-            &mut execution,
-            Stage::Samples,
-            audio.completed,
-            [1, 0, 0, 0],
-            100_000,
-        )?;
+        let wait = execution.call_observed(audio.completed, [1, 0, 0, 0], 100_000, &mut |e| {
+            observer(Stage::Samples, e)
+        })?;
         if wait.result != 1 {
             return Err(format!("PSX bank: VB wait returned {:#x}", wait.result).into());
         }

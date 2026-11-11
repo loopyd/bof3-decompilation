@@ -68,6 +68,10 @@ Each copy appears in the preparation call report and its instructions reach the
 read-only observer and audio scheduler. The host rejects lengths above 64 KiB
 and destinations overlapping that staging window before writing the source.
 VB chunks retain their original guest DMA transfers and preserved padding.
+Each chunk first executes `audio_staging_copy` into the cleared,
+64-byte-aligned `audio_staging_transfer` buffer. This buffer holds 2,048 bytes
+inside the owned arena. The copy includes DMA padding, appears in preparation
+reports and advances the selected instruction and audio clocks before DMA.
 Source and command-descriptor admission remain host work with no guest cycle
 cost. Complete production startup phase is still unqualified. Explicit original
 EXE development execution retains its separate host-entry and direct-copy context.

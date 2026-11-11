@@ -202,6 +202,15 @@ impl Image {
             return Err("owned driver: image and allocation metadata is inconsistent".into());
         }
         ram_offset(base, (bss_end - base) as usize)?;
+        let transfer = self.symbol("audio_staging_transfer")?;
+        let transfer_end = self.symbol("audio_staging_transfer_end")?;
+        if transfer & 63 != 0
+            || transfer < bss
+            || transfer_end.checked_sub(transfer) != Some(2048)
+            || transfer_end > state_end
+        {
+            return Err("owned driver: sample staging allocation is inconsistent".into());
+        }
         let scheduler = self.symbol("audio_sequence_scheduler")?;
         let scheduler_end = self.symbol("audio_sequence_scheduler_end")?;
         let load = self.symbol("audio_sequence_scheduler_load")?;

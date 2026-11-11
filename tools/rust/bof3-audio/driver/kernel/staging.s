@@ -22,3 +22,11 @@ audio_staging_copy:
     jr $ra
     nop
 .end audio_staging_copy
+
+.section .bss
+.balign 64
+.globl audio_staging_transfer
+audio_staging_transfer:
+    .space 2048
+.globl audio_staging_transfer_end
+audio_staging_transfer_end:
