@@ -9,7 +9,6 @@ import sqlite3
 
 from harness.analysis.index import connect
 from harness.common.lexicon import mask_c_text
-from harness.decomp import metadata
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.domain.manifests import load_target_manifests
 from .blocks import block_opportunities_payload
@@ -142,7 +141,11 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
             definitions = [
                 row
                 for row in macros_payload(
-                    connection, target=target, pattern=None, classification=None, limit=0
+                    connection,
+                    target=target,
+                    pattern=None,
+                    classification=None,
+                    limit=0,
                 )
                 if row["owner_target"] == target
             ]
@@ -203,10 +206,9 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
                         foreign.add(use["target_id"])
                 elif use["function_id"]:
                     consumers.add(str(parse_function_id(use["function_id"])))
-                elif (
-                    use["source_path"] in support_sources
-                    or use["source_path"].endswith((".h", ".inc"))
-                ):
+                elif use["source_path"] in support_sources or use[
+                    "source_path"
+                ].endswith((".h", ".inc")):
                     # A declaration or include-guard use names no function by
                     # construction; it is a coverage note, not a gap.
                     findings.append(
@@ -265,7 +267,11 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
     result = {
         "operation": "macros",
         "action": "check",
-        "scope": {"target": target, "selectors": [], "whole_target": not bool(selected)},
+        "scope": {
+            "target": target,
+            "selectors": [],
+            "whole_target": not bool(selected),
+        },
         "consumers": sorted(consumers),
         "total": 0,
         "truncated": False,
