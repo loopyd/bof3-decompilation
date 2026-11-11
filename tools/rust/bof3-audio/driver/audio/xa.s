@@ -7,13 +7,6 @@
 
 .section .text
 .balign 4
-# Owned no-work foreground leaf. The dispatcher accounts for its call and return;
-# the caller selects XA tick cadence. This is not an original game caller.
-.globl audio_xa_foreground
-audio_xa_foreground:
-    jr $ra
-    nop
-
 # exe/slus_004_22@0x80163744..0x80163858.
 # A0 >> 12 selects one of three streams. The low 12 bits select a cue.
 # The image supplies complete tables; the caller must bind indexed media LBAs.

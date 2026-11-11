@@ -5142,7 +5142,7 @@ defaults to, and cannot exceed, 600 seconds; body and tail must fit. Publication
 waits for guest idle and retains exactly body plus tail frames. An insufficient
 safety limit publishes no render, including when cancellation outlasts the tail.
 
-The `bof3.xa-render/v2` report records source and TOC identity, cue selection,
+The `bof3.xa-render/v3` report records source and TOC identity, cue selection,
 cold history, owned startup and guest calls, tick-return states, cancellation
 and idle observations, commands, queue statistics, clock coordinates and PCM16
 delivery. `capture_start_frame` is the absolute origin. Body, cancellation,
@@ -5159,10 +5159,13 @@ The renderer uses `require_ready` and fails without publication if a controller
 callback requires a host audio wait. This bounded path supplies no resumable
 host-consumer schedule.
 
-The 60 Hz functional tick cadence, service latency and CPU/sample alignment
-remain unaccepted native timing. Guest idle and the encoded sector extent do
-not establish the original audible endpoint; the fixed tail may cut queued
-audio. Disc authentication, CDDA playback, independent runtime PCM agreement
+Before each XA tick, the renderer executes the owned original `VSync(2)` wait.
+Its live callback counter and previous-wait state determine the return boundary.
+The report's `tick_wait_vblanks` records the requested wait.
+The surrounding game frame loop and its variable work are not executed.
+Guest idle and the encoded sector extent do
+not establish the original audible endpoint. The fixed tail may cut queued
+audio. Disc authentication, CDDA playback, complete independent PCM acceptance
 and hardware fidelity remain outside this path.
 
 ### Rust BIOS event state

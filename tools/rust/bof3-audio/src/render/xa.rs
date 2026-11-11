@@ -24,7 +24,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use std::{fs::File, path::Path};
 
-const TICK_PERIOD: u64 = 33_868_800 / 60;
+const TICK_WAIT_VBLANKS: u32 = 2;
 const SOURCES: [&str; 3] = [
     "BIN/SCE_XA/S_XA00.STR",
     "BIN/BMAG_XA/MAGIC00.STR",
@@ -163,7 +163,7 @@ pub struct Report {
     pub capture_start_frame: u64,
     pub stop_request_frame: Option<u64>,
     pub idle_frame: u64,
-    pub tick_period_cpu_cycles: u64,
+    pub tick_wait_vblanks: u32,
     pub tick_calls: u64,
     pub states_at_tick_return: Vec<Transition>,
     pub commands: Vec<u8>,
@@ -315,7 +315,7 @@ pub fn render_observed(
         )?);
     }
     let state = image.symbol("audio_xa_state")?;
-    let foreground = image.entry("audio_xa_foreground")?;
+    let wait = image.entry("audio_vsync")?;
     let tick = image.entry("audio_xa_tick")?;
     let capture_start_frame = e.begin_audio_capture()?;
     let instruction_start = e.cpu.instructions();
@@ -338,7 +338,6 @@ pub fn render_observed(
     let mut idle_frame = None;
     let mut transitions = Vec::new();
     let mut tick_calls = 0;
-    let mut next_tick = e.clock.ticks();
     loop {
         pcm.extend(e.take_audio_frames()?.into_iter().flatten());
         let frames = e.audio_frames()? - capture_start_frame;
@@ -368,46 +367,24 @@ pub fn render_observed(
                     .into(),
             );
         }
-        if e.clock.ticks() >= next_tick {
-            e.call_observed(tick, [0; 4], 1_000_000, &mut observe)?;
-            if cancellation_pending {
-                // This is a caller input pulse. Leaving it asserted would make
-                // the tick postamble restart recovery after state 7 reaches idle.
-                cancellation_calls.extend(e.copy_input(copy, state + 0x20, &[0], &mut observe)?);
-                cancellation_pending = false;
-            }
-            tick_calls += 1;
-            let current = e.bus.read(state + 0x21, Width::Byte)? as u8;
-            if transitions
-                .last()
-                .is_none_or(|entry: &Transition| entry.state != current)
-            {
-                transitions.push(Transition {
-                    state: current,
-                    frame: e.audio_frames()? - capture_start_frame,
-                });
-            }
-            next_tick += TICK_PERIOD;
-            continue;
+        e.call_observed(wait, [TICK_WAIT_VBLANKS, 0, 0, 0], 1_000_000, &mut observe)?;
+        e.call_observed(tick, [0; 4], 1_000_000, &mut observe)?;
+        if cancellation_pending {
+            // This is a caller input pulse. Leaving it asserted would make
+            // the tick postamble restart recovery after state 7 reaches idle.
+            cancellation_calls.extend(e.copy_input(copy, state + 0x20, &[0], &mut observe)?);
+            cancellation_pending = false;
         }
-        let boundary = match body_frames {
-            Some(body) if frames < body => body,
-            Some(body) if frames < body + options.release_frames => body + options.release_frames,
-            _ => options.safety_frames,
-        };
-        let mut collected_frame = e.audio_frames()?;
-        while e.clock.ticks() < next_tick && e.audio_frames()? - capture_start_frame < boundary {
-            e.call_observed(foreground, [0; 4], 100_000, &mut observe)?;
-            let advanced_frames = e.audio_frames()?;
-            if advanced_frames != collected_frame {
-                pcm.extend(e.take_audio_frames()?.into_iter().flatten());
-                collected_frame = advanced_frames;
-            }
-            if advanced_frames - capture_start_frame >= options.safety_frames {
-                // The final callback can cross a frame limit. The outer loop
-                // checks idle and exact body/tail coverage before publication.
-                break;
-            }
+        tick_calls += 1;
+        let current = e.bus.read(state + 0x21, Width::Byte)? as u8;
+        if transitions
+            .last()
+            .is_none_or(|entry: &Transition| entry.state != current)
+        {
+            transitions.push(Transition {
+                state: current,
+                frame: e.audio_frames()? - capture_start_frame,
+            });
         }
     }
     let body_frames = body_frames.unwrap();
@@ -424,11 +401,11 @@ pub fn render_observed(
     let (pcm, pcm16_delivery) = psx_render::deliver_pcm16(pcm);
     let queue = e.bus.cd_audio()?.statistics();
     let report = Report {
-        schema: "bof3.xa-render/v2", engine: "owned_us_driver", sample_rate: SAMPLE_RATE,
+        schema: "bof3.xa-render/v3", engine: "owned_us_driver", sample_rate: SAMPLE_RATE,
         source, toc: toc.clone(), cue, history: options.history, startup: started.services.evidence,
         initialization_calls, play_call, cancellation_calls, requested_duration_frames: options.duration_frames,
         body_frames, release_frames: options.release_frames, output_frames, safety_frames: options.safety_frames,
-        capture_start_frame, stop_request_frame, idle_frame: idle_frame.unwrap(), tick_period_cpu_cycles: TICK_PERIOD,
+        capture_start_frame, stop_request_frame, idle_frame: idle_frame.unwrap(), tick_wait_vblanks: TICK_WAIT_VBLANKS,
         tick_calls, states_at_tick_return: transitions, commands,
         final_queue: serde_json::json!({"queued_frames":queue.queued_frames,"pending_frames":queue.pending_frames,
             "admitted_sectors":queue.admitted_sectors,"muted_sectors":queue.muted_sectors,
@@ -441,7 +418,7 @@ pub fn render_observed(
         independent_pcm_validated: false,
         limitations: vec![
             "Cold playback uses a supplied authenticated, closed and spinning disc context, a complete recognized US XA source and the original packed cue ID. Repeated or incoming playback histories are unsupported.",
-            "XA ticks run every 564480 interpreter CPU cycles, at safe foreground boundaries. This host cadence, service latency and production host-call phase are not independently accepted native timing.",
+            "XA ticks follow the owned original VSync(2) wait and its live callback-counter history. The surrounding game frame loop and its variable work are not executed.",
             "The cue's encoded extent and guest GetlocL stop threshold differ. Cue completion means the guest reaches idle after Pause; it does not establish the original audible endpoint. The requested tail may cut queued audio.",
             "The SPU clock runs through game sound initialization. Capture starts before XA START without resetting its phase. Independent runtime PCM agreement and hardware fidelity remain unverified.",
             "The supplied TOC controls track and position metadata. Only the first raw DATA track is attached; CDDA playback and disc authentication are outside this path.",

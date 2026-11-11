@@ -256,8 +256,9 @@ initialization, and capture retains its phase. CD service startup remains
 unclocked. Instruction costs alone do not establish native timing or PCM equivalence.
 
 Production PSX music, cold-bank SFX and cold XA cue renderers use this driver.
-The XA host parks at `audio_xa_foreground` between its 60 Hz functional tick calls,
-returning through interrupt continuations before the next call. Duration stopping
+The XA host calls the owned original `audio_vsync` with argument 2 before each
+XA tick. The guest waits on its live callback counter and retains previous-wait
+state. It executes interrupt continuations during the wait. Duration stopping
 pulses the caller-owned state byte at +0x20 for one tick; the guest owns recovery,
 gain ramp, Pause and callback teardown. Broader playback histories, other
 production operations, native timing and independent PCM acceptance remain open.

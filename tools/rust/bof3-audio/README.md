@@ -295,7 +295,7 @@ positive fixed body and pulses the guest cancellation input at its boundary.
 Without it, the body ends at guest idle after Pause. `--tail` defaults to two
 seconds; `--timeout` defaults to, and cannot exceed, 600 seconds. Publication
 waits for idle, retains exactly body plus tail frames and fails on timeout.
-The fixed tail may cut queued audio. The `bof3.xa-render/v2` report records
+The fixed tail may cut queued audio. The `bof3.xa-render/v3` report records
 source and TOC identity, cue, commands, cancellation, idle, queue and clock state.
 Guest copies supply the three disc-location bindings and both edges of the
 cancellation pulse through the read-only media port. `initialization_calls`
@@ -307,9 +307,11 @@ completion checks, before frame trimming and PCM16 conversion. Either observer
 can stop rendering with an error before a result is returned.
 XA rendering uses the cooperative audio clock through startup and playback.
 Its report retains the retirement quantum, consumer chunk and actor counts.
-XA ticks use a 564,480-interpreter-cycle cadence at safe foreground boundaries.
-Production host-call phase, the original audible endpoint and independent PCM
-agreement remain unaccepted.
+Before each XA tick, the guest executes the owned original `VSync(2)` wait.
+Its live callback counter and previous-wait state determine the return boundary.
+The report records `tick_wait_vblanks` rather than a nominal CPU-cycle period.
+The surrounding game frame loop and its variable work are not executed.
+The original audible endpoint and complete independent PCM acceptance remain open.
 
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--driver DIRECTORY` and `--allow-approximations`, without BIOS or layout. It shares
