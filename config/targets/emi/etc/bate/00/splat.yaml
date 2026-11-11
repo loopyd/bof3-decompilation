@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801D2190
   - - 5784
-    - asm
-    - func_801D2298
+    - c
+    - drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298
+    - '@source: src/bof3/ui/drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298.c'
+    - '@behavior: third handler of the BATE overlay phase handler table D_801D8764 that clears the shared UI phase state once the shared front-end effect-busy gate halfword 0x80143C40 reads zero, and otherwise only redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304'
   - - 5892
     - asm
     - func_801D2304

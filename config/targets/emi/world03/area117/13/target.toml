@@ -20,5 +20,6 @@ support_sources = [
     "src/bof3/world/initArea11713State.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0.c",
+    "src/bof3/world/publishModeStatusFromTable55d8ThenProgressAAndCue205ForModes0To4World03Area11713_801F3FF0.c",
 ]
 psyq_source = "src/bof3/support/area117_13_psyq.c"

@@ -342,6 +342,7 @@ sources = [
     "src/bof3/battle/drawBattlerStatusColumns.c",
     "src/bof3/battle/resolveEnemyTargetDamageThroughGates.c",
     "src/bof3/battle/advanceEnemyTargetModeAndPublishWork.c",
+    "src/bof3/battle/emitBattlerStatusAccentSprite.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

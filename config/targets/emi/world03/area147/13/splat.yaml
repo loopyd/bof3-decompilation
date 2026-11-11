@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F30AC
   - - 1340
-    - asm
-    - func_801F313C
+    - c
+    - drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithHalfword30SpreadAndRow32QuadWorld03Area14713_801F313C
+    - '@source: src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithHalfword30SpreadAndRow32QuadWorld03Area14713_801F313C.c'
+    - '@behavior: Two-pass textured quad drawer of the byte-2 state handler 0x801F2F34 of this overlay, which runs it with mode 0 when the signed work halfword 0x32 is set and mode -1 when it is clear. It fills the flat coordinate of the four scratchpad vectors at 0x1F800014 from the work record published at the pointer cell 0x1F800044: work byte 0x08 set folds the work halfword 0x3A as ((halfword - 0x80) << 7) | 0x40 into the y column and byte 0x08 clear folds the work halfword 0x36 the same way into the x column, then the depth column takes the unsigned work halfword 0x3E less 0x180 for the two leading vectors and unchanged for the two trailing ones. Each of the two passes tags one POLY_FT4 at the shared primitive cursor with flat shading, fills the free column with the work halfword 0x36 shifted by the pass index when byte 0x08 is set and the work halfword 0x3A when it is clear, offset by the product of the unsigned work halfword 0x30 with the signed table byte 0x801F35D8[pass] plus 0x40 for the two leading vectors and minus 0x40 for the two trailing ones, projects the four vectors through RotTransPers4 into the packet corner pairs, fills the texture state through func_80155560 from 0x14500000 | (work byte 0x08 << 21) | (work halfword 0x2E + pass), and links the quad through func_80155A08 at the work words 0x34 and 0x38 with the caller mode and size 0x28. When the signed work halfword 0x32 is nonzero it emits one further POLY_FT4 of the same orientation pair, folded as (halfword << 7) - 0x40C0 and ((halfword - 0x81) << 7) | 0x40, with both depths taken from the unsigned work halfword 0x3E less 0x140, the texture state word 0x801F35D8[0x32] and the linked kind 0.'
   - - 2444
     - textbin
     - D_801F358C

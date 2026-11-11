@@ -13,6 +13,7 @@ sources = [
     "src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c",
     "src/bof3/ui/dispatchUiPhaseTableBate00_801D2070.c",
     "src/bof3/ui/dispatchUiSubStepTableBate00_801D20AC.c",
+    "src/bof3/ui/drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

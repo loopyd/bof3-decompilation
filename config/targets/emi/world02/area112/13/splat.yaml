@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F366C
   - - 2864
-    - asm
-    - func_801F3730
+    - c
+    - publishStatusFromGateByteAndLatchGateFlagPairWorld02Area11213_801F3730
+    - '@source: src/bof3/world/publishStatusFromGateByteAndLatchGateFlagPairWorld02Area11213_801F3730.c'
+    - '@behavior: Publishes the shared status halfword 0x801490A8 from the shared gate byte 0x801490C7 plus three, raising bit 0x33 of the shared flag bank 0x80144F28 and mirroring the two low bits of the gate byte into bits 0x34 and 0x35, then republishes status 2 and clears bit 0x33 when bit 0x10 of the shared flag record 0x80144EF0 reads clear.'
   - - 3184
     - c
     - setStatus14IfGateElse13World02Area11213_801F3870

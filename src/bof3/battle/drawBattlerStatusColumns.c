@@ -28,15 +28,15 @@ extern u8 D_8014833E[];
  * sprites for that entry's +0x1C offset while the battler record halfword +0x0E
  * (0x80145F22) is non-zero and the entry's +0x1E byte is non-zero, the record
  * text through func_8014FC90 at (x + 6, arg1 + 5) with the record halfword
- * +0x0C (0x80145F10) selecting style 2, two func_801DA078 accents at (x + 0x3A,
- * arg1 + 6) and (x + 4, arg1 + 0xE), and the record halfwords +0x14 (0x80145F18)
- * and +0x16 (0x80145F1A) as digit runs through drawDecimalGlyphRun at
- * (x + 0x48, arg1 + 0x0F) and (x + 0x48, arg1 + 8), the second styled 2 when its
- * halfword is zero or the record carries flag 0x4000 and otherwise 4 while that
- * halfword stays below the quarter of the record halfword +0x0E. The red, green
- * and blue channels of the column frame from (x + 2, arg1 + 2) through
- * (x + 0x5D, arg1 + 0x17) come from palette entry 1 of the CLUT bank byte
- * D_80144952.
+ * +0x0C (0x80145F10) selecting style 2, two emitBattlerStatusAccentSprite
+ * accents at (x + 0x3A, arg1 + 6) and (x + 4, arg1 + 0xE), and the record
+ * halfwords +0x14 (0x80145F18) and +0x16 (0x80145F1A) as digit runs through
+ * drawDecimalGlyphRun at (x + 0x48, arg1 + 0x0F) and (x + 0x48, arg1 + 8), the
+ * second styled 2 when its halfword is zero or the record carries flag 0x4000
+ * and otherwise 4 while that halfword stays below the quarter of the record
+ * halfword +0x0E. The red, green and blue channels of the column frame from
+ * (x + 2, arg1 + 2) through (x + 0x5D, arg1 + 0x17) come from palette entry 1
+ * of the CLUT bank byte D_80144952.
  * @status partial
  * @match 66.57
  * @residual The column x base stays a strength-reduced multiply in this lift
@@ -100,8 +100,9 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
       func_8014FC90((s16)(arg0 + index * 0x5e + 6), (s16)(arg1 + 5),
                     (flags & 0x4000) ? 2 : ((flags & 0xbfc) != 0), 5,
                     &D_80145F04[(u8)index * 0x140]);
-      func_801DA078((u16)(arg0 + index * 0x5e + 0x3a), (u16)(arg1 + 6), 1);
-      func_801DA078((u16)(arg0 + index * 0x5e + 4), (u16)y, 0);
+      emitBattlerStatusAccentSprite((u16)(arg0 + index * 0x5e + 0x3a),
+                                    (u16)(arg1 + 6), 1);
+      emitBattlerStatusAccentSprite((u16)(arg0 + index * 0x5e + 4), (u16)y, 0);
       flags = *(volatile u16*)&D_80145F10[(u8)index * 0x140];
       drawDecimalGlyphRun((s16)(arg0 + index * 0x5e + 0x48), (s16)(arg1 + 0x0f),
                           (flags & 0x4000) ? 2 : ((flags >> 11) & 4),

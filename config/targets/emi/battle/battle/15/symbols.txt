@@ -151,6 +151,7 @@ storeScaledAttackMinusSelectedHalfwordClampZero = 0x800A0D64;
 func_800A0E68 = 0x800A0E68;
 runSelectionPassThenSetSelectedRecordFlag8000 = 0x800A1414;
 runSelectionPassSetSelectedFlag40ThenAdvanceByte10 = 0x800A14B4;
+runSelectionPassSetSelectedFlag80ThenAdvanceByte11 = 0x800A15DC;
 runSelectionPassThenSetSelectedRecordFlag100 = 0x800A1704;
 runSelectionPassThenSetSelectedRecordFlag10000 = 0x800A1A30;
 setRecordByte8To2StoreIndexedModifierField6 = 0x800A1AD0;

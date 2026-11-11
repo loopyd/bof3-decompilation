@@ -111,8 +111,10 @@ segments:
     - setStatusFFFFAndStateEntryWhenGateClearWorld03Area11713_801F3FB0
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld03Area11713_801F3FB0.c'
   - - 5104
-    - asm
-    - func_801F3FF0
+    - c
+    - publishModeStatusFromTable55d8ThenProgressAAndCue205ForModes0To4World03Area11713_801F3FF0
+    - '@source: src/bof3/world/publishModeStatusFromTable55d8ThenProgressAAndCue205ForModes0To4World03Area11713_801F3FF0.c'
+    - '@behavior: loads the shared mode byte 0x801490C7 with a signed byte read, scales it by two and indexes the overlay halfword status table at 0x801F55D8, publishing the selected halfword into the shared status halfword 0x801490A8; modes 0 through 4 also store 0x0A into the shared scenario progress byte 0x80146864 and request frontend cue 0x205 through the resident dispatcher 0x8015DF18; takes no arguments and returns nothing.'
   - - 5192
     - asm
     - func_801F4048

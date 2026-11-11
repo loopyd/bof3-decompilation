@@ -142,8 +142,10 @@ segments:
     - '@source: src/bof3/world/setWorkByte8Level5PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F48DC.c'
     - '@behavior: stores the level 5 into byte +0x08 of the scratch work record published at scratchpad pointer cell 0x1F800044, then stores the shared mode byte 0x8014686B shifted left by two into byte +0x07 of the record published at 0x80148210; when that byte reads nonzero it calls the shared status helper 0x8015C148 and, when the answer is 2, calls the shared view routine 0x801C5DFC with the work record byte +0x08, clears the shared facing halfword 0x80149330 and sets bit 0x40 in the published record byte 0, while otherwise it calls the shared arming helper 0x801ABBA8 with the published record and that work byte as the level and sets bit 0x80 in that byte; on every path it then reloads the scratchpad cell, clears the work record word +0x14 and stores 0x480 into its halfword +0x3E.'
   - - 7624
-    - asm
-    - func_801F49C8
+    - c
+    - setWorkByte8Level1PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F49C8
+    - '@source: src/bof3/world/setWorkByte8Level1PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F49C8.c'
+    - '@behavior: entry 5, at index 4, of the eight-word handler run based at 0x801F6398; loads the scratch work record published at the scratchpad pointer cell 0x1F800044, stores the level 1 into its byte +0x08, then stores the shared mode byte 0x8014686B shifted left by two into byte +0x07 of the record published at 0x80148210; when that byte reads nonzero it calls the shared status helper 0x8015C148 and, when the answer is 2, calls the shared view routine 0x801C5DFC with the work record byte +0x08, clears the shared facing halfword 0x80149330 and sets bit 0x40 in the published record byte 0, while otherwise it calls the shared arming helper 0x801ABBA8 with the published record and that work byte as the level and sets bit 0x80 in that byte; on every path it then reloads the scratchpad cell, clears the work record word +0x14 and stores 0x480 into its halfword +0x3E.'
   - - 7860
     - asm
     - func_801F4AB4

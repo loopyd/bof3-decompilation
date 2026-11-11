@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area147_13_psyq.c",
     "src/bof3/world/area14713DispatchTables.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceState2At80ThenDrawWithHalfword32ModeWorld03Area14713_801F2F34.c",
+    "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithHalfword30SpreadAndRow32QuadWorld03Area14713_801F313C.c",
 ]
 psyq_source = "src/bof3/support/area147_13_psyq.c"

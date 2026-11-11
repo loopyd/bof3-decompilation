@@ -776,8 +776,10 @@ segments:
     - '@source: src/bof3/battle/runSelectionPassSetSelectedFlag40ThenAdvanceByte10.c'
     - '@behavior: Runs selection pass func_800A3F28, raises flag 0x40 in the flag word of the selected record - the 0x140-stride party record at 0x80145FB8 for indices below three, the 0x118-stride reserve record at 0x801EB734 at index minus three otherwise - then reloads the selection and advances that record''s byte at +0x10, which stops at 2.'
   - - 44508
-    - asm
-    - func_800A15DC
+    - c
+    - runSelectionPassSetSelectedFlag80ThenAdvanceByte11
+    - '@source: src/bof3/battle/runSelectionPassSetSelectedFlag80ThenAdvanceByte11.c'
+    - '@behavior: Runs selection pass func_800A3F28, raises flag 0x80 in the flag word of the selected record - the 0x140-stride party record at 0x80145FB8 for indices below three, the 0x118-stride reserve record at 0x801EB734 at index minus three otherwise - then reloads the selection and advances that record''s byte at +0x11, which stops at 2.'
   - - 44804
     - c
     - runSelectionPassThenSetSelectedRecordFlag100

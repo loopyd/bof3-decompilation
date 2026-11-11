@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801F7BC0
   - - 4264
-    - asm
-    - func_801F7CA8
+    - c
+    - stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8
+    - '@source: src/bof3/scenario/stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8.c'
+    - '@behavior: Overlay handler with no caller in this payload - no jal reaches 0x801F7CA8 and no word of the payload holds that address, aligned or not - so the loader dispatches it by address rather than through a table word. It runs the record stepper at 0x801F7EC0, which walks the 0x80 entries of the 0x28-byte-stride work table at 0x800E4800 and advances, draws and decays every entry whose byte at offset 0x25 is set, then re-reads the scratch work-object pointer from the cell at 0x1F800044 because the stepper may rewrite that cell, and decrements the work object''s word at +0x0C by one, storing it unconditionally because the store sits in the branch delay slot. When the stored value reaches zero it calls the shared work-area reset helper at 0x80196070, which clears bytes 0x00 through 0x04 of the shared work area. The arming writer of that countdown inside this overlay is func_801F7BC0, which calls the same stepper and then stores 0x40 into that word. It takes no arguments, consumes no result, and its 0x18-byte frame only keeps $ra across the two calls.'
   - - 4336
     - asm
     - func_801F7CF0

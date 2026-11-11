@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_801D0C04
   - - 4260
-    - asm
-    - func_801D1CA4
+    - c
+    - initializeShisuUiWorkBlockHeadShisu00_801D1CA4
+    - '@source: src/bof3/ui/initializeShisuUiWorkBlockHeadShisu00_801D1CA4.c'
+    - '@behavior: Overlay entry of the SHISU overlay and its first code: no jal and no table word of the payload names it, so the loader runs it ahead of the state initializer at 0x801D1D1C. It asks the shared mapper func_8016628C, in mode 0 and for table 0, which byte the codes 0x4D, 0x23, 0x24 and 0x56 map to, and stores the four answers in that order into the leading bytes 0x801DA028 through 0x801DA02B of the UI work block whose address D_801483BC later receives. Each store follows its own call, and the 0x18-byte frame only keeps $ra at 0x10.'
   - - 4380
     - c
     - initializeShisuUiState
