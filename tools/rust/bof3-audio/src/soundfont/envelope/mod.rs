@@ -3,7 +3,6 @@
 //! a hardware oracle or a claim that a fixed SF2 sustain reproduces PSX sustain.
 
 pub(crate) mod snapshot;
-
 use crate::{
     machine::spu::voice::envelope::{Adsr, Model, Phase, Registers},
     soundfont::Envelope,

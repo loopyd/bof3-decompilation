@@ -33,7 +33,7 @@ Neither arithmetic model establishes hardware timing or complete device fidelity
 
 ## Repository evidence and boundaries
 
-[Existing checks](../../tools/rust/bof3-audio/tests/adsr.rs) cover literal phase
+[Existing checks](../../tools/rust/bof3-audio/tests/machine/spu/voice/envelope.rs) cover literal phase
 traces, rate intervals, model differences, signed component injection and key or
 register transitions. The opt-in corpus probe compares VAB register pairs over
 250 ms held notes followed by 250 ms release. Counter units differ between

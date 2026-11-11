@@ -1,11 +1,22 @@
 //! Source-validated song-folder packing with bounded MIDI and SF2 bank edits.
-use crate::{
-    archive::packing, archive::packing::ArchiveReport, archive::packing::Pending,
-    archive::MediaImage, catalog::loader, catalog::model::Catalog, digest::sha256_hex,
-    document::manifest, interchange::midi::Midi, machine::driver::Image, pack::Options,
-    publication::require_absent, publication::write_new, publication::Publication,
-    sequence::editing, sequence::timeline::Limits, voice::tuning::Reference, Result,
-};
+use crate::archive::packing;
+use crate::archive::packing::ArchiveReport;
+use crate::archive::packing::Pending;
+use crate::archive::MediaImage;
+use crate::catalog::loader;
+use crate::catalog::model::Catalog;
+use crate::digest::sha256_hex;
+use crate::document::manifest;
+use crate::interchange::midi::Midi;
+use crate::machine::driver::Image;
+use crate::packing::Options;
+use crate::publication::require_absent;
+use crate::publication::write_new;
+use crate::publication::Publication;
+use crate::sequence::editing;
+use crate::sequence::timeline::Limits;
+use crate::voice::tuning::Reference;
+use crate::Result;
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 use serde_json::json;

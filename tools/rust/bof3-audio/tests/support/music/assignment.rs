@@ -1,4 +1,4 @@
-use bof3_audio::pack;
+use bof3_audio::packing as pack;
 use emi_ex_v2::image::ArchiveImage;
 use std::{fs, path::PathBuf};
 

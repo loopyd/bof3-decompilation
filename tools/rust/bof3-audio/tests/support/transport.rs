@@ -1,7 +1,6 @@
 //! Closure evidence for the explicitly supplied XA scheduler fixture.
 #[path = "transport/machine.rs"]
 pub mod machine;
-
 use bof3_audio::{
     catalog::model::XaCue,
     digest::sha256_hex,

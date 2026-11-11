@@ -1,9 +1,9 @@
-use bof3_audio::{
-    machine::{
-        bank::Stage, image::executable::Executable, image::firmware::Image, music, output_clock,
-    },
-    Result,
-};
+use bof3_audio::machine::audio::bank::Stage;
+use bof3_audio::machine::audio::music;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::{collections::BTreeMap, fs, path::PathBuf};
 fn inputs() -> (Executable, Vec<u8>, ArchiveImage) {

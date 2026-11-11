@@ -3,10 +3,6 @@
 //! Regenerate correspondence from original bytes, never from manifest claims.
 //! This component does not validate bank availability or publish an archive.
 
-use std::collections::{BTreeMap, BTreeSet};
-
-use serde::Serialize;
-
 use crate::{
     interchange::midi::{Event, Message, Midi},
     sequence::events::Kind,
@@ -16,6 +12,8 @@ use crate::{
     sequence::{Sequence, SequenceSet},
     Result,
 };
+use serde::Serialize;
+use std::collections::{BTreeMap, BTreeSet};
 
 mod notes;
 

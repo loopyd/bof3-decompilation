@@ -6,7 +6,6 @@ pub mod mapping;
 pub mod model;
 pub mod music;
 mod roles;
-
 use crate::catalog::model::{Asset, AssetData, Catalog, Entry, SectorRange, Source, XaStream};
 use crate::{archive::MediaImage, bank::Bank, digest::sha256_hex, sequence::SequenceSet, Result};
 use std::{

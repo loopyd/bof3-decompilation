@@ -1,12 +1,10 @@
 use super::fixtures::prepare;
-use bof3_audio::{
-    machine::{
-        bus::{Bus, Width},
-        effects::{self, Note},
-        output_clock,
-    },
-    Result,
-};
+use bof3_audio::machine::audio::effects;
+use bof3_audio::machine::audio::effects::Note;
+use bof3_audio::machine::bus::Bus;
+use bof3_audio::machine::bus::Width;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::Result;
 
 fn note(voice: u8, key: u8) -> Note {
     Note {

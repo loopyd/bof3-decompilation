@@ -1,26 +1,33 @@
 //! Owned US XA cue playback with explicit media, TOC and cold decoder history.
-use crate::{
-    archive::disc::DiscImage,
-    catalog::model::XaCue,
-    digest::sha256_hex,
-    interchange::wave::Wave,
-    machine::{
-        bus::{Bus, Width},
-        cd::audio,
-        cd::data,
-        cd::drive::{Drive, Toc, Track, TrackKind},
-        cd::media::Media,
-        cd::position::CdPosition,
-        cd::queue::{self, Queue},
-        driver,
-        execution::{Call, Execution},
-        spu::noise,
-        spu::transfer,
-    },
-    psx_render::{self, Delivery, SAMPLE_RATE},
-    xa::{self, Arithmetic, Histories, Stream},
-    Result,
-};
+use crate::archive::disc::DiscImage;
+use crate::catalog::model::XaCue;
+use crate::digest::sha256_hex;
+use crate::interchange::wave::Wave;
+use crate::machine::bus::Bus;
+use crate::machine::bus::Width;
+use crate::machine::cd::audio;
+use crate::machine::cd::data;
+use crate::machine::cd::drive::Drive;
+use crate::machine::cd::drive::Toc;
+use crate::machine::cd::drive::Track;
+use crate::machine::cd::drive::TrackKind;
+use crate::machine::cd::media::Media;
+use crate::machine::cd::position::CdPosition;
+use crate::machine::cd::queue;
+use crate::machine::cd::queue::Queue;
+use crate::machine::driver;
+use crate::machine::execution::Call;
+use crate::machine::execution::Execution;
+use crate::machine::spu::noise;
+use crate::machine::spu::transfer;
+use crate::render::psx as psx_render;
+use crate::render::psx::Delivery;
+use crate::render::psx::SAMPLE_RATE;
+use crate::xa;
+use crate::xa::Arithmetic;
+use crate::xa::Histories;
+use crate::xa::Stream;
+use crate::Result;
 use serde::{Deserialize, Serialize};
 use std::{fs::File, path::Path};
 

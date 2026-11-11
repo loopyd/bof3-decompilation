@@ -1,8 +1,10 @@
 use crate::fixture as music_fixture;
-use bof3_audio::{
-    digest::sha256_hex, document::manifest, interchange::midi::Message, interchange::midi::Midi,
-    music::extraction::Options, pc_render,
-};
+use bof3_audio::digest::sha256_hex;
+use bof3_audio::document::manifest;
+use bof3_audio::interchange::midi::Message;
+use bof3_audio::interchange::midi::Midi;
+use bof3_audio::music::extraction::Options;
+use bof3_audio::render::pc as pc_render;
 use music_fixture::synthetic_archive;
 use std::{
     fs,

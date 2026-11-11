@@ -1,15 +1,13 @@
 //! Development-only direct closure, guest preparation and bounded playback coverage.
-use bof3_audio::{
-    driver::{
-        closure::{self, Root},
-        trace::Trace,
-    },
-    machine::{
-        bank::Stage, image::executable::Executable, image::firmware::Image,
-        image::profile::Profile, output_clock,
-    },
-    Result,
-};
+use bof3_audio::driver::closure;
+use bof3_audio::driver::closure::Root;
+use bof3_audio::driver::trace::Trace;
+use bof3_audio::machine::audio::bank::Stage;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::machine::image::executable::Executable;
+use bof3_audio::machine::image::firmware::Image;
+use bof3_audio::machine::image::profile::Profile;
+use bof3_audio::Result;
 use emi_ex_v2::image::ArchiveImage;
 use std::{collections::BTreeSet, fs};
 fn main() -> Result<()> {

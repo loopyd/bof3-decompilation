@@ -54,10 +54,11 @@ fn empty_presets_are_silent_source_preserving_and_reject_unrepresented_edits() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_DRIVER, BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn original_runtime_and_pc_both_produce_silence_for_a_zero_tone_program() {
-    use bof3_audio::{
-        machine::{image::executable::Executable, image::firmware::Image},
-        pc_archive, pc_render, psx_render,
-    };
+    use bof3_audio::machine::image::executable::Executable;
+    use bof3_audio::machine::image::firmware::Image;
+    use bof3_audio::render::pc as pc_render;
+    use bof3_audio::render::pc::archive as pc_archive;
+    use bof3_audio::render::psx as psx_render;
     use emi_ex_v2::image::ArchiveImage;
     use std::{fs, path::PathBuf};
     let exe =

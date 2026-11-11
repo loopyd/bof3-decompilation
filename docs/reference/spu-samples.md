@@ -197,7 +197,7 @@ samples at key-on, phase-zero Gaussian interpolation gives
 +1 for -32768, and zero for the remaining nonpositive values. Setting zero
 after playback has advanced can hold another value.
 
-[Reader tests](../../tools/rust/bof3-audio/tests/spu_samples.rs) distinguish the
+[Reader tests](../../tools/rust/bof3-audio/tests/machine/spu/sample.rs) distinguish the
 published frozen position from native-reference progression. Both use a
 block-relative 16.16 counter. The
 current [PCSX-Redux Agentic interpolator](../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
@@ -214,7 +214,7 @@ Direct native-handler/class comparisons cover scheduled block endings and
 supplied looping blocks. They do not establish CPU/fetch alignment, complete mute
 transitions, native noise timing, mixed PCM or hardware behavior.
 
-The [corpus probe](../../tools/rust/bof3-audio/examples/zero_pitch_probe.rs)
+The [corpus probe](../../tools/rust/bof3-audio/examples/pitch.rs)
 reports published held values and native first values separately in
 `bof3.zero-pitch-probe/v2` output. Its 65-frame check verifies each model's
 counter policy after an explicit zero write without modulation. It does not

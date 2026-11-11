@@ -6,16 +6,17 @@
 mod calls;
 mod cooperative;
 mod native;
-use super::{
-    boot,
-    cpu::clock,
-    cpu::{Cpu, FaultKind, Step},
-    exception_calls::Environment,
-    image::executable::ram_offset,
-    interconnect::{DeviceProgress, Interconnect},
-    kernel::Kernel,
-    output_clock,
-};
+use crate::machine::boot;
+use crate::machine::clock as output_clock;
+use crate::machine::cpu::clock;
+use crate::machine::cpu::Cpu;
+use crate::machine::cpu::FaultKind;
+use crate::machine::cpu::Step;
+use crate::machine::image::executable::ram_offset;
+use crate::machine::interconnect::DeviceProgress;
+use crate::machine::interconnect::Interconnect;
+use crate::machine::kernel::exception::calls::Environment;
+use crate::machine::kernel::Kernel;
 use crate::Result;
 pub(crate) use calls::Guest as GuestCalls;
 pub use cooperative::Clock as CooperativeClock;

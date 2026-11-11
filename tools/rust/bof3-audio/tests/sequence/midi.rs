@@ -1,11 +1,12 @@
-use bof3_audio::{
-    archive::MediaImage,
-    interchange::midi::{Message, Midi},
-    pc_render,
-    sequence::midi as translation,
-    sequence::timeline::{Limits, Stop},
-    sequence::{Sequence, SequenceSet},
-};
+use bof3_audio::archive::MediaImage;
+use bof3_audio::interchange::midi::Message;
+use bof3_audio::interchange::midi::Midi;
+use bof3_audio::render::pc as pc_render;
+use bof3_audio::sequence::midi as translation;
+use bof3_audio::sequence::timeline::Limits;
+use bof3_audio::sequence::timeline::Stop;
+use bof3_audio::sequence::Sequence;
+use bof3_audio::sequence::SequenceSet;
 use std::{io::Cursor, path::Path};
 
 #[test]

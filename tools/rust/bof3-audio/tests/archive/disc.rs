@@ -193,15 +193,18 @@ fn verification_reports_truncation_even_when_all_compared_bytes_are_equal() {
         .read_xa("BIN/SCE_XA/VOICE.STR")
         .unwrap();
     let image = bof3_audio::archive::MediaImage::Xa(full);
-    let report =
-        bof3_audio::verify::Report::inspect("complete.STR".into(), &image, Some(image.bytes()));
+    let report = bof3_audio::verification::Report::inspect(
+        "complete.STR".into(),
+        &image,
+        Some(image.bytes()),
+    );
     assert_eq!(
         report.checks.completeness.status,
-        bof3_audio::verify::Status::Pass
+        bof3_audio::verification::Status::Pass
     );
     assert_eq!(
         report.checks.whole_file.status,
-        bof3_audio::verify::Status::Pass
+        bof3_audio::verification::Status::Pass
     );
     assert!(!report.checks.has_failures());
     assert!(report.byte_equality.unwrap().equal);

@@ -220,7 +220,7 @@ independent trace agreement, or audio fidelity.
 
 ## BIOS SPU initialization and elapsed cycles
 
-[The BIOS probe](../../tools/rust/bof3-audio/examples/bios_probe.rs) accepts
+[The BIOS probe](../../tools/rust/bof3-audio/examples/firmware.rs) accepts
 `bof3.bios-probe-context/v2`. Optional `spu` configuration requires sample and
 envelope arithmetic selections and permits disable and reverb models.
 Unknown fields and choices reject. The `bof3.bios-probe/v2` report records these
@@ -276,7 +276,7 @@ The handoff test compares all RAM outside the payload and all inherited GPRs aga
 separately executed pre-handoff ROM context, checks the BIOS-created PCB/TCB and
 executes the first original EXE instruction.
 
-`examples/runtime_probe.rs` accepts `BIOS EXE entry|callback-init|sound-init`.
+`examples/runtime.rs` accepts `BIOS EXE entry|callback-init|sound-init`.
 `entry` executes the original EXE startup. The other modes are explicitly marked
 diagnostic calls: they retain handoff GPR/COP0 state, select the original routine,
 set zero arguments/HI/LO and a return sentinel. They do not claim that the game
@@ -323,7 +323,7 @@ connects the game loader to these routines:
   archive padding beyond the declared VB data when its length is not a
   multiple of 64 bytes. Padding cannot be synthesized as zero.
 
-`examples/bank_probe.rs DRIVER_DIRECTORY US_EXE BGM_EMI` starts the
+`examples/bank.rs DRIVER_DIRECTORY US_EXE BGM_EMI` starts the
 [owned kernel](../specs/formats/audio.md#owned-kernel-allocation), then loads
 the original executable payload for development reference execution. It runs
 original sound/layout initialization, stages the archive buffers, and executes
@@ -344,8 +344,8 @@ transfer, intermediate/final transfer results, completion waits, guest IRQ
 execution and SEP handle zero. Default synthetic checks cover preserved call
 state, invalid entry/fuel requests and guest IRQ acknowledgement/RFE.
 
-Bank-transfer checks do not establish independent PCM fidelity or permit
-retirement of the host C tool.
+Bank-transfer checks establish transfer and interrupt behavior. Independent PCM
+agreement requires a separate playback comparison.
 
 ## Original sequence scheduler through VBlank interrupts
 
@@ -379,7 +379,7 @@ bytes. Flags at record `+0x90` select play, stop and other transitions; active
 play reaches the existing verified per-sequence scheduler. The guest code,
 not the host, advances event cursors and writes SPU key-on registers.
 
-`bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS` now optionally starts one parsed
+`bank DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS` now optionally starts one parsed
 SEP sequence and pulses VBlank for 1–10000 bounded iterations. Before each
 bounded `GetVideoMode` leaf call (`0x801753DC`), it asserts VBlank. Execution
 delivers the pending interrupt through owned services to the SDK callback
@@ -451,7 +451,7 @@ Default execution without an output clock retains the earlier call behavior.
 The diagnostic now accepts:
 
 ```text
-bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS WAV
+bank DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS WAV
 ```
 
 With a WAV path, `TICKS` counts clocked VBlank events rather than injected
@@ -471,15 +471,15 @@ advancement, exact model VBlank boundaries, interrupt acknowledgement,
 unsupported timer modes and bounded-output failure. The expanded BGM000 media
 test checks nonzero clocked PCM, frame accounting, and repeated-enable rejection.
 
-Independent execution traces, reference audio, and broader song/SFX/XA coverage
-remain required. The
-approximate C renderer is not an audio oracle and C retirement stays blocked
-on the complete migration acceptance gates.
+These functional-clock checks do not establish independent PCM agreement. The
+[production playback contract](../../tools/rust/bof3-audio/README.md) describes
+the separately compared cold and combined music, SFX and vocal/XA contexts and
+their remaining limits.
 
 
 ## Duration-limited PSX music render command
 
-`machine::music::prepare` now owns validated single-VAB/SEP preparation for the
+`machine::audio::music::prepare` owns validated single-VAB/SEP preparation for the
 verified US executable and BIOS. It runs original initialization, header/body
 transfer, completion waits, SEP open and the game callback-start wrapper.
 The source archive stays immutable. Preparation rejects ambiguous entry sets,
@@ -494,7 +494,7 @@ banks simultaneously. Fresh disassembly confirms direct base loads from
 in its delay slot. Cue-specific alternate-layout selection in overlays remains
 unverified.
 
-`psx_render` and `render --mode music --engine psx` execute the
+`render::psx` and `render --mode music --engine psx` execute the
 [source-built owned driver](../specs/formats/audio.md#owned-kernel-allocation)
 with `--archive`, `--driver DIRECTORY`, explicit `--sequence`, and optional
 `--duration` or `--loops` (mutually exclusive). The renderer tries game layouts 0, 1, then 2 and selects the first
@@ -533,7 +533,7 @@ runtime coverage, codec, or C-retirement gates. The
 
 ## Sequence loop-count stopping
 
-`psx_render` defaults to two traversals of an infinite controller loop (`--loops
+`render::psx` defaults to two traversals of an infinite controller loop (`--loops
 N` overrides this); an end marker stops a non-looping or finite-loop sequence
 once. `--duration` retains the exact fixed body cutoff. Finite encoded repeat
 counts are unchanged. The renderer requests one owned SEP play, so these

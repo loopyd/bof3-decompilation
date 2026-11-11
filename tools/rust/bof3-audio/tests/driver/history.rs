@@ -1,12 +1,11 @@
 use super::fixtures::{prepare, prepare_image};
-use bof3_audio::{
-    machine::{
-        bank::Prepared,
-        bus::{Bus, Width},
-        cues, effects, output_clock,
-    },
-    Result,
-};
+use bof3_audio::machine::audio::bank::Prepared;
+use bof3_audio::machine::audio::cues;
+use bof3_audio::machine::audio::effects;
+use bof3_audio::machine::bus::Bus;
+use bof3_audio::machine::bus::Width;
+use bof3_audio::machine::clock as output_clock;
+use bof3_audio::Result;
 
 fn trigger(
     p: &mut Prepared<bof3_audio::machine::boot::Evidence>,

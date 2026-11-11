@@ -121,7 +121,7 @@ key-121/center-46/shift-114/register-192 case uses root 53, coarse -120 and fine
 See [tuning calibration](../specs/formats/audio.md#sf2-note-on-tuning-calibration).
 
 The initialized-state probe at
-[`tuning_init_probe.rs`](../../tools/rust/bof3-audio/examples/tuning_init_probe.rs)
+[`tuning.rs`](../../tools/rust/bof3-audio/examples/tuning.rs)
 uses the exact US BIOS/executable and original BGM000 bank preparation, then
 runs 30,119 distinct corpus key/center/shift contexts with isolated synthetic
 tone records. It observes the original LHU instruction's effective address/value

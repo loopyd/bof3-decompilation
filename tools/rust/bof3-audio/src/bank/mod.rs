@@ -3,7 +3,6 @@
 pub mod extraction;
 pub(crate) mod manifest;
 pub mod packing;
-
 use crate::Result;
 use serde::Serialize;
 

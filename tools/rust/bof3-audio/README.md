@@ -214,8 +214,9 @@ counters. `ram_control_model` records the explicit emulator-reference policy.
 It preserves the RAM-control latch while allowing 512 KiB accesses at any latch
 value, as the native SPU does. Unconfigured components still require `0x0004`.
 Hardware RAM-control modes remain unverified.
-These reports do not establish independent native PCM, CPU/worker alignment or
-hardware timing.
+Reports identify the execution context; they do not themselves establish PCM
+agreement. Bounded native comparisons cover the declared cold and combined
+contexts described below. Hardware timing remains unverified.
 The PSX branch requires `--driver DIRECTORY`, rejects `--executable`, and no
 longer accepts `--bios`. Original-reference execution remains in development
 examples and the explicit `machine::reference` owner. In an extracted source
@@ -257,7 +258,8 @@ releases the explicit SDK voice, or all 24 voices for a game cue in the otherwis
 empty machine. The fixed tail includes guest release and safe-call delay and may
 end before silence. The `bof3.psx-effects-render/v4` report records the selected
 bank, playback values, calls, status snapshots, cutoff and clock limits.
-Independent native timing and PCM agreement remain open.
+Bounded native comparisons cover cold loading, note and cue playback, release
+and retrigger behavior. They do not establish arbitrary incoming bank histories.
 
 XA cues use the separate cold renderer, without an original executable or BIOS:
 
@@ -311,7 +313,9 @@ Before each XA tick, the guest executes the owned original `VSync(2)` wait.
 Its live callback counter and previous-wait state determine the return boundary.
 The report records `tick_wait_vblanks` rather than a nominal CPU-cycle period.
 The surrounding game frame loop and its variable work are not executed.
-The original audible endpoint and complete independent PCM acceptance remain open.
+Bounded native comparisons cover continuous PCM through guest idle or declared
+cancellation. Guest idle does not establish an unspecified hardware audible
+endpoint or equivalence for surrounding game-frame workloads.
 
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--driver DIRECTORY` and `--allow-approximations`, without BIOS or layout. It shares
@@ -418,12 +422,12 @@ structures remain unsupported. Packing checks VAB, EMI and game layout capacity
 before publishing. Current XML policies are required; older exports must be
 regenerated. No compatibility export or packing implementation is retained.
 
-The migration is incomplete. Supported preservation, extraction, edited packing
-and bounded rendering paths are available. Independent PSX fidelity,
-repeated SFX and incoming XA histories, wider XA timing/PCM acceptance and full verification evidence remain
-open. Unsupported operations fail explicitly. C source retirement is separately gated; this
-package is not a claim of full parity. TUI, live playback, standalone PSF
-commands and FLAC are retired from the replacement command surface.
+Supported preservation, extraction, edited packing and bounded rendering use the
+owned driver. Declared cold and combined music, repeated SFX and vocal/XA
+contexts match the native reference. Arbitrary incoming game state and hardware
+fidelity remain unverified. Unsupported operations fail explicitly. TUI, live
+playback, standalone PSF commands and FLAC are retired from the replacement
+command surface.
 
 Use [PCSX-Redux Agentic](https://github.com/loopyd/pcsx-redux-agentic) for SPU/CD
 implementation comparisons and runtime captures. Agreement with the fork alone

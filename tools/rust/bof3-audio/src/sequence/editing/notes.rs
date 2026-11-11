@@ -1,13 +1,12 @@
 //! Linear event edits with complete semantic retranslation.
 
-use std::collections::BTreeMap;
-
 use super::{tempo, translate, Options, Rebuilt, Report};
 use crate::{
     interchange::midi::{Event, Message, Midi},
     sequence::{events::Kind, midi::Translation, timeline::Stop, Sequence},
     Result,
 };
+use std::collections::BTreeMap;
 
 pub(super) fn is_note(message: &Message) -> bool {
     matches!(message, Message::Channel { status, .. } if matches!(status & 0xf0, 0x80 | 0x90))
