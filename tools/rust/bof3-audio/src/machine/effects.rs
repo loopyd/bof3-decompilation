@@ -3,9 +3,7 @@
 
 use super::{
     bank::Prepared,
-    bus::{Bus, Width},
     execution::{Call, Execution},
-    image::executable::ram_offset,
 };
 use crate::Result;
 use serde::Serialize;
@@ -54,37 +52,21 @@ pub fn key_on<P>(
         return Err("PSX effects: noncanonical sample reference needs runtime context".into());
     }
     let e = &mut prepared.execution;
-    let caller_stack = e.cpu.register(29);
-    if caller_stack & 7 != 0 {
-        return Err("PSX effects: unaligned guest argument stack".into());
-    }
-    // A host-directed call has no compiled caller to reserve the o32 outgoing
-    // argument area. Preserve its stack register around our eight-argument call.
-    let stack = caller_stack
-        .checked_sub(32)
-        .ok_or("PSX effects: guest argument stack underflow")?;
-    ram_offset(stack, 32)?;
-    for (index, value) in [note.key, note.fine, note.left, note.right]
-        .into_iter()
-        .enumerate()
-    {
-        e.bus
-            .write(stack + 16 + index as u32 * 4, Width::Word, value.into())?;
-    }
-    e.cpu.set_register(29, stack);
-    let call = e.call_observed(
+    let call = e.call_o32_observed(
         prepared.audio.key_on,
         [
             note.voice.into(),
             prepared.identity.game_bank_id.into(),
             note.program.into(),
             note.tone.into(),
+            note.key.into(),
+            note.fine.into(),
+            note.left.into(),
+            note.right.into(),
         ],
         100_000,
         observer,
-    );
-    e.cpu.set_register(29, caller_stack);
-    let call = call?;
+    )?;
     if call.result != u32::from(note.voice) {
         return Err(format!(
             "PSX effects: original key-on returned {:#x}, requested voice {}",

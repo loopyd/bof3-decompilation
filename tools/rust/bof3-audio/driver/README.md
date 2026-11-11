@@ -40,14 +40,26 @@ guest bodies. The loader requires the current vector symbols, checks their eight
 and verifies the installed bytes. Direct body guards remain active.
 CPU exceptions enter the installed vector before the linked scanner. Functional
 callback return traps claim their ROM addresses only while their calls are active.
-The cold `audio_driver_start` entry needs no incoming stack or GP. It disables
+The ELF entry `audio_calls_start` needs no incoming stack or GP. It calls
+`audio_driver_start`, which disables
 interrupts, selects the initialization stack, calls the kernel initializer and
 disables automatic PAD acknowledgement through B0/5B. Guest instructions then
 select GP zero, foreground SP `0x801FFF00` and status `0x401`. It returns V0 zero
-to the incoming RA. The startup call report and read-only observer include this
-whole sequence, and its instructions advance the selected audio clock.
+to the dispatcher. Startup stops at `audio_call_return`. The startup call report
+and read-only observer include this whole sequence, and its instructions advance
+the selected audio clock.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
+
+At `audio_call_return`, the host supplies an entry and eight argument words in
+the 36-byte `audio_call_arguments` buffer. The guest branch enters
+`audio_call_enter`, reserves a 32-byte o32 outgoing frame, copies four stack
+arguments, loads A0 through A3 and executes JALR. The dispatcher restores SP
+before reaching `audio_call_return` again. Four-argument calls supply zeros for
+the stack arguments. The callee must preserve the o32 stack and return through
+RA. The host verifies SP restoration and does not reset PC or call registers.
+Calls cannot target the dispatcher itself. Invalid stack state, failed observers
+and unfinished calls terminate owned execution, retaining its advanced state.
 
 The host supplies media bytes through `0x80010000..0x80020000`. Header, sequence
 and auxiliary cue copies into their layout addresses execute `audio_staging_copy`, a
@@ -56,9 +68,9 @@ Each copy appears in the preparation call report and its instructions reach the
 read-only observer and audio scheduler. The host rejects lengths above 64 KiB
 and destinations overlapping that staging window before writing the source.
 VB chunks retain their original guest DMA transfers and preserved padding.
-Source admission and routine entry remain host work with no guest cycle cost;
-complete production startup phase is still unqualified. Explicit original
-EXE development execution retains its separate direct-copy context.
+Source and command-descriptor admission remain host work with no guest cycle
+cost. Complete production startup phase is still unqualified. Explicit original
+EXE development execution retains its separate host-entry and direct-copy context.
 
 Owned diagnostic `puts` and `printf` execute guest instructions and emit byte
 writes at the PCSX-Redux debug-character port `0x1F802080`. Startup configures a

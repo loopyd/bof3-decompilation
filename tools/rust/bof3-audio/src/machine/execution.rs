@@ -3,6 +3,7 @@
 //! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
 //! mechanical/media timing and graphics processing remain unmodeled.
 //! PCM output uses a separate explicit clock.
+mod calls;
 mod cooperative;
 mod native;
 use super::{
@@ -16,6 +17,7 @@ use super::{
     output_clock,
 };
 use crate::Result;
+pub(crate) use calls::Guest as GuestCalls;
 pub use cooperative::Clock as CooperativeClock;
 pub use native::{ConsumerClock, NativeProducerProgress};
 use serde::Serialize;
@@ -26,6 +28,8 @@ const RETURN: u32 = 0x8000_1000;
 pub struct Call {
     pub entry: u32,
     pub arguments: [u32; 4],
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stack_arguments: Option<[u32; 4]>,
     pub instructions: u64,
     pub syscalls: u64,
     pub interrupts: u64,
@@ -44,6 +48,7 @@ pub struct Execution {
     kernel: Option<Services>,
     native: Option<native::Audio>,
     cooperative: Option<cooperative::Schedule>,
+    calls: Option<GuestCalls>,
 }
 
 #[derive(Serialize)]
@@ -86,6 +91,7 @@ impl Execution {
             kernel: None,
             native: None,
             cooperative: None,
+            calls: None,
         }
     }
 
@@ -113,6 +119,18 @@ impl Execution {
 
     pub fn kernel(&self) -> Option<&Kernel> {
         self.kernel.as_ref().map(|services| &services.kernel)
+    }
+
+    pub(crate) fn configure_guest_calls(&mut self, calls: GuestCalls) -> Result<()> {
+        if self.kernel.is_none()
+            || self.calls.is_some()
+            || self.cpu.instructions() != 0
+            || self.cpu.pc() != calls.start
+        {
+            return Err("owned call dispatcher requires untouched cold service execution".into());
+        }
+        self.calls = Some(calls);
+        Ok(())
     }
 
     /// Preserve the original BIOS interpreter's absolute NTSC phase for
@@ -471,8 +489,8 @@ impl Execution {
             .take_frames())
     }
 
-    /// Host-directed routine entry using current CPU/kernel/device state.
-    /// RETURN is a stop address only; no instruction or trampoline is written.
+    /// Owned images continue through their guest dispatcher. Caller-loaded
+    /// development contexts use explicit host entry with RETURN as a stop only.
     /// The limit counts transitions, including BIOS calls and blocked wait polls.
     /// Errors may leave guest execution advanced; callers must not retry calls.
     /// The cooperative context resolves its audio waits. Manual native contexts
@@ -493,6 +511,26 @@ impl Execution {
         })
     }
 
+    /// Call an eight-word o32 entry. Owned dispatchers reserve, populate and
+    /// restore the outgoing frame through guest instructions. Development host
+    /// entry preserves its stack bridge, including restoration after errors.
+    pub fn call_o32_observed(
+        &mut self,
+        entry: u32,
+        arguments: [u32; 8],
+        limit: u64,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+    ) -> Result<Call> {
+        self.call_arguments_scheduled(
+            entry,
+            arguments[..4].try_into().unwrap(),
+            Some(arguments[4..].try_into().unwrap()),
+            limit,
+            observer,
+            &mut |_, progress| progress.require_ready(),
+        )
+    }
+
     /// Execute a bounded call with an explicit host-audio scheduler. It runs
     /// after every advanced transition, including Ready and the return to the
     /// stop address. It may advance producer/consumer work and release waits;
@@ -503,6 +541,18 @@ impl Execution {
         &mut self,
         entry: u32,
         arguments: [u32; 4],
+        limit: u64,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+        schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
+    ) -> Result<Call> {
+        self.call_arguments_scheduled(entry, arguments, None, limit, observer, schedule)
+    }
+
+    fn call_arguments_scheduled(
+        &mut self,
+        entry: u32,
+        arguments: [u32; 4],
+        stack_arguments: Option<[u32; 4]>,
         limit: u64,
         observer: &mut impl FnMut(&Self) -> Result<()>,
         schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
@@ -525,7 +575,7 @@ impl Execution {
         {
             return Err("finish the native CPU audio wait before entering a guest call".into());
         }
-        let result = self.run_call(entry, arguments, limit, observer, schedule);
+        let result = self.run_call(entry, arguments, stack_arguments, limit, observer, schedule);
         if result.is_err() {
             if let Some(services) = &mut self.kernel {
                 services.failed = true;
@@ -538,48 +588,64 @@ impl Execution {
         &mut self,
         entry: u32,
         arguments: [u32; 4],
+        stack_arguments: Option<[u32; 4]>,
         limit: u64,
         observer: &mut impl FnMut(&Self) -> Result<()>,
         schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
     ) -> Result<Call> {
         let (instructions, syscalls, interrupts) =
             (self.cpu.instructions(), self.syscalls, self.interrupts);
-        self.cpu.resume_at(entry);
-        for (i, value) in arguments.into_iter().enumerate() {
-            self.cpu.set_register(4 + i, value);
-        }
-        self.cpu.set_register(31, RETURN);
-        for _ in 0..limit {
-            match self.transition(observer, Some(RETURN))? {
-                Transition::Stopped => break,
-                Transition::Advanced(step) => schedule(self, step.devices)?,
+        let mut boundary = calls::prepare(self, entry, arguments, stack_arguments)?;
+        let result = (|| {
+            for _ in 0..limit {
+                match self
+                    .transition(observer, (!boundary.resuming).then_some(boundary.returned))?
+                {
+                    Transition::Stopped => break,
+                    Transition::Advanced(step) => {
+                        if step
+                            .retired
+                            .as_ref()
+                            .is_some_and(|step| step.pc == boundary.returned)
+                        {
+                            boundary.resuming = false;
+                        }
+                        schedule(self, step.devices)?;
+                    }
+                }
             }
-        }
-        if self.cpu.pc() != RETURN {
-            return Err(format!(
-                "guest call {entry:#010x} transition safety limit at {:#010x}",
-                self.cpu.pc()
-            )
-            .into());
-        }
-        self.bus.device_progress().require_ready()?;
-        if self
-            .native
-            .as_ref()
-            .is_some_and(native::Audio::has_continuation)
-        {
-            return Err("guest call transition safety limit during native CPU audio wait".into());
-        }
-        if let Some(services) = &self.kernel {
-            services.kernel.require_plain_context()?;
-        }
-        Ok(Call {
-            entry,
-            arguments,
-            instructions: self.cpu.instructions() - instructions,
-            syscalls: self.syscalls - syscalls,
-            interrupts: self.interrupts - interrupts,
-            result: self.cpu.register(2),
-        })
+            if boundary.resuming || self.cpu.pc() != boundary.returned {
+                return Err(format!(
+                    "guest call {entry:#010x} transition safety limit at {:#010x}",
+                    self.cpu.pc()
+                )
+                .into());
+            }
+            self.bus.device_progress().require_ready()?;
+            if self
+                .native
+                .as_ref()
+                .is_some_and(native::Audio::has_continuation)
+            {
+                return Err(
+                    "guest call transition safety limit during native CPU audio wait".into(),
+                );
+            }
+            if let Some(services) = &self.kernel {
+                services.kernel.require_plain_context()?;
+            }
+            boundary.require_stack(self)?;
+            Ok(Call {
+                entry,
+                arguments,
+                stack_arguments,
+                instructions: self.cpu.instructions() - instructions,
+                syscalls: self.syscalls - syscalls,
+                interrupts: self.interrupts - interrupts,
+                result: self.cpu.register(2),
+            })
+        })();
+        boundary.restore_host_stack(self);
+        result
     }
 }

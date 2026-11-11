@@ -7,11 +7,11 @@
 
 .section .text
 .balign 4
-# Host foreground parking entry. Interrupt continuations return to this loop
-# before the host starts another bounded XA call; no original caller is implied.
+# Owned no-work foreground leaf. The dispatcher accounts for its call and return;
+# the caller selects XA tick cadence. This is not an original game caller.
 .globl audio_xa_foreground
 audio_xa_foreground:
-    b audio_xa_foreground
+    jr $ra
     nop
 
 # exe/slus_004_22@0x80163744..0x80163858.

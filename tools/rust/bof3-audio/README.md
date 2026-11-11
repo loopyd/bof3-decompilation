@@ -197,8 +197,10 @@ synthesis, transfers and counters advance during sound initialization, bank
 upload and callback preparation; only PCM collection is discarded.
 Header, sequence and auxiliary cue copies from the host-fed staging window to
 their live layout addresses execute guest instructions. Preparation reports
-include those calls. Source admission and routine entry remain host work and
-add no guest cycles.
+include those calls. Owned routine entry, argument loads, the o32 outgoing frame,
+call and return execute through the guest dispatcher. Call reports include four
+register arguments and, for eight-word calls, `stack_arguments`. Source and
+command-descriptor admission remain host work and add no guest cycles.
 Collection begins before play without resetting phase or device state.
 `capture_start_frame` records that absolute frame origin. Body, progress, stop
 and `executed_frames` counts are relative to it; `output_clock` retains absolute

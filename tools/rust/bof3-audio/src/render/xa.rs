@@ -376,12 +376,9 @@ pub fn render(
             Some(body) if frames < body + options.release_frames => body + options.release_frames,
             _ => options.safety_frames,
         };
-        e.cpu.resume_at(foreground);
         let mut collected_frame = e.audio_frames()?;
-        while (e.clock.ticks() < next_tick && e.audio_frames()? - capture_start_frame < boundary)
-            || e.cpu.pc() != foreground
-        {
-            e.step_retired(&mut observe)?.devices.require_ready()?;
+        while e.clock.ticks() < next_tick && e.audio_frames()? - capture_start_frame < boundary {
+            e.call_observed(foreground, [0; 4], 100_000, &mut observe)?;
             let advanced_frames = e.audio_frames()?;
             if advanced_frames != collected_frame {
                 pcm.extend(e.take_audio_frames()?.into_iter().flatten());

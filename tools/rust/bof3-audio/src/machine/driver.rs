@@ -8,7 +8,7 @@ use super::{
     event_calls::Service,
     events::Controls,
     exception_calls::{Dispatch, Environment, MissingHook},
-    execution::{Call, Execution},
+    execution::{Call, Execution, GuestCalls},
     image::executable::ram_offset,
     interconnect::{DeviceProgress, Interconnect},
     kernel::{Bootstrap, Kernel},
@@ -239,6 +239,7 @@ impl Image {
             ("audio_a0_services", 0x73 * 4),
             ("audio_b0_services", 0x5c * 4),
             ("audio_c0_services", 0x0b * 4),
+            ("audio_call_arguments", 36),
         ] {
             let address = self.symbol(name)?;
             if address & 3 != 0
@@ -268,6 +269,7 @@ impl Image {
         self.entry("audio_b0_dispatch")?;
         self.entry("audio_c0_dispatch")?;
         self.entry("audio_driver_start")?;
+        self.calls()?;
         self.entry("audio_staging_copy")?;
         for (slot, entry) in self.vector_bindings()? {
             let at = (slot - base) as usize;
@@ -302,6 +304,25 @@ impl Image {
             (c0 + 0x03 * 4, self.entry("audio_kernel_dequeue")?),
             (c0 + 0x0a * 4, self.entry("audio_kernel_clear_counter")?),
         ])
+    }
+
+    fn calls(&self) -> Result<GuestCalls> {
+        let calls = GuestCalls {
+            start: self.entry("audio_calls_start")?,
+            enter: self.entry("audio_call_enter")?,
+            returned: self.entry("audio_call_return")?,
+            end: self.symbol("audio_calls_end")?,
+            arguments: self.symbol("audio_call_arguments")?,
+        };
+        if calls.start != self.symbol("audio_kernel_image")?
+            || calls.enter != calls.start + 16
+            || calls.enter >= calls.returned
+            || calls.returned.checked_add(8) != Some(calls.end)
+            || calls.end > self.entry("audio_driver_start")?
+        {
+            return Err("owned driver: call dispatcher metadata is inconsistent".into());
+        }
+        Ok(calls)
     }
 
     pub(crate) fn data(&self, name: &str, bytes: u32) -> Result<u32> {
@@ -471,7 +492,8 @@ impl Image {
             pad_flag: self.data("audio_pad_auto_ack", 4)?,
         })?;
         kernel.configure_guest_vectors()?;
-        let initialize = self.entry("audio_driver_start")?;
+        let calls = self.calls()?;
+        let initialize = calls.start;
         let cpu = Cpu::new(initialize);
         let mut execution = Execution::with_kernel(
             cpu,
@@ -483,6 +505,7 @@ impl Image {
                 missing_hook: MissingHook::ReturnFromException,
             },
         )?;
+        execution.configure_guest_calls(calls)?;
         execution.bus.configure_spu_voices(
             sample::Model::EmulatorReference,
             envelope::Model::EmulatorReference,

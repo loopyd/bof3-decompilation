@@ -1,5 +1,5 @@
 OUTPUT_ARCH(mips)
-ENTRY(audio_driver_start)
+ENTRY(audio_calls_start)
 audio_exception_global_pointer = 0;
 audio_foreground_stack = 0x801FFF00;
 audio_initial_status = 0x401;
@@ -8,6 +8,7 @@ SECTIONS
     . = 0x80020000;
     audio_kernel_image = .;
     .text : {
+        *(.text.audio_calls)
         *(.text.audio_driver_start)
         *(.text.audio_kernel_initialize)
         *(.text)
