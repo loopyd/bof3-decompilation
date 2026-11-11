@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC.c",
     "src/bof3/world/clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0.c",
+    "src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkByte6ClearWorkByte92World02Area08513_801F38D0.c",

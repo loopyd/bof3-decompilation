@@ -11,7 +11,8 @@ s32 func_801782FC(s32 phase);
 s32 func_801783C8(s32 phase);
 
 u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void);
-void func_801F7EC0(void);
+void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+    void);
 
 /* @source 0x801F7BC0
  * @behavior Entry 2 of this overlay's eight-word work-object handler run at
@@ -37,9 +38,10 @@ void func_801F7EC0(void);
  *           record's +0x18 word is cleared, +0x20 takes 0x800, and the claim
  *           marker 0x40 lands in bytes 0x24 and 0x25, the byte the free-record
  *           scan tests against zero.
- *           After the walk it runs the overlay's record stepper func_801F7EC0
+ *           After the walk it runs the overlay's per-frame record pass
+ *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
  *           (jal at 0x801F7C6C, no arguments), re-reads the scratch work-object
- *           pointer from the cell at 0x1F800044 because the stepper may
+ *           pointer from the cell at 0x1F800044 because the pass may
  *           rewrite that cell, and stores 0x40 in the work object's word at
  *           +0x0C. The overlay step handler at 0x801F7CA8 decrements that word
  *           and tests it against zero, so this body arms 64 of those steps.
@@ -98,7 +100,7 @@ void claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenSt
     index += 1u;
   } while (index < 16u);
 
-  func_801F7EC0();
+  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
   work = SPAD_PTR_SLOT(u8, 0x44u);
   *(s32*)(work + 0x0C) = 0x40;
 }

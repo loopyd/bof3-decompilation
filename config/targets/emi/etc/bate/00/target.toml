@@ -10,6 +10,7 @@ load_address = 0x801D0C00
 sources = [
     "src/bof3/ui/buildEquipStatComparison.c",
     "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionBate00_801D3664.c",
+    "src/bof3/ui/drawSpritePrimTpageFromAbrBate00_801D36B8.c",
     "src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c",
     "src/bof3/ui/dispatchUiPhaseTableBate00_801D2070.c",
     "src/bof3/ui/dispatchUiSubStepTableBate00_801D20AC.c",

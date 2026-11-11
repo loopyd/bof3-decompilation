@@ -21,7 +21,7 @@ setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositi
 func_801F37AC = 0x801F37AC;
 dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8 = 0x801F38D8;
 func_801F3A6C = 0x801F3A6C;
-func_801F3B20 = 0x801F3B20;
+setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20 = 0x801F3B20;
 func_801F3B9C = 0x801F3B9C;
 initArea10013State = 0x801F3BEC;
 func_801F3C2C = 0x801F3C2C;

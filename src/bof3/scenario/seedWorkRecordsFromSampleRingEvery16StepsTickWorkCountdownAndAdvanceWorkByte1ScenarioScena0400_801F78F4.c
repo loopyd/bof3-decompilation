@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void);
-void func_801F7EC0(void);
+void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+    void);
 
 /* @source 0x80147A8C @kind data
  * Resident position triplet in main RAM; this overlay copies these three words
@@ -62,9 +63,11 @@ typedef struct {
  *           re-seeds the ring base from the resident position triplet: +0x00
  *           takes D_80147A8C, +0x04 takes D_80147A90 and +0x08 takes D_80147A94
  *           shifted right by eight arithmetic, with the last store filling the
- *           delay slot of the stepper call. It then runs the overlay's record
- *           stepper func_801F7EC0 (0x801F7EC0, no arguments, no result), re-reads
- *           the work-object cell because the stepper may rewrite it, decrements
+ *           delay slot of the record pass call. It then runs the overlay's
+ *           record pass
+ *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
+ *           (0x801F7EC0, no arguments, no result), re-reads
+ *           the work-object cell because the pass may rewrite it, decrements
  *           its countdown word at +0x0C by one, storing it on both arms because
  *           the store sits in the branch delay slot, and, only when the stored
  *           value reaches zero, increments work byte 1 so the tail dispatcher
@@ -154,7 +157,7 @@ void seedWorkRecordsFromSampleRingEvery16StepsTickWorkCountdownAndAdvanceWorkByt
   *(s32*)(base + 0x00) = D_80147A8C;
   *(s32*)(base + 0x04) = D_80147A90;
   *(s32*)(base + 0x08) = D_80147A94 >> 8;
-  func_801F7EC0();
+  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
   next = SPAD_PTR_SLOT(u8, 0x44u);
   count = *(s32*)(next + 0xC) - 1;
   *(s32*)(next + 0xC) = count;

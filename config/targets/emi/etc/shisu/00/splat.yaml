@@ -155,8 +155,10 @@ segments:
     - asm
     - func_801D6090
   - - 26148
-    - asm
-    - func_801D7224
+    - c
+    - drawBackgroundTilesFromKindShisu00_801D7224
+    - '@source: src/bof3/ui/drawBackgroundTilesFromKindShisu00_801D7224.c'
+    - '@behavior: Background painter of the SHISU overlay: the low byte of its argument picks both a CLUT out of a four-halfword local run filled from row 0x1E2 at x 0x30, 0x50, 0x40 and 0x60 and a run of tile indices out of D_801D9DF8 at the offset D_801D9E44 holds for that kind, then ten 0x20-wide columns follow from x 0 in five passes of two, each pass restarting that run and each column stacking sprites from y 0 while the running y stays below 0xF0, stepping y by the height of the atlas cell of D_801D9D4C it just emitted and moving one byte along the run. Every sprite is initialised by SetSprt on g_PrimCursor, marked semi transparent with 0, given the column x, the running y, the selected CLUT, the cell origin and its size, 0x80 in the three colour bytes, and appended at slot 1 as 0x14 bytes after a draw-mode packet of GetTPage(0, 0, 0x340, 0x100) is installed and appended as 0xC bytes. No jal and no table word of this payload names this body, so it is an overlay entry called from outside the payload; the same body sits at 0x801D627C in emi/etc/bate/00 and 0x801DBD24 in emi/etc/shop/00, differing only in those three data references. Its 0x50-byte frame keeps the eight saved registers and $ra.'
   - - 26648
     - asm
     - func_801D7418

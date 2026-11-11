@@ -13,5 +13,5 @@ func_801EF884 = 0x801EF884;
 decrementWorkByte9ResetToFDecrementWorkByteAInvokeHelper100Or101SetByteBToCAdvanceWorkByte2OnZeroBmagicMagic06803_801EF908 = 0x801EF908;
 decrementWorkByte9AfterHelpersAndDecrementGlobalWorkByteBAndInvokeHelperOnZeroBmagicMagic06803_801EF9D0 = 0x801EF9D0;
 func_801EFA48 = 0x801EFA48;
-func_801EFBE8 = 0x801EFBE8;
+projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic06803_801EFBE8 = 0x801EFBE8;
 D_801EFC98 = 0x801EFC98;

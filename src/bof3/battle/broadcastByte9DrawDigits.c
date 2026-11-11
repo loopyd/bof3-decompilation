@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801E6A54
- * @behavior Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).
+ * @behavior Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls drawScratchColorTile(0, 0, 0xB).
  * @status exact
  * @match 100.00
  * @residual none
@@ -14,5 +14,5 @@ void broadcastByte9DrawDigits(void)
     SPAD_REF(u8, 2) = value;
     SPAD_REF(u8, 1) = value;
     SPAD_REF(u8, 0) = value;
-    func_801D99AC(0, 0, 0xB);
+    drawScratchColorTile(0, 0, 0xB);
 }

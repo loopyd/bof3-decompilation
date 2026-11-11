@@ -269,8 +269,10 @@ segments:
     - '@source: src/bof3/battle/drawFullscreenFadeTile.c'
     - '@behavior: Emits a semi-transparent full-screen tile primitive.'
   - - 36268
-    - asm
-    - func_801D99AC
+    - c
+    - drawScratchColorTile
+    - '@source: src/bof3/battle/drawScratchColorTile.c'
+    - '@behavior: Draws one semi-transparent tile at the current primitive cursor: publishes the tpage-0x3C0 draw mode, takes the dimensions from the 2-entry row of D_801EAE50 selected by the low byte of arg2 and the red/green/blue channels from scratchpad bytes 0x00 through 0x02, then closes the 0x10-byte packet.'
   - - 36532
     - c
     - func_801D9AB4
@@ -1384,12 +1386,12 @@ segments:
     - c
     - broadcastByte9DrawDigitsAndAdvance
     - '@source: src/bof3/battle/broadcastByte9DrawDigitsAndAdvance_battle03.c'
-    - '@behavior: Copies byte +0x09 of the scratchpad-selected object into scratchpad bytes 0x00 through 0x02, calls func_801D99AC(0, 0, 0xB), then increments that object''s byte +0x09 and increments byte +0x01 when the incremented value is 0xFF.'
+    - '@behavior: Copies byte +0x09 of the scratchpad-selected object into scratchpad bytes 0x00 through 0x02, calls drawScratchColorTile(0, 0, 0xB), then increments that object''s byte +0x09 and increments byte +0x01 when the incremented value is 0xFF.'
   - - 89684
     - c
     - broadcastByte9DrawDigits
     - '@source: src/bof3/battle/broadcastByte9DrawDigits.c'
-    - '@behavior: Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).'
+    - '@behavior: Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls drawScratchColorTile(0, 0, 0xB).'
   - - 89760
     - c
     - func_801E6AA0

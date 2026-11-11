@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/ui/drawSpriteWithScenarioKindSubstitutionBate00_801D3664.c'
     - '@behavior: sprite wrapper of the BATE overlay: when the kind byte equals 4 and the shared signed scenario-state byte 0x80146870 is at least 8 it replaces that kind with 0xB, then widens both unsigned 16-bit coordinates and both byte arguments and forwards them to the sprite emitter func_801D3518, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 10936
-    - asm
-    - func_801D36B8
+    - c
+    - drawSpritePrimTpageFromAbrBate00_801D36B8
+    - '@source: src/bof3/ui/drawSpritePrimTpageFromAbrBate00_801D36B8.c'
+    - '@behavior: emitter of the BATE overlay that draws one textured semi-transparent sprite through two packets at the primitive cursor g_PrimCursor: it asks GetTPage for the 4-bit page at vram column 0x3C0 with the semi-transparency rate taken from its own last byte argument, stores that page into a draw-mode packet through SetDrawMode with no dithering, no texture disable and no texture window and appends that 0xC-byte packet at ordering-table slot 1, then re-reads the cursor, initialises a 0x10-byte sprite packet with func_8017AA80, marks it semi transparent, fills its colour bytes 0x4 through 0x6 from the byte arguments 4, 5 and 6, its coordinates 0x8 and 0xA and its halfwords 0xC and 0xE from the four halfword arguments and appends it at slot 1 as 0x10 bytes, its 0x40-byte frame only keeping the saved registers and the return address across those four calls'
   - - 11180
     - asm
     - func_801D37AC

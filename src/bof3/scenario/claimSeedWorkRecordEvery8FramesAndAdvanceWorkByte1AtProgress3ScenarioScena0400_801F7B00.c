@@ -7,7 +7,8 @@ extern s32 D_8014695C;
 extern u8 g_ScenarioProgress;
 
 u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void);
-void func_801F7EC0(void);
+void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+    void);
 
 /* @source 0x801F7B00
  * @behavior Entry 1 of this overlay's eight-word work-object handler run at
@@ -25,8 +26,9 @@ void func_801F7EC0(void);
  *           takes the arithmetic right shift by 8 of D_8014695C, +0x10, +0x14
  *           and +0x18 take zero, +0x20 takes 0x800, and the claim marker 0x80
  *           lands in bytes 0x24 and 0x25, the byte the free-record scan tests.
- *           After the seed block it runs the overlay's record stepper
- *           func_801F7EC0 (jal at 0x801F7B78, no arguments) and then, only when
+ *           After the seed block it runs the overlay's per-frame record pass
+ *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
+ *           (jal at 0x801F7B78, no arguments) and then, only when
  *           the shared scenario progress byte g_ScenarioProgress reads 3, it
  *           re-reads the scratch work-object cell and increments work byte 1,
  *           so the next frame dispatches entry 2 at 0x801F7BC0.
@@ -84,7 +86,7 @@ void claimSeedWorkRecordEvery8FramesAndAdvanceWorkByte1AtProgress3ScenarioScena0
     }
   }
 
-  func_801F7EC0();
+  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
 
   if (g_ScenarioProgress == 3) {
     work = SPAD_PTR_SLOT(u8, 0x44u);

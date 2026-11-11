@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801F3594
   - - 2580
-    - asm
-    - func_801F3614
+    - c
+    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World04Area15213_801F3614
+    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World04Area15213_801F3614.c'
+    - '@behavior: Byte-3 state handler 1 of this overlay handler run based at 0x801F4D84: subtracts 0x0A from the signed halfword at work record offset 0x30 of the record published at scratchpad pointer cell 0x1F800044, increments work byte 0x03 once the stored value falls below 0xC9, writes 3 to work byte 0x03 when the shared byte 0x801454F2 and work byte 0x0B are both nonzero, or when byte 0x80143BB0 is 2, or when bit 0x100 of halfword 0x80146258 is set, then passes mode 0x5C and the signed work halfword 0x30 to the overlay drawer 0x801F3F88.'
   - - 2796
     - asm
     - func_801F36EC

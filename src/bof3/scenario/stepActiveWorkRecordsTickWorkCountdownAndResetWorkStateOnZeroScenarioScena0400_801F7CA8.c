@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F7EC0(void);
+void stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0(
+    void);
 void func_80196070(void);
 
 /* @source 0x801F7CA8
@@ -8,10 +9,13 @@ void func_80196070(void);
  *           0x801F7CA8 and no word of the 0x3760-byte payload, aligned or not,
  *           holds that address, so the loader dispatches it by address rather
  *           than through a table word.
- *           It first runs the overlay's record stepper func_801F7EC0
+ *           It first runs the overlay's per-frame record pass
+ *           stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0
  *           (0x801F7EC0, no arguments, no result), which walks the 0x80 entries
- *           of the 0x28-byte-stride work table at 0x800E4800 and advances,
- *           draws and decays every entry whose byte at offset 0x25 is set.
+ *           of the 0x28-byte-stride work table at 0x800E4800, emits the sprite
+ *           of every entry whose claim byte at offset 0x25 is set, integrates
+ *           that entry's position, clamps its height to the planar distance
+ *           and decays its life pair.
  *           Only after that call does it re-read the scratch work-object
  *           pointer from the cell at 0x1F800044, because the stepper may
  *           rewrite that cell, and it decrements the work object's word at
@@ -57,7 +61,7 @@ void stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0
   u8* work;
   s32 count;
 
-  func_801F7EC0();
+  stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0();
   work = SPAD_PTR_SLOT(u8, 0x44u);
   count = *(s32*)(work + 0x0C) - 1;
   *(s32*)(work + 0x0C) = count;

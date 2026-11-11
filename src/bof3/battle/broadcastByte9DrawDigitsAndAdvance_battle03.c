@@ -2,7 +2,7 @@
 
 /* @source 0x801E69C0
  * @behavior Copies byte +0x09 of the scratchpad-selected object into scratchpad
- * bytes 0x00 through 0x02, calls func_801D99AC(0, 0, 0xB), then increments that
+ * bytes 0x00 through 0x02, calls drawScratchColorTile(0, 0, 0xB), then increments that
  * object's byte +0x09 and, when the incremented value is 0xFF, increments its
  * byte +0x01.
  * @status exact
@@ -18,7 +18,7 @@ void broadcastByte9DrawDigitsAndAdvance(void)
     SPAD_REF(u8, 2) = value;
     SPAD_REF(u8, 1) = value;
     SPAD_REF(u8, 0) = value;
-    func_801D99AC(0, 0, 0xB);
+    drawScratchColorTile(0, 0, 0xB);
 
     next = D_1F800044->unk_09;
     next++;

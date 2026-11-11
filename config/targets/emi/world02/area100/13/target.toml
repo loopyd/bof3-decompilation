@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/seedWorkWord3CScaledDistanceClearWorkOffsetAndVelocityAndAdvanceStateByte1World02Area10013_801F30B4.c",
     "src/bof3/world/setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724.c",
     "src/bof3/world/dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8.c",
+    "src/bof3/world/setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area10013_801F3680.c",

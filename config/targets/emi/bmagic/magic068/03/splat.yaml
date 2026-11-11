@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801EFA48
   - - 4072
-    - asm
-    - func_801EFBE8
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic06803_801EFBE8
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic06803_801EFBE8.c'
+    - '@behavior: Reads the work record pointer at scratchpad cell 0x1F800044 once, zeroes a halfword triplet in ascending element order, and fills a position triplet from work words 0x34 and 0x38 shifted right nine and biased by minus 0x4000 plus half the negated signed halfword 0x3E of the same record. RotTrans projects that triplet into the translation field of a 0x20-byte scratch matrix with a flag word beside it, RotMatrix turns the zeroed triplet into the matrix rotation, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix with SetTransMatrix publish it. Takes no arguments, returns nothing, and the 0x50-byte frame keeps $ra at 0x4C and $s0 at 0x48. No jal word in this payload names it.'
   - - 4248
     - textbin
     - D_801EFC98

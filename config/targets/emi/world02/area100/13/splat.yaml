@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801F3A6C
   - - 3872
-    - asm
-    - func_801F3B20
+    - c
+    - setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20
+    - '@source: src/bof3/world/setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20.c'
+    - '@behavior: sets bit 0x45 of the main-RAM flag bank 0x80144F28 through the shared set-bit helper func_8015B580, passes the pair 0x4A and 0x1E to the shared request helper func_8015507C, queues the fixed sound cue 0x109 through the shared cue dispatcher func_8015DF18, and then queues four world markers of size 0xA1 through the shared world-marker queue func_801A4BC0 at the two-cell columns x = 0x49 with y = 0x1E and 0x1F and x = 0x4D with y = 0x33 and 0x34.'
   - - 3996
     - asm
     - func_801F3B9C

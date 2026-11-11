@@ -94,8 +94,9 @@ segments:
     - asm
     - func_801F3704
   - - 2948
-    - asm
-    - func_801F3784
+    - c
+    - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784
+    - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784.c'
   - - 3164
     - asm
     - func_801F385C

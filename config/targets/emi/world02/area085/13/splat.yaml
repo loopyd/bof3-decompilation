@@ -58,8 +58,10 @@ segments:
     - dispatchStateByte1Table3d40World02Area08513_801F309C
     - '@source: src/bof3/world/area08513DispatchTables.c'
   - - 1248
-    - asm
-    - func_801F30E0
+    - c
+    - claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0
+    - '@source: src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c'
+    - '@behavior: Overlay work-byte-1 step handler, entry 0 of the local handler table at 0x801F3D40: asks the shared slot allocator 0x8015CA48 for two slot identifiers, stores them into work bytes 3 and 4 of the work record published at the scratchpad pointer cell 0x1F800044, sets the flag byte of each selected 0x98-byte record at 0x80146888 to 1 and returns at once on an 0xFF answer (clearing the first record flag byte in the second case). With both slots it searches the five-row key table at 0x801F3D70 for byte 0x4B of the record work byte 0xB selects (0x80145EDB when that byte is nonzero, 0x80146A03 when it is zero), publishes each slot as the halfword at 0x1F800000, hands the 0x11-byte row at 0x801F3D4C that work byte 0xB indexes to 0x801A4D54 and requests the resource and mode of the searched table row through 0x8014D6DC once per slot, then restores the published record pointer. It offsets the record words at 0x34 and 0x38 by 0x1000 in opposite directions for the two slots, copies the shared word at 0x80145ECC into offset 0x3C of both records, sets bit 0x20 of both flag bytes, clears byte 0x5C of both, runs 0x8019651C on both with the stack argument 1 and the 0xF split between the second and fourth arguments, and finally arms work byte 9 to 4 and sets work byte 1 to 1.'
   - - 2464
     - c
     - setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0
