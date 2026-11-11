@@ -39,6 +39,12 @@ int player_note_on(u32 id, u32 bank, u32 program, u32 note, u32 velocity, u32 pa
 }
 
 #if PLAYER_MODE_MUSIC
+static void clear_voice_tracks(void)
+{
+    u32 voice;
+    for (voice = 0; voice < 24; ++voice) voice_tracks[voice] = 255;
+}
+
 static u32 sequence_ticks(void)
 {
     u32 end, delay;
@@ -96,9 +102,8 @@ void audio_initialize(void)
         PLAYER_LAYOUT, PLAYER_BANK, PLAYER_SPU_BASE, PLAYER_HEADER_ADDRESS,
         PLAYER_HEADER_BYTES, PLAYER_BODY_BYTES, 0, player_header, player_body, 0, 0
     };
-    u32 offset;
     int handle;
-    for (offset = 0; offset < 24; ++offset) voice_tracks[offset] = 255;
+    clear_voice_tracks();
     player_status.phase = 1;
     CALL(0x8015cd00, 0, 0, 0, 0);
     bank_load(&asset);
@@ -205,6 +210,7 @@ void audio_select(int direction)
     if (direction > 0 && track + 1 < PLAYER_SEQUENCE_COUNT) ++track;
     if (track == player_status.track) return;
     CALL(0x8016d6c4, sequence_handle, player_status.track, 0, 0);
+    clear_voice_tracks();
     player_status.track = track;
     player_record = WORD(0x80190308 + sequence_handle * 4) + track * 0xac;
     audio_restart();

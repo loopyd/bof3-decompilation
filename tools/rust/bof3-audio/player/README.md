@@ -43,6 +43,10 @@ restarts, and seeks preserve play or pause intent. Seeking clamps to the start
 or a finite end. Cross at the end starts the track again. SMPTE position and
 musical ticks stay fixed while paused.
 
+VU meters show the selected track's MIDI channels that play notes. Each keeps
+its original channel number and stays visible during rests, pause, and seeking.
+Selecting another track replaces the meter set and clears the previous readings.
+
 Build an effects bank view without a music sequence:
 
 ```sh

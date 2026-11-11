@@ -7,7 +7,7 @@ use crate::{
     Result,
     machine::{bank, image::executable::Executable, image::profile::Profile},
     publication::{self, Publication},
-    sequence::SequenceSet,
+    sequence::{SequenceSet, events::Kind, timeline},
 };
 use emi_ex_v2::image::ArchiveImage;
 use std::{ffi::OsString, fs, path::PathBuf, process::Command};
@@ -152,8 +152,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         })
         .collect::<Result<_>>()?;
     let plan = plans.first();
+    let sequence_bytes = if music { plan.unwrap().sequence } else { &[] };
     let sequences = if music {
-        SequenceSet::parse(plan.unwrap().sequence)?.sequences
+        SequenceSet::parse(sequence_bytes)?.sequences
     } else {
         Vec::new()
     };
@@ -162,6 +163,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "compile sequence must select an existing index within four US SEP slots".into(),
         );
     }
+    let mut timing = Vec::with_capacity(sequences.len());
     for selected in &sequences {
         if selected.resolution == 0
             || selected.resolution > 32767
@@ -173,6 +175,20 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                     .into(),
             );
         }
+        let bytes =
+            &sequence_bytes[selected.data_offset..selected.data_offset + selected.data_bytes];
+        let track = timeline::trace(bytes, &timeline::Limits::default())
+            .map_err(|error| format!("compile track {}: {error}", selected.sequence_index + 1))?;
+        let mut channels = 0u16;
+        for step in &track.steps {
+            if matches!(step.kind, Kind::Note { velocity, .. } if velocity != 0) {
+                channels |= 1 << (step.status & 0xf);
+            }
+        }
+        timing.push(format!(
+            "{{{}, {}, {}, {channels:#06x}}}",
+            selected.resolution, selected.time_numerator, selected.time_denominator_power
+        ));
     }
     let root = fs::canonicalize(
         root.unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../..")),
@@ -299,15 +315,6 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             media.cue.filter_file, media.cue.channel, media.coding, id = media.cue.packed_id,
         ));
     }
-    let timing: Vec<_> = sequences
-        .iter()
-        .map(|track| {
-            format!(
-                "{{{}, {}, {}}}",
-                track.resolution, track.time_numerator, track.time_denominator_power
-            )
-        })
-        .collect();
     config.push_str(&format!(
         "#define PLAYER_TIMING {{{}}}\n",
         timing.join(", ")

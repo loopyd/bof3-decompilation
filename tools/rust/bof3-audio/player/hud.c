@@ -8,10 +8,12 @@
 static u8 levels[AUDIO_CHANNELS];
 static u8 peaks[AUDIO_CHANNELS];
 static u8 peak_hold[AUDIO_CHANNELS];
+static u32 meter_track;
 static const struct MusicTiming {
     u32 resolution;
     u32 numerator;
     u32 denominator_power;
+    u32 channels;
 } timing[PLAYER_SEQUENCE_COUNT] = PLAYER_TIMING;
 #endif
 
@@ -83,7 +85,7 @@ static u32 meter_level(u32 amplitude)
     return level + (amplitude - base) * 18 / base;
 }
 
-static void meters(const u8 current[AUDIO_CHANNELS])
+static void meters(u32 track, const u8 current[AUDIO_CHANNELS])
 {
     static const u32 fire[16] = {
         0x080c90, 0x080ea8, 0x0814c0, 0x081dd8,
@@ -91,36 +93,45 @@ static void meters(const u8 current[AUDIO_CHANNELS])
         0x0874ff, 0x088cff, 0x08a4ff, 0x10baff,
         0x20ceff, 0x38deff, 0x58ecff, 0x80f8ff
     };
-    u32 track, level, x, bar, color;
+    u32 channel, level, x, bar, color, channels;
     char number[3];
-    for (track = 0; track < AUDIO_CHANNELS; ++track) {
-        level = meter_level(current[track]);
-        if (level >= levels[track]) levels[track] = (u8)level;
-        else levels[track] = levels[track] > 4 ? levels[track] - 4 : 0;
-        if (levels[track] >= peaks[track]) {
-            peaks[track] = levels[track];
-            peak_hold[track] = 24;
-        } else if (peak_hold[track] != 0) --peak_hold[track];
-        else if (peaks[track] != 0) --peaks[track];
-        x = 17 + track * 18;
+    if (track != meter_track) {
+        for (channel = 0; channel < AUDIO_CHANNELS; ++channel) {
+            levels[channel] = peaks[channel] = peak_hold[channel] = 0;
+        }
+        meter_track = track;
+    }
+    channels = timing[track].channels;
+    x = 17;
+    for (channel = 0; channel < AUDIO_CHANNELS; ++channel) {
+        if (!(channels & (1u << channel))) continue;
+        level = meter_level(current[channel]);
+        if (level >= levels[channel]) levels[channel] = (u8)level;
+        else levels[channel] = levels[channel] > 4 ? levels[channel] - 4 : 0;
+        if (levels[channel] >= peaks[channel]) {
+            peaks[channel] = levels[channel];
+            peak_hold[channel] = 24;
+        } else if (peak_hold[channel] != 0) --peak_hold[channel];
+        else if (peaks[channel] != 0) --peaks[channel];
         graphics_panel(x - 1, 116, 13, 95, 0x100610, 0x080308, 0);
         color = level != 0 ? fire[level / 8] : 0x100818;
         graphics_rectangle(x + 2, 118, 7, 7, color);
         for (bar = 0; bar < 16; ++bar) {
             color = 0x100818;
-            if (levels[track] > bar * 8) color = fire[bar];
+            if (levels[channel] > bar * 8) color = fire[bar];
             graphics_rectangle(x + 1, 204 - bar * 4, 9, 3, color);
-            if (levels[track] > bar * 8) {
+            if (levels[channel] > bar * 8) {
                 graphics_rectangle(x + 2, 204 - bar * 4, 7, 1, fire[bar] | 0x303030);
             }
-            if (peaks[track] != 0 && bar == (peaks[track] - 1u) / 8) {
+            if (peaks[channel] != 0 && bar == (peaks[channel] - 1u) / 8) {
                 graphics_rectangle(x + 1, 204 - bar * 4, 9, 1, 0xa0e8ff);
             }
         }
-        number[0] = (char)('0' + (track + 1) / 10);
-        number[1] = (char)('0' + (track + 1) % 10);
+        number[0] = (char)('0' + (channel + 1) / 10);
+        number[1] = (char)('0' + (channel + 1) % 10);
         number[2] = 0;
         graphics_text(x - 2, 216, number);
+        x += 18;
     }
 }
 
@@ -145,7 +156,7 @@ void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
     timecode(frames);
     musical_position(ticks);
     graphics_text(16, 96, PLAYER_SONG);
-    meters(amplitudes);
+    meters(player_status.track, amplitudes);
     graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
     graphics_text_scaled(18, 229, TEXT_BUTTON_L1 " CONTROLS  " TEXT_BUTTON_CROSS
