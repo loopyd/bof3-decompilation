@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801EF8F4
   - - 3680
-    - asm
-    - func_801EFA60
+    - c
+    - seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60
+    - '@source: src/bof3/bmagic/seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60.c'
+    - '@behavior: Decrement work byte 9 and return while the countdown is nonzero; at zero request helper 0x8015D71C with code 0x101 when work byte 0xB is clear, set work word 0x0C to 8, project the position pair from masked work byte 0xB through 0x801782FC and 0x801783C8, set work word 0x3C from shared record word 0x3C biased by 0x800000, seed work words 0x14 and 0x20 from a masked rand() value, seed work bytes 0x5D through 0x5F from masked rand() values, clear work byte 9, set work byte 0xA to 0x10 and advance work byte 2.'
   - - 4144
     - c
     - growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic07603_801EFC30

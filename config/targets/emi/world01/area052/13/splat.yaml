@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F2EC8
   - - 1156
-    - asm
-    - func_801F3084
+    - c
+    - claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084
+    - '@source: src/bof3/world/claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084.c'
+    - '@behavior: Claims four work records, one per phase step of 0x100 from 0x80, from the 0x800E4800 work table, marking each occupied and seeding its position words from the scratch work object at cell 0x1F800044 plus the two phase-table offsets.'
   - - 1368
     - asm
     - func_801F3158

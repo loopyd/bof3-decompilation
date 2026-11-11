@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic169/03.bin"
 splat = "config/targets/emi/bmagic/magic169/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusEightTintedGreyByWorkByte9TimesTwelveWithRimFromSignedBytes5d5e5fTimesWorkByte9BmagicMagic16903_801EFE3C.c",
+]
 support_sources = [
     "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444.c",

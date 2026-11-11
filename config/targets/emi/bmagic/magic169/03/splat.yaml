@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EFCF4
   - - 4668
-    - asm
-    - func_801EFE3C
+    - c
+    - drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusEightTintedGreyByWorkByte9TimesTwelveWithRimFromSignedBytes5d5e5fTimesWorkByte9BmagicMagic16903_801EFE3C
+    - '@source: src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusEightTintedGreyByWorkByte9TimesTwelveWithRimFromSignedBytes5d5e5fTimesWorkByte9BmagicMagic16903_801EFE3C.c'
+    - '@behavior: Publishes radius 8 into scratchpad halfword 0 and four tint halfwords from work byte 9 and the signed work bytes 0x5D to 0x5F, then emits eight translucent POLY_G3 fan triangles of that radius around work halfwords 0x2E and 0x30, tinted grey at the centre and with the signed-byte tint at the rim, linking each at work words 0x34 and 0x38 with kind 2.'
   - - 5264
     - asm
     - func_801F0090

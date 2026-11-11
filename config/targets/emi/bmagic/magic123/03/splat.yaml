@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801EF14C
   - - 1676
-    - asm
-    - func_801EF28C
+    - c
+    - incrementWorkByteBAdvanceTurnWord14PublishScratchPairAccumulateSampledTurnIntoHalfwords2EAnd30RampByteAThenCountDownByte9PlaySoundClearTickAdvanceByte2AndDrawWhenOnScreenBmagicMagic12303_801EF28C
+    - '@source: src/bof3/bmagic/incrementWorkByteBAdvanceTurnWord14PublishScratchPairAccumulateSampledTurnIntoHalfwords2EAnd30RampByteAThenCountDownByte9PlaySoundClearTickAdvanceByte2AndDrawWhenOnScreenBmagicMagic12303_801EF28C.c'
+    - '@behavior: Entry index 1 of the four-word handler run based at 0x801EFD5C that the byte-2 dispatcher at 0x801EF108 indexes with work byte 2. It advances work byte 0xB, samples 0x801782FC at that tick masked to six bits and shifted left six, adds the sample shifted left seven and then right twelve to work word 0x14 and stores it as the scratchpad turn halfword 0x1F800004. It publishes work word 0xC as the scratchpad centre halfword 0x1F800000, adds the 0x801782FC and 0x801783C8 samples at that turn times the centre shifted right twelve to work halfwords 0x2E and 0x30, copies that pair to scratchpad halfwords 0x1F800006 and 0x1F800008, and advances work byte 0xA by two while it stays below work byte 0x3 plus six. At work byte 9 countdown zero it requests sound 0x100 or 0x101 from 0x8015D71C when bit 0 of the shared counter at 0x80143E6C is set, clears byte 0xB and advances byte 2. While the pair 0x2E and 0x30 lies inside the 0x140 by 0xF0 screen it then calls the draw routines at 0x801EF584 and 0x801EF750. The 0x18-byte frame keeps $ra and $s0; it takes no arguments and returns nothing.'
   - - 2220
     - c
     - incrementWorkByteBAndWorkByte9DecrementWorkByteAThenClearWorkBytesAtZeroElseInvokeHelperAtEF9E0BmagicMagic12303_801EF4AC

@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801F3D4C
   - - 4524
-    - asm
-    - func_801F3DAC
+    - c
+    - clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC
+    - '@source: src/bof3/world/clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC.c'
+    - '@behavior: Clears bit 0 of the work record byte at +0x74, then once the shared work-record kind byte at 0x80145F09 reads 5, 6 or 7 sets bit 0x54 of the shared flag bank 0x80144F28, calls 0x8015507C with 2 and 7 and clears byte 0 of the scratchpad work record.'
   - - 4656
     - asm
     - func_801F3E30

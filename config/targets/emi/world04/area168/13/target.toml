@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c",
     "src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c",
+    "src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8.c",
     "src/bof3/support/area168_13_psyq.c",
     "src/bof3/world/area16813DispatchTables.c",
 ]

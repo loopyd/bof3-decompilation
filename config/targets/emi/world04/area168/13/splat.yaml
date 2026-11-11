@@ -111,8 +111,10 @@ segments:
     - asm
     - func_801F4634
   - - 6904
-    - asm
-    - func_801F46F8
+    - c
+    - setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8
+    - '@source: src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 0 of the shared overlay byte when the shared selector query for id 0xC answers nonzero, or stores 7 when it answers zero.'
   - - 7012
     - c
     - setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764

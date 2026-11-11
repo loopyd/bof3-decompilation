@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic219/03.bin"
 splat = "config/targets/emi/bmagic/magic219/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic21903_801EF934.c",
+]
 support_sources = [
     "src/bof3/support/magic219_03_psyq.c",
     "src/bof3/bmagic/magic21903DispatchTables.c",
