@@ -148,7 +148,8 @@ void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
     meters(amplitudes);
     graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
-    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PAUSE  SQUARE RESTART", 6, 6);
+    graphics_text_scaled(18, 229, TEXT_BUTTON_L1 " CONTROLS  " TEXT_BUTTON_CROSS
+                         " PAUSE  " TEXT_BUTTON_SQUARE " RESTART", 6, 6);
 }
 #elif PLAYER_MODE_SFX
 void hud_sfx(void)
@@ -197,7 +198,8 @@ void hud_sfx(void)
     }
     graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
-    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PLAY  SQUARE HALT", 6, 6);
+    graphics_text_scaled(18, 229, TEXT_BUTTON_L1 " CONTROLS  " TEXT_BUTTON_CROSS
+                         " PLAY  " TEXT_BUTTON_SQUARE " HALT", 6, 6);
 }
 #elif PLAYER_MODE_VOCAL
 void hud_vocal(void)
@@ -224,7 +226,8 @@ void hud_vocal(void)
     graphics_text_scaled(188, 185, vocal_status.repeat ? "REPEAT ON" : "REPEAT OFF", 6, 6);
     graphics_text_scaled(12, 86, "Audio driver: Capcom C 1993", 6, 6);
     graphics_panel(10, 226, 300, 12, 0x281028, 0x100010, 1);
-    graphics_text_scaled(18, 229, "L1 CONTROLS  CROSS PLAY  CIRCLE STOP", 6, 6);
+    graphics_text_scaled(18, 229, TEXT_BUTTON_L1 " CONTROLS  " TEXT_BUTTON_CROSS
+                         " PLAY  " TEXT_BUTTON_CIRCLE " STOP", 6, 6);
 }
 #endif
 
@@ -233,22 +236,22 @@ void hud_help(void)
     graphics_panel(32, 42, 256, 152, 0x602040, 0x301020, 1);
 #if PLAYER_MODE_SFX
     graphics_text(48, 56, "SFX CONTROLS");
-    graphics_text(48, 80, "LEFT/RIGHT SWITCH BANK");
-    graphics_text(48, 100, "UP/DOWN SELECT SAMPLE");
-    graphics_text(48, 120, "CROSS   PLAY SAMPLE");
-    graphics_text(48, 140, "SQUARE  HALT");
+    graphics_text(48, 80, TEXT_BUTTON_LEFT "/" TEXT_BUTTON_RIGHT "  SWITCH BANK");
+    graphics_text(48, 100, TEXT_BUTTON_UP "/" TEXT_BUTTON_DOWN "  SELECT SAMPLE");
+    graphics_text(48, 120, TEXT_BUTTON_CROSS "    PLAY SAMPLE");
+    graphics_text(48, 140, TEXT_BUTTON_SQUARE "    HALT");
 #elif PLAYER_MODE_VOCAL
     graphics_text(48, 56, "VOCAL CONTROLS");
-    graphics_text(48, 80, "CROSS   PLAY/RETRIGGER");
-    graphics_text(48, 100, "CIRCLE  STOP");
-    graphics_text(48, 120, "SQUARE  TOGGLE REPEAT");
+    graphics_text(48, 80, TEXT_BUTTON_CROSS "    PLAY/RETRIGGER");
+    graphics_text(48, 100, TEXT_BUTTON_CIRCLE "    STOP");
+    graphics_text(48, 120, TEXT_BUTTON_SQUARE "    TOGGLE REPEAT");
     graphics_text(48, 140, "ONE QUALIFIED CUE");
 #else
     graphics_text(48, 56, "MUSIC CONTROLS");
-    graphics_text(48, 80, "UP/DOWN PREV/NEXT TRACK");
-    graphics_text(48, 104, "CROSS   PLAY/PAUSE");
-    graphics_text(48, 128, "SQUARE  RESTART TRACK");
-    graphics_text(48, 152, "L/R     SEEK -5S/+5S");
+    graphics_text(48, 80, TEXT_BUTTON_UP "/" TEXT_BUTTON_DOWN "  PREV/NEXT TRACK");
+    graphics_text(48, 104, TEXT_BUTTON_CROSS "    PLAY/PAUSE");
+    graphics_text(48, 128, TEXT_BUTTON_SQUARE "    RESTART TRACK");
+    graphics_text(48, 152, TEXT_BUTTON_LEFT "/" TEXT_BUTTON_RIGHT "  SEEK -5S/+5S");
 #endif
-    graphics_text(48, 174, "L1      CLOSE CONTROLS");
+    graphics_text(48, 174, TEXT_BUTTON_L1 "    CLOSE CONTROLS");
 }

@@ -24,6 +24,14 @@ time formatting, meter animation, and the small `Capcom C 1993` driver credit.
 The audio, controls, graphics, and HUD interfaces have matching headers. `psx.h` defines
 shared PSX types and hardware access.
 
+Use the `TEXT_BUTTON_*` string literals from `graphics.h` to place a controller
+glyph inside `graphics_text` or `graphics_text_scaled`. For example,
+`"PRESS " TEXT_BUTTON_CROSS " TO PLAY"` draws the Cross glyph inline. The face,
+direction and shoulder glyphs advance one text cell. Start advances two cells
+and Select advances three. Glyphs use the same height, cell width and newline
+spacing as the rest of the string. The macros contain reserved font bytes, so
+keep them as C string literals in the player sources.
+
 Up and Down select the previous and next sequence in the compiled SEP. Selection
 stops at the first and last track. Cross toggles play and pause. Square restarts
 the selected track. Left and Right seek five seconds backward and forward. The

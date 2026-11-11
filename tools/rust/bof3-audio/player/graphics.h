@@ -3,6 +3,21 @@
 
 #include "psx.h"
 
+#define TEXT_BUTTON_CROSS    "\340"
+#define TEXT_BUTTON_CIRCLE   "\341"
+#define TEXT_BUTTON_SQUARE   "\342"
+#define TEXT_BUTTON_TRIANGLE "\343"
+#define TEXT_BUTTON_UP       "\344"
+#define TEXT_BUTTON_DOWN     "\345"
+#define TEXT_BUTTON_LEFT     "\346"
+#define TEXT_BUTTON_RIGHT    "\347"
+#define TEXT_BUTTON_L1       "\350"
+#define TEXT_BUTTON_L2       "\351"
+#define TEXT_BUTTON_R1       "\352"
+#define TEXT_BUTTON_R2       "\353"
+#define TEXT_BUTTON_START    "\354"
+#define TEXT_BUTTON_SELECT   "\356"
+
 void graphics_initialize(void);
 void graphics_begin_frame(u32 frames);
 void graphics_present(void);

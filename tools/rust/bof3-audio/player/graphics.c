@@ -96,7 +96,9 @@ static void background(u32 frames)
 void graphics_text_scaled(u32 x, u32 y, const char *string, u32 width, u32 height)
 {
     u32 *packet, *end, length, index, px, py, uv, u, v;
+    u32 line, extra, cells, glyph_width, source_width;
     if (width == 0 || height == 0) return;
+    line = extra = 0;
     glyph_head = 0x00ffffff;
     WORD(0x8014598c) = (u32)glyph_packets;
     WORD(0x801459d4) = (u32)&glyph_head;
@@ -106,18 +108,35 @@ void graphics_text_scaled(u32 x, u32 y, const char *string, u32 width, u32 heigh
     for (packet = glyph_packets; packet < end; packet += length + 1) {
         length = *packet >> 24;
         if (length == 3) {
-            px = x + (packet[2] & 0xffff) * width / 8;
-            py = y + (packet[2] >> 16) * height / 8;
-            if (width == 8 && height == 8) {
-                gpu(packet[1]); gpu(xy(px, py)); gpu(packet[3]);
+            if (line != packet[2] >> 16) {
+                line = packet[2] >> 16;
+                extra = 0;
+            }
+            px = x + (packet[2] & 0xffff) * width / 8 + extra;
+            py = y + line * height / 8;
+            uv = packet[3]; u = uv & 255; v = (uv >> 8) & 255;
+            cells = 1;
+            source_width = 8;
+            /* Inline button slots occupy row 48 and use the CLUT at x=256. */
+            if (v == 48 && u < 136) {
+                uv = (uv & 0xffff) | 0x78100000;
+                /* Skip the face glyphs' blank column when shrinking them. */
+                if (u < 32 && width < 8) source_width = 7;
+                if (u == 96) cells = 2;
+                if (u == 112) cells = 3;
+            }
+            if (width == 8 && height == 8 && cells == 1) {
+                gpu(packet[1]); gpu(xy(px, py)); gpu(uv);
             } else {
-                uv = packet[3]; u = uv & 255; v = (uv >> 8) & 255;
+                glyph_width = width * cells;
+                source_width *= cells;
                 gpu(0x2e000000 | (packet[1] & 0xffffff));
                 gpu(xy(px, py)); gpu(uv);
-                gpu(xy(px + width, py)); gpu((u + 8) | (v << 8) | 0x002f0000);
+                gpu(xy(px + glyph_width, py)); gpu((u + source_width) | (v << 8) | 0x002f0000);
                 gpu(xy(px, py + height)); gpu(u | ((v + 8) << 8));
-                gpu(xy(px + width, py + height)); gpu((u + 8) | ((v + 8) << 8));
+                gpu(xy(px + glyph_width, py + height)); gpu((u + source_width) | ((v + 8) << 8));
             }
+            extra += (cells - 1) * width;
         } else {
             for (index = 1; index <= length; ++index) gpu(packet[index]);
         }
@@ -138,7 +157,7 @@ void graphics_initialize(void)
     WORD(0x1f801814) = 0x03000000;
     gpu(0xe6000000);
     upload(960, 0, 64, 256, player_font);
-    upload(0, 480, 256, 1, player_palette);
+    upload(0, 480, 272, 1, player_palette);
     upload(512, 0, 160, 80, player_logo);
 }
 
