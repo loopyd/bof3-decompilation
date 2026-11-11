@@ -28,8 +28,9 @@ pub const HELP: &str = "
   stops, and Square toggles repeat. --disc-root supplies graphics assets.
   Build player.exe with canonical GCC 2.7.2. Output includes the rebuildable C89
   project and supplied runtime/song bytes. The US runtime is retained in full.
-  Up/Down select tracks, Cross toggles play/pause, Square restarts, and L1 toggles
-  controls help. Music repeats forever. BIOS is supplied by the console or emulator.
+  Up/Down select tracks, Cross toggles play/pause, and Square restarts. Left/Right
+  seek backward/forward five seconds with muted playback up to the destination.
+  L1 toggles controls help. BIOS is supplied by the console or emulator.
 ";
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -356,7 +357,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         "controls": match mode {
             "sfx" => serde_json::json!({"left_right": "bank", "up_down": "physical_sample", "cross": "play_selected_sample", "square": "halt", "l1": "modal_help"}),
             "vocal" => serde_json::json!({"left_right": "none", "up_down": "single_qualified_cue", "cross": "play_retrigger", "circle": "stop", "square": "toggle_repeat", "l1": "modal_help"}),
-            _ => serde_json::json!({"up_down": "track", "cross": "play_pause", "square": "restart", "l1": "modal_help"}),
+            _ => serde_json::json!({"up_down": "track", "left_right": "seek_5_seconds", "cross": "play_pause", "square": "restart", "l1": "modal_help"}),
         },
         "executable_sha256": crate::digest::sha256_hex(result.bytes()),
         "compiler": "gcc-2.7.2-psx", "playback": match mode { "sfx" => "manual_game_cue_or_sdk_note", "vocal" => "original_xa", _ => "repeat_forever" },

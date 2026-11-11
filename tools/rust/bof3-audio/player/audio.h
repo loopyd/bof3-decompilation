@@ -18,6 +18,8 @@ struct PlayerStatus {
     u32 sample;
     u32 playing;
     u32 playing_sample;
+    u32 seeking;
+    u32 ended;
 };
 extern volatile struct PlayerStatus player_status;
 
@@ -26,6 +28,7 @@ void audio_update(void);
 void audio_pause(void);
 void audio_restart(void);
 void audio_select(int direction);
+void audio_seek(int direction);
 u32 audio_ticks(void);
 void audio_levels(u8 amplitudes[AUDIO_CHANNELS]);
 

@@ -49,6 +49,8 @@ void player_main(void)
         else if (buttons & BUTTON_DOWN) audio_select(1);
         if (buttons & BUTTON_CROSS) audio_pause();
         if (buttons & BUTTON_SQUARE) audio_restart();
+        if (buttons & BUTTON_LEFT) audio_seek(-1);
+        else if (buttons & BUTTON_RIGHT) audio_seek(1);
         ticks = audio_ticks();
         audio_levels(amplitudes);
 #endif

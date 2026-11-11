@@ -127,11 +127,16 @@ static void meters(const u8 current[AUDIO_CHANNELS])
 void hud_draw(u32 frames, u32 ticks, const u8 amplitudes[AUDIO_CHANNELS])
 {
     char track[3];
+    const char *state;
+    state = "PLAYING";
+    if (player_status.seeking) state = "SEEKING";
+    else if (player_status.ended) state = "END";
+    else if (player_status.paused) state = "PAUSED";
     graphics_panel(176, 16, 132, 78, 0x180818, 0x080008, 1);
     graphics_panel(10, 92, 300, 18, 0x180818, 0x080008, 0);
     graphics_logo();
     graphics_text(184, 22, "PLAYER " PLAYER_VERSION);
-    graphics_text_scaled(184, 32, player_status.paused ? "PAUSED" : "PLAYING", 6, 6);
+    graphics_text_scaled(184, 32, state, 6, 6);
     decimal(track, player_status.track + 1, 2);
     track[2] = 0;
     graphics_text_scaled(240, 32, "TRACK", 6, 6);
@@ -243,6 +248,7 @@ void hud_help(void)
     graphics_text(48, 80, "UP/DOWN PREV/NEXT TRACK");
     graphics_text(48, 104, "CROSS   PLAY/PAUSE");
     graphics_text(48, 128, "SQUARE  RESTART TRACK");
+    graphics_text(48, 152, "L/R     SEEK -5S/+5S");
 #endif
     graphics_text(48, 174, "L1      CLOSE CONTROLS");
 }

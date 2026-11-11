@@ -13,8 +13,8 @@ existing assembler and linker wrappers:
 make REPO=/absolute/path/to/rebof3-simple clean all
 ```
 
-`player.c` coordinates the frame loop. `audio.c` owns music sequencing, pause, restarts, musical ticks, and SPU channel
-levels. `bank.c` loads embedded banks through the original routines. `sfx.c` owns
+`player.c` coordinates the frame loop. `audio.c` owns music transport, musical
+ticks, and SPU channel levels. `bank.c` loads embedded banks through the original routines. `sfx.c` owns
 effects bank and sample selection and direct SDK-note auditions. `vocal.c`
 services original XA playback and handles play, stop, and repeat. `controls.c`
 reads the original PAD routines and handles button edges and modal help.
@@ -26,9 +26,14 @@ shared PSX types and hardware access.
 
 Up and Down select the previous and next sequence in the compiled SEP. Selection
 stops at the first and last track. Cross toggles play and pause. Square restarts
-the selected track. Track changes and restarts preserve pause state. Pause uses
-the original sequence routine, which releases active notes and retains the event
-cursor for resume. SMPTE position and musical ticks stop advancing while paused.
+the selected track. Left and Right seek five seconds backward and forward. The
+player mutes output while the original driver plays to the destination. A
+backward seek or a seek from pause rebuilds playback from the track start at
+normal speed, so the wait depends on the destination. The HUD shows `SEEKING`
+until it can display the new SMPTE and musical positions. Track changes,
+restarts, and seeks preserve play or pause intent. Seeking clamps to the start
+or a finite end. Cross at the end starts the track again. SMPTE position and
+musical ticks stay fixed while paused.
 
 Build an effects bank view without a music sequence:
 
