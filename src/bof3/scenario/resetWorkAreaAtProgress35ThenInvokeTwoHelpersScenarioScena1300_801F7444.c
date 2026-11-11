@@ -7,7 +7,8 @@ extern u8 g_ScenarioProgress;
 
 void func_80196070(void);
 void func_801F7484(void);
-void func_801F7568(void);
+void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568(
+    void);
 
 /* @source 0x801F7444
  * @behavior Work-object step handler of this overlay, reached while the
@@ -21,8 +22,11 @@ void func_801F7568(void);
  * that byte equals 0x35 does it call the shared work-area reset func_80196070,
  * whose exact scena0300 lift at 0x801F7334 records it clearing the work-object
  * header bytes 0x00-0x04. Both paths then call the overlay helpers func_801F7484
- * and func_801F7568 in that order with no arguments and with any result
- * discarded, so the pair runs on every call. Every jal delay slot stays a nop,
+ * and setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568
+ * in that order with no arguments and with any result discarded, so the pair
+ * runs on every call; that second helper publishes the work record selected by
+ * the object's byte 6 and then the base record 0x80145E90, storing 2 into each
+ * one's byte 0x29 around two calls of the shared service 0x8014D290. Every jal delay slot stays a nop,
  * and the 0x18-byte frame keeps only $ra at 0x10, stored in the delay slot of
  * that compare. It reads and writes no other state. No word in this payload
  * encodes a jal to 0x801F7444, so the two handler runs are its only references.
@@ -35,5 +39,5 @@ void resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444(voi
     func_80196070();
   }
   func_801F7484();
-  func_801F7568();
+  setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568();
 }

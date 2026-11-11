@@ -54,8 +54,8 @@ segments:
     - asm
     - func_801EF1FC
   - - 3076
-    - asm
-    - func_801EF804
+    - c
+    - drawSixRecedingTranslucentGouraudQuadRingsWithStepJitterTableAndWorkByte9AlphaFadeBmagicMagic09503_801EF804
   - - 4572
     - c
     - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius448TintedByWorkByteATimesEightAtOriginAndOneAtRimBmagicMagic09503_801EFDDC

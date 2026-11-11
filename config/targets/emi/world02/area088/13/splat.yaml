@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801F3A50
   - - 4036
-    - asm
-    - func_801F3BC4
+    - c
+    - prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4
+    - '@source: src/bof3/world/prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4.c'
+    - '@behavior: stores 0x80 in work byte 0x24 of the record published at the scratchpad pointer cell 0x1F800044, applies main lookup entry 0x157 through the resident 0x8014DD3C helper, stores 5 in work byte 0x29, clears work byte 0x2A and the triplet at 0x5D through 0x5F, then arms work byte 0x01 with 1 so the next dispatch through the table at 0x801F61A0 runs the 0x801F3C50 handler; the pointer cell is re-read before every store.'
   - - 4176
     - asm
     - func_801F3C50

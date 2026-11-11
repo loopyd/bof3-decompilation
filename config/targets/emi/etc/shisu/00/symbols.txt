@@ -21,6 +21,7 @@ dispatchStateByteTable9734EtcShisu00_801D2DA8 = 0x801D2DA8;
 drawMastersCommandPanelShisu00_801D3320 = 0x801D3320;
 drawPartyMemberStatusBoxShisu00_801D376C = 0x801D376C;
 drawEquipPanelShisu00_801D3F0C = 0x801D3F0C;
+drawExpRowPanelShisu00_801D4158 = 0x801D4158;
 emitFlatLineRectangleBorderShisu00_801D432C = 0x801D432C;
 func_801D44C0 = 0x801D44C0;
 drawSpriteWithScenarioKindSubstitutionShisu00_801D460C = 0x801D460C;

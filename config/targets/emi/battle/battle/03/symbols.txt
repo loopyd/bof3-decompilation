@@ -277,6 +277,7 @@ raiseFlag4AndUpdateWhenLocalReady = 0x801DFB64;
 dispatchScratchByte2Table = 0x801DFBDC;
 copyScratchToLocalWork = 0x801DFC20;
 dispatchWorkByte3Table = 0x801DFC70;
+resolveSelectionDamageAndSubmitPendingEffects = 0x801DFCB4;
 waitReadyAdvanceSubstate3 = 0x801E019C;
 func_801E020C = 0x801E020C;
 dispatchLocalSubstate3Table = 0x801E046C;

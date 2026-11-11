@@ -748,8 +748,10 @@ segments:
     - c
     - dispatchWorkByte3Table
   - - 61620
-    - asm
-    - func_801DFCB4
+    - c
+    - resolveSelectionDamageAndSubmitPendingEffects
+    - '@source: src/bof3/battle/resolveSelectionDamageAndSubmitPendingEffects.c'
+    - '@behavior: Arms the local selection pass, resolves the selected action damage and submits its pending effects.'
   - - 62876
     - c
     - waitReadyAdvanceSubstate3

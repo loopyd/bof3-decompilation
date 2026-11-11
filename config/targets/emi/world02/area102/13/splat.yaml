@@ -37,8 +37,9 @@ segments:
     - asm
     - func_801F2D04
   - - 388
-    - asm
-    - func_801F2D84
+    - c
+    - drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84
+    - '@source: src/bof3/world/drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84.c'
   - - 552
     - asm
     - func_801F2E28

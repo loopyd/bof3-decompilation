@@ -1,7 +1,7 @@
 dispatchStateByte2Table3930World02Area10213_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2D04 = 0x801F2D04;
-func_801F2D84 = 0x801F2D84;
+drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84 = 0x801F2D84;
 func_801F2E28 = 0x801F2E28;
 drawCountdownLevelThenRearmFromSavedByteAndSelectStep1World02Area10213_801F2EC0 = 0x801F2EC0;
 func_801F2F44 = 0x801F2F44;

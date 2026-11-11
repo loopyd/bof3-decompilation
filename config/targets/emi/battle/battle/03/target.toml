@@ -356,6 +356,7 @@ sources = [
     "src/bof3/battle/drawShadowedBattlerStatusPanel.c",
     "src/bof3/battle/drawBattlerStatusGaugeBar.c",
     "src/bof3/battle/drawShadowedBattlerHpStatusPanel.c",
+    "src/bof3/battle/resolveSelectionDamageAndSubmitPendingEffects.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

@@ -1022,8 +1022,10 @@ segments:
     - '@source: src/bof3/world/appendDimTile.c'
     - '@behavior: configures the dim semi-transparent AREA030 tile and appends it after selecting graphics mode 4.'
   - - 68440
-    - asm
-    - func_801E1758
+    - c
+    - drawArea030CompactPanel
+    - '@source: src/bof3/world/drawArea030CompactPanel.c'
+    - '@behavior: draws the compact AREA030 panel at the requested origin: submits the 0x64 by 0x38 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, eight 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x48 and x + 0x60, the two func_801D799C text rows of width 0x20 at (x, y + 0x18) and (x + 0x60, y + 0x18), the 0x30 sprite at x on the y + 0x38 row, eleven 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0x60 on that row, and finally the three main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x23, y + 6), (x + 0xA, y + 0x19) and (x + 0xA, y + 0x29) with colour 0 and flag 0xFF through func_8014F800.'
   - - 69068
     - c
     - drawArea030Panel

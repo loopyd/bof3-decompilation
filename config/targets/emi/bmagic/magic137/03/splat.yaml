@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF21C
   - - 1732
-    - asm
-    - func_801EF2C4
+    - c
+    - advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic13703_801EF2C4
+    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic13703_801EF2C4.c'
+    - '@behavior: Steps the scratchpad work object at 0x1F800044 one frame of a position advance. Work byte 0xB gains one plus work byte 9 shifted right by six, work byte 0xA is decremented when bit 0 of the frame counter at 0x80143E6C is set, work word 0xC is set to 0x2000 and work word 0x10 to zero before the shared helper at 0x801DD350 is invoked with the work pointer. Then work byte 9 drops by two and the position pair gains the step words in place, word 0x34 by word 0xC and word 0x38 by word 0x10. Only when the stored byte 9 lands on 0x30 does it decrement byte 0xB of the shared battle work record at 0x801EB4E0 and invoke the helper at 0x801E5988, the store filling the call delay slot. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 1968
     - asm
     - func_801EF3B0

@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F7484
   - - 2408
-    - asm
-    - func_801F7568
+    - c
+    - setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568
+    - '@source: src/bof3/scenario/setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568.c'
+    - '@behavior: Two-step work-record publish of this overlay. It reads the work object at scratchpad cell 0x1F800044 once, indexes the shared 0x98-byte work-record table at 0x80146888 with that object byte 6, publishes the computed record through the cell and stores 2 into its byte 0x29 around a call of the shared service 0x8014D290; then publishes the base record at 0x80145E90 through the cell, stores 2 into its byte 0x29 at the absolute address 0x80145EB9 and calls the same service again; then restores the incoming cell value. It takes no arguments and returns nothing, and its 0x20-byte frame keeps $s1 at 0x14, $ra at 0x18 and $s0 at 0x10.'
   - - 2552
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F75F8

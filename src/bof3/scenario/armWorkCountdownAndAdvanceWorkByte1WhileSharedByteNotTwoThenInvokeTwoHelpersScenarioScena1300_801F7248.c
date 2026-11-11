@@ -6,7 +6,8 @@
 extern u8 D_80143BB0;
 
 void func_801F7484(void);
-void func_801F7568(void);
+void setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568(
+    void);
 
 /* @source 0x801F7248
  * @behavior Work-object step handler of this overlay, the word at 0x801FBF00:
@@ -21,7 +22,8 @@ void func_801F7568(void);
  * byte 0x09 (`addiu $v0,$zero,0x1E` / `sb $v0,0x9($v1)`), read that same cell a
  * second time the same way and store 2 into the object's byte 0x01.
  * Both arms rejoin at the two overlay helper calls func_801F7484 and
- * func_801F7568, made in that order with no arguments and with any result
+ * setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568,
+ * made in that order with no arguments and with any result
  * discarded, so the pair runs on every call; their jal delay slots stay nops.
  * The 0x18-byte frame keeps only $ra at 0x10 across them, and $ra is stored in
  * the delay slot of the shared-byte compare, so the frame carries no other
@@ -42,5 +44,5 @@ void armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelper
     PSX_REF(u8 *, SPAD_BASE + slot_offset)[1] = 2;
   }
   func_801F7484();
-  func_801F7568();
+  setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568();
 }

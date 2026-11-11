@@ -2,14 +2,14 @@
 
 /* @behavior increments byte 9 of the work record published at the scratchpad
  * cursor 0x1F800044 and redraws the AREA030 panel at the origin
- * 0x6C - 0x50 * that count through func_801E1758; once the count reaches 5 it
- * restarts it at zero and, while the record byte 6 is clear, advances the shared
- * halfword counter D_80143B92, otherwise advances the shared step byte
- * D_8014403D and clears the record dispatch byte 3; then the dim tile is
- * appended through appendDimTile, and while that restarted count is nonzero the
- * inset panel rectangle 0x12 - 8 * count and the texture row 0x15 - 8 * count
- * are submitted through func_801D9534 and func_8014F800 using the halfword
- * offset-table entry 0x40 on the 0x80010000 main-RAM base.
+ * 0x6C - 0x50 * that count through drawArea030CompactPanel; once the count
+ * reaches 5 it restarts it at zero and, while the record byte 6 is clear,
+ * advances the shared halfword counter D_80143B92, otherwise advances the
+ * shared step byte D_8014403D and clears the record dispatch byte 3; then the
+ * dim tile is appended through appendDimTile, and while that restarted count is
+ * nonzero the inset panel rectangle 0x12 - 8 * count and the texture row
+ * 0x15 - 8 * count are submitted through func_801D9534 and func_8014F800 using
+ * the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.
  * @source 0x801DA2A0
  * @status exact
  * @match 100.00
@@ -22,7 +22,7 @@ void func_801DA2A0(void) {
     u8 *step_byte;
 
     D_1F800044[9]++;
-    func_801E1758((s16)(0x6C - D_1F800044[9] * 0x50), 0x56);
+    drawArea030CompactPanel((s16)(0x6C - D_1F800044[9] * 0x50), 0x56);
     work = D_1F800044;
     if (work[9] == 5) {
         work[9] = 0;
