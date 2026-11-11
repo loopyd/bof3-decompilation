@@ -158,8 +158,10 @@ segments:
     - c
     - zeroResultScenarioScena0400_801F9DAC
   - - 12724
-    - asm
-    - func_801F9DB4
+    - c
+    - forwardRoute28RecordScenarioScena0400_801F9DB4
+    - '@source: src/bof3/scenario/forwardRoute28RecordScenarioScena0400_801F9DB4.c'
+    - '@behavior: Route-0x28 gate of this overlay in front of its own packed-record handler func_801F9DF4 (0x801F9DF4): when the shared route word D_80143F00 reads 0x28 it forwards its own two incoming packed record words unchanged and returns the sign-extended low byte of that handler''s result, so it reports 1 only on that path; for every other route value it reports 0, materialised in the jump delay slot of the branch to the shared epilogue at 0x801F9DE4. The 0x18-byte frame only keeps $ra across the call, sunk into the `beq` delay slot, and it reads no other state and writes none. No in-image jal targets this address: its only image word is 0x801F9DB4 at 0x801FA1F8, word 5 of the eight-word code-pointer run at 0x801FA1E4 that the work byte 1 dispatcher indexes.'
   - - 12788
     - asm
     - func_801F9DF4

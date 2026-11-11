@@ -23,5 +23,6 @@ support_sources = [
     "src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8.c",
     "src/bof3/support/area168_13_psyq.c",
     "src/bof3/world/area16813DispatchTables.c",
+    "src/bof3/world/advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8.c",
 ]
 psyq_source = "src/bof3/support/area168_13_psyq.c"

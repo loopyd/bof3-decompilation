@@ -26,7 +26,7 @@ drawMoveBlockByWorkByte9HalfThenIncrementWorkByte9WrapAt7ToState2Is3AndDrawRowWo
 func_801F41F0 = 0x801F41F0;
 func_801F4258 = 0x801F4258;
 func_801F4790 = 0x801F4790;
-func_801F4804 = 0x801F4804;
+clearWorkByte74Bit0ThenSetSharedFlagBankBitDWhenMappedStateIs1World01Area04813_801F4804 = 0x801F4804;
 func_801F4864 = 0x801F4864;
 func_801F48DC = 0x801F48DC;
 func_801F49C8 = 0x801F49C8;

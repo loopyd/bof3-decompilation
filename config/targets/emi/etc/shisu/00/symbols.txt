@@ -10,6 +10,7 @@ func_801D27BC = 0x801D27BC;
 func_801D2978 = 0x801D2978;
 func_801D2ADC = 0x801D2ADC;
 dispatchStateByteTable9720EtcShisu00_801D2C0C = 0x801D2C0C;
+advanceShisuUiWordThenStepUpdateShisu00_801D2C50 = 0x801D2C50;
 runShisuUiStepUpdateShisu00_801D2D88 = 0x801D2D88;
 dispatchStateByteTable9734EtcShisu00_801D2DA8 = 0x801D2DA8;
 func_801D3320 = 0x801D3320;

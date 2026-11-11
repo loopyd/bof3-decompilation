@@ -29,6 +29,7 @@ sources = [
     "src/bof3/battle/clampIndexedBattleByte14.c",
     "src/bof3/battle/clearOwnerRecordFlag40.c",
     "src/bof3/battle/clearOwnerRecordHead.c",
+    "src/bof3/battle/collectGridCellEntriesThenRefreshAccumulator.c",
     "src/bof3/battle/dispatchLocalHandlerPair.c",
     "src/bof3/battle/dispatchPanelStateTable69f8.c",
     "src/bof3/battle/dispatchPanelStateTable6a08.c",

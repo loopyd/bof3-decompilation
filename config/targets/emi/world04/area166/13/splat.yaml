@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801F345C
   - - 2408
-    - asm
-    - func_801F3568
+    - c
+    - advanceState2WhenWorkByte9Reaches8ThenAdvanceWorkByte9World04Area16613_801F3568
+    - '@source: src/bof3/world/advanceState2WhenWorkByte9Reaches8ThenAdvanceWorkByte9World04Area16613_801F3568.c'
+    - '@behavior: gates on the scratchpad work record published at 0x1F800044; when the record byte at +9 is at least 8 it increments the state byte at +2, re-reads the record pointer and then increments the byte at +9, and while +9 stays below 8 it only increments +9.'
   - - 2488
     - asm
     - func_801F35B8

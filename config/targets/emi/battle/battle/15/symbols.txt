@@ -191,6 +191,7 @@ func_800A4C44 = 0x800A4C44;
 func_800A4FD8 = 0x800A4FD8;
 initMenuState15 = 0x800A50B8;
 enterState2WhenB8Clear = 0x800A5120;
+collectGridCellEntriesThenRefreshAccumulator = 0x800A5164;
 dispatchSubstateTable4d00 = 0x800A52C4;
 func_800A5300 = 0x800A5300;
 setupMode104ArmWorkBit2 = 0x800A581C;

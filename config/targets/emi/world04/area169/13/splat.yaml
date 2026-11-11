@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F3078
   - - 1256
-    - asm
-    - func_801F30E8
+    - c
+    - drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8
+    - '@source: src/bof3/world/drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8.c'
+    - '@behavior: Build the scratchpad vector deck from the work record and emit its two mirrored textured quads under the graph-type draw mode.'
   - - 2052
     - asm
     - func_801F3404

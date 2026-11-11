@@ -8,5 +8,5 @@ func_801D1048 = 0x801D1048;
 func_801D129C = 0x801D129C;
 drawPendingNotificationRowsCommu0507 = 0x801D14C8;
 func_801D1670 = 0x801D1670;
-func_801D1724 = 0x801D1724;
+drawPanelBackgroundTilesCommu0507 = 0x801D1724;
 D_801D1950 = 0x801D1950;

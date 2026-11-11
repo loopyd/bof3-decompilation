@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801F3424
   - - 2552
-    - asm
-    - func_801F35F8
+    - c
+    - advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8
+    - '@source: src/bof3/world/advanceWorkByte2AndQueueCue200WhenCameraInsideRecordCoordinateWindowThenCall3914World04Area16813_801F35F8.c'
+    - '@behavior: Advances work byte +2 when the camera is inside the record coordinate window, queues cue 0x200 while the shared front-end phase byte is zero, then calls local helper 0x801F3914.'
   - - 2872
     - c
     - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738

@@ -1009,8 +1009,10 @@ segments:
     - '@source: src/bof3/battle/enterState2WhenB8Clear.c'
     - '@behavior: Clears local battle selection state when its gate flag is clear.'
   - - 59748
-    - asm
-    - func_800A5164
+    - c
+    - collectGridCellEntriesThenRefreshAccumulator
+    - '@source: src/bof3/battle/collectGridCellEntriesThenRefreshAccumulator.c'
+    - '@behavior: Rebuilds the active byte list at 0x801463C4 from the three entries of the four-byte grid cell selected by the two work counters, keeping every entry that is not the 0xFF sentinel, then refreshes the list accumulator, stores 2 into 0x801485BB, sets bit 2 at +0x128 and advances the substate byte.'
   - - 59972
     - asm
     - func_800A5244

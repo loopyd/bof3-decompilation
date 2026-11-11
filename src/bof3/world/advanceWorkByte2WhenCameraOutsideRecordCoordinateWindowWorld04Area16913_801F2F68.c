@@ -7,8 +7,8 @@
 extern s32 D_80145EC4; /* @source 0x80145EC4 @kind data */
 extern s32 D_80145EC8; /* @source 0x80145EC8 @kind data */
 
-/* Local drawing routine of this overlay (still an `asm` span of this target). */
-void func_801F30E8(void);
+/* Local two-pass drawing routine of this overlay. */
+void drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8(void);
 
 /* @source 0x801F2F68
  * @behavior Overlay step gate over the scratchpad work record at
@@ -95,5 +95,5 @@ advance:
     }
   }
 
-  func_801F30E8();
+  drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8();
 }

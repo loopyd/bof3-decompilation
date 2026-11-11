@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F0778
   - - 7900
-    - asm
-    - func_801F0ADC
+    - c
+    - sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC
+    - '@source: src/bof3/bmagic/sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC.c'
+    - '@behavior: Samples this overlay''s signed byte height grid at 0x801F0DDB for one coordinate pair and returns the negated height; see the source metadata for the full description.'
   - - 8340
     - textbin
     - D_801F0C94

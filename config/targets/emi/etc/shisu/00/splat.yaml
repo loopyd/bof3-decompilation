@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801D2C48
   - - 8272
-    - asm
-    - func_801D2C50
+    - c
+    - advanceShisuUiWordThenStepUpdateShisu00_801D2C50
+    - '@source: src/bof3/ui/advanceShisuUiWordThenStepUpdateShisu00_801D2C50.c'
+    - '@behavior: Step handler of the SHISU overlay that advances one work word and then runs the shared step: it takes the unsigned word at 0x801DA0B4, adds 0x20 to it and stores it back in the call delay slot before calling the shared drawing step func_801D2978 with no arguments. Its only in-image reference is the word at 0x801D9724, entry 1 of the step handler run based at 0x801D9720, and no jal in this payload names it, so it is reached through that run alone and is an overlay entry called from outside the payload. It reads no other state and writes none besides that word, its 0x18-byte frame only keeps $ra at 0x10 across the call, and the epilogue leaves the call result in $v0 untouched.'
   - - 8324
     - asm
     - func_801D2C84
