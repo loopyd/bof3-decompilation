@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801F3030
   - - 3152
-    - asm
-    - func_801F3850
+    - c
+    - emitDrawAreaMoveForCellOffsetByHalfWorkByteAWorld04Area19613_801F3850
+    - '@source: src/bof3/world/emitDrawAreaMoveForCellOffsetByHalfWorkByteAWorld04Area19613_801F3850.c'
+    - '@behavior: emits one draw-area move packet for a 0x10 by 0x20 cell at the fixed source column 0x1A8 whose y is 0x140 minus half of the unsigned byte 0xA of the shared scratch work record reached through the scratchpad pointer cell 0x1F800044; hands the rect to SetDrawMove with the primitive published at g_PrimCursor and the fixed destination origin (0x198, 0x120), then queues the 0x18-byte packet through func_8014E5A0(2, 0x18).'
   - - 3264
     - asm
     - func_801F38C0

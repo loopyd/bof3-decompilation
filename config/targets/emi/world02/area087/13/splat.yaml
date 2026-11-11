@@ -73,8 +73,9 @@ segments:
     - dispatchStateByte2Table5750World02Area08713_801F34FC
     - '@source: src/bof3/world/area08713DispatchTables.c'
   - - 2368
-    - asm
-    - func_801F3540
+    - c
+    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08713_801F3540
+    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08713_801F3540.c'
   - - 2448
     - asm
     - func_801F3590

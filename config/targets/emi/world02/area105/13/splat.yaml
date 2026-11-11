@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801F2D38
   - - 412
-    - asm
-    - func_801F2D9C
+    - c
+    - drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C
+    - '@source: src/bof3/world/drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C.c'
+    - '@behavior: brackets three semi-transparent flat 0x80 grey POLY_FT4 cell quads between two draw-mode packets that scope and then reset the texture window, taking the cells from the three four-byte records at 0x801F3330 and shifting their edges and depth by the argument, and projecting the four scratchpad vectors at 0x1F800014 through RotTransPers4.'
   - - 1344
     - c
     - initArea10513State

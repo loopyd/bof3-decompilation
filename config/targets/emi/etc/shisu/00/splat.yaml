@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801D4AF4
   - - 18700
-    - asm
-    - func_801D550C
+    - c
+    - drawSpritePrimTpageFromGraphTypeShisu00_801D550C
+    - '@source: src/bof3/ui/drawSpritePrimTpageFromGraphTypeShisu00_801D550C.c'
+    - '@behavior: Sprite emitter of the SHISU overlay: GetGraphType selects the texture page 0x8F when it answers 1 or 2 and 0x2F otherwise, that page fills a draw-mode packet at g_PrimCursor with dfe 0, dtd 0 and no texture window, and the 0xC-byte packet is appended at ordering-table slot 1. A second read of g_PrimCursor initialises a 0x14-byte SPRT: width 0x10, height 8, CLUT 0x7800, colour bytes 0x4 through 0x6 set to 0x10 when the fourth argument is nonzero and to 0x80 when it is zero, texture row 0xD8, texture column the second byte argument shifted left by four, and the two signed coordinates from arguments 0 and 1. SetSprt stamps the packet, SetSemiTrans marks it semi transparent with 1, and the sprite is appended at slot 1 as 0x14 bytes. The two appends are func_8014E5A0. Both call sites, at 0x801D49CC and 0x801D4A2C, lie inside func_801D4754, still an asm row. One payload cmp proved the 0x114 bytes equal func_801DA00C at 0x801DA00C in emi/etc/shop/00, whose lift recorded exact there, and func_801D4564 at 0x801D4564 in emi/etc/bate/00, still an asm row there; the body carries no target-specific literal.'
   - - 18976
     - c
     - emitPanelIconPrimShisu00_801D5620

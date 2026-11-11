@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F369C
   - - 2852
-    - asm
-    - func_801F3724
+    - c
+    - setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724
+    - '@source: src/bof3/world/setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724.c'
+    - '@behavior: raises the shared overlay state byte 0x8014933B to 1, passes the pair 0x4A and 0x2F to the shared request helper func_8015507C, then seeds the row the front-end allocator func_8019601C returns with handler selector 0xB7, occupancy flag 1 and the fixed position words 0x460000 and 0x340000.'
   - - 2988
     - asm
     - func_801F37AC

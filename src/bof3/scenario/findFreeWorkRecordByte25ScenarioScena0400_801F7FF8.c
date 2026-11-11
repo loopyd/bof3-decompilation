@@ -15,7 +15,9 @@
  * its copy in that branch's delay slot. Byte 0x25 is the claim marker: the three
  * in-payload claimers write it non-zero after a successful scan (0x80 at
  * 0x801F79D0 in func_801F78F4 and 0x801F7B6C in func_801F7B00, 0x40 at
- * 0x801F7C54 in func_801F7BC0), and this overlay's clear handler
+ * 0x801F7C54 in
+ * claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenStepActiveWorkRecordsScenarioScena0400_801F7BC0),
+ * and this overlay's clear handler
  * clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC (0x801F7FCC) zeroes
  * byte 0x25 for all 0x80 entries, which is what frees them again. All three
  * callers jal this address (0x801F7934, 0x801F7B18 and 0x801F7BEC) and all three

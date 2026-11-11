@@ -22,7 +22,9 @@ void func_80196070(void);
  *           area and is bound as clearWorkFlags in the target that owns that
  *           body.
  *           The countdown's arming writer inside this overlay is the seeding
- *           handler func_801F7BC0, which calls the same stepper and then stores
+ *           handler
+ *           claimUpTo16FreeWorkRecordsSeedSavedPositionAndDirectionArmCountdown64ThenStepActiveWorkRecordsScenarioScena0400_801F7BC0,
+ *           which calls the same stepper and then stores
  *           0x40 into that word; the word is shared scratchpad space and the
  *           overlay's earlier step-run phase stores a primitive field there
  *           instead.

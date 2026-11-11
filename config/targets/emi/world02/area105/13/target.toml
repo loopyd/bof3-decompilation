@@ -8,6 +8,7 @@ splat = "config/targets/emi/world02/area105/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
+    "src/bof3/world/drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C.c",
     "src/bof3/world/stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180.c",
 ]
 support_sources = [

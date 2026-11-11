@@ -142,6 +142,7 @@ dispatchStateTableAd00 = 0x801D6DE4;
 initBattleUiAndQueueFixedCue = 0x801D6E20;
 advanceStateWhenLoaderReady = 0x801D6EAC;
 dispatchStateTableAd0c = 0x801D6EEC;
+submitActiveBattlerRecordsAndAdvanceState = 0x801D6F28;
 startEmiStreamSlotWhenLoaderReady = 0x801D7108;
 enterPhase4WhenLoaderReady = 0x801D716C;
 dispatchStateTableAd20 = 0x801D71A4;

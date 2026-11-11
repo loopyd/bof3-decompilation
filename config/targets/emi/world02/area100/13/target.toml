@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/initArea10013State.c",
     "src/bof3/world/seedWorkWord3CScaledDistanceAndAdvanceStateByte1World02Area10013_801F3CDC.c",
     "src/bof3/world/seedWorkWord3CScaledDistanceClearWorkOffsetAndVelocityAndAdvanceStateByte1World02Area10013_801F30B4.c",
+    "src/bof3/world/setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area10013_801F3680.c",

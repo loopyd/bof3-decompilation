@@ -17,6 +17,7 @@ sources = [
     "src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c",
     "src/bof3/ui/stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190.c",
     "src/bof3/ui/setFrontLocalMode3AndAdvanceUiSubstep.c",
+    "src/bof3/ui/emitPanelIconPrimBate00_801D4678.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

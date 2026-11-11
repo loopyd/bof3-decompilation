@@ -152,8 +152,10 @@ segments:
     - c
     - dispatchStateTableAd0c
   - - 25384
-    - asm
-    - func_801D6F28
+    - c
+    - submitActiveBattlerRecordsAndAdvanceState
+    - '@source: src/bof3/battle/submitActiveBattlerRecordsAndAdvanceState.c'
+    - '@behavior: Returns while any of the localBattlerCount 0x140-byte local work record flag words at D_80145FB4 still carries the queued-slot flag 0x2000; when the D_801462E5 queue cursor differs from that count the battle state byte BATTLE_GLOBAL_BYTE_62E2 steps back by one, and otherwise it resets the layout bank through func_80161808, submits every active record with the 0xBF5F-masked status halfword at D_80145F10 through func_800A36F0 and func_80196718, publishes each record whose flag byte carries bit 0 into the scratchpad work pointer and draws its panel through func_8014D664 with the 0x800F0800 row and the 0x1800 flags, starts the EMI stream slot selected by the low seven bits of D_80145024 through func_8016728C, and then advances the battle state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 25864
     - c
     - startEmiStreamSlotWhenLoaderReady

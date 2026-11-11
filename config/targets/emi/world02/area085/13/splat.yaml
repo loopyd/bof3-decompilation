@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F2ED8
   - - 972
-    - asm
-    - func_801F2FCC
+    - c
+    - setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC
+    - '@source: src/bof3/world/setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC.c'
+    - '@behavior: Overlay work-record teardown: walks the 30 shared 0x98-byte work records based at 0x80146888, publishes each record through the scratchpad pointer cell 0x1F800044 and, for a record whose byte 0 has bit 0 set, stores 5 in its state byte 0x29 and runs the shared service at 0x8014D290; it then publishes the base record at 0x80145E90 unconditionally, stores 5 in that base byte 0x29, runs the shared service once more and restores the pointer cell incoming value.'
   - - 1180
     - c
     - dispatchStateByte1Table3d40World02Area08513_801F309C

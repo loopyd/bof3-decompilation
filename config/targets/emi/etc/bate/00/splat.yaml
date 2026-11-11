@@ -107,8 +107,10 @@ segments:
     - asm
     - func_801D4564
   - - 14968
-    - asm
-    - func_801D4678
+    - c
+    - emitPanelIconPrimBate00_801D4678
+    - '@source: src/bof3/ui/emitPanelIconPrimBate00_801D4678.c'
+    - '@behavior: emits one 8-byte sprite packet at the primitive cursor g_PrimCursor through SetSprt8, storing the two signed coordinates at 0x8 and 0xA, the two 32-bit arguments shifted left by three at 0xC and 0xD, the caller frame halfword at 0x40 into 0xE and the frame byte at 0x44 into 0x04, 0x05 and 0x06, then marking the packet semi transparent with a zero argument and appending it through func_8014E5A0 with index 1 and size 0x10'
   - - 15152
     - asm
     - func_801D4730
