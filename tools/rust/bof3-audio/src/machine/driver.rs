@@ -1,4 +1,6 @@
 //! Validated owned guest image and cold service startup.
+mod reset;
+
 use super::{
     bus::{Bus, Ram, Width},
     cd::drive::Drive,
@@ -10,6 +12,7 @@ use super::{
     exception_calls::{Dispatch, Environment, MissingHook},
     execution::{Call, Execution, GuestCalls},
     image::executable::ram_offset,
+    image::firmware,
     interconnect::{DeviceProgress, Interconnect},
     kernel::{Bootstrap, Kernel},
     spu::reverb,
@@ -202,6 +205,7 @@ impl Image {
             return Err("owned driver: image and allocation metadata is inconsistent".into());
         }
         ram_offset(base, (bss_end - base) as usize)?;
+        self.validate_reset()?;
         let transfer = self.symbol("audio_staging_transfer")?;
         let transfer_end = self.symbol("audio_staging_transfer_end")?;
         if transfer & 63 != 0
@@ -317,6 +321,7 @@ impl Image {
 
     fn calls(&self) -> Result<GuestCalls> {
         let calls = GuestCalls {
+            reset: reset::ENTRY,
             start: self.entry("audio_calls_start")?,
             enter: self.entry("audio_call_enter")?,
             returned: self.entry("audio_call_return")?,
@@ -429,8 +434,9 @@ impl Image {
         })
     }
 
-    /// Execute cold service startup in zeroed RAM. Guest instructions select
-    /// stacks, GP and status. Audio initialization remains a subsequent call.
+    /// Execute the owned ROM from CPU reset and zeroed RAM. Guest instructions
+    /// load the image and select stacks, GP and status. Audio initialization
+    /// remains a subsequent call.
     pub fn start(&self, observer: &mut impl FnMut(&Execution) -> Result<()>) -> Result<Started> {
         self.start_scheduled(&mut |_| Ok(()), observer, &mut |_, progress| {
             progress.require_ready()
@@ -446,10 +452,10 @@ impl Image {
         observer: &mut impl FnMut(&Execution) -> Result<()>,
         schedule: &mut impl FnMut(&mut Execution, DeviceProgress) -> Result<()>,
     ) -> Result<Started> {
-        let mut bus = Interconnect::from_ram(self.ram()?);
+        let mut bus = Interconnect::from_ram(Ram::default());
+        bus.attach_firmware(firmware::Image::from_bytes(self.reset_rom()?)?)?;
         bus.configure_gpu_status()?;
         let base = self.symbol("audio_kernel_image")?;
-        bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
         let mut kernel = Kernel::default();
         bus.configure_diagnostic_output(64 * 1024)?;
         kernel.configure_counter_flags(self.symbol("audio_counter_flags")?)?;
@@ -502,8 +508,8 @@ impl Image {
         })?;
         kernel.configure_guest_vectors()?;
         let calls = self.calls()?;
-        let initialize = calls.start;
-        let cpu = Cpu::new(initialize);
+        let initialize = calls.reset;
+        let cpu = Cpu::pcsx_redux_reset();
         let mut execution = Execution::with_kernel(
             cpu,
             bus,
@@ -539,6 +545,7 @@ impl Image {
                 + 1_000
                 + 157 * 5
                 + 8 * 5
+                + self.bytes.len() as u64 / 4 * 6
                 + 6;
         let initialization = execution.call_scheduled(
             initialize,

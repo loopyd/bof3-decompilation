@@ -192,8 +192,10 @@ records the float peak before conversion and `clipped_samples` counts channel
 samples saturated for PCM16 delivery. The renderer fixes native settings to
 volume 3, stereo and unmuted. Reports include `native_key_on_delay`, the
 configured signed delay in output frames. Production rendering uses six frames.
-The cooperative output context starts before owned kernel startup. CPU timing,
-synthesis, transfers and counters advance during sound initialization, bank
+The cooperative output context starts before the first owned reset instruction.
+The CPU starts with zeroed RAM and executes the owned ROM loader before kernel
+startup. CPU timing, synthesis, transfers and counters advance during image
+loading, sound initialization, bank
 upload and callback preparation; only PCM collection is discarded.
 Header, sequence and auxiliary cue copies from the host-fed staging window to
 their live layout addresses execute guest instructions. Each padded sample
@@ -452,7 +454,7 @@ The retained timer access or counter pass resumes once. The owned image executes
 `WaitEvent` through its guest body and preserves the selected record across IRQ
 save and return. Raw host-service polling remains unsupported in this mode.
 
-Use `Image::start_scheduled` to configure devices before service startup and
+Use `Image::start_scheduled` to configure devices before CPU reset execution and
 `Execution::call_scheduled` for later calls. The scheduler runs after every
 advanced transition, including `DeviceProgress::Ready` and the instruction that
 returns to the stop address. The stopped check has no scheduler callback; the

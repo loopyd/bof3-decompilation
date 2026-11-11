@@ -9,6 +9,7 @@ use crate::{
 
 #[derive(Clone, Copy)]
 pub(crate) struct Guest {
+    pub reset: u32,
     pub start: u32,
     pub enter: u32,
     pub returned: u32,
@@ -58,9 +59,9 @@ pub(super) fn prepare(
     stack_arguments: Option<[u32; 4]>,
 ) -> Result<Boundary> {
     if let Some(guest) = execution.calls {
-        let cold = execution.cpu.pc() == guest.start;
+        let cold = execution.cpu.pc() == guest.reset && execution.cpu.instructions() == 0;
         if cold {
-            if entry != guest.start || arguments != [0; 4] || stack_arguments.is_some() {
+            if entry != guest.reset || arguments != [0; 4] || stack_arguments.is_some() {
                 return Err("owned cold startup requires its entry and no arguments".into());
             }
             return Ok(Boundary {

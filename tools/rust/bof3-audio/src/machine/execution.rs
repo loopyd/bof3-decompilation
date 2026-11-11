@@ -125,7 +125,7 @@ impl Execution {
         if self.kernel.is_none()
             || self.calls.is_some()
             || self.cpu.instructions() != 0
-            || self.cpu.pc() != calls.start
+            || self.cpu.pc() != calls.reset
         {
             return Err("owned call dispatcher requires untouched cold service execution".into());
         }
@@ -557,7 +557,11 @@ impl Execution {
         observer: &mut impl FnMut(&Self) -> Result<()>,
         schedule: &mut impl FnMut(&mut Self, DeviceProgress) -> Result<()>,
     ) -> Result<Call> {
-        ram_offset(entry, 4)?;
+        if !self.calls.is_some_and(|calls| {
+            entry == calls.reset && self.cpu.pc() == entry && self.cpu.instructions() == 0
+        }) {
+            ram_offset(entry, 4)?;
+        }
         if entry & 3 != 0 || entry == RETURN || !(1..=10_000_000).contains(&limit) {
             return Err("guest call requires aligned RAM entry and limit 1..=10000000".into());
         }

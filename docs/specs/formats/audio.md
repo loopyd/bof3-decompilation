@@ -4982,12 +4982,16 @@ bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
 
 The maintained [driver loader](../../../tools/rust/bof3-audio/src/machine/driver.rs)
 checks the manifest hashes, allocation bounds, stack alignment and required
-service symbols before returning a machine. It starts from zeroed RAM, loads
-only the built image and runs the guest service initializer. It sets GP to zero,
+service symbols before returning a machine. It starts the CPU at `0xBFC00000`
+with zeroed RAM and the immutable owned 512 KiB ROM from `Image::reset_rom`.
+The reset block configures BIU and SPU memory control `0x200931E1`, copies the
+built image from ROM offset `0x1000` to its linked RAM address, and enters the
+guest dispatcher and service initializer. Its observed initialization call
+includes the loader instructions. It sets GP to zero,
 reserves foreground stack space at `0x801F0000..0x80200000` with initial SP
 `0x801FFF00`, disables automatic PAD acknowledgement and enables CPU status
 `0x401` after initialization. It binds the linked services, a 65,536-byte
-diagnostic buffer, SPU memory control `0x200931E1` and the existing emulator
+diagnostic buffer and the existing emulator
 reference SPU models. Audio and layout initialization remain subsequent calls.
 
 The `bof3.bank-probe/v3` report includes owned startup hashes and policy,
@@ -5003,7 +5007,7 @@ symbols. Layout candidates run in isolated scratch RAM; the selected layout is
 then installed on the playback machine. Music rendering binds both loop-store
 instructions and the end-event entry, preserving pre-execution observations.
 Its `bof3.psx-render/v5` report records owned startup instead of BIOS boot.
-The cooperative audio context starts before owned kernel startup and runs through
+The cooperative audio context starts before the first owned reset instruction and runs through
 sound initialization, upload and callback preparation. Only PCM collection is
 discarded. Starting collection before play preserves DSP, transfer, queue and
 counter state. `capture_start_frame` is

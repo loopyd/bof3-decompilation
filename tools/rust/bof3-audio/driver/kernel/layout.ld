@@ -3,6 +3,7 @@ ENTRY(audio_calls_start)
 audio_exception_global_pointer = 0;
 audio_foreground_stack = 0x801FFF00;
 audio_initial_status = 0x401;
+audio_reset_payload = 0xBFC01000;
 SECTIONS
 {
     . = 0x80020000;
@@ -11,6 +12,7 @@ SECTIONS
         *(.text.audio_calls)
         *(.text.audio_driver_start)
         *(.text.audio_kernel_initialize)
+        *(.text.audio_reset)
         *(.text)
         *(.text.audio_counters)
         *(.text.audio_generic)
@@ -52,6 +54,10 @@ SECTIONS
     }
     ASSERT(audio_kernel_bss_end <= 0x80050000,
            "kernel allocation exceeds the owned arena")
+    ASSERT(audio_reset_end - audio_reset_start <= 0x1000 &&
+           (audio_kernel_image_end & 3) == 0 &&
+           audio_kernel_image_end - audio_kernel_image <= 0x7F000,
+           "reset ROM payload exceeds its allocation")
     ASSERT(audio_entry_vectors_end - audio_entry_vectors == 48,
            "A0/B0/C0 vector installation size changed")
     ASSERT(audio_exception_vector_end - audio_exception_vector == 16,

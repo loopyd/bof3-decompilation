@@ -29,8 +29,15 @@ The linker checks both allocations. Source comments retain original US function
 ranges, data identities and provenance hashes.
 
 The Rust [`machine::driver::Image`](../src/machine/driver.rs) validates artifact
-hashes, required symbols and allocation bounds, then starts services in zeroed
-RAM with explicit event, exception, timer, DMA and SPU service bindings. It uses the
+hashes, required symbols and allocation bounds, then starts the CPU at reset
+with zeroed RAM and explicit event, exception, timer, DMA and SPU service bindings.
+`Image::reset_rom` constructs the immutable 512 KiB owned ROM used by this path.
+Its position-independent reset block begins at `0xBFC00000`; the linked image
+follows at ROM offset `0x1000`. Guest instructions configure BIU and SPU memory
+control, copy that image into RAM, and enter `audio_calls_start`. The startup
+call report begins at reset and includes these loading instructions. The same
+ROM can be supplied to a native reference without an executable handoff.
+Service startup uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
 Startup owns RAM `0x80..0x90` for the CPU exception vector,
 `0xA0..0xD0` for the A0/B0/C0 entry vectors and
@@ -117,7 +124,7 @@ before enabling interrupts. SysDeqIntRP follows the live finite exception chain,
 compares exact pointer values and leaves the detached node's next link intact.
 Entry guards retain buffer, frame, priority, counter-index and chain limits.
 
-`Image::start_scheduled` accepts device configuration before the first startup
+`Image::start_scheduled` accepts device configuration before the first reset
 instruction and a resolver for audio waits. The resolver orders producer and
 consumer work without restarting the guest call. `Execution::call_scheduled`
 uses the same resolver for later bounded calls. Each wait poll counts toward
