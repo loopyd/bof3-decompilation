@@ -108,8 +108,10 @@ segments:
     - asm
     - func_801F40C0
   - - 5876
-    - asm
-    - func_801F42F4
+    - c
+    - setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4
+    - '@source: src/bof3/world/setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4.c'
+    - '@behavior: While the front-side byte 0x80143F03 is zero and flag 0x66 of the main-RAM flag bank 0x80144F28 tests set through 0x8015B5D4, sets the shared progress byte 0x801448EC to 5 and runs the shared front-end startup helper 0x8015C088 once the first packed word equals 0x558000 and the second word high half falls in 0xA..0xB. Returns 0 on every path.'
   - - 6016
     - asm
     - func_801F4380

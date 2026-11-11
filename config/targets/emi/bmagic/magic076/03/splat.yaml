@@ -93,11 +93,10 @@ segments:
     - dispatchStateByte1Table04a0BmagicMagic07603_801EF8A8
     - '@source: src/bof3/bmagic/magic07603DispatchTables.c'
   - - 3308
-    - textbin
-    - T_801EF8EC
-  - - 3316
-    - asm
-    - func_801EF8F4
+    - c
+    - dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic07603_801EF8EC
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic07603_801EF8EC.c'
+    - '@behavior: Copy the three code pointers at 0x801EEC1C into the frame, call the entry selected by unsigned work byte 2 of the scratchpad work object, then open and link a 12-byte draw-mode packet with page 0xA5 for graphics types 1 or 2 and 0x35 otherwise; call 0x800AF764 and the overlay draw passes 0x801EFEA8 and 0x801F00FC when work bytes 0 and 2 are both set, and finally open and link a second draw-mode packet with page 0x25 for graphics types 1 or 2 and 0x15 otherwise.'
   - - 3680
     - c
     - seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60

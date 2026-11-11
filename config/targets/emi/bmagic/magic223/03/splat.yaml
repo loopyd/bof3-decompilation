@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF7A8
   - - 3960
-    - asm
-    - func_801EFB78
+    - c
+    - reserveFirstFreeRecordBmagicMagic22303_801EFB78
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22303_801EFB78.c'
+    - '@behavior: Reserves the first free record among 64 records of stride 0x78 in the pool at 0x801EFC60, sets that record''s flags bit 0 and returns its index, or returns 0xFF when every record is occupied.'
   - - 4060
     - c
     - clearWorkBytes0Through4BmagicMagic22303_801EFBDC

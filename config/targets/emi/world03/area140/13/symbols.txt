@@ -21,7 +21,7 @@ clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkReco
 func_801F3E30 = 0x801F3E30;
 testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058 = 0x801F4058;
 func_801F40C0 = 0x801F40C0;
-func_801F42F4 = 0x801F42F4;
+setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4 = 0x801F42F4;
 func_801F4380 = 0x801F4380;
 func_801F4674 = 0x801F4674;
 dispatchStateByte1Table4ac4World03Area14013_801F46A0 = 0x801F46A0;

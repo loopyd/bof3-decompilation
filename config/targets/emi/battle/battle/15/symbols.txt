@@ -261,6 +261,7 @@ countdownWorkByte9CopyPositionAndAdvanceStage = 0x800AE574;
 advanceStageAndAccumulateWorkCounter = 0x800AE640;
 accumulateWorkCounter = 0x800AE6C8;
 dispatchBattleWorkStateHandlerB = 0x800AE788;
+countdownWorkByte9SeedAxesFromBattlerRecordAndAdvanceStage = 0x800AE82C;
 func_800AF0F8 = 0x800AF0F8;
 func_800AF5FC = 0x800AF5FC;
 testWorkRangeAgainstRecord = 0x800AF66C;

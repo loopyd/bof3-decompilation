@@ -23,5 +23,5 @@ func_801F3F34 = 0x801F3F34;
 clearSharedFlagBit25World01Area05213_801F4268 = 0x801F4268;
 func_801F4290 = 0x801F4290;
 claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C = 0x801F431C;
-func_801F43B0 = 0x801F43B0;
+probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area05213_801F43B0 = 0x801F43B0;
 D_801F44B8 = 0x801F44B8;

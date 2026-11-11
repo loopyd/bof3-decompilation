@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF530
   - - 2524
-    - asm
-    - func_801EF5DC
+    - c
+    - decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC.c'
+    - '@behavior: Calls the shared readiness helper, decrements work byte 0x0A while nonzero, counts down work byte 0x09 and, at zero, decrements byte 0x0B of the record at 0x801EB4E0 and clears work bytes 0x00-0x04.'
   - - 2660
     - asm
     - func_801EF664

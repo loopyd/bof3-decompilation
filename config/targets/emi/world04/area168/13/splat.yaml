@@ -125,8 +125,10 @@ segments:
     - setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c'
   - - 7240
-    - asm
-    - func_801F4848
+    - c
+    - setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F4848
+    - '@source: src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F4848.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 0 of the shared overlay byte at 0x8014933B when the shared selector query for id 0xC answers nonzero, or stores 7 when it answers zero.'
   - - 7348
     - asm
     - func_801F48B4

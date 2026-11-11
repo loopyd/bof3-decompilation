@@ -119,8 +119,10 @@ segments:
     - '@source: src/bof3/world/claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C.c'
     - '@behavior: Claims a front-end record at 0x80143FC8 and seeds handler 0x48 with the fixed position pair 0x890000/0x118000, the distance word scaled left by eight and row byte 0x0B = 0x10.'
   - - 6064
-    - asm
-    - func_801F43B0
+    - c
+    - probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area05213_801F43B0
+    - '@source: src/bof3/world/probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area05213_801F43B0.c'
+    - '@behavior: Projects the work position into two words through 0x801F3980 and keeps the low halfword of each as the cell coordinate this step works on, then for the cell one step down in the first coordinate and one step up in the second: runs the shared 0x80155038 helper with the size 0x10, ORs the byte answered by the shared map probe 0x80166CB0 into work word +0x18 and +0x1C, and queues a size-0x11 shared cue through 0x801A4BC0 at each pair. Finally writes 7 into work byte 8, arms the work record published at 0x80148210 with level 7 through 0x801ABBA8 and stores 2 into that record byte 7.'
   - - 6328
     - textbin
     - D_801F44B8
