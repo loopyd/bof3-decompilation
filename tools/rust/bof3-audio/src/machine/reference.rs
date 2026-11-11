@@ -112,6 +112,7 @@ fn prepare_bank_output(
         Vec::new(),
         audio,
         plan,
+        bank::Staging::Direct,
         observer,
     )
 }

@@ -195,6 +195,10 @@ configured signed delay in output frames. Production rendering uses six frames.
 The cooperative output context starts before owned kernel startup. CPU timing,
 synthesis, transfers and counters advance during sound initialization, bank
 upload and callback preparation; only PCM collection is discarded.
+Header, sequence and auxiliary cue copies from the host-fed staging window to
+their live layout addresses execute guest instructions. Preparation reports
+include those calls. Source admission and routine entry remain host work and
+add no guest cycles.
 Collection begins before play without resetting phase or device state.
 `capture_start_frame` records that absolute frame origin. Body, progress, stop
 and `executed_frames` counts are relative to it; `output_clock` retains absolute

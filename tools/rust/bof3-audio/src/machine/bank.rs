@@ -30,11 +30,12 @@ pub struct Prepared<P = driver::Evidence> {
     pub execution: Execution,
     pub startup: P,
     pub(crate) audio: Audio,
+    pub(crate) staging: Staging,
     pub identity: Identity,
     pub calls: Vec<Call>,
     pub bank: Bank,
 }
-fn copy(execution: &mut Execution, address: u32, bytes: &[u8]) -> Result<()> {
+fn write(execution: &mut Execution, address: u32, bytes: &[u8]) -> Result<()> {
     super::image::executable::ram_offset(address, bytes.len())?;
     for (offset, &byte) in bytes.iter().enumerate() {
         execution
@@ -42,6 +43,45 @@ fn copy(execution: &mut Execution, address: u32, bytes: &[u8]) -> Result<()> {
             .write(address + offset as u32, Width::Byte, u32::from(byte))?;
     }
     Ok(())
+}
+
+/// Direct writes belong to original EXE development execution only.
+pub(crate) enum Staging {
+    Direct,
+    Guest(u32),
+}
+
+impl Staging {
+    pub(crate) fn copy(
+        &self,
+        execution: &mut Execution,
+        address: u32,
+        bytes: &[u8],
+        observer: &mut impl FnMut(&Execution) -> Result<()>,
+    ) -> Result<Option<Call>> {
+        let destination = super::image::executable::ram_offset(address, bytes.len())?;
+        let Self::Guest(entry) = *self else {
+            write(execution, address, bytes)?;
+            return Ok(None);
+        };
+        if bytes.is_empty() {
+            return Ok(None);
+        }
+        if bytes.len() > 0x10000 || (destination < 0x20000 && destination + bytes.len() > 0x10000) {
+            return Err("PSX bank: guest copy exceeds or overlaps media staging".into());
+        }
+        write(execution, 0x80010000, bytes)?;
+        let copied = execution.call_observed(
+            entry,
+            [address, 0x80010000, bytes.len() as u32, 0],
+            1_000_000,
+            observer,
+        )?;
+        if copied.result != address {
+            return Err("PSX bank: guest copy returned a different destination".into());
+        }
+        Ok(Some(copied))
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
@@ -70,6 +110,7 @@ pub fn prepare(
 ) -> Result<Prepared> {
     let plan = plan(image, archive, options)?;
     let audio = image.audio()?;
+    let staging = Staging::Guest(image.entry("audio_staging_copy")?);
     let started = image.start_scheduled(
         &mut |execution| {
             use super::spu::{
@@ -96,6 +137,7 @@ pub fn prepare(
         vec![started.initialization],
         audio,
         plan,
+        staging,
         observer,
     )
 }
@@ -106,6 +148,7 @@ pub(crate) fn load<P>(
     mut calls: Vec<Call>,
     audio: Audio,
     plan: Plan<'_>,
+    staging: Staging,
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared<P>> {
     let Plan {
@@ -119,25 +162,27 @@ pub(crate) fn load<P>(
     let layout = identity.layout;
     let dma_bytes = identity.dma_bytes;
     let body = &source[..identity.body_bytes];
-    let mut call = |execution: &mut Execution, stage: Stage, entry, arguments, limit| {
-        execution.call_observed(entry, arguments, limit, &mut |e| observer(stage, e))
-    };
-    calls.extend([
-        call(
-            &mut execution,
-            Stage::Initialization,
-            audio.initialize,
-            [0; 4],
-            1_000_000,
-        )?,
-        call(
-            &mut execution,
-            Stage::Layout,
-            audio.layout,
-            [u32::from(layout), 0, 0, 0],
-            1000,
-        )?,
-    ]);
+    calls.extend({
+        let mut call = |execution: &mut Execution, stage: Stage, entry, arguments, limit| {
+            execution.call_observed(entry, arguments, limit, &mut |e| observer(stage, e))
+        };
+        [
+            call(
+                &mut execution,
+                Stage::Initialization,
+                audio.initialize,
+                [0; 4],
+                1_000_000,
+            )?,
+            call(
+                &mut execution,
+                Stage::Layout,
+                audio.layout,
+                [u32::from(layout), 0, 0, 0],
+                1000,
+            )?,
+        ]
+    });
     let reverb_base = execution.bus.read(0x1f801da2, Width::Half)? * 8;
     if slot.spu_base as usize + dma_bytes > reverb_base as usize {
         return Err(format!(
@@ -145,8 +190,19 @@ pub(crate) fn load<P>(
         )
         .into());
     }
-    copy(&mut execution, slot.header_address, header)?;
-    copy(&mut execution, slot.sequence_address, sep_bytes)?;
+    calls.extend(
+        staging.copy(&mut execution, slot.header_address, header, &mut |e| {
+            observer(Stage::Header, e)
+        })?,
+    );
+    calls.extend(
+        staging.copy(&mut execution, slot.sequence_address, sep_bytes, &mut |e| {
+            observer(Stage::Sequence, e)
+        })?,
+    );
+    let mut call = |execution: &mut Execution, stage: Stage, entry, arguments, limit| {
+        execution.call_observed(entry, arguments, limit, &mut |e| observer(stage, e))
+    };
     let id = u32::from(slot.vab_id);
     let opened = call(
         &mut execution,
@@ -161,7 +217,7 @@ pub(crate) fn load<P>(
     calls.push(opened);
     for (index, chunk) in body.chunks(2048).enumerate() {
         let start = index * 2048;
-        copy(
+        write(
             &mut execution,
             0x80010000,
             &source[start..start + chunk.len().div_ceil(64) * 64],
@@ -206,6 +262,7 @@ pub(crate) fn load<P>(
         execution,
         startup,
         audio,
+        staging,
         identity,
         calls,
         bank,

@@ -45,6 +45,17 @@ After service initialization, the host selects GP zero, foreground SP
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
 
+The host supplies media bytes through `0x80010000..0x80020000`. Header, sequence
+and auxiliary cue copies into their layout addresses execute `audio_staging_copy`, a
+forward byte copy with A0 destination, A1 source, A2 length and V0 destination.
+Each copy appears in the preparation call report and its instructions reach the
+read-only observer and audio scheduler. The host rejects lengths above 64 KiB
+and destinations overlapping that staging window before writing the source.
+VB chunks retain their original guest DMA transfers and preserved padding.
+Source admission and routine entry remain host work with no guest cycle cost;
+complete production startup phase is still unqualified. Explicit original
+EXE development execution retains its separate direct-copy context.
+
 Owned diagnostic `puts` and `printf` execute guest instructions and emit byte
 writes at the PCSX-Redux debug-character port `0x1F802080`. Startup configures a
 64 KiB capture, available through `Interconnect::diagnostic_output`. Entry guards

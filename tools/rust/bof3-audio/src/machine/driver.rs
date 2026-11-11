@@ -265,6 +265,7 @@ impl Image {
         self.entry("audio_a0_dispatch")?;
         self.entry("audio_b0_dispatch")?;
         self.entry("audio_c0_dispatch")?;
+        self.entry("audio_staging_copy")?;
         for (slot, entry) in self.vector_bindings()? {
             let at = (slot - base) as usize;
             if u32::from_le_bytes(self.bytes[at..at + 4].try_into().unwrap()) != entry {

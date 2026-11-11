@@ -49,8 +49,8 @@ pub fn prepare(
     })
 }
 
-/// Observe owned preparation instructions. Archive staging remains host work;
-/// the observer cannot mutate guest state.
+/// Observe owned preparation, including guest header and sequence copies.
+/// Source bytes enter the staging window from the host. Observation is read-only.
 pub fn prepare_observed(
     image: &driver::Image,
     archive: &ArchiveImage,

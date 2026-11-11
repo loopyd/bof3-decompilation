@@ -100,8 +100,8 @@ pub(crate) fn local_cue<'a>(
     Ok((cue, program))
 }
 
-/// Host staging of the type-8 payload, as with VAB/SEP preparation. This does
-/// not execute the CD loader or establish its scheduling and transport behavior.
+/// Supply the type-8 payload through the prepared bank's staging policy.
+/// Owned copies execute guest instructions. CD loader timing remains unqualified.
 pub fn stage<P>(prepared: &mut Prepared<P>, archive: &ArchiveImage, index: usize) -> Result<Table> {
     if sha256_hex(archive.bytes()) != prepared.identity.archive_sha256 {
         return Err("PSX cues: auxiliary archive differs from prepared bank".into());
@@ -160,12 +160,12 @@ pub fn stage<P>(prepared: &mut Prepared<P>, archive: &ArchiveImage, index: usize
         capacity,
         records: bytes.as_chunks::<4>().0.to_vec(),
     };
-    for (i, &byte) in bytes.iter().enumerate() {
-        prepared
-            .execution
-            .bus
-            .write(address + i as u32, Width::Byte, byte.into())?;
-    }
+    prepared.calls.extend(prepared.staging.copy(
+        &mut prepared.execution,
+        address,
+        bytes,
+        &mut |_| Ok(()),
+    )?);
     Ok(table)
 }
 
