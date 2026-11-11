@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2F2C
   - - 904
-    - asm
-    - func_801F2F88
+    - c
+    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area15713_801F2F88
+    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area15713_801F2F88.c'
+    - '@behavior: Advance work byte 2 when the camera is outside the record coordinate window, then run the overlay routine at 0x801F3108.'
   - - 1176
     - asm
     - func_801F3098

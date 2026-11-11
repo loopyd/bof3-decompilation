@@ -79,8 +79,10 @@ segments:
     - '@source: src/bof3/ui/alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84.c'
     - '@behavior: Step handler of the SHISU overlay that keeps the shared step word 0x801DA0B4 on a 0x40 grid inside a 0x1000 window and reports the result through the byte 0x801DA04E before running the shared step. It loads that word, tests its low twelve bits and, when they are non-zero, adds 0x40 and masks the sum with 0xFC0 before storing it back and lowering the byte to zero; a word whose low twelve bits are already zero is left untouched and raises that byte to one. It then calls the shared drawing step func_801D2978 with no arguments. Its only in-image reference is the word 0x801D2C84 at 0x801D9728, entry 2 of the step handler run based at 0x801D9720 that the dispatcher at 0x801D2C0C indexes from the state byte 0x801DA049, and no jal in this payload names it. It reads no other state, its 0x18-byte frame only keeps $ra at 0x10 across the call, and the epilogue leaves the callee result in $v0 untouched.'
   - - 8420
-    - asm
-    - func_801D2CE4
+    - c
+    - advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4
+    - '@source: src/bof3/ui/advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4.c'
+    - '@behavior: Step handler of the SHISU overlay, the state-3 entry of its step run, that raises one work word toward the shared distance, reports whether it reached it, and then runs the shared step. It takes the signed word at 0x801DA084, the offset 0x3C cell of the UI work record based at 0x801DA048 that 0x801D27BC seeds to the shared distance shifted left 16 and lowered by 0x2000000, adds 0x200000 and stores the sum back in the delay slot of its first call. That call is the shared distance helper func_8015477C with the two shared coordinate cells 0x80149308 and 0x8014930C; when its answer shifted left 16 lies below the incremented word, this handler replaces the word with that shifted answer and sets the byte 0x801DA04E to one, and otherwise it leaves the word alone and clears that byte. It then calls the shared drawing step func_801D2978 with no arguments. Its only in-image reference is the word 0x801D2CE4 at 0x801D972C, entry 3 of the step handler run based at 0x801D9720 that the dispatcher at 0x801D2C0C indexes from the state byte 0x801DA049, and no jal in this payload names it. Its 0x18-byte frame keeps $s0 at 0x10 and $ra at 0x14, and the epilogue leaves the callee result in $v0 untouched.'
   - - 8584
     - c
     - runShisuUiStepUpdateShisu00_801D2D88

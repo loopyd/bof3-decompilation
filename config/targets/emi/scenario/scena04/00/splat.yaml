@@ -174,8 +174,10 @@ segments:
     - asm
     - func_801F9DF4
   - - 13264
-    - asm
-    - func_801F9FD0
+    - c
+    - queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0
+    - '@source: src/bof3/scenario/queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0.c'
+    - '@behavior: Single call-site handler of this overlay: func_801F9DF4 reaches it through the jal at 0x801F9FA0 with the mode id 3 (materialised at 0x801F9F48) or 0x26 (at 0x801F9F88) in the argument register, after writing the shared state byte D_80146874 and clearing the shared sub-state byte D_80146875, and then sign-extends the low byte of the result (sll/sra 24). It queues the low byte of its argument as a front-end mode through func_80150224 at 0x80150224, arms the shared primary mode byte D_80143BB0 with 2, raises flag 0x100 in the shared unsigned halfword mode word D_80146258, and returns 1. The argument is truncated explicitly with andi 0xFF in the call delay slot, the halfword load is hoisted above the mode-byte store, the mode byte constant is materialised in $v1 while $v0 carries the returned 1, and that 1 is written in the jr delay slot. The 0x18-byte frame only keeps $ra across the call. The 0x40-byte body is byte-identical to the exact lift at 0x801FCC9C in the scena03 00 overlay, proven by one cmp of the two 64-byte spans of the 0x801F6C00-load payloads, so the statement order, operand forms and declaration style came from that sibling and the two shared cells keep its names.'
   - - 13328
     - asm
     - func_801FA010

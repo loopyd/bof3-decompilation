@@ -391,8 +391,10 @@ segments:
     - '@source: src/bof3/battle/func_801DC73C.c'
     - '@behavior: Returns the signed damage value unchanged while the battle global halfword 0x801462E8 has bit 0x80 set. Otherwise it reads the status halfword of the local work record selected by the low byte of arg1 (or of the enemy work record when that byte is at least 3), and clears bit 0x10 of the local work record byte +0x120 selected by the low byte of arg2 when the status carries bit 8 and the first random gate passes, or when the second random gate lands below the percent byte 0x801EC303.'
   - - 48276
-    - asm
-    - func_801DC894
+    - c
+    - resolveEnemyTargetDamageThroughGates
+    - '@source: src/bof3/battle/resolveEnemyTargetDamageThroughGates.c'
+    - '@behavior: Returns the signed value arg0 unchanged while the full-damage flag 0x80 of the battle global halfword 0x801462E8 is set. Otherwise it gates on the attacker state: bit 8 of the local work record halfword +0x80 selected by the low byte of arg1, or of the enemy work record halfword +0x82 when that byte is at least 3, cancels on a nonzero rand() & 2; a party attacker with flag 0x100 set in its 0x80145FB8 word still returns arg0, as does an enemy attacker after the target gate. The target gate cancels on bit 4 of the +0x80 halfword of the enemy work record selected by the low byte of arg2 together with a nonzero rand() & 2, and a party attacker also cancels when rand() % 100 does not stay below the chance byte 0x801EC324. Cancelling clears bit 0x10 of the +0xFC pending byte of that enemy work record and returns zero.'
   - - 48856
     - asm
     - func_801DCAD8

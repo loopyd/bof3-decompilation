@@ -90,8 +90,10 @@ segments:
     - dispatchStateByte1Table493cWorld02Area11213_801F3E14
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 4696
-    - asm
-    - func_801F3E58
+    - c
+    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58
+    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c'
+    - '@behavior: Evaluates the work object''s cursor word pair at +0x34 and +0x38 through the shared distance helper func_801F5477C, stores the answer shifted left 16 into cursor word +0x3C and advances the work state byte at +1 so the next dispatch of table 0x801F493C lands on drawWorkCursorQuadWorld02Area11213_801F3EA4.'
   - - 4772
     - c
     - drawWorkCursorQuadWorld02Area11213_801F3EA4

@@ -12,6 +12,7 @@ rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC = 0x801D2ADC;
 dispatchStateByteTable9720EtcShisu00_801D2C0C = 0x801D2C0C;
 advanceShisuUiWordThenStepUpdateShisu00_801D2C50 = 0x801D2C50;
 alignShisuUiWordToBoundaryAndSetByteThenStepUpdateShisu00_801D2C84 = 0x801D2C84;
+advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4 = 0x801D2CE4;
 runShisuUiStepUpdateShisu00_801D2D88 = 0x801D2D88;
 dispatchStateByteTable9734EtcShisu00_801D2DA8 = 0x801D2DA8;
 func_801D3320 = 0x801D3320;

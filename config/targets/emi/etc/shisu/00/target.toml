@@ -16,6 +16,7 @@ sources = [
     "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionShisu00_801D460C.c",
     "src/bof3/ui/rampShisuWorkRecordChannelsThenDrawShisu00_801D2ADC.c",
     "src/bof3/ui/initializeShisuUiWorkRecordsShisu00_801D27BC.c",
+    "src/bof3/ui/advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

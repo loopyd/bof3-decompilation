@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801F34F8
   - - 2392
-    - asm
-    - func_801F3558
+    - c
+    - clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558
+    - '@source: src/bof3/world/clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558.c'
+    - '@behavior: Clears bit 0 of the byte at +0x74 of the work record published by the pointer cell 0x80146884; when the shared work record party byte 0x80145F09 reads 5 and character record 5 status byte 0x80144CAA reads 0x4B, sets flag 0x73 of the main-RAM flag bank 0x80144F28, queues the shared UI markers (2,0x21,0xC0), (2,0x22,0xC0), (3,0x21,0), (3,0x22,0) and adds one to the work record countdown halfword at +0x7E; when the party byte reads 7, runs the shared front-end startup helper func_8015C088 and requests front-end state entry 0x30 with progress 0xA. Takes no arguments and returns nothing.'
   - - 2640
     - asm
     - func_801F3650

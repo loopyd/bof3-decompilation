@@ -8,7 +8,7 @@ decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1And
 func_801F3070 = 0x801F3070;
 func_801F33D8 = 0x801F33D8;
 func_801F34F8 = 0x801F34F8;
-func_801F3558 = 0x801F3558;
+clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558 = 0x801F3558;
 func_801F3650 = 0x801F3650;
 func_801F3764 = 0x801F3764;
 findWorkPositionBoundsIndexWorld04Area17113_801F379C = 0x801F379C;

@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0.c",
     "src/bof3/world/drawWorkCursorQuadWorld02Area11213_801F3EA4.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638.c",
+    "src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c",
 ]
 support_sources = [
     "src/bof3/support/area112_13_psyq.c",

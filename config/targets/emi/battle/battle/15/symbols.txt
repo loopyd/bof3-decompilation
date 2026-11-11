@@ -83,6 +83,7 @@ func_8009DFBC = 0x8009DFBC;
 func_8009DFEC = 0x8009DFEC;
 func_8009E01C = 0x8009E01C;
 func_8009E04C = 0x8009E04C;
+setRecordField4NegOneWhenBattlerFlag4000 = 0x8009E07C;
 forwardSelector0 = 0x8009E1E0;
 setRecordFlag8Field6Neg20 = 0x8009E200;
 setRecordFlag8Field6Neg100 = 0x8009E224;

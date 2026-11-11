@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1AndDrawWorld04Area17113_801F3000.c",
     "src/bof3/world/setSharedStateByteAndRequestPair1c4aThenQueueCue109World04Area17113_801F3F24.c",
     "src/bof3/world/syncWorkRecordsAgainstBoundsTableAndMirrorKindChangeWorld04Area17113_801F3868.c",
+    "src/bof3/world/clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558.c",
 ]
 support_sources = [
     "src/bof3/support/area171_13_psyq.c",

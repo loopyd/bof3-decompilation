@@ -416,8 +416,10 @@ segments:
     - '@source: src/bof3/battle/func_8009E04C.c'
     - '@behavior: Applies the 0xBFC flags value to the active battler index byte D_80146394 through func_800A36F0, then runs the selection-input pass func_800A3F28.'
   - - 30844
-    - asm
-    - func_8009E07C
+    - c
+    - setRecordField4NegOneWhenBattlerFlag4000
+    - '@source: src/bof3/battle/setRecordField4NegOneWhenBattlerFlag4000.c'
+    - '@behavior: Takes the 0x4000 bit of the active battler index byte D_80146394 work-record halfword, which is the party halfword at 0x80145F10 for an index below three and the enemy halfword at 0x801EB6B2 rebased by -3 otherwise, and when it is set stores -1 in the signed halfword at byte +0x04 of the selection record pointer D_8014639C.record, clears that bit through func_800A36F0 and advances the band counter byte D_801462F1 or D_801462F3; a clear bit stores zero in the record halfword.'
   - - 31108
     - asm
     - func_8009E184

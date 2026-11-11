@@ -48,8 +48,25 @@ segments:
     - '@source: src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c'
     - '@behavior: publishes the inverse of bit zero of the func_80165EC0 answer for the two shared mask bytes 0x80148338 and 0x8014833D into the flag byte 0x80148511, copies the six shared field bytes 0x80144DF2 through 0x80144DF7 into the six-byte overlay snapshot table 0x801D8EE0 with its fifth slot written twice so the last of those stores lands on the same byte, and then stores the 0x8014833D mask byte into that snapshot table at the index the cell 0x8014835E holds'
   - - 5232
+    - c
+    - dispatchUiPhaseTableBate00_801D2070
+    - '@source: src/bof3/ui/dispatchUiPhaseTableBate00_801D2070.c'
+    - '@behavior: phase-table dispatcher of the BATE overlay that calls the entry of the three-entry phase handler pointer table D_801D8764 at the index the shared UI phase byte 0x80148651 holds, its 0x18-byte frame only keeping the return address at 0x10 across that call'
+  - - 5292
     - asm
-    - func_801D2070
+    - func_801D20AC
+  - - 5352
+    - asm
+    - func_801D20E8
+  - - 5404
+    - asm
+    - func_801D211C
+  - - 5520
+    - asm
+    - func_801D2190
+  - - 5784
+    - asm
+    - func_801D2298
   - - 5892
     - asm
     - func_801D2304

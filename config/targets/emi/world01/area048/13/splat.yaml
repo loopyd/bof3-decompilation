@@ -101,8 +101,10 @@ segments:
     - asm
     - func_801F3EE4
   - - 5016
-    - asm
-    - func_801F3F98
+    - c
+    - clearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDClearOrNonzeroWithModeClearThenAdvanceWorkByte9WrapAt41ToRandomState5AndDrawRowWorld01Area04813_801F3F98
+    - '@source: src/bof3/world/clearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDClearOrNonzeroWithModeClearThenAdvanceWorkByte9WrapAt41ToRandomState5AndDrawRowWorld01Area04813_801F3F98.c'
+    - '@behavior: entry 3 of the six-handler work-byte-+0x02 run based at 0x801F4E54; while the scratch work record''s signed halfword +0x36 is zero and bit 0xD of the shared main-RAM flag bank 0x80144F28 reads clear through the shared tester 0x8015B5D4, or while that halfword is nonzero and the shared mode byte 0x8014686B is zero, clears work byte +0x09 and advances the record dispatch state byte +0x02 by one; then, on every call, increments work byte +0x09 and, once it reaches 0x41, clears it and, when the low bit of the PsyQ rand at 0x8017E3D4 is set, stores 5 into that dispatch state byte, before passing the halfword +0x36 to the row draw routine at 0x801F4258.'
   - - 5300
     - c
     - drawMoveBlockByWorkByte9ThirdThenIncrementWorkByte9AndSetState2To1At4World01Area04813_801F40B4

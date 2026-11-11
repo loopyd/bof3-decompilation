@@ -11,6 +11,7 @@ sources = [
     "src/bof3/ui/buildEquipStatComparison.c",
     "src/bof3/ui/drawSpriteWithScenarioKindSubstitutionBate00_801D3664.c",
     "src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c",
+    "src/bof3/ui/dispatchUiPhaseTableBate00_801D2070.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

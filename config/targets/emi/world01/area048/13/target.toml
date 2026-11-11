@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4.c",
     "src/bof3/world/setStatusFFFFThenProgressBAndQueueCue205WhenGateBit0ClearElseProgress1ReleaseOverlayAndClearSharedStateBytesWorld01Area04813_801F4790.c",
     "src/bof3/world/queueCue20DThenClearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDSetOrNonzeroWithModeByteSetWorld01Area04813_801F3E38.c",
+    "src/bof3/world/clearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDClearOrNonzeroWithModeClearThenAdvanceWorkByte9WrapAt41ToRandomState5AndDrawRowWorld01Area04813_801F3F98.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c",

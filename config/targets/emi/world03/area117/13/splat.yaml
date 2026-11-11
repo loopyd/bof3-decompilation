@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70.c'
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 5 through the shared allocator 0x8015CB18 with word +0x0C = 0, word +0x10 = the byte D_801F466C[D_80144F5C] and halfwords +0x2E/+0x30 = D_8014613E/D_80146140; unless the call reports 0xFF the returned record index is stored in work byte +0x0B; takes no arguments and returns nothing.'
   - - 4848
-    - asm
-    - func_801F3EF0
+    - c
+    - publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0
+    - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0.c'
+    - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 2 through the shared allocator 0x8015CB18 with word +0x0C = 0, word +0x10 = the byte D_801F4678[D_80144F5C] and halfwords +0x2E/+0x30 = D_8014613E/D_80146140; unless the call reports 0xFF the returned record index is stored in work byte +0x0B; takes no arguments and returns nothing.'
   - - 4976
     - c
     - initArea11713State
