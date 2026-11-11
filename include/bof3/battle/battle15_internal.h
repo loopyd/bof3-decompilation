@@ -345,6 +345,7 @@ extern u8 D_801EB6C4[]; /* @source 0x801EB6C4 @kind unknown */
  * `addu at,offset,at`. */
 extern u8 D_801EB6AD[]; /* @source 0x801EB6AD @kind unknown */
 extern u8 D_801EB6AE[]; /* @source 0x801EB6AE @kind unknown */
+extern u8 D_801EB6AF[]; /* @source 0x801EB6AF @kind unknown */
 extern u8 D_801EB6B0[]; /* @source 0x801EB6B0 @kind unknown */
 extern u8 D_801EB6B2[]; /* @source 0x801EB6B2 @kind unknown */
 extern u8 D_801EB6B4[]; /* @source 0x801EB6B4 @kind unknown */
@@ -560,9 +561,9 @@ s32  func_800A3B6C(s32 arg0, s32 battler_index, s32 selection_mask);
 s32  func_800A3C9C(s32 arg0, s32 battler_index);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
-void func_800ABF5C(void);
+void claimOwnerSlotsInModeRowThenSeedCountdown(void);
 void func_800ABBE0(void);
-void func_800ABC30(void);
+void initBattlerRecordsForActiveSlotsThenSeedCountdown(void);
 void func_800A9BD8(u8 battler_index);
 void clampIndexedBattleByte14(s16 delta, s32 index);
 s32  func_800A403C(u8 index);
@@ -744,6 +745,26 @@ extern BattleWorkStateDispatchTable battleWorkStateHandlerTable;
 extern BattleWorkStateDispatchTable battleWorkStateHandlerTableB;
 
 extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
+/* Initialised battler-record counter: func_800ABCE0 raises it once per record
+ * it initialises, and initBattlerRecordsForActiveSlotsThenSeedCountdown resets
+ * it and publishes the total into the countdown below. */
+extern u8 D_801462F2; /* @source 0x801462F2 @kind unknown */
+extern u8 D_801462F3; /* @source 0x801462F3 @kind unknown */
+
+/* The eight 12-byte slot records of D_801463DC, read by
+ * initBattlerRecordsForActiveSlotsThenSeedCountdown and filled by the battle
+ * setup passes: the leading byte marks an active slot, the second indexes the
+ * 0x88-byte identity records at D_800E4050, and the words at 0x04 and 0x08 are
+ * the pair func_800ABCE0 forwards to func_8015477C. */
+typedef struct BattleSlotRecord {
+  u8  active;
+  u8  identity;
+  u8  unk_02[2];
+  u32 word_04;
+  u32 word_08;
+} BattleSlotRecord;
+
+extern BattleSlotRecord D_801463DC[]; /* @source 0x801463DC @kind table */
 extern s16 D_8014930A; /* @source 0x8014930A @kind unknown */
 extern s16 D_8014930E; /* @source 0x8014930E @kind unknown */
 extern u8 D_80149332; /* @source 0x80149332 @kind unknown */

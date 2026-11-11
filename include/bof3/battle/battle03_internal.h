@@ -83,7 +83,11 @@ typedef struct Battle03LocalWork {
   u8  unk_79;
   u8  pad_7a[6];
   u16 unk_80;
-  u8  pad_82[3];
+  /* unk_82 is the kind byte the damage resolver at 0x801DC044 compares against
+   * the 0x13/0x17/0x33 and 0x16/0x35/0x40 sets and uses to select the
+   * 0x801C90EB kind record stored in the scratchpad. */
+  u8  unk_82;
+  u8  pad_83[2];
   /* Identity triple tested by func_801E0E0C while unk_80 carries 0x4000. */
   u8  unk_85;
   u8  unk_86;
@@ -171,7 +175,14 @@ typedef struct Battle03EnemyWork {
   /* func_801E2A88 returns byte unk_05 in its default arm and tests halfword
    * unk_80 in cases 1 and 4. Both use the folded D_801EB630 record base. */
   u8                       unk_05;
-  u8                       pad_06[0x7a];
+  u8                       pad_06[0x77];
+  /* unk_7d is the enemy kind byte the damage resolver at 0x801DC044 compares
+   * against 4 and 1 when the party attacker's kind selects a doubling. */
+  u8                       unk_7d;
+  /* unk_7e indexes the target mode pack table at 0x800B51F8; one two-bit
+   * field of that entry becomes the target mode byte 0x80146375. */
+  u8                       unk_7e;
+  u8                       pad_7f;
   u16                      unk_80;
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
@@ -182,13 +193,20 @@ typedef struct Battle03EnemyWork {
   u16                      unk_86;
   /* unk_88 proven by the func_801DD978 slot-selection scan */
   u16                      unk_88;
-  u8                       pad_8a[0xa];
+  u8                       pad_8a[2];
+  /* unk_8c is an eight-byte candidate run; the entry selected by rand() & 7 is
+   * copied into unk_f6, the kind index of the 0x801CA718 kind table. */
+  u8                       unk_8c[8];
   /* unk_94 proven by the initDeferredBattlerCountdown path */
   u16                      unk_94;
   u8                       pad_96[0xa];
   /* unk_a0 proven by the func_801E97A8 ratio path */
   u16                      unk_a0;
-  u8                       pad_a2[0x12];
+  u8                       pad_a2[8];
+  /* unk_aa below 2 forces the target mode byte 0x80146375 to 0 while
+   * 0x801462E8 bit 0x4000 is set. */
+  u16                      unk_aa;
+  u8                       pad_ac[8];
   u8                       unk_b4;
   u8                       pad_b5[0x2b];
   u8                       unk_e0;
@@ -361,6 +379,10 @@ extern const u8                     D_801D0C98[]; /* @source 0x801D0C98 @kind un
 extern volatile u32                 D_801463D0; /* @source 0x801463D0 @kind unknown */
 extern u8                           D_801462F3; /* @source 0x801462F3 @kind unknown */
 extern u8                           D_80146384; /* @source 0x80146384 @kind unknown */
+/* Two-bit entry pack indexed by record byte +0x7E; the original reaches it
+ * symbol-relative (lui $at,%hi(X) + addu $at,$at,index + lbu %lo(X)($at)), so it
+ * is bound as a symbol rather than as a fixed-address macro. */
+extern u8                           D_800B51F8[]; /* @source 0x800B51F8 @kind unknown */
 extern u8                           D_801462F4; /* @source 0x801462F4 @kind unknown */
 /* Seven per-actor countdown bytes 0x801462FC..0x80146302; the group-queue cursor
  * at 0x80146303 abuts the array's end. */
@@ -420,6 +442,11 @@ extern u8 D_80145F26[]; /* @source 0x80145F26 @kind unknown */
 extern volatile u8 D_80145F1A[];
 extern volatile u8 D_80145F1C[];
 extern volatile u8 D_80145F20[]; /* @source 0x80145F20 @kind unknown */
+/* Halfword and byte of the same 0x140-stride record (+0x92 and +0x9E) that the
+ * 0x800-flagged status path of submitBattlerRecordsAndStartPhaseStream copies
+ * into D_80145F1A and D_80145F1C. */
+extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
+extern u8 D_80145F2E[]; /* @source 0x80145F2E @kind unknown */
 extern u8 D_80145FCC[];
 extern volatile u16           D_80143C40; /* @source 0x80143C40 @kind unknown */
 extern volatile u16           D_80145AA8; /* @source 0x80145AA8 @kind unknown */
@@ -434,6 +461,7 @@ extern u8*          g_PrimCursor; /* @source 0x8014598C @kind bss */
 extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind rodata */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
+extern const char   D_801D0C78[]; /* @source 0x801D0C78 @kind rodata */
 extern Battle03FiveDispatchTable D_801D0C84; /* @source 0x801D0C84 @kind table */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
@@ -779,8 +807,8 @@ void dispatchState2EventTable(void);
 void dispatchState2FollowupTable(void);
 void dispatchDefaultClassTable(void);
 void func_801E2170(void);
-void func_801E25E0(u8 arg0);
-void pickTargetStoreGlobal(s8 arg0);
+void advanceEnemyTargetModeAndPublishWork(u8 arg0);
+void pickTargetStoreGlobal(u8 arg0);
 void func_801D9304(u8 arg0);
 u8   resolveKindResultMode(void);
 void clearPendingBattlerPairsExceptModeKind(void);
@@ -796,12 +824,12 @@ u8   func_801D5A60(void);
 u8   func_801D5BC0(void);
 u8   func_801D5DCC(void);
 void advanceBattlerCountdownsAndReleaseSuppression(void);
-void func_801D750C(s32 arg0, s32 arg1);
+void drawBattlerStatusColumns(s32 arg0, s32 arg1);
 void drawBattlerCountdownEntries(s16 arg0, s16 arg1);
-void func_801D7D10(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
+void drawBattlerCountdownTile(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
 void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
 void drawBattleCommandStrip(u32 arg0);
-void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
+void drawShadowedBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
 void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
 u8   markBattlersMeetingOpposingThresholds(void);
@@ -815,7 +843,7 @@ void drawDecimalGlyphRun(s16 arg0, s16 arg1, u8 arg2, u16 arg3);
  * func_801E62BC) sign-extend it in the original binary (`lh`) and the callee
  * stores only its low half, so the declaration stays signed to reproduce that
  * caller-side extension. */
-void func_801D9684(s16 arg0, s16 arg1, s32 arg2, u16 arg3);
+void drawDecimalGlyphRun8x8(s32 arg0, s32 arg1, s32 arg2, u16 arg3);
 extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
@@ -851,6 +879,13 @@ extern u8  D_801EB6AF[]; /* @source 0x801EB6AF @kind unknown */
 extern s8  D_801EAEA4; /* @source 0x801EAEA4 @kind unknown */
 extern s8  D_801EAEA6; /* @source 0x801EAEA6 @kind unknown */
 extern u8  D_801EAF27[]; /* @source 0x801EAF27 @kind unknown */
+/* @source 0x801EAF2C @kind unknown — 4-byte texture-window rows {u, v, du, dv}
+ * that drawSpritePrimFt4Clut selects with the low byte of its arg2; the row is
+ * reached once per field at the byte displacements +0x2c..+0x2f of the same
+ * base, and the four rows of this overlay's table hold the signed texel offsets
+ * {0x34, 0xf4, 4, 4}, {0x37, 0xf4, 0xfc, 4}, {0x34, 0xf7, 4, 0xfc} and
+ * {0x37, 0xf7, 0xfc, 0xfc}. */
+extern u8  D_801EAF2C[][4];
 /* @source 0x801EAF3C @kind unknown — per-rank percent table the rank list scales
  * by; its own symbol so the read folds as `%hi`/`%lo` instead of `lui`+`ori`. */
 extern const u16 D_801EAF3C[];
@@ -862,8 +897,9 @@ extern const s8 D_801EAF48[];
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawColorTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
-void func_801D9E9C(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4);
-void func_801DA078(s16 arg0, s16 arg1, s32 arg2);
+void drawBattlerStatusGaugeBar(s16 arg0, s16 arg1, u16 arg2, u16 arg3,
+                               u8 arg4);
+void emitBattlerStatusAccentSprite(u16 arg0, u16 arg1, u8 arg2);
 void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   func_801DA69C(u32 arg0);
@@ -880,10 +916,10 @@ void func_801DAAE4(void);
 u32  func_801DC73C(s16 arg0, u32 arg1, u32 arg2);
 u32  func_801DCCB0(void);
 u32  func_801DCD50(u32 arg0, u8 arg1, s32 arg2);
-u32  func_801DC044(u8 arg0, u8 arg1, u16 arg2);
+s32  resolveBattlerDamageAmount(u8 attacker, u8 target, u16 kind_mask);
 u32  func_801DCAD8(u8 arg0, u8 arg1, s8 arg2);
-u32  func_801DC894(s16 arg0, u8 arg1, u32 arg2);
-u32  func_801DBB78(u8 arg0, u8 arg1);
+u32  resolveEnemyTargetDamageThroughGates(s16 arg0, u8 arg1, u8 arg2);
+s16  applyResolvedDamageToTarget(u8 attacker, u8 target);
 void copyLocalTemplates(void);
 void clearBattlerActionFlags(u8 arg0);
 void func_801DD29C(void);
@@ -943,11 +979,13 @@ void func_801DEAE0(void);
 void queueScriptEvent(u32 arg0, u32 arg1);
 void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void drawFullscreenFadeTile(void);
-void func_801D99AC(s16 arg0, s16 arg1, s32 arg2);
+void drawScratchColorTile(s16 arg0, s16 arg1, s32 arg2);
 void drawSpritePrimTpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
+void drawSpritePrim8x8Clut(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u8 arg4);
+void drawSpritePrimFt4Clut(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 u8   pickRandomUnblockedId(u8 arg0);
 u8   func_801E2A88(u8 arg0);
 u8   func_801E2CA4(void);

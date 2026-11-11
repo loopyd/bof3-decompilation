@@ -34,14 +34,19 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score. When that block also materialises a fixed-address base, order each zeroing against that materialisation separately: hoisting both above the base measured 96/98, the reversed pair 90/98, and the split matched. The later zeroing's home, plain statement or `for` initializer, measured the same, so the split is the lever. A call in that chain is ordered pairwise and as one chain: with a setup call, the counter clear, a base pointer and a following call's arguments in the same entry block, every single move measured the same or one instruction better, and only the order holding the setup call ahead of the counter clear and the counter clear ahead of the base pointer matched, because the following call's argument setup is emitted where its preceding statement sits |
 | An `andi 0xff` truncation on a copied byte where the original sign-extends (`sll`/`sra` of the byte) | The byte is signed: reach it as an `s8` lvalue or hold it in an `s8` local, since a `u8` spelling forces the mask. Mask and allocation are separate residuals on that body: clearing the mask moved 25 of 32 to 26 with the base register still swapped, and only a second pointer local for the other cell read reached exact |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask. A redundant `andi 0xFF` on a byte the original's own load already zero-extended is a widening conversion written at the use, so cast there. Where that byte is compared and used again, the mask is also the wrong form: it keeps a second masked byte in a temporary through the compare and re-masks it at the later use (one instruction and four bytes over, first difference on that temporary), while `(u8)value` at the compare matched at both local widths, and a `u8` local instead moves the mask onto the producing call's result and can change the compare's signedness. Read the condition off the original as one `andi` and no kept copy, and keep such a byte-validity guard as its two tests (`!((u32)mode < 2u || mode == 2)`) because folding them into `mode <= 2` emits one compare where the original has `sltiu` plus `addiu`/`bne`. A mask on a call argument the original does not carry is the callee's declared parameter width, not the argument expression: a `u16` parameter emitted that mask ahead of the `jal` with eight extra bytes, dropping the cast at the call site measured the same bytes, and declaring the parameter `u32` removed it and left the argument's `addiu` in the `jal` delay slot. Take the width off the original's argument register, since existing sources on other targets may declare that callee narrower. With the narrow formal in place that argument mask folds away, so a masked and a bare argument at that call compile alike and the spelling owes no probe. Read the same width off the callee's own prologue: an `sll`/`sra` pair per parameter there means signed narrow parameters, and declaring them wider drops that extension and leaves the caller's argument setup short |
-| First difference is the source register of the `sll` that narrows a computed value: a fresh copy where the original shifts the value's own register | Convert at the comparison, not into a local: an `s16` local copies the value, so the shift extends the copy, while an inline `(s16)value` cast at the test extends the value's own register. The inline form reached the full count where the local stayed one instruction short at unchanged size, and assigning through the local with the implicit conversion reproduced that residual, so the named local is the fault and the cast's spelling is not |
+| First difference is the source register of the `sll` that narrows a computed value: a fresh copy where the original shifts the value's own register | Convert at the comparison, not into a local: an `s16` local copies the value, so the shift extends the copy, while an inline `(s16)value` cast at the test extends the value's own register. The inline form reached the full count where the local stayed one instruction short at unchanged size, and assigning through the local with the implicit conversion reproduced that residual, so the named local is the fault and the cast's spelling is not. A store of a shifted value splits the same way: a wide local with a cast at the store (`(u8)(count << 5)`) matched, while masking that shift (`(count << 5) & 0xFF`) measured 45 of 51 with the body four bytes short, and a `u8` local taking the shift carried the same shortfall |
+| A shift by a runtime count comes out `srlv` where the original has `srav`, or the reverse | A register-count shift takes its opcode from the operand's type, so read signedness off that word: `srav`/`sllv` mean a signed operand and `srlv` an unsigned one. Mask the extracted bits and cast at the shift (`(s32)(color & 0x1f) >> count`), because the same body's constant-count extracts stay unsigned and emit `srl`, so decide each shift from its own word |
 | Frame a few bytes short and the first difference is a halfword load from a frame slot (`lhu` off `sp`) | That slot's declared width is the lever, and this function's own prologue states it: an `sll`/`sra` pair on an incoming argument register means a signed narrow parameter, and an `lhu` of a stacked argument slot means an unsigned one, so declare those parameters `s16`/`u16` rather than `s32`. Three `s32` spellings differing only in casts and clamp arm order measured the same 19 instructions short at 4 bytes under, while the narrow declarations matched at the payload's frame size; the casts on the comparisons then measured identical, so drop them. Unchanged score and byte count across such rewrites is the signal that the width, not the spelling, is the residual |
-| One byte of a named byte group, addressed by a constant subscript or by a stride the body computes | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate. The split is per byte, not per subscript kind: byte fields of one table record walked with a runtime stride need one extern each for the same reason, since every load then folds its own `%hi`/`%lo`. Spell each such field as a `u8` array extern at its own address and index it by the row's stride offset carried in one named byte-offset local (`index = (u32)row[slot] * STRIDE;` then `D_f0[index]`, `D_f1[index]`), which reached exact for both fields of one record: the named offset leaves each field re-deriving its own base at every access, while a single record view gives both fields one base |
+| Frame eight bytes long with every statement matching, where two halves of one 32-bit position word are read at different offsets | Keep the word one `s32` local and read its upper half through the halfword view (`((u16 *)&w)[1]`). A two-`u16` struct declared for that pair makes each address-taken aggregate take an 8-byte slot where the separate word locals take 4, so the frame came out eight bytes long with the first difference at the frame size, while the word plus halfword view matched at the payload's own size |
+| First difference is the register of a `lui %hi` that builds one fixed address, and revised candidates differ only in which register carries it | That register is a symptom of how many times the address is built, not a register-allocation residual: count the original's `lui`/`addiu` pairs for that address against the candidate's at the same sites. Revisions that changed only the carrying register moved the match count by tens of instructions at an unchanged body size and left the first difference on the same site; it cleared when the address was built once and copied. A variant that instead respells the load consuming that base - cast, array form, or a widened local - kept the same offset and the same count across three variants, so an offset that survives variants of different statement classes names the base local as the residual, not the statement printed at that site. Where that base is built once, read the width of the other locals live across its load before respelling the load: a value local whose only observers are byte stores is wider than anything reads, and narrowing it from `u32` to the store's own width closed a body that thirty ledger variants of statement order, expression splitting, local reuse and mask spelling could not move past 81 of 84. |
+| One byte of a named byte group, addressed by a constant subscript or by a stride the body computes | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate. The split is per byte, not per subscript kind: byte fields of one table record walked with a runtime stride need one extern each for the same reason, since every load then folds its own `%hi`/`%lo`. Spell each such field as a `u8` array extern at its own address and index it by the row's stride offset carried in one named byte-offset local (`index = (u32)row[slot] * STRIDE;` then `D_f0[index]`, `D_f1[index]`), which reached exact for both fields of one record: the named offset leaves each field re-deriving its own base at every access, while a single record view gives both fields one base. Splitting is per site too, not only per field: one byte the original reads through its record base's stride at one site and through a base of its own at another measured 24 instructions short at 8 bytes over when one binding served both — the base hoisted into a saved register and the constant it shared with the body pulled into a second — while either assignment of the two spellings measured exact |
+| Two byte loads and a two-part compare where the original issues one `lhu` against one constant pairing both values | Bind the pair as a single `u16` extern at the lower address and write the one combined compare. This width belongs to the body, not to the neighbourhood: exact sources on the same address pair may store those bytes separately, and a split-byte spelling reaches the pair in two accesses, so it cannot emit that one halfword load |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions. Mirror case: one record halfword the original reloads twice needs its own signed word temporary at the second read, since a reused local or an inline cast at the second use folds the pair into one zero-extending load and lands one or two instructions short with the first difference at that load |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place. An initializer list that dereferences that extern (`T handlers[3] = {D_t[0], D_t[1], D_t[2]};`) is not that spelling: GCC 2.7.2 materialises the elements into a temporary and copies it, so each table word costs a load and a store where the original keeps one register-based load. Measured at 15 of 24 instructions with the frame 28 bytes long, first difference the entry block's `lui` of that base, while the aggregate assignment matched and kept the entry cell load ahead of `subu sp`. When the original copies only a leading prefix of a longer pointer run, size that extern's type to the copied words: the aggregate assignment emits one word load and store per declared element and nothing past it, while a type covering the whole run copies the neighbours. Index that local with the cell read written inline (`handlers[D_cell[2]]();`): a pointer local for the cell taken ahead of the table local leaves two bases competing for the entry block's first free register, and the build kept `$a2` for the cell where the original has `$v0` at 22 of 37 instructions, while the inline index matched |
 | Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads. Fields copied one at a time instead of as one block take the same type per field: assign each moved four-byte field through an alignment-1 typedef, since that record's own `u32` field keeps the aligned load. The mirror sits in the same type: when the original moves the block with aligned `lw`/`sw` and the build overruns there, the copy was spelled through byte-typed operands, which GCC 2.7.2 lowers to that alignment-tested `lwl`/`lwr` path and grows the body by most of the copied block; casting those operands to `u32 *` leaves the codegen identical, because the alignment is the type's and not the argument's, so write the block as a struct assignment over a `u32` row sized to its word count or as `__builtin_memcpy` through `u32 *` locals, which returned the original size with the first difference past the copy. Size that byte-array type to the bytes the original moves, not to the slot it sits in: a `0xA`-byte template inside a `0xC`-byte slot moves its leading word groups as `lwl`/`lwr` plus `swl`/`swr` and its trailing two bytes as `lb`/`sb`, while a type covering the slot's stride moves the padding instead |
 | Aggregate copy of a record from a fixed pointer; per-field stores already right and the build is four bytes over and short of the original | Keep the destination cast inside the assignment and give the source its own pointer local of the aggregate type (`head = (T *)D_table; *(T *)record = *head;`). The cast at the copy from a `u8 *` source, the typed head derived from that `u8 *` local, and a typed destination local each measured 116 matched instructions at or over the original size, so the aggregate type belongs on the source local alone |
+| Contiguous word group copied between two records: the original issues all its loads then all its stores, while the build pairs `lw`/`sw` and lets surrounding arithmetic fill a nearby branch delay slot | Spell the group as one assignment of a struct sized to the copied words (`*(T *)dst = *(T *)src;`): the declared element count sets both runs, so four words emit four loads ahead of four stores. Per-field statements emit a load/store pair per field with load-delay `nop`s. Measured 92 of 92 with the group's loads issued together |
 | Word copy between two named cells: the build materialises the destination base in `$v1` where the original keeps `$v0` | Write the copy as one assignment indexing both cells at their offsets (`work[0x08] = src[0x08];`). A local for the read value gave the two bases conflicting quantities and the destination took `$v1`, measured 15 of 30 at the original size, while the direct assignment matched; per-cell locals matched too, so the fault is the shared value quantity rather than the two-cell form |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products). With no missing saved register or spill, move an accumulator local's assignment to each original read site in turn: assigned after its last store it left the frame eight bytes long, assigned before the earlier reads four bytes short with nineteen instructions lost, and the site between the byte updates and the word store returned the original size with nine instructions still differing. Store form waits for that frame: rewriting the separate load/add/store updates as `+=`/`++` measured identical at the long frame and closed those nine once the assignment point was right |
 | Frame grows with callee-saved registers and a cell store the original commits before a call ends up after it in the build | Keep that store at its original place, as an in-place update on the record (`p[n]++`). Carrying the incremented value in a local and storing it after the call keeps the value live across the call: one measured body cost two callee-saved registers and an `0x20`-byte frame (22 of 32 instructions, 144 bytes against 128), while the in-place form let the following argument load fill the load-delay gap and the store fill the call's delay slot. This is the mirror of a `jal` result the original stores right after the call, which does take its own local |
@@ -64,11 +69,13 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | First difference is one `addu` building an indexed entry address with its operand roles swapped | Give that entry address its own pointer local and compare through the dereference (`entry = records + index + 2; if (g < *entry)`). This is a lifetime edit, not a representation one: casts on the index and a reversed comparison each re-folded the address and stayed short, while the pointer local matched |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
+| A shared halfword takes one bit set in one arm and cleared in the other, and the original builds that value with `ori` into a register the following branch's delay slot stores | Write both arms as in-place set and clear on that halfword (`rec->status |= A;` in one, `rec->status &= ~A;` in the other): GCC if-converts the pair into one select with a pre-test store, which is the original's single store. A ternary over the two constants keeps the value in a second register and puts the first difference on that `ori`'s destination, measured 262 of 282, so the pair is the spelling; the inverted arm order of the surrounding blocks is a separate axis and neither change substitutes for the other |
 | First difference is the same value stored to a later byte offset of one record than the original's first store, inside a field run the body repeats | One chained assignment over a record's adjacent byte fields emits those stores in reverse of the written order, so write them as separate ascending statements: the chain measured 113 of 121 instructions with `first=` on the third byte of the first colour run, and the separate form matched on the next gate |
 | Two adjacent byte fields of one record swapped in place, the original issuing a three-`xor` chain that reloads each cell between the operations | Write the swap as three statements on that byte view (`p[7] ^= p[8]; p[8] ^= p[7]; p[7] ^= p[8];`). A temp-byte swap shortened the walk's read-modify-writes by sixteen instructions and twenty bytes; the chain matched at the payload's size. Two elements of one array object are distinct objects, so the idiom stays defined C89 here |
 | Two equality tests on one byte each call the same function with a different constant; the build is four bytes under the original with the first difference at the outer branch's target | Write a `switch` over that byte with one case per constant in the original's test order. Every `if`/`else if` spelling stayed off: the chain and its nested and reversed forms four bytes under, two separate `if`s sixteen over, the disjunction of both tests eight over. The reversed case order kept the size and inverted the second case's test (61 of 63). Mirror topology: a body whose original negates the second test keeps that nested form instead of the switch, where the chain measured 55 of 63 instructions four bytes under with its then arm holding a jump to the merged call, and `if (a != A) { if (a == B) f(C); } else f(D);` matched. Read which test the original negates before choosing between the two forms |
 | One helper is called again at each test of a chain, and the build issues fewer `jal`s to it than the original | Re-issue the call at each site and compare its own result (`p = probe(x, y); if (p == A) ... else { p = probe(x, y); if (p == B) ... }`). Those are successive readings, not one value tested repeatedly, so neither a result local bound once nor a `switch` over one reading matches |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size. Grouping also places the multiply's `mflo`: a scaled sum of two byte-table addends kept left-associative measured a partial with `mflo` ahead of the last addend's add, and parenthesizing each addend's own load-plus-offset fixed that order at unchanged size. A constant bias used once in the sum is part of that choice: `(a >> 9) - 0x4000 + p` keeps the `addiu` on the addend the original bills, while the algebraically equal `(a >> 9) + (p - 0x4000)` folds it into the product group and measured ten instructions short of a matched body of identical size, so a size-equal count deficit that survives corrected statement order is this association, not another ordering probe |
+| A scaled index added to a promoted halfword base is two instructions short at the original size, first difference a constant `addiu` on the accumulator where the original's rides the scaled index | Write the offset as the right operand's own group and the base first (`(s16)((u32)x + (i * STRIDE + K))`): that grouping recovered fourteen instructions and the unsigned cast on the halfword base cleared the last pair, while the signed cast, the same terms as `i * STRIDE + K + x`, and every named-offset form kept the residual - and the hoisted local also left the frame 28 bytes short |
 | Two operand chains of one subtraction issued in the opposite order, count and size already equal, the first difference where one chain's load pair sits where the original has the other's shift pair | Name the right operand's biased sum as one `s32` local (`offset = FIELD_REF(u16, p, n) + K;` then `(p[b] << S) - offset`). Binding only the loaded halfword, or both loads as separate temporaries, left the chains free to interleave at the same partial; the named sum fixed the order and matched on the next gate |
 | `mult` plus `bgez`/`addiu (N-1)`/`sra log2(N)` around a scaled product | That triple is truncating signed division, not a shift: write `product / N` on a signed type. Shifting the product emits the bare `sra` and loses the sign-correction pair, so the divide spelling is what reproduces `mult` and the correction. An unsigned divide of the same kind of value instead shows one `mult`/`multu` with a large magic and no correction, so cast that dividend to an unsigned type at that use; one body can hold both spellings, since division signedness belongs to the use like a load's. A `u8` dividend promotes to `int`, so that cast, or a `u32` local holding the byte, is what selects `multu`, not the cell's own type. The mask applies to the divided value, not to the dividend: the original masks after the `multu`/`srl` pair, so write the byte cast where each result is used (`(u8)(count % 5) == 0`, `func((u8)(count / 5) + 4)`, `(u8)(channel / 17) << 5`), while masking the dividend instead moves that `andi` ahead of the divide and leaves the result bare. A record-slot index is that same dividend from the other side: when the original derives the index from the distance between a published record and its table base, its `multu` by a large magic plus a logical shift is that difference divided by the stride, so write the difference through byte pointers with a `u32` cast (`((u32)((u8*)p - (u8*)base)) / STRIDE`) - a typed record-pointer difference is signed, and that dividend brings back the sign-correction pair the original does not carry. A subtraction inside the dividend decides that signedness the other way: keep it inside and cast the result (`(u8)((cell - 1) / 2 + K)`), while a plain byte cell divided with no subtraction emits a bare shift because its promoted range is nonnegative, so read the original's correction pair before casting a dividend unsigned. The element type can carry that divisor instead of a written divide: declare the element as an opaque byte array of the proven stride and subtract the two typed pointers, which emits the original's multiply and shift from the declaration itself, with no `/ STRIDE` and no dividend cast, and matched the signed chain on the first gate. That spelling is a signed difference, so it belongs to the signed chain; the byte-pointer `u32` cast stays the form for `multu` plus a logical shift |
 | `subu`, `bgez` and `negu` chain in one guard | That chain is an absolute difference. A magnitude consumed only by its own comparison stays inline: `abs(a - K) > L` through the `<stdlib.h>` `abs` matched a band guard of three such tests, each keeping its transient chain beside one limit constant the whole guard shares. When the magnitude is compared again or used after the test, write `d = a - b; if (d < 0) d = -d;` on an `s32` local and compare that magnitude against the bound. Two magnitudes compared with each other rather than against a bound take one such local each, both computed before either test, so the original negates each in place and the compare reads those two registers. Keep each halfword's `<< 16` cell-start term inline in its own subtraction, since the original recomputes it per guard. When the magnitude's bound compare is followed by more arm work, write `d = d >= 0 ? d : -d;`: the mirrored `d = d < 0 ? -d : d;` and the `if (d < 0) d = -d;` form leave the negation outside the arm, so a later constant or copy fills the sign branch's delay slot and the body lands one instruction short at equal size. If the copy survives that, `d = __builtin_abs(d);` emits the backend's in-place `bgez`/`nop`/`negu` and shields the branch from the later constant, closing the residual on the compiler-evidence rung after the ternary alone stalled at the same size. Applying that intrinsic at each arm's own negation, rather than once onto one shared magnitude, is what fills both sign-branch delay slots; what still differs then is the bound the arms' shared tail compares, which closes only when that constant gets its own definition inside each arm after the arm's guard, because one literal or one copy assigned after both arms leaves those slots empty and the tail short at the original's size |
@@ -78,18 +85,19 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
-| Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
+| Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes: where that load's only consumer is the following call, its destination register is that call's argument number, so write the value in the argument list rather than as a body value that lands in a scratch register. A row byte kept as a body value measured 46 of 48 with `first=` at that load, and eight statement-order, local-spelling and guard variants held the same 46 until the byte was passed as the callee's third argument and matched on the next gate; a value the arm also tests still needs its own local |
 | A call site fills an argument register the callee's own body never reads | Parameter count belongs to the call site, not the callee. Where every call of a callee sets `$a3` while that callee's own lifted body reads three parameters, this caller declares the fourth argument the original fill needs and the callee's source keeps the three it reads: measured exact on the first gate, with the callee's own row gating unchanged. Read the fills off the `jal` sites, and keep each list in its own source, since a shared header would carry one and conflict. A parameter's width disagrees the same way: one caller's prototype may declare the pair `s16` while the definition takes `u16`, and each file keeps the width its own body measures, because the call crosses the same low half and the definition re-narrows at entry, so no shared header reconciles the two |
 | One small `li` for an argument sits before the address load another argument needs, instead of after it | Hold the value that fills that slot at the width the call consumes: a `u16` local narrowed it and the compiler hoisted the literal over the `lui`/`lw`, while the same body with an `s32` local emitted source order and matched. Argument-list respellings at that call (an extra local, a cast, an extra zero argument) kept the one-instruction swap, so read the residual as the held value's width, not the call's argument list |
+| Body at the original size and a couple of instructions short, first difference inside the entry block's saved-argument copies, and no loop setup in that block | That offset is the width of a local that only forwards an argument into a narrower store: an `s16` holder for a halfword packet field converts the `s32` argument into a second entry value, and declaring the holder `s32` while the store keeps its cast matched as the single change. A forwarded argument is not a computed accumulator, which does take the store's width, so read whether the original computes the value before narrowing it |
 | Original stores one cell twice on one path: the same constant, or a second value derived from the first read | Write both stores in the original order. The repeat is real bytes: one store leaves the build short and puts the first difference in that cell's block, while folding the pair into one expression emits a single store. That covers a byte the original adds a second byte to and then masks back through the same cell, and a counter it stores `+1` into before a guard overwrites it with `+2` |
 | Exactly 4 bytes over an exact twin whose bodies differ only in the constants they store | A store of zero reads `$zero` and needs no materialisation, while a store of a non-zero constant costs the `addiu` that produces it, so the twin that stores zero is the shorter one by that instruction and the difference is not a shape fault. Read both stored constants before reshaping, and do not recover the bytes by respelling the store |
-| Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor, or give each read its own local: two locals loaded from the one cell stay two `lui`/`lw` pairs where a shared local folds them into one and lands a pair short, with the first difference at the second read. That serves the pair inside a single arm too, where the store between the reads writes another symbol and so forces nothing. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral |
+| Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor, or give each read its own local: two locals loaded from the one cell stay two `lui`/`lw` pairs where a shared local folds them into one and lands a pair short, with the first difference at the second read. That serves the pair inside a single arm too, where the store between the reads writes another symbol and so forces nothing. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral. Where the intervening store writes a named symbol, CSE holds the cell across it and no read-side respelling restores the reload; write that store as a fixed-address lvalue (`PSX_REF(u32, ADDR) = 0;`), which assembles to the original's own `lui $at` plus `sw %lo` and is not provably disjoint from the cell, where a named store is. Its divergent pass shows in a `-da` dump as one reference fewer than the source earns, and only the store with no call after it needs the form: a named store followed by a call forces the same reload |
 | Second read of one byte missing with no store between the two | That pair needs a volatile pointee on the pointer reaching the byte, keeping the record's word fields on plain typed views; see [representation](#representation-and-volatility) |
 | Second read of one table element scheduled above an intervening store | Write that read as a scalar dereference through its own pointer local (`p = &row[i]; ... return *p;`): a repeated `row[i]` compiles as an array-element reference, which the pre-reload scheduler lifts above the store, moving the store's constant into another register, while the scalar load stays at its statement. One pointer for both uses measured a 48/49 partial with the `addu` operands exchanged, and one value local folded the pair into a single load four bytes short; width, cast and guard respellings held at 46/49 at the original size, so the split of uses is the lever, not another local's width |
 | One extern array covers a run of same-size tables and a later table is reached as `base[i + N]` | Bind that table at its own symbolic address and index it with its own element type (`extern s16 D_A[16][2]; extern s16 D_B[16][2];` then `D_B[i][0]`). The offset form gives both tables one base pseudo and one index quantity: one measured seed spelled the second table as `D_A[i + 16][0]` and held 23 of 46 instructions with a swapped index-register pair (`move a0,v0` against `move a1,v0`), while the two symbolic rows matched on the next gate. Both addresses are the payload's own immediates, so this is a binding split, not a layout change |
 | Fixed run of identical calls whose arguments differ only in a constant | Write each call out with its own literal arguments rather than looping over an argument table: the original's run has no latch, and a loop adds the induction, the counter register and the frame bytes the original never had |
-| Body draws through the shared GPU packet cursor `g_PrimCursor`; a queued size or the call set differs | Each packet is built in place at the cursor and queued with its own packet size, in the original's order: `SetDrawMode((DR_MODE *)g_PrimCursor, ...)` then `GpuAppendPrim(ot_index, 0xC)`, then `SetPolyFT4((POLY_FT4 *)g_PrimCursor)` with the vertex, texture and colour writes, then `GpuAppendPrim(ot_index, 0x28)`. The call set is this span's own `jal` list: a quad whose colour words are all `0x80` carries no `SetSemiTrans`, while the family's translucent members add that call. Order the colour stores by the source byte each one consumes, not by the packet's field order: where one loaded record byte feeds red and green of the first triangle and a second feeds the remaining blue fields, writing each source byte's group together with its zero fields cleared first matched, while the natural red, green, blue order for all three triangles measured 103 of 113 instructions |
-| Saved-register pair exchanged, or the save group one register short with the body 8 bytes under | Trace real value deaths, later reuse and merged allocator quantities, then order: saved-register numbers follow the order the source first mentions each saved value, so read the original's prologue save sequence and mention its values in that order. With the group and the size already restored, a state byte still took `$s3` where the original holds `$s2`, and writing that byte's store ahead of the first coordinate word matched. A coordinate left in `$s1` for a later literal 1 to reuse is this same order, seen as the missing save. When the exchange sits where the original calls a helper and tests a cell after it, the order the source mentions those values is the lever: bind the call result to its own local on a statement ahead of the test, because that same call left as a later `&&` operand emits after the test and keeps the exchange at the original byte size, while hoisting it, with the callee width read off its own argument register, matched. One call answer both stored as its raw byte and used as a signed value is a [value-lifetime](#allocator-sensitive-functions) split into two locals, not another order variant. Numbering also follows the preheader's emitted words, not only the source's mention order: initialising a loop base from a pointer the body already holds emits one `move` where initialising it from its own symbol emits `lui`+`addiu`, and that missing word numbers every loop register one place later, so a permutation at unchanged shape and one word under is that initialiser, which matched once written `= &CELL`. A non-zero counter literal shifts the same way: written in the `for` head it emitted after the pointer initialisations the original emits first, so give it its own statement above them and leave the head bare |
+| Body draws through the shared GPU packet cursor `g_PrimCursor`; a queued size or the call set differs | Each packet is built in place at the cursor and queued with its own packet size, in the original's order: `SetDrawMode((DR_MODE *)g_PrimCursor, ...)` then `GpuAppendPrim(ot_index, 0xC)`, then `SetPolyFT4((POLY_FT4 *)g_PrimCursor)` with the vertex, texture and colour writes, then `GpuAppendPrim(ot_index, 0x28)`. The call set is this span's own `jal` list: a quad whose colour words are all `0x80` carries no `SetSemiTrans`, while the family's translucent members add that call. The texture page is part of the draw-mode call's own argument (`SetDrawMode((DR_MODE *)g_PrimCursor, 0, 0, GetTPage(0, 0, X, Y), 0)`), and where the packet's `+0x16` tpage word carries that same page the original calls the helper again at that store instead of reusing the first answer, so write the second call and give the page no local. Order the colour stores by the source byte each one consumes, not by the packet's field order: where one loaded record byte feeds red and green of the first triangle and a second feeds the remaining blue fields, writing each source byte's group together with its zero fields cleared first matched, while the natural red, green, blue order for all three triangles measured 103 of 113 instructions |
+| Saved-register pair exchanged, or the save group one register short with the body 8 bytes under | Trace real value deaths, later reuse and merged allocator quantities, then order: saved-register numbers follow the order the source first mentions each saved value, so read the original's prologue save sequence and mention its values in that order. With the group and the size already restored, a state byte still took `$s3` where the original holds `$s2`, and writing that byte's store ahead of the first coordinate word matched. A coordinate left in `$s1` for a later literal 1 to reuse is this same order, seen as the missing save. When the exchange sits where the original calls a helper and tests a cell after it, the order the source mentions those values is the lever: bind the call result to its own local on a statement ahead of the test, because that same call left as a later `&&` operand emits after the test and keeps the exchange at the original byte size, while hoisting it, with the callee width read off its own argument register, matched. One call answer both stored as its raw byte and used as a signed value is a [value-lifetime](#allocator-sensitive-functions) split into two locals, not another order variant. Numbering also follows the preheader's emitted words, not only the source's mention order: initialising a loop base from a pointer the body already holds emits one `move` where initialising it from its own symbol emits `lui`+`addiu`, and that missing word numbers every loop register one place later, so a permutation at unchanged shape and one word under is that initialiser, which matched once written `= &CELL`. A non-zero counter literal shifts the same way: written in the `for` head it emitted after the pointer initialisations the original emits first, so give it its own statement above them and leave the head bare. Copies of the incoming arguments are the case with no mention order to give, since every one of them is mentioned at entry: their rotation follows live length, and GCC 2.7.2 weighs a global allocno's references by that length, so the copy whose last consumer sits latest takes the last saved register. Move the stores that consume the early copies ahead of the longer computation that consumes the late one: that closed a three-role permutation measured 54 of 62 at the original size, where dropping the named local, re-typing it and reordering declarations each stayed at 54 and masking the third argument reached 56 |
 | Two structurally identical blocks call one helper and consume its answer, and the original assigns them different registers | Keep one local set per block and do not reuse it across the two blocks: a shared pair made the allocator give both blocks the same two registers and moved ten words, while per-block pairs reproduce each block's own load targets. This is a value-lifetime lever; statement order inside each block is unchanged |
 | Two pointer bases read on both sides of a call exchange registers (`$3`/`$4` where the original has `$4`/`$3`) at equal size and count | Split both lifetimes at the call: one local per base before it and a fresh local per base after it. One local per base held across the call keeps each pre-call value live into the join, and the allocator exchanges the two bases there (25 of 33 at the payload size), while splitting one base alone reallocated the whole body (14 of 35); swapping the two post-call reads in source order measured that same 25 because the scheduler keeps the emitted load order, so this is a value-lifetime lever, not representation or statement order |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
@@ -122,6 +130,17 @@ arm, while a `switch` or `if`/`else if` chain evaluates it once and drops that
 reload. Advance only when measured evidence rejects eligible alternatives. Locals may
 change register web. GCC can normalize chain inversion regardless of spelling; another
 spelling alone is not new evidence.
+
+Chain shape is not spelling. A two-case dispatch on a shared state byte whose original
+prints two `beq` then one `j` is `switch (state)`. The `if`/`else if` form compiled the
+arms `0x14` short, which moved every table word with them and made the reviewed
+placement check refuse the section: those words are arm addresses, so this refusal
+points at the arms, not at the row. Read the emitted table's words against the
+payload's own, and the refused slots become that arm list: slots holding one address
+move together, so their count and shared offset name the arms still wrong (25 of 31,
+then four, then seven default slots each off by one arm's 4 bytes), and the refusal
+turns back into an ordinary instruction diff as those arms reach their length. The
+`switch` matched on the first measurement.
 
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
@@ -188,7 +207,12 @@ target, so a `bnez` where the build emits `beqz` is this ordering choice, not a 
 rung. Arms that both end in the same constant return are that case with the shared
 constant as the only tell: choose the written order from the arm the branch enters,
 because ordering by which arm does more work instead inverts the test and hoists that
-constant above the other arm's stores at unchanged size and count. When two arms
+constant above the other arm's stores at unchanged size and count. A select between two
+constants for one call argument takes that ordering without returns: the original
+materialises the constant it keeps before the test (`addiu reg,$zero,C`) and assigns the
+other after the branch, so write the polarity whose false arm is that first constant.
+The mirrored polarity held frame and size and still mismatched three of 52
+instructions, first where the default constant is materialised. When two arms
 rejoin a common tail instead, the inverse order is not size-neutral: skipping the arm
 written first needs its own `j`, which cost one instruction and four bytes at an
 unchanged frame. A result local live across
@@ -212,7 +236,11 @@ into the one site the original shows, so the cleanup still emits as a single
 block.
 
 GCC loop rotation can move invariants: assigning inside loop body can permit late
-hoisting/preheader copies; moving before loop can lose them. Keep only measured
+hoisting/preheader copies; moving before loop can lose them. A residual that is one
+register-to-register copy of a cell address has the arm as its lever: assign that
+address inside the arm that stores through it, because one assignment above the loop
+puts the copy ahead of the hoisted invariants. Its position inside the arm is not a
+lever — pre-store, post-store and block-scoped forms all measured exact. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
 Hoisting also reorders whatever sits beside it: a mask the body re-derives from an
 argument each iteration belongs at that use, because assigning it once above the loop
@@ -229,7 +257,13 @@ spend no variant on the loop keyword. That neutrality holds only while the latch
 compare is the exit: a counted body whose only exit is a `break` at the top needs the
 `for` form, because `do { ... } while (i < N)` re-emits the stop test at the back
 edge, measured five instructions and 20 bytes over the original with the first
-difference on that back edge. The guard applies with no zeroing in play as
+difference on that back edge. Neutrality also ends where the body closes with a store
+group that carries a value read: kept as the `for` increment the counter schedules
+after that group and matched, while the same body with `i++` written among those
+stores measured three instructions short with the first difference inside the group,
+and the same two spellings with no read in the group measured alike. Read the
+increment's placement before spending a sweep on the stores. The guard applies with
+no zeroing in play as
 well: when the original leaves load-delay `nop`s ahead of the loop's own setup, a
 plain `while` hoists that setup into a preheader and fills them, so write an explicit
 guard with a `do`/`while` body and keep the bound expression inline in both tests,
@@ -262,17 +296,31 @@ than a second defect. Masks and a re-typed narrow index on that compared value
 measured neutral at the same residue. A conjunction also folds rather than swaps
 arms when its low bound is `>= 0`, because that pair is exactly the unsigned bound:
 GCC emits one `sltiu` and lands two instructions short of the original's separate
-sign and magnitude tests, so write each test as its own early return. A bounded range
-whose lower bound the original subtracts before a single `sltiu` is that wrapped
-unsigned compare, not the two-test conjunction: write `(u32)(x - lo) >= N`, casting
-at the compare so a value below `lo` wraps into the reject range. Two signed compares
-cannot emit the `addiu`/`sltiu` pair, and the failure arm stays the early return. A
-pair of adjacent discrete code values is that same single compare with `N = 2`, so
-write `((v + 0x100 - lo) & 0xFF) < 2`: the mask is what keeps the compare `sltiu`,
-while a lone code value in the same body stays its own `==` on the byte cast. The
-wrapped compare and a disjunction of `==` tests are one spelling: the equality run
-folded into one `addiu`/`andi`/`sltiu` pair per adjacent run plus the lone code's own
-compare, so take whichever the seed shows and owe no probe on the other.
+sign and magnitude tests, so write each test as its own early return. Where both
+tests guard one shared arm that no return separates, nest them
+(`if (x >= 0) { if (x < N) ... }`): the conjunction measured nine instructions and
+four bytes short with a single `sltiu` where the original has `bltz` plus `slti`,
+its first difference the register of the `lui` that builds a shared cell the
+guarded arm writes, and the nested pair matched at the payload's own size while the
+compared local's width measured neutral at that spelling. A `lui` register
+difference beside one folded compare is therefore that guard, not the address's
+build count. A bounded range whose lower bound the original subtracts before a
+single `sltiu` is that wrapped unsigned compare, not the two-test conjunction:
+write `(u32)(x - lo) >= N`, casting at the compare so a value below `lo` wraps into
+the reject range. Two signed compares cannot emit the `addiu`/`sltiu` pair, and the
+failure arm stays the early return. A pair of adjacent discrete code values is that
+same single compare with `N = 2`, so write `((v + 0x100 - lo) & 0xFF) < 2`: the mask
+is what keeps the compare `sltiu`, while a lone code value in the same body stays
+its own `==` on the byte cast. The wrapped compare and a disjunction of `==` tests
+are one spelling only while the compared value is the byte lvalue itself: the
+equality run folded into one `addiu`/`andi`/`sltiu` pair per adjacent run plus the
+lone code's own compare, so take whichever the seed shows and owe no probe on the
+other. A wide local or an explicit cast folds that surviving `andi 0xFF` away, so
+the equality run belongs on the cell: ten variants that read the byte into a `u32`,
+`s32` or `u8` local all stayed four bytes short at an unchanged count with the first
+difference on the missing mask, while the same tests written as repeated reads of the
+cell matched at the original size. An `andi .,.,0xFF` directly after an `lbu` plus a
+range check marks that lvalue chain, not a source mask.
 
 Unrelated reject tests around a block that itself calls are the opposite case: write
 them as one conjunction with a single `return 0` after that block. A ladder of early
@@ -295,18 +343,32 @@ original's dispatch before adding empty labels or a chain. An arm set whose
 unmatched values leave through the shared epilogue needs its own `default: return;`
 when another arm `break`s into a tail after the switch: without it those values
 reach that tail too, and the arms measured two instructions short at the original
-size. Such a body's switch operand is the address-taken byte, read once for the
+size. When one arm falls through into that tail, the gate measures its placement as
+well. A table-emitting switch with the tail written after it fills the unmatched slots
+with the tail's address, so the refusal is a reviewed `.rodata` placement naming the
+slots the original points at the epilogue, and a live-range change in the arms does not
+move them. Write the tail inside that last arm and reach it with `goto`, which keeps
+one copy and measured exact. Such a body's switch operand is the
+address-taken byte, read once for the
 whole body: a direct `switch` on the named byte measured 51 of 83 with the frame
 eight bytes over, and an `if`/`else` chain on a byte copy 41 of 81 with it short.
 Label placement is part
 of that shape: write `default` first, because with it last the same arms measured
 four instructions short at that size, and a middle `default` with the cases
-reversed stayed short there too. A case that carries the default's
+reversed stayed short there too. That placement belongs to the table form: a
+sparse `switch` that lowers to a comparison chain emits its arms in source order, so
+write them in the order the original's own compares reach them and leave `default`
+where that chain puts it, since `default` written first grew those arms by eight
+bytes while an `if`/`else if` chain of them came out twelve bytes short. A case
+that carries the default's
 body must be numbered below the cluster's lowest real case, where it folds into
 that same bound: numbered inside the cluster it measured 150 of 143 instructions
 at 600 bytes against 572, and one above the top 144 of 143 at 576, while every
 below-cluster value probed, zero included, byte-matched, so take one and spend no
-variant on which. When the first seed already builds to the original `.text` size
+variant on which. A comparison chain needs that pair with no bound to fold into:
+both labels on one block (`default: case 0:`) emit the body once, as the chain's
+fall-through with its first instruction in the last compare's delay slot, which
+measured exact. When the first seed already builds to the original `.text` size
 and differs only at address-bearing words, the source shape is settled; finish the
 symbol bindings and the reviewed table placement before probing more C. A table
 whose entries differ only in which block each case value reaches is part of that
@@ -399,6 +461,14 @@ passes before changing scope placement.
    while `.loop`, `.cse` and `.combine` still hold the value after those calls
    names the pre-reload scheduler, so neither statement order nor a narrower scope
    is the lever.
+   The boundary pins the opposite order too: when the one remaining hunk shows a
+   later statement's zeroing (`move r,zero`) ahead of two narrowed conversions
+   whose results a following block consumes, one scope around those two
+   conversions alone clears it, with the zeroing and its conditional left outside.
+   That hunk is the scope rung rather than a lifetime question: on a retained
+   representation-level partial whose only difference was that hunk, variants that
+   reused a consumed local for the flag measured below the partial, and the scope
+   matched.
 3. Compare plain initialization, PRE placement and proposed placement through
    `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
    another placement may retain allocation while freeing argument order. Bind
@@ -457,7 +527,13 @@ advances the anchor comes first, and the reversed list lost one instruction at t
 advance block with size unchanged. The loss can land at the loop head instead, with
 the reversed step rotated in there and dropped after the last store, and moving the
 same two steps to trailing `while` statements reproduces it: the order is the lever
-and the loop spelling is not.
+and the loop spelling is not. A walk over one pointer whose last store group also
+feeds a call keeps that group on the cursor: hold the pre-step address in a second
+local for the call, step once more and write the group through `[0]`. Spelled as a
+constant-offset element of the earlier pointer (`p[4]`) the group collapsed to a
+fresh fixed base (`lui $at` plus a store off it) where the original stores off the
+live cursor, and that store was the first difference, two instructions short at the
+original size.
 
 ## Delay slots and entry copies
 
@@ -467,6 +543,13 @@ and the loop spelling is not.
   measured 172 of 174 with the first difference at that reorder, while
   `(u16)(angle + 0x400)` written at the argument matched; the same heading read by
   two calls keeps its local, so the form is per value, not per expression class.
+- Loop-counter update scheduled above the loop bottom: an `i++` written before the
+  loop's last call is hoisted into that call's argument setup, so the first
+  difference is a `nop` where the original has the increment and the body is eight
+  bytes short at the original count. Write the increment after the call, which puts
+  it back at the loop bottom beside the exit test. Three representation rungs on the
+  same body left that site standing, so read it as statement position before
+  another rewrite.
 - Same-size branch/`jal`/`j` difference: identify exact instruction, live inputs/
   outputs, value use after transfer. Try branch inversion, early return, independent
   statement order, one local or pointer hoist.
@@ -475,7 +558,12 @@ and the loop spelling is not.
   A `move` that copies a freshly loaded base into a saved register after a store group
   marks a second local's live-range start: one local serving both the store group and
   the loop base keeps that saved register live from the first store on and drops the
-  copy, so load the loop base into its own local after the group. The same copy
+  copy, so load the loop base into its own local after the group. Tell the two cases
+  apart at the original's own second build: where the loop base repeats a
+  `lui`/`addiu` pair, the loop needs `&cell` in its own local; where the loop only
+  `move`s the store's register, assign the loop base from the store's pointer local
+  instead, because a second `&cell` there builds the address twice and measured four
+  instructions short at the original's byte size with that store's `lui` gone. The same copy
   lands on an argument register: with one pointer local spanning an earlier store group
   and the stores that feed a later call's argument, the build emitted `move $a0,$a1`
   and four extra bytes, and giving that second region its own local removed both.
@@ -524,7 +612,15 @@ folded `lbu`, where the original builds the base once with `addiu` and reloads a
 `0(base)`, so write `volatile u8 *p = &cell;` and read `p[0]` at each use. One selector
 byte feeding three scaled index computations measured all three spellings: the plain
 cell folded the reads into one address, the bare volatile cell rebuilt the address per
-read, and the local pointer matched. Place that local at the original's own base
+read, and the local pointer matched. Take that local's pointee qualifier from the
+original's own accesses: `volatile` where it re-reads the cell at each use, plain
+where it re-materialises the address per site and takes the byte once, because a
+volatile pointee then reloads where the original does not. Spell the plain one
+`u8 *const p = (u8 *)&CELL;` over every access of that region and leave the header's
+declaration alone: volatile pointee forms and a view covering only part of the region
+each measured short of the original count, while the plain view matched at the
+original size, and a site the original does re-read after a call keeps the named
+volatile cell. Place that local at the original's own base
 materialisation: where the reads straddle a call and the base is built once after it,
 declare `u8 *p = &cell;` after that call and leave the earlier read on the symbol. A
 direct-read seed measured eight bytes short with `first=` on the prologue's `sw ra`
@@ -537,7 +633,11 @@ keeps consecutive handoff stores that no call separates, declare that cell volat
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
 Reading or writing that cell from another target still owes this target its own
 `@source`-tagged extern and map row: the no-copy rule bans borrowing a binding, not
-re-declaring a cell this target's own bytes show.
+re-declaring a cell this target's own bytes show. Another pointer cell earns that qualifier
+from its own bytes: where the original writes the cell and then re-reads it before the next
+call, `extern u8 *volatile cell;` is the spelling, because without it the compiler forwards
+the stored pointer into the following field read and the reload is gone - 99 of 111
+instructions at 16 bytes under, 111 of 111 once the cell carried the qualifier.
 Original-proven ordering remains explicit evidence. Where a store through the loaded
 pointer already separates the reads, the plain spelling measured identical bytes on that
 same cell, so the qualifier is not what carries the reload there: a store through the
@@ -652,13 +752,23 @@ the wide formal copied it two slots early and measured 114 of 116 at the origina
 size with its first difference at +0x14, while the narrow formal placed the copy
 after the entry's own literal words. Read a prologue-only deficit at unchanged size
 as that signature, and take the width from a sibling that hands the identical pair to
-the same callee. Count the narrowings of one incoming register: where the original
-narrows it at the prologue and again at later call sites, the narrowed value did not
-survive the wide path between them, so keep the wide formal and let those calls
-convert again while the entry-narrowed pair stays in locals for the calls it
-dominates. The mirror case is a cast used twice: `(s8)value` in both the call
-and the comparison lets one conversion serve both, while reassigning
-`value = (s8)value;` between them duplicates it.
+the same callee. A seed's formals are a hypothesis, since the ABI encodes no width:
+the surplus reads the same way, where a current-side extra word in that entry block at
+the original size (`first=+0x0004 [o-/c1]`) is that seed's narrow formal, whose entry
+conversion the original never issues, so declare it full width and let the halfword
+stores truncate - which closed a body that eleven alias, order, cast, mask and
+statement variants held at 92 of 96 or below. Several arguments share that block, and
+one mismatched width permutes the whole group. With two narrow formals and one wide
+formal whose every use masked it, the copies came out in a different order at the
+original size, and shapes that left the body alone kept that order. Declaring the
+remaining formal narrow, with the matching prototype, restored it. Read a permuted
+copy group as the widths of its arguments, not as their statement order. Count the
+narrowings of one incoming register: where the original narrows it at the prologue and
+again at later call sites, the narrowed value did not survive the wide path between
+them, so keep the wide formal and let those calls convert again while the
+entry-narrowed pair stays in locals for the calls it dominates. The mirror case is a
+cast used twice: `(s8)value` in both the call and the comparison lets one conversion
+serve both, while reassigning `value = (s8)value;` between them duplicates it.
 
 Where the mask sits, not the parameter's name, decides that width. An original that
 masks a byte argument once at entry (`andi $a0,$a0,0xff`) and leaves it alone after
@@ -716,6 +826,13 @@ byte, while word locals let GCC fold both offsets into one base offset and drop 
 add. Two `s16` locals measured 119 of 119 instructions, and the same body with `s32`
 locals measured 114.
 
+Declare the sum, not its addends. A local holding a published byte plus a signed byte
+delta, later passed as a halfword argument and compared, takes `s16` with no cast at
+the use. `s32` sums cast at each use built the frame eight bytes short with the entry
+pair of callee-saved saves missing, and measured 100 of 138 instructions;
+`s16` delta temporaries feeding those `s32` sums, and `u8`, `s8` and shift-pair
+spellings of the same loads, stayed at that count.
+
 A narrow value built from a difference wants that split one step further: assign the
 base constant, subtract in place, then truncate with a self-assignment
 (`w = 0x40; w -= limit; w = (u8)w;`). The one-expression `(u8)(0x40 - limit)` and the
@@ -751,7 +868,12 @@ adjacent fields of one record are updated in a row.
    then `if ((s16)value < limit)`. The store then precedes the sign extension.
    Widening without the comparison cast, or storing the uncast value, moves the
    extension ahead of the store. An `s16` local is still wrong: GCC copies it with
-   `move` and emits a register `slt` instead of `slti`.
+   `move` and emits a register `slt` instead of `slti`. A plain cell whose stored
+   value is tested rather than reloaded takes that same store-then-extend order, and
+   its local may sit at the cell's own width:
+   `u16 half = *p - delta; *p = half; if ((s16)half < limit)` is what an exact
+   handler of that condition wrote, so the volatile qualifier and the wider local
+   belong to a cell the body re-reads.
 3. When the original stalls on its first load, or keeps two cursor registers,
    read the cell again into a second pointer variable placed after the first
    store. See [scratch cursor group variables](#scratch-cursor-group-variables).
@@ -930,7 +1052,10 @@ the original reuses one cursor load across stores that the current build reloads
    locals carrying it still decides allocation: one local per read and one local for
    every read each put the first cell load in `$a0` where the original has `$v1`
    (27 of 35 at eight bytes under, 21 of 35 at the payload size), while one local per
-   read group matched. Group by the base the payload shares, not by access.
+   read group matched. Group by the base the payload shares, not by access. Split by
+   call, not by block: two blocks with no call between them share one cursor local,
+   and giving each its own added a redundant `move` into the just-loaded register at
+   four bytes over, while the shared local matched.
 2. When a reload runs on one arm only, make it the last statement of that arm.
    Written after the `if`, both arms share it and the branch target lands eight
    bytes before the original target. Size stays equal because the instruction count
@@ -1001,7 +1126,12 @@ store through the record needs the named extern. Two arms of one exact body can
 spell the same cell differently - one publishing through a pointer local whose
 every read reloads it, the other indexing the named symbol directly - so read each
 arm's base register and never unify them. Copy a sibling's statement order and
-operand forms, not its cell access spelling. Once the reload count and the load's
+operand forms, not its cell access spelling, but re-read the order inside each store
+group from the receiving span's own bytes: that order decides which source load is
+issued first, so a twin's adjacent tail stores left in the twin's sequence against
+this span's loads measured two instructions short with the first difference on the
+load, and swapping the pair closed it at the original size. Once the reload count and
+the load's
 base register agree, the spelling is free: a displacement that folds makes a named
 extern and the
 `SPAD_PTR_TABLE` accessor at that cell's own word emit the same `lui`/`lw` pair at
@@ -1064,7 +1194,13 @@ local sweep is owed. A body with no map row for the cell has a non-volatile
 spelling: build the accessor's base from a non-constant offset (`u32 off = 0x44u;`
 then `PSX_REF(u8 *, SPAD_BASE + off)` at each reload point), which measured 28 of 28
 instructions where the same accessor with a literal offset hoisted the cell address
-into `$s0` and measured 18 of 28.
+into `$s0` and measured 18 of 28. A cell the target's map already names takes the
+symbol form instead of an accessor: a pointer-typed `extern` at that address builds
+the base once and folds the low half into the load (`lui $v1,0x1F80` then
+`lw ...,0x44($v1)`), which matched at 35/35, 40/40 and 64/64 where the accessor left
+18/35, 24/40 and 54/64. A second name for that address goes in the map's alias
+section, since another definition row at an address the map already carries is
+refused as `address collision`.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read
@@ -1185,6 +1321,15 @@ record through the named cell; writing both on the local gives both stores one b
 drops that reload. Two adjacent word updates through one word-typed view also serialise
 through one `$v0`, as the original's do, while the same negations written at byte
 offsets let the scheduler pair them into `$v0`/`$v1`, measured 44 of 50.
+
+An SDK packet is the same choice with the opposite answer, because there the typed
+member spelling is what displaces the store. Where a libgfx packet body already matches
+count and size and one texturing store lands three slots late, write the packet through
+a flat `u8 *` with byte offsets: member stores kept the texture-page `sh` late at 118 of
+119, inlining the mask at one site or giving that word its own `u16` temporary measured
+the same, and assigning the masked value above the primitive load regressed to 115 of
+119 and four bytes under, while the byte-offset form matched with the mask's value
+consumed where the original stores it.
 
 A scratchpad block the original addresses through one base register is one object, not
 one extern per cell: declare a struct over the whole block at the block's own origin,
@@ -1386,7 +1531,11 @@ extra bytes.
    bytes short with two saved registers exchanged because GCC folded the `+0x20` into
    the load displacement, while naming that offset as an `s32` or `u32` local restored
    the separate base, and three algebraic respellings of the same inline constant
-   measured identically.
+   measured identically. A repeated product that reserves unused word temporaries has a
+   second spelling when its value range is narrow: casting the subscript to that width
+   (`(u16)(byte * 3)`) kept every consuming instruction identical and removed the three
+   unused 8-byte stack temporaries the word spelling reserved, which restored the frame
+   where the other probe spellings had not.
 2. Name the product once as a scalar local and index the same array symbol through
    it in both places: `offset = span * 3;` then `D_x[offset + 2]` and
    `&D_x[offset]`. Keep the symbol name on both uses; a pointer local used for both
@@ -1398,7 +1547,14 @@ extra bytes.
    materialisation. Write the byte offset as its own local against the byte view
    (`offset = slot * 152; ((u8 *)D_x)[offset] += ...;`) so every access re-derives
    the base. Five respellings of the word-scaled subscript, including a named
-   `slot * 38` and a separate load/store value local, measured identical. An exact
+   `slot * 38` and a separate load/store value local, measured identical. A
+   parameter the original re-adds on every pass belongs outside that offset: name
+   the scaled row offset and add the parameter at the use
+   (`dy = j * 0x10 + 0x10; y = arg1 + dy;`). Every single-expression form
+   initialises the induction variable at the parameter plus the constant and drops
+   the per-pass add, so fourteen spellings of a 139-instruction body held 83 to 126
+   instructions, from 12 bytes under to 20 over, while the named offset matched at
+   the payload's own size with the parameter re-added each pass. An exact
    body that already indexes the same table settles that local's declared width
    and signedness along with the rest of the record's spelling: keeping the scale
    inline in the subscript and holding the lookup result in its own `u8` measured
@@ -1463,14 +1619,24 @@ earlier write's quantity and frees that register. Keep every store site, order a
 value exact; one different literal or an extra store splits the quantity again.
 Confirm with the complete live gate, and keep this as the matching form: restoring
 inline literals re-opens the exchange. That local covers one literal: a second,
-different constant in the same block takes none of its own. Where the original loads
+different constant in the same block takes none of its own. The operand position
+takes the same local: two wide bit-clear constants written inline at consecutive
+`&=` sites on one record word left the record pointer and the mask in each other's
+registers while size, frame and count already agreed, respellings of those constants
+measured neutral, and one `u32` local assigned at each store matched, so read a
+pointer/constant register exchange at unchanged size as that inline constant and not
+as an allocation residual. Where the original loads
 one constant into a register and re-uses it for two stores before loading a second
 constant into that same register for a three-store triplet, keep the repeated literal
 on its narrow local and write the triplet inline at each store through the signed view
 of the cell (`((s8 *)cell)[N] = -0x40;`). Naming the triplet in an `s8` local of its
 own measured 51 of 61 at unchanged bytes with the first difference the seeded
 pointer-local spelling already showed, an unsigned `0xC0` spelling 60 of 61, and the
-inline signed stores matched. The arm-and-merged-tail form is worth trying
+inline signed stores matched. The access type carries that sign too when the literal
+is already negative: one constant stored through an unsigned view of the cell
+materialises zero-extended (`li v0,0xfca6` where the original keeps `li v0,-858`), so
+declare the pointer that reaches that store signed at that cell's own width. The
+arm-and-merged-tail form is worth trying
 before any dump: when one constant is stored inside a switch arm and again at the
 tail after the switch, assign it in each arm to one arm-local of the store width and
 store that local at both sites. Without the local the compiler loads the constant
