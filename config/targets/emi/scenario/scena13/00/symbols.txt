@@ -10,7 +10,7 @@ clearWorkTintQueueFrontEndMode33SetPhase2AndAdvanceWorkByte1ScenarioScena1300_80
 armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248 = 0x801F7248;
 func_801F72A0 = 0x801F72A0;
 func_801F735C = 0x801F735C;
-func_801F7444 = 0x801F7444;
+resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444 = 0x801F7444;
 func_801F7484 = 0x801F7484;
 func_801F7568 = 0x801F7568;
 dispatchWorkByte1HandlerScenarioScena1300_801F75F8 = 0x801F75F8;

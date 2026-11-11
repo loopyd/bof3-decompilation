@@ -90,8 +90,10 @@ segments:
     - asm
     - func_801F42F4
   - - 5988
-    - asm
-    - func_801F4364
+    - c
+    - setTriggerRecordFlagAndQueueCue204OnMatchedArgumentsWorld03Area13913_801F4364
+    - '@source: src/bof3/world/setTriggerRecordFlagAndQueueCue204OnMatchedArgumentsWorld03Area13913_801F4364.c'
+    - '@behavior: Matches the two zero-extended word arguments and the shared game-mode byte 0x80145E98 against the records of the two-entry trigger table this payload carries at 0x801F45E4. A record is accepted when its first byte equals the first argument, its second byte equals the second argument, and the low nibble of its third byte equals the game-mode byte, which the original masks with 0xF. The search walks the table by a byte offset advanced 0x04 per record and stops at the accepted record; the accepted record then sets its own fourth byte as a bit of the shared main-RAM flag bank 0x80144F28 through the shared setter 0x8015B5F4 and queues sound cue 0x204 through the resident cue dispatcher 0x8015DF18, and that path returns 1. A run that reads the last record without acceptance returns 0 and calls nothing.'
   - - 6188
     - textbin
     - D_801F442C

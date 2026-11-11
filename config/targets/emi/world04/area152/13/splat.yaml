@@ -123,8 +123,10 @@ segments:
     - dispatchStateByte1Table4e04World04Area15213_801F4038
     - '@source: src/bof3/world/area15213DispatchTables.c'
   - - 5244
-    - asm
-    - func_801F407C
+    - c
+    - spawnRandomRowsWithRandomNibbleAndAngleWorld04Area15213_801F407C
+    - '@source: src/bof3/world/spawnRandomRowsWithRandomNibbleAndAngleWorld04Area15213_801F407C.c'
+    - '@behavior: Gated spawner for rows of the shared 0x74-byte table based at 0x80143FC8: while bit 0 of shared byte 0x80146871 is set it calls the shared helper 0x80196070 and returns, and while shared word 0x80143E6C reads nonzero under mask 0x3FF it returns unspawned; otherwise it keeps the rand() answer masked by 0x33 and shifted right four as a nibble and the same answer masked by 3 as a row count, and for each row asks the shared helper 0x8019601C for a slot, abandons the loop on the masked answer 0xFF, scales the slot by the 0x74-byte stride and stores 1 at row byte 0x00, 0x16 at row byte 0x05, 1 at row byte 0x01, the loop index at row byte 0x06, the nibble at row byte 0x08 and the 0x400-biased answer of the shared helper 0x8015477C, called with the coordinate pair at 0x80145EC4, at row halfword 0x3E.'
   - - 5560
     - asm
     - func_801F41B8

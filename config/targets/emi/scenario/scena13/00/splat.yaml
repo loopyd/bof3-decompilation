@@ -63,8 +63,8 @@ segments:
     - asm
     - func_801F735C
   - - 2116
-    - asm
-    - func_801F7444
+    - c
+    - resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444
   - - 2180
     - asm
     - func_801F7484

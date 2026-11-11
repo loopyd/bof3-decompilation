@@ -23,6 +23,7 @@ sources = [
     "src/bof3/ui/drawSemiTransGreyCrossPrimBate00_801D26E0.c",
     "src/bof3/ui/emitFlatLineRectangleBorderBate00_801D3384.c",
     "src/bof3/ui/drawEquipPanelBate00_801D2F64.c",
+    "src/bof3/ui/drawExpRowPanelBate00_801D31B0.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

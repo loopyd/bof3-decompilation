@@ -99,8 +99,13 @@ segments:
     - asm
     - func_801D2DE4
   - - 10016
+    - c
+    - drawMastersCommandPanelShisu00_801D3320
+    - '@source: src/bof3/ui/drawMastersCommandPanelShisu00_801D3320.c'
+    - '@behavior: Draws the whole SHISU panel of the masters system-mode overlay from its panel task root: the 0x95 by 0xA0 inset at (x + 3, y + 3) with the shade 0 and the shared CLUT-bank byte, then the four command rows at x + 7 and y + 0x18 or 0x1A in steps of 13, each carrying its own code byte of D_801D9798 and its own state byte of the task''s +0x20 run. A row whose state byte is zero is emitted with the shade 7 and the row flag 1, and a row whose state byte is not zero with the shade 0 and the flag 0. The selected row, the index the task''s +0x0A byte names, is emitted at y+0x18 and, when its own state byte is not zero, gains one extra emission at y+0x1A with the shade 7 and the flag 1. The title D_801D979C is then right-aligned through strlen into the panel and drawn at (x + 0x4E, y + 7) with the shade 0 and the glyph width 0x10, the two sprite streams D_801D9780 and D_801D978C are submitted at the panel origin with the flag 1, and the panel is closed by the border pieces 1 along the top from x + 40 to x + 112, 4 down the left side from y + 24 to y + 152, 5 at (x, y + 0xA0), 0x20 at (x + 0x90, y + 0x18), 0x21 down the right side from y + 32 to y + 144, 0x22 at (x + 0x90, y + 0x98), 6 along the bottom from x + 8 to x + 136, and the two top corner pieces 0x32 at (x + 8, y) and 0x34 at (x + 0x90, y), all with the flag 1. The payload names this body only from the jal at 0x801D3288 inside func_801D324C, which reads the panel task root from the shared cell 0x80148648 after dispatching its own state byte, so that root is the only argument its call site shows. Its 0x38-byte frame keeps $s0 through $s4 and $ra, and the epilogue returns no value.'
+  - - 11116
     - asm
-    - func_801D3320
+    - func_801D376C
   - - 14528
     - asm
     - func_801D44C0

@@ -30,7 +30,8 @@ extern s32 D_801FA2B8;
  */
 extern void func_801AFE18(void* arg0);
 
-void func_801F732C(u8 arg0, u8 arg1, u8 arg2, u8 arg3, s32 arg4, s32 arg5);
+void drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(
+    u8 arg0, u8 arg1, u8 arg2, u8 arg3, s32 arg4, s32 arg5);
 
 /* @source 0x801F7084
  * @behavior Drawing entry of this overlay's work-byte-1 handler run at
@@ -114,9 +115,9 @@ void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena
   D_801FA2B4 = *(s32*)(record + 0x1C) - *(s32*)(record + 0x28);
   D_801FA2B8 = *(s32*)(record + 0x20);
   func_801AFE18(scratch);
-  func_801F732C(0, 1, 2, 3, 1, 1);
-  func_801F732C(0, 1, 4, 5, 1, 0);
-  func_801F732C(2, 0, 6, 4, 1, 0);
-  func_801F732C(1, 3, 5, 7, 1, 0);
-  func_801F732C(2, 3, 6, 7, 1, 0);
+  drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(0, 1, 2, 3, 1, 1);
+  drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(0, 1, 4, 5, 1, 0);
+  drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(2, 0, 6, 4, 1, 0);
+  drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(1, 3, 5, 7, 1, 0);
+  drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C(2, 3, 6, 7, 1, 0);
 }

@@ -261,8 +261,10 @@ segments:
     - drawDecimalGlyphRun
     - '@source: src/bof3/battle/drawDecimalGlyphRun.c'
   - - 35460
-    - asm
-    - func_801D9684
+    - c
+    - drawDecimalGlyphRun8x8
+    - '@source: src/bof3/battle/drawDecimalGlyphRun8x8.c'
+    - '@behavior: Formats arg3 through the 3-column decimal format string at 0x801D0C78 into the shared UI buffer, then emits a run of 8x8 glyphs: for every buffer byte other than the 0x20 pad it converts the digit in place, takes the CLUT of palette row 0x1e0 column (arg2 & 0xff) and appends one semi-transparent SPRT at (arg0, arg1) tinted by the neutral gray 0x80, with texture row 0xd0 and texel column digit * 8 - 0x50, advancing arg0 by 8 until the next buffer byte is 0.'
   - - 35844
     - c
     - drawIconStrip24x8
@@ -1348,7 +1350,7 @@ segments:
     - c
     - func_801E62BC
     - '@source: src/bof3/battle/func_801E62BC.c'
-    - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to func_801D9684.'
+    - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to drawDecimalGlyphRun8x8.'
   - - 88000
     - c
     - dispatchSlotByte1TableF20
