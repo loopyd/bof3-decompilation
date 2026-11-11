@@ -68,8 +68,10 @@ segments:
     - setStatusFFFFAndStateEntryWhenGateClearWorld04Area16613_801F3634
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16613_801F3634.c'
   - - 2676
-    - asm
-    - func_801F3674
+    - c
+    - setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16613_801F3674
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16613_801F3674.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword at 0x801490A8, and while the shared gate byte at 0x801490C7 equals 3 runs the shared front-end startup helper and writes state entry 0x0A with progress 5 and companion byte 0xFF, then copies the gated row pair from the payload row table at 0x801F3940 into record words 0x18 and 0x1C.'
   - - 2840
     - textbin
     - D_801F3718

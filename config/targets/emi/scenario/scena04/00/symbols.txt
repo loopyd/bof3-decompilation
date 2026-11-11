@@ -4,7 +4,7 @@ seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801
 func_801F6DD4 = 0x801F6DD4;
 func_801F6EA4 = 0x801F6EA4;
 func_801F6F2C = 0x801F6F2C;
-func_801F6FF8 = 0x801F6FF8;
+drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8 = 0x801F6FF8;
 invokeHelperScenarioScena0400_801F7064 = 0x801F7064;
 func_801F7084 = 0x801F7084;
 func_801F732C = 0x801F732C;

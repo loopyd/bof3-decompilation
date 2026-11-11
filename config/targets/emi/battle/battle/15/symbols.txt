@@ -277,6 +277,7 @@ func_800B0058 = 0x800B0058;
 selectOffsetPairByMode = 0x800B0118;
 dispatchPanelTaskTable69e4 = 0x800B0180;
 dispatchPanelStateTable69f8 = 0x800B01F0;
+panelStepLeftOrRightSettle42 = 0x800B0398;
 func_800B0498 = 0x800B0498;
 dispatchPanelStateTable6a08 = 0x800B09CC;
 func_800B0A2C = 0x800B0A2C;

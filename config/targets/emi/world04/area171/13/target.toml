@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world04/area171/13.bin"
 splat = "config/targets/emi/world04/area171/13/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area17113_801F2F00.c",
+]
 support_sources = [
     "src/bof3/support/area171_13_psyq.c",
     "src/bof3/world/area17113DispatchTables.c",

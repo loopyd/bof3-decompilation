@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F6F2C
   - - 1016
-    - asm
-    - func_801F6FF8
+    - c
+    - drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8
+    - '@source: src/bof3/scenario/drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8.c'
+    - '@behavior: Entry 4 of this overlay''s nine-word work-byte-1 handler run at 0x801FA180, reached only through the indirect call in dispatchWorkByte1HandlerScenarioScena0400_801F6D00: loads the work-object pointer from the scratchpad cell 0x1F800044, passes the record at its +0x0C to the quad-primitive builder at 0x801F7084, then re-reads the cell and decrements the work object''s unsigned countdown byte 9 at byte width, testing the stored value against zero; only when that countdown reaches zero does it re-read the cell once more and increment work byte 1, so the next frame dispatches entry 5 at 0x801F7064. The stamped countdown is armed with 8 by entry 0 at 0x801F6D44. It takes no arguments, consumes no result, and its 0x18-byte frame only keeps $ra across the call.'
   - - 1124
     - c
     - invokeHelperScenarioScena0400_801F7064

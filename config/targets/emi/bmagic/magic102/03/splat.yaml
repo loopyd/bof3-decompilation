@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801EFEFC
   - - 5484
-    - asm
-    - func_801F016C
+    - c
+    - drawPackedGridCornerQuadsWithSampledHeightsBmagicMagic10203_801F016C
+    - '@source: src/bof3/bmagic/drawPackedGridCornerQuadsWithSampledHeightsBmagicMagic10203_801F016C.c'
+    - '@behavior: Draws this overlay''s packed grid quads: one translucent Gouraud quad per eight-word record of four grid corners and four packed colours, with every corner height sampled from the signed byte grid and the texture page taken from the first colour''s top byte. Bracket the run with a draw-mode set and a draw-mode restore; see the source metadata for the full description.'
   - - 6280
     - asm
     - func_801F0488

@@ -24,6 +24,7 @@ sources = [
     "src/bof3/scenario/setRenderCellCursorForMappedPositionScenarioScena0400_801F8034.c",
     "src/bof3/scenario/seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44.c",
     "src/bof3/scenario/forwardRoute28RecordScenarioScena0400_801F9DB4.c",
+    "src/bof3/scenario/drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

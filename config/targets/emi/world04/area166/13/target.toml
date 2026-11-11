@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/advanceState2WhenWorkByte9Reaches8ThenAdvanceWorkByte9World04Area16613_801F3568.c",
+    "src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16613_801F3674.c",
 ]
 support_sources = [
     "src/bof3/support/area166_13_psyq.c",

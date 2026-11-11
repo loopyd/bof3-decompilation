@@ -5,7 +5,7 @@ advanceWorkByte1Every16FramesAndPublishSignedRampToHalfword8014932ABmagicMagic10
 func_801EF2B8 = 0x801EF2B8;
 func_801EFD7C = 0x801EFD7C;
 func_801EFEFC = 0x801EFEFC;
-func_801F016C = 0x801F016C;
+drawPackedGridCornerQuadsWithSampledHeightsBmagicMagic10203_801F016C = 0x801F016C;
 func_801F0488 = 0x801F0488;
 func_801F0778 = 0x801F0778;
 sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC = 0x801F0ADC;

@@ -10,6 +10,7 @@ load_address = 0x801D0C00
 sources = [
     "src/bof3/ui/drawPendingNotificationRowsCommu0507.c",
     "src/bof3/ui/drawPanelBackgroundTilesCommu0507.c",
+    "src/bof3/ui/drawRowIconSpriteCommu0507.c",
 ]
 support_sources = [
     "src/bof3/ui/initializeCommu0507RowCountsAndCursor.c",

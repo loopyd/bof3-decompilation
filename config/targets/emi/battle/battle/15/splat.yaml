@@ -1637,8 +1637,10 @@ segments:
     - asm
     - func_800B0250
   - - 105368
-    - asm
-    - func_800B0398
+    - c
+    - panelStepLeftOrRightSettle42
+    - '@source: src/bof3/battle/panelStepLeftOrRightSettle42.c'
+    - '@behavior: Runs the panel-task pass func_800B0498, then settles panel task x on the 0x42 rest coordinate: with byte +0x0A clear a signed x below 0x43 is reset to 0x42 and a larger x steps left by 0x20, while with that byte set a signed x below 0x42 steps right by 0x20 and a larger x is reset to 0x42.'
   - - 105488
     - asm
     - func_800B0410

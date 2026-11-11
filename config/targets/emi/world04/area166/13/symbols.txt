@@ -10,6 +10,6 @@ func_801F345C = 0x801F345C;
 advanceState2WhenWorkByte9Reaches8ThenAdvanceWorkByte9World04Area16613_801F3568 = 0x801F3568;
 func_801F35B8 = 0x801F35B8;
 setStatusFFFFAndStateEntryWhenGateClearWorld04Area16613_801F3634 = 0x801F3634;
-func_801F3674 = 0x801F3674;
+setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16613_801F3674 = 0x801F3674;
 D_801F3718 = 0x801F3718;
 D_801F3814 = 0x801F3814;
