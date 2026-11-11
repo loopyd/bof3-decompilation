@@ -21,5 +21,19 @@ support_sources = [
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind5FromModeTableWorld03Area11713_801F3E70.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld03Area11713_801F3EF0.c",
     "src/bof3/world/publishModeStatusFromTable55d8ThenProgressAAndCue205ForModes0To4World03Area11713_801F3FF0.c",
+    "src/bof3/world/publishModeStatusFromTable55e4ThenProgressAAndCue205ForModes0To4Except2AndProgress14ForMode2World03Area11713_801F4048.c",
 ]
 psyq_source = "src/bof3/support/area117_13_psyq.c"
+
+# The reviewed switch below dispatches the shared mode byte 0x801490C7 through a
+# six-entry table that the original placed in this payload's leading table data
+# at 0x801F2C04 (0x18 bytes). psyq gcc emits the jump table after .rdata +
+# .align 3, so the section carries 8-byte alignment while that address is
+# 4-mod-8; the placement route lowers only the affected section's alignment to
+# the reviewed address's own alignment so the table lands exactly and the
+# emitted lui/lw relocation matches.
+[[matching.section_placements]]
+function = 0x801F4048
+section = ".rodata"
+address = 0x801F2C04
+size = 0x18

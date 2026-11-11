@@ -296,8 +296,10 @@ segments:
     - asm
     - func_801DA14C
   - - 38696
-    - asm
-    - func_801DA328
+    - c
+    - drawSpritePrim8x8Clut
+    - '@source: src/bof3/battle/drawSpritePrim8x8Clut.c'
+    - '@behavior: Emits one 8x8 textured battle sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying GetTPage(0, 0, 0x3c0, 0), then a SPRT with the size words 8 and 8, the texel bytes arg2 and arg3 at +0x0C and +0x0D, the CLUT halfword built from the low six bits of arg4 over the 0x7800 base, tinted by the neutral gray 0x80 and appended under ordering-table index 1.'
   - - 38920
     - c
     - drawFlatLinePrim

@@ -302,6 +302,7 @@ sources = [
     "src/bof3/battle/setRecordField4NegOneWhenBattlerFlag4000.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag40ThenAdvanceByte10.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag80ThenAdvanceByte11.c",
+    "src/bof3/battle/runSelectionPassClearSelectedRecordStateThenCallA9BD8.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

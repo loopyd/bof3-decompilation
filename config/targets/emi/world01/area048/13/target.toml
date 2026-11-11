@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/clearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDClearOrNonzeroWithModeClearThenAdvanceWorkByte9WrapAt41ToRandomState5AndDrawRowWorld01Area04813_801F3F98.c",
     "src/bof3/world/setWorkByte8Level5PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F48DC.c",
     "src/bof3/world/setWorkByte8Level1PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F49C8.c",
+    "src/bof3/world/queueCueBySharedSelectorAndModeByteThenReleaseOverlayAndClearSharedSelectorsWorld01Area04813_801F4B60.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c",

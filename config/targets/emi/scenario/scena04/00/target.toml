@@ -31,6 +31,7 @@ sources = [
     "src/bof3/scenario/queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0400_801F9FD0.c",
     "src/bof3/scenario/requestPrimaryState2ArmCountdown10AndClearSubStateScenarioScena0400_801FA074.c",
     "src/bof3/scenario/stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8.c",
+    "src/bof3/scenario/dispatchRoute30CoordinateLookupHandlerScenarioScena0400_801FA010.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

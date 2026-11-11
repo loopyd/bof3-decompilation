@@ -18,6 +18,7 @@ dispatchStateByteTable9734EtcShisu00_801D2DA8 = 0x801D2DA8;
 func_801D3320 = 0x801D3320;
 func_801D44C0 = 0x801D44C0;
 drawSpriteWithScenarioKindSubstitutionShisu00_801D460C = 0x801D460C;
+drawSpritePrimTpageFromAbrShisu00_801D4660 = 0x801D4660;
 func_801D4754 = 0x801D4754;
 func_801D4AF4 = 0x801D4AF4;
 func_801D550C = 0x801D550C;

@@ -155,8 +155,10 @@ segments:
     - '@source: src/bof3/world/setFlagBit0AndClearModeWorld01Area04813_801F4B40.c'
     - '@behavior: sets bit 0 of the shared world flag byte 0x80147CC8 and writes 0 to the shared mode byte 0x8014686B; takes no arguments and returns nothing.'
   - - 8032
-    - asm
-    - func_801F4B60
+    - c
+    - queueCueBySharedSelectorAndModeByteThenReleaseOverlayAndClearSharedSelectorsWorld01Area04813_801F4B60
+    - '@source: src/bof3/world/queueCueBySharedSelectorAndModeByteThenReleaseOverlayAndClearSharedSelectorsWorld01Area04813_801F4B60.c'
+    - '@behavior: reads the shared selector byte 0x801448ED; while it reads 1, maps the shared mode byte 0x8014686B to a cue id (2 to 6, 6 to 7, 8 to 1, every other value to 8) and passes it to the shared cue helper 0x801BE1B0, otherwise runs that helper with 0 while the selector reads 0 and with 2 while it reads 2; on every path it then runs the shared overlay release helper 0x8015C058 and clears the shared selector bytes 0x801448EB, 0x801448EC and 0x801448ED; takes no arguments and returns nothing.'
   - - 8232
     - asm
     - func_801F4C28

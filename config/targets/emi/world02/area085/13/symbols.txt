@@ -1,3 +1,4 @@
+paletteStageSerial = 0x80145988;
 D_80146884 = 0x80146884;
 dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
@@ -22,5 +23,5 @@ invokeHelperWithWorkWorld02Area08513_801F3BA4 = 0x801F3BA4;
 advanceWorkHalfwordWorld02Area08513_801F3BCC = 0x801F3BCC;
 func_801F3BEC = 0x801F3BEC;
 invokeHelperArgWorld02Area08513_801F3C1C = 0x801F3C1C;
-func_801F3C3C = 0x801F3C3C;
+offsetPaletteChannelsWorld02Area08513_801F3C3C = 0x801F3C3C;
 D_801F3D2C = 0x801F3D2C;

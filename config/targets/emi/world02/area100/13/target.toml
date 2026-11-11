@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area10013_801F3108.c",
+    "src/bof3/world/initArea10013State.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area10013_801F3680.c",

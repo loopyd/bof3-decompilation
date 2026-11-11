@@ -106,8 +106,9 @@ segments:
     - asm
     - func_801F3B9C
   - - 4076
-    - asm
-    - func_801F3BEC
+    - c
+    - initArea10013State
+    - '@source: src/bof3/world/initArea10013State.c'
   - - 4140
     - asm
     - func_801F3C2C

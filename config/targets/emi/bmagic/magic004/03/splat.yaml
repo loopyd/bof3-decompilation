@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF910
   - - 3488
-    - asm
-    - func_801EF9A0
+    - c
+    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00403_801EF9A0
+    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00403_801EF9A0.c'
+    - '@behavior: Calls the helper at 0x800AFF98 with no arguments, stores its returned byte in work byte 9 of the scratchpad work object read through the pointer cell at 0x1F800044, then reloads that cell and increments work byte 2 by one. No other field is read or written and nothing is returned.'
   - - 3560
     - asm
     - func_801EF9E8

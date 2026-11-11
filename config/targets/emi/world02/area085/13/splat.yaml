@@ -98,8 +98,9 @@ segments:
     - c
     - invokeHelperArgWorld02Area08513_801F3C1C
   - - 4156
-    - asm
-    - func_801F3C3C
+    - c
+    - offsetPaletteChannelsWorld02Area08513_801F3C3C
+    - '@source: src/bof3/world/offsetPaletteChannelsWorld02Area08513_801F3C3C.c'
   - - 4396
     - textbin
     - D_801F3D2C

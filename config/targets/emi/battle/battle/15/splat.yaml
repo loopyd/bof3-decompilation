@@ -784,8 +784,10 @@ segments:
     - c
     - runSelectionPassThenSetSelectedRecordFlag100
   - - 44964
-    - asm
-    - func_800A17A4
+    - c
+    - runSelectionPassClearSelectedRecordStateThenCallA9BD8
+    - '@source: src/bof3/battle/runSelectionPassClearSelectedRecordStateThenCallA9BD8.c'
+    - '@behavior: Runs selection pass func_800A3F28, then clears the selected battler''s record state - zeroes the eight state bytes at record +0x08, clears bits 0x8000 and 0x10000 of the record word at +0x00 and bits 0x40, 0x80, 0x100, 0x200, 0x800, 0x1000, 0x2000 and 0x40000 of the word at +0x04 - of the 0x140-stride party record above 0x80145FB8 for selected bytes below three, or of the 0x118-stride reserve record above 0x801EB734 at index minus three otherwise, then calls func_800A9BD8 with the selected byte D_80146394.'
   - - 45432
     - asm
     - func_800A1978
