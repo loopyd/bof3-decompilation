@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801F6FF8
   - - 1244
-    - asm
-    - func_801F70DC
+    - c
+    - setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC
+    - '@source: src/bof3/scenario/setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC.c'
+    - '@behavior: Saves the scratchpad pointer cell 0x1F800044, walks the 30 shared 0x98-byte work records based at 0x80146888 with a byte-masked counter bounded by 0x1E, publishes each record through that cell, and for a record whose byte 0 has bit 0 set and whose byte 6 reads 6 stores 5 into the record byte 0x29 and calls the shared service func_8014D290 with no argument set, then restores the cell.'
   - - 1432
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F7198

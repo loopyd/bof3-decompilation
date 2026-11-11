@@ -353,6 +353,7 @@ sources = [
     "src/bof3/battle/submitBattlerRecordsAndStartPhaseStream.c",
     "src/bof3/battle/applyResolvedDamageToTarget.c",
     "src/bof3/battle/drawDecimalGlyphRun8x8.c",
+    "src/bof3/battle/drawShadowedBattlerStatusPanel.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

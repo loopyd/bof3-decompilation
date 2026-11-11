@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801F2FF0
   - - 1164
-    - asm
-    - func_801F308C
+    - c
+    - probeAxisPointRunAndSetFoundRecordOctantSideThenRequestAction2World03Area13913_801F308C
+    - '@source: src/bof3/world/probeAxisPointRunAndSetFoundRecordOctantSideThenRequestAction2World03Area13913_801F308C.c'
+    - '@behavior: Probe-run seeding of this overlay, called with the axis to scan: argument 0 runs the four points that fix x at 0x5C0000 and take y from the byte run at 0x801F4440, argument 1 runs the four points that fix y at 0x440000 and take x from the byte run at 0x801F4444, and any other argument returns at once. Each iteration stores the 16.16 point pair into the work record published at the scratchpad pointer cell 0x1F800044, re-reads the word at offset 0x34 and passes the pair with a zero third argument to the shared position probe at 0x801BE0C0, which answers the number of the record occupying that point or 0xFF when the point is free; a probe is skipped when the answer is 0xFF, when the shared flag halfword 0x8014625A holds the 0x1400 mask, or when the front-end phase byte 0x80143BB0 is non-zero. Otherwise the answer selects the answered record of the 0x140-byte-stride array whose first byte is 0x80145E98, and that record octant byte is set from the order of the probed axis word against the record own position word: mode 0 compares the 0x5C0000 just stored against the record word at 0x80145EC4 and writes 3 on the greater answer, 7 otherwise, and mode 1 compares the 0x440000 just stored against the record word at 0x80145EC8 and writes 5 on the greater answer, 1 otherwise; action 2 is then requested for the answered record through 0x8015C214. Takes the axis byte and returns nothing, keeping a 0x20-byte frame with ra at 0x18 and s1 and s0 at 0x14 and 0x10.'
   - - 1672
     - asm
     - func_801F3288

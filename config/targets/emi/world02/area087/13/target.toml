@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8.c",
     "src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld02Area08713_801F4558.c",
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08713_801F4328.c",
+    "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34.c",
 ]
 support_sources = [
     "src/bof3/world/area08713_work_state.c",

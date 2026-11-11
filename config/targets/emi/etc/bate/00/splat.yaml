@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801D3B4C
   - - 14692
-    - asm
-    - func_801D4564
+    - c
+    - drawSpritePrimTpageFromGraphTypeBate00_801D4564
+    - '@source: src/bof3/ui/drawSpritePrimTpageFromGraphTypeBate00_801D4564.c'
+    - '@behavior: sprite emitter of the BATE overlay: GetGraphType selects the texture page 0x8F when it answers 1 or 2 and 0x2F otherwise, that page fills a draw-mode packet at g_PrimCursor with dfe 0, dtd 0 and no texture window, and the 0xC-byte packet is appended at ordering-table slot 1. A second read of g_PrimCursor fills a 0x14-byte SPRT: width 0x10, height 8, CLUT 0x7800, colour bytes 0x4 through 0x6 set to 0x10 when the fourth argument is nonzero and to 0x80 when it is zero, texture row 0xD8, texture column the second byte argument shifted left by four, and the two signed coordinates from arguments 0 and 1. SetSprt stamps the packet, SetSemiTrans marks it semi transparent with 1, and the sprite is appended at slot 1 as 0x14 bytes. The two appends are func_8014E5A0. No jal and no pointer word of this payload names this span, so it is an overlay entry called from outside the payload. One payload cmp proved the 0x114 bytes equal drawSpritePrimTpageFromGraphType at 0x801D550C in emi/etc/shisu/00 and func_801DA00C at 0x801DA00C in emi/etc/shop/00, both lifts recorded exact there; the body carries no target-specific literal.'
   - - 14968
     - c
     - emitPanelIconPrimBate00_801D4678

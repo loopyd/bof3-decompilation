@@ -161,8 +161,10 @@ segments:
     - asm
     - func_801F8680
   - - 9112
-    - asm
-    - func_801F8F98
+    - c
+    - runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98
+    - '@source: src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98.c'
+    - '@behavior: Overlay handler of primary state 2, word 2 of the handler run at 0x801FA210: switches on the shared substate byte D_80146875 with an unsigned bound of 31, so substates 0..30 select a case and 23..29 fall to the exit, and after the switch every substate from 2 to 12 steps the shared word D_80149318 through the signed step table by calling addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC. Six substates wait out and decrement the shared countdown D_80146876, five decrement it first and test the result and substate 16 ticks the distance word D_8014932C up by 9 with a clamp at 0x400. The countdown expiries and the progress-byte gates of D_80146864 drive the area opening sequence: func_801BE1B0, func_80161CD0, func_8015DF18, func_80161B24, func_80161BBC, func_80154FD8, func_80153DE8, func_8015D4F8 and func_8019FA28 requests, the render word pair D_80149308/D_8014930C, the effect-bank byte D_8014832E and the record claims the allocator func_8019601C answers, which seed 0x74-byte rows of 0x80143FC8 unless the index is 0xFF. Substates 16 and 21 bracket the front-selector request with bit 7 of D_80146258, and substate 22 releases the front selector and resets D_80146874 and D_80146875 to 0. Takes no arguments, returns nothing and keeps an 0x20-byte frame.'
   - - 12540
     - c
     - addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC

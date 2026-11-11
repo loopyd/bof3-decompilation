@@ -16,6 +16,7 @@ sources = [
     "src/bof3/scenario/convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958.c",
     "src/bof3/scenario/decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24.c",
     "src/bof3/scenario/resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444.c",
+    "src/bof3/scenario/setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC.c",
 ]
 support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88.c",

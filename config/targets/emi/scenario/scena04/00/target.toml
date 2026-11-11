@@ -41,6 +41,7 @@ sources = [
     "src/bof3/scenario/drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084.c",
     "src/bof3/scenario/requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4.c",
     "src/bof3/scenario/drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C.c",
+    "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",
@@ -51,3 +52,12 @@ support_sources = [
     "src/bof3/support/scena04_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena04_00_psyq.c"
+
+# The switch table of runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98
+# is 31 code words (0x7C bytes) in the original's leading table data at
+# 0x801F6C84, not beside the code.
+[[matching.section_placements]]
+function = 0x801F8F98
+section = ".rodata"
+address = 0x801F6C84
+size = 0x7C

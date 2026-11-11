@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 void func_801F6FF8(void);
-void func_801F70DC(void);
+void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
+    void);
 
 /* @source 0x801F6FD0
  * @behavior Thin overlay wrapper: calls the helpers at 0x801F6FF8 and 0x801F70DC in sequence.
@@ -11,5 +12,5 @@ void func_801F70DC(void);
  */
 void invokeTwoHelpersScenarioScena1300_801F6FD0(void) {
   func_801F6FF8();
-  func_801F70DC();
+  setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC();
 }

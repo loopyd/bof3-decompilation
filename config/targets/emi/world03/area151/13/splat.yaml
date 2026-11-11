@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801F3898
   - - 3400
-    - asm
-    - func_801F3948
+    - c
+    - emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948
+    - '@source: src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948.c'
+    - '@behavior: emits one semi-transparent flat-grey sprite. The draw-mode texture page word is 0x22C when the graph type reads 1 or 2 and 0x9C otherwise; that DR_MODE is opened on the primitive cursor with a zero tail word, sized 0xC and appended through the shared primitive append helper under ordering-table index 1. The SPRT that follows is flagged semi-transparent, drawn in the flat colour 0x80 with CLUT 0x7B80, placed at the two signed arguments, and takes its width, height and two texture bytes from the four-byte record of the byte table 0x801F5468 that the third argument selects, then is appended at 0x14 bytes. Takes x, y and a record index, returns nothing.'
   - - 3696
     - c
     - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F3A70

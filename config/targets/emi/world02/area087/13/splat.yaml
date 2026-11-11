@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801F3A0C
   - - 3892
-    - asm
-    - func_801F3B34
+    - c
+    - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34
+    - '@source: src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34.c'
+    - '@behavior: returns immediately unless the shared byte 0x8014832E has any of the bits 0x1B set; then picks tpage 0x22C when the graph type reads 1 or 2 and 0x9C otherwise, opens that drawing mode on the primitive cursor, reserves twelve bytes and draws the first sprite layer at the two signed arguments; unless the map byte probed at the shared coordinates 0x8014930A and 0x8014930E reads 0xA0, 0xA1 or 0xAE or bit 0x1000 of the shared halfword 0x8014625A is set, it also draws a second layer 0x30 to the right with the incremented record index, while those three cases take the plain index; the same split repeats for a third layer 0x10 below over eight entries against the shared mask 0x80145AC0, all layers walking the local four-byte table at 0x801F57C8 with the shared mask word 0x80145AB4 for the first pair; a fourth layer 0x30 right and 0x18 below follows when the map probe still reads zero or bit 0x1000 of 0x8014625A, the masked byte 0x80145024 equal to 0x0C or bit 0x4000 of 0x80146258 is set, and the local panel 0x801F3F00 is always appended from 0x18 right and 0x18 below.'
   - - 4864
     - asm
     - func_801F3F00

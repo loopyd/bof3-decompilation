@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 void func_801F6FF8(void);
-void func_801F70DC(void);
+void setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC(
+    void);
 
 /* @source 0x801F6F24
  * @behavior Entry 1 of this overlay's twelve-word work-object handler table
@@ -22,7 +23,8 @@ void func_801F70DC(void);
  * reads zero it instead stores 2 into the object's dispatch byte 0x01 (`sb` of
  * the constant the `beqz` delay slot loads), which hands the next frame to table
  * entry 2 (0x801F6FD0, invokeTwoHelpersScenarioScena1300_801F6FD0). Both arms
- * rejoin at the two overlay helper calls func_801F6FF8 and func_801F70DC, made
+ * rejoin at the two overlay helper calls func_801F6FF8 and
+ * setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC, made
  * in that order with no arguments and with any result discarded, so the pair
  * runs on every call and their `jal` delay slots stay nops. The 0x18-byte frame
  * keeps only $ra at 0x10 across them, and the first pointer-cell load precedes
@@ -60,5 +62,5 @@ void decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoH
     work[1] = 2;
   }
   func_801F6FF8();
-  func_801F70DC();
+  setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC();
 }

@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/world/area13913DispatchTables.c",
     "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area13913_801F3DA8.c",
     "src/bof3/world/noopWorld03Area13913_801F3A7C.c",
+    "src/bof3/world/probeAxisPointRunAndSetFoundRecordOctantSideThenRequestAction2World03Area13913_801F308C.c",
     "src/bof3/world/seedHalfwordPairsFromWorkTablesThenAdvanceWorkByte2AndSetThreeInsideCameraWindowThenDrawWorld03Area13913_801F3AD0.c",
     "src/bof3/world/setTriggerRecordFlagAndQueueCue204OnMatchedArgumentsWorld03Area13913_801F4364.c",
 ]

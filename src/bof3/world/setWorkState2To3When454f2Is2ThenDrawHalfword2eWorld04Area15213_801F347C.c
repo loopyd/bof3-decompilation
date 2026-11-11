@@ -3,9 +3,10 @@
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 
-/* The local drawer narrows both arguments with `sll`/`sra 16` in its own
- * prologue and neither call site consumes a result. */
-void func_801F39C4(s16 arg0, s16 arg1);
+/* The local layer drawer narrows both arguments with `sll`/`sra 16` in its
+ * own prologue and neither call site consumes a result. */
+void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4(
+    s16 arg0, s16 arg1);
 
 /* @source 0x801F347C
  * @behavior Byte-2 step of this overlay's handler run. When the shared mode
@@ -37,5 +38,6 @@ void setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C(
     SPAD_PTR_SLOT(u8, 0x44)[2] = 3;
   }
   record = SPAD_PTR_SLOT(u8, 0x44);
-  func_801F39C4(0x10, FIELD_REF(s16, record, 0x2E));
+  drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4(
+      0x10, FIELD_REF(s16, record, 0x2E));
 }

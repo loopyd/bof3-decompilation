@@ -23,7 +23,7 @@ decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30
 func_801F385C = 0x801F385C;
 func_801F395C = 0x801F395C;
 func_801F3A0C = 0x801F3A0C;
-func_801F3B34 = 0x801F3B34;
+drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34 = 0x801F3B34;
 func_801F3F00 = 0x801F3F00;
 drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8 = 0x801F40F8;
 dispatchStateByte1Table57e0World02Area08713_801F41A8 = 0x801F41A8;

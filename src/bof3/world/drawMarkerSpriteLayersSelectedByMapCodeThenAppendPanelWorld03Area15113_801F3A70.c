@@ -35,10 +35,12 @@ extern u8* g_PrimCursor;
 /* Sprite-layer table carrying the masks and record indices drawn below. */
 extern const World03Area15113LayerEntry D_801F54C0[];
 
-/* Local emitter this target's unlifted 0x801F3948 span provides: its call sites
- * narrow both position arguments with `sll`/`sra 16` and pass the record index
- * zero-extended, and no caller consumes a result. */
-void func_801F3948(s16 arg0, s16 arg1, u8 arg2);
+/* Local emitter this target provides at 0x801F3948: it emits one
+ * semi-transparent sprite from the record the index selects. Its call sites
+ * narrowed both position arguments with `sll`/`sra 16`, the record index was
+ * passed zero-extended, and no caller consumes a result. */
+void emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+    s16 arg0, s16 arg1, u8 arg2);
 
 /* Local panel this target's unlifted 0x801F3E3C span provides, appended after
  * the last layer from the same narrowed signed pair. */
@@ -103,44 +105,49 @@ void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F
                                   : (GetGraphType() == 2 ? 0x22c : 0x9c),
               0);
   func_8014E5A0(1, 0x0c);
-  func_801F3948((s16)arg0, (s16)arg1, 0);
+  emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+      (s16)arg0, (s16)arg1, 0);
 
   mapCode = func_80166CB0(PSX_REF(s16, 0x8014930au),
                           PSX_REF(s16, 0x8014930eu));
   if (((u32)((mapCode + 0x60) & 0xff) >= 2) && ((mapCode & 0xff) != 0xae) &&
       !(PSX_REF(u16, 0x8014625au) & 0x1000)) {
-    func_801F3948((s16)(arg0 + 0x30), (s16)arg1, 1);
+    emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+        (s16)(arg0 + 0x30), (s16)arg1, 1);
     for (i = 0; i < 6; i++) {
       if (D_80145AB4 & (D_801F54C0[i].mask)) {
-        func_801F3948((s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
-                      (u8)(D_801F54C0[i].field_02 + 1));
+        emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+            (s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
+            (u8)(D_801F54C0[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 6; i++) {
       if (D_80145AB4 & (D_801F54C0[i].mask)) {
-        func_801F3948((s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
-                      D_801F54C0[i].field_02);
+        emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+            (s16)(arg0 + 0x38), (s16)(arg1 + 0x8), D_801F54C0[i].field_02);
         break;
       }
     }
   }
 
   if ((u32)((mapCode + 0x60) & 0xff) >= 2) {
-    func_801F3948((s16)(arg0 + 0x30), (s16)(arg1 + 0x10), 2);
+    emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+        (s16)(arg0 + 0x30), (s16)(arg1 + 0x10), 2);
     for (i = 0; i < 8; i++) {
       if (D_80145AC0 & (D_801F54C0[i].mask)) {
-        func_801F3948((s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-                      (u8)(D_801F54C0[i].field_02 + 1));
+        emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+            (s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
+            (u8)(D_801F54C0[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 8; i++) {
       if (D_80145AC0 & (D_801F54C0[i].mask)) {
-        func_801F3948((s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-                      D_801F54C0[i].field_02);
+        emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+            (s16)(arg0 + 0x38), (s16)(arg1 + 0x10), D_801F54C0[i].field_02);
         break;
       }
     }
@@ -151,7 +158,8 @@ void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F
       (PSX_REF(u16, 0x8014625au) & 0x1000) ||
       ((PSX_REF(u8, 0x80145024u) & 0x7f) == 0x0c) ||
       (D_80146258 & 0x4000)) {
-    func_801F3948((s16)(arg0 + 0x30), (s16)(arg1 + 0x18), 3);
+    emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948(
+        (s16)(arg0 + 0x30), (s16)(arg1 + 0x18), 3);
   }
   func_801F3E3C((s16)(arg0 + 0x18), (s16)(arg1 + 0x18));
 }

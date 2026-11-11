@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801F2FE0
   - - 1084
-    - asm
-    - func_801F303C
+    - c
+    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C
+    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C.c'
+    - '@behavior: Advances work byte +2 when the camera is outside the record coordinate window, then calls helper 0x801F31BC.'
   - - 1356
     - asm
     - func_801F314C
