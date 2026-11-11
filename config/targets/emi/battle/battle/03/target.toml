@@ -351,6 +351,7 @@ sources = [
     "src/bof3/battle/submitActiveBattlerRecordsAndAdvanceState.c",
     "src/bof3/battle/drawScratchColorTile.c",
     "src/bof3/battle/submitBattlerRecordsAndStartPhaseStream.c",
+    "src/bof3/battle/applyResolvedDamageToTarget.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

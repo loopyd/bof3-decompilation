@@ -39,6 +39,7 @@ sources = [
     "src/bof3/scenario/stepDrawIntegrateMotionClampHeightAndDecayActiveWorkRecordsScenarioScena0400_801F7EC0.c",
     "src/bof3/scenario/armEffectGroupClearCountAndResetEffectSlots0And1And5ScenarioScena0400_801FA12C.c",
     "src/bof3/scenario/drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084.c",
+    "src/bof3/scenario/requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

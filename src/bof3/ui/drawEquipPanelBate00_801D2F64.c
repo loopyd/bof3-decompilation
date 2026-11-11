@@ -1,0 +1,113 @@
+#include "bof3/bof3.h"
+#include "data/equipment.h"
+#include "gpu/prim.h"
+
+/* @source 0x801C90DC @kind table */
+extern const WeaponObject WEAPON_OBJECTS[];
+/* @source 0x801C98A4 @kind table */
+extern const ArmorObject ARMOR_OBJECTS[];
+/* @source 0x801C9E7C @kind table */
+extern const AccessoryObject ACCESSORY_OBJECTS[];
+
+/* Field table of the main executable, outside this EMI payload: eight 164-byte
+ * records, one per party slot, that the index argument selects.
+ * @source 0x80144968 @kind data */
+extern u8 D_80144968[];
+
+/* Six-byte per-slot id table of this overlay, inside its trailing data blob
+ * (bytes 08 0A 09 0B 0C 0C): the id func_801AEA80 arms each of the six equipped
+ * -item cells with.
+ * @source 0x801D8B38 @kind data */
+extern u8 D_801D8B38[];
+
+/* "EQUIP" caption string of this overlay, inside the same data blob and eight
+ * bytes past the id table; handed to func_8014F800 as the address of byte 0.
+ * @source 0x801D8B40 @kind data */
+extern u8 D_801D8B40[];
+
+/* Panel backing drawer of this overlay: fills the panel anchored at the two
+ * signed coordinates with the size pair its last two arguments carry. This
+ * payload's other call to it, in func_801D8508, passes the same wide form, and
+ * the widths below are the widths observed at these call sites rather than a
+ * recovered callee contract.
+ * @source 0x801D6470 @kind unknown */
+extern void func_801D6470(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
+
+/* Main-exe panel icon drawer, called here with the icon anchor of the equipped
+ * panel and the constant arguments 0, 16, 16 and 0x80 it is called with at the
+ * shop copy of this panel too.
+ * @source 0x801644D8 @kind unknown */
+extern void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4,
+                          u32 arg5);
+
+/* Main-exe equipment-icon cell helper, called once per equipped-item slot with
+ * the cell anchor, the slot id byte of D_801D8B38 and the constant 0. Both
+ * coordinates arrive zero-extended (andi 0xFFFF) and the id byte already
+ * zero-extended by its lbu load, so those widths are the call-site widths.
+ * @source 0x801AEA80 @kind unknown */
+extern void func_801AEA80(u16 arg0, u16 arg1, u8 arg2, s32 arg3);
+
+/* Main-exe equipment-record mask query, called with one of the six item-record
+ * pointers this body selected; only the low byte of the answer is used, and the
+ * word-wide return is the caller-side narrowing of that byte.
+ * @source 0x801AF20C @kind unknown */
+extern u32 func_801AF20C(const void* arg0);
+
+/* @source 0x801D2F64
+ * @behavior Equipment panel of the BATE overlay: it draws the panel backing
+ *           through this overlay's drawer func_801D6470 at (x, y) with the size
+ *           pair 9/10, selects the 164-byte field record D_80144968[index]
+ *           whose item bytes it then reads, draws the 16x16 icon through
+ *           func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80 and
+ *           the EQUIP caption D_801D8B40 through func_8014F800 at (x+0x2E, y+7)
+ *           with the mask 0xFF. It next selects the six equipped-item records
+ *           of that field record - the weapon record of WEAPON_OBJECTS for
+ *           record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F
+ *           to 0x11 and the accessory records of ACCESSORY_OBJECTS for bytes
+ *           0x12 and 0x13 - and for each of the six slots arms the cell at
+ *           (x+5, y+13*slot+0x1C) through func_801AEA80 with the per-slot id
+ *           byte of D_801D8B38 and 0, then submits that record again through
+ *           func_8014F800 at (x+0x11, y+13*slot+0x1A) with the low byte of the
+ *           mask func_801AF20C reports for it. Nothing is returned and the
+ *           0x50-byte frame keeps $s0 to $s5 and $ra across the calls. No jal
+ *           or table word of this payload names the span, so its three
+ *           arguments have the roles their uses give them: a caller outside the
+ *           payload invokes it. The 0x24C bytes equal under cmp the
+ *           emi/etc/shop/00 span at 0x801D8A0C apart from three words - the jal
+ *           at +0x40 to this overlay's own panel drawer func_801D6470 where the
+ *           shop copy calls func_801DBF18, and the two literal low halves at
+ *           +0x6C (caption D_801D8B40) and +0x1D0 (id table D_801D8B38), each
+ *           0x3304 below the shop copy's own literals while the lui halves stay
+ *           equal - so this is one body with this overlay's bindings.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ *
+ * The body follows the shop copy of this panel: the slot row offset stays a
+ * u16 local that is not narrowed until its uses, so the armed cell takes
+ * (u16)(row + 2) and the submitted row the (s16)row truncation.
+ */
+void drawEquipPanelBate00_801D2F64(s16 x, s16 y, u8 index) {
+  u8* record;
+  const void* cells[6];
+  u8 slot;
+  u32 mask;
+  u16 row;
+
+  func_801D6470(x, y, 9, 10);
+  record = &D_80144968[index * 164];
+  func_8014F800((s16)(x + 0x2E), (s16)(y + 7), 0, 0xFF, (u32)D_801D8B40);
+  func_801644D8(0, (u16)(x + 7), (u16)(y + 5), 16, 16, 128);
+  cells[0] = &WEAPON_OBJECTS[record[0x0E]];
+  cells[1] = &ARMOR_OBJECTS[record[0x0F]];
+  cells[2] = &ARMOR_OBJECTS[record[0x10]];
+  cells[3] = &ARMOR_OBJECTS[record[0x11]];
+  cells[4] = &ACCESSORY_OBJECTS[record[0x12]];
+  cells[5] = &ACCESSORY_OBJECTS[record[0x13]];
+  for (slot = 0; slot < 6; slot++) {
+    row = slot * 13 + 0x1A + y;
+    func_801AEA80((u16)(x + 5), (u16)(row + 2), D_801D8B38[slot], 0);
+    mask = func_801AF20C(cells[slot]);
+    func_8014F800((s16)(x + 0x11), (s16)row, 0, mask & 0xFF, (u32)cells[slot]);
+  }
+}

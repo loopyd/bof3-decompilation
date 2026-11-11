@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801EF6F8
   - - 2960
-    - asm
-    - func_801EF790
+    - c
+    - drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790
+    - '@source: src/bof3/bmagic/drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790.c'
+    - '@behavior: Draws one closed translucent red disc of sixteen gouraud triangles that share a passed centre point and cover a whole turn in 0x100 steps of the 0x1000 circle. Each step reloads the cursor primitive from g_PrimCursor, seeds it with 0x8017A97C, turns semi-transparency on and writes the three vertices of a POLY_G3: the centre pair, the arc point at the step angle and the arc point one step further, each arc coordinate being the centre coordinate plus the two-argument radius times the sampler of that angle shifted right twelve, with 0x801783C8 sampling x and 0x801782FC sampling y. Only the red channel carries shade, the centre vertex taking 0x80 in its only caller and the two arc vertices taking the fifth argument, while green and blue of every vertex are cleared. The 0x1C-byte POLY_G3 is appended at ordering-table index 1. The counter is a full-word phase, the current angle truncated from it before the first sampler pair, while the arc point is the phase one 0x100 step ahead truncated only where it is sampled and where the loop test compares it against 0x1000, so sixteen triangles are emitted. It takes two wide centre coordinates, a signed radius and two shade bytes, the last on the stack, and returns nothing.'
   - - 3308
     - asm
     - func_801EF8EC

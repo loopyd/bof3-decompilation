@@ -13,9 +13,11 @@ extern u16 D_80146258;
 void func_80150224(s32 arg0);
 
 /* @source 0x801F9FD0
- * @behavior Single call-site handler of this overlay: func_801F9DF4 reaches it
- *           through the jal at 0x801F9FA0 with the mode id 3 (materialised at
- *           0x801F9F48) or 0x26 (at 0x801F9F88) in the argument register,
+ * @behavior Single call-site handler of this overlay:
+ *           requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4
+ *           reaches it through the jal at 0x801F9FA0 with the mode id 2
+ *           (materialised at 0x801F9F28), 3 (at 0x801F9F48) or 0x26 (at
+ *           0x801F9F88) in the argument register,
  *           after writing the shared state byte D_80146874 and clearing the
  *           shared sub-state byte D_80146875, and then sign-extends the low
  *           byte of the result (sll/sra 24). It queues the low byte of its

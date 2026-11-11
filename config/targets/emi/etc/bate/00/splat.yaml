@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801D2C2C
   - - 9060
-    - asm
-    - func_801D2F64
+    - c
+    - drawEquipPanelBate00_801D2F64
+    - '@source: src/bof3/ui/drawEquipPanelBate00_801D2F64.c'
+    - '@behavior: equipment panel of the BATE overlay: draws the panel backing through this overlay''s drawer func_801D6470 at (x, y) with the size pair 9/10, selects the 164-byte field record D_80144968[index], draws the 16x16 icon through func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80 and the EQUIP caption D_801D8B40 through func_8014F800 at (x+0x2E, y+7) with the mask 0xFF; it then selects the six equipped-item records of that field record - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F to 0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12 and 0x13 - and for each of the six slots arms the cell at (x+5, y+13*slot+0x1C) through func_801AEA80 with the per-slot id byte of D_801D8B38 and 0, then submits that record again through func_8014F800 at (x+0x11, y+13*slot+0x1A) with the low byte of the mask func_801AF20C reports for it'
   - - 9648
     - asm
     - func_801D31B0

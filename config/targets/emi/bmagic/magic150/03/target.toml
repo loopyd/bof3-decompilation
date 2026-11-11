@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC.c",
     "src/bof3/bmagic/setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4.c",
+    "src/bof3/bmagic/drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790.c",
 ]
 support_sources = [
     "src/bof3/support/magic150_03_psyq.c",

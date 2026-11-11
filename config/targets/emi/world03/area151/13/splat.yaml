@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F4128
   - - 5732
-    - asm
-    - func_801F4264
+    - c
+    - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area15113_801F4264
+    - '@source: src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area15113_801F4264.c'
+    - '@behavior: Entry 1 of the three-entry byte-1 handler run based at 0x801F54D8, whose dispatcher is 0x801F40E4. Applies entry 0x46 through 0x8014DD3C, clears record bytes 0x48 and 0x24 and sets byte 0x29 to 5 through fresh reads of the scratchpad pointer cell 0x1F800044. Seeds record words 0x0C and 0x10 from the signed halfword pair selected by facing byte 0x08 in table 0x801F54E4 and copies the shared words 0x80145EC4 and 0x80145EC8 into record offsets 0x34 and 0x38. While record byte 0x06 is nonzero it subtracts the pair shifted right by 13 from halfwords 0x36 and 0x3A, then moves halfword 0x36 by 2 when word 0x0C is zero and byte 0x06 reads 1 and moves halfword 0x3A by +2 for that case and by -2 for every other reading. It then subtracts the pair shifted right by 9 from both halfwords, clears record byte 0x0B and increments state byte 0x01 so the next dispatch takes entry 2 of the same run at 0x801F4494. Finally it requests the first byte of the facing-selected pair at 0x801F54F4 through 0x8014D6B8, stores the second byte in record byte 0x2A and calls 0x8014D290. Takes no arguments and returns nothing.'
   - - 6292
     - asm
     - func_801F4494

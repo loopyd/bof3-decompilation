@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/support/area139_13_psyq.c",
+    "src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld03Area13913_801F3C68.c",
     "src/bof3/world/area13913DispatchTables.c",
     "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area13913_801F3DA8.c",
     "src/bof3/world/noopWorld03Area13913_801F3A7C.c",

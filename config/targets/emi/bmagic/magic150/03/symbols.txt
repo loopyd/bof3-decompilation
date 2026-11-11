@@ -14,6 +14,6 @@ func_801EF324 = 0x801EF324;
 func_801EF4E0 = 0x801EF4E0;
 resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0 = 0x801EF6B0;
 func_801EF6F8 = 0x801EF6F8;
-func_801EF790 = 0x801EF790;
+drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790 = 0x801EF790;
 func_801EF8EC = 0x801EF8EC;
 T_801EFA9C = 0x801EFA9C;

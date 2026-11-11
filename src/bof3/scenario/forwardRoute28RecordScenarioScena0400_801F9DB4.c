@@ -2,11 +2,13 @@
 
 extern u16 D_80143F00;
 
-s32 func_801F9DF4(s32 arg0, s32 arg1);
+s32 requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4(
+    s32 arg0, s32 arg1);
 
 /* @source 0x801F9DB4
  * @behavior Route-0x28 gate of this overlay in front of its own packed-record
- * handler func_801F9DF4 (0x801F9DF4): when the shared route word D_80143F00
+ * handler requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4
+ * (0x801F9DF4): when the shared route word D_80143F00
  * reads 0x28 (40) it forwards its own two incoming packed record words
  * unchanged (no argument register is set up anywhere in its body) and returns
  * the sign-extended low byte of that handler's result (the `sll`/`sra` by 24 at
@@ -36,7 +38,8 @@ s32 func_801F9DF4(s32 arg0, s32 arg1);
  */
 s32 forwardRoute28RecordScenarioScena0400_801F9DB4(s32 arg0, s32 arg1) {
   if (D_80143F00 == 0x28) {
-    return (s8)func_801F9DF4(arg0, arg1);
+    return (s8)requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4(
+        arg0, arg1);
   }
   return 0;
 }

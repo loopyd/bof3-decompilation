@@ -185,8 +185,10 @@ segments:
     - asm
     - func_801D8A78
   - - 34224
-    - asm
-    - func_801D91B0
+    - c
+    - drawThreeIconStatusRowPanelShisu00_801D91B0
+    - '@source: src/bof3/ui/drawThreeIconStatusRowPanelShisu00_801D91B0.c'
+    - '@behavior: Status row panel of the SHISU overlay: it insets the 200 by 48 panel at (x + 8, y) through func_801AE3F0 with the shade 0 and the shared CLUT-bank byte D_80144952, and a null record skips the rest of the row. Otherwise it re-reads the graph type when that answer is not 1, installs the draw mode at g_PrimCursor with dfe 0, dtd 0, the texture page 0xF and no texture window as 0xC bytes at slot 1, emits the 16x16 icon through emitPanelIconPrimShisu00_801D5620 at (x + 9, y + 5) with the icon id plus 3 as its kind, the 0x1E texture row, the clut GetClut(0x10, 0x1E0) and the attribute 0x80, and then walks the record''s three sprite kinds, calling func_801D44C0 at (x + 0x56 plus 41 per slot, y + 2) with the mode 0 for every slot byte that is not 0xFF. It submits the record''s five-cell name run through func_8014F800 at (x + 0x15, y + 3) with the alignment 0, formats the record byte +0x08 with "%2d" into the shared work buffer and draws it through func_80150098 at (x + 0x1F, y + 0x18), formats the bytes +0x0C and +0x0D with "%02d %02d" and draws them at (x + 0x27, y + 0x25), draws the three-cell label row "  :" at that same column on y + 0x24 and y + 0x27, and hands the byte +0x08 and the word +0x10 to the gauge helper func_801D56D8 at (x + 0x14, y + 0x12) with the selector 0. Outside the guarded block it reads the record byte +0x14 and submits the sprite stream D_801D9A60 through func_801AF390 at (x, y) with 2 as the flag when that byte is set and 0 when it is clear, then appends the sprite 0x3D through func_801AF2A0 at (x + 0x32, y + 0x16) when the record is present and that byte is set. No jal and no table word of this payload names this body, so it is an overlay entry called from outside the payload. The same 0x300-byte body sits at 0x801D8208 in emi/etc/bate/00 and at 0x801DDCB0 in emi/etc/shop/00 with 185 of its 192 words equal, so those rows are shape evidence and not a clone source. Its 0x40-byte frame keeps s0 through s7, $fp and $ra and the epilogue returns no value.'
   - - 34992
     - c
     - drawTwoRowNumberedPanelShisu00_801D94B0

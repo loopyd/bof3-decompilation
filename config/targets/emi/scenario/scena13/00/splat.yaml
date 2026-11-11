@@ -51,8 +51,8 @@ segments:
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F7198
   - - 1500
-    - asm
-    - func_801F71DC
+    - c
+    - clearWorkTintQueueFrontEndMode33SetPhase2AndAdvanceWorkByte1ScenarioScena1300_801F71DC
   - - 1608
     - c
     - armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248

@@ -394,8 +394,10 @@ segments:
     - '@source: src/bof3/battle/findLocalWorkByKind.c'
     - '@behavior: Returns the first of three local work records whose byte +0x79 matches the selector.'
   - - 44920
-    - asm
-    - func_801DBB78
+    - c
+    - applyResolvedDamageToTarget
+    - '@source: src/bof3/battle/applyResolvedDamageToTarget.c'
+    - '@behavior: Applies the damage one attacker deals to one target battler and returns the amount: marks the target status byte 0x11, resolves the amount through resolveBattlerDamageAmount with the 0xFFFF kind mask, replaces it with the target HP halfword and queues the 0x1E event row with 0x801EB075 while the target flag 0x100 is set, subtracts a positive amount with the party threshold-byte and D_80145FB8 gated 0x4 flags bit or zeroes the halfword, clamps a non-positive amount at the target maximum with status bit 4, and rolls func_800A3DF8 for the 0x4A/0x4C/0x4F party kinds to apply the 0x40/0x8/0x20 mask to the target.'
   - - 46148
     - c
     - resolveBattlerDamageAmount
