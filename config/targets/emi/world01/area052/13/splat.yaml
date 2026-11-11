@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801F3E14
   - - 4916
-    - asm
-    - func_801F3F34
+    - c
+    - dispatchSharedModeByteTable2C04World01Area05213_801F3F34
+    - '@source: src/bof3/world/dispatchSharedModeByteTable2C04World01Area05213_801F3F34.c'
+    - '@behavior: Steps this overlay shared front-end mode byte 0x801448EC through the 48-slot jump table the payload keeps at 0x801F2C04.'
   - - 5736
     - c
     - clearSharedFlagBit25World01Area05213_801F4268

@@ -16,5 +16,6 @@ support_sources = [
     "src/bof3/world/drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4.c",
     "src/bof3/world/drawTwoTexturedTileBatchesThenAdvanceState2WhenSharedStateSetWorld01Area04813_801F37F4.c",
     "src/bof3/world/drawMoveBlockByWorkByte9ThirdThenIncrementWorkByte9AndSetState2To1At4World01Area04813_801F40B4.c",
+    "src/bof3/world/drawMoveBlockByWorkByte9HalfThenIncrementWorkByte9WrapAt7ToState2Is3AndDrawRowWorld01Area04813_801F4148.c",
 ]
 psyq_source = "src/bof3/support/area048_13_psyq.c"

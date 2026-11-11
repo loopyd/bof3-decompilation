@@ -19,6 +19,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CThenOnFrameParityDecrementWorkByte9AndSharedByteBAndClearAtZeroBmagicMagic07603_801EFD60.c",
     "src/bof3/bmagic/clearRecordPoolBytes0To2CopyBattleStateToWorkByte4CopyRecordByte8TripletSetByte9To3CClaimSlot62PublishWorkPointerCopy256And16HalfwordsBit15Set80145988InvokeHelper100AdvanceWorkByte1BmagicMagic07603_801EED48.c",
     "src/bof3/bmagic/seedRandomWorkWord14AndBytes5DTo5FProjectPositionPairAtWordCScaleEightSetWord3CAndAdvanceWorkByte2OnWorkByte9CountdownBmagicMagic07603_801EFA60.c",
+    "src/bof3/bmagic/drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic07603_801F0438.c",

@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/world/publishWorkHalfword32ToSeedThenClearWorkFlagsWorld03Area13013_801F33CC.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld03Area13013_801F39FC.c",
     "src/bof3/world/seedFrontEndRecordHandler78FromWorkPositionWorld03Area13013_801F38F0.c",
+    "src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30.c",
 ]
 psyq_source = "src/bof3/support/area130_13_psyq.c"

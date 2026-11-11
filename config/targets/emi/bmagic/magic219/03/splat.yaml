@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801EEE50
   - - 852
-    - asm
-    - func_801EEF54
+    - c
+    - decrementWorkByte9InvokeHelper101AndRaiseBattleTargetFlag10ThenAdvanceWorkByte1BmagicMagic21903_801EEF54
+    - '@source: src/bof3/bmagic/decrementWorkByte9InvokeHelper101AndRaiseBattleTargetFlag10ThenAdvanceWorkByte1BmagicMagic21903_801EEF54.c'
+    - '@behavior: Counts down scratchpad work byte 0x9 and, at zero, invokes the main-executable helper at 0x8015D71C with selector 0x101, raises battler flag 0x10 on the shared target byte at 0x80146384 through func_800A9610 and increments work byte 0x1.'
   - - 964
     - asm
     - func_801EEFC4

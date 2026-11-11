@@ -26,7 +26,7 @@ void func_80155A08(s32 x, s32 y, s32 kind, s32 size);
  * overlay's own two draw passes. */
 void func_800AF764(void);
 void func_801EFEA8(void);
-void func_801F00FC(void);
+void drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC(void);
 
 /* @source 0x801EF8EC
  * @behavior Entry 0 of the overlay's work-byte-1 table at 0x801F04A0 and one
@@ -65,7 +65,7 @@ void dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenW
     if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
         func_800AF764();
         func_801EFEA8();
-        func_801F00FC();
+        drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC();
     }
     if (GetGraphType() == 1 || GetGraphType() == 2) {
         mode = 0x25;

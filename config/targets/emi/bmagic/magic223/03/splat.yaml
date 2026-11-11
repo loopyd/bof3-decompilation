@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF18C
   - - 1512
-    - asm
-    - func_801EF1E8
+    - c
+    - drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZeroAndThreeMirroredByGlobalWorkByte8BitZeroThenRearmGraphTypeDrawModeBmagicMagic22303_801EF1E8
+    - '@source: src/bof3/bmagic/drawFullscreenTranslucentGouraudQuadTintedByWorkByte9TimesEightAtVerticesZeroAndThreeMirroredByGlobalWorkByte8BitZeroThenRearmGraphTypeDrawModeBmagicMagic22303_801EF1E8.c'
+    - '@behavior: Full-screen translucent Gouraud quad drawer reached from the work step at 0x801EF050 while work byte 0 is set: picks the graph-type draw-mode word (0xA5 for types 1 and 2, 0x35 otherwise), seeds SetDrawMode at g_PrimCursor and appends a 0xC-byte packet, then fills a semi-transparent POLY_G4 at g_PrimCursor with the 320x240 screen rectangle (x 0/0x13F, y 0/0xEF) whose vertex wiring bit 0 of byte 8 of the shared record at 0x801EB4E0 mirrors, publishes work byte 9 as a word through 0x1F800008 and eight times that byte at 0x1F80000C, tints all four vertices grey with vertices 0 and 3 taking the shifted scratch byte and vertices 1 and 2 the unshifted work byte, appends a second 0xC-byte packet and re-arms the draw mode with 0x25 for types 1 and 2 and 0x15 otherwise.'
   - - 1984
     - c
     - dispatchStateByte1Tablefc40BmagicMagic22303_801EF3C0

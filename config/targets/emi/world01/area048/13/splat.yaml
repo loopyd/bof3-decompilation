@@ -103,8 +103,10 @@ segments:
     - '@source: src/bof3/world/drawMoveBlockByWorkByte9ThirdThenIncrementWorkByte9AndSetState2To1At4World01Area04813_801F40B4.c'
     - '@behavior: draws one 8 by 0x78 move block through the emitter at 0x801F41F0 using the record halfword +0x36 and the column byte that the table at 0x801F4E70 holds for the work byte +0x09 divided by three, then advances that byte and, once it reaches 4, stores 1 into the record''s dispatch state byte +0x02.'
   - - 5448
-    - asm
-    - func_801F4148
+    - c
+    - drawMoveBlockByWorkByte9HalfThenIncrementWorkByte9WrapAt7ToState2Is3AndDrawRowWorld01Area04813_801F4148
+    - '@source: src/bof3/world/drawMoveBlockByWorkByte9HalfThenIncrementWorkByte9WrapAt7ToState2Is3AndDrawRowWorld01Area04813_801F4148.c'
+    - '@behavior: draws one 8 by 0x78 move block through the emitter at 0x801F41F0 using the record halfword +0x36 and the column byte that the table at 0x801F4E74 holds for the work byte +0x09 halved, advances that byte, and once it reaches 7 clears it and stores 3 into the record''s dispatch state byte +0x02 before passing the halfword +0x36 to the row draw routine at 0x801F4258.'
   - - 5616
     - asm
     - func_801F41F0

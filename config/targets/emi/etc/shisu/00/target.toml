@@ -7,7 +7,9 @@ binary = "out/binaries/emi/etc/shisu/00.bin"
 splat = "config/targets/emi/etc/shisu/00/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/ui/sumLevelExpShisu00_801D5F78.c",
+]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
     "src/bof3/ui/dispatchStateByteTable9720EtcShisu00_801D2C0C.c",

@@ -116,8 +116,10 @@ segments:
     - asm
     - func_801EFEA8
   - - 5372
-    - asm
-    - func_801F00FC
+    - c
+    - drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudRingOfEightQuadsBetweenRadiiTwentyAndEightTintedByWorkByte9TimesSignedBytes5d5e5fBmagicMagic07603_801F00FC.c'
+    - '@behavior: Publish the fixed radii 8 and 0x14 and the fade tint, the unsigned work byte 9 times the signed work bytes 5D, 5E and 5F, into the scratchpad halfwords at 0x1F800000, 0x1F800002 and 0x1F800008 to 0x1F80000C, then emit eight semi-transparent Gouraud quads over the eight 0x200 steps of the circle between those two radii around the work halfwords 0x2E and 0x30, with vertices zero and one on radius 0x14 and RGB 1 and vertices two and three on radius 8 carrying the tint bytes, linking each 0x24-byte packet at work words 0x34 and 0x38 with kind 2.'
   - - 6100
     - asm
     - func_801F03D4

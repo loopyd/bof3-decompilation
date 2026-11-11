@@ -189,6 +189,7 @@ sources = [
     "src/bof3/battle/func_800AB4BC.c",
     "src/bof3/battle/func_800ABBE0_battle15.c",
     "src/bof3/battle/func_800ABC28.c",
+    "src/bof3/battle/claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount.c",
     "src/bof3/battle/func_800AC218_battle15.c",
     "src/bof3/battle/func_800AC704.c",
     "src/bof3/battle/func_800AC7D0_battle15.c",

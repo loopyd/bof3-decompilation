@@ -44,8 +44,10 @@ segments:
     - invokeHelperWorld03Area13013_801F2E10
     - '@source: src/bof3/world/invokeHelperWorld03Area13013_801F2E10.c'
   - - 560
-    - asm
-    - func_801F2E30
+    - c
+    - drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30
+    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30.c'
+    - '@behavior: Overlay effect entry draw pass that the overlay draw pass 0x801F2CDC calls once for each of the 0x20 entries of the 0x2C-byte-stride effect table at 0x800E4800 on the frame it adds 0x10 to the spin angle of the entry it has just drawn: it stamps the shared primitive cursor 0x8014598C through 0x8017A97C, flags it semi-transparent, projects the entry position words 0 4 and 8 into the first vertex of a POLY_G3 at cursor offset 8 through 0x801AFF04, rotates the signed-halfword extent pairs at 0x10 and 0x18 by the spin angle at 0x24 into the vertices at cursor offsets 0x10 and 0x18 with the extents scaled by the halfword at 0x28 and translated by the entry position, then clamps the shade halfword 0x2A into the red and green bytes at cursor offsets 4 and 5, writes half of it into the blue byte at 6, clears the colour bytes of the second and third vertices and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 1.'
   - - 1232
     - asm
     - func_801F30D0

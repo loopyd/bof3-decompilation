@@ -1318,8 +1318,10 @@ segments:
     - asm
     - func_800ABF5C
   - - 88092
-    - asm
-    - func_800AC01C
+    - c
+    - claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount
+    - '@source: src/bof3/battle/claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount.c'
+    - '@behavior: Claims the owner work record of party slot slot (findOwnerRecord), copies its 0x74-byte head into the 0x118-byte local panel record selected by index, publishes that record as the active work pointer 0x1F800044, resets the inherited work state, initialises the record from its class template through func_800AC218 and func_800AD0A8, clears band byte 0x7F, raises flag 0x40 of the owner record leading byte and advances the initialised record counter D_801462F2.'
   - - 88600
     - c
     - func_800AC218

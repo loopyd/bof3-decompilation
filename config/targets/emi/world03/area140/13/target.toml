@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058.c",
     "src/bof3/world/clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC.c",
     "src/bof3/world/setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4.c",
+    "src/bof3/world/clearFlagBitFromWorkByteBAndSubmitPair36And3aThenResetWorkWorld03Area14013_801F476C.c",
 ]
 support_sources = [
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c",

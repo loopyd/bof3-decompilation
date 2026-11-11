@@ -110,8 +110,13 @@ segments:
     - asm
     - func_801D5C7C
   - - 21368
+    - c
+    - sumLevelExpShisu00_801D5F78
+    - '@source: src/bof3/ui/sumLevelExpShisu00_801D5F78.c'
+    - '@behavior: Level-table experience sum for one character row: the SHISU overlay masks the row and count arguments to bytes, returns -1 when the count is 100 or greater, and otherwise sums the u16 experience threshold at the head of the first count entries of row `row` in the shared 99-entry-per-row table at 0x801CB8DC; the 0x8-byte frame saves no register and the epilogue returns the sum in $v0.'
+  - - 21492
     - asm
-    - func_801D5F78
+    - func_801D5FF4
   - - 21648
     - asm
     - func_801D6090
