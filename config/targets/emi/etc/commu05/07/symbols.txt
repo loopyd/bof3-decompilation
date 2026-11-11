@@ -1,6 +1,6 @@
 fairyProgress = 0x801448EC;
 D_801D0C04 = 0x801D0C04;
-func_801D0C4C = 0x801D0C4C;
+initializeCommu0507RowCountsAndCursor = 0x801D0C4C;
 func_801D0D4C = 0x801D0D4C;
 advanceFairyProgressCommu0507_801D0F34 = 0x801D0F34;
 func_801D0F50 = 0x801D0F50;

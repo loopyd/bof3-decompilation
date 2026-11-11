@@ -7,7 +7,7 @@ binary = "out/binaries/emi/world03/area130/13.bin"
 splat = "config/targets/emi/world03/area130/13/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = ["src/bof3/world/seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0.c"]
 support_sources = [
     "src/bof3/world/invokeFourConstantArgsWorld03Area13013_801F3760.c",
     "src/bof3/world/invokeTwoZeroArgsWorld03Area13013_801F373C.c",
@@ -24,3 +24,16 @@ support_sources = [
     "src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld03Area13013_801F2E30.c",
 ]
 psyq_source = "src/bof3/support/area130_13_psyq.c"
+
+# The compiler-emitted six-entry switch table of
+# seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0
+# lives where the original overlay links it, at 0x801F2C04 in this payload's
+# leading tabledata header (offset 0x04): that address is 4-mod-8 while the
+# compiler's `.align 3` asks for 8, so the placement route lowers only this
+# section's alignment. The table's entries are the function's own dispatch arm
+# labels, in selector order 0 through 5.
+[[matching.section_placements]]
+function = 0x801F3CD0
+section = ".rodata"
+address = 0x801F2C04
+size = 0x18

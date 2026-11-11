@@ -39,8 +39,10 @@ segments:
     - c
     - clearByte80148330AndSetThreeBytesShisu00_801D1E34
   - - 4704
-    - asm
-    - func_801D1E60
+    - c
+    - mapByte80144FF9ToCodeShisu00_801D1E60
+    - '@source: src/bof3/ui/mapByte80144FF9ToCodeShisu00_801D1E60.c'
+    - '@behavior: Maps the shared byte at 0x80144FF9 onto one of eight codes from 9 through 16 by a descending unsigned range ladder: any value below 0x26 returns 9, the bands 0x26 to 0x27, 0x28 to 0x2C, 0x2D to 0x31, 0x32 to 0x3B, 0x3C to 0x40 and 0x41 to 0x43 return 10 through 15, and every other value returns 16; each band is tested as an unsigned subtraction of its own base, the span takes no arguments, creates no frame, touches no memory beyond that load and leaves the code in $v0.'
   - - 4840
     - asm
     - func_801D1EE8

@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/dispatchStateByte4Table4dc4World03Area14113_801F3688.c",
+    "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14113_801F3AC0.c",
 ]
 support_sources = [
     "src/bof3/support/area141_13_psyq.c",

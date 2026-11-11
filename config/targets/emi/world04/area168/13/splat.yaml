@@ -69,8 +69,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16813_801F3794.c'
     - '@behavior: Advances work byte +2 when the camera is outside the record coordinate window, then calls helper 0x801F3914.'
   - - 3236
-    - asm
-    - func_801F38A4
+    - c
+    - decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCall3914World04Area16813_801F38A4
+    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCall3914World04Area16813_801F38A4.c'
+    - '@behavior: Subtracts 0x10 from work halfword +0x30 and, once that countdown reaches zero, queues cue 0x201 while the shared front-end phase byte is zero, sets work byte +2 to 1, and calls local helper 0x801F3914 on every call.'
   - - 3348
     - asm
     - func_801F3914

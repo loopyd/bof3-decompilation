@@ -1299,7 +1299,7 @@ segments:
     - c
     - dispatchByBattleMode
     - '@source: src/bof3/battle/dispatchByBattleMode.c'
-    - '@behavior: Runs the battle mode pass func_800ABBE0 (func_800ABF5C then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero reset/apply pass func_800ABC30 when it is clear.'
+    - '@behavior: Runs the battle mode pass func_800ABBE0 (func_800ABF5C then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero pass initBattlerRecordsForActiveSlotsThenSeedCountdown when it is clear.'
   - - 87008
     - c
     - func_800ABBE0
@@ -1309,8 +1309,10 @@ segments:
     - c
     - func_800ABC28
   - - 87088
-    - asm
-    - func_800ABC30
+    - c
+    - initBattlerRecordsForActiveSlotsThenSeedCountdown
+    - '@source: src/bof3/battle/initBattlerRecordsForActiveSlotsThenSeedCountdown.c'
+    - '@behavior: Clears the initialised battler-record counter D_801462F2, walks the eight 12-byte slot records of D_801463DC and, for every slot whose leading byte is set, initialises the next battler record through func_800ABCE0 with that slot''s identity byte and the word pair at 0x04 and 0x08, passing the current number of initialised records as the record index. After the walk it copies D_801462F2 into D_801462F3, the countdown clearBattlerFlagsAndDecrement462F3 decrements as each battler finishes.'
   - - 87264
     - asm
     - func_800ABCE0

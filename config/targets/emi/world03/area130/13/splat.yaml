@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F3C9C
   - - 4304
-    - asm
-    - func_801F3CD0
+    - c
+    - seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0
+    - '@source: src/bof3/world/seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0.c'
+    - '@behavior: Two-step overlay handler on the shared sub-state byte D_80146875. Step 0 runs while the shared front-end mode byte D_80143BB0 reads other than 2: it dispatches the shared selector byte D_80144E5E through the six-entry jump table at 0x801F2C04, resolves the selected name through func_80165D48 into the shared buffer D_801490D8, gates its cue through func_801650B4, clears 0x801490E4 and 0x80149100, starts action 0x49, latches the mode byte to 2 and advances the sub-state to 1. Step 1 also runs only while that mode reads other than 2: it queues sound cue 0x106 through func_8015DF18, sets flag bit 0x98 of the bank D_80144F28, runs the release helper func_8015C058 and clears 0x801448EB and 0x801448ED.'
   - - 4824
     - textbin
     - D_801F3ED8

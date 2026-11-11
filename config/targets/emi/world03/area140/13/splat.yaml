@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/world/clearWorkByte74Bit0AndSetSharedFlagBankBit54ThenResetScratchWorkByteWhenWorkRecordKind5To7World03Area14013_801F3DAC.c'
     - '@behavior: Clears bit 0 of the work record byte at +0x74, then once the shared work-record kind byte at 0x80145F09 reads 5, 6 or 7 sets bit 0x54 of the shared flag bank 0x80144F28, calls 0x8015507C with 2 and 7 and clears byte 0 of the scratchpad work record.'
   - - 4656
-    - asm
-    - func_801F3E30
+    - c
+    - projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30
+    - '@source: src/bof3/world/projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30.c'
+    - '@behavior: While flag 0x66 of the main-RAM flag bank 0x80144F28 is set, copies the shared mode byte 0x80145E98 into work byte 8 and projects the walk step from the signed route-step pair 0x80181B00 / 0x80181B01 onto the work halfwords +0x36 and +0x3A; the projected cell either arms the record published through 0x80148210 for level 2 when the movement probe 0x801F4058 rejects it inside the column 0x44..0x50 and row 0x06..0x10 window, or requests the resource named by work byte 8, and when the work-gate halfwords 0x80145AA8 and 0x80145AC0 share a set bit it raises bit 0x40 of that record and bit 0x08 of work byte 7, requests the facing step cue from the local pair table 0x801F4A6C, stores that pair second byte at work +0x2A and passes the projected cell to the local trigger lookup 0x801F4380; every other path only adds 4 to the record halfword at +0x0A.'
   - - 5208
     - c
     - testMoveProbeAndMapCellCodeNot89World03Area14013_801F4058

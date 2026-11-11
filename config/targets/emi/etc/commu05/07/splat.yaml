@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_801D0C04
   - - 76
-    - asm
-    - func_801D0C4C
+    - c
+    - initializeCommu0507RowCountsAndCursor
+    - '@source: src/bof3/ui/initializeCommu0507RowCountsAndCursor.c'
+    - '@behavior: Step 0 of the handler run at 0x801D1950. Stores the three section row counts into the payload bytes at 0x801D19F0, 0x801D19F1 and 0x801D19F2 as ceil(counter / entriesPerRow) with capacities 7, 0x14 and 8, read from the shared commu queue counters at 0x80145E44, 0x80145E5C and 0x80145E5D, clears the row cursor at 0x801D19F4 and advances the shared step byte at 0x801F294C by one.'
   - - 332
     - asm
     - func_801D0D4C
