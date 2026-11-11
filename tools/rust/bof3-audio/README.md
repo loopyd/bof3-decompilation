@@ -506,5 +506,6 @@ Unstamped host ENVX reads and SPU writes reject in these contexts.
 reports the selected model; cooperative reports use
 `model: "pcsx_redux_cooperative"` and retain quantum, chunk and actor counters.
 `output()` exposes the separate functional clock. Cooperative scheduling defines
-a reproducible reference context. Complete native timing and music, SFX and XA
-history acceptance remain open.
+a reproducible reference context. Bounded native comparisons cover cold music,
+SFX and XA startup, continuous playback and combined histories. Original-game
+frame workloads, unknown incoming state and hardware timing remain unverified.

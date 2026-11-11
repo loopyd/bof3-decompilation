@@ -2095,8 +2095,8 @@ Bounded native comparisons cover two capture-ring addresses, a voice-block
 fetch, acknowledgement and rearm, masked delivery, and a syscall after IRQ
 return. They compare CPU state, full RAM and producer state through the guest
 callback manager. They do not establish hardware IRQ timing, concurrent RAM
-arbitration or wider original-game IRQ histories. Disabled-frame execution
-remains unsupported.
+arbitration or wider original-game IRQ histories. Disabled frames require the
+explicit native disable model; hardware disable semantics remain unverified.
 
 DMA RAM observation is disabled by default. Call
 `Interconnect::enable_dma_observation(limit)` with a limit of 1–1,000,000

@@ -249,18 +249,22 @@ uses 64-bit absolute CPU cycles. This profile uses the default disabled
 `RCntFix` setting and retains the mode-triggered timer-2 jitter rule.
 
 Owned execution counts instruction fetch, data access and multiply/divide costs
-with the same interpreter model. Host kernel services retain two functional
-ticks per dispatch; their latency is unverified. Owned timers and PCM output
-keep their separate device clocks. Production output starts before game sound
-initialization, and capture retains its phase. CD service startup remains
-unclocked. Instruction costs alone do not establish native timing or PCM equivalence.
+with the selected native interpreter model. Production starts its CPU, synthesis
+producer and output consumer before the first reset instruction. Guest loading,
+service initialization, bank transfers and CD startup advance these actors.
+The cooperative context rejects functional host-service execution. Its explicit
+CPU quantum, producer batches and consumer turns determine output phase.
 
 Production PSX music, cold-bank SFX and cold XA cue renderers use this driver.
 The XA host calls the owned original `audio_vsync` with argument 2 before each
 XA tick. The guest waits on its live callback counter and retains previous-wait
 state. It executes interrupt continuations during the wait. Duration stopping
 pulses the caller-owned state byte at +0x20 for one tick; the guest owns recovery,
-gain ramp, Pause and callback teardown. Broader playback histories, other
-production operations, native timing and independent PCM acceptance remain open.
+gain ramp, Pause and callback teardown. Bounded native comparisons cover cold
+music, SFX and XA preparation and combined playback with the same command/media
+ports and cooperative actor context. Arbitrary original-game frame workloads,
+unknown caller state and hardware fidelity remain unverified. All seven host
+operations use owned driver data; reference EXE and BIOS execution is a separate
+development path.
 The authored sources use the project [MIT license](../LICENSE); dependency
 notices remain in [`THIRD_PARTY_LICENSES.txt`](../THIRD_PARTY_LICENSES.txt).
