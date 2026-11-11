@@ -1,6 +1,6 @@
 //! PC interchange and owned-driver rendering with verified publication.
 use crate::{
-    codec::vorbis,
+    codec::{mp3, vorbis},
     digest::sha256_hex,
     interchange::wave::Wave,
     machine::{driver::Image, effects::Note},
@@ -33,9 +33,9 @@ render --mode music --engine pc --archive EMI --driver DIRECTORY
   render --mode xa --engine psx --track RAW_DATA --toc TOC_JSON --driver DIRECTORY
     --cue PACKED_ID --history cold --output NEW_DIR [--duration SECONDS]
     [--tail SECONDS] [--timeout SECONDS] [--json]
-  [--format wav|ogg] [--quality 0.7]
-  Writes render.wav and render.json after validation, plus render.ogg for --format ogg.
-Output must not exist. Vorbis quality is fixed at the independently measured 0.7.
+  [--format wav|ogg|mp3] [--quality 0.7] [--bitrate 192]
+  Writes render.wav and render.json after validation, plus the requested encoded file.
+Output must not exist. Vorbis quality is fixed at 0.7; MP3 is fixed at 192 kbit/s.
 PC MIDI defaults: 44100 Hz, one file play; explicit --repeats resets the synth.
 PC archive defaults: two infinite-loop traversals, intro once, finite loops retained.
 Archive translation requires --allow-approximations; only the selected sequence plays.
@@ -47,8 +47,15 @@ PSX uses the verified US profile and explicit reference clocks at 44100 Hz.
   SFX requires a cold bank and one explicit note or local cue; repeated histories and cross-bank cues are unsupported.
   XA requires a complete recognized US source in a raw 2352-byte DATA track and an explicit bof3.disc-toc/v1 JSON.
   XA cue IDs accept decimal or 0x hexadecimal. Without --duration, the body ends at guest idle after Pause.
-  MP3 delivery remains unsupported.
+  MP3 delivery decodes and checks each output; failed presentation or quality publishes nothing.
 ";
+
+#[derive(Clone, Copy)]
+enum Format {
+    Wave,
+    Vorbis,
+    Mp3,
+}
 
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut engine) = (None, None);
@@ -57,7 +64,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut sequence, mut layout, mut loops) = (None, None, None);
     let (mut rate, mut repeats) = (None, None);
     let (mut duration, mut tail, mut timeout) = (None, None, None);
-    let (mut format, mut quality) = (None, None);
+    let (mut format, mut quality, mut bitrate) = (None, None, None);
     let (mut header_entry, mut body_entry, mut auxiliary_entry, mut cue_row) =
         (None, None, None, None);
     let (mut voice, mut program, mut tone, mut key, mut fine, mut left, mut right) =
@@ -105,6 +112,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "--format" if format.is_none() => format = Some(string(&mut args, flag)?),
             "--quality" if quality.is_none() => {
                 quality = Some(string(&mut args, flag)?.parse::<f32>()?)
+            }
+            "--bitrate" if bitrate.is_none() => {
+                bitrate = Some(string(&mut args, flag)?.parse::<u32>()?)
             }
             "--json" if !json => json = true,
             "--header-entry" if header_entry.is_none() => {
@@ -163,8 +173,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     publication::require_absent(&output)?;
     let rate = rate.unwrap_or(44100);
-    let ogg = match format.as_deref().unwrap_or("wav") {
-        "wav" if quality.is_none() => false,
+    let format = match format.as_deref().unwrap_or("wav") {
+        "wav" if quality.is_none() => Format::Wave,
         "wav" => return Err("render: --quality requires --format ogg".into()),
         "ogg" => {
             if quality.is_some_and(|value| value != 0.7) {
@@ -173,15 +183,25 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             if !matches!(rate, 32000 | 44100 | 48000) {
                 return Err("render: Vorbis delivery supports 32000, 44100 or 48000 Hz without implicit rate conversion".into());
             }
-            true
+            Format::Vorbis
         }
         "mp3" => {
-            return Err(
-                "render: MP3 content quality remains unaccepted; delivery is disabled".into(),
-            )
+            if quality.is_some() {
+                return Err("render: --quality requires --format ogg".into());
+            }
+            if bitrate.is_some_and(|value| value != 192) {
+                return Err("render: accepted MP3 delivery bitrate is 192 kbit/s".into());
+            }
+            if !matches!(rate, 32000 | 44100 | 48000) {
+                return Err("render: MP3 delivery supports 32000, 44100 or 48000 Hz without implicit rate conversion".into());
+            }
+            Format::Mp3
         }
-        _ => return Err("render: --format must be wav or ogg".into()),
+        _ => return Err("render: --format must be wav, ogg or mp3".into()),
     };
+    if bitrate.is_some() && !matches!(format, Format::Mp3) {
+        return Err("render: --bitrate requires --format mp3".into());
+    }
     let release_frames = frames(tail.as_deref().unwrap_or("2"), rate)?;
     let safety_frames = frames(timeout.as_deref().unwrap_or("600"), rate)?;
     let duration_frames = duration.as_deref().map(|s| frames(s, rate)).transpose()?;
@@ -349,21 +369,41 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         (rendered.wave, serde_json::to_value(rendered.report)?)
     };
     let bytes = wave.to_bytes()?;
-    let encoded = ogg.then(|| vorbis::encode(&wave, 0.7)).transpose()?;
-    if let Some(encoded) = &encoded {
-        report["delivery"] = serde_json::json!({
-            "schema": "bof3.audio.delivery/v1",
-            "format": "ogg",
-            "encoder": "oxideav-vorbis 0.0.12",
-            "quality": 0.7,
-            "coupling": false,
-            "lossy": true,
-            "reference_wav_sha256": sha256_hex(&bytes),
-            "encoded_sha256": sha256_hex(&encoded.bytes),
-            "encoded_bytes": encoded.bytes.len(),
-            "stream": encoded.stream,
-            "decoded_error": "not measured for this output; representative independent-consumer quality accepted"
-        });
+    let encoded = match format {
+        Format::Wave => None,
+        Format::Vorbis => {
+            let encoded = vorbis::encode(&wave, 0.7)?;
+            let metadata = serde_json::json!({
+                "format": "ogg",
+                "encoder": "oxideav-vorbis 0.0.12",
+                "quality": 0.7,
+                "coupling": false,
+                "stream": encoded.stream,
+                "decoded_error": "not measured for this output; representative independent-consumer quality accepted"
+            });
+            Some(("render.ogg", encoded.bytes, metadata))
+        }
+        Format::Mp3 => {
+            let delivery = mp3::delivery(&wave)?;
+            let metadata = serde_json::json!({
+                "format": "mp3",
+                "encoder": "oxideav-mp3 0.1.3",
+                "bitrate_kbps": 192,
+                "timing": delivery.encoded.timing,
+                "stream": mp3::stream::inspect(&delivery.encoded.bytes)?,
+                "validation": delivery.validation
+            });
+            Some(("render.mp3", delivery.encoded.bytes, metadata))
+        }
+    };
+    if let Some((_, encoded, metadata)) = &encoded {
+        let mut delivery = metadata.clone();
+        delivery["schema"] = serde_json::json!("bof3.audio.delivery/v1");
+        delivery["lossy"] = serde_json::json!(true);
+        delivery["reference_wav_sha256"] = serde_json::json!(sha256_hex(&bytes));
+        delivery["encoded_sha256"] = serde_json::json!(sha256_hex(encoded));
+        delivery["encoded_bytes"] = serde_json::json!(encoded.len());
+        report["delivery"] = delivery;
     }
     let report_bytes = serde_json::to_vec_pretty(&report)?;
     let transaction = Publication::new(&output)?;
@@ -373,12 +413,19 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     if Wave::from_bytes(&std::fs::read(wave_path)?)? != wave {
         return Err("render: written WAV did not verify; output not published".into());
     }
-    if let Some(encoded) = &encoded {
-        let path = transaction.staging.join("render.ogg");
-        publication::write_new(&path, &encoded.bytes)?;
+    if let Some((name, encoded, metadata)) = &encoded {
+        let path = transaction.staging.join(name);
+        publication::write_new(&path, encoded)?;
         let written = std::fs::read(path)?;
-        if written != encoded.bytes || vorbis::inspect(&written)? != encoded.stream {
-            return Err("render: written Vorbis did not verify; output not published".into());
+        let stream = match format {
+            Format::Vorbis => serde_json::to_value(vorbis::inspect(&written)?)?,
+            Format::Mp3 => serde_json::to_value(mp3::stream::inspect(&written)?)?,
+            Format::Wave => unreachable!(),
+        };
+        if written != *encoded || stream != metadata["stream"] {
+            return Err(
+                "render: written encoded audio did not verify; output not published".into(),
+            );
         }
     }
     if std::fs::read(transaction.staging.join("render.json"))? != report_bytes {

@@ -338,18 +338,22 @@ different context evidence fails. Without this option, adjacent-data pitch
 lookups remain rejected. Capture history, gameplay reachability and native audio
 fidelity remain unverified.
 
-Add `--format ogg` to a supported render mode to publish `render.ogg` alongside the
-inspectable WAV and report. Vorbis uses the pinned Rust encoder at quality 0.7,
-with stereo coupling disabled. `--quality 0.7` states that setting explicitly;
-other qualities fail. PC Ogg delivery accepts 32000, 44100 and 48000 Hz; PSX
-rendering requires 44100 Hz. Neither path converts rates implicitly.
-The report's `delivery` object records the encoder,
-settings, hashes and exact presentation frames. Its decoded PCM error is not
-measured per output. Independent representative comparisons require at least
-30 dB SNR and absolute gain error at most 0.01 per nonzero-energy channel.
-Silent channels require decoded peak at most one PCM16 unit. This numerical
-policy does not establish perceptual transparency or game playback fidelity.
-MP3 delivery remains disabled because its full-band noise quality is unresolved.
+Add `--format ogg` or `--format mp3` to a supported render mode to publish
+`render.ogg` or `render.mp3` alongside the inspectable WAV and report. Vorbis
+uses quality 0.7 with stereo coupling disabled; optional `--quality 0.7` states
+that setting explicitly. MP3 uses 192 kbit/s, optionally stated with
+`--bitrate 192`. Other qualities or bitrates fail. PC encoded delivery accepts
+32000, 44100 and 48000 Hz; PSX requires 44100 Hz. No rate conversion is implicit.
+
+The report's `delivery` object records encoder identity, settings, hashes and
+presentation frames. Every MP3 output is decoded in Rust before publication;
+its report also retains delay, padding, decoder identity and per-channel error.
+Nonzero channels require at least 30 dB SNR and absolute gain error at most
+0.01. Silent channels permit decoded peak at most one PCM16 unit. Failed
+presentation or content quality publishes nothing, including the retained
+full-band noise case. Vorbis uses independent representative quality evidence
+and does not measure decoded error per output. This numerical policy does not
+establish perceptual transparency or game playback fidelity.
 
 Build a standalone PS-X EXE for the selected song with the full repository's
 canonical GCC 2.7.2 toolchain:
@@ -416,7 +420,7 @@ regenerated. No compatibility export or packing implementation is retained.
 
 The migration is incomplete. Supported preservation, extraction, edited packing
 and bounded rendering paths are available. Independent PSX fidelity,
-repeated SFX and incoming XA histories, XA timing/PCM acceptance, MP3 delivery and full verification evidence remain
+repeated SFX and incoming XA histories, wider XA timing/PCM acceptance and full verification evidence remain
 open. Unsupported operations fail explicitly. C source retirement is separately gated; this
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.

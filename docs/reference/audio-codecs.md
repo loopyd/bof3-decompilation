@@ -4,24 +4,35 @@ The approved dependency graph pins
 `oxideav-mp3 =0.1.3` and `oxideav-vorbis =0.0.12`, with the exact transitive
 versions below. License notices are included in the source package.
 Conformance, fidelity, timing, and publication remain separate acceptance
-gates. Music rendering exports inspectable WAV and optional Ogg Vorbis.
-MP3 delivery remains disabled pending its content-quality boundary.
+gates. Supported render modes export inspectable WAV and optional MP3 or Ogg
+Vorbis. MP3 delivery validates each encoded output before publication.
 
 ## Music delivery
 
-Use `render --format ogg` with either music engine. The command retains
-`render.wav` and `render.json` and adds `render.ogg`. The pinned Rust Vorbis
-encoder uses quality 0.7 with coupling disabled. `--quality 0.7` is optional;
-other values fail. PC delivery supports 32000, 44100 and 48000 Hz. PSX rendering
-requires 44100 Hz. The command never changes the rate implicitly.
+Use `render --format ogg` or `render --format mp3`. The command retains
+`render.wav` and `render.json` and adds `render.ogg` or `render.mp3`. Vorbis uses
+quality 0.7 with coupling disabled; optional `--quality 0.7` states that setting.
+MP3 uses 192 kbit/s; optional `--bitrate 192` states its setting. Other values or
+options for the wrong format fail. PC delivery supports 32000, 44100 and
+48000 Hz. PSX requires 44100 Hz. The command never changes the rate implicitly.
 
 Before publication, the command reads back every file, checks encoded byte
-identity and Ogg structure, and verifies the encoded rate, channels and final
+identity and stream structure, and verifies the encoded rate, channels and final
 presentation frame count. Failed encoding or verification publishes no output.
 An existing destination remains untouched. The report's `delivery` object uses
 `bof3.audio.delivery/v1` and records actual encoder identity, settings, reference
-and encoded hashes, byte count and stream metadata. Vorbis is lossy. Decoded PCM
-error is not measured for each output.
+and encoded hashes, byte count and stream metadata. Both codecs are lossy.
+Vorbis does not measure decoded PCM error for each output.
+
+MP3 delivery uses the pinned `oxideav-mp3 0.1.3` decoder and direct
+`oxideav-core 0.1.36` types. It validates packet and gross decoded frame counts,
+removes exactly 1,057 leading frames and `encoder_padding - 529` trailing
+frames, and checks the resulting input length. This fixed trim follows the
+adapter's declared filter delays; it is not fitted to the signal. Every channel
+must pass the numerical policy below. Failed decoding, presentation or quality
+publishes nothing and retains channel measurements in the error. Successful
+reports include typed encoder timing and a `validation` object with decoder
+identity, limits, counts, trims, decoded PCM hash and per-channel error.
 
 The numerical acceptance policy compares final production bytes through an
 independent consumer against the exact encoder input. Each nonzero-energy channel
@@ -38,8 +49,10 @@ Music comparisons include all three delivery rates. Independent short and
 partial-frame checks also require exact decoded presentation and boundary
 impulses above half source amplitude. Content evidence is bounded to those
 representatives; wider source coverage and other quality settings remain open.
-MP3 192 kbit/s fails the full-band noise SNR and gain bounds, so its passing
-music, sample and voice comparisons do not enable production delivery.
+MP3 192 kbit/s passes the retained music, sample, voice, controller and silence
+inputs. Full-band noise fails SNR and gain limits and is rejected by the
+per-output gate. This rejects unsuitable bytes without changing the limits or
+substituting an encoder, bitrate, rate or gain.
 
 ## Reviewed graph
 

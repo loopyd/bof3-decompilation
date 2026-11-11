@@ -1,6 +1,7 @@
 //! MPEG-1 delivery encoding with complete filter tails and explicit gapless timing.
 
 mod allocation;
+mod quality;
 pub mod stream;
 
 use crate::{interchange::wave::Wave, Result};
@@ -36,6 +37,22 @@ pub struct Timing {
 pub struct Encoded {
     pub bytes: Vec<u8>,
     pub timing: Timing,
+}
+
+pub struct Delivery {
+    pub encoded: Encoded,
+    pub validation: quality::Report,
+}
+
+/// Encode the measured delivery setting and reject failed presentation or
+/// content quality before returning bytes for publication.
+pub fn delivery(wave: &Wave) -> Result<Delivery> {
+    let encoded = encode(wave, 192)?;
+    let validation = quality::validate(wave, &encoded)?;
+    Ok(Delivery {
+        encoded,
+        validation,
+    })
 }
 
 /// Encode without resampling. Consumer support for gapless tags is separate
