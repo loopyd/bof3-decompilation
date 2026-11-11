@@ -122,8 +122,10 @@ segments:
     - '@source: src/bof3/battle/queueEligibleWorkRecord.c'
     - '@behavior: Scans the battle-local work records from the D_801462E5 cursor up to the volatile localBattlerCount count, skipping the records isBattlerInactiveOrFlag4000 reports unavailable; the first record whose D_80145FB8 flag word carries bit 0 or bit 1 has flag 0x2000 raised on its D_80145FB4 flag word, allocates the queued slot-store entry for kind 0xB when that record''s D_80145F09 byte is 4 and for kind 0xC otherwise (clearing bit 0 of the three 0x801EC048 status records first), publishes the record pointer into the entry +0x74 pointer, and advances both the cursor and the battle state byte 0x801462E2; when the scan exhausts, only the state byte advances.'
   - - 24084
-    - asm
-    - func_801D6A14
+    - c
+    - submitBattlerRecordsAndStartPhaseStream
+    - '@source: src/bof3/battle/submitBattlerRecordsAndStartPhaseStream.c'
+    - '@behavior: Runs the battle step that waits for the queued local work records to drain and then submits them. It returns while any of the localBattlerCount 0x140-byte record flag words at D_80145FB4 still carries the queued-slot flag 0x2000, and when the D_801462E5 queue cursor differs from that count it steps the battle state byte BATTLE_GLOBAL_BYTE_62E2 back by one and returns. With the cursor matched and D_80146328 bit 0 clear it publishes each record through the scratchpad work pointer and, for a record whose D_80145F10 status halfword carries bit 0x800, copies that record''s D_80145F20/D_80145F22 halfwords and D_80145F2E byte into D_80145F18/D_80145F1A/D_80145F1C before submitting the 0xBFFF-masked status; every record is then submitted with the 0xBF5F mask, refreshed through func_80196718, ranked through func_801DDFEC, and the enemy-ready latch BATTLE_GLOBAL_BYTE_63CE is cleared. When no enemy cue is pending it maps D_80146328 bit 0 to battle mode byte 0x801462E1 = 2 and bit 1 to 1, then runs the battle hook D_801463A4, resets layout bank 0 through func_80161808, starts EMI stream slot 1 or 2 through func_80161FDC for the mode byte it ended on, and clears the battle state byte BATTLE_GLOBAL_BYTE_62E2.'
   - - 24708
     - c
     - dispatchStateTableAcf4

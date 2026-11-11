@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC.c",
     "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784.c",
     "src/bof3/world/prepareWorkRecordForLookup156AndArmState1World02Area08713_801F3094.c",
+    "src/bof3/world/drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8.c",
 ]
 support_sources = [
     "src/bof3/world/area08713_work_state.c",

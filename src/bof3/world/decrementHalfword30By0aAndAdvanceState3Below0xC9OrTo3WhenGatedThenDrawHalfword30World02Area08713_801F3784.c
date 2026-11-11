@@ -9,9 +9,12 @@ extern u8 D_80143BB0;
 /* @source 0x80146258 @kind unknown */
 extern u16 D_80146258;
 
-/* The local emitter at 0x801F40F8 narrows both arguments with `sll`/`sra 16` in
- * its own prologue and this call site consumes no result. */
-void func_801F40F8(s16 arg0, s16 arg1);
+/* The local emitter
+ * drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8 narrows both
+ * arguments with `sll`/`sra 16` in its own prologue and this call site consumes
+ * no result. */
+void drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8(
+    s16 arg0, s16 arg1);
 
 /* @source 0x801F3784
  * @behavior Handler 1 of the local work-byte-3 dispatch run based at
@@ -56,5 +59,6 @@ void decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfw
     D_1F800044[3] = 3;
   }
   emitter = D_1F800044;
-  func_801F40F8(0x5C, FIELD_REF(s16, emitter, 0x30));
+  drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8(
+      0x5C, FIELD_REF(s16, emitter, 0x30));
 }

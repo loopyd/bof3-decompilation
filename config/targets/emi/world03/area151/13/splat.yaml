@@ -48,8 +48,9 @@ segments:
     - asm
     - func_801F3210
   - - 1744
-    - asm
-    - func_801F32D0
+    - c
+    - decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState1OnByte9ExpiryWorld03Area15113_801F32D0
+    - '@source: src/bof3/world/decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState1OnByte9ExpiryWorld03Area15113_801F32D0.c'
   - - 1904
     - c
     - setWorkHalfwordsWorld03Area15113_801F3370

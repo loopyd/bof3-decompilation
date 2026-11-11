@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F7084(u8* record);
+void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+    u8* record);
 void func_801F75BC(u8 fraction, u8 intensity);
 
 /* @source 0x1F800044 @kind unknown */
@@ -16,8 +17,9 @@ extern u8* D_1F800044;
  *           9 with 4 before it hands over. It loads the work-object pointer from
  *           the scratchpad cell 0x1F800044 and advances the two words entry 0
  *           stamped: +0x1C by 0x4000 and +0x34 by 0x10000. It then passes the
- *           record at the work object +0x0C to the quad-primitive builder at
- *           0x801F7084, re-reads the cell to take the countdown byte 9, and
+ *           record at the work object +0x0C to
+ *           drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+ *           at 0x801F7084, re-reads the cell to take the countdown byte 9, and
  *           passes it to the five-segment drawer at 0x801F75BC as an intensity
  *           of 0xFF when byte 9 is 8 and otherwise byte 9 scaled by 32 and
  *           masked to a byte, with a constant 0x10 fraction. After that call it
@@ -45,7 +47,8 @@ void advanceWorkWordsDrawQuadsAndSegmentsTickCountdownArmCountdown32AndAdvanceWo
   work = D_1F800044;
   *(u32*)(work + 0x1C) += 0x4000;
   *(u32*)(work + 0x34) += 0x10000;
-  func_801F7084(work + 0xC);
+  drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+      work + 0xC);
   countdown = D_1F800044[9];
   if (countdown != 8) {
     intensity = (u8)(countdown << 5);

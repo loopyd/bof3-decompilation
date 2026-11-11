@@ -115,8 +115,10 @@ segments:
     - asm
     - func_801F3F00
   - - 5368
-    - asm
-    - func_801F40F8
+    - c
+    - drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8
+    - '@source: src/bof3/world/drawSpriteFrameAndMainRamTexture0World02Area08713_801F40F8.c'
+    - '@behavior: Draws the AREA087 sprite frame unless the shared display-enable byte 0x8014832E holds none of bits 0x1B: the 0x80-by-0x18 sprite-table entry 4 of the local table 0x801F5770, whose texture cell is (0, 0x38), at (x, y) and the 8-by-0x18 end-cap entry 5 at texture (0, 0x50) at (x + 0x80, y) through the semi-transparent sprite emitter 0x801F3A0C, then the texture whose handle is the 0x80010000 main-RAM base plus offset-table entry 0, at (x + 4, y + 4) with colour 0 and flag 0xFF through func_8014F800. The three state handlers 0x801F3784, 0x801F385C and 0x801F395C pass x 0x5C and the animated work halfword at record offset 0x30 as y. Takes two signed halfword coordinates and returns nothing.'
   - - 5544
     - c
     - dispatchStateByte1Table57e0World02Area08713_801F41A8

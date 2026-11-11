@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F7084(u8* record);
+void drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+    u8* record);
 
 /* @source 0x1F800044 @kind unknown */
 extern u8* D_1F800044;
@@ -15,8 +16,9 @@ extern u8* D_1F800044;
  *           arms work byte 9 with 8 on the way into this run, and each frame
  *           that holds byte 1 at 4 runs one step of that countdown.
  *           It loads the work-object pointer from the scratchpad cell
- *           0x1F800044, passes the record at its +0x0C to the quad-primitive
- *           builder at 0x801F7084 (that body sets a tpage and a draw mode,
+ *           0x1F800044, passes the record at its +0x0C to
+ *           drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+ *           (that body sets a tpage and a draw mode,
  *           writes eight vertex records from the record's position words at
  *           +0x00/+0x04/+0x08/+0x10/+0x14 and its extent words at
  *           +0x18/+0x1C/+0x20/+0x28/+0x2C, and emits five vertex-indexed
@@ -38,7 +40,8 @@ extern u8* D_1F800044;
  */
 void drawWorkQuadsTickCountdownAdvanceWorkByte1OnZeroScenarioScena0400_801F6FF8(
     void) {
-  func_801F7084(D_1F800044 + 0xC);
+  drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084(
+      D_1F800044 + 0xC);
   if (--D_1F800044[9] == 0) {
     D_1F800044[1]++;
   }

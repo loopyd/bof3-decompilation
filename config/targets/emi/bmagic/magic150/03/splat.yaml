@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801EEE24
   - - 708
-    - asm
-    - func_801EEEC4
+    - c
+    - setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4
+    - '@source: src/bof3/bmagic/setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4.c'
+    - '@behavior: Magic-150 effect handler, one of the words of the overlay handler table at 0x801EEC04 that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It publishes the ring radius at 0x801EFAAC as 0x100, or 0x110 when bit 0 of the shared frame counter 0x80143E6C is set, subtracts 0x200 from the fan angle at 0x801EFAB0, and calls the overlay draw setup 0x801EF254 with no arguments. It then decrements work byte 9 and returns untouched while that byte is nonzero; when the countdown reaches zero it stores 4 into work byte 9, increments work byte 1 to move the dispatcher to the next handler entry, calls 0x800A9820 with the shared battle byte 0x80146384 and submits cue 0x102 through 0x8015DF18. It takes no arguments and returns nothing.'
   - - 896
     - asm
     - func_801EEF80

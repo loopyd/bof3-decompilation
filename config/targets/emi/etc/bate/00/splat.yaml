@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801D31B0
   - - 10116
-    - asm
-    - func_801D3384
+    - c
+    - emitFlatLineRectangleBorderBate00_801D3384
+    - '@source: src/bof3/ui/emitFlatLineRectangleBorderBate00_801D3384.c'
+    - '@behavior: border emitter of the BATE overlay that builds the three colour bytes of its two line packets from the low three bits of the mask argument, each set bit taking the flat colour 0x3F | (((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5) when the colour-enable argument is set and 0xFF when it is zero and each clear bit taking black, then draws the open three-point flat line from (x + 4, y) to (x, y + 4) to (x, y + h - 1) with SetLineF3 and the closed four-corner border from (x + 4, y) to (x + w - 1, y) to (x + w - 1, y + h - 1) to (x, y + h - 1) with SetLineF4, both packets taken from g_PrimCursor and each queued through func_8014E5A0(1, size) as 0x18 and 0x1C bytes, its 0x38-byte frame keeping $s0 to $s5 and $ra across those calls'
   - - 10520
     - asm
     - func_801D3518

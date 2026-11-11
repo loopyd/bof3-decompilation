@@ -63,8 +63,10 @@ segments:
     - dispatchStateByte2Table4448World03Area13913_801F3A8C
     - '@source: src/bof3/world/area13913DispatchTables.c'
   - - 3792
-    - asm
-    - func_801F3AD0
+    - c
+    - seedHalfwordPairsFromWorkTablesThenAdvanceWorkByte2AndSetThreeInsideCameraWindowThenDrawWorld03Area13913_801F3AD0
+    - '@source: src/bof3/world/seedHalfwordPairsFromWorkTablesThenAdvanceWorkByte2AndSetThreeInsideCameraWindowThenDrawWorld03Area13913_801F3AD0.c'
+    - '@behavior: Byte-2 state handler entry 0 of the five-entry handler table based at 0x801F4448, the table the overlay dispatcher at 0x801F3A8C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: seeds the record from its own step tables, the signed halfword at offset 0x36 selecting entry 0x36 * 2 of the byte tables at 0x801F4464 and 0x801F4465 and entry 0x36 of the halfword tables at 0x801F445C and 0x801F4460, whose values overwrite the halfwords at offsets 0x36, 0x3A, 0x3E and 0x2E, sets the route byte at offset 0x08 to whether the halfword read at offset 0x3A was zero, increments the state byte at offset 0x02 and zeroes the halfword at offset 0x30. It then measures the route-selected halfword against its shared camera word, 0x80145EC8 with 0x3A when the route byte is set and 0x80145EC4 with 0x36 otherwise, from the centre (((halfword + 1) << 16) | 0x8000) with an 0x8000 bound, and measures the other axis from its cell start and next cell start against 0x10000; when both stay inside that window the halfword at 0x30 becomes -0x100 and the state byte becomes 3 so the next dispatch takes entry 3 at 0x801F3E04. Every path calls the payload record draw routine at 0x801F3F84.'
   - - 4200
     - asm
     - func_801F3C68

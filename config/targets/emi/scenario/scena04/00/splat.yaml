@@ -61,8 +61,10 @@ segments:
     - c
     - invokeHelperScenarioScena0400_801F7064
   - - 1156
-    - asm
-    - func_801F7084
+    - c
+    - drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084
+    - '@source: src/bof3/scenario/drawFiveTranslucentGouraudQuadsOfBoxFromRecordPointsAndExtentsScenarioScena0400_801F7084.c'
+    - '@behavior: Drawing entry of this overlay''s work-byte-1 handler run at 0x801FA180: its three callers, entries 1, 3 and 4 at 0x801F6DD4, 0x801F6F2C and 0x801F6FF8, pass the record at the work object''s +0x0C, which carries two 16.16 points and their half-extents - point A at +0x00/+0x04/+0x08 with a y half-extent at +0x10 and a z half-extent at +0x14, and point B at +0x18/+0x1C/+0x20 with the matching pair at +0x28/+0x2C. It arms the emitter the way this overlay''s drawing entries do: GetTPage(0, 1, 0x3C0, 0) yields the texture page, SetDrawMode installs it on the packet published at g_PrimCursor with dfe 0 and dtd 1, and func_8014E5A0 queues the 0xC-byte DR_MODE under OT slot 1. It then stamps the eight 16-byte vertex records of the overlay-local table at 0x801FA240, x first and then y and z: records 0..3 hold point A, whose x word is +0x00 and whose y and z words are +0x04 plus and minus the +0x10 half-extent and +0x08 plus the +0x14 half-extent for records 0 and 1 while records 2 and 3 take +0x08 without that addition, and records 4..7 repeat that pattern on point B, +0x18 as x, +0x1C plus and minus +0x28 as y and +0x20 plus +0x2C then +0x20 alone as z. It publishes the table through the shared projection setup at 0x801AFE18, passing the cursor the last record left at 0x801FA2A0, and then emits five vertex-indexed quads through the emitter at 0x801F732C, whose 16-byte indexing makes the tuples (0, 1, 2, 3), (0, 1, 4, 5), (2, 0, 6, 4), (1, 3, 5, 7) and (2, 3, 6, 7) select the four faces of the box plus the one face that joins the two point pairs, each emission carrying the grey levels 1 and 1, 1 and 0, 1 and 0, 1 and 0, 1 and 0 as its trailing pair. It takes one argument, returns no value, and its 0x20-byte frame keeps $s0 and $ra across the three calls.'
   - - 1836
     - asm
     - func_801F732C

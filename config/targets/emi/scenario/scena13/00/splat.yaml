@@ -36,8 +36,8 @@ segments:
     - c
     - clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8
   - - 804
-    - asm
-    - func_801F6F24
+    - c
+    - decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24
   - - 976
     - c
     - invokeTwoHelpersScenarioScena1300_801F6FD0

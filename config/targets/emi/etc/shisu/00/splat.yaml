@@ -118,8 +118,13 @@ segments:
     - asm
     - func_801D4754
   - - 16116
+    - c
+    - drawEquipSlotRowsShisu00_801D4AF4
+    - '@source: src/bof3/ui/drawEquipSlotRowsShisu00_801D4AF4.c'
+    - '@behavior: Equipment-slot block of the SHISU overlay: it paints the inset backing rectangle of the block through func_801AED54 at (x+2, y+0x44) with the size 0x87 by 0x58 and the shade 0xF1, then draws the six equipped slots of the 164-byte field record the index byte selects out of D_80144968 - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F through 0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12 and 0x13. Each slot name is submitted through func_8014F800 at (x+0x0F, y+0x46/0x53/0x60/0x6D/0x81/0x8E) as an eight-cell run, aligned to 7 when the flag byte is nonzero and to 0 when it is zero; the six palette cells 8, 0xA, 9, 0xB, 0xC and 0xC follow at (x+5, y+0x49/0x56/0x63/0x70/0x84/0x91) through func_801AEA80 with that same flag byte as the fourth argument. The payload names this span only from the jal at 0x801D6EA4 inside func_801D6E38, which passes the task origin halfwords, the leading byte of the 0x140-byte record D_80145FCC[task byte 0xC] and the low byte of its own second argument, right after painting the panel backing and right before the stat block func_801D4754 for the same arguments; the 0x38-byte frame keeps $s0 through $s6 and $ra. One payload cmp proved the 0x2CC bytes equal func_801D95F4 at 0x801D95F4 in emi/etc/shop/00 and func_801D3B4C at 0x801D3B4C in emi/etc/bate/00, both still asm rows there, so no sibling source carried this body.'
+  - - 16832
     - asm
-    - func_801D4AF4
+    - func_801D4DC0
   - - 18700
     - c
     - drawSpritePrimTpageFromGraphTypeShisu00_801D550C

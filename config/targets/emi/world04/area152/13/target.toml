@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld04Area15213_801F347C.c",
     "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World04Area15213_801F3614.c",
     "src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World04Area15213_801F36EC.c",
+    "src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld04Area15213_801F43E8.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchStateByte3Table4d84World04Area15213_801F3550.c",

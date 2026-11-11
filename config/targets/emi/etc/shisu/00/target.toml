@@ -26,6 +26,7 @@ sources = [
     "src/bof3/ui/drawTwoRowNumberedPanelShisu00_801D94B0.c",
     "src/bof3/ui/drawBackgroundTilesFromKindShisu00_801D7224.c",
     "src/bof3/ui/drawPanelFrameShisu00_801D8850.c",
+    "src/bof3/ui/drawEquipSlotRowsShisu00_801D4AF4.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
