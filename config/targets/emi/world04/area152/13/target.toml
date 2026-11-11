@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0.c",
     "src/bof3/world/spawnRandomRowsWithRandomNibbleAndAngleWorld04Area15213_801F407C.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4.c",
+    "src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchStateByte3Table4d84World04Area15213_801F3550.c",

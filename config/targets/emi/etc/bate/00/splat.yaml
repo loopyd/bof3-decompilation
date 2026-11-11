@@ -167,8 +167,10 @@ segments:
     - asm
     - func_801D8208
   - - 30984
-    - asm
-    - func_801D8508
+    - c
+    - drawTwoRowNumberedPanelBate00_801D8508
+    - '@source: src/bof3/ui/drawTwoRowNumberedPanelBate00_801D8508.c'
+    - '@behavior: two-row numbered panel of the BATE overlay, the copy of the shop value panel in emi/etc/shop/00 at 0x801DDFB0: it draws the 7 by 4 cell backing through this overlay own func_801D6470 with the counts 7 and 4, emits the 16 by 16 icon 0x14 through func_801644D8 at (x + 7, y + 5) with the size pair 16/16 and the attribute 128, and the caption through func_8014F800 at (x + 42, y + 7) with the shade 0 and the 0xFF mask, that caption handle being func_801502D0(0x1C) or func_801502D0(0x1B) when the variant byte is zero; it then draws the two rows at y + 25 and y + 41, each row emitting the label func_801502D0(0x85) through func_8014F800 at x + 6 with the shade 0 when the matching bit of the flags word is set and 7 otherwise plus the 0xFF mask and its value through func_8014FF0C at x + 94 with the same shade, which is the string 1 for the first row and 2 for the second; finally it submits the row marker through func_801647C4 at (x + 8, row * 16 + y + 28)'
   - - 31456
     - textbin
     - T_801D86E0

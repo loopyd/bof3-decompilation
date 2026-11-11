@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EFC58.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic13703_801F00D8.c",
     "src/bof3/bmagic/magic13703DispatchTables.c",
     "src/bof3/support/magic137_03_psyq.c",

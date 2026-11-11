@@ -7,7 +7,7 @@ advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C
 func_801F314C = 0x801F314C;
 func_801F31BC = 0x801F31BC;
 dispatchStateByte2Table4aa0World04Area16713_801F35E0 = 0x801F35E0;
-func_801F3624 = 0x801F3624;
+setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624 = 0x801F3624;
 func_801F36FC = 0x801F36FC;
 dispatchStateByte2Table4ab0World04Area16713_801F3764 = 0x801F3764;
 func_801F37A8 = 0x801F37A8;

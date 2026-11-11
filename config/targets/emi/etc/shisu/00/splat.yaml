@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801D4158
   - - 14124
-    - asm
-    - func_801D432C
+    - c
+    - emitFlatLineRectangleBorderShisu00_801D432C
+    - '@source: src/bof3/ui/emitFlatLineRectangleBorderShisu00_801D432C.c'
+    - '@behavior: Flat-line border emitter of the SHISU overlay: it builds the three colour bytes of its two line packets from the low three bits of the mask argument, each set bit taking the flat colour 0x3F | (((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5) when the colour-enable argument is set and 0xFF when that argument is zero, and each clear bit taking black. It then draws the open three-point flat line from (x + 4, y) to (x, y + 4) to (x, y + h - 1) with SetLineF3 and the closed four-corner border from (x + 4, y) to (x + w - 1, y) to (x + w - 1, y + h - 1) to (x, y + h - 1) with SetLineF4, both packets taken from g_PrimCursor and each queued through func_8014E5A0(1, size) as 0x18 and 0x1C bytes. SetLineF3, SetLineF4 and func_8014E5A0 are calls of the main executable, so this span carries no payload-local target. No jal and no word of this payload names it, so it is an overlay entry called from outside the payload, and its 0x38-byte frame keeps $s0 through $s5 and $ra across those calls. One payload cmp proves its 0x194 bytes equal the emitFlatLineRectangleBorderBate00_801D3384 span at 0x801D3384 in emi/etc/bate/00 and the span at 0x801D8E2C in emi/etc/shop/00 apart from the two internal j words at +0x60 and +0x88, each of which moves by exactly the address delta between the spans, so this is one body.'
   - - 14528
     - asm
     - func_801D44C0

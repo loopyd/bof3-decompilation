@@ -8,16 +8,17 @@
  * 3 at (arg0, arg1) and (arg0, arg1 + 0x13); the red/green/blue channels come
  * from palette entry 1 of the CLUT bank byte D_80144952. It then reads byte
  * +0x7F of the 0x118-byte D_801EB630 record selected by arg2 - 3: when that
- * byte reads 1 it submits the record's textured gauge through func_801D9E9C at
- * (arg0 + 6, arg1 + 0xA) with the current panel object bytes +0x0B/+0x0D as the
- * filled and total widths, otherwise it blanks the numeric field through
- * drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC). When func_801DA69C accepts
+ * byte reads 1 it submits the record's textured gauge through
+ * drawBattlerStatusGaugeBar at (arg0 + 6, arg1 + 0xA) with the current panel
+ * object bytes +0x0B/+0x0D as the two gauge widths, otherwise it blanks the
+ * numeric field through drawDecimalGlyphRun at (arg0 + 0x24, arg1 + 0xC). When func_801DA69C accepts
  * that index it draws the record's text pointer at +0x74 through func_8014FC90
  * at (arg0 + 4, arg1 + 3), and finally outlines the box from
  * (arg0 + 2, arg1 + 2) through (arg0 + 0x49, arg1 + 0x12) with four
  * semi-transparent sprite prims: the top and left edges from texture page 1 and
- * the right and bottom edges from texture page 0. The only caller, func_801E9910,
- * feeds it the active panel halfwords +0x04/+0x06 and panel byte +0x0A.
+ * the right and bottom edges from texture page 0. The only caller,
+ * func_801E9910, feeds it the active panel halfwords +0x04/+0x06 and panel byte
+ * +0x0A.
  * @status exact
  * @match 100.00
  * @residual none
@@ -49,8 +50,8 @@ void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2) {
   x = arg0;
   y = arg1;
   if (D_801EB6AF[index * 0x118] == 1) {
-    func_801D9E9C((s16)(arg0 + 6), (s16)(arg1 + 0xa), D_80148648[0xb],
-                  D_80148648[0xd], 1);
+    drawBattlerStatusGaugeBar((s16)(arg0 + 6), (s16)(arg1 + 0xa),
+                              D_80148648[0xb], D_80148648[0xd], 1);
   } else {
     drawDecimalGlyphRun((s16)(arg0 + 0x24), (s16)(arg1 + 0xc), 0, 0xffff);
   }

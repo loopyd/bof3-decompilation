@@ -147,8 +147,10 @@ segments:
     - c
     - advanceStateAndClearSharedByteScenarioScena0400_801F8160
   - - 5500
-    - asm
-    - func_801F817C
+    - c
+    - commitStagesForSharedRouteStepsAndAdvanceScenarioStateScenarioScena0400_801F817C
+    - '@source: src/bof3/scenario/commitStagesForSharedRouteStepsAndAdvanceScenarioStateScenarioScena0400_801F817C.c'
+    - '@behavior: Per-frame state-1 handler of this overlay''s three-word progress chain at 0x801FA204: it gates on the shared route word D_80143F00 (and on the sub-step byte D_80143F03 for routes 0x28 and 0x30), commits stages 1, 3, 6 and 7 through the shared stage wait func_8015B5D4 and stage commit func_8015B580 against the shared scenario bank word D_8014686C, clears the shared scenario progress word on routes 0x2A, 0x30, 0x36 and 0x41, requests primary state 1 with sub-state 7 on route 0x28, submits records 0x83/0x84 on route 0x30, clears bit 0x20 of three main-RAM record flags and claims up to two 0x74-byte front-end rows through the shared allocator func_8019601C on route 0x41, and closes by storing 2 into the shared scenario state byte D_80146872 so the chain advances from state 1 to state 2.'
   - - 6716
     - c
     - dispatchPrimaryStateHandlerScenarioScena0400_801F863C

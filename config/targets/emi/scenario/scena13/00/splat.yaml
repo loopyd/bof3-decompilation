@@ -134,8 +134,10 @@ segments:
     - asm
     - func_801FA844
   - - 17312
-    - asm
-    - func_801FAFA0
+    - c
+    - armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0
+    - '@source: src/bof3/scenario/armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0.c'
+    - '@behavior: Derives the palette fade step total 0x1E * (frames & 0xFF) - 1 from the second argument, stores it in the scratchpad halfword 0x1F800002, publishes the first argument as the shared status halfword 0x801490A8, stores the total minus the shared countdown 0x80146876 in the scratchpad halfword 0x1F800000, and while that difference compares below the total submits one 0x50 by 0x3C func_8014F800 window with the 0x80010002 plus main-RAM offset-table entry selected by the first argument and then steps the palette window through clampPaletteChannels at 0x801FB0B8 below 0x20 and above total minus 0x20, or copies the palette block at exactly 0x20; a difference that no longer compares below the total copies the block only when it still equals the total.'
   - - 17592
     - c
     - clampPaletteChannelsScenarioScena1300_801FB0B8

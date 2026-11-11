@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801EEC18
   - - 156
-    - asm
-    - func_801EEC9C
+    - c
+    - copyRecordFieldsSeedRandomTableQueueTwelveSlotsWithDescendingByte9ClearByteAAndAdvanceWorkByte1BmagicMagic09503_801EEC9C
   - - 608
     - asm
     - func_801EEE60

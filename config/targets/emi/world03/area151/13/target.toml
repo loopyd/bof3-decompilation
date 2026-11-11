@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld03Area15113_801F3A70.c",
     "src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948.c",
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area15113_801F4264.c",
+    "src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F46D4.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C.c",

@@ -150,8 +150,10 @@ segments:
     - c
     - invokeTwoHelpersWorld04Area15213_801F4600
   - - 6696
-    - asm
-    - func_801F4628
+    - c
+    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628
+    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628.c'
+    - '@behavior: Layer-derived textured cell grid of this overlay: initializes work byte 0x02 and adds the low nibble of the shared frame counter 0x80143E6C to work halfword 0x3A. Returns while bit 4 of shared byte 0x8014832E is clear, otherwise advances work word 0x38 by 0x800 plus the layer value (work byte 0x0B minus two) shifted left ten and wraps work halfword 0x3A to -8 once it passes the map height byte 0x80104001 plus eight. Returns again unless shared focus halfword 0x8014930A or 0x8014930E lies within 0x1A of work halfword 0x36 or 0x3A. Then projects one textured quad at depth -0x300 whose half extent is the layer width plus the shared counter low five bits mirrored around 0xF, opens it with the shared append helper 0x8014E5A0, and draws a grid of semitransparent textured cells from the shared lookup helper 0x801559AC over a layer-derived count, taking texture coordinates from this payloads own trailing byte tables 0x801F4E30, 0x801F4E34 and 0x801F4E38 and closing each cell with the shared helper 0x80155A08 passed the grid coordinate pair shifted left sixteen.'
 - - 8252
   - bin
   - tail

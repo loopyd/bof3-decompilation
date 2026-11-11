@@ -23,18 +23,19 @@ extern u8 D_8014833E[];
  * through func_801D9C80 at (arg0, arg1 + 2), whose tile rows follow the
  * localBattlerCount byte 0x801462F0. It then draws one framed column per local
  * battler at x = arg0 + index * 0x5E: the row-9 colour tile and the textured
- * gauge through func_801D9E9C at (x + 0x14, arg1 + 0xE) with the byte +0x1B and
- * +0x1D widths of UI owner record 0x80148320 entry index + 0x0D, up to two
- * sprites for that entry's +0x1C offset while the battler record halfword +0x0E
- * (0x80145F22) is non-zero and the entry's +0x1E byte is non-zero, the record
- * text through func_8014FC90 at (x + 6, arg1 + 5) with the record halfword
- * +0x0C (0x80145F10) selecting style 2, two emitBattlerStatusAccentSprite
- * accents at (x + 0x3A, arg1 + 6) and (x + 4, arg1 + 0xE), and the record
- * halfwords +0x14 (0x80145F18) and +0x16 (0x80145F1A) as digit runs through
- * drawDecimalGlyphRun at (x + 0x48, arg1 + 0x0F) and (x + 0x48, arg1 + 8), the
- * second styled 2 when its halfword is zero or the record carries flag 0x4000
- * and otherwise 4 while that halfword stays below the quarter of the record
- * halfword +0x0E. The red, green and blue channels of the column frame from
+ * gauge through drawBattlerStatusGaugeBar at (x + 0x14, arg1 + 0xE) with the
+ * byte +0x1B and +0x1D widths of UI owner record 0x80148320 entry index + 0x0D,
+ * up to two sprites for that entry's +0x1C offset while the battler record
+ * halfword +0x0E (0x80145F22) is non-zero and the entry's +0x1E byte is
+ * non-zero, the record text through func_8014FC90 at (x + 6, arg1 + 5) with
+ * the record halfword +0x0C (0x80145F10) selecting style 2, two
+ * emitBattlerStatusAccentSprite accents at (x + 0x3A, arg1 + 6) and (x + 4,
+ * arg1 + 0xE), and the record halfwords +0x14 (0x80145F18) and +0x16
+ * (0x80145F1A) as digit runs through drawDecimalGlyphRun at (x + 0x48,
+ * arg1 + 0x0F) and (x + 0x48, arg1 + 8), the second styled 2 when its
+ * halfword is zero or the record carries flag 0x4000 and otherwise 4 while
+ * that halfword stays below the quarter of the record halfword +0x0E. The
+ * red, green and blue channels of the column frame from
  * (x + 2, arg1 + 2) through (x + 0x5D, arg1 + 0x17) come from palette entry 1
  * of the CLUT bank byte D_80144952.
  * @status partial
@@ -76,7 +77,7 @@ void drawBattlerStatusColumns(s32 arg0, s32 arg1) {
   if (localBattlerCount != 0) {
     do {
       drawColorTilePrim((s16)(arg0 + index * 0x5e + 0x14), (s16)y, 9, 0, 0);
-      func_801D9E9C((s16)(arg0 + index * 0x5e + 0x14), (s16)y,
+      drawBattlerStatusGaugeBar((s16)(arg0 + index * 0x5e + 0x14), (s16)y,
                     D_8014833B[((u8)index + 0x0d) * 0x24],
                     D_8014833D[((u8)index + 0x0d) * 0x24], 0);
       if (*(u16*)&D_80145F22[(u8)index * 0x140] != 0) {

@@ -58,8 +58,10 @@ segments:
     - dispatchStateByte2Table4aa0World04Area16713_801F35E0
     - '@source: src/bof3/world/area16713DispatchTables.c'
   - - 2596
-    - asm
-    - func_801F3624
+    - c
+    - setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624
+    - '@source: src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624.c'
+    - '@behavior: Entry 0 of the state-byte-2 handler run based at 0x801F4AA0, whose dispatcher is 0x801F35E0. Stores the zero test of record halfword +0x3A into record byte +0x08, republishes record halfwords +0x36 and +0x3A from the stride-2 byte pair table 0x801F4A80/0x801F4A81 at twice the old +0x36 row index, stores minus the halved position distance less the unsigned row term 0x801F4A68[index] into +0x3E, stores the word row term 0x801F4A70[index] into +0x20, clears +0x30, increments record byte +0x02 and calls the payload render helper 0x801F31BC.'
   - - 2812
     - asm
     - func_801F36FC

@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-func_801EEC9C = 0x801EEC9C;
+copyRecordFieldsSeedRandomTableQueueTwelveSlotsWithDescendingByte9ClearByteAAndAdvanceWorkByte1BmagicMagic09503_801EEC9C = 0x801EEC9C;
 func_801EEE60 = 0x801EEE60;
 func_801EEF64 = 0x801EEF64;
 func_801EEFFC = 0x801EEFFC;

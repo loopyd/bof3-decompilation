@@ -27,9 +27,9 @@ extern u8 D_801D8B40[];
 
 /* Panel backing drawer of this overlay: fills the panel anchored at the two
  * signed coordinates with the size pair its last two arguments carry. This
- * payload's other call to it, in func_801D8508, passes the same wide form, and
- * the widths below are the widths observed at these call sites rather than a
- * recovered callee contract.
+ * payload's other call to it, in drawTwoRowNumberedPanelBate00_801D8508,
+ * passes the same wide form, and the widths below are the widths observed at
+ * these call sites rather than a recovered callee contract.
  * @source 0x801D6470 @kind unknown */
 extern void func_801D6470(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 

@@ -36,5 +36,5 @@ stepWorkPositionPairAndRunSharedUpdatesWorld04Area15213_801F43E8 = 0x801F43E8;
 dispatchStateByte1Table4e28World04Area15213_801F448C = 0x801F448C;
 initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0 = 0x801F44D0;
 invokeTwoHelpersWorld04Area15213_801F4600 = 0x801F4600;
-func_801F4628 = 0x801F4628;
+drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628 = 0x801F4628;
 D_801F4C48 = 0x801F4C48;

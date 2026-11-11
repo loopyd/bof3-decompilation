@@ -32,4 +32,4 @@ func_801F4494 = 0x801F4494;
 dispatchStateByte1Table54fcWorld03Area15113_801F4538 = 0x801F4538;
 func_801F457C = 0x801F457C;
 invokeTwoHelpersWorld03Area15113_801F46AC = 0x801F46AC;
-func_801F46D4 = 0x801F46D4;
+drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F46D4 = 0x801F46D4;

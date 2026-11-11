@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/world/setWorld04Area16713_801F3F14.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C.c",
     "src/bof3/support/area167_13_psyq.c",
+    "src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624.c",
 ]
 psyq_source = "src/bof3/support/area167_13_psyq.c"

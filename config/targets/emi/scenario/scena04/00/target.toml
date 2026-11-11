@@ -42,6 +42,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState1AndFrontEndModeOnPackedRecordMatchScenarioScena0400_801F9DF4.c",
     "src/bof3/scenario/drawTranslucentGouraudQuadFromFourIndexedRecordsWithTwoShadeLevelsScenarioScena0400_801F732C.c",
     "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0400_801F8F98.c",
+    "src/bof3/scenario/commitStagesForSharedRouteStepsAndAdvanceScenarioStateScenarioScena0400_801F817C.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

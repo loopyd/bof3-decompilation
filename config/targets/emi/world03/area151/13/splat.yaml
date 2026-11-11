@@ -143,8 +143,10 @@ segments:
     - c
     - invokeTwoHelpersWorld03Area15113_801F46AC
   - - 6868
-    - asm
-    - func_801F46D4
+    - c
+    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F46D4
+    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F46D4.c'
+    - '@behavior: Projects a pulsing textured panel then walks a scrolling grid of semitransparent textured cells from the shared 0x801559AC lookup, texturing each cell from the target-local byte columns 0x801F5504/5508/550C.'
 - - 8424
   - bin
   - tail

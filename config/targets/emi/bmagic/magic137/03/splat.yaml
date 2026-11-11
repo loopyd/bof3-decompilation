@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF4C4
   - - 4184
-    - asm
-    - func_801EFC58
+    - c
+    - dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EFC58
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EFC58.c'
+    - '@behavior: Dispatches one frame of the overlay work object through its work byte 2 step table at 0x801F0114: the work-object pointer cell at 0x1F800044 is read before the frame adjustment, its unsigned byte 2 selects the code pointer at that table base plus the scaled offset, and that entry is invoked with no arguments. The table is indexed in place and the selector is not bounds-checked. After the handler returns the pointer cell is read again and, when work byte 0 is non-zero, the overlay quad-drawing routine at 0x801EFDF8 runs. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 4288
     - c
     - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
