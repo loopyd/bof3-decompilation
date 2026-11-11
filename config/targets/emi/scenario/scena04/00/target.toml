@@ -32,6 +32,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState2ArmCountdown10AndClearSubStateScenarioScena0400_801FA074.c",
     "src/bof3/scenario/stepActiveWorkRecordsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0400_801F7CA8.c",
     "src/bof3/scenario/dispatchRoute30CoordinateLookupHandlerScenarioScena0400_801FA010.c",
+    "src/bof3/scenario/seedSampleRingAt800E5C00ClearWorkTableByte25ArmCountdown512AndAdvanceWorkByte1ScenarioScena0400_801F77EC.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

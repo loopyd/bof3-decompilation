@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801F2EC0
   - - 1068
-    - asm
-    - func_801F302C
+    - c
+    - drawTintedLineBetweenPointsWithRotatedEndSquaresAndGouraudConnectorWorld01Area04813_801F302C
+    - '@source: src/bof3/world/drawTintedLineBetweenPointsWithRotatedEndSquaresAndGouraudConnectorWorld01Area04813_801F302C.c'
+    - '@behavior: links the two three-word points it is handed: appends a 0xC-byte draw-mode packet with size class 3, seals a 0x10-byte line packet from the shared cursor through 0x8017AA80, projects both points into the packet''s vertex pairs through 0x801AFF04, tints the colour bytes from the three-byte record that work byte +0x06 selects in the 0x801F4D5C run, appends the line with size 0x10, then converts the fixed size pair {0x40, 0} at each point through 0x801AFFD8, takes the packet''s heading through 0x8017A138 and emits the rotated end square of each converted radius through 0x801F3274 before handing both centres, radii and phases to the connector emitter 0x801F3434.'
   - - 1652
     - asm
     - func_801F3274

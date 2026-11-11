@@ -8,6 +8,7 @@ func_801D1E8C = 0x801D1E8C;
 publishBateMaskFlagAndSnapshotSharedFields = 0x801D1FA0;
 dispatchUiPhaseTableBate00_801D2070 = 0x801D2070;
 dispatchUiSubStepTableBate00_801D20AC = 0x801D20AC;
+setFrontLocalMode3AndAdvanceUiSubstep = 0x801D20E8;
 drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C = 0x801D211C;
 drawBatePanelOrResetUiPhaseStateWhenEffectIdleBate00_801D2298 = 0x801D2298;
 func_801D2304 = 0x801D2304;

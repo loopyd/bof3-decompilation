@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801F39F4
   - - 3832
-    - asm
-    - func_801F3AF8
+    - c
+    - applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8
+    - '@source: src/bof3/world/applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8.c'
+    - '@behavior: Overlay state handler: clears bit 0 of work byte 0x24, applies main lookup record 0x184 through 0x8014DD3C, requests resource 0 through 0x8014D6B8, sets work byte 0x2A to 1 and sets bit 0x10 of work byte 0.'
   - - 3932
     - asm
     - func_801F3B5C

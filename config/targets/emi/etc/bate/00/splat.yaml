@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/ui/dispatchUiSubStepTableBate00_801D20AC.c'
     - '@behavior: sub-step dispatcher of the BATE overlay that calls the entry of the two-entry sub-step handler pointer table D_801D8770 at the index the shared UI sub-step byte 0x80148652 holds, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 5352
-    - asm
-    - func_801D20E8
+    - c
+    - setFrontLocalMode3AndAdvanceUiSubstep
+    - '@source: src/bof3/ui/setFrontLocalMode3AndAdvanceUiSubstep.c'
+    - '@behavior: first handler of the BATE overlay sub-step handler pointer table D_801D8770 that requests frontend-local mode 3 through the main-exe setter func_8014ECAC and then advances the shared UI sub-step byte 0x80148652 by one, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 5404
     - c
     - drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C

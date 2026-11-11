@@ -293,8 +293,10 @@ segments:
     - '@source: src/bof3/battle/emitBattlerStatusAccentSprite.c'
     - '@behavior: Emits one 16x8 textured battle sprite at (arg0, arg1) into the shared primitive cursor: a DR_MODE carrying GetTPage(0, 1, 0x3c0, 0), then a SPRT with the size words 0x10 and 8, the CLUT 0x7800, texture row 0xd8 and texture column arg2 * 16, tinted by the neutral gray 0x80 and appended under ordering-table index 1. drawBattlerStatusColumns draws the two column accents of each battler status column with it, and the still-assembler func_801D8DF8 draws the column-0 accent at (x + 2, y + 0xA).'
   - - 38220
-    - asm
-    - func_801DA14C
+    - c
+    - drawSpritePrimFt4Clut
+    - '@source: src/bof3/battle/drawSpritePrimFt4Clut.c'
+    - '@behavior: Emits one 4x4 textured battle quad at (arg0, arg1) into the shared primitive cursor: a POLY_FT4 opened by SetPolyFT4 with the texture page GetTPage(0, 0, 0x3c0, 0) at +0x16, the CLUT of column (D_80144952 * 2 + arg3) * 0x10 on row 0x1e1 at +0x0e, the neutral gray 0x80 in r0/g0/b0 and the corners (arg0, arg1), (arg0 + 4, arg1), (arg0, arg1 + 4) and (arg0 + 4, arg1 + 4) at +0x08 to +0x22. Its texture window comes from the 4-byte row {u, v, du, dv} of the table D_801EAF2C inside this overlay, selected by the low byte of arg2: u0/u2 take u, u1/u3 add du, v0/v1 take v less 8 rows per arg3 band, and v2/v3 add dv to that same base. The four rows at 0x801EAF2C are {0x34, 0xf4, 4, 4}, {0x37, 0xf4, 0xfc, 4}, {0x34, 0xf7, 4, 0xfc} and {0x37, 0xf7, 0xfc, 0xfc}, so du and dv are signed texel offsets stored as bytes and added modulo 0x100. The quad is marked semi-transparent with the arg3 byte and appended under ordering-table index 1 as a 0x28-byte primitive.'
   - - 38696
     - c
     - drawSpritePrim8x8Clut

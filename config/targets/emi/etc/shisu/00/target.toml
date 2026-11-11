@@ -20,6 +20,7 @@ sources = [
     "src/bof3/ui/emitPanelIconPrimShisu00_801D5620.c",
     "src/bof3/ui/initializeShisuUiWorkBlockHeadShisu00_801D1CA4.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrShisu00_801D4660.c",
+    "src/bof3/ui/drawMenuCommandRowShisu00_801D5C7C.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

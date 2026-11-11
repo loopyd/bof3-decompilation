@@ -132,8 +132,13 @@ segments:
     - asm
     - func_801D56D8
   - - 20604
+    - c
+    - drawMenuCommandRowShisu00_801D5C7C
+    - '@source: src/bof3/ui/drawMenuCommandRowShisu00_801D5C7C.c'
+    - '@behavior: Draws one row of system-menu command cells: the group argument indexes a five-byte record of D_801D9CE8 whose first byte is the command count and whose following bytes are command codes, and for each code the body emits the shaded 0x2D by 0x14 panel at the x argument plus 0x30 per entry and the row y through func_801AE3F0 with the shared CLUT-bank byte, picks the shade byte 7 for every entry other than the selection while the selection lies inside that count, forces the same shade for the Ally code 0x12 while bit 0 of D_80143F02 is clear and for the Chng code 8 while the queries func_80166140(0xF) and func_8016628C(0, 0x58, 0) both answer zero, submits the command label D_801D9C8C[code] through the text drawer func_8014F800 at x plus the 0x30 step plus a right-aligned 4-cell inset and y plus 3 with width 0x10, and emits the 0x18-byte sprite-record stream D_801D991C for the selected entry and D_801D9904 for every other entry at x plus the 0x30 step and the sign-extended y. The count byte is re-read from D_801D9CE8 at each test because the calls can reach it, the 0x50-byte frame keeps the eight saved registers and $ra, and the fifth argument of the caller frame slot is never read by this body.'
+  - - 21188
     - asm
-    - func_801D5C7C
+    - func_801D5EC4
   - - 21368
     - c
     - sumLevelExpShisu00_801D5F78

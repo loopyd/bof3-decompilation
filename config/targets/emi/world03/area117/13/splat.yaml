@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F2F5C
   - - 1060
-    - asm
-    - func_801F3024
+    - c
+    - incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11713_801F3024
+    - '@source: src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11713_801F3024.c'
+    - '@behavior: Byte-2 state handler entry 4 of the six-entry handler table based at 0x801F4624, the table the overlay dispatcher at 0x801F2C1C indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044: adds 0x20 to that record unsigned halfword at offset 0x30 and stores the truncated halfword, and, when the stored value read as a signed halfword is nonnegative, calls the overlay camera-window handler at 0x801F2E08, reloads the record pointer and returns without drawing when the reloaded state byte reads 2, which is the state that handler may have just stored; otherwise it stores 1 into the state byte so the next dispatch takes entry 1 at 0x801F2E08 and queues cue 0x201 through the resident routine 0x8015DF18 when the shared phase byte at 0x80143BB0 reads zero. Every path except that early return finishes by calling the payload record draw routine at 0x801F314C, which reads the same halfword as a sprite screen offset. Takes no arguments and returns nothing.'
   - - 1196
     - c
     - stampMapCellsA1AndSetWorkByte2To1WhenFlag0CSetThenDrawWorld03Area11713_801F30AC

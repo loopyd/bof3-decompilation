@@ -61,8 +61,10 @@ segments:
     - '@source: src/bof3/bmagic/magic00403DispatchTables.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 is scaled by four and selects an entry of the five-entry overlay-local code-pointer table at 0x801EFE58 (0x801EF910, 0x801EFAF4, 0x801EFBA8, 0x801EFBEC, 0x801EFD84), and the selected entry is invoked with no arguments. It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 3344
-    - asm
-    - func_801EF910
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00403_801EF910
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00403_801EF910.c'
+    - '@behavior: Work byte 2 step dispatcher of the overlay work object, reached as entry 0 of the overlay-local work byte 1 code pointer table at 0x801EFE58 that 0x801EF8CC dispatches (0x801EF910, 0x801EFAF4, 0x801EFBA8, 0x801EFBEC, 0x801EFD84). It copies the four-entry work byte 2 handler table at 0x801EEC18 (0x801EF9A0, 0x801EF9E8, 0x801EFA70, 0x801EFAD4) into its own 0x28-byte frame as four word copies, so the call target is read back from the copy at 0x10($sp), then reads the scratchpad work-object pointer cell at 0x1F800044 and invokes the copied entry selected by that object unsigned byte 2, with no arguments and no bounds test. After the handler returns it re-reads the pointer cell and, when the work object flags byte 0 is non-zero, runs the shared main-executable service func_8014D290. It takes no arguments and returns nothing; the frame keeps the table at 0x10 and the return address at 0x20, and the first cell load is hoisted above the frame adjustment. It reads and writes no other state.'
   - - 3488
     - c
     - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00403_801EF9A0
