@@ -227,6 +227,7 @@ dispatchByBattleMode = 0x800ABBA4;
 func_800ABBE0 = 0x800ABBE0;
 func_800ABC28 = 0x800ABC28;
 initBattlerRecordsForActiveSlotsThenSeedCountdown = 0x800ABC30;
+claimOwnerSlotsInModeRowThenSeedCountdown = 0x800ABF5C;
 claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount = 0x800AC01C;
 func_800AC218 = 0x800AC218;
 func_800AC704 = 0x800AC704;

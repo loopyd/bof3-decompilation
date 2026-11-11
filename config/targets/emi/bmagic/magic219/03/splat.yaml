@@ -70,8 +70,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC.c'
     - '@behavior: Calls the shared readiness helper, decrements work byte 0x0A while nonzero, counts down work byte 0x09 and, at zero, decrements byte 0x0B of the record at 0x801EB4E0 and clears work bytes 0x00-0x04.'
   - - 2660
-    - asm
-    - func_801EF664
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic21903_801EF664
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic21903_801EF664.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the work record published at the scratchpad pointer cell 0x1F800044 once, zeroes a translation triplet in ascending element order, and builds a rotation triplet from work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 together with half the negated signed halfword 0x3E of the shared battle record read through the main-RAM pointer cell 0x801EB4E0. RotTrans projects that triplet, RotMatrix turns the zeroed triplet into an identity rotation, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish the result. Takes no arguments and returns nothing.'
   - - 2844
     - asm
     - func_801EF71C

@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801F390C
   - - 3624
-    - asm
-    - func_801F3A28
+    - c
+    - setStateEntry2FProgress0WhenFrontSideByteIs1AndFlag74ClearWorld04Area16913_801F3A28
+    - '@source: src/bof3/world/setStateEntry2FProgress0WhenFrontSideByteIs1AndFlag74ClearWorld04Area16913_801F3A28.c'
+    - '@behavior: Set state entry 0x2F and clear progress when the front-side byte reads 1 and flag 0x74 of the main-RAM flag bank is clear.'
   - - 3728
     - textbin
     - D_801F3A90

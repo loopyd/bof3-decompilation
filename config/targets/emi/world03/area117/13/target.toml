@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld03Area11713_801F3FB0.c",
+    "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area11713_801F40CC.c",
     "src/bof3/support/area117_13_psyq.c",
     "src/bof3/world/area11713DispatchTables.c",
 ]

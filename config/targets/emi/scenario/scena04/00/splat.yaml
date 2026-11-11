@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0400_801F6D00.c'
     - '@behavior: Per-frame step dispatcher of this overlay: loads the work-object pointer from the scratchpad cell 0x1F800044 before it creates its frame, takes that object''s unsigned byte at offset 1, scales it by four and invokes that slot of the overlay-local code-pointer run at 0x801FA180 with no arguments and no result consumed; the run holds the nine handlers 0x801F6D44 through 0x801F7A64 and the word after them at 0x801FA1A4 is 0x00010000, so byte 1 is this overlay''s step counter; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 324
-    - asm
-    - func_801F6D44
+    - c
+    - seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44
+    - '@source: src/bof3/scenario/seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44.c'
+    - '@behavior: Step-0 handler of the work-byte-1 run at 0x801FA180 (word 0 of its nine entries), reached only through the indirect call in dispatchWorkByte1HandlerScenarioScena0400_801F6D00: loads the work-object pointer from the scratchpad cell 0x1F800044, stamps ten words into it, calls the segment-key seeder at 0x801F747C, then arms work byte 9 with 8 and advances work byte 1 modulo 256 so the next frame dispatches entry 1 at 0x801F6DD4. The stamped words are 0x1000000 at +0x14 and +0x2C, 0x568000 at +0x0C and +0x24, 0x128000 at +0x10 and +0x28, 0 at +0x1C, 0x2200000 at +0x20 and +0x38 and 0x4000 at +0x34, while +0x18 and +0x30 stay untouched; the +0x38 store sits in the call delay slot and still uses the pre-call pointer, and the 0x18-byte frame only keeps $ra across the call.'
   - - 468
     - asm
     - func_801F6DD4

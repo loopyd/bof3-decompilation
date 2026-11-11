@@ -293,6 +293,7 @@ sources = [
     "src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c",
     "src/bof3/battle/storeKind2EstimateMinusSelectedHalfwordClampZero.c",
     "src/bof3/battle/countdownWorkByte9SeedAxesFromBattlerRecordAndAdvanceStage.c",
+    "src/bof3/battle/claimOwnerSlotsInModeRowThenSeedCountdown.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

@@ -7,7 +7,9 @@ binary = "out/binaries/emi/etc/commu05/07.bin"
 splat = "config/targets/emi/etc/commu05/07/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/ui/drawPendingNotificationRowsCommu0507.c",
+]
 support_sources = [
     "src/bof3/ui/initializeCommu0507RowCountsAndCursor.c",
     "src/bof3/ui/advanceFairyProgressCommu0507_801D0F34.c",

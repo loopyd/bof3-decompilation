@@ -1299,12 +1299,12 @@ segments:
     - c
     - dispatchByBattleMode
     - '@source: src/bof3/battle/dispatchByBattleMode.c'
-    - '@behavior: Runs the battle mode pass func_800ABBE0 (func_800ABF5C then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero pass initBattlerRecordsForActiveSlotsThenSeedCountdown when it is clear.'
+    - '@behavior: Runs the battle mode pass func_800ABBE0 (claimOwnerSlotsInModeRowThenSeedCountdown then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero pass initBattlerRecordsForActiveSlotsThenSeedCountdown when it is clear.'
   - - 87008
     - c
     - func_800ABBE0
     - '@source: src/bof3/battle/func_800ABBE0_battle15.c'
-    - '@behavior: Runs the battle substate pass func_800ABF5C, then dispatches the handler selected by the battle mode byte D_801462EA through the function table rooted at D_800B5108.'
+    - '@behavior: Runs the battle substate pass claimOwnerSlotsInModeRowThenSeedCountdown, then dispatches the handler selected by the battle mode byte D_801462EA through the function table rooted at D_800B5108.'
   - - 87080
     - c
     - func_800ABC28
@@ -1317,8 +1317,10 @@ segments:
     - asm
     - func_800ABCE0
   - - 87900
-    - asm
-    - func_800ABF5C
+    - c
+    - claimOwnerSlotsInModeRowThenSeedCountdown
+    - '@source: src/bof3/battle/claimOwnerSlotsInModeRowThenSeedCountdown.c'
+    - '@behavior: Clears the initialised record counter D_801462F2, walks the eight owner-slot bytes of the party row that the battle mode byte D_801462EA selects through the 4-byte rows of D_801CD78E and the 9-byte rows rooted at D_800E4000, claims a local panel record through claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount for every slot whose byte is not the empty marker 0xFF, passing the slot index and the number of records claimed so far, and then copies the counter into the countdown D_801462F3.'
   - - 88092
     - c
     - claimOwnerSlotInitLocalPanelRecordResetWorkAndAdvanceCount

@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementWorkByteAAndCountDownByte9ThenDecrementRecordByteBAndClearAtZeroBmagicMagic21903_801EF5DC.c",
     "src/bof3/bmagic/decrementWorkByte9InvokeHelper101AndRaiseBattleTargetFlag10ThenAdvanceWorkByte1BmagicMagic21903_801EEF54.c",
     "src/bof3/bmagic/countDownWorkByte9DrawWorkPointShiftHeadingWordSetHeadingFromRangeOriginAndAdvanceWorkByte2OnRangeHitOrHeadingBandBmagicMagic21903_801EF3CC.c",
+    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3EBmagicMagic21903_801EF664.c",
 ]
 support_sources = [
     "src/bof3/support/magic219_03_psyq.c",

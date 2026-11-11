@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F3234
   - - 2440
-    - asm
-    - func_801F3588
+    - c
+    - clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588
+    - '@source: src/bof3/world/clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588.c'
+    - '@behavior: clears bit 0x20 of byte 0 of the scratchpad work record published through the pointer cell 0x1F800044, then zeroes that record''s tint channel bytes 0x5F, 0x5E and 0x5D and its mode byte 0x5C, then hands the record to the release helper at 0x80196718; takes no arguments and returns nothing.'
   - - 2532
     - asm
     - func_801F35E4

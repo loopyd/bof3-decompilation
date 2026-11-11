@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801D2CE4
   - - 8584
-    - asm
-    - func_801D2D88
+    - c
+    - runShisuUiStepUpdateShisu00_801D2D88
+    - '@source: src/bof3/ui/runShisuUiStepUpdateShisu00_801D2D88.c'
+    - '@behavior: Step handler of the SHISU overlay step handler run based at 0x801D9720 that runs the shared step routine func_801D2978 with no handler-specific work of its own: it takes no arguments, touches no memory of its own, and its 0x18-byte frame only keeps $ra at 0x10 across the call, so the call result stays in $v0.'
   - - 8616
     - c
     - dispatchStateByteTable9734EtcShisu00_801D2DA8

@@ -145,8 +145,10 @@ segments:
     - asm
     - func_801F4C28
   - - 8492
-    - asm
-    - func_801F4D2C
+    - c
+    - queueFrontCue20CWhenFrontSideByteIs5World01Area04813_801F4D2C
+    - '@source: src/bof3/world/queueFrontCue20CWhenFrontSideByteIs5World01Area04813_801F4D2C.c'
+    - '@behavior: requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18 while the shared front-side byte 0x80143F03 reads 5, and does nothing otherwise; takes no arguments and returns nothing.'
   - - 8540
     - textbin
     - D_801F4D5C

@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801D129C
   - - 2248
-    - asm
-    - func_801D14C8
+    - c
+    - drawPendingNotificationRowsCommu0507
+    - '@source: src/bof3/ui/drawPendingNotificationRowsCommu0507.c'
+    - '@behavior: Submits the panel and the eight pending-notification rows of this overlay''s fairy list. Submits the panel image through 0x8014F800 at (arg0 + 0x52, arg1) with colour 0 and flag 0xFF, the handle being the 0x80010000 main-RAM base plus the fixed table halfword at 0x800101D8, then walks up to eight queue entries starting at arg2 * 8 and stops at the first entry the pending append index at 0x80145E5D does not reach. Per row it reads the notification kind from 0x80145E60 and looks it up in the local eight-entry table at 0x801D197C, copies eight bytes of the five-byte-stride label run at 0x801457E8 selected by the notification second byte into the name buffer at 0x801490D8 and clears that buffer byte 5 when the entry flag is set, and submits the row image at (arg0 + 0x14, arg1 + i * 0x10 + 0x1C) with the handle taken from the 0x80010000 table entry the row text id names.'
   - - 2672
     - asm
     - func_801D1670

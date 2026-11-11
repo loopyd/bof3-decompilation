@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/mapByte80144FF9ToCodeShisu00_801D1E60.c",
+    "src/bof3/ui/runShisuUiStepUpdateShisu00_801D2D88.c",
     "src/bof3/ui/sumLevelExpShisu00_801D5F78.c",
 ]
 support_sources = [

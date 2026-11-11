@@ -22,6 +22,7 @@ sources = [
     "src/bof3/scenario/addSignedTableStepToWord80149318ScenarioScena0400_801F9CFC.c",
     "src/bof3/scenario/seedSegmentKeyTableAt801FA2C0ScenarioScena0400_801F747C.c",
     "src/bof3/scenario/setRenderCellCursorForMappedPositionScenarioScena0400_801F8034.c",
+    "src/bof3/scenario/seedWorkFieldsAndSegmentKeyTableSetByte9AndAdvanceWorkByte1ScenarioScena0400_801F6D44.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",

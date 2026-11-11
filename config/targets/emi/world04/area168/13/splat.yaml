@@ -97,8 +97,10 @@ segments:
     - asm
     - func_801F3FBC
   - - 5336
-    - asm
-    - func_801F40D8
+    - c
+    - decrementHalfword30By10AndQueueCue203WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCallPairWorld04Area16813_801F40D8
+    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue203WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCallPairWorld04Area16813_801F40D8.c'
+    - '@behavior: Subtracts 0x10 from work halfword +0x30 and, once that countdown reaches zero, queues cue 0x203 while the shared front-end phase byte is zero and sets work byte +2 to 1, then calls local helper 0x801F4158 with (0, 1) and (1, 2).'
   - - 5464
     - asm
     - func_801F4158
