@@ -8,7 +8,7 @@ extern int rand(void);
  * @match 100.00
  * @residual none
  */
-void pickTargetStoreGlobal(s8 arg0) {
+void pickTargetStoreGlobal(u8 arg0) {
   u8 target;
 
   if ((rand() & 7) < 3) {

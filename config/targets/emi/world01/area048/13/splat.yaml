@@ -137,8 +137,10 @@ segments:
     - '@source: src/bof3/world/clearWorkByte74Bit0ThenIncrementModeByteBelow8AndQueueCue20DWhenMappedStateIs1World01Area04813_801F4864.c'
     - '@behavior: clears bit 0 of the byte at +0x74 of the work record published by the shared pointer cell 0x80146884, then, when the shared party-id byte 0x80145F09 indexes table 0x80181B10 to 1, advances the shared mode byte 0x8014686B by one while that byte reads below 8 and requests frontend cue 0x20D through the shared cue dispatcher 0x8015DF18; takes no arguments and returns nothing.'
   - - 7388
-    - asm
-    - func_801F48DC
+    - c
+    - setWorkByte8Level5PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F48DC
+    - '@source: src/bof3/world/setWorkByte8Level5PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F48DC.c'
+    - '@behavior: stores the level 5 into byte +0x08 of the scratch work record published at scratchpad pointer cell 0x1F800044, then stores the shared mode byte 0x8014686B shifted left by two into byte +0x07 of the record published at 0x80148210; when that byte reads nonzero it calls the shared status helper 0x8015C148 and, when the answer is 2, calls the shared view routine 0x801C5DFC with the work record byte +0x08, clears the shared facing halfword 0x80149330 and sets bit 0x40 in the published record byte 0, while otherwise it calls the shared arming helper 0x801ABBA8 with the published record and that work byte as the level and sets bit 0x80 in that byte; on every path it then reloads the scratchpad cell, clears the work record word +0x14 and stores 0x480 into its halfword +0x3E.'
   - - 7624
     - asm
     - func_801F49C8

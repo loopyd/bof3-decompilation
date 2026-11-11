@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F2EA8
   - - 1652
-    - asm
-    - func_801F3274
+    - c
+    - drawRecordQuadRunSlicedByWorkHalfword36World02Area11213_801F3274
+    - '@source: src/bof3/world/drawRecordQuadRunSlicedByWorkHalfword36World02Area11213_801F3274.c'
+    - '@behavior: Draws the run of textured quads the work record halfword 0x36 selects through the bound byte tables at 0x801F4250 and 0x801F4251, one POLY_FT4 per 8-byte record of 0x801F4294 with its corners biased by the record corner offset row, projected by RotTransPers4 and linked through func_80155A08 or appended with kind 3 through func_8014E5A0.'
   - - 2392
     - asm
     - func_801F3558

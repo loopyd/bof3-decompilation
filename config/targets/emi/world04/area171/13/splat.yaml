@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801F3070
   - - 2008
-    - asm
-    - func_801F33D8
+    - c
+    - setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkByte2EveryEighthFrameWorld04Area17113_801F33D8
+    - '@source: src/bof3/world/setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkByte2EveryEighthFrameWorld04Area17113_801F33D8.c'
+    - '@behavior: Full-screen overlay tint emitter. Selects the draw-mode texture page 0x2A5 for graphics types 1 or 2 and 0xB5 otherwise through two successive GetGraphType calls, seeds that draw mode at the shared primitive cursor 0x8014598C with dfe 0, dtd 0 and no texture window, and appends its 0xC bytes under ordering class 3. It then stamps the same cursor through the shared POLY_F4 initialiser 0x8017A9A4, sets that packet semi-transparency bit, writes the four screen corners (0,0), (0x140,0), (0,0xF0) and (0x140,0xF0) as the eight halfwords at offsets 0x08 to 0x16, fixes the red byte at 0 and the green byte at 0x30, and takes the blue byte from the four-byte table at 0x801F3F88 indexed by the work record byte at offset 0x02 of the scratchpad pointer cell 0x1F800044 and scaled left by three, then appends that 0x18-byte packet under the same ordering class 3. On every eighth frame, where the shared frame counter 0x80143E6C reads zero in its low three bits, it re-reads that work pointer and rewrites the same byte as (byte + 1) AND 3, the dispatch byte the overlay dispatcher at 0x801F2C5C indexes its handler run with. The payload names no caller for it: no jal and no table word of this overlay holds 0x801F33D8, so the overlay loader is the only entry that reaches it. Takes no arguments and returns nothing; the 0x20-byte frame keeps ra at 0x1C and s0 at 0x18.'
   - - 2296
     - asm
     - func_801F34F8

@@ -7,6 +7,7 @@ initializeBateUiState = 0x801D1C90;
 func_801D1E8C = 0x801D1E8C;
 publishBateMaskFlagAndSnapshotSharedFields = 0x801D1FA0;
 dispatchUiPhaseTableBate00_801D2070 = 0x801D2070;
+dispatchUiSubStepTableBate00_801D20AC = 0x801D20AC;
 func_801D2304 = 0x801D2304;
 func_801D259C = 0x801D259C;
 func_801D26E0 = 0x801D26E0;

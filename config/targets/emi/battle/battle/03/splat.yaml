@@ -952,8 +952,10 @@ segments:
     - '@source: src/bof3/battle/func_801E257C_battle03.c'
     - '@behavior: Publishes the 0x118-byte work record at D_801EB2E8[index] as the current enemy work, runs the enemy script byte helper func_801E2314 for the masked argument and restores the previously published record.'
   - - 72160
-    - asm
-    - func_801E25E0
+    - c
+    - advanceEnemyTargetModeAndPublishWork
+    - '@source: src/bof3/battle/advanceEnemyTargetModeAndPublishWork.c'
+    - '@behavior: Derives the enemy target mode byte 0x80146375 from the target mode pack table 0x800B51F8 field selected by record byte +0x7E and the low rand bits, forces it to 0 below record halfword +0xAA 2 while 0x801462E8 bit 0x4000 is set, advances it through 0..4 on record halfword +0x80 readiness bits 0x80, 0x40 and 0x20 with a +0xF6 seed from the +0x8C candidate run, picks the target through pickTargetStoreGlobal when record halfword +0x82 bit 0x20 or record word +0x104 bit 0x4000 is set and otherwise through func_801E2A88 into 0x80146384, publishes the record as the current enemy work and runs its +0xE4 handler while 0x801462EA is set, then copies the mode into record byte +0xF5 or clears both when the selected target byte reads 0xFF.'
   - - 73032
     - c
     - name: pickTargetStoreGlobal

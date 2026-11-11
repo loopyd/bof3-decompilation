@@ -120,8 +120,10 @@ segments:
     - asm
     - func_801D550C
   - - 18976
-    - asm
-    - func_801D5620
+    - c
+    - emitPanelIconPrimShisu00_801D5620
+    - '@source: src/bof3/ui/emitPanelIconPrimShisu00_801D5620.c'
+    - '@behavior: Emits one 8-byte sprite packet at g_PrimCursor, the SHISU copy of the panel icon wrapper. SetSprt8 initialises the packet, the two signed coordinates fill the halfwords at 0x8 and 0xA, the two middle arguments fill the bytes at 0xC and 0xD after a left shift of three, the fifth argument, read from the caller frame as an unsigned halfword, fills 0xE and the sixth, read as an unsigned byte, fills 0x04, 0x05 and 0x06. It marks the packet semi transparent with a zero argument and appends it through func_8014E5A0(1, 0x10). The 0xB8 bytes equal emitPanelIconPrim at 0x801D2520 in emi/etc/sisyou/00 and the body is the shared PANEL_ICON_PRIM template with no target-specific literal.'
   - - 19160
     - asm
     - func_801D56D8

@@ -300,6 +300,7 @@ sources = [
     "src/bof3/battle/clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh.c",
     "src/bof3/battle/storeDecrementedSelectedValueWhenRollAccepted.c",
     "src/bof3/battle/setRecordField4NegOneWhenBattlerFlag4000.c",
+    "src/bof3/battle/runSelectionPassSetSelectedFlag40ThenAdvanceByte10.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",
