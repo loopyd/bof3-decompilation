@@ -221,9 +221,11 @@ impl Image {
         if bss_end > FOREGROUND_STACK_START
             || scheduler_end > FOREGROUND_STACK_START
             || self.symbol("audio_exception_global_pointer")? != 0
+            || self.symbol("audio_foreground_stack")? != FOREGROUND_STACK
+            || self.symbol("audio_initial_status")? != self.evidence.initial_status
         {
             return Err(
-                "owned driver: foreground stack or exception GP conflicts with startup policy"
+                "owned driver: foreground stack, status or exception GP conflicts with startup policy"
                     .into(),
             );
         }
@@ -265,6 +267,7 @@ impl Image {
         self.entry("audio_a0_dispatch")?;
         self.entry("audio_b0_dispatch")?;
         self.entry("audio_c0_dispatch")?;
+        self.entry("audio_driver_start")?;
         self.entry("audio_staging_copy")?;
         for (slot, entry) in self.vector_bindings()? {
             let at = (slot - base) as usize;
@@ -396,8 +399,8 @@ impl Image {
         })
     }
 
-    /// Initialize services in zeroed RAM. Audio initialization remains an
-    /// explicit subsequent guest call, before layout selection and bank upload.
+    /// Execute cold service startup in zeroed RAM. Guest instructions select
+    /// stacks, GP and status. Audio initialization remains a subsequent call.
     pub fn start(&self, observer: &mut impl FnMut(&Execution) -> Result<()>) -> Result<Started> {
         self.start_scheduled(&mut |_| Ok(()), observer, &mut |_, progress| {
             progress.require_ready()
@@ -468,9 +471,8 @@ impl Image {
             pad_flag: self.data("audio_pad_auto_ack", 4)?,
         })?;
         kernel.configure_guest_vectors()?;
-        let initialize = self.entry("audio_kernel_initialize")?;
-        let mut cpu = Cpu::new(initialize);
-        cpu.set_register(29, self.symbol("audio_initialization_stack_end")?);
+        let initialize = self.entry("audio_driver_start")?;
+        let cpu = Cpu::new(initialize);
         let mut execution = Execution::with_kernel(
             cpu,
             bus,
@@ -549,15 +551,6 @@ impl Image {
                 "owned driver: scheduler installation differs from its source bytes".into(),
             );
         }
-        // Disable automatic PAD acknowledgement before enabling interrupts.
-        execution.cpu.set_register(9, 0x5b);
-        execution.call_scheduled(0xb0, [0; 4], 64, &mut |_| Ok(()), schedule)?;
-        execution.cpu.set_register(28, 0);
-        execution.cpu.set_register(29, FOREGROUND_STACK);
-        execution
-            .cpu
-            .cop0_mut()
-            .write(12, self.evidence.initial_status)?;
         Ok(Started {
             execution,
             initialization,

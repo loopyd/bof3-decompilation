@@ -40,8 +40,12 @@ guest bodies. The loader requires the current vector symbols, checks their eight
 and verifies the installed bytes. Direct body guards remain active.
 CPU exceptions enter the installed vector before the linked scanner. Functional
 callback return traps claim their ROM addresses only while their calls are active.
-After service initialization, the host selects GP zero, foreground SP
-`0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
+The cold `audio_driver_start` entry needs no incoming stack or GP. It disables
+interrupts, selects the initialization stack, calls the kernel initializer and
+disables automatic PAD acknowledgement through B0/5B. Guest instructions then
+select GP zero, foreground SP `0x801FFF00` and status `0x401`. It returns V0 zero
+to the incoming RA. The startup call report and read-only observer include this
+whole sequence, and its instructions advance the selected audio clock.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
 

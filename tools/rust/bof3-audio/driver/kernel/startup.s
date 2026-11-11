@@ -1,10 +1,41 @@
 # SPDX-License-Identifier: MIT
-# Owned cold kernel allocation. Call before admitting interrupts or registering
-# events, with no active kernel continuation and a separate aligned RAM stack.
-# This initializes service state, the entry vectors and fixed-address scheduler.
-# It does not initialize audio state or device registers.
+# Owned cold startup and kernel allocation. The low-level initializer requires
+# an aligned RAM stack and no active kernel continuation or registered events.
+# It initializes service state, entry vectors and the fixed-address scheduler.
+# Audio state and device initialization follow separately.
 .set noreorder
 .set noat
+.section .text.audio_driver_start,"ax"
+.balign 4
+.globl audio_driver_start
+.ent audio_driver_start
+# Cold entry. No incoming stack or GP is required. RA is the caller's stop
+# address. The initialization frame is separate from the state being cleared.
+# Return with V0 zero, foreground SP/GP/SR installed and PAD auto-ack disabled.
+audio_driver_start:
+    mtc0 $zero, $12
+    nop
+    nop
+    lui $sp, %hi(audio_initialization_stack_end - 24)
+    addiu $sp, $sp, %lo(audio_initialization_stack_end - 24)
+    sw $ra, 16($sp)
+    jal audio_kernel_initialize
+    nop
+    addiu $t1, $zero, 0x5b
+    jal 0xb0
+    addu $a0, $zero, $zero
+    lw $ra, 16($sp)
+    addu $gp, $zero, $zero
+    lui $sp, %hi(audio_foreground_stack)
+    addiu $sp, $sp, %lo(audio_foreground_stack)
+    addiu $t0, $zero, audio_initial_status
+    mtc0 $t0, $12
+    nop
+    nop
+    jr $ra
+    addu $v0, $zero, $zero
+.end audio_driver_start
+
 .section .text.audio_kernel_initialize,"ax"
 .balign 4
 .globl audio_kernel_initialize
