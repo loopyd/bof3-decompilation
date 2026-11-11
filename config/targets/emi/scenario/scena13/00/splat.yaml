@@ -88,8 +88,10 @@ segments:
     - c
     - bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C
   - - 4132
-    - asm
-    - func_801F7C24
+    - c
+    - clearTwoSelectedWorkRecordFlagsThenSubmitBothAndResetWorkAreaScenarioScena1300_801F7C24
+    - '@source: src/bof3/scenario/clearTwoSelectedWorkRecordFlagsThenSubmitBothAndResetWorkAreaScenarioScena1300_801F7C24.c'
+    - '@behavior: Work-record release handler of this overlay, entry 11 of the twelve-word in-image pointer run D_801FBEF0 at 0x801FBF1C. It reloads the scratchpad pointer cell 0x1F800044 before each of its four record references, scales the selected work-object byte by 0x98 into the shared record table at 0x80146888, clears the record flags byte 0 of the record selected by object byte 3 and then of the one selected by byte 4, submits both selected records to the shared main-executable routine func_80196718 through the base it keeps in a saved register, then calls the shared work-area reset func_80196070 and returns. The 0x18-byte frame keeps only the return address and that saved base.'
   - - 4372
     - c
     - dispatchScenarioStateHandlerScenarioScena1300_801F7D14

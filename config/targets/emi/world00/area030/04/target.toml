@@ -194,6 +194,7 @@ sources = [
     "src/bof3/world/drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38.c",
     "src/bof3/world/func_801DC690_area03004.c",
     "src/bof3/world/drawStretchedPanelColumnWorld00Area03004_801D8248.c",
+    "src/bof3/world/drawMirroredPanelCellQuadWorld00Area03004_801D2C34.c",
     "src/bof3/world/drawArea030CompactPanel.c",
 ]
 support_sources = [

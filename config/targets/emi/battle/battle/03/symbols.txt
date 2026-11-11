@@ -358,6 +358,7 @@ func_801E3B04 = 0x801E3B04;
 dispatchByte2TableB40c = 0x801E3B68;
 resetScratchByte4Set2 = 0x801E3BAC;
 dispatchByte3TableB424 = 0x801E3BD0;
+resolveEnemySelectionDamageAndSubmitPendingEffects = 0x801E3C14;
 advanceByte3WhenReady2 = 0x801E4104;
 updateEnemyQueuedFlagAndRearmWorkState = 0x801E414C;
 checkEnemyQueuedPredicate = 0x801E4368;

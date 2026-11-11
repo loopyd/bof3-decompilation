@@ -28,6 +28,7 @@ drawSpriteWithScenarioKindSubstitutionShisu00_801D460C = 0x801D460C;
 drawSpritePrimTpageFromAbrShisu00_801D4660 = 0x801D4660;
 func_801D4754 = 0x801D4754;
 drawEquipSlotRowsShisu00_801D4AF4 = 0x801D4AF4;
+drawRotatingIconSlotPanelShisu00_801D4DC0 = 0x801D4DC0;
 drawSpritePrimTpageFromGraphTypeShisu00_801D550C = 0x801D550C;
 emitPanelIconPrimShisu00_801D5620 = 0x801D5620;
 func_801D56D8 = 0x801D56D8;

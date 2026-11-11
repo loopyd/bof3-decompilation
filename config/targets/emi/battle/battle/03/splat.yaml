@@ -1116,8 +1116,10 @@ segments:
     - c
     - dispatchByte3TableB424
   - - 77844
-    - asm
-    - func_801E3C14
+    - c
+    - resolveEnemySelectionDamageAndSubmitPendingEffects
+    - '@source: src/bof3/battle/resolveEnemySelectionDamageAndSubmitPendingEffects.c'
+    - '@behavior: Enemy selection pass entry 0 of the scratch work-byte-3 table 0x801EB424: publishes the scratch work and enemy work subject cells, copies the enemy work block +0xA0, resolves the mode-selected damage, replays the pending halves and advances scratch work byte +0x03.'
   - - 79108
     - c
     - advanceByte3WhenReady2

@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F3D54
   - - 4564
-    - asm
-    - func_801F3DD4
+    - c
+    - setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4
+    - '@source: src/bof3/world/setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4.c'
+    - '@behavior: Entry 2 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there when the shared gate byte 0x801490C7 reads 2, and otherwise stores 0 in the shared mode byte 0x80146866 when the gate byte is zero and 1 when it is not, runs the shared front-end startup helper 0x8015C088, then seeds the shared counter byte 0x80146867 with 0x40, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x14.'
   - - 4692
     - asm
     - func_801F3E54

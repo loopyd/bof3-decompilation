@@ -12,7 +12,7 @@
  * record's signed deltas and byte 6 loses its second delta, the sign of the
  * record's fourth byte selects the func_801D6B28 marker mode, and the panel row
  * is redrawn through func_801D3244 (0xCE, 0x5C, 0x20, 0, 1, 0) and
- * func_801D2C34 (0xE3, 0x69, 0, 1).
+ * drawMirroredPanelCellQuadWorld00Area03004_801D2C34 (0xE3, 0x69, 0, 1).
  * @source 0x801D6CB0
  * @status exact
  * @match 100.00
@@ -64,5 +64,5 @@ void func_801D6CB0(void) {
     func_801D6B28(1);
   }
   func_801D3244(0xCE, 0x5C, 0x20, 0, 1, 0);
-  func_801D2C34(0xE3, 0x69, 0, 1);
+  drawMirroredPanelCellQuadWorld00Area03004_801D2C34(0xE3, 0x69, 0, 1);
 }

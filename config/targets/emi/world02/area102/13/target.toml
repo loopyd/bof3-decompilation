@@ -13,5 +13,6 @@ support_sources = [
     "src/bof3/world/area10213DispatchTables.c",
     "src/bof3/world/drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84.c",
     "src/bof3/world/drawCountdownLevelThenRearmFromSavedByteAndSelectStep1World02Area10213_801F2EC0.c",
+    "src/bof3/world/selectCountdownFromPositionHalfwordLsbsStoreDistanceAndOffsetCompareThenAdvanceStateWorld02Area10213_801F32A8.c",
 ]
 psyq_source = "src/bof3/support/area102_13_psyq.c"

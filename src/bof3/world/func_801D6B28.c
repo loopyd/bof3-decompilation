@@ -8,7 +8,7 @@
  * marker row: func_801D3244 receives the clamped x word (as a signed halfword),
  * 0xB3, 0x20, the work-record byte 6 low three bits doubled and a final mode
  * flag that is 1 when word 0x10 is below word 0x0C or word 0x0C plus 0x20 is
- * below word 0x10 and 0 otherwise; func_801D2C34 then receives the clamped
+ * below word 0x10 and 0 otherwise; drawMirroredPanelCellQuadWorld00Area03004_801D2C34 then receives the clamped
  * companion word as a signed halfword, 0xB3, arg0's byte as a flag and 1.
  * @source 0x801D6B28
  * @status exact
@@ -65,9 +65,11 @@ void func_801D6B28(u8 arg0) {
 
   if (arg0 == 0) {
     u8* tail0 = D_1F800044;
-    func_801D2C34(*(s16*)(tail0 + 0x10), 0xB3, 0, 1);
+    drawMirroredPanelCellQuadWorld00Area03004_801D2C34(*(s16*)(tail0 + 0x10), 0xB3,
+                                                       0, 1);
   } else {
     u8* tail1 = D_1F800044;
-    func_801D2C34(*(s16*)(tail1 + 0x10), 0xB3, 1, 1);
+    drawMirroredPanelCellQuadWorld00Area03004_801D2C34(*(s16*)(tail1 + 0x10), 0xB3,
+                                                       1, 1);
   }
 }

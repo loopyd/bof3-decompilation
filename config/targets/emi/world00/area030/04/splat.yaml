@@ -149,8 +149,16 @@ segments:
     - func_801D2BF0
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 8244
+    - c
+    - drawMirroredPanelCellQuadWorld00Area03004_801D2C34
+    - '@source: src/bof3/world/drawMirroredPanelCellQuadWorld00Area03004_801D2C34.c'
+    - '@behavior: emits one 16 by 8 textured quad of the AREA030 panel cell texture into the primitive cursor: SetPolyFT4 stamps the tag, the texture page is 0x229 in graphics modes 1 and 2 and 0x99 otherwise, the CLUT is 0x7A40 and the three colour bytes are the grey 0x80, the quad spans x from arg0 less eight to arg0 plus eight and y from arg1 to arg1 plus eight, and its texture cell is the sixteen-wide, eight-high slice at v 0x58..0x60 whose u pair is (0x28,0x38) or, mirrored to (0x38,0x28), selected by the low byte of the flag arg2; func_8014E5A0 then appends the 0x28-byte primitive under the caller ot index arg3.'
+  - - 8564
     - asm
-    - func_801D2C34
+    - func_801D2D74
+  - - 8644
+    - asm
+    - func_801D2DC4
   - - 9796
     - c
     - func_801D3244
@@ -385,12 +393,12 @@ segments:
     - c
     - func_801D6B28
     - '@source: src/bof3/world/func_801D6B28.c'
-    - '@behavior: AREA030 selection-panel marker refresh: runs the shared panel reset func_8014D4E0, submits the tpage draw mode (0, 1), draws the three panel lines through func_801E0DCC, clamps the work-record x word 0x0C to 0x39..0x79 and its companion word 0x10 to 0x41..0x94 in place, then redraws the selection marker row through func_801D3244 (clamped x word as a signed halfword, 0xB3, 0x20, work byte 6 low three bits doubled, 1, and a mode flag that is 1 when word 0x10 is below word 0x0C or word 0x0C plus 0x20 is below word 0x10) and func_801D2C34 (clamped companion word as a signed halfword, 0xB3, arg0 byte as a flag, 1).'
+    - '@behavior: AREA030 selection-panel marker refresh: runs the shared panel reset func_8014D4E0, submits the tpage draw mode (0, 1), draws the three panel lines through func_801E0DCC, clamps the work-record x word 0x0C to 0x39..0x79 and its companion word 0x10 to 0x41..0x94 in place, then redraws the selection marker row through func_801D3244 (clamped x word as a signed halfword, 0xB3, 0x20, work byte 6 low three bits doubled, 1, and a mode flag that is 1 when word 0x10 is below word 0x0C or word 0x0C plus 0x20 is below word 0x10) and drawMirroredPanelCellQuadWorld00Area03004_801D2C34 (clamped companion word as a signed halfword, 0xB3, arg0 byte as a flag, 1).'
   - - 24752
     - c
     - func_801D6CB0
     - '@source: src/bof3/world/func_801D6CB0_area03004.c'
-    - '@behavior: AREA030 selection-panel step advancer on the work record published at the scratchpad cursor 0x1F800044: a nonzero countdown byte 9 is decremented and, unless bit 7 of the current step record at 0x801E207C is set, runs the shared func_8014D978 helper; an expired countdown looks the step record up through the record step byte 10, re-seeds that byte from the record count byte at the 0xFF end marker, requests the record low 7 bits through func_8014D8D4, arms countdown byte 9 and advances step byte 10. It then integrates the stepped-from record (work words 0x0C/0x10 gain the record signed deltas, work byte 6 loses the second delta), passes the sign of the record fourth byte to func_801D6B28 and redraws the panel row through func_801D3244 (0xCE, 0x5C, 0x20, 0, 1, 0) and func_801D2C34 (0xE3, 0x69, 0, 1).'
+    - '@behavior: AREA030 selection-panel step advancer on the work record published at the scratchpad cursor 0x1F800044: a nonzero countdown byte 9 is decremented and, unless bit 7 of the current step record at 0x801E207C is set, runs the shared func_8014D978 helper; an expired countdown looks the step record up through the record step byte 10, re-seeds that byte from the record count byte at the 0xFF end marker, requests the record low 7 bits through func_8014D8D4, arms countdown byte 9 and advances step byte 10. It then integrates the stepped-from record (work words 0x0C/0x10 gain the record signed deltas, work byte 6 loses the second delta), passes the sign of the record fourth byte to func_801D6B28 and redraws the panel row through func_801D3244 (0xCE, 0x5C, 0x20, 0, 1, 0) and drawMirroredPanelCellQuadWorld00Area03004_801D2C34 (0xE3, 0x69, 0, 1).'
   - - 25284
     - c
     - func_801D6EC4
