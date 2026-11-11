@@ -16,7 +16,7 @@ dispatchWorkByte2HandlerThenInvokeFDF8WhenWorkByte0NonzeroBmagicMagic13703_801EF
 clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0 = 0x801EFCC0;
 func_801EFD00 = 0x801EFD00;
 func_801EFD50 = 0x801EFD50;
-func_801EFD9C = 0x801EFD9C;
+decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13703_801EFD9C = 0x801EFD9C;
 func_801EFDF8 = 0x801EFDF8;
 dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC = 0x801EFFBC;
 func_801F001C = 0x801F001C;

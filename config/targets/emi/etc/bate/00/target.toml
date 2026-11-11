@@ -25,6 +25,7 @@ sources = [
     "src/bof3/ui/drawEquipPanelBate00_801D2F64.c",
     "src/bof3/ui/drawExpRowPanelBate00_801D31B0.c",
     "src/bof3/ui/drawSpritePrimTpageFromGraphTypeBate00_801D4564.c",
+    "src/bof3/ui/drawPanelFrameBate00_801D78A8.c",
     "src/bof3/ui/drawTwoRowNumberedPanelBate00_801D8508.c",
 ]
 support_sources = [

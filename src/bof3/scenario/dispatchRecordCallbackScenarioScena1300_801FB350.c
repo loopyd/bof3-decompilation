@@ -23,8 +23,9 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * callback-pointer table at 0x801FBFB8 (thirteen entries: word 0
  * incrementWorkHalfword7EScenarioScena1300_801FB390, word 1
  * requestPrimaryState3Substate5ScenarioScena1300_801FB3A4, word 2
- * requestPrimaryState6Substate19ScenarioScena1300_801FB3DC, words 3, 4, 5 the
- * still-anchored func_801FB414, func_801FBB78 and func_801FBBC4, word 6
+ * requestPrimaryState6Substate19ScenarioScena1300_801FB3DC, word 3
+ * setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414,
+ * words 4, 5 the still-anchored func_801FBB78 and func_801FBBC4, word 6
  * armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88,
  * words 7, 8, 9 the still-anchored func_801FBCC4, func_801FBD84 and
  * func_801FBDD8, word 10 invokeHelperArgThenHelperScenarioScena1300_801FBE98,

@@ -146,8 +146,10 @@ segments:
     - '@source: src/bof3/world/decrementHalfword30By10AndAdvanceState3BelowC9AndSetState3To3WhenGatedThenDrawHalfword30World02Area08813_801F42B4.c'
     - '@behavior: subtracts 0xA from work-record halfword 0x30 and increments work byte 0x03 while the stored value stays below 0xC9; when the gate holds (shared byte 0x801454F2 set and record byte 0x0B nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 set) it writes 3 to work byte 0x03 through a second read of the scratchpad pointer cell 0x1F800044, then reloads that cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6028
-    - asm
-    - func_801F438C
+    - c
+    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08813_801F438C
+    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08813_801F438C.c'
+    - '@behavior: while work-record byte 0x0B of the record published at scratchpad pointer cell 0x1F800044 is zero, increments record byte 0x09 and, once that stored byte reaches 0x5A, increments record byte 0x0B through a second read of the cell; then increments state byte 0x03 through another read of the cell when shared byte 0x801454F2 is nonzero and record byte 0x0B is nonzero, or byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set; finally reloads the cell and calls the local 0x801F4C28 with 0x5C and the signed halfword at record offset 0x30.'
   - - 6284
     - asm
     - func_801F448C

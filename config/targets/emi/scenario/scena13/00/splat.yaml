@@ -160,8 +160,10 @@ segments:
     - c
     - requestPrimaryState6Substate19ScenarioScena1300_801FB3DC
   - - 18452
-    - asm
-    - func_801FB414
+    - c
+    - setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414
+    - '@source: src/bof3/scenario/setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414.c'
+    - '@behavior: Sets bit 0x1C of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580, runs the shared front-end startup helper func_8015C088, then requests shared state entry 0x2C by storing 0x2C in the shared state-entry selector byte D_801448EB, 0 in the shared progress byte D_801448EC and 0x11 in the companion byte D_801448ED; takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls, with each byte store materialising the 0x8014 page in $at on its own.'
   - - 18532
     - asm
     - func_801FB464

@@ -6,7 +6,7 @@
  * SPRT with the size words 0x10 and 8, the CLUT 0x7800, texture row 0xd8 and
  * texture column arg2 * 16, tinted by the neutral gray 0x80 and appended under
  * ordering-table index 1. drawBattlerStatusColumns draws the two column accents
- * of each battler status column with it, and the still-assembler func_801D8DF8
+ * of each battler status column with it, and drawShadowedBattlerHpStatusPanel
  * draws the column-0 accent at (x + 2, y + 0xA).
  * @status exact
  * @match 100.00

@@ -57,8 +57,8 @@ segments:
     - asm
     - func_801EF804
   - - 4572
-    - asm
-    - func_801EFDDC
+    - c
+    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius448TintedByWorkByteATimesEightAtOriginAndOneAtRimBmagicMagic09503_801EFDDC
   - - 5144
     - asm
     - func_801F0018

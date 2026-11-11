@@ -31,6 +31,7 @@ sources = [
     "src/bof3/ui/drawPanelFrameShisu00_801D8850.c",
     "src/bof3/ui/drawEquipSlotRowsShisu00_801D4AF4.c",
     "src/bof3/ui/drawThreeIconStatusRowPanelShisu00_801D91B0.c",
+    "src/bof3/ui/drawEquipPanelShisu00_801D3F0C.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

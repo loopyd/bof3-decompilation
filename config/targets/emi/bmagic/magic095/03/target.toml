@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic095/03.bin"
 splat = "config/targets/emi/bmagic/magic095/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius448TintedByWorkByteATimesEightAtOriginAndOneAtRimBmagicMagic09503_801EFDDC.c",
+]
 support_sources = [
     "src/bof3/bmagic/decrementWorkByte9WhenGlobalWorkByte1Is3ThenAdvanceWorkByte1WhenZeroBmagicMagic09503_801F0070.c",
     "src/bof3/bmagic/copyRecordFieldsSeedRandomTableQueueTwelveSlotsWithDescendingByte9ClearByteAAndAdvanceWorkByte1BmagicMagic09503_801EEC9C.c",

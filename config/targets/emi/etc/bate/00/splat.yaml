@@ -158,8 +158,10 @@ segments:
     - asm
     - func_801D6470
   - - 27816
-    - asm
-    - func_801D78A8
+    - c
+    - drawPanelFrameBate00_801D78A8
+    - '@source: src/bof3/ui/drawPanelFrameBate00_801D78A8.c'
+    - '@behavior: panel frame of the BATE overlay that installs the texture page GetTPage(0, 0, 0x380, 0x100) as the draw-mode packet at g_PrimCursor with dfe 0, dtd 0 and no texture window and appends that 0xC-byte packet at ordering-table slot 1, then draws the border of an 8-pixel cell grid as eight border-piece sprites: for every column below the column count it draws the piece 0x29 at x plus (column + 1) * 8 and y and the piece 0x2E at the same x and the bottom y that is y plus (row count + 1) * 8, for every row below the row count it draws the piece 0x2B at x and that row y and the piece 0x2C at the right x that is x plus (column count + 1) * 8 and the same row y, and the four corners close the frame in the order 0x28 at (x, y), 0x2A at the right x and y, 0x2D at x and the bottom y and 0x2F at the right x and the bottom y, both counts read as bytes so a zero count skips its edge walk; the panel routine func_801D2304 of this same payload calls it through the jal at 0x801D2390 with the signed x and y in $a0 and $a1 and the constants 0x1A and 0x10 in $a2 and $a3'
   - - 28368
     - asm
     - func_801D7AD0

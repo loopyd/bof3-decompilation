@@ -10,8 +10,8 @@
  * sign-extended plus 0xC. While the selection gate byte 0x801462EF is set, a
  * queued slot byte D_801EB4D8 with no 0xC0 bits that equals panel byte +0x0A, or
  * that has bit 0x80 set, forwards panel halfwords +0x04/+0x06 and panel byte
- * +0x0A to func_801D8DF8 and returns; otherwise panel byte +0x0F is cleared and
- * panel byte +0x03 is decremented.
+ * +0x0A to drawShadowedBattlerHpStatusPanel and returns; otherwise panel byte
+ * +0x0F is cleared and panel byte +0x03 is decremented.
  * @status exact
  * @match 100.00
  * @residual none
@@ -63,5 +63,6 @@ void func_801E9FDC(void) {
     D_80148648[3] -= 1;
     return;
   }
-  func_801D8DF8(*(s16*)&D_80148648[4], *(s16*)&D_80148648[6], D_80148648[0xA]);
+  drawShadowedBattlerHpStatusPanel(*(s16*)&D_80148648[4],
+                                   *(s16*)&D_80148648[6], D_80148648[0xA]);
 }
