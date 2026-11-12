@@ -666,9 +666,14 @@ matching callee ELF sections and observed entry are not admission claims.
 | `[0x6E40,0x7110)` | `[0x801D7A40,0x801D7D10)` | 720 | `0x801E9424` | `0x801E9390` |
 | `[0x7A90,0x7EE4)` | `[0x801D8690,0x801D8AE4)` | 1108 | `0x801E9A98` | `0x801E99AC` |
 | `[0x81F8,0x8704)` | `[0x801D8DF8,0x801D9304)` | 1292 | `0x801EA15C` | `0x801E9FDC` |
+| `[0x9080,0x91BC)` | `[0x801D9C80,0x801D9DBC)` | 316 | `0x801D75F4` | `0x801D750C` |
+| `[0x91BC,0x929C)` | `[0x801D9DBC,0x801D9E9C)` | 224 | `0x801D768C` | `0x801D750C` |
 | `[0x929C,0x9478)` | `[0x801D9E9C,0x801DA078)` | 476 | `0x801D8C70` | `0x801D8AE4` |
+| `[0xBB3C,0xBC94)` | `[0x801DC73C,0x801DC894)` | 344 | `0x801DC52C` | `0x801DC044` |
 | `[0xD0B4,0xD27C)` | `[0x801DDCB4,0x801DDE7C)` | 456 | `0x801D56BC` | `0x801D5658` |
+| `[0xDEE0,0xDFC4)` | `[0x801DEAE0,0x801DEBC4)` | 228 | `0x801D6D60` | `0x801D6CC0` |
 | `[0x11E88,0x120A4)` | `[0x801E2A88,0x801E2CA4)` | 540 | `0x801E2860` | `0x801E25E0` |
+| `[0x148EC,0x14A7C)` | `[0x801E54EC,0x801E567C)` | 400 | `0x801E4910` | `0x801E48D4` |
 | `[0x181D8,0x183A8)` | `[0x801E8DD8,0x801E8FA8)` | 464 | `0x801E6F54` | `0x801E6E54` |
 
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
@@ -770,6 +775,28 @@ The separate original body at `0x8014B020..0x8014B0F0`, file offsets
 match resident RAM. Structural review covers all 52 words, two loop branches
 and the return delay slot. The compiled callee remains partial and provides no
 admission basis. Actual entry, valid records and callee behavior remain unverified.
+
+These additional complete original bodies qualify through direct calls from
+qualified executable callers. Every original word and delay slot matches ASM
+and retained resident RAM. Structural call continuations assume returns. Ten
+indirect calls retain unqualified targets and selectors. Matching callee ELF,
+observed entry, argument validity and callee behavior remain unverified.
+
+| File interval | Runtime interval | Bytes | Original JAL | Qualified caller |
+| --- | --- | ---: | --- | --- |
+| `[0xDE6E0,0xDE700)` | `[0x801746E0,0x80174700)` | 32 | `0x8014AF1C` | `0x8014AEE0` |
+| `[0xDE700,0xDE848)` | `[0x80174700,0x80174848)` | 328 | `0x8014AB10` | `0x8014AAC8` |
+| `[0xDE9D8,0xDEA08)` | `[0x801749D8,0x80174A08)` | 48 | `0x8014AF14` | `0x8014AEE0` |
+| `[0xDF3EC,0xDF47C)` | `[0x801753EC,0x8017547C)` | 144 | `0x80161F60` | `0x80161F58` |
+| `[0xDFADC,0xDFBE0)` | `[0x80175ADC,0x80175BE0)` | 260 | `0x8014E1C0` | `0x8014E0FC` |
+| `[0xE4514,0xE45E4)` | `[0x8017A514,0x8017A5E4)` | 208 | `0x8014AE34` | `0x8014AE08` |
+| `[0xE488C,0xE48C8)` | `[0x8017A88C,0x8017A8C8)` | 60 | `0x8014B144` | `0x8014B0F0` |
+| `[0xE5330,0xE53CC)` | `[0x8017B330,0x8017B3CC)` | 156 | `0x8014AFA4` | `0x8014AEE0` |
+| `[0xE53CC,0xE5438)` | `[0x8017B3CC,0x8017B438)` | 108 | `0x8014AC60` | `0x8014AAC8` |
+| `[0xE581C,0xE58D4)` | `[0x8017B81C,0x8017B8D4)` | 184 | `0x8014AF60` | `0x8014AEE0` |
+| `[0xE58D4,0xE596C)` | `[0x8017B8D4,0x8017B96C)` | 152 | `0x8014ABA8` | `0x8014AAC8` |
+| `[0xE59CC,0xE5A40)` | `[0x8017B9CC,0x8017BA40)` | 116 | `0x8014AB58` | `0x8014AAC8` |
+| `[0xE80B4,0xE80E4)` | `[0x8017E0B4,0x8017E0E4)` | 48 | `0x8014AF24` | `0x8014AEE0` |
 
 ## Executable geometry table coverage
 
