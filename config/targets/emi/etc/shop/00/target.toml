@@ -131,6 +131,7 @@ sources = [
     "src/bof3/ui/tickPhaseTimerThenCloseShopPanelsOnCancel.c",
     "src/bof3/ui/retreatShopPanelRowThenAdvanceUiSubstep.c",
     "src/bof3/ui/tickPhaseTimerThenAdvanceWorkCounterB.c",
+    "src/bof3/ui/rebuildFieldRecordSlots.c",
     "src/bof3/ui/collectSaveSlotsThenCountFreeBlocks.c",
     "src/bof3/ui/swapSelectionIds.c",
     "src/bof3/ui/rebuildShopSlotLists.c",

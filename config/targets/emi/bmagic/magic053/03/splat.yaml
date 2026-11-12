@@ -58,8 +58,9 @@ segments:
     - asm
     - func_801EF5C0
   - - 2676
-    - asm
-    - func_801EF674
+    - c
+    - decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674
+    - '@source: src/bof3/bmagic/decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674.c'
   - - 2776
     - c
     - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8

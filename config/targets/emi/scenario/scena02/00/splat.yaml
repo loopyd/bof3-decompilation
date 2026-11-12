@@ -204,8 +204,8 @@ segments:
     - c
     - waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate5ScenarioScena0200_801FD164
   - - 26076
-    - asm
-    - func_801FD1DC
+    - c
+    - waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate7ScenarioScena0200_801FD1DC
   - - 26196
     - c
     - setScenarioScena0200_801FD254

@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08813_801F4E58.c",
     "src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld02Area08813_801F5170.c",
     "src/bof3/world/seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld02Area08813_801F4D1C.c",
+    "src/bof3/world/advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28.c",
 ]
 support_sources = [
     "src/bof3/world/area08813_work_state.c",

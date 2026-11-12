@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/initArea10313State.c",
+    "src/bof3/world/seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgress0cThenDrawFourBlocksWorld02Area10313_801F3C6C.c",
     "src/bof3/world/advanceWorkByte9AndResetWorkAreaAt1dWorld02Area10313_801F511C.c",
     "src/bof3/world/claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834.c",
     "src/bof3/world/drawWorkBandWithDescendingVariantOnFifthTickThenResetWorkAreaOnLastBandWorld02Area10313_801F42E0.c",

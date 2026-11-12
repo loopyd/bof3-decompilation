@@ -59,5 +59,6 @@ support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromCommonModeTableWorld02Area07714_801F5F04.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area07714_801F5F84.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F6004.c",
+    "src/bof3/world/setMatchedTriggerRecordFlagAndQueueCue201WhenSharedFlag2cClearWorld02Area07714_801F5880.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

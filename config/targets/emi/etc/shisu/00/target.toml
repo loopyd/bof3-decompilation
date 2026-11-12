@@ -28,6 +28,7 @@ sources = [
     "src/bof3/ui/drawSpritePrimTpageFromGraphTypeShisu00_801D550C.c",
     "src/bof3/ui/drawTwoRowNumberedPanelShisu00_801D94B0.c",
     "src/bof3/ui/drawBackgroundTilesFromKindShisu00_801D7224.c",
+    "src/bof3/ui/drawTexturedFrameShisu00_801D6090.c",
     "src/bof3/ui/drawPanelFrameShisu00_801D8850.c",
     "src/bof3/ui/drawEquipSlotRowsShisu00_801D4AF4.c",
     "src/bof3/ui/drawThreeIconStatusRowPanelShisu00_801D91B0.c",

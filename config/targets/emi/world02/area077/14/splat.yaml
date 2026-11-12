@@ -230,8 +230,10 @@ segments:
     - '@source: src/bof3/world/cycleThreePaletteBlocksWorld02Area07714_801F57BC.c'
     - '@behavior: copies three palette blocks selected by work byte +9 modulo four, then increments that byte.'
   - - 11392
-    - asm
-    - func_801F5880
+    - c
+    - setMatchedTriggerRecordFlagAndQueueCue201WhenSharedFlag2cClearWorld02Area07714_801F5880
+    - '@source: src/bof3/world/setMatchedTriggerRecordFlagAndQueueCue201WhenSharedFlag2cClearWorld02Area07714_801F5880.c'
+    - '@behavior: gates on bit 0x2C of the shared main-RAM flag bank 0x80144EB8 through the shared tester 0x8015B5D4, matches the two byte arguments and the game-mode byte 0x80145E98 against the two 4-byte trigger records of the payload table at 0x801F6B14, and on the accepted record whose flag bit 0x1C of the bank 0x80144F28 is still clear sets that record''s fourth byte as the bank bit, queues sound cue 0x201 through 0x8015DF18 and calls 0x8019ABB0 with 0xF before returning 1.'
   - - 11676
     - c
     - initArea07714State

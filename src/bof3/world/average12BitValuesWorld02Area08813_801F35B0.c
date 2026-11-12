@@ -20,8 +20,9 @@
  * payload differs only in the two low bytes of the internal `j` word, which
  * encode the jump target address, so every overlay owns its own copy. The
  * label follows the already-reviewed sibling's role. This target's only
- * in-image reference is the `jal` at 0x801F3200 inside func_801F2F28, which
- * passes both angles in a0/a1 and consumes the halfword result.
+ * in-image reference is the `jal` at 0x801F3200 inside
+ * advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28,
+ * which passes both angles in a0/a1 and consumes the halfword result.
  * @status exact
  * @match 100.00
  * @residual none

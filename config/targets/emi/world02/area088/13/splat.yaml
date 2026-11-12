@@ -59,8 +59,10 @@ segments:
     - invokeHelperWorld02Area08813_801F2F08
     - '@source: src/bof3/world/invokeHelperWorld02Area08813_801F2F08.c'
   - - 808
-    - asm
-    - func_801F2F28
+    - c
+    - advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28
+    - '@source: src/bof3/world/advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28.c'
+    - '@behavior: Shifts the 32 records of the 0x18-byte-stride trail buffer handed in $a0 up by one and seeds record 0 from the cursor words 0x34, 0x38 and 0x3C of the work object published at the scratchpad pointer cell 0x1F800044; then, after filling the 0x20-byte projection scratch through 0x801AFE18, projects each record through 0x801AFF04 into its screen pair at +0x10 and +0x12 and converts a size pair copied from heading halfword 0x1F through 0x801AFFD8 into the record size at +0x16; then stores the 0x8017A138 direction of the signed screen delta between each record and its successor into the halfword run at 0x300, with 0x1000 for a degenerate delta; then fills each 0x1000 heading from the next valid heading, else the first valid one behind it, else 0; then averages each heading with its predecessor through the 12-bit average at 0x801F35B0 into the record heading at +0x14, seeding record 0 with heading 0 and record 31 with heading 0x1E; it returns nothing and keeps a 0x58-byte frame.'
   - - 1624
     - asm
     - func_801F3258

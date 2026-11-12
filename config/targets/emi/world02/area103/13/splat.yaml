@@ -81,8 +81,10 @@ segments:
     - '@source: src/bof3/world/initializeWorkFieldsAndAdvanceWorkByte2World02Area10313_801F3C14.c'
     - '@behavior: clears work-record byte 0x09, seeds the fixed-point position pair 0x570000/0x140000 at words 0x34/0x38 with halfword 0xFF00 at 0x3E and 0 at 0x32, clears byte 0x0B, then advances the byte-2 dispatch step.'
   - - 4204
-    - asm
-    - func_801F3C6C
+    - c
+    - seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgress0cThenDrawFourBlocksWorld02Area10313_801F3C6C
+    - '@source: src/bof3/world/seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgress0cThenDrawFourBlocksWorld02Area10313_801F3C6C.c'
+    - '@behavior: once the shared scenario progress byte at 0x80146864 reads 0x0C, increments the work record''s byte-2 dispatch step, raises the shared overlay state byte 0x8014933B to 0x23 and seeds the front-end record row returned by func_8019601C with occupancy 1 at byte 0, handler selector 0x18 at byte 5, entry state 0x17 at byte 1 and 0x0A at byte 2, then every frame drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five and always runs func_801F49A0 twice and the four-block drawer func_801F482C.'
   - - 4456
     - asm
     - func_801F3D68
