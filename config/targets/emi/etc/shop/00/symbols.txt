@@ -138,6 +138,7 @@ drawShopPanelRowThenStepSaveCursorAndAcceptOrCancel = 0x801D4E74;
 drawShopPanelRowThenAcceptOrCancel = 0x801D50C0;
 drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard = 0x801D51B8;
 func_801D5390 = 0x801D5390;
+drawShopPanelByActionIdThenArmUiSubstepOnPadOrTimer = 0x801D543C;
 drawShopPanelRowThenArmAcceptTransition = 0x801D5790;
 drawShopValuePanelThenAcceptOrCancelSelection = 0x801D5AD0;
 drawShopValuePanelThenArmAcceptTransition = 0x801D5BB0;

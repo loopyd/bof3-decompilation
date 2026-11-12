@@ -20,6 +20,7 @@ sources = [
     "src/bof3/scenario/runPrimaryState4SubstateSequenceScenarioScena1100_801F7F08.c",
     "src/bof3/scenario/applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4.c",
     "src/bof3/scenario/runPrimaryState1SubstateSequenceScenarioScena1100_801F778C.c",
+    "src/bof3/scenario/runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",
@@ -113,3 +114,13 @@ function = 0x801F778C
 section = ".rodata"
 address = 0x801F6C64
 size = 0xF4
+
+# The sub-state switch of the primary-state 6 handler at 0x801F8B84 dispatches
+# through the forty-nine-word table the overlay keeps at 0x801F6F24 in its
+# leading table data; psyq gcc emits a switch table as .rodata, so this row
+# gives the comparator the payload address and size of that table.
+[[matching.section_placements]]
+function = 0x801F8B84
+section = ".rodata"
+address = 0x801F6F24
+size = 0xC4

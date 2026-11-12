@@ -173,8 +173,10 @@ segments:
     - asm
     - func_801FBF18
   - - 21416
-    - asm
-    - func_801FBFA8
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperAndPublishPartyIdsScenarioScena1400_801FBFA8
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperAndPublishPartyIdsScenarioScena1400_801FBFA8.c'
+    - '@behavior: Overlay per-record callback (entry 13 of the twenty-two-word callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC49C holds this address, its only image word, so the overlay selects this entry for the record kind 0x0D). It re-arms the three-entry overlay effect group for ids 0, 1 and 5 through func_80166E88(0, 1, 5, 0), clears the shared live-local work-record count byte D_80146254, runs the per-id effect teardown func_801C187C for ids 0, 1 and 5 in that order, invokes the no-argument helper func_801C1630, and then publishes three literal party ids by storing 7, 8 and 5 into the consecutive shared bytes D_80144F5D, D_80144F5E and D_80144F5F, slots 3, 4 and 5 of the six-byte party-id list at D_80144F5A. It ignores the record pointer and second argument its dispatcher passes, reads no memory of its own, writes only those four bytes, and its 0x18-byte frame only keeps $ra at 0x10 across the five calls. Its statement order and operand forms are those of the exact neighbour armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC020, whose shorter body differs in the arm and teardown immediates alone; this body carries its own 0, 1 and 5 where that one carries 7, 2 and 6, and adds the three tail stores. No extracted payload holds a byte-identical copy of this 120-byte span.'
   - - 21536
     - c
     - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC020

@@ -170,6 +170,7 @@ sources = [
     "src/bof3/ui/drawShopSortOptionPanel.c",
     "src/bof3/ui/drawShopSlotListThenStepSlotCursorAndAcceptOrCancel.c",
     "src/bof3/ui/drawShopSlotListThenStepRowCursorAndAcceptOrCancel.c",
+    "src/bof3/ui/drawShopPanelByActionIdThenArmUiSubstepOnPadOrTimer.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
@@ -185,6 +186,12 @@ function = 0x801D3828
 section = ".rodata"
 address = 0x801D0C04
 size = 0x18
+
+[[matching.section_placements]]
+function = 0x801D543C
+section = ".rodata"
+address = 0x801D0C3C
+size = 0x2C
 
 [[matching.section_placements]]
 function = 0x801D5E88

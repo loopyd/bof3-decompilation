@@ -27,6 +27,7 @@ sources = [
     "src/bof3/bmagic/seedWorkObjectFromBattleRecordStoreKindCodeClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerRaiseFlag40AdvanceQueueCountCopyTwo16HalfwordBandsSetPaletteSerial80145988BmagicMagic00800_801EFD90.c",
     "src/bof3/bmagic/invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1384.c",
     "src/bof3/bmagic/invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1804.c",
+    "src/bof3/bmagic/seedWorkObjectFromBattleRecordThenClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerRaiseFlag40AndInvokeHelperAt100BmagicMagic00800_801EED5C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c",
