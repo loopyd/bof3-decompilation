@@ -219,6 +219,10 @@ is the decoded byte count.
 | `PL257.EMI` | 71680 | 328837 | 406900 | `0f2d7c069e65a7c7ad6c3e798a707bfb129c0885b28736e5e7cc304660ee298b` |
 | `PL278.EMI` | 73728 | 312757 | 392820 | `263581239eac67a6c611e7c3fc2aa59aae111a1e3bbbed02bd79383d454a61f2` |
 | `PL012.EMI` | 73728 | 292491 | 360412 | `934d31899d96e8110cab9a4544c4891a5c1705a4efc9bea247241ded1899ebc8` |
+| `PL457.EMI` | 71680 | 284731 | 344824 | `ee268e24edccaf3ada151d42ad718a261dcc0b88d16498bb647aad01f5804a0e` |
+| `PL578.EMI` | 75776 | 270419 | 329248 | `6e4ac6e56a9b114d229f63b36051f7a9c0dc769b90a93d12770c6cc4f139ccce` |
+| `PL478.EMI` | 73728 | 268792 | 330744 | `23ed7ca1e3ab1711d3c43f508d9de4fb5073055a38803af9b9b763f1dd717d5a` |
+| `PL267.EMI` | 67584 | 258331 | 337364 | `27fcef3a95f29736d7db0a280fcbcf0f11647b0e58c2ffb9493e0cc1f1346e80` |
 
 The original family-0 requests bind each archive to the following file slot and
 IDs. GAME uses these IDs to select a root through the same conditional
@@ -232,6 +236,10 @@ reviewed mode-1 and mode-2 image encodings.
 | `PL257.EMI` | 8 | 626 | `[2,5,7]` | 93 |
 | `PL278.EMI` | 10 | 628 | `[2,7,8]` | 92 |
 | `PL012.EMI` | 0 | 618 | `[0,1,2]` | 102 |
+| `PL457.EMI` | 13 | 631 | `[4,5,7]` | 84 |
+| `PL578.EMI` | 17 | 635 | `[5,7,8]` | 88 |
+| `PL478.EMI` | 15 | 633 | `[4,7,8]` | 83 |
+| `PL267.EMI` | 9 | 627 | `[2,6,7]` | 84 |
 
 The profiles classify root-relative words, image-directory words, image headers
 and consumed encoded words or tokens. The complete compression walk includes a
@@ -1172,6 +1180,7 @@ original calls at `0x80154F94` and `0x80154FA4` reach the other two bodies.
 | --- | --- | ---: |
 | `[780988,782032)` | `[0x80154ABC,0x80154ED0)` | 1044 |
 | `[782032,782120)` | `[0x80154ED0,0x80154F28)` | 88 |
+| `[782120,782200)` | `[0x80154F28,0x80154F78)` | 80 |
 | `[782200,782296)` | `[0x80154F78,0x80154FD8)` | 96 |
 
 All aligned words, control transfers and delay slots reconcile with closed
@@ -1180,7 +1189,19 @@ endpoint RAM. The rule assumes ordinary calls and returns, writable disjoint
 frames, preserved saved registers and return storage, and stable code. It
 qualifies instruction representation without establishing a matching ELF,
 execution of every word, argument or resource safety, rendering or safe editing.
-The intervening body at `0x80154F28..0x80154F78` remains outside this rule.
+The separate original GAME caller `0x801C2538..0x801C2710` qualifies its
+complete 472-byte instruction body at archive offsets `[185656,186128)`.
+Its original call at `0x801C24D8` and retained execution inside the body with
+return address `0x801C24E0` bind this instruction representation. Coverage
+requires the exact original archive and entry-0 raw payload identity, load
+address `0x80195800`, checkword `0x1E` and payload size 229720.
+
+After an ordinary return from `0x80154F78`, a nonzero scratch-byte test in this
+caller conditionally reaches `JAL 0x80154F28` at `0x801C26A0`. This qualifies
+the additional 80-byte wrapper without proving its execution. The review covers
+all words, branches, calls, terminal BREAK guards, returns and delay slots in
+both bodies. Actual state-0 invocation, actor setup correctness, sampler
+semantics and resource safety remain unqualified.
 
 ## Guarded executable switch coverage
 
@@ -1292,9 +1313,17 @@ an editable layout.
 In `CAPCOM30.STR`, the original LOGO reader at `0x801D29B4` and `0x801D29C8`
 checks a packet marker and type at the start of each video sector's user payload.
 The CD mode and DMA path at `0x801D28A4` bind that reader to the user-payload
-start. Coverage identifies only `[2336*s+8, 2336*s+12)` as packet metadata when
+start. Coverage identifies `[2336*s+8, 2336*s+12)` as packet metadata when
 the Form 1 video subheader and exact `60 01 01 80` marker/type bytes match.
-The remaining packet header stays unresolved.
+
+Under the same source and packet gates, coverage identifies numeric packet
+index/count words and a frame ID at `[2336*s+12, 2336*s+20)`. Original LOGO
+reads at `0x801D2AF8`, `0x801D2E04` and `0x801D2E08` consume the two u16
+words; `0x801D2E10` compares the index with count minus one. Paired-header
+reads at `0x801CEA58` and `0x801CEAF4` consume the complete u32 frame ID.
+The other packets in each frame carry exact copies of that ID. Existing
+index, count and frame checks remain required. Header bytes `[20,40)` within
+each sector stay unresolved; their values do not establish coded length.
 
 Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 221.
 Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
@@ -1318,7 +1347,7 @@ Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
 Form 1 user payloads outside the reviewed empty payloads, packet marker/type
-fields and reviewed coded prefixes remain unresolved.
+and numeric fields, and reviewed coded prefixes remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 
