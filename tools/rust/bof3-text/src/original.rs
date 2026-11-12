@@ -1249,14 +1249,16 @@ pub fn payload_nontext_ranges(
         {
             Some([
                 (0x15f54, 124),
+                (0x15fd0, 116),
                 (0x16044, 44),
                 (0x16070, 196),
+                (0x16134, 48),
             ]
             .into_iter()
             .map(|(offset, length)| NontextRange {
                 offset,
                 length,
-                evidence: "original US shared battle payload; complete instruction bodies 0x800AC754..0x800AC7D0, 0x800AC844..0x800AC870 and 0x800AC870..0x800AC934 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
+                evidence: "original US shared battle payload; five complete instruction bodies spanning 0x800AC754..0x800AC964 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
             })
             .collect())
         }
