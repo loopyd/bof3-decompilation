@@ -48,7 +48,7 @@ segments:
     - c
     - handleCommuEntryListInputThenDrawCommu0107_801D1158
     - '@source: src/bof3/ui/handleCommuEntryListInputThenDrawCommu0107_801D1158.c'
-    - '@behavior: handler at entry 7 of the handler run at 0x801D4BCC, the dispatch shape of the entry list handler at 0x801D1630. Reads the shared pad-state word 0x80145AA8 once: while it shares a bit with the cancel mask 0x80145AC4 it queues resident sound cue 0x106 through the shared cue dispatcher at 0x8015DF18, publishes the list row text id of 0x801448ED through publishCommuEntryTextId and closes the request through restoreSavedCommuRequestStateAndStepBack; while it shares a bit with the confirm mask 0x80145AC2 it commits the request row through commitCommuEntryRequestIntoActiveRecord with offset 0 and stores result code 0xB5 into the halfword 0x801D4E0C when the returned low byte is nonzero; when neither mask matches it moves the request row byte 0x801D4E28 through func_801D3B0C and publishes that row text id through publishCommuEntryTextIdForRow. Every path draws the entry list through func_801D3038 and draws the list row 0x801448ED with selected flag 1 and the request row 0x801D4E28 with 0 through func_801D36FC, and while nothing was committed draws the marker through func_801D3984 with selected flag 1 at 0x28 plus 8 times the signed ordinal byte 0x801D4E24 on x and 0x39 on y while the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5 on x and 0x44 plus 54 times the cursor minus 9 plus 7 times that byte divided by 5 on y, and draws the record slot cursor box at (0xA0, 0x3E) with selected flag 1 through func_801D28A4 for the slot findActiveRecordSlotByKind returns for the cursor and that byte'
+    - '@behavior: handler at entry 7 of the handler run at 0x801D4BCC, the dispatch shape of the entry list handler at 0x801D1630. Reads the shared pad-state word 0x80145AA8 once: while it shares a bit with the cancel mask 0x80145AC4 it queues resident sound cue 0x106 through the shared cue dispatcher at 0x8015DF18, publishes the list row text id of 0x801448ED through publishCommuEntryTextId and closes the request through restoreSavedCommuRequestStateAndStepBack; while it shares a bit with the confirm mask 0x80145AC2 it commits the request row through commitCommuEntryRequestIntoActiveRecord with offset 0 and stores result code 0xB5 into the halfword 0x801D4E0C when the returned low byte is nonzero; when neither mask matches it moves the request row byte 0x801D4E28 through func_801D3B0C and publishes that row text id through publishCommuEntryTextIdForRow. Every path draws the entry list through func_801D3038 and draws the list row 0x801448ED with selected flag 1 and the request row 0x801D4E28 with 0 through func_801D36FC, and while nothing was committed draws the marker through drawMarkerTriangleCommu0107_801D3984 with selected flag 1 at 0x28 plus 8 times the signed ordinal byte 0x801D4E24 on x and 0x39 on y while the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5 on x and 0x44 plus 54 times the cursor minus 9 plus 7 times that byte divided by 5 on y, and draws the record slot cursor box at (0xA0, 0x3E) with selected flag 1 through func_801D28A4 for the slot findActiveRecordSlotByKind returns for the cursor and that byte'
   - - 1832
     - c
     - dispatchByte1f294dTable4becCommu0107_801D1328
@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801D36FC
   - - 11652
-    - asm
-    - func_801D3984
+    - c
+    - drawMarkerTriangleCommu0107_801D3984
+    - '@source: src/bof3/ui/drawMarkerTriangleCommu0107_801D3984.c'
+    - '@behavior: emits one opaque flat-shaded marker triangle at the shared primitive cursor. Stamps the cursor through the POLY_F3 initialiser at 0x8017A954, writes the apex (x, y) and the base corners (x - 4, y - 4) and (x + 4, y - 4) to the halfwords at 0x08 to 0x12, writes 0 to the tint bytes at 0x04 and 0x06 with the computed green byte at 0x05, and appends the 0x14-byte primitive through func_8014E5A0 with size class 1. A nonzero selected byte forces green 0xFF; a zero byte takes bits 1 and 2 of the shared frame counter 0x80143E6C, scaled by 32 and offset by 0x3F, inverted while bit 3 of that counter is clear, so an unselected marker blinks'
   - - 11848
     - c
     - countActiveRecordsByKind

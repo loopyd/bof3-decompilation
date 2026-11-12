@@ -176,8 +176,10 @@ segments:
     - asm
     - func_801FC690
   - - 23264
-    - asm
-    - func_801FC6E0
+    - c
+    - setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC6E0
+    - '@source: src/bof3/scenario/setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC6E0.c'
+    - '@behavior: Overlay per-record callback and entry 11 (the word at 0x801FD218) of the 15-word record-callback table at 0x801FD1EC that dispatchRecordCallbackByByte7AScenarioScena1200_801FC574 selects with the record unsigned byte at offset 0x7A: it runs the shared front-end startup helper func_8015C088, requests secondary sub-state 2 in the shared sub-state byte D_80146875, clears the shared progress byte g_ScenarioProgress (0x80146864) and the shared state bytes 0x80146865, 0x80146866 and 0x80146867, then requests primary scene state 5 by storing 5 in the shared primary state byte D_80146874. It takes no arguments, ignores the record pointer and second argument its dispatcher passes, reads no other state and writes nothing else; the 0x18-byte frame only keeps $ra across the call and every byte store materialises the 0x8014 page in $at on its own. The 88 bytes keep the same statement order and operand forms as setSubstate0AClearProgressAndSharedStateBytesAndRequestPrimaryState0EScenarioScena0600_801FD170 (0x801FD170 of emi/scenario/scena06/00), whose payload span differs from this one only in the two stored constants.'
   - - 23352
     - c
     - clearSharedStateBytesThenRequestPrimaryState8ScenarioScena1200_801FC738

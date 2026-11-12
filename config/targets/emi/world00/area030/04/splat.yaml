@@ -418,8 +418,10 @@ segments:
     - '@source: src/bof3/world/func_801D6F08.c'
     - '@behavior: Seeds the menu scratch record, then stores 0x37 at cursor+0xB.'
   - - 25396
-    - asm
-    - func_801D6F34
+    - c
+    - advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34
+    - '@source: src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c'
+    - '@behavior: AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table 0x801E20C4, walking the second step-record chain at 0x801E20CC: while work byte 9 of the record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and, unless bit 7 of the stepped-from record first byte is set, runs the shared func_8014D978 helper; once the countdown expires it looks the record up through work byte 0xA, re-seeds work byte 0xA from the record count byte and seeds work byte 0xB with 0x37 and work words 0x0C/0x10 with 0x6A when the record carries the 0xFF end marker, requests the record low 7 bits through func_8014D8D4 and, for request id 9, claims a front-end entry record through the shared allocator func_8019601c and seeds that row with flags 1, handler selector 0x1A, bytes 1..3 0x10/2/2 and halfwords 0xF2/0x9E at 0x2E/0x30 unless the claimed index is 0xFF, then arms work byte 9 from the record count byte and advances work byte 0xA; it integrates the stepped-from record into work words 0x0C/0x10 and byte 6, passes the sign of the record fourth byte to func_801D6B28, and on every sixteenth frame with a positive fourth byte advances work byte 0xB, clamps it to 0x3C and submits it through the %2d format 0x801D0C04 in the shared 0x80145AD4 buffer at (0xAC, 0xB0) through func_8014FF0C with mode 2 while frame-counter bit 2 is set.'
   - - 26340
     - asm
     - func_801D72E4

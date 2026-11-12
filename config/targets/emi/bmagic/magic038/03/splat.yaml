@@ -71,8 +71,10 @@ segments:
     - dispatchStateByte2Tablef9d0BmagicMagic03803_801EF8B8
     - '@source: src/bof3/bmagic/magic03803DispatchTables.c'
   - - 3324
-    - asm
-    - func_801EF8FC
+    - c
+    - invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic03803_801EF8FC
+    - '@source: src/bof3/bmagic/invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic03803_801EF8FC.c'
+    - '@behavior: First step handler of this overlay two-entry work state-byte-2 handler table at 0x801EF9D0 (its first word; 0x801EF8B8 indexes that table with the work record byte 2): reads the scratchpad work record through pointer cell 0x1F800044 once, passes its unsigned byte 4 as the first argument and its unsigned byte 3 as the second to the battle helper at 0x800AEEC8, then stores 1 in the record byte 0xB and increments the unsigned state byte at offset 2 to advance the dispatcher to the second entry at 0x801EF954; takes no arguments and returns nothing.'
   - - 3412
     - asm
     - func_801EF954

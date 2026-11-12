@@ -10,6 +10,6 @@ func_801EF590 = 0x801EF590;
 func_801EF710 = 0x801EF710;
 decrementGlobalWorkByteBAndInvokeHelperBmagicMagic03803_801EF884 = 0x801EF884;
 dispatchStateByte2Tablef9d0BmagicMagic03803_801EF8B8 = 0x801EF8B8;
-func_801EF8FC = 0x801EF8FC;
+invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic03803_801EF8FC = 0x801EF8FC;
 func_801EF954 = 0x801EF954;
 D_801EF9A4 = 0x801EF9A4;

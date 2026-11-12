@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/clearTwoIndexedRecordFlagBitsThenInvokeHelperTwiceThenHelperScenarioScena0200_801FE1C0.c",
     "src/bof3/scenario/queueCue20BAndRequestPrimaryState1ASubstate1EOnModeCellMatchScenarioScena0200_801FC9CC.c",
     "src/bof3/scenario/runFrontEndStartupSetProgress23AndRequestPrimaryState1AOnModeCellMatchScenarioScena0200_801FC7E4.c",
+    "src/bof3/scenario/setScenarioFlagBit23QueueCue106AndReturnHandler0OnSubstate0ScenarioScena0200_801FB300.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",

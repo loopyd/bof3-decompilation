@@ -13,7 +13,7 @@ extern u32 D_80143E6C;
 
 void func_801F4E70(u32 variant);
 void func_801F49A0(u32 pass);
-void func_801F482C(void);
+void drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C(void);
 
 /* @source 0x801F3F60
  * @behavior Overlay step handler, entry 5 of the work-byte-2 handler table at
@@ -29,7 +29,8 @@ void func_801F482C(void);
  *           re-reads the shared counter and, when it is a multiple of five,
  *           drives the block drawer func_801F4E70 with the four-way variant
  *           (counter / 5) & 3, and ends with func_801F49A0(0),
- *           func_801F49A0(1) and the four-block drawer func_801F482C, which
+ *           func_801F49A0(1) and the four-block drawer
+ *           drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C, which
  *           emits four SetDrawMove blocks anchored on the record's fixed-point
  *           x/y pair at 0x34/0x38. Takes no arguments, returns nothing and uses
  *           a 0x18-byte frame that holds only the saved return address at 0x10.
@@ -59,5 +60,5 @@ void advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorl
   }
   func_801F49A0(0);
   func_801F49A0(1);
-  func_801F482C();
+  drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C();
 }

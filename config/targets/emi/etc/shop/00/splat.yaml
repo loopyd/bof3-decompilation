@@ -390,13 +390,15 @@ segments:
     - '@source: src/bof3/ui/emitFlatLineRectangleBorder.c'
     - '@behavior: flat-line rectangle border emitter: builds the three-byte colour-channel mask of the emitted border from the low three bits of the sixth argument, each set bit selecting the flat colour and each clear bit black, where the flat colour is 0x3F | (((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5) when the fifth argument is set and 0xFF when it is zero; it then draws an open three-point flat line from (x+4, y) to (x, y+4) to (x, y+h-1) through SetLineF3 and the closed four-corner border (x+4, y), (x+w-1, y), (x+w-1, y+h-1), (x, y+h-1) through SetLineF4, queueing each 0x18/0x1C-byte primitive from the shared primitive cursor through appendRenderPrim(1, size).'
   - - 33728
-    - asm
-    - func_801D8FC0
+    - c
+    - emitShopIconSprite
+    - '@source: src/bof3/ui/emitShopIconSprite.c'
+    - '@behavior: shop icon sprite emitter reached from the shop icon wrapper func_801D910C with two coordinates, an icon kind byte and a mode byte: it picks the draw-mode texture page from GetGraphType (0x2E when the first query answers 1, 0x2E when a second query answers 2, 0x1E otherwise), arms SetDrawMode at g_PrimCursor with dithering enabled, no texture disable and no texture window, appends that 0xC-byte draw-mode packet at ordering-table slot 1, initialises the 0x14-byte SPRT packet at the advanced cursor through SetSprt, picks its three colour bytes from the mode byte (0 makes all three 0x80, 1 makes them 0x30, any other value gives 0x40/0x40/0x80), stores the two coordinates at 0x8 and 0xA, takes the entry of the 4-byte-stride icon tile table D_801E5850 that the kind byte indexes for the texture byte pair at 0xC/0xD, fixes a 0x28 by 0x30 size, assembles the clut word at 0xE as ((clutY + 0x1E0) << 6) | (clutX >> 4) from the last two bytes of that entry and appends the sprite at slot 1 as a 0x14-byte primitive.'
   - - 34060
     - c
     - func_801D910C
     - '@source: src/bof3/ui/func_801D910C_shop00.c'
-    - '@behavior: shop icon wrapper: when the kind byte arg2 equals 4 and the signed main-RAM byte D_80146870 is at least 8, substitutes the kind 0xB; then forwards the two zero-extended u16 coordinates, the kind byte and the mode byte arg3 to the shop icon emitter func_801D8FC0.'
+    - '@behavior: shop icon wrapper: when the kind byte arg2 equals 4 and the signed main-RAM byte D_80146870 is at least 8, substitutes the kind 0xB; then forwards the two zero-extended u16 coordinates, the kind byte and the mode byte arg3 to the shop icon sprite emitter emitShopIconSprite.'
   - - 34144
     - c
     - drawSpritePrimTpageFromAbrShop00_801D9160

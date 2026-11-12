@@ -182,8 +182,10 @@ segments:
     - asm
     - func_801FB464
   - - 20020
-    - asm
-    - func_801FBA34
+    - c
+    - requestPrimaryState8Substate0OnRoute8FPackedRangesOrSetFlagBit10OnRoute91PackedRangeScenarioScena1300_801FBA34
+    - '@source: src/bof3/scenario/requestPrimaryState8Substate0OnRoute8FPackedRangesOrSetFlagBit10OnRoute91PackedRangeScenarioScena1300_801FBA34.c'
+    - '@behavior: Event handler reached only from a table word: no in-image jal names the address, its single image word is the word at 0x801FBF40 (payload offset 0x5340), entry 3 of the null-terminated four-entry code-pointer run at 0x801FBF34 whose base is published in emi/etc/game/00 at 0x801C8488. It takes the two packed record words and saves them in $s0 and $s1. With the shared route halfword D_80143F00 at 0x8F, the shared byte D_80143F03 at 0 and scenario flag bit 0x1C of the shared flag word D_8014686C set while bit 0x1D is clear, it requires the first record word high half to equal 0x2E and the second word high half to fall in 0x1F..0x22, then runs the shared front-end startup helper func_8015C088, requests primary scene state 8 with sub-state 0 through the shared state bytes D_80146874 and D_80146875 and answers 1. With the route halfword at 0x91, D_80143F03 at 5 and flag bit 0xA clear, it requires the first word high half to fall in 0x40..0x41 and the second to equal 0x6A, then sets that bit through func_8015B580(D_8014686C, 0xA), cues func_8015507C(0x40, 0x6B) and answers 0.'
   - - 20344
     - c
     - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78

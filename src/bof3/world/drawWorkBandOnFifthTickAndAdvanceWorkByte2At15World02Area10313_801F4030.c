@@ -21,7 +21,7 @@ void func_801F4E70(u32 variant);
 
 /* Drawing pass at 0x801F49A0, still unlifted assembly inside this target; the
  * sibling step handlers run it with pass 0 and pass 1 before the closing
- * drawer func_801F482C. */
+ * drawer drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C. */
 void func_801F49A0(u32 pass);
 
 /* @source 0x801F4030

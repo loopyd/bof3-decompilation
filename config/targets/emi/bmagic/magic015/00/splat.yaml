@@ -172,8 +172,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkWordsAndCopyRecordByte27ThenAdvanceWorkByte2BmagicMagic01500_801F0D48.c'
     - '@behavior: Overlay handler seed: writes the scratchpad work object at the pointer cell 0x1F800044 word 0x14 = 0x80, word 0x20 = -0x10, byte 0x27 = byte 0x27 of the shared battle work record read through 0x801EB4E0, byte 9 = 0x14 and byte 0xA = 7, then advances work byte 2 with a byte-width read-modify-write whose store sits in the return delay slot. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 8628
-    - asm
-    - func_801F0DB4
+    - c
+    - callAF4A0With3800DecrementWorkByte9AddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownByteAThenAdvanceWorkByte2BmagicMagic01500_801F0DB4
+    - '@source: src/bof3/bmagic/callAF4A0With3800DecrementWorkByte9AddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownByteAThenAdvanceWorkByte2BmagicMagic01500_801F0DB4.c'
+    - '@behavior: Entry 33 of the overlay handler code-pointer run that starts at 0x801EEC04, the word the tabledata segment stores at 0x801EEC88: it passes the shared battle record read through the pointer cell 0x8014638C with 0x3800 and a zero third argument to helper 0x800AF4A0, then decrements scratchpad work byte 9 and adds work word 0x20 to work word 0x14, accumulating the updated word 0x14 into work halfword 0x3E, then decrements work byte 0xA and advances work byte 2, the handler index, when that byte reaches zero. The cell at 0x1F800044 is re-read before the byte 0xA group and again before the byte 2 advance because a store through the loaded pointer may alias it. No jal word in the payload targets 0x801F0DB4, so the caller that selects this table entry lies outside the overlay.'
   - - 8788
     - asm
     - func_801F0E54

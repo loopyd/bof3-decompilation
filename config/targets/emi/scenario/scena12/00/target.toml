@@ -44,5 +44,6 @@ support_sources = [
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState8ScenarioScena1200_801FC738.c",
     "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState4ScenarioScena1200_801FC640.c",
     "src/bof3/scenario/setSubstate1EClearSharedStateBytesAndRequestPrimaryState8ScenarioScena1200_801FC784.c",
+    "src/bof3/scenario/setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC6E0.c",
 ]
 psyq_source = "src/bof3/support/scena12_00_psyq.c"

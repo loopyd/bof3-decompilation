@@ -111,8 +111,8 @@ segments:
     - c
     - noopHandlerScenarioScena0200_801FB2F8
   - - 18176
-    - asm
-    - func_801FB300
+    - c
+    - setScenarioFlagBit23QueueCue106AndReturnHandler0OnSubstate0ScenarioScena0200_801FB300
   - - 18284
     - asm
     - func_801FB36C

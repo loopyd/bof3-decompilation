@@ -26,7 +26,7 @@ extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
 extern void func_801D3B0C(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
-extern void func_801D3984(s16 x, s16 y, s32 selected);
+extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
 extern void func_801D28A4(s16 x, s16 y, u8 slot, s32 selected);
 void publishCommuEntryTextId(void);
 void publishCommuEntryTextIdForRow(u8 *rowPtr);
@@ -50,8 +50,9 @@ u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * request row 0x801D4E28 with 0 through func_801D36FC, and when no commit
  * happened computes the slot origin of the list row kind at ordinal 0x801D4E24
  * through computeKindSlotOrigin, draws the marker at that origin advanced by 4
- * on x with the selected flag 1 through func_801D3984, and draws the record slot
- * cursor box at (0xA0, 0x3E) with the selected flag 1 through func_801D28A4 for
+ * on x with the selected flag 1 through drawMarkerTriangleCommu0107_801D3984,
+ * and draws the record slot cursor box at (0xA0, 0x3E) with the selected flag 1
+ * through func_801D28A4 for
  * the slot findActiveRecordSlotByKind returns for that kind and ordinal minus
  * one. No state other than the result halfword, the request row byte, the list
  * row cursor and the callee cells is written.
@@ -87,7 +88,7 @@ void handleCommuEntryListInputThenDraw(void) {
   func_801D36FC(D_801D4E28, 0);
   if ((committed & 0xFF) == 0) {
     computeKindSlotOrigin(&x, &y, *row, D_801D4E24);
-    func_801D3984(x + 4, y, 1);
+    drawMarkerTriangleCommu0107_801D3984(x + 4, y, 1);
     func_801D28A4(0xA0, 0x3E, findActiveRecordSlotByKind(*row, D_801D4E24 - 1),
                   1);
   }

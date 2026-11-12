@@ -31,6 +31,7 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAD68.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState5ScenarioScena1100_801FA6C0.c",
+    "src/bof3/scenario/setSubstate0AClearSharedStateBytesAndRequestPrimaryState3ScenarioScena1100_801FA70C.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState6ScenarioScena1100_801FA75C.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState7ScenarioScena1100_801FA7A8.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState9ScenarioScena1100_801FA7F4.c",

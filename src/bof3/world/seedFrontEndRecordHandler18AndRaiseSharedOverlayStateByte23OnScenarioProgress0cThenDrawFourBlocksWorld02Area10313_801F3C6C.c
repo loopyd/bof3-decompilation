@@ -54,7 +54,7 @@ extern u8 func_8019601C(void);
 
 void func_801F4E70(u32 variant);
 void func_801F49A0(u32 pass);
-void func_801F482C(void);
+void drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C(void);
 
 /* @source 0x801F3C6C
  * @behavior Overlay step handler, entry 1 of the work-byte-2 handler table at
@@ -69,7 +69,8 @@ void func_801F482C(void);
  *           counter at 0x80143E6C and, when the counter is a multiple of five,
  *           calls the block drawer func_801F4E70 with the four-way variant
  *           (counter / 5) & 3, and always ends with func_801F49A0(0),
- *           func_801F49A0(1) and the four-block drawer func_801F482C. Takes no
+ *           func_801F49A0(1) and the four-block drawer
+ *           drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C. Takes no
  *           arguments, returns nothing and uses a 0x18-byte frame that holds
  *           only the saved return address at 0x10. The roles of record bytes 1
  *           and 2, of the 0x23 state value and of the three callees beyond their
@@ -119,5 +120,5 @@ void seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgre
   }
   func_801F49A0(0);
   func_801F49A0(1);
-  func_801F482C();
+  drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C();
 }

@@ -84,7 +84,7 @@ segments:
     - c
     - seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgress0cThenDrawFourBlocksWorld02Area10313_801F3C6C
     - '@source: src/bof3/world/seedFrontEndRecordHandler18AndRaiseSharedOverlayStateByte23OnScenarioProgress0cThenDrawFourBlocksWorld02Area10313_801F3C6C.c'
-    - '@behavior: once the shared scenario progress byte at 0x80146864 reads 0x0C, increments the work record''s byte-2 dispatch step, raises the shared overlay state byte 0x8014933B to 0x23 and seeds the front-end record row returned by func_8019601C with occupancy 1 at byte 0, handler selector 0x18 at byte 5, entry state 0x17 at byte 1 and 0x0A at byte 2, then every frame drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five and always runs func_801F49A0 twice and the four-block drawer func_801F482C.'
+    - '@behavior: once the shared scenario progress byte at 0x80146864 reads 0x0C, increments the work record''s byte-2 dispatch step, raises the shared overlay state byte 0x8014933B to 0x23 and seeds the front-end record row returned by func_8019601C with occupancy 1 at byte 0, handler selector 0x18 at byte 5, entry state 0x17 at byte 1 and 0x0A at byte 2, then every frame drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five and always runs func_801F49A0 twice and the four-block drawer drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.'
   - - 4456
     - asm
     - func_801F3D68
@@ -92,17 +92,17 @@ segments:
     - c
     - rampWorkYPositionDrawOnFifthTickAndAdvanceWorkByte2At19World02Area10313_801F3E10
     - '@source: src/bof3/world/rampWorkYPositionDrawOnFifthTickAndAdvanceWorkByte2At19World02Area10313_801F3E10.c'
-    - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x1000 while the signed halfword at 0x3A stays below 0x19 and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer func_801F482C.'
+    - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x1000 while the signed halfword at 0x3A stays below 0x19 and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.'
   - - 4788
     - c
     - rampWorkXyPositionDrawOnFifthTickAndAdvanceWorkByte2At1cWorld02Area10313_801F3EB4
     - '@source: src/bof3/world/rampWorkXyPositionDrawOnFifthTickAndAdvanceWorkByte2At1cWorld02Area10313_801F3EB4.c'
-    - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x800 and retreats its x word at 0x34 by 0x800 while the signed halfword at 0x3A stays below 0x1C and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer func_801F482C.'
+    - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x800 and retreats its x word at 0x34 by 0x800 while the signed halfword at 0x3A stays below 0x1C and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.'
   - - 4960
     - c
     - advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Area10313_801F3F60
     - '@source: src/bof3/world/advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Area10313_801F3F60.c'
-    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and watches the signed halfword at 0x36, the upper half of the fixed-point x word at 0x34: while that halfword stays below 0x4F it advances work byte 0x02 by one on every frame whose shared counter 0x80143E6C satisfies ((counter / 5) & 3) == 3, and once the halfword has reached 0x4F it retreats the x word at 0x34 by 0x1000 per frame; it then drives the block drawer func_801F4E70 with (counter / 5) & 3 when the counter is a multiple of five and ends with func_801F49A0(0), func_801F49A0(1) and the four-block drawer func_801F482C.'
+    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and watches the signed halfword at 0x36, the upper half of the fixed-point x word at 0x34: while that halfword stays below 0x4F it advances work byte 0x02 by one on every frame whose shared counter 0x80143E6C satisfies ((counter / 5) & 3) == 3, and once the halfword has reached 0x4F it retreats the x word at 0x34 by 0x1000 per frame; it then drives the block drawer func_801F4E70 with (counter / 5) & 3 when the counter is a multiple of five and ends with func_801F49A0(0), func_801F49A0(1) and the four-block drawer drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.'
   - - 5168
     - c
     - drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030
@@ -146,8 +146,10 @@ segments:
     - '@source: src/bof3/world/requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C.c'
     - '@behavior: overlay step handler, entry 15 of the work-byte-2 handler table at 0x801F5954 and entry 18 of the work-byte-1 handler table at 0x801F5948; it reads the work record through the scratchpad pointer cell 0x1F800044, forms the band index (byte 0x09 / 5) and, once that index stands at 4, hands the shared request helper func_80155218 the pair (0x43, 0x1A), calls the shared helper func_80196070 and returns without advancing byte 0x09; every lower band hands the block drawer func_801F4E70 the variant 7 minus the band index on each tick whose byte 0x09 is a multiple of five and then advances byte 0x09 through a fresh cell read.'
   - - 7212
-    - asm
-    - func_801F482C
+    - c
+    - drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C
+    - '@source: src/bof3/world/drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.c'
+    - '@behavior: draws the four-block backdrop that every closing drawing pass of this overlay runs; it reads the work record through the scratchpad pointer cell 0x1F800044 and turns the record''s fixed-point position words 0x34 and 0x38 into the two split sizes the blocks are cut with, the width being the low five bits of the integer x coordinate flipped about 0x10 and halved and the height the low five bits of the integer y coordinate; four blocks then partition a 0x10-wide by 0x20-high area at the split point, each handed to the LIBGPU draw-area mover SetDrawMove with the primitive published at g_PrimCursor and the fixed draw-area origins (0x270 - width, 0x120 - height), (0x260, 0x120 - height), (0x270 - width, 0x100) and (0x260, 0x100), and each 0x18-byte packet is queued through func_8014E5A0(6, 0x18).'
   - - 7584
     - asm
     - func_801F49A0
