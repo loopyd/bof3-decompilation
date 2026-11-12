@@ -165,6 +165,13 @@ The 32-byte `CdFlush` wrapper at file offsets `[9700,9732)`, runtime
 `0x801D141C`. The original caller and call/return boundaries qualify the wrapper;
 its callee remains unresolved.
 
+The 52-byte `CdComstr` body at file offsets `[9756,9808)`, runtime
+`[0x801CFE1C,0x801CFE50)`, matches `libcd.a` member `s_010.o` after all five
+relocations. Both branches join at its return and delay slot. This extent
+excludes twelve trailing SDK section-padding bytes; the SDK symbol has no
+function type or size. No direct caller is identified in LOGO. The referenced
+table, fallback string and preceding `CdSetDebug` gap remain unresolved.
+
 The same exact identity qualifies the 32-byte `CdMix` wrapper at file offsets
 `[10908,10940)`, runtime `[0x801D029C,0x801D02BC)`. Its complete SDK executable
 section from `libcd.a` member `s_020.o` matches after relocating its call to
@@ -1307,11 +1314,16 @@ Each numeric edit moves the digits by one eight-pixel glyph cell. Replacing
 
 A separate fixture sets the EXP pool to 30 and verifies the original Whelp
 preview at level 3 with gains of 5 HP, 1 AP, 2 Power, 1 Defense, 2 Agility and
-3 Intelligence. This preview stops before the game updates the stored level and
-stats. A controlled list containing one Green Apple entry with count 2 verifies
-the original name and quantity display. Ordinary reward availability, edited
-level-gain and item rendering, level and stat updates, inventory grant, normal
-cleanup and other battle-results text remain unverified.
+3 Intelligence. Changing the plural HP label from `H` to `L` changes only that
+glyph; all other screen pixels remain identical. The identical BATTLE entry 11
+and BOSS001 entry 8 bank copies leave the active supplier ambiguous.
+
+A controlled list containing one item with count 2 verifies the original Green
+Apple display and an edit to Brown Apple. Changing `*%2d` to `*%d`
+removes the space and moves the quantity digit eight pixels left; the star stays
+fixed. These previews stop before stored level and stat updates or inventory
+grant. Ordinary reward availability, normal cleanup and other battle-results
+text remain unverified.
 
 ## Bank layout
 

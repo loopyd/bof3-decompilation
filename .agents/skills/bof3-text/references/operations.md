@@ -285,10 +285,11 @@ retains an argument in 1..256 and at most three output bytes before NUL. The two
 `%d` formats reach `0x8014F800` through bank command `0x07` and 32-byte dynamic
 buffers. Runtime observations cover width edits for remaining EXP, next level
 and current money, plus an edit to the currency glyph, in a controlled fixture
-with zero rewards. Setting the EXP pool to 30 also verifies the original preview
-at level 3 with all six stat deltas. An original item preview shows Green Apple
-with count 2. Ordinary reward availability, edited level-gain and item rendering,
-level and stat updates, inventory grant and normal cleanup remain unverified.
+with zero rewards. Controlled EXP-pool and item-list fixtures also verify the
+level-3 stat preview, an edited stat label, an item name edit and the
+item-count format. These previews stop before stored level and stat updates or
+inventory grant. Ordinary reward availability, normal cleanup and other
+battle-results text remain unverified.
 See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
 
 The results ingress tests rising input at `0x80145AA8`; display waits test held

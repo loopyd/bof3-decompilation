@@ -74,6 +74,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
                 evidence: "original US LOGO 0x801CFDE4..0x801CFE04; complete CdFlush wrapper from PsyQ libcd.a s_008.o executable section with CD_flush relocation to 0x801D141C; original caller at 0x801D1E84 and reviewed call/return boundaries; exact executable identity; no runtime execution or callee classification claim",
             },
             NontextRange {
+                offset: 9756,
+                length: 52,
+                evidence: "original US LOGO 0x801CFE1C..0x801CFE50; complete CdComstr instruction body from PsyQ libcd.a s_010.o after all five table/local-text/rdata relocations; reviewed branches join at return and delay slot; SDK text padding excluded; exact executable identity; no runtime execution, table/string classification or complete indirect-reference claim",
+            },
+            NontextRange {
                 offset: 10908,
                 length: 32,
                 evidence: "original US LOGO 0x801D029C..0x801D02BC; complete PsyQ libcd.a s_020.o executable section with CD_vol relocation to 0x801D1394; original typed callers at 0x801CED74 and 0x801CEDD0; exact executable identity; no runtime execution or complete callee claim",
