@@ -1,18 +1,18 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "2695b81650e0f055d8553f5b3fd4852291df01fc",
-  "published_at": "2026-11-12T21:33:51.045235+00:00",
+  "revision": "52ca36a9a891bd3ea11a094b80e68c06b1eb14c7",
+  "published_at": "2026-11-12T21:42:00.873521+00:00",
   "counts": {
     "completed": 5633,
-    "partial": 391,
-    "unlifted": 4531,
+    "partial": 394,
+    "unlifted": 4528,
     "invalid": 0,
     "total": 10555,
     "symbols": {
-      "named": 68269,
-      "raw": 55529,
-      "total": 123798
+      "named": 68272,
+      "raw": 55527,
+      "total": 123799
     }
   },
   "targets": [
@@ -176,13 +176,13 @@
       "archive": "magic008",
       "entry": "00",
       "completed": 47,
-      "partial": 1,
-      "unlifted": 17,
+      "partial": 2,
+      "unlifted": 16,
       "invalid": 0,
       "total": 65,
       "symbols": {
-        "named": 208,
-        "raw": 141,
+        "named": 209,
+        "raw": 140,
         "total": 349
       }
     },
@@ -2964,14 +2964,14 @@
       "archive": "shop",
       "entry": "00",
       "completed": 187,
-      "partial": 13,
-      "unlifted": 31,
+      "partial": 14,
+      "unlifted": 30,
       "invalid": 0,
       "total": 231,
       "symbols": {
-        "named": 285,
+        "named": 286,
         "raw": 374,
-        "total": 659
+        "total": 660
       }
     },
     {
@@ -3627,13 +3627,13 @@
       "archive": "scena14",
       "entry": "00",
       "completed": 32,
-      "partial": 0,
-      "unlifted": 12,
+      "partial": 1,
+      "unlifted": 11,
       "invalid": 0,
       "total": 44,
       "symbols": {
-        "named": 191,
-        "raw": 136,
+        "named": 192,
+        "raw": 135,
         "total": 327
       }
     },
