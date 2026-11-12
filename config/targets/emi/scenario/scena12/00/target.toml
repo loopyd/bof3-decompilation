@@ -21,6 +21,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState7Substate0AndCue103UnlessFlag2ASetScenarioScena1200_801FCD58.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FCDE0.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FCEB4.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FD018.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

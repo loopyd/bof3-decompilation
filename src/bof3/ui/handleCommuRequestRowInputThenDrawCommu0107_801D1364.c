@@ -53,7 +53,7 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void func_801D3038(void);
+extern void drawCommuEntryListScreen(void);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
@@ -94,7 +94,7 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * when the signed byte goes negative, bit 0x2000 adds one and wraps to zero when
  * the signed byte passes the count, no other bit moves it, and an ordinal byte
  * landing on a different value queues resident cue 0x100. Every path then runs
- * func_801D3038 and draws the list row 0x801448ED with the selected flag 1
+ * drawCommuEntryListScreen and draws the list row 0x801448ED with the selected flag 1
  * through drawRowMarkerOutlineCommu0107_801D36FC, then computes the slot origin
  * of that list row kind at the ordinal byte through computeKindSlotOrigin and, for
  * a nonzero ordinal byte, draws the marker triangle at that origin advanced by 4
@@ -167,7 +167,7 @@ void handleCommuRequestRowInputThenDrawCommu0107_801D1364(void) {
       dispatchSoundCue(0x100);
     }
   }
-  func_801D3038();
+  drawCommuEntryListScreen();
   row = &D_801448ED;
   drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
   computeKindSlotOrigin(&x, &y, *row, D_801D4E24);

@@ -20,7 +20,7 @@ extern u8 countActiveRecordsByKind(s32 kind);
  * y 0x6B. An ordinal of zero takes the cell origin with a fixed 0xA inset on x.
  * Any other ordinal starts at slot 2 when the kind has two live records, at
  * slot 1 when it has three and at slot 0 otherwise, and adds the offset of
- * table entry 0x801D4DDC at that slot advanced by ordinal - 1. func_801D3038
+ * table entry 0x801D4DDC at that slot advanced by ordinal - 1. drawCommuEntryListScreen
  * walks ordinals 1 through the live record count of each kind 1 through 8 and
  * draws a piece at every result, func_801D1364 and func_801D1630 pass the
  * overlay byte 0x801D4E24 as the ordinal, and func_801D1778, func_801D1A94,

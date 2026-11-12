@@ -40,7 +40,7 @@ extern u8 D_801D4CD4[]; /* @source 0x801D4CD4 @kind data */
  *           is the quotient times 16 less 0x20, so ordinals 0 through 9 sit in
  *           the texel row at 0xE0 and 10 and 11 in the row below it. It reads
  *           only the CLUT byte the ordinal selects and writes only the cursor.
- *           Its single in-image caller func_801D3038 walks the stride-8 active
+ *           Its single in-image caller drawCommuEntryListScreen walks the stride-8 active
  *           records at 0x801455C8 and passes each record kind's icon ordinal,
  *           D_801D4C34[kind] for every kind but 5 and 0x02 plus
  *           D_801457A9[record] for kind 5, at (x + 0x22, y + 0x6C); no jal and

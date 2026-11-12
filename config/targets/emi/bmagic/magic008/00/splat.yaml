@@ -260,8 +260,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F133C.c'
     - '@behavior: Calls helper 0x800AFF98, stores its returned byte in work byte 9, reloads the scratchpad work pointer and increments work byte 2.'
   - - 10116
-    - asm
-    - func_801F1384
+    - c
+    - invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1384
+    - '@source: src/bof3/bmagic/invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1384.c'
+    - '@behavior: Entry 1 and entry 4 of the seven-entry handler run at 0x801EECAC (0x801F133C, 0x801F1384, 0x801F1400, 0x801F1474, 0x801F1384, 0x801F1400, 0x801F16E8), which the still-asm dispatcher 0x801F1294 copies into its own 0x38-byte frame and indexes with scratchpad work-object byte 2 before running the shared main-executable service func_8014D290 when work byte 0 is non-zero, so the two table words are the only incoming paths. Per frame it calls the shared readiness helper func_8014DAEC and discards the returned byte, then re-materializes the work-object pointer cell at 0x1F800044 and decrements that object''s unsigned byte 9 in place, testing the stored byte truncated to eight bits, so the rest of the body runs only when that countdown reaches zero. On zero it invokes the shared helper func_800AFC98 with the constant pair (2, 0), the 2 filling that test''s branch delay slot, then forwards the shared battle byte 0x80146384 to the helper func_800A9820, and finally re-reads the pointer cell and increments work byte 2 with a byte-width add, moving dispatch to the next entry of the run. The 0x18-byte frame only keeps $ra at 0x10 across the calls; nothing is returned and no other state is read or written. The body repeats byte for byte at 0x801F1804, entry 1, 4 and 7 of the nine-entry run at 0x801EECC8.'
   - - 10240
     - c
     - setGlobalWorkByteBToFFAtWorkByte2State5ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1400

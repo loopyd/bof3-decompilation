@@ -54,7 +54,7 @@ void publishCommuEntryTextId(void);
 u8 countActiveRecordsByKind(s32 kind);
 extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
-extern void func_801D3038(void);
+extern void drawCommuEntryListScreen(void);
 
 /* @source 0x801D0CAC
  * @behavior Handler at entry 1 of the run at 0x801D4BCC. Reads the shared
@@ -76,7 +76,7 @@ extern void func_801D3038(void);
  * value other than those three, queues cue 0x107 and leaves the step alone. When
  * neither mask matches it moves the commu list row through
  * moveCommuRowCursorByPadDirection. Every
- * path then runs func_801D3038 and draws the list row 0x801448ED with the
+ * path then runs drawCommuEntryListScreen and draws the list row 0x801448ED with the
  * selected flag 0 through drawRowMarkerOutlineCommu0107_801D36FC. Its 0x18-byte frame only holds ra.
  * @status exact
  * @match 100.00
@@ -122,6 +122,6 @@ void confirmCommuEntryRequestThenDrawCommu0107_801D0CAC(void) {
   } else {
     moveCommuRowCursorByPadDirection(&D_801448ED);
   }
-  func_801D3038();
+  drawCommuEntryListScreen();
   drawRowMarkerOutlineCommu0107_801D36FC(D_801448ED, 0);
 }

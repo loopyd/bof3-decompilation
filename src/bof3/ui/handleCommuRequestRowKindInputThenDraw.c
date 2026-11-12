@@ -57,7 +57,7 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void func_801D3038(void);
+extern void drawCommuEntryListScreen(void);
 extern void publishCommuEntryTextId(void);
 extern void saveCommuRequestStateAndSelectStep5(void);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
@@ -96,7 +96,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * the count, no other bit moves it, and a row landing on a different value
  * queues resident cue 0x100; that arm reports the new row's text id from the
  * halfword table at 0x801D4BB8 through the same result halfword. Every path then
- * runs func_801D3038, draws the list row marker of 0x801448ED with selected flag
+ * runs drawCommuEntryListScreen, draws the list row marker of 0x801448ED with selected flag
  * 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes the slot origin of
  * that row kind at ordinal 0 through computeKindSlotOrigin, draws the marker
  * triangle at that origin with selected flag 1, draws the entry-list panel in
@@ -167,7 +167,7 @@ void handleCommuRequestRowKindInputThenDraw(void) {
     srow = D_801D4E28;
     D_801D4E0C = D_801D4BB8[srow];
   }
-  func_801D3038();
+  drawCommuEntryListScreen();
   cursor = &D_801448ED;
   drawRowMarkerOutlineCommu0107_801D36FC(*cursor, 1);
   computeKindSlotOrigin(&x, &y, *cursor, 0);

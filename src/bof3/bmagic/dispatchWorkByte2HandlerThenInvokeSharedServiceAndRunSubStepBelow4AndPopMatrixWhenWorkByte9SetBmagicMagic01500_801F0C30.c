@@ -35,11 +35,11 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
 
 /* Sub-step emitter pair selected by the work object's byte 2 while it is below
- * three, the following transform step, and the GTE matrix stack pop. The two
- * emitters 0x801F1250 and 0x801F13D4 are still asm rows in this target, so they
- * keep their raw names, while the transform step between them is lifted and
- * carries its reviewed spelling. */
-void func_801F1250(void);
+ * three, the following transform step, and the GTE matrix stack pop. The emitter
+ * 0x801F13D4 is still an asm row in this target and keeps its raw name, while
+ * 0x801F1250 and the transform step between them are lifted and carry their
+ * reviewed spellings. */
+extern void projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordPositionDistanceBmagicMagic01500_801F1250(void);
 extern void projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C(void);
 void func_801F13D4(void);
 
@@ -83,7 +83,7 @@ void dispatchWorkByte2HandlerThenInvokeSharedServiceAndRunSubStepBelow4AndPopMat
       step = work[2];
       if (step < 4) {
         if (step < 3) {
-          func_801F1250();
+          projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordPositionDistanceBmagicMagic01500_801F1250();
         } else {
           projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C();
         }

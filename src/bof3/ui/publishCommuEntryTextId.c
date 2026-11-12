@@ -16,7 +16,7 @@ extern u8 D_801457A9[]; /* @source 0x801457A9 @kind data */
 extern u16 D_801D0C18[]; /* @source 0x801D0C18 @kind data */
 
 /* Result halfword of the current commu request, consumed as a text id: the
- * drawing handler func_801D3038 indexes the executable's string-offset table at
+ * drawing handler drawCommuEntryListScreen indexes the executable's string-offset table at
  * 0x80010000 with it. */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 

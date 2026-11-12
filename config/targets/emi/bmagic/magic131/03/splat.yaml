@@ -148,7 +148,7 @@ segments:
     - c
     - dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44.c'
-    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 ahead of its 0x18-byte frame and calls the three-entry handler-table entry at 0x801F1C24 selected by unsigned work byte 2 scaled by four, without bounding the index. Re-reads the same cell after the handler returns and tests work byte 0 and then work byte 2 from that single second load; only when both are nonzero does it call the in-payload helper at 0x801F0D44, then the helper at 0x801F0DF4, then the SDK routine PopMatrix. The handler run ends at 0x801F1C30, which this target names dispatchHandlerTable801F1C30. The frame only keeps $ra at 0x10, and nothing is stored or returned.'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 ahead of its 0x18-byte frame and calls the three-entry handler-table entry at 0x801F1C24 selected by unsigned work byte 2 scaled by four, without bounding the index. Re-reads the same cell after the handler returns and tests work byte 0 and then work byte 2 from that single second load; only when both are nonzero does it call the in-payload helper at 0x801F0D44, then the ring-band draw helper at 0x801F0DF4, then the SDK routine PopMatrix. The handler run ends at 0x801F1C30, which this target names dispatchHandlerTable801F1C30. The frame only keeps $ra at 0x10, and nothing is stored or returned.'
   - - 8140
     - c
     - seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC
@@ -167,8 +167,10 @@ segments:
     - asm
     - func_801F0D44
   - - 8692
-    - asm
-    - func_801F0DF4
+    - c
+    - drawSixteenGreyTexturedRingQuadsAtRadiusWorkWord14BetweenZ0AndZ400FromWorkByteBTexPageBmagicMagic13103_801F0DF4
+    - '@source: src/bof3/bmagic/drawSixteenGreyTexturedRingQuadsAtRadiusWorkWord14BetweenZ0AndZ400FromWorkByteBTexPageBmagicMagic13103_801F0DF4.c'
+    - '@behavior: Draws the sixteen translucent textured quads of a ring band around the radius the caller left in work-object word 0x14, one quad per 0x100 phase step of the full 4096-unit turn. It seeds the scratchpad radius halfword 0x1F800000 from that word and the first sample from the phase-zero rotator pair, then each step copies the previous sample into the vertices at 0x1F800014 and 0x1F800024 at depth -0x400, stores the step samples scaled by the radius into 0x1F80001C and 0x1F80001E and copies them to 0x1F80002C and 0x1F80002E at depth 0, stamps a POLY_FT4 at the shared primitive cursor with SetPolyFT4, sets semi-transparency from work-object byte 0xB and writes GetTPage(1, work byte 0xB, 0x340, 0x100) and GetClut(0, 0x1FA), toggles the texture u coordinate between 0 and 0x40 and v between 0 and 0xBF by step parity, copies the grey tint lanes at 0x1F800008, 0x1F80000A and 0x1F80000C, which hold three times work byte 0x9 shifted left three, into the primitive colour bytes, projects the four vectors through RotTransPers4 and appends the 0x28-byte primitive to output list 3 unless the step index lies in 7 to 14. It opens by selecting the draw-mode texture page from GetGraphType with the low two bits of work byte 0xB folded into bit 7 or bit 5, arms SetDrawMode on the cursor at 0x8014598C with dfe 0, dtd 1 and a null tw, and appends a 0xC-byte packet to output list 3 through the shared append routine at 0x8014E5A0. It takes no arguments and returns nothing.'
   - - 9460
     - c
     - dispatchRecordByte1HandlerBmagicMagic13103_801F10F4

@@ -222,8 +222,10 @@ segments:
     - c
     - invokeHelperBmagicMagic01500_801F1230
   - - 9808
-    - asm
-    - func_801F1250
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordPositionDistanceBmagicMagic01500_801F1250
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordPositionDistanceBmagicMagic01500_801F1250.c'
+    - '@behavior: Emitter step of this overlay: the body the work byte 2 dispatch at 0x801F0C30 runs when work byte 2 is below three, beside the sibling emitter 0x801F131C. It pushes the GTE matrix stack, reads the work record at scratchpad pointer cell 0x1F800044 once, zeroes a translation halfword triplet highest element first, builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and whose third element is half the negated distance the shared main-executable helper 0x8015477C answers for that same word pair, projects the triplet into the translation field of a 0x20-byte scratch matrix with RotTrans while storing a flag word beside it, turns the zeroed triplet into the rotation of that matrix with RotMatrix, composes the shared matrix at 0x801492E8 under it with MulMatrix2, and publishes the result through SetRotMatrix and SetTransMatrix. It takes no arguments and returns nothing; the 0x50-byte frame keeps $ra at 0x4C and $s0 at 0x48, both in-payload call sites (0x801F0D10 and 0x801F0424) pass no arguments and pair it with PopMatrix, no payload jal or table word publishes its address, and the 0xCC-byte span ends at the next subsegment, 0x801F131C.'
   - - 10012
     - c
     - projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C

@@ -942,10 +942,12 @@ segments:
     - c
     - func_801E3F34
     - '@source: src/bof3/ui/func_801E3F34_shop00.c'
-    - '@behavior: forwards the global panel task root (D_80148648) to the shop panel helper func_801E3F5C; the call result is unused and the wrapper returns nothing.'
+    - '@behavior: forwards the global panel task root (D_80148648) to the shop sort option panel drawShopSortOptionPanel; the call result is unused and the wrapper returns nothing.'
   - - 78684
-    - asm
-    - func_801E3F5C
+    - c
+    - drawShopSortOptionPanel
+    - '@source: src/bof3/ui/drawShopSortOptionPanel.c'
+    - '@behavior: shop sort option panel reached through the wrapper func_801E3F34, which forwards the global panel task root: paints the shaded panel rectangle through func_801AE3F0 at (task x + 3, task y + 3) with the width 0x65, the height 0x19 plus 0x10 times the option count byte D_801E5F0C, the constant 0 and the main-RAM CLUT-bank byte D_80144952 as the two trailing stack arguments, submits the caption D_801E5EFC[0] (the bytes SORT) at (x + 0x27, y + 7) through the main-exe caption emitter func_8014F800 with the texture-row constants 0 and 0xFF, submits the tile-record stream D_801E5E7C once at (x, y) through the main-exe record-table renderer func_801AF390 with the flag 1, walks the D_801E5F0C option rows taking row i caption from D_801E5EFC[D_801E5F0D[i]] (the slots LOOK, High 0xFF AP and Low 0xFF AP) and submitting it through func_8014F800 at (x + 7, y + i * 0x10 + 0x1A) with the texture-row constant 7 when i is the task byte 0xA or byte 0xB row and 0 otherwise plus one more submission at (x + 7, y + i * 0x10 + 0x18) with 2 for the byte 0xB row and 0 for the byte 0xA row while overlaying that row with the tile-record stream D_801E5EA0 at (x, y + i * 0x10 + 0x18) and (x, y + i * 0x10 + 0x20) with the flag 1, and finally submits D_801E5EAC at (x, y + count * 0x10 + 0x18) with the flag 1 to close the panel below the last row.'
   - - 79396
     - c
     - func_801E4224

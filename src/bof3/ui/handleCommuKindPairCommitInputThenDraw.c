@@ -80,7 +80,7 @@ extern s32 func_8014E640(u32 mask);
  */
 extern void dispatchSoundCue(u32 cue_id);
 
-extern void func_801D3038(void);
+extern void drawCommuEntryListScreen(void);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
@@ -117,7 +117,7 @@ extern void func_801647C4(u16 x, u16 y, s32 mode);
  * saved step. When neither mask matches it decodes the 0xA000 bits of the pad
  * word through the shared decoder at 0x8014E640 and, when one of those bits
  * comes back, queues resident cue 0x100 and flips the toggle byte 0x801D4E18.
- * Every path then runs func_801D3038, draws the list row marker of 0x801448ED
+ * Every path then runs drawCommuEntryListScreen, draws the list row marker of 0x801448ED
  * with selected flag 1 through drawRowMarkerOutlineCommu0107_801D36FC, computes
  * the slot origin of that row kind at ordinal 0 through computeKindSlotOrigin,
  * draws the marker triangle at that origin with selected flag 1 and stacks its
@@ -211,7 +211,7 @@ void handleCommuKindPairCommitInputThenDraw(void) {
       D_801D4E18 = D_801D4E18 ^ 1;
     }
   }
-  func_801D3038();
+  drawCommuEntryListScreen();
   row = &D_801448ED;
   drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
   computeKindSlotOrigin(&x, &y, *row, 0);
