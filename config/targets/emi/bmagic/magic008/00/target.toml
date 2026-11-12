@@ -15,6 +15,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0294.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy3ThenDecrementWorkByte9SetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic00800_801F08C4.c",
     "src/bof3/bmagic/setGlobalWorkByteBToFFAtWorkByte2State5ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1400.c",
+    "src/bof3/bmagic/setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1880.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c",

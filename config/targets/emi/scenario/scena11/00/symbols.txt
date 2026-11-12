@@ -1,7 +1,8 @@
 D_80146865 = 0x80146865;
+dispatchSoundCue = 0x8015DF18;
 dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4 = 0x801F70B4;
 seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104 = 0x801F7104;
-func_801F7178 = 0x801F7178;
+raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100_801F7178 = 0x801F7178;
 func_801F7200 = 0x801F7200;
 dispatchProgressHandlerScenarioScena1100_801F7288 = 0x801F7288;
 armEffectBankAndAdvanceStateScenarioScena1100_801F72C4 = 0x801F72C4;

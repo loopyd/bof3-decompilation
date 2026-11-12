@@ -608,8 +608,10 @@ segments:
     - '@source: src/bof3/world/func_801DA92C_area03004.c'
     - '@behavior: AREA030 mode-entry step: stores 1 in the shared state byte D_8014419E, increments the shared step counter byte D_8014403E, advances the shared selection counter D_80144199_BYTE, stores 1 in byte 6 of the work record published at the scratchpad cursor 0x1F800044, clears the four D_801E31E0 slot character counters, clears record byte 0x07 and (before the func_8014D8D4(3) call) record byte 0x0B, then increments record byte 3.'
   - - 40412
-    - asm
-    - func_801DA9DC
+    - c
+    - stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC
+    - '@source: src/bof3/world/stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC.c'
+    - '@behavior: AREA030 front-end entry-record motion step, handler index 1 of the 0x801E2258 table: retires scratch record byte 6 through func_801DDE94(1) while the shared selection gate holds 3, queues cue 0x203 and moves the shared mode bytes while the pad carries Up with a clear gate or while the shared word D_80144000 passes 0x3E7FFF, gates the random record-distance reseed on the selected entry byte 0x11 and the frame-counter nibble, applies the pad direction to the entry record motion triple 0x0C/0x10/0x14 and the selected value D_801E31F8 with the request passed to func_8014D8D4, publishes the entry record word 0x38 into D_8014930C and derives D_8014932E from word 0x10, clamps D_8014930C into 0x150000..0x3C0000 and stops entry record word 0x0C at the 0x80000/0x11FFFF x walls.'
   - - 41532
     - c
     - func_801DAE3C

@@ -271,8 +271,10 @@ segments:
     - asm
     - func_801F1804
   - - 11392
-    - asm
-    - func_801F1880
+    - c
+    - setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1880
+    - '@source: src/bof3/bmagic/setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1880.c'
+    - '@behavior: Entry 2, entry 5 and entry 8 of the nine-entry handler table at 0x801EECC8 (0x801F17BC, 0x801F1804, 0x801F1880, 0x801F18F4, 0x801F1804, 0x801F1880, 0x801F18F4, 0x801F1804, 0x801F1880), which 0x801F1708 copies into its own 0x40-byte frame and dispatches on scratchpad work-object byte 2 before running the shared main-executable service func_8014D290 when work byte 0 is non-zero. Per frame it calls the shared readiness helper func_8014DAEC and tests its returned byte; while the helper reports not-ready the handler does nothing. Once it reports ready it re-reads the work-object pointer cell at 0x1F800044 and, when the work object state byte 2 still equals 8, stores 0xFF into byte 0xB of the shared battle work record at 0x801EB4E0, the 0xFF constant filling that branch delay slot. It then re-reads the pointer cell and increments state byte 2 with a byte-width add, so entry 2 and entry 5 advance to 0x801F18F4 and entry 8 runs past the end of the run. The 0x18-byte frame only keeps $ra at 0x10 across the helper call; nothing is returned and no other state is read or written.'
   - - 11508
     - asm
     - func_801F18F4

@@ -44,8 +44,10 @@ segments:
     - c
     - dispatchByte1f294dTable4be4Commu0107_801D0E80
   - - 700
-    - asm
-    - func_801D0EBC
+    - c
+    - handleCommuRecordOrdinalInputThenDrawCommu0107_801D0EBC
+    - '@source: src/bof3/ui/handleCommuRecordOrdinalInputThenDrawCommu0107_801D0EBC.c'
+    - '@behavior: handler at entry 6 of the dispatch table at 0x801D4BCC, the dispatch shape of the entry list handler at 0x801D1158 one entry later. Reads the shared pad-state word 0x80145AA8 once: while it shares a bit with the cancel mask 0x80145AC4 it queues resident sound cue 0x106 through the shared cue dispatcher at 0x8015DF18, reports result code 0xB5 through the request result halfword 0x801D4E0C and rolls the shared overlay step byte 0x801F294C back by one; while it shares a bit with the confirm mask 0x80145AC2 it queues resident cue 0x104, reports result code 0x44 through the same halfword, copies the shared list row 0x801448ED into the request row byte 0x801D4E28 and advances the commu request step byte 0x801F294D by one; when neither mask matches it takes the record count of the list row kind through countActiveRecordsByKind, decodes the 0xA000 bits of the re-read pad-state word through the shared decoder at 0x8014E640 and steps the ordinal byte 0x801D4E24 inside that count, where bit 0x2000 adds one and wraps to 0 at the count, bit 0x8000 subtracts one and wraps to count minus one below zero, no other bit moves it, and a changed ordinal queues resident cue 0x100. Every path draws through func_801D3038 and draws the list row 0x801448ED with selected flag 1 through drawRowMarkerOutlineCommu0107_801D36FC, then draws the record of the ordinal byte with select flag 0: through drawMarkerTriangleCommu0107_801D3984 and the slot box through func_801D28A4 at 0x28 plus 8 times the signed ordinal on x and 0x39 on y for the marker and 0x30 plus that sum on x and 0x42 on y for the box while the list row is zero, otherwise at 0xFA plus 8 times the ordinal modulo 5 on x and 0x44 plus 54 times the list row minus 9 plus 7 times the ordinal divided by 5 on y for the marker and 0xA8 plus the same modulo term on x and 8 below that y for the box, the box taking the slot findActiveRecordSlotByKind returns for the list row and the ordinal truncated to its low byte'
   - - 1368
     - c
     - handleCommuEntryListInputThenDrawCommu0107_801D1158

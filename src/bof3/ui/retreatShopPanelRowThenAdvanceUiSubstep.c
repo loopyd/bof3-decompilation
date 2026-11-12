@@ -10,11 +10,11 @@
  *           saved-state byte D_8014865C is not the -1 sentinel it submits the
  *           texture row 0x1C at row 0x16 through func_8014F800 with the
  *           constant 0xFF as the fourth argument and the value returned by
- *           func_801502D0(0xA1) as the fifth, then draws the message panel
- *           through func_801DA2F4 at (0x62, 0x28) with the constant 0 and the
- *           main-RAM value D_80144F50. Finally it decrements the frame timer
- *           phaseTimer through its address and, when the decremented byte
- *           reaches zero, advances the UI sub-step byte D_80148652 by one.
+ *           func_801502D0(0xA1) as the fifth, then draws the money panel
+ *           through drawShopMoneyPanel at (0x62, 0x28) with the constant 0 and
+ *           the main-RAM value D_80144F50. Finally it decrements the frame
+ *           timer phaseTimer through its address and, when the decremented
+ *           byte reaches zero, advances the UI sub-step byte D_80148652 by one.
  * @status exact
  * @match 100.00
  * @residual none
@@ -37,7 +37,7 @@ void retreatShopPanelRowThenAdvanceUiSubstep(void) {
      * and stores it into the outgoing argument slot in the delay slot
      * (sibling shape: drawShopPanelsThenDecrementUiSubstep). */
     func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0xA1));
-    func_801DA2F4(0x62, 0x28, 0, D_80144F50);
+    drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);
   }
   value = *timer - 1;
   *timer = value;

@@ -13,12 +13,12 @@
  *           func_8016620C with the constants 0 and 8, submits the texture row
  *           0x1C at row 0x16 through func_8014F800 with the constant 0xFF as
  *           the fourth argument and the value returned by func_801502D0(0xA1)
- *           as the fifth, and draws the message panel through func_801DA2F4 at
- *           (0x62, 0x28) with the constant 0 and the main-RAM value
- *           D_80144F50. Finally, when bit 1 of the global gate halfword
- *           D_801490A4 is set, it re-arms the frame timer phaseTimer with 6,
- *           advances the UI sub-step byte D_80148652 by one and plays the cue
- *           0x102 through the main-exe cue dispatcher func_8015DF18.
+ *           as the fifth, and draws the money panel through
+ *           drawShopMoneyPanel at (0x62, 0x28) with the constant 0 and the
+ *           main-RAM value D_80144F50. Finally, when bit 1 of the global gate
+ *           halfword D_801490A4 is set, it re-arms the frame timer phaseTimer
+ *           with 6, advances the UI sub-step byte D_80148652 by one and plays
+ *           the cue 0x102 through the main-exe cue dispatcher func_8015DF18.
  * @status exact
  * @match 100.00
  * @residual none
@@ -40,7 +40,7 @@ void emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate(void) {
     sprintf((char*)D_80145AD4, D_801D0C1C, D_80148699 * 10);
     func_8016620C(0, 8, (u32)D_80145AD4);
     func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0xA1));
-    func_801DA2F4(0x62, 0x28, 0, D_80144F50);
+    drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);
   }
   if (D_801490A4 & 2) {
     *timer = 6;

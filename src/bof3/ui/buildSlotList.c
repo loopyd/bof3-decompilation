@@ -23,7 +23,7 @@
  *           emitter func_801D826C with the even row offset
  *           (slot * 54 + 0x3E) & 0xFFFE, the record byte, the nonzero state of
  *           the bit-mask byte D_80144981[164 * record] and the constant 0;
- *           finally draws the shop panel through func_801DA2F4 at
+ *           finally draws the money panel through drawShopMoneyPanel at
  *           phaseTimer * 32 + 0xB4 with the y constant 0x26, the constant 0 and
  *           the main-RAM value D_80144F50.
  * @status exact
@@ -59,5 +59,5 @@ void buildSlotList(u8 arg0) {
                     record, 0, 0);
     }
   }
-  func_801DA2F4(timer * 32 + 0xB4, 0x26, 0, D_80144F50);
+  drawShopMoneyPanel(timer * 32 + 0xB4, 0x26, 0, D_80144F50);
 }

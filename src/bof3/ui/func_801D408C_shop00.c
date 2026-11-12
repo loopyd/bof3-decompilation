@@ -6,16 +6,15 @@
  *           x = phaseTimer * 48 + 0x6E with the y constant 0x4C, emits the shop
  *           panel strip through func_801DAB90 with the fixed panel arguments
  *           (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
- *           D_80144952 as the fifth argument, draws the message panel through
- *           func_801DA2F4 at (0x62, 0x28) with the
- *           constant 0 and the main-RAM value D_80144F50 when the saved-state
- *           byte D_8014865C is not -1, then advances the frame timer phaseTimer
- *           by one and, when the advanced byte reaches 6, either resets
- *           phaseTimer and advances the UI phase byte D_80148651 by three when
- *           the overlay byte D_801E60F4 is set, or arms phaseTimer with 0x2D
- *           when the overlay byte D_801E60F0 is clear (otherwise 0), clears the
- *           UI sub-step byte D_80148652 and advances D_80148651 by
- *           D_801E60F0 + 1.
+ *           D_80144952 as the fifth argument, draws the money panel through
+ *           drawShopMoneyPanel at (0x62, 0x28) with the constant 0 and the
+ *           main-RAM value D_80144F50 when the saved-state byte D_8014865C is
+ *           not -1, then advances the frame timer phaseTimer by one and, when
+ *           the advanced byte reaches 6, either resets phaseTimer and advances
+ *           the UI phase byte D_80148651 by three when the overlay byte
+ *           D_801E60F4 is set, or arms phaseTimer with 0x2D when the overlay
+ *           byte D_801E60F0 is clear (otherwise 0), clears the UI sub-step byte
+ *           D_80148652 and advances D_80148651 by D_801E60F0 + 1.
  * @status exact
  * @match 100.00
  * @residual none
@@ -38,7 +37,7 @@ void func_801D408C(void) {
   drawThreeRowSelectorPanel((*timer * 48) + 0x6E, 0x4C);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
-    func_801DA2F4(0x62, 0x28, 0, D_80144F50);
+    drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);
   }
   next = *timer + 1;
   *timer = next;

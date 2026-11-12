@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF234
   - - 2504
-    - asm
-    - func_801EF5C8
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithHeadingFromWorkWord0CPairBmagicMagic04803_801EF5C8
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHeadingFromWorkWord0CPairBmagicMagic04803_801EF5C8.c'
+    - '@behavior: Projects this overlay work record position and installs the GTE transform. Pushes the matrix stack, reads the scratchpad work-record pointer cell at 0x1F800044, zeroes the first two elements of a translation halfword triplet, and asks the shared main-executable helper func_8017A138 for the 12-bit angle of the record word 0x10 minus word 0x38 and word 0xC minus word 0x34. The cell is re-read after that call and the masked angle becomes the third translation element. A rotation triplet is built from record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 plus half the negated signed halfword 0x3E; RotTrans projects it into the translation field of a 0x20-byte scratch matrix storing a flag beside it, RotMatrix turns the translation triplet into that matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish it. Takes no arguments, returns nothing, keeps $ra and $s0 in a 0x50-byte frame, and is called by the same-payload span at 0x801EEEB4, which pops the matrix afterwards.'
   - - 2720
     - asm
     - func_801EF6A0

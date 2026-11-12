@@ -39,8 +39,10 @@ segments:
     - '@source: src/bof3/scenario/seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104.c'
     - '@behavior: Reseeds the three 16.16 panel accumulators at 0x801481E8/0x801481EC/0x801481F0 from the signed halfword panel coordinates at 0x801492D8/0x801492DA/0x801492DC shifted left sixteen, zeroes the paired per-frame deltas at 0x801481F8/0x801481FC/0x80148200, copies work-record byte 9 read through the scratchpad pointer cell 0x1F800044 into the shared mode byte 0x80149333, and stores 1 in that work-record byte at offset 1.'
   - - 1400
-    - asm
-    - func_801F7178
+    - c
+    - raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100_801F7178
+    - '@source: src/bof3/scenario/raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100_801F7178.c'
+    - '@behavior: Handler 1 of the overlay handler run at 0x801FAEC0, entered by the dispatcher at 0x801F70B4 through work-record byte 1. Reads the shared panel ramp halfword D_801492DA (0x801492DA) unsigned, stores that ramp raised by four back into the same cell and hands the previous ramp plus 0xF4 sign-extended to the resident helper func_80154FD8 (0x80154FD8). Once the re-read signed ramp reaches 0xF1 it dispatches cue 0x203 through the resident sound-cue dispatcher 0x8015DF18 when the shared primary mode byte D_80143BB0 is zero, then publishes 2 in work-record byte 1 through the scratchpad pointer cell 0x1F800044 so the next dispatch selects the run word at 0x801F7200, the mirror handler that lowers the ramp. Takes no arguments and returns nothing.'
   - - 1536
     - asm
     - func_801F7200

@@ -13,8 +13,8 @@ extern u8 D_801455C9[]; /* @source 0x801455C9 @kind data */
  * @behavior Returns the slot index in the 60 stride-8 active records at
  * 0x801455C8 of the ordinal-th (zero-based) record that is in use (byte 0
  * nonzero) and whose kind byte at 0x801455C9 equals kind; returns 0xFF when
- * fewer than ordinal + 1 records match. No record is modified. The only caller,
- * func_801D0EBC, passes the shared commu list row at 0x801448ED as kind and the
+ * fewer than ordinal + 1 records match. No record is modified. The handler at
+ * 0x801D0EBC passes the shared commu list row at 0x801448ED as kind and the
  * overlay counter byte at 0x801D4E24 as ordinal, and hands the returned slot to
  * func_801D28A4.
  * @status exact

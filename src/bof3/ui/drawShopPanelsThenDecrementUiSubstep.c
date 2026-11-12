@@ -7,14 +7,14 @@
  *           drawThreeRowSelectorPanel at the fixed origin (0x6E, 0x4C), emits
  *           the shop panel strip through func_801DAB90 with the fixed panel
  *           arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
- *           D_80144952 as the fifth argument, draws the message panel through
- *           func_801DA2F4 at (0x62, 0x28) with the constant 0 and the main-RAM
- *           value D_80144F50 when the saved-state byte D_8014865C is not the
- *           -1 sentinel, then submits the texture row 0x1C at row 0x16 through
- *           func_8014F800 with the constant 0xFF as the fourth argument and
- *           the value returned by func_801502D0(0xA2) as the fifth. When the
- *           shared pad-state halfword D_80145AA8 is nonzero it finally steps
- *           the UI sub-step byte D_80148652 back by one; a clear halfword
+ *           D_80144952 as the fifth argument, draws the money panel through
+ *           drawShopMoneyPanel at (0x62, 0x28) with the constant 0 and the
+ *           main-RAM value D_80144F50 when the saved-state byte D_8014865C is
+ *           not the -1 sentinel, then submits the texture row 0x1C at row 0x16
+ *           through func_8014F800 with the constant 0xFF as the fourth argument
+ *           and the value returned by func_801502D0(0xA2) as the fifth. When
+ *           the shared pad-state halfword D_80145AA8 is nonzero it finally
+ *           steps the UI sub-step byte D_80148652 back by one; a clear halfword
  *           leaves that byte untouched.
  * @status exact
  * @match 100.00
@@ -37,7 +37,7 @@ void drawShopPanelsThenDecrementUiSubstep(void) {
   drawThreeRowSelectorPanel(0x6E, 0x4C);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
-    func_801DA2F4(0x62, 0x28, 0, D_80144F50);
+    drawShopMoneyPanel(0x62, 0x28, 0, D_80144F50);
   }
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0xA2));
   if (D_80145AA8 != 0) {
