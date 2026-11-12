@@ -43,6 +43,18 @@ bin/harness text extract out/extracted/BIN/WORLD00/AREA000.EMI -o out/area000.js
 include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
+For SHOP's card-choice labels, extract AFLDKWA entry 0 and FIRST entry 11 with
+`--class battle` into separate version 3 bank documents. In bank 0, row 29 is
+`Save`, row 153 is the prompt, and rows 126 through 134 share `Memory card`.
+Edit all nine shared rows identically. Pack each document against its own source
+archive into a separate output. Editing one alias leaves the other unchanged;
+the active supplier remains unresolved. See the
+[card-choice allocation contract](../../../../tools/rust/bof3-text/docs/formats.md#card-choice-bank-aliases)
+for capacities and consumers.
+Controlled packed-media checks verify the edited prompt, title and both slot
+labels through a frontend-state fixture. Ordinary menu availability, the unique
+supplier and card-save persistence remain unverified.
+
 For the main US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
 Its `bof3.executable-text/v18` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumers, output, codec,

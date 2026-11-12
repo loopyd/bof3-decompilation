@@ -1513,6 +1513,35 @@ strings[]                         ; begins at byte pointer_bytes
   battle/system text subfiles (`0x8001A000`, sizes 14428/16872) use it and round-trip
   byte-identically; packing preserves the header.
 
+### Card-choice bank aliases
+
+US `BIN/ETC/AFLDKWA.EMI` entry 0 and `BIN/ETC/FIRST.EMI` entry 11 contain
+identical 16,872-byte battle-text payloads loaded at `0x8001A000` in raw mode 0.
+Their payload offsets are 2048 and 243712. The eight-byte header selects bank 0
+at offset 8 and bank 1 at `0x1694`. Bank 0 occupies 5,772 bytes.
+
+| Bank 0 JSON rows | Selected runtime ID | Original text | RAM address | Capacity including NUL |
+| --- | --- | --- | --- | --- |
+| 29 | `0x1C` | `Save` | `0x8001A438` | 5 |
+| 126 through 134, shared | `0x85` | `Memory card` | `0x8001AA0D` | 12 |
+| 153 | `0x98` | `Save: Which memory card?` | `0x8001AB37` | 25 |
+
+Runtime IDs are zero-based; JSON row numbers are one-based. All nine shared rows
+use one allocation and must have identical text. Lookup `0x801502D0` resolves
+these IDs. SHOP consumers `0x801D4A3C` and `0x801DDFB0` pass the prompt, title
+and two slot labels through `0x8014F800` and `0x8014F84C`.
+
+Use `bof3.dialogue-text/v3` with class `battle` and a separate source-bound
+document and packed output for each archive. Packing preserves both bank tables,
+the header and all bytes outside the edited row extents. Editing one archive
+does not update the other.
+
+Controlled packed-media checks verify the prompt edited to
+`Keep: Which memory chip?`, the `Keep` title and both `Memory chip` slot labels.
+The menu uses a frontend-state fixture after the first battle. The unique
+supplying archive, ordinary menu availability and card-save persistence remain
+unverified.
+
 ## Commands
 
 | Byte | Token | Operands |
