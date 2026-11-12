@@ -140,6 +140,7 @@ sources = [
     "src/bof3/ui/swapSelectionIds.c",
     "src/bof3/ui/rebuildShopSlotLists.c",
     "src/bof3/ui/func_801E4DF4.c",
+    "src/bof3/ui/emitShopFieldRecordIconSprite.c",
     "src/bof3/ui/drawShopSlotListThenChargeOnConfirm.c",
     "src/bof3/ui/drawNumberedShopSlotListThenPanelStrip.c",
     "src/bof3/ui/drawShopSlotListWithSelectionCursors.c",

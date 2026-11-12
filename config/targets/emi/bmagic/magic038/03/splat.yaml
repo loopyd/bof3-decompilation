@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF1AC
   - - 1980
-    - asm
-    - func_801EF3BC
+    - c
+    - stepWorkProjectionByPhaseCountersAdd4ToTintTripletThenClearFlag20ModeAndTintWhenChannel5DReachesC0AdvanceWorkByte2BmagicMagic03803_801EF3BC
+    - '@source: src/bof3/bmagic/stepWorkProjectionByPhaseCountersAdd4ToTintTripletThenClearFlag20ModeAndTintWhenChannel5DReachesC0AdvanceWorkByte2BmagicMagic03803_801EF3BC.c'
+    - '@behavior: Step handler of this overlay work-state run: runs the shared per-frame update func_8014D978, adds 4 to the work object tint channels at bytes 0x5D, 0x5E and 0x5F, advances phase word 0x0C, samples the shared phase samplers at ((word 0x0C) & 0x7F) << 5 and at ((word 0x14) & 0x3F) << 6, accumulates the scaled samples into work words 0x34, 0x38 and 0x3C, and when signed tint channel 0x5D reaches 0xC0 clears flag bit 0x20 and mode byte 0x5C with the three tint channels and advances work byte 2.'
   - - 2448
     - asm
     - func_801EF590

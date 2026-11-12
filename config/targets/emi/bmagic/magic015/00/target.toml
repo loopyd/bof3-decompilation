@@ -13,6 +13,7 @@ sources = [
     "src/bof3/bmagic/callAF4A0With3800DecrementWorkByte9AddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownByteAThenAdvanceWorkByte2BmagicMagic01500_801F0DB4.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenGlobalWorkByteBIs1ChannelIs80AndHelperReadyBmagicMagic01500_801F0A94.c",
+    "src/bof3/bmagic/subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenGlobalWorkByteBIs1ChannelIs80AndHelperReadyBmagicMagic01500_801F1088.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkCountdownThenSeedMotionPairAndSetTintFromWorkByteBAt4ThenAdvanceWorkByte2BmagicMagic01500_801F0654.c",

@@ -128,8 +128,10 @@ segments:
     - add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C
     - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C.c'
   - - 6540
-    - asm
-    - func_801F058C
+    - c
+    - add2ToWorkByte9DecrementWorkTintChannel5DBy4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F058C
+    - '@source: src/bof3/bmagic/add2ToWorkByte9DecrementWorkTintChannel5DBy4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F058C.c'
+    - '@behavior: Entry index 7 of the eight-word dispatcher code pointer run at 0x801F1BF4 that 0x801F0100 indexes with the scratchpad work object''s byte 2 scaled by four. Adds 2 to work-object byte 0x9 at byte width through the first pointer-cell load, then re-reads the cell at 0x1F800044 and subtracts 4 from work-object byte 0x5D at byte width, testing the stored value truncated to eight bits so no second cell read supplies the guard. Only when that byte reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record''s byte 0x0B by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. The cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the call; nothing is returned.'
   - - 6660
     - asm
     - func_801F0604

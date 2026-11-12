@@ -795,8 +795,10 @@ segments:
     - '@source: src/bof3/world/func_801DCCF4_area03004.c'
     - '@behavior: AREA030 scratch work-record handler (entry 0 of the 0x801E22F0 handler table dispatched through scratch byte 4): when the shared state byte 0x80144281 is 3 or 4 it masks the shared panel flag byte 0x80144287 to seven bits, publishes the masked value back, submits func_801647C4 with (0x1C, masked value * 16 + 0x58, 0) and advances byte 4 of the work record published at the scratchpad cursor 0x1F800044; then, following bit 0 of the flag byte, it submits func_8014F800 with (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword 0x800100A4 when the bit is set, else 0x800100A2).'
   - - 49592
-    - asm
-    - func_801DCDB8
+    - c
+    - publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8
+    - '@source: src/bof3/world/publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8.c'
+    - '@behavior: AREA030 scratch work-record handler (entry 1 of the 0x801E22F0 handler table dispatched through scratch byte 4): it decodes the shared pad state 0x80145AA8 masked by 0x5000 through func_8014E640 and submits the fixed func_8014F800 panel texture row (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword 0x800100A4 while bit 0 of the shared panel flag byte 0x80144287 is set, else 0x800100A2); a pad bit shared with the cancel mask 0x80145AC4 plays cue 0x106, publishes 0xFFFF into the main-executable halfword 0x801442AC, sets bit 0x80 of the panel flag byte, decrements byte 3 of the work record published at the scratchpad cursor 0x1F800044, clears that record dispatch byte 4 and returns; a pad bit shared with the confirm mask 0x80145AC2 plays cue 0x103, sets bit 2 of the panel flag byte and advances dispatch byte 4 to entry 2; a decoded direction bit 0x5000 plays cue 0x100, toggles bit 0 of the panel flag byte, toggles the shared state byte 0x80144281 against 7 and steps dispatch byte 4 back to entry 0; unless bit 0x80 is set it then publishes into 0x801442AC the selected index byte 0x80145026 or 0x80145028 plus four, or 0xFFFF while that byte is zero, and submits func_801647C4 with (0x1C, flag bit 0 scaled by 16 plus 0x58, 0).'
   - - 50128
     - asm
     - func_801DCFD0

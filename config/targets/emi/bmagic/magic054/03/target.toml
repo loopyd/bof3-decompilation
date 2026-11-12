@@ -15,5 +15,6 @@ support_sources = [
     "src/bof3/bmagic/seedWorkMotionFromBattlerRecordAndAdvanceWorkByte2BmagicMagic05403_801EF238.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624.c",
     "src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C.c",
 ]
 psyq_source = "src/bof3/support/magic054_03_psyq.c"

@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801F7518
   - - 2460
-    - asm
-    - func_801F759C
+    - c
+    - drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C
+    - '@source: src/bof3/scenario/drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C.c'
+    - '@behavior: Overlay per-frame work handler and entry 2 (the pointer word at 0x801FD180) of the code-pointer run based at 0x801FD178 that dispatchWorkByte1HandlerScenarioScena1200_801F7174 selects with the work object unsigned byte at offset 0x01: it calls func_801F75EC, which formats the low byte of the overlay halfword D_801FD288 with the overlay format string "%03d" at 0x801F6C04 into the shared text buffer D_80145AD4 and draws it at (0x95, 0x22) with colour 0, so this handler paints the three-digit counter readout; then, only when the main-executable front-end mode byte D_80143BB0 differs from 2 and the front-end cue halfword D_80143B90 differs from 4, it calls the shared work-area reset func_80196070, so the overlay keeps its work area while a front-end screen is in mode 2 or on cue 4. It takes no arguments, returns nothing and writes no state of its own, and the 0x18-byte frame only keeps $ra across the calls.'
   - - 2540
     - asm
     - func_801F75EC

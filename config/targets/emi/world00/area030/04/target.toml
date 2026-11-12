@@ -131,6 +131,7 @@ sources = [
     "src/bof3/world/func_801DCC74.c",
     "src/bof3/world/func_801DCCB0.c",
     "src/bof3/world/func_801DCCF4_area03004.c",
+    "src/bof3/world/publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8.c",
     "src/bof3/world/func_801DD90C.c",
     "src/bof3/world/func_801DD95C.c",
     "src/bof3/world/func_801DDB74.c",

@@ -41,5 +41,6 @@ support_sources = [
     "src/bof3/scenario/seedPanelAccumulatorsThenPublishWorkByte9AndSelectHandler1ScenarioScena1100_801F7104.c",
     "src/bof3/scenario/setSubstate5ClearSharedStateBytesAndRequestPrimaryState9ScenarioScena1100_801FA840.c",
     "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState0AScenarioScena1100_801FA890.c",
+    "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState0BScenarioScena1100_801FA8E0.c",
 ]
 psyq_source = "src/bof3/support/scena11_00_psyq.c"

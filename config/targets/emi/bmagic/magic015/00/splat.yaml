@@ -187,8 +187,10 @@ segments:
     - asm
     - func_801F0F2C
   - - 9352
-    - asm
-    - func_801F1088
+    - c
+    - subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenGlobalWorkByteBIs1ChannelIs80AndHelperReadyBmagicMagic01500_801F1088
+    - '@source: src/bof3/bmagic/subtractWorkColorTripletBy16ThenCopyRecordTripletAndAdvanceWorkByte2WhenGlobalWorkByteBIs1ChannelIs80AndHelperReadyBmagicMagic01500_801F1088.c'
+    - '@behavior: Entry 36 of the overlay handler code-pointer run that starts at 0x801EEC04, the word stored at 0x801EEC94: it reads the scratchpad work object through the pointer cell 0x1F800044 and, while the signed tint channel at 0x5D has not reached its -0x80 floor, subtracts 0x10 from each of the three colour channels at 0x5D, 0x5E and 0x5F, the guard and the first store sharing the first cell read and each later store taking its own re-read. It then reads byte 0xB of the shared battle work record read through 0x801EB4E0, and only when that unsigned byte equals 1, a fresh cell read shows the signed channel 0x5D exactly -0x80, and the shared readiness helper 0x8014DAEC returns a non-zero byte, does it copy record words 0x34, 0x38 and 0x3C into the work object and advance the work object handler byte 2. The record pointer is read once more for that copy, so the call is not asked to preserve it. The 248-byte body reserves a 0x20-byte frame holding the saved return address at 0x18. The 248 bytes are byte-identical to the span at 0x801F0A94 of this same payload, entry 30 at 0x801EEC7C, proven by a payload cmp of the two spans, and that lifted sibling supplied the statement order. No jal word in the payload targets 0x801F1088 and the only word naming this address is the handler-table entry itself, so the caller that selects it lies outside the overlay.'
   - - 9600
     - c
     - addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801F1180

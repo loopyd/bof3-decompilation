@@ -53,8 +53,10 @@ segments:
     - dispatchStateByte1Tablef658BmagicMagic05403_801EF158
     - '@source: src/bof3/bmagic/magic05403DispatchTables.c'
   - - 1436
-    - asm
-    - func_801EF19C
+    - c
+    - dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C.c'
+    - '@behavior: Work-byte-2 dispatcher of the overlay work object. The work-object pointer cell at 0x1F800044 is read once before the frame is created, and its state byte at offset 2 selects an entry of the six-entry code pointer table at 0x801EEC14 (0x801EF238, 0x801EF3A4, 0x801EF43C, 0x801EF4A8, 0x801EF534, 0x801EF624), which is invoked with no arguments. The six table words are copied into this function''s own 0x30-byte frame at offset 0x10 first, so the call target is read back from that copy and the index is not bounded before the scaled load. After the handler returns it re-reads the pointer cell, tests work byte 0, and when that byte is nonzero it invokes the helper at 0x8014D290. The 0x30-byte frame only holds the six-word copy and keeps $ra at 0x28; it takes no arguments, returns nothing and writes no state of its own. Its only in-image reference is the pointer word 0x801EF19C that ends the payload at 0x801EF658, so the overlay loader installs it.'
   - - 1592
     - c
     - seedWorkMotionFromBattlerRecordAndAdvanceWorkByte2BmagicMagic05403_801EF238
