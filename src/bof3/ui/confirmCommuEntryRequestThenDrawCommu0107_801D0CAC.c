@@ -52,7 +52,7 @@ extern void dispatchSoundCue(u32 cue_id);
 
 void publishCommuEntryTextId(void);
 u8 countActiveRecordsByKind(s32 kind);
-extern void func_801D3B0C(u8 *rowPtr);
+extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 
@@ -74,7 +74,8 @@ extern void func_801D3038(void);
  * publishes the request text id through publishCommuEntryTextId and advances the
  * overlay step byte 0x801F294C by one; a rejected one, which is also every mode
  * value other than those three, queues cue 0x107 and leaves the step alone. When
- * neither mask matches it moves the commu list row through func_801D3B0C. Every
+ * neither mask matches it moves the commu list row through
+ * moveCommuRowCursorByPadDirection. Every
  * path then runs func_801D3038 and draws the list row 0x801448ED with the
  * selected flag 0 through func_801D36FC. Its 0x18-byte frame only holds ra.
  * @status exact
@@ -119,7 +120,7 @@ void confirmCommuEntryRequestThenDrawCommu0107_801D0CAC(void) {
       break;
     }
   } else {
-    func_801D3B0C(&D_801448ED);
+    moveCommuRowCursorByPadDirection(&D_801448ED);
   }
   func_801D3038();
   func_801D36FC(D_801448ED, 0);

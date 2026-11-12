@@ -483,8 +483,10 @@ segments:
     - '@source: src/bof3/world/func_801D9534.c'
     - '@behavior: submits the AREA030 panel for the requested rectangle, then the inset frame rectangle offset two pixels in and five pixels smaller; the trailing byte selects the frame draw mode.'
   - - 35268
-    - asm
-    - func_801D95C4
+    - c
+    - drawSemiTransPaletteRectangleBorder
+    - '@source: src/bof3/world/drawSemiTransPaletteRectangleBorder.c'
+    - '@behavior: draws the semi-transparent border of the requested rectangle in a palette colour: it reads the 15-bit entry zero of sub-palette row 1 of the CLUT bank selected by the shared CLUT-bank byte D_80144952, expands it into the red, green and blue channel bytes, then emits two semi-transparent flat three-point lines from the shared primitive cursor, the first through (x, y + h), (x + w, y + h) and (x + w, y) and the second through (x, y + h), (x, y) and (x + w, y), queueing each 0x18-byte packet with func_8014E5A0(2, 0x18); the trailing byte selects texture-page draw mode 7 or 6 for the first line and the opposite mode for the second.'
   - - 35648
     - asm
     - func_801D9740

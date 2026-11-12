@@ -208,6 +208,7 @@ sources = [
     "src/bof3/world/togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168.c",
     "src/bof3/world/togglePanelModeOnPadPressAndDrawRowWorld00Area03004_801DC0CC.c",
     "src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c",
+    "src/bof3/world/drawSemiTransPaletteRectangleBorder.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

@@ -188,6 +188,7 @@ func_801D88E0 = 0x801D88E0;
 drawStatusBoxPair = 0x801D8D70;
 func_801D90FC = 0x801D90FC;
 func_801D9534 = 0x801D9534;
+drawSemiTransPaletteRectangleBorder = 0x801D95C4;
 func_801D9740 = 0x801D9740;
 func_801D9B14 = 0x801D9B14;
 func_801D9B58 = 0x801D9B58;

@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801F0C98
   - - 8420
-    - asm
-    - func_801F0CE4
+    - c
+    - decrementWorkByte9By2AdvanceWorkWord14By10ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F0CE4
+    - '@source: src/bof3/bmagic/decrementWorkByte9By2AdvanceWorkWord14By10ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F0CE4.c'
+    - '@behavior: Entry index 2, the last word, of the three-entry code pointer run at 0x801F1C24 that 0x801F0B44 indexes with the scratchpad work object byte 2 scaled by four. Reads the work-object pointer cell at 0x1F800044 once and, through that single loaded pointer, decrements the work-object byte at offset 0x9 at byte width (lbu, addiu -2, sb) and advances the work-object word at offset 0x14 by 0x10, the store filling the branch delay slot. The byte the guard compares is the stored register truncated to eight bits, so no second cell read supplies it. Only when that byte reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0x0B by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. The 0x18-byte frame only keeps $ra at 0x10 across the call; nothing is returned and no other state is read or written.'
   - - 8516
     - asm
     - func_801F0D44

@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC98
   - - 1116
-    - asm
-    - func_801EF05C
+    - c
+    - forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C
+    - '@source: src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C.c'
+    - '@behavior: Entry 1 of the four-entry code pointer table at 0x801EEC04 that the overlay dispatcher at 0x801EEC2C indexes with work byte 1. Reads the work-object pointer cell at 0x1F800044 and tests work byte 0xB; only when that byte is zero does it forward the unsigned battle target byte 0x80146384 to helper 0x800A9820, re-read the pointer cell and increment work byte 1 at byte width. Otherwise it returns without touching anything. The 0x18-byte frame only keeps $ra across the call; it takes no arguments, returns nothing and writes no other state.'
   - - 1208
     - asm
     - func_801EF0B8

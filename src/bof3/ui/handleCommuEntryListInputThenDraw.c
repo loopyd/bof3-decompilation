@@ -23,7 +23,7 @@ extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
 extern void restoreSavedCommuRequestStateAndStepBack(void);
 extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
-extern void func_801D3B0C(u8 *rowPtr);
+extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
@@ -44,8 +44,9 @@ u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * through commitCommuEntryRequestIntoActiveRecord with offset 1 and stores
  * result code 0xB5 into
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches it
- * moves the request row byte 0x801D4E28 through func_801D3B0C and publishes that
- * row text id through publishCommuEntryTextIdForRow. Every path then runs
+ * moves the request row byte 0x801D4E28 through
+ * moveCommuRowCursorByPadDirection and publishes that row text id through
+ * publishCommuEntryTextIdForRow. Every path then runs
  * func_801D3038, draws the list row 0x801448ED with the selected flag 1 and the
  * request row 0x801D4E28 with 0 through func_801D36FC, and when no commit
  * happened computes the slot origin of the list row kind at ordinal 0x801D4E24
@@ -79,7 +80,7 @@ void handleCommuEntryListInputThenDraw(void) {
     }
   } else {
     row = &D_801D4E28;
-    func_801D3B0C(row);
+    moveCommuRowCursorByPadDirection(row);
     publishCommuEntryTextIdForRow(row);
   }
   func_801D3038();

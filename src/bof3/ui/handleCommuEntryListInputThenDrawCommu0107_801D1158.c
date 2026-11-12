@@ -30,7 +30,7 @@ extern void restoreSavedCommuRequestStateAndStepBack(void);
 extern void publishCommuEntryTextId(void);
 extern void publishCommuEntryTextIdForRow(u8 *rowPtr);
 extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
-extern void func_801D3B0C(u8 *rowPtr);
+extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
@@ -52,8 +52,9 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * commitCommuEntryRequestIntoActiveRecord with offset 0 and stores result code
  * 0xB5 into the halfword
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches
- * it moves the request row byte 0x801D4E28 through func_801D3B0C and publishes
- * that row text id through publishCommuEntryTextIdForRow. Every path then runs
+ * it moves the request row byte 0x801D4E28 through
+ * moveCommuRowCursorByPadDirection and publishes that row text id through
+ * publishCommuEntryTextIdForRow. Every path then runs
  * func_801D3038, draws the list row 0x801448ED with the selected flag 1 and the
  * request row 0x801D4E28 with 0 through func_801D36FC, and while no commit
  * happened draws the marker through drawMarkerTriangleCommu0107_801D3984 with the selected flag 1: at
@@ -90,7 +91,7 @@ void handleCommuEntryListInputThenDrawCommu0107_801D1158(void) {
     }
   } else {
     row = &D_801D4E28;
-    func_801D3B0C(row);
+    moveCommuRowCursorByPadDirection(row);
     publishCommuEntryTextIdForRow(row);
   }
   func_801D3038();

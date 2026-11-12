@@ -48,6 +48,7 @@ sources = [
     "src/bof3/ui/func_801D7CC8.c",
     "src/bof3/ui/func_801D7D48.c",
     "src/bof3/ui/swapBytesB.c",
+    "src/bof3/ui/drawShopSlotPriceList.c",
     "src/bof3/ui/buildSlotList.c",
     "src/bof3/ui/tickPhaseTimerThenAdvanceWorkCounter.c",
     "src/bof3/ui/func_801DA00C_shop00.c",

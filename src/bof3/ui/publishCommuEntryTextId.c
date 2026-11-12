@@ -1,9 +1,9 @@
 #include "bof3/bof3.h"
 
-/* Shared commu list cursor. func_801D3B0C moves it by one inside 0..0xB and the
- * row drawing code func_801D36FC indexes the twelve-entry layout table at
- * 0x801D4C44 with it, so it is the row of this overlay's list that its handlers
- * act on. */
+/* Shared commu list cursor. moveCommuRowCursorByPadDirection moves it by the
+ * pad direction with a press and repeat state, and the row drawing code
+ * func_801D36FC indexes the twelve-entry layout table at 0x801D4C44 with it, so
+ * it is the row of this overlay's list that its handlers act on. */
 extern u8 D_801448ED; /* @source 0x801448ED @kind data */
 
 /* Eight stride-8 local record slots: byte 0 of a slot is its record kind and

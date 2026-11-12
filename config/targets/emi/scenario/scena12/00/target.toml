@@ -23,6 +23,7 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena1200_801F88A8.c",
     "src/bof3/support/scena12_00_psyq.c",
     "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54.c",
+    "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState5Substate5Or0IfPartyByte5ScenarioScena1200_801FCCBC.c",
     "src/bof3/scenario/queueCueAndNegativeOneResultScenarioScena1200_801FCD38.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1200_801FD0B0.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1200_801FD0D8.c",

@@ -17,8 +17,10 @@ extern u8 D_801FD228[];
 
 /* Nineteen code pointers at 0x801FD23C: 0x801FCCBC three times, then 0x801FCD58,
  * 0x801FCDE0, 0x801FCE2C, 0x801FCE70, 0x801FCEB4, 0x801FCF00, ... up to
- * 0x801FD150, followed by the zero word at 0x801FD288. Entry 0 is the raw asm
- * row func_801FCCBC, which three of the four selectable indices reach.
+ * 0x801FD150, followed by the zero word at 0x801FD288. Entries 0, 1 and 2 hold
+ * 0x801FCCBC, the exact
+ * clearProgressAndSharedStateBytesThenRequestPrimaryState5Substate5Or0IfPartyByte5ScenarioScena1200_801FCCBC
+ * (0x801FCCBC), which three of the four selectable indices reach.
  */
 extern ScenarioScena1200LookupHandler D_801FD23C[];
 

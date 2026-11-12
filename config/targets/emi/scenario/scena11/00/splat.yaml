@@ -124,8 +124,10 @@ segments:
     - '@source: src/bof3/scenario/setSubstate5ClearSharedStateBytesAndRequestPrimaryState9ScenarioScena1100_801FA840.c'
     - '@behavior: Overlay per-record callback: runs the shared front-end startup helper func_8015C088 (0x8015C088), requests secondary sub-state 5 in the shared sub-state byte D_80146875, clears the shared bytes 0x80146865, 0x80146866 and 0x80146867, and requests primary scene state 9 in the shared primary state byte D_80146874. Takes no arguments and returns nothing; its 0x18-byte frame only keeps $ra across the call. The callback table word 0x801FAF44 is entry 8 of the 29-word overlay callback run at 0x801FAF24 selected by a record byte field at offset 0x7A; no jal or j in the payload reaches the address.'
   - - 15504
-    - asm
-    - func_801FA890
+    - c
+    - setSubstate14ClearSharedStateBytesAndRequestPrimaryState0AScenarioScena1100_801FA890
+    - '@source: src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState0AScenarioScena1100_801FA890.c'
+    - '@behavior: Overlay per-record callback: runs the shared front-end startup helper func_8015C088 (0x8015C088), requests secondary sub-state 0x14 in the shared sub-state byte D_80146875, clears the shared bytes 0x80146865, 0x80146866 and 0x80146867, and requests primary scene state 0xA in the shared primary state byte D_80146874. Takes no arguments and returns nothing; its 0x18-byte frame only keeps $ra across the call. The callback table word 0x801FAF48 is entry 9 of the 29-word overlay callback run at 0x801FAF24 selected by a record byte field at offset 0x7A; no jal or j in the payload reaches the address.'
   - - 15584
     - asm
     - func_801FA8E0
