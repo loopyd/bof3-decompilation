@@ -165,6 +165,7 @@ sources = [
     "src/bof3/ui/stepShopRowCursorThenChargePriceOrAdvanceUiSubstep.c",
     "src/bof3/ui/stepShopListItemCursorThenOpenRecordOrAdvanceUiPhase.c",
     "src/bof3/ui/drawShopInkPanel.c",
+    "src/bof3/ui/stepNoteListSkillCursorThenRecordSelectionOrSubmitHighlightedSkill.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

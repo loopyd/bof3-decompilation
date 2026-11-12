@@ -223,8 +223,10 @@ segments:
     - asm
     - func_801F1250
   - - 10012
-    - asm
-    - func_801F131C
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the work record published at the scratchpad pointer cell 0x1F800044 once, before any call. It zeroes a translation halfword triplet highest element first, then builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and whose third element is half the negated signed halfword 0x3E of the battle record read through the main-RAM pointer cell 0x8014638C. RotTrans projects that triplet into the translation field of a 0x20-byte scratch matrix while storing a flag word beside it, RotMatrix turns the zeroed triplet into the rotation of that same matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and the result is published through SetRotMatrix and SetTransMatrix. Takes no arguments, returns nothing, and the 0x50-byte frame keeps ra at 0x4C and s0 at 0x48; its callers pair it with PopMatrix. Bytes 0x801F131C..0x801F13D3 are identical to the exact sibling projectWorkRecordPositionAndInstallTransformWithSharedRecordHalfword3E at 0x801EFB90 in bmagic magic046/03 except for the two words that address this overlay''s record pointer cell (0x8014638C here, 0x801EB4E0 there), so that body supplied the statement order, operand forms and offsets while every literal and binding here comes from this span. Two jal words inside the payload reach it, at 0x801F0D20 inside dispatchWorkByte2HandlerThenInvokeSharedServiceAndRunSubStepBelow4AndPopMatrixWhenWorkByte9SetBmagicMagic01500_801F0C30, which selects it beside the sibling emitter 0x801F1250, and at 0x801F0434 inside the unlifted func_801F0334.'
   - - 10196
     - asm
     - func_801F13D4

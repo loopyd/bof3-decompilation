@@ -7,7 +7,7 @@ clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerC
 func_801EEF64 = 0x801EEF64;
 func_801EF000 = 0x801EF000;
 func_801EF110 = 0x801EF110;
-func_801EF1C0 = 0x801EF1C0;
+decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0 = 0x801EF1C0;
 func_801EF3D0 = 0x801EF3D0;
 func_801EF488 = 0x801EF488;
 raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13103_801EF61C = 0x801EF61C;

@@ -93,8 +93,10 @@ segments:
     - asm
     - func_801F9184
   - - 14244
-    - asm
-    - func_801FA3A4
+    - c
+    - runPrimaryState9SubstateSequenceScenarioScena1100_801FA3A4
+    - '@source: src/bof3/scenario/runPrimaryState9SubstateSequenceScenarioScena1100_801FA3A4.c'
+    - '@behavior: Word 9 (the word stored at 0x801FAF20) of the ten-entry overlay-local second-level handler run at 0x801FAEFC that dispatchSecondaryStateScenarioScena1100_801F7748 (0x801F7748) indexes with the shared primary state byte D_80146874, so a primary state reading 9 selects it, and no jal or j in the payload reaches the address. It switches on the shared secondary sub-state byte D_80146875 through the ten-word absolute jump table jtbl_801F708C_main at 0x801F708C in this payload leading table data, and the table words of sub-states 2, 3 and 4 are the only ones that point at the body exit. Sub-state 0, while the shared front-end mode byte D_80143BB0 reads other than 2, stores 1 in the shared scenario progress byte g_ScenarioProgress, runs the shared GAME.EMI helper func_801BE1B0 with argument 9 and advances the sub-state byte to 1; sub-state 1, once the progress byte reads 7, sets flag bit 0x13 of the shared flag word D_8014686C through func_8015B580, runs the shared overlay release helper func_8015C058, clears the progress byte, the shared bytes 0x80146865, 0x80146866 and 0x80146867, the sub-state byte D_80146875 and the primary state byte D_80146874, which ends the chain; sub-state 5 repeats the sub-state 0 arm with helper argument 0xA and advances to 6; sub-state 6 advances to 7 on progress 6; sub-state 7 runs the shared front-end mode setter func_8014ECAC with mode 4 on progress 0xF and advances to 8; sub-state 8, while the shared gate halfword D_80143C40 is clear, clears the shared effect bank byte D_8014832E, queues front-end mode 0x3F through func_80150224, arms D_80143BB0 to 2 and advances to 9; sub-state 9, once that mode byte leaves 2, clears the sub-state byte and the primary state byte, runs func_801A78F8, stores 2 in 0x80146866, toggles bit 0x16 of the shared mode halfword D_80146258 and requests front selection context (0x79, 0x290000, 0x330000, 7) through func_8019FA28. Takes no arguments and returns nothing; its 0x18-byte frame keeps $ra and $s0 across the calls.'
   - - 14776
     - c
     - dispatchRecordCallbackScenarioScena1100_801FA5B8

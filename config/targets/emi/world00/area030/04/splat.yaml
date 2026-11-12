@@ -791,8 +791,10 @@ segments:
     - '@source: src/bof3/world/func_801DC904.c'
     - '@behavior: Increments scratch-record byte 3 while state byte 0x80144281 is 3.'
   - - 48444
-    - asm
-    - func_801DC93C
+    - c
+    - stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C
+    - '@source: src/bof3/world/stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C.c'
+    - '@behavior: AREA030 work-record step, entry 2 of the 0x801E22D0 handler table that func_801DC838 dispatches through scratch record byte 3: it steps the shared handler-selector byte 0x80144286 over its 0..2 range on pad bits 0x8000 and 0x2000, steps the shared state byte 0x80144281 on the pressed mask D_80145AC4 and the confirm mask D_80145AC2, and while the record dispatch byte 3 still holds 2 it submits the selector VRAM halfword (0x800100A0, 0x800100C0 or 0x800100DE, offset by 0x80010000) to func_8014F800 and the selector-scaled 0x58 + 48 * selector row to func_801647C4.'
   - - 49268
     - c
     - func_801DCC74

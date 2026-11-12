@@ -47,8 +47,10 @@ segments:
     - asm
     - func_801EF110
   - - 1472
-    - asm
-    - func_801EF1C0
+    - c
+    - decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0.c'
+    - '@behavior: Entry index 4 of the eight-entry code pointer run at 0x801EEC04 that the overlay frame dispatcher func_801EEC24 copies to its stack and calls through work-object byte 1. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements work byte 9 at byte width, comparing the stored register truncated to eight bits so no second cell read supplies the guard. Only when that countdown reaches zero does it scan the D_80146254 local work records, 0x140 bytes apart, setting a found flag whenever a record''s class byte at +0x79 is 4 and its flag word at +0x128 has bit 0 set, without stopping at the first match. When the flag is set it tests the hint byte 0x80145024 against 7, 0xD, 0xE and 0xF in four separate statements and starts the EMI stream slot 0x201, 0x202, 0x203 or 0x204, or the variant 0x205, 0x206, 0x207 or 0x208 when the 0x2 bit of the battle mode byte 0x801462EC is set; the last statement emits its two calls separately. Otherwise it tests the same mode bit and calls the shared wrapper at 0x8016728C from each arm with the hint byte masked to seven bits and family selector 2 or 1. It then re-reads the pointer cell and increments work byte 1, and the 0x18-byte frame only keeps $ra at 0x10 across the five calls.'
   - - 2000
     - asm
     - func_801EF3D0

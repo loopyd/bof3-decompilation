@@ -83,8 +83,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF75C.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the four-entry code pointer table at 0x801EEC30 (0x801EF7C8, 0x801EF9D4, 0x801EFA40, 0x801EF010), and that entry is invoked with no arguments. As at 0x801EECF0 and 0x801EF384, the four table words are copied into this dispatcher''s own 0x28-byte frame and the call target is read back from that copy; it reads no other state and writes none.'
   - - 3016
-    - asm
-    - func_801EF7C8
+    - c
+    - seedWorkObjectFromBattleRecordThenClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerAndRaiseFlag40BmagicMagic00800_801EF7C8
+    - '@source: src/bof3/bmagic/seedWorkObjectFromBattleRecordThenClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerAndRaiseFlag40BmagicMagic00800_801EF7C8.c'
+    - '@behavior: Work byte 1 state 0 of this overlay: entry 0 of the four-entry code pointer table at 0x801EEC30 (0x801EF7C8, 0x801EF9D4, 0x801EFA40, 0x801EF010), which 0x801EF75C dispatches on the scratchpad work object''s state byte 1. It copies the shared battle work record''s byte 8 and word triplet 0x34/0x38/0x3C from the pointer cell at 0x801EB4E0 into the work object, clears work bytes 0xB and 9, increments work byte 1 and invokes the shared battle helper at 0x800AEF98 with the event selector 0xC and the value 2. It then claims one slot through the allocator at 0x801E590C with the identity bytes 1 and 0x1F, copies the acting battler''s 0x74-byte record head into the claimed entry of the 0x78-byte-stride slot store at 0x801EC330 (selectors below 3 read the 0x140-byte-stride party records at 0x80145E90, other selectors the 0x118-byte-stride enemy records at 0x801EB630 indexed by selector minus 3, selected by the acting battler byte at 0x80146374), stamps the entry bytes +0x01 with 4, +0x06 with 1, +0x02 with 0 and +0x05 with 0x1F, publishes the scratchpad work-object pointer in the entry word +0x74 and raises bit 0x40 of the shared work record byte 0. The allocator failure code is not tested; the 0x18-byte frame only keeps $ra across its two calls and nothing is returned.'
   - - 3540
     - c
     - clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4

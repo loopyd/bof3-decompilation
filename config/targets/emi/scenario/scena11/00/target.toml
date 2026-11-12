@@ -53,5 +53,16 @@ support_sources = [
     "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState0AScenarioScena1100_801FA890.c",
     "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState0BScenarioScena1100_801FA8E0.c",
     "src/bof3/scenario/setSubstate28ClearSharedStateBytesAndRequestPrimaryState5ScenarioScena1100_801FAA24.c",
+    "src/bof3/scenario/runPrimaryState9SubstateSequenceScenarioScena1100_801FA3A4.c",
 ]
 psyq_source = "src/bof3/support/scena11_00_psyq.c"
+
+# The sub-state switch of the primary-state 9 handler at 0x801FA3A4 dispatches
+# ten values through the ten-word table the overlay keeps at 0x801F708C in its
+# leading table data; psyq gcc emits a switch table as .rodata, so this row
+# gives the comparator the payload address and size of that table.
+[[matching.section_placements]]
+function = 0x801FA3A4
+section = ".rodata"
+address = 0x801F708C
+size = 0x28
