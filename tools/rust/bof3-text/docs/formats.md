@@ -159,6 +159,12 @@ These 1828 bytes correspond to runtime addresses `[0x801CE758,0x801CEE7C)` and
 twelve complete instruction-only function bodies. Each body matches its freshly
 compiled executable ELF function symbol and reviewed source boundaries.
 
+The 32-byte `CdFlush` wrapper at file offsets `[9700,9732)`, runtime
+`[0x801CFDE4,0x801CFE04)`, matches the complete SDK executable section in
+`libcd.a` member `s_008.o` after one call relocation to `CD_flush` at
+`0x801D141C`. The original caller and call/return boundaries qualify the wrapper;
+its callee remains unresolved.
+
 The same exact identity qualifies the 32-byte `CdMix` wrapper at file offsets
 `[10908,10940)`, runtime `[0x801D029C,0x801D02BC)`. Its complete SDK executable
 section from `libcd.a` member `s_020.o` matches after relocating its call to
