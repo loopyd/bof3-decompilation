@@ -171,6 +171,7 @@ drawShopEquipPanel = 0x801D8A0C;
 emitFlatLineRectangleBorder = 0x801D8E2C;
 func_801D8FC0 = 0x801D8FC0;
 func_801D910C = 0x801D910C;
+drawSpritePrimTpageFromAbrShop00_801D9160 = 0x801D9160;
 func_801DA00C = 0x801DA00C;
 emitPanelIconPrim = 0x801DA120;
 func_801DA9C4 = 0x801DA9C4;

@@ -128,10 +128,12 @@ segments:
     - c
     - drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550
     - '@source: src/bof3/world/drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550.c'
-    - '@behavior: publishes the 0x380/0x100 texture page draw mode at the primitive cursor 0x8014598C through SetDrawMode with the dither field enabled and a null texture window, queues that 0xC-byte draw-mode packet under OT slot 1, initialises the 0x20-byte projection scratch at +0x18 of its frame, then runs the translucent fan drawer func_801F462C four times over the same point at the quarter, half, three-quarter and whole handed signed angle, each fan running on from its own start angle to the end of the 0x1000-unit turn with 0x20 hub colour bytes and zero rim ones.'
+    - '@behavior: publishes the 0x380/0x100 texture page draw mode at the primitive cursor 0x8014598C through SetDrawMode with the dither field enabled and a null texture window, queues that 0xC-byte draw-mode packet under OT slot 1, initialises the 0x20-byte projection scratch at +0x18 of its frame, then runs the translucent fan drawer drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedPointAtConvertedExtentTintedByCentreAndRimBytesWorld02Area07714_801F462C four times over the same point with the handed signed extent quartered, halved, three-quarters and whole, so the four concentric fans nest, each spanning the full 0x1000-unit turn with 0x20 in all three hub colour bytes and zero in the rim ones.'
   - - 6700
-    - asm
-    - func_801F462C
+    - c
+    - drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedPointAtConvertedExtentTintedByCentreAndRimBytesWorld02Area07714_801F462C
+    - '@source: src/bof3/world/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedPointAtConvertedExtentTintedByCentreAndRimBytesWorld02Area07714_801F462C.c'
+    - '@behavior: projects the three-word point handed as arg0 through the shared projector func_801AFF04, writes the signed halfword extent handed as arg1 into the x halfword of the size pair the shared converter func_801AFFD8 reads at the same depth, and takes the converted halfword plus the low bit of the shared frame counter at 0x80143E6C as a signed radius. It then stamps thirty-two semi-transparent POLY_G3 wedges of one 0x80 step each around that point through the shared rotation pair func_801783C8 and func_801782FC, the wedge phase kept to the twelve bits of the 0x1000-unit turn and each wedge sharing its second arc vertex with the next one, the hub vertex coloured with the byte handed as arg2 in all three channels and both rim vertices with the byte handed as arg3, and appends every 0x1C-byte packet under OT slot 1.'
   - - 7112
     - asm
     - func_801F47C8

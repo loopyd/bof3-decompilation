@@ -742,8 +742,10 @@ segments:
     - '@source: src/bof3/world/func_801DC708.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22C8.'
   - - 47948
-    - asm
-    - func_801DC74C
+    - c
+    - seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C
+    - '@source: src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c'
+    - '@behavior: AREA030 work-record dispatch step, handler 0 of the local table at 0x801E22C8 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared gate halfword D_80143C40 holds 0, it arms the callback scheduler through func_8014B87C(1), commits the shared fixed-point channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay through func_80153DE8, clears the shared entry table through func_801E0A30, requests front-end mode 3 through func_8014ECAC, asks for resource 0xA with the second argument 2 while byte 0x79 of the record at D_80146250 is clear and resource 0xB otherwise, and stores 1 in that dispatch byte.'
   - - 48108
     - c
     - func_801DC7EC

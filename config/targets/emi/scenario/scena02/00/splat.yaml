@@ -285,8 +285,8 @@ segments:
     - c
     - invokeHelperArgThenHelperScenarioScena0200_801FE198
   - - 30144
-    - asm
-    - func_801FE1C0
+    - c
+    - clearTwoIndexedRecordFlagBitsThenInvokeHelperTwiceThenHelperScenarioScena0200_801FE1C0
   - - 30316
     - textbin
     - T_801FE26C

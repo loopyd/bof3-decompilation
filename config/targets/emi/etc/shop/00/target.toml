@@ -148,6 +148,7 @@ sources = [
     "src/bof3/ui/drawShopValuePanelThenClearPanelAndArmActionId.c",
     "src/bof3/ui/drawShopValuePanelThenToggleValueAndAcceptOrCancel.c",
     "src/bof3/ui/armShopValueSelectionThenAdvanceUiSubstep.c",
+    "src/bof3/ui/drawSpritePrimTpageFromAbrShop00_801D9160.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

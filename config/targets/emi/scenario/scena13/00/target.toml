@@ -13,6 +13,7 @@ sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78.c",
     "src/bof3/scenario/armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0.c",
     "src/bof3/scenario/armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248.c",
+    "src/bof3/scenario/bootScenarioStateScenarioScena1300_801F7D50.c",
     "src/bof3/scenario/bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C.c",
     "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C.c",
     "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithSecondOverlayActivationEntryPairScenarioScena1300_801F8D0C.c",

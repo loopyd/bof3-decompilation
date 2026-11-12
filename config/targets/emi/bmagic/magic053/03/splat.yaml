@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EF174
   - - 2080
-    - asm
-    - func_801EF420
+    - c
+    - stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420
+    - '@source: src/bof3/bmagic/stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420.c'
+    - '@behavior: Step the work position pair and word 0x3C, add 8 to work byte 0xB, then on the work byte 9 countdown expiry invoke the main-executable helper with 0x100 or 0x101, spawn up to eight free records of the 0x801F0578 pool, step the shared halfword at 0x801492D8 by 0x14, set work byte 9 to 4 and advance work byte 2.'
   - - 2496
     - asm
     - func_801EF5C0

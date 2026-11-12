@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801EF594
   - - 2576
-    - asm
-    - func_801EF610
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic01500_801EF610
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic01500_801EF610.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. Its address is index 2 of the four-entry code pointer run at 0x801EEC14 that dispatchWorkByte1HandlerBmagicMagic01500_801EF248 selects on unsigned work byte 1. The 0x34-byte body is byte-identical to raiseFlag4AndInvokeHelperBmagicMagic01500_801EF1CC of the same payload.'
   - - 2628
     - c
     - dispatchWorkByte1HandlerBmagicMagic01500_801EF644

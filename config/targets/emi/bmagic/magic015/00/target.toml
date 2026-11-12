@@ -26,6 +26,7 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkCountdownThenSeedMotionFieldsAndSetTintWhenGlobalWorkByteBIsSetBmagicMagic01500_801F045C.c",
     "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic01500_801EFFC0.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic01500_801EF1CC.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic01500_801EF610.c",
 ]
 psyq_source = "src/bof3/support/magic015_00_psyq.c"
 

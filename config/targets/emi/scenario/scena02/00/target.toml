@@ -12,6 +12,7 @@ sources = [
     "src/bof3/scenario/waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate5ScenarioScena0200_801FD164.c",
     "src/bof3/scenario/waitFlag5ThenToggleModeFlags36AndRequestPrimaryState4Substate7ScenarioScena0200_801FD1DC.c",
     "src/bof3/scenario/queueFrontEndMode3EThenWaitModeLeave2ReleaseAndClearStateScenarioScena0200_801F8264.c",
+    "src/bof3/scenario/clearTwoIndexedRecordFlagBitsThenInvokeHelperTwiceThenHelperScenarioScena0200_801FE1C0.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",

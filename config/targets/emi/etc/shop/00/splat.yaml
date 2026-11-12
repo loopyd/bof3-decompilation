@@ -396,8 +396,10 @@ segments:
     - '@source: src/bof3/ui/func_801D910C_shop00.c'
     - '@behavior: shop icon wrapper: when the kind byte arg2 equals 4 and the signed main-RAM byte D_80146870 is at least 8, substitutes the kind 0xB; then forwards the two zero-extended u16 coordinates, the kind byte and the mode byte arg3 to the shop icon emitter func_801D8FC0.'
   - - 34144
-    - asm
-    - func_801D9160
+    - c
+    - drawSpritePrimTpageFromAbrShop00_801D9160
+    - '@source: src/bof3/ui/drawSpritePrimTpageFromAbrShop00_801D9160.c'
+    - '@behavior: shop sprite emitter: asks GetTPage for the 4-bit page at vram column 0x3C0 with the semi-transparency rate taken from the last byte argument, stores that page word into a draw-mode packet through SetDrawMode with no dithering, no texture disable and no texture window and appends the 0xC-byte packet at ordering-table slot 1; it then re-reads the shared primitive cursor, initialises a 0x10-byte SPRT packet through func_8017AA80, marks it semi-transparent, fills colour bytes 0x4 through 0x6 from the byte arguments 4, 5 and 6, coordinates 0x8 and 0xA from arguments 0 and 1 and the halfwords at 0xC and 0xE from arguments 2 and 3, and appends it at slot 1 as a 0x10-byte primitive.'
   - - 34388
     - asm
     - func_801D9254

@@ -203,6 +203,7 @@ sources = [
     "src/bof3/world/stepSharedViewYAndDrawFiveGreyLinesWorld00Area03004_801DD9A0.c",
     "src/bof3/world/advancePanelMessageLineUnrevealAndAdvanceState.c",
     "src/bof3/world/sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684.c",
+    "src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

@@ -13,6 +13,7 @@ sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8.c",
     "src/bof3/bmagic/decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c",
+    "src/bof3/bmagic/stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic053_03_symbols.c",

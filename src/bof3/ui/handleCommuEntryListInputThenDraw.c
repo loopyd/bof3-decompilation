@@ -21,7 +21,7 @@ extern u8 D_801D4E24; /* @source 0x801D4E24 @kind data */
 /* Result halfword of the current commu request. */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
-extern void func_801D47C4(void);
+extern void restoreSavedCommuRequestStateAndStepBack(void);
 extern s32 func_801D482C(s32 offset);
 extern void func_801D3B0C(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
@@ -37,8 +37,9 @@ u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * @behavior Handler at entry 9 of the dispatch table at 0x801D4BCC. Reads the
  * shared pad-state word 0x80145AA8 once and dispatches on its masks. While that
  * word shares a bit with the cancel mask 0x80145AC4 it closes the request
- * through func_801D47C4 and publishes the list row text id of 0x801448ED
- * through publishCommuEntryTextId into the result halfword 0x801D4E0C. While it
+ * through restoreSavedCommuRequestStateAndStepBack and publishes the list row
+ * text id of 0x801448ED through publishCommuEntryTextId into the result
+ * halfword 0x801D4E0C. While it
  * shares a bit with the confirm mask 0x80145AC2 it commits the request row
  * through func_801D482C with offset 1 and stores result code 0xB5 into
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches it
@@ -67,7 +68,7 @@ void handleCommuEntryListInputThenDraw(void) {
   pad = D_80145AA8;
   committed = 0;
   if (pad & D_80145AC4) {
-    func_801D47C4();
+    restoreSavedCommuRequestStateAndStepBack();
     publishCommuEntryTextId();
   } else if (pad & D_80145AC2) {
     committed = func_801D482C(1);

@@ -136,8 +136,10 @@ segments:
     - '@source: src/bof3/world/drawWorkBandOnFifthTickWrapWorkByte9At0fThenAdvanceWorkByte9World02Area10313_801F457C.c'
     - '@behavior: overlay step handler, entry 13 of the work-byte-2 handler table at 0x801F5954; while the shared state word 0x80143B90 reads 0x00050005 and the status halfword 0x801EB7CA has bit 0x4000 set it advances work byte 0x02, then rewinds byte 0x09 at 0x0F, hands func_801F4E70 the band index (byte 0x09 / 5) + 7 on every fifth tick and advances byte 0x09.'
   - - 6748
-    - asm
-    - func_801F465C
+    - c
+    - countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C
+    - '@source: src/bof3/world/countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C.c'
+    - '@behavior: overlay step handler, entry 14 of the work-byte-2 handler table at 0x801F5954 and entry 17 of the work-byte-1 handler table at 0x801F5948; it rewinds the work record''s byte 0x09 to zero when that byte reads 0x0F, decrements the signed arm countdown halfword at 0x32 while it stays positive and otherwise advances byte 0x02 through the same pointer while the band index (byte 0x09 / 5) is still zero, hands func_801F4E70 the band index (byte 0x09 / 5) + 7 on every fifth tick, advances byte 0x09, and finally passes the shared request helper func_8015507C the selector 0x42 and the level (halfword 0x32 / 6) + 0x18 truncated to 16 bits.'
   - - 7052
     - asm
     - func_801F478C

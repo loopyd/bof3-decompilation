@@ -4,7 +4,8 @@ extern s8 D_80146872;
 
 /* Overlay-local scenario state-dispatch table of this code span's handlers,
  * indexed by the signed shared main-RAM scenario state byte D_80146872: its
- * twelve code words run from func_801F7D50 (0x801F7D50, word 0) through
+ * twelve code words run from bootScenarioStateScenarioScena1300_801F7D50
+ * (0x801F7D50, word 0) through
  * func_801FB1B4 (0x801FB1B4, word 11) and end immediately before the data words
  * at 0x801FBF78, so that byte selects which of the overlay's twelve scenario
  * handlers runs this frame. The word immediately before it (0x801FBF44) is zero

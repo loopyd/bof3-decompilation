@@ -71,8 +71,10 @@ segments:
     - average12BitValuesWorld02Area08813_801F35B0
     - '@source: src/bof3/world/average12BitValuesWorld02Area08813_801F35B0.c'
   - - 2560
-    - asm
-    - func_801F3600
+    - c
+    - drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackWorld02Area08813_801F3600
+    - '@source: src/bof3/world/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackWorld02Area08813_801F3600.c'
+    - '@behavior: Eight-iteration translucent POLY_G3 fan emitter. Each iteration re-reads the primitive published at g_PrimCursor, stamps it through 0x8017A97C, marks it semi-transparent through SetSemiTrans with one, and writes the caller centre pair (two unsigned halfwords read through the first argument pointer) into the first vertex at +0x08 and +0x0A; the second vertex pair at +0x10 and +0x12 is that centre offset by the radius-scaled samples of the running phase, x through 0x801783C8 and y through 0x801782FC, each product with the signed halfword scale shifted right 12, and the third pair at +0x18 and +0x1A repeats it with the phase advanced by 0x100, so neighbouring triangles share a rim sample and the eight span 0x800 of the 0x1000 phase circle. The centre vertex carries the tint byte in all three channels and both arc vertices carry black. Each 0x1C-byte packet is appended through 0x8014E5A0 with allocation class 1; the body keeps a 0x30-byte frame and returns nothing.'
   - - 2916
     - asm
     - func_801F3764

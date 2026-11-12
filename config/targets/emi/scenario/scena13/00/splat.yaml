@@ -96,8 +96,10 @@ segments:
     - c
     - dispatchScenarioStateHandlerScenarioScena1300_801F7D14
   - - 4432
-    - asm
-    - func_801F7D50
+    - c
+    - bootScenarioStateScenarioScena1300_801F7D50
+    - '@source: src/bof3/scenario/bootScenarioStateScenarioScena1300_801F7D50.c'
+    - '@behavior: Scenario state 0 boot of this overlay, word 0 of the twelve-word state-handler table D_801FBF48 that dispatchScenarioStateHandlerScenarioScena1300_801F7D14 indexes with the shared scenario state byte D_80146872. It runs the shared front-end startup helper func_8015C088, arms the front-end effect bank byte D_8014832E with 0x1F, runs the shared field-record reinitializer func_801C16B8 and the active scenario own handler 0 through func_801C1DF0(0), sets bit 0x43 and clears bit 0x42 of the shared flag bank D_80144F28 through the main-executable bit-set helper func_8015B580 and bit-clear helper func_8015B5A8, and advances D_80146872 to 1; it takes no arguments, returns nothing, and its 0x18-byte frame keeps $ra at 0x14 and the bank address in $s0 at 0x10 across the two flag calls.'
   - - 4540
     - asm
     - func_801F7DBC
