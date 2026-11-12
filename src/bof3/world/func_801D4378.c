@@ -53,7 +53,7 @@ void func_801D4378(void) {
   }
 
   count = ((u8*)D_1F800044)[9u];
-  func_801D88E0((s16)(16 - count * 45), 64);
+  drawEquipmentGuideColumn((s16)(16 - count * 45), 64);
 
   cursor = (u8*)D_1F800044;
   if ((cursor[7u] & 1u) == 0u) {

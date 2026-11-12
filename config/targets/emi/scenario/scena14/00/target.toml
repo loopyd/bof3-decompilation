@@ -11,6 +11,7 @@ sources = [
     "src/bof3/scenario/stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C.c",
     "src/bof3/scenario/copyWorkRecordPartyBytesIntoMirrorThenInvokePartyHelperArmEffectGroupAndResetEffectScenarioScena1400_801FC130.c",
     "src/bof3/scenario/snapshotWorkRecordPartyBytesAndRecordSelectedPartyInMirrorThenInvokePartyHelperArmEffectGroupAndResetEffectScenarioScena1400_801FBE10.c",
+    "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC22C.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",

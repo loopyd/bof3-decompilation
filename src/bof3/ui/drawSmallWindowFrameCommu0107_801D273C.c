@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern void func_801D4030(s16 x, s16 y, u8 piece);
+extern void drawWindowTilePiece(s16 x, s16 y, u8 piece);
 
 /* @source 0x801D273C
  * @behavior Draws the small window frame whose top-left corner sits at (x, y)
@@ -20,18 +20,18 @@ void drawSmallWindowFrameCommu0107_801D273C(s16 x, s16 y) {
     s32 i;
     s32 offset;
 
-    func_801D4030((s16)x, (s16)y, 6);
+    drawWindowTilePiece((s16)x, (s16)y, 6);
     for (i = 0; i < 7; i++) {
         offset = i * 8 + 8;
-        func_801D4030((s16)(x + offset), (s16)y, 7);
-        func_801D4030((s16)(x + offset), (s16)(y + 0x22), 12);
+        drawWindowTilePiece((s16)(x + offset), (s16)y, 7);
+        drawWindowTilePiece((s16)(x + offset), (s16)(y + 0x22), 12);
     }
-    func_801D4030((s16)(x + 0x40), (s16)y, 8);
+    drawWindowTilePiece((s16)(x + 0x40), (s16)y, 8);
     for (i = 0; i < 4; i++) {
         offset = i * 6 + 8;
-        func_801D4030((s16)x, (s16)(y + offset), 9);
-        func_801D4030((s16)(x + 0x40), (s16)(y + offset), 10);
+        drawWindowTilePiece((s16)x, (s16)(y + offset), 9);
+        drawWindowTilePiece((s16)(x + 0x40), (s16)(y + offset), 10);
     }
-    func_801D4030((s16)x, (s16)(y + 0x22), 11);
-    func_801D4030((s16)(x + 0x40), (s16)(y + 0x22), 13);
+    drawWindowTilePiece((s16)x, (s16)(y + 0x22), 11);
+    drawWindowTilePiece((s16)(x + 0x40), (s16)(y + 0x22), 13);
 }

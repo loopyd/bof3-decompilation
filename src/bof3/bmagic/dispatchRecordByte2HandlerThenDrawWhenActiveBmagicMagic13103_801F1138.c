@@ -9,7 +9,9 @@ extern void (*dispatchHandlerTable801F1C48[])(void); /* @source 0x801F1C48 @kind
 extern void projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14(void);
 
 /* Draws the eight-step effect of the active work record. */
-extern void func_801F1844(void);
+extern void
+    drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844(
+        void);
 
 /* @source 0x801F1138
  * @behavior Reads the record pointer cell at 0x801F24E0 and uses the record
@@ -18,7 +20,7 @@ extern void func_801F1844(void);
  * handler returns it reads the cell again in a second load; if the record byte
  * at offset 0x0 and the byte at offset 0x2 are both non-zero it calls
  * projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14 and then
- * func_801F1844. Reads no other state, stores nothing
+ * the eight-triangle fan at 0x801F1844. Reads no other state, stores nothing
  * and returns nothing.
  * @status exact
  * @match 100.00
@@ -33,6 +35,6 @@ void dispatchRecordByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F1138(void)
     gate_record = workRecord801F24E0;
     if (gate_record[0] != 0 && gate_record[2] != 0) {
         projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14();
-        func_801F1844();
+        drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844();
     }
 }

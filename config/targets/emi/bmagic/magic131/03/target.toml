@@ -40,6 +40,7 @@ sources = [
     "src/bof3/bmagic/advanceRecordByte6By2AndHalfwordCBy20AccumulateScaledSampleIntoPositionPairThenAdvanceRecordByte2AtHalfwordC200BmagicMagic13103_801F1644.c",
     "src/bof3/bmagic/decrementWorkByte9ThenStartHintStreamSlotWhenClass4FlaggedBattlerElseStartHintFamilyStreamThenAdvanceWorkByte1BmagicMagic13103_801EF1C0.c",
     "src/bof3/bmagic/clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC.c",
+    "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic131_03_symbols.c",

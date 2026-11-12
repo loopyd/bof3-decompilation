@@ -219,6 +219,7 @@ sources = [
     "src/bof3/world/drawMessageTokenCellQuad.c",
     "src/bof3/world/drawSemiTransPaletteRectangleFill.c",
     "src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c",
+    "src/bof3/world/drawEquipmentGuideColumn.c",
     "src/bof3/world/stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140.c",
     "src/bof3/world/stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C.c",
 ]

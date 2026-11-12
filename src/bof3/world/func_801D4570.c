@@ -20,6 +20,6 @@ void func_801D4570(void) {
     mask = (u8)(1u << cursor[6u]);
   }
   drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
-  func_801D88E0(16, 64);
+  drawEquipmentGuideColumn(16, 64);
   func_801D7EB0(164, 64);
 }

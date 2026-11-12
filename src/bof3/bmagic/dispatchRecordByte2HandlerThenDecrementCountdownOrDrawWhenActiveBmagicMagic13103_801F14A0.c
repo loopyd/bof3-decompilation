@@ -9,7 +9,9 @@ extern void (*dispatchHandlerTable801F1C94[])(void); /* @source 0x801F1C94 @kind
 extern void projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14(void);
 
 /* Draws the eight-step effect of the active work record. */
-extern void func_801F1844(void);
+extern void
+    drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844(
+        void);
 
 /* @source 0x801F14A0
  * @behavior Reads the record pointer cell at 0x801F24E0 and uses the record
@@ -20,7 +22,7 @@ extern void func_801F1844(void);
  * minus one there and jumps straight to the epilogue, calling nothing else.
  * When the halfword is zero and the record bytes at offsets 0x0 and 0x2 are
  * both non-zero it calls projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14
- * and then func_801F1844. Reads no other
+ * and then the eight-triangle fan at 0x801F1844. Reads no other
  * state, stores nothing but that halfword and returns nothing. The halfword's
  * wider role is unknown.
  * @status exact
@@ -40,6 +42,6 @@ void dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic
         *(s16 *)(countdown_record + 0x26) = countdown - 1;
     } else if (countdown_record[0] != 0 && countdown_record[2] != 0) {
         projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14();
-        func_801F1844();
+        drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844();
     }
 }

@@ -140,8 +140,10 @@ segments:
     - '@source: src/bof3/ui/drawCommuEntryKindIconSprite.c'
     - '@behavior: emits one 16x16 kind-icon sprite of the commu01/07 entry list at (x, y) into the shared primitive cursor. Installs a draw-mode primitive carrying the graph-type texture page (0x2E for a first query answering 1, 0x2E for a second query answering 2, 0x1E otherwise) with dfe 0 and dtd 0, appends it as 0xC bytes, stamps a 16x16 sprite through the libgpu setter at 0x8017AA08 and writes the position, the atlas cell, the neutral gray 0x80 on all three colour bytes and the CLUT that the high nibble of the 0x801D4CD4 byte for the ordinal sets over 0x7840, closing with a 0x10-byte append under ordering-table slot 1. The atlas cell splits the icon ordinal into decimal digits: the low digit picks the column from 0x50 in 16-pixel steps and the high digit steps 0x30 left and one 16-pixel row down from 0xE0. Its single in-image caller at 0x801D3038 walks the stride-8 active records at 0x801455C8 and passes the icon ordinal of each record kind at (x + 0x22, y + 0x6C)'
   - - 13360
-    - asm
-    - func_801D4030
+    - c
+    - drawWindowTilePiece
+    - '@source: src/bof3/ui/drawWindowTilePiece.c'
+    - '@behavior: emits one atlas piece of the commu01/07 entry screen as a free-size sprite at (x, y) into the shared primitive cursor. GetGraphType selects the draw-mode texture page, keeping 0x2E when a query answers 1, 0x2E when a second query answers 2 and 0x1E otherwise, and the page is installed with dfe 0, dtd 0 and no texture window before that 0xC-byte draw-mode packet is appended at ordering-table slot 1. SetSprt then initialises the 0x14-byte sprite at the advanced cursor, which takes the position from the two coordinates and the six bytes of entry piece of the six-byte tile table 0x801D4CE0 as its cell u and v, its width and height and its CLUT, the CLUT being the palette row offset plus 0x1E0 shifted up by six and ORed with the palette column shifted down by four. All three colour bytes are the neutral gray 0x80 and the sprite is appended at slot 1 as 0x14 bytes. Its three in-image callers drawWindowFrameCommu0107_801D3594, drawSmallWindowFrameCommu0107_801D273C and drawEntryListFrame pass pieces 6 through 13, the corner and edge tiles of those frames'
   - - 13688
     - c
     - drawEntryListPanel

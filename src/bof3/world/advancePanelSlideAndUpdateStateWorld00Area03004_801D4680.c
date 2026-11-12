@@ -37,7 +37,7 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
     drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
   middle = D_1F800044;
-  func_801D88E0((s16)(16 - middle[9] * 45), 64);
+  drawEquipmentGuideColumn((s16)(16 - middle[9] * 45), 64);
   right = D_1F800044;
   if ((right[7] & 1) == 0) {
     func_801D7EB0((s16)(164 + right[9] * 45), 64);

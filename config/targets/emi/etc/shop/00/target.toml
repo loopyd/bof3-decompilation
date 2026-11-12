@@ -32,6 +32,7 @@ sources = [
     "src/bof3/ui/func_801D4DB4_shop00.c",
     "src/bof3/ui/drawShopPanelRowThenStepSaveCursorAndAcceptOrCancel.c",
     "src/bof3/ui/drawShopValuePanelThenPublishSaveSlotRecords.c",
+    "src/bof3/ui/drawShopSavePanelThenWriteSelectedSaveSlotToMemoryCard.c",
     "src/bof3/ui/func_801D5390.c",
     "src/bof3/ui/drawShopValuePanelThenAcceptOrCancelSelection.c",
     "src/bof3/ui/func_801D6018.c",
