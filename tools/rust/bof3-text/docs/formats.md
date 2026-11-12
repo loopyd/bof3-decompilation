@@ -227,6 +227,11 @@ is the decoded byte count.
 | `PL034.EMI` | 65536 | 243732 | 291900 | `d998bc717ebb2d8009fb5a6f4f67e1449bf017b9f816a4de8fa7f1b762780637` |
 | `PL27A.EMI` | 73728 | 239772 | 310136 | `396ae98f20eefc3212ad657b9be8787db3445cf97fe80160baab1c5a21e8e5c1` |
 | `PL056.EMI` | 69632 | 219544 | 275808 | `447d974c63960bf269ad0a92523cbda6cd66b1e82e1d4bc8e8fc1cf5afa5b159` |
+| `PL567.EMI` | 69632 | 215993 | 273792 | `c05f8a142d977e802e41e76a05933aa3d68da7e7644806ac9e5abd8ca638bf94` |
+| `PL467.EMI` | 67584 | 214266 | 275288 | `cc36dfd4a9c994f92cec65e5f118d33bcff1d005dcc264afccf5dec74ec4fcc4` |
+| `PL349.EMI` | 73728 | 198091 | 236692 | `e85b01d37bb1ae7eb25acf06d4b583fd042c9067ede2abd7cdae38461dd58fef` |
+| `PL678.EMI` | 71680 | 199934 | 259712 | `5afc207a11dcf744a83fb24f6310aa8fb78790139726781ef4299def9c428416` |
+| `PL016.EMI` | 71680 | 179827 | 227304 | `90788ddcc329308292905eedd01d83a9bf916a1a5a23d3fa31ca99f0099d9816` |
 
 The original family-0 requests bind each archive to the following file slot and
 IDs. GAME uses these IDs to select a root through the same conditional
@@ -248,6 +253,11 @@ reviewed mode-1 and mode-2 image encodings.
 | `PL034.EMI` | 5 | 623 | `[0,3,4]` | 85 |
 | `PL27A.EMI` | 11 | 629 | `[2,7,10]` | 75 |
 | `PL056.EMI` | 6 | 624 | `[0,5,6]` | 86 |
+| `PL567.EMI` | 16 | 634 | `[5,6,7]` | 80 |
+| `PL467.EMI` | 14 | 632 | `[4,6,7]` | 75 |
+| `PL349.EMI` | 12 | 630 | `[3,4,9]` | 64 |
+| `PL678.EMI` | 18 | 636 | `[6,7,8]` | 79 |
+| `PL016.EMI` | 2 | 620 | `[0,1,6]` | 89 |
 
 The profiles classify root-relative words, image-directory words, image headers
 and consumed encoded words or tokens. The complete compression walk includes a
@@ -1284,6 +1294,14 @@ use the guarded pointer at `0x801EB674`; its targets and resource safety remain
 unqualified. This instruction-body rule requires neither a matching callee ELF
 nor observed execution. The header-copy loop leaves CAPCOM `H+12`, at sector
 offset 20, opaque.
+
+Under the same gate, the complete 52-byte body `[0x801D2FAC,0x801D2FE0)`,
+file offsets `[22444,22496)`, qualifies through the original call at
+`0x801D2878` in that caller. The call passes count eight when the u32 at
+`0x801ECEA4` is nonzero. All thirteen words, including two conditional branches
+and three delay slots, form complete structural control flow. Argument validity,
+memory access, return integrity, aliasing and stable code remain assumptions.
+The copied bytes and pointed storage remain outside this instruction rule.
 
 Only these instruction bytes become known nontext. Surrounding retained ranges,
 tables and other executable bytes do not inherit the classification. Runtime
