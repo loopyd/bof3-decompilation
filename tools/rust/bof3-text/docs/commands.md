@@ -170,7 +170,7 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 Each supported US `SLUS_004.22` or `LOGO/LOGO.EXE` executable exports one
-`bof3.executable-text/v17` document. Re-extract older documents. Use the default
+`bof3.executable-text/v18` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
 LOGO supports kernel, CD, GPU and MDEC diagnostics. Use `analyze SOURCE --json` for

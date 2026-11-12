@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v17";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v18";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -212,12 +212,50 @@ const SLUS_ALLOCATIONS: &[(u32, usize)] = &[
     (0x801868b9, 41),
 ];
 
+const LOGO_CD_COMMAND_LABELS: [u32; 23] = [
+    0x801ce0c8, 0x801ce0d4, 0x801ce0e0, 0x801ce0ec, 0x801ce0f8, 0x801ce104, 0x801ce110, 0x801ce11c,
+    0x801ce120, 0x801ce12c, 0x801ce13c, 0x801ce148, 0x801ce150, 0x801ce15c, 0x801ce168, 0x801ce170,
+    0x801ce17c, 0x801ce188, 0x801ce194, 0x801ce1a0, 0x801ce1a8, 0x801ce1b4, 0x801ce1bc,
+];
+const LOGO_CD_INTERRUPT_LABELS: [u32; 6] = [
+    0x801ce1c4, 0x801ce1d0, 0x801ce1d8, 0x801ce1e4, 0x801ce1f0, 0x801ce1fc,
+];
+
 const LOGO_ALLOCATIONS: &[(u32, usize)] = &[
     (0x801ce044, 28),
     (0x801ce060, 25),
     (0x801ce07c, 26),
     (0x801ce098, 15),
     (0x801ce0a8, 21),
+    (LOGO_CD_COMMAND_LABELS[0], 9),
+    (LOGO_CD_COMMAND_LABELS[1], 9),
+    (LOGO_CD_COMMAND_LABELS[2], 9),
+    (LOGO_CD_COMMAND_LABELS[3], 9),
+    (LOGO_CD_COMMAND_LABELS[4], 9),
+    (LOGO_CD_COMMAND_LABELS[5], 11),
+    (LOGO_CD_COMMAND_LABELS[6], 11),
+    (LOGO_CD_COMMAND_LABELS[7], 2),
+    (LOGO_CD_COMMAND_LABELS[8], 11),
+    (LOGO_CD_COMMAND_LABELS[9], 13),
+    (LOGO_CD_COMMAND_LABELS[10], 10),
+    (LOGO_CD_COMMAND_LABELS[11], 8),
+    (LOGO_CD_COMMAND_LABELS[12], 9),
+    (LOGO_CD_COMMAND_LABELS[13], 9),
+    (LOGO_CD_COMMAND_LABELS[14], 8),
+    (LOGO_CD_COMMAND_LABELS[15], 11),
+    (LOGO_CD_COMMAND_LABELS[16], 9),
+    (LOGO_CD_COMMAND_LABELS[17], 12),
+    (LOGO_CD_COMMAND_LABELS[18], 11),
+    (LOGO_CD_COMMAND_LABELS[19], 8),
+    (LOGO_CD_COMMAND_LABELS[20], 10),
+    (LOGO_CD_COMMAND_LABELS[21], 7),
+    (LOGO_CD_COMMAND_LABELS[22], 8),
+    (LOGO_CD_INTERRUPT_LABELS[0], 10),
+    (LOGO_CD_INTERRUPT_LABELS[1], 8),
+    (LOGO_CD_INTERRUPT_LABELS[2], 12),
+    (LOGO_CD_INTERRUPT_LABELS[3], 9),
+    (LOGO_CD_INTERRUPT_LABELS[4], 10),
+    (LOGO_CD_INTERRUPT_LABELS[5], 7),
     (0x801ce214, 27),
     (0x801ce230, 12),
     (0x801ce23c, 25),
@@ -316,7 +354,7 @@ const LAYOUTS: &[Layout] = &[
         build: "US SLUS-00422 logo diagnostic ASCII",
         load: 0x801ce000,
         size: 122880,
-        masked_sha256: "4bcea15bf0395cc97212d2715a28c191ea8881db3cb58de415d3af18b587109e",
+        masked_sha256: "5502c539cb65019b2fc8f183775811c5863bcfb75862cdc154e834ab735635ea",
         allocations: LOGO_ALLOCATIONS,
     },
 ];
@@ -555,6 +593,9 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
+    if LOGO_CD_COMMAND_LABELS.contains(&address) || LOGO_CD_INTERRUPT_LABELS.contains(&address) {
+        return Codec::AsciiLiteral;
+    }
     if LOGO_ALLOCATIONS.iter().any(|&(at, _)| at == address) {
         return match address {
             0x801ce0a8 | 0x801ce230 => Codec::AsciiPrintfLiteral,
@@ -579,6 +620,12 @@ fn codec(address: u32) -> Codec {
 }
 
 fn consumers(address: u32) -> Vec<u32> {
+    if LOGO_CD_COMMAND_LABELS.contains(&address) {
+        return vec![0x801d04a4, 0x801d0a2c, 0x801d0cac, 0x801d0f78, 0x801d182c];
+    }
+    if LOGO_CD_INTERRUPT_LABELS.contains(&address) {
+        return vec![0x801d0a2c, 0x801d0cac, 0x801d0f78, 0x801d182c];
+    }
     if CD_COMMAND_LABELS.contains(&address) {
         return vec![0x801755d8];
     }
@@ -1094,7 +1141,11 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                 }
             }]
         } else {
-            let table = if address == CD_FALLBACK {
+            let table = if LOGO_CD_COMMAND_LABELS.contains(&address)
+                || LOGO_CD_INTERRUPT_LABELS.contains(&address)
+            {
+                0x801d9d88..0x801d9e28
+            } else if address == CD_FALLBACK {
                 0x801857a4..0x80185844
             } else if CD_COMMAND_LABELS.contains(&address) {
                 0x801857a4..0x80185814

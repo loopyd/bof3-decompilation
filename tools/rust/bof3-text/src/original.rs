@@ -88,6 +88,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
                 length: 136,
                 evidence: "original US LOGO 0x801D1394..0x801D141C; complete CD_vol instruction body from PsyQ libcd.a bios_1.o; all fourteen HI16/LO16 relocations and external pointer words match original bytes; typed CdlATV argument through original CdMix caller; reviewed straight-line body ends with return and delay slot before CD_flush; exact executable identity; no runtime execution or pointer-storage classification claim",
             },
+            NontextRange {
+                offset: 50_568,
+                length: 160,
+                evidence: "original US LOGO 0x801D9D88..0x801D9E28; 32 command and eight interrupt little-endian pointer words target supported literal allocations, including twelve aliases of the shared question mark; original table-loaded diagnostic printf arguments and exact executable identity; stored representation only, no arbitrary-index bound or runtime execution claim",
+            },
         ];
     }
     if data.len() != 1_445_888 || sha256_hex(data) != US_EXECUTABLE_SHA256 {
@@ -1084,7 +1089,63 @@ fn resident_animation_field_ranges(
     ranges
 }
 
-/// Recognized serialized graphics storage; no rasterized-text or display claim.
+fn pl025_compression_metadata_ranges(data: &[u8]) -> Option<Vec<NontextRange>> {
+    let evidence = "original US PL025 entry 3 compression checkword, token controls, reference displacements, length extensions and terminator; original checkword consumer 0x801623A8..0x80162420 and decoder 0x80164028..0x801644CC; exact source identity; literal data and skipped prefix bytes excluded; no decoded-role, rasterized-text absence or runtime claim";
+    let mut ranges = vec![NontextRange {
+        offset: 0,
+        length: 4,
+        evidence,
+    }];
+    let mut at = 6;
+    let mut decoded = 0_usize;
+    loop {
+        let start = at;
+        let control = *data.get(at)?;
+        at += 1;
+        let terminal = control == 0xff;
+        let literal = control & 0x10 != 0;
+        let mut count = 0;
+        if !terminal {
+            if !literal {
+                let low = usize::from(*data.get(at)?);
+                at += 1;
+                let distance = 2048 - ((usize::from(control & 0xe0) << 3) | low);
+                if distance > decoded {
+                    return None;
+                }
+            }
+            count = if literal {
+                32 - usize::from(control & 31)
+            } else {
+                usize::from(control & 15) + 3
+            };
+            if count == if literal { 16 } else { 18 } {
+                count += usize::from(*data.get(at)?);
+                at += 1;
+            }
+        }
+        let previous = ranges.last_mut()?;
+        if previous.offset + previous.length == start {
+            previous.length += at - start;
+        } else {
+            ranges.push(NontextRange {
+                offset: start,
+                length: at - start,
+                evidence,
+            });
+        }
+        if terminal {
+            return (at == data.len() && decoded == 408_916).then_some(ranges);
+        }
+        if literal {
+            data.get(at..at.checked_add(count)?)?;
+            at += count;
+        }
+        decoded = decoded.checked_add(count)?;
+    }
+}
+
+/// Reviewed graphics and compression fields; no rasterized-text or display claim.
 pub fn graphics_storage_ranges(
     entry: Entry,
     data: &[u8],
@@ -1094,6 +1155,12 @@ pub fn graphics_storage_ranges(
         return None;
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (3, 71_680, 1, 0x8003_b800, 332_447)
+            if sha256_hex(data)
+                == "d58be9091c72afa0aa758f6b9e1a3aa542dd1ffdae693f805fbca1f271ec8744" =>
+        {
+            pl025_compression_metadata_ranges(data)
+        }
         (0, 2048, 0, 0x8003_b800, 331_788)
             if sha256_hex(data)
                 == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e" =>

@@ -479,6 +479,11 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 payload,
                                 original_us,
                             ) {
+                                let gap_evidence = if entry.transfer_mode == 1 {
+                                    "compressed-bank bytes outside reviewed token metadata"
+                                } else {
+                                    "sprite-bank bytes outside reviewed graphics storage"
+                                };
                                 let mut at = 0;
                                 for span in spans {
                                     if span.offset > at {
@@ -486,8 +491,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             entry.offset + at,
                                             span.offset - at,
                                             "unresolved",
-                                            "sprite-bank bytes outside reviewed graphics storage"
-                                                .into(),
+                                            gap_evidence.into(),
                                         ));
                                     }
                                     record.ranges.push(RangeRecord {
