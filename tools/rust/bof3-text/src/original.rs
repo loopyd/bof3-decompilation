@@ -1089,8 +1089,13 @@ fn resident_animation_field_ranges(
     ranges
 }
 
-fn pl025_compression_metadata_ranges(data: &[u8]) -> Option<Vec<NontextRange>> {
-    let evidence = "original US PL025 entry 3 compression checkword, token controls, reference displacements, length extensions and terminator; original checkword consumer 0x801623A8..0x80162420 and decoder 0x80164028..0x801644CC; exact source identity; literal data and skipped prefix bytes excluded; no decoded-role, rasterized-text absence or runtime claim";
+fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<NontextRange>> {
+    let header = data.get(..6)?;
+    if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
+        return None;
+    }
+    let expected = usize::try_from(check_word).ok()?;
+    let evidence = "original US type-1 EMI compression checkword, token controls, reference displacements, length extensions and terminator; original dispatch 0x80162420..0x80162444, checkword consumer 0x801623A8..0x80162420 and decoder 0x80164028..0x801644CC; exact archive identity and checked complete token walk; literal data and skipped prefix bytes excluded; no decoded-role, rasterized-text absence or runtime claim";
     let mut ranges = vec![NontextRange {
         offset: 0,
         length: 4,
@@ -1135,13 +1140,16 @@ fn pl025_compression_metadata_ranges(data: &[u8]) -> Option<Vec<NontextRange>> {
             });
         }
         if terminal {
-            return (at == data.len() && decoded == 408_916).then_some(ranges);
+            return (at == data.len() && decoded == expected).then_some(ranges);
         }
         if literal {
             data.get(at..at.checked_add(count)?)?;
             at += count;
         }
         decoded = decoded.checked_add(count)?;
+        if decoded > expected {
+            return None;
+        }
     }
 }
 
@@ -1154,13 +1162,10 @@ pub fn graphics_storage_ranges(
     if !original_us {
         return None;
     }
+    if entry.transfer_mode == 1 {
+        return compression_metadata_ranges(data, entry.check_word);
+    }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
-        (3, 71_680, 1, 0x8003_b800, 332_447)
-            if sha256_hex(data)
-                == "d58be9091c72afa0aa758f6b9e1a3aa542dd1ffdae693f805fbca1f271ec8744" =>
-        {
-            pl025_compression_metadata_ranges(data)
-        }
         (0, 2048, 0, 0x8003_b800, 331_788)
             if sha256_hex(data)
                 == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e" =>

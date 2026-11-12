@@ -70,22 +70,24 @@ banks remain unresolved under this rule.
 
 ## Compressed bank metadata coverage
 
-For original US `PL025.EMI` entry 3, coverage recognizes compression metadata
-under the exact archive and 332,447-byte payload identities, transfer mode 1,
-load argument `0x8003B800` and archive offset 71,680. It classifies the four-byte
-prefix checkword, token controls, reference displacement operands, optional
-length extensions and final `FF` terminator. The original checkword consumer is
-`0x801623A8..0x80162420`; initialization and decoding use
-`0x80164028..0x801644CC`.
+Coverage recognizes compression metadata in transfer-mode-1 entries whose
+complete archive matches the original US inventory. The shared original loader
+selects this decoder at `0x80162420..0x80162444`, checks the first payload word
+against the TOC checkword at `0x801623A8..0x80162420`, and initializes and resumes
+decoding through `0x80164028..0x801644CC`.
 
-The walk consumes the complete packed payload and reconciles 408,916 decoded
-bytes. These checks bound the host classifier; they do not establish bounds
-enforced by the original decoder. The 61,714 metadata bytes become known
-nontext. Literal data and skipped prefix bytes `[4,6)` remain unresolved.
-References may overlap earlier output. Neither those references nor their
-literal dependencies establish the roles of decoded bytes, the absence of
-rasterized text or runtime behavior. Other compressed banks remain unresolved
-under this rule.
+The host walk requires at least six payload bytes, a nonzero matching checkword,
+bounded token reads, references into initialized output, complete payload
+consumption and a decoded byte count equal to the checkword. If a condition
+fails, this rule classifies no bytes. These checks bound the classifier; they do
+not establish bounds enforced by the original decoder or validate destination RAM.
+
+Only the four-byte checkword, token controls, reference displacement operands,
+optional length extensions and final `FF` terminator become known nontext.
+Literal data and skipped prefix bytes `[4,6)` remain unresolved. References may
+overlap earlier output. Neither those references nor their literal dependencies
+establish the roles of decoded bytes, the absence of rasterized text or runtime
+behavior. Other transfer modes retain their existing classification.
 
 ## Counted sprite metadata coverage
 
