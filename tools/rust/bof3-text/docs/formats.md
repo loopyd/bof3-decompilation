@@ -321,24 +321,36 @@ The containing archive must also match the original disc manifest.
 | --- | --- | ---: | ---: |
 | `[0x3C50,0x3EC0)` | `[0x801D4850,0x801D4AC0)` | 624 | 54 |
 | `[0x4144,0x4408)` | `[0x801D4D44,0x801D5008)` | 708 | 34 |
+| `[0x4FC0,0x51CC)` | `[0x801D5BC0,0x801D5DCC)` | 524 | 41 |
+| `[0x5E14,0x6084)` | `[0x801D6A14,0x801D6C84)` | 624 | 62 |
+| `[0x72B0,0x7490)` | `[0x801D7EB0,0x801D8090)` | 480 | 14 |
+| `[0x7490,0x7670)` | `[0x801D8090,0x801D8270)` | 480 | 14 |
+| `[0x7850,0x7A90)` | `[0x801D8450,0x801D8690)` | 576 | 21 |
 | `[0x7EE4,0x81F8)` | `[0x801D8AE4,0x801D8DF8)` | 788 | 26 |
 | `[0xA458,0xA6F8)` | `[0x801DB058,0x801DB2F8)` | 672 | 18 |
 | `[0xAF78,0xB444)` | `[0x801DBB78,0x801DC044)` | 1228 | 91 |
+| `[0xBC94,0xBED8)` | `[0x801DC894,0x801DCAD8)` | 580 | 28 |
 | `[0xE3E4,0xE74C)` | `[0x801DEFE4,0x801DF34C)` | 872 | 70 |
 | `[0xE7F8,0xEB68)` | `[0x801DF3F8,0x801DF768)` | 880 | 64 |
+| `[0xF60C,0xF86C)` | `[0x801E020C,0x801E046C)` | 608 | 49 |
 | `[0xFB88,0xFF64)` | `[0x801E0788,0x801E0B64)` | 988 | 88 |
 | `[0xFF64,0x1020C)` | `[0x801E0B64,0x801E0E0C)` | 680 | 22 |
+| `[0x11714,0x118F8)` | `[0x801E2314,0x801E24F8)` | 484 | 32 |
 | `[0x119E0,0x11D48)` | `[0x801E25E0,0x801E2948)` | 872 | 63 |
+| `[0x12A38,0x12C3C)` | `[0x801E3638,0x801E383C)` | 516 | 35 |
+| `[0x1354C,0x13768)` | `[0x801E414C,0x801E4368)` | 540 | 47 |
 | `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 | 9 |
 | `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 | 22 |
+| `[0x163B0,0x165EC)` | `[0x801E6FB0,0x801E71EC)` | 572 | 49 |
+| `[0x16D48,0x16F34)` | `[0x801E7948,0x801E7B34)` | 492 | 43 |
 
 Every listed body matches its complete sized executable ELF section, original
 bytes and resident RAM, with its text relocations reconciled. Structural
 control-flow review covers every instruction and delay slot, assuming call returns.
 The body at `0x801DEFE4` has six bounded internal switch targets; the separate
 address table retains its prior status. The body at `0x801DB058` includes four
-`BREAK` exception paths. The callback target and selector at `0x801E25E0` remain
-unqualified. These checks do not establish feasible paths, exception handling or
+`BREAK` exception paths. The callback targets and selectors in the bodies at `0x801D6A14`,
+`0x801DF3F8`, `0x801E25E0` and `0x801E3638` remain unqualified. These checks do not establish feasible paths, exception handling or
 callee behavior.
 
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
