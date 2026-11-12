@@ -210,19 +210,36 @@ and physical offsets may differ between archives.
 | `[0x16874,0x168A8)` | `[0x800AD074,0x800AD0A8)` | 52 |
 | `[0x168A8,0x16A6C)` | `[0x800AD0A8,0x800AD26C)` | 452 |
 | `[0x16A6C,0x16AEC)` | `[0x800AD26C,0x800AD2EC)` | 128 |
+| `[0x16AEC,0x16C34)` | `[0x800AD2EC,0x800AD434)` | 328 |
+| `[0x16C34,0x16CD4)` | `[0x800AD434,0x800AD4D4)` | 160 |
+| `[0x16E7C,0x16E9C)` | `[0x800AD67C,0x800AD69C)` | 32 |
 
 The body at `0x800AC964..0x800ACF80` has a captured native entry at `0x800AC964`
 with return address `0x801D1A80`. Complete original control-flow review accounts
 for all 391 words, including the return delay slot.
 Both direct calls target `0x80158DB8`, whose body remains outside this review.
+The bodies at `0x800AD2EC..0x800AD434` and `0x800AD434..0x800AD4D4` have complete
+original control-flow reviews and conditional entries through the original table
+consumed by `0x800AD26C`. Call continuations assume that callees return; these
+two bodies have no captured entry or ELF-match claim.
 The other listed bodies match complete executable ELF sections of sized function
 symbols, with text relocations reconciled. All listed bodies include their
 returns and delay slots. Their bytes match original `BATTLE.EMI` entry 15 and
 captured resident RAM. They contain no embedded tables or literal pools.
+
+The same source gate qualifies twelve bytes at payload `[0x194,0x1A0)`, runtime
+`0x80096994..0x800969A0`, as three numeric function-address words. The complete
+dispatcher at `0x800AD26C` loads all three words, copies them to its stack and
+calls the indexed address. Selectors 0, 1 and 2 conditionally select the three
+handlers at `0x800AD2EC`, `0x800AD434` and `0x800AD67C`. The words match original
+bytes and resident RAM. Actual invocation, current-work validity, selector bounds
+and pointer lifetimes remain unverified. The interval `0x800AD4D4..0x800AD67C`
+and surrounding header bytes receive no classification from this rule.
+
 Neighboring functions and tables retain their prior status. This classification
-establishes instruction bytes. It does not establish full-function execution,
-valid arguments, selector bounds, indirect-call safety, resource safety, a unique
-supplier or duplicate-source ownership.
+establishes the listed instruction and address bytes. It does not establish
+full-function execution, valid arguments, selector bounds, indirect-call safety,
+resource safety, a unique supplier or duplicate-source ownership.
 
 ## Executable geometry table coverage
 
