@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F9680
   - - 13068
-    - asm
-    - func_801F9F0C
+    - c
+    - stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C
+    - '@source: src/bof3/scenario/stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C.c'
+    - '@behavior: Overlay secondary-state handler, the word stored at 0x801FD1DC (entry 6 of the ten-word handler run at 0x801FD1C4) that dispatchSecondaryStateScenarioScena1200_801F886C selects with the signed shared state byte D_80146874, so it runs while that byte reads 6; that table word is the only image reference to the span and the walker clears D_80146874 on its last sub-state. It switches on the shared sub-state byte D_80146875 through the twenty-three-entry absolute jump table at 0x801F6EAC, an overlay-local table of the leading tabledata blob. Each arm either waits for the shared progress byte g_ScenarioProgress to reach one value and clears it or runs one shared reset or cue helper, then arms the effect-bank byte D_80143F1F, stores the next-window bytes D_80146865 and D_80146866, flips a bit of the mode halfword D_80146258 and requests a front-end context through func_8019FA28 with the seeds 0xBC and 0x79 and the kinds 0x80 through 0x8E. Sub-states 3 and 0x12 take a slot index from func_8019601C, publish it at 0x1F800000 and fill that entry of the 0x74-byte record run at 0x80143FC8; sub-state 0x16 runs func_8015C058 and clears the sub-state and state bytes.'
   - - 15324
     - asm
     - func_801FA7DC

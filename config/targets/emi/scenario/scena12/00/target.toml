@@ -23,6 +23,7 @@ sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FCEB4.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FD018.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FD064.c",
+    "src/bof3/scenario/stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",
@@ -65,3 +66,9 @@ support_sources = [
     "src/bof3/scenario/setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC6E0.c",
 ]
 psyq_source = "src/bof3/support/scena12_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F9F0C
+section = ".rodata"
+address = 0x801F6EAC
+size = 0x5C
