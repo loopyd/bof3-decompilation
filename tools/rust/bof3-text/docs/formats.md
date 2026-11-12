@@ -676,6 +676,26 @@ matching callee ELF sections and observed entry are not admission claims.
 | `[0x148EC,0x14A7C)` | `[0x801E54EC,0x801E567C)` | 400 | `0x801E4910` | `0x801E48D4` |
 | `[0x181D8,0x183A8)` | `[0x801E8DD8,0x801E8FA8)` | 464 | `0x801E6F54` | `0x801E6E54` |
 
+Two original numeric function-address tables at payload `[0x320,0x32C)`
+and `[0x3D0,0x3E0)` contain three and four words. The qualified dispatchers
+at `0x801E63C0` and `0x801E960C` copy all their words to the stack, index
+by unsigned work bytes `+1` and `+3`, and call the selected addresses at
+`0x801E6408` and `0x801E9660`. Finite selector alternatives identify these
+additional complete original bodies. Every table word, consumer instruction
+and complete body matches original bytes and resident RAM.
+
+| Payload interval | Runtime interval | Bytes | Table | Selector | Original JALR |
+| --- | --- | ---: | --- | ---: | --- |
+| `[0x158B4,0x159F8)` | `[0x801E64B4,0x801E65F8)` | 324 | `0x801D0F20` | 1 | `0x801E6408` |
+| `[0x159F8,0x15B24)` | `[0x801E65F8,0x801E6724)` | 300 | `0x801D0F20` | 2 | `0x801E6408` |
+| `[0x18BA8,0x18D10)` | `[0x801E97A8,0x801E9910)` | 360 | `0x801D0FD0` | 0 | `0x801E9660` |
+
+Overall selector bounds, current-work validity and actual invocation remain
+unverified. Call continuations assume returns. The last body contains two
+terminal division-trap instructions; divisor validity is unverified. Matching
+callee ELF sections, gameplay behavior and resource safety are not established.
+Surrounding header and referenced data retain their prior status.
+
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
 executable ELF section, all 54 text relocations, original bytes and resident RAM
 reconcile. Complete control-flow review covers ten conditional branches, two
@@ -797,6 +817,26 @@ observed entry, argument validity and callee behavior remain unverified.
 | `[0xE58D4,0xE596C)` | `[0x8017B8D4,0x8017B96C)` | 152 | `0x8014ABA8` | `0x8014AAC8` |
 | `[0xE59CC,0xE5A40)` | `[0x8017B9CC,0x8017BA40)` | 116 | `0x8014AB58` | `0x8014AAC8` |
 | `[0xE80B4,0xE80E4)` | `[0x8017E0B4,0x8017E0E4)` | 48 | `0x8014AF24` | `0x8014AEE0` |
+
+These complete original SLUS bodies also qualify through original direct
+calls and explicit caller dependencies rooted in the qualified profile.
+Every original word and terminal delay slot matches ASM and resident RAM.
+Call continuations assume returns. Five bodies end with a register jump whose
+original in-body constant selects `0xA0`, `0xB0` or `0xC0`. BIOS behavior and
+returns remain unverified. Two indirect calls retain unqualified targets and
+selectors. Matching callee ELF and observed execution are not admission claims.
+
+| File interval | Runtime interval | Bytes | Original JAL | Qualified caller |
+| --- | --- | ---: | --- | --- |
+| `[0xB56B4,0xB573C)` | `[0x8014B6B4,0x8014B73C)` | 136 | `0x8014ACD0` | `0x8014ACA0` |
+| `[0xE8104,0xE8110)` | `[0x8017E104,0x8017E110)` | 12 | `0x8017E0BC` | `0x8017E0B4` |
+| `[0xE8224,0xE8290)` | `[0x8017E224,0x8017E290)` | 108 | `0x8017E0C4` | `0x8017E0B4` |
+| `[0xE82B4,0xE831C)` | `[0x8017E2B4,0x8017E31C)` | 104 | `0x8017E0CC` | `0x8017E0B4` |
+| `[0xE8CDC,0xE8CE8)` | `[0x8017ECDC,0x8017ECE8)` | 12 | `0x8014AF3C` | `0x8014AEE0` |
+| `[0xE8CEC,0xE8CF8)` | `[0x8017ECEC,0x8017ECF8)` | 12 | `0x8017E274` | `0x8017E224` |
+| `[0xE91CC,0xE91FC)` | `[0x8017F1CC,0x8017F1FC)` | 48 | `0x801746E8` | `0x801746E0` |
+| `[0xE937C,0xE9388)` | `[0x8017F37C,0x8017F388)` | 12 | `0x8017F1DC` | `0x8017F1CC` |
+| `[0xE93AC,0xE93B8)` | `[0x8017F3AC,0x8017F3B8)` | 12 | `0x8017F294` | `0x8017F27C` |
 
 ## Executable geometry table coverage
 
