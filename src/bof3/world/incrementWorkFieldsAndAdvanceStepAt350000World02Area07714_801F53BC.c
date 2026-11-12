@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F54B8(void);
+void drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8(void);
 
 /* @source 0x801F53BC
  * @behavior Loads the work record from scratchpad pointer cell 0x1F800044,
@@ -21,5 +21,5 @@ void incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC(void) {
   if (*(u32*)(work + 0x38) == 0x350000) {
     work[2]++;
   }
-  func_801F54B8();
+  drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8();
 }

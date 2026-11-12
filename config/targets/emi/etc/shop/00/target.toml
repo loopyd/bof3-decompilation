@@ -145,6 +145,7 @@ sources = [
     "src/bof3/ui/stepNoteListCursorThenSwapSelectedNote.c",
     "src/bof3/ui/publishNoteListPanelThenConfirmOrCancel.c",
     "src/bof3/ui/drawShopValuePanelThenClearPanelAndArmActionId.c",
+    "src/bof3/ui/drawShopValuePanelThenToggleValueAndAcceptOrCancel.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

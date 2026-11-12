@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/initArea10313State.c",
     "src/bof3/world/advanceWorkByte9AndResetWorkAreaAt1dWorld02Area10313_801F511C.c",
     "src/bof3/world/claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834.c",
+    "src/bof3/world/drawWorkBandWithDescendingVariantOnFifthTickThenResetWorkAreaOnLastBandWorld02Area10313_801F42E0.c",
 ]
 support_sources = [
     "src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c",

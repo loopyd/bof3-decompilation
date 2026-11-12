@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F54B8(void);
+void drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8(void);
 
 /* @source 0x801F533C
  * @behavior Overlay step handler: loads the scratch work-record cursor from the
@@ -18,5 +18,5 @@ void setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C(void) {
   work = SPAD_PTR_SLOT(u8, 0x44);
   *(u16*)(work + 0x3E) = 0x320;
   work[2]++;
-  func_801F54B8();
+  drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8();
 }

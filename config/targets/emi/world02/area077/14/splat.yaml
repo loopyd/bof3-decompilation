@@ -203,8 +203,10 @@ segments:
     - '@source: src/bof3/world/decrementWorkFieldsAndResetStepWorld02Area07714_801F5464.c'
     - '@behavior: subtracts 0x2000 from work word +0x38 and 0x10 from halfword +0x3E; sets byte +2 to 1 when word +0x38 reaches 0x340000, then calls the local helper at 0x801F54B8.'
   - - 10424
-    - asm
-    - func_801F54B8
+    - c
+    - drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8
+    - '@source: src/bof3/world/drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8.c'
+    - '@behavior: reads the scratchpad work-record pointer cell 0x1F800044, shifts its word 0x34 and word 0x38 right by nine bits as the quad centre and takes its unsigned halfword 0x3E as the depth centre; stamps the shared cursor g_PrimCursor as a POLY_FT4 with the shade texture off, fills the four scratchpad vectors at 0x1F800014 with the corners (x lane word 0x34 less 0x4040 for the first and third vectors and less 0x3F40 for the second and fourth, y lane word 0x38 less 0x4030 and less 0x3FD0, z lane halfword 0x3E less 0x30 and plus 0x30), projects them with RotTransPers4 into the primitive vertex words at +0x08, +0x10, +0x18 and +0x20, then passes the packed texture state 0x21800133 through 0x80155560 with mode 1 and queues the primitive through 0x80155A08 at the fixed grid cell 0x5D by 0x34 with mode 0 and size 0x28.'
   - - 10760
     - c
     - dispatchStateByte2Table62bcWorld02Area07714_801F5608

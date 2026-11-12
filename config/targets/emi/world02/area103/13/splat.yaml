@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F41EC
   - - 5856
-    - asm
-    - func_801F42E0
+    - c
+    - drawWorkBandWithDescendingVariantOnFifthTickThenResetWorkAreaOnLastBandWorld02Area10313_801F42E0
+    - '@source: src/bof3/world/drawWorkBandWithDescendingVariantOnFifthTickThenResetWorkAreaOnLastBandWorld02Area10313_801F42E0.c'
+    - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and treats its byte 0x09 as a five-tick band counter: once the band index (byte 0x09 / 5, truncated to a byte) reaches 4 it hands the sequence to the shared work-area reset helper func_80196070 and advances nothing, otherwise it hands the block drawer func_801F4E70 the descending variant 7 - band index on every tick whose byte 0x09 is a multiple of five, then advances byte 0x09 by one through a fresh cell read and runs the drawing pass func_801F49A0(1).'
   - - 6004
     - asm
     - func_801F4374

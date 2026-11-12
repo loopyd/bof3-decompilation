@@ -2,7 +2,7 @@
 
 extern u8 D_8014933B;
 
-void func_801F54B8(void);
+void drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8(void);
 
 /* @source 0x801F541C
  * @behavior Reads the state byte at 0x8014933B. If zero, increments
@@ -20,5 +20,5 @@ void incrementWorkStepIfStateZeroWorld02Area07714_801F541C(void) {
     work = SPAD_PTR_SLOT(u8, 0x44);
     work[2]++;
   }
-  func_801F54B8();
+  drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8();
 }

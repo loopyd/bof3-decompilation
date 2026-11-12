@@ -22,7 +22,7 @@ advanceWorkByte2UntilHalfword36Reaches4fThenRetreatXWordDrawOnFifthTickWorld02Ar
 drawWorkBandOnFifthTickAndAdvanceWorkByte2At15World02Area10313_801F4030 = 0x801F4030;
 func_801F4108 = 0x801F4108;
 func_801F41EC = 0x801F41EC;
-func_801F42E0 = 0x801F42E0;
+drawWorkBandWithDescendingVariantOnFifthTickThenResetWorkAreaOnLastBandWorld02Area10313_801F42E0 = 0x801F42E0;
 func_801F4374 = 0x801F4374;
 func_801F43EC = 0x801F43EC;
 func_801F44B0 = 0x801F44B0;

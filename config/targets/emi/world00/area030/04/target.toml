@@ -182,6 +182,7 @@ sources = [
     "src/bof3/world/stepSharedIndexLatchGateOnPadAndAdvanceStateWorld00Area03004_801DD664.c",
     "src/bof3/world/resetWorkRecordAndRequestEntryWorld00Area03004_801E0124.c",
     "src/bof3/world/func_801D7B64_area03004.c",
+    "src/bof3/world/advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128.c",
     "src/bof3/world/advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958.c",
     "src/bof3/world/initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0.c",
     "src/bof3/world/drawArea030Panel.c",

@@ -13,6 +13,7 @@ sources = [
     "src/bof3/scenario/armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0.c",
     "src/bof3/scenario/armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248.c",
     "src/bof3/scenario/bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C.c",
+    "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C.c",
     "src/bof3/scenario/clampPaletteChannelsScenarioScena1300_801FB0B8.c",
     "src/bof3/scenario/clearTwoSelectedWorkRecordFlagsThenSubmitBothAndResetWorkAreaScenarioScena1300_801F7C24.c",
     "src/bof3/scenario/clearWorkTintQueueFrontEndMode33SetPhase2AndAdvanceWorkByte1ScenarioScena1300_801F71DC.c",

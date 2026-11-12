@@ -33,6 +33,7 @@ sources = [
     "src/bof3/ui/drawPartyMemberStatusBoxBate00_801D27C4.c",
     "src/bof3/ui/drawPartyMemberParameterPanelBate00_801D2C2C.c",
     "src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c",
+    "src/bof3/ui/drawEquipCategoryListPanelBate00_801D7AD0.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",
@@ -40,3 +41,14 @@ support_sources = [
     "src/bof3/support/bate_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/bate_00_psyq.c"
+
+# drawEquipCategoryListPanelBate00_801D7AD0 dispatches on the task state byte
+# through a six-entry `.rodata` jump table the compiler emits, and the original
+# overlay keeps that table at 0x801D0D68 inside the payload's leading data blob
+# (offset 0x168, the words 0x801D7B24, 0x801D7B2C three times and 0x801D7B34
+# twice). The table's entries are the function's own dispatch arm labels.
+[[matching.section_placements]]
+function = 0x801D7AD0
+section = ".rodata"
+address = 0x801D0D68
+size = 0x18

@@ -176,8 +176,10 @@ segments:
     - dispatchStateByte1Table624cWorldWorld02Area08813_801F4CD8
     - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 8476
-    - asm
-    - func_801F4D1C
+    - c
+    - seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld02Area08813_801F4D1C
+    - '@source: src/bof3/world/seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld02Area08813_801F4D1C.c'
+    - '@behavior: Entry 0 of the three-entry state-1 handler table 0x801F624C that the overlay step dispatch 0x801F4CD8 indexes with work byte 0x01; runs the shared 0x80196070 helper and returns while bit 0 of the shared byte 0x80146871 is set, returns while the low ten bits of the shared tick word 0x80143E6C are non-zero, and otherwise takes one rand() answer whose low two bits bound the number of records it claims and whose bits 4-5 become their facing; each iteration claims one 0x74-byte front-end record at 0x80143FC8 through the shared allocator 0x8019601C and returns as soon as that index reads 0xFF, otherwise storing 1 in row byte 0x00, 0x16 in row byte 0x05, 1 in row byte 0x01, the loop counter in row byte 0x06, the random facing in row byte 0x08 and the shared 0x8015477C distance of the shared cursor pair 0x80145EC4 and 0x80145EC8 biased by 0x400 in the signed halfword at row offset 0x3E.'
   - - 8792
     - c
     - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08813_801F4E58

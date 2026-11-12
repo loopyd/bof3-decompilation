@@ -127,8 +127,10 @@ segments:
     - asm
     - func_801D44E0
   - - 14996
-    - asm
-    - func_801D4694
+    - c
+    - computeKindSlotOrigin
+    - '@source: src/bof3/ui/computeKindSlotOrigin.c'
+    - '@behavior: computes the screen origin of one record slot of the commu01/07 entry grid and stores it through two halfword pointers; x is column (kind - 1) % 4 of four 52-pixel columns starting at 0x20 and y is row band (kind - 1) >> 2 of 61-pixel rows starting at 0x6B; an ordinal of zero takes the fixed 0xA inset on x, and any other ordinal starts at slot 2 when the kind has two live records, slot 1 when it has three and slot 0 otherwise, then adds the (x, y) offset of entry 0x801D4DDC at that slot advanced by ordinal - 1'
   - - 15300
     - asm
     - func_801D47C4

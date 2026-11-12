@@ -38,6 +38,7 @@ sources = [
     "src/bof3/ui/drawPartyMemberParameterPanelShisu00_801D3BD4.c",
     "src/bof3/ui/drawAbilityListPanelShisu00_801D835C.c",
     "src/bof3/ui/drawEquipCategoryListPanelShisu00_801D8A78.c",
+    "src/bof3/ui/drawEquipCategoryAvailabilityListPanelShisu00_801D7BFC.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",

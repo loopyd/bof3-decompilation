@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801F873C
   - - 8220
-    - asm
-    - func_801F8C1C
+    - c
+    - claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C
+    - '@source: src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C.c'
+    - '@behavior: Claims the pair of shared 0x98-byte work records this overlay activates through its own activation entries at 0x801FBF78. It asks the shared allocator func_8015CA48 for a record identifier and returns when it is 0xFF, otherwise sets the flag byte of the 0x80146888 record that identifier indexes, asks for a second identifier and clears that first flag byte again when the second one is 0xFF. With two identifiers it loads the entry at 0x801FBF78, sets the second record flag byte, publishes each identifier as the scratchpad halfword 0x1F800000 and hands the entry, then the entry 0x10 bytes past it, to func_801A65A0. It takes no arguments, returns nothing and its 0x28-byte frame keeps $ra and $s0 to $s4.'
   - - 8460
     - asm
     - func_801F8D0C
