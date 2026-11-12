@@ -1287,8 +1287,15 @@ at most one literal game byte plus NUL and reaches the draw call at `0x801F0A58`
 The empty `references` arrays reflect code addressing. Recognition pins those
 instructions and every payload byte outside the allocations. Allocations stop
 at the original terminators; following padding remains protected, as do byte
-`0x1D` at payload offset `0x55` and the palette at `0x20D4`. Other battle-results
-text and runtime rendering remain unverified.
+`0x1D` at payload offset `0x55` and the palette at `0x20D4`.
+
+Controlled results-fixture observations verify `%6d` to `%5d` for remaining
+EXP 10, `%2d` to `%3d` for next level 1, and `%7d` to `%6d` for current money 0.
+Each numeric edit moves the digits by one eight-pixel glyph cell. Replacing
+`Ƶ` with `X` changes the currency glyph. These observations use zero rewards
+and retain the two empty renderer arrays. Ordinary availability, complete normal
+cleanup, nonzero rewards, level-gain and counted-item pages, and other
+battle-results text remain unverified.
 
 ## Bank layout
 

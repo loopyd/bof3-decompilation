@@ -283,7 +283,15 @@ BATL_END entry 0 exposes six decimal formats and one literal glyph. Retain each
 recorded codec and its encoded and formatted bounds. The byte-plus-one format
 retains an argument in 1..256 and at most three output bytes before NUL. Preserve
 empty renderer arrays where only formatting is qualified. Runtime rendering
-remains unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
+observations cover width edits for remaining EXP, next level and current money,
+plus a currency-glyph edit, in a controlled results fixture with zero rewards.
+Ordinary availability, complete normal cleanup, nonzero rewards, level-gain and
+counted-item pages remain unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
+
+The results ingress tests rising input at `0x80145AA8`; display waits test held
+input at `0x80145AA4`. Releasing the native override does not clear these guest
+samples. Release before the wait and reach the post-sample boundary at
+`0x8014AB68` with both fields zero before resuming into the wait.
 
 For encounter-template monster names, find `monster_entries` with `analyze`
 and extract the selected entry explicitly. The `bof3.monster-text/v1` document
