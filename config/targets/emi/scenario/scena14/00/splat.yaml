@@ -117,8 +117,10 @@ segments:
     - '@source: src/bof3/scenario/startCode2RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB46C.c'
     - '@behavior: Overlay per-record callback: it reads the shared halfword at 0x80143F00, compares it with 0xC0 and takes the code-2 row answer from func_801F326C when the two are equal and from func_801F37AC otherwise, passing the lookup code 2 on both paths. The 16-bit answer is sign-extended into the argument of the shared action requester func_80150224, and the body finally stores 2 in the shared frontend mode byte at 0x80143BB0. It ignores the record pointer and second argument its dispatcher passes, reads no memory besides 0x80143F00, writes only 0x80143BB0, and its 0x18-byte frame only keeps $ra across the call, with the frame store in the branch delay slot, each answer path ending in the sll of the argument conversion and the sra in the requester delay slot. No in-image jal targets the address; its only image word is 0x801FC470, entry 2 of the twenty-two-word callback run at 0x801FC468 that func_801FB37C indexes with the byte at offset 0x7A of its first argument.'
   - - 18628
-    - asm
-    - func_801FB4C4
+    - c
+    - startCode5RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB4C4
+    - '@source: src/bof3/scenario/startCode5RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB4C4.c'
+    - '@behavior: Overlay per-record callback (entry 3 of the twenty-two-word callback run at 0x801FC468, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC474 holds this address, its only image word). It reads the shared halfword D_80143F00, compares it with 0xC0, and takes the code-5 row answer from func_801F326C when the two are equal and from func_801F37AC otherwise; the 16-bit answer is sign-extended into the argument of the shared action requester func_80150224, and the body finally stores 2 in the shared frontend mode byte D_80143BB0. It ignores the record pointer and second argument its dispatcher passes, reads no memory besides D_80143F00, writes only D_80143BB0, and its 0x18-byte frame only keeps $ra across the call, with the frame store in the branch delay slot and each answer path ending in the sll of the argument conversion while the sra uses the requester delay slot. No in-image jal targets the address.'
   - - 18716
     - asm
     - func_801FB51C

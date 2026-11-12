@@ -1,6 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
-void func_801D72E4(s16 x, s16 y);
+void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
+                                                                  s32 y);
 
 /* @source 0x801D5574
  * @behavior increments work byte 9 and draws the header, entry panels and
@@ -37,7 +38,8 @@ void advanceEntryPanelSlideAndSelectStateWorld00Area03004_801D5574(void) {
     drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
   panel = D_1F800044;
-  func_801D72E4(39, (s16)(64 + panel[9] * 60));
+  drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(
+      39, (s16)(64 + panel[9] * 60));
   state = D_1F800044;
   if (state[9] == 4) {
     if (state[0xB] == 0) {

@@ -1,6 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
-void func_801D72E4(s16 x, s16 y);
+void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
+                                                                  s32 y);
 
 /* @source 0x801D5398
  * @behavior draws the header and masked entry panels, decrements work byte 9,
@@ -31,7 +32,8 @@ void decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801
   step = D_1F800044;
   step[9]--;
   panel = D_1F800044;
-  func_801D72E4(39, (s16)(64 + panel[9] * 60));
+  drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(
+      39, (s16)(64 + panel[9] * 60));
   state = D_1F800044;
   if (state[9] == 0) {
     index = (u8)func_8019601c();

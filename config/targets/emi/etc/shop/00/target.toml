@@ -161,6 +161,7 @@ sources = [
     "src/bof3/ui/stepNoteListCursorThenPickOrSwapNote.c",
     "src/bof3/ui/publishShopRowFlagsAndAdvanceUiPhaseUnlessFlag77Set.c",
     "src/bof3/ui/stepNoteListSelectionThenArmNoteCursorSubstep.c",
+    "src/bof3/ui/stepShopRowCursorThenChargePriceOrAdvanceUiSubstep.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

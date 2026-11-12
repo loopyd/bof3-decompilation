@@ -18,6 +18,7 @@ sources = [
     "src/bof3/bmagic/setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1880.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F1708.c",
     "src/bof3/bmagic/copyRecordPositionPairOnFrameParityElseAddStepPairThenInvokeHelperDecrementWorkByte9AndOnZeroReseedWorkByte9FromWorkByteBPlus4AndAdvanceWorkByte2BmagicMagic00800_801F0FA4.c",
+    "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2ThenInvokeSharedServiceBmagicMagic00800_801F09D0.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c",

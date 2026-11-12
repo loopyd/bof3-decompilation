@@ -198,8 +198,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic00800_801F0964.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its byte at offset 2 selects an entry of the four-entry code pointer table at 0x801EEC84 (0x801F09D0, 0x801F0A20, 0x801F0AC8, 0x801F0B44), and that entry is invoked with no arguments. As at 0x801EECF0, 0x801EF384, 0x801EF75C and 0x801F0250, the four table words are copied into this dispatcher''s own 0x28-byte frame first, so the call target is read back from the copy. It reads no other state and writes none. The entry selected by work byte 2 is the same state-2 slot that the six-entry dispatcher at 0x801F0250 publishes for state byte 1.'
   - - 7632
-    - asm
-    - func_801F09D0
+    - c
+    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2ThenInvokeSharedServiceBmagicMagic00800_801F09D0
+    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2ThenInvokeSharedServiceBmagicMagic00800_801F09D0.c'
+    - '@behavior: Entry 0 of the four-entry work-state table at 0x801EEC84 (0x801F09D0, 0x801F0A20, 0x801F0AC8, 0x801F0B44), which the dispatcher at 0x801F0964 copies into its frame and selects with scratchpad work-object byte 2. Calls the helper at 0x800AFF98 with no arguments, stores its returned byte in scratchpad work byte 9, reloads the work pointer cell at 0x1F800044 and increments work byte 2 with a byte-width read-modify-write, moving dispatch to entry 1 at 0x801F0A20, then invokes the shared main-executable service at 0x8014D290 unconditionally, with the byte-2 store filling that call''s delay slot. The pointer cell is read once per access. The 0x18-byte frame keeps only $ra at 0x10 across the two calls; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 7712
     - asm
     - func_801F0A20

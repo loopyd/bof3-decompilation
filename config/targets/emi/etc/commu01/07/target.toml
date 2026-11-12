@@ -33,6 +33,7 @@ sources = [
     "src/bof3/ui/handleCommuRecordOrdinalInputThenDrawCommu0107_801D0EBC.c",
     "src/bof3/ui/handleCommuKindGridPairInputThenDraw.c",
     "src/bof3/ui/handleCommuRequestRowInputThenDrawCommu0107_801D1364.c",
+    "src/bof3/ui/drawRecordSlotChannelBox.c",
 ]
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",

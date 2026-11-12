@@ -37,7 +37,7 @@ extern void func_801D3038(void);
  * is declared wide here and the constant x arguments keep their bare `addiu`
  * form; the selected flag is the byte the emitter masks on entry. */
 extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
-extern void func_801D28A4(s16 x, s16 y, u8 slot, s32 selected);
+extern void drawRecordSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
 
 /* @source 0x801D1158
@@ -62,7 +62,7 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5
  * on x and 0x44 plus 54 times the cursor minus 9 plus 7 times that byte divided
  * by 5 on y. It then draws the record slot cursor box at (0xA0, 0x3E) with the
- * selected flag 1 through func_801D28A4 for the slot
+ * selected flag 1 through drawRecordSlotChannelBox for the slot
  * findActiveRecordSlotByKind returns for the cursor and that byte. No state
  * other than the result halfword, the request row byte, the list row cursor and
  * the callee cells is written, and the 0x20-byte frame only holds s0, s1 and ra.
@@ -112,7 +112,7 @@ void handleCommuEntryListInputThenDrawCommu0107_801D1158(void) {
       drawMarkerTriangleCommu0107_801D3984(
           col * 8 + 0xFA, (*row - 9) * 54 + (line * 7 + lineInset), 1);
     }
-    func_801D28A4(0xA0, 0x3E, findActiveRecordSlotByKind(D_801448ED, D_801D4E24),
-                  1);
+    drawRecordSlotChannelBox(
+        0xA0, 0x3E, findActiveRecordSlotByKind(D_801448ED, D_801D4E24), 1);
   }
 }

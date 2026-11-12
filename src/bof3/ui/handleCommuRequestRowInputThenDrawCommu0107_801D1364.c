@@ -57,7 +57,7 @@ extern void func_801D3038(void);
 extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void computeKindSlotOrigin(s16 *outX, s16 *outY, s32 kind, s32 ordinal);
 extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
-extern void func_801D28A4(s16 x, s16 y, u8 slot, s32 selected);
+extern void drawRecordSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 countActiveRecordsByKind(s32 kind);
 extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
 
@@ -100,7 +100,7 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * a nonzero ordinal byte, draws the marker triangle at that origin advanced by 4
  * on x with the selected flag 0 through drawMarkerTriangleCommu0107_801D3984 and
  * the record slot cursor box of the stride-8 active record slot at that ordinal
- * byte less one through func_801D28A4 at 0x10 right of that origin on x and 8
+ * byte less one through drawRecordSlotChannelBox at 0x10 right of that origin on x and 8
  * less than it on y, while a zero ordinal byte draws only the marker triangle at
  * the origin itself with the selected flag 0. The 0x28-byte frame holds s0, s1
  * and ra.
@@ -176,7 +176,7 @@ void handleCommuRequestRowInputThenDrawCommu0107_801D1364(void) {
     drawMarkerTriangleCommu0107_801D3984(x, y, 0);
   } else {
     drawMarkerTriangleCommu0107_801D3984(x + 4, y, 0);
-    func_801D28A4(x + 0x10, y - 8,
-                  findActiveRecordSlotByKind(*row, D_801D4E24 - 1), 0);
+    drawRecordSlotChannelBox(
+        x + 0x10, y - 8, findActiveRecordSlotByKind(*row, D_801D4E24 - 1), 0);
   }
 }

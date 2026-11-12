@@ -76,6 +76,7 @@ sources = [
     "src/bof3/world/func_801D6CB0_area03004.c",
     "src/bof3/world/func_801D6EC4.c",
     "src/bof3/world/func_801D6F08.c",
+    "src/bof3/world/drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4.c",
     "src/bof3/world/func_801D7784_area03004.c",
     "src/bof3/world/func_801D799C.c",
     "src/bof3/world/func_801D7D68_area03004.c",

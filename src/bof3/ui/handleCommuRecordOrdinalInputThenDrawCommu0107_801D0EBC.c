@@ -46,7 +46,7 @@ extern void func_801D3038(void);
  * is declared wide here and the constant x arguments keep their bare `addiu`
  * form; the selected flag is the byte the emitter masks on entry. */
 extern void drawMarkerTriangleCommu0107_801D3984(s32 x, s16 y, u8 selected);
-extern void func_801D28A4(s16 x, s16 y, u8 slot, s32 selected);
+extern void drawRecordSlotChannelBox(s16 x, s16 y, u8 slot, s32 selected);
 extern u8 countActiveRecordsByKind(s32 kind);
 extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
 
@@ -73,7 +73,7 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * drawRowMarkerOutlineCommu0107_801D36FC, and then draws the record of the
  * ordinal byte: while the list row is zero through
  * drawMarkerTriangleCommu0107_801D3984 at 0x28 plus 8 times the signed ordinal on
- * x and 0x39 on y, and the slot box through func_801D28A4 at 0x30 plus that same
+ * x and 0x39 on y, and the slot box through drawRecordSlotChannelBox at 0x30 plus that same
  * sum on x and 0x42 on y; otherwise through the same pair at 0xFA plus 8 times
  * the ordinal modulo 5 on x and 0x44 plus 54 times the list row minus 9 plus 7
  * times the ordinal divided by 5 on y, and the slot box at 0xA8 plus the same
@@ -138,15 +138,15 @@ void handleCommuRecordOrdinalInputThenDrawCommu0107_801D0EBC(void) {
     ordinal = D_801D4E24;
     ordOffset = ((s32)ordinal << 24) >> 21;
     drawMarkerTriangleCommu0107_801D3984(ordOffset + 0x28, 0x39, 0);
-    func_801D28A4(ordOffset + 0x30, 0x42,
-                  findActiveRecordSlotByKind(*row, D_801D4E24), 0);
+    drawRecordSlotChannelBox(ordOffset + 0x30, 0x42,
+                              findActiveRecordSlotByKind(*row, D_801D4E24), 0);
   } else {
     col = (s8)D_801D4E24 % 5;
     line = (s8)D_801D4E24 / 5;
     x = col * 8;
     y = (*row - 9) * 54 + line * 7;
     drawMarkerTriangleCommu0107_801D3984(x + 0xFA, y + 0x44, 0);
-    func_801D28A4(x + 0xA8, y + 0x4C,
-                  findActiveRecordSlotByKind(*row, D_801D4E24), 0);
+    drawRecordSlotChannelBox(x + 0xA8, y + 0x4C,
+                              findActiveRecordSlotByKind(*row, D_801D4E24), 0);
   }
 }

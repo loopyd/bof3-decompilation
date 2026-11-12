@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7518.c",
     "src/bof3/scenario/requestPrimaryState2Substate3COnRoute79Flag0SetAndArgWordAtMost160000ScenarioScena1200_801FC80C.c",
     "src/bof3/scenario/queueFrontEndMode6Or7ThenReleaseFrontEndOnSubstate33ScenarioScena1200_801F894C.c",
+    "src/bof3/scenario/advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7240.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

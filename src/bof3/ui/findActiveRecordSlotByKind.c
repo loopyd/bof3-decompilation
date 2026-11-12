@@ -16,7 +16,7 @@ extern u8 D_801455C9[]; /* @source 0x801455C9 @kind data */
  * fewer than ordinal + 1 records match. No record is modified. The handler at
  * 0x801D0EBC passes the shared commu list row at 0x801448ED as kind and the
  * overlay counter byte at 0x801D4E24 as ordinal, and hands the returned slot to
- * func_801D28A4.
+ * drawRecordSlotChannelBox.
  * @status exact
  * @match 100.00
  * @residual none

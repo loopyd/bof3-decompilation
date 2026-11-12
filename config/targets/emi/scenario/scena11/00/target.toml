@@ -13,6 +13,7 @@ sources = [
     "src/bof3/scenario/claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8.c",
     "src/bof3/scenario/raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100_801F7178.c",
     "src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress3SetFlagBit5AndClearStateScenarioScena1100_801F7BFC.c",
+    "src/bof3/scenario/requestPrimaryState1Substate3COnRoute79Flag0SetOrSubstateByModeCellAndArgWordAtMost160000ScenarioScena1100_801FAA74.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",

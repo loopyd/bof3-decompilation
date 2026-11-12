@@ -9,7 +9,7 @@ extern void func_801D4030(s16 x, s16 y, u8 piece);
  * bottom-right corners, seven repeated top and bottom edge pieces on an
  * eight-pixel horizontal step, and four repeated side pieces on a six-pixel
  * vertical step, for a frame that spans 0x40 by 0x22. The only in-image
- * caller, func_801D28A4, passes the origin of the 0x48 by 0x26 panel it fills
+ * caller, drawRecordSlotChannelBox, passes the origin of the 0x48 by 0x26 panel it fills
  * just before the frame. Every coordinate is truncated to sixteen bits per
  * primitive. No other state is read or written.
  * @status exact
