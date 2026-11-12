@@ -655,6 +655,22 @@ return from direct calls. Its compiled callee remains a partial mismatch and
 provides no admission basis. This establishes stored instructions, without
 observed entry, valid records, callee behavior or gameplay acceptance.
 
+These complete original bodies also qualify through original direct calls from
+already qualified executable callers. Every original instruction and delay slot
+matches ASM and resident RAM. Structural call continuations assume returns;
+matching callee ELF sections and observed entry are not admission claims.
+
+| Payload interval | Runtime interval | Bytes | Original JAL | Qualified caller |
+| --- | --- | ---: | --- | --- |
+| `[0x690C,0x6E40)` | `[0x801D750C,0x801D7A40)` | 1332 | `0x801E91E4` | `0x801E91CC` |
+| `[0x6E40,0x7110)` | `[0x801D7A40,0x801D7D10)` | 720 | `0x801E9424` | `0x801E9390` |
+| `[0x7A90,0x7EE4)` | `[0x801D8690,0x801D8AE4)` | 1108 | `0x801E9A98` | `0x801E99AC` |
+| `[0x81F8,0x8704)` | `[0x801D8DF8,0x801D9304)` | 1292 | `0x801EA15C` | `0x801E9FDC` |
+| `[0x929C,0x9478)` | `[0x801D9E9C,0x801DA078)` | 476 | `0x801D8C70` | `0x801D8AE4` |
+| `[0xD0B4,0xD27C)` | `[0x801DDCB4,0x801DDE7C)` | 456 | `0x801D56BC` | `0x801D5658` |
+| `[0x11E88,0x120A4)` | `[0x801E2A88,0x801E2CA4)` | 540 | `0x801E2860` | `0x801E25E0` |
+| `[0x181D8,0x183A8)` | `[0x801E8DD8,0x801E8FA8)` | 464 | `0x801E6F54` | `0x801E6E54` |
+
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
 executable ELF section, all 54 text relocations, original bytes and resident RAM
 reconcile. Complete control-flow review covers ten conditional branches, two
@@ -747,6 +763,13 @@ separate 20-byte address table remains unclassified. Four indirect call sites
 in three bodies retain unqualified targets and selectors. These checks establish
 stored instructions, without observed execution, valid arguments, callee
 behavior, loader or playback correctness, or resource safety.
+
+The separate original body at `0x8014B020..0x8014B0F0`, file offsets
+`[741408,741616)`, qualifies through original calls at `0x8014ABB0` and
+`0x8014AD0C` in the qualified boot loop and initializer. All 208 original bytes
+match resident RAM. Structural review covers all 52 words, two loop branches
+and the return delay slot. The compiled callee remains partial and provides no
+admission basis. Actual entry, valid records and callee behavior remain unverified.
 
 ## Executable geometry table coverage
 
