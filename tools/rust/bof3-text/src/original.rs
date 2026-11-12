@@ -62,11 +62,23 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     if data.len() == 122_880
         && sha256_hex(data) == "21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c"
     {
-        return vec![NontextRange {
-            offset: 3928,
-            length: 1828,
-            evidence: "original US LOGO 0x801CE758..0x801CEE7C; twelve complete instruction-only function bodies; original bytes match freshly compiled executable ELF function symbols and reviewed source boundaries; exact executable identity; no runtime execution claim",
-        }];
+        return vec![
+            NontextRange {
+                offset: 3928,
+                length: 1828,
+                evidence: "original US LOGO 0x801CE758..0x801CEE7C; twelve complete instruction-only function bodies; original bytes match freshly compiled executable ELF function symbols and reviewed source boundaries; exact executable identity; no runtime execution claim",
+            },
+            NontextRange {
+                offset: 10908,
+                length: 32,
+                evidence: "original US LOGO 0x801D029C..0x801D02BC; complete PsyQ libcd.a s_020.o executable section with CD_vol relocation to 0x801D1394; original typed callers at 0x801CED74 and 0x801CEDD0; exact executable identity; no runtime execution or complete callee claim",
+            },
+            NontextRange {
+                offset: 15252,
+                length: 136,
+                evidence: "original US LOGO 0x801D1394..0x801D141C; complete CD_vol instruction body from PsyQ libcd.a bios_1.o; all fourteen HI16/LO16 relocations and external pointer words match original bytes; typed CdlATV argument through original CdMix caller; reviewed straight-line body ends with return and delay slot before CD_flush; exact executable identity; no runtime execution or pointer-storage classification claim",
+            },
+        ];
     }
     if data.len() != 1_445_888 || sha256_hex(data) != US_EXECUTABLE_SHA256 {
         return Vec::new();

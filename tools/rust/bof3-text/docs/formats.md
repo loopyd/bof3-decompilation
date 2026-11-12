@@ -159,9 +159,25 @@ These 1828 bytes correspond to runtime addresses `[0x801CE758,0x801CEE7C)` and
 twelve complete instruction-only function bodies. Each body matches its freshly
 compiled executable ELF function symbol and reviewed source boundaries.
 
-Only those instruction bytes become known nontext under this rule. Retained
-ranges, tables and other executable bytes do not inherit the classification.
-Runtime execution, rendering and complete text coverage remain unverified.
+The same exact identity qualifies the 32-byte `CdMix` wrapper at file offsets
+`[10908,10940)`, runtime `[0x801D029C,0x801D02BC)`. Its complete SDK executable
+section from `libcd.a` member `s_020.o` matches after relocating its call to
+`CD_vol` at `0x801D1394`. Original callers bind the typed `CdlATV` argument.
+This proof uses the SDK section, relocation and original call/return sequence;
+the SDK symbol has no function type or size and is not a compiled ELF function
+extraction.
+
+The 136-byte `CD_vol` body at file offsets `[15252,15388)`, runtime
+`[0x801D1394,0x801D141C)`, matches `bios_1.o` after all fourteen HI16/LO16
+relocations. Its 34 straight-line instructions end with a return and delay slot
+immediately before the SDK's `CD_flush` symbol. The original `CdMix` caller
+preserves the typed argument. The referenced CD-register pointer words also
+match the SDK data, but remain outside this instruction classification.
+
+Only these instruction bytes become known nontext. Surrounding retained ranges,
+tables and other executable bytes do not inherit the classification. Runtime
+execution, mutable-pointer stability, rendering and complete text coverage remain
+unverified.
 
 ## XA payload coverage
 
