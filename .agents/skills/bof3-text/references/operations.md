@@ -367,3 +367,8 @@ results separate from runtime results. For game-visible acceptance, use disposab
 images and bounded emulator missions to observe the edited consumer, including
 choices and substitutions when affected. A launch or successful pack is not a
 rendering result.
+
+Checked states from the current software GPU preserve VRAM and GP1 controls but
+omit the GP0 drawing area and offset. After restoring, let the original game
+reissue that environment before assessing pixels. Record the environment
+commands and the scene's GPU ingress in the same observation.

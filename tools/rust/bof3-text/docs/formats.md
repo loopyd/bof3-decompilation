@@ -233,6 +233,7 @@ and physical offsets may differ between archives.
 | `[0x17814,0x1786C)` | `[0x800AE014,0x800AE06C)` | 88 |
 | `[0x1786C,0x1789C)` | `[0x800AE06C,0x800AE09C)` | 48 |
 | `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
+| `[0x17908,0x179F8)` | `[0x800AE108,0x800AE1F8)` | 240 |
 
 The body at `0x800AC964..0x800ACF80` has a captured native entry at `0x800AC964`
 with return address `0x801D1A80`. Complete original control-flow review accounts
@@ -252,6 +253,11 @@ The body at `0x800AE09C..0x800AE108` has a complete original control-flow review
 and a conditional selector-1 entry through `0x800AE014`. Its two calls target
 `0x800A9820` and `0x801E5988`, whose behavior remains outside this review.
 Its call continuations assume returns; no captured entry or ELF match is claimed.
+The body at `0x800AE108..0x800AE1F8` has a captured native entry with return
+address `0x801D39F0` from the original call at `0x801D39E8`. Complete original
+control-flow review accounts for all sixty words, including returns and delay
+slots. Call continuations assume returns; no ELF match or full-function
+execution is claimed.
 The other listed bodies match complete executable ELF sections of sized function
 symbols, with text relocations reconciled. All listed bodies include their
 returns and delay slots. Their bytes match original `BATTLE.EMI` entry 15 and
