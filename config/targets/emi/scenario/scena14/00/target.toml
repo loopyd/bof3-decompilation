@@ -17,6 +17,7 @@ sources = [
     "src/bof3/scenario/armEffectGroupForMirrorPartyIdThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC0C8.c",
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperAndPublishPartyIdsScenarioScena1400_801FBFA8.c",
     "src/bof3/scenario/clearIndexedFlagBit0ArmEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FBF18.c",
+    "src/bof3/scenario/selectFirstPartyMirrorIdOtherThan7Or4ThenArmEffectGroupAndResetEffectSlotsScenarioScena1400_801FC280.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",

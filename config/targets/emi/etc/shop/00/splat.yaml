@@ -451,8 +451,10 @@ segments:
     - '@source: src/bof3/ui/drawShopMoneyPanel.c'
     - '@behavior: shop money panel drawer reached from the panel state dispatcher func_801E2AB0 and the shop sub-step handlers: paints the 0x65 by 0x10 shaded panel rectangle at (x + 3, y + 3) through the main-exe rectangle helper func_801AE3F0 with the constant 0 and the main-RAM CLUT-bank byte D_80144952 as the trailing argument pair, formats the s32 amount through sprintf into the shared text buffer D_80145AD4 with the %7d format string D_801D0D08, draws that buffer at (x + 0x14, y + 4) through the shared text drawer func_8014FF0C, submits the texture handle D_801E58B0 at (x + 0x4C, y + 4) through func_8014F800 with the constant 0xFF as the fourth argument, then submits the first stream D_801E555C once at (x, y), the second stream D_801E5568 eleven times from x to x + 80 in steps of 8 pixels along the same y and the third stream D_801E5574 once at (x, y) through the record-table renderer func_801AF390. The third argument is never read by the body.'
   - - 39036
-    - asm
-    - func_801DA47C
+    - c
+    - drawShopClockPanel
+    - '@source: src/bof3/ui/drawShopClockPanel.c'
+    - '@behavior: shop clock panel drawer of the SHOP overlay: paints the 0x55 by 0x10 shaded panel rectangle at (x + 3, y + 3) through the main-exe rectangle helper func_801AE3F0 with the constant 0 and the main-RAM CLUT-bank byte D_80144952 as the trailing argument pair, then formats the front-end play-time clock cells through this EMI''s "%02d" string D_801D0DE0 into the shared text buffer D_80145AD4 and draws each field through the shared text drawer func_8014FF0C, the hour byte D_80144FC0 at (x + 0x21, y + 4) and the minute byte D_80144FC1 at (x + 0x3C, y + 4). While the sub-second byte D_80144FC3 reads below 0xF it submits the payload cell D_801E58B4 twice through the main-exe text drawer func_8014FC90 at (x + 0x34, y + 3) and (x + 0x34, y + 7) with the constant 0xFF as the fourth argument, so the separator between the two fields blinks at half the clock tick rate. It then submits three tile-record streams through func_801AF390: the first stream D_801E5580 once at (x, y), the second stream D_801E5568 six times from x + 0x18 to x + 0x40 in steps of 8 pixels along the same y, and the third stream D_801E5574 once at (x - 0x10, y). The third and fourth arguments are never read by the body.'
   - - 39544
     - c
     - drawTwoOptionPromptThenReportChoice
