@@ -123,8 +123,10 @@ segments:
     - asm
     - func_801F43C8
   - - 6480
-    - asm
-    - func_801F4550
+    - c
+    - drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550
+    - '@source: src/bof3/world/drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550.c'
+    - '@behavior: publishes the 0x380/0x100 texture page draw mode at the primitive cursor 0x8014598C through SetDrawMode with the dither field enabled and a null texture window, queues that 0xC-byte draw-mode packet under OT slot 1, initialises the 0x20-byte projection scratch at +0x18 of its frame, then runs the translucent fan drawer func_801F462C four times over the same point at the quarter, half, three-quarter and whole handed signed angle, each fan running on from its own start angle to the end of the 0x1000-unit turn with 0x20 hub colour bytes and zero rim ones.'
   - - 6700
     - asm
     - func_801F462C

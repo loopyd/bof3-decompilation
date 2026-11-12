@@ -94,8 +94,10 @@ segments:
     - asm
     - func_801D3984
   - - 11848
-    - asm
-    - func_801D3A48
+    - c
+    - countActiveRecordsByKind
+    - '@source: src/bof3/ui/countActiveRecordsByKind.c'
+    - '@behavior: returns how many of the 60 stride-8 active records at 0x801455C8 are in use (byte 0 nonzero) and have the kind byte at 0x801455C9 equal to the low byte of kind, truncated to an unsigned byte; no record is modified'
   - - 11936
     - c
     - findActiveRecordSlotByKind

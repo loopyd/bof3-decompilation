@@ -17,6 +17,7 @@ func_801D2304 = 0x801D2304;
 func_801D259C = 0x801D259C;
 drawSemiTransGreyCrossPrimBate00_801D26E0 = 0x801D26E0;
 drawPartyMemberStatusBoxBate00_801D27C4 = 0x801D27C4;
+drawPartyMemberParameterPanelBate00_801D2C2C = 0x801D2C2C;
 drawEquipPanelBate00_801D2F64 = 0x801D2F64;
 drawExpRowPanelBate00_801D31B0 = 0x801D31B0;
 emitFlatLineRectangleBorderBate00_801D3384 = 0x801D3384;

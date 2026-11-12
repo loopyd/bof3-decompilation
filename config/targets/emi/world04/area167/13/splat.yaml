@@ -106,8 +106,10 @@ segments:
     - asm
     - func_801F3F28
   - - 4952
-    - asm
-    - func_801F3F58
+    - c
+    - setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58
+    - '@source: src/bof3/world/setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58.c'
+    - '@behavior: Handles the front-side byte 0x80143F03 values 2 and 1 as two separate tests that each re-read the byte. On either value, when the shared flag tester func_8015B5D4 reports bit 0x4C of the main-RAM flag bank 0x80144F28 set, it clears that bit through func_8015B5A8 and stores 5 into byte +3 of the front-end record published through 0x80148210 for the front-side value 2 and 4 for the value 1, then stores 0xFFFE into that record halfword +0x0A. When bit 0x4C stays clear it probes bit 0x4B: a clear 0x4B on the front-side value 2 seeds the scratchpad work record halfword +0x3E with 0xFC40, and a set 0x4B on the value 1 seeds it with 0x9C0; both then raise flag 0x40 of the work record byte +0x00 from the value read before the seed. Every other combination, and any other front-side value, seeds the work record halfword +0x3E with 0x3C0 and touches nothing else.'
   - - 5248
     - asm
     - func_801F4080

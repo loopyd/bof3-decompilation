@@ -37,6 +37,7 @@ sources = [
     "src/bof3/ui/drawPartyMemberAttributesAndExpPanelShisu00_801D4754.c",
     "src/bof3/ui/drawPartyMemberParameterPanelShisu00_801D3BD4.c",
     "src/bof3/ui/drawAbilityListPanelShisu00_801D835C.c",
+    "src/bof3/ui/drawEquipCategoryListPanelShisu00_801D8A78.c",
 ]
 support_sources = [
     "src/bof3/ui/clearByte80148330AndSetThreeBytesShisu00_801D1E34.c",
@@ -46,3 +47,16 @@ support_sources = [
     "src/bof3/support/shisu_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/shisu_00_psyq.c"
+
+# drawEquipCategoryListPanelShisu00_801D8A78 dispatches on the task state byte
+# through a six-entry `.rodata` jump table the compiler emits, and the original
+# overlay keeps that table at 0x801D0D4C inside the payload's leading data blob
+# (offset 0x14C, the words 0x801D8ACC, 0x801D8AD4 three times and 0x801D8ADC
+# twice). The address is 4-mod-8 while the compiler's `.align 3` asks for 8, so
+# the placement route lowers only this section's alignment. The table's entries
+# are the function's own dispatch arm labels.
+[[matching.section_placements]]
+function = 0x801D8A78
+section = ".rodata"
+address = 0x801D0D4C
+size = 0x18

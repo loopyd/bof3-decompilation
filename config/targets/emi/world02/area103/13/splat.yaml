@@ -203,8 +203,10 @@ segments:
     - '@source: src/bof3/world/storeWorkPositionDistanceAt3eWorld02Area10313_801F57FC.c'
     - '@behavior: hands the fixed-point position pair of the work record published through the scratchpad pointer cell 0x1F800044, its x word at 0x34 and its y word at 0x38, to the shared func_8015477C distance helper, re-reads the cell because the helper may republish it, and stores the returned signed distance in the record''s halfword at 0x3E.'
   - - 11316
-    - asm
-    - func_801F5834
+    - c
+    - claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834
+    - '@source: src/bof3/world/claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834.c'
+    - '@behavior: claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, scales it by the 0x74-byte row stride and seeds the claimed row at 0x80143FC8: row byte +0 takes 1, the occupancy flag every seeder of this family writes, row byte +5 takes the handler selector 0x4D, and the word triple at row +0x34/+0x38/+0x3C takes the position words 0x34/0x38/0x3C of the work object published through the scratchpad pointer cell 0x1F800044. A table-full answer (0xFF) instead lowers the halfword at +0x0A of the record published through the global pointer cell 0x80148210 by 2. Takes no arguments and returns nothing.'
   - - 11508
     - c
     - initArea10313State

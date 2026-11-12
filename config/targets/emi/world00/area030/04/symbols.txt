@@ -244,6 +244,7 @@ stepSharedIndexLatchGateOnPadAndAdvanceStateWorld00Area03004_801DD664 = 0x801DD6
 stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC = 0x801DD7CC;
 func_801DD90C = 0x801DD90C;
 func_801DD95C = 0x801DD95C;
+stepSharedViewYAndDrawFiveGreyLinesWorld00Area03004_801DD9A0 = 0x801DD9A0;
 func_801DDB74 = 0x801DDB74;
 func_801DDBC8 = 0x801DDBC8;
 func_801DDC0C = 0x801DDC0C;

@@ -193,8 +193,10 @@ segments:
     - dispatchStateByte1Table6270WorldWorld02Area08813_801F512C
     - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 9584
-    - asm
-    - func_801F5170
+    - c
+    - initializeWorkAndStampMapA0UnlessGatedWorld02Area08813_801F5170
+    - '@source: src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld02Area08813_801F5170.c'
+    - '@behavior: State handler 0 of the two-word handler table 0x801F6270 that the local dispatcher 0x801F512C reads by work byte 0x01; calls the shared 0x80196070 helper and returns when shared byte 0x8014496D reads 9 or bit 0 of shared byte 0x80146871 is set, otherwise calls the shared 0x8019A194 helper, requests resource 0x205 through the shared 0x8014DD3C helper, clears work bytes 0x48, 0x24, 0x2A and 0x5D through 0x5F of the record published at the scratchpad pointer cell 0x1F800044 through a fresh read of that cell per store, stamps 0xA0 into the map byte at map base word 0x8014931C plus the row times width byte 0x80104000 plus the column held by the four-byte record at 0x801F591C that work byte 0x0B selects, calls the shared 0x8014D6B8 helper with 0 and sets work byte 0x01 to 1.'
   - - 9888
     - c
     - invokeTwoHelpersWorld02Area08813_801F52A0

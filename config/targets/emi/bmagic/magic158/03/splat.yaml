@@ -56,8 +56,9 @@ segments:
     - asm
     - func_801EF2F0
   - - 2028
-    - asm
-    - func_801EF3EC
+    - c
+    - drawFiveSemiTransFlatQuadWedgesFromOriginAtTwiceAndFourTimesWorkByte9RadiiTintedBySignedBytes5d5e5fTimesWorkByteABmagicMagic15803_801EF3EC
+    - '@source: src/bof3/bmagic/drawFiveSemiTransFlatQuadWedgesFromOriginAtTwiceAndFourTimesWorkByte9RadiiTintedBySignedBytes5d5e5fTimesWorkByteABmagicMagic15803_801EF3EC.c'
   - - 2824
     - c
     - reserveFirstFreeRecordBmagicMagic15803_801EF708

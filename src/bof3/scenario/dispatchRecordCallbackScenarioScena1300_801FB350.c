@@ -25,7 +25,11 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * requestPrimaryState3Substate5ScenarioScena1300_801FB3A4, word 2
  * requestPrimaryState6Substate19ScenarioScena1300_801FB3DC, word 3
  * setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414,
- * words 4, 5 the still-anchored func_801FBB78 and func_801FBBC4, word 6
+ * word 4
+ * armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1300_801FBB78,
+ * word 5
+ * copyPartyListIntoMirrorThenInvokePartyHelperArmEffectGroupAndResetEffectScenarioScena1300_801FBBC4,
+ * word 6
  * armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88,
  * word 7
  * armEffectGroupFromPartyMirrorThenResetWorkCountAndPublishPartyListScenarioScena1300_801FBCC4,

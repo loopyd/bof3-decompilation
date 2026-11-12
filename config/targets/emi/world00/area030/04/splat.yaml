@@ -803,8 +803,10 @@ segments:
     - '@source: src/bof3/world/func_801DD95C.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22FC.'
   - - 52640
-    - asm
-    - func_801DD9A0
+    - c
+    - stepSharedViewYAndDrawFiveGreyLinesWorld00Area03004_801DD9A0
+    - '@source: src/bof3/world/stepSharedViewYAndDrawFiveGreyLinesWorld00Area03004_801DD9A0.c'
+    - '@behavior: while the area gate byte D_80149332 is clear it drives the shared view pair: when the shared pad word D_80145AA4 holds bit 0x10 or the shared view y word D_8014930C equals 0x150000, and the shared mode byte is clear, it arms the view scale halfword D_8014932E with 0x40, snaps D_8014930C to 0x3C0000 and stores 1 into byte 3 of the scratch work record at the scratchpad cursor 0x1F800044; otherwise it arms D_8014932E with 0x20 and steps D_8014930C down by 0x8000. On the frames whose shared frame counter D_80143E6C holds bit 2 it emits five 0x10-byte grey 0x80 projected line primitives at ordering-table slot 2, projecting a local vertex whose x is -0x4000 then -0x3100 with z 0 and whose y is ((0x3E0000 - phase) >> 9) - 0x4000 into the primitive vertex pairs at offsets 0x08/0x0A and 0x0C/0x0E while the phase advances by 0xA0000 per step.'
   - - 53108
     - c
     - func_801DDB74

@@ -13,6 +13,7 @@ sources = [
     "src/bof3/ui/publishCommuEntryTextId.c",
     "src/bof3/ui/publishCommuEntryTextIdForRow.c",
     "src/bof3/ui/findActiveRecordSlotByKind.c",
+    "src/bof3/ui/countActiveRecordsByKind.c",
     "src/bof3/ui/drawSmallWindowFrameCommu0107_801D273C.c",
     "src/bof3/ui/drawWindowFrameCommu0107_801D3594.c",
     "src/bof3/ui/drawEntryListFrame.c",
