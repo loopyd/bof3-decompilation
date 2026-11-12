@@ -232,6 +232,7 @@ and physical offsets may differ between archives.
 | `[0x177BC,0x17814)` | `[0x800ADFBC,0x800AE014)` | 88 |
 | `[0x17814,0x1786C)` | `[0x800AE014,0x800AE06C)` | 88 |
 | `[0x1786C,0x1789C)` | `[0x800AE06C,0x800AE09C)` | 48 |
+| `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
 
 The body at `0x800AC964..0x800ACF80` has a captured native entry at `0x800AC964`
 with return address `0x801D1A80`. Complete original control-flow review accounts
@@ -247,6 +248,10 @@ and conditional entries through reviewed callers that load handler addresses
 from tables or construct them on the stack.
 They have no captured entry or ELF-match claim. Their call continuations assume
 that callees return.
+The body at `0x800AE09C..0x800AE108` has a complete original control-flow review
+and a conditional selector-1 entry through `0x800AE014`. Its two calls target
+`0x800A9820` and `0x801E5988`, whose behavior remains outside this review.
+Its call continuations assume returns; no captured entry or ELF match is claimed.
 The other listed bodies match complete executable ELF sections of sized function
 symbols, with text relocations reconciled. All listed bodies include their
 returns and delay slots. Their bytes match original `BATTLE.EMI` entry 15 and
@@ -281,7 +286,7 @@ copy them to the stack and conditionally call the selected pointer for work-byte
 All words and complete target bodies match original bytes and resident RAM.
 The handler at `0x800AD808` constructs `0x800AD8D8` and `0x800AD930` for
 work-byte `+2` values 0 and 1. The dispatcher at `0x800AE014` constructs
-`0x800AE06C` and `0x800AE09C`; only the former body is reviewed here. The body
+`0x800AE06C` and `0x800AE09C` for work-byte `+1` values 0 and 1. The body
 at `0x800ADFBC` tests `u16[0x801462E8] & 0x800` before an indirect call through
 a table indexed by work-byte `+5`. That table's extent and targets remain
 unqualified. These are conditional source facts, with selector bounds and
