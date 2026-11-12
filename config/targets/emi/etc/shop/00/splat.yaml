@@ -142,8 +142,10 @@ segments:
     - '@source: src/bof3/ui/func_801D472C_shop00.c'
     - '@behavior: clears the overlay-local byte D_801E6110 and arms D_801E60EC with 0x17, emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, clears D_801E6080, archives the sub-step byte D_80148652 incremented by one into D_801E6094, then sets D_80148652 to 0x13 and re-arms phaseTimer with 2.'
   - - 15276
-    - asm
-    - func_801D47AC
+    - c
+    - armShopValueSelectionThenAdvanceUiSubstep
+    - '@source: src/bof3/ui/armShopValueSelectionThenAdvanceUiSubstep.c'
+    - '@behavior: shop value-panel sub-step handler at table entry 2 of the sub-step handler table D_801E530C, which func_801D46A4 dispatches with the UI sub-step byte D_80148652 as index: emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, submits the texture row 0x1C at row 0x16 through func_8014F800 with the value returned by func_801502D0(D_801E60EC + 0x85) as its fifth argument, then clears the panel through func_801EEC30 with five zero arguments twice, with the main-RAM value word D_8018E260 drawn as 0 before the first clear and as 1 before the second. The selected panel action id D_8018E228 is read before that second clear and again after it, and those two reads select the values the value panel offers: both reads apart from 0 and 2 play the main-exe sound cue 0x107 through the cue dispatcher func_8015DF18, clear the variant byte D_801E60F8 and arm the UI sub-step byte with 0xC instead, while every other combination arms the overlay-local pair of selectable values D_801E6088/D_801E608C and the drawn value D_8018E260 with the pairs (0, 1) and 0, (0, 0) and 0, or (1, 1) and 1, arms the variant byte with 3, 1 or 2 accordingly, then re-arms the frame timer phaseTimer with 4 and advances the UI sub-step byte by one into the value-panel slide-in step func_801D4970.'
   - - 15728
     - c
     - func_801D4970

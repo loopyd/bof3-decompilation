@@ -123,8 +123,10 @@ segments:
     - asm
     - func_801F4374
   - - 6124
-    - asm
-    - func_801F43EC
+    - c
+    - drawFourthBlockVariantOnFourthFifthTickGroupAtScenarioProgress0fElseFifthTickVariantAndRunSecondPassWorld02Area10313_801F43EC
+    - '@source: src/bof3/world/drawFourthBlockVariantOnFourthFifthTickGroupAtScenarioProgress0fElseFifthTickVariantAndRunSecondPassWorld02Area10313_801F43EC.c'
+    - '@behavior: overlay step handler, entry 11 of the work-byte-2 handler table at 0x801F5954 and entry 14 of the work-byte-1 handler table at 0x801F5948; while the shared scenario progress byte 0x80146864 reads 0x0F and (shared frame counter 0x80143E6C / 5) & 3 reads 3 it hands func_801F4E70 the variant 4, passes the pair 0x43 and 0x1A to the shared request helper func_8015507C, increments work byte 0x02 through one read of the scratchpad pointer cell 0x1F800044 and returns; otherwise, on every tick whose counter is a multiple of five, it hands func_801F4E70 the variant (counter / 5) & 3 and then runs the drawing pass func_801F49A0(2).'
   - - 6320
     - asm
     - func_801F44B0

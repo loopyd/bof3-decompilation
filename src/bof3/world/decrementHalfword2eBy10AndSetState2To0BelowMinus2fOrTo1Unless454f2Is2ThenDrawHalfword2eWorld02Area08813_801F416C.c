@@ -7,7 +7,8 @@ extern u8 D_801454F2;
 
 /* The local drawer at 0x801F4664 narrows both arguments with `sll`/`sra 16`
  * in its own prologue and neither call site consumes a result. */
-void func_801F4664(s16 arg0, s16 arg1);
+void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664(
+    s16 arg0, s16 arg1);
 
 /* @source 0x801F416C
  * @behavior Byte-2 state handler 3 of the byte-2 handler table 0x801F61BC for
@@ -40,5 +41,6 @@ void decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDr
     D_1F800044[2] = 1;
   }
   draw = D_1F800044;
-  func_801F4664(0x10, FIELD_REF(s16, draw, 0x2E));
+  drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664(
+      0x10, FIELD_REF(s16, draw, 0x2E));
 }

@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/dispatchSelectedOffsetPairThenStepHalfword0aAndStoreDistanceAtEntry4World02Area07714_801F60C4.c",
     "src/bof3/world/drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550.c",
     "src/bof3/world/drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8.c",
+    "src/bof3/world/drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08.c",
 ]
 support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC.c",

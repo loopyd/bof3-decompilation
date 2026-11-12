@@ -383,8 +383,10 @@ segments:
     - '@source: src/bof3/world/func_801D6598_area03004.c'
     - '@behavior: AREA030 scratch work-record initializer: requests resource 0x47 through the shared func_8014DD3C helper, stores 0x80 in work-record byte 0x24, stores 1 in byte 0x29, clears bytes 0x2A and 0x48, stores the scratch halfwords 0xCA at 0x2E and 0xBA at 0x30, clears scratch bytes 0x5D..0x5F and 0x09/0x0A/0x0B, increments the dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044 and finally requests resource 3 through the shared func_8014D6B8 helper.'
   - - 23172
-    - asm
-    - func_801D6684
+    - c
+    - sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684
+    - '@source: src/bof3/world/sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684.c'
+    - '@behavior: AREA030 grid handler, index 1 of the work-byte-3 dispatch table 0x801E2048: while work byte 0xA is zero it advances the phase byte 9 and, once the cell of the four-by-eight row table 0x801E2050 at the work byte 0xB row and the phase divided by twelve is not the 0xFF end marker, arms the 0x32 countdown; while the countdown runs it queues the icon strip at (0xD4, 0x8A) with the row plus one as the second sprite index. With the countdown still zero and that cell holding 1 it runs the shared func_8014D978 helper on the ten frames of each twelve. It then draws every cell of the table, the highlighted cell through the shaded request func_8014F800 three pixels above its row at the shade equal to the cell value and every other cell through the text drawer func_8014FC90 at the shade three times the cell value inside the selected row or 7 minus the cell value elsewhere, each as the one-character run of 0x801E2070 indexed by that value. After the shared func_8014D4E0 update it decrements the countdown and, when that expires, clears the phase and advances the work byte 0xB row, wrapping to zero at four.'
   - - 24040
     - c
     - func_801D69E8

@@ -92,8 +92,10 @@ segments:
     - asm
     - func_801F3E48
   - - 4872
-    - asm
-    - func_801F3F08
+    - c
+    - drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08
+    - '@source: src/bof3/world/drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08.c'
+    - '@behavior: entry 1 of the local handler table at 0x801F6268 draws the 32 entries of the 0x2C-byte-stride effect table at 0x800E5504 between a PushMatrix/PopMatrix pair, advancing each entry''s spin angle halfword +0x24 by 0x10 and raising its halfword +0x2A by 0x20 while work byte +0x09 is below 4 and lowering it by 2 otherwise, then increments the work frame counter word +0x0C and calls the shared work reset 0x80196070 once it reaches 185.'
   - - 5172
     - c
     - dispatchStateByte1Table6270World02Area07714_801F4034

@@ -1,3 +1,4 @@
+dispatchSoundCue = 0x8015DF18;
 D_801D0C04 = 0x801D0C04;
 func_801D0C68 = 0x801D0C68;
 func_801D0CAC = 0x801D0CAC;
@@ -33,5 +34,5 @@ func_801D47C4 = 0x801D47C4;
 func_801D482C = 0x801D482C;
 publishCommuEntryTextId = 0x801D49C4;
 publishCommuEntryTextIdForRow = 0x801D4AAC;
-func_801D4B58 = 0x801D4B58;
+saveCommuRequestStateAndSelectStep5 = 0x801D4B58;
 D_801D4BB8 = 0x801D4BB8;

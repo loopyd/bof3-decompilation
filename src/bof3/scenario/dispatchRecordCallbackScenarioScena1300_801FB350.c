@@ -33,7 +33,9 @@ extern ScenarioScena1300RecordCallback D_801FBFB8[];
  * armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88,
  * word 7
  * armEffectGroupFromPartyMirrorThenResetWorkCountAndPublishPartyListScenarioScena1300_801FBCC4,
- * word 8 the still-anchored func_801FBD84 and word 9
+ * word 8
+ * armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1300_801FBD84
+ * and word 9
  * invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8,
  * word 10
  * invokeHelperArgThenHelperScenarioScena1300_801FBE98,

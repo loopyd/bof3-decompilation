@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/clearWorkBytesBmagicMagic05303_801F04F8.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8.c",
     "src/bof3/bmagic/decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic053_03_symbols.c",

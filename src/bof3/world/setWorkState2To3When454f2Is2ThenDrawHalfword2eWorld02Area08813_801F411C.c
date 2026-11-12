@@ -4,7 +4,8 @@ extern u8 D_801454F2;
 
 /* The local drawer narrows both arguments with `sll`/`sra 16` in its own
  * prologue and neither call site consumes a result. */
-void func_801F4664(s16 arg0, s16 arg1);
+void drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664(
+    s16 arg0, s16 arg1);
 
 /* @source 0x801F411C
  * @behavior When the shared byte at 0x801454F2 is 2, writes 3 to byte 0x02 of
@@ -35,5 +36,6 @@ void setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08813_801F411C(
     SPAD_PTR_SLOT(u8, 0x44)[2] = 3;
   }
   record = SPAD_PTR_SLOT(u8, 0x44);
-  func_801F4664(0x10, FIELD_REF(s16, record, 0x2E));
+  drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664(
+      0x10, FIELD_REF(s16, record, 0x2E));
 }

@@ -148,8 +148,10 @@ segments:
     - '@source: src/bof3/ui/publishCommuEntryTextIdForRow.c'
     - '@behavior: publishes the text id of the commu list row that its byte pointer argument addresses into the request result halfword 0x801D4E0C; the row equals the shared cursor 0x801448ED -> 0x44, row 0 -> 0x69, rows 9 and above index the halfword table at 0x801D4DDA, and rows 1 through 8 take 0x44 when the pending world entry count is below the row, 0x69 when their record slot is empty, otherwise the halfword table at 0x801D4BB0 indexed by that slot kind byte'
   - - 16216
-    - asm
-    - func_801D4B58
+    - c
+    - saveCommuRequestStateAndSelectStep5
+    - '@source: src/bof3/ui/saveCommuRequestStateAndSelectStep5.c'
+    - '@behavior: Overlay state save that the confirm paths run when the selected commu entry row has no target cell (the row cell byte reads 0xFF): it copies the overlay step byte at 0x801F294D into 0x801D4E10 and the request result halfword at 0x801D4E0C into 0x801D4E14, queues resident sound cue 0x103 through the shared cue dispatcher at 0x8015DF18, publishes request result 0x3D into 0x801D4E0C, clears the byte at 0x801D4E18 and selects overlay step 5 at 0x801F294D; it takes no arguments and returns nothing, and the saved pair is what the cancel path at 0x801D2110 restores'
   - - 16312
     - textbin
     - D_801D4BB8
