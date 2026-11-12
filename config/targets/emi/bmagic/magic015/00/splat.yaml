@@ -133,8 +133,10 @@ segments:
     - asm
     - func_801F014C
   - - 5524
-    - asm
-    - func_801F0194
+    - c
+    - applyHelper60ToBattleRecordThenWhenRecordWithinC000SetHeadingTowardRecordSeedWord14CountdownByte9StepWord20AndAdvanceWorkByte2BmagicMagic01500_801F0194
+    - '@source: src/bof3/bmagic/applyHelper60ToBattleRecordThenWhenRecordWithinC000SetHeadingTowardRecordSeedWord14CountdownByte9StepWord20AndAdvanceWorkByte2BmagicMagic01500_801F0194.c'
+    - '@behavior: Entry 22 of the overlay header handler code-pointer run that starts at 0x801EEC04, the word the run stores at 0x801EEC5C, between func_801F014C and the entry 23 handler at 0x801F0248; the payload holds that one address word and no jal or j word to this address, so the call site is the indirect dispatch through the copied run. It passes the battle record read through the pointer cell 0x8014638C with the constant 0x60 to the main-executable record helper 0x800AF2B4, then re-reads that cell and passes the same record with 0xC000 to the range test 0x800AF66C, returning while the test reports no hit. On a hit it computes the heading of the battle record read through 0x801EB4E0 relative to the scratchpad work object published at the pointer cell 0x1F800044, word 0x34 difference as x and word 0x38 difference as y, through the angle helper 0x8017A138, stores that result as work word 0xC, and seeds work word 0x14 = 0x40, work countdown byte 9 = 0x10 and work step word 0x20 = -8, the value the sibling steps add to word 0x14 on each frame. It then re-reads the work cell and advances work byte 2, the handler index, at byte width. The record cell address stays in $s0 across both calls, the first cell load follows the $ra store, and the 0x18-byte frame keeps $s0 at 0x10 and $ra at 0x14. Nothing is returned and no other state is read or written.'
   - - 5704
     - c
     - stepWorkPositionPairByAngleWord0CAddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9ThenAdvanceWorkByte2BmagicMagic01500_801F0248

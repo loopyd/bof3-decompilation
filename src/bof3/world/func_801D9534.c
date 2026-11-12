@@ -9,6 +9,6 @@
  * @residual none
  */
 void func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4) {
-  func_801D934C(arg0, arg1, arg2, arg3);
+  drawSemiTransPaletteRectangleFill(arg0, arg1, arg2, arg3);
   drawSemiTransPaletteRectangleBorder(arg0 + 2, arg1 + 2, arg2 - 5, arg3 - 5, arg4);
 }

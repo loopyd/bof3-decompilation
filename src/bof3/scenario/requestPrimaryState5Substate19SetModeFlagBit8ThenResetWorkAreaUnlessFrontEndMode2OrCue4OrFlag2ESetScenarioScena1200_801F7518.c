@@ -44,7 +44,8 @@ void func_80196070(void);
  * dispatchWorkByte2HandlerScenarioScena1200_801F73CC (0x801F73CC) selects with
  * the work object unsigned byte at offset 0x02 scaled by four, so it is the
  * handler for that byte reading 1; the neighbours in the same run are entry 0,
- * the raw-named func_801F7410 (0x801F7410), and
+ * advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7410
+ * (0x801F7410), and
  * clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC (0x801F7BEC,
  * entry 2). That pointer word is the only little-endian word of the overlay
  * payload that holds 0x801F7518, so this span is reached from that table alone.

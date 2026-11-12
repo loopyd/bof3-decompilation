@@ -189,6 +189,7 @@ func_801D8364 = 0x801D8364;
 func_801D88E0 = 0x801D88E0;
 drawStatusBoxPair = 0x801D8D70;
 func_801D90FC = 0x801D90FC;
+drawSemiTransPaletteRectangleFill = 0x801D934C;
 func_801D9534 = 0x801D9534;
 drawSemiTransPaletteRectangleBorder = 0x801D95C4;
 drawMessageTokenCellQuad = 0x801D9740;

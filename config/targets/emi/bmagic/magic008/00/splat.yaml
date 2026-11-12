@@ -218,8 +218,10 @@ segments:
     - asm
     - func_801F0DA8
   - - 8788
-    - asm
-    - func_801F0E54
+    - c
+    - seedWorkFlagsTintAndRecordFieldsThenStepPairFromByteBInvokeTransformAndSeedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F0E54
+    - '@source: src/bof3/bmagic/seedWorkFlagsTintAndRecordFieldsThenStepPairFromByteBInvokeTransformAndSeedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F0E54.c'
+    - '@behavior: Work byte 2 state 0 of this overlay: entry 0 of the six-entry code pointer table at 0x801EEC94 (0x801F0E54, 0x801F0FA4, 0x801F1090, 0x801F117C, 0x801F11C4, 0x801F1274), which 0x801F0DA8 copies into its own frame and selects with scratchpad work-object byte 2, so this body runs while work byte 2 is 0. It raises bit 0x20 of work byte 0, seeds mode byte 0x5C and byte 0x2B with 1, seeds the signed tint triplet 0x5D/0x5E/0x5F with -0x50, copies the shared battle work record byte 0x27 and byte 8 into the work object at the same offsets, copies the record position word triplet 0x34/0x38/0x3C into the object at the same offsets, then takes the object byte 0xB as the index of the step-word records at 0x801F1C04 and 0x801F1C08 and stores record [byte 0xB] of each into object words 0xC and 0x10. It then invokes the shared transform helper 0x801DD350 on the work object, stores the byte 0x800AFF98 returns in work byte 9, and advances work byte 2 with a byte-width add, moving dispatch to entry 1 at 0x801F0FA4. The 0x18-byte frame keeps only $ra at 0x10 across the two calls; the function takes no arguments, returns nothing and reads or writes no other state.'
   - - 9124
     - c
     - copyRecordPositionPairOnFrameParityElseAddStepPairThenInvokeHelperDecrementWorkByte9AndOnZeroReseedWorkByte9FromWorkByteBPlus4AndAdvanceWorkByte2BmagicMagic00800_801F0FA4
