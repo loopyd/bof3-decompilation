@@ -1319,6 +1319,11 @@ pub fn payload_nontext_ranges(
                 length: 240,
                 evidence: "original US shared battle payload; complete instruction body 0x800AE108..0x800AE1F8 including return delay slots; complete original control-flow review and captured native entry PC 0x800AE108 with RA 0x801D39F0 from original caller 0x801D39E8; original bytes match captured resident bytes; call continuations assume returns; exact archive and payload identities; no ELF-match, full-function execution, valid-work-record, selector-bound, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
             }])
+            .chain([NontextRange {
+                offset: 0x179f8,
+                length: 104,
+                evidence: "original US shared battle payload; complete instruction body 0x800AE1F8..0x800AE260 including return delay slot; complete original control-flow review and captured native entry PC 0x800AE1F8 with RA 0x801D381C from original caller 0x801D3814; original bytes match captured resident bytes; call continuation assumes return; exact archive and payload identities; no ELF-match, full-function execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+            }])
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
