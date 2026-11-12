@@ -26,6 +26,7 @@ sources = [
     "src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13103_801EF61C.c",
     "src/bof3/bmagic/setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0.c",
+    "src/bof3/bmagic/decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F02B0.c",
     "src/bof3/bmagic/decrementWorkByte9By2AdvanceWorkWord14By10ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F0CE4.c",
     "src/bof3/bmagic/add2ToWorkByte9DecrementWorkTintChannel5DBy4ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13103_801F058C.c",

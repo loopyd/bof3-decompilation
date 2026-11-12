@@ -441,8 +441,10 @@ segments:
     - '@source: src/bof3/ui/drawTwoOptionPromptThenReportChoice.c'
     - '@behavior: shop UI two-option prompt helper: submits the prompt texture row 0x1C at row 0x16 through func_8014F800 with func_801502D0(0xF) as the fifth argument and 0 and 0xFF as the middle pair, places the option cursor through func_801647C4 at the masked x ((0x1F - D_8014865B * 4) * 8 + 0x1B) with the y constant 0x18 and then reads the shared pad halfword D_80145AA8 once for its three tests. While that pad state shares a bit with the cancel mask D_80145AC4 it plays cue 0x106, clears the work-block byte D_8014865B and reports a choice; while it instead shares a bit with the confirm mask D_80145AC2 it plays cue 0x104 when the work-block byte is set and cue 0x106 when it is clear, and reports a choice; while it shares a bit with 0xA000 it plays cue 0x101, toggles the work-block byte and reports no choice. Every other pad state reports no choice, and every return path loads the result register with the constant 1 or 0.'
   - - 39804
-    - asm
-    - func_801DA77C
+    - c
+    - drawShopCommandRow
+    - '@source: src/bof3/ui/drawShopCommandRow.c'
+    - '@behavior: shop command row emitter of the SHOP overlay: the group byte selects one five-byte record of D_801E59C0 whose first byte is the command count and whose following bytes are command codes, and for every code the body paints the 0x2D by 0x14 panel at the x argument plus 0x30 per entry and the row y through func_801AE3F0 with the shade 0 and the CLUT-bank byte D_80144952, sets the shade 7 for every entry other than the selection while the selection lies inside the count, forces that shade for the Ally code 0x12 while bit 0 of D_80143F02 is clear and for the Chng code 8 while func_80166140 with 0xF and func_8016628C with 0, 0x58 and 0 both answer zero, loads the command label D_801E5964[code] once, submits it through the text emitter func_8014F800 at x plus the 0x30 step plus a right-aligned four-cell inset and y plus 3 with the mask 0x10, and emits the 0x18-byte sprite-record stream D_801E55F4 for the selected entry or D_801E55DC for any other entry at x plus the 0x30 step and the sign-extended y, with the flag 0. The count byte is re-read from D_801E59C0 at each test because the calls can reach it, the 0x50-byte frame keeps the saved registers and $ra, the fifth argument is never read, and nothing is returned.'
   - - 40388
     - c
     - func_801DA9C4
@@ -747,7 +749,7 @@ segments:
     - c
     - func_801E29C8
     - '@source: src/bof3/ui/func_801E29C8_shop00.c'
-    - '@behavior: panel state dispatcher sibling of func_801E2AB0, func_801E2EB0, func_801E3720 and func_801E44E0: calls the handler D_801E5DC0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through func_801DA77C with the same task root''s signed x and field-6 halfwords, its bytes 0xA and 0xB and the constant 0.'
+    - '@behavior: panel state dispatcher sibling of func_801E2AB0, func_801E2EB0, func_801E3720 and func_801E44E0: calls the handler D_801E5DC0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop command row through drawShopCommandRow with the same task root''s x and field-6 halfwords, its bytes 0xA and 0xB and the constant 0.'
   - - 73264
     - c
     - retreatPanelField6ToNeg20B

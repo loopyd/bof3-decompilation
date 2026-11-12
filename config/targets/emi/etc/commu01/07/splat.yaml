@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801D28A4
   - - 8600
-    - asm
-    - func_801D2D98
+    - c
+    - drawPaletteChannelGradientBarCommu0107_801D2D98
+    - '@source: src/bof3/ui/drawPaletteChannelGradientBarCommu0107_801D2D98.c'
+    - '@behavior: emits one bar of the commu01/07 entry-detail panel at the shared primitive cursor, width pixels wide and four pixels tall. Copies the overlay''s four-entry channel palette at 0x801D0C04 into a local and takes the entry the channel byte selects, one byte per red, green and blue channel, red, green, blue and cyan in table order. Brightness is a fixed 0x80 when the blink byte is clear; otherwise it takes bits 1 and 2 of the shared frame counter 0x80143E6C, scaled by 32 and offset by 0x3F, inverted while bit 3 of that counter is clear, so the bar blinks. It stamps the cursor through the POLY_G4 initialiser at 0x8017A9CC and writes two 0x24-byte gouraud quads through func_8014E5A0 under ordering-table slot 1: the first spans (x, y) to (x + width, y + 2) with its top edge at a quarter of the selected colour and its bottom edge at the full colour, the second spans (x, y + 2) to (x + width, y + 4) with its top edge at the full colour and its bottom edge at a quarter of it, and each quad repeats the first vertex pair''s x on the second pair, so the pair is one bar whose bright core sits at y + 2'
   - - 9272
     - asm
     - func_801D3038

@@ -88,8 +88,10 @@ segments:
     - '@source: src/bof3/bmagic/setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0.c'
     - '@behavior: Entry index 9 (the word at 0x801F1BE8) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 0xF into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing dispatch to the next table entry at 0x801EFF48. The 0xF constant is materialized ahead of the guard branch, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 4936
-    - asm
-    - func_801EFF48
+    - c
+    - decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48.c'
+    - '@behavior: Entry index 10 (the word at 0x801F1BEC) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements work byte 9 at byte width, comparing the stored register truncated to eight bits so no second cell read supplies the guard. Only when that countdown reaches zero does it forward the global battle byte at 0x80146384 to the main-executable helper at 0x800A9820, then read the global mode byte at 0x801462EC: mode 0 or 3 seeds the work word pairs at 0xC/0x10 and 0x18/0x1C with 8/-1/1/-1, and any other mode seeds them with -8/-1/-1/-1. It then re-reads the pointer cell for each of the remaining three stores: work byte 9 is cleared, work byte 0xA is set to 0x1E, and work byte 2 is advanced with a byte-width add, moving dispatch to table entry 11 at 0x801F0034. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 5172
     - asm
     - func_801F0034

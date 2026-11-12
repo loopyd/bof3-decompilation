@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF52C
   - - 2512
-    - asm
-    - func_801EF5D0
+    - c
+    - seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0
+    - '@source: src/bof3/bmagic/seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0.c'
+    - '@behavior: Overlay header handler index 6 of the run at 0x801EEC04; seeds the scratchpad work header bytes 0x24, 0x25, 0x27 and 0x2B with 0x84, 0x1D, 0xB4 and 0, clears bytes 0x26, 0x28, 0x29, 0x2A and halfword 0x2C, requests resource 5 through 0x8014D6B8, dispatches cue ((work byte 0xA & 1) | 0x100) through 0x8015DF18 and advances work byte 2.'
   - - 2724
     - asm
     - func_801EF6A4

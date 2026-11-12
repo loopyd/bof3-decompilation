@@ -19,7 +19,7 @@ addMotionPairIntoHalfwordsDecrementCountdownSetByte9To24AdvanceWorkByte2BmagicMa
 func_801EFBF8 = 0x801EFBF8;
 func_801EFC74 = 0x801EFC74;
 setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0 = 0x801EFEF0;
-func_801EFF48 = 0x801EFF48;
+decrementWorkByte9ThenForwardBattleByteSeedMotionPairByModeSetByteATo1EAndAdvanceWorkByte2BmagicMagic13103_801EFF48 = 0x801EFF48;
 func_801F0034 = 0x801F0034;
 dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F0100 = 0x801F0100;
 clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178 = 0x801F0178;

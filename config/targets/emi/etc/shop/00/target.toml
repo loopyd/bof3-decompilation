@@ -53,6 +53,7 @@ sources = [
     "src/bof3/ui/tickPhaseTimerThenAdvanceWorkCounter.c",
     "src/bof3/ui/func_801DA00C_shop00.c",
     "src/bof3/ui/drawTwoOptionPromptThenReportChoice.c",
+    "src/bof3/ui/drawShopCommandRow.c",
     "src/bof3/ui/func_801DA9C4.c",
     "src/bof3/ui/func_801DAA78.c",
     "src/bof3/ui/func_801DAB90.c",

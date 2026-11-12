@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF2B4
   - - 2452
-    - asm
-    - func_801EF594
+    - c
+    - callAFC54ThenCallAEF98With4And0ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic01500_801EF594
+    - '@source: src/bof3/bmagic/callAFC54ThenCallAEF98With4And0ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic01500_801EF594.c'
+    - '@behavior: Work byte 1 state 1 of the second handler run of this overlay: the word the four-entry code pointer run at 0x801EEC14 stores at 0x801EEC18, index 1 of 0x801EF2B4, 0x801EF594, 0x801EF610 and 0x801EF200, which dispatchWorkByte1HandlerBmagicMagic01500_801EF248 copies into its 0x28-byte frame and selects on unsigned work byte 1 of the work object held in scratchpad cell 0x1F800044. It reads that object''s byte 0xB and, only when the byte is zero, calls the shared battle buffer-copy helper at 0x800AFC54, calls the shared battle event dispatcher at 0x800AEF98 with the event selector 4 and the value 0, clears bit 0x40 of byte 0 of the shared battle work record read through the pointer at 0x801EB4E0 with the 0xBF mask, and then re-reads the scratchpad cell and increments work byte 1 with a byte-width add, which selects run entry 2 (0x801EF610). The record base stays in one register across its read, mask and store, the store group follows both calls rather than filling a delay slot, the first cell load is hoisted above the frame adjustment, and the 0x18-byte frame only keeps $ra at 0x10 across those calls. Nothing is returned and no other state is read or written. The 124-byte body is byte-identical to the span at 0x801EF150 of this same payload, proven by a payload cmp of the two spans, and that lifted sibling supplied the statement order.'
   - - 2576
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic01500_801EF610

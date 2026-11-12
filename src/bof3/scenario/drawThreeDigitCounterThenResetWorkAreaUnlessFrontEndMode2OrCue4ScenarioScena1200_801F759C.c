@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F75EC(void);
+void drawFramedThreeDigitCounterScenarioScena1200_801F75EC(void);
 void func_80196070(void);
 
 /* Shared front-end mode byte in the main executable: the scenario substate
@@ -23,11 +23,12 @@ extern u16 D_80143B90;
  * dispatchWorkByte1HandlerScenarioScena1200_801F7174 selects with the work
  * object unsigned byte at offset 0x01 scaled by four (entry 0 is the byte-2
  * dispatcher 0x801F71B8 and entry 1 is 0x801F73CC). It first calls
- * func_801F75EC, the next subsegment at 0x801F75EC: that body formats the low
+ * drawFramedThreeDigitCounterScenarioScena1200_801F75EC, the next subsegment at
+ * 0x801F75EC, which gated exact on its own bytes: that body arms a rectangle
+ * through func_801F765C at (0x8A, 0x1E) with size 0x2D by 0x14, formats the low
  * byte of the overlay-local halfword D_801FD288 through sprintf with the
  * overlay's own format string at 0x801F6C04, which reads "%03d", into the
- * shared text buffer D_80145AD4, arms a rectangle through func_801F765C and
- * draws that buffer at (0x95, 0x22) with colour 0 through func_8014FF0C, so
+ * shared text buffer D_80145AD4, and draws that buffer at (0x95, 0x22) with colour 0 through func_8014FF0C, so
  * this call paints the overlay's three-digit counter readout. It then reads the
  * front-end mode byte D_80143BB0 and the front-end cue selector halfword
  * D_80143B90 out of the main executable and calls func_80196070, the shared
@@ -46,7 +47,7 @@ extern u16 D_80143B90;
  * @residual none
  */
 void drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C(void) {
-  func_801F75EC();
+  drawFramedThreeDigitCounterScenarioScena1200_801F75EC();
   if (D_80143BB0 != 2 && D_80143B90 != 4) {
     func_80196070();
   }

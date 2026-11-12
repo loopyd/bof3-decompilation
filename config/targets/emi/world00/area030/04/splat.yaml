@@ -902,8 +902,10 @@ segments:
     - '@source: src/bof3/world/func_801DE4AC.c'
     - '@behavior: walks the 0x1E shared 0x98-byte work records at 0x80146888, publishes each active record as the scratchpad cursor at 0x1F800044 and as D_80146884, dispatches its handler byte 0x01 through the overlay handler table D_801E2314, and derives the record level byte 0x5D from flag 0x20 and the signed counter at 0x3E before mirroring it into 0x5E and 0x5F.'
   - - 55788
-    - asm
-    - func_801DE5EC
+    - c
+    - applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC
+    - '@source: src/bof3/world/applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC.c'
+    - '@behavior: AREA030 work-record entry step for the slot selected by work-record byte 0x06: applies the scale-record entry halfword at +0x10 through func_8014DD3C, clears work bytes 0x24/0x09/0x0B, sets work bytes 0x48 to 2 and 0x29 to 5, seeds heading byte 0x92 from rand & 3 raised to the scale-record byte +0x1A and masked back to two bits, seeds x at 0x34 and y at 0x38 from the 0x140000 and 0x3E0000 ceilings less random 16-bit terms and less heading times 0xC0000, seeds the signed counter at 0x3E from the negated scale byte times 256 less rand & 7 times 32, clamps that counter to -0x20 or up to the func_8015477C distance of the seeded pair, sets work byte 0x08 to 4, clears the work word at 0x14, releases the entry through func_8014D6B8(0) and advances the work handler byte 0x01.'
   - - 56364
     - asm
     - func_801DE82C

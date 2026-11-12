@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/scena11/00.bin"
 splat = "config/targets/emi/scenario/scena11/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState0BScenarioScena1100_801FA930.c",
+]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",
     "src/bof3/scenario/dispatchRecordCallbackScenarioScena1100_801FA5B8.c",

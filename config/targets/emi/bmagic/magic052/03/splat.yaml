@@ -37,8 +37,10 @@ segments:
     - setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C
     - '@source: src/bof3/bmagic/setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C.c'
   - - 188
-    - asm
-    - func_801EECBC
+    - c
+    - decrementWorkByteAQueueSlotSeedRecordHalfwordsWithJitterPublishWorkPointerCopyWorkByte9ThenArmByteAAndAdvanceWorkByte1OnByte9ExpiryBmagicMagic05203_801EECBC
+    - '@source: src/bof3/bmagic/decrementWorkByteAQueueSlotSeedRecordHalfwordsWithJitterPublishWorkPointerCopyWorkByte9ThenArmByteAAndAdvanceWorkByte1OnByte9ExpiryBmagicMagic05203_801EECBC.c'
+    - '@behavior: Countdown step of the scratchpad work object at 0x1F800044. Decrements the work object byte 0xA and returns when the prior value was nonzero. On a zero prior value it claims one 0x78-byte action slot of the pool at 0x801EC330 through func_801E590C(1, 0x50), clears the slot bytes at 0x801EC331 and 0x801EC332, publishes a reloaded work pointer in the slot word at 0x801EC3A4, seeds the slot halfwords 0x2E/0x30/0x32 from the shared record at 0x8014638C with rand() jitter of 0xF added and 0x1F subtracted, copies the work object byte 9 into the slot byte at 0x801EC339, then decrements that work byte 9: a nonzero prior value rearms work byte 0xA to 8 while a zero prior value wraps byte 9, rearms byte 0xA to 0x2D and increments work byte 1.'
   - - 560
     - asm
     - func_801EEE30

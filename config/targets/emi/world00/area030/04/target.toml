@@ -59,6 +59,7 @@ sources = [
     "src/bof3/world/func_801D41E4.c",
     "src/bof3/world/func_801D4570.c",
     "src/bof3/world/func_801D45F8.c",
+    "src/bof3/world/applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC.c",
     "src/bof3/world/func_801D5A48_area03004.c",
     "src/bof3/world/func_801D5B48_area03004.c",
     "src/bof3/world/func_801D5B70_area03004.c",

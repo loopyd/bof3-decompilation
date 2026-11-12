@@ -13,7 +13,7 @@ extern u16 D_801FD288; /* @source 0x801FD288 @kind data */
  * halfword is the flag the next handler of the same run, func_801F7240, shifts
  * down to select its phase-count threshold (`srl $s2, $v1, 15`), keeps in the
  * repacked halfword (`sll $v0, $s2, 15`) and the handler also reads the
- * halfword's low byte as a 0..0xC7 counter; func_801F75EC and func_801F9680 read
+ * halfword's low byte as a 0..0xC7 counter; drawFramedThreeDigitCounterScenarioScena1200_801F75EC and func_801F9680 read
  * that low byte back with `lbu`. After that it reads the scratchpad work object
  * published by the pointer cell at 0x1F800044, takes the object's unsigned byte
  * at offset 0x02, adds one and stores it back with `sb 0x2`, so it advances the
