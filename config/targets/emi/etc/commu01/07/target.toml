@@ -27,6 +27,7 @@ sources = [
     "src/bof3/ui/drawMarkerTriangleCommu0107_801D3984.c",
     "src/bof3/ui/moveCommuRowCursorByPadDirection.c",
     "src/bof3/ui/drawEntryListPanel.c",
+    "src/bof3/ui/drawKindGridPanel.c",
 ]
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",

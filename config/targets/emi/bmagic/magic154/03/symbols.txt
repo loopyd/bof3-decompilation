@@ -1,4 +1,5 @@
 func_801E5988 = 0x801E5988;
+dispatchWorkByte2HandlerTable801EEC14 = 0x801EEC14;
 func_801EEC24 = 0x801EEC24;
 func_801EEC90 = 0x801EEC90;
 func_801EEE94 = 0x801EEE94;
@@ -10,7 +11,7 @@ func_801EF1EC = 0x801EF1EC;
 incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380 = 0x801EF380;
 func_801EF3E4 = 0x801EF3E4;
 func_801EF454 = 0x801EF454;
-func_801EF4B4 = 0x801EF4B4;
+dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_801EF4B4 = 0x801EF4B4;
 func_801EF544 = 0x801EF544;
 func_801EF58C = 0x801EF58C;
 func_801EF648 = 0x801EF648;

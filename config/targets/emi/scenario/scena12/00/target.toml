@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = [
     "src/bof3/scenario/drawThreeDigitCounterThenResetWorkAreaUnlessFrontEndMode2OrCue4ScenarioScena1200_801F759C.c",
+    "src/bof3/scenario/setProgress50AndAdvanceSubstate0BUnlessFrontEndMode2ThenReleaseFrontEndWhenSharedByte65Reads0AScenarioScena1200_801F88B0.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

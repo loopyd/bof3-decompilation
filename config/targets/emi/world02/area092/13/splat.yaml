@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F3708
   - - 3252
-    - asm
-    - func_801F38B4
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09213_801F38B4
+    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09213_801F38B4.c'
+    - '@behavior: Publishes the shared work base D_80146110 as the scratchpad work cursor at 0x1F800044, stores the front-end record index returned by func_8019601C into that base byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte record it selects at 0x80143FC8 with byte 0x00 = 1, byte 0x05 = the handler selector 6, byte 0x06 = the record kind 1, word 0x0C = 0, word 0x10 = the byte D_801F3A90[D_80144F5C] and the halfwords at 0x2E/0x30 copied from the work base, then returns; the overlay code-pointer run at 0x801F413C reaches it as its index 10 step handler, so no jal in this payload names it.'
   - - 3680
     - c
     - queueFrontendCue3DWorld02Area09213_801F3A60

@@ -616,8 +616,10 @@ segments:
     - func_801E0968
     - '@source: src/bof3/ui/func_801E0968.c'
   - - 65012
-    - asm
-    - func_801E09F4
+    - c
+    - stepShopCommandRowThenDispatchOrAdvanceUiSubstep
+    - '@source: src/bof3/ui/stepShopCommandRowThenDispatchOrAdvanceUiSubstep.c'
+    - '@behavior: shop command-row sub-step handler reached as entry 6 of the sub-step table D_801E5CFC, which func_801DFDB8 dispatches with the UI sub-step byte D_80148652 as index: it republishes the selector frame (D_80148340 = 0x18, the x halfword D_80148628 = D_801483E8 + 5 and the y halfword D_8014862A = D_801483EA + 16 * D_801483EE + 0x1A), steps the three-value row index D_801483EE with the direction bits of the pad state D_80145AA8 masked by 0x5000 (bit 0x1000 decrements and wraps a decrement below zero back to 2, bit 0x4000 increments and wraps a count above two back to zero, both playing cue 0x101), and then either handles the confirm mask D_80145AC2 by playing cue 0x103 and clearing D_801483EF plus advancing the UI sub-step byte D_80148652 on the zero row or by dispatching the row index as a command id through the shop command handler table, or handles the cancel mask D_80145AC4 by playing cues 0x102 and 0x106, clearing D_801483E4, storing 4 in D_801483C3 and stepping the UI phase byte D_80148651 back by two.'
   - - 65452
     - asm
     - func_801E0BAC

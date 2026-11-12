@@ -15,5 +15,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8.c",
+    "src/bof3/bmagic/decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C.c",
 ]
 psyq_source = "src/bof3/support/magic115_03_psyq.c"

@@ -136,8 +136,10 @@ segments:
     - c
     - computeEntryListOriginY
   - - 14560
-    - asm
-    - func_801D44E0
+    - c
+    - drawKindGridPanel
+    - '@source: src/bof3/ui/drawKindGridPanel.c'
+    - '@behavior: draws the commu01/07 kind-grid panel, the entry-list panel of one commu kind. The halfword table at 0x801D4DD4 gives each kind the index of its first name run in the low byte and its row count in the high byte, so the panel height is that row count times sixteen; while the origin plus that height plus four pixels reaches the 0xD9 screen bound the origin moves up to 0xD4 minus the height. While the mode byte is zero it first paints the inset rectangle at (x + 4, y + 6), 0x30 wide and that height tall, with shade 0x81, then paints the backing rectangle at (x, y) 0x50 wide and the same height with shade 0x80, both taking the shared clut byte 0x80144952. It draws the entry-list frame through drawEntryListFrame at (x, y - 1) with the height rounded down to a multiple of sixteen and, while the kind has rows, submits one caption per row through func_8014F800 at (x + 8, y + 2 plus sixteen per row) with alignment seven times the mode byte and cell height 8, reading the eight-cell name run at 0x801D4D84 advanced by that kind''s first run index and the row index; its in-image callers func_801D1A94, func_801D1E48 and func_801D2110 pass an x built from the quarter-step origin 0x4A or 0x52, their own y, the overlay cursor kind bytes 0x801D4E1C or 0x801D4E20 and mode 0 or 1'
   - - 14996
     - c
     - computeKindSlotOrigin

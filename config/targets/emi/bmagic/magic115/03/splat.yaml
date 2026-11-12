@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF27C
   - - 2204
-    - asm
-    - func_801EF49C
+    - c
+    - decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C
+    - '@source: src/bof3/bmagic/decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C.c'
+    - '@behavior: Step wrapper around one overlay work handler. It reads the scratchpad work-object pointer cell 0x1F800044, whose first load is issued before the 0x18-byte frame, steps the object tint bytes 0x5D, 0x5E and 0x5F down by four, and runs the shared no-argument update helper func_8014D978. It advances work byte 9 and publishes (byte 9 & 0x3F) << 6 into the scratchpad word 0x1F800000 through an address built once into $s0. Word 0x34 of the work object takes the shared record word 0x34 read through the 0x801EB4E0 cell plus twelve times the func_801782FC sample of that phase, written as the 12-bit fixed-point product sll 1 / addu / sll 14 / sra 12; word 0x38 takes the record word 0x38 plus twelve times the func_801783C8 sample of the same phase re-read from 0x1F800000. Between them it reads the record word 0x38 into a local and stores -0x80 into tint byte 0x5D through the signed byte view; that record load stays ahead of the tint store because a byte store and a record load may alias. After the tint store it re-reads the cell once more, and that pointer advances work byte 2 after the word 0x38 store. The 0x18-byte frame keeps $ra at 0x14 and $s0 at 0x10. Entry index 2 of the eight-word code pointer run based at 0x801EF8C4.'
   - - 2500
     - asm
     - func_801EF5C4

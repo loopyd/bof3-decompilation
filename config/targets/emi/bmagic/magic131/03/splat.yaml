@@ -139,8 +139,10 @@ segments:
     - asm
     - func_801F06B4
   - - 8004
-    - asm
-    - func_801F0B44
+    - c
+    - dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall0D44And0DF4AndPopWhenWorkBytes0And2SetBmagicMagic13103_801F0B44.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 ahead of its 0x18-byte frame and calls the three-entry handler-table entry at 0x801F1C24 selected by unsigned work byte 2 scaled by four, without bounding the index. Re-reads the same cell after the handler returns and tests work byte 0 and then work byte 2 from that single second load; only when both are nonzero does it call the in-payload helper at 0x801F0D44, then the helper at 0x801F0DF4, then the SDK routine PopMatrix. The handler run ends at 0x801F1C30, which this target names dispatchHandlerTable801F1C30. The frame only keeps $ra at 0x10, and nothing is stored or returned.'
   - - 8140
     - c
     - seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC

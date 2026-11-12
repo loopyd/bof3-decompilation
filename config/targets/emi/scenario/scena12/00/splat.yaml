@@ -111,8 +111,10 @@ segments:
     - c
     - noopHandlerScenarioScena1200_801F88A8
   - - 7344
-    - asm
-    - func_801F88B0
+    - c
+    - setProgress50AndAdvanceSubstate0BUnlessFrontEndMode2ThenReleaseFrontEndWhenSharedByte65Reads0AScenarioScena1200_801F88B0
+    - '@source: src/bof3/scenario/setProgress50AndAdvanceSubstate0BUnlessFrontEndMode2ThenReleaseFrontEndWhenSharedByte65Reads0AScenarioScena1200_801F88B0.c'
+    - '@behavior: Overlay secondary-state handler, the word at 0x801FD1C8 (entry 1 of the ten-word handler table at 0x801FD1C4) that dispatchSecondaryStateScenarioScena1200_801F886C selects with the signed shared state byte D_80146874, so it runs while that byte reads 1. It steps the shared sub-state byte D_80146875: from 0x0A it waits for the shared front-end mode byte D_80143BB0 to stop reading 2, then stores 0x32 in the shared progress byte g_ScenarioProgress (0x80146864) and advances the sub-state to 0x0B; from 0x0B, once the shared main-RAM byte D_80146865 reads 0x0A, it clears that byte, runs the shared front-end release helper func_8015C058 (0x8015C058) and clears the sub-state byte and the state byte D_80146874. Any other sub-state value returns untouched, and the 0x18-byte frame only keeps $ra across the call.'
   - - 7500
     - asm
     - func_801F894C

@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED0C
   - - 1360
-    - asm
-    - func_801EF150
+    - c
+    - callAFC54ThenCallAEF98With4And0ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic01500_801EF150
+    - '@source: src/bof3/bmagic/callAFC54ThenCallAEF98With4And0ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic01500_801EF150.c'
+    - '@behavior: Work byte 1 state 1 of this overlay: entry index 1 of the four-entry handler run at 0x801EEC04 (0x801EED0C, 0x801EF150, 0x801EF1CC, 0x801EF200), the word the run stores at 0x801EEC08 and that the dispatch bodies select on unsigned byte 1 of the work object held in scratchpad cell 0x1F800044. It reads that object''s byte 0xB and, only when the byte is zero, calls the shared battle buffer-copy helper at 0x800AFC54, calls the shared battle event dispatcher at 0x800AEF98 with the event selector 4 and the value 0, clears bit 0x40 of byte 0 of the shared battle work record read through the pointer at 0x801EB4E0 with the 0xBF mask, and then re-reads the scratchpad cell and increments work byte 1 with a byte-width add, which selects run entry 2 (0x801EF1CC). Nothing is returned and no other state is read or written.'
   - - 1484
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic01500_801EF1CC
