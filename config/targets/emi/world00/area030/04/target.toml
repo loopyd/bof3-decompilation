@@ -212,6 +212,7 @@ sources = [
     "src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c",
     "src/bof3/world/advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88.c",
     "src/bof3/world/drawSemiTransPaletteRectangleBorder.c",
+    "src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

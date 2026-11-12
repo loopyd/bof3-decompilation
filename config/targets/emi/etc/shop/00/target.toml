@@ -157,6 +157,7 @@ sources = [
     "src/bof3/ui/armShopValueSelectionThenAdvanceUiSubstep.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrShop00_801D9160.c",
     "src/bof3/ui/drawShopVariantPanelThenRestoreUiSubstepOnTimerExpiry.c",
+    "src/bof3/ui/stepNoteListCursorThenPickOrSwapNote.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

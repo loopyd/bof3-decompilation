@@ -207,8 +207,10 @@ segments:
     - clearRecordBytes0Through4BmagicMagic13103_801F1AC4
     - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic13103_801F1AC4.c'
   - - 12052
-    - asm
-    - func_801F1B14
+    - c
+    - projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14
+    - '@source: src/bof3/bmagic/projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14.c'
+    - '@behavior: Builds an eight-byte vector inside its 0x20-byte frame from the work record pointer cell at 0x801F24E0 and projects it through the primitive cursor. The record word at 0x14 shifted down nine bits and biased by -0x4000 becomes the halfword at stack offset 0x10, the record word at 0x18 the same way the halfword at 0x12, and the signed record halfword at 0x1E halved toward zero and negated the halfword at 0x14. Calls the shared helper at 0x8017AA30 with the primitive cursor, then RotTransPers with the frame vector, the cursor plus eight, the frame slot at 0x10 and the halfword slot at 0x14. A second read of the record cell stores the projected primitive halfwords at +8 and +0xA into the record halfwords at 0x20 and 0x22. Reads no other state and returns nothing.'
   - - 12228
     - rodata
     - dispatchHandlerTable801F1BC4

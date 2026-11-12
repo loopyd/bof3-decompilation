@@ -53,7 +53,7 @@ extern void dispatchSoundCue(u32 cue_id);
 void publishCommuEntryTextId(void);
 u8 countActiveRecordsByKind(s32 kind);
 extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
-extern void func_801D36FC(u8 row, u8 selected);
+extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 
 /* @source 0x801D0CAC
@@ -77,7 +77,7 @@ extern void func_801D3038(void);
  * neither mask matches it moves the commu list row through
  * moveCommuRowCursorByPadDirection. Every
  * path then runs func_801D3038 and draws the list row 0x801448ED with the
- * selected flag 0 through func_801D36FC. Its 0x18-byte frame only holds ra.
+ * selected flag 0 through drawRowMarkerOutlineCommu0107_801D36FC. Its 0x18-byte frame only holds ra.
  * @status exact
  * @match 100.00
  * @residual none
@@ -123,5 +123,5 @@ void confirmCommuEntryRequestThenDrawCommu0107_801D0CAC(void) {
     moveCommuRowCursorByPadDirection(&D_801448ED);
   }
   func_801D3038();
-  func_801D36FC(D_801448ED, 0);
+  drawRowMarkerOutlineCommu0107_801D36FC(D_801448ED, 0);
 }

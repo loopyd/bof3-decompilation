@@ -6,7 +6,7 @@ extern u8 *workRecord801F24E0; /* @source 0x801F24E0 @kind data */
 extern void (*dispatchHandlerTable801F1C94[])(void); /* @source 0x801F1C94 @kind data */
 
 /* Projects the work record's position and stores the screen pair. */
-extern void func_801F1B14(void);
+extern void projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14(void);
 
 /* Draws the eight-step effect of the active work record. */
 extern void func_801F1844(void);
@@ -19,7 +19,8 @@ extern void func_801F1844(void);
  * halfword at offset 0x26: when that halfword is non-zero it stores the value
  * minus one there and jumps straight to the epilogue, calling nothing else.
  * When the halfword is zero and the record bytes at offsets 0x0 and 0x2 are
- * both non-zero it calls func_801F1B14 and then func_801F1844. Reads no other
+ * both non-zero it calls projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14
+ * and then func_801F1844. Reads no other
  * state, stores nothing but that halfword and returns nothing. The halfword's
  * wider role is unknown.
  * @status exact
@@ -38,7 +39,7 @@ void dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic
     if (countdown != 0) {
         *(s16 *)(countdown_record + 0x26) = countdown - 1;
     } else if (countdown_record[0] != 0 && countdown_record[2] != 0) {
-        func_801F1B14();
+        projectRecordPositionAndStoreScreenPairBmagicMagic13103_801F1B14();
         func_801F1844();
     }
 }

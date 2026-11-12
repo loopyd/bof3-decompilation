@@ -31,7 +31,7 @@ extern void publishCommuEntryTextId(void);
 extern void publishCommuEntryTextIdForRow(u8 *rowPtr);
 extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
 extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
-extern void func_801D36FC(u8 row, u8 selected);
+extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 /* The marker emitter narrows only its y argument with a signed halfword, so x
  * is declared wide here and the constant x arguments keep their bare `addiu`
@@ -56,7 +56,7 @@ extern u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * moveCommuRowCursorByPadDirection and publishes that row text id through
  * publishCommuEntryTextIdForRow. Every path then runs
  * func_801D3038, draws the list row 0x801448ED with the selected flag 1 and the
- * request row 0x801D4E28 with 0 through func_801D36FC, and while no commit
+ * request row 0x801D4E28 with 0 through drawRowMarkerOutlineCommu0107_801D36FC, and while no commit
  * happened draws the marker through drawMarkerTriangleCommu0107_801D3984 with the selected flag 1: at
  * 0x28 plus 8 times the signed ordinal byte 0x801D4E24 on x and 0x39 on y while
  * the list row cursor is zero, otherwise at 0xFA plus 8 times that byte modulo 5
@@ -96,8 +96,8 @@ void handleCommuEntryListInputThenDrawCommu0107_801D1158(void) {
   }
   func_801D3038();
   row = &D_801448ED;
-  func_801D36FC(*row, 1);
-  func_801D36FC(D_801D4E28, 0);
+  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
+  drawRowMarkerOutlineCommu0107_801D36FC(D_801D4E28, 0);
   if ((committed & 0xFF) == 0) {
     if (*row == 0) {
       drawMarkerTriangleCommu0107_801D3984(*(s8 *)&D_801D4E24 * 8 + 0x28, 0x39,

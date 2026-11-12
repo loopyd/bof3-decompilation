@@ -212,6 +212,7 @@ stepNoteListCursorThenSwapSelectedNote = 0x801E05E0;
 func_801E092C = 0x801E092C;
 func_801E0968 = 0x801E0968;
 stepShopCommandRowThenDispatchOrAdvanceUiSubstep = 0x801E09F4;
+stepNoteListCursorThenPickOrSwapNote = 0x801E0BAC;
 tickPhaseTimerThenBeginFrame = 0x801E0F28;
 func_801E0F78 = 0x801E0F78;
 func_801E112C = 0x801E112C;

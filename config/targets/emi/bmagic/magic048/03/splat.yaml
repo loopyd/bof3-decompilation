@@ -43,8 +43,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperAt100AndAdvanceWorkByte1WhenZeroBmagicMagic04803_801EEDB0.c'
     - '@behavior: Step 1 of this overlay''s work sequence: the handler the dispatcher at 0x801EEC10 selects through work byte 1, which the three-entry code pointer table at 0x801EEC04 binds at entry 1. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements the work object''s byte at offset 0x9 with a byte-width read-modify-write, then tests the truncated byte it just stored. Only when that countdown reached zero does it invoke the main-executable helper at 0x8015D71C with the selector 0x100, re-read the pointer cell and increment the work object''s byte at offset 0x1, advancing the dispatch state to entry 2 (0x801EEE10). The 0x18-byte frame only keeps $ra across that call. Reads or writes no other state.'
   - - 528
-    - asm
-    - func_801EEE10
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04803_801EEE10
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04803_801EEE10.c'
+    - '@behavior: Step 2 of this overlay work sequence: the handler the dispatcher at 0x801EEC10 selects through work byte 1, which the three-entry code pointer table at 0x801EEC04 binds at entry 2. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before the frame is created, and returns immediately when the work object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned, passes it to the shared main-executable helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword load, ori and halfword store that re-materialises the address into $at, then invokes the shared main-executable helper func_801E5988. The 0x18-byte frame only keeps the return address at 0x10 across the two calls. Takes no arguments and returns nothing.'
   - - 624
     - c
     - dispatchStateByte1Tablef818BmagicMagic04803_801EEE70

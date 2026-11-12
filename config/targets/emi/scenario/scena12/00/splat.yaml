@@ -48,8 +48,10 @@ segments:
     - asm
     - func_801F7240
   - - 1864
-    - asm
-    - func_801F7348
+    - c
+    - requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7348
+    - '@source: src/bof3/scenario/requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7348.c'
+    - '@behavior: Overlay per-frame work handler and the word at 0x801FD18C, entry 5 of the code-pointer run based at 0x801FD178 that dispatchWorkByte1HandlerScenarioScena1200_801F7174 selects with the work object unsigned byte at offset 0x01 scaled by four, so it is the handler for that byte reading 5. It requests primary scene state 5 with secondary sub-state 0x19, raises bit 8 in the mode halfword D_80146258 and then calls the shared work-area reset func_80196070, but only when the front-end mode byte D_80143BB0 differs from 2, the front-end cue halfword D_80143B90 differs from 4, and the main-executable flag tester func_8015B5D4 reports flag 0x2E clear in the flag word D_8014686C; the three tests are one short-circuited conjunction branching on the single shared exit label, and a non-zero return, mode 2 or cue 4 leaves every cell untouched. The 0x18-byte frame only keeps $ra across the two calls.'
   - - 1996
     - c
     - dispatchWorkByte2HandlerScenarioScena1200_801F73CC

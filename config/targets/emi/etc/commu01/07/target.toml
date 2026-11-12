@@ -29,6 +29,7 @@ sources = [
     "src/bof3/ui/drawEntryListPanel.c",
     "src/bof3/ui/drawKindGridPanel.c",
     "src/bof3/ui/drawPaletteChannelGradientBarCommu0107_801D2D98.c",
+    "src/bof3/ui/drawRowMarkerOutlineCommu0107_801D36FC.c",
 ]
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",

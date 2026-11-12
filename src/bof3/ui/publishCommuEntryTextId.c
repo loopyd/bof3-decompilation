@@ -2,7 +2,7 @@
 
 /* Shared commu list cursor. moveCommuRowCursorByPadDirection moves it by the
  * pad direction with a press and repeat state, and the row drawing code
- * func_801D36FC indexes the twelve-entry layout table at 0x801D4C44 with it, so
+ * drawRowMarkerOutlineCommu0107_801D36FC indexes the twelve-entry layout table at 0x801D4C44 with it, so
  * it is the row of this overlay's list that its handlers act on. */
 extern u8 D_801448ED; /* @source 0x801448ED @kind data */
 

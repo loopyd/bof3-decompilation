@@ -24,7 +24,7 @@ extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 extern void restoreSavedCommuRequestStateAndStepBack(void);
 extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
 extern void moveCommuRowCursorByPadDirection(u8 *rowPtr);
-extern void func_801D36FC(u8 row, u8 selected);
+extern void drawRowMarkerOutlineCommu0107_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
 extern void drawMarkerTriangleCommu0107_801D3984(s16 x, s16 y, u8 selected);
 extern void func_801D28A4(s16 x, s16 y, u8 slot, s32 selected);
@@ -48,7 +48,7 @@ u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * moveCommuRowCursorByPadDirection and publishes that row text id through
  * publishCommuEntryTextIdForRow. Every path then runs
  * func_801D3038, draws the list row 0x801448ED with the selected flag 1 and the
- * request row 0x801D4E28 with 0 through func_801D36FC, and when no commit
+ * request row 0x801D4E28 with 0 through drawRowMarkerOutlineCommu0107_801D36FC, and when no commit
  * happened computes the slot origin of the list row kind at ordinal 0x801D4E24
  * through computeKindSlotOrigin, draws the marker at that origin advanced by 4
  * on x with the selected flag 1 through drawMarkerTriangleCommu0107_801D3984,
@@ -85,8 +85,8 @@ void handleCommuEntryListInputThenDraw(void) {
   }
   func_801D3038();
   row = &D_801448ED;
-  func_801D36FC(*row, 1);
-  func_801D36FC(D_801D4E28, 0);
+  drawRowMarkerOutlineCommu0107_801D36FC(*row, 1);
+  drawRowMarkerOutlineCommu0107_801D36FC(D_801D4E28, 0);
   if ((committed & 0xFF) == 0) {
     computeKindSlotOrigin(&x, &y, *row, D_801D4E24);
     drawMarkerTriangleCommu0107_801D3984(x + 4, y, 1);

@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801EED60
   - - 728
-    - asm
-    - func_801EEED8
+    - c
+    - publishBattleWorkRecordPointerInvokeUpdateHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13803_801EEED8
+    - '@source: src/bof3/bmagic/publishBattleWorkRecordPointerInvokeUpdateHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13803_801EEED8.c'
+    - '@behavior: Overlay header handler, entry index 2 of the nine-word handler pointer run at 0x801EEC04 (payload word 0x801EEC0C); publishes the shared battle work record pointer held at 0x801EB4E0 into the scratchpad work-object pointer cell at 0x1F800044, invokes the shared update helper at 0x8014D978, restores the cell, and when the restored work object byte 0xB is zero forwards the shared battle byte 0x80146384 through func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes func_801E5988.'
   - - 864
     - c
     - dispatchStateByte1Tablef72cBmagicMagic13803_801EEF60

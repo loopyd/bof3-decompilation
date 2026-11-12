@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801F7F08
   - - 5848
-    - asm
-    - func_801F82D8
+    - c
+    - claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8
+    - '@source: src/bof3/scenario/claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8.c'
+    - '@behavior: Overlay per-record claim: masks the byte argument, scales it by the 0x74-byte record stride over the shared front-end record table D_80143FC8 (0x80143FC8), publishes that record pointer into the scratchpad pointer cell 0x1F800044 so this overlay reads it as the work record, runs the shared lookup helper func_8014DD3C (0x8014DD3C) with record id 0x18, and resets the claimed record: byte 0x24 = 0, byte 0x2A = 0, byte 0x2B advanced by one, byte 0x48 = 0, the tint triplet at bytes 0x5D..0x5F cleared, word 0x14 = 0 and word 0x20 = -8, with the 0x5E clear read through its own cell load and the 0x5F clear stored in the jal delay slot of the following resource request. It then requests resource 0x0E through func_8014D6B8 (0x8014D6B8) and stores 3 in the record byte 1 and 1 in the record byte 2. Takes one byte index and returns nothing; its 0x18-byte frame only keeps $ra. Its only in-image reference is the jal at 0x801F80E8 inside func_801F7F08, which passes scratchpad byte 0 as the index.'
   - - 6088
     - asm
     - func_801F83C8
