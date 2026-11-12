@@ -223,6 +223,10 @@ is the decoded byte count.
 | `PL578.EMI` | 75776 | 270419 | 329248 | `6e4ac6e56a9b114d229f63b36051f7a9c0dc769b90a93d12770c6cc4f139ccce` |
 | `PL478.EMI` | 73728 | 268792 | 330744 | `23ed7ca1e3ab1711d3c43f508d9de4fb5073055a38803af9b9b763f1dd717d5a` |
 | `PL267.EMI` | 67584 | 258331 | 337364 | `27fcef3a95f29736d7db0a280fcbcf0f11647b0e58c2ffb9493e0cc1f1346e80` |
+| `PL015.EMI` | 75776 | 250259 | 296840 | `c63e42c1e6c7a31a274b56dec6e78e1ed41677f4115959777e9c9b1e3a81b290` |
+| `PL034.EMI` | 65536 | 243732 | 291900 | `d998bc717ebb2d8009fb5a6f4f67e1449bf017b9f816a4de8fa7f1b762780637` |
+| `PL27A.EMI` | 73728 | 239772 | 310136 | `396ae98f20eefc3212ad657b9be8787db3445cf97fe80160baab1c5a21e8e5c1` |
+| `PL056.EMI` | 69632 | 219544 | 275808 | `447d974c63960bf269ad0a92523cbda6cd66b1e82e1d4bc8e8fc1cf5afa5b159` |
 
 The original family-0 requests bind each archive to the following file slot and
 IDs. GAME uses these IDs to select a root through the same conditional
@@ -240,6 +244,10 @@ reviewed mode-1 and mode-2 image encodings.
 | `PL578.EMI` | 17 | 635 | `[5,7,8]` | 88 |
 | `PL478.EMI` | 15 | 633 | `[4,7,8]` | 83 |
 | `PL267.EMI` | 9 | 627 | `[2,6,7]` | 84 |
+| `PL015.EMI` | 1 | 619 | `[0,1,5]` | 98 |
+| `PL034.EMI` | 5 | 623 | `[0,3,4]` | 85 |
+| `PL27A.EMI` | 11 | 629 | `[2,7,10]` | 75 |
+| `PL056.EMI` | 6 | 624 | `[0,5,6]` | 86 |
 
 The profiles classify root-relative words, image-directory words, image headers
 and consumed encoded words or tokens. The complete compression walk includes a
@@ -1265,6 +1273,17 @@ relocations. Its 34 straight-line instructions end with a return and delay slot
 immediately before the SDK's `CD_flush` symbol. The original `CdMix` caller
 preserves the typed argument. The referenced CD-register pointer words also
 match the SDK data, but remain outside this instruction classification.
+
+The same exact identity qualifies the complete 2416-byte original body
+`[0x801D263C,0x801D2FAC)`, file offsets `[20028,22444)`. The already
+qualified caller at `0x801CECA4` conditionally calls it at `0x801CECBC`
+when the u32 at `0x801EB678` is nonzero. All 604 words, including delay
+slots, form complete structural control flow. Call continuations assume ordinary
+returns and intact frames. The indirect calls at `0x801D2B98` and `0x801D2C44`
+use the guarded pointer at `0x801EB674`; its targets and resource safety remain
+unqualified. This instruction-body rule requires neither a matching callee ELF
+nor observed execution. The header-copy loop leaves CAPCOM `H+12`, at sector
+offset 20, opaque.
 
 Only these instruction bytes become known nontext. Surrounding retained ranges,
 tables and other executable bytes do not inherit the classification. Runtime
