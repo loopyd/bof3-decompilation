@@ -50,8 +50,8 @@ segments:
     - textbin
     - T_801F3E58
   - - 4792
-    - asm
-    - func_801F3EB8
+    - textbin
+    - T_801F3EB8
   - - 5048
     - textbin
     - T_801F3FB8
