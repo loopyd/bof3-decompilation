@@ -192,7 +192,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v28`. An omitted layout selector fails before
+labels through `bof3.inline-text/v29`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -206,7 +206,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v28` document with ten counted labels, eight default names,
+`bof3.inline-text/v29` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels and fifteen fixed-width settings fields.
@@ -252,7 +252,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v28`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v29`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -261,6 +261,13 @@ Use `--entry 3` to extract them. Its appended row 1 permits literals and
 records remain excluded. SISYOU entry 0 supports four master-menu stat labels,
 the status labels `Pois` and `Conf`, and three ASCII numeric formats; select it
 with `--entry 0`. See [formats.md](formats.md#inline-overlay-text).
+
+For the battle-results count format in `BIN/BATTLE/BATL_END.EMI`, select
+`--entry 0` without class or latch selectors. The `*%2d` allocation uses
+`ascii-u8-decimal-field-format` and reserves one NUL byte. Retain one unsigned-byte
+decimal argument within four encoded and four formatted bytes. See
+[the format contract](formats.md#battle-results-count-format) for the source
+consumer and protected bytes. Runtime rendering remains unverified.
 
 ## `extract-corpus [--root DIR] -o|--output DIR`
 
@@ -379,7 +386,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v28`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v29`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

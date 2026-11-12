@@ -101,11 +101,13 @@ fn the_retained_registry_and_its_prerequisites_are_present() {
     let registry = registry();
     assert_eq!(registry["schema"], "bof3.text-windows/v1");
     assert_eq!(registry["version"].as_u64().unwrap_or(0), 1);
-    assert!(!registry["windows"]
-        .as_array()
-        .cloned()
-        .unwrap_or_default()
-        .is_empty());
+    assert!(
+        !registry["windows"]
+            .as_array()
+            .cloned()
+            .unwrap_or_default()
+            .is_empty()
+    );
 }
 
 #[test]

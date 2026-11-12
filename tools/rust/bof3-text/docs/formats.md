@@ -478,7 +478,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v28`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v29`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -793,7 +793,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v28` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v29` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -1212,6 +1212,25 @@ column. Controlled party-change checks cover the edited split HP/AP fields.
 The pairs at `0x801D0CE8`/`0x801D0CF0` and `0x801D0E68`/`0x801D0E70`
 contain identical strings, so their active supplier remains indistinguishable.
 Other numeric paths remain unverified.
+
+### Battle-results count format
+
+The `US battle-results count format` layout covers the 8417-byte entry 0 of
+original US `BIN/BATTLE/BATL_END.EMI`, loaded at `0x801EEC00`. Its allocation at
+`0x801EEC50`, payload offset `0x50`, contains `*%2d` in five bytes including NUL.
+The `ascii-u8-decimal-field-format` codec retains one unsigned-byte decimal
+argument, at most four encoded bytes and at most four formatted bytes before NUL.
+Optional widths use 1..4 with optional zero padding; printable ASCII literals
+must fit both bounds. Other conversions and extra arguments are refused.
+
+Consumer `0x801F0A74` reads an unsigned byte count and formats only values of
+two or more. Call `0x801F0B58` passes the format and count to `sprintf` at
+`0x8017E3F4`, writing into `0x80145AD4`. Call `0x801F0B78` submits that buffer to
+renderer `0x80150098`. The original maximum output is `*255`, followed by NUL.
+The empty `references` array reflects code addressing; recognition pins those
+instructions and all payload bytes outside the allocation. Bytes from payload
+offset `0x55`, including the nonzero adjacent byte, remain protected. Other
+battle-results text and runtime rendering remain unverified.
 
 ## Bank layout
 

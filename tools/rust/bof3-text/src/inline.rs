@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v28";
+pub const SCHEMA: &str = "bof3.inline-text/v29";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1223,6 +1223,19 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[]),
         ],
+    },
+    Layout {
+        name: "US battle-results count format",
+        load: 0x801eec00,
+        size: 8417,
+        sha256: "75557d4804c8f911eef4c031934fff0a891df9c47abd64bb1d2987f970a0e4cb",
+        consumers: &[0x801f0a74, 0x801f0b58, 0x801f0b78],
+        allocations: &[Allocation::bounded_format(
+            0x801eec50,
+            5,
+            Codec::AsciiU8DecimalFieldFormat,
+            &[0x80150098],
+        )],
     },
     Layout {
         name: "US battle messages",

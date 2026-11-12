@@ -108,7 +108,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v28`. Select that entry without class or latch selectors.
+`bof3.inline-text/v29`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Controlled Config rendering of all fifteen edited fields is verified with a menu
 availability fixture.
@@ -157,7 +157,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v28`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v29`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -269,6 +269,12 @@ Runtime media must include the copy the game loads; identical BATTLE payloads
 occur in multiple US archives with different entry indices.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
+
+BATL_END entry 0 exposes the battle-results `*%2d` count format through
+`ascii-u8-decimal-field-format`. Retain one unsigned-byte decimal argument,
+at most four encoded bytes plus NUL and at most four formatted bytes.
+Packing preserves adjacent bytes and the code references. Runtime rendering
+remains unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-count-format).
 
 For encounter-template monster names, find `monster_entries` with `analyze`
 and extract the selected entry explicitly. The `bof3.monster-text/v1` document
