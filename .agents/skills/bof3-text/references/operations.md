@@ -108,7 +108,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v31`. Select that entry without class or latch selectors.
+`bof3.inline-text/v32`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Controlled Config rendering of all fifteen edited fields is verified with a menu
 availability fixture.
@@ -162,7 +162,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v31`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v32`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -281,12 +281,15 @@ the consumer metadata. The pinned payload protects those instructions.
 
 BATL_END entry 0 exposes six decimal formats and one literal glyph. Retain each
 recorded codec and its encoded and formatted bounds. The byte-plus-one format
-retains an argument in 1..256 and at most three output bytes before NUL. Preserve
-empty renderer arrays where only formatting is qualified. Runtime rendering
-observations cover width edits for remaining EXP, next level and current money,
-plus a currency-glyph edit, in a controlled results fixture with zero rewards.
-Ordinary availability, complete normal cleanup, nonzero rewards, level-gain and
-counted-item pages remain unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
+retains an argument in 1..256 and at most three output bytes before NUL. The two
+`%d` formats reach `0x8014F800` through bank command `0x07` and 32-byte dynamic
+buffers. Runtime observations cover width edits for remaining EXP, next level
+and current money, plus an edit to the currency glyph, in a controlled fixture
+with zero rewards. Setting the EXP pool to 30 also verifies the original preview
+at level 3 with all six stat deltas. An original item preview shows Green Apple
+with count 2. Ordinary reward availability, edited level-gain and item rendering,
+level and stat updates, inventory grant and normal cleanup remain unverified.
+See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
 
 The results ingress tests rising input at `0x80145AA8`; display waits test held
 input at `0x80145AA4`. Releasing the native override does not clear these guest

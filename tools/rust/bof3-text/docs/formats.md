@@ -513,7 +513,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v31`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v32`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -835,7 +835,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v31` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v32` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -1269,8 +1269,8 @@ exclude it. Re-extract older inline documents before editing.
 
 | Address | Original | Capacity | Codec | Maximum formatted bytes | Renderer |
 | --- | --- | --- | --- | --- | --- |
-| `0x801EEC04` | `%d` | 3 | `ascii-i32-decimal-format` | 11 | `[]` |
-| `0x801EEC40` | `%d` | 3 | `ascii-u16-decimal-format` | 5 | `[]` |
+| `0x801EEC04` | `%d` | 3 | `ascii-i32-decimal-format` | 11 | `0x8014F800` |
+| `0x801EEC40` | `%d` | 3 | `ascii-u16-decimal-format` | 5 | `0x8014F800` |
 | `0x801EEC44` | `%6d` | 4 | `ascii-i32-decimal-format` | 11 | `0x8014FF0C` |
 | `0x801EEC48` | `%2d` | 4 | `ascii-u8-plus-one-decimal-format` | 3 | `0x8014FF0C` |
 | `0x801EEC4C` | `%7d` | 4 | `ascii-i32-decimal-format` | 11 | `0x8014FF0C` |
@@ -1280,9 +1280,14 @@ exclude it. Re-extract older inline documents before editing.
 Each format retains one decimal argument and both its encoded and formatted
 bounds. The three-byte allocations permit only `%d`. The signed-word fields
 retain the full 32-bit domain, including the eleven-byte negative minimum.
-The field at `0x801EEC40` receives a value masked to sixteen bits. Preserve both
-empty `renderers` arrays: formatting is qualified, but their downstream rendering
-is not.
+The field at `0x801EEC40` receives a value masked to sixteen bits. Both `%d`
+formats draw through battle-bank command `0x07`. Its operand selects a 32-byte
+buffer at `0x801490D8 + index * 32`; `0x8014F800` draws that buffer through the
+recursive `0x8014F84C` consumer. The signed format supplies EXP and money in
+buffer 0 and the resulting level in buffer 1. The unsigned format supplies six
+stat deltas in buffers 2..7. Their maximum outputs, including NUL, fit these
+buffers. These are conditional source paths; they do not establish ordinary
+availability or exclusive scratch-buffer ownership.
 
 Call `0x801F08F4` supplies an unsigned byte plus one to the format at
 `0x801EEC48`. Its argument domain includes 256 and its output bound is three
@@ -1298,10 +1303,15 @@ at the original terminators; following padding remains protected, as do byte
 Controlled results-fixture observations verify `%6d` to `%5d` for remaining
 EXP 10, `%2d` to `%3d` for next level 1, and `%7d` to `%6d` for current money 0.
 Each numeric edit moves the digits by one eight-pixel glyph cell. Replacing
-`Ƶ` with `X` changes the currency glyph. These observations use zero rewards
-and retain the two empty renderer arrays. Ordinary availability, complete normal
-cleanup, nonzero rewards, level-gain and counted-item pages, and other
-battle-results text remain unverified.
+`Ƶ` with `X` changes the currency glyph. These observations use zero rewards.
+
+A separate fixture sets the EXP pool to 30 and verifies the original Whelp
+preview at level 3 with gains of 5 HP, 1 AP, 2 Power, 1 Defense, 2 Agility and
+3 Intelligence. This preview stops before the game updates the stored level and
+stats. A controlled list containing one Green Apple entry with count 2 verifies
+the original name and quantity display. Ordinary reward availability, edited
+level-gain and item rendering, level and stat updates, inventory grant, normal
+cleanup and other battle-results text remain unverified.
 
 ## Bank layout
 
