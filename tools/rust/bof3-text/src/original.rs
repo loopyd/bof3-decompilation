@@ -1249,6 +1249,11 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 0x3c50,
+                    length: 624,
+                    evidence: "original US battle payload; complete instruction body 0x801D4850..0x801D4AC0 including return delay slot; complete original control-flow review, sized executable ELF function section and all 54 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, battler-index-validity, record-validity, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
                     offset: 0x14d0c,
                     length: 124,
                     evidence: "original US battle payload; complete instruction body 0x801E590C..0x801E5988 including return delay slot; complete original control-flow review, sized executable ELF function section and all nine text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, allocator-semantics, resource-safety or duplicate-source ownership claim",

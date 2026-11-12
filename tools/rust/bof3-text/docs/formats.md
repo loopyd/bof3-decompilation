@@ -319,15 +319,22 @@ The containing archive must also match the original disc manifest.
 
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
+| `[0x3C50,0x3EC0)` | `[0x801D4850,0x801D4AC0)` | 624 |
 | `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 |
 | `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 |
 
-The first body's 31 instruction words match its complete sized executable ELF
-function section and captured resident RAM, with all nine text relocations reconciled.
+The body at `0x801D4850` contains 156 instruction words. Its complete sized
+executable ELF section, all 54 text relocations, original bytes and resident RAM
+reconcile. Complete control-flow review covers ten conditional branches, two
+internal jumps, the return and every delay slot. It contains no calls, embedded
+tables or indirect switches.
+The body at `0x801E590C` has 31 instruction words. They match its complete sized
+executable ELF function section and captured resident RAM, with all nine text
+relocations reconciled.
 Complete original control-flow review includes every branch, jump, return and
 delay slot. The body contains no external calls, embedded data or literal pool.
-The second body's 44 words also match its complete sized executable ELF section,
-original bytes and resident RAM, with all 22 text relocations reconciled.
+The body at `0x801E5988` has 44 words. They match its complete sized executable
+ELF section, original bytes and resident RAM, with all 22 text relocations reconciled.
 Its straight-line body ends with `JR RA` and a store in the return delay slot.
 The qualified body at `0x800AE09C` conditionally calls it at `0x800AE0E4`.
 It contains no calls, embedded data or literal pool.
