@@ -212,6 +212,7 @@ rebuildShopSlotLists = 0x801DE200;
 func_801DE3C8 = 0x801DE3C8;
 func_801DE40C = 0x801DE40C;
 func_801DE45C = 0x801DE45C;
+drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection = 0x801DE4C8;
 func_801DE850 = 0x801DE850;
 func_801DE88C = 0x801DE88C;
 func_801DE8E8 = 0x801DE8E8;

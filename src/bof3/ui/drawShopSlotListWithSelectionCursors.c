@@ -2,8 +2,9 @@
 
 /* @source 0x801DF6A8
  * @behavior shop screen draw called with no arguments by the phase step
- *           func_801DE40C, the cursor/confirm handler func_801DE4C8 and the
- *           sub-step handler func_801DE88C: it first emits the shop screen
+ *           func_801DE40C, the cursor/confirm handler
+ *           drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection and
+ *           the sub-step handler func_801DE88C: it first emits the shop screen
  *           background through
  *           drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM index
  *           byte D_80144953,

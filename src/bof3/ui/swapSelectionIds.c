@@ -20,8 +20,10 @@
  *           cue 0x103, overwrites every D_80144F5A and D_80144F5D slot holding
  *           the current id with the saved id, overwrites every D_801E6244 slot
  *           holding the saved id with the current id, and reports 0xFF. The
- *           0xFF result tells the caller func_801DE4C8 that there is no new id
- *           to publish; every other result is stored into D_801E6254. Both
+ *           0xFF result tells the caller
+ *           drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection that
+ *           there is no new id to publish; every other result is stored into
+ *           D_801E6254. Both
  *           slot loops count bytes (u8 counter, bound from the mode scanner
  *           func_801BDB7C(0) and from the count byte D_801E6250).
  * @status exact

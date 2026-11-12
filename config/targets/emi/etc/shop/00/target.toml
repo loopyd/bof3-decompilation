@@ -122,6 +122,7 @@ sources = [
     "src/bof3/ui/func_801D910C_shop00.c",
     "src/bof3/ui/emitShopIconSprite.c",
     "src/bof3/ui/func_801DE45C.c",
+    "src/bof3/ui/drawShopSlotListThenStepSlotCursorAndPickOrSwapSavedSelection.c",
     "src/bof3/ui/func_801DE3C8_shop00.c",
     "src/bof3/ui/func_801D65A0.c",
     "src/bof3/ui/func_801D408C_shop00.c",
