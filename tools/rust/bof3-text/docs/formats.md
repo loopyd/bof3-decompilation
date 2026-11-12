@@ -85,7 +85,7 @@ not establish bounds enforced by the original decoder or validate destination RA
 Only the four-byte checkword, token controls, reference displacement operands,
 optional length extensions and final `FF` terminator become known nontext.
 Literal data and skipped prefix bytes `[4,6)` remain unresolved except for the
-source-bound PL025 fields below. References may
+source-bound model fields below. References may
 overlap earlier output. Neither those references nor their literal dependencies
 establish the roles of decoded bytes, the absence of rasterized text or runtime
 behavior. Other transfer modes retain their existing classification.
@@ -204,6 +204,34 @@ and origins with any opaque alias remain unresolved. This rule qualifies stored
 representation without proving actual selection, transfer, residency, upload,
 display, the absence of rasterized text or safe editing. Other archives retain
 their existing records and gates.
+
+## PL247 and PL257 compressed image field coverage
+
+Coverage recognizes reviewed fields in entry 3 of the exact original US
+`BIN/PLCHAR/PL247.EMI` and `BIN/PLCHAR/PL257.EMI` archives. Both entries use
+transfer mode 1 and load address `0x8003B800`. Each profile also requires its
+file offset, packed size, checkword and payload SHA-256 below. The checkword
+is the decoded byte count.
+
+| Archive | File offset | Packed bytes | Checkword | Payload SHA-256 |
+| --- | --- | --- | --- | --- |
+| `PL247.EMI` | 71680 | 327152 | 408396 | `0ed30aece981f5c9b97ca1cd96ce35f55c51e905b29225feba5e014a41edc895` |
+| `PL257.EMI` | 71680 | 328837 | 406900 | `0f2d7c069e65a7c7ad6c3e798a707bfb129c0885b28736e5e7cc304660ee298b` |
+
+The original family-0 requests bind index 7 to file slot 625 and IDs `[2,4,7]`,
+and index 8 to slot 626 and IDs `[2,5,7]`. GAME uses these IDs to select a
+root through the same conditional publication path as PL026. The reviewed
+directory reader and image consumers also match that rule. PL247 has 88 images
+in three directories; PL257 has 93. Both use only the reviewed mode-1 and
+mode-2 encodings.
+
+The profiles classify root-relative words, image-directory words, image headers
+and consumed encoded words or tokens. The complete compression walk includes a
+physical literal only when every decoded use lies in those fields. Palette,
+program and cell fields, opaque aliases, mode-2 prefixes and allocation tails
+remain unresolved. These profiles qualify stored representation. Actual requests,
+transfer, residency, upload, display, the absence of rasterized text and safe
+editing remain unqualified.
 
 ## Area surface field coverage
 
