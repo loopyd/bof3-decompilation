@@ -46,7 +46,9 @@ u8 func_8019601C(void);
  * byte 0x05 = 6, byte 0x06 = the caller's value plus 0x70 truncated to a byte,
  * word 0x0C = 0, word 0x10 = the byte T_801FE26C[D_80144F5A] and the halfwords
  * at 0x2E/0x30 copied from the work base at the same offsets. Nothing is
- * returned. The two callers pass 0x91 (func_801FB6C4) and 0x99
+ * returned. The two callers pass 0x91
+ * (runSubstateProgressFlagAndFrontEndRecordStepsThenReleaseScenarioScena0200_801FB6C4)
+ * and 0x99
  * (func_801FB868) and ignore the result.
  * @status exact
  * @match 100.00

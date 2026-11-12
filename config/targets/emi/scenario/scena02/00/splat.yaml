@@ -117,8 +117,19 @@ segments:
     - asm
     - func_801FB36C
   - - 19140
-    - asm
-    - func_801FB6C4
+    - c
+    - runSubstateProgressFlagAndFrontEndRecordStepsThenReleaseScenarioScena0200_801FB6C4
+    - '@source: src/bof3/scenario/runSubstateProgressFlagAndFrontEndRecordStepsThenReleaseScenarioScena0200_801FB6C4.c'
+    - '@behavior: Slot 28 of the 31-word code-pointer run at 0x801FE288, the chain
+      table dispatchProgressHandlerScenarioScena0200_801F719C indexes with the
+      signed chain byte D_80146872. It steps the shared sub-state byte D_80146875
+      through the 18-slot jump table at 0x801F704C: slot 0 seeds progress 0x15
+      and flag bit 0x27 and runs the shared slot setter with group 4, slot 1
+      releases the overlay once progress reads 0x16, slot 10 seeds progress 0x14
+      and flag bit 0x26, runs the shared slot gate with group 4 and releases, slot
+      15 queues front-end mode 0x73 and arms D_80143BB0 with 2, slot 16 publishes
+      front-end record step 0x91 once that mode byte leaves 2, and slot 17
+      releases once progress reads 0x1A.'
   - - 19560
     - asm
     - func_801FB868

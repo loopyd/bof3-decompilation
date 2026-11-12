@@ -24,6 +24,7 @@ sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FD018.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1200_801FD064.c",
     "src/bof3/scenario/stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C.c",
+    "src/bof3/scenario/stepSubstatesThroughFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FA7DC.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",
@@ -72,3 +73,9 @@ function = 0x801F9F0C
 section = ".rodata"
 address = 0x801F6EAC
 size = 0x5C
+
+[[matching.section_placements]]
+function = 0x801FA7DC
+section = ".rodata"
+address = 0x801F6F0C
+size = 0xB0

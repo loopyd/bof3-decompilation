@@ -112,8 +112,10 @@ segments:
     - c
     - noopHandlerScenarioScena1300_801F84B0
   - - 6328
-    - asm
-    - func_801F84B8
+    - c
+    - claimFrontEndRecordWaitProgress8ArmFrontEndPhase6SeedSelectorContextArmEffectBankAndResetHandlerScenarioScena1300_801F84B8
+    - '@source: src/bof3/scenario/claimFrontEndRecordWaitProgress8ArmFrontEndPhase6SeedSelectorContextArmEffectBankAndResetHandlerScenarioScena1300_801F84B8.c'
+    - '@behavior: Front-end departure sequence of this overlay, word 4 of the twelve-word scenario state-handler run at 0x801FBF48 that dispatchScenarioStateHandlerScenarioScena1300_801F7D14 indexes with the shared scenario state byte D_80146872, and at the same time word 1 of the nine-entry primary-state table D_801FBF54 that dispatchPrimaryStateHandlerScenarioScena1300_801F8474 indexes with the progress byte D_80146874, so no jal of the payload names it. It switches on the shared sub-state byte D_80146875 through the overlay-local six-word jump table at 0x801F6C04 in the payload leading table data. Sub-state 0 claims a front-end record through the shared claim func_8019601C, publishes the returned index in D_801FBFEC and, unless that index is 0xFF, seeds the 0x74-byte row it selects (+0 = 1, +5 = 0x13, +0x64 = -0x2AA, +0x6C = 0x200, +9 = 0x80, +0x68 = the signed channel word D_801492DA) then advances to 1. Sub-state 1 waits for the progress byte to read 8, sets the front-end local mode 0 through func_8014ECAC and advances to 2. Sub-state 2 waits for the gate word D_80143C40 to clear, clears the effect-bank byte D_8014832E, yields to the loader through func_8014B87C(1), arms the front-end phase byte D_80143BB0 with 6 and advances to 3. Sub-state 3 waits for that phase byte to clear, clears the progress byte, sets bit 0 of the flag word D_8014686C through func_8015B580, seeds the front selector context (0x7E, 0x4E0000, 0x2C8000, 1) through func_8019FA28, arms D_80143F1D and D_80143F1E with 0xFF and advances to 4. Sub-state 4 waits for the phase byte to clear, arms the effect bank with 0x1F, sets the local mode 1 and advances to 5. Sub-state 5 waits for the gate word to clear, clears bit 3 of the mode-flag halfword D_80146258, releases the front end through func_8015C058 and clears the progress byte and the sub-state byte. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 6972
     - asm
     - func_801F873C

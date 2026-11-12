@@ -69,5 +69,12 @@ support_sources = [
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecord19ScenarioScena0200_801FCECC.c",
     "src/bof3/scenario/clearSkillListEntriesAfterAbilityCheckScenarioScena0200_801FD6FC.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19Substate0AAndQueueCue106ScenarioScena0200_801FD5FC.c",
+    "src/bof3/scenario/runSubstateProgressFlagAndFrontEndRecordStepsThenReleaseScenarioScena0200_801FB6C4.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801FB6C4
+section = ".rodata"
+address = 0x801F704C
+size = 0x48

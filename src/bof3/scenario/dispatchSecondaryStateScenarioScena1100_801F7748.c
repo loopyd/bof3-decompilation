@@ -9,7 +9,8 @@ extern u32 D_801FAEFC[];
  * handler run at 0x801FAEFC (its ten entries are noopHandlerScenarioScena1100_801F7784,
  * func_801F778C, func_801F7BFC, func_801F7CC8, func_801F7F08, func_801F83C8,
  * runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84,
- * noopHandlerScenarioScena1100_801F917C, func_801F9184 and func_801FA3A4), and the selected
+ * noopHandlerScenarioScena1100_801F917C,
+ * runPrimaryState8SubstateSequenceScenarioScena1100_801F9184 and func_801FA3A4), and the
  * entry is then invoked with `jalr` and no arguments. It reads no state other than that byte and
  * writes none; the 0x18-byte frame exists only to keep $ra across the indirect call. Word 2 of
  * the overlay's outer progress table at 0x801FAEF0 is this same address, so

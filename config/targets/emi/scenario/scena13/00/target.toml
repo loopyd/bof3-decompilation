@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248.c",
     "src/bof3/scenario/bootScenarioStateScenarioScena1300_801F7D50.c",
     "src/bof3/scenario/bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C.c",
+    "src/bof3/scenario/claimFrontEndRecordWaitProgress8ArmFrontEndPhase6SeedSelectorContextArmEffectBankAndResetHandlerScenarioScena1300_801F84B8.c",
     "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300_801F8C1C.c",
     "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithSecondOverlayActivationEntryPairScenarioScena1300_801F8D0C.c",
     "src/bof3/scenario/clampPaletteChannelsScenarioScena1300_801FB0B8.c",
@@ -53,3 +54,9 @@ support_sources = [
     "src/bof3/support/scena13_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena13_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F84B8
+section = ".rodata"
+address = 0x801F6C04
+size = 0x18

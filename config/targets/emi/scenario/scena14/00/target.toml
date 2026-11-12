@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/clearIndexedFlagBit0ArmEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FBF18.c",
     "src/bof3/scenario/selectFirstPartyMirrorIdOtherThan7Or4ThenArmEffectGroupAndResetEffectSlotsScenarioScena1400_801FC280.c",
     "src/bof3/scenario/requestPrimaryState4Substate0OnWorld94FrontSide4Position738000OrPrimaryState2Substate14OnWorldBFFlag5MapCodeA6NeighbourScenarioScena1400_801FB648.c",
+    "src/bof3/scenario/dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",
@@ -46,3 +47,17 @@ support_sources = [
     "src/bof3/scenario/startCode6RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB51C.c",
 ]
 psyq_source = "src/bof3/support/scena14_00_psyq.c"
+
+# The reviewed switch dispatches the shared secondary sub-state byte 0x80146875
+# through a 26-entry table that the original placed in this payload's leading
+# table data at 0x801F6C04 (0x68 bytes, immediately before the next function's
+# table at 0x801F6C6C). psyq gcc emits the jump table after .rdata + .align 3,
+# so the section carries 8-byte alignment while that address is 4-mod-8; the
+# placement route lowers only the affected section's alignment to the reviewed
+# address's own alignment so the table lands exactly and the emitted lui/lw
+# relocation matches.
+[[matching.section_placements]]
+function = 0x801F7BA0
+section = ".rodata"
+address = 0x801F6C04
+size = 0x68
