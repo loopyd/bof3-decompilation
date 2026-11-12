@@ -1270,6 +1270,11 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US shared battle payload; two complete instruction bodies spanning 0x800ACF80..0x800AD044 including return delay slots; original bytes match complete sized executable ELF function sections and captured resident bytes, with text relocations reconciled; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
             }))
+            .chain([(0x16844, 48), (0x16874, 52), (0x168a8, 452), (0x16a6c, 128)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; four complete instruction bodies spanning 0x800AD044..0x800AD2EC including return delay slots; original bytes match complete sized executable ELF function sections and captured resident bytes, with text relocations reconciled; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, selector-bound, indirect-call-safety, resource-safety, unique-supplier or duplicate-source ownership claim",
+            }))
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
