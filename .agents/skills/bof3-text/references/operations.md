@@ -108,10 +108,13 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v29`. Select that entry without class or latch selectors.
+`bof3.inline-text/v31`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Controlled Config rendering of all fifteen edited fields is verified with a menu
 availability fixture.
+Packed START media verifies the four edited name-entry menu labels during
+new-game name entry. Other pages, STATUS rendering, other contexts and saved-name
+effects remain unverified.
 Re-extract older inline documents. Use a separate document and output for each
 archive. Editing one does not update the other or a save. Counted formation labels
 use separate groups for one, two and three party members. Controlled packed-media
@@ -157,7 +160,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v29`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v31`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -257,7 +260,11 @@ column, since both draw at the same coordinates. Identical format-pair
 allocations remain indistinguishable; other SHOP rendering remains unverified.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
-five encoded bytes. Other command-bearing and untraced table rows are refused.
+five encoded bytes. BATTLE rows 4 and 5, `Defend` and `Charge`, use `game-literal`
+with thirteen-byte allocations, including NUL. Preserve their `renderers: []`;
+only the indexed bounded copy is qualified. Natural selectors, message
+publication and rendering remain unverified for these rows. Command-bearing
+row 3 remains unsupported.
 BATTLE entry 3 also exposes two digit-sprite decimal formats and their fallback.
 Decimal rows retain one unsigned sixteen-bit argument, at most three encoded
 bytes and five formatted bytes. The one-byte `ascii-digit-glyph-literal` fallback
@@ -270,11 +277,11 @@ occur in multiple US archives with different entry indices.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
 
-BATL_END entry 0 exposes the battle-results `*%2d` count format through
-`ascii-u8-decimal-field-format`. Retain one unsigned-byte decimal argument,
-at most four encoded bytes plus NUL and at most four formatted bytes.
-Packing preserves adjacent bytes and the code references. Runtime rendering
-remains unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-count-format).
+BATL_END entry 0 exposes six decimal formats and one literal glyph. Retain each
+recorded codec and its encoded and formatted bounds. The byte-plus-one format
+retains an argument in 1..256 and at most three output bytes before NUL. Preserve
+empty renderer arrays where only formatting is qualified. Runtime rendering
+remains unverified. See the [format contract](../../../../tools/rust/bof3-text/docs/formats.md#battle-results-text).
 
 For encounter-template monster names, find `monster_entries` with `analyze`
 and extract the selected entry explicitly. The `bof3.monster-text/v1` document

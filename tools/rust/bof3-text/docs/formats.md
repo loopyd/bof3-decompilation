@@ -148,7 +148,20 @@ doubles it and reads an unsigned width/height pair. The sixteen pairs combine
 widths and heights of 8, 16, 24 and 32 pixels.
 
 This qualifies the stored numeric representation. Runtime use, callee effects,
-rectangle behavior, mutable tables and other executables remain unverified.
+rectangle behavior, mutable tables and other geometry tables remain unverified.
+
+## Executable instruction coverage
+
+Coverage recognizes file offsets `[3928,5756)` in the exact original US
+`LOGO/LOGO.EXE`, with size 122880 and SHA-256
+`21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c`.
+These 1828 bytes correspond to runtime addresses `[0x801CE758,0x801CEE7C)` and
+twelve complete instruction-only function bodies. Each body matches its freshly
+compiled executable ELF function symbol and reviewed source boundaries.
+
+Only those instruction bytes become known nontext under this rule. Retained
+ranges, tables and other executable bytes do not inherit the classification.
+Runtime execution, rendering and complete text coverage remain unverified.
 
 ## XA payload coverage
 
@@ -478,7 +491,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v29`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v31`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -514,6 +527,10 @@ command bytes one through four and the other two pages stay protected. Strings
 `0x801ED198` and `0x801ED1A0`. Their allocations are three, four, five and five
 bytes, including NUL. The pointer table at `0x801ED1B8` supplies them to the
 `0x8014FC90` call at `0x801E692C`. Alignment bytes and pointer words stay fixed.
+Packed START media verifies all four labels edited to `GO`, `Cut`, `More` and
+`Prev` during new-game name entry. Other pages, STATUS rendering, other contexts
+and saved-name effects remain unverified.
+
 The next fifteen strings expose four stat-label groups through `game-literal`.
 The groups start at `0x801EC940`, `0x801EC99C`, `0x801ECB0C` and `0x801ECB2C`.
 The first three contain `Pwr`, `Def`, `Int` and `Agl`; the last contains `Pwr`,
@@ -793,7 +810,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v29` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v31` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -1027,13 +1044,19 @@ entry and entry offset. It preserves all other payloads. Each archive replica
 remains a separate source. Other embedded strings, different code
 layouts and observed rendering remain separate coverage requirements.
 
-The `US battle messages` layout supports eight thirteen-byte literal records
+The `US battle messages` layout supports ten thirteen-byte literal records
 in BATTLE entry 3, loaded at `0x801D0C00`. The table starts at `0x801EB000` with
-stride thirteen. Supported table rows are 0, 2, 6, 7, 8, 9, 10 and 11; each
+stride thirteen. Supported table rows are 0, 2 and 4 through 11; each
 accepts up to twelve literal bytes followed by NUL. The copy consumer at
 `0x801DE94C` uses that stride and copies at most twelve bytes through
-`0x801501E4`, which appends NUL. Event enqueue at `0x801DE560` stores message
-pointers; draw consumer `0x801E9538` forwards them to `0x8014F800`.
+`0x801501E4`, which appends NUL. Rows 0, 2, 6, 7, 8, 9, 10 and 11 retain
+renderer `0x8014F800`. Event enqueue at `0x801DE560` stores message pointers;
+draw consumer `0x801E9538` forwards them to that renderer.
+
+Row 4, `Defend` at `0x801EB034`, and row 5, `Charge` at `0x801EB041`, use
+`game-literal` with thirteen-byte allocations. Only their indexed bounded copy
+is qualified. Preserve their `renderers: []`. Natural selectors, message
+publication and rendering remain unverified for these two rows.
 
 Row 1 at `0x801EB00D` uses `game-glyphs` and a six-byte allocation, including NUL.
 It accepts at most five encoded bytes and preserves the remaining seven record
@@ -1049,8 +1072,7 @@ These records use the same schema and source-binding rules. Their `references` a
 empty because their consumers use indexed records or code references rather
 than a pointer table. Recognition pins those instructions outside the editable
 fields. Document `index` identifies the supported allocation, not its original
-table row. Command-bearing row 3 and untraced rows 4 and 5 remain outside
-this layout's editable allocations.
+table row. Command-bearing row 3 remains outside this layout's editable allocations.
 
 The same BATTLE layout exposes three ASCII allocations for its digit-sprite
 renderers. Identical payload copies in other US archives use local entry indices.
@@ -1213,24 +1235,41 @@ The pairs at `0x801D0CE8`/`0x801D0CF0` and `0x801D0E68`/`0x801D0E70`
 contain identical strings, so their active supplier remains indistinguishable.
 Other numeric paths remain unverified.
 
-### Battle-results count format
+### Battle-results text
 
-The `US battle-results count format` layout covers the 8417-byte entry 0 of
-original US `BIN/BATTLE/BATL_END.EMI`, loaded at `0x801EEC00`. Its allocation at
-`0x801EEC50`, payload offset `0x50`, contains `*%2d` in five bytes including NUL.
-The `ascii-u8-decimal-field-format` codec retains one unsigned-byte decimal
-argument, at most four encoded bytes and at most four formatted bytes before NUL.
-Optional widths use 1..4 with optional zero padding; printable ASCII literals
-must fit both bounds. Other conversions and extra arguments are refused.
+The `US battle-results text` layout covers the 8417-byte entry 0 of original US
+`BIN/BATTLE/BATL_END.EMI`, loaded at `0x801EEC00`. It exposes six ASCII formats
+and one literal glyph. Capacities include the original NUL; formatted bounds
+exclude it. Re-extract older inline documents before editing.
 
-Consumer `0x801F0A74` reads an unsigned byte count and formats only values of
-two or more. Call `0x801F0B58` passes the format and count to `sprintf` at
-`0x8017E3F4`, writing into `0x80145AD4`. Call `0x801F0B78` submits that buffer to
-renderer `0x80150098`. The original maximum output is `*255`, followed by NUL.
-The empty `references` array reflects code addressing; recognition pins those
-instructions and all payload bytes outside the allocation. Bytes from payload
-offset `0x55`, including the nonzero adjacent byte, remain protected. Other
-battle-results text and runtime rendering remain unverified.
+| Address | Original | Capacity | Codec | Maximum formatted bytes | Renderer |
+| --- | --- | --- | --- | --- | --- |
+| `0x801EEC04` | `%d` | 3 | `ascii-i32-decimal-format` | 11 | `[]` |
+| `0x801EEC40` | `%d` | 3 | `ascii-u16-decimal-format` | 5 | `[]` |
+| `0x801EEC44` | `%6d` | 4 | `ascii-i32-decimal-format` | 11 | `0x8014FF0C` |
+| `0x801EEC48` | `%2d` | 4 | `ascii-u8-plus-one-decimal-format` | 3 | `0x8014FF0C` |
+| `0x801EEC4C` | `%7d` | 4 | `ascii-i32-decimal-format` | 11 | `0x8014FF0C` |
+| `0x801EEC50` | `*%2d` | 5 | `ascii-u8-decimal-field-format` | 4 | `0x80150098` |
+| `0x801F0CD0` | `Ƶ`, byte `0x60` | 2 | `game-literal` | Not formatted | `0x8014F800` |
+
+Each format retains one decimal argument and both its encoded and formatted
+bounds. The three-byte allocations permit only `%d`. The signed-word fields
+retain the full 32-bit domain, including the eleven-byte negative minimum.
+The field at `0x801EEC40` receives a value masked to sixteen bits. Preserve both
+empty `renderers` arrays: formatting is qualified, but their downstream rendering
+is not.
+
+Call `0x801F08F4` supplies an unsigned byte plus one to the format at
+`0x801EEC48`. Its argument domain includes 256 and its output bound is three
+bytes. The `*%2d` consumer at `0x801F0A74` formats unsigned byte counts of two or
+more; its original maximum output is `*255`. The glyph at `0x801F0CD0` permits
+at most one literal game byte plus NUL and reaches the draw call at `0x801F0A58`.
+
+The empty `references` arrays reflect code addressing. Recognition pins those
+instructions and every payload byte outside the allocations. Allocations stop
+at the original terminators; following padding remains protected, as do byte
+`0x1D` at payload offset `0x55` and the palette at `0x20D4`. Other battle-results
+text and runtime rendering remain unverified.
 
 ## Bank layout
 

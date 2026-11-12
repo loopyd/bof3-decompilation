@@ -57,8 +57,17 @@ pub struct NontextRange {
     pub evidence: &'static str,
 }
 
-/// Numeric fields qualified against the complete original US executable.
+/// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
+    if data.len() == 122_880
+        && sha256_hex(data) == "21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c"
+    {
+        return vec![NontextRange {
+            offset: 3928,
+            length: 1828,
+            evidence: "original US LOGO 0x801CE758..0x801CEE7C; twelve complete instruction-only function bodies; original bytes match freshly compiled executable ELF function symbols and reviewed source boundaries; exact executable identity; no runtime execution claim",
+        }];
+    }
     if data.len() != 1_445_888 || sha256_hex(data) != US_EXECUTABLE_SHA256 {
         return Vec::new();
     }

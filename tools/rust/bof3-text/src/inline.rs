@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v29";
+pub const SCHEMA: &str = "bof3.inline-text/v31";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -29,6 +29,7 @@ pub(crate) enum Codec {
     AsciiI16PlusOneDecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
+    AsciiU8PlusOneDecimalFormat,
     AsciiU8DecimalFieldFormat,
     AsciiU8DecimalPairFormat,
     AsciiU8DecimalTripleFormat,
@@ -116,7 +117,9 @@ impl Codec {
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9, 4),
             Self::AsciiU8DecimalPairFormat => (&[3, 3], 7, 4),
             Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16, 4),
-            Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
+            Self::AsciiU8DecimalFormat
+            | Self::AsciiU8PlusOneDecimalFormat
+            | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
             Self::AsciiU8DecimalFieldFormat => (&[3], 4, 4),
             Self::AsciiU16DecimalFormat => (&[5], 5, 4),
             Self::AsciiU16DecimalFieldFormat => (&[5], 9, 4),
@@ -187,6 +190,7 @@ impl Codec {
             Self::AsciiI16PlusOneDecimalFormat => "ascii-i16-plus-one-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
+            Self::AsciiU8PlusOneDecimalFormat => "ascii-u8-plus-one-decimal-format",
             Self::AsciiU8DecimalFieldFormat => "ascii-u8-decimal-field-format",
             Self::AsciiU8DecimalPairFormat => "ascii-u8-decimal-pair-format",
             Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
@@ -1225,33 +1229,53 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US battle-results count format",
+        name: "US battle-results text",
         load: 0x801eec00,
         size: 8417,
-        sha256: "75557d4804c8f911eef4c031934fff0a891df9c47abd64bb1d2987f970a0e4cb",
-        consumers: &[0x801f0a74, 0x801f0b58, 0x801f0b78],
-        allocations: &[Allocation::bounded_format(
-            0x801eec50,
-            5,
-            Codec::AsciiU8DecimalFieldFormat,
-            &[0x80150098],
-        )],
+        sha256: "2fd669faf11a0033b8d21079204c1bbc56a255a177425d14248fb8f5212db1c0",
+        consumers: &[
+            0x801eecd0, 0x801ef140, 0x801ef348, 0x801efe5c, 0x801f07e0, 0x801f09f4, 0x801f0a74,
+            0x801eed50, 0x801ef1f8, 0x801ef48c, 0x801efed0, 0x801eff70, 0x801f0018, 0x801f00c0,
+            0x801f0168, 0x801f0210, 0x801f08a0, 0x801f08b4, 0x801f08f4, 0x801f0908, 0x801f0a24,
+            0x801f0a38, 0x801f0a58, 0x801f0b58, 0x801f0b78,
+        ],
+        allocations: &[
+            Allocation::bounded_format(0x801eec04, 3, Codec::AsciiI32DecimalFormat, &[]),
+            Allocation::bounded_format(0x801eec40, 3, Codec::AsciiU16DecimalFormat, &[]),
+            Allocation::bounded_format(0x801eec44, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801eec48,
+                4,
+                Codec::AsciiU8PlusOneDecimalFormat,
+                &[0x8014ff0c],
+            ),
+            Allocation::bounded_format(0x801eec4c, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801eec50,
+                5,
+                Codec::AsciiU8DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::literal(0x801f0cd0, 2, None, &[0x8014f800]),
+        ],
     },
     Layout {
         name: "US battle messages",
         load: 0x801d0c00,
         size: 118224,
-        sha256: "18d4f268258122a4f71553ed42fcfef5426dc6b3085d86950a0a175e0f9ecf7a",
+        sha256: "af7fa06e57f9d420f3486607e7e82e23faaba5e39391d150c43ef3ac3f1d0b29",
         consumers: &[
             0x801de94c, 0x801de560, 0x801deaa4, 0x801deac4, 0x801e9538, 0x801d9524, 0x801d9544,
             0x801d96cc,
         ],
         // Indexed records and direct code references, rather than a pointer table.
-        // Row 1 appends at most five encoded bytes. Rows 3/4/5 remain unsupported.
+        // Row 1 appends at most five encoded bytes. Row 3 remains unsupported.
         allocations: &[
             Allocation::literal(0x801eb000, 13, None, &[0x8014f800]),
             Allocation::glyphs(0x801eb00d, 6),
             Allocation::literal(0x801eb01a, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb034, 13, None, &[]),
+            Allocation::literal(0x801eb041, 13, None, &[]),
             Allocation::literal(0x801eb04e, 13, None, &[0x8014f800]),
             Allocation::literal(0x801eb05b, 13, None, &[0x8014f800]),
             Allocation::literal(0x801eb068, 13, None, &[0x8014f800]),
