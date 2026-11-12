@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/func_801D0C68.c",
+    "src/bof3/ui/confirmCommuEntryRequestThenDrawCommu0107_801D0CAC.c",
     "src/bof3/ui/computeEntryListOriginY.c",
     "src/bof3/ui/publishCommuEntryTextId.c",
     "src/bof3/ui/publishCommuEntryTextIdForRow.c",

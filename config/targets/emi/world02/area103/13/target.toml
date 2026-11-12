@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C.c",
     "src/bof3/world/drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174.c",
     "src/bof3/world/drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.c",
+    "src/bof3/world/drawRadialRingOfSixtyFourTintedCellsScaledByArgumentAroundProjectedWorkPositionWorld02Area10313_801F53F0.c",
 ]
 support_sources = [
     "src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c",

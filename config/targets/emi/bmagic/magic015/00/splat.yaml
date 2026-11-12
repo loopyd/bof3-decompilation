@@ -79,8 +79,10 @@ segments:
     - dispatchWorkByte1HandlerBmagicMagic01500_801EF9E4
     - '@source: src/emi/bmagic/magic015/00/magic01500DispatchTables.c'
   - - 3624
-    - asm
-    - func_801EFA28
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28.c'
+    - '@behavior: Entry 0 of the work byte 1 handler run at 0x801F1630, the first word of that run: it copies the eight code pointers at 0x801EEC34 (0x801EFAE4, 0x801EFB90, 0x801EFBD8, 0x801EFCC4, 0x801EFD7C, 0x801EFDE8, 0x801EFE84, 0x801EFEFC) into its 0x38-byte frame at 0x10, calls the copy selected by unsigned byte 2 of the work object held in scratchpad cell 0x1F800044 with no arguments and no bounds test, then re-reads that cell and invokes the shared main-executable service at 0x8014D290 when the work object bytes 0 and 2 are both non-zero. The table is copied because a store through the work object may alias it, and the first cell load is hoisted above the frame adjustment.'
   - - 3812
     - c
     - advanceWorkByte2ByPartyOrEnemyStepThenCopyRecordByte27SeedByte2BAndCopyRecordTripletBmagicMagic01500_801EFAE4

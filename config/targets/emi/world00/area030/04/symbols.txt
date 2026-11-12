@@ -116,6 +116,7 @@ func_801D2AE0 = 0x801D2AE0;
 func_801D2BF0 = 0x801D2BF0;
 drawMirroredPanelCellQuadWorld00Area03004_801D2C34 = 0x801D2C34;
 clearWorkBytes9ToBAndHalfword30ThenAdvanceStateByte1World00Area03004_801D2D74 = 0x801D2D74;
+slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4 = 0x801D2DC4;
 func_801D3244 = 0x801D3244;
 func_801D3358 = 0x801D3358;
 func_801D339C = 0x801D339C;

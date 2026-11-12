@@ -169,6 +169,7 @@ buildSlotList = 0x801D8050;
 tickPhaseTimerThenAdvanceWorkCounter = 0x801D81B4;
 func_801D826C = 0x801D826C;
 drawShopEquipPanel = 0x801D8A0C;
+drawExpRowPanel_shop00 = 0x801D8C58;
 emitFlatLineRectangleBorder = 0x801D8E2C;
 emitShopIconSprite = 0x801D8FC0;
 func_801D910C = 0x801D910C;

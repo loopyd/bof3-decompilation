@@ -159,8 +159,10 @@ segments:
     - '@source: src/bof3/world/clearWorkBytes9ToBAndHalfword30ThenAdvanceStateByte1World00Area03004_801D2D74.c'
     - '@behavior: entry 1 of the local handler table at 0x801E1D80, chosen by the work record step byte at +0x1 of the record published at the scratchpad pointer cell 0x1F800044: clears the record bytes at +0x9, +0xA and +0xB and the halfword at +0x30, then increments that step byte so the next frame dispatches the following entry func_801D2DC4; no arguments, no calls, no frame.'
   - - 8644
-    - asm
-    - func_801D2DC4
+    - c
+    - slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4
+    - '@source: src/bof3/world/slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4.c'
+    - '@behavior: entry 2 of the local handler table at 0x801E1D80, indexed by the work record step byte at +0x1: draws panel sprite 0x11 in draw mode (0, 2) at (0x87, 0xB4), then advances the work record halfword at +0x30 towards the signed byte the slot index D_801E3208 selects from D_80146892 (stride 0x98), arming a -1 or 1 direction word at +0x10 once the record byte at +0x9 has counted to 0xF outside the 4 * D_801E320C[3] + 0xC band and clamping the halfword into +-0x24 minus 4 * D_801E320C[3]; it draws a grey 0x10-byte line at x 0xB9 over y 0xC9..0xD5, the panel row through func_801D3244 and the panel cell through drawMirroredPanelCellQuadWorld00Area03004_801D2C34, adds a red 0x10-byte line of length scaled from the D_80146916 halfword when the D_80146889 byte is 4, and requests sound cue 0x207 when D_80145E92 is 4 and the clamped cell origin leaves that row span on a clear frame-counter nibble.'
   - - 9796
     - c
     - func_801D3244

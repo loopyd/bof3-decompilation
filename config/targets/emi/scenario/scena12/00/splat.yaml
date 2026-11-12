@@ -202,8 +202,10 @@ segments:
     - asm
     - func_801FC890
   - - 24660
-    - asm
-    - func_801FCC54
+    - c
+    - dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54
+    - '@source: src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54.c'
+    - '@behavior: Overlay record selector and word 15 of the per-frame handler run at 0x801FD178: it passes the four five-byte lookup records at 0x801FD228 and the length 4 to the lookup helper func_801A7AD8 together with the unsigned halfwords its own argument registers hold, reads that answer as a signed byte, returns -1 when it is negative and otherwise calls that entry of the nineteen-word code-pointer run at 0x801FD23C with no arguments, returning the handler signed low byte. The four records select only indices 0 to 3 of that run, indices 0, 1 and 2 holding 0x801FCCBC and index 3 holding 0x801FCD58. It makes no stores and reads no other state; the 0x18-byte frame only keeps $ra across the two calls. The only in-image reference to this address is the pointer word at 0x801FD1B4, and the run at 0x801FD178 holding that word calls its handlers with no arguments, so the two halfword coordinates are structural. Its 26 instructions are the same shape as the exact sibling dispatchCoordinateLookupHandlerScenarioScena0100_801FE03C (0x801FE03C of emi/scenario/scena01/00) and differ only in the lookup length, the record table address and the handler table address.'
   - - 24764
     - asm
     - func_801FCCBC

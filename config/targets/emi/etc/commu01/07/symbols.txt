@@ -1,7 +1,8 @@
+fairyProgress = 0x801448EC;
 dispatchSoundCue = 0x8015DF18;
 D_801D0C04 = 0x801D0C04;
 func_801D0C68 = 0x801D0C68;
-func_801D0CAC = 0x801D0CAC;
+confirmCommuEntryRequestThenDrawCommu0107_801D0CAC = 0x801D0CAC;
 dispatchByte4e08Table4bd8Commu0107_801D0E44 = 0x801D0E44;
 dispatchByte1f294dTable4be4Commu0107_801D0E80 = 0x801D0E80;
 func_801D0EBC = 0x801D0EBC;

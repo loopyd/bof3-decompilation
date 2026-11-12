@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801EF534
   - - 2596
-    - asm
-    - func_801EF624
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624.c'
+    - '@behavior: Work-byte-2 handler, entry 5 of the six-entry handler-pointer run at 0x801EEC14 that the overlay dispatcher at 0x801EF19C copies into its frame and indexes with byte 2 of the scratchpad work object at 0x1F800044; the payload word at 0x801EEC28 is the only in-image reference to this address. Reads the shared battle work record pointer at 0x801EB4E0 once, decrements its byte 0xB by one at byte width, and then invokes the shared helper at 0x801E5988 with the store filling the call delay slot; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 2648
     - asm
     - func_801EF658

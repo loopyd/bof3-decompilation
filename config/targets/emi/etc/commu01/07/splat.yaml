@@ -33,8 +33,10 @@ segments:
     - c
     - func_801D0C68
   - - 172
-    - asm
-    - func_801D0CAC
+    - c
+    - confirmCommuEntryRequestThenDrawCommu0107_801D0CAC
+    - '@source: src/bof3/ui/confirmCommuEntryRequestThenDrawCommu0107_801D0CAC.c'
+    - '@behavior: confirm path of the commu01/07 commu request handler run at 0x801D4BCC. The cancel mask reports result 0xFFFF through the request result halfword and advances the shared fairy progress byte, the confirm mask snapshots the current request bytes, clears the request step byte and the request ordinal byte, and accepts the request only when the request mode passes either its world commu entry count check or its active record count check, queueing resident cue 0x104 and advancing the overlay step byte or else queueing cue 0x107, no mask moves the commu list row, and every path then redraws the commu list row'
   - - 580
     - c
     - dispatchByte4e08Table4bd8Commu0107_801D0E44

@@ -74,8 +74,9 @@ segments:
     - asm
     - func_801EF7A4
   - - 3060
-    - asm
-    - func_801EF7F4
+    - c
+    - decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4
+    - '@source: src/bof3/bmagic/decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4.c'
   - - 3208
     - asm
     - func_801EF888
