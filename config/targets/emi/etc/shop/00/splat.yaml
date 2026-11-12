@@ -238,8 +238,10 @@ segments:
     - func_801D6184
     - '@source: src/bof3/ui/func_801D6184.c'
   - - 21952
-    - asm
-    - func_801D61C0
+    - c
+    - publishShopRowFlagsAndAdvanceUiPhaseUnlessFlag77Set
+    - '@source: src/bof3/ui/publishShopRowFlagsAndAdvanceUiPhaseUnlessFlag77Set.c'
+    - '@behavior: shop UI phase step at entry 0 of the phase step table D_801E5360, which func_801D6184 dispatches with the UI phase byte D_80148651 as index; when the shared flag tester func_8015B5D4 reports the save flag 0x77 set over the main-RAM bank base D_80144F28 it selects entry 6 of that table (the gated UI reset setUiFlagsGated) through the phase byte and starts the action 0xEF through func_80150224, and otherwise it clears that flag through func_8015B580 unless the shared scenario-state byte D_80146870 reads 0xE and flag 5 of the work-context word D_8014686C passes the same tester, publishes the main-exe per-row flags of rows 0..3 into the overlay halfword table D_801E6100 with func_8016B344 and sets every nonzero row up through func_8016B968, switches the frontend-local mode through func_8014ECAC with 0 and advances the UI phase byte by one.'
   - - 22236
     - asm
     - func_801D62DC

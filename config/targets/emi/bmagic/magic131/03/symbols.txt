@@ -47,7 +47,7 @@ seedRecordPositionPairFromPhaseTableThenSetFieldsAndAdvanceWorkByte2BmagicMagic1
 func_801F12A0 = 0x801F12A0;
 func_801F13A4 = 0x801F13A4;
 dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0 = 0x801F14A0;
-func_801F153C = 0x801F153C;
+seedRecordPositionPairFromPhaseTableAddSecondPhaseStepToHalfword1ESetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F153C = 0x801F153C;
 func_801F1644 = 0x801F1644;
 func_801F1748 = 0x801F1748;
 func_801F1844 = 0x801F1844;

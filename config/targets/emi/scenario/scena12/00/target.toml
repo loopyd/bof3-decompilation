@@ -13,6 +13,7 @@ sources = [
     "src/bof3/scenario/setProgress50AndAdvanceSubstate0BUnlessFrontEndMode2ThenReleaseFrontEndWhenSharedByte65Reads0AScenarioScena1200_801F88B0.c",
     "src/bof3/scenario/requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7348.c",
     "src/bof3/scenario/requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7518.c",
+    "src/bof3/scenario/requestPrimaryState2Substate3COnRoute79Flag0SetAndArgWordAtMost160000ScenarioScena1200_801FC80C.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

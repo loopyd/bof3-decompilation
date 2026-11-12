@@ -189,8 +189,10 @@ segments:
     - dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0
     - '@source: src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c'
   - - 10556
-    - asm
-    - func_801F153C
+    - c
+    - seedRecordPositionPairFromPhaseTableAddSecondPhaseStepToHalfword1ESetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F153C
+    - '@source: src/bof3/bmagic/seedRecordPositionPairFromPhaseTableAddSecondPhaseStepToHalfword1ESetFieldsAndAdvanceWorkByte2BmagicMagic13103_801F153C.c'
+    - '@behavior: Reads the record pointer cell at 0x801F24E0 and uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C54; the selected byte shifted left six is published to the shared scratchpad halfword at 0x1F800006 and passed to the shared angular helper at 0x801782FC. That result scaled by eight and added to the word at 0x80149308 forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result scaled by eight and added to the word at 0x8014930C forms the record word at offset 0x18. Word 0x3C of the record reached through the pointer cell at 0x801EB4E0 is copied into the record word at 0x1C, and the same record byte 0x7 indexes the byte table at 0x801F1C74, whose selected byte shifted left six is added to the record halfword at 0x1E. The record halfword at offset 0xC is then set to 0x40 and the byte at offset 0x5 to 0x10. Two closing statements re-read the cell at 0x801F24E0 to store 8 into the record byte at offset 0x6 and to increment the record byte at offset 0x2. It takes no arguments, returns nothing, and its address is the first word of the three-entry handler table at 0x801F1C94.'
   - - 10820
     - asm
     - func_801F1644

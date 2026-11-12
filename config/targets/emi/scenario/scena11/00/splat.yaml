@@ -100,8 +100,10 @@ segments:
     - c
     - noopHandlerScenarioScena1100_801FA5F8
   - - 14848
-    - asm
-    - func_801FA600
+    - c
+    - waitFlag5ThenClearSharedStateBytesAndRequestPrimaryState2AndSetFlagBit5ScenarioScena1100_801FA600
+    - '@source: src/bof3/scenario/waitFlag5ThenClearSharedStateBytesAndRequestPrimaryState2AndSetFlagBit5ScenarioScena1100_801FA600.c'
+    - '@behavior: Overlay per-record callback: it polls the shared flag word D_8014686C (0x8014686C) through the two-argument flag helper func_8015B5D4 (0x8015B5D4) with id 5, and a non-zero return ends the handler with no state touched. On a zero return it runs the shared front-end startup helper func_8015C088 (0x8015C088), re-reads D_8014686C after that call, clears the shared bytes 0x80146865, 0x80146866 and 0x80146867, clears the shared secondary sub-state byte D_80146875 and requests primary scene state 2 in the shared primary state byte D_80146874, then applies the paired flag helper func_8015B580 (0x8015B580) to the same word with id 5. Takes no arguments and returns nothing; its 0x18-byte frame only keeps $ra across the three calls. The callback table word 0x801FAF28 is entry 1 of the 29-word overlay callback run at 0x801FAF24 selected by a record byte field at offset 0x7A; no jal or j in the payload reaches the address.'
   - - 14964
     - c
     - clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674

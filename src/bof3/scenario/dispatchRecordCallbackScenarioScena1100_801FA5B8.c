@@ -8,8 +8,10 @@ extern u32 D_8014686C;
 /* @source 0x801FA5B8
  * @behavior Dispatches this overlay's per-record callback selected by the record's unsigned byte
  * field at offset 0x7A through the overlay-local callback-pointer run at 0x801FAF24 (its 29
- * entries begin with noopHandlerScenarioScena1100_801FA5F8, func_801FA600, func_801FA674 and
- * func_801FA6C0 and end with invokeHelperArgThenHelperScenarioScena1100_801FAE98), passing the
+ * entries begin with noopHandlerScenarioScena1100_801FA5F8,
+ * waitFlag5ThenClearSharedStateBytesAndRequestPrimaryState2AndSetFlagBit5ScenarioScena1100_801FA600,
+ * func_801FA674 and func_801FA6C0 and end with
+ * invokeHelperArgThenHelperScenarioScena1100_801FAE98), passing the
  * record pointer unchanged as the first argument and the word held in the shared cell D_8014686C
  * as the second. Takes the record as its only argument and returns nothing; the 0x18-byte frame
  * saves $ra because the target callback is an ordinary indirect call rather than a sibling tail

@@ -917,8 +917,10 @@ segments:
     - asm
     - func_801DEBC4
   - - 57564
-    - asm
-    - func_801DECDC
+    - c
+    - steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC
+    - '@source: src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c'
+    - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through func_801E03F8, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while func_801E0770 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared func_801E0394/func_8014D978 pair.'
   - - 59188
     - asm
     - func_801DF334

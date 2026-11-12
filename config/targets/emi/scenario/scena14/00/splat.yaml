@@ -104,8 +104,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C.c'
     - '@behavior: Overlay-local record-callback dispatcher: it reads the record passed in $a0, takes its unsigned byte field at offset 0x7A, scales it by four and selects a callback word of the overlay-local table at 0x801FC468 (twenty-two words, 0x801FC468 through 0x801FC4BC), then invokes that callback with jalr, passing the record pointer unchanged as the first argument and the shared word D_8014686C as the second. It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call. No in-image jal targets the address; its only image word is 0x801FC408, entry 1 of the five-word pointer run at 0x801FC404.'
   - - 18364
-    - asm
-    - func_801FB3BC
+    - c
+    - startCode8RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB3BC
+    - '@source: src/bof3/scenario/startCode8RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB3BC.c'
+    - '@behavior: Overlay per-record callback (entry 0 of the twenty-two-word callback run at 0x801FC468, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC468 holds this address, its only image word). It reads the shared halfword D_80143F00, compares it with 0xC0, and takes the code-8 row answer from func_801F326C when the two are equal and from func_801F37AC otherwise; the 16-bit answer is sign-extended into the argument of the shared action requester func_80150224, and the body finally stores 2 in the shared frontend mode byte D_80143BB0. It ignores the record pointer and second argument its dispatcher passes, reads no memory besides D_80143F00, writes only D_80143BB0, and its 0x18-byte frame only keeps $ra across the call, with the frame store in the branch delay slot and each answer path ending in the sll of the argument conversion while the sra uses the requester delay slot. No in-image jal targets the address.'
   - - 18452
     - asm
     - func_801FB414

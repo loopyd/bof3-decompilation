@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801D1A94
   - - 4680
-    - asm
-    - func_801D1E48
+    - c
+    - handleCommuKindGridPairInputThenDraw
+    - '@source: src/bof3/ui/handleCommuKindGridPairInputThenDraw.c'
+    - '@behavior: input and redraw step of the commu01/07 commu request flow, one of the four in-image callers of drawEntryListPanel. Dispatches the shared pad-state word 0x80145AA8 on its masks: the cancel mask 0x80145AC4 queues resident sound cue 0x106, reports result code 0x45 through the request result halfword 0x801D4E0C, clears the second kind grid byte 0x801D4E20 to 0xFF and rolls the commu request step byte 0x801F294D back by one, the confirm mask 0x80145AC2 saves the request state and selects overlay step 5, and the 0x5000 bits decoded through 0x8014E640 queue resident cue 0x100 and toggle the cursor box row byte 0x801D4E30. Every path then runs func_801D3038, draws the list row marker of 0x801448ED with selected flag 1, computes the slot origin of that row kind at ordinal 0 through computeKindSlotOrigin, draws the marker triangle at that origin, and stacks three panels whose x is 52 times the quarter index of the list row plus a fixed offset: the entry list panel in mode 1 at 0x42 on the origin computeEntryListOriginY returns, the kind grid of 0x801D4E1C in mode 1 at 0x4A twelve pixels below plus sixteen per unit of 0x801D4E28, and while 0x801D4E20 is not 0xFF the kind grid of that byte in mode 0 at 0x52 twelve pixels below the first grid plus sixteen per unit of 0x801D4E2C, each taking the y the previous call returned, after which the cursor box is submitted through func_801647C4 at 0x54 rounded down to a multiple of four on x and at the last returned bottom plus four plus sixteen per unit of 0x801D4E30 on y'
   - - 5392
     - asm
     - func_801D2110

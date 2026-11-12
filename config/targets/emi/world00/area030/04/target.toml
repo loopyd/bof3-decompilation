@@ -214,6 +214,7 @@ sources = [
     "src/bof3/world/drawSemiTransPaletteRectangleBorder.c",
     "src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c",
     "src/bof3/world/stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC.c",
+    "src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

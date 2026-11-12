@@ -206,8 +206,10 @@ segments:
     - '@source: src/bof3/scenario/requestPrimaryState1Substate10ScenarioScena1200_801FC7D4.c'
     - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 1 with secondary sub-state 0x0A by storing 0x0A in the shared sub-state byte D_80146875 and 1 in the shared state byte D_80146874; the 0x18-byte frame only keeps $ra across the call.'
   - - 23564
-    - asm
-    - func_801FC80C
+    - c
+    - requestPrimaryState2Substate3COnRoute79Flag0SetAndArgWordAtMost160000ScenarioScena1200_801FC80C
+    - '@source: src/bof3/scenario/requestPrimaryState2Substate3COnRoute79Flag0SetAndArgWordAtMost160000ScenarioScena1200_801FC80C.c'
+    - '@behavior: Overlay per-frame work handler and the word at 0x801FD1B0, entry 14 of the code-pointer run based at 0x801FD178 that dispatchWorkByte1HandlerScenarioScena1200_801F7174 selects with the work object unsigned byte at offset 0x01 scaled by four, so it is the handler for that byte reading 0x0E; the neighbour entries are 13 (0x801FD1AC, the raw-named func_801FC890) and 15 (0x801FD1B4, dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54), and that pointer word is the only little-endian word of the payload that holds 0x801FC80C while no jal targets the address. It runs the shared front-end startup helper func_8015C088, requests primary scene state 2 with secondary sub-state 0x3C by storing 0x3C in the shared sub-state byte D_80146875 and 2 in the shared state byte D_80146874, and returns 1, but only when three tests all allow it: the shared route word D_80143F00 reads 0x79, the main-executable flag tester func_8015B5D4 reports flag 0 set in the flag word D_8014686C, and the word the dispatching frame left in $a0 is at most 0x160000 under a signed comparison. The three tests are one short-circuited conjunction whose first two failures branch to the shared trailing return 0, whose zero the compiler also writes in the delay slot of the third test branch while jumping past that block; a refused path writes no cell. The 0x18-byte frame keeps $ra and $s0 because the argument is compared only after the flag call, and each shared byte store materialises the 0x8014 page in $at on its own.'
   - - 23696
     - asm
     - func_801FC890
