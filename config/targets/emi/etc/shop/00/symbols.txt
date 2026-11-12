@@ -227,6 +227,7 @@ swapBytes = 0x801E1BB8;
 func_801E1BCC = 0x801E1BCC;
 sortSkillNotesByCostDescending = 0x801E1C88;
 func_801E1D84 = 0x801E1D84;
+drawShopInkPanel = 0x801E1E80;
 func_801E200C = 0x801E200C;
 func_801E2048 = 0x801E2048;
 func_801E2084 = 0x801E2084;

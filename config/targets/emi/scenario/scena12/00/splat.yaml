@@ -233,8 +233,10 @@ segments:
     - c
     - queueCueAndNegativeOneResultScenarioScena1200_801FCD38
   - - 24920
-    - asm
-    - func_801FCD58
+    - c
+    - requestPrimaryState7Substate0AndCue103UnlessFlag2ASetScenarioScena1200_801FCD58
+    - '@source: src/bof3/scenario/requestPrimaryState7Substate0AndCue103UnlessFlag2ASetScenarioScena1200_801FCD58.c'
+    - '@behavior: Overlay callback at index 3, the word at 0x801FD248, of the nineteen-word code-pointer run based at 0x801FD23C: the selector dispatchCoordinateLookupHandlerScenarioScena1200_801FCC54 (0x801FCC54) calls it with jalr and answers its signed low byte when the fourth of the four five-byte lookup records at 0x801FD228 is selected, and no jal names it. It asks the main-executable flag tester func_8015B5D4 whether flag 0x2A is set in the shared scenario flag word D_8014686C and answers -1 when it is, touching nothing else. Otherwise it runs the shared front-end startup helper func_8015C088, clears the shared progress byte g_ScenarioProgress (0x80146864) and the shared state bytes 0x80146865 and 0x80146867 while the byte at 0x80146866 keeps its value, clears the secondary sub-state byte D_80146875, requests primary state 7 in D_80146874, passes the signed halfwords at +0x36 and +0x3A of the work record held by scratchpad pointer cell 0x1F800044 to the shared request helper func_8015507C, queues front-end cue 0x103 through func_8015DF18 and answers 1. It takes no arguments, reads no state beyond the flag word and that pointer cell, and writes only those five bytes; the 0x18-byte frame only keeps $ra across the four calls.'
   - - 25056
     - asm
     - func_801FCDE0

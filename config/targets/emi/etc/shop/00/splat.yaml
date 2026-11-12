@@ -677,8 +677,10 @@ segments:
     - '@source: src/bof3/ui/func_801E1D84.c'
     - '@behavior: orders the main-RAM 128-slot skill-notes bank D_8014546C by ability cost after normalizing it; it is the mirror twin of the sibling sortSkillNotesByCostDescending with the cost comparison reversed: it first runs the scanner func_801E1BCC over the bank, then for every outer pass i in 0..0x7E re-seeds the byte cursor p at the bank start and walks j from 0 while j is below the signed pass limit 0x7F - i, deriving the next byte address q from the current cursor on every step and swapping the pair through swapBytes when both bytes are non-zero and the cost byte at offset 0x0E of the 0x14-byte ability record selected by p (so abilityObjects[kind].cost, the byte at 0x801CA71A) exceeds the cost of the record selected by q, then advancing the cursor by one byte; both counters are u8 and the cost comparison is unsigned, so the pass limit is recomputed from the truncated pass counter and the q address is re-derived from the cursor on every step. Moving the smaller cost one slot earlier per pass orders the non-zero prefix of the bank by ascending cost; it returns void and does not read the command id handed over by the shop command handler table.'
   - - 70272
-    - asm
-    - func_801E1E80
+    - c
+    - drawShopInkPanel
+    - '@source: src/bof3/ui/drawShopInkPanel.c'
+    - '@behavior: shop ink panel drawer of the panel task, reached from the panel state dispatcher func_801E44E0 with the panel task root x and field-6 halfwords: paints the 0x55 by 0x10 shaded panel rectangle at (x + 3, y + 3) through func_801AE3F0 with the constant 0 and the main-RAM CLUT-bank byte D_80144952 as the trailing argument pair, submits the caption D_801E5D38 (the bytes "Ink") at (x + 4, y + 4) through the text emitter func_8014F800 with a zero alignment argument and the mask 0xFF, formats the low halfword of the command-code mapper func_8016628C answer for table 0 and code 0x58 through sprintf with this EMI "%3d" string D_801D0E84 into the shared text buffer D_80145AD4, draws that buffer at (x + 0x34, y + 4) through func_8014FF0C, then submits three tile streams of three-byte records through func_801AF390: D_801E5CC0 once at (x, y), D_801E5CCC nine times from x to x + 64 in steps of 8 along the same y, and D_801E5CD8 once at (x, y); both parameters are word-sized, so every use truncates the coordinate it reads (an unsigned 0xFFFF mask for the rectangle pair and a sign-extending shift for each signed coordinate), and the body returns nothing.'
   - - 70668
     - c
     - func_801E200C
@@ -987,7 +989,7 @@ segments:
     - c
     - func_801E44E0
     - '@source: src/bof3/ui/func_801E44E0_shop00.c'
-    - '@behavior: panel state dispatcher sibling of func_801E2EB0, func_801E3720, func_801E3BA4, func_801E3CF8, func_801E4224, func_801E4338 and func_801E440C: calls the handler D_801E5F3C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel at the same task root''s x and field-6 coordinates through func_801E1E80.'
+    - '@behavior: panel state dispatcher sibling of func_801E2EB0, func_801E3720, func_801E3BA4, func_801E3CF8, func_801E4224, func_801E4338 and func_801E440C: calls the handler D_801E5F3C[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop ink panel at the same task root''s x and field-6 halfwords through drawShopInkPanel.'
   - - 80192
     - c
     - advancePanelXTo320F

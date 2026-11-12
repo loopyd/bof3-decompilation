@@ -656,8 +656,10 @@ segments:
     - '@source: src/bof3/world/setActiveSlotValueFromFrameMask.c'
     - '@behavior: Clears or invalidates the active slot state according to a frame-mask bit.'
   - - 42304
-    - asm
-    - func_801DB140
+    - c
+    - stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140
+    - '@source: src/bof3/world/stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140.c'
+    - '@behavior: AREA030 work-record dispatch step, handler 2 of the local table 0x801E2268 selected by scratch work-record byte 3: saves the selected-record value byte 0x801E31F8 into 0x801E31FC. While the shared counter 0x80144000 reads at most 0x3E7FFF it walks the two pad halfwords: pad bits 0xC000 of 0x80145AA4 select record value 2 with the fresh countdown 8 in scratch byte 9 and the byte at 0x801E320C + 5 published into 0x8014421C, otherwise the existing countdown is decremented and serviced by func_8014D978 or, once it reads zero, record value 0 with request 7 is restored; pad bits 0x3000 clear the record value and the signed record cell at 0x801468A4 while sliding the byte at 0x801E320C + 6 in with request 0 and stepping 0x80144216 back; pad bit 0x40 selects record value 1 with the byte at 0x801E320C + 4 and request 7. Both 0x40 arms step the signed record cell down by the byte at 0x801E320C + 3 plus 2 and run selectRecordValueAndSlot, the second one through setActiveSlotValueFromFrameMask, and every taken arm advances 0x80144216. Above that counter limit it resets the shared selection counter 0x80144199 to 1, the state bytes 0x8014419E and 0x8014403D to 4, the mode byte 0x80144125 to 7, clears 0x80143FC9 and 0x8014420D, sets handler 6 on the active record, plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8), selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends with func_801DDD4C.'
   - - 43348
     - c
     - func_801DB554

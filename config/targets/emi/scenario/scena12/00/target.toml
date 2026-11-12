@@ -18,6 +18,7 @@ sources = [
     "src/bof3/scenario/advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7240.c",
     "src/bof3/scenario/advanceCounterPhaseQueueCue20AOnRolloverAndAdvanceWorkByte2WhenCounterFullScenarioScena1200_801F7410.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCF44.c",
+    "src/bof3/scenario/requestPrimaryState7Substate0AndCue103UnlessFlag2ASetScenarioScena1200_801FCD58.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

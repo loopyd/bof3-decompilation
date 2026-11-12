@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC24
   - - 492
-    - asm
-    - func_801EEDEC
+    - c
+    - clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC
+    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC.c'
+    - '@behavior: Entry stage 0 of this overlay, word 0 of the eight-word code pointer run at 0x801EEC04 that the frame dispatcher func_801EEC24 copies to its stack and calls through work-object byte 1 scaled by four. It clears bytes 0, 1 and 2 of all 0x30 records of the 0x2C-byte-stride pool at 0x801F1CA0, copies byte 8 of the shared battle work record reached through the pointer cell 0x801EB4E0 into work byte 8 while calling the shared helper at 0x800AFD9C with no arguments, then clears work byte 0xB, sets work byte 9 to 0xA, clears work byte 0xA and increments work byte 1, the handler index this overlay dispatches on, so the next frame runs word 1 at 0x801EEF64. It claims one action slot through the shared allocator func_801E590C called with request class 1 and code 0x69, stores 1 into that slot''s byte 1, publishes the work-object pointer read from the scratchpad cell 0x1F800044 into slot word 0x74 and increments work byte 0xB. It then copies the 0x100 unsigned halfwords of the table at 0x80036C00 into the table at 0x8003AC00 with bit 15 set on every entry, stores 1 into the shared main-RAM byte 0x80145988 and invokes the main-executable helper func_8015D71C with 0x102. Takes no arguments and returns nothing; the 0x18-byte frame keeps only the return address at 0x10 across the two calls, and the roles of pool bytes 1 and 2, slot byte 1, the two halfword tables and the two helper codes remain offset- and address-anchored.'
   - - 868
     - asm
     - func_801EEF64

@@ -27,10 +27,12 @@ void func_801C1630(void);
  * target-qualified; the same 76 bytes were also equal at 0x801FCF88 of
  * emi/scenario/scena12/00, whose own row still held that entry as assembly when
  * the comparison ran. The nearer neighbours in this target carry the same
- * arm-then-helpers shape with other ids: armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAC48
- * (0x801FAC48, ids 7, 8, 5 with func_801C187C(8) then (5)) differs only in the
- * three stored immediates, and func_801FADAC (0x801FADAC, ids 7, 4, 2 with
- * func_801C187C(4) then (2)) differs only in four.
+ * arm-then-helpers shape with other ids:
+ * armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAC48 (0x801FAC48,
+ * ids 7, 8, 5 with func_801C187C(8) then (5)) differs only in the three stored
+ * immediates, and
+ * armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FADAC (0x801FADAC,
+ * ids 7, 4, 2 with func_801C187C(4) then (2)) differs only in four.
  * @status exact
  * @match 100.00
  * @residual none
