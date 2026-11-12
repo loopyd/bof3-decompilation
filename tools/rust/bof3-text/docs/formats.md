@@ -317,14 +317,29 @@ with size 118224 and SHA-256
 `f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1`.
 The containing archive must also match the original disc manifest.
 
-| Payload interval | Runtime interval | Bytes |
-| --- | --- | ---: |
-| `[0x3C50,0x3EC0)` | `[0x801D4850,0x801D4AC0)` | 624 |
-| `[0xAF78,0xB444)` | `[0x801DBB78,0x801DC044)` | 1228 |
-| `[0xE7F8,0xEB68)` | `[0x801DF3F8,0x801DF768)` | 880 |
-| `[0xFB88,0xFF64)` | `[0x801E0788,0x801E0B64)` | 988 |
-| `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 |
-| `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 |
+| Payload interval | Runtime interval | Bytes | Text relocations |
+| --- | --- | ---: | ---: |
+| `[0x3C50,0x3EC0)` | `[0x801D4850,0x801D4AC0)` | 624 | 54 |
+| `[0x4144,0x4408)` | `[0x801D4D44,0x801D5008)` | 708 | 34 |
+| `[0x7EE4,0x81F8)` | `[0x801D8AE4,0x801D8DF8)` | 788 | 26 |
+| `[0xA458,0xA6F8)` | `[0x801DB058,0x801DB2F8)` | 672 | 18 |
+| `[0xAF78,0xB444)` | `[0x801DBB78,0x801DC044)` | 1228 | 91 |
+| `[0xE3E4,0xE74C)` | `[0x801DEFE4,0x801DF34C)` | 872 | 70 |
+| `[0xE7F8,0xEB68)` | `[0x801DF3F8,0x801DF768)` | 880 | 64 |
+| `[0xFB88,0xFF64)` | `[0x801E0788,0x801E0B64)` | 988 | 88 |
+| `[0xFF64,0x1020C)` | `[0x801E0B64,0x801E0E0C)` | 680 | 22 |
+| `[0x119E0,0x11D48)` | `[0x801E25E0,0x801E2948)` | 872 | 63 |
+| `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 | 9 |
+| `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 | 22 |
+
+Every listed body matches its complete sized executable ELF section, original
+bytes and resident RAM, with its text relocations reconciled. Structural
+control-flow review covers every instruction and delay slot, assuming call returns.
+The body at `0x801DEFE4` has six bounded internal switch targets; the separate
+address table retains its prior status. The body at `0x801DB058` includes four
+`BREAK` exception paths. The callback target and selector at `0x801E25E0` remain
+unqualified. These checks do not establish feasible paths, exception handling or
+callee behavior.
 
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
 executable ELF section, all 54 text relocations, original bytes and resident RAM

@@ -1254,9 +1254,29 @@ pub fn payload_nontext_ranges(
                     evidence: "original US battle payload; complete instruction body 0x801D4850..0x801D4AC0 including return delay slot; complete original control-flow review, sized executable ELF function section and all 54 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, battler-index-validity, record-validity, resource-safety or duplicate-source ownership claim",
                 },
                 NontextRange {
+                    offset: 0x4144,
+                    length: 708,
+                    evidence: "original US battle payload; complete instruction body 0x801D4D44..0x801D5008 including return delay slot; complete original control-flow review, sized executable ELF function section and all 34 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x7ee4,
+                    length: 788,
+                    evidence: "original US battle payload; complete instruction body 0x801D8AE4..0x801D8DF8 including return delay slot; complete original control-flow review, sized executable ELF function section and all 26 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0xa458,
+                    length: 672,
+                    evidence: "original US battle payload; complete instruction body 0x801DB058..0x801DB2F8 including return delay slot; complete original control-flow review, sized executable ELF function section and all 18 text relocations reconcile with original and captured resident bytes; four BREAK exception paths retained; exact archive and payload identities; neighboring functions and data excluded; no observed execution, arithmetic-validity, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
                     offset: 0xaf78,
                     length: 1228,
                     evidence: "original US battle payload; complete instruction body 0x801DBB78..0x801DC044 including return delay slot; complete original control-flow review, sized executable ELF function section and all 91 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0xe3e4,
+                    length: 872,
+                    evidence: "original US battle payload; complete instruction body 0x801DEFE4..0x801DF34C including return delay slot; complete original control-flow review, sized executable ELF function section and all 70 text relocations reconcile with original and captured resident bytes; six internal switch targets reconciled, separate address table excluded; exact archive and payload identities; neighboring functions and data excluded; no observed execution, selector-validity, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
                 },
                 NontextRange {
                     offset: 0xe7f8,
@@ -1267,6 +1287,16 @@ pub fn payload_nontext_ranges(
                     offset: 0xfb88,
                     length: 988,
                     evidence: "original US battle payload; complete instruction body 0x801E0788..0x801E0B64 including return delay slot; complete original control-flow review, sized executable ELF function section and all 88 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0xff64,
+                    length: 680,
+                    evidence: "original US battle payload; complete instruction body 0x801E0B64..0x801E0E0C including return delay slot; complete original control-flow review, sized executable ELF function section and all 22 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x119e0,
+                    length: 872,
+                    evidence: "original US battle payload; complete instruction body 0x801E25E0..0x801E2948 including return delay slot; complete original control-flow review, sized executable ELF function section and all 63 text relocations reconcile with original and captured resident bytes; indirect callback target and selector remain unqualified; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
                 },
                 NontextRange {
                     offset: 0x14d0c,
