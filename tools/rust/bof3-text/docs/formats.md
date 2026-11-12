@@ -217,10 +217,13 @@ when that complete extent fits the payload. It adds the complement of previously
 classified fields and preserves their records. A missing complete extent leaves
 the earlier profile intact and admits no prefix.
 
-The sampler also reads a separate signed-byte plane. Its initialization and
-ownership remain unresolved, so this rule excludes that plane and its header
-offset. Integral alternatives qualify the stored main words without proving
-neighbor safety for fractional coordinates, terrain meaning or actual visitation.
+The sampler also reads a separate signed-byte plane. Its relative offset is the
+u16 field at payload bytes `[42,44)`, multiplied by four. The complete original
+setter at `0x80155038..0x8015507C` uses the same offset for numeric byte writes.
+Coverage includes that two-byte field when present. Initialization and ownership
+of the separate plane remain unresolved, and the rule excludes its storage.
+Integral alternatives qualify the stored main words without proving neighbor
+safety for fractional coordinates, terrain meaning or actual visitation.
 
 Conditional reads of subsequent packed words depend on entity fields whose
 producers remain unqualified. Those words, unselected records, gaps and tails

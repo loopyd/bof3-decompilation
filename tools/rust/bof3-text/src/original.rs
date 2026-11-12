@@ -2194,6 +2194,9 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
         .collect();
     let evidence = "original US raw area numeric u8 grid; header-relative offset at bytes 20..22 multiplied by four and published to 0x8014931C by original SLUS 0x80154094..0x801540F8; complete original getter 0x80166CB0..0x80166CEC returns unchanged byte at base+y*width+x and original GAME caller applies numeric masks/comparisons; finite declared-grid coordinates cover every width*height byte with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and checked source bounds; prior fields retain their own evidence; no global caller-coordinate bounds, natural visitation, terrain semantics, full allocation, rendering or editing claim";
     let mut numeric_planes = vec![(byte_grid, byte_grid_end, evidence)];
+    if data.get(42..44).is_some() {
+        numeric_planes.push((42, 44, "original US raw area unsigned-u16 relative-offset field at payload bytes 42..44; original sampler 0x80154ABC..0x80154ED0 and complete setter 0x80155038..0x8015507C scale the field by four and add payload base 0x80104000 before numeric signed-byte reads or writes; exact original archive, raw mode, load, checkword agreement and checked two-byte source extent; prior fields retain their own evidence; auxiliary storage, initialization, ownership, coordinate safety, terrain semantics, full allocation, rendering and editing excluded"));
+    }
     if let Some(end) = cells
         .checked_mul(4)
         .and_then(|bytes| 48usize.checked_add(bytes))
