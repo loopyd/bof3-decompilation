@@ -21,5 +21,5 @@ void func_801D45F8(void) {
   }
   drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   func_801D88E0(16, 64);
-  func_801D8364(164, 64);
+  drawLureListColumnWorld00Area03004_801D8364(164, 64);
 }

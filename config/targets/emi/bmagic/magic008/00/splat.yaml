@@ -158,8 +158,10 @@ segments:
     - asm
     - func_801F03FC
   - - 6268
-    - asm
-    - func_801F047C
+    - c
+    - invokeHelperAt101SetByte9ToFAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F047C
+    - '@source: src/bof3/bmagic/invokeHelperAt101SetByte9ToFAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F047C.c'
+    - '@behavior: Work byte 0x2 state 3 handler: entry 3 (index 3) of the six-entry table at 0x801EEC58 (0x801F0330, 0x801F037C, 0x801F03FC, 0x801F047C, 0x801F04DC, 0x801F0548), which 0x801F0294 copies into its frame and dispatches on the scratchpad work object byte 0x2. Per frame it calls the shared readiness helper func_8014DAEC and tests the returned byte; while the helper reports not-ready nothing happens. Once it reports ready the handler invokes the shared helper at 0x8015D71C with selector 0x101, stores 0x0F into work byte 0x9 (the countdown 0x801F0330 seeds with 0x1E), re-reads the pointer cell at 0x1F800044 and increments work byte 0x2 with a byte-width add, handing off to table entry 4 (0x801F04DC). The cell is materialised separately for the byte 0x9 store and for the byte 0x2 update. The 0x18-byte frame only keeps $ra at 0x10; it returns nothing and reads or writes no other state.'
   - - 6364
     - c
     - decrementMotionCountdownAndSubtractMotionPairThenAdvanceWorkByte2BmagicMagic00800_801F04DC

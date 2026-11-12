@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress3SetFlagBit5AndClearStateScenarioScena1100_801F7BFC.c",
     "src/bof3/scenario/requestPrimaryState1Substate3COnRoute79Flag0SetOrSubstateByModeCellAndArgWordAtMost160000ScenarioScena1100_801FAA74.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAC48.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAD1C.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",

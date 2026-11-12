@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/scena14/00.bin"
 splat = "config/targets/emi/scenario/scena14/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C.c",
+]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",
     "src/bof3/scenario/noopHandlerScenarioScena1400_801FB374.c",

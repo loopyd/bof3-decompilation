@@ -7,8 +7,9 @@
  *           sub-step byte D_80148652. Every call first republishes the panel
  *           state: it arms the s16 cell D_80148340 with the selected
  *           field-record id D_80148361 plus 0x122 and copies the list cursor
- *           byte D_8014835F (the byte the entry-0 sibling func_801E2150 steps
- *           with the pad) into the slot byte D_80148360. It then counts the
+ *           byte D_8014835F (the byte the entry-0 sibling
+ *           stepShopListItemCursorThenOpenRecordOrAdvanceUiPhase steps with the
+ *           pad) into the slot byte D_80148360. It then counts the
  *           shared frame timer phaseTimer down: a nonzero timer is decremented
  *           and the handler returns immediately. Once the timer reads zero and
  *           the pad state D_80145AA8 carries the cancel mask D_80145AC4, it

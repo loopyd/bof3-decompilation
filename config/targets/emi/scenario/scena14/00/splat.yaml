@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F8CE4
   - - 9804
-    - asm
-    - func_801F924C
+    - c
+    - stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C
+    - '@source: src/bof3/scenario/stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C.c'
+    - '@behavior: Overlay view step of this scenario overlay, reached only through the three in-image jal sites 0x801F8F88, 0x801F8FCC and 0x801F90DC inside the state controller func_801F8CE4, each passing no argument and ignoring the result. While the shared scroll word D_80149310 reads 0x77FF it consumes that request by rewriting the word as 0x63FF and moves the view one whole step: it adds 0x140000 (20.0 in 16.16) to the shared view-origin mirror word D_80149308 and to the view-origin word D_80143F7C, adds 0x14 (20 cells) to the render-cell reference halfword D_80149320, and stores the s16 distance func_8015477C answers for the moved D_80149308/D_8014930C pair into the view halfword D_80143F86. It hands that same distance, widened, to the shared view helper func_80154FD8, runs func_80154698, and then moves the first shared work record by the same 0x140000 along x, adding it to D_80147A8C, and stores the distance of the moved record position pair D_80147A8C/D_80147A90 into D_80147A96. A scroll word other than 0x77FF leaves every cell untouched; the body takes no argument, returns nothing, and its 0x18-byte frame keeps only $ra and the live 0x140000 step in $s0.'
   - - 10016
     - asm
     - func_801F9320

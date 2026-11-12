@@ -218,6 +218,7 @@ sources = [
     "src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c",
     "src/bof3/world/drawMessageTokenCellQuad.c",
     "src/bof3/world/drawSemiTransPaletteRectangleFill.c",
+    "src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

@@ -463,8 +463,10 @@ segments:
     - '@source: src/bof3/world/drawStretchedPanelColumnWorld00Area03004_801D8248.c'
     - '@behavior: emits one grey textured quad into the primitive cursor at the requested origin: a column eight pixels wide and of the requested height, whose texels are the 8 by 4 slice at (0x58, 0x9A) of the panel texture page that the tpage field 0x2D selects in graphics modes 1 and 2 and 0x1D in every other mode, with CLUT 0x7887 and the three colour bytes 0x80. The source V fields are the base 0x9A and the base plus four, so the four-texel band is stretched over the requested height; the quad is submitted through func_8014E5A0(1, 0x28).'
   - - 30564
-    - asm
-    - func_801D8364
+    - c
+    - drawLureListColumnWorld00Area03004_801D8364
+    - '@source: src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c'
+    - '@behavior: draws the AREA030 lure column at the requested origin: submits the 0x8B by 0x9E inset panel through func_801AE3F0 with shade 0x80 and the shared CLUT-bank byte D_80144952, walks the 0x80 slot entries of the shared main-executable tables D_801451CC (record index) and D_801453CC (count) and, for every slot whose 20-byte equipment record in D_801C9E7C carries the kind byte 10 at +0x0E, draws that record''s twelve-character name through func_8014F800 at (x + 5, row). Work-record byte +0x0A is a countdown decremented per call: its low byte +0x38 is the first visible row (one less while work byte +0x08 is clear), the drawn row limit is 10 (9 in that case) and the column height reads 0x19 - 4 * count (0x19 - 4 * (3 - count) in that case). The row the work word +0x10 names is drawn highlighted with colour 7 and, while the shared byte 0x80145E94 reads two and bit 0 of work byte +0x07 is set, a second unhighlighted copy of its name is drawn two pixels up; the work halfword +0x3A is stamped with that row''s slot index. A slot count of two or more is formatted through "*%2d" into the shared 0x80145AD4 buffer and drawn through func_80150098. The column closes with func_801D90FC at the origin, the stretched panel column at x + 0x80 whose height loses six pixels per row beyond the ninth and whose origin follows the work-record scroll byte, and the four-character "LURE" title of the panel at (x + 0x37, y + 7).'
   - - 31968
     - asm
     - func_801D88E0

@@ -12,8 +12,9 @@
  *           field runs (7, 16, 2, 320, 63) for the first record and
  *           (7, 17, 2, 180, 240) for the second, and copies the main-RAM byte
  *           D_80148361 into the first record's byte at +0x0A. The caller
- *           func_801E2150 runs it inside the shop UI transition after the
- *           sound cue 0x102 and before it clears D_80148624, re-arms
+ *           stepShopListItemCursorThenOpenRecordOrAdvanceUiPhase runs it inside
+ *           the shop UI transition after the sound cues 0x103 and 0x102 and
+ *           before it clears the cursor-visible flag D_80148624, re-arms
  *           phaseTimer with 8 and advances the UI sub-step byte D_80148652.
  * @status exact
  * @match 100.00

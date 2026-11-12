@@ -42,7 +42,8 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
   if ((right[7] & 1) == 0) {
     func_801D7EB0((s16)(164 + right[9] * 45), 64);
   } else {
-    func_801D8364((s16)(164 + right[9] * 45), 64);
+    drawLureListColumnWorld00Area03004_801D8364(
+        (s16)(164 + right[9] * 45), 64);
   }
   state = D_1F800044;
   if (state[9] == 4) {
