@@ -171,6 +171,7 @@ sources = [
     "src/bof3/ui/drawShopSlotListThenStepSlotCursorAndAcceptOrCancel.c",
     "src/bof3/ui/drawShopSlotListThenStepRowCursorAndAcceptOrCancel.c",
     "src/bof3/ui/drawShopPanelByActionIdThenArmUiSubstepOnPadOrTimer.c",
+    "src/bof3/ui/setUpShopRowsOrSeedWorkRecordTriplesThenResetOverlayAndAdvanceUiPhase.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
