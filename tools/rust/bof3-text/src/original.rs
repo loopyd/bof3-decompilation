@@ -100,6 +100,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     }
     vec![
         NontextRange {
+            offset: 738_132,
+            length: 20,
+            evidence: "original US SLUS; five little-endian u32 control-flow targets at 0x8014A354..0x8014A368; complete original body 0x80175C60..0x801761E8 unsigned selector-minus-one guard accepts only indices 0..4, scaled load at 0x80175EBC and JR at 0x80175EC4; all five exact original targets remain inside that body; complete original guard, load delays, table and captured resident bytes reconcile; exact whole executable identity; numeric data separate from instructions; no observed execution, table immutability, argument-validity, callee-semantics or resource-safety claim",
+        },
+        NontextRange {
             offset: 739_844,
             length: 8,
             evidence: "original US SLUS; complete instruction body 0x8014AA04..0x8014AA0C including return delay slot; complete original word and control-flow review, sized executable ELF function section and complete object text without text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -355,6 +360,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x801638B0..0x801639B8 including return delay slots; original JAL at 0x80163044 in the qualified executable caller at 0x80163010 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 843_400,
+            length: 24,
+            evidence: "original US SLUS; complete original instruction body 0x80163E88..0x80163EA0 including terminal delay slots; original JAL at 0x80163974 in the qualified executable caller at 0x801638B0 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 849_140,
             length: 124,
             evidence: "original US SLUS; complete instruction body 0x801654F4..0x80165570 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 2 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -380,9 +390,39 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x801682E0..0x80168374 including return delay slots; original JAL at 0x8015D070 in the qualified executable caller at 0x8015D044 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 862_560,
+            length: 656,
+            evidence: "original US SLUS; complete original instruction body 0x80168960..0x80168BF0 including terminal delay slots; original JAL at 0x8016F47C in the qualified executable caller at 0x8016F378 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 863_456,
+            length: 72,
+            evidence: "original US SLUS; complete original instruction body 0x80168CE0..0x80168D28 including terminal delay slots; original JAL at 0x8016ED38 in the qualified executable caller at 0x8016E8A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 863_848,
+            length: 44,
+            evidence: "original US SLUS; complete original instruction body 0x80168E68..0x80168E94 including terminal delay slots; original JAL at 0x80168B48 in the qualified executable caller at 0x80168960 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 863_892,
+            length: 44,
+            evidence: "original US SLUS; complete original instruction body 0x80168E94..0x80168EC0 including terminal delay slots; original JAL at 0x80168B38 in the qualified executable caller at 0x80168960 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 864_404,
+            length: 36,
+            evidence: "original US SLUS; complete original instruction body 0x80169094..0x801690B8 including terminal delay slots; original JAL at 0x8016BA60 in the qualified executable caller at 0x8016BA24 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 864_440,
             length: 52,
             evidence: "original US SLUS; complete original instruction body 0x801690B8..0x801690EC including return delay slots; original JAL at 0x801628BC in the qualified executable caller at 0x80162898 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 871_308,
+            length: 380,
+            evidence: "original US SLUS; complete original instruction body 0x8016AB8C..0x8016AD08 including terminal delay slots; original JAL at 0x8016AD38 in the qualified executable caller at 0x8016AD2C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 871_724,
@@ -400,6 +440,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8016BA04..0x8016BA24 including return delay slots; original JAL at 0x8015D028 in the qualified executable caller at 0x8015CEBC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 875_044,
+            length: 124,
+            evidence: "original US SLUS; complete original instruction body 0x8016BA24..0x8016BAA0 including terminal delay slots; original JAL at 0x8016BA0C in the qualified executable caller at 0x8016BA04 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 884_412,
             length: 312,
             evidence: "original US SLUS; complete original instruction body 0x8016DEBC..0x8016DFF4 including return delay slots; original JAL at 0x8015CEC8 in the qualified executable caller at 0x8015CEBC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -410,9 +455,34 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8016E80C..0x8016E8A4 including return delay slots; original JAL at 0x8015D018 in the qualified executable caller at 0x8015CEBC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 886_948,
+            length: 1_272,
+            evidence: "original US SLUS; complete original instruction body 0x8016E8A4..0x8016ED9C including terminal delay slots; original JAL at 0x8016E88C in the qualified executable caller at 0x8016E80C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 888_348,
+            length: 140,
+            evidence: "original US SLUS; complete original instruction body 0x8016EE1C..0x8016EEA8 including terminal delay slots; original JAL at 0x8016E944 in the qualified executable caller at 0x8016E8A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 888_488,
+            length: 1_232,
+            evidence: "original US SLUS; complete original instruction body 0x8016EEA8..0x8016F378 including terminal delay slots; original JAL at 0x8016ED00 in the qualified executable caller at 0x8016E8A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 889_720,
+            length: 412,
+            evidence: "original US SLUS; complete original instruction body 0x8016F378..0x8016F514 including terminal delay slots; original JAL at 0x8016ED20 in the qualified executable caller at 0x8016E8A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 890_132,
             length: 164,
             evidence: "original US SLUS; complete original instruction body 0x8016F514..0x8016F5B8 including return delay slots; original JAL at 0x8015D00C in the qualified executable caller at 0x8015CEBC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 890_312,
+            length: 208,
+            evidence: "original US SLUS; complete original instruction body 0x8016F5C8..0x8016F698 including terminal delay slots; original JAL at 0x8016F580 in the qualified executable caller at 0x8016F514 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 890_520,
@@ -423,6 +493,21 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 891_128,
             length: 108,
             evidence: "original US SLUS; complete original instruction body 0x8016F8F8..0x8016F964 including return delay slots; original JAL at 0x8015E22C in the qualified executable caller at 0x8015DF18 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 897_000,
+            length: 44,
+            evidence: "original US SLUS; complete original instruction body 0x80170FE8..0x80171014 including terminal delay slots; original JAL at 0x80173CFC in the qualified executable caller at 0x80173CB0 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 897_044,
+            length: 24,
+            evidence: "original US SLUS; complete original instruction body 0x80171014..0x8017102C including terminal delay slots; original JAL at 0x80173CE0 in the qualified executable caller at 0x80173CB0 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 903_632,
+            length: 1_344,
+            evidence: "original US SLUS; complete original instruction body 0x801729D0..0x80172F10 including terminal delay slots; original JAL at 0x8016ABAC in the qualified executable caller at 0x8016AB8C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 905_244,
@@ -440,6 +525,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017389C..0x80173918 including return delay slots; original JAL at 0x8017385C in the qualified executable caller at 0x80173818 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 907_544,
+            length: 776,
+            evidence: "original US SLUS; complete original instruction body 0x80173918..0x80173C20 including terminal delay slots; original JAL at 0x80173900 in the qualified executable caller at 0x8017389C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 908_368,
             length: 48,
             evidence: "original US SLUS; complete original instruction body 0x80173C50..0x80173C80 including return delay slots; original JAL at 0x8016292C in the qualified executable caller at 0x80162898 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -448,6 +538,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 908_464,
             length: 988,
             evidence: "original US SLUS; complete original instruction body 0x80173CB0..0x8017408C including return delay slots; original JAL at 0x80173C64 in the qualified executable caller at 0x80173C50 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 909_452,
+            length: 712,
+            evidence: "original US SLUS; complete original instruction body 0x8017408C..0x80174354 including terminal delay slots; original JAL at 0x80173F38 in the qualified executable caller at 0x80173CB0 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 910_952,
@@ -480,9 +575,34 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x801748E4..0x80174914 including return delay slots; original JAL at 0x8014AD30 in the qualified executable caller at 0x8014AD28 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 911_636,
+            length: 48,
+            evidence: "original US SLUS; complete original instruction body 0x80174914..0x80174944 including terminal delay slots; original JAL at 0x8016B180 in the qualified executable caller at 0x8016B100 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 911_684,
+            length: 48,
+            evidence: "original US SLUS; complete original instruction body 0x80174944..0x80174974 including terminal delay slots; original JAL at 0x801690A0 in the qualified executable caller at 0x80169094 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 911_732,
+            length: 52,
+            evidence: "original US SLUS; complete original instruction body 0x80174974..0x801749A8 including terminal delay slots; original JAL at 0x8016B14C in the qualified executable caller at 0x8016B100 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 911_832,
             length: 48,
             evidence: "original US SLUS; complete original instruction body 0x801749D8..0x80174A08 including return delay slot; original JAL at 0x8014AF14 in the qualified executable caller at 0x8014AEE0 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; indirect call targets and selectors remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 911_928,
+            length: 16,
+            evidence: "original US SLUS; complete original instruction body 0x80174A38..0x80174A48 including terminal delay slots; original JAL at 0x8017631C in the qualified executable caller at 0x801761E8 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 911_968,
+            length: 28,
+            evidence: "original US SLUS; complete original instruction body 0x80174A60..0x80174A7C including terminal delay slots; original JAL at 0x8017DA64 in the qualified executable caller at 0x8017DA54 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 914_372,
@@ -500,9 +620,29 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x801753EC..0x8017547C including return delay slot; original JAL at 0x80161F60 in the qualified executable caller at 0x80161F58 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 914_676,
+            length: 16,
+            evidence: "original US SLUS; complete original instruction body 0x801754F4..0x80175504 including terminal delay slots; original JAL at 0x801781E0 in the qualified executable caller at 0x80178138 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 914_692,
+            length: 16,
+            evidence: "original US SLUS; complete original instruction body 0x80175504..0x80175514 including terminal delay slots; original JAL at 0x8017801C in the qualified executable caller at 0x80177F1C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 914_724,
+            length: 16,
+            evidence: "original US SLUS; complete original instruction body 0x80175524..0x80175534 including terminal delay slots; original JAL at 0x80177FD0 in the qualified executable caller at 0x80177F1C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 914_740,
             length: 108,
             evidence: "original US SLUS; complete original instruction body 0x80175534..0x801755A0 including return delay slots; original JAL at 0x801753FC in the qualified executable caller at 0x801753EC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 914_848,
+            length: 32,
+            evidence: "original US SLUS; complete original instruction body 0x801755A0..0x801755C0 including terminal delay slots; original JAL at 0x80178000 in the qualified executable caller at 0x80177F1C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 915_008,
@@ -530,6 +670,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x801756B0..0x801757E8 including return delay slots; original JAL at 0x8014E140 in the qualified executable caller at 0x8014E0FC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 915_432,
+            length: 300,
+            evidence: "original US SLUS; complete original instruction body 0x801757E8..0x80175914 including terminal delay slots; original JAL at 0x80177F7C in the qualified executable caller at 0x80177F1C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 915_732,
             length: 324,
             evidence: "original US SLUS; complete original instruction body 0x80175914..0x80175A58 including return delay slots; original JAL at 0x8014E1D0 in the qualified executable caller at 0x8014E0FC conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -550,6 +695,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x80175BE0..0x80175C60 including return delay slots; original JAL at 0x8016227C in the qualified executable caller at 0x80162230 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 916_576,
+            length: 1_416,
+            evidence: "original US SLUS; complete original instruction body 0x80175C60..0x801761E8 including return delay slot; original JAL at 0x80176344 in qualified executable caller 0x801761E8 conditionally enters this body; complete original word, decoder, control-flow and 48-byte save/restore frame review; unsigned selector-minus-one guard closes the five original u32 targets for JR at 0x80175EC4; all branch targets and delays and captured resident bytes reconcile; structural call continuations assume ordinary returns with caller stack and saved return storage preserved and dynamic stores nonaliasing that storage; exact whole executable identity; separate jump table, neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 917_992,
             length: 640,
             evidence: "original US SLUS; complete original instruction body 0x801761E8..0x80176468 including return delay slots; original JAL at 0x80175648 in the qualified executable caller at 0x80175640 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -563,6 +713,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 919_348,
             length: 1_052,
             evidence: "original US SLUS; complete original instruction body 0x80176734..0x80176B50 including return delay slots; original JAL at 0x8017573C in the qualified executable caller at 0x801756B0 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 920_536,
+            length: 224,
+            evidence: "original US SLUS; complete original instruction body 0x80176BD8..0x80176CB8 including terminal delay slots; original JAL at 0x80176300 in the qualified executable caller at 0x801761E8 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 920_760,
@@ -608,6 +763,21 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 924_092,
             length: 684,
             evidence: "original US SLUS; complete original instruction body 0x801779BC..0x80177C68 including return delay slots; original JAL at 0x801774AC in the qualified executable caller at 0x80177348 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 924_776,
+            length: 108,
+            evidence: "original US SLUS; complete original instruction body 0x80177C68..0x80177CD4 including terminal delay slots; original JAL at 0x80177664 in the qualified executable caller at 0x80177634 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 924_884,
+            length: 52,
+            evidence: "original US SLUS; complete original instruction body 0x80177CD4..0x80177D08 including terminal delay slots; original JAL at 0x801777F8 in the qualified executable caller at 0x80177634 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 925_468,
+            length: 460,
+            evidence: "original US SLUS; complete original instruction body 0x80177F1C..0x801780E8 including terminal delay slots; original JAL at 0x80178200 in the qualified executable caller at 0x80178138 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 926_008,
@@ -660,6 +830,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017B3CC..0x8017B438 including return delay slot; original JAL at 0x8014AC60 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; indirect call targets and selectors remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 939_064,
+            length: 296,
+            evidence: "original US SLUS; complete original instruction body 0x8017B438..0x8017B560 including terminal delay slots; original JAL at 0x8017B590 in the qualified executable caller at 0x8017B560 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 939_360,
             length: 148,
             evidence: "original US SLUS; complete original instruction body 0x8017B560..0x8017B5F4 including return delay slots; original JAL at 0x8014E588 in the qualified executable caller at 0x8014E564 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -700,9 +875,44 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017C548..0x8017C7D8 including return delay slots; original JAL at 0x8017BA94 in the qualified executable caller at 0x8017BA40 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 944_088,
+            length: 88,
+            evidence: "original US SLUS; complete original instruction body 0x8017C7D8..0x8017C830 including terminal delay slots; original JAL at 0x8017C5CC in the qualified executable caller at 0x8017C548 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 944_176,
+            length: 204,
+            evidence: "original US SLUS; complete original instruction body 0x8017C830..0x8017C8FC including terminal delay slots; original JAL at 0x8017C568 in the qualified executable caller at 0x8017C548 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 944_380,
+            length: 204,
+            evidence: "original US SLUS; complete original instruction body 0x8017C8FC..0x8017C9C8 including terminal delay slots; original JAL at 0x8017C5A0 in the qualified executable caller at 0x8017C548 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 944_584,
+            length: 68,
+            evidence: "original US SLUS; complete original instruction body 0x8017C9C8..0x8017CA0C including terminal delay slots; original JAL at 0x8017C5B4 in the qualified executable caller at 0x8017C548 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 944_652,
+            length: 132,
+            evidence: "original US SLUS; complete original instruction body 0x8017CA0C..0x8017CA90 including terminal delay slots; original JAL at 0x8017C5D8 in the qualified executable caller at 0x8017C548 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 944_784,
             length: 176,
             evidence: "original US SLUS; complete original instruction body 0x8017CA90..0x8017CB40 including return delay slots; original JAL at 0x8017BD00 in the qualified executable caller at 0x8017BC98 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 948_820,
+            length: 348,
+            evidence: "original US SLUS; complete original instruction body 0x8017DA54..0x8017DBB0 including terminal delay slots; original JAL at 0x8017AFB4 in the qualified executable caller at 0x8017AF0C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 949_912,
+            length: 220,
+            evidence: "original US SLUS; complete original instruction body 0x8017DE98..0x8017DF74 including terminal delay slots; original JAL at 0x8017DB94 in the qualified executable caller at 0x8017DA54 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 950_132,
@@ -710,14 +920,44 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017DF74..0x8017DFA0 including return delay slots; original JAL at 0x8017B384 in the qualified executable caller at 0x8017B330 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 950_176,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017DFA0..0x8017DFAC including terminal delay slots; original JAL at 0x8014B31C in the qualified executable caller at 0x8014B1A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 950_312,
+            length: 84,
+            evidence: "original US SLUS; complete original instruction body 0x8017E028..0x8017E07C including terminal delay slots; original JAL at 0x8014B30C in the qualified executable caller at 0x8014B1A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 950_396,
+            length: 56,
+            evidence: "original US SLUS; complete original instruction body 0x8017E07C..0x8017E0B4 including terminal delay slots; original JAL at 0x8014B314 in the qualified executable caller at 0x8014B1A4 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 950_452,
             length: 48,
             evidence: "original US SLUS; complete original instruction body 0x8017E0B4..0x8017E0E4 including return delay slot; original JAL at 0x8014AF24 in the qualified executable caller at 0x8014AEE0 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 950_500,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E0E4..0x8017E0F0 including terminal delay slots; original JAL at 0x8017E048 in the qualified executable caller at 0x8017E028 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 950_516,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E0F4..0x8017E100 including terminal delay slots; original JAL at 0x8017E08C in the qualified executable caller at 0x8017E07C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 950_532,
             length: 12,
             evidence: "original US SLUS; complete original instruction body 0x8017E104..0x8017E110 including terminal delay slot; original JAL at 0x8017E0BC in the qualified executable caller at 0x8017E0B4 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; original in-body constants bind the external terminal jump; BIOS behavior and returns remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 950_636,
+            length: 136,
+            evidence: "original US SLUS; complete original instruction body 0x8017E16C..0x8017E1F4 including terminal delay slots; original JAL at 0x8017E050 in the qualified executable caller at 0x8017E028 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns; original incoming return address is saved and restored through absolute word 0x8018B2CC; conditional return identity assumes this cell is preserved by calls and dynamic stores, no aliasing write and no reentrancy; original SP is unchanged; the cell is not classified; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 950_820,
@@ -730,6 +970,36 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017E2B4..0x8017E31C including return delay slot; original JAL at 0x8017E0CC in the qualified executable caller at 0x8017E0B4 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; indirect call targets and selectors remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 951_100,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E33C..0x8017E348 including terminal delay slots; original JAL at 0x80174898 in the qualified executable caller at 0x80174848 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 951_156,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E374..0x8017E380 including terminal delay slots; original JAL at 0x80177968 in the qualified executable caller at 0x80177914 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 951_172,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E384..0x8017E390 including terminal delay slots; original JAL at 0x8017761C in the qualified executable caller at 0x80177614 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 951_236,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E3C4..0x8017E3D0 including terminal delay slots; original JAL at 0x8017C114 in the qualified executable caller at 0x8017BC98 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 951_252,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E3D4..0x8017E3E0 including terminal delay slots; original JAL at 0x8014AB18 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 951_268,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017E3E4..0x8017E3F0 including terminal delay slots; original JAL at 0x8017545C in the qualified executable caller at 0x801753EC conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 953_564,
             length: 12,
             evidence: "original US SLUS; complete original instruction body 0x8017ECDC..0x8017ECE8 including terminal delay slot; original JAL at 0x8014AF3C in the qualified executable caller at 0x8014AEE0 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; original in-body constants bind the external terminal jump; BIOS behavior and returns remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -740,9 +1010,79 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017ECEC..0x8017ECF8 including terminal delay slot; original JAL at 0x8017E274 in the qualified executable caller at 0x8017E224 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; original in-body constants bind the external terminal jump; BIOS behavior and returns remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 953_596,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ECFC..0x8017ED08 including terminal delay slots; original JAL at 0x8017AFAC in the qualified executable caller at 0x8017AF0C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_660,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED3C..0x8017ED48 including terminal delay slots; original JAL at 0x8014AD94 in the qualified executable caller at 0x8014AD28 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_676,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED4C..0x8017ED58 including terminal delay slots; original JAL at 0x8016BA70 in the qualified executable caller at 0x8016BA24 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_692,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED5C..0x8017ED68 including terminal delay slots; original JAL at 0x8016F4AC in the qualified executable caller at 0x8016F378 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_724,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED7C..0x8017ED88 including terminal delay slots; original JAL at 0x8014AD9C in the qualified executable caller at 0x8014AD28 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_740,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED8C..0x8017ED98 including terminal delay slots; original JAL at 0x8016BA80 in the qualified executable caller at 0x8016BA24 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_756,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017ED9C..0x8017EDA8 including terminal delay slots; original JAL at 0x8014B7C4 in the qualified executable caller at 0x8014B73C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_772,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017EDAC..0x8017EDB8 including terminal delay slots; original JAL at 0x8014B8D8 in the qualified executable caller at 0x8014B8B0 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_788,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017EDBC..0x8017EDC8 including terminal delay slots; original JAL at 0x8014B810 in the qualified executable caller at 0x8014B73C conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 953_804,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017EDCC..0x8017EDD8 including terminal delay slots; original JAL at 0x801746C0 in the qualified executable caller at 0x801746B8 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 954_044,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017EEBC..0x8017EEC8 including terminal delay slots; original JAL at 0x8014ADF0 in the qualified executable caller at 0x8014AD28 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 954_076,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017EEDC..0x8017EEE8 including terminal delay slots; original JAL at 0x801748AC in the qualified executable caller at 0x80174848 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 954_500,
+            length: 140,
+            evidence: "original US SLUS; complete original instruction body 0x8017F084..0x8017F110 including terminal delay slots; original JAL at 0x80174698 in the qualified executable caller at 0x80174668 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 954_828,
             length: 48,
             evidence: "original US SLUS; complete original instruction body 0x8017F1CC..0x8017F1FC including return delay slot; original JAL at 0x801746E8 in the qualified executable caller at 0x801746E0 conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 954_876,
+            length: 128,
+            evidence: "original US SLUS; complete original instruction body 0x8017F1FC..0x8017F27C including terminal delay slots; original JAL at 0x8017F0C8 in the qualified executable caller at 0x8017F084 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 955_004,
@@ -755,9 +1095,24 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8017F37C..0x8017F388 including terminal delay slot; original JAL at 0x8017F1DC in the qualified executable caller at 0x8017F1CC conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; original in-body constants bind the external terminal jump; BIOS behavior and returns remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 955_276,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017F38C..0x8017F398 including terminal delay slots; original JAL at 0x8017F0DC in the qualified executable caller at 0x8017F084 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 955_292,
+            length: 12,
+            evidence: "original US SLUS; complete original instruction body 0x8017F39C..0x8017F3A8 including terminal delay slots; original JAL at 0x8017F254 in the qualified executable caller at 0x8017F1FC conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns with the caller stack and saved return storage preserved; original in-body constants bind external terminal jumps; BIOS behavior and returns remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
             offset: 955_308,
             length: 12,
             evidence: "original US SLUS; complete original instruction body 0x8017F3AC..0x8017F3B8 including terminal delay slot; original JAL at 0x8017F294 in the qualified executable caller at 0x8017F27C conditionally enters this body; complete original word and control-flow review and captured resident bytes reconcile; structural call continuations assume returns; original in-body constants bind the external terminal jump; BIOS behavior and returns remain unqualified; no matching callee ELF is claimed; exact whole executable identity; neighboring functions, data and referenced callees excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 955_364,
+            length: 104,
+            evidence: "original US SLUS; complete original instruction body 0x8017F3E4..0x8017F44C including terminal delay slots; original JAL at 0x8017F0B0 in the qualified executable caller at 0x8017F084 conditionally enters this body; acyclic original caller dependencies, complete raw word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume ordinary returns; original incoming return address is saved and restored through absolute word 0x8018B2EC; conditional return identity assumes this cell is preserved by calls and dynamic stores, no aliasing write and no reentrancy; original SP is unchanged; the cell is not classified; indirect call targets and behavior remain unqualified; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
             offset: 955_708,
@@ -1825,7 +2180,169 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
     )
 }
 
-fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<NontextRange>> {
+fn pl025_decoded_nontext_fields(entry: Entry, data: &[u8]) -> &'static [(usize, usize)] {
+    if entry.index != 3
+        || entry.offset != 71_680
+        || entry.ram_ptr != 0x8003_b800
+        || entry.check_word != 408_916
+        || data.len() != 332_447
+        || sha256_hex(data) != "d58be9091c72afa0aa758f6b9e1a3aa542dd1ffdae693f805fbca1f271ec8744"
+    {
+        return &[];
+    }
+    &[
+        (0, 12),
+        (16, 20),
+        (144, 6_988),
+        (6_992, 19_308),
+        (19_312, 24_800),
+        (24_804, 26_790),
+        (26_792, 26_800),
+        (26_804, 27_668),
+        (27_672, 29_140),
+        (29_144, 29_982),
+        (29_984, 29_992),
+        (29_996, 32_314),
+        (32_316, 32_324),
+        (32_328, 34_023),
+        (34_024, 34_032),
+        (34_036, 34_849),
+        (34_852, 34_860),
+        (34_864, 39_126),
+        (39_128, 39_136),
+        (39_140, 41_130),
+        (41_132, 41_140),
+        (41_144, 43_855),
+        (43_856, 43_864),
+        (43_868, 45_334),
+        (45_336, 45_344),
+        (45_348, 47_838),
+        (47_840, 47_848),
+        (47_852, 48_848),
+        (48_852, 50_445),
+        (50_448, 50_456),
+        (50_460, 52_863),
+        (52_864, 52_872),
+        (52_876, 55_053),
+        (55_056, 55_064),
+        (55_068, 56_098),
+        (56_100, 56_108),
+        (56_112, 57_711),
+        (57_712, 57_720),
+        (57_724, 59_625),
+        (59_628, 59_636),
+        (59_640, 61_414),
+        (61_416, 61_424),
+        (61_428, 62_183),
+        (62_184, 62_192),
+        (62_196, 63_679),
+        (63_680, 63_748),
+        (75_900, 80_004),
+        (80_008, 112_836),
+        (112_840, 127_876),
+        (127_880, 133_360),
+        (133_364, 136_218),
+        (136_220, 136_228),
+        (136_232, 139_266),
+        (139_268, 139_276),
+        (139_280, 144_115),
+        (144_116, 144_124),
+        (144_128, 147_276),
+        (147_280, 151_462),
+        (151_464, 151_472),
+        (151_476, 154_555),
+        (154_556, 154_564),
+        (154_568, 157_383),
+        (157_384, 157_392),
+        (157_396, 160_144),
+        (160_148, 167_522),
+        (167_524, 167_532),
+        (167_536, 172_347),
+        (172_348, 172_356),
+        (172_360, 174_687),
+        (174_688, 174_696),
+        (174_700, 181_629),
+        (181_632, 181_640),
+        (181_644, 184_683),
+        (184_684, 184_692),
+        (184_696, 186_551),
+        (186_552, 186_560),
+        (186_564, 188_360),
+        (188_364, 190_623),
+        (190_624, 190_632),
+        (190_636, 192_460),
+        (192_464, 196_613),
+        (196_616, 196_624),
+        (196_628, 200_021),
+        (200_024, 200_032),
+        (200_036, 203_778),
+        (203_780, 203_788),
+        (203_792, 209_507),
+        (209_508, 209_516),
+        (209_520, 214_962),
+        (214_964, 214_972),
+        (214_976, 217_539),
+        (217_540, 217_548),
+        (217_552, 224_301),
+        (224_304, 224_312),
+        (224_316, 228_592),
+        (228_596, 233_026),
+        (233_028, 233_036),
+        (233_040, 237_689),
+        (274_260, 281_104),
+        (281_108, 285_212),
+        (285_216, 294_792),
+        (294_796, 298_900),
+        (298_904, 319_424),
+        (319_428, 319_436),
+        (319_440, 322_611),
+        (322_612, 322_620),
+        (322_624, 325_916),
+        (325_920, 327_821),
+        (327_824, 327_832),
+        (327_836, 330_673),
+        (330_676, 330_684),
+        (330_688, 340_417),
+        (340_420, 340_428),
+        (340_432, 349_510),
+        (349_512, 349_520),
+        (349_524, 351_677),
+        (351_680, 351_688),
+        (351_692, 353_783),
+        (353_784, 353_792),
+        (353_796, 355_649),
+        (355_652, 355_660),
+        (355_664, 358_170),
+        (358_172, 358_180),
+        (358_184, 360_100),
+        (360_104, 362_670),
+        (362_672, 362_680),
+        (362_684, 366_034),
+        (366_036, 366_044),
+        (366_048, 369_025),
+        (369_028, 369_036),
+        (369_040, 376_714),
+        (376_716, 376_724),
+        (376_728, 381_710),
+        (381_712, 381_720),
+        (381_724, 383_944),
+        (383_948, 386_038),
+        (386_040, 386_048),
+        (386_052, 388_196),
+        (388_200, 391_622),
+        (391_624, 391_632),
+        (391_636, 392_812),
+        (392_816, 396_131),
+        (396_132, 396_140),
+        (396_144, 397_233),
+    ]
+}
+
+fn compression_metadata_ranges(
+    data: &[u8],
+    check_word: u32,
+    literal_fields: &[(usize, usize)],
+) -> Option<Vec<NontextRange>> {
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
         return None;
@@ -1837,6 +2354,13 @@ fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nonte
         length: 4,
         evidence,
     }];
+    let track_literals = !literal_fields.is_empty();
+    let mut typed = vec![false; if track_literals { expected } else { 0 }];
+    for &(start, end) in literal_fields {
+        typed.get_mut(start..end)?.fill(true);
+    }
+    let mut origins = Vec::new();
+    let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
     let mut at = 6;
     let mut decoded = 0_usize;
     loop {
@@ -1846,11 +2370,12 @@ fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nonte
         let terminal = control == 0xff;
         let literal = control & 0x10 != 0;
         let mut count = 0;
+        let mut distance = 0;
         if !terminal {
             if !literal {
                 let low = usize::from(*data.get(at)?);
                 at += 1;
-                let distance = 2048 - ((usize::from(control & 0xe0) << 3) | low);
+                distance = 2048 - ((usize::from(control & 0xe0) << 3) | low);
                 if distance > decoded {
                     return None;
                 }
@@ -1876,17 +2401,54 @@ fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nonte
             });
         }
         if terminal {
-            return (at == data.len() && decoded == expected).then_some(ranges);
+            if at != data.len() || decoded != expected {
+                return None;
+            }
+            break;
+        }
+        let end = decoded.checked_add(count)?;
+        if end > expected {
+            return None;
         }
         if literal {
             data.get(at..at.checked_add(count)?)?;
+        }
+        if track_literals {
+            for (index, &known) in typed.get(decoded..end)?.iter().enumerate() {
+                let origin = if literal {
+                    at + index
+                } else {
+                    *origins.get(origins.len().checked_sub(distance)?)?
+                };
+                let role = literal_roles.get_mut(origin)?;
+                *role = Some(role.unwrap_or(true) && known);
+                origins.push(origin);
+            }
+        }
+        if literal {
             at += count;
         }
-        decoded = decoded.checked_add(count)?;
-        if decoded > expected {
-            return None;
-        }
+        decoded = end;
     }
+    let evidence = "original US PL025 entry 3; literal origins whose every decoded use is in reviewed root-relative words, root-0 palette fields or 99 image headers and consumed mode-1 words/mode-2 tokens; original GAME 0x801C12F0/0x801C1308/0x801C13DC and SLUS 0x80166C48/0x8014E6D0/0x8014E7F8/0x8014E8FC; exact archive, entry, mode, load, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires all decoded aliases to have reviewed roles; opaque aliases, mode-2 prefixes, allocation tails and other fields excluded; no runtime selection, transfer, upload, display, rasterized-text absence or safe-edit claim";
+    let mut at = 0;
+    while at < literal_roles.len() {
+        if literal_roles[at] != Some(true) {
+            at += 1;
+            continue;
+        }
+        let start = at;
+        while at < literal_roles.len() && literal_roles[at] == Some(true) {
+            at += 1;
+        }
+        ranges.push(NontextRange {
+            offset: start,
+            length: at - start,
+            evidence,
+        });
+    }
+    ranges.sort_by_key(|range| range.offset);
+    Some(ranges)
 }
 
 /// Reviewed payload fields and instruction bodies; no display claim.
@@ -1899,7 +2461,11 @@ pub fn payload_nontext_ranges(
         return None;
     }
     if entry.transfer_mode == 1 {
-        return compression_metadata_ranges(data, entry.check_word);
+        return compression_metadata_ranges(
+            data,
+            entry.check_word,
+            pl025_decoded_nontext_fields(entry, data),
+        );
     }
     if entry.transfer_mode == 0 && entry.ram_ptr == 0x8010_4000 {
         return area_surface_field_ranges(data, entry.check_word);

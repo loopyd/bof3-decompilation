@@ -84,10 +84,56 @@ not establish bounds enforced by the original decoder or validate destination RA
 
 Only the four-byte checkword, token controls, reference displacement operands,
 optional length extensions and final `FF` terminator become known nontext.
-Literal data and skipped prefix bytes `[4,6)` remain unresolved. References may
+Literal data and skipped prefix bytes `[4,6)` remain unresolved except for the
+source-bound PL025 fields below. References may
 overlap earlier output. Neither those references nor their literal dependencies
 establish the roles of decoded bytes, the absence of rasterized text or runtime
 behavior. Other transfer modes retain their existing classification.
+
+## Compressed PL025 numeric and image fields
+
+For original US `BIN/PLCHAR/PL025.EMI` entry 3, coverage also recognizes stored
+literals whose decoded uses all have reviewed numeric or encoded-image roles.
+The rule requires transfer mode 1, file offset 71680, destination `0x8003B800`,
+checkword 408916, size 332447 and payload SHA-256
+`d58be9091c72afa0aa758f6b9e1a3aa542dd1ffdae693f805fbca1f271ec8744`.
+It also requires the original whole archive identity and a complete checked
+compression walk.
+
+| Decoded interval | Consumed numeric field |
+| --- | --- |
+| `[0,12)` | Three root-relative words |
+| `[16,20)` | Root-0 palette-directory offset |
+| `[63680,63684)` | Palette-slot-0 record offset |
+| `[63684,63748)` | Palette record of 32 halfwords |
+
+GAME `0x801C12F0` reads the three root words and `0x801C1308` publishes the
+selected root. For root 0 and palette slot 0, its original JAL at `0x801C13DC`
+calls `SLUS_004.22@0x80166C48`, which reads the palette-directory and record
+offsets, then copies 32 halfwords to A0 and its `+0x4000` mirror.
+
+The reviewed image fields cover 99 records consumed by
+`SLUS_004.22@0x8014E6D0` and its helpers `0x8014E7F8` and `0x8014E8FC`.
+Each record has an eight-byte width, height and mode header. The 27 mode-1
+records store six five-bit values per four-byte word. Coverage includes every
+consumed word, including its unused bits and final unused values, without
+assigning those bits a meaning. The 72 mode-2 records have a four-byte opaque
+prefix followed by flags, literals and reference tokens. Coverage includes the
+consumed tokens and excludes each prefix and allocation tail.
+
+The compression walk records each literal's physical source offset and copies
+that origin through overlapping references. A stored literal becomes known
+nontext only when every decoded occurrence lies in these reviewed fields.
+An opaque occurrence excludes the whole origin, even when another occurrence
+has a known role. The 144 decoded field intervals therefore admit 250591 stored
+literal bytes. Origins `[8,11)`, `[24,27)` and `[43904,43908)` still have opaque
+uses and remain unresolved.
+
+Root image tables, selection data, programs, cells, other literal bytes and
+skipped outer prefix bytes retain their prior status. These fields establish
+stored numeric and encoded-image representation. Runtime selection, residency,
+transfer, upload, CLUT, display and safe editing remain unqualified. Images can
+contain rasterized text.
 
 ## Counted sprite metadata coverage
 
@@ -928,6 +974,109 @@ ELF, observed execution or referenced-data classification follows.
 | `[0xE5690,0xE56F4)` | `[0x8017B690,0x8017B6F4)` | 100 | `0x8014E264` | `0x8014E22C` |
 | `[0xE6548,0xE67D8)` | `[0x8017C548,0x8017C7D8)` | 656 | `0x8017BA94` | `0x8017BA40` |
 | `[0xE6A90,0xE6B40)` | `[0x8017CA90,0x8017CB40)` | 176 | `0x8017BD00` | `0x8017BC98` |
+
+These additional bodies have acyclic caller dependencies rooted in the preceding
+profile. Every original instruction, branch, terminal delay and return path
+matches the managed decoder and retained RAM. Call continuations assume ordinary
+returns with saved return storage preserved. Seven indirect calls retain
+unqualified targets and behavior. Twenty-three bodies end with register jumps
+bound by original in-body constants to external BIOS entries. BIOS behavior and
+returns remain unverified.
+
+The bodies at `0x8017E16C..0x8017E1F4` and `0x8017F3E4..0x8017F44C` save and
+restore incoming return addresses through absolute words `0x8018B2CC` and
+`0x8018B2EC`. Their original SP is unchanged. Conditional return identity assumes
+that calls and dynamic stores preserve each word, with no aliasing write or
+reentrant execution. The words themselves remain unclassified. These are
+stored-instruction facts, without matching callee ELF, observed entry, valid
+arguments, callee behavior or resource-safety acceptance.
+
+| File interval | Runtime interval | Bytes | Original JAL | Qualified caller |
+| --- | --- | ---: | --- | --- |
+| `[0xCDE88,0xCDEA0)` | `[0x80163E88,0x80163EA0)` | 24 | `0x80163974` | `0x801638B0` |
+| `[0xD2960,0xD2BF0)` | `[0x80168960,0x80168BF0)` | 656 | `0x8016F47C` | `0x8016F378` |
+| `[0xD2CE0,0xD2D28)` | `[0x80168CE0,0x80168D28)` | 72 | `0x8016ED38` | `0x8016E8A4` |
+| `[0xD2E68,0xD2E94)` | `[0x80168E68,0x80168E94)` | 44 | `0x80168B48` | `0x80168960` |
+| `[0xD2E94,0xD2EC0)` | `[0x80168E94,0x80168EC0)` | 44 | `0x80168B38` | `0x80168960` |
+| `[0xD3094,0xD30B8)` | `[0x80169094,0x801690B8)` | 36 | `0x8016BA60` | `0x8016BA24` |
+| `[0xD4B8C,0xD4D08)` | `[0x8016AB8C,0x8016AD08)` | 380 | `0x8016AD38` | `0x8016AD2C` |
+| `[0xD5A24,0xD5AA0)` | `[0x8016BA24,0x8016BAA0)` | 124 | `0x8016BA0C` | `0x8016BA04` |
+| `[0xD88A4,0xD8D9C)` | `[0x8016E8A4,0x8016ED9C)` | 1272 | `0x8016E88C` | `0x8016E80C` |
+| `[0xD8E1C,0xD8EA8)` | `[0x8016EE1C,0x8016EEA8)` | 140 | `0x8016E944` | `0x8016E8A4` |
+| `[0xD8EA8,0xD9378)` | `[0x8016EEA8,0x8016F378)` | 1232 | `0x8016ED00` | `0x8016E8A4` |
+| `[0xD9378,0xD9514)` | `[0x8016F378,0x8016F514)` | 412 | `0x8016ED20` | `0x8016E8A4` |
+| `[0xD95C8,0xD9698)` | `[0x8016F5C8,0x8016F698)` | 208 | `0x8016F580` | `0x8016F514` |
+| `[0xDAFE8,0xDB014)` | `[0x80170FE8,0x80171014)` | 44 | `0x80173CFC` | `0x80173CB0` |
+| `[0xDB014,0xDB02C)` | `[0x80171014,0x8017102C)` | 24 | `0x80173CE0` | `0x80173CB0` |
+| `[0xDC9D0,0xDCF10)` | `[0x801729D0,0x80172F10)` | 1344 | `0x8016ABAC` | `0x8016AB8C` |
+| `[0xDD918,0xDDC20)` | `[0x80173918,0x80173C20)` | 776 | `0x80173900` | `0x8017389C` |
+| `[0xDE08C,0xDE354)` | `[0x8017408C,0x80174354)` | 712 | `0x80173F38` | `0x80173CB0` |
+| `[0xDE914,0xDE944)` | `[0x80174914,0x80174944)` | 48 | `0x8016B180` | `0x8016B100` |
+| `[0xDE944,0xDE974)` | `[0x80174944,0x80174974)` | 48 | `0x801690A0` | `0x80169094` |
+| `[0xDE974,0xDE9A8)` | `[0x80174974,0x801749A8)` | 52 | `0x8016B14C` | `0x8016B100` |
+| `[0xDEA38,0xDEA48)` | `[0x80174A38,0x80174A48)` | 16 | `0x8017631C` | `0x801761E8` |
+| `[0xDEA60,0xDEA7C)` | `[0x80174A60,0x80174A7C)` | 28 | `0x8017DA64` | `0x8017DA54` |
+| `[0xDF4F4,0xDF504)` | `[0x801754F4,0x80175504)` | 16 | `0x801781E0` | `0x80178138` |
+| `[0xDF504,0xDF514)` | `[0x80175504,0x80175514)` | 16 | `0x8017801C` | `0x80177F1C` |
+| `[0xDF524,0xDF534)` | `[0x80175524,0x80175534)` | 16 | `0x80177FD0` | `0x80177F1C` |
+| `[0xDF5A0,0xDF5C0)` | `[0x801755A0,0x801755C0)` | 32 | `0x80178000` | `0x80177F1C` |
+| `[0xDF7E8,0xDF914)` | `[0x801757E8,0x80175914)` | 300 | `0x80177F7C` | `0x80177F1C` |
+| `[0xE0BD8,0xE0CB8)` | `[0x80176BD8,0x80176CB8)` | 224 | `0x80176300` | `0x801761E8` |
+| `[0xE1C68,0xE1CD4)` | `[0x80177C68,0x80177CD4)` | 108 | `0x80177664` | `0x80177634` |
+| `[0xE1CD4,0xE1D08)` | `[0x80177CD4,0x80177D08)` | 52 | `0x801777F8` | `0x80177634` |
+| `[0xE1F1C,0xE20E8)` | `[0x80177F1C,0x801780E8)` | 460 | `0x80178200` | `0x80178138` |
+| `[0xE5438,0xE5560)` | `[0x8017B438,0x8017B560)` | 296 | `0x8017B590` | `0x8017B560` |
+| `[0xE67D8,0xE6830)` | `[0x8017C7D8,0x8017C830)` | 88 | `0x8017C5CC` | `0x8017C548` |
+| `[0xE6830,0xE68FC)` | `[0x8017C830,0x8017C8FC)` | 204 | `0x8017C568` | `0x8017C548` |
+| `[0xE68FC,0xE69C8)` | `[0x8017C8FC,0x8017C9C8)` | 204 | `0x8017C5A0` | `0x8017C548` |
+| `[0xE69C8,0xE6A0C)` | `[0x8017C9C8,0x8017CA0C)` | 68 | `0x8017C5B4` | `0x8017C548` |
+| `[0xE6A0C,0xE6A90)` | `[0x8017CA0C,0x8017CA90)` | 132 | `0x8017C5D8` | `0x8017C548` |
+| `[0xE7A54,0xE7BB0)` | `[0x8017DA54,0x8017DBB0)` | 348 | `0x8017AFB4` | `0x8017AF0C` |
+| `[0xE7E98,0xE7F74)` | `[0x8017DE98,0x8017DF74)` | 220 | `0x8017DB94` | `0x8017DA54` |
+| `[0xE7FA0,0xE7FAC)` | `[0x8017DFA0,0x8017DFAC)` | 12 | `0x8014B31C` | `0x8014B1A4` |
+| `[0xE8028,0xE807C)` | `[0x8017E028,0x8017E07C)` | 84 | `0x8014B30C` | `0x8014B1A4` |
+| `[0xE807C,0xE80B4)` | `[0x8017E07C,0x8017E0B4)` | 56 | `0x8014B314` | `0x8014B1A4` |
+| `[0xE80E4,0xE80F0)` | `[0x8017E0E4,0x8017E0F0)` | 12 | `0x8017E048` | `0x8017E028` |
+| `[0xE80F4,0xE8100)` | `[0x8017E0F4,0x8017E100)` | 12 | `0x8017E08C` | `0x8017E07C` |
+| `[0xE816C,0xE81F4)` | `[0x8017E16C,0x8017E1F4)` | 136 | `0x8017E050` | `0x8017E028` |
+| `[0xE833C,0xE8348)` | `[0x8017E33C,0x8017E348)` | 12 | `0x80174898` | `0x80174848` |
+| `[0xE8374,0xE8380)` | `[0x8017E374,0x8017E380)` | 12 | `0x80177968` | `0x80177914` |
+| `[0xE8384,0xE8390)` | `[0x8017E384,0x8017E390)` | 12 | `0x8017761C` | `0x80177614` |
+| `[0xE83C4,0xE83D0)` | `[0x8017E3C4,0x8017E3D0)` | 12 | `0x8017C114` | `0x8017BC98` |
+| `[0xE83D4,0xE83E0)` | `[0x8017E3D4,0x8017E3E0)` | 12 | `0x8014AB18` | `0x8014AAC8` |
+| `[0xE83E4,0xE83F0)` | `[0x8017E3E4,0x8017E3F0)` | 12 | `0x8017545C` | `0x801753EC` |
+| `[0xE8CFC,0xE8D08)` | `[0x8017ECFC,0x8017ED08)` | 12 | `0x8017AFAC` | `0x8017AF0C` |
+| `[0xE8D3C,0xE8D48)` | `[0x8017ED3C,0x8017ED48)` | 12 | `0x8014AD94` | `0x8014AD28` |
+| `[0xE8D4C,0xE8D58)` | `[0x8017ED4C,0x8017ED58)` | 12 | `0x8016BA70` | `0x8016BA24` |
+| `[0xE8D5C,0xE8D68)` | `[0x8017ED5C,0x8017ED68)` | 12 | `0x8016F4AC` | `0x8016F378` |
+| `[0xE8D7C,0xE8D88)` | `[0x8017ED7C,0x8017ED88)` | 12 | `0x8014AD9C` | `0x8014AD28` |
+| `[0xE8D8C,0xE8D98)` | `[0x8017ED8C,0x8017ED98)` | 12 | `0x8016BA80` | `0x8016BA24` |
+| `[0xE8D9C,0xE8DA8)` | `[0x8017ED9C,0x8017EDA8)` | 12 | `0x8014B7C4` | `0x8014B73C` |
+| `[0xE8DAC,0xE8DB8)` | `[0x8017EDAC,0x8017EDB8)` | 12 | `0x8014B8D8` | `0x8014B8B0` |
+| `[0xE8DBC,0xE8DC8)` | `[0x8017EDBC,0x8017EDC8)` | 12 | `0x8014B810` | `0x8014B73C` |
+| `[0xE8DCC,0xE8DD8)` | `[0x8017EDCC,0x8017EDD8)` | 12 | `0x801746C0` | `0x801746B8` |
+| `[0xE8EBC,0xE8EC8)` | `[0x8017EEBC,0x8017EEC8)` | 12 | `0x8014ADF0` | `0x8014AD28` |
+| `[0xE8EDC,0xE8EE8)` | `[0x8017EEDC,0x8017EEE8)` | 12 | `0x801748AC` | `0x80174848` |
+| `[0xE9084,0xE9110)` | `[0x8017F084,0x8017F110)` | 140 | `0x80174698` | `0x80174668` |
+| `[0xE91FC,0xE927C)` | `[0x8017F1FC,0x8017F27C)` | 128 | `0x8017F0C8` | `0x8017F084` |
+| `[0xE938C,0xE9398)` | `[0x8017F38C,0x8017F398)` | 12 | `0x8017F0DC` | `0x8017F084` |
+| `[0xE939C,0xE93A8)` | `[0x8017F39C,0x8017F3A8)` | 12 | `0x8017F254` | `0x8017F1FC` |
+| `[0xE93E4,0xE944C)` | `[0x8017F3E4,0x8017F44C)` | 104 | `0x8017F0B0` | `0x8017F084` |
+
+## Guarded executable switch coverage
+
+For the exact original US `SLUS_004.22`, coverage recognizes the complete
+instruction body `0x80175C60..0x801761E8` and its separate five-word table at
+`0x8014A354..0x8014A368`. A qualified original call at `0x80176344` enters the
+body. The unsigned selector-minus-one guard accepts indices 0 through 4 before
+the scaled table load and register jump. All five original targets remain
+inside the complete body, and the load and jump delay slots reconcile.
+
+The 1416 instruction bytes and 20 numeric table bytes have separate records.
+Call continuations assume ordinary returns with the caller's stack and saved
+return storage preserved. Dynamic stores must not alias that storage. This
+classification does not establish actual execution, table immutability,
+hardware progress, argument validity or callee and resource semantics.
 
 ## Executable geometry table coverage
 
