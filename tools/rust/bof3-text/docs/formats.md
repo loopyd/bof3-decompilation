@@ -112,6 +112,19 @@ selected root. For root 0 and palette slot 0, its original JAL at `0x801C13DC`
 calls `SLUS_004.22@0x80166C48`, which reads the palette-directory and record
 offsets, then copies 32 halfwords to A0 and its `+0x4000` mirror.
 
+The original helper `SLUS_004.22@0x8014DC08..0x8014DD3C` reads each root's
+image-section word, adds the root base, loads a u32 by image index, adds that
+table base and queues the resulting record pointer at `0x80145A04`.
+The following finite directory entries point to the reviewed image records.
+The indices describe conditional alternatives; actual PL025 selection and queue
+capacity remain unqualified.
+
+| Root | Image-section word | Image-directory words | Finite indices |
+| --- | --- | --- | --- |
+| 0 | `[12,16)` | `[28,144)` | 0 through 28 |
+| 1 | `[75736,75740)` | `[75752,75900)` | 0 through 36 |
+| 2 | `[274112,274116)` | `[274128,274260)` | 0 through 32 |
+
 The reviewed image fields cover 99 records consumed by
 `SLUS_004.22@0x8014E6D0` and its helpers `0x8014E7F8` and `0x8014E8FC`.
 Each record has an eight-byte width, height and mode header. The 27 mode-1
@@ -125,11 +138,11 @@ The compression walk records each literal's physical source offset and copies
 that origin through overlapping references. A stored literal becomes known
 nontext only when every decoded occurrence lies in these reviewed fields.
 An opaque occurrence excludes the whole origin, even when another occurrence
-has a known role. The 144 decoded field intervals therefore admit 250591 stored
-literal bytes. Origins `[8,11)`, `[24,27)` and `[43904,43908)` still have opaque
+has a known role. The 145 decoded field intervals therefore admit 250914 stored
+literal bytes. Origins `[24,27)` and `[43904,43908)` still have opaque
 uses and remain unresolved.
 
-Root image tables, selection data, programs, cells, other literal bytes and
+Selection data, programs, cells, other literal bytes and
 skipped outer prefix bytes retain their prior status. These fields establish
 stored numeric and encoded-image representation. Runtime selection, residency,
 transfer, upload, CLUT, display and safe editing remain unqualified. Images can
@@ -185,12 +198,21 @@ read and the relative header offset used to find it. Unused header fields remain
 unresolved. These stored extents do not establish natural visitation of every cell
 or a runtime bound on the caller's coordinates.
 
-The byte-grid pointer at header bytes `[20,22)` is consumed by `0x80154094`.
-The pointed-to bytes remain unresolved. Conditional reads of subsequent packed
-words depend on entity fields whose producers remain unqualified. Those words,
-unselected records, gaps and tails stay unresolved. The rule does not establish
-complete tables, physical texture or palette sources, rendering, safe editing or
-the absence of rasterized text.
+The producer at `0x80154094..0x801540F8` multiplies header bytes `[20,22)`
+by four, adds the payload base and publishes the byte-grid pointer at
+`0x8014931C`. The complete getter at `0x80166CB0..0x80166CEC` returns the
+unchanged byte at `base + y * width + x`. Its original GAME caller uses numeric
+masks and comparisons. For each declared grid byte, finite coordinates
+`x = index % width` and `y = index / width` select that byte and fit signed 16
+bits. Coverage therefore includes the bounded `width * height` u8 grid under
+the same raw-entry gates. Previously classified fields retain their own records.
+This qualifies numeric storage without assigning terrain meaning or proving
+actual visitation and global caller-coordinate bounds.
+
+Conditional reads of subsequent packed words depend on entity fields whose
+producers remain unqualified. Those words, unselected records, gaps and tails
+stay unresolved. The rule does not establish complete tables, physical texture
+or palette sources, rendering, safe editing or the absence of rasterized text.
 
 ## Resident animation field coverage
 

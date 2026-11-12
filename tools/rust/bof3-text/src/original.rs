@@ -2126,7 +2126,8 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
     let grid = data.get(grid_offset..grid_end)?;
     let words_offset = grid_offset.checked_add(cells.div_ceil(2).checked_mul(4)?)?;
     let byte_grid = half(20)?.checked_mul(4)?;
-    data.get(byte_grid..byte_grid.checked_add(cells)?)?;
+    let byte_grid_end = byte_grid.checked_add(cells)?;
+    data.get(byte_grid..byte_grid_end)?;
 
     let mut spans = vec![(0, 4), (20, 22), (grid_offset, grid_end)];
     let mut ids: Vec<_> = grid
@@ -2168,16 +2169,41 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
         }
     }
     let evidence = "original US raw area surface dimensions, relative offsets, declared u16 cell IDs, nonzero-ID primary packed words and selected coordinate reads; original consumers 0x80154294..0x80154438, 0x80155560..0x801556FC and byte-grid pointer 0x80154094..0x801540F8; exact archive identity, checkword agreement and checked source bounds; unused headers, byte-grid contents, conditional sequential words, gaps and tails excluded; no natural visitation, full allocation, rendering or editing claim";
-    Some(
-        merged
-            .into_iter()
-            .map(|(offset, end)| NontextRange {
-                offset,
-                length: end - offset,
+    let mut ranges: Vec<_> = merged
+        .iter()
+        .map(|&(offset, end)| NontextRange {
+            offset,
+            length: end - offset,
+            evidence,
+        })
+        .collect();
+    let evidence = "original US raw area numeric u8 grid; header-relative offset at bytes 20..22 multiplied by four and published to 0x8014931C by original SLUS 0x80154094..0x801540F8; complete original getter 0x80166CB0..0x80166CEC returns unchanged byte at base+y*width+x and original GAME caller applies numeric masks/comparisons; finite declared-grid coordinates cover every width*height byte with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and checked source bounds; prior fields retain their own evidence; no global caller-coordinate bounds, natural visitation, terrain semantics, full allocation, rendering or editing claim";
+    let mut cursor = byte_grid;
+    for (start, end) in merged {
+        if cursor >= byte_grid_end {
+            break;
+        }
+        if end <= cursor {
+            continue;
+        }
+        if cursor < start {
+            ranges.push(NontextRange {
+                offset: cursor,
+                length: start.min(byte_grid_end) - cursor,
                 evidence,
-            })
-            .collect(),
-    )
+            });
+        }
+        cursor = cursor.max(end);
+    }
+    if cursor < byte_grid_end {
+        ranges.push(NontextRange {
+            offset: cursor,
+            length: byte_grid_end - cursor,
+            evidence,
+        });
+    }
+    ranges.sort_by_key(|range| range.offset);
+    Some(ranges)
 }
 
 fn pl025_decoded_nontext_fields(entry: Entry, data: &[u8]) -> &'static [(usize, usize)] {
@@ -2191,9 +2217,8 @@ fn pl025_decoded_nontext_fields(entry: Entry, data: &[u8]) -> &'static [(usize, 
         return &[];
     }
     &[
-        (0, 12),
-        (16, 20),
-        (144, 6_988),
+        (0, 20),
+        (28, 6_988),
         (6_992, 19_308),
         (19_312, 24_800),
         (24_804, 26_790),
@@ -2237,7 +2262,8 @@ fn pl025_decoded_nontext_fields(entry: Entry, data: &[u8]) -> &'static [(usize, 
         (62_184, 62_192),
         (62_196, 63_679),
         (63_680, 63_748),
-        (75_900, 80_004),
+        (75_736, 75_740),
+        (75_752, 80_004),
         (80_008, 112_836),
         (112_840, 127_876),
         (127_880, 133_360),
@@ -2289,7 +2315,8 @@ fn pl025_decoded_nontext_fields(entry: Entry, data: &[u8]) -> &'static [(usize, 
         (228_596, 233_026),
         (233_028, 233_036),
         (233_040, 237_689),
-        (274_260, 281_104),
+        (274_112, 274_116),
+        (274_128, 281_104),
         (281_108, 285_212),
         (285_216, 294_792),
         (294_796, 298_900),
@@ -2430,7 +2457,7 @@ fn compression_metadata_ranges(
         }
         decoded = end;
     }
-    let evidence = "original US PL025 entry 3; literal origins whose every decoded use is in reviewed root-relative words, root-0 palette fields or 99 image headers and consumed mode-1 words/mode-2 tokens; original GAME 0x801C12F0/0x801C1308/0x801C13DC and SLUS 0x80166C48/0x8014E6D0/0x8014E7F8/0x8014E8FC; exact archive, entry, mode, load, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires all decoded aliases to have reviewed roles; opaque aliases, mode-2 prefixes, allocation tails and other fields excluded; no runtime selection, transfer, upload, display, rasterized-text absence or safe-edit claim";
+    let evidence = "original US PL025 entry 3; literal origins whose every decoded use is in reviewed root and image-directory relative words, root-0 palette fields or 99 image headers and consumed mode-1 words/mode-2 tokens; original GAME 0x801C12F0/0x801C1308/0x801C13DC and SLUS 0x80166C48/0x8014DC08/0x8014E6D0/0x8014E7F8/0x8014E8FC; exact archive, entry, mode, load, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires all decoded aliases to have reviewed roles; opaque aliases, mode-2 prefixes, allocation tails and other fields excluded; no runtime selection, transfer, upload, display, rasterized-text absence or safe-edit claim";
     let mut at = 0;
     while at < literal_roles.len() {
         if literal_roles[at] != Some(true) {
