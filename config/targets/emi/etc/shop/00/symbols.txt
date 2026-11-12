@@ -164,6 +164,7 @@ func_801D7080 = 0x801D7080;
 rebuildPanelRecordTable = 0x801D7208;
 func_801D7344 = 0x801D7344;
 func_801D7380 = 0x801D7380;
+drawShopSlotListThenStepSlotCursorAndAcceptOrCancel = 0x801D7444;
 drawShopSlotListThenChargeOnConfirm = 0x801D7960;
 func_801D7AE4 = 0x801D7AE4;
 func_801D7B74 = 0x801D7B74;

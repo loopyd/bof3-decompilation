@@ -35,13 +35,12 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 extern void func_8014D290(void); /* @source 0x8014D290 @kind function */
 
 /* Sub-step emitter pair selected by the work object's byte 2 while it is below
- * three, the following transform step, and the GTE matrix stack pop. The emitter
- * 0x801F13D4 is still an asm row in this target and keeps its raw name, while
- * 0x801F1250 and the transform step between them are lifted and carry their
- * reviewed spellings. */
+ * three, the projected draw step that follows them, and the GTE matrix stack
+ * pop: 0x801F1250 and 0x801F131C carry their reviewed spellings, and the draw
+ * step at 0x801F13D4 is the projected eight-triangle fan of the same overlay. */
 extern void projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordPositionDistanceBmagicMagic01500_801F1250(void);
 extern void projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C(void);
-void func_801F13D4(void);
+extern void drawProjectedTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusFourTimesWorkByte9BmagicMagic01500_801F13D4(void);
 
 /* @source 0x801F0C30
  * @behavior Work byte 1 handler, entry 3 of the four-entry handler run at
@@ -58,8 +57,8 @@ void func_801F13D4(void);
  *           main-executable service func_8014D290; it then re-reads the cell
  *           again and, when that object's byte 9 is non-zero and its unsigned
  *           byte 2 is below 4, runs the emitter selected by byte 2 below three
- *           (0x801F1250) or 0x801F131C, then the transform step 0x801F13D4 and
- *           the GTE matrix stack pop. It takes no arguments and returns
+ *           (0x801F1250) or 0x801F131C, then the projected draw step 0x801F13D4
+ *           and the GTE matrix stack pop. It takes no arguments and returns
  *           nothing; the frame keeps the table copy at 0x10 and $ra at 0x30, and
  *           the first cell load is hoisted above the frame adjustment. It reads
  *           and writes no other state.
@@ -87,7 +86,7 @@ void dispatchWorkByte2HandlerThenInvokeSharedServiceAndRunSubStepBelow4AndPopMat
         } else {
           projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C();
         }
-        func_801F13D4();
+        drawProjectedTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusFourTimesWorkByte9BmagicMagic01500_801F13D4();
         PopMatrix();
       }
     }

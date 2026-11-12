@@ -42,6 +42,7 @@ sources = [
     "src/bof3/bmagic/clearRecordPoolBytes0To2CopyRecordByte8SetByte9ToAClaimSlot69PublishWorkPointerCopy256HalfwordsSettingBit15Set80145988ToOneInvokeHelperAt102AdvanceWorkByte1BmagicMagic13103_801EEDEC.c",
     "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkScreenPairAtRadiusWorkByte6PlusRandomTintedByWorkByte5TimesFourteenOrByFourPlusRandomWhenByte1SetBmagicMagic13103_801F1844.c",
     "src/bof3/bmagic/drawSixteenGreyTexturedRingQuadsAtRadiusWorkWord14BetweenZ0AndZ400FromWorkByteBTexPageBmagicMagic13103_801F0DF4.c",
+    "src/bof3/bmagic/drawSemiTransTexturedRippledDiscOfEightRingsSixteenSectorsWithRadiiFromWorkByte9AndRippleFromWorkByteATintedByWorkByte5DBmagicMagic13103_801F06B4.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic131_03_symbols.c",

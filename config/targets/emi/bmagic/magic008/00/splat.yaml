@@ -286,8 +286,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F17BC.c'
     - '@behavior: Entry 0 of the nine-word handler table at 0x801EECC8 that 0x801F1708 copies to its frame and dispatches on scratchpad work byte 2. Calls helper 0x800AFF98, stores its returned byte in work byte 9, reloads the scratchpad work pointer and increments work byte 2.'
   - - 11268
-    - asm
-    - func_801F1804
+    - c
+    - invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1804
+    - '@source: src/bof3/bmagic/invokeReadinessHelperThenDecrementWorkByte9ThenInvokeBattleHelpersAndAdvanceWorkByte2OnZeroBmagicMagic00800_801F1804.c'
+    - '@behavior: Entry 1, entry 4 and entry 7 of the nine-entry handler run at 0x801EECC8 (0x801F17BC, 0x801F1804, 0x801F1880, 0x801F18F4, 0x801F1804, 0x801F1880, 0x801F18F4, 0x801F1804, 0x801F1880), which the dispatcher at 0x801F1708 copies into its own 0x40-byte frame and indexes with scratchpad work-object byte 2 before running the shared main-executable service func_8014D290 when work byte 0 is non-zero, so those three table words are the only incoming paths. Per frame it calls the shared readiness helper func_8014DAEC and discards the returned byte, then re-materializes the work-object pointer cell at 0x1F800044 and decrements that object''s unsigned byte 9 in place, testing the stored byte truncated to eight bits, so the rest of the body runs only when that countdown reaches zero. On zero it invokes the shared helper func_800AFC98 with the constant pair (2, 0), the 2 filling that test''s branch delay slot, then forwards the shared battle byte 0x80146384 to the helper func_800A9820, and finally re-reads the pointer cell and increments work byte 2 with a byte-width add, moving dispatch to the next entry of the run. The 0x18-byte frame only keeps $ra at 0x10 across the calls; nothing is returned and no other state is read or written. All 0x7C bytes equal the span at 0x801F1384, whose lift measured exact, so this body is written from that sibling''s statement order, operand forms and cell bindings.'
   - - 11392
     - c
     - setGlobalWorkByteBToFFAtWorkByte2State8ThenAdvanceWorkByte2WhenHelperReadyBmagicMagic00800_801F1880

@@ -6,7 +6,7 @@ raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100
 func_801F7200 = 0x801F7200;
 dispatchProgressHandlerScenarioScena1100_801F7288 = 0x801F7288;
 armEffectBankAndAdvanceStateScenarioScena1100_801F72C4 = 0x801F72C4;
-func_801F72E4 = 0x801F72E4;
+applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4 = 0x801F72E4;
 dispatchSecondaryStateScenarioScena1100_801F7748 = 0x801F7748;
 noopHandlerScenarioScena1100_801F7784 = 0x801F7784;
 func_801F778C = 0x801F778C;

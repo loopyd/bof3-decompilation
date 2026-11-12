@@ -168,6 +168,7 @@ sources = [
     "src/bof3/ui/drawShopInkPanel.c",
     "src/bof3/ui/stepNoteListSkillCursorThenRecordSelectionOrSubmitHighlightedSkill.c",
     "src/bof3/ui/drawShopSortOptionPanel.c",
+    "src/bof3/ui/drawShopSlotListThenStepSlotCursorAndAcceptOrCancel.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
