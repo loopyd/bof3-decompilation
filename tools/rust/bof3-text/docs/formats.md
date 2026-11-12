@@ -209,6 +209,19 @@ the same raw-entry gates. Previously classified fields retain their own records.
 This qualifies numeric storage without assigning terrain meaning or proving
 actual visitation and global caller-coordinate bounds.
 
+The complete original sampler at `0x80154ABC..0x80154ED0` constructs the main
+plane at payload offset 48. For integral coordinates, its `LW` at `0x80154B98`
+reads a whole numeric word at `base + 4 * (y * width + x)`. Finite coordinates
+cover each declared cell. Coverage includes `[48, 48 + 4 * width * height)` only
+when that complete extent fits the payload. It adds the complement of previously
+classified fields and preserves their records. A missing complete extent leaves
+the earlier profile intact and admits no prefix.
+
+The sampler also reads a separate signed-byte plane. Its initialization and
+ownership remain unresolved, so this rule excludes that plane and its header
+offset. Integral alternatives qualify the stored main words without proving
+neighbor safety for fractional coordinates, terrain meaning or actual visitation.
+
 Conditional reads of subsequent packed words depend on entity fields whose
 producers remain unqualified. Those words, unselected records, gaps and tails
 stay unresolved. The rule does not establish complete tables, physical texture
@@ -1084,6 +1097,27 @@ arguments, callee behavior or resource-safety acceptance.
 | `[0xE938C,0xE9398)` | `[0x8017F38C,0x8017F398)` | 12 | `0x8017F0DC` | `0x8017F084` |
 | `[0xE939C,0xE93A8)` | `[0x8017F39C,0x8017F3A8)` | 12 | `0x8017F254` | `0x8017F1FC` |
 | `[0xE93E4,0xE944C)` | `[0x8017F3E4,0x8017F44C)` | 104 | `0x8017F0B0` | `0x8017F084` |
+
+## Executable numeric-sampler instruction coverage
+
+The exact original US executable qualifies these complete instruction bodies.
+Original GAME `JAL` at `0x801BB774` calls the wrapper at `0x80154F78`.
+Retained return observations at `0x801BB77C` bind that call arm. The wrapper's
+original calls at `0x80154F94` and `0x80154FA4` reach the other two bodies.
+
+| File offsets | Runtime addresses | Bytes |
+| --- | --- | ---: |
+| `[780988,782032)` | `[0x80154ABC,0x80154ED0)` | 1044 |
+| `[782032,782120)` | `[0x80154ED0,0x80154F28)` | 88 |
+| `[782200,782296)` | `[0x80154F78,0x80154FD8)` | 96 |
+
+All aligned words, control transfers and delay slots reconcile with closed
+whole-entry structural flow. Original bytes agree with the retained origin and
+endpoint RAM. The rule assumes ordinary calls and returns, writable disjoint
+frames, preserved saved registers and return storage, and stable code. It
+qualifies instruction representation without establishing a matching ELF,
+execution of every word, argument or resource safety, rendering or safe editing.
+The intervening body at `0x80154F28..0x80154F78` remains outside this rule.
 
 ## Guarded executable switch coverage
 

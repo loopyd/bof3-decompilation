@@ -240,6 +240,21 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8014E8FC..0x8014EA80 including return delay slots; original JAL at 0x8014E79C in the qualified executable caller at 0x8014E6D0 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 780_988,
+            length: 1_044,
+            evidence: "original US SLUS complete 1044-byte instruction body 0x80154ABC..0x80154ED0; original direct JAL 0x80154FA4 from the wrapper bound to the retained GAME 0x801BB774 return witness; all 261 aligned words, ten conditional branches, seven internal jumps, sole JR RA and every delay slot form a closed whole-entry structural CFG; call-free 24-byte frame restored before JR RA 0x80154EC8 and NOP; original and retained origin/endpoint RAM agree; ordinary return, writable disjoint frame, nonalias and stable-code assumptions; no matching ELF, all-path native execution, argument/resource safety, full coverage, rendering or editing claim",
+        },
+        NontextRange {
+            offset: 782_032,
+            length: 88,
+            evidence: "original US SLUS complete 88-byte instruction body 0x80154ED0..0x80154F28; original direct JAL 0x80154F94 from the wrapper bound to the retained GAME 0x801BB774 return witness; all 22 aligned words, two conditional branches, one internal jump, sole JR RA and every delay slot form a closed whole-entry structural CFG; call-free and frame-free with unchanged RA, JR RA 0x80154F20 and NOP; original and retained origin/endpoint RAM agree; ordinary return, nonalias and stable-code assumptions; no matching ELF, all-path native execution, pointer/resource safety, full coverage, rendering or editing claim",
+        },
+        NontextRange {
+            offset: 782_200,
+            length: 96,
+            evidence: "original US SLUS complete 96-byte instruction body 0x80154F78..0x80154FD8; actual original GAME 0x801BB774 JAL and NOP bound by retained preinstruction return 0x801BB77C and downstream predicate observations; all 24 aligned words, two direct calls at 0x80154F94 to 0x80154ED0 and 0x80154FA4 to 0x80154ABC, sole JR RA and every delay slot structurally accounted; 32-byte frame and saved S0/S1/S2/RA restored before JR RA 0x80154FD0 and NOP; original and retained origin/endpoint RAM agree; ordinary call-return/frame/nonalias/stable-code assumptions; no matching ELF, whole-body native execution, argument/resource safety, full coverage, rendering or editing claim",
+        },
+        NontextRange {
             offset: 814_780,
             length: 392,
             evidence: "original US SLUS; complete original instruction body 0x8015CEBC..0x8015D044 including return delay slots; original JAL at 0x8014AC00 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -2178,29 +2193,43 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
         })
         .collect();
     let evidence = "original US raw area numeric u8 grid; header-relative offset at bytes 20..22 multiplied by four and published to 0x8014931C by original SLUS 0x80154094..0x801540F8; complete original getter 0x80166CB0..0x80166CEC returns unchanged byte at base+y*width+x and original GAME caller applies numeric masks/comparisons; finite declared-grid coordinates cover every width*height byte with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and checked source bounds; prior fields retain their own evidence; no global caller-coordinate bounds, natural visitation, terrain semantics, full allocation, rendering or editing claim";
-    let mut cursor = byte_grid;
-    for (start, end) in merged {
-        if cursor >= byte_grid_end {
-            break;
+    let mut numeric_planes = vec![(byte_grid, byte_grid_end, evidence)];
+    if let Some(end) = cells
+        .checked_mul(4)
+        .and_then(|bytes| 48usize.checked_add(bytes))
+        .filter(|&end| data.get(48..end).is_some())
+    {
+        numeric_planes.push((48, end, "original US raw area packed-u32 numeric plane; complete original sampler 0x80154ABC..0x80154ED0 constructs base 0x80104030 and reads one whole word at base+4*(y*width+x) for integral coordinates through LW 0x80154B98; finite declared-grid coordinates cover every width*height word with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and complete checked extent; prior fields retain their own evidence; separate auxiliary signed-byte plane excluded; no partial prefix, global caller bounds, neighbor safety, natural visitation, terrain semantics, full allocation, rendering or editing claim"));
+    }
+    for (start, end, evidence) in numeric_planes {
+        ranges.sort_by_key(|range| range.offset);
+        let mut additions = Vec::new();
+        let mut cursor = start;
+        for range in &ranges {
+            if cursor >= end {
+                break;
+            }
+            let known_end = range.offset + range.length;
+            if known_end <= cursor {
+                continue;
+            }
+            if cursor < range.offset {
+                additions.push(NontextRange {
+                    offset: cursor,
+                    length: range.offset.min(end) - cursor,
+                    evidence,
+                });
+            }
+            cursor = cursor.max(known_end);
         }
-        if end <= cursor {
-            continue;
-        }
-        if cursor < start {
-            ranges.push(NontextRange {
+        if cursor < end {
+            additions.push(NontextRange {
                 offset: cursor,
-                length: start.min(byte_grid_end) - cursor,
+                length: end - cursor,
                 evidence,
             });
         }
-        cursor = cursor.max(end);
-    }
-    if cursor < byte_grid_end {
-        ranges.push(NontextRange {
-            offset: cursor,
-            length: byte_grid_end - cursor,
-            evidence,
-        });
+        ranges.extend(additions);
     }
     ranges.sort_by_key(|range| range.offset);
     Some(ranges)
