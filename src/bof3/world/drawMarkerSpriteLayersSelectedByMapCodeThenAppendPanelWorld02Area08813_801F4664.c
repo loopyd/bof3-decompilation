@@ -44,7 +44,7 @@ extern const World02Area08813MarkerEntry D_801F6234[];
 void func_801F453C(s16 arg0, s16 arg1, u8 arg2);
 
 /* Local panel the last layer is followed by. */
-void func_801F4A30(s16 arg0, s16 arg1);
+void appendTransformedG4PanelWorld02Area08813_801F4A30(s16 arg0, s16 arg1);
 
 /* Resident map probe returning the map byte under the given coordinates. */
 s32 func_80166CB0(s16 arg0, s16 arg1);

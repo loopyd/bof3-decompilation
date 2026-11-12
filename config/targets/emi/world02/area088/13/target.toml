@@ -17,6 +17,7 @@ sources = [
     "src/bof3/world/seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld02Area08813_801F4D1C.c",
     "src/bof3/world/advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2F28.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664.c",
+    "src/bof3/world/appendTransformedG4PanelWorld02Area08813_801F4A30.c",
     "src/bof3/world/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackWorld02Area08813_801F3600.c",
 ]
 support_sources = [

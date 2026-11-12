@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/drawTexturedQuadAtWorkCursorPairAndDepth3eLinkedAtGridCell5d34World02Area07714_801F54B8.c",
     "src/bof3/world/drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185World02Area07714_801F3F08.c",
     "src/bof3/world/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedPointAtConvertedExtentTintedByCentreAndRimBytesWorld02Area07714_801F462C.c",
+    "src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8.c",
 ]
 support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC.c",

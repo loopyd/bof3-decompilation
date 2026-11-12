@@ -135,8 +135,10 @@ segments:
     - '@source: src/bof3/world/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedPointAtConvertedExtentTintedByCentreAndRimBytesWorld02Area07714_801F462C.c'
     - '@behavior: projects the three-word point handed as arg0 through the shared projector func_801AFF04, writes the signed halfword extent handed as arg1 into the x halfword of the size pair the shared converter func_801AFFD8 reads at the same depth, and takes the converted halfword plus the low bit of the shared frame counter at 0x80143E6C as a signed radius. It then stamps thirty-two semi-transparent POLY_G3 wedges of one 0x80 step each around that point through the shared rotation pair func_801783C8 and func_801782FC, the wedge phase kept to the twelve bits of the 0x1000-unit turn and each wedge sharing its second arc vertex with the next one, the hub vertex coloured with the byte handed as arg2 in all three channels and both rim vertices with the byte handed as arg3, and appends every 0x1C-byte packet under OT slot 1.'
   - - 7112
-    - asm
-    - func_801F47C8
+    - c
+    - drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8
+    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8.c'
+    - '@behavior: draws one 0x2C-byte effect entry handed as arg0 as a single semi-transparent POLY_G3 at the shared primitive cursor 0x8014598C: projects the entry position triple at +0x0/+0x4/+0x8 into the vertex at cursor byte 0x08, rotates the signed extent pair at +0x10/+0x12 by the spin halfword at +0x24 and scales it by the halfword at +0x28 with the halfword at +0x14 shifted left by 12 as z to build the vertex at cursor byte 0x10, does the same over the pair at +0x18/+0x1A with the halfword at +0x1C for the vertex at cursor byte 0x18, translates both by the entry position, clamps the shade halfword at +0x2A to 0..0xFF into the red and green channels of the first vertex with half of it in blue, zeroes the six colour bytes of the other two vertices, and appends the 0x1C-byte packet through 0x8014E5A0 under OT slot 1.'
   - - 7784
     - asm
     - func_801F4A68

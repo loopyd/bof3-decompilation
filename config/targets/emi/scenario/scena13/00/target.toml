@@ -28,6 +28,7 @@ sources = [
     "src/bof3/scenario/resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444.c",
     "src/bof3/scenario/setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC.c",
     "src/bof3/scenario/setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414.c",
+    "src/bof3/scenario/setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70.c",
     "src/bof3/scenario/setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568.c",
 ]
 support_sources = [

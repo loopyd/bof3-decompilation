@@ -9,12 +9,14 @@
 void func_8014E5A0(u32 ot_index, u32 primitive_size);
 void func_801AFE18(void* arg0);
 
-/* Effect entry draw pass at 0x801F47C8, still an asm boundary of this payload so
- * it keeps its address anchor. It stamps the primitive cursor, turns
- * semi-transparency on, projects the entry and builds the entry's rotation from
- * the unsigned spin angle halfword at +0x24 and the extents at +0x10/+0x12,
- * which is why the pass below advances that halfword between frames. */
-void func_801F47C8(u8* entry);
+/* Effect entry draw pass at 0x801F47C8, claimed by the source of that address
+ * in this payload. It stamps the primitive cursor, turns semi-transparency on,
+ * projects the entry position and builds the entry's two rotated vertices from
+ * the signed extent pairs at +0x10/+0x12 and +0x18/+0x1A by the spin angle
+ * halfword at +0x24 and the scale halfword at +0x28, which is why the pass
+ * below advances that halfword between frames. */
+void drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8(
+    u8* entry);
 
 /* Shared work-area reset at 0x80196070, lifted from the main executable as
  * clearWorkFlags: it clears work bytes 0x00-0x04, the dispatch byte +0x01
@@ -36,10 +38,11 @@ extern u8* workRecordCursor1F800044;
  *           of its frame through func_801AFE18. It then walks the 32 entries of
  *           the 0x2C-byte-stride effect table at 0x800E5504, the table the
  *           neighbouring handler entry 0 (0x801F3E48) seeds through
- *           func_801F4A68: each entry is drawn through func_801F47C8, its
- *           unsigned spin angle halfword at +0x24 is advanced by 0x10, and the
- *           unsigned halfword at +0x2A is raised by 0x20 while the work byte
- *           +0x09 is below 4 and lowered by 2 otherwise. After PopMatrix it
+ *           func_801F4A68: each entry is drawn through
+ *           drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8,
+ *           its unsigned spin angle halfword at +0x24 is advanced by 0x10, and
+ *           the unsigned halfword at +0x2A is raised by 0x20 while the work
+ *           byte +0x09 is below 4 and lowered by 2 otherwise. After PopMatrix it
  *           reloads the work pointer from scratchpad slot 0x1F800044,
  *           increments the frame counter word at +0x0C and calls the shared
  *           work-area reset func_80196070 once that counter reaches 0xB9 (185),
@@ -67,7 +70,8 @@ void drawEffectEntriesThenAdvanceAngleAndStepShadeThenClearWorkFlagsAtFrame185Wo
   index = 0;
 
   do {
-    func_801F47C8(entry);
+    drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8(
+        entry);
     work = workRecordCursor1F800044;
     FIELD_REF(u16, entry, 0x24u) = (u16)(FIELD_REF(u16, entry, 0x24u) + 0x10);
     if (work[9] < 4) {

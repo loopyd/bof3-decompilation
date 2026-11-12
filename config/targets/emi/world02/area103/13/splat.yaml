@@ -141,8 +141,10 @@ segments:
     - '@source: src/bof3/world/countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C.c'
     - '@behavior: overlay step handler, entry 14 of the work-byte-2 handler table at 0x801F5954 and entry 17 of the work-byte-1 handler table at 0x801F5948; it rewinds the work record''s byte 0x09 to zero when that byte reads 0x0F, decrements the signed arm countdown halfword at 0x32 while it stays positive and otherwise advances byte 0x02 through the same pointer while the band index (byte 0x09 / 5) is still zero, hands func_801F4E70 the band index (byte 0x09 / 5) + 7 on every fifth tick, advances byte 0x09, and finally passes the shared request helper func_8015507C the selector 0x42 and the level (halfword 0x32 / 6) + 0x18 truncated to 16 bits.'
   - - 7052
-    - asm
-    - func_801F478C
+    - c
+    - requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C
+    - '@source: src/bof3/world/requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C.c'
+    - '@behavior: overlay step handler, entry 15 of the work-byte-2 handler table at 0x801F5954 and entry 18 of the work-byte-1 handler table at 0x801F5948; it reads the work record through the scratchpad pointer cell 0x1F800044, forms the band index (byte 0x09 / 5) and, once that index stands at 4, hands the shared request helper func_80155218 the pair (0x43, 0x1A), calls the shared helper func_80196070 and returns without advancing byte 0x09; every lower band hands the block drawer func_801F4E70 the variant 7 minus the band index on each tick whose byte 0x09 is a multiple of five and then advances byte 0x09 through a fresh cell read.'
   - - 7212
     - asm
     - func_801F482C

@@ -28,7 +28,7 @@ drawFourthBlockVariantOnFourthFifthTickGroupAtScenarioProgress0fElseFifthTickVar
 func_801F44B0 = 0x801F44B0;
 drawWorkBandOnFifthTickWrapWorkByte9At0fThenAdvanceWorkByte9World02Area10313_801F457C = 0x801F457C;
 countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C = 0x801F465C;
-func_801F478C = 0x801F478C;
+requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C = 0x801F478C;
 func_801F482C = 0x801F482C;
 func_801F49A0 = 0x801F49A0;
 func_801F4E70 = 0x801F4E70;

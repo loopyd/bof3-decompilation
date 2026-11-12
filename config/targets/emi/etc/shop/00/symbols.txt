@@ -139,6 +139,7 @@ drawShopValuePanelThenAcceptOrCancelSelection = 0x801D5AD0;
 drawShopValuePanelThenArmAcceptTransition = 0x801D5BB0;
 drawShopValuePanelThenClearPanelAndArmActionId = 0x801D5CB0;
 func_801D5D98 = 0x801D5D98;
+drawShopVariantPanelThenRestoreUiSubstepOnTimerExpiry = 0x801D5E88;
 func_801D6018 = 0x801D6018;
 func_801D60B0 = 0x801D60B0;
 func_801D6184 = 0x801D6184;

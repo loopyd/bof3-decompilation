@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c'
     - '@behavior: Dispatch work byte 2, then invoke 0x801F0110, 0x801F01C0 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 4636
-    - asm
-    - func_801EFE1C
+    - c
+    - seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic05303_801EFE1C
+    - '@source: src/bof3/bmagic/seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic05303_801EFE1C.c'
+    - '@behavior: Seed work word 0xC with (rand() & 7) + 8 and publish work byte 0xB shifted left nine to the scratchpad halfword at 0x1F800004, then add the two rotator samples 0x801782FC and 0x801783C8 of that halfword, each multiplied by work word 0xC, to the shared record words 0x34 and 0x38 into work words 0x34 and 0x38, copy shared record word 0x3C into work word 0x3C, set work byte 9 to 8 and work byte 0xA to 0x10, and advance work byte 2 by one so the byte 2 dispatcher 0x801EFD94 leaves this handler for the next entry of the run based at 0x801F056C.'
   - - 4900
     - asm
     - func_801EFF24

@@ -30,7 +30,7 @@ claimTwoWorkRecordsThenActivateBothWithSecondOverlayActivationEntryPairScenarioS
 func_801F8DFC = 0x801F8DFC;
 func_801F9570 = 0x801F9570;
 func_801F9A44 = 0x801F9A44;
-func_801F9E70 = 0x801F9E70;
+setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70 = 0x801F9E70;
 func_801F9F18 = 0x801F9F18;
 func_801FA844 = 0x801FA844;
 armPaletteFadeOverSharedCountdownThenDrawWindowAndStepChannelsScenarioScena1300_801FAFA0 = 0x801FAFA0;

@@ -168,8 +168,8 @@ segments:
     - asm
     - func_801FC7E4
   - - 24012
-    - asm
-    - func_801FC9CC
+    - c
+    - queueCue20BAndRequestPrimaryState1ASubstate1EOnModeCellMatchScenarioScena0200_801FC9CC
   - - 24404
     - c
     - setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54

@@ -149,6 +149,7 @@ sources = [
     "src/bof3/ui/drawShopValuePanelThenToggleValueAndAcceptOrCancel.c",
     "src/bof3/ui/armShopValueSelectionThenAdvanceUiSubstep.c",
     "src/bof3/ui/drawSpritePrimTpageFromAbrShop00_801D9160.c",
+    "src/bof3/ui/drawShopVariantPanelThenRestoreUiSubstepOnTimerExpiry.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
@@ -163,4 +164,10 @@ headers = [
 function = 0x801D3828
 section = ".rodata"
 address = 0x801D0C04
+size = 0x18
+
+[[matching.section_placements]]
+function = 0x801D5E88
+section = ".rodata"
+address = 0x801D0C7C
 size = 0x18

@@ -204,6 +204,7 @@ sources = [
     "src/bof3/world/advancePanelMessageLineUnrevealAndAdvanceState.c",
     "src/bof3/world/sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684.c",
     "src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c",
+    "src/bof3/world/togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

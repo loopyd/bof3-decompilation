@@ -37,7 +37,7 @@ advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfwor
 func_801F448C = 0x801F448C;
 func_801F453C = 0x801F453C;
 drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664 = 0x801F4664;
-func_801F4A30 = 0x801F4A30;
+appendTransformedG4PanelWorld02Area08813_801F4A30 = 0x801F4A30;
 func_801F4C28 = 0x801F4C28;
 dispatchStateByte1Table624cWorldWorld02Area08813_801F4CD8 = 0x801F4CD8;
 seedRandomFrontEndRecordsEvery1024TicksUnlessGatedWorld02Area08813_801F4D1C = 0x801F4D1C;

@@ -135,8 +135,10 @@ segments:
     - asm
     - func_801F9A44
   - - 12912
-    - asm
-    - func_801F9E70
+    - c
+    - setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70
+    - '@source: src/bof3/scenario/setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70.c'
+    - '@behavior: Sets four ids through the shared three-argument setter func_801690EC at 0x801690EC: the ids 0x11, 0x12 and 0x13 take one magnitude and the id 0x10 takes a second one, each magnitude passed as both the second and the third argument. Both magnitudes come from the shared 12-bit rotation helper func_801782FC at 0x801782FC, the first for the incoming 16-bit angle 0x4C0 lower and the second for the same angle 0xCC0 lower; each derivation halves the biased angle, makes the helper result positive by negating a negative one, and doubles it as a signed 16-bit value through the shift pair. The argument is masked once with 0xFFFF and kept in a saved register across all five calls, and the 0x20-byte frame keeps $ra, $s0 and $s1. It takes that one 16-bit angle, returns nothing and reads no memory of its own, and no word or jal in this overlay names its address.'
   - - 13080
     - asm
     - func_801F9F18
