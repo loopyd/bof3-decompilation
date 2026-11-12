@@ -1294,6 +1294,21 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US shared battle payload; two complete instruction bodies spanning 0x800AD4D4..0x800AD67C including return delay slots; original bytes match complete sized executable ELF function sections and captured resident bytes, with all text relocations reconciled; qualified dispatcher 0x800AD434 constructs their addresses for conditional work-byte-2 selection; exact archive and payload identities; no observed-execution, valid-work-record, selector-bound, list-integrity, resource-safety or duplicate-source ownership claim",
             }))
+            .chain([(0x16e9c, 128), (0x17130, 124), (0x171ac, 32), (0x171cc, 128), (0x174a4, 32), (0x174c4, 128), (0x1779c, 32), (0x177bc, 88), (0x17814, 88), (0x1786c, 48)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; ten complete instruction bodies within 0x800AD69C..0x800AE09C including return delay slots; complete original control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all text relocations reconciled; exact archive and payload identities; no observed-execution, valid-work-record, selector-bound, indirect-call-safety, argument-validity, resource-safety or duplicate-source ownership claim",
+            }))
+            .chain([(0x16f1c, 236), (0x17008, 208), (0x170d8, 88), (0x1724c, 296), (0x17374, 304), (0x17544, 296), (0x1766c, 304)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; seven complete instruction bodies within 0x800AD71C..0x800ADF9C including return delay slots; complete original control-flow reviews and conditional entries through reviewed callers that load handler addresses from tables or construct them on the stack; original bytes match captured resident bytes; call continuations assume returns; exact archive and payload identities; no ELF-match, observed-execution, valid-work-record, selector-bound, indirect-call-safety, argument-validity, resource-safety or duplicate-source ownership claim",
+            }))
+            .chain([0x1a0, 0x1ac, 0x1b8].into_iter().map(|offset| NontextRange {
+                offset,
+                length: 12,
+                evidence: "original US shared battle payload; three numeric function-address words in each original table at 0x800969A0, 0x800969AC and 0x800969B8; complete original dispatchers 0x800AD69C, 0x800AD9CC and 0x800ADCC4 read all three words, copy them to their stacks and conditionally call the indexed address; all table words and complete target bodies match original and captured resident bytes; exact archive and payload identities; surrounding header bytes excluded; no selector-bound, current-work-validity, pointer-lifetime, observed-invocation, resource-safety or duplicate-source ownership claim",
+            }))
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)

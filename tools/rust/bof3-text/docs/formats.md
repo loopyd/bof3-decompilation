@@ -215,6 +215,23 @@ and physical offsets may differ between archives.
 | `[0x16CD4,0x16DC8)` | `[0x800AD4D4,0x800AD5C8)` | 244 |
 | `[0x16DC8,0x16E7C)` | `[0x800AD5C8,0x800AD67C)` | 180 |
 | `[0x16E7C,0x16E9C)` | `[0x800AD67C,0x800AD69C)` | 32 |
+| `[0x16E9C,0x16F1C)` | `[0x800AD69C,0x800AD71C)` | 128 |
+| `[0x16F1C,0x17008)` | `[0x800AD71C,0x800AD808)` | 236 |
+| `[0x17008,0x170D8)` | `[0x800AD808,0x800AD8D8)` | 208 |
+| `[0x170D8,0x17130)` | `[0x800AD8D8,0x800AD930)` | 88 |
+| `[0x17130,0x171AC)` | `[0x800AD930,0x800AD9AC)` | 124 |
+| `[0x171AC,0x171CC)` | `[0x800AD9AC,0x800AD9CC)` | 32 |
+| `[0x171CC,0x1724C)` | `[0x800AD9CC,0x800ADA4C)` | 128 |
+| `[0x1724C,0x17374)` | `[0x800ADA4C,0x800ADB74)` | 296 |
+| `[0x17374,0x174A4)` | `[0x800ADB74,0x800ADCA4)` | 304 |
+| `[0x174A4,0x174C4)` | `[0x800ADCA4,0x800ADCC4)` | 32 |
+| `[0x174C4,0x17544)` | `[0x800ADCC4,0x800ADD44)` | 128 |
+| `[0x17544,0x1766C)` | `[0x800ADD44,0x800ADE6C)` | 296 |
+| `[0x1766C,0x1779C)` | `[0x800ADE6C,0x800ADF9C)` | 304 |
+| `[0x1779C,0x177BC)` | `[0x800ADF9C,0x800ADFBC)` | 32 |
+| `[0x177BC,0x17814)` | `[0x800ADFBC,0x800AE014)` | 88 |
+| `[0x17814,0x1786C)` | `[0x800AE014,0x800AE06C)` | 88 |
+| `[0x1786C,0x1789C)` | `[0x800AE06C,0x800AE09C)` | 48 |
 
 The body at `0x800AC964..0x800ACF80` has a captured native entry at `0x800AC964`
 with return address `0x801D1A80`. Complete original control-flow review accounts
@@ -224,6 +241,12 @@ The bodies at `0x800AD2EC..0x800AD434` and `0x800AD434..0x800AD4D4` have complet
 original control-flow reviews and conditional entries through the original table
 consumed by `0x800AD26C`. Call continuations assume that callees return; these
 two bodies have no captured entry or ELF-match claim.
+The seven bodies in `0x800AD71C..0x800AD930`, `0x800ADA4C..0x800ADCA4`
+and `0x800ADD44..0x800ADF9C` also have complete original control-flow reviews
+and conditional entries through reviewed callers that load handler addresses
+from tables or construct them on the stack.
+They have no captured entry or ELF-match claim. Their call continuations assume
+that callees return.
 The other listed bodies match complete executable ELF sections of sized function
 symbols, with text relocations reconciled. All listed bodies include their
 returns and delay slots. Their bytes match original `BATTLE.EMI` entry 15 and
@@ -242,6 +265,28 @@ their sized executable ELF sections, original bytes and resident RAM, with all
 text relocations reconciled. Valid work records, selector bounds and list
 integrity remain unverified. Surrounding header bytes receive no classification
 from this rule.
+
+The same source gate qualifies three more twelve-byte tables at payload
+`[0x1A0,0x1AC)`, `[0x1AC,0x1B8)` and `[0x1B8,0x1C4)`. Their complete dispatchers
+at `0x800AD69C`, `0x800AD9CC` and `0x800ADCC4` load each table's three words,
+copy them to the stack and conditionally call the selected pointer for work-byte
+`+1` values 0, 1 and 2. The target addresses are:
+
+| Runtime table | Conditional targets |
+| --- | --- |
+| `0x800969A0` | `0x800AD71C`, `0x800AD808`, `0x800AD9AC` |
+| `0x800969AC` | `0x800ADA4C`, `0x800ADB74`, `0x800ADCA4` |
+| `0x800969B8` | `0x800ADD44`, `0x800ADE6C`, `0x800ADF9C` |
+
+All words and complete target bodies match original bytes and resident RAM.
+The handler at `0x800AD808` constructs `0x800AD8D8` and `0x800AD930` for
+work-byte `+2` values 0 and 1. The dispatcher at `0x800AE014` constructs
+`0x800AE06C` and `0x800AE09C`; only the former body is reviewed here. The body
+at `0x800ADFBC` tests `u16[0x801462E8] & 0x800` before an indirect call through
+a table indexed by work-byte `+5`. That table's extent and targets remain
+unqualified. These are conditional source facts, with selector bounds and
+actual invocation still unverified. Surrounding header and referenced data bytes
+receive no classification from these instruction reviews.
 
 Neighboring functions and tables retain their prior status. This classification
 establishes the listed instruction and address bytes. It does not establish
