@@ -303,7 +303,10 @@ must retain all eight records, including empty names. Edit only `text`, using
 at most eight literal bytes per name. Pack against the same source archive
 with its recorded entry or `all`, without class or latch selectors. Shorter
 names are NUL-padded; encounter data and stats remain unchanged. Corpus export
-includes each matching entry. Runtime rendering and other regions remain open.
+includes each matching entry. Controlled runtime checks verify the
+`Gary` label from `AREA024.EMI` entry 11 edited to `Zary` in the first battle. Other
+names, encounter families, regions and battle or substitution contexts remain
+unverified.
 
 Analysis reports archive offsets, encoded size, original capacity, command operands
 and shared rows. Terminators inside operands are not string boundaries. Trailing

@@ -743,8 +743,10 @@ US encounter templates loaded at `0x800E4000` have a 72-byte prefix followed by
 eight records at stride `0x88`. Each record starts with an eight-byte name at
 `0x800E4048 + index × 0x88`. The template copy at `0x800AC218` transfers those
 eight bytes to the enemy's battle record. Lookup at `0x800AC704` searches the
-eight template records. Battle name copy at `0x801DEA18` copies eight bytes
-from the live battle record through `0x801501E4`, which appends NUL.
+eight template records. The `name_copy_consumer` at `0x801DEA18` copies up to
+eight bytes from the live battle record into a substitution buffer through
+`0x801501E4`, which appends NUL. The first battle's Gary label reads the live
+name through `0x801D8AE4` and renderer `0x8014FC90`.
 
 The tool recognizes the 1160-byte entry layout and load argument. The schema
 `bof3.monster-text/v1` retains `source`, `source_sha256`, `entry`, `entry_offset`,
@@ -757,8 +759,10 @@ names need no internal NUL; shorter names are NUL-padded.
 
 Packing checks the complete source digest, canonical path, entry offset and
 layout before writing. Encounter data, stats and all other bytes stay unchanged.
-Different archives remain separate sources. This layout recognition does not
-establish support for another region or prove observed rendering.
+Different archives remain separate sources. Controlled runtime checks verify
+the `Gary` label from `AREA024.EMI` entry 11 edited to `Zary` in the first battle.
+Other names, encounter families, regions and battle or substitution contexts
+remain unverified.
 
 ## Inline overlay text
 
