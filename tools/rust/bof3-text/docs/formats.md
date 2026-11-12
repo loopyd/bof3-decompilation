@@ -312,15 +312,25 @@ resource safety, a unique supplier or duplicate-source ownership.
 
 ## Battle overlay instruction coverage
 
-Coverage recognizes the complete 124-byte body at `0x801E590C..0x801E5988`,
-payload `[0x14D0C,0x14D88)`, in original US raw payloads loaded at `0x801D0C00`
+Coverage recognizes these complete bodies in original US raw payloads loaded at `0x801D0C00`
 with size 118224 and SHA-256
 `f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1`.
 The containing archive must also match the original disc manifest.
-All 31 instruction words match the complete sized executable ELF function section
-and captured resident RAM, with all nine text relocations reconciled.
+
+| Payload interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 |
+| `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 |
+
+The first body's 31 instruction words match its complete sized executable ELF
+function section and captured resident RAM, with all nine text relocations reconciled.
 Complete original control-flow review includes every branch, jump, return and
 delay slot. The body contains no external calls, embedded data or literal pool.
+The second body's 44 words also match its complete sized executable ELF section,
+original bytes and resident RAM, with all 22 text relocations reconciled.
+Its straight-line body ends with `JR RA` and a store in the return delay slot.
+The qualified body at `0x800AE09C` conditionally calls it at `0x800AE0E4`.
+It contains no calls, embedded data or literal pool.
 Neighboring bytes retain their prior status. This establishes instruction representation;
 execution, valid arguments, allocator behavior, resource safety and duplicate-source
 ownership remain unverified.

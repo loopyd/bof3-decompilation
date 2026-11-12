@@ -1247,11 +1247,18 @@ pub fn payload_nontext_ranges(
             if sha256_hex(data)
                 == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1" =>
         {
-            Some(vec![NontextRange {
-                offset: 0x14d0c,
-                length: 124,
-                evidence: "original US battle payload; complete instruction body 0x801E590C..0x801E5988 including return delay slot; complete original control-flow review, sized executable ELF function section and all nine text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, allocator-semantics, resource-safety or duplicate-source ownership claim",
-            }])
+            Some(vec![
+                NontextRange {
+                    offset: 0x14d0c,
+                    length: 124,
+                    evidence: "original US battle payload; complete instruction body 0x801E590C..0x801E5988 including return delay slot; complete original control-flow review, sized executable ELF function section and all nine text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, allocator-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x14d88,
+                    length: 176,
+                    evidence: "original US battle payload; complete instruction body 0x801E5988..0x801E5A38 including the store in its return delay slot; complete original control-flow review, sized executable ELF function section and all 22 text relocations reconcile with original and captured resident bytes; conditional entry through qualified caller 0x800AE09C; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, work-record-validity, resource-safety or duplicate-source ownership claim",
+                },
+            ])
         }
         (_, _, 0, 0x8009_6800, 133_316)
             if sha256_hex(data)
