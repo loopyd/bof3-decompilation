@@ -153,6 +153,34 @@ def render_context(function: FunctionId, manifest: TargetManifest) -> str:
 
 
 _JUMP_TABLE_NAME = re.compile(r"(jtbl_[0-9A-Fa-f]{8}[A-Za-z0-9_]*)")
+_FUNCTION_EXTENT = re.compile(r"^(?:nonmatching\s+)?func_([0-9A-Fa-f]{8}),\s*(0x[0-9A-Fa-f]+)", re.MULTILINE)
+
+
+def _function_span(text: str) -> tuple[int, int] | None:
+    """Address range of the function the assembly declares, when it states one.
+
+    A table runs into the next table when both are adjacent in the payload, so
+    the run also ends where the function ends: arms past that point cannot be
+    labelled for m2c anyway.
+    """
+
+    match = _FUNCTION_EXTENT.search(text)
+    if not match:
+        return None
+    start = int(match.group(1), 16)
+    return start, start + int(match.group(2), 16)
+
+
+def _declared_table_addresses(root: Path, manifest: TargetManifest) -> list[int]:
+    """Addresses of the jump tables the map declares for this target.
+
+    Adjacent tables form one unbroken run of in-image pointers, so a table's
+    extent must stop where the next declared table starts; reading through it
+    would hand m2c arms that belong to another table.
+    """
+
+    symbols = load_target_symbols(root, manifest.id.value)
+    return sorted({s.address for s in symbols if s.symbol_type == "jtbl"})
 
 
 def jump_table_assembly(
@@ -181,18 +209,24 @@ def jump_table_assembly(
     limit = load_address + len(payload)
     labels: set[str] = set()
     blocks: list[str] = []
+    addresses = _declared_table_addresses(root, manifest)
     for name in tables:
         table = name.replace("jtbl_", "", 1)[:8]
         table_address = int(table, 16)
         offset = table_address - load_address
         if offset < 0 or offset + 4 > len(payload):
             return None
+        following = [a for a in addresses if a > table_address]
+        end = (following[0] - load_address) if following else len(payload)
+        span = _function_span(text)
         entries: list[int] = []
-        while offset + len(entries) * 4 + 4 <= len(payload):
+        while offset + len(entries) * 4 + 4 <= min(end, len(payload)):
             value = int.from_bytes(
                 payload[offset + len(entries) * 4 : offset + len(entries) * 4 + 4], "little"
             )
             if not (load_address <= value < limit) or value % 4:
+                break
+            if span and not (span[0] <= value < span[1]):
                 break
             entries.append(value)
         if not entries:
