@@ -3,8 +3,10 @@
 /* @source 0x801DF6A8
  * @behavior shop screen draw called with no arguments by the phase step
  *           func_801DE40C, the cursor/confirm handler func_801DE4C8 and the
- *           sub-step handler func_801DE88C: it first emits the sprite grid
- *           through func_801DBD24 with the main-RAM index byte D_80144953,
+ *           sub-step handler func_801DE88C: it first emits the shop screen
+ *           background through
+ *           drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM index
+ *           byte D_80144953,
  *           reads the visible-list length through func_801BDB7C(0) and draws
  *           the shop panel strip through func_801DAB90 with the fixed panel
  *           arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank
@@ -46,7 +48,7 @@ void drawShopSlotListWithSelectionCursors(void) {
   u8 slot;
 
   slot = 0;
-  func_801DBD24(D_80144953);
+  drawBackgroundTilesFromKindShop00_801DBD24(D_80144953);
   count = func_801BDB7C(0);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (count != 0) {

@@ -490,8 +490,10 @@ segments:
     - asm
     - func_801DB9F0
   - - 45348
-    - asm
-    - func_801DBD24
+    - c
+    - drawBackgroundTilesFromKindShop00_801DBD24
+    - '@source: src/bof3/ui/drawBackgroundTilesFromKindShop00_801DBD24.c'
+    - '@behavior: shop background painter: turns GetTPage(0, 0, 0x340, 0x100) into the texture page of a draw-mode packet installed at g_PrimCursor with dfe 0, dtd 0 and no texture window and appended at slot 1 as 0xC bytes, then fills a four-halfword local CLUT run from GetClut(0x30, 0x1E2), GetClut(0x50, 0x1E2), GetClut(0x40, 0x1E2) and GetClut(0x60, 0x1E2) and paints ten 0x20-wide columns from x 0 in five passes of two, each pass walking the D_801E5AD0 index run that the low byte of arg0 selects through D_801E5B1C and stacking semi-transparent sprites down the screen from y 0 while the running y stays below 0xF0, each sprite taking the CLUT halfword of that selected run entry, the origin and size of the D_801E5A24 atlas cell its run byte names and 0x80 in the three colour bytes, and being appended at slot 1 as 0x14 bytes.'
   - - 45848
     - asm
     - func_801DBF18
@@ -544,7 +546,7 @@ segments:
     - c
     - func_801DE45C
     - '@source: src/bof3/ui/func_801DE45C.c'
-    - '@behavior: calls the this-EMI sprite-grid renderer func_801DBD24 with the main-RAM index byte D_80144953, calls the shop slot-list renderer drawNumberedShopSlotListThenPanelStrip, then decrements the frame timer phaseTimer through its address and, when the byte wraps to zero, reads the UI phase byte D_80148651 before re-arming phaseTimer with 3 and writing the phase byte back incremented (sibling shape advanceUiPhaseOrSelectSavedStatePhase).'
+    - '@behavior: calls the this-EMI shop background painter drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM index byte D_80144953, calls the shop slot-list renderer drawNumberedShopSlotListThenPanelStrip, then decrements the frame timer phaseTimer through its address and, when the byte wraps to zero, reads the UI phase byte D_80148651 before re-arming phaseTimer with 3 and writing the phase byte back incremented (sibling shape advanceUiPhaseOrSelectSavedStatePhase).'
   - - 55496
     - asm
     - func_801DE4C8
@@ -588,7 +590,7 @@ segments:
     - c
     - drawShopSlotListWithSelectionCursors
     - '@source: src/bof3/ui/drawShopSlotListWithSelectionCursors.c'
-    - '@behavior: shop screen draw called with no arguments by the phase step func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step handler func_801DE88C: it emits the sprite grid through func_801DBD24 with the main-RAM index byte D_80144953, reads the visible-list length through func_801BDB7C(0), draws the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, then draws every visible slot below that length through the field-list emitter func_801D826C with the fixed x 0x11, the even row offset (slot * 54 + 0x3E) & 0xFFFE, the field-record index D_80181B10[D_80144F5A[slot]] and bit 1 of that record''s flag byte shifted down to 0/1, formats the one-based slot ordinal through sprintf into the shared text buffer D_80145AD4 with the EMI-local "%d" format string D_801D0E60 and draws it through the main-exe text emitter func_80150098 at x 0x1A by the sign-extended row y slot * 54 + 0x43 with the alignment constant that same flag bit selects (7 set, 0 clear); afterwards it emits the off-screen slot region through func_801DF00C at (0x96, 0x3B) and marks both shop selections through emitFlatLineRectangleBorder with the D_801E5BC8[slot][column] coordinate pair and the sprite/palette constants 0x7E/0x30 or 0x80/0x34 chosen by that cell''s flag byte - first the saved pair D_8014865A/D_8014865D unless the saved kind byte still holds the 0x7F "no saved selection" sentinel, with the selection argument 0, then the live cursor pair D_80148658/D_80148659 with the selection argument 1.'
+    - '@behavior: shop screen draw called with no arguments by the phase step func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step handler func_801DE88C: it emits the shop background through drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM index byte D_80144953, reads the visible-list length through func_801BDB7C(0), draws the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, then draws every visible slot below that length through the field-list emitter func_801D826C with the fixed x 0x11, the even row offset (slot * 54 + 0x3E) & 0xFFFE, the field-record index D_80181B10[D_80144F5A[slot]] and bit 1 of that record''s flag byte shifted down to 0/1, formats the one-based slot ordinal through sprintf into the shared text buffer D_80145AD4 with the EMI-local "%d" format string D_801D0E60 and draws it through the main-exe text emitter func_80150098 at x 0x1A by the sign-extended row y slot * 54 + 0x43 with the alignment constant that same flag bit selects (7 set, 0 clear); afterwards it emits the off-screen slot region through func_801DF00C at (0x96, 0x3B) and marks both shop selections through emitFlatLineRectangleBorder with the D_801E5BC8[slot][column] coordinate pair and the sprite/palette constants 0x7E/0x30 or 0x80/0x34 chosen by that cell''s flag byte - first the saved pair D_8014865A/D_8014865D unless the saved kind byte still holds the 0x7F "no saved selection" sentinel, with the selection argument 0, then the live cursor pair D_80148658/D_80148659 with the selection argument 1.'
   - - 60684
     - c
     - appendFullscreenDimTileB

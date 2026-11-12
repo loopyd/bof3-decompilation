@@ -1,7 +1,8 @@
 #include "bof3/ui/shop00_internal.h"
 
 /* @source 0x801DE45C
- * @behavior calls the sprite-grid renderer func_801DBD24 with the main-RAM
+ * @behavior calls the shop background painter
+ *           drawBackgroundTilesFromKindShop00_801DBD24 with the main-RAM
  *           index byte D_80144953 and then the shop slot-list renderer
  *           drawNumberedShopSlotListThenPanelStrip; afterwards it
  *           decrements the frame timer phaseTimer through its address and,
@@ -18,7 +19,7 @@ void func_801DE45C(void) {
   u8           value;
   u8           phase;
 
-  func_801DBD24(D_80144953);
+  drawBackgroundTilesFromKindShop00_801DBD24(D_80144953);
   drawNumberedShopSlotListThenPanelStrip();
   /* The original materializes the timer address once and reuses that base for
    * the load, the decrement store and the re-arm store (lui+addiu / lbu / sb
