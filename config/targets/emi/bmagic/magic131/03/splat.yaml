@@ -182,8 +182,10 @@ segments:
     - asm
     - func_801F12A0
   - - 10148
-    - asm
-    - func_801F13A4
+    - c
+    - advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4
+    - '@source: src/bof3/bmagic/advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4.c'
+    - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38. The selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5 and, only when that countdown reaches zero, decrements byte 0xB of the shared record at 0x801EB4E0 and calls clearRecordBytes0Through4BmagicMagic13103_801F1AC4. It takes no arguments, returns nothing and its address is the third word (index 2) of the three-entry handler table at 0x801F1C48.'
   - - 10400
     - c
     - dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0

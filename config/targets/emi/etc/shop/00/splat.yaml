@@ -603,8 +603,10 @@ segments:
     - tickPhaseTimer
     - '@source: src/bof3/ui/tickPhaseTimer.c'
   - - 62572
-    - asm
-    - func_801E006C
+    - c
+    - stepNoteListSelectionThenArmNoteCursorSubstep
+    - '@source: src/bof3/ui/stepNoteListSelectionThenArmNoteCursorSubstep.c'
+    - '@behavior: note-list sub-step handler reached as entry 2 of the sub-step table D_801E5CFC, which func_801DFDB8 dispatches with the UI sub-step byte D_80148652 as index: it submits the 164-byte field record selected by the rebuilt list entry D_801E6264[D_801E625C] through func_8016620C with the constants 0 and 5, publishes D_80148340 = 0x75, and publishes the cursor cells D_80148628 = D_801483A0 + 0x2A and D_8014862A = D_801483A2 + 7 with the visibility byte D_80148624 = 1 only while the panel-state byte D_8014839F is zero. It decodes the pad state D_80145AA8 over the mask 0xF000 through func_8014E640: bit 0x8000 plays cue 0x101, arms D_801483A9 with 0x32 and steps the list cursor D_801E625C down by one with a wrap to D_801E6258 - 1, and bit 0x2000 plays the same cue, arms D_801483A9 with 0x31 and steps the cursor up by one with a wrap to zero past D_801E6258 - 1. It republishes D_801E6264[D_801E625C] into D_80148382 and D_801483A6, plays cues 0x103 and 0x102 and initializes the note-cursor block (D_8014839F = 3, D_801483C1 = 7, D_801483C2 = 0xB, D_801483C3 = 2, D_801483A8 = 0xFF, D_801483CC = 0xFF, D_8014837B = 1, D_801483C0 = 1, D_801483CA = 0, D_801483CB = 0, D_801483C4 = 0x140, D_801483C6 = 0x3E, D_801483CD = 0) while the pad state shares the confirm mask D_80145AC2, then advances the UI sub-step byte D_80148652 by one; the cancel mask D_80145AC4 instead plays cue 0x106, stores 1 into D_8014837B and D_8014839F and steps the UI phase byte D_80148651 down by one.'
   - - 63276
     - asm
     - func_801E032C

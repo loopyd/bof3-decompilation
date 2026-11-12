@@ -210,6 +210,7 @@ func_801DF9B4 = 0x801DF9B4;
 func_801DFDB8 = 0x801DFDB8;
 publishNoteListPanelThenConfirmOrCancel = 0x801DFDF4;
 tickPhaseTimer = 0x801E0028;
+stepNoteListSelectionThenArmNoteCursorSubstep = 0x801E006C;
 stepNoteListCursorThenSwapSelectedNote = 0x801E05E0;
 func_801E092C = 0x801E092C;
 func_801E0968 = 0x801E0968;

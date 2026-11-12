@@ -2,9 +2,10 @@
 
 /* @behavior decrements the AREA030 work-record countdown byte at scratch offset 9
  * and dispatches on the remaining count: a zero count runs the shared func_80196070
- * helper, otherwise the three-byte row of 0x801E1F14 selected by the span byte of the
- * current 12-byte entry is submitted through func_801D9740 with a width derived from
- * the remaining count, bit 7 set, and the selector 29.
+ * helper, otherwise the three-byte row of 0x801E1F14 selected by the span byte
+ * of the current 12-byte entry is submitted through drawMessageTokenCellQuad
+ * with a width derived from the remaining count, bit 7 set, and the selector
+ * 29.
  * @source 0x801D41E4
  * @status exact
  * @match 100.00
@@ -25,7 +26,7 @@ void func_801D41E4(void) {
   if (count != 0) {
     span = D_801E1E78[next[0x4Bu]].byte_08;
     offset = span * 3;
-    func_801D9740(D_801E1F14[offset + 2], &D_801E1F14[offset],
+    drawMessageTokenCellQuad(D_801E1F14[offset + 2], &D_801E1F14[offset],
                   (u8)(((8 - ((4 - count) << 1)) & 0xFE) | 0x80), 29);
   } else {
     func_80196070();

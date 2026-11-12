@@ -9,10 +9,10 @@ extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
  * table 0x801E1F44): subtracts two from the vertical offset halfword 0x2E of the
  * work record published at the scratchpad cursor 0x1F800044. While the record
  * pause byte 0x0A is set it counts that byte down and resubmits the current
- * message run through func_801D9740 with the 3-byte row of 0x801E1F14 selected
- * by the attribute byte 0x08 of the 12-byte panel entry 0x801E1E78 indexed by
- * record byte 0x4B, the shade span 8 - 0x0A * 2 and the row argument
- * 0x125 - (4 - 0x0A) * 2. Once the pause byte is clear it counts the reveal
+ * message run through drawMessageTokenCellQuad with the 3-byte row of
+ * 0x801E1F14 selected by the attribute byte 0x08 of the 12-byte panel entry
+ * 0x801E1E78 indexed by record byte 0x4B, the shade span 8 - 0x0A * 2 and the
+ * pen column 0x125 - (4 - 0x0A) * 2. Once the pause byte is clear it counts the reveal
  * timer byte 0x09 down, and when that reaches zero it advances the token slot
  * byte 0x4A through the four-byte row of 0x801E1F20 selected by record byte 0x06,
  * wrapping the slot to zero at the third position or on the 0xFF sentinel;
@@ -60,7 +60,7 @@ void advancePanelMessageScrollAndArmEntry(void) {
     remaining = next[0x0Au];
     span = D_801E1E78[next[0x4Bu]].byte_08;
     entryOffset = span * 3;
-    func_801D9740(D_801E1F14[entryOffset + 2], &D_801E1F14[entryOffset],
+    drawMessageTokenCellQuad(D_801E1F14[entryOffset + 2], &D_801E1F14[entryOffset],
                   (u8)(8 - remaining * 2),
                   (s16)(0x125 - (4 - remaining) * 2));
   } else {

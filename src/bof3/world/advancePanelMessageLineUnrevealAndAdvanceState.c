@@ -13,8 +13,9 @@ extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
  * control codes 0x12 and 0x15, advances it one further byte while counting one
  * revealed token off that byte 0x49, and rewinds the vertical offset to 0x23
  * with the reveal timer byte 0x09 rearmed to 4. While the timer runs it counts
- * the timer down and resubmits the saved line through func_801D9740 with the
- * shade span (8 - (4 - timer) * 2) & 0xFE plus 0x80 and the line argument 0x1D.
+ * the timer down and resubmits the saved line through
+ * drawMessageTokenCellQuad with the shade span (8 - (4 - timer) * 2) & 0xFE
+ * plus 0x80 and the pen column 0x1D.
  * While the revealed count is nonzero it submits the shaded panel through
  * func_8014F800 at (s16)0x2E, (s16)0x80144154 + 2, 0, the revealed count and
  * the run cursor word 0x50, then, unless the entry attribute byte 0x08 of the
@@ -79,7 +80,7 @@ void advancePanelMessageLineUnrevealAndAdvanceState(void) {
     countdown = (u8)(timer[9u] - 1u);
     timer[9u] = countdown;
     panel = D_1F800044;
-    func_801D9740(0, *(u8**)(panel + 0x54u),
+    drawMessageTokenCellQuad(0, *(u8**)(panel + 0x54u),
                   (u8)(((8 - (4 - panel[9u]) * 2) & 0xFEu) | 0x80u), 0x1D);
   }
 

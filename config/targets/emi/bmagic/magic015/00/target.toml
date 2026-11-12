@@ -19,6 +19,7 @@ sources = [
     "src/bof3/bmagic/stepWorkPositionPairByAngleWord0CAddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9ThenAdvanceWorkByte2BmagicMagic01500_801EFCC4.c",
     "src/bof3/bmagic/stepWorkPositionPairByAngleWord0CAddWorkWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9ThenAdvanceWorkByte2BmagicMagic01500_801F0248.c",
     "src/bof3/bmagic/callAF4A0With1800DecrementWorkByte9AddWorkWord20ToWord14AccumulateIntoHalfword3EStepMotionPairThenOnCountdownCopyRecordWordsAddC00ToHalfword3ECallAF4A0With20000AndAdvanceWorkByte2BmagicMagic01500_801F0570.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceAndRunSubStepBelow4AndPopMatrixWhenWorkByte9SetBmagicMagic01500_801F0C30.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkCountdownThenSeedMotionPairAndSetTintFromWorkByteBAt4ThenAdvanceWorkByte2BmagicMagic01500_801F0654.c",

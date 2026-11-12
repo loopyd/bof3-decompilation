@@ -490,8 +490,10 @@ segments:
     - '@source: src/bof3/world/drawSemiTransPaletteRectangleBorder.c'
     - '@behavior: draws the semi-transparent border of the requested rectangle in a palette colour: it reads the 15-bit entry zero of sub-palette row 1 of the CLUT bank selected by the shared CLUT-bank byte D_80144952, expands it into the red, green and blue channel bytes, then emits two semi-transparent flat three-point lines from the shared primitive cursor, the first through (x, y + h), (x + w, y + h) and (x + w, y) and the second through (x, y + h), (x, y) and (x + w, y), queueing each 0x18-byte packet with func_8014E5A0(2, 0x18); the trailing byte selects texture-page draw mode 7 or 6 for the first line and the opposite mode for the second.'
   - - 35648
-    - asm
-    - func_801D9740
+    - c
+    - drawMessageTokenCellQuad
+    - '@source: src/bof3/world/drawMessageTokenCellQuad.c'
+    - '@behavior: draws one panel message token as a single flat textured quad from the shared primitive cursor: stamps a POLY_FT4, selects the texture page from the graphics type (0x8F when the query answers 1 or 2 and 0x2F otherwise, replaced by 0xAF or 0x3F on the table-cell path), derives the atlas cell of the token byte (the ASCII cell of byte - 0x30 on the 31-column 8-pixel table with a 0x48 row offset, the cell of byte + 0x5B for control code 0x15, and for control codes 0x12 and 0x13 the cell of the carried byte, plus 0x100 for 0x13, on the 21-column 12-pixel table), spans the requested x to x + (width byte 0x7F mask) at the rows D_80144154 + 3 and + 0xC, takes the mid grey 0x80, the CLUT row 0x1E0 with the low nibble of the first argument, shifts the horizontal texture coordinate right by 8 - width when bit 0x80 of the width byte is set, and appends the 0x28-byte packet at ordering-table slot 1.'
   - - 36628
     - c
     - func_801D9B14

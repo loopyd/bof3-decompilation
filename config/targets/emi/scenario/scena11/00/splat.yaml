@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F778C
   - - 4092
-    - asm
-    - func_801F7BFC
+    - c
+    - armProgress1UnlessMode2ThenWaitProgress3SetFlagBit5AndClearStateScenarioScena1100_801F7BFC
+    - '@source: src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress3SetFlagBit5AndClearStateScenarioScena1100_801F7BFC.c'
+    - '@behavior: Word 2 of the overlay-local second-level handler run at 0x801FAEFC, reached by dispatchSecondaryStateScenarioScena1100_801F7748 via the shared primary state byte D_80146874. Takes the address of the shared secondary sub-state byte D_80146875 once and switches on it: sub-state 0, while the shared front-end mode byte D_80143BB0 is not 2, stores 1 in the shared progress byte g_ScenarioProgress, runs func_801BE1B0 with 0 and advances the sub-state to 1; sub-state 1, once the progress byte reads 3, sets flag bit 5 of the shared flag word D_8014686C through func_8015B580, runs the shared overlay release helper func_8015C058, clears the shared bytes 0x80146865, 0x80146866 and 0x80146867, then clears D_80146875 and the primary state byte D_80146874. Every other sub-state returns untouched. Takes no arguments and returns nothing; its 0x20-byte frame keeps $ra, $s0 and $s1.'
   - - 4296
     - asm
     - func_801F7CC8

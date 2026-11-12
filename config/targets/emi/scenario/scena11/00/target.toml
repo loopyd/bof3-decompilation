@@ -12,6 +12,7 @@ sources = [
     "src/bof3/scenario/setSubstate2ClearProgressAndSharedStateBytesAndRequestPrimaryState0BScenarioScena1100_801FA930.c",
     "src/bof3/scenario/claimFrontEndRecordPublishWorkPointerAndResetStateScenarioScena1100_801F82D8.c",
     "src/bof3/scenario/raiseSharedPanelRamp4UntilF1ThenDispatchCue203AndSelectHandler2ScenarioScena1100_801F7178.c",
+    "src/bof3/scenario/armProgress1UnlessMode2ThenWaitProgress3SetFlagBit5AndClearStateScenarioScena1100_801F7BFC.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",

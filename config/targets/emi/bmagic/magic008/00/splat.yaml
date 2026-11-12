@@ -219,8 +219,10 @@ segments:
     - asm
     - func_801F0E54
   - - 9124
-    - asm
-    - func_801F0FA4
+    - c
+    - copyRecordPositionPairOnFrameParityElseAddStepPairThenInvokeHelperDecrementWorkByte9AndOnZeroReseedWorkByte9FromWorkByteBPlus4AndAdvanceWorkByte2BmagicMagic00800_801F0FA4
+    - '@source: src/bof3/bmagic/copyRecordPositionPairOnFrameParityElseAddStepPairThenInvokeHelperDecrementWorkByte9AndOnZeroReseedWorkByte9FromWorkByteBPlus4AndAdvanceWorkByte2BmagicMagic00800_801F0FA4.c'
+    - '@behavior: Work-state handler of this overlay: entry 1 of the six-entry code pointer table at 0x801EEC94 (0x801F0E54, 0x801F0FA4, 0x801F1090, 0x801F117C, 0x801F11C4, 0x801F1274), which 0x801F0DA8 copies into its own frame and selects with scratchpad work-object byte 2, so this body runs while work byte 2 is 1. Bit 0 of the shared frame counter at 0x80143E6C picks the arm. On a set bit the handler copies the position word pair 0x34/0x38 of the shared battle work record into the work object pair at the same offsets, both stores issued through one pointer-cell read, then invokes the shared helper 0x8014DAEC and drops the readiness byte it returns; on a clear bit it instead accumulates the object step pair: word 0x34 gains step word 0xC and word 0x38 gains step word 0x10, each read and written in place with lw / addu / sw through one pointer-cell read. Only on the set-bit arm does it count the object countdown byte 9 down in place (lbu / addiu -1 / sb) and test the stored byte truncated to eight bits (andi $v0,$v0,0xFF / bnez); when that countdown reaches zero it re-reads the pointer cell to store work byte 0xB plus 4 into byte 9, then re-reads the cell once more to increment work byte 2 with a byte-width add, moving dispatch to entry 2 at 0x801F1090. The 0x18-byte frame keeps only $ra at 0x10 across the one call; the function takes no arguments, returns nothing and reads or writes no other state.'
   - - 9360
     - asm
     - func_801F1090
