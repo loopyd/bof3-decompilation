@@ -19,6 +19,7 @@ sources = [
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664.c",
     "src/bof3/world/appendTransformedG4PanelWorld02Area08813_801F4A30.c",
     "src/bof3/world/drawTranslucentGouraudFanOfEightTrianglesAroundGivenCenterFadingFromTintToBlackWorld02Area08813_801F3600.c",
+    "src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld02Area08813_801F52C8.c",
 ]
 support_sources = [
     "src/bof3/world/area08813_work_state.c",

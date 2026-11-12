@@ -15,6 +15,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0110And01C0AndPopWhenWorkBytes0And2SetBmagicMagic05303_801EFD94.c",
     "src/bof3/bmagic/seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic05303_801EFE1C.c",
     "src/bof3/bmagic/stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420.c",
+    "src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic053_03_symbols.c",

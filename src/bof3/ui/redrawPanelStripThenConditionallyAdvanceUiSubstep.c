@@ -9,7 +9,7 @@
  *           argument. When the saved-state byte D_8014865C holds the -1
  *           sentinel it submits the texture row 0x1C at row 0x16 through
  *           func_8014F800 with the value returned by func_801502D0(0x1D) and
- *           takes the advance decision from the low byte of func_801DA678;
+ *           takes the advance decision from the low byte of drawTwoOptionPromptThenReportChoice;
  *           otherwise the decision is bit 2 of the global gate halfword
  *           D_801490A4. A nonzero decision advances the UI sub-step byte
  *           D_80148652 by one.
@@ -34,7 +34,7 @@ void redrawPanelStripThenConditionallyAdvanceUiSubstep(void) {
   } else {
     prim = func_801502D0(0x1D);
     func_8014F800(0x1C, 0x16, 0, 0xFF, prim);
-    advance = func_801DA678() & 0xFF;
+    advance = drawTwoOptionPromptThenReportChoice() & 0xFF;
   }
   if (advance != 0) {
     D_80148652 += 1;

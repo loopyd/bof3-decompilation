@@ -11,7 +11,7 @@
  *           D_8014865D, then draws the panel through
  *           emitFlatLineRectangleBorder with the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6.
- *           When the two-option prompt helper func_801DA678 reports a choice
+ *           When the two-option prompt helper drawTwoOptionPromptThenReportChoice reports a choice
  *           through a nonzero low byte, the step charges the selection: it
  *           re-arms the work-block byte D_8014865B with 0xC, the frame timer
  *           phaseTimer with 0x3C and advances the UI phase byte D_80148651 by
@@ -29,7 +29,7 @@
  * @residual none
  *
  * The selection byte is tested through a signed pointer view because the
- * original loads it with `lb` (as the sibling func_801DA678 does at its own
+ * original loads it with `lb` (as the sibling drawTwoOptionPromptThenReportChoice does at its own
  * signed test) while the same cell is read zero-extended elsewhere.
  *
  * The main-RAM value D_80144F50 is written through a pointer local: the original
@@ -50,7 +50,7 @@ void drawShopSlotListThenChargeOnConfirm(void) {
   func_801D7E1C(work[0], 0x98, 0x3F, 0, D_8014865D);
   emitFlatLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
                               0x34, 0, 6);
-  if ((u8)func_801DA678()) {
+  if ((u8)drawTwoOptionPromptThenReportChoice()) {
     if (*(s8*)&D_8014865B) {
       value = &D_80144F50;
       record_offset = D_80145FCC[(s8)work[0] * 0x140] * 164;

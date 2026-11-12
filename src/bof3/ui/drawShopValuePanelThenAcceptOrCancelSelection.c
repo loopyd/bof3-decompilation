@@ -12,7 +12,7 @@
  *           the sliding shop value panel through func_801DDFB0 at the origin
  *           (0x62, 0x4C) with the overlay flag byte D_801E60F8, the main-RAM
  *           byte D_8018E260 and the variant constant 1.
- *           When the two-option prompt helper func_801DA678 reports a choice
+ *           When the two-option prompt helper drawTwoOptionPromptThenReportChoice reports a choice
  *           through a nonzero low byte, the step either accepts the armed
  *           selection or cancels: while the work-block byte D_8014865B is
  *           nonzero it plays the accept cue 0x104 through the cue dispatcher
@@ -29,7 +29,7 @@ void drawShopValuePanelThenAcceptOrCancelSelection(void) {
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0x91));
   func_801DDFB0(0x62, 0x4C, D_801E60F8, D_8018E260, 1);
-  if ((u8)func_801DA678()) {
+  if ((u8)drawTwoOptionPromptThenReportChoice()) {
     /* The original materializes this cell's address once and reuses that base
      * for the signed load and the clear store (lui+addiu / lb 0() / sb 0()
      * through one callee-saved register), so both accesses go through the

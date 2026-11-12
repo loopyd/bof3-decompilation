@@ -175,6 +175,7 @@ func_801D910C = 0x801D910C;
 drawSpritePrimTpageFromAbrShop00_801D9160 = 0x801D9160;
 func_801DA00C = 0x801DA00C;
 emitPanelIconPrim = 0x801DA120;
+drawTwoOptionPromptThenReportChoice = 0x801DA678;
 func_801DA9C4 = 0x801DA9C4;
 func_801DAA78 = 0x801DAA78;
 func_801DAB90 = 0x801DAB90;

@@ -43,7 +43,7 @@ setSubstate14ClearSharedStateBytesAndRequestPrimaryState4ScenarioScena1200_801FC
 func_801FC690 = 0x801FC690;
 func_801FC6E0 = 0x801FC6E0;
 clearSharedStateBytesThenRequestPrimaryState8ScenarioScena1200_801FC738 = 0x801FC738;
-func_801FC784 = 0x801FC784;
+setSubstate1EClearSharedStateBytesAndRequestPrimaryState8ScenarioScena1200_801FC784 = 0x801FC784;
 requestPrimaryState1Substate10ScenarioScena1200_801FC7D4 = 0x801FC7D4;
 func_801FC80C = 0x801FC80C;
 func_801FC890 = 0x801FC890;

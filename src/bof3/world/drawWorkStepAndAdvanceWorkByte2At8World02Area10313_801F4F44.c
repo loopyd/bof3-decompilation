@@ -8,15 +8,18 @@
  */
 extern u8* D_1F800044;
 
-void func_801F5174(s32 arg0, s32 arg1);
+void drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174(
+    s32 arg0, s32 arg1);
 void func_801F53F0(s32 arg0);
 
 /* @source 0x801F4F44
  * @behavior Overlay step handler, entry 0 of the work-byte-2 handler table at
  *           0x801F5A28. It re-reads the work-record pointer cell at scratchpad
  *           0x1F800044 for each access group: hands the record's byte at 0x09
- *           to the drawer func_801F5174 together with 0x80, hands that same
- *           byte to the drawer func_801F53F0, increments byte 0x09 through a
+ *           to the drawer
+ *           drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174
+ *           together with 0x80, hands that same byte to the drawer
+ *           func_801F53F0, increments byte 0x09 through a
  *           fresh cell read, then re-reads the cell once more and advances the
  *           byte-2 dispatch step when byte 0x09 has reached 8. Both callees
  *           emit display-list primitives (SetPolyFT4 with RotTransPers4, and
@@ -35,7 +38,8 @@ void drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44(void) {
   u8* stepCell;
 
   drawCell = D_1F800044;
-  func_801F5174(drawCell[9], 0x80);
+  drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174(
+      drawCell[9], 0x80);
   drawCell = D_1F800044;
   func_801F53F0(drawCell[9]);
   stepCell = D_1F800044;

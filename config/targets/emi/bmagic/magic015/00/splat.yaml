@@ -131,8 +131,10 @@ segments:
     - asm
     - func_801F0248
   - - 5888
-    - asm
-    - func_801F0300
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01500_801F0300
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01500_801F0300.c'
+    - '@behavior: Entry 24 of the overlay handler table at 0x801EEC04, the word the tabledata segment stores at 0x801EEC64: it reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record byte 0xB by one at byte width and invokes the shared helper at 0x801E5988 unconditionally, the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. No jal word in the payload targets this address and the table run''s only in-payload reader copies its first four words, so the caller is outside the overlay.'
   - - 5940
     - asm
     - func_801F0334

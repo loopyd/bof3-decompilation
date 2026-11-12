@@ -8,13 +8,15 @@
  */
 extern u8* D_1F800044;
 
-void func_801F5174(s32 arg0, s32 arg1);
+void drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174(
+    s32 arg0, s32 arg1);
 
 /* @source 0x801F507C
  * @behavior Overlay step handler, entry index 2 of the four-pointer work-byte-2
  *           handler table at 0x801F5A28. It reads the work record published
  *           through the scratchpad pointer cell 0x1F800044 and hands the drawer
- *           func_801F5174 a ramp pair derived from that record's byte at 0x09:
+ *           drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174
+ *           a ramp pair derived from that record's byte at 0x09:
  *           (0x1F - byte) / 4 as the per-band step and (0x1F - byte) * 4 as the
  *           shade level, which draws eight shaded textured quads whose step and
  *           shade level both shrink as the byte grows. It then re-reads the cell
@@ -39,7 +41,8 @@ void drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C(void) {
 
   drawCell = D_1F800044;
   ramp = 0x1F - drawCell[9];
-  func_801F5174(ramp / 4, ramp * 4);
+  drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174(
+      ramp / 4, ramp * 4);
   incCell = D_1F800044;
   incCell[9]++;
   stepCell = D_1F800044;

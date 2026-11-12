@@ -13,7 +13,7 @@
  *           func_801502D0(0x90) as its fifth argument, and draws the panel row
  *           through the row emitter func_801D67B0 at the fixed coordinates
  *           (0x20, 0x30, 0).
- *           When the two-option prompt helper func_801DA678 reports a choice
+ *           When the two-option prompt helper drawTwoOptionPromptThenReportChoice reports a choice
  *           through a nonzero low byte, the step either accepts or cancels.
  *           While the work-block byte D_8014865B is nonzero it plays the accept
  *           cue 0x104 through the cue dispatcher func_8015DF18, reads the UI
@@ -36,7 +36,7 @@ void drawShopPanelRowThenArmAcceptTransition(void) {
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(0x90));
   func_801D67B0(0x20, 0x30, 0);
-  if ((u8)func_801DA678()) {
+  if ((u8)drawTwoOptionPromptThenReportChoice()) {
     /* The original tests the work-block byte with a signed load (lb) on the
      * bare symbol expression rather than through a pointer local, because the
      * accept arm stores three other cells before it. */

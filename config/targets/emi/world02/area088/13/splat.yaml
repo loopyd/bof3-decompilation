@@ -211,8 +211,10 @@ segments:
     - c
     - invokeTwoHelpersWorld02Area08813_801F52A0
   - - 9928
-    - asm
-    - func_801F52C8
+    - c
+    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld02Area08813_801F52C8
+    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld02Area08813_801F52C8.c'
+    - '@behavior: Draws the pulsing textured panel of the focus area and then the scrolling grid of semitransparent textured cells around it. Initializes work byte 0x02 and adds the low nibble of the shared frame counter 0x80143E6C to work halfword 0x3A, returns while bit 4 of the shared byte 0x8014832E is clear, advances work word 0x38 by 0x800 plus work byte 0x0B minus two shifted left ten, wraps halfword 0x3A to -8 above the map height byte 0x80104001 plus eight, and returns unless a shared focus halfword 0x8014930A or 0x8014930E lies within 0x1A of work halfword 0x36 or 0x3A. It projects one textured quad at depth -0x300 over the scratchpad vectors 0x1F800014 through RotTransPers4 with a half extent of the layer width plus the frame counter low five bits mirrored around 0xF, hands it to the shared 0x80155560 with the layer byte out of 0xBB509100 and reserves it through GpuAppendPrim(4, 0x28), then walks a (2 - layer) * 4 + 1 by (2 - layer) * 4 grid whose cells come from the shared 0x801559AC lookup and take their texture window from this payload trailing byte tables 0x801F6278, 0x801F627C and 0x801F6280 at index layer before being queued through the shared 0x80155A08 with both coordinates shifted left by 16.'
   - - 11484
     - textbin
     - D_801F58DC

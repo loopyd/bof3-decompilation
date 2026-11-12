@@ -32,8 +32,10 @@ void func_8015C088(void);
  * clearSharedStateBytesThenRequestPrimaryState6ScenarioScena1100_801FA75C
  * (0x801FA75C, stores 6) of emi/scenario/scena11/00, which run the same helper,
  * clear the same four bytes and differ only in the one stored constant; the
- * neighbouring word 13 of the same table, the still-unlifted func_801FC784
- * (0x801FC784), carries the same shape with sub-state 0x1E and primary state 8.
+ * neighbouring word 13 of the same table,
+ * setSubstate1EClearSharedStateBytesAndRequestPrimaryState8ScenarioScena1200_801FC784
+ * (0x801FC784), carries the same shape with sub-state 0x1E and primary state 8;
+ * that span was still on its asm row when this seed was written.
  * The name records that proven behavior and the address anchor keeps it
  * target-qualified.
  * @status exact

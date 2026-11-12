@@ -165,8 +165,8 @@ segments:
     - c
     - requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC734
   - - 23524
-    - asm
-    - func_801FC7E4
+    - c
+    - runFrontEndStartupSetProgress23AndRequestPrimaryState1AOnModeCellMatchScenarioScena0200_801FC7E4
   - - 24012
     - c
     - queueCue20BAndRequestPrimaryState1ASubstate1EOnModeCellMatchScenarioScena0200_801FC9CC

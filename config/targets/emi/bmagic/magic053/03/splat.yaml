@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EF7E0
   - - 3632
-    - asm
-    - func_801EFA30
+    - c
+    - drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByteATimesFourBmagicMagic05303_801EFA30.c'
+    - '@behavior: Draw sixty-four translucent Gouraud quads that span the ring between work byte 0xB and twice that radius, one sixty-fourth of a turn per pass, choosing page 0x125 for graph types 1 and 2 and 0x55 otherwise, seeding the four quad cells from the shared rotator pair at turn zero, tinting the work-byte-0xB edge with work byte 0xA shifted left two and leaving the doubled edge at 1.'
   - - 4432
     - c
     - dispatchStateByte1Table0568BmagicMagic05303_801EFD50

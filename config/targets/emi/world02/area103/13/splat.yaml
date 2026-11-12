@@ -162,25 +162,27 @@ segments:
     - c
     - drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44
     - '@source: src/bof3/world/drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44.c'
-    - '@behavior: hands work-record byte 0x09 to the drawer func_801F5174 with 0x80 and then to the drawer func_801F53F0, increments byte 0x09 through its own reload of the scratchpad pointer cell 0x1F800044, and advances the byte-2 dispatch step when byte 0x09 has reached 8.'
+    - '@behavior: hands work-record byte 0x09 to the drawer drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174 with 0x80 and then to the drawer func_801F53F0, increments byte 0x09 through its own reload of the scratchpad pointer cell 0x1F800044, and advances the byte-2 dispatch step when byte 0x09 has reached 8.'
   - - 9172
     - c
     - drawWorkStep7AndAdvanceWorkByte2At20World02Area10313_801F4FD4
     - '@source: src/bof3/world/drawWorkStep7AndAdvanceWorkByte2At20World02Area10313_801F4FD4.c'
-    - '@behavior: hands the ramp drawer func_801F5174 the fixed pair (7, 0x80), the hardest per-band step of the 0x1F-down ramp with the 0x80 shade level, then reads the work record published through the scratchpad pointer cell 0x1F800044 and, only while that record''s byte 0x09 is below 0x10, hands the byte to the arg-scaled quad drawer func_801F53F0, increments byte 0x09 through a fresh cell read, and clears it and advances the record''s work-byte-2 dispatch step when a further cell read shows it has reached 0x20.'
+    - '@behavior: hands the ramp drawer drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174 the fixed pair (7, 0x80), the hardest per-band step of the 0x1F-down ramp with the 0x80 shade level, then reads the work record published through the scratchpad pointer cell 0x1F800044 and, only while that record''s byte 0x09 is below 0x10, hands the byte to the arg-scaled quad drawer func_801F53F0, increments byte 0x09 through a fresh cell read, and clears it and advances the record''s work-byte-2 dispatch step when a further cell read shows it has reached 0x20.'
   - - 9340
     - c
     - drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C
     - '@source: src/bof3/world/drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C.c'
-    - '@behavior: reads the work record published through the scratchpad pointer cell 0x1F800044 and hands the drawer func_801F5174 (0x1F - byte 0x09) / 4 as a per-band step and (0x1F - byte 0x09) * 4 as a shade level, then increments byte 0x09 and, when a fresh cell read shows it has reached 0x19, clears byte 0x09 and advances the record''s work-byte-2 dispatch step.'
+    - '@behavior: reads the work record published through the scratchpad pointer cell 0x1F800044 and hands the drawer drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174 (0x1F - byte 0x09) / 4 as a per-band step and (0x1F - byte 0x09) * 4 as a shade level, then increments byte 0x09 and, when a fresh cell read shows it has reached 0x19, clears byte 0x09 and advances the record''s work-byte-2 dispatch step.'
   - - 9500
     - c
     - advanceWorkByte9AndResetWorkAreaAt1dWorld02Area10313_801F511C
     - '@source: src/bof3/world/advanceWorkByte9AndResetWorkAreaAt1dWorld02Area10313_801F511C.c'
     - '@behavior: entry 3 of the work-byte-2 handler table at 0x801F5A28; increments work-record byte 0x09 through its own read of the scratchpad pointer cell 0x1F800044 and, when a fresh cell read shows that byte has reached 0x1D, calls the shared work-area reset helper func_80196070.'
   - - 9588
-    - asm
-    - func_801F5174
+    - c
+    - drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174
+    - '@source: src/bof3/world/drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174.c'
+    - '@behavior: reads the work record published through the scratchpad pointer cell 0x1F800044, takes its signed halfwords 0x36 and 0x3A as the integer parts of the band centre shifted left seven, and hands its position words 0x34 and 0x38 to the shared distance helper func_8015477C, whose returned distance halved and negated becomes the near edge; the low three bits of the shared frame counter 0x80143E6C shifted left two then oscillate that edge by the first argument, the per-band step, while the second argument is the starting shade scale. Eight times it takes a primitive from g_PrimCursor, seeds it as a flat-shaded textured quad, fills the four scratchpad vectors at 0x1F800014 with a square of half-extent band / 4 + 8 + twice the running offset, whose first corner stands one first-argument step of sixteen units in front of the middle pair and whose last corner stands the same amount behind them, projects them through RotTransPers4 rotated by one corner, fills the texture state with the packed draw word 0xBA009124 carrying the slice index divided by four in bits 19 and above, carries the shade scale through (slice * (scale << 18)) / 0x80 masked to 0xF8000000, and links the 0x28-byte packet through func_80155A08 with kind 2 after re-reading the record position pair, advancing the per-slice depth offset by the first argument so the eight slices recede eight units at a time.'
   - - 10224
     - asm
     - func_801F53F0

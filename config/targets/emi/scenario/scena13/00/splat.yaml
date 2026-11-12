@@ -79,8 +79,10 @@ segments:
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F75F8
   - - 2620
-    - asm
-    - func_801F763C
+    - c
+    - claimTwoWorkRecordsThenActivateBothWithSharedEntryOpenWord38By10000SetFlag20AndArmByte9ScenarioScena1300_801F763C
+    - '@source: src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithSharedEntryOpenWord38By10000SetFlag20AndArmByte9ScenarioScena1300_801F763C.c'
+    - '@behavior: Work-byte-1 handler of this overlay, entry 8 (the word at 0x801FBF10) of the twelve-word work-object handler table D_801FBEF0 that dispatchWorkByte1HandlerScenarioScena1300_801F6EA4 indexes with the scratchpad work object byte 1. It asks the shared allocator func_8015CA48 for a free record identifier and stores it at cursor byte 3, returning when it is 0xFF, otherwise sets the flag byte of the 0x80146888 record it scales, asks for a second identifier at cursor byte 4 and clears that first flag byte again when the second is 0xFF. With two identifiers it sets the second record flag byte, publishes each identifier as the scratchpad halfword 0x1F800000 and hands the in-image entry at 0x801FBF20 to func_801A4D54 twice, republishing the work object at 0x1F800044. It then opens the 0x38 word of the two records by -0x10000 and +0x10000, sets bit 0x20 of both flag bytes, stores 1 into the 0x801468E4 byte of both records, submits both through func_8019651C with the 0xF mask and mode 1, and arms cursor byte 9 to 0x20 and cursor byte 1 to 1. It takes no arguments, returns nothing and its 0x38-byte frame keeps $ra at 0x30 and $s0 to $s3 at 0x20 to 0x2C.'
   - - 3416
     - c
     - convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958

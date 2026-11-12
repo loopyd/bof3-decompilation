@@ -30,7 +30,7 @@ decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWo
 func_801F014C = 0x801F014C;
 func_801F0194 = 0x801F0194;
 func_801F0248 = 0x801F0248;
-func_801F0300 = 0x801F0300;
+decrementGlobalWorkByteBAndInvokeHelperBmagicMagic01500_801F0300 = 0x801F0300;
 func_801F0334 = 0x801F0334;
 decrementWorkCountdownThenSeedMotionFieldsAndSetTintWhenGlobalWorkByteBIsSetBmagicMagic01500_801F045C = 0x801F045C;
 func_801F0570 = 0x801F0570;

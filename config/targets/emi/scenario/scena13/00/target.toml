@@ -30,6 +30,7 @@ sources = [
     "src/bof3/scenario/setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414.c",
     "src/bof3/scenario/setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70.c",
     "src/bof3/scenario/setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568.c",
+    "src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithSharedEntryOpenWord38By10000SetFlag20AndArmByte9ScenarioScena1300_801F763C.c",
 ]
 support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88.c",

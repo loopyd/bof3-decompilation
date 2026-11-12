@@ -22,7 +22,7 @@ extern u8 D_801D4E24; /* @source 0x801D4E24 @kind data */
 extern u16 D_801D4E0C; /* @source 0x801D4E0C @kind data */
 
 extern void restoreSavedCommuRequestStateAndStepBack(void);
-extern s32 func_801D482C(s32 offset);
+extern s32 commitCommuEntryRequestIntoActiveRecord(s32 offset);
 extern void func_801D3B0C(u8 *rowPtr);
 extern void func_801D36FC(u8 row, u8 selected);
 extern void func_801D3038(void);
@@ -41,7 +41,8 @@ u8 findActiveRecordSlotByKind(u8 kind, u8 ordinal);
  * text id of 0x801448ED through publishCommuEntryTextId into the result
  * halfword 0x801D4E0C. While it
  * shares a bit with the confirm mask 0x80145AC2 it commits the request row
- * through func_801D482C with offset 1 and stores result code 0xB5 into
+ * through commitCommuEntryRequestIntoActiveRecord with offset 1 and stores
+ * result code 0xB5 into
  * 0x801D4E0C when the returned low byte is nonzero. When neither mask matches it
  * moves the request row byte 0x801D4E28 through func_801D3B0C and publishes that
  * row text id through publishCommuEntryTextIdForRow. Every path then runs
@@ -71,7 +72,7 @@ void handleCommuEntryListInputThenDraw(void) {
     restoreSavedCommuRequestStateAndStepBack();
     publishCommuEntryTextId();
   } else if (pad & D_80145AC2) {
-    committed = func_801D482C(1);
+    committed = commitCommuEntryRequestIntoActiveRecord(1);
     if (committed & 0xFF) {
       D_801D4E0C = 0xB5;
     }

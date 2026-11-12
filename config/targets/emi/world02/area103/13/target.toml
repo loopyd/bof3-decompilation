@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/drawFourthBlockVariantOnFourthFifthTickGroupAtScenarioProgress0fElseFifthTickVariantAndRunSecondPassWorld02Area10313_801F43EC.c",
     "src/bof3/world/countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C.c",
     "src/bof3/world/requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C.c",
+    "src/bof3/world/drawEightShadedTexturedQuadsSteppingDepthAtWorkPositionWorld02Area10313_801F5174.c",
 ]
 support_sources = [
     "src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c",

@@ -22,6 +22,7 @@ sources = [
     "src/bof3/ui/saveCommuRequestStateAndSelectStep5.c",
     "src/bof3/ui/restoreSavedCommuRequestStateAndStepBack.c",
     "src/bof3/ui/handleCommuEntryListInputThenDrawCommu0107_801D1158.c",
+    "src/bof3/ui/commitCommuEntryRequestIntoActiveRecord.c",
 ]
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",
