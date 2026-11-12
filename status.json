@@ -1,18 +1,18 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "22c7ef40b80e771bf2e62633a5188bdc5b2c04ca",
-  "published_at": "2026-11-12T19:28:05.196935+00:00",
+  "revision": "76838e98292f450c0f7853ed218b2544a852f1e7",
+  "published_at": "2026-11-12T19:41:57.662269+00:00",
   "counts": {
-    "completed": 5619,
+    "completed": 5624,
     "partial": 389,
-    "unlifted": 4547,
+    "unlifted": 4542,
     "invalid": 0,
     "total": 10555,
     "symbols": {
-      "named": 68253,
-      "raw": 55536,
-      "total": 123789
+      "named": 68258,
+      "raw": 55532,
+      "total": 123790
     }
   },
   "targets": [
@@ -175,14 +175,14 @@
       "family": "bmagic",
       "archive": "magic008",
       "entry": "00",
-      "completed": 44,
+      "completed": 45,
       "partial": 0,
-      "unlifted": 21,
+      "unlifted": 20,
       "invalid": 0,
       "total": 65,
       "symbols": {
-        "named": 204,
-        "raw": 145,
+        "named": 205,
+        "raw": 144,
         "total": 349
       }
     },
@@ -2963,15 +2963,15 @@
       "family": "etc",
       "archive": "shop",
       "entry": "00",
-      "completed": 184,
+      "completed": 185,
       "partial": 12,
-      "unlifted": 35,
+      "unlifted": 34,
       "invalid": 0,
       "total": 231,
       "symbols": {
-        "named": 281,
+        "named": 282,
         "raw": 369,
-        "total": 650
+        "total": 651
       }
     },
     {
@@ -3575,14 +3575,14 @@
       "family": "scenario",
       "archive": "scena11",
       "entry": "00",
-      "completed": 46,
+      "completed": 47,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
       "total": 52,
       "symbols": {
-        "named": 205,
-        "raw": 131,
+        "named": 206,
+        "raw": 130,
         "total": 336
       }
     },
@@ -3592,14 +3592,14 @@
       "family": "scenario",
       "archive": "scena12",
       "entry": "00",
-      "completed": 52,
+      "completed": 53,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 67,
       "symbols": {
-        "named": 211,
-        "raw": 142,
+        "named": 212,
+        "raw": 141,
         "total": 353
       }
     },
@@ -3626,14 +3626,14 @@
       "family": "scenario",
       "archive": "scena14",
       "entry": "00",
-      "completed": 28,
+      "completed": 29,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 44,
       "symbols": {
-        "named": 187,
-        "raw": 140,
+        "named": 188,
+        "raw": 139,
         "total": 327
       }
     },
