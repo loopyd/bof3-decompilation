@@ -205,10 +205,10 @@ representation without proving actual selection, transfer, residency, upload,
 display, the absence of rasterized text or safe editing. Other archives retain
 their existing records and gates.
 
-## PL247 and PL257 compressed image field coverage
+## Additional compressed player image field coverage
 
-Coverage recognizes reviewed fields in entry 3 of the exact original US
-`BIN/PLCHAR/PL247.EMI` and `BIN/PLCHAR/PL257.EMI` archives. Both entries use
+Coverage recognizes reviewed fields in entry 3 of the following exact original US
+`BIN/PLCHAR/` archives. These entries use
 transfer mode 1 and load address `0x8003B800`. Each profile also requires its
 file offset, packed size, checkword and payload SHA-256 below. The checkword
 is the decoded byte count.
@@ -217,13 +217,21 @@ is the decoded byte count.
 | --- | --- | --- | --- | --- |
 | `PL247.EMI` | 71680 | 327152 | 408396 | `0ed30aece981f5c9b97ca1cd96ce35f55c51e905b29225feba5e014a41edc895` |
 | `PL257.EMI` | 71680 | 328837 | 406900 | `0f2d7c069e65a7c7ad6c3e798a707bfb129c0885b28736e5e7cc304660ee298b` |
+| `PL278.EMI` | 73728 | 312757 | 392820 | `263581239eac67a6c611e7c3fc2aa59aae111a1e3bbbed02bd79383d454a61f2` |
+| `PL012.EMI` | 73728 | 292491 | 360412 | `934d31899d96e8110cab9a4544c4891a5c1705a4efc9bea247241ded1899ebc8` |
 
-The original family-0 requests bind index 7 to file slot 625 and IDs `[2,4,7]`,
-and index 8 to slot 626 and IDs `[2,5,7]`. GAME uses these IDs to select a
-root through the same conditional publication path as PL026. The reviewed
-directory reader and image consumers also match that rule. PL247 has 88 images
-in three directories; PL257 has 93. Both use only the reviewed mode-1 and
-mode-2 encodings.
+The original family-0 requests bind each archive to the following file slot and
+IDs. GAME uses these IDs to select a root through the same conditional
+publication path as PL026. The reviewed directory reader and image consumers
+also match that rule. Each source has three directories and uses only the
+reviewed mode-1 and mode-2 image encodings.
+
+| Archive | Family index | File slot | IDs | Images |
+| --- | --- | --- | --- | --- |
+| `PL247.EMI` | 7 | 625 | `[2,4,7]` | 88 |
+| `PL257.EMI` | 8 | 626 | `[2,5,7]` | 93 |
+| `PL278.EMI` | 10 | 628 | `[2,7,8]` | 92 |
+| `PL012.EMI` | 0 | 618 | `[0,1,2]` | 102 |
 
 The profiles classify root-relative words, image-directory words, image headers
 and consumed encoded words or tokens. The complete compression walk includes a
