@@ -1243,6 +1243,16 @@ pub fn payload_nontext_ranges(
         return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (_, _, 0, 0x801d_0c00, 118_224)
+            if sha256_hex(data)
+                == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1" =>
+        {
+            Some(vec![NontextRange {
+                offset: 0x14d0c,
+                length: 124,
+                evidence: "original US battle payload; complete instruction body 0x801E590C..0x801E5988 including return delay slot; complete original control-flow review, sized executable ELF function section and all nine text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, allocator-semantics, resource-safety or duplicate-source ownership claim",
+            }])
+        }
         (_, _, 0, 0x8009_6800, 133_316)
             if sha256_hex(data)
                 == "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140" =>

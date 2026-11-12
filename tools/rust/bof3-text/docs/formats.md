@@ -310,6 +310,21 @@ establishes the listed instruction and address bytes. It does not establish
 full-function execution, valid arguments, selector bounds, indirect-call safety,
 resource safety, a unique supplier or duplicate-source ownership.
 
+## Battle overlay instruction coverage
+
+Coverage recognizes the complete 124-byte body at `0x801E590C..0x801E5988`,
+payload `[0x14D0C,0x14D88)`, in original US raw payloads loaded at `0x801D0C00`
+with size 118224 and SHA-256
+`f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1`.
+The containing archive must also match the original disc manifest.
+All 31 instruction words match the complete sized executable ELF function section
+and captured resident RAM, with all nine text relocations reconciled.
+Complete original control-flow review includes every branch, jump, return and
+delay slot. The body contains no external calls, embedded data or literal pool.
+Neighboring bytes retain their prior status. This establishes instruction representation;
+execution, valid arguments, allocator behavior, resource safety and duplicate-source
+ownership remain unverified.
+
 ## Executable geometry table coverage
 
 Coverage recognizes the 32-byte numeric table at `0x8017F53C..0x8017F55C`
