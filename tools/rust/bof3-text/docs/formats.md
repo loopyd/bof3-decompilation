@@ -646,6 +646,15 @@ switch targets. Their separate address tables retain their prior status. The bod
 two `BREAK` exception paths. Indirect call targets and selectors remain unqualified. These checks do not establish feasible paths, exception handling or
 callee behavior.
 
+A separate complete original body at `[0x801DC044,0x801DC73C)`, payload
+`[0xB444,0xBB3C)`, qualifies through a conditional call. The original `JAL` at
+`0x801DBBFC` in the qualified caller at `0x801DBB78` targets this body and sets
+`a2=0xFFFF` in its delay slot. All 1,784 original body bytes match resident RAM;
+structural review covers all 446 instruction words and delay slots, assuming
+return from direct calls. Its compiled callee remains a partial mismatch and
+provides no admission basis. This establishes stored instructions, without
+observed entry, valid records, callee behavior or gameplay acceptance.
+
 The body at `0x801D4850` contains 156 instruction words. Its complete sized
 executable ELF section, all 54 text relocations, original bytes and resident RAM
 reconcile. Complete control-flow review covers ten conditional branches, two

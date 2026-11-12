@@ -1564,6 +1564,11 @@ pub fn payload_nontext_ranges(
                     evidence: "original US battle payload; complete instruction body 0x801DBB78..0x801DC044 including return delay slot; complete original control-flow review, sized executable ELF function section and all 91 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
                 },
                 NontextRange {
+                    offset: 0xb444,
+                    length: 1_784,
+                    evidence: "original US battle payload; complete original instruction body 0x801DC044..0x801DC73C including return delay slot; original JAL at 0x801DBBFC in the already qualified complete executable caller conditionally enters this body with a2=0xFFFF; complete original control-flow review and captured resident bytes reconcile; the compiled callee remains a partial mismatch and is not the admission basis; exact archive and payload identities; neighboring functions and data excluded; no observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
                     offset: 0xbc94,
                     length: 580,
                     evidence: "original US battle payload; complete instruction body 0x801DC894..0x801DCAD8 including return delay slot; complete original control-flow review, sized executable ELF function section and all 28 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
