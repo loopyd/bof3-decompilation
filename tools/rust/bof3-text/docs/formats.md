@@ -181,6 +181,30 @@ debug callbacks and queue paths remain separate execution questions. The rule
 does not establish a full palette upload, sampling, display, unique ownership or
 the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
+## PL026 compressed image field coverage
+
+The exact original US `BIN/PLCHAR/PL026.EMI` qualifies reviewed fields in
+entry 3, file offsets `[67584,329576)`. The entry uses transfer mode 1,
+load address `0x8003B800`, decoded size 339380 and packed payload SHA-256
+`48fd888c1d80aa62a812f0753fed508d2c65c7e82778783c3bd87233ec4ffc39`.
+The original family-0/index-4 request selects file slot 622. Its ID row
+`[0,2,6]` binds the conditional GAME root publication at
+`0x801C12F0/0x801C1308` to this source.
+
+The reviewed directory reader and image consumers are the same original routines
+used by the PL025 rule. This source has 29, 37 and 24 image-relative words in
+three directories. Its 90 images use 27 mode-1 and 63 mode-2 encodings.
+Coverage recognizes the reviewed root words, directory words, image headers
+and consumed encoded words or tokens. The complete outer walk propagates each
+physical literal origin through overlapping references. It includes a stored
+literal byte only when every decoded use lies within those reviewed fields.
+
+Palette, program and cell fields, mode-2 prefixes, unconsumed allocation tails
+and origins with any opaque alias remain unresolved. This rule qualifies stored
+representation without proving actual selection, transfer, residency, upload,
+display, the absence of rasterized text or safe editing. Other archives retain
+their existing records and gates.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
