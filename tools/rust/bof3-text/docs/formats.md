@@ -680,6 +680,74 @@ Neighboring bytes retain their prior status. This establishes instruction repres
 execution, valid arguments, allocator behavior, resource safety and duplicate-source
 ownership remain unverified.
 
+## SLUS instruction coverage
+
+Coverage recognizes the following complete bodies in the exact original US
+`SLUS_004.22`, with size 1445888 and SHA-256
+`0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a`.
+File offsets include the 2048-byte PS-X header. The header loads the following
+1443840 bytes at `0x80096800`.
+
+| File interval | Runtime interval | Bytes | Text relocations |
+| --- | --- | ---: | ---: |
+| `[0xB4A04,0xB4A0C)` | `[0x8014AA04,0x8014AA0C)` | 8 | 0 |
+| `[0xB4AC8,0xB4CA0)` | `[0x8014AAC8,0x8014ACA0)` | 472 | 66 |
+| `[0xB4CA0,0xB4D28)` | `[0x8014ACA0,0x8014AD28)` | 136 | 15 |
+| `[0xB4D28,0xB4E08)` | `[0x8014AD28,0x8014AE08)` | 224 | 24 |
+| `[0xB4E08,0xB4E9C)` | `[0x8014AE08,0x8014AE9C)` | 148 | 6 |
+| `[0xB4E9C,0xB4EE0)` | `[0x8014AE9C,0x8014AEE0)` | 68 | 1 |
+| `[0xB4EE0,0xB4FC0)` | `[0x8014AEE0,0x8014AFC0)` | 224 | 23 |
+| `[0xB50F0,0xB517C)` | `[0x8014B0F0,0x8014B17C)` | 140 | 9 |
+| `[0xB517C,0xB51A4)` | `[0x8014B17C,0x8014B1A4)` | 40 | 3 |
+| `[0xB51A4,0xB533C)` | `[0x8014B1A4,0x8014B33C)` | 408 | 48 |
+| `[0xB533C,0xB53C4)` | `[0x8014B33C,0x8014B3C4)` | 136 | 11 |
+| `[0xB573C,0xB5854)` | `[0x8014B73C,0x8014B854)` | 280 | 25 |
+| `[0xB5854,0xB587C)` | `[0x8014B854,0x8014B87C)` | 40 | 4 |
+| `[0xB587C,0xB58B0)` | `[0x8014B87C,0x8014B8B0)` | 52 | 3 |
+| `[0xB58B0,0xB5900)` | `[0x8014B8B0,0x8014B900)` | 80 | 8 |
+| `[0xB5900,0xB5954)` | `[0x8014B900,0x8014B954)` | 84 | 7 |
+| `[0xB7D3C,0xB7E78)` | `[0x8014DD3C,0x8014DE78)` | 316 | 25 |
+| `[0xB80FC,0xB822C)` | `[0x8014E0FC,0x8014E22C)` | 304 | 16 |
+| `[0xC7F18,0xC8994)` | `[0x8015DF18,0x8015E994)` | 2684 | 408 |
+| `[0xCBF58,0xCBFDC)` | `[0x80161F58,0x80161FDC)` | 132 | 12 |
+| `[0xCBFDC,0xCC160)` | `[0x80161FDC,0x80162160)` | 388 | 56 |
+| `[0xCC160,0xCC178)` | `[0x80162160,0x80162178)` | 24 | 2 |
+| `[0xCC178,0xCC1E8)` | `[0x80162178,0x801621E8)` | 112 | 15 |
+| `[0xCC1E8,0xCC230)` | `[0x801621E8,0x80162230)` | 72 | 4 |
+| `[0xCC230,0xCC500)` | `[0x80162230,0x80162500)` | 720 | 70 |
+| `[0xCC500,0xCC5E4)` | `[0x80162500,0x801625E4)` | 228 | 17 |
+| `[0xCC5E4,0xCC618)` | `[0x801625E4,0x80162618)` | 52 | 3 |
+| `[0xCC618,0xCC698)` | `[0x80162618,0x80162698)` | 128 | 14 |
+| `[0xCC698,0xCC790)` | `[0x80162698,0x80162790)` | 248 | 32 |
+| `[0xCC898,0xCC9F0)` | `[0x80162898,0x801629F0)` | 344 | 42 |
+| `[0xCC9F0,0xCCA6C)` | `[0x801629F0,0x80162A6C)` | 124 | 9 |
+| `[0xCCA6C,0xCCB08)` | `[0x80162A6C,0x80162B08)` | 156 | 13 |
+| `[0xCCB08,0xCCC14)` | `[0x80162B08,0x80162C14)` | 268 | 33 |
+| `[0xCCC14,0xCCCD8)` | `[0x80162C14,0x80162CD8)` | 196 | 20 |
+| `[0xCCCD8,0xCCD00)` | `[0x80162CD8,0x80162D00)` | 40 | 6 |
+| `[0xCCD00,0xCCD18)` | `[0x80162D00,0x80162D18)` | 24 | 0 |
+| `[0xCCD18,0xCCD9C)` | `[0x80162D18,0x80162D9C)` | 132 | 4 |
+| `[0xCF4F4,0xCF570)` | `[0x801654F4,0x80165570)` | 124 | 2 |
+| `[0xCF5F4,0xCF694)` | `[0x801655F4,0x80165694)` | 160 | 3 |
+| `[0xCFD48,0xCFE04)` | `[0x80165D48,0x80165E04)` | 188 | 16 |
+| `[0xD0CB0,0xD0CEC)` | `[0x80166CB0,0x80166CEC)` | 60 | 4 |
+| `[0xDD01C,0xDD0B8)` | `[0x8017301C,0x801730B8)` | 156 | 9 |
+| `[0xE927C,0xE92B4)` | `[0x8017F27C,0x8017F2B4)` | 56 | 5 |
+
+Every listed body matches its complete sized executable ELF section, original
+bytes and retained resident RAM, with all text relocations reconciled. Review
+covers every original instruction and delay slot. Call continuations assume
+returns. The boot loop at `0x8014AAC8` includes a four-word compiler epilogue at
+`0x8014AC90..0x8014ACA0` that is unreachable from its original entry. Complete
+section and relocation identity identifies those stored instructions; no path
+to that epilogue is established.
+
+The equipment selector body has five bounded internal switch targets. Its
+separate 20-byte address table remains unclassified. Four indirect call sites
+in three bodies retain unqualified targets and selectors. These checks establish
+stored instructions, without observed execution, valid arguments, callee
+behavior, loader or playback correctness, or resource safety.
+
 ## Executable geometry table coverage
 
 Coverage recognizes the 32-byte numeric table at `0x8017F53C..0x8017F55C`

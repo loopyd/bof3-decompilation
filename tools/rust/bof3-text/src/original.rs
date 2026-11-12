@@ -98,11 +98,228 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     if data.len() != 1_445_888 || sha256_hex(data) != US_EXECUTABLE_SHA256 {
         return Vec::new();
     }
-    vec![NontextRange {
-        offset: 955_708,
-        length: 32,
-        evidence: "original US SLUS 0x8017F53C..0x8017F55C unsigned width/height pairs; bounded byte-pair consumer 0x8014C7F0..0x8014C818; exact executable identity; stored numeric representation only",
-    }]
+    vec![
+        NontextRange {
+            offset: 739_844,
+            length: 8,
+            evidence: "original US SLUS; complete instruction body 0x8014AA04..0x8014AA0C including return delay slot; complete original word and control-flow review, sized executable ELF function section and complete object text without text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 740_040,
+            length: 472,
+            evidence: "original US SLUS; complete instruction body 0x8014AAC8..0x8014ACA0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 66 text relocations reconcile with original and captured resident bytes; compiler epilogue 0x8014AC90..0x8014ACA0 is unreachable from the original entry and receives no executable-path claim; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 740_512,
+            length: 136,
+            evidence: "original US SLUS; complete instruction body 0x8014ACA0..0x8014AD28 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 15 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 740_648,
+            length: 224,
+            evidence: "original US SLUS; complete instruction body 0x8014AD28..0x8014AE08 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 24 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 740_872,
+            length: 148,
+            evidence: "original US SLUS; complete instruction body 0x8014AE08..0x8014AE9C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 6 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 741_020,
+            length: 68,
+            evidence: "original US SLUS; complete instruction body 0x8014AE9C..0x8014AEE0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and its single text relocation reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 741_088,
+            length: 224,
+            evidence: "original US SLUS; complete instruction body 0x8014AEE0..0x8014AFC0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 23 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 741_616,
+            length: 140,
+            evidence: "original US SLUS; complete instruction body 0x8014B0F0..0x8014B17C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 9 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 741_756,
+            length: 40,
+            evidence: "original US SLUS; complete instruction body 0x8014B17C..0x8014B1A4 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 3 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 741_796,
+            length: 408,
+            evidence: "original US SLUS; complete instruction body 0x8014B1A4..0x8014B33C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 48 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 742_204,
+            length: 136,
+            evidence: "original US SLUS; complete instruction body 0x8014B33C..0x8014B3C4 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 11 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 743_228,
+            length: 280,
+            evidence: "original US SLUS; complete instruction body 0x8014B73C..0x8014B854 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 25 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 743_508,
+            length: 40,
+            evidence: "original US SLUS; complete instruction body 0x8014B854..0x8014B87C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 4 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 743_548,
+            length: 52,
+            evidence: "original US SLUS; complete instruction body 0x8014B87C..0x8014B8B0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 3 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 743_600,
+            length: 80,
+            evidence: "original US SLUS; complete instruction body 0x8014B8B0..0x8014B900 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 8 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 743_680,
+            length: 84,
+            evidence: "original US SLUS; complete instruction body 0x8014B900..0x8014B954 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 7 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 752_956,
+            length: 316,
+            evidence: "original US SLUS; complete instruction body 0x8014DD3C..0x8014DE78 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 25 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 753_916,
+            length: 304,
+            evidence: "original US SLUS; complete instruction body 0x8014E0FC..0x8014E22C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 16 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 818_968,
+            length: 2_684,
+            evidence: "original US SLUS; complete instruction body 0x8015DF18..0x8015E994 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 408 text relocations reconcile with original and captured resident bytes; indirect call targets and selectors remain unqualified; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 835_416,
+            length: 132,
+            evidence: "original US SLUS; complete instruction body 0x80161F58..0x80161FDC including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 12 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 835_548,
+            length: 388,
+            evidence: "original US SLUS; complete instruction body 0x80161FDC..0x80162160 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 56 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 835_936,
+            length: 24,
+            evidence: "original US SLUS; complete instruction body 0x80162160..0x80162178 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 2 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 835_960,
+            length: 112,
+            evidence: "original US SLUS; complete instruction body 0x80162178..0x801621E8 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 15 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 836_072,
+            length: 72,
+            evidence: "original US SLUS; complete instruction body 0x801621E8..0x80162230 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 4 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 836_144,
+            length: 720,
+            evidence: "original US SLUS; complete instruction body 0x80162230..0x80162500 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 70 text relocations reconcile with original and captured resident bytes; indirect call targets and selectors remain unqualified; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 836_864,
+            length: 228,
+            evidence: "original US SLUS; complete instruction body 0x80162500..0x801625E4 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 17 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 837_092,
+            length: 52,
+            evidence: "original US SLUS; complete instruction body 0x801625E4..0x80162618 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 3 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 837_144,
+            length: 128,
+            evidence: "original US SLUS; complete instruction body 0x80162618..0x80162698 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 14 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 837_272,
+            length: 248,
+            evidence: "original US SLUS; complete instruction body 0x80162698..0x80162790 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 32 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 837_784,
+            length: 344,
+            evidence: "original US SLUS; complete instruction body 0x80162898..0x801629F0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 42 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_128,
+            length: 124,
+            evidence: "original US SLUS; complete instruction body 0x801629F0..0x80162A6C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 9 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_252,
+            length: 156,
+            evidence: "original US SLUS; complete instruction body 0x80162A6C..0x80162B08 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 13 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_408,
+            length: 268,
+            evidence: "original US SLUS; complete instruction body 0x80162B08..0x80162C14 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 33 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_676,
+            length: 196,
+            evidence: "original US SLUS; complete instruction body 0x80162C14..0x80162CD8 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 20 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_872,
+            length: 40,
+            evidence: "original US SLUS; complete instruction body 0x80162CD8..0x80162D00 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 6 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_912,
+            length: 24,
+            evidence: "original US SLUS; complete instruction body 0x80162D00..0x80162D18 including return delay slot; complete original word and control-flow review, sized executable ELF function section and complete object text without text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 838_936,
+            length: 132,
+            evidence: "original US SLUS; complete instruction body 0x80162D18..0x80162D9C including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 4 text relocations reconcile with original and captured resident bytes; indirect call targets and selectors remain unqualified; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 849_140,
+            length: 124,
+            evidence: "original US SLUS; complete instruction body 0x801654F4..0x80165570 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 2 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 849_396,
+            length: 160,
+            evidence: "original US SLUS; complete instruction body 0x801655F4..0x80165694 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 3 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 851_272,
+            length: 188,
+            evidence: "original US SLUS; complete instruction body 0x80165D48..0x80165E04 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 16 text relocations reconcile with original and captured resident bytes; five bounded internal switch targets, with the separate address table excluded; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 855_216,
+            length: 60,
+            evidence: "original US SLUS; complete instruction body 0x80166CB0..0x80166CEC including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 4 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 905_244,
+            length: 156,
+            evidence: "original US SLUS; complete instruction body 0x8017301C..0x801730B8 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 9 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 955_004,
+            length: 56,
+            evidence: "original US SLUS; complete instruction body 0x8017F27C..0x8017F2B4 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 5 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+        },
+        NontextRange {
+            offset: 955_708,
+            length: 32,
+            evidence: "original US SLUS 0x8017F53C..0x8017F55C unsigned width/height pairs; bounded byte-pair consumer 0x8014C7F0..0x8014C818; exact executable identity; stored numeric representation only",
+        },
+    ]
 }
 
 // Original LOGO fresh-input frames 1..=221: return frontiers minus eight bytes.
