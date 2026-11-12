@@ -112,9 +112,11 @@ three equipment-category labels and fifteen fixed-width settings fields through
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Controlled Config rendering of all fifteen edited fields is verified with a menu
 availability fixture.
-Packed START media verifies the four edited name-entry menu labels during
-new-game name entry. Other pages, STATUS rendering, other contexts and saved-name
-effects remain unverified.
+Packed START media verifies the four edited menu labels and the first ordinary
+keyboard cell edited from `A` to `Z` during new-game name entry. Selection renders
+`Z` in the entered name. START confirmation copies the normalized five-byte name
+to the main character record at `0x80144968`. Other cells, pages, STATUS
+rendering, other contexts and memory-card persistence remain unverified.
 Re-extract older inline documents. Use a separate document and output for each
 archive. Editing one does not update the other or a save. Counted formation labels
 use separate groups for one, two and three party members. Controlled packed-media

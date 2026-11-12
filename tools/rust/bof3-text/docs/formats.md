@@ -528,8 +528,11 @@ command bytes one through four and the other two pages stay protected. Strings
 bytes, including NUL. The pointer table at `0x801ED1B8` supplies them to the
 `0x8014FC90` call at `0x801E692C`. Alignment bytes and pointer words stay fixed.
 Packed START media verifies all four labels edited to `GO`, `Cut`, `More` and
-`Prev` during new-game name entry. Other pages, STATUS rendering, other contexts
-and saved-name effects remain unverified.
+`Prev` during new-game name entry. The first ordinary cell, edited from `A` to
+`Z`, renders in both the keyboard and entered name. START confirmation copies
+the normalized five-byte name to the main character record at `0x80144968`.
+Other cells, pages, STATUS rendering, other contexts and memory-card persistence
+remain unverified.
 
 The next fifteen strings expose four stat-label groups through `game-literal`.
 The groups start at `0x801EC940`, `0x801EC99C`, `0x801ECB0C` and `0x801ECB2C`.
