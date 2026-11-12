@@ -1289,6 +1289,11 @@ pub fn payload_nontext_ranges(
                 length: 12,
                 evidence: "original US shared battle payload; three numeric function-address words at 0x80096994..0x800969A0; original dispatcher 0x800AD26C loads all three words, copies them to its stack and conditionally calls the indexed address; original words match captured resident bytes; exact archive and payload identities; surrounding header bytes excluded; no selector-bound, current-work-validity, pointer-lifetime or observed-invocation claim",
             }])
+            .chain([(0x16cd4, 244), (0x16dc8, 180)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; two complete instruction bodies spanning 0x800AD4D4..0x800AD67C including return delay slots; original bytes match complete sized executable ELF function sections and captured resident bytes, with all text relocations reconciled; qualified dispatcher 0x800AD434 constructs their addresses for conditional work-byte-2 selection; exact archive and payload identities; no observed-execution, valid-work-record, selector-bound, list-integrity, resource-safety or duplicate-source ownership claim",
+            }))
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
