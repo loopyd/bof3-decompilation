@@ -122,6 +122,30 @@ debug callbacks and queue paths remain separate execution questions. The rule
 does not establish a full palette upload, sampling, display, unique ownership or
 the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
+## Area surface field coverage
+
+Coverage recognizes numeric fields in original US raw entries loaded at
+`0x80104000`. The whole archive must match the original disc inventory, and
+payload word zero must equal its TOC checkword. Dimensions must be nonzero.
+The declared cell grid, selected packed words, coordinate reads and byte-grid
+extent must fit the payload. A failed check leaves this profile unresolved.
+
+The original consumer at `0x80154294..0x80154438` selects a primary u32 word
+for each nonzero u16 cell ID. It derives the word-table base from the dimensions
+and grid offset. Coverage includes those header fields, the declared cell grid
+and its selected primary words. The coordinate consumer at
+`0x80155560..0x801556FC` qualifies each selected four- or eight-byte coordinate
+read and the relative header offset used to find it. Unused header fields remain
+unresolved. These stored extents do not establish natural visitation of every cell
+or a runtime bound on the caller's coordinates.
+
+The byte-grid pointer at header bytes `[20,22)` is consumed by `0x80154094`.
+The pointed-to bytes remain unresolved. Conditional reads of subsequent packed
+words depend on entity fields whose producers remain unqualified. Those words,
+unselected records, gaps and tails stay unresolved. The rule does not establish
+complete tables, physical texture or palette sources, rendering, safe editing or
+the absence of rasterized text.
+
 ## Resident animation field coverage
 
 Coverage recognizes fixed fields in entry 4 of four original US archives. Each

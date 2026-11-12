@@ -1089,6 +1089,80 @@ fn resident_animation_field_ranges(
     ranges
 }
 
+fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<NontextRange>> {
+    let header = data.get(..22)?;
+    if data.len() > 1024 * 1024
+        || header[0] == 0
+        || header[1] == 0
+        || u32::from_le_bytes(header[..4].try_into().ok()?) != check_word
+    {
+        return None;
+    }
+    let half = |offset: usize| -> Option<usize> {
+        Some(usize::from(u16::from_le_bytes(
+            data.get(offset..offset.checked_add(2)?)?.try_into().ok()?,
+        )))
+    };
+    let cells = usize::from(header[0]).checked_mul(usize::from(header[1]))?;
+    let grid_offset = half(2)?.checked_mul(4)?;
+    let grid_end = grid_offset.checked_add(cells.checked_mul(2)?)?;
+    let grid = data.get(grid_offset..grid_end)?;
+    let words_offset = grid_offset.checked_add(cells.div_ceil(2).checked_mul(4)?)?;
+    let byte_grid = half(20)?.checked_mul(4)?;
+    data.get(byte_grid..byte_grid.checked_add(cells)?)?;
+
+    let mut spans = vec![(0, 4), (20, 22), (grid_offset, grid_end)];
+    let mut ids: Vec<_> = grid
+        .chunks_exact(2)
+        .map(|pair| u16::from_le_bytes([pair[0], pair[1]]))
+        .collect();
+    ids.sort_unstable();
+    ids.dedup();
+    for id in ids {
+        let id = usize::from(id);
+        if id == 0 {
+            continue;
+        }
+        let offset = words_offset.checked_add(id.checked_mul(4)?)?;
+        let end = offset.checked_add(4)?;
+        let word = u32::from_le_bytes(data.get(offset..end)?.try_into().ok()?);
+        spans.push((offset, end));
+        if word & 0xf00 == 0 {
+            continue;
+        }
+        let paired = word & 0x800 != 0;
+        let size = if paired { 8 } else { 4 };
+        let field = (if paired { 6 } else { 4 }) + 4 * ((word >> 28) & 3) as usize;
+        let index = (word & if paired { 0x7ff } else { 0xff }) as usize;
+        let coordinates = half(field)?
+            .checked_mul(4)?
+            .checked_add(index.checked_mul(size)?)?;
+        let end = coordinates.checked_add(size)?;
+        data.get(coordinates..end)?;
+        spans.push((field, field + 2));
+        spans.push((coordinates, end));
+    }
+    spans.sort_unstable();
+    let mut merged: Vec<(usize, usize)> = Vec::new();
+    for (start, end) in spans {
+        match merged.last_mut() {
+            Some(previous) if start <= previous.1 => previous.1 = previous.1.max(end),
+            _ => merged.push((start, end)),
+        }
+    }
+    let evidence = "original US raw area surface dimensions, relative offsets, declared u16 cell IDs, nonzero-ID primary packed words and selected coordinate reads; original consumers 0x80154294..0x80154438, 0x80155560..0x801556FC and byte-grid pointer 0x80154094..0x801540F8; exact archive identity, checkword agreement and checked source bounds; unused headers, byte-grid contents, conditional sequential words, gaps and tails excluded; no natural visitation, full allocation, rendering or editing claim";
+    Some(
+        merged
+            .into_iter()
+            .map(|(offset, end)| NontextRange {
+                offset,
+                length: end - offset,
+                evidence,
+            })
+            .collect(),
+    )
+}
+
 fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<NontextRange>> {
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
@@ -1164,6 +1238,9 @@ pub fn graphics_storage_ranges(
     }
     if entry.transfer_mode == 1 {
         return compression_metadata_ranges(data, entry.check_word);
+    }
+    if entry.transfer_mode == 0 && entry.ram_ptr == 0x8010_4000 {
+        return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
         (0, 2048, 0, 0x8003_b800, 331_788)
