@@ -128,12 +128,12 @@ Coverage recognizes fixed fields in entry 4 of four original US archives. Each
 requires its original archive identity, entry offset 198656, raw transfer mode,
 load address `0x800D3800` and exact payload hash.
 
-| Archive | Payload bytes | Metadata bytes | Referenced cells | Cell count and XYUV bytes |
+| Archive | Payload bytes | Metadata bytes | Referenced cells | Cell field bytes |
 | --- | ---: | ---: | ---: | ---: |
-| `AREA024.EMI` | 11368 | 1917 | 354 | 7442 |
-| `AREA000.EMI` | 10592 | 1951 | 349 | 6793 |
-| `AREA001.EMI` | 11968 | 1808 | 326 | 7990 |
-| `AREA002.EMI` | 11104 | 1654 | 300 | 7432 |
+| `AREA024.EMI` | 11368 | 1917 | 354 | 9214 |
+| `AREA000.EMI` | 10592 | 1951 | 349 | 8404 |
+| `AREA001.EMI` | 11968 | 1808 | 326 | 9906 |
+| `AREA002.EMI` | 11104 | 1654 | 300 | 9215 |
 
 The metadata covers root-relative u32 group offsets, group-relative u16 program
 offsets, program count bytes, duration/operand pairs and referenced relative cell
@@ -144,13 +144,17 @@ bounds. Duplicate program slots retain their shared target. Program header byte
 0 constrains profile recognition but remains unclassified.
 
 Original pointer construction at `0x8014C6D8..0x8014C6F4` binds the relative cell
-offsets to the count and five-byte part consumer at `0x8014C6F8..0x8014CD8C`.
-Its quad paths interpret signed X/Y and unsigned U/V fields. The rectangle helper
+offsets to the count and five-byte part consumer at `0x8014C6F8..0x8014CD90`.
+Each part starts with a control byte, followed by signed X/Y and unsigned U/V.
+The control reader at `0x8014C710` extracts bit 7 for drawing-path selection;
+`0x8014C7F0..0x8014C818` uses the low four bits as a size-table index. The loop
+delay slot at `0x8014CD8C` advances the part pointer by five bytes. Bits 4 through
+6, entity state and the selected path remain unqualified. The rectangle helper
 at `0x8014CF9C` remains outside the reviewed source. This classification identifies
-stored fields; it does not establish each cell's selected path or rectangle behavior.
+stored fields; it does not establish rectangle behavior.
 
-Packed part flags, allocation tails, unreferenced offset words and unreferenced
-cells remain unresolved. These include AREA024's word `[6836,6838)` and cells
+Allocation tails, unreferenced offset words and unreferenced cells remain
+unresolved. These include AREA024's word `[6836,6838)` and cells
 `[5495,5504)` and `[7180,7221)`, and AREA000's word `[6518,6520)` and cell
 `[6541,6572)`. AREA001 excludes words `[5252,5254)` and `[11818,11820)`
 and cells `[5371,5380)` and `[11841,11872)`. AREA002 excludes words

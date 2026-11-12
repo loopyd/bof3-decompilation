@@ -1079,8 +1079,8 @@ fn resident_animation_field_ranges(
         });
         for part in 0..usize::from(data[cell]) {
             ranges.push(NontextRange {
-                offset: cell + 2 + 5 * part,
-                length: 4,
+                offset: cell + 1 + 5 * part,
+                length: 5,
                 evidence: cell_evidence,
             });
         }
@@ -1188,7 +1188,7 @@ pub fn graphics_storage_ranges(
                 AREA024_ANIMATION_METADATA_RANGES,
                 AREA024_REFERENCED_CELL_OFFSETS,
                 "original US AREA024 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0 and unreferenced offset words excluded; no runtime or unique-supplier claim",
-                "original US AREA024 entry 4 referenced cell counts and signed X/Y, unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD8C; quad-path numeric fields only, no rectangle-helper behavior claim; packed flags, tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
+                "original US AREA024 entry 4 referenced cell counts, packed part controls, signed X/Y and unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD90; control bit7 dispatch and low-four-bit size readers 0x8014C710..0x8014C770 and 0x8014C7F0..0x8014C818; stored numeric fields only, bits4..6 and selected rectangle-helper behavior unqualified; tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
             ))
         }
         (4, 198_656, 0, 0x800d_3800, 10_592)
@@ -1200,7 +1200,7 @@ pub fn graphics_storage_ranges(
                 AREA000_ANIMATION_METADATA_RANGES,
                 AREA000_REFERENCED_CELL_OFFSETS,
                 "original US AREA000 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0 and unreferenced offset words excluded; no runtime or unique-supplier claim",
-                "original US AREA000 entry 4 referenced cell counts and signed X/Y, unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD8C; quad-path numeric fields only, no rectangle-helper behavior claim; packed flags, tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
+                "original US AREA000 entry 4 referenced cell counts, packed part controls, signed X/Y and unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD90; control bit7 dispatch and low-four-bit size readers 0x8014C710..0x8014C770 and 0x8014C7F0..0x8014C818; stored numeric fields only, bits4..6 and selected rectangle-helper behavior unqualified; tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
             ))
         }
         (4, 198_656, 0, 0x800d_3800, 11_968)
@@ -1212,7 +1212,7 @@ pub fn graphics_storage_ranges(
                 AREA001_ANIMATION_METADATA_RANGES,
                 AREA001_REFERENCED_CELL_OFFSETS,
                 "original US AREA001 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0 and unreferenced offset words excluded; no runtime or unique-supplier claim",
-                "original US AREA001 entry 4 referenced cell counts and signed X/Y, unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD8C; quad-path numeric fields only, no rectangle-helper behavior claim; packed flags, tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
+                "original US AREA001 entry 4 referenced cell counts, packed part controls, signed X/Y and unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD90; control bit7 dispatch and low-four-bit size readers 0x8014C710..0x8014C770 and 0x8014C7F0..0x8014C818; stored numeric fields only, bits4..6 and selected rectangle-helper behavior unqualified; tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
             ))
         }
         (4, 198_656, 0, 0x800d_3800, 11_104)
@@ -1224,7 +1224,7 @@ pub fn graphics_storage_ranges(
                 AREA002_ANIMATION_METADATA_RANGES,
                 AREA002_REFERENCED_CELL_OFFSETS,
                 "original US AREA002 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0 and unreferenced offset words excluded; no runtime or unique-supplier claim",
-                "original US AREA002 entry 4 referenced cell counts and signed X/Y, unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD8C; quad-path numeric fields only, no rectangle-helper behavior claim; packed flags, tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
+                "original US AREA002 entry 4 referenced cell counts, packed part controls, signed X/Y and unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD90; control bit7 dispatch and low-four-bit size readers 0x8014C710..0x8014C770 and 0x8014C7F0..0x8014C818; stored numeric fields only, bits4..6 and selected rectangle-helper behavior unqualified; tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim",
             ))
         }
         (8, 737_280, 0, 0x8003_3e00, 5120)
