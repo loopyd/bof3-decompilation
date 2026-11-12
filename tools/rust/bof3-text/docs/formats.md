@@ -320,6 +320,9 @@ The containing archive must also match the original disc manifest.
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
 | `[0x3C50,0x3EC0)` | `[0x801D4850,0x801D4AC0)` | 624 |
+| `[0xAF78,0xB444)` | `[0x801DBB78,0x801DC044)` | 1228 |
+| `[0xE7F8,0xEB68)` | `[0x801DF3F8,0x801DF768)` | 880 |
+| `[0xFB88,0xFF64)` | `[0x801E0788,0x801E0B64)` | 988 |
 | `[0x14D0C,0x14D88)` | `[0x801E590C,0x801E5988)` | 124 |
 | `[0x14D88,0x14E38)` | `[0x801E5988,0x801E5A38)` | 176 |
 
@@ -328,6 +331,12 @@ executable ELF section, all 54 text relocations, original bytes and resident RAM
 reconcile. Complete control-flow review covers ten conditional branches, two
 internal jumps, the return and every delay slot. It contains no calls, embedded
 tables or indirect switches.
+The bodies at `0x801DBB78`, `0x801DF3F8` and `0x801E0788` contain 307, 220 and
+247 instruction words. Their complete sized executable ELF sections, original
+bytes and resident RAM match, with all 91, 64 and 88 text relocations reconciled.
+Complete control-flow review covers every word and delay slot. Call continuations
+assume returns. The body at `0x801DF3F8` contains one indirect call; its handler
+table, selector validity and callee effects remain unqualified.
 The body at `0x801E590C` has 31 instruction words. They match its complete sized
 executable ELF function section and captured resident RAM, with all nine text
 relocations reconciled.
