@@ -1,18 +1,18 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7643113d792b798b15cc271e0787dbf1e649c022",
-  "published_at": "2026-11-12T22:33:28.138267+00:00",
+  "revision": "e2556073ee7d82fd787eb464318562a9613add11",
+  "published_at": "2026-11-12T22:41:22.044154+00:00",
   "counts": {
     "completed": 5634,
-    "partial": 395,
-    "unlifted": 4526,
+    "partial": 396,
+    "unlifted": 4525,
     "invalid": 0,
     "total": 10555,
     "symbols": {
-      "named": 68274,
+      "named": 68275,
       "raw": 55527,
-      "total": 123801
+      "total": 123802
     }
   },
   "targets": [
@@ -2964,14 +2964,14 @@
       "archive": "shop",
       "entry": "00",
       "completed": 188,
-      "partial": 14,
-      "unlifted": 29,
+      "partial": 15,
+      "unlifted": 28,
       "invalid": 0,
       "total": 231,
       "symbols": {
-        "named": 287,
+        "named": 288,
         "raw": 375,
-        "total": 662
+        "total": 663
       }
     },
     {
