@@ -1227,8 +1227,8 @@ fn compression_metadata_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nonte
     }
 }
 
-/// Reviewed graphics and compression fields; no rasterized-text or display claim.
-pub fn graphics_storage_ranges(
+/// Reviewed payload fields and instruction bodies; no display claim.
+pub fn payload_nontext_ranges(
     entry: Entry,
     data: &[u8],
     original_us: bool,
@@ -1243,6 +1243,23 @@ pub fn graphics_storage_ranges(
         return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (_, _, 0, 0x8009_6800, 133_316)
+            if sha256_hex(data)
+                == "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140" =>
+        {
+            Some([
+                (0x15f54, 124),
+                (0x16044, 44),
+                (0x16070, 196),
+            ]
+            .into_iter()
+            .map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; complete instruction bodies 0x800AC754..0x800AC7D0, 0x800AC844..0x800AC870 and 0x800AC870..0x800AC934 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
+            })
+            .collect())
+        }
         (0, 2048, 0, 0x8003_b800, 331_788)
             if sha256_hex(data)
                 == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e" =>

@@ -188,6 +188,27 @@ establish complete program consumption, runtime execution, rendering or a unique
 supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
 unqualified; entries at the same load address do not inherit any profile.
 
+## Shared battle instruction coverage
+
+Coverage recognizes three complete instruction bodies in original US raw
+payloads loaded at `0x80096800`, with size 133316 and SHA-256
+`77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140`.
+The containing archive must also match the original disc manifest. Entry indices
+and physical offsets may differ between archives.
+
+| Payload interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[0x15F54,0x15FD0)` | `[0x800AC754,0x800AC7D0)` | 124 |
+| `[0x16044,0x16070)` | `[0x800AC844,0x800AC870)` | 44 |
+| `[0x16070,0x16134)` | `[0x800AC870,0x800AC934)` | 196 |
+
+Each body includes its return and delay slot and matches the complete executable
+ELF section of its sized function symbol. The original `BATTLE.EMI` entry 15
+bytes also match captured resident RAM. These bodies contain no embedded tables
+or literal pools. Neighboring functions and tables retain their prior status.
+This classification establishes instruction bytes. It does not establish valid
+arguments, resource safety, a unique supplier or duplicate-source ownership.
+
 ## Executable geometry table coverage
 
 Coverage recognizes the 32-byte numeric table at `0x8017F53C..0x8017F55C`

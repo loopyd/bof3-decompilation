@@ -420,17 +420,44 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     });
                                 }
                             }
+                            let has_text = !allocations.is_empty();
+                            if let Some(spans) = crate::original::payload_nontext_ranges(
+                                *entry,
+                                payload,
+                                original_us,
+                            ) {
+                                allocations.extend(spans.into_iter().map(|span| RangeRecord {
+                                    offset: entry.offset + span.offset,
+                                    length: span.length,
+                                    entry: Some(entry.index),
+                                    status: "known-nontext",
+                                    evidence: span.evidence.into(),
+                                }));
+                            }
                             if !allocations.is_empty() {
-                                text_count += 1;
+                                if has_text {
+                                    text_count += 1;
+                                }
                                 allocations.sort_by_key(|text| text.offset);
-                                let gap = if mixed {
+                                let nontext_gap = if entry.transfer_mode == 1 {
+                                    "compressed-bank bytes outside reviewed token metadata"
+                                } else if entry.ram_ptr == 0x8009_6800 {
+                                    "payload bytes outside reviewed instruction bodies"
+                                } else {
+                                    "sprite-bank bytes outside reviewed graphics storage"
+                                };
+                                let gap = if !has_text {
+                                    nontext_gap
+                                } else if mixed {
                                     "bytes outside the supported text allocations"
                                 } else if inline_layout {
                                     "bytes outside the supported inline allocations"
                                 } else {
                                     "bytes outside the supported name record fields"
                                 };
-                                let tail = if mixed {
+                                let tail = if !has_text {
+                                    nontext_gap
+                                } else if mixed {
                                     "remaining text entry consumers unverified"
                                 } else if inline_layout {
                                     "remaining inline payload consumers unverified"
@@ -472,43 +499,6 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         end - at,
                                         "unresolved",
                                         tail.into(),
-                                    ));
-                                }
-                            } else if let Some(spans) = crate::original::graphics_storage_ranges(
-                                *entry,
-                                payload,
-                                original_us,
-                            ) {
-                                let gap_evidence = if entry.transfer_mode == 1 {
-                                    "compressed-bank bytes outside reviewed token metadata"
-                                } else {
-                                    "sprite-bank bytes outside reviewed graphics storage"
-                                };
-                                let mut at = 0;
-                                for span in spans {
-                                    if span.offset > at {
-                                        record.ranges.push(range(
-                                            entry.offset + at,
-                                            span.offset - at,
-                                            "unresolved",
-                                            gap_evidence.into(),
-                                        ));
-                                    }
-                                    record.ranges.push(RangeRecord {
-                                        offset: entry.offset + span.offset,
-                                        length: span.length,
-                                        entry: Some(entry.index),
-                                        status: "known-nontext",
-                                        evidence: span.evidence.into(),
-                                    });
-                                    at = span.offset + span.length;
-                                }
-                                if at < payload.len() {
-                                    record.ranges.push(range(
-                                        entry.offset + at,
-                                        payload.len() - at,
-                                        "unresolved",
-                                        "remaining sprite-bank bytes outside reviewed graphics storage".into(),
                                     ));
                                 }
                             } else {
