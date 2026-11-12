@@ -118,8 +118,10 @@ segments:
     - asm
     - func_801F4140
   - - 5828
-    - asm
-    - func_801F42C4
+    - c
+    - advanceHalfword0aBy8WhenWorkHalfword3eIs3c0ElseClearWorkFlag40AndMirrorFrontSideByteIntoFlagPair48And49World04Area16713_801F42C4
+    - '@source: src/bof3/world/advanceHalfword0aBy8WhenWorkHalfword3eIs3c0ElseClearWorkFlag40AndMirrorFrontSideByteIntoFlagPair48And49World04Area16713_801F42C4.c'
+    - '@behavior: Entry 11 of the 25-entry overlay handler table at 0x801F6830 of this payload. Reads the scratchpad work record once through the pointer cell 0x1F800044 and keeps the pointer for the whole run; when the record halfword +0x3E reads 0x3C0 it only adds 8 to the published halfword +0x0A of the front-end record 0x80148210, and on every other value it clears flag 0x40 of record byte +0x00 and mirrors the front-side byte 0x80143F03 into the shared flag bank 0x80144F28 through the setter 0x8015B580 and the bit clear helper 0x8015B5A8: value 1 raises bit 0x48 and clears 0x49, value 2 clears 0x48 and raises 0x49, value 3 clears both and any other value leaves the pair untouched.'
   - - 6072
     - c
     - advanceHalfword0aBy3InFrontByte1OrUngated2World04Area16713_801F43B8

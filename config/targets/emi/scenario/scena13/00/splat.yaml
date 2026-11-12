@@ -194,8 +194,10 @@ segments:
     - asm
     - func_801FBD84
   - - 20952
-    - asm
-    - func_801FBDD8
+    - c
+    - invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8
+    - '@source: src/bof3/scenario/invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8.c'
+    - '@behavior: Overlay per-record callback, entry 9 of the thirteen-entry callback-pointer table at 0x801FBFB8 that dispatchRecordCallbackScenarioScena1300_801FB350 selects with the record byte 0x7A. It snapshots the party byte (+0x79) of the first three 0x140-byte-stride local work records based at 0x80145E90 into an eight-byte stack array, calls the party helper func_801C1ABC for the three snapshot bytes in order, re-arms the overlay effect group through func_80166E88(7, 4, 2, 0), clears the shared live work-record count byte D_80146254, runs the per-id teardown func_801C187C for id 7 and finishes with the helper func_801C1630. It ignores the arguments its dispatcher passes, reads only those record party bytes and writes only D_80146254; the 0x28-byte frame holds the snapshot at $sp+0x10 plus the saved $ra and $s0/$s1, and each loop bounds its zero-extended u8 counter with an unsigned compare against 3.'
   - - 21144
     - c
     - invokeHelperArgThenHelperScenarioScena1300_801FBE98

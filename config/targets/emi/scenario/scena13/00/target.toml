@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164.c",
     "src/bof3/scenario/convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958.c",
     "src/bof3/scenario/decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24.c",
+    "src/bof3/scenario/invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8.c",
     "src/bof3/scenario/resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444.c",
     "src/bof3/scenario/setWorkByte29To5OnActiveWorkRecordsWithByte6SixScenarioScena1300_801F70DC.c",
     "src/bof3/scenario/setScenarioFlagBit1CThenRequestStateEntry2CProgress0Substate11ScenarioScena1300_801FB414.c",

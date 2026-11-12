@@ -690,8 +690,10 @@ segments:
     - c
     - func_8009FFF8
   - - 38912
-    - asm
-    - func_800A0000
+    - c
+    - addToFlaggedEnemyWorkBytesAndClampToSeven
+    - '@source: src/bof3/battle/addToFlaggedEnemyWorkBytesAndClampToSeven.c'
+    - '@behavior: Selection-action handler at 0x800B4878 in the battle selection-action table D_800B471C. Runs the selection-input refresh pass func_800A3F28, then addresses the 0x118-byte enemy work record band by the active battler byte D_80146394 rebased by -3: when the byte at record + 0x06 (D_801EB6CA) is non-zero and bit 0 of the flag byte at record + 0x07 is clear it sets that bit and adds 2 to the value byte, and when the byte at record + 0x0A (D_801EB6CE) is non-zero and bit 0 of the flag byte at record + 0x0B is clear it sets that bit and adds 1 to the value byte, after which both value bytes are clamped to 7.'
   - - 39304
     - asm
     - func_800A0188

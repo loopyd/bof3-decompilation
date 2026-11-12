@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801D4178
   - - 14044
-    - asm
-    - func_801D42DC
+    - c
+    - drawEntryListFrame
+    - '@source: src/bof3/ui/drawEntryListFrame.c'
+    - '@behavior: draws the commu01/07 entry-list frame whose top-left corner sits at (x, y) from the eight window tiles that occupy pieces 6 through 13 of the six-byte sprite rect table at 0x801D4CE0, with eight repeated top and bottom edge pieces on an eight-pixel horizontal step and height divided by eight minus one repeated side pieces on an eight-pixel vertical step, for a frame 0x48 pixels wide that spans the height byte'
   - - 14452
     - c
     - computeEntryListOriginY

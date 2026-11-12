@@ -115,8 +115,10 @@ segments:
     - '@source: src/bof3/world/seedWorkTable64World02Area07714_801F41B4.c'
     - '@behavior: clears the shared halfword at 0x800E5500 and byte at 0x800E5502, then seeds 64 records of stride 0x34 at 0x800E4800 with scratch work words +0x34/+0x38/+0x3C and clears each record halfword +0x30.'
   - - 5664
-    - asm
-    - func_801F4220
+    - c
+    - shiftWorkTable64AndBuildRotatedVertexPairsWorld02Area07714_801F4220
+    - '@source: src/bof3/world/shiftWorkTable64AndBuildRotatedVertexPairsWorld02Area07714_801F4220.c'
+    - '@behavior: ages the 64-entry work table at 0x800E4800 by one entry by copying entries 0..62 into entries 1..63, seeds entry 0 position words and twist halfword from the scratch work record and the shared frame counter, advances the twist halfword by 0x40 while its gate byte is set, then rewrites both vertex triples of all 64 entries from each entry position and twist angle.'
   - - 6088
     - asm
     - func_801F43C8

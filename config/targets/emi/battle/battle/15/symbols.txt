@@ -138,6 +138,7 @@ func_8009FF7C = 0x8009FF7C;
 func_8009FFB4 = 0x8009FFB4;
 func_8009FFE4 = 0x8009FFE4;
 func_8009FFF8 = 0x8009FFF8;
+addToFlaggedEnemyWorkBytesAndClampToSeven = 0x800A0000;
 storeHalvedSelectedValueWhenRollAccepted = 0x800A0244;
 clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh = 0x800A02E8;
 storeSelectedValueSetRecordByte8To1WhenRollRejected = 0x800A0378;
