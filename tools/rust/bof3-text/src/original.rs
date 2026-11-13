@@ -3337,6 +3337,62 @@ fn model_decoded_nontext_fields(
             "original US BPLD27A entry 7; literal origins whose every decoded alias is in the reviewed three-root relative words, 36 image-directory words, image headers or consumed mode-1 words/mode-2 tokens of 36 finite original records; original family-1/index-11 request selects slot 486 and exact physical LBAs 50982..51113; successful unskipped entry-7 loading without flag-0x20 early completion, stable hint 11, original code, bank, count and nonaliased work/scratch, and ordinary returning helpers condition the original GAME phase-1/2/3 route; under separate conditional identifiers 2/7/10 at work index 0, count 1, route 0 and clear record masks 0x0080/0x4000, immutable row 02070a selects root ordinals 0/1/2, identifier-map bytes 2/0/7 select flags at 0x80144ABC/0x80144974/0x80144DF0, and GAME 0x801C1400 calls 0x801C1254 to publish roots 0x8003B80C/0x8005F80C/0x8007A80C; original 0x801BF448 reselects the same work and call 0x801BF56C reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 0 and images 7/4/0 respectively; exact original archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates ultimate physical origins through initialized overlapping references and requires all decoded aliases to lie in this three-root field union; opaque aliases, other root-header words, palette/program/cell/selection fields, mode-2 prefixes, allocation tails, raw entry 3 where present and container gaps excluded; no actual request, roster, invocation, transfer, residency, every-image selection, argument/resource safety, upload, display, rasterized-text absence or safe-edit claim",
         );
     }
+    if entry.index == 7
+        && entry.transfer_mode == 1
+        && entry.offset == 98_304
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 275_460
+        && data.len() == 133_381
+        && sha256_hex(data) == "d7dfb508ba4366c13a87fba1d91af0166170839f651f4952dd6d54fa44c815d7"
+    {
+        return (
+            &[
+                (0, 16),
+                (28, 23_324),
+                (23_328, 29_858),
+                (29_860, 29_868),
+                (29_872, 36_801),
+                (36_804, 36_812),
+                (36_816, 40_156),
+                (40_160, 43_028),
+                (43_032, 45_585),
+                (45_588, 53_788),
+                (53_792, 66_088),
+                (66_092, 66_100),
+                (66_104, 74_051),
+                (74_052, 74_060),
+                (74_064, 80_545),
+                (80_548, 80_556),
+                (80_560, 84_594),
+                (84_596, 87_348),
+                (147_468, 147_472),
+                (147_484, 153_036),
+                (153_040, 155_103),
+                (155_104, 155_112),
+                (155_116, 158_904),
+                (158_908, 165_511),
+                (165_512, 165_520),
+                (165_524, 172_034),
+                (172_036, 172_044),
+                (172_048, 174_448),
+                (174_452, 175_823),
+                (175_824, 175_832),
+                (175_836, 176_666),
+                (176_668, 176_676),
+                (176_680, 178_068),
+                (178_072, 184_344),
+                (184_348, 186_368),
+                (186_372, 191_290),
+                (191_292, 191_300),
+                (191_304, 195_846),
+                (195_848, 195_856),
+                (195_860, 196_359),
+                (258_060, 258_064),
+                (258_076, 273_168),
+            ],
+            "original US BPLU27A entry 7; three root-array relative words, root image-directory relative words, 35 directory words and headers/consumed mode-1 words or mode-2 tokens of 35 finite images; original family-2/index-11 request selects slot 505 and physical LBAs 53763..53892; successful unskipped loading without flag-0x20 early completion, stable hint 11 and flag byte 2, original code/bank/count, nonaliased work/scratch and ordinary helper returns condition the GAME phase-1/2/3 route; separate identifiers 2/7/10 with count 1, work index 0 and clear record masks 0x0080/0x4000 select roots 0/1/2 through original 0x801C1400/0x801C1254; original 0x801BF448/0x801BF56C reaches 0x8014D6B8/0x8014D6DC/0x8014DC08, preserving flag byte 2 as selector 2 and choosing images 1/4/1; exact original archive and entry/mode/load/offset/checkword/size/payload identities; complete checked compression walk propagates ultimate literal origins through initialized overlapping references and requires every decoded use in this field union; other root-header words, palettes/programs/cells/selection fields, mode-2 prefixes, tails, entry 3, gaps and opaque aliases excluded; no actual request, invocation, transfer, residency, every-image selection, argument/resource safety, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
     if entry.index == 0
         && entry.transfer_mode == 1
         && entry.offset == 2_048

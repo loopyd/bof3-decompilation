@@ -571,6 +571,32 @@ container gaps remain unresolved. Actual invocation, transfer, residency,
 argument and resource safety, upload, display, rasterized-text absence and
 safe editing remain unqualified.
 
+## Compressed BPLU27A image fields
+
+Coverage recognizes image fields in original US `BIN/BPLCHAR/BPLU27A.EMI`
+entry 7, with transfer mode 1, file offset 98304, destination `0x8003B800`,
+packed size 133381, decoded size and checkword 275460, and payload SHA-256
+`d7dfb508ba4366c13a87fba1d91af0166170839f651f4952dd6d54fa44c815d7`.
+The original family-2/index-11 request selects slot 505 and physical LBAs
+`[53763,53892)`, which reproduce the complete archive.
+
+The conditional GAME phase-1/2/3 path requires successful unskipped loading
+without flag `0x20` early completion, stable hint 11 and flag byte 2, original
+code and bank, count 1, work index 0, clear record masks `0x0080/0x4000`,
+nonaliased work and scratch, and ordinary helper returns. Identifiers 2, 7
+and 10 select decoded roots 12, 147468 and 258060. The image path preserves
+flag byte 2 as selector 2, which selects images 1, 4 and 1.
+
+The profile covers the root-array words, each root's image-directory relative
+word, 14/16/5 directory words, and the headers and consumed encodings of 35
+images. Fourteen images use mode 1 and twenty-one use mode 2. A physical literal
+qualifies only when every decoded alias belongs to these fields.
+Other root-header words, palettes, programs, cells, selection fields, mode-2
+prefixes, allocation tails, raw entry 3 and gaps remain unresolved.
+Actual requests, invocation, transfer, residency, every-image selection, argument
+and resource safety, upload, display, rasterized-text absence and safe editing
+remain unverified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
