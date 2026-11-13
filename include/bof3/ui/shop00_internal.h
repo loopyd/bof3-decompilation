@@ -1830,4 +1830,10 @@ extern char D_801D0C94[];
  * @source 0x801CA70C @kind table */
 extern AbilityObject abilityObjects[];
 
+/* Original SHOP dispatcher, retained ASM. Game00's call at 0x801993D8
+ * supplies no arguments and ignores the result. This declaration records
+ * that call; it does not declare the handler table's callback ABI.
+ * @source 0x801D0EA0 */
+void dispatchShopUiState(void);
+
 #endif

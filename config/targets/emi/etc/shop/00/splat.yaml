@@ -21,6 +21,18 @@ segments:
 - - 0
   - bin
   - header
+- name: header_code_801d0ea0
+  type: code
+  start: 672
+  vram: 2149387936
+  subsegments:
+  - - 672
+    - asm
+    - dispatchShopUiState
+    - '@behavior: Dispatches the unsigned state byte at 0x80148650 through the SHOP handler table at 0x801E5144.'
+- - 732
+  - bin
+  - header_retained_000002dc
 - name: header_code_801d3654
   type: code
   start: 10836

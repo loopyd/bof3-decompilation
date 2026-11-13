@@ -442,4 +442,4 @@ D_801CD510 = 0x801CD510;
 scenarioSubstateHandlerTable = 0x801CD568;
 D_801CD570 = 0x801CD570;
 func_801D0D9C = 0x801D0D9C;
-func_801D0EA0 = 0x801D0EA0;
+dispatchShopUiState = 0x801D0EA0;

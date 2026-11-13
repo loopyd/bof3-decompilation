@@ -1,5 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 
+WEAK_SYMBOL_AT(dispatchShopUiState, 0x801D0EA0);
 /* ---- Shared scratchpad pointer cell ---- */
 WEAK_SYMBOL_AT(g_game_work, 0x1F800044);
 WEAK_SYMBOL_AT(D_1F800000, 0x1f800000);

@@ -112,6 +112,7 @@ D_801D0CDC = 0x801D0CDC;
 D_801D0E58 = 0x801D0E58;
 D_801D0E5C = 0x801D0E5C;
 D_801D0E60 = 0x801D0E60;
+dispatchShopUiState = 0x801D0EA0;
 scaleByPercentFloor1 = 0x801D3654;
 setFieldRecordSlotValue = 0x801D3828;
 dispatchUiPhaseTable = 0x801D39BC;

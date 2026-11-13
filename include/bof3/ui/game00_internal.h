@@ -1013,7 +1013,9 @@ void clearWorkFlags(void);
 void resetWork2(void);
 void func_801D0D80(void);
 void func_801D0D9C(void);
-void func_801D0EA0(void);
+/* Original SHOP entry 0, reached after the Game00 loader/state path.
+ * The call at 0x801993D8 supplies no arguments and ignores the result. */
+void dispatchShopUiState(void);
 void func_801D1740(void);
 
 /* @behavior seeds the shared callback/frame dispatch prologue before the entry-0
