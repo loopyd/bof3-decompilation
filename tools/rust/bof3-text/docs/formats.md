@@ -3325,9 +3325,13 @@ does not update the other.
 
 Controlled packed-media checks verify the prompt edited to
 `Keep: Which memory chip?`, the `Keep` title and both `Memory chip` slot labels.
-The menu uses a frontend-state fixture after the first battle. The unique
-supplying archive, ordinary menu availability and card-save persistence remain
-unverified.
+The menu uses a frontend-state fixture after the first battle.
+
+An ordinary diary interaction also reaches the menu with its original labels.
+Both complete SHOP readers and the shared bank match loaded RAM. One save
+created there has been reloaded through the title menu in the native emulator.
+Selected reader calls and the unique supplying archive remain unbound. Edited
+rendering through the diary route remains unverified.
 
 ## Commands
 
