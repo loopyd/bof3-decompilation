@@ -1627,6 +1627,7 @@ File offsets include the 2048-byte PS-X header. The header loads the following
 | `[0xB5900,0xB5954)` | `[0x8014B900,0x8014B954)` | 84 | 7 |
 | `[0xB7D3C,0xB7E78)` | `[0x8014DD3C,0x8014DE78)` | 316 | 25 |
 | `[0xB80FC,0xB822C)` | `[0x8014E0FC,0x8014E22C)` | 304 | 16 |
+| `[0xB85A0,0xB8640)` | `[0x8014E5A0,0x8014E640)` | 160 | 11 |
 | `[0xC7F18,0xC8994)` | `[0x8015DF18,0x8015E994)` | 2684 | 408 |
 | `[0xCBF58,0xCBFDC)` | `[0x80161F58,0x80161FDC)` | 132 | 12 |
 | `[0xCBFDC,0xCC160)` | `[0x80161FDC,0x80162160)` | 388 | 56 |
@@ -1660,6 +1661,15 @@ returns. The boot loop at `0x8014AAC8` includes a four-word compiler epilogue at
 `0x8014AC90..0x8014ACA0` that is unreachable from its original entry. Complete
 section and relocation identity identifies those stored instructions; no path
 to that epilogue is established.
+
+The body at `0x8014E5A0..0x8014E640` also has conditional original entries
+through JAL sites `0x800AEA1C`, `0x800AEBB8` and `0x800AED3C` in
+`emi/battle/battle/15@0x800AE9C4`. Its three control-transfer delay slots include
+the saved return address store on both branch paths. Frame restoration assumes
+ordinary callee preservation, valid memory, intact saved slots and nonaliasing
+stores. The cursor guard and masked index establish no allocation capacity or
+table bounds. Referenced globals, tables, buffers and the callee remain excluded.
+No observed invocation, unique runtime supplier or safe-editing claim follows.
 
 The equipment selector body has five bounded internal switch targets. Its
 separate 20-byte address table remains unclassified. Four indirect call sites
