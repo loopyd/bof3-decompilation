@@ -3418,12 +3418,17 @@ Lookup `0x801502D0` selects bank 1, zero-based index 208 and table cell
 `SP + 0x10` at `0x801E9C84`, before calling renderer `0x8014F800` at
 `0x801E9C9C`. Its delay word sign-extends the Y coordinate.
 
-Linked native captures observe that ID, lookup result, renderer entry and a read
-watch at `0x8014F8D4` with `S1=0x8001C9F7`. The watch stops before the byte load.
-Continuation returns to `0x801E9CA4` with the caller stack restored. This binds
-row 209 for the selected original-description invocation. Edited-description
-rendering, the other shared-row lookups, general selector bounds and the unique
-archive supplier remain unverified.
+Packing all three shared rows as `Mend light wounds on one target{end}` changes
+three bytes within the same 32-byte allocation. After a fresh boot of the edited
+disc, loading a game-created inn save through Load Game and selecting Heal through
+Ability displays `Mend light wounds on one target`. Heal retains its AP cost of 4.
+
+Linked native captures bind ID `0x40D0`, its lookup result and the stack argument
+for the edited description. A read watch at `0x8014F8D4` stops before the byte load
+with `S1=0x8001C9F7` and the edited byte `0x4D` at that address. Continuation
+returns to `0x801E9CA4` with the caller stack restored. These observations bind
+row 209 for the selected original and edited descriptions. The other shared-row
+lookups, general selector bounds and the unique archive supplier remain unverified.
 
 ## Commands
 
