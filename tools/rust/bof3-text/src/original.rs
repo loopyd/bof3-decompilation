@@ -6731,6 +6731,17 @@ pub fn payload_nontext_ranges(
         return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (8, 360_448, 0, 0x801d_0c00, 117_986)
+            if entry.check_word == 18
+                && sha256_hex(data)
+                    == "a47d32865283a01ce87b2f2f8cb19d3305525659b95a8feb4f307eddf63a8cb1" =>
+        {
+            Some(vec![NontextRange {
+                offset: 2_496,
+                length: 384,
+                evidence: "original US START entry 8; complete instruction body 0x801D15C0..0x801D1740 including all branch and return delay slots; original GAME01 callback registration and typed OpenTh entry-function consumer conditionally bind the alternate-loop and finite START selector-2/name-entry selector-0 route to JAL at 0x801E4678; all 96 words and complete structural flow match original and retained RAM; ordinary helper returns, valid thread arguments, successful unskipped START loading, stable code/selectors and noninterfering callback slots remain conditions; two compiled BREAK division guards are exceptional terminal edges without delay slots, and exception-handler behavior remains unqualified; exact original archive, entry, mode, load, offset, checkword, size and payload identities; neighboring code and character-record data excluded; no matching ELF, observed execution, historical initialization, full selector bounds, argument-validity, resource-safety or unique-supplier claim",
+            }])
+        }
         (0, 2_048, 0, 0x8019_5800, 229_720)
             if entry.check_word == 0x1e
                 && sha256_hex(data)
@@ -8622,6 +8633,36 @@ pub fn payload_nontext_ranges(
                 offset,
                 length,
                 evidence: "original US shared battle payload; 22 complete instruction bodies within 0x8009FFE4..0x800AC754 including all actual control-transfer delay slots; complete original structural control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all 628 text relocations independently reconciled from existing objects; direct-call continuations assume ordinary returns and intact caller frames; the body at 0x800AB760..0x800AB834 includes two original compiled BREAK instructions as exceptional terminal edges without delay slots, with exception-handler behavior and continuation unqualified; exact archive and payload identities; intervening gaps, refused bodies, neighboring functions and data excluded; no observed-execution, full-function-execution, feasible-path, valid-work-record, selector-bound, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+            }))
+            .chain([
+                (0x17cd0, 164),
+                (0x17ec8, 96),
+                (0x17f88, 164),
+                (0x18e6c, 76),
+                (0x19798, 192),
+                (0x19858, 192),
+                (0x19918, 104),
+                (0x19980, 112),
+                (0x199f0, 96),
+                (0x19b98, 120),
+                (0x1a1cc, 96),
+                (0x1a254, 92),
+                (0x1a2b0, 92),
+                (0x1a4e4, 112),
+                (0x1a6c4, 108),
+                (0x1a730, 108),
+                (0x1ab8c, 96),
+                (0x1ad5c, 96),
+                (0x1ae64, 108),
+                (0x1b904, 84),
+                (0x1ba58, 84),
+                (0x1bb2c, 140),
+                (0x1bc78, 84),
+                (0x1ca6c, 184),
+            ].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; 24 complete instruction bodies within 0x800AC964..0x800B70C4 including all actual control-transfer delay slots; complete original structural control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all 130 text relocations independently reconciled from existing objects; direct and indirect-call continuations assume ordinary returns, intact caller frames and nonaliasing dynamic stores; targets, selectors and table bounds for the twelve indirect-call sites remain unqualified; exact archive and payload identities; intervening gaps, refused bodies, neighboring functions and data excluded; no observed-execution, full-function-execution, feasible-path, valid-work-record, selector-bound, indirect-call-safety, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
             }))
             .chain([NontextRange {
                 offset: 0x16164,

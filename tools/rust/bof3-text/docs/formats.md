@@ -662,6 +662,31 @@ establish complete program consumption, runtime execution, rendering or a unique
 supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
 unqualified; entries at the same load address do not inherit any profile.
 
+## START initializer instruction coverage
+
+Coverage recognizes the complete instruction body at `0x801D15C0..0x801D1740`
+in original US `START.EMI#8`. The raw entry must have offset 360448, load address
+`0x801D0C00`, checkword 18, size 117986 and SHA-256
+`a47d32865283a01ce87b2f2f8cb19d3305525659b95a8feb4f307eddf63a8cb1`.
+The containing archive must match the original disc manifest. The classified
+payload interval is `[2496,2880)`, or archive bytes `[362944,363328)`.
+
+Original GAME01 registration stores `0x80196F78` in callback slot 0. The SLUS
+scheduler passes that field to the typed `OpenTh` entry-function argument. The
+alternate-loop index 1, START index 2 and name-entry index 0 conditionally reach
+the original `JAL` at `0x801E4678`. The complete initializer has 96 words in 12
+structural blocks and seven actual branch or return delay slots. Original and
+retained RAM bytes agree. Its two compiled `BREAK` division guards terminate at
+unqualified exception edges and have no delay slots.
+
+This classification requires ordinary helper returns, valid thread arguments,
+successful unskipped START loading, stable code and selectors, and noninterfering
+callback slots. Exiting the current thread can clear the new registration if the
+current slot is slot 0. The rule does not establish actual scheduling, initializer
+execution, historical initialization, selector bounds, exception-handler behavior
+or argument and resource safety. Neighboring code and character records retain
+their prior classifications. No matching initializer ELF is claimed.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw
@@ -822,6 +847,30 @@ and physical offsets may differ between archives.
 | `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
 | `[0x17908,0x179F8)` | `[0x800AE108,0x800AE1F8)` | 240 |
 | `[0x179F8,0x17A60)` | `[0x800AE1F8,0x800AE260)` | 104 |
+| `[0x17CD0,0x17D74)` | `[0x800AE4D0,0x800AE574)` | 164 |
+| `[0x17EC8,0x17F28)` | `[0x800AE6C8,0x800AE728)` | 96 |
+| `[0x17F88,0x1802C)` | `[0x800AE788,0x800AE82C)` | 164 |
+| `[0x18E6C,0x18EB8)` | `[0x800AF66C,0x800AF6B8)` | 76 |
+| `[0x19798,0x19858)` | `[0x800AFF98,0x800B0058)` | 192 |
+| `[0x19858,0x19918)` | `[0x800B0058,0x800B0118)` | 192 |
+| `[0x19918,0x19980)` | `[0x800B0118,0x800B0180)` | 104 |
+| `[0x19980,0x199F0)` | `[0x800B0180,0x800B01F0)` | 112 |
+| `[0x199F0,0x19A50)` | `[0x800B01F0,0x800B0250)` | 96 |
+| `[0x19B98,0x19C10)` | `[0x800B0398,0x800B0410)` | 120 |
+| `[0x1A1CC,0x1A22C)` | `[0x800B09CC,0x800B0A2C)` | 96 |
+| `[0x1A254,0x1A2B0)` | `[0x800B0A54,0x800B0AB0)` | 92 |
+| `[0x1A2B0,0x1A30C)` | `[0x800B0AB0,0x800B0B0C)` | 92 |
+| `[0x1A4E4,0x1A554)` | `[0x800B0CE4,0x800B0D54)` | 112 |
+| `[0x1A6C4,0x1A730)` | `[0x800B0EC4,0x800B0F30)` | 108 |
+| `[0x1A730,0x1A79C)` | `[0x800B0F30,0x800B0F9C)` | 108 |
+| `[0x1AB8C,0x1ABEC)` | `[0x800B138C,0x800B13EC)` | 96 |
+| `[0x1AD5C,0x1ADBC)` | `[0x800B155C,0x800B15BC)` | 96 |
+| `[0x1AE64,0x1AED0)` | `[0x800B1664,0x800B16D0)` | 108 |
+| `[0x1B904,0x1B958)` | `[0x800B2104,0x800B2158)` | 84 |
+| `[0x1BA58,0x1BAAC)` | `[0x800B2258,0x800B22AC)` | 84 |
+| `[0x1BB2C,0x1BBB8)` | `[0x800B232C,0x800B23B8)` | 140 |
+| `[0x1BC78,0x1BCCC)` | `[0x800B2478,0x800B24CC)` | 84 |
+| `[0x1CA6C,0x1CB24)` | `[0x800B326C,0x800B3324)` | 184 |
 
 The bodies at `0x8009CFEC..0x8009D198`, `0x8009DA94..0x8009DAB4`
 and `0x8009DC6C..0x8009DCC8` have complete original control-flow reviews.
@@ -872,6 +921,17 @@ handler behavior and continuation remain unqualified. Intervening gaps, bodies
 with unmatched complete extents or bytes, and referenced data remain excluded.
 This classification does not establish execution, feasible paths, work-record,
 selector or argument validity, callee behavior or resource safety.
+
+The 24 listed bodies within `0x800AC964..0x800B70C4` contain 700 instruction
+words in 90 structural blocks. Their complete sized executable ELF function
+sections and all 130 object text relocations reconcile with original bytes and
+captured resident RAM. Structural review covers every word and all 77 actual
+control-transfer delay slots. Direct and indirect-call continuations assume
+ordinary returns, intact caller frames and nonaliasing dynamic stores. Targets,
+selectors and table bounds at the twelve indirect-call sites remain unqualified.
+Eight refused bodies, intervening gaps and referenced data remain excluded.
+This classification does not establish execution, feasible paths, valid work
+records, argument validity, callee behavior or resource safety.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident
