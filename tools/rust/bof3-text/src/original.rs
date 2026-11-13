@@ -6736,16 +6736,37 @@ pub fn payload_nontext_ranges(
         return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
-        (8, 360_448, 0, 0x801d_0c00, 117_986)
+        (8, 360_448, 0, 0x801d_0c00, 117_986) | (0, 2_048, 0, 0x801d_0c00, 117_986)
             if entry.check_word == 18
                 && sha256_hex(data)
                     == "a47d32865283a01ce87b2f2f8cb19d3305525659b95a8feb4f307eddf63a8cb1" =>
         {
-            Some(vec![NontextRange {
-                offset: 2_496,
-                length: 384,
-                evidence: "original US START entry 8; complete instruction body 0x801D15C0..0x801D1740 including all branch and return delay slots; original GAME01 callback registration and typed OpenTh entry-function consumer conditionally bind the alternate-loop and finite START selector-2/name-entry selector-0 route to JAL at 0x801E4678; all 96 words and complete structural flow match original and retained RAM; ordinary helper returns, valid thread arguments, successful unskipped START loading, stable code/selectors and noninterfering callback slots remain conditions; two compiled BREAK division guards are exceptional terminal edges without delay slots, and exception-handler behavior remains unqualified; exact original archive, entry, mode, load, offset, checkword, size and payload identities; neighboring code and character-record data excluded; no matching ELF, observed execution, historical initialization, full selector bounds, argument-validity, resource-safety or unique-supplier claim",
-            }])
+            let mut ranges = Vec::new();
+            if entry.index == 8 {
+                ranges.push(NontextRange {
+                    offset: 2_496,
+                    length: 384,
+                    evidence: "original US START entry 8; complete instruction body 0x801D15C0..0x801D1740 including all branch and return delay slots; original GAME01 callback registration and typed OpenTh entry-function consumer conditionally bind the alternate-loop and finite START selector-2/name-entry selector-0 route to JAL at 0x801E4678; all 96 words and complete structural flow match original and retained RAM; ordinary helper returns, valid thread arguments, successful unskipped START loading, stable code/selectors and noninterfering callback slots remain conditions; two compiled BREAK division guards are exceptional terminal edges without delay slots, and exception-handler behavior remains unqualified; exact original archive, entry, mode, load, offset, checkword, size and payload identities; neighboring code and character-record data excluded; no matching ELF, observed execution, historical initialization, full selector bounds, argument-validity, resource-safety or unique-supplier claim",
+                });
+            }
+            ranges.extend([
+                NontextRange {
+                    offset: 61_428,
+                    length: 1_888,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801DFBF4..0x801E0354; all 472 original words, 53 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; observed internal PC 0x801DFF24 binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code assumptions; strings, tables, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 63_316,
+                    length: 1_268,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801E0354..0x801E0848; all 317 original words, 37 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; observed internal PC 0x801E05A0 binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code assumptions; strings, tables, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 65_136,
+                    length: 1_848,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801E0A70..0x801E11A8; all 462 original words, 48 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; unsigned selector guard and six exact original targets at 0x801D0D94 close the computed JR at 0x801E0ABC; observed internal PC 0x801E0E2C binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code/table assumptions; table bytes, strings, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
+                },
+            ]);
+            Some(ranges)
         }
         (0, 2_048, 0, 0x8019_5800, 229_720)
             if entry.check_word == 0x1e

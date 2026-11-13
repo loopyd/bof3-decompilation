@@ -687,6 +687,35 @@ execution, historical initialization, selector bounds, exception-handler behavio
 or argument and resource safety. Neighboring code and character records retain
 their prior classifications. No matching initializer ELF is claimed.
 
+## START and STATUS category reader instruction coverage
+
+The START entry identified above and original US `STATUS.EMI#0` share the same
+117,986-byte payload, load address, checkword and payload hash. STATUS entry 0
+must be in raw mode at archive offset 2048. Each containing archive must
+independently match the original disc manifest. Coverage classifies these
+complete instruction bodies in both entries:
+
+| Reader | Payload interval | Runtime interval | Bytes |
+| --- | --- | --- | ---: |
+| Items | `[61428,63316)` | `[0x801DFBF4,0x801E0354)` | 1888 |
+| Ability | `[63316,64584)` | `[0x801E0354,0x801E0848)` | 1268 |
+| Equipment | `[65136,66984)` | `[0x801E0A70,0x801E11A8)` | 1848 |
+
+All 1,251 original words have complete structural control flow, including their
+138 control-transfer delay words. Equipment's unsigned selector guard limits
+the computed jump at `0x801E0ABC` to six table entries at `0x801D0D94`.
+All targets stay within the reviewed body. The table bytes retain their prior
+classification. Native internal PCs `0x801DFF24`, `0x801E05A0` and `0x801E0E2C`
+bind executable words without establishing first-instruction or all-path execution.
+
+The rule requires stable code and table bytes, valid incoming return control and
+memory, an aligned intact stack, ordinary returning callees that preserve saved
+values, and stores that do not alias code, table or frame slots. It does not
+qualify strings, referenced data, callees, selector bounds outside the reviewed
+Equipment guard, resource safety or a unique archive supplier. The 552-byte gap
+between Ability and Equipment retains its prior status. The separate initializer
+classification remains specific to START entry 8.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw
