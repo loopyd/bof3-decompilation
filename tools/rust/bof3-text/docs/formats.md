@@ -2029,6 +2029,20 @@ conditions. Referenced data, tables, pointers, buffers and callees remain
 excluded. Invocation, feasible execution, callee behavior, resource safety,
 safe editing and unique source ownership remain unqualified.
 
+The preceding leaf at `0x801AF270..0x801AF2A0` also qualifies. Its payload
+offsets are `[105072,105120)` and archive offsets are `[107120,107168)`.
+All 12 original words, three control-transfer delays, retained RAM bytes,
+existing sized executable ELF section and five executable relocations agree.
+The existing objects were not rebuilt. The qualified sprite body has one
+original JAL to this leaf at `0x801AF2CC`.
+
+Both return paths preserve SP, RA and saved registers without memory loads or
+stores. Stable executable bytes and valid incoming return control remain
+conditions. Linked table symbols establish relocation arithmetic; table extents,
+contents, returned-pointer validity and consumer safety remain unqualified.
+Invocation, runtime feasibility, resource safety, safe editing and source
+semantics also remain unqualified.
+
 ## Guarded executable switch coverage
 
 For the exact original US `SLUS_004.22`, coverage recognizes the complete

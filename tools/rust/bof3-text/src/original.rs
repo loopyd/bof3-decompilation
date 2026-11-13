@@ -6754,6 +6754,11 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 105_072,
+                    length: 48,
+                    evidence: "original US GAME entry 0 complete leaf instruction body 0x801AF270..0x801AF2A0 including all three control-transfer delay slots; all twelve original ASM words, retained resident bytes, sized existing executable ELF function section and five text relocations agree; one qualified original JAL at 0x801AF2CC in body 0x801AF2A0..0x801AF390 conditionally enters this leaf; four structural blocks and both return paths preserve SP, RA and saved registers without memory loads or stores; exact original archive, raw mode, load, entry, size, checkword and payload identities; linked table symbols qualify relocation arithmetic only, with tables, returned-pointer validity and consumer safety excluded; stable executable bytes and valid incoming return control remain conditions; no fresh source build, observed invocation, runtime feasibility, resource safety, safe editing or source-semantic acceptance",
+                },
+                NontextRange {
                     offset: 105_120,
                     length: 240,
                     evidence: "original US GAME entry 0 complete instruction body 0x801AF2A0..0x801AF390 including all eight control-transfer delay slots; complete original ASM word and structural control-flow review, sized existing executable ELF function section and all six text relocations reconcile with original and captured resident bytes; nine qualified original JAL sites in shared battle body 0x800B1A74..0x800B1DAC conditionally enter this body; ordinary callee returns and preservation, valid memory, intact frames and nonaliasing stores remain conditions; exact original archive, raw mode, load, entry, size, checkword and payload identities; referenced tables, pointers, data, buffers and callees excluded; no fresh source build, observed invocation, feasible execution, argument-validity, callee-semantics, resource-safety, safe-editing or unique-supplier claim",
