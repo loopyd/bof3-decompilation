@@ -2548,12 +2548,19 @@ alignment bytes and twenty pointer bytes protected. Controlled packed-media
 Items observations verify all five edited category labels. A preinstruction capture
 at `0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
 `S1=0x80148504`, with handler 6, type 12, callback state 2 at `+3`, reader byte
-zero at `+8` and category zero at `+A`. It does not
-prove call or delay-store retirement. WEAPON, ARMOR, OPTION and VITAL use separate
-controlled records with categories 1 through 4. These observations accept
-category-label glyphs only. Other selected calls, general selector bounds and
-natural availability remain unverified; identical payloads leave the START
-or STATUS supplier unresolved.
+zero at `+8` and category zero at `+A`. This controlled capture stops before the
+JAL and delay store. WEAPON, ARMOR, OPTION and VITAL use separate controlled
+records with categories 1 through 4. These observations verify category-label
+glyphs only.
+
+Ordinary Items navigation after loading a game-created save also displays all
+five original labels. The regular list reaches ITEM, WEAPON, ARMOR and OPTION;
+the Vtal command opens VITAL. Selected calls at `0x801DFF24` bind categories
+0 through 4 to their respective pointers and continue to `0x8014F800` with return
+address `0x801DFF2C` and the selected pointer stored at `SP + 0x10`. This verifies
+each selected JAL and delay store. Row reads and completed rendering for those
+invocations, general selector bounds and the unique START or STATUS supplier
+remain unverified.
 
 The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
 `0x801ECC78`, `0x801ECC80`, `0x801ECC88` and `0x801ECC90`, with capacities
