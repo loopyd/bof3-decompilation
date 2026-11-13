@@ -210,6 +210,16 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete instruction body 0x8014B900..0x8014B954 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 7 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 751_288,
+            length: 36,
+            evidence: "original US SLUS 0x8014D6B8..0x8014D6DC; complete nine-word instruction-only wrapper including direct-call and return delay slots; original whole executable/raw payload and retained resident RAM bytes agree; conditionally entered by original START#8 JAL at 0x801E3FB8 under the reviewed initializer route; all words and structural call/return flow reviewed; ordinary-return/frame/nonalias assumptions; exact executable identity; no callee semantics, actual START invocation, argument/resource safety, transfer, display or whole-layout claim",
+        },
+        NontextRange {
+            offset: 751_324,
+            length: 504,
+            evidence: "original US SLUS 0x8014D6DC..0x8014D8D4; complete 126-word instruction-only body including all 11 control delay slots; original whole executable/raw and retained resident RAM bytes agree; conditional original entry at reviewed wrapper JAL 0x8014D6C4; all words and four conditional/two internal direct/four external direct/sole return transfers reviewed, internal CFG closed; ordinary external-return/frame/nonalias assumptions; exact executable identity; no callee semantics, data/argument/resource safety, actual START invocation, transfer, display or whole-layout claim",
+        },
+        NontextRange {
             offset: 752_956,
             length: 316,
             evidence: "original US SLUS; complete instruction body 0x8014DD3C..0x8014DE78 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 25 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -2301,6 +2311,44 @@ fn model_decoded_nontext_fields(
                 (48_720, 50_313),
             ],
             "original US START entry 7; literal origins whose every decoded use is in the reviewed root-0 relative words, 21 image-directory words, image headers or consumed mode-1 words/mode-2 tokens; original slot 0x268 resolves to exact START physical LBAs 61926..62179; successful unskipped entry-7 loading, flag-0x20 clearance and stable bank/work memory condition the GAME alternate-loop index-1, START dispatcher index-0 and initializer 0x801E3EC4 source route; GAME 0x801C1254 publishes root 0 and original START call 0x801E3FB8 reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 12 and image 4; exact archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires every decoded alias to have a reviewed role; ordinary-return and noninterference assumptions; roots 1/2, palette/program/cell/selection fields, mode-2 prefixes, allocation tails and opaque aliases excluded; no actual invocation, transfer, residency, every-image selection, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
+    if entry.index == 7
+        && entry.transfer_mode == 1
+        && entry.offset == 96_256
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 331_788
+        && data.len() == 211_642
+        && sha256_hex(data) == "4b321cc1ff09b75bad5cd7a34cc1ef806fffcc7c26adb618279d04c07e0857cc"
+    {
+        return (
+            &[
+                (0, 4),
+                (12, 16),
+                (28, 92),
+                (96, 7_554),
+                (7_556, 7_564),
+                (7_568, 9_875),
+                (9_876, 9_884),
+                (9_888, 12_194),
+                (12_196, 12_204),
+                (12_208, 15_424),
+                (15_428, 17_762),
+                (17_764, 17_772),
+                (17_776, 24_986),
+                (24_988, 24_996),
+                (25_000, 32_820),
+                (32_824, 34_257),
+                (34_260, 34_268),
+                (34_272, 42_254),
+                (42_256, 42_264),
+                (42_268, 48_190),
+                (48_192, 61_864),
+                (61_868, 62_263),
+                (62_264, 62_272),
+                (62_276, 83_920),
+            ],
+            "original US BPLD578 entry 7; literal origins whose every decoded use is in the reviewed root-0 relative words, 14 image-directory words, image headers or consumed mode-1 words/mode-2 tokens; original family-1/index-17 request selects slot 492 and exact physical LBAs 51797..51965; successful unskipped entry-7 loading, flag-0x20 clearance, stable hint 17 and bank/work memory condition the original GAME phase-1/2/3 source route; under conditional identifier 5 at work index 0, count 1, route 0 and clear record masks 0x0080/0x4000, GAME 0x801C1400 calls 0x801C1254 to publish root 0, and original call 0x801BF56C reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 0 and image 0; exact original archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires every decoded alias to have a reviewed role; ordinary-return and noninterference assumptions; roots 1/2, palette/program/cell/selection fields, mode-2 prefixes, allocation tails and opaque aliases excluded; no actual request, roster, invocation, transfer, residency, every-image selection, upload, display, rasterized-text absence or safe-edit claim",
         );
     }
     if entry.index != 3 || entry.ram_ptr != 0x8003_b800 {

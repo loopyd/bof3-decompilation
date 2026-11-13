@@ -319,6 +319,34 @@ returns and bank/work noninterference are conditions. Actual invocation,
 transfer, residency, upload, display, rasterized-text absence and safe editing
 remain unqualified.
 
+## Compressed BPLD578 root-0 image fields
+
+Coverage recognizes original US `BIN/BPLCHAR/BPLD578.EMI` entry 7 with
+transfer mode 1, load address `0x8003B800`, file offset 96256, packed size
+211642 and checkword 331788. Its payload SHA-256 is
+`4b321cc1ff09b75bad5cd7a34cc1ef806fffcc7c26adb618279d04c07e0857cc`.
+
+Original family 1/index 17 requests slot 492 at LBA 51797. Successful
+unskipped loading with flag `0x20` clear and stable hint 17, bank and work
+memory condition the GAME phase-1/2/3 route. With identifier 5 at work index 0,
+count 1, route 0, clear record masks `0x0080/0x4000` and ordinary helper
+returns, GAME `0x801C1400` calls `0x801C1254` to publish root 0. Its call at
+`0x801BF56C` then reaches `0x8014DC08` through `0x8014D6B8/0x8014D6DC`
+with selector 0 and image 0. These are conditional inputs, not observed
+requests or roster contents.
+
+The profile qualifies decoded words `[0,4)` and `[12,16)`, the 14 image
+directory words at `[28,84)`, and the headers and consumed encodings of two
+mode-1 and twelve mode-2 images. Each record has a separately checked
+serialized extent; only image 0 has the selected conditional call path.
+The compression walk admits a physical literal only when every decoded use
+has a reviewed role.
+
+Other roots, palette, program, cell and selection fields, opaque aliases,
+mode-2 prefixes and allocation tails remain unresolved. Actual invocation,
+transfer, residency, upload, display, rasterized-text absence and safe editing
+remain unqualified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
@@ -1238,6 +1266,23 @@ arguments, callee behavior or resource-safety acceptance.
 | `[0xE938C,0xE9398)` | `[0x8017F38C,0x8017F398)` | 12 | `0x8017F0DC` | `0x8017F084` |
 | `[0xE939C,0xE93A8)` | `[0x8017F39C,0x8017F3A8)` | 12 | `0x8017F254` | `0x8017F1FC` |
 | `[0xE93E4,0xE944C)` | `[0x8017F3E4,0x8017F44C)` | 104 | `0x8017F0B0` | `0x8017F084` |
+
+## Executable image-selector instruction coverage
+
+The exact original US executable qualifies two complete instruction bodies.
+Original START call `0x801E3FB8` conditionally enters the wrapper at
+`0x8014D6B8`; its call at `0x8014D6C4` enters `0x8014D6DC`.
+
+| File offsets | Runtime addresses | Bytes |
+| --- | --- | ---: |
+| `[751288,751324)` | `[0x8014D6B8,0x8014D6DC)` | 36 |
+| `[751324,751828)` | `[0x8014D6DC,0x8014D8D4)` | 504 |
+
+All original words, control transfers and delay slots reconcile with complete
+structural flow and retained resident RAM. Ordinary external returns,
+preserved frames, nonaliasing and stable code are conditions. These records
+qualify instructions without requiring a matching ELF or establishing
+execution, callee semantics, argument or resource safety, transfer or display.
 
 ## Executable numeric-sampler instruction coverage
 
