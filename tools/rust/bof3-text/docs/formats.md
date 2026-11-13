@@ -366,6 +366,43 @@ aliases, mode-2 prefixes and allocation tails remain unresolved. Actual
 invocation, transfer, residency, upload, display, rasterized-text absence and
 safe editing remain unqualified.
 
+## Compressed BPLD257 image fields
+
+Coverage recognizes original US `BIN/BPLCHAR/BPLD257.EMI` entry 7 with
+transfer mode 1, load address `0x8003B800`, file offset 98304, packed size
+213807 and checkword 368652. Its payload SHA-256 is
+`b627b7492e8462589d8ed191e365b6c53c3595c86d8efa4209cf59128b963a45`.
+
+Original family 1/index 8 requests slot 483 at LBA 50489. Successful
+unskipped loading without flag `0x20` early completion and stable hint 8,
+bank and work memory condition the GAME phase-1/2/3 route. With count 1,
+work index 0 and conditional identifiers 2, 5 or 7, row `02 05 07` selects
+root ordinals 0, 1 or 2. The identifier-map bytes are 2, 5 and 0; record
+flags at `0x80144ABC`, `0x80144CA8` and `0x80144974` must have masks
+`0x0080/0x4000` clear. Under route 0 and ordinary helper returns,
+`0x801C1400` calls `0x801C1254` to publish roots `0x8003B80C`,
+`0x8005F80C` and `0x8007A80C`. `0x801BF448` reselects the same work,
+and `0x801BF56C` reaches `0x8014DC08` through
+`0x8014D6B8/0x8014D6DC` with selector 0 and images 7, 0 and 4,
+respectively. These are conditional inputs, not observed requests or roster
+contents.
+
+The profile qualifies root-array words `[0,12)`, root-relative words
+`[12,16)`, `[147468,147472)` and `[258060,258064)`, and the 16, 14 and
+16 image-directory words at `[28,92)`, `[147484,147540)` and
+`[258076,258140)`. It also qualifies the headers and consumed encodings of
+thirteen mode-1 and thirty-three mode-2 images. Each serialized extent is
+checked separately; the selected conditional paths bind only images 7, 0
+and 4 in their respective roots. The complete compression walk admits a
+physical literal only when every decoded alias belongs to this three-root
+field union.
+
+Other root-header words, palette, program, cell and selection fields, opaque
+aliases, mode-2 prefixes, allocation tails, raw entry 3 and container gaps
+remain unresolved. Actual invocation, transfer, residency, argument and
+resource safety, upload, display, rasterized-text absence and safe editing
+remain unqualified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at

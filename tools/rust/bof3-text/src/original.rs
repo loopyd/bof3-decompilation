@@ -2351,6 +2351,84 @@ fn model_decoded_nontext_fields(
             "original US BPLD578 entry 7; literal origins whose every decoded use is in the reviewed root-0 relative words, 14 image-directory words, image headers or consumed mode-1 words/mode-2 tokens; original family-1/index-17 request selects slot 492 and exact physical LBAs 51797..51965; successful unskipped entry-7 loading, flag-0x20 clearance, stable hint 17 and bank/work memory condition the original GAME phase-1/2/3 source route; under conditional identifier 5 at work index 0, count 1, route 0 and clear record masks 0x0080/0x4000, GAME 0x801C1400 calls 0x801C1254 to publish root 0, and original call 0x801BF56C reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 0 and image 0; exact original archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires every decoded alias to have a reviewed role; ordinary-return and noninterference assumptions; roots 1/2, palette/program/cell/selection fields, mode-2 prefixes, allocation tails and opaque aliases excluded; no actual request, roster, invocation, transfer, residency, every-image selection, upload, display, rasterized-text absence or safe-edit claim",
         );
     }
+    if entry.index == 7
+        && entry.transfer_mode == 1
+        && entry.offset == 98_304
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 368_652
+        && data.len() == 213_807
+        && sha256_hex(data) == "b627b7492e8462589d8ed191e365b6c53c3595c86d8efa4209cf59128b963a45"
+    {
+        return (
+            &[
+                (0, 16),
+                (28, 9_668),
+                (9_672, 16_763),
+                (16_764, 16_772),
+                (16_776, 23_448),
+                (23_452, 26_560),
+                (26_564, 29_296),
+                (29_300, 31_435),
+                (31_436, 39_636),
+                (39_640, 64_244),
+                (64_248, 71_336),
+                (71_340, 77_825),
+                (77_828, 77_836),
+                (77_840, 81_685),
+                (81_688, 98_112),
+                (147_468, 147_472),
+                (147_484, 147_548),
+                (147_552, 155_010),
+                (155_012, 155_020),
+                (155_024, 157_331),
+                (157_332, 157_340),
+                (157_344, 159_650),
+                (159_652, 159_660),
+                (159_664, 162_880),
+                (162_884, 165_218),
+                (165_220, 165_228),
+                (165_232, 172_442),
+                (172_444, 172_452),
+                (172_456, 180_276),
+                (180_280, 181_713),
+                (181_716, 181_724),
+                (181_728, 189_710),
+                (189_712, 189_720),
+                (189_724, 195_646),
+                (195_648, 209_320),
+                (209_324, 209_719),
+                (209_720, 209_728),
+                (209_732, 231_376),
+                (258_060, 258_064),
+                (258_076, 263_628),
+                (263_632, 265_687),
+                (265_688, 265_696),
+                (265_700, 269_733),
+                (269_736, 269_744),
+                (269_748, 275_447),
+                (275_448, 275_456),
+                (275_460, 282_307),
+                (282_308, 282_316),
+                (282_320, 284_885),
+                (284_888, 284_896),
+                (284_900, 286_278),
+                (286_280, 286_288),
+                (286_292, 287_191),
+                (287_192, 287_200),
+                (287_204, 288_829),
+                (288_832, 288_840),
+                (288_844, 289_667),
+                (289_668, 296_512),
+                (296_516, 298_954),
+                (298_956, 298_964),
+                (298_968, 304_676),
+                (304_680, 310_173),
+                (310_176, 310_184),
+                (310_188, 310_687),
+            ],
+            "original US BPLD257 entry 7; literal origins whose every decoded alias is in the reviewed three-root relative words, 46 image-directory words, image headers or consumed mode-1 words/mode-2 tokens of 46 finite original records; original family-1/index-8 request selects slot 483 and exact physical LBAs 50489..50661; successful unskipped entry-7 loading without flag-0x20 early completion, stable hint 8, original code, bank, count and nonaliased work/scratch, and ordinary returning helpers condition the original GAME phase-1/2/3 route; under separate conditional identifiers 2/5/7 at work index 0, count 1, route 0 and clear record masks 0x0080/0x4000, immutable row 020507 selects root ordinals 0/1/2, identifier-map bytes 2/5/0 select flags at 0x80144ABC/0x80144CA8/0x80144974, and GAME 0x801C1400 calls 0x801C1254 to publish roots 0x8003B80C/0x8005F80C/0x8007A80C; original 0x801BF448 reselects the same work and call 0x801BF56C reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 0 and images 7/0/4 respectively; exact original archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates ultimate physical origins through initialized overlapping references and requires all decoded aliases to lie in this three-root field union; opaque aliases, other root-header words, palette/program/cell/selection fields, mode-2 prefixes, allocation tails and raw entry 3 excluded; no actual request, roster, invocation, transfer, residency, every-image selection, argument/resource safety, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
     if entry.index != 3 || entry.ram_ptr != 0x8003_b800 {
         return (&[], "");
     }
