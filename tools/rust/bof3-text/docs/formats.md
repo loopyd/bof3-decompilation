@@ -2572,9 +2572,17 @@ verifies first-glyph edits in all four labels at selectors 0 through 3.
 Preinstruction captures at `0x801E05A0` bind record `S1=0x80148570` to slot
 `0x801ECC98` and pointer `V0=0x801ECC78` for HEAL, and slot `0x801ECCA4` and
 pointer `V0=0x801ECC90` for SKILL. Both callback states at `+3` are zero; the reader
-byte at `+8` is zero for HEAL and three for SKILL. Selected ASSIST and ATTACK
-calls, call and delay-store retirement, general selector bounds and natural
-availability remain unverified.
+byte at `+8` is zero for HEAL and three for SKILL. These controlled captures stop
+before the JAL and delay store.
+
+Ordinary Ability navigation after loading a game-created save also displays all
+four original labels. Selected calls at `0x801E05A0` bind category values 0 through
+3 at record byte `+B` to the four respective pointers. At these calls,
+`AT - 0x3368` identifies the pointer slot; `S0` holds a shifted centering
+coordinate. Each continues to `0x8014F800` with return address `0x801E05A8` and
+its text pointer stored at `SP + 0x10`, verifying the selected JAL and delay
+store. Row reads and completed rendering for those invocations, general selector
+bounds and the unique START or STATUS supplier remain unverified.
 
 The separate equipment-category table at `0x801ECCD0` exposes WEAPON, ARMOR
 and OPTION at `0x801ECCB0`, `0x801ECCB8` and `0x801ECCC0`, with capacities
