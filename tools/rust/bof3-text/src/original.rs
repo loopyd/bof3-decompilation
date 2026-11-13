@@ -225,6 +225,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "Exact original complete 26-word instruction body 0x8014D910..0x8014D978, conditionally entered by original JAL 0x8014D8B0 with its 0x8014D8B4 delay supplying A0=S2&0xFFFF; the reviewed wrapper path saves A1=0 into S2. All original words and both control-transfer delay slots match retained shared code RAM. The sole external JAL at 0x8014D960 calls 0x8014DB98 with the work+0x54 store in its delay; the sole JR RA at 0x8014D970 has a NOP delay. The 0x18-byte frame saves/restores RA and restores SP. Stored instruction role only, with ordinary external call-return, frame and nonalias assumptions; no matching ELF, native execution, resource semantics or rendering claim.",
         },
         NontextRange {
+            offset: 751_992,
+            length: 172,
+            evidence: "Exact original complete 43-word instruction body 0x8014D978..0x8014DA24, conditionally entered by original GAME JAL 0x801B0354 with NOP delay after the reviewed B0320 selected substate handler returns. All words and all 6 control-transfer delays reconcile with original raw and retained shared code RAM. Complete 7-block CFG has 3 conditional branches, one internal J, one direct JAL to 0x8014DB98 and sole JR RA; the 0x18-byte frame restores S0/RA/SP. Stored instruction role only, with original B0320 entry, selector0/1/2, ordinary handler/callee return, frame and nonalias assumptions; no matching ELF, native retirement, resource semantics or rendering claim.",
+        },
+        NontextRange {
             offset: 752_536,
             length: 112,
             evidence: "original US SLUS 0x8014DB98..0x8014DC08; complete 28-word call-free body conditionally entered by original JAL 0x8014D960 after its 0x8014D964 delay; all words and the sole JR RA delay match original raw bytes and retained shared code RAM; exact whole executable identity; stored instruction role under ordinary caller return/frame/nonalias and stable incoming work assumptions; no actual execution, matching ELF, resource/field semantics or rendering claim",
@@ -6237,14 +6242,345 @@ fn additional_model_decoded_nontext_fields(
     (&[], "")
 }
 
+fn model_program_decoded_nontext_fields(
+    entry: Entry,
+    data: &[u8],
+) -> (&'static [(usize, usize)], &'static str) {
+    if entry.index == 7
+        && entry.transfer_mode == 1
+        && entry.offset == 96_256
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 331_788
+        && data.len() == 211_642
+        && sha256_hex(data) == "4b321cc1ff09b75bad5cd7a34cc1ef806fffcc7c26adb618279d04c07e0857cc"
+    {
+        return (
+            &[
+                (20, 28),
+                (83_988, 83_990),
+                (84_023, 84_068),
+                (84_069, 84_115),
+                (84_116, 84_120),
+                (84_121, 84_125),
+                (84_126, 84_130),
+                (84_131, 84_135),
+                (84_136, 84_140),
+                (84_141, 84_146),
+                (84_147, 84_151),
+                (84_152, 84_156),
+                (84_157, 84_161),
+                (84_162, 84_166),
+                (84_167, 84_171),
+                (84_172, 84_176),
+                (84_177, 84_181),
+                (84_182, 84_187),
+                (84_188, 84_192),
+                (84_193, 84_197),
+                (84_198, 84_202),
+                (84_203, 84_207),
+                (84_208, 84_212),
+                (84_213, 84_217),
+                (84_218, 84_223),
+                (84_224, 84_228),
+                (84_229, 84_233),
+                (84_234, 84_238),
+                (84_239, 84_243),
+                (84_244, 84_248),
+                (84_249, 84_253),
+                (84_254, 84_258),
+                (84_259, 84_263),
+                (84_264, 84_268),
+                (84_269, 84_273),
+                (84_274, 84_279),
+                (84_280, 84_284),
+                (84_285, 84_289),
+                (84_290, 84_294),
+                (84_295, 84_299),
+                (84_300, 84_304),
+                (84_305, 84_309),
+                (84_310, 84_314),
+                (84_315, 84_319),
+                (84_320, 84_324),
+                (84_325, 84_329),
+                (84_330, 84_334),
+                (84_335, 84_340),
+                (84_341, 84_345),
+                (84_346, 84_350),
+                (84_351, 84_355),
+                (84_356, 84_360),
+                (84_361, 84_365),
+                (84_366, 84_370),
+                (84_371, 84_375),
+                (84_376, 84_380),
+                (84_381, 84_385),
+                (84_386, 84_391),
+                (84_392, 84_396),
+                (84_397, 84_401),
+                (84_402, 84_406),
+                (84_407, 84_411),
+                (84_412, 84_416),
+                (84_417, 84_421),
+                (84_422, 84_427),
+                (84_428, 84_432),
+                (84_433, 84_437),
+                (84_438, 84_442),
+                (84_443, 84_447),
+                (84_448, 84_452),
+                (84_453, 84_457),
+                (84_458, 84_462),
+                (84_463, 84_467),
+                (84_468, 84_472),
+                (84_473, 84_477),
+                (84_478, 84_482),
+                (84_483, 84_487),
+                (84_488, 84_492),
+                (84_493, 84_497),
+                (84_498, 84_502),
+                (84_503, 84_508),
+                (84_509, 84_513),
+                (84_514, 84_518),
+                (84_519, 84_523),
+                (84_524, 84_528),
+                (84_529, 84_533),
+                (84_534, 84_538),
+                (84_539, 84_543),
+                (84_544, 84_548),
+                (84_549, 84_553),
+                (84_554, 84_558),
+                (84_559, 84_563),
+                (84_564, 84_568),
+                (84_569, 84_573),
+                (84_574, 84_578),
+                (84_579, 84_583),
+                (84_584, 84_589),
+                (84_590, 84_594),
+                (84_595, 84_599),
+                (84_600, 84_604),
+                (84_605, 84_609),
+                (84_610, 84_614),
+                (84_615, 84_619),
+                (84_620, 84_624),
+                (84_625, 84_629),
+                (84_630, 84_634),
+                (84_635, 84_639),
+                (84_640, 84_644),
+                (84_645, 84_649),
+                (84_650, 84_654),
+                (84_655, 84_659),
+                (84_660, 84_664),
+                (84_665, 84_670),
+                (84_671, 84_675),
+                (84_676, 84_680),
+                (84_681, 84_685),
+                (84_686, 84_690),
+                (84_691, 84_695),
+                (84_696, 84_700),
+                (84_701, 84_705),
+                (84_706, 84_710),
+                (84_711, 84_715),
+                (84_716, 84_720),
+                (84_721, 84_725),
+                (84_726, 84_730),
+                (84_731, 84_735),
+                (84_736, 84_740),
+                (84_741, 84_745),
+                (84_746, 84_750),
+                (84_751, 84_756),
+                (84_757, 84_761),
+                (84_762, 84_766),
+                (84_767, 84_771),
+                (84_772, 84_776),
+                (84_777, 84_781),
+                (84_782, 84_786),
+                (84_787, 84_791),
+                (84_792, 84_796),
+                (84_797, 84_801),
+                (84_802, 84_806),
+                (84_807, 84_811),
+                (84_812, 84_816),
+                (84_817, 84_821),
+                (84_822, 84_826),
+                (84_827, 84_831),
+                (84_832, 84_836),
+                (84_837, 84_841),
+                (84_842, 84_846),
+                (84_847, 84_851),
+                (84_852, 84_856),
+                (84_857, 84_861),
+                (84_862, 84_866),
+                (84_867, 84_871),
+                (84_872, 84_877),
+                (84_878, 84_882),
+                (84_883, 84_887),
+                (84_888, 84_892),
+                (84_893, 84_897),
+                (84_898, 84_902),
+                (84_903, 84_907),
+                (84_908, 84_912),
+                (84_913, 84_917),
+                (84_918, 84_922),
+                (84_923, 84_927),
+                (84_928, 84_932),
+                (84_933, 84_937),
+                (84_938, 84_942),
+                (84_943, 84_947),
+                (84_948, 84_952),
+                (84_953, 84_957),
+                (84_958, 84_962),
+                (84_963, 84_967),
+                (84_968, 84_972),
+                (84_973, 84_977),
+                (84_978, 84_982),
+                (84_983, 84_987),
+                (84_988, 84_992),
+                (84_993, 84_997),
+                (84_998, 85_002),
+                (85_003, 85_007),
+                (85_008, 85_012),
+                (85_013, 85_017),
+                (85_018, 85_023),
+                (85_024, 85_028),
+                (85_029, 85_033),
+                (85_034, 85_038),
+                (85_039, 85_043),
+                (85_044, 85_048),
+                (85_049, 85_053),
+                (85_054, 85_058),
+                (85_059, 85_063),
+                (85_064, 85_068),
+                (85_069, 85_073),
+                (85_074, 85_078),
+                (85_079, 85_083),
+                (85_084, 85_088),
+                (85_089, 85_093),
+                (85_094, 85_099),
+                (85_100, 85_104),
+                (85_105, 85_109),
+                (85_110, 85_114),
+                (85_115, 85_119),
+                (85_120, 85_124),
+                (85_125, 85_129),
+                (85_130, 85_134),
+                (85_135, 85_139),
+                (85_140, 85_144),
+                (85_145, 85_149),
+                (85_150, 85_154),
+                (85_155, 85_159),
+                (85_160, 85_164),
+                (85_165, 85_169),
+                (85_170, 85_174),
+                (85_175, 85_179),
+                (85_180, 85_185),
+                (85_186, 85_190),
+                (85_191, 85_195),
+                (85_196, 85_200),
+                (85_201, 85_205),
+                (85_206, 85_210),
+                (85_211, 85_215),
+                (85_216, 85_220),
+                (85_221, 85_225),
+                (85_226, 85_230),
+                (85_231, 85_235),
+                (85_236, 85_240),
+                (85_241, 85_245),
+                (85_246, 85_251),
+                (85_252, 85_256),
+                (85_257, 85_261),
+                (85_262, 85_266),
+                (85_267, 85_271),
+                (85_272, 85_276),
+                (85_277, 85_281),
+                (85_282, 85_286),
+                (85_287, 85_291),
+                (85_292, 85_296),
+                (85_297, 85_301),
+                (85_302, 85_306),
+                (85_307, 85_311),
+                (85_312, 85_317),
+                (85_318, 85_322),
+                (85_323, 85_327),
+                (85_328, 85_332),
+                (85_333, 85_337),
+                (85_338, 85_342),
+                (85_343, 85_347),
+                (85_348, 85_352),
+                (85_353, 85_357),
+                (85_358, 85_362),
+                (85_363, 85_367),
+                (85_368, 85_372),
+                (85_373, 85_377),
+                (85_378, 85_382),
+                (85_383, 85_387),
+                (85_388, 85_392),
+                (85_393, 85_398),
+                (85_399, 85_403),
+                (85_404, 85_408),
+                (85_409, 85_413),
+                (85_414, 85_418),
+                (85_419, 85_423),
+                (85_424, 85_428),
+                (85_429, 85_433),
+                (85_434, 85_438),
+                (85_439, 85_443),
+                (85_444, 85_448),
+                (85_449, 85_453),
+                (85_454, 85_458),
+                (85_459, 85_463),
+                (85_464, 85_469),
+                (85_470, 85_474),
+                (85_475, 85_479),
+                (85_480, 85_484),
+                (85_485, 85_489),
+                (85_490, 85_494),
+                (85_495, 85_499),
+                (85_500, 85_504),
+                (85_505, 85_509),
+                (85_510, 85_514),
+                (85_515, 85_519),
+                (85_520, 85_524),
+                (85_525, 85_529),
+                (85_530, 85_535),
+                (85_536, 85_540),
+                (85_541, 85_545),
+                (85_546, 85_550),
+                (85_551, 85_555),
+                (85_556, 85_560),
+                (85_561, 85_565),
+                (85_566, 85_570),
+                (85_571, 85_575),
+                (85_576, 85_580),
+                (85_581, 85_585),
+                (85_586, 85_590),
+                (85_591, 85_596),
+                (85_597, 85_601),
+                (85_602, 85_606),
+                (85_607, 85_611),
+                (85_612, 85_616),
+                (85_617, 85_621),
+                (85_622, 85_626),
+                (85_627, 85_631),
+                (85_632, 85_636),
+                (85_637, 85_641),
+                (85_642, 85_646),
+                (85_647, 85_651),
+                (98_064, 98_067),
+            ],
+            "original US BPLD578 entry 7 root-0 selector-0 program fields; literal origins whose every decoded alias is in the unchanged primary or additional image fields or the reviewed finite program/cell fields; exact original archive, entry, mode, offset, load, size, checkword and payload identity; conditional original family-1/index-17 request, slot 492, LBAs 51797..51965, unskipped loading, stable hint 17 and bank/work, identifier 5, count 1, work index 0, route 0 and clear record masks 0x0080/0x4000 bind the preserved publisher/reselection path; original D910/DB98/D978 readers bind 22 duration/index pairs and one jump operand, 22 referenced cell-relative halfwords and cell counts; under the same selected work, work[0]=1, work+0x24=1, work+0x2A=1, work+0x48=0 and work+0x28=0, the reviewed C6DC consumer and preserved helper/cursor/frame path bind signed X/Y and unsigned U/V for 303 finite high-bit-zero parts; stable inputs, ordinary returns and valid writable nonaliased work, scratch, packets, queue heads and frames are conditional; complete checked compression walk propagates ultimate origins through initialized overlapping references and applies all-use AND to the three-profile union; prior image records retain their evidence; program header byte 0, jump-control byte, whole part flags, other programs/selectors/cells, palette fields and opaque aliases excluded; no actual request, roster, invocation, transfer, residency, timing, allocation success, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
+    (&[], "")
+}
+
 fn compression_metadata_ranges(
     data: &[u8],
     check_word: u32,
     literal_profile: (&[(usize, usize)], &'static str),
     additional_literal_profile: (&[(usize, usize)], &'static str),
+    program_literal_profile: (&[(usize, usize)], &'static str),
 ) -> Option<Vec<NontextRange>> {
     let (literal_fields, literal_evidence) = literal_profile;
     let (additional_fields, additional_evidence) = additional_literal_profile;
+    let (program_fields, program_evidence) = program_literal_profile;
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
         return None;
@@ -6256,16 +6592,22 @@ fn compression_metadata_ranges(
         length: 4,
         evidence,
     }];
-    let track_literals = !literal_fields.is_empty() || !additional_fields.is_empty();
+    let track_literals =
+        !literal_fields.is_empty() || !additional_fields.is_empty() || !program_fields.is_empty();
     let mut typed = vec![0_u8; if track_literals { expected } else { 0 }];
-    // The low bit preserves primary records; the next bit accepts their union
-    // with the additional fields.
+    // The low bits preserve primary and additional records; the third bit
+    // accepts their union with the program fields.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(3);
+        typed.get_mut(start..end)?.fill(7);
     }
     for &(start, end) in additional_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 2;
+            *role |= 6;
+        }
+    }
+    for &(start, end) in program_fields {
+        for role in typed.get_mut(start..end)? {
+            *role |= 4;
         }
     }
     let mut origins = Vec::new();
@@ -6330,7 +6672,7 @@ fn compression_metadata_ranges(
                     *origins.get(origins.len().checked_sub(distance)?)?
                 };
                 let role = literal_roles.get_mut(origin)?;
-                *role = Some(role.unwrap_or(3) & known);
+                *role = Some(role.unwrap_or(7) & known);
                 origins.push(origin);
             }
         }
@@ -6348,8 +6690,10 @@ fn compression_metadata_ranges(
         }
         let evidence = if role & 1 != 0 {
             literal_evidence
-        } else {
+        } else if role & 2 != 0 {
             additional_evidence
+        } else {
+            program_evidence
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {
@@ -6380,6 +6724,7 @@ pub fn payload_nontext_ranges(
             entry.check_word,
             model_decoded_nontext_fields(entry, data),
             additional_model_decoded_nontext_fields(entry, data),
+            model_program_decoded_nontext_fields(entry, data),
         );
     }
     if entry.transfer_mode == 0 && entry.ram_ptr == 0x8010_4000 {
@@ -8123,6 +8468,23 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US shared battle payload; five complete instruction bodies spanning 0x800AC754..0x800AC964 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
             })
+            .chain([
+                NontextRange {
+                    offset: 0x67ec,
+                    length: 428,
+                    evidence: "original US shared battle payload; complete instruction body 0x8009CFEC..0x8009D198 including return delay slot; complete original control-flow review and sized executable ELF function section match original and captured resident bytes, with all 21 text relocations reconciled; exact archive and payload identities; neighboring functions and data excluded; no observed-execution, full-function-execution, valid-work-record, selector-bound, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x7294,
+                    length: 32,
+                    evidence: "original US shared battle payload; complete instruction body 0x8009DA94..0x8009DAB4 including return delay slot; complete original control-flow review and sized executable ELF function section match original and captured resident bytes, with all 1 text relocations reconciled; call continuations assume ordinary returns; exact archive and payload identities; neighboring functions and data excluded; no observed-execution, full-function-execution, valid-work-record, selector-bound, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x746c,
+                    length: 92,
+                    evidence: "original US shared battle payload; complete instruction body 0x8009DC6C..0x8009DCC8 including return delay slot; complete original control-flow review and sized executable ELF function section match original and captured resident bytes, with all 8 text relocations reconciled; call continuations assume ordinary returns; exact archive and payload identities; neighboring functions and data excluded; no observed-execution, full-function-execution, valid-work-record, selector-bound, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+                },
+            ])
             .chain([NontextRange {
                 offset: 0x6998,
                 length: 2300,

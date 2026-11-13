@@ -361,10 +361,44 @@ A physical literal qualifies only when every decoded alias belongs to either
 the unchanged primary root-0 fields or these additional fields. Primary
 records retain their evidence.
 
-Other root-header words, palette, program, cell and selection fields, opaque
-aliases, mode-2 prefixes and allocation tails remain unresolved. Actual
-invocation, transfer, residency, upload, display, rasterized-text absence and
-safe editing remain unqualified.
+A separate program profile qualifies 1,337 decoded bytes for root 0 and
+selector 0 under the same source identity and publisher conditions. Original
+`0x8014D910`, `0x8014DB98` and `0x8014D978` bind these finite fields.
+All offsets below refer to the decoded bank at `0x8003B800`.
+
+| Decoded interval | Consumed field |
+| --- | --- |
+| `[20,28)` | Program-directory and selection relative words |
+| `[83988,83990)` | Selected program-relative halfword |
+| `[84023,84068)` | Pair-count byte and 22 countdown/index pairs |
+| `[84069,84114)` | Jump operand and 22 referenced cell-relative halfwords |
+| `[98064,98067)` | Selected image index, program index and nonzero mode predicate |
+
+The declared count is 23 pairs. The last pair redirects the cursor to pair 21;
+its first byte never becomes a countdown on this selected path. The count is
+an equality-wrap threshold, not a general index bound. Repeated calls require
+unchanged program and work fields; no frame cadence is established.
+
+The 22 referenced cells contain 303 parts. For each cell at decoded offset `C`,
+the byte at `C` is its part count. With `j` from zero to one less than that
+count, the four bytes at `[C+2+5*j,C+6+5*j)` are signed X and Y offsets and
+unsigned U and V components. Every selected part has bit 7 clear. The reviewed
+consumer requires the same selected work, `work[0]=1`, `work+0x24=1`,
+`work+0x2A=1`, `work+0x48=0` and `work+0x28=0`, ordinary helper returns,
+stable code and buffers, and valid writable nonaliased packets, queue heads
+and frames. These are conditional inputs, not observed resources or execution.
+
+The complete compression walk intersects every decoded use of each physical
+literal with the image and program field unions. Existing image records keep
+their boundaries and evidence; newly qualified origins use separate program
+evidence. Any opaque alias excludes its physical origin.
+
+Program header byte 0 at `[84022,84023)`, the jump-control byte at
+`[84068,84069)` and each whole part-flag byte remain unresolved. Other
+root-header words, palette fields, programs, selectors and cells, opaque
+aliases, mode-2 prefixes and allocation tails also remain unresolved. Actual
+invocation, transfer, residency, timing, allocation success, upload, display,
+rasterized-text absence and safe editing remain unqualified.
 
 ## Compressed BPLD257 image fields
 
@@ -638,7 +672,10 @@ and physical offsets may differ between archives.
 
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
+| `[0x67EC,0x6998)` | `[0x8009CFEC,0x8009D198)` | 428 |
 | `[0x6998,0x7294)` | `[0x8009D198,0x8009DA94)` | 2300 |
+| `[0x7294,0x72B4)` | `[0x8009DA94,0x8009DAB4)` | 32 |
+| `[0x746C,0x74C8)` | `[0x8009DC6C,0x8009DCC8)` | 92 |
 | `[0x15F54,0x15FD0)` | `[0x800AC754,0x800AC7D0)` | 124 |
 | `[0x15FD0,0x16044)` | `[0x800AC7D0,0x800AC844)` | 116 |
 | `[0x16044,0x16070)` | `[0x800AC844,0x800AC870)` | 44 |
@@ -676,6 +713,14 @@ and physical offsets may differ between archives.
 | `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
 | `[0x17908,0x179F8)` | `[0x800AE108,0x800AE1F8)` | 240 |
 | `[0x179F8,0x17A60)` | `[0x800AE1F8,0x800AE260)` | 104 |
+
+The bodies at `0x8009CFEC..0x8009D198`, `0x8009DA94..0x8009DAB4`
+and `0x8009DC6C..0x8009DCC8` have complete original control-flow reviews.
+Their sized executable ELF sections match original bytes and captured resident
+RAM, with all text relocations reconciled. Call continuations assume ordinary
+returns. This proves stored instruction roles; work records, selectors, arguments,
+callees and resource safety remain unqualified. The neighboring body beginning
+at `0x8009DCC8` remains excluded because its linked bytes differ from the original.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident
@@ -1484,20 +1529,24 @@ execution, callee semantics, argument or resource safety, transfer or display.
 
 ## Executable program instruction coverage
 
-The exact original US executable qualifies two complete instruction bodies.
+The exact original US executable qualifies three complete instruction bodies.
 The original call at `0x8014D8B0` conditionally enters `0x8014D910` with
 selector 0 under the reviewed wrapper path. Its call at `0x8014D960`
-conditionally enters `0x8014DB98`.
+conditionally enters `0x8014DB98`. The original GAME call at `0x801B0354` with
+a NOP delay conditionally enters `0x8014D978` after the reviewed selected
+substate handler returns. This caller binds selector cases 0, 1 and 2 only.
 
 | File offsets | Runtime addresses | Bytes |
 | --- | --- | ---: |
 | `[751888,751992)` | `[0x8014D910,0x8014D978)` | 104 |
+| `[751992,752164)` | `[0x8014D978,0x8014DA24)` | 172 |
 | `[752536,752648)` | `[0x8014DB98,0x8014DC08)` | 112 |
 
 Every original word and control-transfer delay slot matches retained resident
-RAM. The first body has a complete ordinary call/return frame; the second is
-a call-free leaf. Returning calls, valid disjoint frames, nonaliasing and
-stable incoming work are conditions. These records qualify instructions.
+RAM. The bodies at `0x8014D910` and `0x8014D978` restore ordinary call/return
+frames; `0x8014DB98` is a call-free leaf. Returning calls, valid disjoint
+frames, nonaliasing and stable incoming work are conditions. These records
+qualify instructions.
 Matching ELF, actual execution, referenced field and resource semantics,
 rendering and safe editing remain unqualified.
 
