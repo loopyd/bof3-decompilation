@@ -176,6 +176,7 @@ sources = [
     "src/bof3/ui/setUpShopRowsOrSeedWorkRecordTriplesThenResetOverlayAndAdvanceUiPhase.c",
     "src/bof3/ui/drawBackgroundTilesFromKindShop00_801DBD24.c",
     "src/bof3/ui/drawShopSavePanelThenCreateSaveSlotOnMemoryCard.c",
+    "src/bof3/ui/drawShopPriceListPanel.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

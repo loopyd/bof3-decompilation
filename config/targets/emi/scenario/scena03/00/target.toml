@@ -77,5 +77,15 @@ support_sources = [
     "src/bof3/scenario/buildFourRotatedQuadCornerVerticesFromWorkCentreAndAnglesScenarioScena0300_801F7FFC.c",
     "src/bof3/scenario/queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC.c",
     "src/bof3/scenario/claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4.c",
+    "src/bof3/scenario/runPrimaryState7SubstateSequenceScenarioScena0300_801FB268.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"
+
+# The sub-state switch of the primary-state 7 handler at 0x801FB268 dispatches
+# through the fourteen-word absolute jump table at 0x801F6DE4 in this
+# payload's leading table data.
+[[matching.section_placements]]
+function = 0x801FB268
+section = ".rodata"
+address = 0x801F6DE4
+size = 0x38

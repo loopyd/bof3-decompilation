@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760.c",
     "src/bof3/boss/dispatchStateByte2Table3274BossBoss02513_800C1EC8.c",
     "src/bof3/boss/dispatchStateByte1Table31f0BossBoss02513_800C1B6C.c",
     "src/bof3/boss/setBossBoss02513_800C1D64.c",
@@ -43,6 +44,12 @@ psyq_source = "src/bof3/support/boss025_13_psyq.c"
 # splat map reads as the D_800C1804 textbin row: that address is 4-mod-8 while
 # the compiler's `.align 3` asks for 8, so the placement route lowers only this
 # section's alignment. The table's entries are the function's own case labels.
+[[matching.section_placements]]
+function = 0x800C2760
+section = ".rodata"
+address = 0x800C181C
+size = 0x18
+
 [[matching.section_placements]]
 function = 0x800C2B98
 section = ".rodata"

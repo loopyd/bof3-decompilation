@@ -11,9 +11,24 @@ sources = [
     "src/bof3/world/clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588.c",
     "src/bof3/world/dispatchStateByte4Table4dc4World03Area14113_801F3688.c",
     "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14113_801F3AC0.c",
+    "src/bof3/world/advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14.c",
 ]
 support_sources = [
     "src/bof3/support/area141_13_psyq.c",
     "src/bof3/world/area14113DispatchTables.c",
 ]
 psyq_source = "src/bof3/support/area141_13_psyq.c"
+
+# The compiler-emitted 5-entry dispatch table of
+# advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14 lives
+# where the original overlay links it, at 0x801F2C04 in this payload's leading
+# tabledata header (payload offset 4): that address is 4-mod-8 while the
+# compiler's `.align 3` asks for 8, so the placement route lowers only this
+# section's alignment. The table's entries are the function's own dispatch arm
+# labels, which is why the reviewed size covers the five words up to the next
+# unrelated pointer run at 0x801F2C18.
+[[matching.section_placements]]
+function = 0x801F2F14
+section = ".rodata"
+address = 0x801F2C04
+size = 0x14

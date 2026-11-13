@@ -305,6 +305,7 @@ sources = [
     "src/bof3/battle/runSelectionPassSetSelectedFlag80ThenAdvanceByte11.c",
     "src/bof3/battle/runSelectionPassClearSelectedRecordStateThenCallA9BD8.c",
     "src/bof3/battle/func_8009C794_battle15.c",
+    "src/bof3/battle/applyLocalPanelRuleToWorkRecord.c",
     "src/bof3/battle/addToFlaggedEnemyWorkBytesAndClampToSeven.c",
 ]
 support_sources = [
@@ -317,11 +318,18 @@ headers = [
     "include/bof3/battle/battle15_dispatch_internal.h",
 ]
 
-# func_8009CCBC's dense switch dispatches through a seven-entry table at
-# 0x80096934 (4-mod-8). psyq gcc emits the jump table after `.rdata` + `.align 3`
-# (8-byte alignment), so the placement route lowers the section's alignment to
-# the reviewed address's own alignment, landing the table exactly there instead
-# of front-padding it four bytes late.
+# The dense switches below dispatch through jump tables in the reviewed
+# 0x80096914..0x80096974 run, at 4-mod-8 addresses (func_8009CCBC's seven-entry
+# table at 0x80096934, for example). psyq gcc emits the jump table after `.rdata`
+# + `.align 3` (8-byte alignment), so the placement route lowers the section's
+# alignment to the reviewed address's own alignment, landing the table exactly
+# there instead of front-padding it four bytes late.
+[[matching.section_placements]]
+function = 0x8009C994
+section = ".rodata"
+address = 0x80096914
+size = 0x20
+
 [[matching.section_placements]]
 function = 0x8009CCBC
 section = ".rodata"

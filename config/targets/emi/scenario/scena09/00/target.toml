@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/scena09/00.bin"
 splat = "config/targets/emi/scenario/scena09/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0900_801F8504.c",
+]
 support_sources = [
     "src/bof3/scenario/invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C.c",
     "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0900_801FD280.c",
@@ -85,6 +87,12 @@ support_sources = [
     "src/bof3/scenario/waitFlags0E100FForParty5ThenRequestPrimaryState6Substate2Or3Or28Or5ScenarioScena0900_801FD498.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F8504
+section = ".rodata"
+address = 0x801F6C64
+size = 0x30
 
 [[matching.section_placements]]
 function = 0x801FAC88

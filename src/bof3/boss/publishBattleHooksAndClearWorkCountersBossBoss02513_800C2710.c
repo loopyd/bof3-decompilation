@@ -8,7 +8,7 @@ typedef void (*Boss02513Handler)(void);
  * slot type. */
 void func_800C2984(void);
 void raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C(void);
-void func_800C2760(u8 index);
+u32 accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760(u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -18,10 +18,10 @@ extern Boss02513Handler D_801463A8; /* @source 0x801463A8 @kind unknown */
 extern Boss02513Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* Work counters of this overlay. All three are read and rewritten only by the
- * mode dispatcher func_800C2760 published here: 0x801FE4F0 accumulates the
- * signed halfword D_80145FAC of the record func_800C2760 selects, 0x801FE4E8
- * accumulates its own operand and 0x801FE4EF is a byte counter of the same
- * dispatch. */
+ * mode dispatcher accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760
+ * published here: 0x801FE4F0 accumulates the signed halfword D_80145FAC of the
+ * record that dispatcher selects, 0x801FE4E8 accumulates its own operand and
+ * 0x801FE4EF is a byte counter of the same dispatch. */
 extern u32 D_801FE4F0; /* @source 0x801FE4F0 @kind unknown */
 extern u32 D_801FE4E8; /* @source 0x801FE4E8 @kind unknown */
 extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
@@ -33,7 +33,8 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
  * 0x1F800044) into 0x801463A4, the battle-exit routine
  * raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C (raises bit 0x2 of
  * D_801462E8 and requests frontend mode 4) into 0x801463A8, and the mode
- * dispatcher func_800C2760 (six-entry jump table at 0x800C181C) into
+ * dispatcher accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760
+ * (six-entry jump table at 0x800C181C) into
  * 0x801463AC, then clears the three work counters that dispatcher maintains:
  * the word 0x801FE4F0, the word 0x801FE4E8 and the byte 0x801FE4EF. It takes no
  * arguments, keeps no frame and touches $v0/$at only, so nothing is returned.
@@ -54,7 +55,7 @@ extern u8 D_801FE4EF; /* @source 0x801FE4EF @kind unknown */
 void publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710(void) {
   D_801463A4 = func_800C2984;
   D_801463A8 = raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C;
-  D_801463AC = (Boss02513Handler)func_800C2760;
+  D_801463AC = (Boss02513Handler)accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760;
   D_801FE4F0 = 0;
   D_801FE4E8 = 0;
   D_801FE4EF = 0;

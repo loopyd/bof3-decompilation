@@ -84,8 +84,10 @@ segments:
     - setFlagBit0RequestFrontSelectorContextArmEffectBankThenSetFlagBit1AndClearStateOnProgress11ScenarioScena0900_801F841C
     - '@source: src/bof3/scenario/setFlagBit0RequestFrontSelectorContextArmEffectBankThenSetFlagBit1AndClearStateOnProgress11ScenarioScena0900_801F841C.c'
   - - 6404
-    - asm
-    - func_801F8504
+    - c
+    - runPrimaryState2SubstateSequenceScenarioScena0900_801F8504
+    - '@source: src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0900_801F8504.c'
+    - '@behavior: Handler of primary state 2, word 2 of the seventeen-word primary state table at 0x801FE3EC that dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 indexes with D_80146874: it switches on the shared sub-state byte D_80146875 through the twelve-entry jump table at 0x801F6C64, and its sub-states gate on the shared progress byte, set and clear flags of D_80146258 and D_8014686C through the shared flag helpers, run the shared front-end request setters and, from sub-states 7 and 11, release the overlay and clear the sub-state and primary state bytes.'
   - - 7024
     - asm
     - func_801F8770

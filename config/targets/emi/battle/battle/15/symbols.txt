@@ -65,6 +65,7 @@ func_8009C794 = 0x8009C794;
 testEntryBitE1 = 0x8009C868;
 setEntryBitE1 = 0x8009C87C;
 func_8009C8AC = 0x8009C8AC;
+applyLocalPanelRuleToWorkRecord = 0x8009C994;
 func_8009CCBC = 0x8009CCBC;
 func_8009CF80 = 0x8009CF80;
 func_8009CFEC = 0x8009CFEC;

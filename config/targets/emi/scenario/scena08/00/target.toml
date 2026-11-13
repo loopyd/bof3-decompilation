@@ -100,6 +100,7 @@ support_sources = [
     "src/bof3/scenario/claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C.c",
     "src/bof3/scenario/emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108.c",
     "src/bof3/scenario/emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4.c",
+    "src/bof3/scenario/runProgressGatedSubstatesSetModeBit8SeedObjectRowType5FCue203AndResetHandlerScenarioScena0800_801FD1A4.c",
 ]
 psyq_source = "src/bof3/support/scena08_00_psyq.c"
 
@@ -112,3 +113,13 @@ function = 0x801FB8A0
 section = ".rodata"
 address = 0x801F6C8C
 size = 0x2C
+
+# The eight-value sub-state switch of the handler at 0x801FD1A4 dispatches
+# through the eight-word table the overlay keeps at 0x801F6D94 in the same
+# leading table data; this row gives the comparator that table's payload
+# address and size.
+[[matching.section_placements]]
+function = 0x801FD1A4
+section = ".rodata"
+address = 0x801F6D94
+size = 0x20

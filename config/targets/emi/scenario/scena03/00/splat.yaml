@@ -240,8 +240,10 @@ segments:
     - asm
     - func_801FABA8
   - - 18024
-    - asm
-    - func_801FB268
+    - c
+    - runPrimaryState7SubstateSequenceScenarioScena0300_801FB268
+    - '@source: src/bof3/scenario/runPrimaryState7SubstateSequenceScenarioScena0300_801FB268.c'
+    - '@behavior: Word 7 of the nine-word primary state handler table at 0x801FCFE0 that dispatchPrimaryStateHandlerScenarioScena0300_801F92F4 indexes with the shared primary state byte D_80146874: runs the sub-state sequence of primary state 7 from the shared sub-state byte D_80146875 through the fourteen-entry absolute jump table jtbl_801F6DE4_main, gating each step on the shared progress byte g_ScenarioProgress and on the shared countdown halfword D_80146876, claiming two front-end rows through the shared allocator func_8019601C and seeding them at the 0x74-byte stride of the table at 0x80143FC8, and closing by releasing the overlay through func_8015C058, raising flag bit 0x1D and clearing the progress, sub-state and primary state bytes plus bit 0x80 of the shared mode halfword D_80146258.'
   - - 19620
     - asm
     - func_801FB8A4

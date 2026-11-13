@@ -328,8 +328,10 @@ segments:
     - '@source: src/bof3/battle/func_8009C8AC_battle15.c'
     - '@behavior: Reports whether the required mask is present on the current battler: rejects an inert current work record (+0xF8), resolves the mode 0x4 kind-record mask test, then requires mode 1, an index below 3, and no 0x100 bit before testing the two-level lookup byte table.'
   - - 24980
-    - asm
-    - func_8009C994
+    - c
+    - applyLocalPanelRuleToWorkRecord
+    - '@source: src/bof3/battle/applyLocalPanelRuleToWorkRecord.c'
+    - '@behavior: Applies one 16-byte local panel rule to a battle work record: the rule byte +0x01 selects which work fields the rule writes (halfword 0x80, the 0x1F800044 publish pair, the masked selection calls to func_8009CCBC and func_8009CF80, bytes 0x9A and 0x9E, the percentage-scaled halfwords 0x86 and 0x84, or the selection byte 0x801463D7), and every rule stores byte +0x04 at work +0x7E, copies bytes +0x08..+0x0F to work +0x8C..+0x93, refreshes through func_800A9BD8 and appends the local panel entry of the rule halfword +0x06.'
   - - 25788
     - c
     - name: func_8009CCBC

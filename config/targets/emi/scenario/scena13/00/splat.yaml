@@ -161,8 +161,10 @@ segments:
     - c
     - copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164
   - - 17844
-    - asm
-    - func_801FB1B4
+    - c
+    - runPrimaryState8SubstateSequenceScenarioScena1300_801FB1B4
+    - '@source: src/bof3/scenario/runPrimaryState8SubstateSequenceScenarioScena1300_801FB1B4.c'
+    - '@behavior: Entry 8 of the nine-entry primary-state handler table at 0x801FBF54, the sub-state switch of the overlay primary state 8 handler: it bounds the shared sub-state byte D_80146875 against 0xC and dispatches through the twelve-word table at 0x801F6E74, where sub-states 1, 2, 3, 7 and 9 are the body exit; sub-state 0, once the shared gate bytes D_801460FB and D_8014623B both read zero, runs func_801BE1B0 with 0x0A, sets bit 0x1D of the shared flag word D_8014686C through func_8015B580 and clears D_80146874 and D_80146875; sub-states 4 and 5 queue front-end actions 1 and 0x4E through func_80150224, store 2 in the shared front-end phase byte D_80143BB0 and advance to sub-state 6; sub-state 6, while that phase byte leaves 2, runs the release helper func_8015C058 and ends on the same clearing tail; sub-state 8 clears the shared progress byte g_ScenarioProgress on 0x28 and advances to 0x0A; sub-state 0x0A, while the phase byte leaves 2, seeds func_8019FA28 with 0x97, 0x360000, 0x1D0000 and 3 and advances to 0x0B; sub-state 0x0B, while the phase byte reads 0, sets bit 0x1E of D_8014686C, runs func_8015C058, clears D_80146874 and D_80146875 and ends on func_801A78F8.'
   - - 18256
     - c
     - dispatchRecordCallbackScenarioScena1300_801FB350

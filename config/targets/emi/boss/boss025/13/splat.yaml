@@ -131,9 +131,15 @@ segments:
   - - 3856
     - c
     - publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710
+    - '@source: src/bof3/boss/publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710.c'
   - - 3936
-    - asm
-    - func_800C2760
+    - c
+    - accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760
+    - '@source: src/bof3/boss/accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760.c'
+    - '@behavior: Overlay hook-mode dispatcher of this overlay at 0x800C2760, the third member of the handler trio the installer 0x800C2710 publishes into the shared battle hook slot 0x801463AC. Masks the mode byte and switches through the six-entry jump table at 0x800C181C, where modes 4 and 5 fall straight to the one return. Mode 0 adds the signed halfword at +0x11C of the 0x140-stride work record of byte 0x80146384 (0x80145FAC) into the work counter 0x801FE4F0 while the battle phase byte 0x80146374 reads 3 and that byte is below 3, and otherwise, while 0x80146384 is 3 or holds a 0xC0 bit, raises the byte counter 0x801FE4EF while bit 0x2 of 0x801EB730 is set and else adds the signed halfword 0x801EB728 into 0x801FE4E8. Mode 1, gated on the ranked-owner cursor 0x80146322 and the enemy record byte 0x801EB6AE both reading 1, stamps 2 into 0x801EB631 and 0x801EB725, clears 0x801EB632 and raises bit 0x2 of 0x801EB730. Mode 2 raises bit 0x4 of 0x80146328 while 0x801463D0 reads 0x15. Mode 3, gated on bit 0x20 of 0x801462ED clear and 0x801462E0 reading 1, submits effect 8 through the shared action-slot allocator 0x801E590C and raises that bit. Every path returns zero.'
+    - '@status: exact'
+    - '@match: 100.00'
+    - '@residual: none'
   - - 4484
     - asm
     - func_800C2984

@@ -48,8 +48,31 @@ segments:
     - asm
     - func_801F7A44
   - - 4204
-    - asm
-    - func_801F7C6C
+    - c
+    - runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C.c'
+    - '@behavior: Word 2 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through eleven states of a
+      twenty-entry case table gated on the shared front-end progress byte
+      g_ScenarioProgress: state 0 arms progress 1 and secondary state 1 unless
+      the front-end phase byte D_80143BB0 reads 2; state 1 hands the flag word
+      D_8014686C and mode 4 to func_8015B580 and releases the overlay; state 5
+      opens the shared front-end transition for selector 0x42 and writes phase
+      byte 2; state 6 releases the overlay unless that phase byte already reads
+      2; state 10 arms progress 0x0F and lets the shared game-mode byte
+      D_80145E98 select func_801BE1B0 mode 4, 5 or 6 for game modes 2, 3 and 4
+      before advancing to state 0x0B; state 11 releases the overlay with mode 5
+      at progress 0x14; state 15 arms progress 0x19, runs func_801BE1B0 mode 8
+      and advances to state 0x10; state 0x10 seeds the 0x74-byte front-end
+      record selected by the scratchpad object byte func_8019601C, carries that
+      byte into D_80146865 and advances to state 0x11; state 0x11 waits for the
+      selected record and advances to state 0x12; state 0x12 seeds the same
+      record with a 0x200 duration and advances to state 0x13; state 0x13
+      releases the overlay with mode 7 and clears the secondary and primary
+      state bytes. The twenty-entry case table sits in the overlay rodata slot
+      at 0x801F6C6C.'
   - - 5512
     - asm
     - func_801F8188

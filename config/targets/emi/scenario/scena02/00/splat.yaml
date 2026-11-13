@@ -78,8 +78,21 @@ segments:
     - asm
     - func_801F936C
   - - 10872
-    - asm
-    - func_801F9678
+    - c
+    - runSubstateProgressLadderThenToggleModeFlags8AndReleaseScenarioScena0200_801F9678
+    - '@source: src/bof3/scenario/runSubstateProgressLadderThenToggleModeFlags8AndReleaseScenarioScena0200_801F9678.c'
+    - '@behavior: Slot 15 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872. It steps the shared sub-state byte
+      D_80146875 through the five-slot jump table at 0x801F6E0C: slot 0 raises
+      mode bit 0x8 of D_80146258, runs the shared helper with 0x1A and the
+      helper func_801C601C with 1 and advances; slots 1, 2 and 3 wait for
+      progress 0x15, 0x1F and 0x20 and advance, slot 2 taking the front-end word
+      pair 0x50000 and 0x370000 with 9 to func_801BFE34 and running
+      func_801C7A54 with 9; slot 4 waits for progress 0x25, sets flag bit 0x11
+      of D_8014686C, flips the same mode bit, releases the overlay through
+      func_8015C058, clears the shared bytes 0x80146865 through 0x80146867 and
+      returns to sub-state 0 and primary state 0.'
   - - 11264
     - asm
     - func_801F9800

@@ -856,8 +856,10 @@ segments:
     - '@source: src/bof3/ui/func_801E2EB0_shop00.c'
     - '@behavior: panel state dispatcher: calls the handler D_801E5DFC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then steps the same panel task root through func_801E2F04.'
   - - 74500
-    - asm
-    - func_801E2F04
+    - c
+    - drawShopPriceListPanel
+    - '@source: src/bof3/ui/drawShopPriceListPanel.c'
+    - '@behavior: shop price list panel of the sliding shop panel: draws the 0xAD by 0x9F shaded rectangle at (x + 3, y + 3) through func_801AE3F0 with task byte 0xA as the fifth argument and the main-RAM CLUT-bank byte D_80144952 as the sixth, then one row per entry of the count-prefixed list the task holds at +0x20. Each entry is a (kind, index) pair: the row value is func_801DA9C4(kind, index) scaled by task byte 0xB through scaleByPercentFloor1 and formatted into the shared text buffer D_80145AD4 with the "%6dZ" string D_801D0E88; the row draws the icon cell D_801E5E0C[func_80165E04(kind, index) & 0xFF] through func_801AEA80, the record func_80165D48(kind, index) masked through func_801AF20C as the handle of func_8014F800, and the buffer text through func_80150098, the two text emitters sharing the row shade. The shade is 7 and the icon mode 1 when task byte 0xA is nonzero or the main-RAM money word D_80144F50 is below the row value, and 0 and 0 otherwise; the highlighted row (index == task byte 0xC) draws twice, the second copy two pixels up, and the panel frame func_801DD350 closes the body with the constants 0x14 and 0x13.'
   - - 75204
     - c
     - advancePanelXTo320

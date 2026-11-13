@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2D2C
   - - 788
-    - asm
-    - func_801F2F14
+    - c
+    - advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14
+    - '@source: src/bof3/world/advanceStateByte2WhenHalfword36GateSatisfiedWorld03Area14113_801F2F14.c'
+    - '@behavior: State-1 handler of the work-record state-byte-2 dispatch run of this overlay: the payload handler table at 0x801F47E8 holds this address at word 1, so the body has no jal caller. It reads the work record through the scratchpad pointer cell 0x1F800044 and switches on the record signed halfword at +0x36, guarded by an unsigned sltiu bound of 5 so a negative value returns untouched as well. Value 0 waits on bit 0x14 of the main-RAM flag bank word 0x80144EF8 through the shared flag tester 0x8015B5D4, value 1 waits on the shared state byte 0x8014933B reading 1, and values 2, 3 and 4 wait on bits 0x7A, 0x7B and 0x7C of the flag bank word 0x80144F28. When the selected gate answers non-zero the body re-reads the scratchpad cell and increments the record dispatch byte at +2 by one; that byte is the index of the state-byte-2 dispatcher at 0x801F2CE8, so the record leaves this handler for the next arm of the same run. Every other halfword value returns untouched. Takes no arguments and returns nothing; its 0x18-byte frame only holds ra at +0x10 and the record pointer load precedes the frame creation.'
   - - 996
     - asm
     - func_801F2FE4
