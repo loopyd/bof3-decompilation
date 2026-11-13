@@ -50,6 +50,8 @@ segments:
   - - 1536
     - c
     - dispatchStateByte2Table07a4PlcharPlp56700_801CEA00
+    - '@source: src/bof3/plchar/dispatchStateByte2Table07a4PlcharPlp56700_801CEA00.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07A4.'
   - - 1604
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CEA44
@@ -64,9 +66,13 @@ segments:
   - - 2092
     - c
     - dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C
+    - '@source: src/bof3/plchar/dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07B0.'
   - - 2160
     - c
     - dispatchStateByte3Table07b8PlcharPlp56700_801CEC70
+    - '@source: src/bof3/plchar/dispatchStateByte3Table07b8PlcharPlp56700_801CEC70.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D07B8.'
   - - 2228
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp56700_801CECB4
@@ -103,6 +109,8 @@ segments:
   - - 4380
     - c
     - dispatchStateByte3Table07ccPlcharPlp56700_801CF51C
+    - '@source: src/bof3/plchar/dispatchStateByte3Table07ccPlcharPlp56700_801CF51C.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D07CC.'
   - - 4448
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp56700_801CF560
@@ -129,6 +137,8 @@ segments:
   - - 5800
     - c
     - dispatchStateByte2Table07d8PlcharPlp56700_801CFAA8
+    - '@source: src/bof3/plchar/dispatchStateByte2Table07d8PlcharPlp56700_801CFAA8.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07D8.'
   - - 5868
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC
@@ -142,6 +152,8 @@ segments:
   - - 6364
     - c
     - dispatchStateByte2Table07e4PlcharPlp56700_801CFCDC
+    - '@source: src/bof3/plchar/dispatchStateByte2Table07e4PlcharPlp56700_801CFCDC.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07E4.'
   - - 6432
     - asm
     - func_801CFD20

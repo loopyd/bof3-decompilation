@@ -41,6 +41,8 @@ segments:
   - - 544
     - c
     - dispatchWorkByte2Table03b8PlcharPlp46700_801CE620
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table03b8PlcharPlp46700_801CE620.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D03B8.'
   - - 612
     - asm
     - func_801CE664
@@ -53,9 +55,13 @@ segments:
   - - 1100
     - c
     - dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table03c4PlcharPlp46700_801CE84C.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D03C4.'
   - - 1168
     - c
     - dispatchWorkByte3Table03ccPlcharPlp46700_801CE890
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table03ccPlcharPlp46700_801CE890.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D03CC.'
   - - 1236
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4
@@ -94,6 +100,8 @@ segments:
   - - 3388
     - c
     - dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D03E0.'
   - - 3456
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp46700_801CF180
@@ -118,6 +126,8 @@ segments:
   - - 4808
     - c
     - dispatchWorkByte2Table03ecPlcharPlp46700_801CF6C8
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table03ecPlcharPlp46700_801CF6C8.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D03EC.'
   - - 4876
     - asm
     - func_801CF70C
@@ -129,6 +139,8 @@ segments:
   - - 5372
     - c
     - dispatchWorkByte2Table03f8PlcharPlp46700_801CF8FC
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table03f8PlcharPlp46700_801CF8FC.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D03F8.'
   - - 5440
     - asm
     - func_801CF940
