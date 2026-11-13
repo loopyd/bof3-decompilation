@@ -4840,11 +4840,28 @@ pub fn payload_nontext_ranges(
                 && sha256_hex(data)
                     == "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff" =>
         {
-            Some(vec![NontextRange {
-                offset: 183_608,
-                length: 472,
-                evidence: "original US GAME entry 0 complete 472-byte instruction body 0x801C2538..0x801C2710; original JAL 0x801C24D8 and retained native PCs 0x801C2628/0x801C2668 with RA 0x801C24E0 bind the executable caller; all 118 original words, eight conditional branches, two direct calls, three terminal BREAK guards, sole JR RA and delay slots structurally covered; original and retained before/after RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring caller and referenced data excluded; no matching ELF, native first-instruction or all-path execution, argument/resource safety, state-0 invocation, rendering or editing claim",
-            }])
+            Some(vec![
+                NontextRange {
+                    offset: 154_296,
+                    length: 1_080,
+                    evidence: "original US GAME entry 0 complete 1080-byte instruction body 0x801BB2B8..0x801BB6F0; retained native PC 0x801BB52C and original caller/return words bind execution inside this body; all 270 original words, 50 conditional branches, 19 internal jumps, eight direct calls, sole JR RA and delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, incoming-register validity, sampler semantics, argument/resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 155_376,
+                    length: 112,
+                    evidence: "original US GAME entry 0 complete 112-byte instruction body 0x801BB6F0..0x801BB760; original JAL 0x801BB508 in the qualified body at 0x801BB2B8 conditionally enters this body; all 28 original words, five conditional branches, one internal jump, sole JR RA and seven delay slots structurally covered; original and retained RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary return and stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, observed helper entry or execution, argument or work validity, domain semantics, resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 155_488,
+                    length: 80,
+                    evidence: "original US GAME entry 0 complete 80-byte instruction body 0x801BB760..0x801BB7B0; original JAL 0x801BB520 and retained paired native PCs 0x801BB77C/0x801BB52C with return addresses 0x801BB77C/0x801BB528 and restored 24-byte frame bind execution inside this body; all 20 original words, one direct call, one conditional branch, sole JR RA and three delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, sampler semantics, argument/resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 183_608,
+                    length: 472,
+                    evidence: "original US GAME entry 0 complete 472-byte instruction body 0x801C2538..0x801C2710; original JAL 0x801C24D8 and retained native PCs 0x801C2628/0x801C2668 with RA 0x801C24E0 bind the executable caller; all 118 original words, eight conditional branches, two direct calls, three terminal BREAK guards, sole JR RA and delay slots structurally covered; original and retained before/after RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring caller and referenced data excluded; no matching ELF, native first-instruction or all-path execution, argument/resource safety, state-0 invocation, rendering or editing claim",
+                },
+            ])
         }
         (_, _, 0, 0x801d_0c00, 118_224)
             if sha256_hex(data)

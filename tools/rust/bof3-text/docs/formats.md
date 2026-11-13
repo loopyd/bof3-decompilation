@@ -1207,6 +1207,24 @@ endpoint RAM. The rule assumes ordinary calls and returns, writable disjoint
 frames, preserved saved registers and return storage, and stable code. It
 qualifies instruction representation without establishing a matching ELF,
 execution of every word, argument or resource safety, rendering or safe editing.
+The same exact original GAME entry-0 gate qualifies three related instruction
+bodies. Payload offsets are relative to the raw entry; archive offsets include
+its 2048-byte prefix.
+
+| Payload offsets | Archive offsets | Runtime addresses | Bytes |
+| --- | --- | --- | ---: |
+| `[154296,155376)` | `[156344,157424)` | `[0x801BB2B8,0x801BB6F0)` | 1080 |
+| `[155376,155488)` | `[157424,157536)` | `[0x801BB6F0,0x801BB760)` | 112 |
+| `[155488,155568)` | `[157536,157616)` | `[0x801BB760,0x801BB7B0)` | 80 |
+
+Original call and return words, retained execution at `0x801BB77C` and
+`0x801BB52C`, and the restored 24-byte frame bind execution inside the first
+and third bodies. An entry-reachable original call at `0x801BB508` conditionally
+enters the second. Complete structural flow covers every original word and
+delay slot in each body. These records classify instructions under ordinary
+call and return assumptions; they do not establish execution of every word,
+incoming-register validity, sampler semantics, resource safety or rendering.
+
 The separate original GAME caller `0x801C2538..0x801C2710` qualifies its
 complete 472-byte instruction body at archive offsets `[185656,186128)`.
 Its original call at `0x801C24D8` and retained execution inside the body with
