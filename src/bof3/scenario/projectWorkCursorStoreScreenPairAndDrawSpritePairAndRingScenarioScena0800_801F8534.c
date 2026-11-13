@@ -4,7 +4,8 @@ extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
 void emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108(s32 arg0, s32 arg1);
-void func_801F823C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
+    s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(u16 arg0);
 
 /* @source 0x801F8534
@@ -20,12 +21,14 @@ void shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(u16 arg0);
  * overlay angle table at 0x801FE9EC one entry through
  * shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4 with the work
  * object's unsigned halfword at 0x58 as the new head value; and finally calls
- * func_801F823C with the work object's signed halfwords 0x2E, 0x30, 0x32 and
- * 0x2C, which lays out its cells around the projected pair from that shifted
- * table. The scratchpad work pointer is reloaded once per call group, so the
- * stores and reload in the second group share one pointer register. Takes no
- * arguments and returns nothing. The four callees and the work halfwords'
- * wider roles remain unknown, so they stay address-anchored.
+ * drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C
+ * with the work object's signed halfwords 0x2E, 0x30, 0x32 and 0x2C, so the ring
+ * is centred on the projected pair, has half height and half width taken from
+ * the work halfwords 0x32 and 0x2C and turns by that shifted table. The
+ * scratchpad work pointer is reloaded once per call group, so the stores and
+ * reload in the second group share one pointer register. Takes no arguments and
+ * returns nothing. The three remaining callees and the work halfwords' wider
+ * roles remain unknown, so they stay address-anchored.
  * @status exact
  * @match 100.00
  * @residual none
@@ -54,6 +57,7 @@ void projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_8
   shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(
       *(u16*)(ringWork + 0x58));
   ringWork = scenarioScena0800Work;
-  func_801F823C(*(s16*)(ringWork + 0x2E), *(s16*)(ringWork + 0x30),
-                *(s16*)(ringWork + 0x32), *(s16*)(ringWork + 0x2C));
+  drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
+      *(s16*)(ringWork + 0x2E), *(s16*)(ringWork + 0x30),
+      *(s16*)(ringWork + 0x32), *(s16*)(ringWork + 0x2C));
 }

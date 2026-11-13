@@ -307,6 +307,7 @@ sources = [
     "src/bof3/battle/func_8009C794_battle15.c",
     "src/bof3/battle/applyLocalPanelRuleToWorkRecord.c",
     "src/bof3/battle/addToFlaggedEnemyWorkBytesAndClampToSeven.c",
+    "src/bof3/battle/resolveDragonFormFromGenes.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

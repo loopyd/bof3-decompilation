@@ -1,4 +1,7 @@
 scenarioScena0900Work = 0x1F800044;
+D_80143FFC = 0x80143FFC;
+D_80144000 = 0x80144000;
+D_80144004 = 0x80144004;
 D_8014932A = 0x8014932A;
 func_801A7AD8 = 0x801A7AD8;
 dispatchWorkByte1HandlerScenarioScena0900_801F735C = 0x801F735C;
@@ -26,7 +29,7 @@ waitProgress15ThenSeedFrontSelectorContextsAndResetStateScenarioScena0900_801FAC
 func_801FAE0C = 0x801FAE0C;
 waitProgress3ThenSetFlagBit24AndRequestPrimaryState0ScenarioScena0900_801FBC78 = 0x801FBC78;
 invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C = 0x801FBD0C;
-func_801FBD6C = 0x801FBD6C;
+waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsThenClearStateScenarioScena0900_801FBD6C = 0x801FBD6C;
 noopHandlerScenarioScena0900_801FC588 = 0x801FC588;
 addSignedTableStepToHalfword8014932AScenarioScena0900_801FC590 = 0x801FC590;
 noopHandlerScenarioScena0900_801FC5DC = 0x801FC5DC;
@@ -97,3 +100,4 @@ scenarioScena0900CoordinateLookupRecords = 0x801FE474;
 scenarioScena0900CoordinateLookupHandlers = 0x801FE4BC;
 T_801FE4C4 = 0x801FE4C4;
 T_801FE544 = 0x801FE544;
+D_801FE554 = 0x801FE554;

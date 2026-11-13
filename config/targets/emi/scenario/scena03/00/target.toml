@@ -78,6 +78,7 @@ support_sources = [
     "src/bof3/scenario/queueFrontEndMode2FAndWaitForTransitionScenarioScena0300_801FC5FC.c",
     "src/bof3/scenario/claimTwoWorkRecordsActivateBothWithSharedTemplateRequestResource61AndSubmitScenarioScena0300_801F6EB4.c",
     "src/bof3/scenario/runPrimaryState7SubstateSequenceScenarioScena0300_801FB268.c",
+    "src/bof3/scenario/runPrimaryState4SubstateSequenceScenarioScena0300_801FA0A4.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"
 
@@ -89,3 +90,12 @@ function = 0x801FB268
 section = ".rodata"
 address = 0x801F6DE4
 size = 0x38
+
+# The sub-state switch of the primary-state 4 handler at 0x801FA0A4 dispatches
+# through the eleven-word absolute jump table at 0x801F6CF4 in this target's
+# leading table data.
+[[matching.section_placements]]
+function = 0x801FA0A4
+section = ".rodata"
+address = 0x801F6CF4
+size = 0x2C

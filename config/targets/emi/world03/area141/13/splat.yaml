@@ -53,8 +53,10 @@ segments:
     - '@source: src/bof3/world/clearWorkFlag20TintTripletAndModeThenInvokeWorkHelperWorld03Area14113_801F3588.c'
     - '@behavior: clears bit 0x20 of byte 0 of the scratchpad work record published through the pointer cell 0x1F800044, then zeroes that record''s tint channel bytes 0x5F, 0x5E and 0x5D and its mode byte 0x5C, then hands the record to the release helper at 0x80196718; takes no arguments and returns nothing.'
   - - 2532
-    - asm
-    - func_801F35E4
+    - c
+    - setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4
+    - '@source: src/bof3/world/setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4.c'
+    - '@behavior: Overlay step handler reached from the payload handler run based at 0x801F4D38, whose fourth word 0x801F4D44 holds this address, so it takes no arguments and returns nothing. It forms the scratch work record word at +0x34 minus 0x450000 shifted right by 15 and returns untouched when that difference is zero; otherwise it stores the absolute value into byte +0x07 of the record published at the pointer cell 0x80148210, stores the level 7 into work byte +0x08, and then, when the work record pointer equals the static main-RAM record at 0x80143F48, calls the shared view routine 0x801C5DFC with that static record byte +0x08 read at the fixed address 0x80143F50, or otherwise calls the shared arming helper 0x801ABBA8 with the published record and work byte +0x08. Each group re-reads the scratchpad pointer cell 0x1F800044 because a store through the loaded pointer may alias the cell, and the 0x18-byte frame holds only ra at +0x10.'
   - - 2696
     - c
     - dispatchStateByte4Table4dc4World03Area14113_801F3688

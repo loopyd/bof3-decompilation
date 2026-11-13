@@ -75,8 +75,29 @@ segments:
     - asm
     - func_801F9134
   - - 10092
-    - asm
-    - func_801F936C
+    - c
+    - runFrontEndCompletionSubstatesSeedingSelectorContextsThenReleaseScenarioScena0200_801F936C
+    - '@source: src/bof3/scenario/runFrontEndCompletionSubstatesSeedingSelectorContextsThenReleaseScenarioScena0200_801F936C.c'
+    - '@behavior: Slot 14 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872. It switches the shared sub-state byte
+      D_80146875 through the twenty-five-word case table at 0x801F6DA4. Sub-state
+      0 ends the front-end phase: on progress 0x64 it clears that byte, requests
+      front-end mode 0x0D and advances to 0x14, and on progress 0x65 it clears the
+      progress byte, D_80146865 and D_80146866 and releases the overlay through
+      func_8015C058. Sub-states 1 and 0x18 clear D_80146865, D_80146866 and
+      D_80146867 and release on progress 1; sub-states 3 and 8 do the same after
+      clearing the progress byte while the area-mode byte D_80143BB0 reads zero;
+      sub-states 2 and 7, unless that byte already reads 2, seed the front-end
+      cells D_8014865C, D_80148698, D_80143B90, D_80148650 and D_80148699 on
+      progress 0xC8 and release on progress 0xC9. Sub-state 0x14 clears
+      D_8014832E, runs func_801C16B8, advances and starts the scripted motion
+      func_8015D554(0, 0, 4, 0x1E); sub-state 0x15 queues effect group 1 through
+      func_801636A0; sub-state 0x16 advances on a nonzero low byte from
+      func_80163EA0; sub-state 0x17 stores 5 in D_80146866, seeds the front
+      selector context through func_8019FA28 with seed 5 and the pair 0x510000,
+      0x80000, 0x85 or 0x500000, 0x50000, 0x86 chosen by the mode byte
+      D_80146254, and queues the cue func_80161C20(7, 0x64, 8).'
   - - 10872
     - c
     - runSubstateProgressLadderThenToggleModeFlags8AndReleaseScenarioScena0200_801F9678

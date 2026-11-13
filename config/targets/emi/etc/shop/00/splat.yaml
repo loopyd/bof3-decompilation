@@ -430,8 +430,10 @@ segments:
     - asm
     - func_801D9254
   - - 35316
-    - asm
-    - func_801D95F4
+    - c
+    - drawEquipSlotRowsShop00_801D95F4
+    - '@source: src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c'
+    - '@behavior: equipment-slot block of the shop overlay: it paints the inset backing rectangle of the block through func_801AED54 at (x+2, y+0x44) with the size 0x87 by 0x58 and the shade 0xF1, then draws the six equipped slots of the 164-byte field record the index byte selects out of D_80144968 - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F through 0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12 and 0x13 - each as an eight-cell name run through func_8014F800 at (x+0x0F, y+0x46/0x53/0x60/0x6D/0x81/0x8E) aligned to 7 or 0 by the flag byte; the six palette cells 8, 0xA, 9, 0xB, 0xC and 0xC follow at (x+5, y+0x49/0x56/0x63/0x70/0x84/0x91) through func_801AEA80 with that same flag byte. The payload names the span only from the jal at 0x801DB9A4 inside func_801DB938; one payload cmp proved these 0x2CC bytes equal drawEquipSlotRowsShisu00_801D4AF4 at 0x801D4AF4 in emi/etc/shisu/00 and drawEquipSlotRowsBate00_801D3B4C at 0x801D3B4C in emi/etc/bate/00.'
   - - 36032
     - asm
     - func_801D98C0
@@ -487,7 +489,7 @@ segments:
     - c
     - func_801DB938
     - '@source: src/bof3/ui/func_801DB938_shop00.c'
-    - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice through the shop row emitters func_801D95F4 and func_801D9254 with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
+    - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice, once through the equipment-slot block drawEquipSlotRowsShop00_801D95F4 and once through the still-unlifted shop row emitter func_801D9254, with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
   - - 44528
     - asm
     - func_801DB9F0

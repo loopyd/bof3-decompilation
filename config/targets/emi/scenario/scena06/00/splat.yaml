@@ -80,8 +80,28 @@ segments:
     - asm
     - func_801F8B50
   - - 8984
-    - asm
-    - func_801F8F18
+    - c
+    - runSecondaryStateSequenceForPrimaryState5ScenarioScena0600_801F8F18
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState5ScenarioScena0600_801F8F18.c'
+    - '@behavior: Word 5 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through six states of a
+      six-word case table at 0x801F6D7C: state 0 requests front-end mode 0x0D
+      through func_8014ECAC and advances to state 1; state 1, while the shared
+      halfword D_80143C40 reads zero, clears D_8014832E, advances to state 2 and
+      seeds the front-selector context (0x35, 0x120000, 0x180000, 0x81) through
+      func_8019FA28; state 2, at progress 0x0C, requests the same mode, runs
+      func_801C16B8, advances to state 3, hands the scenario flag word
+      D_8014686C and mode 0x11 to func_8015B580 and starts the scripted motion
+      func_8015D554 with (0, 0, 4, 0x1E); state 3, while D_80143C40 reads zero,
+      clears D_8014832E, runs func_801636A0(0, 1) and advances to state 4; state
+      4, once func_80163EA0 reports a nonzero low byte, advances to state 5 and
+      seeds the context (0x57, 0x310000, 0x2E0000, 3); state 5 stores 0x1F in
+      D_8014832E, runs the shared overlay release helper func_8015C058 and
+      clears D_80146865 to D_80146867 and the secondary and primary state
+      bytes. The six-word case table sits in the overlay rodata slot at
+      0x801F6D7C.'
   - - 9408
     - asm
     - func_801F90C0

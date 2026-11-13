@@ -1119,8 +1119,10 @@ segments:
     - asm
     - func_800A68A4
   - - 66604
-    - asm
-    - func_800A6C2C
+    - c
+    - resolveDragonFormFromGenes
+    - '@source: src/bof3/battle/resolveDragonFormFromGenes.c'
+    - '@behavior: Takes the first of the eleven rows of the three-byte table at 0x800B4D58 whose three entries are each the 0xFF sentinel or present in the active byte list at 0x801463C4, then copies the row group byte from the table at 0x800B4D4C into 0x800B6F5C and returns the row index, or returns 0xFF when no row is covered. Row six is decided by the guard func_800A6D84 instead: its non-zero low byte returns, otherwise that row is skipped and the scan resumes at the next one.'
   - - 66808
     - c
     - func_800A6CF8

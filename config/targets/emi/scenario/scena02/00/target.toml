@@ -16,6 +16,7 @@ sources = [
     "src/bof3/scenario/queueCue20BAndRequestPrimaryState1ASubstate1EOnModeCellMatchScenarioScena0200_801FC9CC.c",
     "src/bof3/scenario/runFrontEndStartupSetProgress23AndRequestPrimaryState1AOnModeCellMatchScenarioScena0200_801FC7E4.c",
     "src/bof3/scenario/setScenarioFlagBit23QueueCue106AndReturnHandler0OnSubstate0ScenarioScena0200_801FB300.c",
+    "src/bof3/scenario/runFrontEndCompletionSubstatesSeedingSelectorContextsThenReleaseScenarioScena0200_801F936C.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",
@@ -85,3 +86,9 @@ function = 0x801F9678
 section = ".rodata"
 address = 0x801F6E0C
 size = 0x14
+
+[[matching.section_placements]]
+function = 0x801F936C
+section = ".rodata"
+address = 0x801F6DA4
+size = 0x64

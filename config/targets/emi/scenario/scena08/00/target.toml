@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/drawTranslucentGouraudLineBetweenWorkPoints34And0CScenarioScena0800_801FA19C.c",
     "src/bof3/scenario/drawTranslucentGouraudDiscOfSixteenTrianglesAroundProjectedRecordPointScenarioScena0800_801F8964.c",
     "src/bof3/scenario/drawTranslucentGouraudRingOfSixteenQuadsAroundScreenCenterFadingFromBlackToWhiteScenarioScena0800_801F9688.c",
+    "src/bof3/scenario/drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C.c",
     "src/bof3/scenario/waitForProgressOrRecordFlagThenSetFlagBit5Or6QueueMode24AndSeedFrontSelectorContextScenarioScena0800_801FB8A0.c",
 ]
 support_sources = [

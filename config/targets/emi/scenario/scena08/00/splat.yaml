@@ -192,13 +192,15 @@ segments:
     - '@source: src/bof3/scenario/shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4.c'
     - '@behavior: Shifts the 0x40 halfword entries of the u16 table at 0x801FE9EC one slot toward higher addresses and stores its u16 argument in entry 0, so entry 0 is the newest value; a leaf with no frame that reads and writes only that table and returns nothing.'
   - - 5692
-    - asm
-    - func_801F823C
+    - c
+    - drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C
+    - '@source: src/bof3/scenario/drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C.c'
+    - '@behavior: Fills a screen-aligned circle of radius arg2 as 2*arg2 one-pixel-tall translucent Gouraud-tinted POLY_GT4 strip pairs: row i sits at arg1 - arg2 + i, its half width is the square-root helper func_801786E8 of arg2*arg2 minus the squared row counter m counting down from arg2 - 1, that half width is shifted by (arg3 times func_801782FC of the 0x801FE9EC angle table entry indexed by the row counter low byte) shifted right 12, the left quad spans arg0 - half + offset to arg0 + offset and the right quad arg0 + offset to arg0 + offset + half, both take GetTPage(2, 0, 0x340, 0x100) as tpage, SetSemiTrans with zero, func_8017A9E0 as the cursor setter and func_8014E5A0 under class 2 size 0x34; the texture column runs 0x40 - half to 0x40 on the left quad and 0 to half on the right, the texture row is i - (arg2 - 0x40) for the left quad and 0x80 lower for the right, and the tints are 0x40/0x40/0x80 alternating with 0x60/0x60/0x60 on the left quad and 0x60/0x60/0x60 alternating with 0x80/0x40/0x40 on the right.'
   - - 6452
     - c
     - projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_801F8534
     - '@source: src/bof3/scenario/projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_801F8534.c'
-    - '@behavior: Projects the scratchpad work object cursor words at 0x34/0x38/0x3C through func_801AFF04 into a local screen pair after filling the projection scratch through func_801AFE18, stores that pair into the work object halfwords 0x2E/0x30, draws the two 0x18-byte cells through emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108 with the signed 0x2E halfword and the projected y, shifts the 0x801FE9EC angle table head through shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4 with work halfword 0x58, then lays out the ring through func_801F823C with signed work halfwords 0x2E, 0x30, 0x32 and 0x2C; the work pointer is reloaded once per call group.'
+    - '@behavior: Projects the scratchpad work object cursor words at 0x34/0x38/0x3C through func_801AFF04 into a local screen pair after filling the projection scratch through func_801AFE18, stores that pair into the work object halfwords 0x2E/0x30, draws the two 0x18-byte cells through emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108 with the signed 0x2E halfword and the projected y, shifts the 0x801FE9EC angle table head through shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4 with work halfword 0x58, then lays out the ring through drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C with signed work halfwords 0x2E, 0x30, 0x32 and 0x2C; the work pointer is reloaded once per call group.'
   - - 6640
     - asm
     - func_801F85F0

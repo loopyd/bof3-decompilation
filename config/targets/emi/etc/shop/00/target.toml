@@ -177,6 +177,7 @@ sources = [
     "src/bof3/ui/drawBackgroundTilesFromKindShop00_801DBD24.c",
     "src/bof3/ui/drawShopSavePanelThenCreateSaveSlotOnMemoryCard.c",
     "src/bof3/ui/drawShopPriceListPanel.c",
+    "src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

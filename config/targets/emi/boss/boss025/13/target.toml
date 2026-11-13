@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C.c",
     "src/bof3/boss/accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760.c",
     "src/bof3/boss/dispatchStateByte2Table3274BossBoss02513_800C1EC8.c",
     "src/bof3/boss/dispatchStateByte1Table31f0BossBoss02513_800C1B6C.c",

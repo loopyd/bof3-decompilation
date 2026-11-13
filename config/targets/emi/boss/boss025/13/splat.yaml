@@ -91,8 +91,10 @@ segments:
     - c
     - dispatchStateByte2Table3274BossBoss02513_800C1EC8
   - - 1804
-    - asm
-    - func_800C1F0C
+    - c
+    - callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C
+    - '@source: src/bof3/boss/callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C.c'
+    - '@behavior: Work byte 9 handler of this overlay at 0x800C1F0C, reached from word 0 of the run based at 0x800C3274 indexed by work byte 2 and from word 12 of the table based at 0x800C3244 indexed by work byte 1, with no jal in the payload naming it. Calls the shared readiness helper 0x801E30F8 and discards its byte, decrements work-object byte 9 in place through the scratchpad pointer cell 0x1F800044 and returns while the stored byte is non-zero; on zero it submits halfword 0 of the row the current enemy work record pointer 0x801EB4E8 holds at record offset 0xE8 through the shared submitter 0x801E52F0, then re-reads the cell and advances work byte 2 by one. The 0x18-byte frame only keeps the return address at 0x10.'
   - - 1936
     - asm
     - func_800C1F90

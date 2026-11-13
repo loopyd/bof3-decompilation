@@ -231,8 +231,10 @@ segments:
     - asm
     - func_801F9880
   - - 13476
-    - asm
-    - func_801FA0A4
+    - c
+    - runPrimaryState4SubstateSequenceScenarioScena0300_801FA0A4
+    - '@source: src/bof3/scenario/runPrimaryState4SubstateSequenceScenarioScena0300_801FA0A4.c'
+    - '@behavior: Word 4 (0x801FCFB0) of the nine-word primary-state handler table at 0x801FCFE0 that dispatchPrimaryStateHandlerScenarioScena0300_801F92F4 indexes with the signed shared primary state byte D_80146874, so no in-image jal targets it: switches on the shared sub-state byte D_80146875 through the eleven-entry absolute jump table jtbl_801F6CF4_main at 0x801F6CF4 in the payload leading table data, bounded by sltiu against 0xB. Sub-state 0 runs func_801BE1B0(0) and advances to 1; sub-state 1 waits for g_ScenarioProgress 4, runs func_8014ECAC(0), arms the countdown D_80146876 with 0x3C and advances to 2; sub-state 2 waits for the gate halfword D_80143C40 to clear, runs func_80150224(0x20), parks the mode byte D_80143BB0 at 2, clears the effect bank byte D_8014832E and advances to 3; sub-state 3 keeps off mode 2 and otherwise requests selector context seed 0x25 with 0x2D0000 and 0x280000 and kind 0x81, saturates D_80143F1E and advances to 4; sub-state 4, once the gate halfword clears, adds one to the progress byte and runs func_8015C058 before advancing to 5; sub-state 5 waits for mode 2 and D_801490A8 0x33 and jumps to sub-state 10; sub-state 6 ticks the countdown and, at zero, runs func_8015C088, sets flag bit 0x15 of D_8014686C through func_8015B580, stores 1 in the progress byte, requests seed 0x25 with kind 0x82 and advances to 7; sub-state 7, once the gate halfword clears, advances to 8 and adds one to the progress byte; sub-state 8 waits for progress 0x0F, clears it, runs func_8015C058 and resets the primary state and sub-state bytes; sub-state 9 does nothing; sub-state 10 returns to sub-state 5 and clears bit 0x100 of D_80146258 while the mode byte reads anything but 2. Any other value returns without a store; the 0x18-byte frame only keeps $ra.'
   - - 14156
     - asm
     - func_801FA34C
