@@ -967,6 +967,9 @@ and physical offsets may differ between archives.
 | `[0x1ACBC,0x1AD04)` | `[0x800B14BC,0x800B1504)` | 72 |
 | `[0x1AD5C,0x1ADBC)` | `[0x800B155C,0x800B15BC)` | 96 |
 | `[0x1AE64,0x1AED0)` | `[0x800B1664,0x800B16D0)` | 108 |
+| `[0x1B274,0x1B5AC)` | `[0x800B1A74,0x800B1DAC)` | 824 |
+| `[0x1B5AC,0x1B704)` | `[0x800B1DAC,0x800B1F04)` | 344 |
+| `[0x1B704,0x1B888)` | `[0x800B1F04,0x800B2088)` | 388 |
 | `[0x1B888,0x1B8CC)` | `[0x800B2088,0x800B20CC)` | 68 |
 | `[0x1B8CC,0x1B8D4)` | `[0x800B20CC,0x800B20D4)` | 8 |
 | `[0x1B904,0x1B958)` | `[0x800B2104,0x800B2158)` | 84 |
@@ -1106,6 +1109,19 @@ frames and nonaliasing dynamic stores. Pointer validity, indexed tables, format
 contents, buffer capacity and callee behavior remain unqualified. Referenced data
 and neighboring bodies remain excluded. No ELF match, observed execution, feasible
 path, valid selector or safe-editing claim follows.
+
+The three complete bodies at `0x800B1A74..0x800B2088` contain 389 instruction
+words, with separate boundaries at `0x800B1DAC` and `0x800B1F04`. Original ASM,
+word and control-flow reviews reconcile with captured resident bytes, including
+all 39 control-transfer delay slots. Qualified original JAL sites `0x800B0FDC`,
+`0x800B11DC` and `0x800B131C` conditionally enter the respective bodies.
+Call continuations require ordinary returns, preserved saved values, intact
+frames and live local bytes, and nonaliasing dynamic stores. Indexed tables,
+flags, pointers, pointed storage and callee behavior remain unqualified.
+Each MFHI follows its MULTU without an intervening call or HI/LO write.
+Hardware timing remains unverified. Referenced data and callees remain excluded.
+No ELF match, observed execution, feasible path,
+valid-argument, resource-safety or safe-editing claim follows.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident

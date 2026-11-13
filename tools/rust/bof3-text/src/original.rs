@@ -8875,6 +8875,23 @@ pub fn payload_nontext_ranges(
                 length: 1008,
                 evidence: "original US shared battle payload; complete instruction body 0x800B0F9C..0x800B138C including all 20 control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entries through qualified original JAL sites 0x800B0ECC and 0x800B0F38; call continuations assume ordinary returns, preserved saved values, intact caller frames and nonaliasing dynamic stores; exact archive and payload identities; referenced formats, buffers, tables, data and neighboring bodies excluded; no ELF-match, observed-execution, feasible-path, argument-validity, selector-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
             }])
+            .chain([
+                NontextRange {
+                    offset: 0x1b274,
+                    length: 824,
+                    evidence: "original US shared battle payload; complete instruction body 0x800B1A74..0x800B1DAC including all 21 control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entry through qualified original JAL site 0x800B0FDC; call continuations assume ordinary returns, preserved saved values, intact frames and nonaliasing dynamic stores; exact archive and payload identities; referenced tables, data, pointed storage and callees excluded; no ELF-match, observed-execution, feasible-path, argument-validity, table-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x1b5ac,
+                    length: 344,
+                    evidence: "original US shared battle payload; complete instruction body 0x800B1DAC..0x800B1F04 including all seven control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entry through qualified original JAL site 0x800B11DC; call continuations assume ordinary returns, preserved saved values, intact frames and nonaliasing dynamic stores; exact archive and payload identities; referenced tables, data, pointed storage and callees excluded; no ELF-match, observed-execution, feasible-path, argument-validity, table-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 0x1b704,
+                    length: 388,
+                    evidence: "original US shared battle payload; complete instruction body 0x800B1F04..0x800B2088 including all eleven control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entry through qualified original JAL site 0x800B131C; call continuations assume ordinary returns, preserved saved values, intact frames and live local bytes, and nonaliasing dynamic stores; exact archive and payload identities; referenced flags, data, pointed storage and callees excluded; no ELF-match, observed-execution, feasible-path, argument-validity, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
+                },
+            ])
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
