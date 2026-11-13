@@ -1768,6 +1768,23 @@ match resident RAM. Structural review covers all 52 words, two loop branches
 and the return delay slot. The compiled callee remains partial and provides no
 admission basis. Actual entry, valid records and callee behavior remain unverified.
 
+Two startup callbacks also qualify through complete original-word and structural
+control-flow review, without matching ELF evidence:
+
+| File interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[0xB8A80,0xB8C64)` | `[0x8014EA80,0x8014EC64)` | 484 |
+| `[0xB8C64,0xB8CAC)` | `[0x8014EC64,0x8014ECAC)` | 72 |
+
+The qualified boot loop installs the first pointer at `0x8014AB08`. That body
+installs the second pointer at `0x8014EC44`. Every original word matches the
+decoder and retained resident RAM. Review covers all branches, delay slots and
+both 24-byte frames. External call continuations assume ordinary returns,
+preserved saved return addresses, nonaliasing stores and stable code. A native
+loader entry binds the first body's interior JAL at `0x8014EAB4`; it does not
+prove callback entry or whole-body execution. The second callback's execution
+and the callees' behavior remain unverified. Referenced data remain excluded.
+
 These additional complete original bodies qualify through direct calls from
 qualified executable callers. Every original word and delay slot matches ASM
 and retained resident RAM. Structural call continuations assume returns. Ten

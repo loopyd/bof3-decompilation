@@ -280,6 +280,16 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8014E8FC..0x8014EA80 including return delay slots; original JAL at 0x8014E79C in the qualified executable caller at 0x8014E6D0 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 756_352,
+            length: 484,
+            evidence: "original US SLUS; complete 121-word instruction body 0x8014EA80..0x8014EC64 including return delay slot; qualified original boot loop installs this callback pointer at 0x8014AB08; complete raw original words, decoder, structural control flow, load delays, 24-byte frame and saved RA reconcile with captured resident bytes; native loader entry RA 0x8014EABC binds the interior JAL at 0x8014EAB4 only; call continuations assume ordinary returns, preserved caller frame and saved return storage, nonaliasing stores and stable code; exact whole executable identity; referenced globals, tables, callees and neighboring bodies excluded; no matching ELF, observed callback entry or whole-body execution, argument-validity, callee-semantics, resource-safety, rendering or safe-editing claim",
+        },
+        NontextRange {
+            offset: 756_836,
+            length: 72,
+            evidence: "original US SLUS; complete 18-word instruction body 0x8014EC64..0x8014ECAC including return delay slot; qualified original initializer supplies this callback pointer to installer call 0x8014EC44; complete raw original words, decoder, structural control flow, load delay, 24-byte frame and saved RA reconcile with captured resident bytes; call continuations assume ordinary returns, preserved caller frame and saved return storage, nonaliasing stores and stable code; exact whole executable identity; referenced callees and neighboring bodies excluded; no matching ELF, observed callback entry or execution, argument-validity, callee-semantics, resource-safety, rendering or safe-editing claim",
+        },
+        NontextRange {
             offset: 762_576,
             length: 52,
             evidence: "original US SLUS; complete 13-word leaf instruction body 0x801502D0..0x80150304 including JR RA delay slot; complete original word, load-delay and structural-flow review reconciles with retained native entry and return; observed ID 0x40D0 selects bank 1, zero-based row 208 and cell 0x8001B834, returning 0x8001C9F7; exact whole executable identity; stable code and descriptor/table bytes, valid readable memory and incoming return control remain conditions; referenced bank data and neighboring code excluded; no matching ELF, arbitrary-ID bounds, general pointer safety, edited rendering or unique-supplier claim",
