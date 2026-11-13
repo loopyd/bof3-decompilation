@@ -676,6 +676,38 @@ and physical offsets may differ between archives.
 | `[0x6998,0x7294)` | `[0x8009D198,0x8009DA94)` | 2300 |
 | `[0x7294,0x72B4)` | `[0x8009DA94,0x8009DAB4)` | 32 |
 | `[0x746C,0x74C8)` | `[0x8009DC6C,0x8009DCC8)` | 92 |
+| `[0x7520,0x7550)` | `[0x8009DD20,0x8009DD50)` | 48 |
+| `[0x7550,0x7618)` | `[0x8009DD50,0x8009DE18)` | 200 |
+| `[0x7618,0x7650)` | `[0x8009DE18,0x8009DE50)` | 56 |
+| `[0x7650,0x7664)` | `[0x8009DE50,0x8009DE64)` | 20 |
+| `[0x7664,0x7678)` | `[0x8009DE64,0x8009DE78)` | 20 |
+| `[0x7678,0x768C)` | `[0x8009DE78,0x8009DE8C)` | 20 |
+| `[0x768C,0x7770)` | `[0x8009DE8C,0x8009DF70)` | 228 |
+| `[0x7770,0x77BC)` | `[0x8009DF70,0x8009DFBC)` | 76 |
+| `[0x77BC,0x77EC)` | `[0x8009DFBC,0x8009DFEC)` | 48 |
+| `[0x77EC,0x781C)` | `[0x8009DFEC,0x8009E01C)` | 48 |
+| `[0x781C,0x784C)` | `[0x8009E01C,0x8009E04C)` | 48 |
+| `[0x784C,0x787C)` | `[0x8009E04C,0x8009E07C)` | 48 |
+| `[0x787C,0x7984)` | `[0x8009E07C,0x8009E184)` | 264 |
+| `[0x79E0,0x7A00)` | `[0x8009E1E0,0x8009E200)` | 32 |
+| `[0x7A00,0x7A24)` | `[0x8009E200,0x8009E224)` | 36 |
+| `[0x7A24,0x7A48)` | `[0x8009E224,0x8009E248)` | 36 |
+| `[0x7FC4,0x7FE4)` | `[0x8009E7C4,0x8009E7E4)` | 32 |
+| `[0x7FE4,0x8004)` | `[0x8009E7E4,0x8009E804)` | 32 |
+| `[0x8004,0x8024)` | `[0x8009E804,0x8009E824)` | 32 |
+| `[0x8024,0x8044)` | `[0x8009E824,0x8009E844)` | 32 |
+| `[0x818C,0x8230)` | `[0x8009E98C,0x8009EA30)` | 164 |
+| `[0x828C,0x82CC)` | `[0x8009EA8C,0x8009EACC)` | 64 |
+| `[0x82CC,0x8328)` | `[0x8009EACC,0x8009EB28)` | 92 |
+| `[0x86CC,0x8708)` | `[0x8009EECC,0x8009EF08)` | 60 |
+| `[0x8708,0x8728)` | `[0x8009EF08,0x8009EF28)` | 32 |
+| `[0x87B8,0x8810)` | `[0x8009EFB8,0x8009F010)` | 88 |
+| `[0x8A58,0x8A78)` | `[0x8009F258,0x8009F278)` | 32 |
+| `[0x8A78,0x8AB0)` | `[0x8009F278,0x8009F2B0)` | 56 |
+| `[0x8AB0,0x8AE8)` | `[0x8009F2B0,0x8009F2E8)` | 56 |
+| `[0x8AE8,0x8B20)` | `[0x8009F2E8,0x8009F320)` | 56 |
+| `[0x8B20,0x8BDC)` | `[0x8009F320,0x8009F3DC)` | 188 |
+| `[0x8BDC,0x8C14)` | `[0x8009F3DC,0x8009F414)` | 56 |
 | `[0x15F54,0x15FD0)` | `[0x800AC754,0x800AC7D0)` | 124 |
 | `[0x15FD0,0x16044)` | `[0x800AC7D0,0x800AC844)` | 116 |
 | `[0x16044,0x16070)` | `[0x800AC844,0x800AC870)` | 44 |
@@ -721,6 +753,15 @@ RAM, with all text relocations reconciled. Call continuations assume ordinary
 returns. This proves stored instruction roles; work records, selectors, arguments,
 callees and resource safety remain unqualified. The neighboring body beginning
 at `0x8009DCC8` remains excluded because its linked bytes differ from the original.
+
+The 32 listed bodies within `0x8009DD20..0x8009F414` contain 575 instruction
+words in 92 structural blocks. Their complete sized executable ELF function
+sections and all 197 object text relocations reconcile with original bytes and
+captured resident RAM. Structural review covers every word, branch and delay
+slot. Direct-call continuations assume ordinary returns and intact caller frames.
+Intervening gaps and referenced data remain excluded. Actual execution,
+work-record, selector and argument validity, callee behavior and resource safety
+remain unqualified.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident
