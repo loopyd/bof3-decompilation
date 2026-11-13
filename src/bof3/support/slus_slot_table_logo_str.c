@@ -5,10 +5,8 @@
 /* @source 0x801D8BB0 @kind unknown */
 extern u_long capcomStrLba;
 
-/* @behavior probes the independently loaded LOGO.EXE stream path for the authored
- * SLUS boot harness.
- * @source Not native SLUS code: 0x801ce760 and 0x801cea98 belong to LOGO.EXE.
- */
+/* This authored SLUS boot helper probes the independently loaded LOGO.EXE
+ * stream path. Its LOGO.EXE calls are not native SLUS code. */
 const SlotTableEntry* slot_table_logo_str(void) {
   volatile u8 scratch[0x18];
   u_long      pad_state;

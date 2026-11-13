@@ -1,13 +1,5 @@
 #include "bof3/core/slus_internal.h"
 
-/* @behavior snapshots the target-local EMI callback table and invokes the
- * callback selected by the current loader mode.
- * @source 0x80162D18
- * @status exact
- * @match 100.00
- * @residual none
- */
-
 typedef void (*EmiLoaderCallback)(void);
 
 typedef struct EmiCallbackGroup {
@@ -18,6 +10,13 @@ extern s8        emiLoaderMode; /* @source 0x8014648A @kind bss */
 /* @source 0x80149C3C @kind table */
 extern const u32 emiLoaderCallbackTable[];
 
+/* @behavior snapshots the target-local EMI callback table and invokes the
+ * callback selected by the current loader mode.
+ * @source 0x80162D18
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
 void dispatchEmiModeCallback(void) {
   EmiCallbackGroup*       dst;
   const EmiCallbackGroup* src;

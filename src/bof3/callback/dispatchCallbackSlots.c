@@ -1,5 +1,11 @@
 #include "bof3/core/slus_internal.h"
 
+/* @source 0x80143D40 @kind bss */
+extern volatile GameCallbackSlot* gameCallbackSlotCursor;
+extern GameCallbackSlot           D_80143B40;
+
+extern void closeCallbackSlot(int slot_index);
+
 /* @behavior walks the callback slot table and dispatches each non-empty slot by
  * index.
  * @source 0x8014B33C
@@ -7,13 +13,6 @@
  * @match 100.00
  * @residual none
  */
-
-/* @source 0x80143D40 @kind bss */
-extern volatile GameCallbackSlot* gameCallbackSlotCursor;
-extern GameCallbackSlot           D_80143B40;
-
-extern void closeCallbackSlot(int slot_index);
-
 void dispatchCallbackSlots(void) {
   GameCallbackSlot*          slot_end;
   volatile GameCallbackSlot* next_slot;

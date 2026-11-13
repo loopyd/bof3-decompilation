@@ -1,9 +1,7 @@
 #include "bof3/core/slus_internal.h"
 
-/* @behavior resolves one selected native loader slot to authored shipped-file
- * metadata.
- * @source emiSlotLbaTable is the native u32 LBA table; this helper is authored.
- */
+/* This authored helper finds shipped-file metadata for a selected loader slot.
+ * emiSlotLbaTable is the native u32 LBA table. */
 const SlotTableEntry* slot_table_find(EmiLoaderSlotId slot_id) {
   size_t index;
 

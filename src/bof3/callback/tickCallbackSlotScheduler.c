@@ -1,5 +1,9 @@
 #include "bof3/core/slus_internal.h"
 
+/* @source 0x80143D40 @kind bss */
+extern GameCallbackSlot* volatile gameCallbackSlotCursor;
+extern GameCallbackSlot           D_80143B40[4];
+
 /* @behavior walks the EXE callback slot table, opens ready threads, decrements
  * yield timers, and switches into any thread whose slot reached dispatch state.
  * @source 0x8014B73C
@@ -7,11 +11,6 @@
  * @match 100.00
  * @residual none
  */
-
-/* @source 0x80143D40 @kind bss */
-extern GameCallbackSlot* volatile gameCallbackSlotCursor;
-extern GameCallbackSlot           D_80143B40[4];
-
 void tickCallbackSlotScheduler(void) {
   GameCallbackSlot* top_slot;
   GameCallbackSlot* open_slot;

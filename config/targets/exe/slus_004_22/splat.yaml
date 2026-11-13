@@ -86,6 +86,7 @@ segments:
     subsegments:
       - [0xb4b3c, c, dispatchCallbackSlots, '@source: src/bof3/callback/dispatchCallbackSlots.c']
       - [0xb4bc4, c, displayBootExceptionDump, '@source: src/bof3/boot/displayBootExceptionDump.c']
+      - [0xb4eb4, asm, func_8014B6B4]
       - [0xb4f3c, c, tickCallbackSlotScheduler, '@source: src/bof3/callback/tickCallbackSlotScheduler.c']
       - [0xb5054, c, installCallbackSlot, '@source: src/bof3/callback/installCallbackSlot.c']
       - [0xb507c, c, yieldCallbackSlotScheduler, '@source: src/bof3/callback/yieldCallbackSlotScheduler.c']
@@ -106,6 +107,12 @@ segments:
     subsegments:
       - [0xb753c, c, applyMainLookupRecord, '@source: src/bof3/world/applyMainLookupRecord.c']
   - [0xb7678, bin, pre_exe_image_load]
+  - name: slus_function_8014e0a8
+    type: code
+    start: 0xb78a8
+    vram: 0x8014e0a8
+    subsegments:
+      - [0xb78a8, c, cdReadSync, '@source: src/bof3/io/cdReadSync.c']
   - name: exe_image_load
     type: code
     start: 0xb78fc
@@ -113,6 +120,19 @@ segments:
     subsegments:
       - [0xb78fc, c, func_8014E0FC, '@source: src/bof3/io/func_8014E0FC.c']
   - [0xb7a2c, bin, post_main_lookup_record]
+  - name: slus_function_8014e564
+    type: code
+    start: 0xb7d64
+    vram: 0x8014e564
+    subsegments:
+      - [0xb7d64, c, clearRenderRect, '@source: src/bof3/render/clearRenderRect.c']
+  - name: slus_function_8014e5a0
+    type: code
+    start: 0xb7da0
+    vram: 0x8014e5a0
+    subsegments:
+      - [0xb7da0, c, appendRenderPrim, '@source: src/bof3/render/appendRenderPrim.c']
+  - [0xb7e40, bin, unclassified_0xb7e40]
   - name: main_lookup_initializer
     type: code
     start: 0xb8280
@@ -126,7 +146,28 @@ segments:
     vram: 0x8014ecac
     subsegments:
       - [0xb84ac, c, setFrontLocalMode, '@source: src/bof3/ui/setFrontLocalMode.c']
-  - [0xb856c, bin, pre_emi_loader]
+  - [0xb84ec, bin, pre_emi_loader]
+  - name: slus_function_8014f514
+    type: code
+    start: 0xb8d14
+    vram: 0x8014f514
+    subsegments:
+      - [0xb8d14, c, fadeLoop, '@source: src/bof3/render/fadeLoop.c']
+  - [0xb8df0, bin, unclassified_0xb8df0]
+  - name: slus_function_8014f704
+    type: code
+    start: 0xb8f04
+    vram: 0x8014f704
+    subsegments:
+      - [0xb8f04, c, drawFadeTile, '@source: src/bof3/render/drawFadeTile.c']
+  - [0xb9000, bin, unclassified_0xb9000]
+  - name: slus_function_80150098
+    type: code
+    start: 0xb9898
+    vram: 0x80150098
+    subsegments:
+      - [0xb9898, c, drawGlyphString8x8, '@source: src/bof3/render/drawGlyphString8x8.c']
+  - [0xb99e4, bin, unclassified_0xb99e4]
   - name: cue_dispatch
     type: code
     start: 0xc7718
@@ -200,6 +241,13 @@ segments:
     subsegments:
       - [0xD04B0, c, func_80166CB0, '@source: src/bof3/world/func_80166CB0.c']
   - [0xD04EC, bin, post_map_byte_query]
+  - name: slus_function_8016728c
+    type: code
+    start: 0xd0a8c
+    vram: 0x8016728c
+    subsegments:
+      - [0xd0a8c, c, func_8016728C, '@source: src/bof3/io/func_8016728C.c']
+  - [0xd0b44, bin, unclassified_0xd0b44]
   - name: cluster_0
     type: code
     start: 0xd438c

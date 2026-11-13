@@ -1,13 +1,5 @@
 #include "bof3/core/slus_internal.h"
 
-/* @behavior services the active EMI CD-ready callback, validates the sector source,
- * dispatches the current loader phase, and advances the streaming ring.
- * @source 0x80162230
- * @status exact
- * @match 100.00
- * @residual none
- */
-
 extern void (*D_80183248[])(void);
 /* @source 0x8018B490 @kind bss */
 extern CdlLOC       cdCurrentPositionState;
@@ -25,6 +17,13 @@ extern u8           D_80146494;
 extern volatile u8  D_801464A0[];
 extern volatile u32 D_80146808;
 
+/* @behavior services the active EMI CD-ready callback, validates the sector source,
+ * dispatches the current loader phase, and advances the streaming ring.
+ * @source 0x80162230
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
 void emiCdReadyCallback(u8 status, u8* result) {
   u8*           read_progress;
   CdlLOC*       current_pos;

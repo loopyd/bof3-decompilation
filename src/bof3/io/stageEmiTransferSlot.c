@@ -1,13 +1,5 @@
 #include "bof3/core/slus_internal.h"
 
-/* @behavior selects one pending EMI transfer slot and copies its staged transfer
- * state into the active loader registers.
- * @source 0x80162B08
- * @status exact
- * @match 100.00
- * @residual none
- */
-
 extern u32*             D_80146848;
 extern u8               D_80146854;
 extern EmiTransferSlot* D_80146844;
@@ -20,6 +12,13 @@ extern volatile u32     D_8014645C;
 extern volatile u16     D_80146460;
 extern u32              D_8014646C;
 
+/* @behavior selects one pending EMI transfer slot and copies its staged transfer
+ * state into the active loader registers.
+ * @source 0x80162B08
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
 s32 stageEmiTransferSlot(u8 slot) {
   volatile EmiTransferSlot* slot_table;
   if ((*D_80146848 < slot) ||

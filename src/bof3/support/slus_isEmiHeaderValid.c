@@ -6,7 +6,7 @@ static const unsigned char EMI_MAGIC[EMI_MAGIC_SIZE] = {
     'M', 'A', 'T', 'H', '_', 'T', 'B', 'L',
 };
 
-/* @behavior validates the fixed EMI header magic within a bounded buffer. */
+/* This authored helper checks the EMI header magic in a bounded buffer. */
 bool isEmiHeaderValid(const void* header, size_t size) {
   const unsigned char* bytes = (const unsigned char*)header;
 

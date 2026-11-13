@@ -1,8 +1,6 @@
 #include "bof3/core/slus_internal.h"
 
-/* possible name: emi_build_entry_lba_table
- * @behavior derives per-entry LBAs from the base header LBA and TOC sizes.
- */
+/* This authored helper derives entry LBAs from the base header LBA and TOC sizes. */
 void buildEmiEntryLbas(u32 base_lba, const EmiTocEntry* entries,
                           size_t entry_count, u32* entry_lbas) {
   size_t index;

@@ -105,7 +105,7 @@ context docs for the complete source/symbol contract.
 | Directory | Domain |
 | --- | --- |
 | `include/base/`, `include/memory/` | common types, compiler attributes, fixed RAM and hardware addresses |
-| `include/gpu/`, `include/frontend/`, `include/callback/` | rendering, frontend, callbacks |
+| `include/gpu/`, `include/frontend/` | rendering, frontend |
 | `include/loader/`, `include/panel/`, `include/battle/` | loader, panel, battle runtime |
 | `include/data/`, `include/media/`, `include/ui/`, `include/game/` | records, media, UI and game templates |
 

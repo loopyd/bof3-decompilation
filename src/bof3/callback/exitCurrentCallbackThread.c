@@ -1,5 +1,8 @@
 #include "bof3/core/slus_internal.h"
 
+/* @source 0x80143D40 @kind bss */
+extern GameCallbackSlot* gameCallbackSlotCursor;
+
 /* @behavior clears the current slot state, closes its thread inside the scheduler
  * critical section, then forces a scheduler switch away from the current
  * callback.
@@ -8,10 +11,6 @@
  * @match 100.00
  * @residual none
  */
-
-/* @source 0x80143D40 @kind bss */
-extern GameCallbackSlot* gameCallbackSlotCursor;
-
 void NO_SIBLING_CALLS exitCurrentCallbackThread(void) {
   gameCallbackSlotCursor->state = GAME_CALLBACK_SLOT_STATE_EMPTY;
   EnterCriticalSection();

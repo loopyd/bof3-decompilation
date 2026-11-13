@@ -227,7 +227,7 @@ bottom.
 | --- | --- | --- |
 | Structs / typedefs | PascalCase | `PanelTask`, `AbilityObject` |
 | Struct members | snake_case | `targeting_flags`, `item_type` |
-| Function aliases | PascalCase, abbreviated domain prefix | `GpuAppendPrim`, `CbSchedTick` |
+| Function aliases | PascalCase, abbreviated domain prefix | `GpuAppendPrim` |
 | Constants / macros | SCREAMING_SNAKE_CASE | `EMI_SECTOR_SIZE`, `EQUIP_RYU` |
 | Single-bit flags | `(1 << N)` shift form | `#define ELEM_FIRE (1 << 0)` |
 | Globals (fixed-address) | `g_` + PascalCase | `g_PrimCursor`, `g_GameState` |

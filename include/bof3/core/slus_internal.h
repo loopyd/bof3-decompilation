@@ -2,7 +2,6 @@
 #define SLUS_004_22_INTERNAL_H
 
 #include "bof3/bof3.h"
-#include "callback/scheduler.h"
 #include "data/equipment.h"
 #include "loader/emi.h"
 #include "frontend/state.h"

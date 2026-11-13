@@ -1,10 +1,7 @@
 #include "bof3/core/slus_internal.h"
 
-/*
- * @behavior records reviewed shipped-file metadata for selected native EMI-loader
- * slot IDs.
- * @source emiSlotLbaTable is the native u32 LBA table; this path metadata is authored.
- */
+/* This authored table records shipped-file metadata for selected loader slots.
+ * emiSlotLbaTable is the native u32 LBA table. */
 const SlotTableEntry g_slot_table[] = {
     {EMI_LOADER_SLOT_DEMO_EMI, 60853u, "BIN/ETC/DEMO.EMI", RUNTIME_PATH_EMI},
     {EMI_LOADER_SLOT_FIRST_EMI, 61359u, "BIN/ETC/FIRST.EMI", RUNTIME_PATH_EMI},

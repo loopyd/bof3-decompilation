@@ -1,5 +1,9 @@
 #include "bof3/core/slus_internal.h"
 
+
+extern GameCallbackEntry D_80143B44;
+extern u16               D_80143B40;
+
 /* @behavior stores one callback entrypoint in the requested slot and marks it ready
  * for thread open state `2`.
  * @source 0x8014B854
@@ -7,9 +11,6 @@
  * @match 100.00
  * @residual none
  */
-extern GameCallbackEntry D_80143B44;
-extern u16               D_80143B40;
-
 void installCallbackSlot(int slot_index, GameCallbackEntry callback) {
   int slot_offset = slot_index << 7;
 
