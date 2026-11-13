@@ -8124,6 +8124,11 @@ pub fn payload_nontext_ranges(
                 evidence: "original US shared battle payload; five complete instruction bodies spanning 0x800AC754..0x800AC964 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
             })
             .chain([NontextRange {
+                offset: 0x6998,
+                length: 2300,
+                evidence: "original US shared battle payload; complete instruction body 0x8009D198..0x8009DA94 including return delay slot; complete original control-flow review and sized executable ELF function section match original and captured resident bytes, with all 190 text relocations reconciled; indirect-call continuation assumes ordinary return; exact archive and payload identities; neighboring functions, handler tables and data excluded; no observed-execution, valid-work-record, selector-bound, indirect-call-safety, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+            }])
+            .chain([NontextRange {
                 offset: 0x16164,
                 length: 1564,
                 evidence: "original US shared battle payload; complete instruction body 0x800AC964..0x800ACF80 including return delay slot; native entry PC 0x800AC964 and RA 0x801D1A80 bind the complete original control-flow review; original bytes match canonical payload and captured resident bytes; exact archive and payload identities; no ELF-match, full-function execution, argument-validity, resource-safety, callee-semantics or duplicate-source ownership claim",

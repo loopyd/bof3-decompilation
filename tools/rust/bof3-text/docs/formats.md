@@ -638,6 +638,7 @@ and physical offsets may differ between archives.
 
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
+| `[0x6998,0x7294)` | `[0x8009D198,0x8009DA94)` | 2300 |
 | `[0x15F54,0x15FD0)` | `[0x800AC754,0x800AC7D0)` | 124 |
 | `[0x15FD0,0x16044)` | `[0x800AC7D0,0x800AC844)` | 116 |
 | `[0x16044,0x16070)` | `[0x800AC844,0x800AC870)` | 44 |
@@ -675,6 +676,13 @@ and physical offsets may differ between archives.
 | `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
 | `[0x17908,0x179F8)` | `[0x800AE108,0x800AE1F8)` | 240 |
 | `[0x179F8,0x17A60)` | `[0x800AE1F8,0x800AE260)` | 104 |
+
+The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
+Its complete sized executable ELF section, original bytes and captured resident
+RAM match, with all 190 text relocations reconciled. Structural review covers
+every word and delay slot. The indirect-call continuation assumes an ordinary
+return and an intact caller frame. The target of `JALR v0` at `0x8009D41C`
+remains unqualified. No native entry or full-function execution is claimed.
 
 The body at `0x800AC964..0x800ACF80` has a captured native entry at `0x800AC964`
 with return address `0x801D1A80`. Complete original control-flow review accounts
