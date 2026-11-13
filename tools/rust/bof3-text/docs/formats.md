@@ -342,10 +342,29 @@ serialized extent; only image 0 has the selected conditional call path.
 The compression walk admits a physical literal only when every decoded use
 has a reviewed role.
 
-Other roots, palette, program, cell and selection fields, opaque aliases,
-mode-2 prefixes and allocation tails remain unresolved. Actual invocation,
-transfer, residency, upload, display, rasterized-text absence and safe editing
-remain unqualified.
+An additional profile qualifies roots 1 and 2 under the same loading, stability
+and ordinary-return conditions. With count 1 and work index 0, conditional
+identifiers 7 and 8 match the original row `05 07 08` at ordinals 1 and 2.
+Their identifier-map bytes are 0 and 1; the record flags at `0x80144974` and
+`0x80144A18` must have masks `0x0080/0x4000` clear. `0x801C1254` publishes
+roots `0x8005680C` and `0x8007180C`. `0x801BF448` reselects the same work,
+and `0x801BF56C` reaches `0x8014DC08` with selector 0 and images 4 and 9,
+respectively, through the existing route-0 path.
+
+The additional fields are the root-array words `[4,12)`, root-relative words
+`[110604,110608)` and `[221196,221200)`, and the 16 and 14 image-directory
+words at `[110620,110684)` and `[221212,221268)`. Root 1 includes headers
+and consumed encodings for three mode-1 and thirteen mode-2 images; root 2
+includes three mode-1 and eleven mode-2 images. Each serialized extent is
+checked separately; the selected conditional paths bind only images 4 and 9.
+A physical literal qualifies only when every decoded alias belongs to either
+the unchanged primary root-0 fields or these additional fields. Primary
+records retain their evidence.
+
+Other root-header words, palette, program, cell and selection fields, opaque
+aliases, mode-2 prefixes and allocation tails remain unresolved. Actual
+invocation, transfer, residency, upload, display, rasterized-text absence and
+safe editing remain unqualified.
 
 ## Area surface field coverage
 

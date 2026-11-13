@@ -4806,6 +4806,69 @@ fn additional_model_decoded_nontext_fields(
             "original US PL012 entry 3 additional root-0 fields; global decoded offsets 16..20 and 63680..63684 are relative-pointer words consumed by original SLUS 0x80166C48; for initialization slot 0, decoded 63684..63748 is copied to mirror 0x80039600..0x80039640 and conditionally supplies 32 graphics image-input halfwords through original 0x8014E22C, 0x8017B690, table-selected 0x8017D488 and callback 0x8017CE9C; concrete original table and GPU port words, stable descriptor/source, returning calls/queue and dimension limits preserving rectangle 0/480/256/32 are conditions; exact original archive and family-0/index-0/identifier-0/root-0 source binding, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk requires every decoded alias in the primary image fields or these additional fields; primary records retain their evidence; opaque aliases excluded; no live dispatch, hardware transfer, color-channel format, CLUT use, display, rasterized-text absence or safe-edit claim",
         );
     }
+    if entry.index == 7
+        && entry.transfer_mode == 1
+        && entry.offset == 96_256
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 331_788
+        && data.len() == 211_642
+        && sha256_hex(data) == "4b321cc1ff09b75bad5cd7a34cc1ef806fffcc7c26adb618279d04c07e0857cc"
+    {
+        return (
+            &[
+                (4, 12),
+                (110_604, 110_608),
+                (110_620, 116_172),
+                (116_176, 118_231),
+                (118_232, 118_240),
+                (118_244, 122_277),
+                (122_280, 122_288),
+                (122_292, 127_991),
+                (127_992, 128_000),
+                (128_004, 134_851),
+                (134_852, 134_860),
+                (134_864, 137_429),
+                (137_432, 137_440),
+                (137_444, 138_822),
+                (138_824, 138_832),
+                (138_836, 139_735),
+                (139_736, 139_744),
+                (139_748, 141_373),
+                (141_376, 141_384),
+                (141_388, 142_211),
+                (142_212, 149_056),
+                (149_060, 151_498),
+                (151_500, 151_508),
+                (151_512, 157_220),
+                (157_224, 162_717),
+                (162_720, 162_728),
+                (162_732, 163_231),
+                (221_196, 221_200),
+                (221_212, 224_016),
+                (224_020, 225_445),
+                (225_448, 225_456),
+                (225_460, 226_326),
+                (226_328, 226_336),
+                (226_340, 227_207),
+                (227_208, 227_216),
+                (227_220, 232_253),
+                (232_256, 232_264),
+                (232_268, 236_031),
+                (236_032, 236_040),
+                (236_044, 241_332),
+                (241_336, 252_701),
+                (252_704, 252_712),
+                (252_716, 263_173),
+                (263_176, 276_848),
+                (276_852, 282_746),
+                (282_748, 282_756),
+                (282_760, 283_625),
+                (283_628, 297_300),
+                (297_304, 298_150),
+            ],
+            "original US BPLD578 entry 7 additional root-1/root-2 fields; literal origins whose every decoded alias is in the unchanged primary root-0 image fields or these additional relative words, 16/14 image-directory words, image headers and consumed mode-1 words/mode-2 tokens; original family-1/index-17 request selects slot 492 and exact physical LBAs 51797..51965; successful unskipped entry-7 loading without flag-0x20 early completion, stable hint 17, original code, bank, count and nonaliased work/scratch, and ordinary returning helpers condition the original GAME phase-1/2/3 route; under separate conditional identifiers 7/8 at work index 0, count 1, route 0 and clear record masks 0x0080/0x4000, immutable row 050708 selects root ordinals 1/2, identifier-map bytes 0/1 select flags at 0x80144974/0x80144A18, and GAME 0x801C1400 calls 0x801C1254 to publish roots 0x8005680C/0x8007180C; original 0x801BF448 reselects the same work and call 0x801BF56C reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 0 and images 4/9 respectively; exact original archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates ultimate physical origins through initialized overlapping references and applies all-use AND to the primary-or-additional union; primary records retain their evidence; opaque aliases, other root-header words, palette/program/cell/selection fields, mode-2 prefixes and allocation tails excluded; no actual request, roster, invocation, transfer, residency, every-image selection, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
     (&[], "")
 }
 
