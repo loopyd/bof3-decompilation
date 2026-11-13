@@ -659,11 +659,64 @@ to that profile's reviewed field union.
 | `BPLU578` | 12 / 110604 / 221196 | 14 / 16 / 13 | 12 / 31 | 0 / 4 / 0 |
 | `BPLU678` | 12 / 110604 / 221196 | 15 / 16 / 13 | 15 / 29 | 5 / 4 / 0 |
 
-Other root-header words, palettes, programs, cells, selection fields, mode-2
-prefixes, allocation tails, raw entry 3 and gaps remain unresolved. Actual
+These image profiles leave other root-header words, palettes, programs, cells,
+selection fields, mode-2 prefixes, allocation tails, raw entry 3 and gaps
+unresolved. Actual
 requests, invocation, transfer, residency, every-image selection, argument and
 resource safety, upload, display, rasterized-text absence and safe editing
 remain unverified.
+
+## Compressed BPLU selected-program fields
+
+A separate profile covers selector 2 in each of the three roots of the
+seventeen archives above. It uses the same exact source identities and
+conditional family-2 loader, publisher and work-selection path. Original
+`0x8014DC08` selects the program. `0x8014D6DC` calls `0x8014D910` with
+pair-byte offset zero; `0x8014D910`, `0x8014DB98` and `0x8014D978` read the
+selected numeric fields.
+
+The fields are the root-relative program and selection words, selected
+image and program indices, program-relative halfword, pair-count byte, fetched
+duration/index pairs, jump operands and referenced following-table halfwords.
+The finite paths require repeated calls with unchanged code, bank, program
+and work fields, valid nonaliased memory and ordinary returns. These are
+conditional source paths, not observed invocations or frame cadence.
+
+All offsets below are decoded-bank byte offsets. Each row lists roots 0, 1
+and 2 in order. The fetched-pair count includes each distinct direct fetch
+once, including a control pair if a jump makes `0x8014DB98` fetch it directly.
+
+| Archive | Program offsets | Declared pair counts | Distinct fetched pairs |
+| --- | --- | --- | --- |
+| `BPLU012` | 37934 / 169302 / 310326 | 13 / 30 / 17 | 13 / 29 / 16 |
+| `BPLU015` | 37934 / 169302 / 305010 | 13 / 30 / 23 | 13 / 29 / 22 |
+| `BPLU016` | 37934 / 169302 / 266124 | 13 / 30 / 10 | 13 / 29 / 9 |
+| `BPLU025` | 37934 / 199734 / 341874 | 13 / 17 / 23 | 13 / 16 / 22 |
+| `BPLU026` | 37934 / 199734 / 302988 | 13 / 17 / 10 | 13 / 16 / 9 |
+| `BPLU034` | 40170 / 146496 / 289420 | 13 / 10 / 19 | 13 / 10 / 19 |
+| `BPLU056` | 37934 / 194418 / 266124 | 13 / 23 / 10 | 13 / 22 / 9 |
+| `BPLU247` | 89142 / 220980 / 308282 | 17 / 19 / 27 | 16 / 19 / 27 |
+| `BPLU257` | 89142 / 231282 / 308282 | 17 / 23 / 27 | 16 / 22 / 27 |
+| `BPLU267` | 89142 / 192396 / 308282 | 17 / 10 / 27 | 16 / 9 / 27 |
+| `BPLU278` | 89142 / 197690 / 346908 | 17 / 27 / 23 | 16 / 27 / 23 |
+| `BPLU457` | 73524 / 194418 / 271418 | 19 / 23 / 27 | 19 / 22 / 27 |
+| `BPLU467` | 73524 / 155532 / 271418 | 19 / 10 / 27 | 19 / 9 / 27 |
+| `BPLU478` | 73524 / 160826 / 310044 | 19 / 27 / 23 | 19 / 27 / 23 |
+| `BPLU567` | 83826 / 155532 / 271418 | 23 / 10 / 27 | 22 / 9 / 27 |
+| `BPLU578` | 83826 / 160826 / 310044 | 23 / 27 / 23 | 22 / 27 / 23 |
+| `BPLU678` | 44940 / 160826 / 310044 | 10 / 27 / 23 | 9 / 27 / 23 |
+
+The count is an equality-wrap threshold, not a general index bound.
+`BPLU034` root 1 has a final `80 09` pair that jumps to itself. The direct
+fetch then uses both bytes as a countdown and index. Other high-bit
+control bytes remain unresolved unless a direct fetch reads them.
+
+A physical literal qualifies only when every decoded alias has an image or
+selected-program role. Existing image records retain their boundaries and
+evidence. Selection mode bytes, program header byte zero, unselected programs and selectors,
+cell counts and part fields, palettes, tails and opaque aliases remain
+unresolved. Actual invocation, cadence, transfer, residency, resource safety,
+upload, display, rasterized-text absence and safe editing remain unverified.
 
 ## Area surface field coverage
 
