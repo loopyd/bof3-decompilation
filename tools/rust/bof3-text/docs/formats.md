@@ -597,6 +597,74 @@ Actual requests, invocation, transfer, residency, every-image selection, argumen
 and resource safety, upload, display, rasterized-text absence and safe editing
 remain unverified.
 
+## Other compressed BPLU image fields
+
+Coverage recognizes the following original US `BIN/BPLCHAR/` entry-7
+profiles under the whole-archive identity gate, transfer mode 1 and destination
+`0x8003B800`. Each profile also requires the file offset, packed size,
+decoded size and checkword, and payload SHA-256 below.
+
+| Archive | Request index / slot | Physical LBAs | File offset | Packed bytes | Decoded bytes / checkword | Payload SHA-256 |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| `BPLU012` | 0 / 494 | [52114,52263) | 98304 | 164994 | 368652 | `e2a34bb38b0a2f4640b12edcf99abfbdfbfe94899e16dbedcf4f19654bb46dc2` |
+| `BPLU015` | 1 / 495 | [52263,52414) | 98304 | 171761 | 331788 | `6b07b7680c06ab63614b5d824df4482b293d7f19ed7af15dfa9506c25c151202` |
+| `BPLU016` | 2 / 496 | [52414,52543) | 98304 | 124778 | 331788 | `09a3ac9e9463bbd28d007c0fa1e12d6349b3ad21f81c40726887b1e1df6a918f` |
+| `BPLU025` | 3 / 497 | [52543,52705) | 98304 | 192570 | 368652 | `8a3d4406db576778f6c28da82cc74da24d043a0a9814eba7573f09bb3572b716` |
+| `BPLU026` | 4 / 498 | [52705,52845) | 98304 | 145584 | 368652 | `3a3756665db495864c14e4d3ed169a56e599f0da6562da57a439ad28a5ea30ec` |
+| `BPLU034` | 5 / 499 | [52845,52977) | 98304 | 134569 | 331788 | `2b9702dd8b5a617ac209ac4463a7c2f352fc190487ce826f970a36f0012d3f66` |
+| `BPLU056` | 6 / 500 | [52977,53119) | 96256 | 152690 | 331788 | `dca408e86ea40dbb6cb9b411fd82d4ebf59ae7dff4438e69f111d6de17145d4c` |
+| `BPLU247` | 7 / 501 | [53119,53282) | 96256 | 196697 | 368652 | `e346011032cbdeb18efbe5519dfed41ee48379d9f122aa021b757bdefd45edd6` |
+| `BPLU257` | 8 / 502 | [53282,53451) | 98304 | 208309 | 368652 | `04c55b4f45a62a7cbb50e400e643553f8d3e76cef8929bec6853877ca1758d65` |
+| `BPLU267` | 9 / 503 | [53451,53598) | 100352 | 161332 | 368652 | `49b75da89fb00ed33e435221f0a44ed40a065e405d3b267f1c5068432bc97af2` |
+| `BPLU278` | 10 / 504 | [53598,53763) | 98304 | 203533 | 368652 | `e89f0b3b8ed58b12352cba5516071aaa14dcd825a604a234b7adf2ed8b824fd6` |
+| `BPLU457` | 13 / 507 | [54056,54221) | 94208 | 203819 | 331788 | `53db0e87ff007d5f285f369e8fe831c69ade60fb52fae4f324ac0bf30256ad3c` |
+| `BPLU467` | 14 / 508 | [54221,54364) | 96256 | 156785 | 331788 | `3dc9d693b853e79393b206dddd5215c8bb94ff88cfe9805d1afa0543cfdf6ddd` |
+| `BPLU478` | 15 / 509 | [54364,54525) | 94208 | 198974 | 331788 | `dd9c4770ba3eab3f49cabedeeb8b8939876b9e0cdf403edf0ccd59ca0d3d3428` |
+| `BPLU567` | 16 / 510 | [54525,54675) | 98304 | 168385 | 331788 | `6b299fd8cea814cf90575f7b0f803a9b300f8cc6cf0b1d2c10b10555cb20f063` |
+| `BPLU578` | 17 / 511 | [54675,54842) | 96256 | 210574 | 331788 | `0eaa04778217afe8fe7793e4666a48bbd8ecf5f92cf9324d25c6aca5c3edcbfc` |
+| `BPLU678` | 18 / 512 | [54842,54987) | 98304 | 163590 | 331788 | `5d47579d411fd999b25bf7627e0a246e84653f8450e955b57ab75c7bee013a75` |
+
+These profiles use the conditional GAME phase-1/2/3 path described for
+BPLU27A, with each archive's own plain request hint and identifier triplet.
+The exact flag byte remains 2 through request and image selection, choosing
+selector 2. Successful unskipped complete loading, count 1, work index 0,
+clear record masks `0x0080/0x4000`, stable original code and bank, nonaliased
+work and scratch, and ordinary helper returns remain required.
+The three identifier bytes in each archive name give the separate conditional
+identifiers for root ordinals 0, 1 and 2.
+
+Root offsets, directory counts and selected images below follow ordinal order.
+Each profile qualifies its root-array words, each root's image-directory
+relative word, the finite directory words, image headers and consumed image
+encodings. Physical literals qualify only when every decoded alias belongs
+to that profile's reviewed field union.
+
+| Archive | Decoded roots | Directory words | Mode-1 / mode-2 images | Selected images |
+| --- | --- | --- | --- | --- |
+| `BPLU012` | 12 / 110604 / 221196 | 15 / 14 / 14 | 15 / 28 | 0 / 0 / 1 |
+| `BPLU015` | 12 / 110604 / 221196 | 15 / 14 / 14 | 11 / 32 | 0 / 0 / 0 |
+| `BPLU016` | 12 / 110604 / 221196 | 15 / 14 / 15 | 14 / 30 | 0 / 0 / 5 |
+| `BPLU025` | 12 / 110604 / 258060 | 15 / 14 / 14 | 13 / 30 | 0 / 1 / 0 |
+| `BPLU026` | 12 / 110604 / 258060 | 15 / 14 / 15 | 16 / 28 | 0 / 1 / 5 |
+| `BPLU034` | 12 / 110604 / 221196 | 15 / 12 / 12 | 11 / 28 | 0 / 0 / 1 |
+| `BPLU056` | 12 / 110604 / 221196 | 15 / 14 / 15 | 12 / 32 | 0 / 0 / 5 |
+| `BPLU247` | 12 / 147468 / 258060 | 14 / 13 / 16 | 12 / 31 | 1 / 1 / 4 |
+| `BPLU257` | 12 / 147468 / 258060 | 14 / 14 / 16 | 11 / 33 | 1 / 0 / 4 |
+| `BPLU267` | 12 / 147468 / 258060 | 14 / 15 / 16 | 14 / 31 | 1 / 5 / 4 |
+| `BPLU278` | 12 / 147468 / 258060 | 14 / 16 / 13 | 16 / 27 | 1 / 4 / 0 |
+| `BPLU457` | 12 / 110604 / 221196 | 13 / 14 / 16 | 8 / 35 | 1 / 0 / 4 |
+| `BPLU467` | 12 / 110604 / 221196 | 13 / 15 / 16 | 11 / 33 | 1 / 5 / 4 |
+| `BPLU478` | 12 / 110604 / 221196 | 13 / 16 / 13 | 13 / 29 | 1 / 4 / 0 |
+| `BPLU567` | 12 / 110604 / 221196 | 14 / 15 / 16 | 10 / 35 | 0 / 5 / 4 |
+| `BPLU578` | 12 / 110604 / 221196 | 14 / 16 / 13 | 12 / 31 | 0 / 4 / 0 |
+| `BPLU678` | 12 / 110604 / 221196 | 15 / 16 / 13 | 15 / 29 | 5 / 4 / 0 |
+
+Other root-header words, palettes, programs, cells, selection fields, mode-2
+prefixes, allocation tails, raw entry 3 and gaps remain unresolved. Actual
+requests, invocation, transfer, residency, every-image selection, argument and
+resource safety, upload, display, rasterized-text absence and safe editing
+remain unverified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
