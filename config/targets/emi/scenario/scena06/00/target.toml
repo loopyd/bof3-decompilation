@@ -58,6 +58,7 @@ support_sources = [
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState17ScenarioScena0600_801FC718.c",
     "src/bof3/scenario/waitFlag27ElseMainRamFlags5Or6ElseFlag2CThenClearProgressAndSharedStateBytesAndRequestPrimaryState0FSubstate1EOr5ScenarioScena0600_801FDEA4.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760.c",
+    "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState11ScenarioScena0600_801FA8EC.c",
 ]
 psyq_source = "src/bof3/support/scena06_00_psyq.c"
 
@@ -90,3 +91,9 @@ function = 0x801FA760
 section = ".rodata"
 address = 0x801F7024
 size = 0x1C
+
+[[matching.section_placements]]
+function = 0x801FA8EC
+section = ".rodata"
+address = 0x801F7044
+size = 0x28

@@ -154,8 +154,34 @@ segments:
       releases the overlay, clears bytes 0x80146865 to 0x80146867 and clears the
       secondary and primary state bytes.'
   - - 15596
-    - asm
-    - func_801FA8EC
+    - c
+    - runSecondaryStateSequenceForPrimaryState11ScenarioScena0600_801FA8EC
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState11ScenarioScena0600_801FA8EC.c'
+    - '@behavior: Word 11 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a ten-entry case
+      table, and every value of that byte above 9 falls to the epilogue, as do
+      the unclaimed states 2, 3 and 4: state 0 arms secondary state 1, then
+      tests scenario flag 0x27 of the shared flag word D_8014686C with
+      func_8015B5D4 and queues front-end action 0x0A or 8 through func_80150224
+      before latching the front-end phase byte D_80143BB0 to 2; state 1, unless
+      that phase byte already reads 2, releases the overlay with func_8015C058
+      and clears the progress byte g_ScenarioProgress, the bytes
+      0x80146865..0x80146867 and the secondary and primary state bytes; state 5
+      tests flag 0x27 and then flag 0x25 and, when either is set, queues action
+      0x0A or 8, latches the phase byte to 2 and arms secondary state 1, while
+      with both flags clear it queues action 9 and advances to secondary state
+      6; state 6, unless the phase byte reads 2, moves to secondary state 7 at
+      progress 1 and otherwise releases the overlay and clears the progress byte
+      and the shared bytes; state 7 runs the shared GAME.EMI helper
+      func_801BE1B0 with mode 0 and advances to secondary state 8; state 8
+      advances to secondary state 9 at progress 2; state 9, at progress 3, sets
+      flag bit 0x25 of D_8014686C through func_8015B580, releases the overlay
+      and clears the shared bytes. The 0x18-byte frame keeps $ra and $s0 across
+      the calls, the state-byte load and its bound test are hoisted above the
+      frame setup, and the ten-word case table sits in the overlay rodata slot
+      at 0x801F7044.'
   - - 16136
     - asm
     - func_801FAB08
