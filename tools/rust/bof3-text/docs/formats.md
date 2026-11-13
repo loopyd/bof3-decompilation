@@ -944,6 +944,7 @@ and physical offsets may differ between archives.
 | `[0x17CD0,0x17D74)` | `[0x800AE4D0,0x800AE574)` | 164 |
 | `[0x17EC8,0x17F28)` | `[0x800AE6C8,0x800AE728)` | 96 |
 | `[0x17F88,0x1802C)` | `[0x800AE788,0x800AE82C)` | 164 |
+| `[0x181C4,0x1855C)` | `[0x800AE9C4,0x800AED5C)` | 920 |
 | `[0x18E6C,0x18EB8)` | `[0x800AF66C,0x800AF6B8)` | 76 |
 | `[0x18F20,0x18F64)` | `[0x800AF720,0x800AF764)` | 68 |
 | `[0x19454,0x19498)` | `[0x800AFC54,0x800AFC98)` | 68 |
@@ -1084,6 +1085,16 @@ Targets, selectors, table contents and bounds at the two indirect-call sites
 remain unqualified. Prior refused bodies, missing artifacts, gaps and referenced
 data retain their classifications. No execution, feasible-path, argument,
 work-record, resource-safety or editable-allocation claim follows.
+
+The body at `0x800AE9C4..0x800AED5C` contains 230 instruction words.
+Complete original ASM, word and control-flow reviews reconcile with captured
+resident bytes, including all fifteen control-transfer delay slots. Qualified
+original callers conditionally enter it at JAL sites `0x800AE55C` and `0x800AE814`.
+Call continuations assume ordinary returns, preserved saved values, intact caller
+frames and nonaliasing dynamic stores. Its indexed table, pointer validity and
+callee behavior remain unqualified. Referenced data and neighboring bodies remain
+excluded. No ELF match, observed execution, valid selector or safe-editing claim
+follows.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident
