@@ -1,5 +1,23 @@
 #include "bof3/ui/shop00_internal.h"
 
+
+/* Representation notes for the two sites that needed a probe before the first
+ * exact measurement. The column-origin local is declared once per pad arm: one
+ * shared `column` scored 194/201 instructions with the left arm's origin load
+ * landing in a0 instead of the original's v1, and the per-arm locals scored
+ * 201/201. The forward arm's new row is spelled through a one-use s32
+ * intermediate, because the flat `(start + 8) - column` was reassociated into
+ * `start - (column - 8)` and scored 199/201, while `start - column + 8` also
+ * scored 199/201 with the same first difference.
+ */
+/* Shop state byte cleared on every call to this handler. No other source of
+ * this target reads it and its role is not recovered, so it stays
+ * address-anchored; the generated undefined-symbol list carries the address,
+ * so no target-map row is added.
+ * @source 0x8014845A @kind unknown */
+extern u8 D_8014845A;
+extern void func_801E2724(void); /* @source 0x801E2724 */
+
 /* @source 0x801E2150
  * @behavior shop sub-step handler reached as entry 0 of the three-entry
  *           sub-step table D_801E5D50 (the shipped word at 0x801E5D50 is this
@@ -39,23 +57,6 @@
  * @match 100.00
  * @residual none
  */
-/* Representation notes for the two sites that needed a probe before the first
- * exact measurement. The column-origin local is declared once per pad arm: one
- * shared `column` scored 194/201 instructions with the left arm's origin load
- * landing in a0 instead of the original's v1, and the per-arm locals scored
- * 201/201. The forward arm's new row is spelled through a one-use s32
- * intermediate, because the flat `(start + 8) - column` was reassociated into
- * `start - (column - 8)` and scored 199/201, while `start - column + 8` also
- * scored 199/201 with the same first difference.
- */
-/* Shop state byte cleared on every call to this handler. No other source of
- * this target reads it and its role is not recovered, so it stays
- * address-anchored; the generated undefined-symbol list carries the address,
- * so no target-map row is added.
- * @source 0x8014845A @kind unknown */
-extern u8 D_8014845A;
-extern void func_801E2724(void); /* @source 0x801E2724 */
-
 void stepShopListItemCursorThenOpenRecordOrAdvanceUiPhase(void) {
   s32 direction;
   u8  start;
