@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = [
     "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena0900_801F8504.c",
+    "src/bof3/scenario/runPrimaryState9SubstateSequenceScenarioScena0900_801FA8B8.c",
     "src/bof3/scenario/waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsThenClearStateScenarioScena0900_801FBD6C.c",
 ]
 support_sources = [
@@ -94,6 +95,12 @@ function = 0x801F8504
 section = ".rodata"
 address = 0x801F6C64
 size = 0x30
+
+[[matching.section_placements]]
+function = 0x801FA8B8
+section = ".rodata"
+address = 0x801F6FAC
+size = 0x80
 
 [[matching.section_placements]]
 function = 0x801FAC88

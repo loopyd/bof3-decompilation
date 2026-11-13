@@ -24,7 +24,7 @@ armProgress1UnlessMode2ThenWaitProgress9SetFlag3FOrProgress2AndClearStateScenari
 func_801F9498 = 0x801F9498;
 armProgress0UnlessMode2ThenSetFlagBit13OrSeedFrontSelectorContext76AndClearStateScenarioScena0900_801FA08C = 0x801FA08C;
 func_801FA1F0 = 0x801FA1F0;
-func_801FA8B8 = 0x801FA8B8;
+runPrimaryState9SubstateSequenceScenarioScena0900_801FA8B8 = 0x801FA8B8;
 waitProgress15ThenSeedFrontSelectorContextsAndResetStateScenarioScena0900_801FAC88 = 0x801FAC88;
 func_801FAE0C = 0x801FAE0C;
 waitProgress3ThenSetFlagBit24AndRequestPrimaryState0ScenarioScena0900_801FBC78 = 0x801FBC78;

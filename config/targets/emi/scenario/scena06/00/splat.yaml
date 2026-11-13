@@ -45,8 +45,30 @@ segments:
     - c
     - noopHandlerScenarioScena0600_801F7A3C
   - - 3652
-    - asm
-    - func_801F7A44
+    - c
+    - runSecondaryStateSequenceForPrimaryState1ScenarioScena0600_801F7A44
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState1ScenarioScena0600_801F7A44.c'
+    - '@behavior: Word 1 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through an eleven-entry case
+      table, and every value of that byte above 0x0A falls to the epilogue:
+      state 0 arms progress 1 and secondary state 1 unless the front-end phase
+      byte D_80143BB0 reads 2; state 1, at progress 8, arms secondary state 2
+      and hands the flag word D_8014686C to func_8015B580 mode 0x3E before
+      running func_8019FA28 with 0x27, 0x1E0000, 0x270000 and 0x82; state 2
+      runs func_801C601C mode 1, releases the overlay with mode 3 and arms
+      secondary state 3; state 3, at progress 0x11, clears the progress byte,
+      arms secondary state 4, seeds the countdown halfword D_80146876 with
+      0xB4, clears D_8014832E and runs func_8019FA28 with 0x27, 0x598000,
+      0x100000 and 0x82; state 4 decrements that countdown on every call and,
+      once the value it read was 0, runs func_8014ECAC mode 5, writes 0x1F into
+      D_8014832E and arms secondary state 7; state 7, while D_80143C40 reads 0,
+      arms progress 1 and secondary state 0x0A; state 0x0A, at progress 2 with
+      D_80149332 clear, hands the flag word to func_8015B5A8 mode 0x3E, releases
+      the overlay with mode 3, runs func_8015C058 and clears the progress byte
+      and both state bytes. States 5, 6, 8 and 9 have no body. The eleven-entry
+      case table sits in the overlay rodata slot at 0x801F6C3C.'
   - - 4204
     - c
     - runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C

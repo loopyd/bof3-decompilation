@@ -139,8 +139,28 @@ segments:
     - c
     - noopHandlerScenarioScena0200_801FB0E8
   - - 17648
-    - asm
-    - func_801FB0F0
+    - c
+    - runSubstateSequenceQueueCueArmEffectBankSeedProgressAndReleaseScenarioScena0200_801FB0F0
+    - '@source: src/bof3/scenario/runSubstateSequenceQueueCueArmEffectBankSeedProgressAndReleaseScenarioScena0200_801FB0F0.c'
+    - '@behavior: Slot 24 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872. It walks the shared sub-state byte
+      D_80146875 through the eight-slot jump table at 0x801F6FD4: slot 0 arms
+      the effect bank D_8014832E with 0x1F, queues the front-end cue
+      func_80161C20(0xF, 0x64, 8), runs func_801C601C with 0 and advances the
+      sub-state byte to 1; slot 1, once D_80149332 reads zero and the progress
+      byte reads 3, runs func_801C16B8, flips mode bit 0x8 of D_80146258, sets
+      flag bit 0x1F of D_8014686C through func_8015B580, clears the progress
+      byte and D_80146865 and D_80146867, raises mode bit 0x80, releases the
+      overlay through func_8015C058 and returns to sub-state 0 and primary
+      state 0; slot 5, once the progress byte reads 1, sets front-end mode 5
+      through func_8014ECAC, arms the effect bank with 0x1F and advances to 6;
+      slot 6, while the gate word D_80143C40 is clear, stores 2 in the progress
+      byte and advances to 7; slot 7, once the progress byte reads 0xF, sets
+      flag bit 0x20 through func_8015B580, clears the progress byte and the
+      shared bytes 0x80146865 through 0x80146867, flips mode bit 0x80, releases
+      the overlay, returns to sub-state 0 and primary state 0 and runs the
+      shared helper func_801A78F8. Slots 2, 3 and 4 fall to the epilogue.'
   - - 18168
     - c
     - noopHandlerScenarioScena0200_801FB2F8

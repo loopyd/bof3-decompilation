@@ -8,6 +8,7 @@ splat = "config/targets/emi/scenario/scena06/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
+    "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState1ScenarioScena0600_801F7A44.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState5ScenarioScena0600_801F8F18.c",
 ]
@@ -59,6 +60,12 @@ support_sources = [
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760.c",
 ]
 psyq_source = "src/bof3/support/scena06_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F7A44
+section = ".rodata"
+address = 0x801F6C3C
+size = 0x2C
 
 [[matching.section_placements]]
 function = 0x801F7C6C

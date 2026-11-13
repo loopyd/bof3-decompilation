@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_800C1804
   - - 148
-    - asm
-    - func_800C1894
+    - c
+    - publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894.c'
+    - '@behavior: Entry setup of this overlay work state machine, entry 0 of the 0x800C319C state run. Publishes the data row pointer 0x800C3174 into work record +0xEC, the indexed dispatcher 0x800C1A68 into +0xE4 and the in-row pointer 0x800C318C into +0xE8, stores 2 into the work record state byte at +1 and calls the shared helper 0x8014D978; when the battle mode byte 0x801462EA holds 0x1A it also applies the class template of the class record keyed 0x59 to battler 0, stores 1 at work byte +0x7F and 0x1E at +0xF0, and copies the shared halfword run 0x80144E00, 0x80144E04 and 0x80144E06 into the record +0x94 and the +0xA0/+0xC0 runs.'
   - - 380
     - asm
     - func_800C197C

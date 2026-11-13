@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-void func_801F8C04(s32 x, s32 y, s16 radius, u8 center, u8 edge);
+void drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04(
+    s16 x, s16 y, s16 radius, u8 center, u8 edge);
 
 /* @source 0x801F8710
  * @behavior Calls local drawing helper 0x801F8C04 with signed work
@@ -19,8 +20,9 @@ void drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710(void) {
   u8 *test_work;
 
   draw_work = D_1F800044;
-  func_801F8C04(FIELD_REF(s16, draw_work, 0x2E),
-                FIELD_REF(s16, draw_work, 0x30), draw_work[9], 0x80, 0);
+  drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04(
+      FIELD_REF(s16, draw_work, 0x2E),
+      FIELD_REF(s16, draw_work, 0x30), draw_work[9], 0x80, 0);
   D_1F800044[9] += 15;
   test_work = D_1F800044;
   if (test_work[9] > 60) {

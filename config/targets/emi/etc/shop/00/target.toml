@@ -178,6 +178,7 @@ sources = [
     "src/bof3/ui/drawShopSavePanelThenCreateSaveSlotOnMemoryCard.c",
     "src/bof3/ui/drawShopPriceListPanel.c",
     "src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c",
+    "src/bof3/ui/drawShopParameterPanel.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
@@ -205,3 +206,9 @@ function = 0x801D5E88
 section = ".rodata"
 address = 0x801D0C7C
 size = 0x18
+
+[[matching.section_placements]]
+function = 0x801DB9F0
+section = ".rodata"
+address = 0x801D0DEC
+size = 0x34

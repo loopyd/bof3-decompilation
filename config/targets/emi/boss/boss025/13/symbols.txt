@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 D_800C1804 = 0x800C1804;
-func_800C1894 = 0x800C1894;
+publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894 = 0x800C1894;
 func_800C197C = 0x800C197C;
 func_800C19C0 = 0x800C19C0;
 dispatchIndexedHandlerBossBoss02513_800C1A68 = 0x800C1A68;
@@ -43,6 +43,9 @@ dispatchStateByte1Table32a0BossBoss02513_800C2FF4 = 0x800C2FF4;
 advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038 = 0x800C3038;
 func_800C3088 = 0x800C3088;
 D_800C3174 = 0x800C3174;
+sharedFieldHalfword_80144E00 = 0x80144E00;
+sharedFieldHalfword_80144E04 = 0x80144E04;
+sharedFieldHalfword_80144E06 = 0x80144E06;
 D_801462E8 = 0x801462E8;
 D_801462ED = 0x801462ED;
 D_80146375 = 0x80146375;

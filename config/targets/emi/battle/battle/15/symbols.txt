@@ -215,6 +215,7 @@ initMenuState13 = 0x800A602C;
 func_800A60A8 = 0x800A60A8;
 func_800A6488 = 0x800A6488;
 func_800A6870 = 0x800A6870;
+resolveDragonFormThenInstallRowAndRefresh = 0x800A68A4;
 resolveDragonFormFromGenes = 0x800A6C2C;
 func_800A6CF8 = 0x800A6CF8;
 func_800A6D84 = 0x800A6D84;

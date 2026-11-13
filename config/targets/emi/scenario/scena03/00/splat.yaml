@@ -202,8 +202,10 @@ segments:
     - asm
     - func_801F88FC
   - - 8196
-    - asm
-    - func_801F8C04
+    - c
+    - drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04
+    - '@source: src/bof3/scenario/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04.c'
+    - '@behavior: Emits 32 semi-transparent Gouraud triangles as one closed radial fan around the caller screen pair, arming the emitter with GetTPage(0, 1, 0x3C0, 0) and SetDrawMode, stamping each 0x1C-byte POLY_G3 with func_8017A97C and SetSemiTrans and linking it under OT slot 1, with the center vertex in the fourth argument colour and the two radius samples, 0x80 apart over a 0x1000 turn, in the fifth.'
   - - 8616
     - c
     - dispatchScenarioStateHandlerScenarioScena0300_801F8DA8

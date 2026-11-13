@@ -413,8 +413,10 @@ segments:
     - asm
     - func_801FBCA4
   - - 22044
-    - asm
-    - func_801FC21C
+    - c
+    - waitCountdownSeedFrontSelectorContextRunFrontEndCuePublishRecordWordsThenResetHandlerScenarioScena0800_801FC21C
+    - '@source: src/bof3/scenario/waitCountdownSeedFrontSelectorContextRunFrontEndCuePublishRecordWordsThenResetHandlerScenarioScena0800_801FC21C.c'
+    - '@behavior: Entry 7 of the overlay progress-handler table at D_801FE970 that dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with the signed byte D_80146874: it drives the shared sub-state byte D_80146875 through the sixteen-entry absolute jump table jtbl_801F6CE4_main at 0x801F6CE4, waiting out the shared halfword countdown D_80146876, seeding front selector context 0 through func_8019FA28(0, 0x5C0000, 0x498000, 0x86), stopping and finishing the shared front-end cue through func_80161D20 and func_80161D74 on the shared selection index byte D_80145029, arming the effect bank byte D_8014832E to 0x1F, and finally publishing byte 6 and words 0x18 and 0x1C of the record reached through the pointer cell D_80148208 before releasing the overlay back to handler 0 by clearing D_80146874 and the sub-state byte; sub-states 2 through 9 return without touching the tail.'
   - - 22620
     - asm
     - func_801FC45C

@@ -491,8 +491,10 @@ segments:
     - '@source: src/bof3/ui/func_801DB938_shop00.c'
     - '@behavior: shop panel emitter: submits the shaded panel rectangle through func_801AE3F0 with the task''s x and field-6 halfwords, the fixed 0x8B by 0x9F size, the low byte of arg1 offset by 0xF0 and the main-RAM CLUT-bank byte D_80144952 as the trailing stack argument, then draws the same task twice, once through the equipment-slot block drawEquipSlotRowsShop00_801D95F4 and once through the still-unlifted shop row emitter func_801D9254, with the leading byte of the 0x140-byte-stride record D_80145FCC selected by task byte 0xC and the low byte of arg1.'
   - - 44528
-    - asm
-    - func_801DB9F0
+    - c
+    - drawShopParameterPanel
+    - '@source: src/bof3/ui/drawShopParameterPanel.c'
+    - '@behavior: shop parameter panel of the field record: the mode byte selects one of four groups from a 13-slot run (0, 6, 7, 8, 9, 12 and every larger value to group 0, 1 to group 1, 2 to 4 to group 2 and 5, 10, 11 to group 3), the main-exe group query func_80165EC0 answers for that group and the second task byte, and the inverted bit the record index selects becomes the panel flag. The body fills the 0x6C by 0x30 shaded rectangle at (x+3, y+3) through func_801AE3F0 with the CLUT-bank byte D_80144952, then draws three value rows at (x+0x2C, y + 15*i + 8): with the flag clear they are the main-exe preview builder func_80164D2C values for the record index, the mode byte minus one and the second task byte, formatted with the "%3d" string D_801D0CE4 into D_80145AD4 and drawn with that row own shade byte, while with the flag set they are the record halfwords at +0x20, +0x22 and +0x24 drawn with the shade 7. It then draws the record id byte through the shop icon wrapper func_801D910C at (x+0x46, y+2), submits the three caption cells of D_801E5A10 at (x+5, y + 15*i + 6) through func_8014F800 with the mask 0xFF and closes with the stream D_801E56DC at (x, y) through func_801AF390 with the flag 0. The 0x58-byte frame keeps the saved registers and $ra, and nothing is returned.'
   - - 45348
     - c
     - drawBackgroundTilesFromKindShop00_801DBD24
@@ -822,7 +824,7 @@ segments:
     - c
     - func_801E2C18
     - '@source: src/bof3/ui/func_801E2C18_shop00.c'
-    - '@behavior: panel state dispatcher sibling of func_801E2DB4: calls the handler D_801E5DDC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same task root''s x and field-6 halfwords, the byte D_80181B10[D_80144F5A[task byte 0xA]], task byte 0xB and task byte 0xC to the shop field-record draw helper func_801DB9F0.'
+    - '@behavior: panel state dispatcher sibling of func_801E2DB4: calls the handler D_801E5DDC[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then forwards the same task root''s x and field-6 halfwords, the byte D_80181B10[D_80144F5A[task byte 0xA]], task byte 0xB and task byte 0xC to the shop parameter panel drawShopParameterPanel.'
   - - 73884
     - c
     - retreatPanelXToNeg150

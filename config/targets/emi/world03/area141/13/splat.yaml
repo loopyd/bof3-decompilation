@@ -104,8 +104,10 @@ segments:
     - asm
     - func_801F4400
   - - 6408
-    - asm
-    - func_801F4508
+    - c
+    - claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508
+    - '@source: src/bof3/world/claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508.c'
+    - '@behavior: Claims one shared 0x98-byte work record and activates it: asks the shared allocator 0x8015CA48 for a free record identifier, returns when the masked identifier is 0xFF, otherwise sets the flag byte of the 0x80146888 record it indexes, publishes the identifier as the halfword at 0x1F800000, hands the payload activation entry 0x801F4DFC to the shared activator 0x801A65A0 and requests resource 3 with mode 0 through 0x8014D6DC. No jal in the payload and no word of it names this address, so it takes no arguments and returns nothing; the 0x18-byte frame holds only ra at 0x10.'
   - - 6532
     - asm
     - func_801F4584

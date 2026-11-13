@@ -136,8 +136,10 @@ segments:
     - asm
     - func_801F9570
   - - 11844
-    - asm
-    - func_801F9A44
+    - c
+    - runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44
+    - '@source: src/bof3/scenario/runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44.c'
+    - '@behavior: Primary state 5 handler of this overlay, entry 5 of the nine-entry primary-state handler run at 0x801FBF54 that dispatchPrimaryStateHandlerScenarioScena1300_801F8474 selects with the shared byte D_80146874 and calls with no arguments. It reads the shared sub-state byte D_80146875, bounds it against 0x11 with sltiu and dispatches through the seventeen-word table at 0x801F6D34 in this payload leading table data, whose entries for 4, 7, 8 and 9 point at the body exit. Sub-state 0 cues the front end, arms sprite ids 0x208 and 0x207 and advances to 1; sub-state 1 publishes the shared record angle D_80147B5C masked with 0xFFF through the overlay own setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70 and advances to 2; sub-state 2 publishes that masked angle as the scratchpad halfword 0x1F800000 and, while the held-pad word D_80145AA4 carries bit 0x2000 or 0x8000, adds or subtracts 0x10 in the whole word, stores it back and republishes it, then advances to 3 while the pressed-pad word D_80145AA8 carries bit 0x40; sub-state 3 publishes the masked angle and advances to 0x0A while it lies in 0x4A0 to 0x4E0 and otherwise to 5. Sub-states 5 and 0x0A re-arm sprite ids 0x20A and 0x209, cue the front end and seed the 16-bit countdown D_80146876 with 0x30 and 0x1E. Sub-state 6, 0x0B, 0x0D walk that countdown through its own address. Sub-state 0x0C, once the progress byte g_ScenarioProgress reads 1, claims the front-end record func_8019601C indexes, scaling 0x74 and storing 1 in D_80143FC8, 0x7F in D_80143FCD and 0x98000, 0x68000 and 0xF000000 in D_80143FFC, D_80144000 and D_80144004, then seeds the countdown with 0x28. Sub-state 0x0E runs func_801636A0(5, 1) and queues action 5 once progress reads 4, sub-state 0x0F advances to 0x10 and increments progress, and sub-state 0x10 releases the overlay, sets bit 0x10 of D_8014686C and clears the primary and sub-state bytes. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 12912
     - c
     - setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70

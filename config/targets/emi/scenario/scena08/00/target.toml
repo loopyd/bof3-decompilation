@@ -21,6 +21,7 @@ sources = [
     "src/bof3/scenario/drawTranslucentGouraudRingOfSixteenQuadsAroundScreenCenterFadingFromBlackToWhiteScenarioScena0800_801F9688.c",
     "src/bof3/scenario/drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C.c",
     "src/bof3/scenario/waitForProgressOrRecordFlagThenSetFlagBit5Or6QueueMode24AndSeedFrontSelectorContextScenarioScena0800_801FB8A0.c",
+    "src/bof3/scenario/waitCountdownSeedFrontSelectorContextRunFrontEndCuePublishRecordWordsThenResetHandlerScenarioScena0800_801FC21C.c",
 ]
 support_sources = [
     "src/bof3/scenario/seedAngleTableWithRandomWalkArmCountdown5AQueueCue208AndAdvanceStateScenarioScena0800_801F70C0.c",
@@ -124,3 +125,14 @@ function = 0x801FD1A4
 section = ".rodata"
 address = 0x801F6D94
 size = 0x20
+
+
+# The sixteen-value sub-state switch of the entry-7 progress handler at
+# 0x801FC21C dispatches through the sixteen-word table the overlay keeps at
+# 0x801F6CE4 in the same leading table data; this row gives the comparator that
+# table's payload address and size.
+[[matching.section_placements]]
+function = 0x801FC21C
+section = ".rodata"
+address = 0x801F6CE4
+size = 0x40

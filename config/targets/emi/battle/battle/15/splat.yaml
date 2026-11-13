@@ -1116,8 +1116,10 @@ segments:
     - c
     - func_800A6870
   - - 65700
-    - asm
-    - func_800A68A4
+    - c
+    - resolveDragonFormThenInstallRowAndRefresh
+    - '@source: src/bof3/battle/resolveDragonFormThenInstallRowAndRefresh.c'
+    - '@behavior: Resets the acting battler''s party record state - the eight state bytes at +0x08 of its 0x140-stride row above 0x80145FBC zeroed, bits 0x8000 and 0x10000 cleared in the word at 0x80145FB4 and bits 0x100, 0x200, 0x800, 0x1000, 0x2000, 0x4000 and 0x40000 cleared in the word at 0x80145FB8 - then refreshes through func_800A9BD8, clears the form bytes 0x800B6F58 and 0x800B6F5C and raises bit 0x2 of the flag word. Resolves the dragon form from the gene tables: the 0xFF result runs func_800A6E14 with 0xFF, otherwise func_800A7C14 runs with the form and the form code (form + 4) is stored at 0x800B6F58, where code 8 raises flag 0x10000 and codes 7 and 4 raise flag 0x20000. Every path shifts the four-byte rows 1 through 5 of the table at 0x80145500 down from the row above, refills row 0''s bytes 0 through 2 from the active byte list 0x801463C4 up to its count 0x801463C7 and pads the rest with 0xFF, stores the packed byte (group << 5) + (code & 0x1F) in row 0''s byte 3, publishes the code at 0x801463C9 and the group at 0x801463B9, and refreshes again through func_800A9BD8.'
   - - 66604
     - c
     - resolveDragonFormFromGenes

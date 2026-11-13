@@ -1,7 +1,8 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_1F800044;
-void func_801F8C04(s32 x, s32 y, s16 radius, u8 center, u8 edge);
+void drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04(
+    s16 x, s16 y, s16 radius, u8 center, u8 edge);
 void func_8015DF18(u16 arg0);
 
 /* @source 0x801F87A4
@@ -25,9 +26,10 @@ void drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena03
   u8 countdown;
 
   draw_work = D_1F800044;
-  func_801F8C04(FIELD_REF(s16, draw_work, 0x2E),
-                FIELD_REF(s16, draw_work, 0x30),
-                (draw_work[9] & 1) | 0x3C, 0x80, 0);
+  drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04(
+      FIELD_REF(s16, draw_work, 0x2E),
+      FIELD_REF(s16, draw_work, 0x30),
+      (draw_work[9] & 1) | 0x3C, 0x80, 0);
   if (D_1F800044[9] == 0xD7) {
     func_8015DF18(0x208);
   }

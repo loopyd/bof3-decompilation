@@ -42,7 +42,7 @@ drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_80
 drawAndTickWorkByte9ScenarioScena0300_801F885C = 0x801F885C;
 invokeHelperScenarioScena0300_801F88DC = 0x801F88DC;
 func_801F88FC = 0x801F88FC;
-func_801F8C04 = 0x801F8C04;
+drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04 = 0x801F8C04;
 dispatchScenarioStateHandlerScenarioScena0300_801F8DA8 = 0x801F8DA8;
 advanceStateAndClearSharedByteScenarioScena0300_801F8DE4 = 0x801F8DE4;
 func_801F8E00 = 0x801F8E00;

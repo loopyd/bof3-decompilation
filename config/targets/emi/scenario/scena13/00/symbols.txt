@@ -29,7 +29,7 @@ claimTwoWorkRecordsThenActivateBothWithOverlayActivationEntriesScenarioScena1300
 claimTwoWorkRecordsThenActivateBothWithSecondOverlayActivationEntryPairScenarioScena1300_801F8D0C = 0x801F8D0C;
 func_801F8DFC = 0x801F8DFC;
 func_801F9570 = 0x801F9570;
-func_801F9A44 = 0x801F9A44;
+runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44 = 0x801F9A44;
 setSharedIds11To13And10FromAngleOffsetsScenarioScena1300_801F9E70 = 0x801F9E70;
 func_801F9F18 = 0x801F9F18;
 runPrimaryState7SubstateSequenceScenarioScena1300_801FA844 = 0x801FA844;
