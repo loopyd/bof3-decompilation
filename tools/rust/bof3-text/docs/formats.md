@@ -3397,6 +3397,15 @@ identical 16,872-byte battle-text payloads loaded at `0x8001A000` in raw mode 0.
 Their payload offsets are 2048 and 243712. The eight-byte header selects bank 0
 at offset 8 and bank 1 at `0x1694`. Bank 0 occupies 5,772 bytes.
 
+During ordinary startup, SLUS call `0x8014EAB4` requests loader slot `0x261`.
+Original table cell `0x80182DC8` and a native resolver return select FIRST at
+LBA `61359`. The consumed header identifies entry 11's raw bank at `0x8001A000`,
+with size 16,872 and checkword 8. Complete native RAM histories observe every bank
+byte copied from zeros during that load and no bank writes in the subsequent
+startup interval. A linked paused capture shows the title logo with the same
+edited bank. This binds FIRST entry 11 to this initial startup bank. It does not
+identify the supplier after later game loads or establish use of the AFLDKWA copy.
+
 | Bank 0 JSON rows | Selected runtime ID | Original text | RAM address | Capacity including NUL |
 | --- | --- | --- | --- | --- |
 | 29 | `0x1C` | `Save` | `0x8001A438` | 5 |
