@@ -261,11 +261,63 @@ reviewed mode-1 and mode-2 image encodings.
 
 The profiles classify root-relative words, image-directory words, image headers
 and consumed encoded words or tokens. The complete compression walk includes a
-physical literal only when every decoded use lies in those fields. Palette,
-program and cell fields, opaque aliases, mode-2 prefixes and allocation tails
-remain unresolved. These profiles qualify stored representation. Actual requests,
+physical literal only when every decoded use lies in those fields. The primary
+image profiles leave palette, program and cell fields, opaque aliases,
+mode-2 prefixes and allocation tails unresolved. These profiles qualify stored
+representation. Actual requests,
 transfer, residency, upload, display, the absence of rasterized text and safe
 editing remain unqualified.
+
+## Additional PL012 root-0 image-input fields
+
+The exact PL012 entry-3 gate also qualifies global decoded offsets `[16,20)`
+and `[63680,63684)` as relative-pointer words. For initialization slot 0, the
+original reader at `0x80166C48` copies `[63684,63748)` into the mirror at
+`[0x80039600,0x80039640)`. These are global decoded coordinates; root 0 starts
+at 12 and is already included.
+
+Original `0x8014E22C` supplies rectangle `0/480/256/32` and source
+`0x80037800` through `0x8017B690`. Concrete original table words select
+`0x8017D488` and callback `0x8017CE9C`. The callback constructs a GPU image-load
+stream and a dimension-derived CPU/DMA source span. Under stable descriptor,
+source, dispatch and dimension limits, the entire 64-byte mirror supplies
+32 image-input halfwords within that span. Live dispatch, queue lifetime,
+hardware transfer, color-channel format, CLUT use and display remain unqualified.
+
+The compression walk intersects roles across every decoded alias. It preserves
+the primary image records and their evidence, then emits separate records for
+origins newly qualified by the union with these fields. An opaque alias still
+excludes its physical literal. This rule does not establish the absence of
+rasterized text or safe editing.
+
+## Compressed START root-0 image fields
+
+The exact original US `BIN/ETC/START.EMI` has a reviewed entry-7 profile with
+transfer mode 1, load address `0x8003B800`, file offset 174080, packed size
+185082 and checkword 245444. Its payload SHA-256 is
+`48f91b9d1f086bb2adbb109eab1fd4cf6a6fefd38d7acf7a6b8cdec36fcd3910`.
+
+Original slot `0x268` selects START at physical LBAs `[61926,62179)`.
+Successful unskipped loading with `0x80146854 & 0x20` clear and stable bank memory
+condition the alternate-loop index-1 and START dispatcher index-0 path.
+The initializer at `0x801E3EC4` calls GAME `0x801C1254` to publish root 0,
+then calls `0x8014D6B8` at `0x801E3FB8`. The original path through
+`0x8014D6DC` reaches `0x8014DC08` with selector 12 and image index 4.
+Ready byte 3 alone does not prove that entry 7 was loaded.
+
+The profile qualifies decoded root word `[0,4)`, root-0 relative word
+`[12,16)`, its 21 image-directory words at `[28,112)`, and the headers and
+consumed encodings of seven mode-1 and fourteen mode-2 images. Each image has
+an independently checked serialized extent under the shared original readers.
+Only image 4 has the selected conditional call path; the profile does not
+establish selection of every directory entry. Every alias of an admitted packed
+literal must lie in the reviewed fields.
+
+Roots 1 and 2, palette, program, cell and selection fields, mode-2 prefixes,
+unconsumed allocation tails and opaque aliases remain unresolved. Ordinary
+returns and bank/work noninterference are conditions. Actual invocation,
+transfer, residency, upload, display, rasterized-text absence and safe editing
+remain unqualified.
 
 ## Area surface field coverage
 

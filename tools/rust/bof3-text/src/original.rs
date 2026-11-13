@@ -2262,6 +2262,47 @@ fn model_decoded_nontext_fields(
     entry: Entry,
     data: &[u8],
 ) -> (&'static [(usize, usize)], &'static str) {
+    if entry.index == 7
+        && entry.offset == 174_080
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 245_444
+        && data.len() == 185_082
+        && sha256_hex(data) == "48f91b9d1f086bb2adbb109eab1fd4cf6a6fefd38d7acf7a6b8cdec36fcd3910"
+    {
+        return (
+            &[
+                (0, 4),
+                (12, 16),
+                (28, 6_956),
+                (6_960, 19_276),
+                (19_280, 24_768),
+                (24_772, 26_753),
+                (26_756, 26_764),
+                (26_768, 27_632),
+                (27_636, 29_104),
+                (29_108, 29_946),
+                (29_948, 29_956),
+                (29_960, 32_278),
+                (32_280, 32_288),
+                (32_292, 33_987),
+                (33_988, 33_996),
+                (34_000, 34_813),
+                (34_816, 34_824),
+                (34_828, 39_090),
+                (39_092, 39_100),
+                (39_104, 41_047),
+                (41_048, 41_056),
+                (41_060, 43_771),
+                (43_772, 43_780),
+                (43_784, 45_250),
+                (45_252, 45_260),
+                (45_264, 47_716),
+                (47_720, 48_716),
+                (48_720, 50_313),
+            ],
+            "original US START entry 7; literal origins whose every decoded use is in the reviewed root-0 relative words, 21 image-directory words, image headers or consumed mode-1 words/mode-2 tokens; original slot 0x268 resolves to exact START physical LBAs 61926..62179; successful unskipped entry-7 loading, flag-0x20 clearance and stable bank/work memory condition the GAME alternate-loop index-1, START dispatcher index-0 and initializer 0x801E3EC4 source route; GAME 0x801C1254 publishes root 0 and original START call 0x801E3FB8 reaches SLUS 0x8014D6B8/0x8014D6DC/0x8014DC08 with selector 12 and image 4; exact archive, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk propagates physical origins through overlapping references and requires every decoded alias to have a reviewed role; ordinary-return and noninterference assumptions; roots 1/2, palette/program/cell/selection fields, mode-2 prefixes, allocation tails and opaque aliases excluded; no actual invocation, transfer, residency, every-image selection, upload, display, rasterized-text absence or safe-edit claim",
+        );
+    }
     if entry.index != 3 || entry.ram_ptr != 0x8003_b800 {
         return (&[], "");
     }
@@ -4701,12 +4742,33 @@ fn model_decoded_nontext_fields(
     }
 }
 
+fn additional_model_decoded_nontext_fields(
+    entry: Entry,
+    data: &[u8],
+) -> (&'static [(usize, usize)], &'static str) {
+    if entry.index == 3
+        && entry.offset == 73_728
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 360_412
+        && data.len() == 292_491
+        && sha256_hex(data) == "934d31899d96e8110cab9a4544c4891a5c1705a4efc9bea247241ded1899ebc8"
+    {
+        return (
+            &[(16, 20), (63_680, 63_748)],
+            "original US PL012 entry 3 additional root-0 fields; global decoded offsets 16..20 and 63680..63684 are relative-pointer words consumed by original SLUS 0x80166C48; for initialization slot 0, decoded 63684..63748 is copied to mirror 0x80039600..0x80039640 and conditionally supplies 32 graphics image-input halfwords through original 0x8014E22C, 0x8017B690, table-selected 0x8017D488 and callback 0x8017CE9C; concrete original table and GPU port words, stable descriptor/source, returning calls/queue and dimension limits preserving rectangle 0/480/256/32 are conditions; exact original archive and family-0/index-0/identifier-0/root-0 source binding, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk requires every decoded alias in the primary image fields or these additional fields; primary records retain their evidence; opaque aliases excluded; no live dispatch, hardware transfer, color-channel format, CLUT use, display, rasterized-text absence or safe-edit claim",
+        );
+    }
+    (&[], "")
+}
+
 fn compression_metadata_ranges(
     data: &[u8],
     check_word: u32,
     literal_profile: (&[(usize, usize)], &'static str),
+    additional_literal_profile: (&[(usize, usize)], &'static str),
 ) -> Option<Vec<NontextRange>> {
     let (literal_fields, literal_evidence) = literal_profile;
+    let (additional_fields, additional_evidence) = additional_literal_profile;
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
         return None;
@@ -4718,10 +4780,17 @@ fn compression_metadata_ranges(
         length: 4,
         evidence,
     }];
-    let track_literals = !literal_fields.is_empty();
-    let mut typed = vec![false; if track_literals { expected } else { 0 }];
+    let track_literals = !literal_fields.is_empty() || !additional_fields.is_empty();
+    let mut typed = vec![0_u8; if track_literals { expected } else { 0 }];
+    // The low bit preserves primary records; the next bit accepts their union
+    // with the additional fields.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(true);
+        typed.get_mut(start..end)?.fill(3);
+    }
+    for &(start, end) in additional_fields {
+        for role in typed.get_mut(start..end)? {
+            *role |= 2;
+        }
     }
     let mut origins = Vec::new();
     let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
@@ -4785,7 +4854,7 @@ fn compression_metadata_ranges(
                     *origins.get(origins.len().checked_sub(distance)?)?
                 };
                 let role = literal_roles.get_mut(origin)?;
-                *role = Some(role.unwrap_or(true) && known);
+                *role = Some(role.unwrap_or(3) & known);
                 origins.push(origin);
             }
         }
@@ -4794,15 +4863,20 @@ fn compression_metadata_ranges(
         }
         decoded = end;
     }
-    let evidence = literal_evidence;
     let mut at = 0;
     while at < literal_roles.len() {
-        if literal_roles[at] != Some(true) {
+        let role = literal_roles[at].unwrap_or(0);
+        if role == 0 {
             at += 1;
             continue;
         }
+        let evidence = if role & 1 != 0 {
+            literal_evidence
+        } else {
+            additional_evidence
+        };
         let start = at;
-        while at < literal_roles.len() && literal_roles[at] == Some(true) {
+        while at < literal_roles.len() && literal_roles[at] == Some(role) {
             at += 1;
         }
         ranges.push(NontextRange {
@@ -4829,6 +4903,7 @@ pub fn payload_nontext_ranges(
             data,
             entry.check_word,
             model_decoded_nontext_fields(entry, data),
+            additional_model_decoded_nontext_fields(entry, data),
         );
     }
     if entry.transfer_mode == 0 && entry.ram_ptr == 0x8010_4000 {
