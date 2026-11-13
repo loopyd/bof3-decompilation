@@ -280,6 +280,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8014E8FC..0x8014EA80 including return delay slots; original JAL at 0x8014E79C in the qualified executable caller at 0x8014E6D0 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 762_576,
+            length: 52,
+            evidence: "original US SLUS; complete 13-word leaf instruction body 0x801502D0..0x80150304 including JR RA delay slot; complete original word, load-delay and structural-flow review reconciles with retained native entry and return; observed ID 0x40D0 selects bank 1, zero-based row 208 and cell 0x8001B834, returning 0x8001C9F7; exact whole executable identity; stable code and descriptor/table bytes, valid readable memory and incoming return control remain conditions; referenced bank data and neighboring code excluded; no matching ELF, arbitrary-ID bounds, general pointer safety, edited rendering or unique-supplier claim",
+        },
+        NontextRange {
             offset: 780_988,
             length: 1_044,
             evidence: "original US SLUS complete 1044-byte instruction body 0x80154ABC..0x80154ED0; original direct JAL 0x80154FA4 from the wrapper bound to the retained GAME 0x801BB774 return witness; all 261 aligned words, ten conditional branches, seven internal jumps, sole JR RA and every delay slot form a closed whole-entry structural CFG; call-free 24-byte frame restored before JR RA 0x80154EC8 and NOP; original and retained origin/endpoint RAM agree; ordinary return, writable disjoint frame, nonalias and stable-code assumptions; no matching ELF, all-path native execution, argument/resource safety, full coverage, rendering or editing claim",
@@ -6764,6 +6769,11 @@ pub fn payload_nontext_ranges(
                     offset: 65_136,
                     length: 1_848,
                     evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801E0A70..0x801E11A8; all 462 original words, 48 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; unsigned selector guard and six exact original targets at 0x801D0D94 close the computed JR at 0x801E0ABC; observed internal PC 0x801E0E2C binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code/table assumptions; table bytes, strings, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 102_380,
+                    length: 300,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 75-word instruction body 0x801E9BEC..0x801E9D18 including all ten control-transfer delay words; complete original structural flow and retained ordinary Heal entry, lookup and renderer captures reconcile; observed ID 0x40D0 returns pointer 0x8001C9F7, stored at 0x801E9C84 before renderer JAL 0x801E9C9C; native renderer return 0x801E9CA4 restores the caller stack; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returns from five direct calls and one opaque linking call, valid memory, intact frame, nonaliasing and stable-code/table assumptions; table, strings, referenced data, callees and neighbors excluded; no matching ELF, all-path execution, general selector bounds, resource safety, safe editing or unique-supplier claim",
                 },
             ]);
             Some(ranges)

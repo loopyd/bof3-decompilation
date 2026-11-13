@@ -716,6 +716,26 @@ Equipment guard, resource safety or a unique archive supplier. The 552-byte gap
 between Ability and Equipment retains its prior status. The separate initializer
 classification remains specific to START entry 8.
 
+## Menu description instruction coverage
+
+The same exact START and STATUS entry pins admit the complete description reader
+at `0x801E9BEC..0x801E9D18`, payload interval `[102380,102680)`. All 75 original
+words and ten control-transfer delay words reconcile with native entry, lookup
+and renderer observations. Its five direct calls and one indirect linking call
+require ordinary returns. The index into the indirect-call table at `0x801ED420`
+has no in-body guard. Table bytes, referenced data and callees remain outside
+this classification. The category readers' memory, frame, nonaliasing and
+stable-code conditions also apply.
+
+The exact original executable identified in
+[SLUS instruction coverage](#slus-instruction-coverage) also admits the complete
+52-byte lookup leaf at `0x801502D0..0x80150304`, file interval `[762576,762628)`.
+Its 13 words contain two loads and one return with its delay slot, without calls,
+stores or stack changes. Original words match native entry and return captures.
+Classification requires stable code and descriptor/table bytes, valid readable
+memory and incoming return control. Neither body establishes arbitrary-ID bounds,
+general pointer safety, edited rendering or a unique supplying archive.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw
@@ -3383,6 +3403,27 @@ game-created save from the title menu. Both complete SHOP readers and the edited
 bank match loaded RAM. The original-label diary route has created and reloaded
 one save, and a native read watch matches its prompt consumer. Selected
 value-panel calls and the unique supplying archive remain unbound.
+
+### Ability description lookup
+
+The same two archive entries contain the original `Heal light wounds on one
+target` description in bank 1. One-based rows 207, 208 and 209 share its 32-byte
+allocation at bank offset `0x1363`, payload offset 10743 and RAM address
+`0x8001C9F7`. All three rows must retain identical text when packed.
+
+Ordinary Ability navigation selects runtime ID `0x40D0`. The description reader
+at `0x801E9BEC` loads that ID from the current record's halfword at `+0x10`.
+Lookup `0x801502D0` selects bank 1, zero-based index 208 and table cell
+`0x8001B834`, then returns `0x8001C9F7`. The reader stores that pointer at
+`SP + 0x10` at `0x801E9C84`, before calling renderer `0x8014F800` at
+`0x801E9C9C`. Its delay word sign-extends the Y coordinate.
+
+Linked native captures observe that ID, lookup result, renderer entry and a read
+watch at `0x8014F8D4` with `S1=0x8001C9F7`. The watch stops before the byte load.
+Continuation returns to `0x801E9CA4` with the caller stack restored. This binds
+row 209 for the selected original-description invocation. Edited-description
+rendering, the other shared-row lookups, general selector bounds and the unique
+archive supplier remain unverified.
 
 ## Commands
 
