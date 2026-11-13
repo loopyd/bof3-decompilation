@@ -6754,6 +6754,11 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 105_120,
+                    length: 240,
+                    evidence: "original US GAME entry 0 complete instruction body 0x801AF2A0..0x801AF390 including all eight control-transfer delay slots; complete original ASM word and structural control-flow review, sized existing executable ELF function section and all six text relocations reconcile with original and captured resident bytes; nine qualified original JAL sites in shared battle body 0x800B1A74..0x800B1DAC conditionally enter this body; ordinary callee returns and preservation, valid memory, intact frames and nonaliasing stores remain conditions; exact original archive, raw mode, load, entry, size, checkword and payload identities; referenced tables, pointers, data, buffers and callees excluded; no fresh source build, observed invocation, feasible execution, argument-validity, callee-semantics, resource-safety, safe-editing or unique-supplier claim",
+                },
+                NontextRange {
                     offset: 154_296,
                     length: 1_080,
                     evidence: "original US GAME entry 0 complete 1080-byte instruction body 0x801BB2B8..0x801BB6F0; retained native PC 0x801BB52C and original caller/return words bind execution inside this body; all 270 original words, 50 conditional branches, 19 internal jumps, eight direct calls, sole JR RA and delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, incoming-register validity, sampler semantics, argument/resource safety, rendering or editing claim",

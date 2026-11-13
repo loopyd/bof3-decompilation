@@ -2013,6 +2013,22 @@ all words, branches, calls, terminal BREAK guards, returns and delay slots in
 both bodies. Actual state-0 invocation, actor setup correctness, sampler
 semantics and resource safety remain unqualified.
 
+## GAME sprite instruction coverage
+
+The original US GAME entry-0 gate also qualifies the complete instruction body
+at `0x801AF2A0..0x801AF390`. Its payload offsets are `[105120,105360)` and
+archive offsets are `[107168,107408)`. All 60 original instruction words,
+eight control-transfer delays, retained resident bytes and the existing sized
+linked ELF section agree. All six executable relocations reproduce those bytes.
+The existing objects were not rebuilt for this classification.
+
+Nine original JAL sites in the qualified shared battle body
+`0x800B1A74..0x800B1DAC` conditionally enter this body. Ordinary callee returns,
+preserved registers, valid memory, intact frames and nonaliasing stores remain
+conditions. Referenced data, tables, pointers, buffers and callees remain
+excluded. Invocation, feasible execution, callee behavior, resource safety,
+safe editing and unique source ownership remain unqualified.
+
 ## Guarded executable switch coverage
 
 For the exact original US `SLUS_004.22`, coverage recognizes the complete
