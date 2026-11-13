@@ -736,6 +736,25 @@ Classification requires stable code and descriptor/table bytes, valid readable
 memory and incoming return control. Neither body establishes arbitrary-ID bounds,
 general pointer safety, edited rendering or a unique supplying archive.
 
+Ordinary SQUARE entry from a loaded inn scene reaches GAME call `0x80197628`,
+whose delay slot supplies loader slot `0x269`. Original executable table
+`0x80182444[617]` resolves that slot to LBA `62179`, the start of `STATUS.EMI`.
+Linked native observations match the slot, resolved LBA and complete 2048-byte
+STATUS header. Entry 0 selects 117,986 raw bytes for destination `0x801D0C00`.
+Its mode halfword at archive header offset `0x1C` is zero; the separate checkword
+at `0x18` is `0x12`.
+
+Between the first raw-payload call at `0x80162C4C` and menu-ready continuation
+`0x80197650`, native RAM history records CD DMA commits of 20 and 280 bytes
+within the reader. Together they overwrite all 300 reader bytes and match the
+original body. The initial bytes already match, so committed writes establish
+the overwrite. Subsequent ordinary Ability selection displays the edited Heal
+description, and the reader's lookup return at `0x801E9C6C` binds record ID
+`0x40D0` to `0x8001C9F7` on this same lineage. These observations support the
+selected STATUS reader transfer for this transition. They do not cover the
+complete entry or per-sector CD lifecycle, identify suppliers for earlier
+independent captures, or identify the description-bank supplier.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw
@@ -3428,7 +3447,8 @@ for the edited description. A read watch at `0x8014F8D4` stops before the byte l
 with `S1=0x8001C9F7` and the edited byte `0x4D` at that address. Continuation
 returns to `0x801E9CA4` with the caller stack restored. These observations bind
 row 209 for the selected original and edited descriptions. The other shared-row
-lookups, general selector bounds and the unique archive supplier remain unverified.
+lookups, general selector bounds and the unique description-bank supplier remain
+unverified.
 
 ## Commands
 
