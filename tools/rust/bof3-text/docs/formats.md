@@ -672,6 +672,29 @@ and physical offsets may differ between archives.
 
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
+| `[0x2E8,0x324)` | `[0x80096AE8,0x80096B24)` | 60 |
+| `[0x324,0x37C)` | `[0x80096B24,0x80096B7C)` | 88 |
+| `[0x614,0x690)` | `[0x80096E14,0x80096E90)` | 124 |
+| `[0x690,0x700)` | `[0x80096E90,0x80096F00)` | 112 |
+| `[0x700,0x73C)` | `[0x80096F00,0x80096F3C)` | 60 |
+| `[0x73C,0x778)` | `[0x80096F3C,0x80096F78)` | 60 |
+| `[0x778,0x7BC)` | `[0x80096F78,0x80096FBC)` | 68 |
+| `[0x7BC,0x84C)` | `[0x80096FBC,0x8009704C)` | 144 |
+| `[0xDD4,0xE1C)` | `[0x800975D4,0x8009761C)` | 72 |
+| `[0x14BC,0x151C)` | `[0x80097CBC,0x80097D1C)` | 96 |
+| `[0x1558,0x15C0)` | `[0x80097D58,0x80097DC0)` | 104 |
+| `[0x18E4,0x1944)` | `[0x800980E4,0x80098144)` | 96 |
+| `[0x1A54,0x1AE4)` | `[0x80098254,0x800982E4)` | 144 |
+| `[0x1AE4,0x1B4C)` | `[0x800982E4,0x8009834C)` | 104 |
+| `[0x1BC4,0x1C08)` | `[0x800983C4,0x80098408)` | 68 |
+| `[0x1C08,0x1C50)` | `[0x80098408,0x80098450)` | 72 |
+| `[0x21B4,0x21FC)` | `[0x800989B4,0x800989FC)` | 72 |
+| `[0x2914,0x2978)` | `[0x80099114,0x80099178)` | 100 |
+| `[0x4A0C,0x4A74)` | `[0x8009B20C,0x8009B274)` | 104 |
+| `[0x4F00,0x4F94)` | `[0x8009B700,0x8009B794)` | 148 |
+| `[0x4F94,0x5028)` | `[0x8009B794,0x8009B828)` | 148 |
+| `[0x527C,0x52CC)` | `[0x8009BA7C,0x8009BACC)` | 80 |
+| `[0x5F94,0x6068)` | `[0x8009C794,0x8009C868)` | 212 |
 | `[0x67EC,0x6998)` | `[0x8009CFEC,0x8009D198)` | 428 |
 | `[0x6998,0x7294)` | `[0x8009D198,0x8009DA94)` | 2300 |
 | `[0x7294,0x72B4)` | `[0x8009DA94,0x8009DAB4)` | 32 |
@@ -816,6 +839,17 @@ slot. Direct-call continuations assume ordinary returns and intact caller frames
 Intervening gaps and referenced data remain excluded. Actual execution,
 work-record, selector and argument validity, callee behavior and resource safety
 remain unqualified.
+
+The 23 listed bodies within `0x80096800..0x8009CFEC` contain 584 instruction
+words in 72 structural blocks. Their complete sized executable ELF function
+sections and all 222 object text relocations reconcile with original bytes and
+captured resident RAM. Structural review covers every word and all 63 actual
+control-transfer delay slots. Direct and indirect-call continuations assume
+ordinary returns and intact caller frames. The three `JALR v0` wrappers leave
+target validity, table bounds and callee behavior unqualified. Intervening gaps,
+refused bodies and referenced data remain excluded. This classification does not
+establish execution, feasible paths, selector or argument validity, valid work
+records or resource safety.
 
 The 32 listed bodies within `0x8009F414..0x8009FFE4` contain 427 instruction
 words in 60 structural blocks. Their complete sized executable ELF function

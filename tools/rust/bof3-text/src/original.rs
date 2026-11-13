@@ -8469,6 +8469,35 @@ pub fn payload_nontext_ranges(
                 evidence: "original US shared battle payload; five complete instruction bodies spanning 0x800AC754..0x800AC964 including return delay slots; original bytes match sized executable ELF function sections and captured resident bytes; exact archive and payload identities; neighboring functions and tables excluded; no argument-validity, resource-safety, unique-supplier or duplicate-source ownership claim",
             })
             .chain([
+                (0x2e8, 60),
+                (0x324, 88),
+                (0x614, 124),
+                (0x690, 112),
+                (0x700, 60),
+                (0x73c, 60),
+                (0x778, 68),
+                (0x7bc, 144),
+                (0xdd4, 72),
+                (0x14bc, 96),
+                (0x1558, 104),
+                (0x18e4, 96),
+                (0x1a54, 144),
+                (0x1ae4, 104),
+                (0x1bc4, 68),
+                (0x1c08, 72),
+                (0x21b4, 72),
+                (0x2914, 100),
+                (0x4a0c, 104),
+                (0x4f00, 148),
+                (0x4f94, 148),
+                (0x527c, 80),
+                (0x5f94, 212),
+            ].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; 23 complete instruction bodies within 0x80096800..0x8009CFEC including all actual control-transfer delay slots; complete original structural control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all 222 text relocations independently reconciled from existing objects; direct and indirect-call continuations assume ordinary returns and intact caller frames; three JALR v0 targets, selectors and table bounds remain unqualified; exact archive and payload identities; intervening gaps, refused bodies, neighboring functions and data excluded; no observed-execution, full-function-execution, feasible-path, valid-work-record, selector-bound, indirect-call-safety, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
+            }))
+            .chain([
                 NontextRange {
                     offset: 0x67ec,
                     length: 428,
