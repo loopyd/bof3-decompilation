@@ -8664,6 +8664,29 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US shared battle payload; 24 complete instruction bodies within 0x800AC964..0x800B70C4 including all actual control-transfer delay slots; complete original structural control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all 130 text relocations independently reconciled from existing objects; direct and indirect-call continuations assume ordinary returns, intact caller frames and nonaliasing dynamic stores; targets, selectors and table bounds for the twelve indirect-call sites remain unqualified; exact archive and payload identities; intervening gaps, refused bodies, neighboring functions and data excluded; no observed-execution, full-function-execution, feasible-path, valid-work-record, selector-bound, indirect-call-safety, argument-validity, callee-semantics, resource-safety, unique-supplier or duplicate-source ownership claim",
             }))
+            .chain([
+                (0x17b4c, 68),
+                (0x17b90, 48),
+                (0x17c38, 60),
+                (0x18f20, 68),
+                (0x19454, 68),
+                (0x1a22c, 40),
+                (0x1a624, 72),
+                (0x1acbc, 72),
+                (0x1b888, 68),
+                (0x1b8cc, 8),
+                (0x1b958, 64),
+                (0x1b998, 64),
+                (0x1b9d8, 64),
+                (0x1baec, 64),
+                (0x1bc38, 64),
+                (0x1bccc, 64),
+                (0x1bd8c, 52),
+            ].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US shared battle payload; 17 complete instruction bodies within 0x800AE34C..0x800B25C0 including all actual control-transfer delay slots; complete original structural control-flow reviews and sized executable ELF function sections match original and captured resident bytes, with all 17 text relocations independently reconciled from existing objects; direct and indirect-call continuations assume ordinary returns, preserved saved values, intact caller frames and nonaliasing dynamic stores; targets, selectors, table contents and bounds for the two indirect-call sites remain unqualified; exact archive and payload identities; intervening gaps, prior refused bodies, missing artifacts, neighboring functions and referenced data excluded; no observed-execution, full-function-execution, feasible-path, valid-work-record, selector-bound, indirect-call-safety, argument-validity, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
+            }))
             .chain([NontextRange {
                 offset: 0x16164,
                 length: 1564,

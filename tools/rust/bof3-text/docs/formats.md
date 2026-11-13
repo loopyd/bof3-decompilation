@@ -847,10 +847,15 @@ and physical offsets may differ between archives.
 | `[0x1789C,0x17908)` | `[0x800AE09C,0x800AE108)` | 108 |
 | `[0x17908,0x179F8)` | `[0x800AE108,0x800AE1F8)` | 240 |
 | `[0x179F8,0x17A60)` | `[0x800AE1F8,0x800AE260)` | 104 |
+| `[0x17B4C,0x17B90)` | `[0x800AE34C,0x800AE390)` | 68 |
+| `[0x17B90,0x17BC0)` | `[0x800AE390,0x800AE3C0)` | 48 |
+| `[0x17C38,0x17C74)` | `[0x800AE438,0x800AE474)` | 60 |
 | `[0x17CD0,0x17D74)` | `[0x800AE4D0,0x800AE574)` | 164 |
 | `[0x17EC8,0x17F28)` | `[0x800AE6C8,0x800AE728)` | 96 |
 | `[0x17F88,0x1802C)` | `[0x800AE788,0x800AE82C)` | 164 |
 | `[0x18E6C,0x18EB8)` | `[0x800AF66C,0x800AF6B8)` | 76 |
+| `[0x18F20,0x18F64)` | `[0x800AF720,0x800AF764)` | 68 |
+| `[0x19454,0x19498)` | `[0x800AFC54,0x800AFC98)` | 68 |
 | `[0x19798,0x19858)` | `[0x800AFF98,0x800B0058)` | 192 |
 | `[0x19858,0x19918)` | `[0x800B0058,0x800B0118)` | 192 |
 | `[0x19918,0x19980)` | `[0x800B0118,0x800B0180)` | 104 |
@@ -858,18 +863,30 @@ and physical offsets may differ between archives.
 | `[0x199F0,0x19A50)` | `[0x800B01F0,0x800B0250)` | 96 |
 | `[0x19B98,0x19C10)` | `[0x800B0398,0x800B0410)` | 120 |
 | `[0x1A1CC,0x1A22C)` | `[0x800B09CC,0x800B0A2C)` | 96 |
+| `[0x1A22C,0x1A254)` | `[0x800B0A2C,0x800B0A54)` | 40 |
 | `[0x1A254,0x1A2B0)` | `[0x800B0A54,0x800B0AB0)` | 92 |
 | `[0x1A2B0,0x1A30C)` | `[0x800B0AB0,0x800B0B0C)` | 92 |
 | `[0x1A4E4,0x1A554)` | `[0x800B0CE4,0x800B0D54)` | 112 |
+| `[0x1A624,0x1A66C)` | `[0x800B0E24,0x800B0E6C)` | 72 |
 | `[0x1A6C4,0x1A730)` | `[0x800B0EC4,0x800B0F30)` | 108 |
 | `[0x1A730,0x1A79C)` | `[0x800B0F30,0x800B0F9C)` | 108 |
 | `[0x1AB8C,0x1ABEC)` | `[0x800B138C,0x800B13EC)` | 96 |
+| `[0x1ACBC,0x1AD04)` | `[0x800B14BC,0x800B1504)` | 72 |
 | `[0x1AD5C,0x1ADBC)` | `[0x800B155C,0x800B15BC)` | 96 |
 | `[0x1AE64,0x1AED0)` | `[0x800B1664,0x800B16D0)` | 108 |
+| `[0x1B888,0x1B8CC)` | `[0x800B2088,0x800B20CC)` | 68 |
+| `[0x1B8CC,0x1B8D4)` | `[0x800B20CC,0x800B20D4)` | 8 |
 | `[0x1B904,0x1B958)` | `[0x800B2104,0x800B2158)` | 84 |
+| `[0x1B958,0x1B998)` | `[0x800B2158,0x800B2198)` | 64 |
+| `[0x1B998,0x1B9D8)` | `[0x800B2198,0x800B21D8)` | 64 |
+| `[0x1B9D8,0x1BA18)` | `[0x800B21D8,0x800B2218)` | 64 |
 | `[0x1BA58,0x1BAAC)` | `[0x800B2258,0x800B22AC)` | 84 |
+| `[0x1BAEC,0x1BB2C)` | `[0x800B22EC,0x800B232C)` | 64 |
 | `[0x1BB2C,0x1BBB8)` | `[0x800B232C,0x800B23B8)` | 140 |
+| `[0x1BC38,0x1BC78)` | `[0x800B2438,0x800B2478)` | 64 |
 | `[0x1BC78,0x1BCCC)` | `[0x800B2478,0x800B24CC)` | 84 |
+| `[0x1BCCC,0x1BD0C)` | `[0x800B24CC,0x800B250C)` | 64 |
+| `[0x1BD8C,0x1BDC0)` | `[0x800B258C,0x800B25C0)` | 52 |
 | `[0x1CA6C,0x1CB24)` | `[0x800B326C,0x800B3324)` | 184 |
 
 The bodies at `0x8009CFEC..0x8009D198`, `0x8009DA94..0x8009DAB4`
@@ -932,6 +949,17 @@ selectors and table bounds at the twelve indirect-call sites remain unqualified.
 Eight refused bodies, intervening gaps and referenced data remain excluded.
 This classification does not establish execution, feasible paths, valid work
 records, argument validity, callee behavior or resource safety.
+
+The seventeen smaller bodies within `0x800AE34C..0x800B25C0` contain 252
+instruction words in 44 structural blocks. Their complete sized executable ELF
+function sections and all seventeen object text relocations reconcile with
+original bytes and captured resident RAM. Structural review covers every word
+and all 33 actual control-transfer delay slots. Calls assume ordinary returns,
+preserved saved values, intact caller frames and nonaliasing dynamic stores.
+Targets, selectors, table contents and bounds at the two indirect-call sites
+remain unqualified. Prior refused bodies, missing artifacts, gaps and referenced
+data retain their classifications. No execution, feasible-path, argument,
+work-record, resource-safety or editable-allocation claim follows.
 
 The body at `0x8009D198..0x8009DA94` has 575 instruction words in 64 blocks.
 Its complete sized executable ELF section, original bytes and captured resident
