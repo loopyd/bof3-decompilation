@@ -68,6 +68,8 @@ segments:
   - - 2584
     - c
     - dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB1C.'
   - - 2652
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp24700_801CEE5C
@@ -81,6 +83,8 @@ segments:
   - - 3148
     - c
     - dispatchWorkByte2Tablefb28PlcharPlp24700_801CF04C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb28PlcharPlp24700_801CF04C.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB28.'
   - - 3216
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp24700_801CF090

@@ -68,9 +68,13 @@ segments:
   - - 2600
     - c
     - dispatchWorkByte2HandlerPlcharPlp26700_801CEE28
+    - '@source: src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp26700_801CEE28.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D09A8.'
   - - 2668
     - c
     - dispatchWorkByte3HandlerPlcharPlp26700_801CEE6C
+    - '@source: src/bof3/plchar/dispatchWorkByte3HandlerPlcharPlp26700_801CEE6C.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D09B0.'
   - - 2736
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp26700_801CEEB0
@@ -105,6 +109,8 @@ segments:
   - - 4888
     - c
     - dispatchWorkByte3Table09c4PlcharPlp26700_801CF718
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table09c4PlcharPlp26700_801CF718.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801D09C4.'
   - - 4956
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp26700_801CF75C
@@ -129,6 +135,8 @@ segments:
   - - 6308
     - c
     - dispatchWorkByte2Table09d0PlcharPlp26700_801CFCA4
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table09d0PlcharPlp26700_801CFCA4.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D09D0.'
   - - 6376
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp26700_801CFCE8
@@ -139,6 +147,8 @@ segments:
   - - 6872
     - c
     - dispatchWorkByte2Table09dcPlcharPlp26700_801CFED8
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table09dcPlcharPlp26700_801CFED8.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D09DC.'
   - - 6940
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp26700_801CFF1C

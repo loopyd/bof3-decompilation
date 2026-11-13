@@ -41,6 +41,8 @@ segments:
   - - 596
     - c
     - dispatchWorkByte3Tablef600PlcharPlp34900_801CE654
+    - '@source: src/bof3/plchar/dispatchWorkByte3Tablef600PlcharPlp34900_801CE654.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801CF600.'
   - - 664
     - c
     - probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp34900_801CE698
@@ -79,6 +81,8 @@ segments:
   - - 2832
     - c
     - dispatchWorkByte3Tablef614PlcharPlp34900_801CEF10
+    - '@source: src/bof3/plchar/dispatchWorkByte3Tablef614PlcharPlp34900_801CEF10.c'
+    - '@behavior: Calls the handler indexed by work byte 3 from the table at 0x801CF614.'
   - - 2900
     - c
     - queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp34900_801CEF54
