@@ -403,6 +403,42 @@ remain unresolved. Actual invocation, transfer, residency, argument and
 resource safety, upload, display, rasterized-text absence and safe editing
 remain unqualified.
 
+## Compressed BPLD457 image fields
+
+Coverage recognizes original US `BIN/BPLCHAR/BPLD457.EMI` entry 7 with
+transfer mode 1, load address `0x8003B800`, file offset 94208, packed size
+200599 and checkword 331788. Its payload SHA-256 is
+`b682d37a2ec37adf08dde1a514f98b85ae4aa0ac68e616cdbb697e140ba5b858`.
+
+Original family 1/index 13 requests slot 488 at LBA 51178. Successful
+unskipped loading without flag `0x20` early completion and stable hint 13,
+bank and work memory condition the GAME phase-1/2/3 route. With count 1,
+work index 0 and conditional identifiers 4, 5 or 7, row `04 05 07` selects
+root ordinals 0, 1 or 2. The identifier-map bytes are 4, 5 and 0; record
+flags at `0x80144C04`, `0x80144CA8` and `0x80144974` must have masks
+`0x0080/0x4000` clear. Under route 0 and ordinary helper returns,
+`0x801C1400` calls `0x801C1254` to publish roots `0x8003B80C`,
+`0x8005680C` and `0x8007180C`. `0x801BF448` reselects the same work,
+and `0x801BF56C` reaches `0x8014DC08` through
+`0x8014D6B8/0x8014D6DC` with selector 0 and images 0, 0 and 4,
+respectively. These are conditional inputs, not observed requests or roster
+contents.
+
+The profile qualifies root-array words `[0,12)`, root-relative words
+`[12,16)`, `[110604,110608)` and `[221196,221200)`, and the 13, 14 and
+16 image-directory words at `[28,80)`, `[110620,110676)` and
+`[221212,221276)`. It also qualifies the headers and consumed encodings of
+eight mode-1 and thirty-five mode-2 images. Each serialized extent is checked
+separately; the selected conditional paths bind only images 0, 0 and 4 in
+their respective roots. The complete compression walk admits a physical
+literal only when every decoded alias belongs to this three-root field union.
+
+Other root-header words, palette, program, cell and selection fields, opaque
+aliases, mode-2 prefixes, allocation tails, raw entry 3 and container gaps
+remain unresolved. Actual invocation, transfer, residency, argument and
+resource safety, upload, display, rasterized-text absence and safe editing
+remain unqualified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
@@ -1339,6 +1375,25 @@ structural flow and retained resident RAM. Ordinary external returns,
 preserved frames, nonaliasing and stable code are conditions. These records
 qualify instructions without requiring a matching ELF or establishing
 execution, callee semantics, argument or resource safety, transfer or display.
+
+## Executable program instruction coverage
+
+The exact original US executable qualifies two complete instruction bodies.
+The original call at `0x8014D8B0` conditionally enters `0x8014D910` with
+selector 0 under the reviewed wrapper path. Its call at `0x8014D960`
+conditionally enters `0x8014DB98`.
+
+| File offsets | Runtime addresses | Bytes |
+| --- | --- | ---: |
+| `[751888,751992)` | `[0x8014D910,0x8014D978)` | 104 |
+| `[752536,752648)` | `[0x8014DB98,0x8014DC08)` | 112 |
+
+Every original word and control-transfer delay slot matches retained resident
+RAM. The first body has a complete ordinary call/return frame; the second is
+a call-free leaf. Returning calls, valid disjoint frames, nonaliasing and
+stable incoming work are conditions. These records qualify instructions.
+Matching ELF, actual execution, referenced field and resource semantics,
+rendering and safe editing remain unqualified.
 
 ## Executable numeric-sampler instruction coverage
 
