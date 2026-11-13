@@ -439,6 +439,104 @@ remain unresolved. Actual invocation, transfer, residency, argument and
 resource safety, upload, display, rasterized-text absence and safe editing
 remain unqualified.
 
+## Other compressed BPLD image fields
+
+Coverage recognizes the original US `BIN/BPLCHAR/` entries below under the
+whole-archive original identity gate, transfer mode 1 and load address
+`0x8003B800`. Each entry also requires its exact offset, packed size,
+checkword and payload SHA-256. `BPLD349` has one entry and uses entry 0;
+the others use entry 7. The original generic loader accepts that one-entry
+layout without an entry-7 restriction.
+
+| Archive | Entry | File offset | Packed bytes | Checkword | Payload SHA-256 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `BPLD012` | 7 | 98304 | 166846 | 368652 | `053c5e252a85d53b7ddedd9043fe09427c21a6869d7df79e6e27f049a318058b` |
+| `BPLD015` | 7 | 98304 | 168143 | 331788 | `58818212b2924ea74f946de57fcb2ca5217df55df59c13c7efc64b712c1e8441` |
+| `BPLD016` | 7 | 98304 | 126764 | 331788 | `5788a3234f6ce4d8ee0075d9345b4b4a9958f2adf7d319b95dacefc2b6385268` |
+| `BPLD025` | 7 | 98304 | 197048 | 368652 | `b266a31ac21b11a086c4fe548fb5bdc170b15fd5f9e2d4601dc90930bc9b0e7b` |
+| `BPLD026` | 7 | 98304 | 155687 | 368652 | `3ae2a261a6fac405171fc8051dc88247c5290806c9d06c247099cdd3631ad7b7` |
+| `BPLD034` | 7 | 98304 | 129525 | 331788 | `e4dcdf27c2d790c1731de7c1d3a4186a2427ba64243bcc2e40d9270a3bbf65bf` |
+| `BPLD056` | 7 | 96256 | 157020 | 331788 | `a08ce37780b173281c607a3cdff5c4291458fbce794d9a571198aae46092515a` |
+| `BPLD247` | 7 | 96256 | 199085 | 368652 | `21e3a59a7b0771d43f42babd465142899935f87e50188b7c6829fba8959c4ee1` |
+| `BPLD267` | 7 | 100352 | 172578 | 368652 | `d96a0b1fc1f3e9cb0d19c349459d60e336a114a9d402261d6d6b83cd52c5b018` |
+| `BPLD278` | 7 | 98304 | 210377 | 368652 | `145a87d311cce9f157630b5c77b4bd97f54afc5d10fcf5f5ed3ce5d3e53afa8a` |
+| `BPLD27A` | 7 | 98304 | 138325 | 269856 | `b9dd8cb2698064159c49a3bb1abb550c7163ac7622d23a3fe07d3033f73d5dd0` |
+| `BPLD349` | 0 | 2048 | 129413 | 331788 | `b9229f2ef691a502bf1c9d5a94626f2ed97b9922d92ff1e6db96e6a03662f8e4` |
+| `BPLD467` | 7 | 96256 | 159254 | 331788 | `0a2c91b60f2eaf4ec493d6014c0eabacc06979c481d07fab1367710eaeace1f8` |
+| `BPLD478` | 7 | 94208 | 196922 | 331788 | `a48d4b434e176f043f2482050906d13788c979bdebe252807952b1e148922802` |
+| `BPLD567` | 7 | 98304 | 173974 | 331788 | `03cf547e8cfedee08e9581d4202e1f41425d83e6daebb6c4495098f464e7d3af` |
+| `BPLD678` | 7 | 98304 | 170285 | 331788 | `69136a4e291a626a5285c1168642a726bedfc670a593589b3f5fec9c3998cb02` |
+
+Original family 1 requests bind these slots and half-open physical LBA ranges.
+The three identifiers in each row are separate conditional inputs for root
+ordinals 0, 1 and 2; they are not observed requests or roster contents.
+
+| Archive | Request index / slot | Physical LBAs | IDs for roots 0 / 1 / 2 |
+| --- | --- | --- | --- |
+| `BPLD012` | 0 / 475 | [49312,49462) | 0 / 1 / 2 |
+| `BPLD015` | 1 / 476 | [49462,49612) | 0 / 1 / 5 |
+| `BPLD016` | 2 / 477 | [49612,49742) | 0 / 1 / 6 |
+| `BPLD025` | 3 / 478 | [49742,49906) | 0 / 2 / 5 |
+| `BPLD026` | 4 / 479 | [49906,50051) | 0 / 2 / 6 |
+| `BPLD034` | 5 / 480 | [50051,50181) | 0 / 3 / 4 |
+| `BPLD056` | 6 / 481 | [50181,50325) | 0 / 5 / 6 |
+| `BPLD247` | 7 / 482 | [50325,50489) | 2 / 4 / 7 |
+| `BPLD267` | 9 / 484 | [50661,50814) | 2 / 6 / 7 |
+| `BPLD278` | 10 / 485 | [50814,50982) | 2 / 7 / 8 |
+| `BPLD27A` | 11 / 486 | [50982,51113) | 2 / 7 / 10 |
+| `BPLD349` | 12 / 487 | [51113,51178) | 3 / 4 / 9 |
+| `BPLD467` | 14 / 489 | [51341,51485) | 4 / 6 / 7 |
+| `BPLD478` | 15 / 490 | [51485,51645) | 4 / 7 / 8 |
+| `BPLD567` | 16 / 491 | [51645,51797) | 5 / 6 / 7 |
+| `BPLD678` | 18 / 493 | [51965,52114) | 6 / 7 / 8 |
+
+The GAME phase-1/2/3 route requires successful unskipped model loading without
+flag `0x20` early completion, stable request hint, code, bank and count,
+nonaliased work and scratch memory, and ordinary helper returns. With count 1,
+work index 0, route 0 and record masks `0x0080/0x4000` clear,
+`0x801C1400` calls `0x801C1254` to select the identifier's immutable
+row position and publish its root. `0x801BF448` reselects the same work;
+`0x801BF56C` reaches the image reader `0x8014DC08` through
+`0x8014D6B8/0x8014D6DC` with selector 0.
+
+The profiles qualify the three root-array words, each root's image-directory
+relative word, the finite directory words, image headers and consumed encodings
+listed below. Root offsets are decoded offsets from `0x8003B800`.
+Directory counts and selected images follow root order. Each serialized image
+extent is checked separately; the conditional paths select only the listed
+images, while the finite image encodings have their own representation proof.
+
+| Archive | Decoded roots | Directory words | Mode-1 / mode-2 images | Selected images |
+| --- | --- | --- | --- | --- |
+| `BPLD012` | 12 / 110604 / 221196 | 15 / 12 / 16 | 16 / 27 | 2 / 2 / 7 |
+| `BPLD015` | 12 / 110604 / 221196 | 15 / 12 / 14 | 10 / 31 | 2 / 2 / 0 |
+| `BPLD016` | 12 / 110604 / 221196 | 15 / 12 / 15 | 13 / 29 | 2 / 2 / 5 |
+| `BPLD025` | 12 / 110604 / 258060 | 15 / 16 / 14 | 14 / 31 | 2 / 7 / 0 |
+| `BPLD026` | 12 / 110604 / 258060 | 15 / 16 / 15 | 17 / 29 | 2 / 7 / 5 |
+| `BPLD034` | 12 / 110604 / 221196 | 15 / 13 / 12 | 10 / 30 | 2 / 1 / 0 |
+| `BPLD056` | 12 / 110604 / 221196 | 15 / 14 / 15 | 11 / 33 | 2 / 0 / 5 |
+| `BPLD247` | 12 / 147468 / 258060 | 16 / 13 / 16 | 14 / 31 | 7 / 0 / 4 |
+| `BPLD267` | 12 / 147468 / 258060 | 16 / 15 / 16 | 16 / 31 | 7 / 5 / 4 |
+| `BPLD278` | 12 / 147468 / 258060 | 16 / 16 / 14 | 14 / 32 | 7 / 4 / 9 |
+| `BPLD27A` | 12 / 147468 / 258060 | 16 / 16 / 4 | 14 / 22 | 7 / 4 / 0 |
+| `BPLD349` | 12 / 110604 / 221196 | 13 / 12 / 15 | 10 / 30 | 1 / 0 / 2 |
+| `BPLD467` | 12 / 110604 / 221196 | 13 / 15 / 16 | 11 / 33 | 0 / 5 / 4 |
+| `BPLD478` | 12 / 110604 / 221196 | 13 / 16 / 14 | 9 / 34 | 0 / 4 / 9 |
+| `BPLD567` | 12 / 110604 / 221196 | 14 / 15 / 16 | 10 / 35 | 0 / 5 / 4 |
+| `BPLD678` | 12 / 110604 / 221196 | 15 / 16 / 14 | 11 / 34 | 5 / 4 / 9 |
+
+The complete compression walk propagates ultimate literal origins through
+initialized overlapping references. It admits a physical literal only when
+every decoded alias belongs to that archive's reviewed three-root field union.
+Mode-1 CPU output overshoot is recorded without an argument or resource safety
+claim.
+
+Other root-header words, palette, program, cell and selection fields, opaque
+aliases, mode-2 prefixes, allocation tails, raw entry 3 where present and
+container gaps remain unresolved. Actual invocation, transfer, residency,
+argument and resource safety, upload, display, rasterized-text absence and
+safe editing remain unqualified.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
