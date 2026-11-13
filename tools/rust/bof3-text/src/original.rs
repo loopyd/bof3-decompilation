@@ -8865,6 +8865,11 @@ pub fn payload_nontext_ranges(
                 length: 920,
                 evidence: "original US shared battle payload; complete instruction body 0x800AE9C4..0x800AED5C including all 15 control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entries through qualified original JAL sites 0x800AE55C and 0x800AE814; call continuations assume ordinary returns, preserved saved values, intact caller frames and nonaliasing dynamic stores; exact archive and payload identities; referenced tables, data and neighboring bodies excluded; no ELF-match, observed-execution, feasible-path, argument-validity, selector-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
             }])
+            .chain([NontextRange {
+                offset: 0x1a79c,
+                length: 1008,
+                evidence: "original US shared battle payload; complete instruction body 0x800B0F9C..0x800B138C including all 20 control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entries through qualified original JAL sites 0x800B0ECC and 0x800B0F38; call continuations assume ordinary returns, preserved saved values, intact caller frames and nonaliasing dynamic stores; exact archive and payload identities; referenced formats, buffers, tables, data and neighboring bodies excluded; no ELF-match, observed-execution, feasible-path, argument-validity, selector-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
+            }])
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
