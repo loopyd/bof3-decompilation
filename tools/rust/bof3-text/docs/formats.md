@@ -2573,14 +2573,21 @@ The separate equipment-category table at `0x801ECCD0` exposes WEAPON, ARMOR
 and OPTION at `0x801ECCB0`, `0x801ECCB8` and `0x801ECCC0`, with capacities
 seven, six and seven bytes including NUL. The reader at `0x801E0A70` assigns
 category values 1, 2 or 3 from the panel's byte at offset 9, then draws through
-`0x8014F800` at `0x801E0E2C`. These are local assignments; intervening callee
-effects and natural availability remain unverified. ITEM and VITAL in this table
+`0x8014F800` at `0x801E0E2C`. These local assignments do not establish general
+transitive callee behavior. ITEM and VITAL in this table
 stay protected because their selected consumers are unresolved. Keep all nine
 alignment bytes and twenty pointer bytes protected. Controlled Equipment
 rendering verifies first-glyph edits in WEAPON, ARMOR and OPTION at observed
 selectors 0, 1 and 4, with categories 1, 2 and 3 and callback state zero. These
-captures follow ordinary menu inputs from the controlled availability fixture.
-Selected calls, call and delay-store retirement and general selector bounds
+captures follow menu inputs from the controlled availability fixture.
+
+Ordinary Equipment navigation after loading a game-created save also displays
+the original WEAPON, ARMOR and OPTION labels at selectors 0, 1 and 5. Selected
+calls at `0x801E0E2C` supply pointers `0x801ECCB0`, `0x801ECCB8` and
+`0x801ECCC0`, respectively. Each continues to renderer `0x8014F800` with return
+address `0x801E0E34` and its text pointer stored at `SP + 0x10`, verifying the
+selected JAL and delay store. Row reads and completed rendering for those
+invocations, general selector bounds and the unique START or STATUS supplier
 remain unverified.
 
 The settings reader at `0x801E2C00` exposes fifteen fixed-width fields from the
