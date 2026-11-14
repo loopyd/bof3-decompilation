@@ -902,6 +902,42 @@ selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
 
+## SHOP selector instruction coverage
+
+Coverage recognizes these complete bodies in original US `SHOP.EMI#0`.
+The containing archive must match the original disc manifest. Entry 0 must
+use raw mode 0, archive offset 2048, load address `0x801D0C00`, checkword
+`0x13`, size 87660 and payload SHA-256
+`b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219`.
+
+| Payload interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[672,732)` | `[0x801D0EA0,0x801D0EDC)` | 60 |
+| `[1252,1312)` | `[0x801D10E4,0x801D1120)` | 60 |
+| `[1728,1788)` | `[0x801D12C0,0x801D12FC)` | 60 |
+| `[1788,2224)` | `[0x801D12FC,0x801D14B0)` | 436 |
+
+The three selected little-endian function-address words at `0x801E514C`,
+`0x801E5174` and `0x801E518C` also qualify as known nontext. For selector
+bytes 2, 1 and 0, they select `0x801D10E4`, `0x801D12C0` and
+`0x801D12FC`, respectively.
+
+Complete original-word and structural control-flow review covers every
+instruction and delay slot. All admitted bodies and table cells match retained
+RAM. Ordinary callee returns, preserved frames, valid nonaliased memory and
+stable code and tables remain conditions. Other table cells, neighboring bodies
+and referenced data retain their prior classifications. General selector bounds,
+callee behavior, actual execution, safe editing and runtime text acceptance
+remain unqualified.
+
+The exact original executable identified under
+[SLUS instruction coverage](#slus-instruction-coverage) also qualifies
+`0x8014E640..0x8014E6D0`, file interval `[755264,755408)`.
+Original SHOP call `0x801D137C` conditionally enters this call-free body.
+Review covers all 36 original words and every branch, jump and return delay
+slot. Referenced input and repeat-state fields remain outside the classification.
+Physical button mapping and input cadence remain separate requirements.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw

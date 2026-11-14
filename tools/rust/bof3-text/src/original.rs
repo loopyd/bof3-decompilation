@@ -270,6 +270,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete instruction body 0x8014E5A0..0x8014E640 including all three control-transfer delay slots; complete original ASM word and structural control-flow review, sized executable ELF function section and all eleven object text relocations reconcile with original and captured resident bytes; conditional original entries at emi/battle/battle/15 JAL sites 0x800AEA1C, 0x800AEBB8 and 0x800AED3C; call continuation assumes ordinary return, preserved saved values, intact caller frame and nonaliasing dynamic stores; exact whole executable identity; referenced globals, tables, buffers, callee and neighboring bodies excluded; no observed-execution, feasible-path, argument-validity, selector-bound, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 755_264,
+            length: 144,
+            evidence: "original US SLUS; complete 36-word leaf instruction body 0x8014E640..0x8014E6D0, conditionally entered by original SHOP JAL 0x801D137C with argument mask in its delay slot; all original words, five control-transfer delays, four load delays and closed six-block flow match retained RAM; exact whole executable identity; stable code, valid nonaliasing memory and incoming return control remain conditions; referenced input fields, repeat state and neighboring code excluded; no matching ELF, actual invocation, physical-button mapping, VSync timing, resource safety, rendering or editing claim",
+        },
+        NontextRange {
             offset: 755_408,
             length: 296,
             evidence: "original US SLUS; complete original instruction body 0x8014E6D0..0x8014E7F8 including return delay slots; original JAL at 0x8014AB48 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -8384,6 +8389,49 @@ pub fn payload_nontext_ranges(
         return area_surface_field_ranges(data, entry.check_word);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (0, 2_048, 0, 0x801d_0c00, 87_660)
+            if entry.check_word == 0x13
+                && sha256_hex(data)
+                    == "b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219" =>
+        {
+            Some(vec![
+                NontextRange {
+                    offset: 672,
+                    length: 60,
+                    evidence: "original US SHOP entry 0; complete 15-word dispatcher 0x801D0EA0..0x801D0EDC including indirect-call and return delays; original ASM, raw words and retained RAM agree; captured mode 2 selects the original pointer cell at 0x801E514C; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary selected-callee return, intact frame, valid nonaliasing memory and stable code/table remain conditions; other table cells, referenced data and callees excluded; no general selector bounds, observed entry, all-path execution, resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 1_252,
+                    length: 60,
+                    evidence: "original US SHOP entry 0; complete 15-word dispatcher 0x801D10E4..0x801D1120 selected by original cell 0x801E514C; all original words, load/indirect-call/return delays and closed local flow match retained RAM; captured phase 1 selects cell 0x801E5174; exact archive and payload identities; ordinary selected-callee return, intact frame, valid nonaliasing memory and stable code/table remain conditions; other cells, referenced data and callees excluded; no general selector bounds, observed invocation, resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 1_728,
+                    length: 60,
+                    evidence: "original US SHOP entry 0; complete 15-word dispatcher 0x801D12C0..0x801D12FC selected by original cell 0x801E5174; all original words, load/indirect-call/return delays and closed local flow match retained RAM; captured substep 0 selects cell 0x801E518C; exact archive and payload identities; ordinary selected-callee return, intact frame, valid nonaliasing memory and stable code/table remain conditions; other cells, referenced data and callees excluded; no general selector bounds, observed invocation, resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 1_788,
+                    length: 436,
+                    evidence: "original US SHOP entry 0; complete 109-word instruction body 0x801D12FC..0x801D14B0 selected by original cell 0x801E518C; all original words, twelve control-transfer delays, fifteen loads, closed fifteen-block flow and shared return reconcile with retained RAM; exact archive and payload identities; ordinary returns and preservation from five direct calls, intact frame, valid nonaliasing memory and stable code remain conditions; input/state fields, callees and neighboring bodies excluded; no actual handler entry, physical-input contract, general selector bounds, purchase/sale, resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 83_276,
+                    length: 4,
+                    evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E514C contains 0x801D10E4 and is selected by captured mode 2 in the complete original dispatcher at 0x801D0EA0; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
+                },
+                NontextRange {
+                    offset: 83_316,
+                    length: 4,
+                    evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E5174 contains 0x801D12C0 and is selected by captured phase 1 in the complete original dispatcher at 0x801D10E4; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
+                },
+                NontextRange {
+                    offset: 83_340,
+                    length: 4,
+                    evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E518C contains 0x801D12FC and is selected by captured substep 0 in the complete original dispatcher at 0x801D12C0; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
+                },
+            ])
+        }
         (8, 360_448, 0, 0x801d_0c00, 117_986) | (0, 2_048, 0, 0x801d_0c00, 117_986)
             if entry.check_word == 18
                 && sha256_hex(data)
