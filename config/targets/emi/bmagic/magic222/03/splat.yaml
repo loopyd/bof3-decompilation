@@ -155,6 +155,6 @@ segments:
     - textbin
     - func_801F0D54
   - - 8596
-    - asm
-    - func_801F0D94
+    - textbin
+    - T_801F0D94
 - - 8620

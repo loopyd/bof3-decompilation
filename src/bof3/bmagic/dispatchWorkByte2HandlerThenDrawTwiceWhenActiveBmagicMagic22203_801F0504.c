@@ -10,9 +10,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* Five-entry overlay handler table for work byte 2, inside this overlay's
  * trailing pointer run: the word at 0x801F0D94 holds 0x801F0070 and the table
  * starts at the next word, 0x801F0D98 = 0x801F0584, then 0x801F061C,
- * 0x801F066C, 0x801F06C8 and 0x801F0730, followed by a zero word at
- * 0x801F0DAC. The run's asm boundary func_801F0D94 defines the label, so this
- * extern binds the interior word the scaled index is added to. */
+ * 0x801F066C, 0x801F06C8 and 0x801F0730, ending at the payload EOF,
+ * 0x801F0DAC. This extern binds the interior word the scaled index is added to. */
 extern void (*D_801F0D98[])(void); /* @source 0x801F0D98 @kind data */
 
 /* This overlay's 0x5AC-byte primitive-drawing routine at 0x801F07A8, still
