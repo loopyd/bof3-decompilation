@@ -2417,6 +2417,42 @@ all words, branches, calls, terminal BREAK guards, returns and delay slots in
 both bodies. Actual state-0 invocation, actor setup correctness, sampler
 semantics and resource safety remain unqualified.
 
+## GAME record-setter instruction coverage
+
+The exact original GAME entry-0 gate qualifies the complete 72-byte instruction
+body at `0x801A72E8..0x801A7330`, payload offsets `[72424,72496)` and archive
+offsets `[74472,74544)`. All eighteen original words, three control-transfer
+delays and load schedules agree with retained RAM. This call-free body preserves
+SP, RA and saved registers.
+
+The complete original caller at `0x801A3F3C` supplies an ordinary record cursor
+to `0x801A4BF8` through its call at `0x801A3F80`. The dispatcher's high-nibble-D
+arm calls the setter at `0x801A4C48`, with `A0 = S0` in the delay word. Valid
+record and current-work memory, return control, nonaliasing and stable code/data
+remain conditions. Input and work fields, tables, caller bodies and neighbors
+retain their prior status. An actual D directive selecting callback `0x0C`,
+eligible task, callback lifetime, invocation, ordinary menu route, matching ELF,
+argument or resource safety, rendering and safe editing remain unverified.
+
+## COMMU00 callback instruction coverage
+
+Original US `COMMU00.EMI#0` qualifies the complete 64-byte instruction body at
+`0x801F15F8..0x801F1638`, payload offsets `[10744,10808)` and archive offsets
+`[12792,12856)`. The entry must be raw mode at archive offset 2048, load at
+`0x801EEC00`, have checkword `0x18` and contain 15696 bytes. The whole archive
+must match the original disc manifest, and the payload must have SHA-256
+`27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a`.
+
+All sixteen original words, two control-transfer delays, both load delays and
+the restored 24-byte frame agree with the complete sized executable ELF
+function. All seven object text relocations reproduce the original bytes.
+Ordinary helper return and ABI preservation, valid incoming task memory and
+return control, an intact frame, nonaliasing and stable code remain conditions.
+Referenced data, the external helper and neighboring bodies retain their prior
+status. A source-bound directive, eligible task, residency, callback lifetime,
+invocation, helper effects, argument or resource safety, rendering and safe
+editing remain unverified.
+
 ## GAME sprite instruction coverage
 
 The original US GAME entry-0 gate also qualifies the complete instruction body

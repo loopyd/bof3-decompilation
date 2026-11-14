@@ -8579,12 +8579,28 @@ pub fn payload_nontext_ranges(
             }
             Some(ranges)
         }
+        (0, 2_048, 0, 0x801e_ec00, 15_696)
+            if entry.check_word == 0x18
+                && sha256_hex(data)
+                    == "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a" =>
+        {
+            Some(vec![NontextRange {
+                offset: 10_744,
+                length: 64,
+                evidence: "original US COMMU00 entry 0; complete 16-word instruction body 0x801F15F8..0x801F1638 including call and return delay words; every original word, complete structural flow, both load delays, restored 24-byte frame, existing sized 64-byte executable ELF function sections and all seven reconstructed object text relocations agree; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary external-call return and ABI preservation, valid incoming task memory and return control, intact frame, nonaliasing and stable code remain conditions; referenced data, external helper and neighbors excluded; no fresh source build, resident-byte match, observed entry, actual directive, ordinary menu route, callback lifetime, helper effects, argument/resource safety, rendering, safe editing or unique-supplier claim",
+            }])
+        }
         (0, 2_048, 0, 0x8019_5800, 229_720)
             if entry.check_word == 0x1e
                 && sha256_hex(data)
                     == "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff" =>
         {
             Some(vec![
+                NontextRange {
+                    offset: 72_424,
+                    length: 72,
+                    evidence: "original US GAME entry 0; complete 18-word instruction body 0x801A72E8..0x801A7330 including all three control-transfer delays; complete original ASM, structural flow and load scheduling reconcile with retained RAM; qualified original ordinary-record call at 0x801A3F80 enters dispatcher 0x801A4BF8, whose high-nibble-D arm calls this setter at 0x801A4C48 with A0=S0 in its delay; the call-free body preserves SP, RA and saved registers; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; valid incoming record and current-work memory, return control, nonaliasing and stable code/data remain conditions; input/work fields, tables, caller bodies and neighbors excluded; no actual D/nonzero/0C directive, eligible task, callback lifetime, observed entry, ordinary route, matching ELF, argument/resource safety, rendering, safe editing or unique-supplier claim",
+                },
                 NontextRange {
                     offset: 105_072,
                     length: 48,
