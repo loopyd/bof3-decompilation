@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/world/resetWorkareaSelectEntry4.c'
     - '@behavior: entry-4 handler of the overlay entry table (D_801F4200): calls the shared work-area reset helper.'
   - - 504
-    - asm
+    - c
     - func_801F2DF8
+    - '@source: src/bof3/world/func_801F2DF8.c'
+    - '@behavior: Projects one local sprite work entry and queues the matching local effect.'
   - - 980
     - c
     - func_801F2FD4

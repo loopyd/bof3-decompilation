@@ -82,7 +82,7 @@ segments:
     - '@source: src/bof3/world/func_801F33A8_area02713.c'
     - '@behavior: Selects the draw-mode texture depth by graphics type, sets the draw mode of the shared primitive cursor, submits the fixed line draw of the record anchor 0x468000/0x478000, projects that anchor minus the 0x4000 screen bias into a local three-halfword point and emits one textured marker quad for it, then submits the second fixed line draw of the same anchor.'
   - - 2176
-    - asm
+    - c
     - emitMarkerQuad
     - '@source: src/bof3/world/emitMarkerQuad.c'
     - '@behavior: Projects a fixed textured quad and fills its texture state.'
