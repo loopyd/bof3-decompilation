@@ -22,6 +22,15 @@ segments:
 - - 0
   - bin
   - header
+- name: header_embedded_functions
+  type: code
+  start: 504
+  vram: 0x801EEDF8
+  subsegments:
+  - - 504
+    - c
+    - func_801EEDF8
+    - '@source: src/bof3/ui/func_801EEDF8_commu00.c'
 - name: header_functions
   type: code
   start: 752
@@ -60,6 +69,26 @@ segments:
 - - 5332
   - bin
   - header_data
+- name: header_data_functions
+  type: code
+  start: 5620
+  vram: 0x801F01F4
+  subsegments:
+  - - 5620
+    - c
+    - func_801F01F4
+    - '@source: src/bof3/ui/func_801F01F4_commu00.c'
+  - - 5860
+    - c
+    - countActiveRecords
+    - '@source: src/bof3/ui/countActiveRecords.c'
+  - - 5920
+    - c
+    - func_801F0320
+    - '@source: src/bof3/ui/func_801F0320_commu00.c'
+- - 6096
+  - bin
+  - header_data_tail
 - name: main
   type: code
   start: 7384
