@@ -13,7 +13,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * 16-byte Splat row, whose label the map keeps because the row is not this
  * function's span; only the word the scaled index adds to is declared here and
  * the index is not bounded. */
-extern void (*func_801EF988[])(void); /* @source 0x801EF988 @kind data */
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801EF988 @kind data */
 
 /* Shared battle work-record pointer in main RAM, outside this overlay's image.
  * The remaining asm span func_801EF710 still references the address, so Splat's
@@ -93,7 +93,7 @@ void dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic094
   u8 *record;
   s32 tpage;
 
-  func_801EF988[g_battle_work[1]]();
+  workByte1HandlerTable[g_battle_work[1]]();
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
     projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654();

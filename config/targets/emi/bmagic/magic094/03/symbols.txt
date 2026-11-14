@@ -12,4 +12,4 @@ incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20Bmag
 drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C = 0x801EF14C;
 projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654 = 0x801EF654;
 func_801EF710 = 0x801EF710;
-func_801EF988 = 0x801EF988;
+workByte1HandlerTable = 0x801EF988;

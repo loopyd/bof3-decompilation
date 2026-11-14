@@ -74,6 +74,6 @@ segments:
     - asm
     - func_801EF710
   - - 3464
-    - asm
-    - func_801EF988
+    - textbin
+    - workByte1HandlerTable
 - - 3480
