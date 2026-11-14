@@ -2417,6 +2417,40 @@ all words, branches, calls, terminal BREAK guards, returns and delay slots in
 both bodies. Actual state-0 invocation, actor setup correctness, sampler
 semantics and resource safety remain unqualified.
 
+## GAME work and event instruction coverage
+
+The exact original GAME entry-0 gate qualifies these complete instruction bodies.
+Each range requires the original archive identity, raw transfer mode, load address
+`0x80195800`, checkword `0x1E`, payload size 229720 and payload SHA-256
+`1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff`.
+
+| Runtime range | Payload offsets | Archive offsets | Bytes |
+| --- | --- | --- | ---: |
+| `[0x801A17A0,0x801A18C8)` | `[49056,49352)` | `[51104,51400)` | 296 |
+| `[0x801A4914,0x801A4990)` | `[61716,61840)` | `[63764,63888)` | 124 |
+| `[0x801A4990,0x801A4AA8)` | `[61840,62120)` | `[63888,64168)` | 280 |
+| `[0x801A4AA8,0x801A4B80)` | `[62120,62336)` | `[64168,64384)` | 216 |
+| `[0x801A4D54,0x801A50C0)` | `[62804,63680)` | `[64852,65728)` | 876 |
+| `[0x801A50C0,0x801A5400)` | `[63680,64512)` | `[65728,66560)` | 832 |
+
+Structural review covers every original word, local branch, call, terminal BREAK
+guard, return, delay slot and frame save/restore sequence. All instruction bytes
+match retained RAM. Original type-0 and type-1 dispatcher arms bind the two
+constructors and their calls to the three smaller work helpers. The pool caller
+at `0x801A0790` passes an actor's subrecord at offset `0x74` to `0x801A17A0`.
+The reader's field at offset 8 therefore refers to the actor's field at `0x7C`.
+The caller prefix itself is not classified by this rule.
+
+Classification assumes valid record, work, scratch and table memory, intact
+frames, nonaliasing, stable code/data and ordinary callee returns with ABI
+preservation. The constructors additionally require a nonnegative slot below
+30; their signed upper-bound test alone does not establish that domain.
+Referenced data, event scripts, external helpers and neighboring bytes retain
+their prior status. These instruction records do not establish invocation,
+complete field initialization, event triggers, work lifetime, resource safety,
+rendering, safe editing or an ELF match.
+The terminal BREAK guards do not qualify exception-handler behavior.
+
 ## GAME record-setter instruction coverage
 
 The exact original GAME entry-0 gate qualifies the complete 72-byte instruction

@@ -8597,6 +8597,36 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 49_056,
+                    length: 296,
+                    evidence: "Original US GAME entry 0, complete 74-word instruction body 0x801A17A0..0x801A18C8. Every original ASM word, local control path, delay slot and restored 32-byte frame agrees with original archive and retained RAM bytes. Original JAL 0x801A0790 passes actor+0x74 in its delay, so this reader's input+8 aliases actor+0x7C. Ordinary callee returns and ABI preservation, valid memory and return control, intact frame, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Caller prefix, event records, tables, scripts, callees and neighbors are excluded. No invocation, event-trigger, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 61_716,
+                    length: 124,
+                    evidence: "Original US GAME entry 0, complete 31-word instruction body 0x801A4914..0x801A4990. Original constructor JALs 0x801A5090 and 0x801A53D0 conditionally enter it. All ASM words, branches, calls, delay slots and the restored 24-byte frame agree with original archive and retained RAM bytes. Ordinary callee returns and ABI preservation, valid scratch-selected work, memory and return control, intact frame, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Work fields, external helpers and neighbors are excluded. No invocation, transitive effects, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 61_840,
+                    length: 280,
+                    evidence: "Original US GAME entry 0, complete 70-word instruction body 0x801A4990..0x801A4AA8. Original constructor JALs 0x801A5018 and 0x801A5358 pass record+0x0D in their delay slots. All ASM words, branches, internal jump, division traps, return and delay slots agree with original archive and retained RAM bytes. This leaf preserves SP and RA. Valid record, work and table memory, return control, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Referenced fields, table and neighbors are excluded. No invocation, divisor validity, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 62_120,
+                    length: 216,
+                    evidence: "Original US GAME entry 0, complete 54-word instruction body 0x801A4AA8..0x801A4B80. Original constructor JALs 0x801A4DC8 and 0x801A5134 conditionally enter it with NOP delays. All ASM words and the return delay agree with original archive and retained RAM bytes. This straight-line leaf preserves SP and RA. Valid scratch-selected work and return control, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Work fields and neighbors are excluded. No invocation, complete field initialization, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 62_804,
+                    length: 876,
+                    evidence: "Original US GAME entry 0, complete 219-word instruction body 0x801A4D54..0x801A50C0. The original ordinary-record dispatcher's type-0 arm calls it at 0x801A4D18 with A0=S0 in the delay. All ASM words, local branches, five calls, return, delay slots and restored 32-byte frame agree with original archive and retained RAM bytes. Ordinary callee returns and ABI preservation, a valid nonnegative slot below 30, readable record, writable work and scratch storage, intact frame, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 63_680,
+                    length: 832,
+                    evidence: "Original US GAME entry 0, complete 208-word instruction body 0x801A50C0..0x801A5400. The original ordinary-record dispatcher's type-1 arm calls it at 0x801A4D08 with A0=S0 in the delay. All ASM words, local branches, five calls, return, delay slots and restored 32-byte frame agree with original archive and retained RAM bytes. Ordinary callee returns and ABI preservation, a valid nonnegative slot below 30, readable record, writable work and scratch storage, intact frame, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, lifetime, resource-safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
                     offset: 72_424,
                     length: 72,
                     evidence: "original US GAME entry 0; complete 18-word instruction body 0x801A72E8..0x801A7330 including all three control-transfer delays; complete original ASM, structural flow and load scheduling reconcile with retained RAM; qualified original ordinary-record call at 0x801A3F80 enters dispatcher 0x801A4BF8, whose high-nibble-D arm calls this setter at 0x801A4C48 with A0=S0 in its delay; the call-free body preserves SP, RA and saved registers; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; valid incoming record and current-work memory, return control, nonaliasing and stable code/data remain conditions; input/work fields, tables, caller bodies and neighbors excluded; no actual D/nonzero/0C directive, eligible task, callback lifetime, observed entry, ordinary route, matching ELF, argument/resource safety, rendering, safe editing or unique-supplier claim",
