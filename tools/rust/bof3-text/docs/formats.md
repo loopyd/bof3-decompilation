@@ -916,11 +916,18 @@ use raw mode 0, archive offset 2048, load address `0x801D0C00`, checkword
 | `[1252,1312)` | `[0x801D10E4,0x801D1120)` | 60 |
 | `[1728,1788)` | `[0x801D12C0,0x801D12FC)` | 60 |
 | `[1788,2224)` | `[0x801D12FC,0x801D14B0)` | 436 |
+| `[7148,7208)` | `[0x801D27EC,0x801D2828)` | 60 |
+| `[7376,8548)` | `[0x801D28D0,0x801D2D64)` | 1172 |
 
 The three selected little-endian function-address words at `0x801E514C`,
 `0x801E5174` and `0x801E518C` also qualify as known nontext. For selector
 bytes 2, 1 and 0, they select `0x801D10E4`, `0x801D12C0` and
 `0x801D12FC`, respectively.
+
+For phase 3, the additional cell at `0x801E517C` selects `0x801D27EC`.
+That dispatcher selects `0x801D28D0` through cell `0x801E51B4` for
+substep 1. Both four-byte little-endian function-address words also qualify
+as known nontext.
 
 Complete original-word and structural control-flow review covers every
 instruction and delay slot. All admitted bodies and table cells match retained
