@@ -876,6 +876,29 @@ Equipment guard, resource safety or a unique archive supplier. The 552-byte gap
 between Ability and Equipment retains its prior status. The separate initializer
 classification remains specific to START entry 8.
 
+## Stat-label instruction coverage
+
+The same exact START and STATUS pins qualify two complete instruction bodies:
+
+| Body | Payload interval | Runtime interval | Bytes |
+| --- | --- | --- | ---: |
+| Four-label reader | `[47948,48876)` | `[0x801DC74C,0x801DCAEC)` | 928 |
+| Wrapper | `[57904,58088)` | `[0x801DEE30,0x801DEEE8)` | 184 |
+
+All 278 original words, 29 control-transfer delays, 35 loads, complete structural
+flow and saved frames reconcile with retained RAM. The wrapper's original call
+at `0x801DEEC8` conditionally enters the reader. Its four renderer calls consume
+the labels at `0x801EC99C`, `0x801EC9A2`, `0x801EC9A8` and `0x801EC9AE`.
+The wrapper's incoming record and flag producer remain unidentified. This
+classification establishes stored instructions; invocation and an ordinary menu
+route remain unverified.
+
+The category readers' memory, frame, nonaliasing, ordinary-return and stable-code
+conditions also apply. Referenced data, external callees and the neighboring
+three-label entry at `0x801DEEE8` retain their prior classifications. No matching
+C/ELF, all-path feasibility, general argument bounds, transitive callee effects,
+rendering, safe editing or unique archive supplier is established.
+
 ## Config instruction coverage
 
 The same exact START and STATUS entry pins admit these complete instruction
