@@ -3644,6 +3644,11 @@ The `US AREA030 panel text` layout covers entry 4 of the original US
 below `BIN`. Each payload loads at `0x801D0C00`. Each archive requires its own
 source-bound document and edited output.
 
+This is a fishing UI layout. The original payload contains `ROD`, `LURE`,
+`EQUIP` and `GUIDE`, and consumer `0x801E1004` resolves fish names through
+GAME item records. Those menu labels and dynamic names are outside this
+layout's editable allocations.
+
 | Address | Original text | Capacity | Codec |
 | --- | --- | --- | --- |
 | `0x801D0C04` | `%2d` | 4 | `ascii-i16-plus-one-decimal-format` |
