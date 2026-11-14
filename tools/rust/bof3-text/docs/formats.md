@@ -801,16 +801,16 @@ or palette sources, rendering, safe editing or the absence of rasterized text.
 
 ## Resident animation field coverage
 
-Coverage recognizes fixed fields in entry 4 of four original US archives. Each
-requires its original archive identity, entry offset 198656, raw transfer mode,
-load address `0x800D3800` and exact payload hash.
+Coverage recognizes a bounded variant of original US AREA resident animation
+fields. Admission requires the original archive identity and a reviewed tuple
+of entry index, archive offset, raw mode, load address `0x800D3800`, checkword,
+payload length and SHA-256. Supported tuples use entry 4; their archive offsets
+vary. Use `bin/harness text coverage --root DIR --strict --json` to inspect the
+qualified fields and remaining gaps for a source tree.
 
-| Archive | Payload bytes | Metadata bytes | Referenced cells | Cell field bytes |
-| --- | ---: | ---: | ---: | ---: |
-| `AREA024.EMI` | 11368 | 1917 | 354 | 9214 |
-| `AREA000.EMI` | 10592 | 1951 | 349 | 8404 |
-| `AREA001.EMI` | 11968 | 1808 | 326 | 9906 |
-| `AREA002.EMI` | 11104 | 1654 | 300 | 9215 |
+AREA030, AREA089 and AREA129 instead hold resident data in entry 10. Their normal
+token operand reaches beyond the declared cell directory into metadata. This
+alias requires separate consumer evidence, so these profiles remain unresolved.
 
 The metadata covers root-relative u32 group offsets, group-relative u16 program
 offsets, program count bytes, duration/operand pairs and referenced relative cell
@@ -818,7 +818,16 @@ offsets. Original consumers `0x8014D878..0x8014D8AC`, `0x8014D928..0x8014D964`
 and `0x8014DBB4..0x8014DC04` qualify these fields. First offsets delimit recognized
 directories; they do not store separate counts or establish runtime selector
 bounds. Duplicate program slots retain their shared target. Program header byte
-0 constrains profile recognition but remains unclassified.
+0 constrains profile recognition but remains unclassified. Initialization reads
+the first token's operand directly. High-duration tokens select one destination
+token whose operand is then read directly; the field walk preserves this single
+fetch without recursively following controls.
+
+Every directory, program and declared cell must fit its containing extent.
+Distinct next pointers bound those extents. Only referenced cell lookup words,
+counts and five-byte parts qualify. Conflicting aliases and overlaps between
+metadata and cell fields refuse the profile. Metadata forms merged contiguous
+intervals; cell counts and each part remain separate records.
 
 Original pointer construction at `0x8014C6D8..0x8014C6F4` binds the relative cell
 offsets to the count and five-byte part consumer at `0x8014C6F8..0x8014CD90`.
@@ -852,8 +861,11 @@ function at `0x80162B08` otherwise rejects this mode and ends progression
 early. Readiness alone therefore does not prove entry 4 was copied. If the
 permitted exact transfer completes, the published pointer stays unchanged and
 no replacement intervenes, the payload supplies the root read at `0x8014D880`.
-This conditional AREA024 binding establishes neither actual selection and
-consumption nor the layouts of other entries at the same load address.
+The original file-slot cells for world indices 0 through 199 also bind their
+exact AREA archives to the same conditional raw-loader route. Each payload
+still requires its own reviewed descriptor tuple and checked field layout.
+These bindings establish neither actual selection and consumption nor universal
+pointer stability through scene rebuilds.
 
 ## START initializer instruction coverage
 
