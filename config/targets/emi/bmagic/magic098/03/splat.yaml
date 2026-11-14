@@ -68,6 +68,6 @@ segments:
     - asm
     - func_801F00C4
   - - 5952
-    - asm
-    - func_801F0340
+    - textbin
+    - D_801F0340
 - - 5972

@@ -111,12 +111,12 @@ segments:
   - - 5632
     - c
     - incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200
-    - '@source: 0x801F0200'
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200.c'
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 16, then count down byte 9 and advance byte 2 at zero.'
   - - 5908
     - c
     - incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314
-    - '@source: 0x801F0314'
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314.c'
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 24, subtract two from byte A, then advance source byte B and call 0x801E5988 when byte A re-reads zero.'
   - - 6204
     - asm
@@ -126,8 +126,8 @@ segments:
     - func_801F070C
   - - 7572
     - textbin
-    - func_801F0994
+    - D_801F0994
   - - 7604
-    - asm
-    - func_801F09B4
+    - textbin
+    - D_801F09B4
 - - 7632
