@@ -120,6 +120,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete instruction body 0x8014AA04..0x8014AA0C including return delay slot; complete original word and control-flow review, sized executable ELF function section and complete object text without text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 739_852,
+            length: 36,
+            evidence: "original US SLUS startup entry 0x8014AA0C..0x8014AA30; original PS-X header PC and nine original instruction words establish the complete finite initialization loop, one backward branch and its NOP delay; constructs destination 0x8018B2B8 and exclusive end 0x80190C60, stores zero then advances four bytes and tests the unsigned end; exactly 5738 stores under normal loader entry, mapped RAM, stable code and noninterference assumptions; exact whole executable identity; entry-loop interval only, no complete startup-function or observed execution claim",
+        },
+        NontextRange {
             offset: 740_040,
             length: 472,
             evidence: "original US SLUS; complete instruction body 0x8014AAC8..0x8014ACA0 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 66 text relocations reconcile with original and captured resident bytes; compiler epilogue 0x8014AC90..0x8014ACA0 is unreachable from the original entry and receives no executable-path claim; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -1193,6 +1198,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 955_708,
             length: 32,
             evidence: "original US SLUS 0x8017F53C..0x8017F55C unsigned width/height pairs; bounded byte-pair consumer 0x8014C7F0..0x8014C818; exact executable identity; stored numeric representation only",
+        },
+        NontextRange {
+            offset: 1_004_216,
+            length: 22_952,
+            evidence: "original US SLUS startup-zero-initialization storage 0x8018B2B8..0x80190C60; original PS-X entry loop 0x8014AA0C..0x8014AA30 overwrites exactly these 5738 aligned words with zero before any call under normal loader entry, mapped RAM, stable code and noninterference assumptions; original stored bytes are all zero but the original loop establishes the extent and role; exact whole executable identity; header b_addr and b_size are zero, no header-BSS, heap, neighboring-storage, later-content or observed execution claim",
         },
     ]
 }

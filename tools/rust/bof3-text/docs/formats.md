@@ -1830,6 +1830,30 @@ Neighboring bytes retain their prior status. This establishes instruction repres
 execution, valid arguments, allocator behavior, resource safety and duplicate-source
 ownership remain unverified.
 
+## SLUS startup initialization coverage
+
+Coverage recognizes two additional ranges in the exact original US executable
+identified under [SLUS instruction coverage](#slus-instruction-coverage).
+File intervals include its 2048-byte PS-X header.
+
+| File interval | Runtime interval | Role |
+| --- | --- | --- |
+| `[739852,739888)` | `[0x8014AA0C,0x8014AA30)` | Nine startup-loop instructions |
+| `[1004216,1027168)` | `[0x8018B2B8,0x80190C60)` | 22952 bytes of startup initialization storage |
+
+The header's entry PC is `0x8014AA0C`. The loop constructs the destination and
+exclusive end addresses, stores zero, advances four bytes and branches while
+the unsigned address is below the end. Its sole branch has a `NOP` delay slot.
+Under normal loader entry, valid mapped RAM, stable code and no interference,
+5738 aligned stores clear exactly the destination interval before any call.
+The stored destination bytes are all zero, but the loop establishes their role
+and extent. The header's `b_addr` and `b_size` are both zero.
+
+These ranges establish instruction and initialization-storage representation.
+They do not classify the rest of startup, its trailing data, neighboring storage
+or the heap from `0x80190C60` onward. They do not establish observed execution
+or the storage's later contents.
+
 ## SLUS instruction coverage
 
 Coverage recognizes the following complete bodies in the exact original US
