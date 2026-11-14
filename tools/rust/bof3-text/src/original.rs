@@ -305,6 +305,36 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete 13-word leaf instruction body 0x801502D0..0x80150304 including JR RA delay slot; complete original word, load-delay and structural-flow review reconciles with retained native entry and return; observed ID 0x40D0 selects bank 1, zero-based row 208 and cell 0x8001B834, returning 0x8001C9F7; exact whole executable identity; stable code and descriptor/table bytes, valid readable memory and incoming return control remain conditions; referenced bank data and neighboring code excluded; no matching ELF, arbitrary-ID bounds, general pointer safety, edited rendering or unique-supplier claim",
         },
         NontextRange {
+            offset: 762_848,
+            length: 144,
+            evidence: "Original US SLUS, complete 36-word instruction body 0x801503E0..0x80150470. Original state-2 JAL 0x80159568 and its NOP delay conditionally enter this wrapper. Every original word, local branch, three calls, return and five delay slots agrees with retained RAM. The 24-byte frame and saved RA are restored on return. The exact whole executable identity gates classification. Ordinary callee returns and ABI preservation, valid memory and return control, an intact disjoint frame and stable code/data remain conditions. Referenced fields, callees and neighbors are excluded. No invocation, action-60 script supplier, termination, completion, latch release, resource safety, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
+            offset: 763_836,
+            length: 128,
+            evidence: "Original US SLUS, complete 32-word instruction body 0x801507BC..0x8015083C. Original wrapper JAL 0x80150420 and its NOP delay conditionally enter this dispatcher. Every original word, copied pointer, indirect-call and return delay agrees with retained RAM; the 56-byte frame and saved RA are restored on return. Finite selector alternatives 0 and 2 bind original table targets 0x8015083C and 0x80150E48, without a general selector bound. The exact whole executable identity gates classification. Valid memory and return control, stable code/table bytes, nonaliasing, intact frame and ordinary selected-callee return remain conditions. Table bytes, selected handlers, fields and neighbors are excluded. No invocation, general target safety, callee effects, action-60 script supplier, termination, completion, latch release, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
+            offset: 763_964,
+            length: 1_496,
+            evidence: "Original US SLUS, complete 374-word instruction body 0x8015083C..0x80150E14. Original dispatcher table selector 0 conditionally enters this parser. Every original word, branch, internal jump, sole direct call, return and 60 delay slots agrees with retained RAM; the 48-byte frame and S0..S5/RA are restored on return. Five stored instructions at 0x801509D0..0x801509E4 have an infeasible unsigned-byte-equals-0x100 incoming condition; their classification does not assert execution. The exact whole executable identity gates classification. Valid memory/cursor and return control, ordinary callee return and ABI preservation, intact disjoint frame and stable code/data remain conditions. Script bytes, cursors, tables, external callee and neighbors are excluded. No invocation, cursor bounds, actual action-60 commands, finite termination, completion, latch release, resource safety, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
+            offset: 765_512,
+            length: 80,
+            evidence: "Original US SLUS, complete 20-word instruction body 0x80150E48..0x80150E98. Original outer-dispatcher table selector 2 conditionally enters this body. Every original word, selected indirect call, return and both delay slots agrees with retained RAM; the 32-byte frame and saved RA are restored on return. Finite subselector alternatives 0 and 1 bind the two in-body constant targets 0x80150E98 and 0x80150F08, without a general selector bound. The exact whole executable identity gates classification. Valid memory and return control, intact disjoint frame, nonaliasing, stable selector/code and ordinary selected-handler return remain conditions. Fields, handlers and neighbors are excluded. No invocation, general target safety, actual action-60 commands, completion, latch release, resource safety, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
+            offset: 765_592,
+            length: 112,
+            evidence: "Original US SLUS, complete 28-word leaf instruction body 0x80150E98..0x80150F08. Original dispatcher 0x80150E48 conditionally calls this constant target for subselector 0. Every original word, branch, return and three delay slots agrees with retained RAM. This leaf preserves SP, RA and saved registers. The exact whole executable identity gates classification. Valid memory and return control, nonaliasing and stable code/data remain conditions. Fixed task-slot and interpreter fields and neighbors are excluded. No invocation, selected-task identity, actual action-60 commands, completion, latch release, resource safety, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
+            offset: 765_704,
+            length: 52,
+            evidence: "Original US SLUS, complete 13-word leaf instruction body 0x80150F08..0x80150F3C. Original dispatcher 0x80150E48 conditionally calls this constant target for subselector 1. Every original word, branch, return and two delay slots agrees with retained RAM. This leaf preserves SP, RA and saved registers. The exact whole executable identity gates classification. Valid memory and return control, nonaliasing and stable code/data remain conditions. Fixed task-slot and interpreter fields and neighbors are excluded. No invocation, selected-task identity, actual action-60 commands, consistent boolean result, completion, latch release, resource safety, rendering, editing or ELF-match claim.",
+        },
+        NontextRange {
             offset: 780_988,
             length: 1_044,
             evidence: "original US SLUS complete 1044-byte instruction body 0x80154ABC..0x80154ED0; original direct JAL 0x80154FA4 from the wrapper bound to the retained GAME 0x801BB774 return witness; all 261 aligned words, ten conditional branches, seven internal jumps, sole JR RA and every delay slot form a closed whole-entry structural CFG; call-free 24-byte frame restored before JR RA 0x80154EC8 and NOP; original and retained origin/endpoint RAM agree; ordinary return, writable disjoint frame, nonalias and stable-code assumptions; no matching ELF, all-path native execution, argument/resource safety, full coverage, rendering or editing claim",
@@ -8627,9 +8657,24 @@ pub fn payload_nontext_ranges(
                     evidence: "Original US GAME entry 0, complete 208-word instruction body 0x801A50C0..0x801A5400. The original ordinary-record dispatcher's type-1 arm calls it at 0x801A4D08 with A0=S0 in the delay. All ASM words, local branches, five calls, return, delay slots and restored 32-byte frame agree with original archive and retained RAM bytes. Ordinary callee returns and ABI preservation, a valid nonnegative slot below 30, readable record, writable work and scratch storage, intact frame, nonaliasing and stable code/data remain conditions. The exact original archive and entry identities gate classification. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, lifetime, resource-safety, rendering, editing or ELF-match claim.",
                 },
                 NontextRange {
+                    offset: 69_024,
+                    length: 800,
+                    evidence: "Original US GAME entry 0, complete 200-word instruction body 0x801A65A0..0x801A68C0. The original ordinary-record dispatcher's type-6 arm calls it at 0x801A4C98 with A0=S0 in the delay. Every original ASM word, local branch, five calls, return and nine delay slots agrees with original archive and retained RAM bytes. The 32-byte frame and S0/S1/RA are restored on return. The exact original archive and entry identities gate classification. A valid nonnegative slot below 30, valid record/work/scratch memory, ordinary callee returns and ABI preservation, intact disjoint frame, nonaliasing and stable code/data remain conditions. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, callback producer, lifetime, resource safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 71_512,
+                    length: 856,
+                    evidence: "Original US GAME entry 0, complete 214-word instruction body 0x801A6F58..0x801A72B0. The original ordinary-record dispatcher's type-5 arm calls it at 0x801A4C68 with A0=S0 in the delay. Every original ASM word, local branch, five calls, return and nine delay slots agrees with original archive and retained RAM bytes. The 32-byte frame and S0/S1/RA are restored on return. The exact original archive and entry identities gate classification. A valid nonnegative slot below 30, valid record/work/scratch memory, ordinary callee returns and ABI preservation, intact disjoint frame, nonaliasing and stable code/data remain conditions. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, callback producer, lifetime, resource safety, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
                     offset: 72_424,
                     length: 72,
                     evidence: "original US GAME entry 0; complete 18-word instruction body 0x801A72E8..0x801A7330 including all three control-transfer delays; complete original ASM, structural flow and load scheduling reconcile with retained RAM; qualified original ordinary-record call at 0x801A3F80 enters dispatcher 0x801A4BF8, whose high-nibble-D arm calls this setter at 0x801A4C48 with A0=S0 in its delay; the call-free body preserves SP, RA and saved registers; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; valid incoming record and current-work memory, return control, nonaliasing and stable code/data remain conditions; input/work fields, tables, caller bodies and neighbors excluded; no actual D/nonzero/0C directive, eligible task, callback lifetime, observed entry, ordinary route, matching ELF, argument/resource safety, rendering, safe editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 72_496,
+                    length: 980,
+                    evidence: "Original US GAME entry 0, complete 245-word instruction body 0x801A7330..0x801A7704. The original ordinary-record dispatcher's type-9 arm calls it at 0x801A4CB8 with A0=S0 in the delay. Every original ASM word, local branch, two internal jumps, six calls, return and seventeen delay slots agrees with original archive and retained RAM bytes. The 32-byte frame and S0/S1/S2/RA are restored on return. The exact original archive and entry identities gate classification. A valid nonnegative slot below 30, valid record/work/scratch memory, ordinary callee returns and ABI preservation, intact disjoint frame, nonaliasing and stable code/data remain conditions. The exact named record can take a gate-dependent inactive return without incrementing the slot counter. Records, work fields, tables, callees and neighbors are excluded. No invocation, complete field initialization, callback producer, lifetime, resource safety, rendering, editing or ELF-match claim.",
                 },
                 NontextRange {
                     offset: 105_072,
@@ -8655,6 +8700,11 @@ pub fn payload_nontext_ranges(
                     offset: 155_488,
                     length: 80,
                     evidence: "original US GAME entry 0 complete 80-byte instruction body 0x801BB760..0x801BB7B0; original JAL 0x801BB520 and retained paired native PCs 0x801BB77C/0x801BB52C with return addresses 0x801BB77C/0x801BB528 and restored 24-byte frame bind execution inside this body; all 20 original words, one direct call, one conditional branch, sole JR RA and three delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, sampler semantics, argument/resource safety, rendering or editing claim",
+                },
+                NontextRange {
+                    offset: 178_772,
+                    length: 428,
+                    evidence: "Original US GAME entry 0, complete 107-word instruction body 0x801C1254..0x801C1400. Original type-6 constructor JAL 0x801A660C and its NOP delay conditionally enter this helper. Every original ASM word, local branch, two calls, return and five delay slots agrees with original archive and retained RAM bytes. The 32-byte frame and S0/S1/S2/RA are restored on return. The exact original archive and entry identities gate classification. Valid record/table/scratch-selected work and resource memory, ordinary callee returns and ABI preservation, intact disjoint frame, nonaliasing and stable code/data remain conditions. Referenced fields, tables, external helpers and neighbors are excluded. No invocation, lookup success, resource-pointer safety, transitive effects, callback producer, lifetime, rendering, editing or ELF-match claim.",
                 },
                 NontextRange {
                     offset: 183_608,

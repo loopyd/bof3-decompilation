@@ -2417,6 +2417,38 @@ all words, branches, calls, terminal BREAK guards, returns and delay slots in
 both bodies. Actual state-0 invocation, actor setup correctness, sampler
 semantics and resource safety remain unqualified.
 
+## SLUS dialogue interpreter instruction coverage
+
+The exact original US executable gate also qualifies these complete instruction
+bodies. File offsets include the 2048-byte header. Every original instruction
+word and delay slot agrees with retained RAM. Structural review accounts for
+all branches, local jumps, load schedules and saved frames.
+
+| Runtime range | File offsets | Bytes |
+| --- | --- | ---: |
+| `[0x801503E0,0x80150470)` | `[762848,762992)` | 144 |
+| `[0x801507BC,0x8015083C)` | `[763836,763964)` | 128 |
+| `[0x8015083C,0x80150E14)` | `[763964,765460)` | 1496 |
+| `[0x80150E48,0x80150E98)` | `[765512,765592)` | 80 |
+| `[0x80150E98,0x80150F08)` | `[765592,765704)` | 112 |
+| `[0x80150F08,0x80150F3C)` | `[765704,765756)` | 52 |
+
+The original state-2 call at `0x80159568` enters `0x801503E0`, which calls the
+outer dispatcher at `0x80150420`. Its finite selector alternatives 0 and 2
+bind the parser and mode-2 dispatcher. The latter constructs two constant
+targets selected by subselector 0 or 1. Neither dispatcher proves a general
+index bound. The parser's five stored instructions at
+`0x801509D0..0x801509E4` have an infeasible unsigned-byte-equals-`0x100`
+incoming condition. They remain stored instructions without an execution claim.
+
+Classification assumes valid memory and cursors, intact disjoint frames,
+nonaliasing, stable code and selectors, and ordinary external returns with ABI
+preservation. Frames are restored on return; the parser has a backedge without
+a finite-termination proof. Scripts, tables, task fields, external callees and
+neighboring bytes retain their prior status. These records do not establish
+an action-60 script supplier, selected-task identity, latch release, invocation,
+completion, resource safety, rendering, safe editing or an ELF match.
+
 ## GAME work and event instruction coverage
 
 The exact original GAME entry-0 gate qualifies these complete instruction bodies.
@@ -2432,12 +2464,19 @@ Each range requires the original archive identity, raw transfer mode, load addre
 | `[0x801A4AA8,0x801A4B80)` | `[62120,62336)` | `[64168,64384)` | 216 |
 | `[0x801A4D54,0x801A50C0)` | `[62804,63680)` | `[64852,65728)` | 876 |
 | `[0x801A50C0,0x801A5400)` | `[63680,64512)` | `[65728,66560)` | 832 |
+| `[0x801A65A0,0x801A68C0)` | `[69024,69824)` | `[71072,71872)` | 800 |
+| `[0x801A6F58,0x801A72B0)` | `[71512,72368)` | `[73560,74416)` | 856 |
+| `[0x801A7330,0x801A7704)` | `[72496,73476)` | `[74544,75524)` | 980 |
+| `[0x801C1254,0x801C1400)` | `[178772,179200)` | `[180820,181248)` | 428 |
 
 Structural review covers every original word, local branch, call, terminal BREAK
 guard, return, delay slot and frame save/restore sequence. All instruction bytes
-match retained RAM. Original type-0 and type-1 dispatcher arms bind the two
-constructors and their calls to the three smaller work helpers. The pool caller
-at `0x801A0790` passes an actor's subrecord at offset `0x74` to `0x801A17A0`.
+match retained RAM. Original dispatcher arms for types 0, 1, 5, 6 and 9 bind
+the five constructors and their calls to the smaller work helpers. Type 6 calls
+`0x801C1254` at `0x801A660C`. Type 9 can deactivate the selected slot and
+return without incrementing the counter, depending on its gate and record.
+The pool caller at `0x801A0790` passes an actor's subrecord at offset `0x74`
+to `0x801A17A0`.
 The reader's field at offset 8 therefore refers to the actor's field at `0x7C`.
 The caller prefix itself is not classified by this rule.
 
@@ -2445,7 +2484,7 @@ Classification assumes valid record, work, scratch and table memory, intact
 frames, nonaliasing, stable code/data and ordinary callee returns with ABI
 preservation. The constructors additionally require a nonnegative slot below
 30; their signed upper-bound test alone does not establish that domain.
-Referenced data, event scripts, external helpers and neighboring bytes retain
+Referenced data, event scripts, external callees and neighboring bytes retain
 their prior status. These instruction records do not establish invocation,
 complete field initialization, event triggers, work lifetime, resource safety,
 rendering, safe editing or an ELF match.
