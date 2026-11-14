@@ -775,6 +775,25 @@ of the separate plane remain unresolved, and the rule excludes its storage.
 Integral alternatives qualify the stored main words without proving neighbor
 safety for fractional coordinates, terrain meaning or actual visitation.
 
+The original initializer at `0x80157F98..0x801580A4` reads the unsigned-u16
+relative offset at payload bytes `[32,34)`, multiplies it by four and adds
+`0x80104000`. Coverage includes that two-byte field when present. If the first
+four-byte list word fits inside the payload and is zero, coverage also includes
+that terminator. The `LW` at `0x80157FD4` and zero-test at `0x80157FDC` skip
+the callback loop for this value. Nonzero records, subsequent list words and
+callback targets remain unresolved. Both additions preserve prior field records
+and establish neither actual initialization nor auxiliary storage ownership.
+
+The [exact original SLUS identity](#slus-instruction-coverage) also qualifies
+the complete 144-byte leaf at `0x8014E3F4..0x8014E484`, file offsets
+`[754676,754820)`. The original GAME call at `0x8019FB00` conditionally enters
+after `clearAllRecords` returns. Review covers all 36 words and four branch or
+return delay slots. The body resets fixed slot bytes at `0x80145BD4` and
+`0x80145D54`; it does not initialize the auxiliary plane. Valid nonaliased
+stores, stable code and ordinary incoming return control remain conditions.
+Referenced slot data, actual invocation, auxiliary ownership, rendering and
+safe editing remain unqualified.
+
 Conditional reads of subsequent packed words depend on entity fields whose
 producers remain unqualified. Those words, unselected records, gaps and tails
 stay unresolved. The rule does not establish complete tables, physical texture
@@ -819,8 +838,22 @@ and cells `[5371,5380)` and `[11841,11872)`. AREA002 excludes words
 `[7328,7330)` and `[10906,10908)` and cells `[7447,7456)` and
 `[10929,10960)`. Other payload bytes retain their prior status. The rule does not
 establish complete program consumption, runtime execution, rendering or a unique
-supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
-unqualified; entries at the same load address do not inherit any profile.
+supplier.
+
+The original startup callback at `0x8014EA80` publishes the literal base
+`0x800D3800` to `0x801459F0` at `0x8014EBE4`, after FIRST readiness.
+FIRST has no entry at that destination; this publication is independent of
+its payload pointers. For world 24, the original GAME reload call at
+`0x8019FBA8` requests file slot `0x2C3`, which resolves to original AREA024.
+Entry 4 is loader slot 5 and declares raw transfer to `0x800D3800`.
+
+That transfer requires bit `0x20` of `0x80146854` to be clear. The staging
+function at `0x80162B08` otherwise rejects this mode and ends progression
+early. Readiness alone therefore does not prove entry 4 was copied. If the
+permitted exact transfer completes, the published pointer stays unchanged and
+no replacement intervenes, the payload supplies the root read at `0x8014D880`.
+This conditional AREA024 binding establishes neither actual selection and
+consumption nor the layouts of other entries at the same load address.
 
 ## START initializer instruction coverage
 

@@ -260,6 +260,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete original instruction body 0x8014E22C..0x8014E284 including return delay slots; original JAL at 0x8014AB40 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 754_676,
+            length: 144,
+            evidence: "original US SLUS; complete 36-word leaf instruction body 0x8014E3F4..0x8014E484; original GAME JAL 0x8019FB00 conditionally enters after clearAllRecords returns, through the entry-reachable reload call in the complete sized applySelectionContext ELF root; all original words, four control-transfer delays, closed seven-block flow and fixed slot stores match retained RAM; exact whole executable identity; ordinary incoming return control, valid nonaliasing stores and stable code remain conditions; referenced slot data, neighboring code and auxiliary area storage excluded; no matching callee ELF, actual invocation, auxiliary initialization or ownership, resource safety, rendering or editing claim",
+        },
+        NontextRange {
             offset: 755_044,
             length: 60,
             evidence: "original US SLUS; complete original instruction body 0x8014E564..0x8014E5A0 including return delay slots; original JAL at 0x8014ACF4 in the qualified executable caller at 0x8014ACA0 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -2304,6 +2309,16 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
         .collect();
     let evidence = "original US raw area numeric u8 grid; header-relative offset at bytes 20..22 multiplied by four and published to 0x8014931C by original SLUS 0x80154094..0x801540F8; complete original getter 0x80166CB0..0x80166CEC returns unchanged byte at base+y*width+x and original GAME caller applies numeric masks/comparisons; finite declared-grid coordinates cover every width*height byte with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and checked source bounds; prior fields retain their own evidence; no global caller-coordinate bounds, natural visitation, terrain semantics, full allocation, rendering or editing claim";
     let mut numeric_planes = vec![(byte_grid, byte_grid_end, evidence)];
+    if let Some(offset) = half(32) {
+        numeric_planes.push((32, 34, "original US raw area unsigned-u16 relative-offset field at payload bytes 32..34; original initializer 0x80157F98..0x801580A4 reads it with LHU 0x80157FA4, scales by four and adds payload base 0x80104000 before the first list-word read; exact original archive, raw mode, load, checkword agreement and checked two-byte source extent; prior fields retain their own evidence; list storage and nonzero callbacks require separate qualification; no actual invocation, callback semantics, auxiliary storage, resource safety, rendering or editing claim"));
+        let terminator = offset.checked_mul(4).and_then(|start| {
+            let end = start.checked_add(4)?;
+            (data.get(start..end)? == [0, 0, 0, 0]).then_some((start, end))
+        });
+        if let Some((start, end)) = terminator {
+            numeric_planes.push((start, end, "original US raw area first callback-list zero terminator; original initializer 0x80157F98..0x801580A4 uses the unsigned-u16 offset at payload bytes 32..34, scaled by four, for LW 0x80157FD4 and zero-test 0x80157FDC; complete four-byte source extent is checked and must contain u32 zero; exact original archive, raw mode, load and checkword agreement; prior fields retain their own evidence; nonzero records, subsequent list words, callback targets and auxiliary storage excluded; no actual invocation, initialization, ownership, callback semantics, resource safety, rendering or editing claim"));
+        }
+    }
     if data.get(42..44).is_some() {
         numeric_planes.push((42, 44, "original US raw area unsigned-u16 relative-offset field at payload bytes 42..44; original sampler 0x80154ABC..0x80154ED0 and complete setter 0x80155038..0x8015507C scale the field by four and add payload base 0x80104000 before numeric signed-byte reads or writes; exact original archive, raw mode, load, checkword agreement and checked two-byte source extent; prior fields retain their own evidence; auxiliary storage, initialization, ownership, coordinate safety, terrain semantics, full allocation, rendering and editing excluded"));
     }
