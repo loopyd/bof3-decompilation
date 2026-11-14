@@ -804,13 +804,19 @@ or palette sources, rendering, safe editing or the absence of rasterized text.
 Coverage recognizes a bounded variant of original US AREA resident animation
 fields. Admission requires the original archive identity and a reviewed tuple
 of entry index, archive offset, raw mode, load address `0x800D3800`, checkword,
-payload length and SHA-256. Supported tuples use entry 4; their archive offsets
-vary. Use `bin/harness text coverage --root DIR --strict --json` to inspect the
+payload length and SHA-256. Supported tuples use entry 4 or entry 10; their archive
+offsets vary. Use `bin/harness text coverage --root DIR --strict --json` to inspect the
 qualified fields and remaining gaps for a source tree.
 
 AREA030, AREA089 and AREA129 instead hold resident data in entry 10. Their normal
-token operand reaches beyond the declared cell directory into metadata. This
-alias requires separate consumer evidence, so these profiles remain unresolved.
+token 14 in program 530 has duration 2 and operand 14, beyond its declared
+14-cell directory. The exact lookup at payload `[590,592)` contains relative
+offset 1, which selects zero-part cell byte 563. The original lookup and count
+readers at `0x8014DBE4..0x8014DC04` and `0x8014C6E8..0x8014C708` qualify
+this one alias, conditional on stable source/work/pointers, ordinary helper
+returns and noninterference. Both lookup bytes must already be typed ordinary
+cell fields, and the zero count must already be typed metadata. The alias adds
+no physical bytes or records. Every other metadata alias remains unsupported.
 
 The metadata covers root-relative u32 group offsets, group-relative u16 program
 offsets, program count bytes, duration/operand pairs and referenced relative cell
@@ -825,7 +831,7 @@ fetch without recursively following controls.
 
 Every directory, program and declared cell must fit its containing extent.
 Distinct next pointers bound those extents. Only referenced cell lookup words,
-counts and five-byte parts qualify. Conflicting aliases and overlaps between
+counts and five-byte parts qualify. Unqualified aliases and overlaps between
 metadata and cell fields refuse the profile. Metadata forms merged contiguous
 intervals; cell counts and each part remain separate records.
 
