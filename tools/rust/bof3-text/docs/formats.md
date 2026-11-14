@@ -2918,10 +2918,12 @@ contain 3, 4, 4, 2 and 2 records; the sixth has count zero. Manual and Auto rema
 protected because this path skips their group. Preserve all thirty count/position
 bytes, fifty trailing bytes, sixteen Manual/Auto bytes and sixteen group-map
 bytes. Controlled Config rendering of all fifteen edited fields is verified with
-a menu availability fixture.
+a menu availability fixture. All fifteen STATUS-only glyph edits also appear in
+Config after booting from BIOS, loading an unchanged game-created save and
+opening Config through the main menu. Differences from the matching control screen
+are confined to the fifteen first-character regions; settings remain unchanged.
 
-Ordinary Config navigation after loading a game-created save displays all fifteen
-original fields without changing settings. Observed calls at `0x801E2854` enter
+Original and edited ordinary Config captures bind calls at `0x801E2854` to
 reader `0x801E2C00` for groups 0 through 5. Group 5 draws no fields. For groups 0
 through 4, calls at `0x801E2D18` supply all fifteen field pointers at `SP + 0x10`
 and their stored glyph limits in `A3`. These calls enter renderer `0x8014FC90`
@@ -2930,8 +2932,9 @@ return continuations.
 
 Ordinary Config navigation also selects the row for message speed without
 changing settings. The selected original Med. field reaches `0x801E2CDC` and
-enters renderer `0x8014F800` with return address `0x801E2CE4`. Its text pointer
-`0x801ECD2E` is at `SP + 0x10`, and `A3` holds its stored glyph limit of four.
+enters renderer `0x8014F800` with return address `0x801E2CE4`; its edited form
+follows the same path. Its text pointer `0x801ECD2E` is at `SP + 0x10`, and `A3`
+holds its stored glyph limit of four.
 The observed calls reach their return continuation. Other fields on this draw
 path, glyph reads, pixels tied to individual calls, transitive callee effects,
 general selector bounds, Manual/Auto consumption and the unique START or STATUS
