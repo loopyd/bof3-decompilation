@@ -91,11 +91,13 @@ segments:
     - asm
     - returnZero
   - - 6048
-    - asm
+    - c
     - returnZero2
+    - '@source: src/bof3/scenario/returnZero2_scena16.c'
   - - 6056
-    - asm
+    - c
     - returnZero3
+    - '@source: src/bof3/scenario/returnZero3_scena16.c'
   - - 6064
     - c
     - clampPaletteChannels
