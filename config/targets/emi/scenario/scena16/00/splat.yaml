@@ -31,8 +31,9 @@ segments:
     - dispatchPrimaryState
     - '@source: src/bof3/scenario/dispatchPrimaryState_scena16.c'
   - - 204
-    - asm
+    - c
     - bootPrimaryState
+    - '@source: src/bof3/scenario/bootPrimaryState_scena16.c'
   - - 400
     - c
     - selectRouteForPendingWorld
