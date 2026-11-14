@@ -47,6 +47,6 @@ segments:
     - '@source: src/bof3/bmagic/copyEquipmentObjectNameBmagicMagic21600_801EEF98.c'
     - '@behavior: copies the name of the equipment object selected by the masked category and index pair into the shared name slot at 0x801490D8 with the bounded count 0xC: categories 1, 2 and 3 select the weapon, armor and accessory tables with record strides 0x18, 0x16 and 0x14, while the default arm, which also takes the serialized empty category 0, selects the item table with stride 0x12.'
   - - 1144
-    - asm
-    - func_801EF078
+    - textbin
+    - T_801EF078
 - - 1152
