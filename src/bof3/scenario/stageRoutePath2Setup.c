@@ -25,7 +25,7 @@
  * unsigned (`lhu`) while the +0x64 row word re-reads the same local through
  * `(s16)`, so the compiler folds the sign extension into an `lh` instead of
  * re-materialising `lui`/`addiu` for 0x801492D8. The progress word is stored
- * through the bound byte object as a `u32` view and the front selector pair
+ * through a nonvolatile `u32` view of the bound word and the front selector pair
  * reads back non-volatile, because volatile stores block the delay-slot fills
  * the original shows: `li a0,0x300` belongs to the func_80154FD8 call and
  * `li a1,2` to the closing func_8015B580 call. The trailing

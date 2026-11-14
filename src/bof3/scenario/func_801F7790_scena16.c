@@ -83,7 +83,7 @@ void func_801F7790(void) {
       }
 
       func_8014ECAC(1u);
-      D_80146866 = 0x30u;
+      ((u8 *)&g_ScenarioProgress)[2] = 0x30u;
       D_8014832E = 0x1fu;
 
       {

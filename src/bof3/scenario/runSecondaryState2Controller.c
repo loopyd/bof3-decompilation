@@ -95,7 +95,7 @@ void runSecondaryState2Controller(void) {
       func_8015C088();
       func_8015C100();
       func_8014ECAC(1u);
-      D_80146867 = 1u;
+      ((u8 *)&g_ScenarioProgress)[3] = 1u;
       D_80146876 = 0u;
       D_80146875 = (u8)(D_80146875 + 1u);
       break;
@@ -103,7 +103,7 @@ void runSecondaryState2Controller(void) {
     case 4: {
       u8* next;
 
-      if (D_80146867 == 0x54u) {
+      if (((u8 *)&g_ScenarioProgress)[3] == 0x54u) {
         func_8014ECAC(0u);
         next = &D_80146875;
         *next = (u8)(*next + 1u);
@@ -175,7 +175,7 @@ void runSecondaryState2Controller(void) {
       u8* scratch;
       u8  object_index;
 
-      if (D_80146866 != 0x23u) {
+      if (((u8 *)&g_ScenarioProgress)[2] != 0x23u) {
         break;
       }
 
@@ -199,11 +199,11 @@ void runSecondaryState2Controller(void) {
     }
 
     case 11:
-      if (D_80146867 == 0x60u) {
+      if (((u8 *)&g_ScenarioProgress)[3] == 0x60u) {
         func_8019FA28(0x1fu, 0x70000u, 0x140000u, 0u);
         D_80143F1D = 0xffu;
         func_80161CD0(6u, 0x50, 0x40);
-        D_80146866 = 0u;
+        ((u8 *)&g_ScenarioProgress)[2] = 0u;
         D_80146874 = 3;
         D_80146875 = 0u;
       }
