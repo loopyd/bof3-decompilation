@@ -3496,8 +3496,12 @@ digits respectively. All four formats use the 64-byte scratch buffer at
 `0x80145AD4`. The largest output, including NUL, occupies eleven bytes.
 The alignment gaps `0x801D0E8D..0x801D0E90`, `0x801D0E95..0x801D0E98` and
 `0x801D0E9D..0x801D0EA0` remain protected. Ordinary shop Buy-list observations
-verify an edited price suffix through `%6dG` at `0x801D0E88`. The separate money
-display remains `0Z`. Quantity and total rendering remain unverified.
+verify the edited price suffix `%6dG` at `0x801D0E88`. Sell quantity-preview
+observations verify that price suffix and the edited total suffix `%7dG` at
+`0x801D0E90`. The Sell preview also covers the original starred quantity field
+for one item. The separate money display retains its original `Z` suffix.
+Other quantity paths, larger quantities, purchase effects and sale effects
+remain unverified.
 
 Four further SHOP formats use the existing byte-decimal codecs. Capacities
 include NUL; formatted bounds exclude it.
