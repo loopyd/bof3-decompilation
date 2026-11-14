@@ -14,5 +14,5 @@ drawTranslucentBeamBodyQuadsBetweenTwoProjectedPointsWithHalfWidthsScenarioSce15
 drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914 = 0x801D1914;
 drawTranslucentSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef000_801D1A20 = 0x801D1A20;
 drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C = 0x801D1C1C;
-func_801D1F88 = 0x801D1F88;
-func_801D1FA8 = 0x801D1FA8;
+T_801D1F88 = 0x801D1F88;
+T_801D1FA8 = 0x801D1FA8;

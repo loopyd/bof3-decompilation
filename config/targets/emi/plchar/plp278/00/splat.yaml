@@ -65,6 +65,7 @@ segments:
   - - 2608
     - c
     - dispatchWorkByte2Tablefcd4PlcharPlp27800_801CEE30
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefcd4PlcharPlp27800_801CEE30.c'
   - - 2676
     - asm
     - func_801CEE74
@@ -97,6 +98,7 @@ segments:
   - - 5732
     - c
     - dispatchWorkByte2TablefcecPlcharPlp27800_801CFA64
+    - '@source: src/bof3/plchar/dispatchWorkByte2TablefcecPlcharPlp27800_801CFA64.c'
   - - 5800
     - asm
     - func_801CFAA8
@@ -113,8 +115,8 @@ segments:
     - dispatchWorkHalfword2cTablefd00PlcharPlp27800_801CFC70
   - - 6324
     - textbin
-    - func_801CFCB4
+    - T_801CFCB4
   - - 6388
-    - asm
-    - func_801CFCF4
+    - textbin
+    - T_801CFCF4
 - - 6412

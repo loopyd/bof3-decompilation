@@ -65,6 +65,7 @@ segments:
   - - 2100
     - c
     - dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34
+    - '@source: src/bof3/plchar/dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34.c'
   - - 2168
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp57800_801CEC78
@@ -129,8 +130,8 @@ segments:
     - func_801CFA74
   - - 5816
     - textbin
-    - func_801CFAB8
+    - T_801CFAB8
   - - 5880
-    - asm
-    - func_801CFAF8
+    - textbin
+    - T_801CFAF8
 - - 5908

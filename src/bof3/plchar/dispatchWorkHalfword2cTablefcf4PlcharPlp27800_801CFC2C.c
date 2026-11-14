@@ -4,7 +4,7 @@
  * pointers, 0x801CFCF4 through 0x801CFD08, holding this payload's own functions
  * 0x801CE404, 0x801CEBFC, 0x801CF858, 0x801CE610, 0x801CEE30 and 0x801CFA64. The
  * wider run at 0x801CFCB4 ends at 0x801CFCF0, so these six words are their own run
- * and the target's `asm` row of the same base places them; the run is only
+ * and the target's `textbin T_801CFCF4` row places them; the run is only
  * referenced here. This dispatcher indexes it from 0x801CFCF4, so its base is entry
  * 0 of that run. The neighbouring 0x801CFD00, entry 3, is the base the sibling
  * dispatcher at 0x801CFC70 uses. Because the run is the payload's last six words,

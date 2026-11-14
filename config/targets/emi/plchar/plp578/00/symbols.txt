@@ -23,5 +23,5 @@ func_801CF8AC = 0x801CF8AC;
 clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4 = 0x801CF9C4;
 dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30 = 0x801CFA30;
 func_801CFA74 = 0x801CFA74;
-func_801CFAB8 = 0x801CFAB8;
-func_801CFAF8 = 0x801CFAF8;
+T_801CFAB8 = 0x801CFAB8;
+T_801CFAF8 = 0x801CFAF8;

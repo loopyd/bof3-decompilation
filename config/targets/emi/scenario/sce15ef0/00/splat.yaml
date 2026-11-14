@@ -90,8 +90,8 @@ segments:
     - '@source: src/bof3/scenario/drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPointsScenarioSce15ef000_801D1C1C.c'
   - - 5000
     - textbin
-    - func_801D1F88
+    - T_801D1F88
   - - 5032
-    - asm
-    - func_801D1FA8
+    - textbin
+    - T_801D1FA8
 - - 5048
