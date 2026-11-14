@@ -1058,7 +1058,7 @@ selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
 
-## GAME actor-dispatch instruction coverage
+## GAME actor and record dispatch instruction coverage
 
 Coverage recognizes these complete instruction bodies under the existing exact
 US `GAME.EMI#0` archive and payload identities. Offsets are relative to entry 0.
@@ -1069,6 +1069,7 @@ checkword `0x1E`, size 229720 and payload SHA-256
 | Payload interval | Runtime interval | Bytes |
 | --- | --- | ---: |
 | `[15424,15704)` | `[0x80199440,0x80199558)` | 280 |
+| `[18660,18836)` | `[0x8019A0E4,0x8019A194)` | 176 |
 | `[108792,108908)` | `[0x801B00F8,0x801B016C)` | 116 |
 | `[164804,165112)` | `[0x801BDBC4,0x801BDCF8)` | 308 |
 | `[176744,176820)` | `[0x801C0A68,0x801C0AB4)` | 76 |
@@ -1079,8 +1080,14 @@ That body first calls `0x801C0A68`. Its first actor branch publishes
 `0x80145E90` to `0x80146250` and `0x1F800044`, then calls `0x801B00F8`
 at `0x8019948C`. The reader calls `0x801C3154` and `0x801BDBC4` before
 loading its actor-selected function pointer and making an indirect call.
-All five bodies match the original archive and retained RAM. Complete original
+All six bodies match the original archive and retained RAM. Complete original
 instruction and control-flow review includes every delay slot and return.
+
+AREA030 entry-4 call `0x801E0C00` conditionally enters `0x8019A0E4`.
+This updater visits 20 records at `0x80143FC8` with stride `0x74`. For each
+active record, it publishes the pointer to `0x1F800044` and dispatches byte 5
+through `0x801C7C70`. It does not set `A0` or publish `0x80146884`. The
+record fields and table cells retain their prior classifications.
 
 Classification covers these instruction bytes. Ordinary prior and callee returns,
 preserved saved values, valid memory and return control, intact nonaliasing frames
