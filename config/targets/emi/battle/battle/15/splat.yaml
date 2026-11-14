@@ -1149,8 +1149,10 @@ segments:
     - '@source: src/bof3/battle/func_800A7694_battle15.c'
     - '@behavior: Writes the nine class-slot bytes 0x801EBEFA..0x801EBF02 and their record copies at +0x2B and +0x4B of the active battler record 0x80145F04 + D_80146374 * 0x140: each signed index argument is offset by two and clamped to 0..4 before indexing the local byte tables 0x800B4E94 (slots 0-2), 0x800B4E9E (slot 5) and 0x800B4E99 (slots 7-8), while slots 3, 4 and 6 store the constant 2.'
   - - 69816
-    - asm
-    - func_800A78B8
+    - c
+    - fillRecordSlotListFromFormAndGroups
+    - '@source: src/bof3/battle/fillRecordSlotListFromFormAndGroups.c'
+    - '@behavior: Fills the ten-entry slot list at +0x70 of the active battler record 0x80145F04 + D_80146374 * 0x140: the three bytes of the row selected by the form byte 0x800B6F58 in the three-byte table 0x800B4EA4 are copied in order up to the first zero byte, then the positive group bytes 0x800B6F60 through 0x800B6F64 append their groups 0 through 4 through func_800A7B40, groups 6 through 9 append only while the shared gate byte 0x800B6F69 is positive, group 5 and group 0xE append under 0x800B6F69 and 0x800B6F63 inside the 0x800B6F60 block, groups 0xC, 0xB and 0xD append under 0x800B6F6C, 0x800B6F6B and 0x800B6F69, and the byte 0xD9 is stored at the resulting count with every remaining entry up to ten zeroed.'
   - - 70464
     - c
     - func_800A7B40

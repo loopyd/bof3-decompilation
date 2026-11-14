@@ -221,6 +221,7 @@ func_800A6CF8 = 0x800A6CF8;
 func_800A6D84 = 0x800A6D84;
 lookupClampedS8Table = 0x800A7648;
 func_800A7694 = 0x800A7694;
+fillRecordSlotListFromFormAndGroups = 0x800A78B8;
 func_800A7B40 = 0x800A7B40;
 func_800A82A0 = 0x800A82A0;
 func_800A82F8 = 0x800A82F8;
