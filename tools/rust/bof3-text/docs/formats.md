@@ -1058,6 +1058,37 @@ selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
 
+## GAME actor-dispatch instruction coverage
+
+Coverage recognizes these complete instruction bodies under the existing exact
+US `GAME.EMI#0` archive and payload identities. Offsets are relative to entry 0.
+The entry must use raw mode 0, archive offset 2048, load address `0x80195800`,
+checkword `0x1E`, size 229720 and payload SHA-256
+`1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff`.
+
+| Payload interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[15424,15704)` | `[0x80199440,0x80199558)` | 280 |
+| `[108792,108908)` | `[0x801B00F8,0x801B016C)` | 116 |
+| `[164804,165112)` | `[0x801BDBC4,0x801BDCF8)` | 308 |
+| `[176744,176820)` | `[0x801C0A68,0x801C0AB4)` | 76 |
+| `[186708,186884)` | `[0x801C3154,0x801C3204)` | 176 |
+
+The original AREA030 entry-4 frame calls `0x80199440` at `0x801E0BD8`.
+That body first calls `0x801C0A68`. Its first actor branch publishes
+`0x80145E90` to `0x80146250` and `0x1F800044`, then calls `0x801B00F8`
+at `0x8019948C`. The reader calls `0x801C3154` and `0x801BDBC4` before
+loading its actor-selected function pointer and making an indirect call.
+All five bodies match the original archive and retained RAM. Complete original
+instruction and control-flow review includes every delay slot and return.
+
+Classification covers these instruction bytes. Ordinary prior and callee returns,
+preserved saved values, valid memory and return control, intact nonaliasing frames
+and stable code and pointers remain conditions. Selected handlers, tables,
+actors, palettes, state and neighboring bodies retain their prior classifications.
+This evidence does not establish observed entry, general selector bounds, callee
+effects, resource safety, rendering, safe editing or an ELF match.
+
 ## SHOP selector instruction coverage
 
 Coverage recognizes these complete bodies in original US `SHOP.EMI#0`.
