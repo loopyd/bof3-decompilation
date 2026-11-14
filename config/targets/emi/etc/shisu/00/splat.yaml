@@ -192,7 +192,7 @@ segments:
     - drawTexturedFrameShisu00_801D6090
     - '@source: src/bof3/ui/drawTexturedFrameShisu00_801D6090.c'
     - '@behavior: Translucent frame of the SHISU overlay: it reserves the 0x10-by-0x10 texture window at (0, 0xF0) at g_PrimCursor and then builds four textured quads around the rectangle whose origin is (arg0, arg1) and whose width and height are arg2 and arg3, each with the CLUT column arg4 times 32 plus 0x10, the flat colour 0xAC, texture page 0xF and an append at ordering-table slot 1 as 0x28 bytes after one graphics-type query, and it closes with a 0x100-by-0x100 texture window, a draw mode that references it and the inner fill rectangle from (arg0 plus 2, arg1 plus 2) sized arg2 minus 4 by arg3 minus 4 through func_801AEBA0. The payload names this span only from the jal at 0x801D306C inside func_801D2DA8, which passes the halfwords at 0x4 and 0x6 of the D_80148648 record, the width 0x118, the height 0x13 and the scratch byte D_80144952, so the argument roles stay structural. One payload cmp proves its 0x54C bytes equal the spans at 0x801DAB90 in emi/etc/shop/00, 0x801D1E54 in emi/etc/sisyou/00, 0x801D50E8 in emi/etc/bate/00, 0x801D8A40 in emi/etc/commu02/08, 0x801F3D88 in emi/world00/area008/13 and 0x801F765C in emi/scenario/scena12/00.'
-  - - 22920
+  - - 23004
     - asm
     - func_801D65DC
   - - 26148

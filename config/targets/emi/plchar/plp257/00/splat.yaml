@@ -85,6 +85,7 @@ segments:
   - - 3576
     - c
     - dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8.c'
   - - 3644
     - asm
     - func_801CF23C
@@ -96,6 +97,7 @@ segments:
   - - 4140
     - c
     - dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C.c'
   - - 4208
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp25700_801CF470

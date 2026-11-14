@@ -2,7 +2,7 @@
 
 /* This overlay's handler run at 0x801CFBC4: seven code pointers, entry 0 =
  * 0x801CFA28 through entry 6 = 0x801CF70C, holding this payload's functions. That
- * row currently sits inside the `asm func_801CFBC4` boundary, so the run is only
+ * row currently sits inside the `textbin T_801CFBC4` boundary, so the run is only
  * referenced here. This dispatcher indexes it from 0x801CFBC8, so its base is
  * entry 1 of that run, and the six entries it reaches are 0x801CE404, 0x801CF12C,
  * 0x801CF500, 0x801CE72C, 0x801CF338 and 0x801CF70C. The neighbouring base

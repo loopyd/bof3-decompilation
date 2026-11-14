@@ -127,6 +127,6 @@ segments:
     - textbin
     - func_801CFB84
   - - 6084
-    - asm
-    - func_801CFBC4
+    - textbin
+    - T_801CFBC4
 - - 6112

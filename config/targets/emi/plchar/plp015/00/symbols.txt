@@ -25,4 +25,4 @@ selectWorkSequenceFromRouteByte8AndClearByte7WhenSetElseClearWorkByte2BAndStateB
 dispatchWorkHalfword2cTablefbc8PlcharPlp01500_801CFAFC = 0x801CFAFC;
 dispatchWorkHalfword2cTablefbd4PlcharPlp01500_801CFB40 = 0x801CFB40;
 func_801CFB84 = 0x801CFB84;
-func_801CFBC4 = 0x801CFBC4;
+T_801CFBC4 = 0x801CFBC4;

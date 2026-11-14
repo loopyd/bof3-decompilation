@@ -27,4 +27,4 @@ selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkBy
 dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20 = 0x801CFF20;
 dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64 = 0x801CFF64;
 func_801CFFA8 = 0x801CFFA8;
-func_801CFFE8 = 0x801CFFE8;
+T_801CFFE8 = 0x801CFFE8;
