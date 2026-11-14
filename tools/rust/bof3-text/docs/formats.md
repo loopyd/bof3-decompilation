@@ -2926,9 +2926,16 @@ reader `0x801E2C00` for groups 0 through 5. Group 5 draws no fields. For groups 
 through 4, calls at `0x801E2D18` supply all fifteen field pointers at `SP + 0x10`
 and their stored glyph limits in `A3`. These calls enter renderer `0x8014FC90`
 with return address `0x801E2D20`. The observed reader and draw calls reach their
-return continuations. The `0x801E2CDC` path to `0x8014F800`, glyph reads, pixels
-tied to individual calls, transitive callee effects, general selector bounds,
-Manual/Auto consumption and the unique START or STATUS supplier remain unverified.
+return continuations.
+
+Ordinary Config navigation also selects the row for message speed without
+changing settings. The selected original Med. field reaches `0x801E2CDC` and
+enters renderer `0x8014F800` with return address `0x801E2CE4`. Its text pointer
+`0x801ECD2E` is at `SP + 0x10`, and `A3` holds its stored glyph limit of four.
+The observed calls reach their return continuation. Other fields on this draw
+path, glyph reads, pixels tied to individual calls, transitive callee effects,
+general selector bounds, Manual/Auto consumption and the unique START or STATUS
+supplier remain unverified.
 
 Retain all 133 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
