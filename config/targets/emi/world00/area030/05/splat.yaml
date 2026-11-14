@@ -46,4 +46,7 @@ segments:
     - func_800F510C
     - '@source: src/bof3/world/func_800F510C.c'
     - '@behavior: Second phase entry of the AREA030/05 companion dispatch; when the shared gate halfword D_80143C40 is clear it selects handlerIndex 1 and restarts handlerPhase at 0.'
+- - 312
+  - bin
+  - tail
 - - 8784

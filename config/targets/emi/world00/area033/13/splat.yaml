@@ -143,7 +143,7 @@ segments:
   - - 5676
     - c
     - seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C
-    - '@source: 0x801F422C'
+    - '@source: src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C.c'
     - '@behavior: Seeds the facing-selected step pair and shared position, adjusts position halfwords, advances mode byte 0x01 and requests the facing-selected resource.'
   - - 6236
     - asm
