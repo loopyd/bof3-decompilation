@@ -1075,6 +1075,31 @@ use raw mode 0, archive offset 2048, load address `0x801D0C00`, checkword
 | `[7148,7208)` | `[0x801D27EC,0x801D2828)` | 60 |
 | `[7376,8548)` | `[0x801D28D0,0x801D2D64)` | 1172 |
 | `[8548,9236)` | `[0x801D2D64,0x801D3014)` | 688 |
+| `[47868,49756)` | `[0x801DC6FC,0x801DCE5C)` | 1888 |
+| `[72636,72704)` | `[0x801E27BC,0x801E2800)` | 68 |
+| `[76576,76660)` | `[0x801E3720,0x801E3774)` | 84 |
+
+Two complete bodies qualify under the existing exact GAME and SLUS identities.
+GAME offsets below are relative to entry 0's payload. SLUS offsets include its
+2048-byte executable header.
+
+| Source | Source interval | Runtime interval | Bytes |
+| --- | --- | --- | ---: |
+| `GAME.EMI#0` | `[15256,15344)` | `[0x80199398,0x801993F0)` | 88 |
+| `SLUS_004.22` | `[797824,798136)` | `[0x80158C80,0x80158DB8)` | 312 |
+
+The retained GAME object's complete 88-byte executable section and sized function
+match the original body after all eight `R_MIPS_26` relocations. This comparison
+does not establish a fresh build or linked-executable match.
+
+GAME call `0x801993D0` enters the SLUS body. For an active slot with byte 1 equal
+to 7, the SLUS dispatcher selects SHOP `0x801E27BC` through the nine-pointer
+table copied from `0x80149B0C`. Panel byte 2 equal to 9 then selects wrapper
+`0x801E3720` through cell `0x801E5D8C`. After its byte-3-selected indirect call,
+the wrapper reloads `0x80148648` and calls `0x801DC6FC` at `0x801E375C`.
+Original bytes and retained RAM agree for all five bodies. Copied pointers and
+saved returns corroborate this conditional path without proving earlier execution.
+The supporting table cells retain their prior classifications.
 
 The three selected little-endian function-address words at `0x801E514C`,
 `0x801E5174` and `0x801E518C` also qualify as known nontext. For selector
@@ -1089,10 +1114,11 @@ as known nontext.
 
 Complete original-word and structural control-flow review covers every
 instruction and delay slot. All admitted bodies and table cells match retained
-RAM. Ordinary callee returns, preserved frames, valid nonaliased memory and
-stable code and tables remain conditions. Other table cells, neighboring bodies
-and referenced data retain their prior classifications. General selector bounds,
-callee behavior, actual execution, safe editing and runtime text acceptance
+RAM. Ordinary prior and callee returns, valid indirect-call targets, preserved
+frames, valid nonaliased memory and stable selectors, code and tables remain
+conditions. Other table cells, neighboring bodies and referenced data retain their
+prior classifications. General selector bounds, selector producers, callee behavior,
+whole-body execution, resource safety, safe editing and runtime text acceptance
 remain unqualified.
 
 The exact original executable identified under

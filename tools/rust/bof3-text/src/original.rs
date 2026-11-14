@@ -360,6 +360,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS complete 96-byte instruction body 0x80154F78..0x80154FD8; actual original GAME 0x801BB774 JAL and NOP bound by retained preinstruction return 0x801BB77C and downstream predicate observations; all 24 aligned words, two direct calls at 0x80154F94 to 0x80154ED0 and 0x80154FA4 to 0x80154ABC, sole JR RA and every delay slot structurally accounted; 32-byte frame and saved S0/S1/S2/RA restored before JR RA 0x80154FD0 and NOP; original and retained origin/endpoint RAM agree; ordinary call-return/frame/nonalias/stable-code assumptions; no matching ELF, whole-body native execution, argument/resource safety, full coverage, rendering or editing claim",
         },
         NontextRange {
+            offset: 797_824,
+            length: 312,
+            evidence: "Original US SLUS, complete 78-word instruction body 0x80158C80..0x80158DB8. Original GAME call 0x801993D0 conditionally enters it. All original words, local control flow, delay slots and restored frame agree with retained RAM. An active slot with byte 1 equal to 7 selects 0x801E27BC through the original nine-pointer table copied from 0x80149B0C. The exact whole executable identity gates classification. Stable code, tables and selectors, valid callback targets and nonaliasing memory, intact frames and ordinary prior/callee returns remain conditions. Supporting table cells and referenced data are excluded. Selector producers, general bounds, indirect-call effects, historical execution, resource safety, rendering and editing remain unqualified.",
+        },
+        NontextRange {
             offset: 814_780,
             length: 392,
             evidence: "original US SLUS; complete original instruction body 0x8015CEBC..0x8015D044 including return delay slots; original JAL at 0x8014AC00 in the qualified executable caller at 0x8014AAC8 conditionally enters this body; complete raw original word, decoder, control-flow and return review and captured resident bytes reconcile; structural call continuations assume returns with the caller stack preserved; exact whole executable identity; neighboring functions, data and referenced callees excluded; no matching callee ELF, observed entry or execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -9305,6 +9310,21 @@ pub fn payload_nontext_ranges(
                     evidence: "original US SHOP entry 0; complete 172-word instruction body 0x801D2D64..0x801D3014 selected by original cell 0x801E51B8; all original words, 20 control-transfer delays, 28 loads, closed 29-block flow and shared return reconcile with retained RAM; exact archive and payload identities; ordinary returns and preservation from five direct calls, intact frame, valid nonaliasing memory and stable code remain conditions; input/quantity/work fields, callees and neighboring bodies excluded; no actual instruction retirement, general physical-input producer, selector bounds, purchase/sale, resource safety, rendering or editing claim",
                 },
                 NontextRange {
+                    offset: 47_868,
+                    length: 1_888,
+                    evidence: "Original US SHOP entry 0, complete 472-word instruction body 0x801DC6FC..0x801DCE5C. Original wrapper JAL 0x801E375C with NOP delay conditionally enters it after reloading 0x80148648. All original ASM words, local control flow, delay slots and restored frame agree with original archive and retained RAM. Exact archive and payload identities gate classification. Stable code, tables and selectors, valid applicable memory, nonaliasing, intact frames and ordinary prior/callee returns remain conditions. Referenced records, tables, fields, callees and neighbors are excluded. Selector producers, general bounds, whole-body execution, resource safety, rendering and editing remain unqualified.",
+                },
+                NontextRange {
+                    offset: 72_636,
+                    length: 68,
+                    evidence: "Original US SHOP entry 0, complete 17-word dispatcher 0x801E27BC..0x801E2800. Original SLUS 0x80158C80 conditionally selects it through source cell 0x80149B28. Panel byte 2 equal to 9 selects wrapper 0x801E3720 through cell 0x801E5D8C. All original ASM words, local control flow, delay slots and restored frame agree with original archive and retained RAM. Exact archive and payload identities gate classification. Stable selectors, code and tables, valid callback targets and nonaliasing memory, intact frames and ordinary prior/callee returns remain conditions. Supporting cells and referenced data are excluded. Selector producers, general bounds, indirect-call effects, historical execution, resource safety, rendering and editing remain unqualified.",
+                },
+                NontextRange {
+                    offset: 76_576,
+                    length: 84,
+                    evidence: "Original US SHOP entry 0, complete 21-word wrapper 0x801E3720..0x801E3774. Dispatcher 0x801E27BC conditionally selects it through original cell 0x801E5D8C. After the byte-3-selected indirect call, it reloads 0x80148648 and calls 0x801DC6FC at 0x801E375C with NOP delay. All original ASM words, local control flow, delay slots and restored frame agree with original archive and retained RAM. Exact archive and payload identities gate classification. Stable selectors, code and tables, valid callback targets and nonaliasing memory, intact frames and ordinary prior/callee returns remain conditions. Referenced cells, fields and callees are excluded. Selector producers, general bounds, indirect-call effects, historical execution, resource safety, rendering and editing remain unqualified.",
+                },
+                NontextRange {
                     offset: 83_276,
                     length: 4,
                     evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E514C contains 0x801D10E4 and is selected by captured mode 2 in the complete original dispatcher at 0x801D0EA0; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
@@ -9467,6 +9487,11 @@ pub fn payload_nontext_ranges(
                     == "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff" =>
         {
             Some(vec![
+                NontextRange {
+                    offset: 15_256,
+                    length: 88,
+                    evidence: "Original US GAME entry 0, complete 22-word instruction body 0x80199398..0x801993F0. All original ASM words, local control flow, delay slots and restored frame agree with original archive and retained RAM. The complete 88-byte AX text and sized function in the retained relocatable object reproduce all original words after its eight R_MIPS_26 relocations. JAL 0x801993D0 with NOP delay conditionally calls SLUS 0x80158C80. Exact archive and payload identities gate classification. Stable code, valid nonaliasing memory, intact frames and ordinary callee returns remain conditions. Callees and referenced data are excluded. No fresh build, linked-executable match, historical execution, resource-safety, rendering or editing claim follows.",
+                },
                 NontextRange {
                     offset: 49_056,
                     length: 296,
