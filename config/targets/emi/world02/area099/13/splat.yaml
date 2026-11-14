@@ -37,6 +37,7 @@ segments:
   - - 360
     - c
     - dispatchWorkByte4Table4988World02Area09913_801F2D68
+    - '@source: src/bof3/world/dispatchWorkByte4Table4988World02Area09913_801F2D68.c'
   - - 428
     - asm
     - func_801F2DAC
