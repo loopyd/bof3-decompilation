@@ -747,6 +747,7 @@ segments:
   - - 61552
     - c
     - dispatchWorkByte3Table
+    - '@source: src/bof3/battle/dispatchWorkByte3Table.c'
   - - 61620
     - c
     - resolveSelectionDamageAndSubmitPendingEffects
@@ -1043,6 +1044,7 @@ segments:
   - - 75504
     - c
     - dispatchByte3TableB3ec
+    - '@source: src/bof3/battle/dispatchByte3TableB3ec.c'
   - - 75572
     - c
     - initScratchWorkState
@@ -1056,6 +1058,7 @@ segments:
   - - 75832
     - c
     - dispatchByte3TableB3f4
+    - '@source: src/bof3/battle/dispatchByte3TableB3f4.c'
   - - 75900
     - c
     - applyModeOffsetPairToWork
@@ -1160,6 +1163,7 @@ segments:
   - - 80736
     - c
     - dispatchByte3TableB444
+    - '@source: src/bof3/battle/dispatchByte3TableB444.c'
   - - 80804
     - c
     - initScratchMotionFields

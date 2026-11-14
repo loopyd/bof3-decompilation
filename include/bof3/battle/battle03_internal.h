@@ -831,7 +831,7 @@ void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
 void drawBattleCommandStrip(u32 arg0);
 void drawShadowedBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
 void drawBattlerStatusPanel(s32 arg0, s32 arg1, s32 arg2);
-void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
+void drawShadowedBattlerHpStatusPanel(s32 arg0, s32 arg1, u32 arg2);
 u8   markBattlersMeetingOpposingThresholds(void);
 /* arg1 and arg3 are the coordinates/data the run consumes: both call sites in
  * the original sign-extend arg1 (`sll`/`sra` pair) and pass arg3 either as a
