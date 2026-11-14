@@ -8469,6 +8469,11 @@ pub fn payload_nontext_ranges(
                     evidence: "original US SHOP entry 0; complete 293-word instruction body 0x801D28D0..0x801D2D64 selected by original cell 0x801E51B4; all original words, 44 control-transfer delays, 49 loads, closed 51-block flow and shared return reconcile with retained RAM; exact archive and payload identities; ordinary returns and preservation from eleven direct calls, intact frame, valid nonaliasing memory and stable code remain conditions; category/input/work fields, callees and neighboring bodies excluded; no whole-handler execution, physical-input producer, general selector or allocation bounds, purchase/sale, resource safety, rendering or editing claim",
                 },
                 NontextRange {
+                    offset: 8_548,
+                    length: 688,
+                    evidence: "original US SHOP entry 0; complete 172-word instruction body 0x801D2D64..0x801D3014 selected by original cell 0x801E51B8; all original words, 20 control-transfer delays, 28 loads, closed 29-block flow and shared return reconcile with retained RAM; exact archive and payload identities; ordinary returns and preservation from five direct calls, intact frame, valid nonaliasing memory and stable code remain conditions; input/quantity/work fields, callees and neighboring bodies excluded; no actual instruction retirement, general physical-input producer, selector bounds, purchase/sale, resource safety, rendering or editing claim",
+                },
+                NontextRange {
                     offset: 83_276,
                     length: 4,
                     evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E514C contains 0x801D10E4 and is selected by captured mode 2 in the complete original dispatcher at 0x801D0EA0; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
@@ -8492,6 +8497,11 @@ pub fn payload_nontext_ranges(
                     offset: 83_380,
                     length: 4,
                     evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E51B4 contains 0x801D28D0 and is selected by captured substep 1 in the complete original dispatcher at 0x801D27EC; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
+                },
+                NontextRange {
+                    offset: 83_384,
+                    length: 4,
+                    evidence: "original US SHOP entry 0; little-endian function-pointer cell 0x801E51B8 contains 0x801D2D64 and is selected by captured substep 2 in the complete original dispatcher at 0x801D27EC; original raw and retained RAM agree under exact archive and payload identities; numeric pointer storage only; neighboring cells, selector bounds and actual dispatch excluded",
                 },
             ])
         }
