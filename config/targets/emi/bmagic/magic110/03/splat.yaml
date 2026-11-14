@@ -144,7 +144,7 @@ segments:
     - func_801F01E8
   - - 6252
     - textbin
-    - func_801F046C
+    - T_801F046C
   - - 6316
     - textbin
     - D_801F04AC

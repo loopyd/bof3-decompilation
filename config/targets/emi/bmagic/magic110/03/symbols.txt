@@ -29,5 +29,5 @@ offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo4
 func_801F00D8 = 0x801F00D8;
 func_801F0138 = 0x801F0138;
 func_801F01E8 = 0x801F01E8;
-func_801F046C = 0x801F046C;
+T_801F046C = 0x801F046C;
 D_801F04AC = 0x801F04AC;
