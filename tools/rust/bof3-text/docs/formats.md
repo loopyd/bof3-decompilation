@@ -199,11 +199,24 @@ and consumed encoded words or tokens. The complete outer walk propagates each
 physical literal origin through overlapping references. It includes a stored
 literal byte only when every decoded use lies within those reviewed fields.
 
-Palette, program and cell fields, mode-2 prefixes, unconsumed allocation tails
-and origins with any opaque alias remain unresolved. This rule qualifies stored
-representation without proving actual selection, transfer, residency, upload,
-display, the absence of rasterized text or safe editing. Other archives retain
-their existing records and gates.
+For identifier 0, root 0 and initialization slot 0, the original call at
+`0x801C13DC` passes index 0 to `0x80166C48`. Coverage also recognizes decoded
+relative words `[16,20)` and `[63680,63684)`, plus the selected 32-halfword record
+at `[63684,63748)`. The reader copies that record to
+`[0x80039600,0x80039640)`. Under the concrete original dispatch and dimension
+limits preserving rectangle `0/480/256/32`, the image-input path through
+`0x8014E22C`, `0x8017B690`, table `0x8017D488` and callback `0x8017CE9C`
+consumes the mirror as graphics words. Stable descriptor/source memory and
+ordinary returning calls and queue operations remain conditions. The complete
+compression walk accepts a literal origin only when every decoded use lies in
+the primary image fields or these additional fields. Existing primary records
+retain their evidence.
+
+Other palette, program and cell fields, mode-2 prefixes, unconsumed allocation
+tails and origins with any opaque alias remain unresolved. This rule qualifies
+stored representation without proving actual selection, transfer, residency,
+upload, display, color-channel format, CLUT use, the absence of rasterized text
+or safe editing. Other archives retain their existing records and gates.
 
 ## Additional compressed player image field coverage
 
@@ -862,6 +875,35 @@ qualify strings, referenced data, callees, selector bounds outside the reviewed
 Equipment guard, resource safety or a unique archive supplier. The 552-byte gap
 between Ability and Equipment retains its prior status. The separate initializer
 classification remains specific to START entry 8.
+
+## Config instruction coverage
+
+The same exact START and STATUS entry pins admit these complete instruction
+bodies:
+
+| Body | Payload interval | Runtime interval | Bytes |
+| --- | --- | --- | ---: |
+| Phase dispatcher | `[68224,68284)` | `[0x801E1680,0x801E16BC)` | 60 |
+| Phase 1 | `[68816,69664)` | `[0x801E18D0,0x801E1C20)` | 848 |
+| Phase 2 | `[69664,70764)` | `[0x801E1C20,0x801E206C)` | 1100 |
+| Settings caller | `[72360,72856)` | `[0x801E26A8,0x801E2898)` | 496 |
+| Settings reader | `[73728,74116)` | `[0x801E2C00,0x801E2D84)` | 388 |
+
+All words have complete structural control flow, including branch, call and
+return delays. Phase-entry observations have return address `0x801E16AC`,
+matching the dispatcher's indirect call at `0x801E16A4`. The selected callee must
+return normally; general phase bounds remain unverified. Phase 2's unsigned
+focus-minus-two guard bounds the computed jump at `0x801E1CD8` to six original
+table entries at `0x801D0DC8`. Every target is inside the reviewed body.
+The table retains its prior classification.
+
+Original phase-body calls and observed internal PC `0x801E2854` bind the settings
+caller. Reader entries have return address `0x801E285C`, matching that call and
+its `A1 = T0` delay word. The category readers' memory, frame, nonaliasing,
+ordinary-return and stable-code/table conditions also apply. This classifies
+instructions without qualifying referenced records, callees, neighboring code,
+all-path feasibility, general selector/count bounds, additional rendering,
+safe editing or a unique archive supplier.
 
 ## Menu description instruction coverage
 

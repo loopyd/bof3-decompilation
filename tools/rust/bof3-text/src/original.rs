@@ -7440,6 +7440,19 @@ fn additional_model_decoded_nontext_fields(
     data: &[u8],
 ) -> (&'static [(usize, usize)], &'static str) {
     if entry.index == 3
+        && entry.transfer_mode == 1
+        && entry.offset == 67_584
+        && entry.ram_ptr == 0x8003_b800
+        && entry.check_word == 339_380
+        && data.len() == 261_992
+        && sha256_hex(data) == "48fd888c1d80aa62a812f0753fed508d2c65c7e82778783c3bd87233ec4ffc39"
+    {
+        return (
+            &[(16, 20), (63_680, 63_748)],
+            "original US PL026 entry 3 additional root-0 fields; decoded offsets 16..20 and 63680..63684 are relative-pointer words consumed by original SLUS 0x80166C48 through GAME JAL 0x801C13DC with palette index 0; for initialization slot 0, decoded 63684..63748 is copied to mirror 0x80039600..0x80039640 and conditionally supplies 32 graphics image-input halfwords through original 0x8014E22C, 0x8017B690, table-selected 0x8017D488 and callback 0x8017CE9C; concrete original table and GPU port words, stable descriptor/source, returning calls/queue and dimension limits preserving rectangle 0/480/256/32 are conditions; exact original archive and conditional family-0/index-4/slot-622/identifier-0/root-0 source binding, successful unskipped loading, entry, mode, load, offset, checkword, size and payload identities; complete checked compression walk requires every decoded alias in the primary image fields or these additional fields; primary records retain their evidence; opaque aliases excluded; no actual selection, residency, live dispatch, hardware transfer, color-channel format, CLUT use, display, rasterized-text absence or safe-edit claim",
+        );
+    }
+    if entry.index == 3
         && entry.offset == 73_728
         && entry.ram_ptr == 0x8003_b800
         && entry.check_word == 360_412
@@ -8480,6 +8493,31 @@ pub fn payload_nontext_ranges(
                     offset: 65_136,
                     length: 1_848,
                     evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801E0A70..0x801E11A8; all 462 original words, 48 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; unsigned selector guard and six exact original targets at 0x801D0D94 close the computed JR at 0x801E0ABC; observed internal PC 0x801E0E2C binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code/table assumptions; table bytes, strings, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 68_224,
+                    length: 60,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 15-word instruction body 0x801E1680..0x801E16BC including both indirect-call and return delay words; all original words and complete structural flow reconcile with retained RAM; observed phase-1 and phase-2 entries have return address 0x801E16AC, matching original JALR 0x801E16A4; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary return from the opaque selected callee, valid memory and incoming return control, intact frame, nonaliasing writes and stable code/table remain conditions; table cells, other handlers and neighbors excluded; no general phase bounds, first-instruction dispatcher execution, all-path feasibility, transitive effects, resource safety, rendering, editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 68_816,
+                    length: 848,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 212-word instruction body 0x801E18D0..0x801E1C20 including all 36 control-transfer delay words; complete original structural flow and observed phase-1 entry with return address 0x801E16AC reconcile with retained RAM; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning callees, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code remain conditions; input/work fields, strings, callees and neighbors excluded; no all-path feasibility, general argument bounds, transitive effects, resource safety, rendering, editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 69_664,
+                    length: 1_100,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 275-word instruction body 0x801E1C20..0x801E206C including all 55 control-transfer delay words; complete original structural flow and observed phase-2 entry with return address 0x801E16AC reconcile with retained RAM; unsigned focus-minus-two guard and six exact original targets at 0x801D0DC8 close computed JR 0x801E1CD8 within the body; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning callees, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code/table remain conditions; table bytes, settings/work fields, strings, callees and neighbors excluded; no all-path feasibility, general selector bounds beyond the local guard, transitive effects, resource safety, rendering, editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 72_360,
+                    length: 496,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 124-word instruction body 0x801E26A8..0x801E2898 including all eight control-transfer delay words; all original words, three LWL/LWR merge pairs and complete structural flow reconcile with retained RAM; original JALs 0x801E1950 and 0x801E1C98 in qualified phase bodies conditionally enter this caller, with native interior PC 0x801E2854 and linked reader entry/return observations; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning callees, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code/table remain conditions; selected records, referenced data, callees and neighbors excluded; no first-instruction caller execution, all-path feasibility, general selector bounds, transitive effects, resource safety, rendering, editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 73_728,
+                    length: 388,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 97-word instruction body 0x801E2C00..0x801E2D84 including all eight control-transfer delay words; complete original structural flow reconciles with native entry at 0x801E2C00, return address 0x801E285C and linked renderer calls/returns; original JAL 0x801E2854 and its A1=T0 delay bind the qualified caller; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning renderers, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code/table remain conditions; count/pointer maps, settings records, renderers and neighbors excluded; no all-path feasibility, general selector/count bounds, transitive effects, resource safety, additional rendering, safe editing or unique-supplier claim",
                 },
                 NontextRange {
                     offset: 102_380,
