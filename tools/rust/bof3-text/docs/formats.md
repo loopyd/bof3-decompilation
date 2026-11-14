@@ -3011,6 +3011,12 @@ and appends NUL. A name can therefore occupy all twelve bytes.
 The [equipment contract](../../../../docs/specs/data/equipment.md) describes the
 table locations and record strides.
 
+The SHOP Sell weapon-row call at `0x801DC8E0` uses GAME `0x801AF800`, which passes
+the resolved record pointer directly to renderer `0x8014F800`. The name counter
+at GAME `0x801AF20C` stops at NUL or twelve encoded bytes. An ordinary Sell
+observation verifies an edited full-field weapon name with a twelve-byte renderer
+limit. Runtime acceptance covers the observed weapon row and call path.
+
 The document retains `source`, mandatory `source_sha256`, `entry`,
 `load_address`, `equipment_resolver`, `equipment_name_copy_consumer`,
 `ability_name_copy_consumer` and `names`. Each name has
