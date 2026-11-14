@@ -864,8 +864,8 @@ complete instruction bodies in both entries:
 All 1,251 original words have complete structural control flow, including their
 138 control-transfer delay words. Equipment's unsigned selector guard limits
 the computed jump at `0x801E0ABC` to six table entries at `0x801D0D94`.
-All targets stay within the reviewed body. The table bytes retain their prior
-classification. Native internal PCs `0x801DFF24`, `0x801E05A0` and `0x801E0E2C`
+All targets stay within the reviewed body. Separate pointer records cover those
+six table cells. Native internal PCs `0x801DFF24`, `0x801E05A0` and `0x801E0E2C`
 bind executable words without establishing first-instruction or all-path execution.
 
 The rule requires stable code and table bytes, valid incoming return control and
@@ -886,7 +886,9 @@ bodies:
 | Phase dispatcher | `[68224,68284)` | `[0x801E1680,0x801E16BC)` | 60 |
 | Phase 1 | `[68816,69664)` | `[0x801E18D0,0x801E1C20)` | 848 |
 | Phase 2 | `[69664,70764)` | `[0x801E1C20,0x801E206C)` | 1100 |
+| Direct callee at `0x801E2668` | `[72296,72360)` | `[0x801E2668,0x801E26A8)` | 64 |
 | Settings caller | `[72360,72856)` | `[0x801E26A8,0x801E2898)` | 496 |
+| Direct callee at `0x801E2898` | `[72856,73728)` | `[0x801E2898,0x801E2C00)` | 872 |
 | Settings reader | `[73728,74116)` | `[0x801E2C00,0x801E2D84)` | 388 |
 
 All words have complete structural control flow, including branch, call and
@@ -895,15 +897,53 @@ matching the dispatcher's indirect call at `0x801E16A4`. The selected callee mus
 return normally; general phase bounds remain unverified. Phase 2's unsigned
 focus-minus-two guard bounds the computed jump at `0x801E1CD8` to six original
 table entries at `0x801D0DC8`. Every target is inside the reviewed body.
-The table retains its prior classification.
+Separate pointer records cover those six cells.
 
 Original phase-body calls and observed internal PC `0x801E2854` bind the settings
 caller. Reader entries have return address `0x801E285C`, matching that call and
 its `A1 = T0` delay word. The category readers' memory, frame, nonaliasing,
-ordinary-return and stable-code/table conditions also apply. This classifies
-instructions without qualifying referenced records, callees, neighboring code,
-all-path feasibility, general selector/count bounds, additional rendering,
-safe editing or a unique archive supplier.
+ordinary-return and stable-code/table conditions also apply.
+
+The original phase calls at `0x801E1960`, `0x801E1AD0` and `0x801E1CA8`
+conditionally enter the 64-byte callee. The settings caller's `0x801E280C` call
+and `A0 = S0` delay word bind the 872-byte callee. Both complete bodies restore
+their frames and return through their own `JR RA` delays. All 234 words and
+fourteen control-transfer delays have complete structural flow; the larger body
+has eleven `LWL`/`LWR` merge-forwarding pairs. Original and retained RAM bytes
+agree. Invocation of these two callees remains unobserved.
+
+Each instruction record covers its own complete body. Referenced data, external
+callees and neighbors remain outside that record. No all-path feasibility,
+general selector/count bounds, transitive callee effects, additional rendering,
+safe editing, C/ELF match or unique archive supplier is established.
+
+## Menu table and record coverage
+
+The same exact START and STATUS pins qualify these numeric stored fields:
+
+| Field | Payload interval | Bytes |
+| --- | --- | ---: |
+| Equipment jump targets | `[404,428)` | 24 |
+| Config phase-2 jump targets | `[456,480)` | 24 |
+| Config phase-1/phase-2 handler pointers | `[114920,114928)` | 8 |
+| Settings record-start indices | `[115116,115122)` | 6 |
+| Settings record counts | `[115124,115130)` | 6 |
+| Glyph limit and signed horizontal offset | `[114980+8*i,114982+8*i)`, `i=0..14` | 30 |
+
+The two reviewed unsigned guards bound their six-cell jump tables. Only the
+observed phase-1 and phase-2 entry links qualify the two handler cells; other
+phase cells remain unresolved. Settings groups 0 through 5 read start indices
+`0,3,7,11,13,15` and counts `3,4,4,2,2,0`. The sixth group skips record loads.
+The reader uses each selected record's first byte as the glyph limit and
+sign-extends its second byte before horizontal centering. Retained original
+draw arguments agree with all fifteen count/position pairs.
+
+Stable code, maps and records, valid memory and frames, nonaliasing writes and
+ordinary returns remain conditions. These records classify numeric storage.
+The unconsumed pairs `[115122,115124)` and `[115130,115132)` remain unresolved;
+their role is unproven. Record text and tails, Manual/Auto headers, neighboring
+cells, general bounds, retired loads, glyph reads, additional rendering and
+safe editing remain outside this proof.
 
 ## Menu description instruction coverage
 

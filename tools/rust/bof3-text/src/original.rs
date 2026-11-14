@@ -8480,6 +8480,16 @@ pub fn payload_nontext_ranges(
             }
             ranges.extend([
                 NontextRange {
+                    offset: 404,
+                    length: 24,
+                    evidence: "original US START entry 8 or STATUS entry 0; six little-endian numeric jump targets at 0x801D0D94..0x801D0DAC; complete original Equipment body 0x801E0A70..0x801E11A8 bounds the indexed LW at 0x801E0AB4 by unsigned selector < 6 at 0x801E0AA0, with invalid selectors bypassing the load; all targets stay inside the qualified body; original words, load/branch delays and retained RAM agree; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; stable code/table, valid memory/control, intact frame and nonaliasing remain conditions; numeric storage only, excluding neighbors, actual dispatch, all-path feasibility, general bounds, transitive effects and safe editing",
+                },
+                NontextRange {
+                    offset: 456,
+                    length: 24,
+                    evidence: "original US START entry 8 or STATUS entry 0; six little-endian numeric jump targets at 0x801D0DC8..0x801D0DE0; complete original Config phase-2 body 0x801E1C20..0x801E206C bounds the indexed LW at 0x801E1CD0 by unsigned focus-minus-two < 6 at 0x801E1CBC; all targets stay inside the qualified body; original words, load/branch delays and retained RAM agree; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; stable code/table, valid memory/control, intact frame and nonaliasing remain conditions; numeric storage only, excluding neighbors, actual dispatch, all-path feasibility, general bounds, transitive effects and safe editing",
+                },
+                NontextRange {
                     offset: 61_428,
                     length: 1_888,
                     evidence: "original US START entry 8 or STATUS entry 0; complete instruction body 0x801DFBF4..0x801E0354; all 472 original words, 53 control-transfer delay words and complete structural flow reconcile with retained ordinary origin and native call captures; observed internal PC 0x801DFF24 binds executable words without proving first-instruction or all-path execution; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary call-return, valid-memory, intact-frame, nonaliasing and stable-code assumptions; strings, tables, referenced data, callees and neighbors excluded; no ELF match, general selector bounds, resource safety, safe editing or unique-supplier claim",
@@ -8510,9 +8520,19 @@ pub fn payload_nontext_ranges(
                     evidence: "original US START entry 8 or STATUS entry 0; complete 275-word instruction body 0x801E1C20..0x801E206C including all 55 control-transfer delay words; complete original structural flow and observed phase-2 entry with return address 0x801E16AC reconcile with retained RAM; unsigned focus-minus-two guard and six exact original targets at 0x801D0DC8 close computed JR 0x801E1CD8 within the body; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning callees, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code/table remain conditions; table bytes, settings/work fields, strings, callees and neighbors excluded; no all-path feasibility, general selector bounds beyond the local guard, transitive effects, resource safety, rendering, editing or unique-supplier claim",
                 },
                 NontextRange {
+                    offset: 72_296,
+                    length: 64,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 16-word instruction body 0x801E2668..0x801E26A8 including both call and return delay words; qualified original phase-body JALs 0x801E1960, 0x801E1AD0 and 0x801E1CA8 conditionally enter this body; every original word, complete structural flow, load scheduling and saved frame reconcile with retained RAM; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary external-call return and ABI preservation, valid memory and incoming return control, intact saved frame, nonaliasing and stable code remain conditions; referenced data, opaque callee and neighbors excluded; no observed entry, all-path feasibility, argument/string-index bounds, callee effects, rendering, C/ELF match, unique supplier or safe editing",
+                },
+                NontextRange {
                     offset: 72_360,
                     length: 496,
                     evidence: "original US START entry 8 or STATUS entry 0; complete 124-word instruction body 0x801E26A8..0x801E2898 including all eight control-transfer delay words; all original words, three LWL/LWR merge pairs and complete structural flow reconcile with retained RAM; original JALs 0x801E1950 and 0x801E1C98 in qualified phase bodies conditionally enter this caller, with native interior PC 0x801E2854 and linked reader entry/return observations; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returning callees, valid aligned memory and incoming return control, intact saved frame, nonaliasing writes and stable code/table remain conditions; selected records, referenced data, callees and neighbors excluded; no first-instruction caller execution, all-path feasibility, general selector bounds, transitive effects, resource safety, rendering, editing or unique-supplier claim",
+                },
+                NontextRange {
+                    offset: 72_856,
+                    length: 872,
+                    evidence: "original US START entry 8 or STATUS entry 0; complete 218-word instruction body 0x801E2898..0x801E2C00 including all twelve control-transfer delay words; qualified original caller JAL 0x801E280C and its A0=S0 delay conditionally enter this body; every original word, complete structural flow, eleven LWL/LWR merge-forwarding pairs, load scheduling and saved frame reconcile with retained RAM; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary external-call returns and ABI preservation, valid memory and incoming return control, intact saved frame, nonaliasing and stable code remain conditions; referenced data, external callees and neighbors excluded; no observed entry, all-path feasibility, argument/string-index bounds, callee effects, rendering, C/ELF match, unique supplier or safe editing",
                 },
                 NontextRange {
                     offset: 73_728,
@@ -8524,7 +8544,29 @@ pub fn payload_nontext_ranges(
                     length: 300,
                     evidence: "original US START entry 8 or STATUS entry 0; complete 75-word instruction body 0x801E9BEC..0x801E9D18 including all ten control-transfer delay words; complete original structural flow and retained ordinary Heal entry, lookup and renderer captures reconcile; observed ID 0x40D0 returns pointer 0x8001C9F7, stored at 0x801E9C84 before renderer JAL 0x801E9C9C; native renderer return 0x801E9CA4 restores the caller stack; exact original archive, entry, offset, raw mode, load, checkword, size and payload identities; ordinary returns from five direct calls and one opaque linking call, valid memory, intact frame, nonaliasing and stable-code/table assumptions; table, strings, referenced data, callees and neighbors excluded; no matching ELF, all-path execution, general selector bounds, resource safety, safe editing or unique-supplier claim",
                 },
+                NontextRange {
+                    offset: 114_920,
+                    length: 8,
+                    evidence: "original US START entry 8 or STATUS entry 0; two little-endian numeric handler pointers at 0x801ECCE8..0x801ECCF0 contain 0x801E18D0 and 0x801E1C20; complete original dispatcher 0x801E1680..0x801E16BC loads table 0x801ECCE4 indexed by unsigned phase; retained phase-1/phase-2 entries have return address 0x801E16AC matching its JALR and NOP delay; original words and retained RAM agree under exact archive and payload identities; stable code/table, valid memory/control, intact frame, nonaliasing and ordinary return remain conditions; numeric storage only, excluding other phase cells, general phase bounds, actual dispatcher instruction retirement, transitive effects, rendering and safe editing",
+                },
+                NontextRange {
+                    offset: 115_116,
+                    length: 6,
+                    evidence: "original US START entry 8 or STATUS entry 0; six u8 record-start indices at 0x801ECDAC..0x801ECDB2 contain 0,3,7,11,13,15; complete original settings reader 0x801E2C00..0x801E2D84 loads the selected byte at 0x801E2C4C, scales by eight and adds record base 0x801ECD24; retained original reader groups 0..5, source bytes, code and RAM agree under exact archive and payload identities; stable code/maps/records, valid memory, intact frame, nonaliasing and ordinary returns remain conditions; numeric storage only, excluding unconsumed neighboring byte pairs, record text/tails, Manual/Auto consumption, general selector bounds, retired loads, new rendering and safe editing",
+                },
+                NontextRange {
+                    offset: 115_124,
+                    length: 6,
+                    evidence: "original US START entry 8 or STATUS entry 0; six u8 record counts at 0x801ECDB4..0x801ECDBA contain 3,4,4,2,2,0; complete original settings reader 0x801E2C00..0x801E2D84 loads these at 0x801E2C64 and 0x801E2D3C to bound its stride-eight record loop; retained original reader groups 0..5, source bytes, code and RAM agree, with group 5 exiting before record loads, under exact archive and payload identities; stable code/maps/records, valid memory, intact frame, nonaliasing and ordinary returns remain conditions; numeric storage only, excluding unconsumed neighboring byte pairs, record text/tails, Manual/Auto consumption, general selector bounds, retired loads, new rendering and safe editing",
+                },
             ]);
+            for index in 0..15 {
+                ranges.push(NontextRange {
+                    offset: 114_980 + 8 * index,
+                    length: 2,
+                    evidence: "original US START entry 8 or STATUS entry 0; first fifteen eight-byte settings records at 0x801ECD24; each first byte is a u8 glyph limit and each second byte is a signed horizontal offset, loaded and sign-extended by complete original reader 0x801E2C00..0x801E2D84 before both draw branches; six original start/count pairs select exactly these fifteen records; retained original draw arguments reproduce all fifteen counts and signed-offset centering calculations, and source bytes, code and RAM agree under exact archive and payload identities; stable code/maps/records, valid memory, intact frame, nonaliasing and ordinary returns remain conditions; only these two numeric bytes per record qualify; text, tails, Manual/Auto headers, retired loads, glyph reads, additional rendering and safe editing excluded",
+                });
+            }
             Some(ranges)
         }
         (0, 2_048, 0, 0x8019_5800, 229_720)
