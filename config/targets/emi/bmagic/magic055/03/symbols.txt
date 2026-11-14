@@ -11,4 +11,4 @@ drawThirtyTwoProjectedTranslucentTexturedRingQuadsFromWorkBytes9AB_BmagicMagic05
 func_801EF700 = 0x801EF700;
 drawTranslucentGouraudFanOfEightTrianglesAtWorkScreenPairRadiusTwiceWorkByte9Plus32TintedByWorkByte9TimesTenBmagicMagic05503_801EF7B0 = 0x801EF7B0;
 func_801EF9E4 = 0x801EF9E4;
-func_801EFC64 = 0x801EFC64;
+D_801EFC64 = 0x801EFC64;

@@ -12,4 +12,4 @@ func_801EF158 = 0x801EF158;
 func_801EF234 = 0x801EF234;
 projectWorkRecordPositionAndInstallTransformWithHeadingFromWorkWord0CPairBmagicMagic04803_801EF5C8 = 0x801EF5C8;
 func_801EF6A0 = 0x801EF6A0;
-func_801EF818 = 0x801EF818;
+D_801EF818 = 0x801EF818;
