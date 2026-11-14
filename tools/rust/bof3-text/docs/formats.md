@@ -3452,7 +3452,9 @@ quantity bounds the total at 835,571,250. These bounds require seven and nine
 digits respectively. All four formats use the 64-byte scratch buffer at
 `0x80145AD4`. The largest output, including NUL, occupies eleven bytes.
 The alignment gaps `0x801D0E8D..0x801D0E90`, `0x801D0E95..0x801D0E98` and
-`0x801D0E9D..0x801D0EA0` remain protected. Runtime rendering remains unverified.
+`0x801D0E9D..0x801D0EA0` remain protected. Ordinary shop Buy-list observations
+verify an edited price suffix through `%6dG` at `0x801D0E88`. The separate money
+display remains `0Z`. Quantity and total rendering remain unverified.
 
 Four further SHOP formats use the existing byte-decimal codecs. Capacities
 include NUL; formatted bounds exclude it.
@@ -3646,6 +3648,15 @@ returns to `0x801E9CA4` with the caller stack restored. These observations bind
 row 209 for the selected original and edited descriptions. The other shared-row
 lookups, general selector bounds and the unique description-bank supplier remain
 unverified.
+
+### Item description display
+
+Bank 1, one-based row 3 in the same two archive entries contains
+`Restores 40HP{end}`. Packing both copies as `Restores 41HP{end}`, booting the
+edited disc and loading a game-created inn save makes the ordinary shop Buy list
+display `Restores 41HP` with Healing Herb selected. The complete edited bank
+matches loaded RAM. The unique supplying archive, other item descriptions and
+the item's healing effect remain unverified.
 
 ## Commands
 
