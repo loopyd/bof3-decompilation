@@ -2918,9 +2918,17 @@ contain 3, 4, 4, 2 and 2 records; the sixth has count zero. Manual and Auto rema
 protected because this path skips their group. Preserve all thirty count/position
 bytes, fifty trailing bytes, sixteen Manual/Auto bytes and sixteen group-map
 bytes. Controlled Config rendering of all fifteen edited fields is verified with
-a menu availability fixture. The selected reader call, transitive
-callee effects, Manual/Auto consumption, natural availability and the unique
-archive supplier remain unverified.
+a menu availability fixture.
+
+Ordinary Config navigation after loading a game-created save displays all fifteen
+original fields without changing settings. Observed calls at `0x801E2854` enter
+reader `0x801E2C00` for groups 0 through 5. Group 5 draws no fields. For groups 0
+through 4, calls at `0x801E2D18` supply all fifteen field pointers at `SP + 0x10`
+and their stored glyph limits in `A3`. These calls enter renderer `0x8014FC90`
+with return address `0x801E2D20`. The observed reader and draw calls reach their
+return continuations. The `0x801E2CDC` path to `0x8014F800`, glyph reads, pixels
+tied to individual calls, transitive callee effects, general selector bounds,
+Manual/Auto consumption and the unique START or STATUS supplier remain unverified.
 
 Retain all 133 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
