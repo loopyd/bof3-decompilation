@@ -929,8 +929,10 @@ segments:
     - '@source: src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c'
     - '@behavior: AREA030 work-record handler 1 of the 0x801E2314 table: while the record step countdown byte 0x09 is non-zero it only integrates the step through func_801E0394 and runs func_8014D978, and the entry gate func_801E0680 matching sets handler byte 0x01 to 3 before that same pair; with the gate clear it rolls rand once and reuses the single roll, either arming the entry latch D_801E3200 when that latch is clear, the record signed timer 0x3E is zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not 0x16 - loading the scale record entry halfword 0x12 through func_8014DD3C, queueing cue 0x206 unless record flag 0x80 is set, clearing record flag bit 5 and bytes 0x2A/0x48, releasing the entry through func_8014D6B8(0) and advancing handler byte 0x01 - or stepping the route index byte 0x08 to the neighbouring route by one modulo 8 from roll bits 4 and 8, re-deriving the steps through func_801E03F8, mirroring the step-mode row trailing byte into record byte 0x2A and selecting the row leading byte through func_8014D8D4, then setting the countdown step word 0x14 from the func_8015477C distance of the record x/y advanced by the step words shifted 4, forcing it to 2 or -2 from roll bits 0x20 and 0x10 against the scale byte 0x1A, clearing the three step words on roll bit 0x40 and restarting the countdown byte 0x09 at 0x10 before the integration pair.'
   - - 57284
-    - asm
-    - func_801DEBC4
+    - c
+    - restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4
+    - '@source: src/bof3/world/restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4.c'
+    - '@behavior: AREA030 work handler 2: after a nonzero completion byte, restores the selected entry and route step mode, seeds the work step and selects handler 1.'
   - - 57564
     - c
     - steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC
