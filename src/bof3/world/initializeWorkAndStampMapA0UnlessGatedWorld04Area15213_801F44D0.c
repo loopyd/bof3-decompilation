@@ -7,11 +7,11 @@ extern u8 D_8014496D;
 /* @source 0x80146871 @kind unknown */
 extern u8 D_80146871;
 /* @source 0x80104000 @kind unknown */
-extern u8 D_80104000;
+extern u8 stampRowByteStride;
 /* @source 0x8014931C @kind unknown */
-extern u32 D_8014931C;
+extern u32 stampByteBaseAddress;
 /* @source 0x801F4C48 @kind data */
-extern const u8 D_801F4C48[][4];
+extern const u8 stampCellCoordinates[][4];
 
 /* @source 0x80196070 */
 extern void func_80196070(void);
@@ -69,8 +69,8 @@ void initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0(void) {
   FIELD_REF(u8, area15213WorkCursor_1F800044, 0x5Fu) = 0;
 
   index = area15213WorkCursor_1F800044[0x0B];
-  *(u8*)(D_8014931C + D_801F4C48[index][1] * D_80104000 +
-         D_801F4C48[index][0]) = 0xA0;
+  *(u8*)(stampByteBaseAddress + stampCellCoordinates[index][1] * stampRowByteStride +
+         stampCellCoordinates[index][0]) = 0xA0;
 
   func_8014D6B8(0);
   FIELD_REF(u8, area15213WorkCursor_1F800044, 0x01u) = 1;

@@ -1,7 +1,7 @@
 area15213WorkCursor_1F800044 = 0x1F800044;
-D_80104000 = 0x80104000;
+stampRowByteStride = 0x80104000;
 D_8014496D = 0x8014496D;
-D_8014931C = 0x8014931C;
+stampByteBaseAddress = 0x8014931C;
 func_801F2C04 = 0x801F2C04;
 func_801F2C38 = 0x801F2C38;
 func_801F2CA8 = 0x801F2CA8;
@@ -37,4 +37,4 @@ dispatchStateByte1Table4e28World04Area15213_801F448C = 0x801F448C;
 initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0 = 0x801F44D0;
 invokeTwoHelpersWorld04Area15213_801F4600 = 0x801F4600;
 drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628 = 0x801F4628;
-D_801F4C48 = 0x801F4C48;
+stampCellCoordinates = 0x801F4C48;
