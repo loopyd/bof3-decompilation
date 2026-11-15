@@ -1,13 +1,6 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
-typedef void (*BmagicMagic00303Handler)(void);
-
-/* Overlay-local handler-pointer run this dispatcher indexes, based at
- * 0x801F0B00: its single in-image word is 0x801EFAE0, the next function of
- * this overlay. The run sits in this overlay's trailing data block, which no
- * map row owns, so the reference is bound by the target's generated
- * undefined-symbol table. */
-extern BmagicMagic00303Handler D_801F0B00[]; /* @source 0x801F0B00 @kind data */
+extern void (*D_801F0B00[])(void); /* @source 0x801F0B00 @kind data */
 
 /* @source 0x801EFA9C
  * @behavior Dispatches one frame of the overlay work handler from the
@@ -27,6 +20,4 @@ extern BmagicMagic00303Handler D_801F0B00[]; /* @source 0x801F0B00 @kind data */
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C(void) {
-  D_801F0B00[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C, D_801F0B00);

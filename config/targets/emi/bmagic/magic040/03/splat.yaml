@@ -44,7 +44,7 @@ segments:
   - - 840
     - c
     - dispatchWorkByte1HandlerBmagicMagic04003_801EEF48
-    - '@source: src/emi/bmagic/magic040/03/magic04003DispatchTables.c'
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEF48.c'
   - - 908
     - c
     - dispatchWorkByte2FourEntryHandlerThenInvoke801EF7FCAnd801EF600WhenActiveBmagicMagic04003_801EEF8C

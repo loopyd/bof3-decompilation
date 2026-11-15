@@ -81,7 +81,7 @@ segments:
   - - 3556
     - c
     - dispatchWorkByte1HandlerBmagicMagic01500_801EF9E4
-    - '@source: src/emi/bmagic/magic015/00/magic01500DispatchTables.c'
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic01500_801EF9E4.c'
   - - 3624
     - c
     - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28

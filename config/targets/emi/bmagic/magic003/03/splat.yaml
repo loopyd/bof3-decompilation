@@ -118,7 +118,7 @@ segments:
   - - 3740
     - c
     - dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C
-    - '@source: src/emi/bmagic/magic003/03/magic00303DispatchTables.c'
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00303_801EFA9C.c'
   - - 3808
     - asm
     - func_801EFAE0
@@ -150,8 +150,8 @@ segments:
     - func_801F0164
   - - 6128
     - c
-    - ../../../../../src/bof3/bmagic/drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0
-    - '@source: 0x801F03F0'
+    - drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0
+    - '@source: src/bof3/bmagic/drawGrey12PixelGlyphAtWorkScreenPairBmagicMagic00303_801F03F0.c'
     - '@behavior: Draws a grey 12-pixel glyph at the work screen pair using an indexed CLUT and texture column.'
   - - 6480
     - c
