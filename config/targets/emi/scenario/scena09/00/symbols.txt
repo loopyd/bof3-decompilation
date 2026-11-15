@@ -100,4 +100,4 @@ scenarioScena0900CoordinateLookupRecords = 0x801FE474;
 scenarioScena0900CoordinateLookupHandlers = 0x801FE4BC;
 T_801FE4C4 = 0x801FE4C4;
 T_801FE544 = 0x801FE544;
-D_801FE554 = 0x801FE554;
+effectRowIndex = 0x801FE554;

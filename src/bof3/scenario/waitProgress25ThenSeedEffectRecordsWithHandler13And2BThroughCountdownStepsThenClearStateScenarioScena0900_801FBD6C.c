@@ -35,7 +35,7 @@ extern s32 D_8014930C;
 
 /* Overlay-local byte holding the row index the shared front-end record
  * allocator answered last. */
-extern u8 D_801FE554;
+extern u8 effectRowIndex; /* @source 0x801FE554 @kind data */
 
 /* Front-end record allocator of the shared main-executable data segment: it
  * answers the index of the next free 0x74-byte row at 0x80143FC8, or 0xFF when
@@ -69,7 +69,7 @@ void func_801A78F8(void);
  * byte g_ScenarioProgress (0x80146864) to 0x20 and advances to 1. Sub-state 1,
  * once that progress byte reads 0x25, asks the shared front-end record allocator
  * func_8019601C for a row, stores the answer in the overlay-local byte
- * D_801FE554 and, unless that byte is 0xFF, seeds the 0x74-byte row at
+ * effectRowIndex and, unless that byte is 0xFF, seeds the 0x74-byte row at
  * 0x80143FC8: row byte 0 takes 1, row byte 5 takes the handler selector 0x13,
  * row word 0x64 takes -0x3C8, row word 0x6C takes 0xF8, row byte 9 takes 0x30
  * and row word 0x68 takes the signed position halfword D_801492DA, then it
@@ -90,7 +90,7 @@ void func_801A78F8(void);
  * D_801492DA, and only then, when the allocator answered a free row, advances to
  * 7, so a full table returns without touching the sub-state byte. Sub-state 7
  * proceeds only while the occupancy byte of the row the overlay-local byte
- * D_801FE554 names, read back from the table, has bit 0 clear: it allocates and
+ * effectRowIndex names, read back from the table, has bit 0 clear: it allocates and
  * seeds a row with selector 0x13, row word 0x64 = -0x2AA, row word 0x68 =
  * D_801492DA, row byte 9 = 0x7C and row word 0x6C = D_801492DC, then advances to
  * 8 and increments the progress byte. Sub-state 8, once the byte reads 0x32,
@@ -127,13 +127,13 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
   case 1:
     if (g_ScenarioProgress == 0x25) {
       index = func_8019601C();
-      D_801FE554 = index;
+      effectRowIndex = index;
       if (index != 0xFFu) {
         u32 row;
 
-        D_80143FC8[D_801FE554 * 0x74] = 1;
-        D_80143FCD[D_801FE554 * 0x74] = 0x13;
-        row = D_801FE554 * 0x74;
+        D_80143FC8[effectRowIndex * 0x74] = 1;
+        D_80143FCD[effectRowIndex * 0x74] = 0x13;
+        row = effectRowIndex * 0x74;
         *(s32*)(D_8014402C + row) = -0x3C8;
         *(s32*)(D_80144030 + row) = D_801492DA;
         *(s32*)(D_80144034 + row) = 0xF8;
@@ -145,16 +145,16 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
   case 2:
     if (g_ScenarioProgress == 0x26) {
       index = func_8019601C();
-      D_801FE554 = index;
+      effectRowIndex = index;
       if (index != 0xFFu) {
         u32 row;
 
-        D_80143FC8[D_801FE554 * 0x74] = 1;
-        D_80143FCD[D_801FE554 * 0x74] = 0x2B;
-        row = D_801FE554 * 0x74;
+        D_80143FC8[effectRowIndex * 0x74] = 1;
+        D_80143FCD[effectRowIndex * 0x74] = 0x2B;
+        row = effectRowIndex * 0x74;
         *(s32*)(D_80143FFC + row) = 0x238000;
         *(s32*)(D_80144000 + row) = 0x1F8000;
-        *(s32*)(D_80144004 + D_801FE554 * 0x74) =
+        *(s32*)(D_80144004 + effectRowIndex * 0x74) =
             func_8015477C(*(s32*)(D_80143FFC + row), 0x1F8000) << 16;
       }
       D_80146876 = 0x5F;
@@ -175,13 +175,13 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
   case 4:
     if (g_ScenarioProgress == 0x28) {
       index = func_8019601C();
-      D_801FE554 = index;
+      effectRowIndex = index;
       if (index != 0xFFu) {
         u32 row;
 
-        D_80143FC8[D_801FE554 * 0x74] = 1;
-        D_80143FCD[D_801FE554 * 0x74] = 0x13;
-        row = D_801FE554 * 0x74;
+        D_80143FC8[effectRowIndex * 0x74] = 1;
+        D_80143FCD[effectRowIndex * 0x74] = 0x13;
+        row = effectRowIndex * 0x74;
         *(s32*)(D_8014402C + row) = D_801492D8;
         *(s32*)(D_80144030 + row) = D_801492DA;
         *(s32*)(D_80144034 + row) = -0x144;
@@ -201,13 +201,13 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
 
     if (--*countdown == 0) {
       index = func_8019601C();
-      D_801FE554 = index;
+      effectRowIndex = index;
       if (index != 0xFFu) {
         u32 row;
 
-        D_80143FC8[D_801FE554 * 0x74] = 1;
-        D_80143FCD[D_801FE554 * 0x74] = 0x13;
-        row = D_801FE554 * 0x74;
+        D_80143FC8[effectRowIndex * 0x74] = 1;
+        D_80143FCD[effectRowIndex * 0x74] = 0x13;
+        row = effectRowIndex * 0x74;
         *(s32*)(D_8014402C + row) = D_801492D8;
         *(s32*)(D_80144030 + row) = D_801492DA;
         *(s32*)(D_80144034 + row) = 0x200;
@@ -220,15 +220,15 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
   case 7: {
     u32 row;
 
-    row = D_801FE554 * 0x74;
+    row = effectRowIndex * 0x74;
     if ((D_80143FC8[row] & 1) == 0) {
       index = func_8019601C();
-      D_801FE554 = index;
+      effectRowIndex = index;
       if (index != 0xFFu) {
-        row = D_801FE554 * 0x74;
+        row = effectRowIndex * 0x74;
         D_80143FC8[row] = 1;
-        D_80143FCD[D_801FE554 * 0x74] = 0x13;
-        row = D_801FE554 * 0x74;
+        D_80143FCD[effectRowIndex * 0x74] = 0x13;
+        row = effectRowIndex * 0x74;
         *(s32*)(D_8014402C + row) = -0x2AA;
         *(s32*)(D_80144030 + row) = D_801492DA;
         *(s32*)(D_80144034 + row) = D_801492DC;
