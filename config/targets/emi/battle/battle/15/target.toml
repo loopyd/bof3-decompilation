@@ -304,7 +304,7 @@ sources = [
     "src/bof3/battle/runSelectionPassSetSelectedFlag40ThenAdvanceByte10.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag80ThenAdvanceByte11.c",
     "src/bof3/battle/runSelectionPassClearSelectedRecordStateThenCallA9BD8.c",
-    "src/bof3/battle/func_8009C794_battle15.c",
+    "src/bof3/battle/allOtherSlotsHaveNon63RuleAndE1BitSet.c",
     "src/bof3/battle/applyLocalPanelRuleToWorkRecord.c",
     "src/bof3/battle/addToFlaggedEnemyWorkBytesAndClampToSeven.c",
     "src/bof3/battle/resolveDragonFormFromGenes.c",

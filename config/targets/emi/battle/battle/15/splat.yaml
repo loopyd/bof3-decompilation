@@ -310,9 +310,9 @@ segments:
     - func_8009BFC4
   - - 24468
     - c
-    - func_8009C794
-    - '@source: src/bof3/battle/func_8009C794_battle15.c'
-    - '@behavior: Reports whether the local panel slots of a battler record other than the given one are usable: each such slot must not read the 0x63 class-rule sentinel at class-row offset 0x34 + slot*0x10 and must have its record byte 0xE1 slot bit set.'
+    - allOtherSlotsHaveNon63RuleAndE1BitSet
+    - '@source: src/bof3/battle/allOtherSlotsHaveNon63RuleAndE1BitSet.c'
+    - '@behavior: Returns 1 when every slot index 0 through 3 other than the given slot has a rule byte other than 0x63 at 0x800E4048 + record[0xE0]*0x88 + slot*0x10 + 0x34 and its record byte +0xE1 bit set; returns 0 on the first failed check. The other argument selects a 0x118-byte record at 0x801EB630.'
   - - 24680
     - c
     - testEntryBitE1
