@@ -79,7 +79,7 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478.c'
   - - 6324
     - textbin
-    - D_801F44B4
+    - trailLayerPushCursors
   - - 6328
     - textbin
     - D_801F44B8

@@ -21,7 +21,7 @@ extern void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 /* The two layer push cursors, one byte per layer, holding the record slot each
  * layer writes its next sample into. */
 /* @source 0x801F44B4 @kind bss */
-extern u8 D_801F44B4[];
+extern u8 trailLayerPushCursors[];
 
 /* The 0x98-byte-stride layer state records of the shared overlay state: word 0
  * is the layer clock and the halfword at 6 its phase source. Only the words this
@@ -103,7 +103,7 @@ void drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Are
 
   layer = 0;
   tint = 0x25808000;
-  pushCursor = D_801F44B4;
+  pushCursor = trailLayerPushCursors;
   stateOffset = 0x98;
   do {
     clock = *(s32*)(D_801468BC + stateOffset);
