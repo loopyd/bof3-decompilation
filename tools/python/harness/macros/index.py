@@ -19,6 +19,7 @@ from harness.macros.facts import parse_macro_definitions, parse_macro_uses
 SHARED_MACRO_HEADERS = (
     Path("include/base/compiler.h"),
     Path("include/bof3/asm.h"),
+    Path("include/bof3/emi/dispatchers.h"),
     Path("include/bof3/symbols.h"),
     Path("include/game/counter_step.h"),
     Path("include/game/workarea.h"),
