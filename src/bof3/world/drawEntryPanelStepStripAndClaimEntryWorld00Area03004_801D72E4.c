@@ -112,9 +112,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
         phase[9] = 0;
         D_1F800044[8] = 0;
         index = (u8)func_8019601c();
-        D_80143FC8[index].flags_00 = 1;
-        D_80143FC8[index].byte_05 = 0x1A;
-        D_80143FC8[index].unk_01 = 0x10;
+        WORLD00_AREA030_ARM_PANEL_ENTRY(index);
         values = D_1F800044;
         D_80143FC8[index].unk_02 = FIELD_REF(u16, values, 0x3E);
       } else {

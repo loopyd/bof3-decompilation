@@ -860,6 +860,12 @@ void appendDimTile(void);
   ((first)[0x5D] = 0, (cell)[0x5E] = 0, (cell)[0x5F] = 0, \
    (cell)[9] = 0, (cell)[10] = 0)
 
+/* Arm an entry-panel record. Pass a stable unsigned slot local, read three times. */
+#define WORLD00_AREA030_ARM_PANEL_ENTRY(slot) \
+  (D_80143FC8[(slot)].flags_00 = 1, \
+   D_80143FC8[(slot)].byte_05 = 0x1A, \
+   D_80143FC8[(slot)].unk_01 = 0x10)
+
 #define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
 
 

@@ -76,9 +76,7 @@ void advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128(void
     check = D_1F800044;
     if (panelStepModeTableWorld00Area03004_801E2024[check[0xA]].mode == 0x50) {
       slot = (u8)func_8019601c();
-      D_80143FC8[slot].flags_00 = 1u;
-      D_80143FC8[slot].byte_05 = 0x1A;
-      D_80143FC8[slot].unk_01 = 0x10;
+      WORLD00_AREA030_ARM_PANEL_ENTRY(slot);
       D_80143FC8[slot].unk_02 = 2u;
       D_80143FC8[slot].unk_03 = 2u;
       D_80143FC8[slot].halfword_2E = 0xF0u;

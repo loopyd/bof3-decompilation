@@ -31,9 +31,7 @@ void decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801
   state = D_1F800044;
   if (state[9] == 0) {
     index = (u8)func_8019601c();
-    D_80143FC8[index].flags_00 = 1;
-    D_80143FC8[index].byte_05 = 26;
-    D_80143FC8[index].unk_01 = 16;
+    WORLD00_AREA030_ARM_PANEL_ENTRY(index);
     values = D_1F800044;
     D_80143FC8[index].unk_02 = FIELD_REF(u16, values, 0x3E);
     next = D_1F800044;

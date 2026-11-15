@@ -27,16 +27,12 @@ void initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0(void) {
 
   index = (u8)func_8019601c();
   if (index != 0xFF) {
-    D_80143FC8[index].flags_00 = 1;
-    D_80143FC8[index].byte_05 = 26;
-    D_80143FC8[index].unk_01 = 16;
+    WORLD00_AREA030_ARM_PANEL_ENTRY(index);
     D_80143FC8[index].unk_03 = 2;
   }
   index = (u8)func_8019601c();
   if (index != 0xFF) {
-    D_80143FC8[index].flags_00 = 1;
-    D_80143FC8[index].byte_05 = 26;
-    D_80143FC8[index].unk_01 = 16;
+    WORLD00_AREA030_ARM_PANEL_ENTRY(index);
     D_80143FC8[index].unk_03 = 4;
   }
   func_8014DD3C(0x47);
