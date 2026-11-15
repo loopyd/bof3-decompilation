@@ -11,10 +11,10 @@
  * services and marks the selected entry record.
  * @source 0x801D210C
  * @status partial
- * @match 64.06
- * @residual 123 of 192 current instructions match 186 original; 768 current
- * bytes against 744 original. Scratch cursor reload groups, access counts,
- * register allocation and branch scheduling differ from the original.
+ * @match 65.96
+ * @residual 124 of 188 current instructions match 186 original; 752 current
+ * bytes against 744 original. Entry scheduling, arithmetic allocation, budget
+ * branches and later cursor reload and clear groups differ from the original.
  */
 void func_801D210C(void) {
   u8* s1;
@@ -43,11 +43,11 @@ void func_801D210C(void) {
   *(volatile u16*)(s2 + 0x3Eu) = (u16)(level + 0x100);
 
   level = (s32)((u32)(u8)D_801E320C[2] * D_801440BC) / 255 + 8;
+  s2[6] = (u8)(level / 15);
   s3 = AREA030_SCRATCH;
-  s3[6] = (u8)(level / 15);
-  *(volatile u32*)(s3 + 0x10) = (u32)level;
-  if (AREA030_SCRATCH[6] >= 4u) {
-    AREA030_SCRATCH[6] = 3;
+  *(volatile u32*)(s2 + 0x10) = (u32)level;
+  if (s3[6] >= 4u) {
+    s3[6] = 3;
   }
 
   s4 = AREA030_SCRATCH;
@@ -63,9 +63,11 @@ void func_801D210C(void) {
 
   s5 = AREA030_SCRATCH;
   D_8014932E = 0u;
-  *(volatile u32*)(s5 + 0x0Cu) = 0u;
   index = s5[6];
-  *(volatile u32*)(s5 + 0x14u) = D_801E1D38[index].first;
+  *(volatile u32*)(s5 + 0x0Cu) = 0u;
+  value = D_801E1D38[index].first;
+  index = s5[6];
+  *(volatile u32*)(s5 + 0x14u) = value;
   *(volatile u32*)(s5 + 0x20u) = D_801E1D38[index].second;
   s5[0x24u] = 0u;
 
