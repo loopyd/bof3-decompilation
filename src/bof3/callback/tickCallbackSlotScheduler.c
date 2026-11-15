@@ -37,7 +37,7 @@ void tickCallbackSlotScheduler(void) {
         goto dispatch;
 
       case GAME_CALLBACK_SLOT_STATE_YIELD:
-        if ((u16)--top_slot->countdown != 0u) {
+        if (--top_slot->countdown != 0u) {
           break;
         }
         goto dispatch;

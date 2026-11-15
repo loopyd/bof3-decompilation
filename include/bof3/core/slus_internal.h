@@ -19,6 +19,7 @@ typedef struct GameCallbackSlot {
   u32               open_arg_2;
   u8                pad_48[0x38];
 } GameCallbackSlot;
+ASSERT_SIZE(GameCallbackSlot, 0x80);
 
 enum {
   GAME_CALLBACK_SLOT_STATE_EMPTY = 0,
