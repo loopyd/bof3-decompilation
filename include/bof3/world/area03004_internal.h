@@ -855,6 +855,11 @@ void appendDimTile(void);
     *(volatile u16*)((halfword_cursor) + 0x30) = (halfword_30);               \
   } while (0)
 
+/* first is a captured cursor; cell is reread for each later store. */
+#define WORLD00_AREA030_CLEAR_PANEL_LEVELS_AND_COUNTERS(first, cell) \
+  ((first)[0x5D] = 0, (cell)[0x5E] = 0, (cell)[0x5F] = 0, \
+   (cell)[9] = 0, (cell)[10] = 0)
+
 #define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
 
 

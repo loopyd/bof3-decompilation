@@ -25,11 +25,8 @@ void func_801D6598(void) {
   WORLD00_AREA030_INIT_PANEL_WORK(
       ((volatile struct scratchpad_state*)0x1f800000u)->scratch,
       temp_v1, temp_a0, 0xca, 0xba);
-  temp_a0[0x5d] = 0;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x5e] = 0;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x5f] = 0;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[9] = 0;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[10] = 0;
+  WORLD00_AREA030_CLEAR_PANEL_LEVELS_AND_COUNTERS(
+      temp_a0, ((volatile struct scratchpad_state*)0x1f800000u)->scratch);
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[11] = 0;
   temp_v1_2 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   {
