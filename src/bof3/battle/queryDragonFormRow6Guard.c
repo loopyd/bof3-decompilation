@@ -11,7 +11,7 @@ extern u8 func_800A805C(void); /* @source 0x800A805C */
  * @match 100.00
  * @residual none
  */
-u8 func_800A6D84(void)
+u8 queryDragonFormRow6Guard(void)
 {
   u8 i;
 

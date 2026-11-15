@@ -1124,7 +1124,7 @@ segments:
     - c
     - resolveDragonFormFromGenes
     - '@source: src/bof3/battle/resolveDragonFormFromGenes.c'
-    - '@behavior: Takes the first of the eleven rows of the three-byte table at 0x800B4D58 whose three entries are each the 0xFF sentinel or present in the active byte list at 0x801463C4, then copies the row group byte from the table at 0x800B4D4C into 0x800B6F5C and returns the row index, or returns 0xFF when no row is covered. Row six is decided by the guard func_800A6D84 instead: its non-zero low byte returns, otherwise that row is skipped and the scan resumes at the next one.'
+    - '@behavior: Takes the first of the eleven rows of the three-byte table at 0x800B4D58 whose three entries are each the 0xFF sentinel or present in the active byte list at 0x801463C4, then copies the row group byte from the table at 0x800B4D4C into 0x800B6F5C and returns the row index, or returns 0xFF when no row is covered. Row six is decided by the guard queryDragonFormRow6Guard instead: its non-zero low byte returns, otherwise that row is skipped and the scan resumes at the next one.'
   - - 66808
     - c
     - func_800A6CF8
@@ -1132,8 +1132,8 @@ segments:
     - '@behavior: Reads the 3-byte row selected by the two index bytes from the lookup table at 0x800B4D58 and reports whether that entry is the 0xFF sentinel or appears in the active byte list at 0x801463C4.'
   - - 66948
     - c
-    - func_800A6D84
-    - '@source: src/bof3/battle/func_800A6D84_battle15.c'
+    - queryDragonFormRow6Guard
+    - '@source: src/bof3/battle/queryDragonFormRow6Guard.c'
     - '@behavior: Returns zero unless the active byte list at 0x801463C4 holds the entry 0x10 while the party counter byte 0x801462F1 equals 3, in which case it runs func_800A805C and returns the low byte of its result.'
   - - 67092
     - asm
