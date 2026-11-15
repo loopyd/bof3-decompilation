@@ -8,9 +8,9 @@ void func_801D7B64(void);
  * 0xFF sentinel for an unavailable entry, draws the fixed header and mode
  * indicators, and sets state byte 1 to 8 when the sliding byte reaches zero.
  * @status partial
- * @match 83.05
- * @residual duplicate signed/unsigned halfword loads and entry/sprite
- * register allocation differ from the original
+ * @match 91.53
+ * @residual countdown and index register allocation and initial selection
+ * branch layout differ from the original
  */
 void decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70(void) {
   u8* step;
@@ -23,16 +23,16 @@ void decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70(void) {
   u32 mask;
 
   step = D_1F800044;
-  step[9]--;
+  index = (s16)(step[9] - 1);
+  step[9] = (u8)index;
   submitPanelPair(0, 78);
   entry = D_1F800044;
   index = FIELD_REF(s16, entry, 0x3E);
   amount = D_80144FE4[index];
-  if (amount != 0) {
-    func_801E1004((u8)index, amount, 0);
-  } else {
-    func_801E1004(255, 0, 0);
+  if (amount == 0) {
+    index = 255;
   }
+  func_801E1004((u8)index, amount, 0);
   sprite = D_1F800044;
   if (sprite[8] == 0) {
     index = FIELD_REF(s16, sprite, 0x3E);

@@ -11,13 +11,10 @@
  * services and marks the selected entry record.
  * @source 0x801D210C
  * @status partial
- * @match 63.02
- * @residual 121 of 192 current instructions match 186 original; 768 current against
- * 744 original bytes. Each scratch cursor group now reads the cell through its own
- * variable, which recovered 24 matches and 4 bytes over the single-variable form.
- * The first difference is at +0x10, where the second group's D_80145EC4 load is
- * allocated to a1 instead of the original v0, and the remaining groups still differ
- * in register choice and schedule.
+ * @match 64.06
+ * @residual 123 of 192 current instructions match 186 original; 768 current
+ * bytes against 744 original. Scratch cursor reload groups, access counts,
+ * register allocation and branch scheduling differ from the original.
  */
 void func_801D210C(void) {
   u8* s1;
@@ -39,7 +36,7 @@ void func_801D210C(void) {
   value = D_80145EC4;
   budget = D_80145EC8;
   *(volatile u32*)(s1 + 0x34u) = value;
-  *(volatile u32*)(s1 + 0x38u) = budget - 0x8000u;
+  *(u32*)(s1 + 0x38u) = budget - 0x8000u;
   level = func_8015477c((s32)(*(volatile u32*)(s1 + 0x34u)), (s32)(budget - 0x8000u));
 
   s2 = AREA030_SCRATCH;
@@ -55,7 +52,7 @@ void func_801D210C(void) {
 
   s4 = AREA030_SCRATCH;
   level = (s32)(*(volatile u32*)(s4 + 0x38) - (*(volatile u32*)(s4 + 0x10) << 15));
-  *(volatile u32*)(s4 + 0x10) = (u32)level;
+  *(u32*)(s4 + 0x10) = (u32)level;
   if (level > 0x3BFFFF) {
     D_8014930C = 0x3C0000u;
   } else if (level > 0x14FFFF) {

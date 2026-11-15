@@ -10,11 +10,11 @@
  * @source 0x801D3244
  * @status partial
  * @match 75.36
- * @residual 52 of 68 current instructions match 69 original at 272 of 276 bytes;
- * the body, calls, stores and both masks agree, and the first difference is the
- * saved-register set. The original keeps the masked width in its own s6 while the
- * argument stays live in s0; this build reuses a parameter register for it, so the
- * frame is four bytes smaller and the ra slot sits four bytes lower.
+ * @residual 52 of 68 current instructions match 69 original at 272 of 276 bytes.
+ * Both frames are 48 bytes. The current saved-register set omits the original
+ * s6 save and restore, relocates the x coordinate and saves ra four bytes lower.
+ * The original keeps the masked width in s6 and reuses the incoming width
+ * register for the primitive cursor.
  */
 void func_801D3244(s16 arg0, s16 arg1, s32 arg2, s8 arg3, u8 arg4, u8 arg5) {
   u8*  cell;
