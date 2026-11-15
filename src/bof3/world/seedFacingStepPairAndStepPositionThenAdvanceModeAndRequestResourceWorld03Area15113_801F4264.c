@@ -7,7 +7,7 @@
  * so this body addresses it by name at every access.
  * @source 0x1F800044 @kind unknown
  */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord;
 /* Shared position word of the main executable copied into record offset 0x34.
  * @source 0x80145EC4 @kind unknown
  */
@@ -76,11 +76,11 @@ void seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Ar
   s16 stepped;
 
   func_8014DD3C(0x46);
-  D_1F800044[0x48] = 0;
-  D_1F800044[0x24] = 0;
-  D_1F800044[0x29] = 5;
+  scratchpadWorkRecord[0x48] = 0;
+  scratchpadWorkRecord[0x24] = 0;
+  scratchpadWorkRecord[0x29] = 5;
 
-  record = D_1F800044;
+  record = scratchpadWorkRecord;
   FIELD_REF(s32, record, 0x0C) = (s16)D_801F54E4[record[0x08]][0];
   FIELD_REF(s32, record, 0x10) = (s16)D_801F54E4[record[0x08]][1];
   FIELD_REF(u32, record, 0x34) = D_80145EC4;
@@ -108,15 +108,15 @@ void seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Ar
     u8* next;
     u16 half;
 
-    record = D_1F800044;
+    record = scratchpadWorkRecord;
     FIELD_REF(u16, record, 0x36) -= (s16)D_801F54E4[record[0x08]][0] >> 9;
     half = FIELD_REF(u16, record, 0x3A) - ((s16)D_801F54E4[record[0x08]][1] >> 9);
     record[0x0B] = 0;
-    next = D_1F800044;
+    next = scratchpadWorkRecord;
     FIELD_REF(u16, record, 0x3A) = half;
     next[0x01]++;
   }
-  func_8014D6B8(D_801F54F4[D_1F800044[0x08]][0]);
-  D_1F800044[0x2A] = D_801F54F4[D_1F800044[0x08]][1];
+  func_8014D6B8(D_801F54F4[scratchpadWorkRecord[0x08]][0]);
+  scratchpadWorkRecord[0x2A] = D_801F54F4[scratchpadWorkRecord[0x08]][1];
   func_8014D290();
 }

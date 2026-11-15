@@ -14,7 +14,7 @@ typedef struct Area15113PanelWork {
 } Area15113PanelWork;
 
 /* @source 0x1F800044 @kind data */
-extern Area15113PanelWork* D_1F800044;
+extern Area15113PanelWork* scratchpadWorkRecord;
 /* @source 0x1F800014 @kind data */
 extern SVECTOR D_1F800014[];
 /* @source 0x80143E6C @kind data */
@@ -93,7 +93,7 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
   long depth;
   long flag;
 
-  first_frame = D_1F800044;
+  first_frame = scratchpadWorkRecord;
   if (first_frame->unk_02 == 0) {
     u8 count;
     u8 next;
@@ -107,14 +107,14 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
     return;
   }
 
-  scratch = D_1F800044;
+  scratch = scratchpadWorkRecord;
   layer = (s32)scratch->unk_0b - 2;
   scratch->unk_38 = scratch->unk_38 + 0x800 + (layer << 10);
   if (D_80104001 + 8 < FIELD_REF(s16, scratch, 0x3au)) {
     FIELD_REF(s16, scratch, 0x3au) = -8;
   }
 
-  scratch = D_1F800044;
+  scratch = scratchpadWorkRecord;
   if (abs(D_8014930A - FIELD_REF(s16, scratch, 0x36u)) >= 0x1a &&
       abs(D_8014930E - FIELD_REF(s16, scratch, 0x3au)) >= 0x1a) {
     return;
@@ -132,8 +132,8 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
   SPAD_REF(s16, 0x30u) = -0x300;
 
   half = ((2 - layer) * 256) + abs(0xf - (D_80143E6C & 0x1f));
-  x = (D_1F800044->unk_34 >> 9) - 0x3fc0;
-  y = (D_1F800044->unk_38 >> 9) - 0x3fc0;
+  x = (scratchpadWorkRecord->unk_34 >> 9) - 0x3fc0;
+  y = (scratchpadWorkRecord->unk_38 >> 9) - 0x3fc0;
 
   vertices[0].vx = x - half;
   SPAD_REF(s16, 0x16u) = y - half;
@@ -159,8 +159,8 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
     }
     for (column = 0; column < (2 - layer) * 4; column++) {
       record = func_801559AC(
-          FIELD_REF(s16, D_1F800044, 0x36u) - 2 + layer + column,
-          FIELD_REF(s16, D_1F800044, 0x3au) - 2 + layer + row);
+          FIELD_REF(s16, scratchpadWorkRecord, 0x36u) - 2 + layer + column,
+          FIELD_REF(s16, scratchpadWorkRecord, 0x3au) - 2 + layer + row);
       if (record == 0) {
         continue;
       }
@@ -193,7 +193,7 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
       *(u8*)(primitive + 0x0d) = D_801F5508[layer] +
                                  row * D_801F550C[layer] -
                                  (D_801F550C[layer] *
-                                  FIELD_REF(u16, D_1F800044, 0x38u)) /
+                                  FIELD_REF(u16, scratchpadWorkRecord, 0x38u)) /
                                      0x10000;
       *(u8*)(primitive + 0x14) =
           D_801F550C[layer] +
@@ -201,24 +201,24 @@ void drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld03Area15113_801F4
       *(u8*)(primitive + 0x15) = D_801F5508[layer] +
                                  row * D_801F550C[layer] -
                                  (D_801F550C[layer] *
-                                  FIELD_REF(u16, D_1F800044, 0x38u)) /
+                                  FIELD_REF(u16, scratchpadWorkRecord, 0x38u)) /
                                      0x10000;
       *(u8*)(primitive + 0x1c) = D_801F5504[layer] + column * D_801F550C[layer];
       *(u8*)(primitive + 0x1d) =
           D_801F550C[layer] +
           (D_801F5508[layer] + row * D_801F550C[layer] -
-           (D_801F550C[layer] * FIELD_REF(u16, D_1F800044, 0x38u)) / 0x10000);
+           (D_801F550C[layer] * FIELD_REF(u16, scratchpadWorkRecord, 0x38u)) / 0x10000);
       *(u8*)(primitive + 0x24) =
           D_801F550C[layer] +
           (D_801F5504[layer] + column * D_801F550C[layer]);
       *(u8*)(primitive + 0x25) =
           D_801F550C[layer] +
           (D_801F5508[layer] + row * D_801F550C[layer] -
-           (D_801F550C[layer] * FIELD_REF(u16, D_1F800044, 0x38u)) / 0x10000);
+           (D_801F550C[layer] * FIELD_REF(u16, scratchpadWorkRecord, 0x38u)) / 0x10000);
 
       func_80155A08(
-          (FIELD_REF(s16, D_1F800044, 0x36u) - 2 + layer + column) << 16,
-          (FIELD_REF(s16, D_1F800044, 0x3au) - 2 + layer + row) << 16, 1, 0x28);
+          (FIELD_REF(s16, scratchpadWorkRecord, 0x36u) - 2 + layer + column) << 16,
+          (FIELD_REF(s16, scratchpadWorkRecord, 0x3au) - 2 + layer + row) << 16, 1, 0x28);
     }
   }
 }

@@ -8,7 +8,7 @@ extern u16 D_80146258;
  * while the macro spelling of the same cell folds the address into one base
  * register and diverges. */
 /* @source 0x1F800044 @kind data */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord;
 
 /* The local emitter at 0x801F4034 narrows both arguments with `sll`/`sra 16`
  * in its own body and the call site consumes no result. */
@@ -41,18 +41,18 @@ void advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHa
   u8* record;
   u8* emitter;
 
-  record = D_1F800044;
+  record = scratchpadWorkRecord;
   if (record[0x0B] == 0) {
     record[9]++;
-    record = D_1F800044;
+    record = scratchpadWorkRecord;
     if (record[9] >= 0x5A) {
       record[0x0B]++;
     }
   }
-  if ((D_801454F2 != 0 && D_1F800044[0x0B] != 0) || D_80143BB0 == 2 ||
+  if ((D_801454F2 != 0 && scratchpadWorkRecord[0x0B] != 0) || D_80143BB0 == 2 ||
       (D_80146258 & 0x100u) != 0) {
-    D_1F800044[3]++;
+    scratchpadWorkRecord[3]++;
   }
-  emitter = D_1F800044;
+  emitter = scratchpadWorkRecord;
   func_801F4034(0x5C, FIELD_REF(s16, emitter, 0x30));
 }

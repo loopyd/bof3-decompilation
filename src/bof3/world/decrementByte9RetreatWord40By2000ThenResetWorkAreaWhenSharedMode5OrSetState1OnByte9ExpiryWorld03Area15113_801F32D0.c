@@ -18,7 +18,7 @@ typedef struct Area15113WorkRecord {
  * cached pointer.
  * @source 0x1F800044 @kind data
  */
-extern Area15113WorkRecord* D_1F800044;
+extern Area15113WorkRecord* scratchpadWorkRecord;
 
 /* Shared mode byte of the shared main executable, outside this payload: the
  * countdown-expiry arm routes to the shared work-area reset only while this byte
@@ -80,17 +80,17 @@ void decrementByte9RetreatWord40By2000ThenResetWorkAreaWhenSharedMode5OrSetState
   Area15113WorkRecord* state;
 
   setWorkHalfwordsWorld03Area15113_801F3370();
-  work = D_1F800044;
+  work = scratchpadWorkRecord;
   work->countdown--;
   work->unk_40 -= 0x2000;
 
-  state = D_1F800044;
+  state = scratchpadWorkRecord;
   if (state->countdown == 0) {
     if (D_80143BB0 == 5) {
       func_80196070();
     } else {
       state->unk_48 = 0;
-      work = D_1F800044;
+      work = scratchpadWorkRecord;
       work->mode = 1;
     }
   } else {
