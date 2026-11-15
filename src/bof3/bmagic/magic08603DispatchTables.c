@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-extern void (*D_801F0354[])(void);
+extern void (*workByte1HandlerTable[])(void); /* @source 0x801F0354 @kind table */
 
 /* @source 0x801EF278
  * @behavior Overlay step dispatch: reads the state byte at +1 of
@@ -12,4 +12,4 @@ extern void (*D_801F0354[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0354BmagicMagic08603_801EF278, D_801F0354);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0354BmagicMagic08603_801EF278, workByte1HandlerTable);
