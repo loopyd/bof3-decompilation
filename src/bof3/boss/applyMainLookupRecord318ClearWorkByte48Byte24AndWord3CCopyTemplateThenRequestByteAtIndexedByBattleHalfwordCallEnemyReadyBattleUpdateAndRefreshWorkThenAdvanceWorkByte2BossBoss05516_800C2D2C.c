@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/boss/boss05516_steps.h"
 
 /* The leading data run of this payload starts at 0x800C1804 and holds 12-byte
  * slots whose first 0xA bytes are copied into a frame slot before use. This body
@@ -77,10 +78,10 @@ extern void refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800
  *           (the `lui`/`lw` pairs above 0x800C2D78, 0x800C2D88, 0x800C2D98 and
  *           0x800C2DDC, each using the load destination as base), because a
  *           store through the loaded pointer may alias the cell; the template
- *           copy loads all three groups before it stores any of them, and the
- *           byte +2 store fills the return slot of the plain `jr $ra`. The
- *           0x28-byte frame keeps the template at 0x10 and $ra at 0x20 across
- *           the four calls.
+ *           copy loads two words and byte +8 before storing them, then copies
+ *           byte +9. The byte +2 store precedes `jr $ra`; its delay slot
+ *           restores $sp by 0x28. The frame keeps the template at 0x10 and
+ *           $ra at 0x20 across five calls.
  *           This 54-instruction 0xD8 body differs from the step body at
  *           0x800C2BA0 in exactly two payload words, the low immediate of the
  *           template slot (0x1834 here, 0x1828 there) and the lookup record id
@@ -100,14 +101,5 @@ void applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplateThenReque
     void) {
   Boss05516StepTemplate stepTemplate;
 
-  stepTemplate = D_800C1834;
-  func_8014DD3C(0x318);
-  g_battle_work[0x48] = 0;
-  g_battle_work[0x24] = 0;
-  FIELD_REF(s32, g_battle_work, 0x3C) = 0;
-  func_8014D6B8(stepTemplate.bytes[D_801463BE]);
-  func_801E3160();
-  func_8014D4E0();
-  refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284();
-  g_battle_work[2]++;
+  BOSS055_APPLY_TEMPLATE_STEP(stepTemplate, D_800C1834, 0x318, func_801E3160);
 }

@@ -51,3 +51,4 @@ support_sources = [
     "src/bof3/support/boss055_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss055_16_psyq.c"
+headers = ["include/bof3/boss/boss05516_steps.h"]
