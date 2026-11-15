@@ -13,13 +13,7 @@ void func_801D4570(void) {
   u8* cursor;
   u32 mask;
 
-  func_801D9534(20, 18, 280, 19, 0);
-  mask = 0u;
-  if (D_80145E93 >= 3u) {
-    cursor = (u8*)D_1F800044;
-    mask = (u8)(1u << cursor[6u]);
-  }
-  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
+  WORLD00_AREA030_DRAW_HEADER_AND_STATUS(cursor, mask);
   drawEquipmentGuideColumn(16, 64);
   func_801D7EB0(164, 64);
 }

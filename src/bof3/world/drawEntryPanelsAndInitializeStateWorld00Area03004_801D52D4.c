@@ -15,13 +15,7 @@ void drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4(void) {
   u8* state;
   u32 mask;
 
-  func_801D9534(20, 18, 280, 19, 0);
-  mask = 0u;
-  if (D_80145E93 >= 3u) {
-    cursor = D_1F800044;
-    mask = (u8)(1u << cursor[6]);
-  }
-  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
+  WORLD00_AREA030_DRAW_HEADER_AND_STATUS(cursor, mask);
   cursor = D_1F800044;
   cursor[8] = 0;
   cleared = D_1F800044;

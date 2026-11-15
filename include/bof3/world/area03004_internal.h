@@ -820,6 +820,16 @@ void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
 
+/* cursor and mask are distinct simple output locals. */
+#define WORLD00_AREA030_DRAW_HEADER_AND_STATUS(cursor, mask) \
+  (func_801D9534(20, 18, 280, 19, 0), \
+   (mask) = 0u, \
+   (D_80145E93 >= 3u \
+        ? ((cursor) = D_1F800044, \
+           (mask) = (u8)(1u << (cursor)[6])) \
+        : 0u), \
+   drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, (mask)))
+
 /* Preserve the repeated record reads. Evaluate icon_row_y once, at the final
  * call. */
 #define WORLD00_AREA030_DRAW_PANEL_ROW(icon_row_y)                           \
