@@ -18,6 +18,10 @@ target. `--limit` is positive and only truncates list records; counts and findin
 retain complete scope. `--kind all` combines definitions, uses and C repetitions.
 Byte-repeat discovery is separate because it reads the global reviewed corpus.
 It retains all members of a relationship that touches the selected target.
+Candidates sort by descending instruction count, descending disjoint member
+count, then candidate ID before the limit applies. Support counts nonoverlapping
+intervals separately within each target. Normalized instruction matches retain
+member byte hashes; compare those hashes to establish identical original bytes.
 
 Listings read a fresh existing index without refreshing it or building source.
 Repeated tokens and instruction shapes are leads. They do not establish a useful

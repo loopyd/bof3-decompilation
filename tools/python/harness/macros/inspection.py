@@ -40,6 +40,28 @@ def _definition(row: dict) -> dict:
     }
 
 
+def _rank_byte_repeat(row: dict) -> tuple[int, int, str]:
+    instructions = (
+        row["instruction_count"]
+        if row["record_kind"] == "byte_repetition"
+        else row["evidence"]["instruction_count"]
+    )
+    intervals = sorted(
+        (
+            member["target"],
+            int(member.get("start_address", member.get("address")), 16),
+        )
+        for member in row["members"]
+    )
+    ends = {}
+    support = 0
+    for target, start in intervals:
+        if start >= ends.get(target, -1):
+            support += 1
+            ends[target] = start + instructions * 4
+    return -instructions, -support, row["id"]
+
+
 def list_report(
     root: Path, target: str, *, kind: str = "definitions", limit: int | None = None
 ) -> dict:
@@ -98,14 +120,17 @@ def list_report(
                 )
     except (OSError, RuntimeError, ValueError, sqlite3.Error) as error:
         findings.append({"status": "unavailable", "message": str(error)})
-    rows.sort(
-        key=lambda row: (
-            row["record_kind"],
-            row.get("source_path", ""),
-            row.get("source_line", 0),
-            row.get("name", row.get("spelling", row.get("id", ""))),
+    if kind == "byte-repeats":
+        rows.sort(key=_rank_byte_repeat)
+    else:
+        rows.sort(
+            key=lambda row: (
+                row["record_kind"],
+                row.get("source_path", ""),
+                row.get("source_line", 0),
+                row.get("name", row.get("spelling", row.get("id", ""))),
+            )
         )
-    )
     return {
         "operation": "macros",
         "action": "list",
