@@ -17,11 +17,7 @@
  * @residual none
  */
 void togglePanelModeOnPadPressAndDrawRowWorld00Area03004_801DC0CC(void) {
-  submitPanelPair(0, 78);
-  configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
-  func_801E1004(D_80146888[D_801E3208].unk_02[4],
-                D_80146888[D_801E3208].unk_60[0x30], 0);
-  func_801E1320(176, 156);
+  WORLD00_AREA030_DRAW_PANEL_ROW(156);
   func_801E162C(8, 148, 68);
   if ((D_80145AA8 & 0x5000) != 0) {
     func_8015DF18(0x100);

@@ -20,11 +20,7 @@ void func_801DBD6C(void) {
 
   work = D_1F800044;
   work[9] = work[9] - 1;
-  submitPanelPair(0, 78);
-  configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
-  func_801E1004(D_80146888[D_801E3208].unk_02[4],
-                D_80146888[D_801E3208].unk_60[0x30], 0);
-  func_801E1320(176, 156);
+  WORLD00_AREA030_DRAW_PANEL_ROW(156);
   work = D_1F800044;
   if (work[0xB] == 1) {
     func_801E162C(8, work[9] * 30 + 148, 67);

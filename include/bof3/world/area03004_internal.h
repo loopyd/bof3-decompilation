@@ -820,6 +820,15 @@ void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
 
+/* Preserve the repeated record reads. Evaluate icon_row_y once, at the final
+ * call. */
+#define WORLD00_AREA030_DRAW_PANEL_ROW(icon_row_y)                           \
+  (submitPanelPair(0, 78),                                                   \
+   configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]),          \
+   func_801E1004(D_80146888[D_801E3208].unk_02[4],                           \
+                 D_80146888[D_801E3208].unk_60[0x30], 0),                    \
+   func_801E1320(176, (icon_row_y)))
+
 /* work_cell is read five times. Pass a volatile pointer-cell lvalue and distinct
  * simple cursor locals; each halfword value is evaluated once. */
 #define WORLD00_AREA030_INIT_PANEL_WORK(work_cell, halfword_cursor,           \

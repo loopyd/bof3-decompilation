@@ -32,11 +32,7 @@ void choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC(void) {
   u8* cursor;
   u8 recordId;
 
-  submitPanelPair(0, 78);
-  configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
-  func_801E1004(D_80146888[D_801E3208].unk_02[4],
-                D_80146888[D_801E3208].unk_60[0x30], 0);
-  func_801E1320(176, 156);
+  WORLD00_AREA030_DRAW_PANEL_ROW(156);
   func_801E1C7C();
   if ((D_80145AA8 & 0x50) != 0) {
     cursor = D_1F800044;
