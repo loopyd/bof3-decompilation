@@ -22,15 +22,9 @@ void func_801D5C8C(void) {
   volatile u8* temp_v1_2;
   volatile u8* temp_a0_2;
 
-  func_8014DD3C(0x47);
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x24] = 0x80;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x29] = 1;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x2a] = 0;
-  temp_v1 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
-  temp_v1[0x48] = 0;
-  temp_a0 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
-  *(volatile u16*)(temp_v1 + 0x2e) = 0xec;
-  *(volatile u16*)(temp_v1 + 0x30) = 0xa2;
+  WORLD00_AREA030_INIT_PANEL_WORK(
+      ((volatile struct scratchpad_state*)0x1f800000u)->scratch,
+      temp_v1, temp_a0, 0xec, 0xa2);
   temp_a0[0x5d] = 0;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x5e] = 0;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x5f] = 0;

@@ -12,6 +12,12 @@ repetition and maintainable definitions. Inspect C89, original instructions and
 existing macros before selecting. Incidental similarity is insufficient. Preserve
 useful abstractions and generated bindings. Discovery supplies no write authority.
 
+Bind N before a bounded review. Reconcile the full pool total, the limit and
+overlapping intervals. Count disjoint uses rather than overlapping windows.
+Review the largest leads first, then select the useful operation
+with the largest net source reduction, counting its definition and invocations.
+Record remaining batches; listing or rejection earns no extraction credit.
+
 For template extraction, require at least four useful disjoint uses. Frozen
 campaigns retain their selected members, instruction floor, ordering, budgets,
 prior failures and unfinished duties. Current lexical repetition can appear with

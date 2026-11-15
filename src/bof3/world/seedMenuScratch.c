@@ -18,15 +18,9 @@ void seedMenuScratch(void) {
   volatile u8* temp_v1;
   volatile u8* temp_v1_2;
 
-  func_8014DD3C(0x47);
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x24] = 0x80;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x29] = 1;
-  ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x2a] = 0;
-  temp_v1 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
-  temp_v1[0x48] = 0;
-  temp_a0 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
-  *(volatile u16*)(temp_v1 + 0x2e) = 0xf0;
-  *(volatile u16*)(temp_v1 + 0x30) = 0xba;
+  WORLD00_AREA030_INIT_PANEL_WORK(
+      ((volatile struct scratchpad_state*)0x1f800000u)->scratch,
+      temp_v1, temp_a0, 0xf0, 0xba);
   temp_a0[9] = 0;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[10] = 0;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[6] = 0;

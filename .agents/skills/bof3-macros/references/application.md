@@ -5,6 +5,12 @@ Read [selection](selection.md) and shared
 Capture owned PRE and the adopted dirty/index baseline, then establish current
 native results. Edit the smallest useful extraction directly.
 
+Use parenthesized bodies for expression macros and `do { ... } while (0)` for
+statement macros in C89. Keep caller locals explicit and preserve their scope,
+lifetime and initialization order. Document output lvalues and intentionally
+repeated input evaluation. Parenthesize parameter uses and verify the actual
+expansion under the effective compiler recipe.
+
 Resolve all direct and transitive consumers of the definition, including other
 parameters and uses outside the selected repetition. Inspect the complete writable
 files. Attach generated function records to individual invocations under the

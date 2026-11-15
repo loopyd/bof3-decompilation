@@ -820,6 +820,22 @@ void submitPanelPair(s16 arg0, s16 arg1);
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
 
+/* work_cell is read five times. Pass a volatile pointer-cell lvalue and distinct
+ * simple cursor locals; each halfword value is evaluated once. */
+#define WORLD00_AREA030_INIT_PANEL_WORK(work_cell, halfword_cursor,           \
+                                      next_cursor, halfword_2e, halfword_30)  \
+  do {                                                                        \
+    func_8014DD3C(0x47);                                                      \
+    (work_cell)[0x24] = 0x80;                                                 \
+    (work_cell)[0x29] = 1;                                                    \
+    (work_cell)[0x2a] = 0;                                                    \
+    (halfword_cursor) = (work_cell);                                          \
+    (halfword_cursor)[0x48] = 0;                                              \
+    (next_cursor) = (work_cell);                                              \
+    *(volatile u16*)((halfword_cursor) + 0x2e) = (halfword_2e);               \
+    *(volatile u16*)((halfword_cursor) + 0x30) = (halfword_30);               \
+  } while (0)
+
 #define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
 
 
