@@ -52,6 +52,7 @@ segments:
   - - 1432
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F7198
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1300_801F7198.c'
   - - 1500
     - c
     - clearWorkTintQueueFrontEndMode33SetPhase2AndAdvanceWorkByte1ScenarioScena1300_801F71DC
@@ -78,6 +79,7 @@ segments:
   - - 2552
     - c
     - dispatchWorkByte1HandlerScenarioScena1300_801F75F8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1300_801F75F8.c'
   - - 2620
     - c
     - claimTwoWorkRecordsThenActivateBothWithSharedEntryOpenWord38By10000SetFlag20AndArmByte9ScenarioScena1300_801F763C
@@ -130,8 +132,10 @@ segments:
     - '@source: src/bof3/scenario/claimTwoWorkRecordsThenActivateBothWithSecondOverlayActivationEntryPairScenarioScena1300_801F8D0C.c'
     - '@behavior: Claims the second pair of shared 0x98-byte work records this overlay activates, the pair its own activation-entry records at 0x801FBF98 and 0x801FBFA8 arm. It asks the shared allocator func_8015CA48 for a free record identifier and returns when that identifier is 0xFF, otherwise sets the flag byte of the 0x80146888 record the identifier scales, asks for a second identifier and clears that first flag byte again when the second one is 0xFF. With two identifiers it loads the entry at 0x801FBF98, sets the second record flag byte, publishes each identifier as the scratchpad halfword 0x1F800000 and hands the entry, then the entry 0x10 bytes past it, to func_801A65A0. It takes no arguments, returns nothing and its 0x28-byte frame keeps $ra and $s0 to $s4.'
   - - 8700
-    - asm
-    - func_801F8DFC
+    - c
+    - runPrimaryState3SubstateSequenceScenarioScena1300_801F8DFC
+    - '@source: src/bof3/scenario/runPrimaryState3SubstateSequenceScenarioScena1300_801F8DFC.c'
+    - '@behavior: Primary-state 3 handler selected without arguments by the nine-entry table at 0x801FBF54. It bounds shared sub-state D_80146875 against 0x19 and dispatches through the 25-word table at 0x801F6C4C. Cases 0 and 2 claim and fill a front-end record, publish its identifier in D_801FBFEC, and seed the countdown; case 0 also subtracts 0x800 from D_80149338. Cases 1 and 3 decrement the countdown, then subtract or add 0x800 to that halfword and advance the sub-state. Cases 4 and 5 set a scenario flag or run release helpers, then clear both state bytes. Cases 10 and 11 run cue helpers and wait for progress 0x12 before arming mode 2. Case 12 waits until that mode changes, seeds the context and view pairs, refreshes distance, queues action 0x19, stores mode 2 before calling the record-release helper, seeds angles and claims a record. It advances to sub-state 13 only if allocation succeeds. Case 13 waits for that record and mode, sets scenario flag bit 9, seeds the front selector and clears both state bytes. Cases 20 through 24 sequence front-end startup, gate waits, timed record allocation, selector setup and release. Case 22 keeps the allocator identifier local and preserves the countdown address across the call; it does not replace D_801FBFEC. The function returns nothing and uses a 24-byte frame that preserves ra and s0.'
   - - 10608
     - asm
     - func_801F9570
