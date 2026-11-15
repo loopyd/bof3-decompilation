@@ -48,27 +48,20 @@
 #define SPAD_PTR_TABLE(type) SPAD_ADDR(type*, 0u)
 
 /*
- * Pointer stored in a scratchpad slot.
+ * Lvalue for a pointer stored in a scratchpad cell.
  *
- * The cell is intentionally NOT marked volatile: the constant-address codegen
- * (lui + offset load, e.g. `lw v1,68(v1)` for 0x1F800044) matches the original
- * binary. Marking the cell `volatile` forces `lui + ori + lw 0`, which diverges.
- * To force a reload on every evaluation, qualify the type and/or use PSX_REF
- * directly.
+ * The pointer cell is unqualified. Qualifiers in type apply to the pointee.
+ * When a volatile cell is required, use
+ * PSX_REF(Entity* volatile, SPAD_ADDRESS(0x44u)).
  *
  *     SPAD_PTR_SLOT(Entity, 0x44u)
- *         Entity **
+ *         Entity* lvalue
  *
  *     SPAD_PTR_SLOT(volatile Entity, 0x44u)
- *         volatile Entity **
+ *         volatile Entity* lvalue
  */
 #define SPAD_PTR_SLOT(type, byte_offset)                                       \
   PSX_REF(type*, SPAD_ADDRESS(byte_offset))
 
-
-#define BOF3_DISPATCH_WORK_SLOT_TWO(name, table)                               \
-  void name(void) {                                                            \
-    table[SPAD_PTR_SLOT(u8, 0x44)[2]]();                                       \
-  }
 
 #endif
