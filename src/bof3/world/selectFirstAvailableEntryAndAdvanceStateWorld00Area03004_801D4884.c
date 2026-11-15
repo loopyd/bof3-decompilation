@@ -4,12 +4,12 @@
  * @behavior scans the 32 entry-amount bytes from index zero, wrapping the work
  * halfword at 0x3E and setting halfword 0x3C when none is available. Draws the
  * fixed header and mode indicators, sets work byte 9 to four and advances state.
- * @status partial
- * @match 76.56
- * @residual entry constant/pointer allocation and 32-byte frame differ from
- * the original 40-byte frame
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884(void) {
+  u8 unused_stack[8];
   s32 start;
   s16* work;
   u32 mask;
@@ -18,10 +18,11 @@ void selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884(void) {
   u8* state;
 
   start = 0;
-  work = (s16*)D_1F800044;
+  mode = D_1F800044;
+  work = (s16*)mode;
   work[31] = 0;
   work[30] = 0;
-  do {
+  for (;;) {
     s32 index = work[31];
     if (D_80144FE4[index] != 0) {
       goto selected;
@@ -30,8 +31,11 @@ void selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884(void) {
     if (work[31] >= 32) {
       work[31] = 0;
     }
-  } while (work[31] != start);
-  work[30] = 1;
+    if (work[31] == start) {
+      work[30] = 1;
+      break;
+    }
+  }
 selected:
   func_801D9534(20, 18, 280, 19, 0);
   mask = 0;

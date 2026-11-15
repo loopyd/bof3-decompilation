@@ -40,7 +40,7 @@
  * `ABS(macro)`/ternary spellings of the three signed magnitudes. Nothing in
  * this file is a matching aid: no pins, clobbers, barriers or empty asm.
  */
-s32 func_801E0770(void) {
+u8 func_801E0770(void) {
   Area030WorkRecord* work;
   s32 dx;
   s32 dy;

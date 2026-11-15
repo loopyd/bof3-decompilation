@@ -82,7 +82,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
   u16 sprite;
   u32 index;
 
-  func_801ae3f0((u16)x, (u16)y, 0xF2, 0x9F, 0xF0, D_80144952);
+  func_801AE3F0((u16)x, (u16)y, 0xF2, 0x9F, 0xF0, D_80144952);
 
   work = D_1F800044;
   if (work[8] != 0) {
@@ -176,8 +176,8 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
     startY += 0xD;
   }
 
-  func_801ae3f0((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, D_80144952);
-  func_801ae3f0((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, D_80144952);
+  func_801AE3F0((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, D_80144952);
+  func_801AE3F0((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, D_80144952);
   func_8014f800((s16)(x + 0x3D), (s16)(y + 6), 0, 0xFF,
                 0x80010000u +
                     PSX_PTR(u16, 0x80010000u)[D_801E2114[FIELD_REF(
