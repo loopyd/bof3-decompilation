@@ -304,8 +304,8 @@ segments:
     - textbin
     - func_801FE57C
   - - 31196
-    - asm
-    - func_801FE5DC
+    - textbin
+    - T_801FE5DC
   - - 31484
     - textbin
     - T_801FE6FC

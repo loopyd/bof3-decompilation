@@ -252,8 +252,8 @@ segments:
     - textbin
     - func_801FD5A8
   - - 27240
-    - asm
-    - func_801FD668
+    - textbin
+    - T_801FD668
   - - 27272
     - textbin
     - T_801FD688
