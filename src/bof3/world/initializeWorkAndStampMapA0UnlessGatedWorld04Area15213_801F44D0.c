@@ -3,7 +3,7 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* area15213WorkCursor_1F800044;
 /* @source 0x8014496D @kind unknown */
-extern u8 D_8014496D;
+extern u8 firstFieldRecordId;
 /* @source 0x80146871 @kind unknown */
 extern u8 D_80146871;
 /* @source 0x80104000 @kind unknown */
@@ -54,7 +54,7 @@ extern void func_8014D6B8(u32 flag);
 void initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0(void) {
   u8 index;
 
-  if (D_8014496D == 9 || (D_80146871 & 1) != 0) {
+  if (firstFieldRecordId == 9 || (D_80146871 & 1) != 0) {
     func_80196070();
     return;
   }
