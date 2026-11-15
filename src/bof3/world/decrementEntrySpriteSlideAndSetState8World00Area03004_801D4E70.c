@@ -8,9 +8,9 @@ void func_801D7B64(void);
  * 0xFF sentinel for an unavailable entry, draws the fixed header and mode
  * indicators, and sets state byte 1 to 8 when the sliding byte reaches zero.
  * @status partial
- * @match 91.53
- * @residual countdown and index register allocation and initial selection
- * branch layout differ from the original
+ * @match 93.22
+ * @residual countdown and sprite index register allocation and initial
+ * sentinel argument setup differ from the original
  */
 void decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70(void) {
   u8* step;
@@ -19,6 +19,7 @@ void decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70(void) {
   u8* mode;
   u8* state;
   s16 index;
+  u8 entry_arg;
   u32 amount;
   u32 mask;
 
@@ -29,10 +30,11 @@ void decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70(void) {
   entry = D_1F800044;
   index = FIELD_REF(s16, entry, 0x3E);
   amount = D_80144FE4[index];
+  entry_arg = (u8)index;
   if (amount == 0) {
-    index = 255;
+    entry_arg = 255;
   }
-  func_801E1004((u8)index, amount, 0);
+  func_801E1004(entry_arg, amount, 0);
   sprite = D_1F800044;
   if (sprite[8] == 0) {
     index = FIELD_REF(s16, sprite, 0x3E);
