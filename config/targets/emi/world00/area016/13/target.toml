@@ -47,6 +47,7 @@ support_sources = [
 psyq_source = "src/bof3/support/area01613_psyq.c"
 headers = [
     "include/bof3/world/area01613_internal.h",
+    "include/world/work_state.h",
 ]
 
 
