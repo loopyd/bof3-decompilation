@@ -17,17 +17,6 @@ extern u8  D_80146892[];   /* @source 0x80146892 @kind table */
 extern u8  D_80146898[];   /* @source 0x80146898 @kind table */
 extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
 
-/* Lever record for this span. A little-endian scan of every payload under
- * out/binaries found the 0x480-byte span only at 0x801D2DC4 of this payload, so
- * clone was declined; the two byte-identical replicas this manifest declares
- * (BIN/WORLD02/AREA089.EMI#4 and BIN/WORLD03/AREA129.EMI#4) have no target rows
- * and so no lifted source to copy. Scanning every generated asm row that calls
- * submitTpageDrawMode found this shared panel shape only in this target, and no
- * sibling carries the D_80146892 / D_80146916 / D_80145E92 combination, so the
- * seed was written from the original bytes. The span opens on addiu sp,-0x30,
- * returns through jr $ra at 0x801D3240 and ends exactly at its own declared
- * boundary, so the data and carve levers did not apply. */
-
 /* @source 0x801D2DC4
  * @behavior entry 2 of the local handler table at 0x801E1D80, which the
  * dispatcher func_801D2BF0 indexes with the work record's unsigned step byte at
