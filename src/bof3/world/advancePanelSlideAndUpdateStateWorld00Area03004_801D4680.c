@@ -28,13 +28,7 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
     left = D_1F800044;
     drawLabeledStatusCellsWorld00Area03004_801D7C10((u16)(88 + left[9] * 45), 40, 0);
   } else {
-    func_801D9534(20, 18, 280, 19, 0);
-    mask = 0;
-    if (D_80145E93 >= 3) {
-      mode = D_1F800044;
-      mask = (u8)(1u << mode[6]);
-    }
-    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
+    WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
   }
   middle = D_1F800044;
   drawEquipmentGuideColumn((s16)(16 - middle[9] * 45), 64);

@@ -37,13 +37,7 @@ void selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884(void) {
     }
   }
 selected:
-  func_801D9534(20, 18, 280, 19, 0);
-  mask = 0;
-  if (D_80145E93 >= 3) {
-    mode = D_1F800044;
-    mask = (u8)(1u << mode[6]);
-  }
-  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
+  WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
   step = D_1F800044;
   step[9] = 4;
   state = D_1F800044;

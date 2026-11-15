@@ -30,14 +30,7 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
     sliding = D_1F800044;
     drawLabeledStatusCellsWorld00Area03004_801D7C10(88 + sliding[9] * 45, 40, 0);
   } else {
-    func_801D9534(20, 18, 280, 19, 0);
-    if (D_80145E93 >= 3) {
-      mode = D_1F800044;
-      mask = (u8)(1u << mode[6]);
-    } else {
-      mask = 0;
-    }
-    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
+    WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
   }
   step = D_1F800044;
   step[9]++;
