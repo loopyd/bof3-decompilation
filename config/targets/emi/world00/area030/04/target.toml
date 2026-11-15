@@ -55,7 +55,7 @@ sources = [
     "src/bof3/world/func_801D3908.c",
     "src/bof3/world/func_801D42E4.c",
     "src/bof3/world/func_801D4378.c",
-    "src/bof3/world/func_801D39B8.c",
+    "src/bof3/world/initializePanelMessageRunAndAdvanceStateWorld00Area03004_801D39B8.c",
     "src/bof3/world/func_801D41E4.c",
     "src/bof3/world/func_801D4570.c",
     "src/bof3/world/func_801D45F8.c",

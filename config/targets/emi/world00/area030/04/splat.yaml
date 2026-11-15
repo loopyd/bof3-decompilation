@@ -221,8 +221,8 @@ segments:
     - '@source: src/bof3/world/advancePanelScroll.c'
   - - 11704
     - c
-    - func_801D39B8
-    - '@source: src/bof3/world/func_801D39B8.c'
+    - initializePanelMessageRunAndAdvanceStateWorld00Area03004_801D39B8
+    - '@source: src/bof3/world/initializePanelMessageRunAndAdvanceStateWorld00Area03004_801D39B8.c'
   - - 11860
     - c
     - advancePanelTextCursor
@@ -311,6 +311,7 @@ segments:
   - - 19308
     - c
     - dispatchStateByte3Table1fd4World00Area03004_801D576C
+    - '@source: src/bof3/world/dispatchStateByte3Table1fd4World00Area03004_801D576C.c'
   - - 19376
     - c
     - initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0

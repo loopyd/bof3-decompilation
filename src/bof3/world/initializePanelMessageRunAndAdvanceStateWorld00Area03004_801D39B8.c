@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D39B8(void) {
+void initializePanelMessageRunAndAdvanceStateWorld00Area03004_801D39B8(void) {
   u8* cursor;
   u8* next;
   u8* countdown;
