@@ -5,7 +5,7 @@
  * of taken through a fixed-address accessor: the named cell is rematerialised
  * as `lui` plus the offset load, while the fixed-address spelling keeps it live
  * in a saved register across the call. */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind data */
 
 /* Front-end phase byte of the main executable, outside this overlay's payload.
  * The cue below only fires while that phase holds zero; the exact world04
@@ -55,14 +55,14 @@ void decrementHalfword30By20AndQueueCue201WhenFrontendPhaseZeroThenSetWorkByte2T
   u8* work;
   u16 half;
 
-  work = D_1F800044;
+  work = scratchpadWorkRecord;
   half = *(u16*)(work + 0x30) - 0x20;
   *(u16*)(work + 0x30) = half;
   if ((s16)half <= 0) {
     if (D_80143BB0 == 0) {
       func_8015DF18(0x201);
     }
-    work = D_1F800044;
+    work = scratchpadWorkRecord;
     work[2] = 1;
   }
 }
