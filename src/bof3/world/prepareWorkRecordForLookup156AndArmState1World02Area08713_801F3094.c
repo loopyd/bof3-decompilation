@@ -6,7 +6,7 @@
  * 0x1F800044 base in a saved register (lui + ori, then lw 0(base)) and grew the
  * frame, while the named cell emits the original's lui %hi plus offset lw at
  * every store. */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
 
 /* Shared main-executable lookup helper. Its lifted body at 0x8014DD3C scans
  * the published main lookup table and copies the record whose 16-bit key
@@ -30,12 +30,12 @@ void func_8014DD3C(u16 entry); /* @source 0x8014DD3C */
  * @residual none
  */
 void prepareWorkRecordForLookup156AndArmState1World02Area08713_801F3094(void) {
-  D_1F800044[0x24] = 0x80;
+  scratchpadWorkRecord[0x24] = 0x80;
   func_8014DD3C(0x156);
-  D_1F800044[0x29] = 5;
-  D_1F800044[0x2A] = 0;
-  D_1F800044[0x5D] = 0;
-  D_1F800044[0x5E] = 0;
-  D_1F800044[0x5F] = 0;
-  D_1F800044[0x01] = 1;
+  scratchpadWorkRecord[0x29] = 5;
+  scratchpadWorkRecord[0x2A] = 0;
+  scratchpadWorkRecord[0x5D] = 0;
+  scratchpadWorkRecord[0x5E] = 0;
+  scratchpadWorkRecord[0x5F] = 0;
+  scratchpadWorkRecord[0x01] = 1;
 }
