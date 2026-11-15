@@ -62,7 +62,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  *           $ra and $s0..$s4 across the calls.
  *
  * Name evidence: 0x80143F03 is the front-side cell code the resident publisher
- *           func_8019FBF8 fills from the bounding-box record of the current
+ *           func_8019FAA0 fills from the bounding-box record of the current
  *           point, and the same-target entry step at 0x801F4140 already reads
  *           it as the gate of this overlay's entry sequence; 0x80144F28 is the
  *           main-RAM flag bank that same step names; 0x801F5BC8 and 0x801F5BFC
