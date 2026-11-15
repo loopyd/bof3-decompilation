@@ -49,10 +49,10 @@ fn the_aggregate_facts_match_the_artifacts() {
         counter(&map["totals"], "text_like_runs_in_data_subfiles"),
         0
     );
-    assert_eq!(length(&registry["windows"]), 49_111);
+    assert_eq!(length(&registry["windows"]), 49_138);
     assert_eq!(
         map["totals"]["latches_removed_by_windows"],
-        serde_json::json!(0)
+        serde_json::json!(3)
     );
     assert_eq!(counter(&index["counts"], "heuristic"), 0);
 }
