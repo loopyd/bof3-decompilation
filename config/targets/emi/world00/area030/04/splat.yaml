@@ -1033,7 +1033,7 @@ segments:
     - c
     - updateArea030OverlayFrame
     - '@source: src/bof3/world/updateArea030OverlayFrame.c'
-    - '@behavior: AREA030 overlay per-frame entry invoked by the main-executable front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through func_801DE4AC and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
+    - '@behavior: AREA030 overlay per-frame entry invoked by the GAME.EMI entry-0 front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through func_801DE4AC and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
   - - 65568
     - c
     - dispatchCompanion
@@ -1043,7 +1043,7 @@ segments:
     - c
     - runArea030FrameServices
     - '@source: src/bof3/world/runArea030FrameServices.c'
-    - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order; the main-executable front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
+    - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order; the GAME.EMI entry-0 front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
   - - 65664
     - c
     - submitTpageDrawMode
