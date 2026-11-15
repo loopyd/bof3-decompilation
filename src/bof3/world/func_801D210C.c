@@ -11,10 +11,10 @@
  * services and marks the selected entry record.
  * @source 0x801D210C
  * @status partial
- * @match 65.96
- * @residual 124 of 188 current instructions match 186 original; 752 current
- * bytes against 744 original. Entry scheduling, arithmetic allocation, budget
- * branches and later cursor reload and clear groups differ from the original.
+ * @match 68.28
+ * @residual 127 of 184 current instructions match 186 original; 736 current
+ * bytes against 744 original. Entry scheduling, arithmetic allocation and budget
+ * branches differ from the original.
  */
 void func_801D210C(void) {
   u8* s1;
@@ -80,13 +80,14 @@ void func_801D210C(void) {
   AREA030_SCRATCH[0x5Du] = 0u;
   AREA030_SCRATCH[0x5Eu] = 0u;
   AREA030_SCRATCH[0x5Fu] = 0u;
-  AREA030_SCRATCH[0x2Au] = 0u;
   s8 = AREA030_SCRATCH;
+  s8[0x2Au] = 0u;
+  s9 = AREA030_SCRATCH;
   *(volatile u32*)(s8 + 0x60u) = 0u;
   *(volatile u32*)(s8 + 0x64u) = 0u;
   *(volatile u32*)(s8 + 0x68u) = 0u;
   *(volatile u32*)(s8 + 0x6Cu) = 0u;
-  AREA030_SCRATCH[0x48u] = 1u;
+  s9[0x48u] = 1u;
 
   func_8014dd3c((s32)(*(volatile u16*)(D_801E3210 + 0x0Cu)));
   func_8014d6b8(1);
