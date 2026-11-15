@@ -12,10 +12,8 @@ typedef struct World00Area027Point {
 /* One 4-byte projected screen pair of the local trail: two signed halfwords,
  * so the original copies whole entries with the unaligned lwl/lwr + swl/swr
  * idiom. */
-typedef struct World00Area027ScreenPoint {
-  s16 x;
-  s16 y;
-} World00Area027ScreenPoint;
+typedef DVECTOR World00Area027ScreenPoint;
+ASSERT_SIZE(World00Area027ScreenPoint, 4);
 
 /* Entry table at 0x80143FC8 — 0x74 bytes per record. Only the occupancy byte
  * at 0x00 and the byte at 0x05 are proven for this target. */
@@ -45,6 +43,7 @@ typedef struct World00Area027Work {
   u8  pad_16[2]; /* 0x18 - 0x16 */
   World00Area027ScreenPoint trail_18[0x20];
 } World00Area027Work;
+ASSERT_SIZE(World00Area027Work, 0x98);
 
 /* @source 0x80143FC8 @kind bss */
 extern World00Area027Record D_80143FC8[];
