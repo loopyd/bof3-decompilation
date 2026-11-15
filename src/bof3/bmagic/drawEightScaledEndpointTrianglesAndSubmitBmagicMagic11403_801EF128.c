@@ -8,7 +8,7 @@ typedef struct Magic114Endpoint {
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
-extern Magic114Endpoint D_801F11F4[]; /* @source 0x801F11F4 @kind data */
+extern Magic114Endpoint edgeEndpoints[]; /* @source 0x801F11F4 @kind data */
 extern void func_801EF6A8(void); /* @source 0x801EF6A8 */
 extern void func_801DD350(s32 work); /* @source 0x801DD350 */
 extern void func_801EF280(s32 *keys); /* @source 0x801EF280 */
@@ -43,15 +43,15 @@ void drawEightScaledEndpointTrianglesAndSubmitBmagicMagic11403_801EF128(void) {
   do {
     edge = index & 3;
     work = (s32)g_battle_work;
-    FIELD_REF(s32, work, 0xCu) = D_801F11F4[edge].unk_00 * FIELD_REF(u8, work, 0xAu);
-    FIELD_REF(s32, work, 0x10u) = D_801F11F4[edge].unk_04 * FIELD_REF(u8, work, 0xAu);
+    FIELD_REF(s32, work, 0xCu) = edgeEndpoints[edge].unk_00 * FIELD_REF(u8, work, 0xAu);
+    FIELD_REF(s32, work, 0x10u) = edgeEndpoints[edge].unk_04 * FIELD_REF(u8, work, 0xAu);
     func_801DD350(work);
     work = (s32)g_battle_work;
     FIELD_REF(s32, work, 0x34u) = FIELD_REF(s32, work, 0xCu);
     FIELD_REF(s32, work, 0x38u) = FIELD_REF(s32, work, 0x10u);
     edge++;
-    FIELD_REF(s32, work, 0xCu) = D_801F11F4[edge].unk_00 * FIELD_REF(u8, work, 0xAu);
-    FIELD_REF(s32, work, 0x10u) = D_801F11F4[edge].unk_04 * FIELD_REF(u8, work, 0xAu);
+    FIELD_REF(s32, work, 0xCu) = edgeEndpoints[edge].unk_00 * FIELD_REF(u8, work, 0xAu);
+    FIELD_REF(s32, work, 0x10u) = edgeEndpoints[edge].unk_04 * FIELD_REF(u8, work, 0xAu);
     func_801DD350(work);
     g_battle_work[0xB] = index;
     func_801EF280(keys);

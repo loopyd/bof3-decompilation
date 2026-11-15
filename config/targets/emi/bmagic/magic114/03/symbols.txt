@@ -27,4 +27,4 @@ seedWorkHeaderSelectParityAndAdvanceWorkByte2BmagicMagic11403_801F0D6C = 0x801F0
 call801E5988WhenReadyOtherwiseCall8014D290BmagicMagic11403_801F0E4C = 0x801F0E4C;
 seedOffsetFromModeThenProjectWorkPositionAndInstallAxisQuarterTurnBmagicMagic11403_801F0E90 = 0x801F0E90;
 func_801F0FBC = 0x801F0FBC;
-D_801F11F4 = 0x801F11F4;
+edgeEndpoints = 0x801F11F4;
