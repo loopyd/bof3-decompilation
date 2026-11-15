@@ -17,7 +17,7 @@ extern void func_8017A9A4(u32 primitive); /* @source 0x8017A9A4 */
  * scale left by three to the run 0, 8, 16, 8. Flipping this body to C drops
  * the generated undefined-syms row the asm referenced it through, so the
  * target map carries it. */
-extern u8 D_801F3F88[]; /* @source 0x801F3F88 @kind table */
+extern u8 quadBlueLevels[]; /* @source 0x801F3F88 @kind table */
 
 /* Shared per-frame counter of main RAM, read here masked to its low three
  * bits. Already bound by the generated undefined-syms map. */
@@ -96,7 +96,7 @@ void setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkB
   *(s16 *)(prim + 18) = 0xF0;
   *(s16 *)(prim + 20) = 0x140;
   *(s16 *)(prim + 22) = 0xF0;
-  *(u8 *)(prim + 6) = D_801F3F88[work[2]] << 3;
+  *(u8 *)(prim + 6) = quadBlueLevels[work[2]] << 3;
   GpuAppendPrim(3, 0x18);
   if ((D_80143E6C & 7) == 0) {
     D_1F800044[2] = (D_1F800044[2] + 1) & 3;
