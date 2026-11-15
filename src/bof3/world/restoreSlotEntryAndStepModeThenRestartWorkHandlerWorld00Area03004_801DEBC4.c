@@ -8,19 +8,19 @@
  * seeds work words +0x14/+0x0C/+0x10 with -2/0/0, stores 0x10 at work
  * +0x09 and selects handler 1. A zero helper result skips these stores and
  * further calls.
- * @status partial
- * @match 91.43
- * @residual 64 of 70 instructions match at 280 of 280 bytes with a 24-byte
- * frame. Two three-instruction groups use v1 rather than v0 for the scratch
- * pointer. The complete control flow, calls and memory accesses agree.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4(void) {
   u8* work;
+  u8* scale_work;
+  u8* route_work;
 
   if (func_8014D978()) {
-    work = D_1F800044;
+    scale_work = D_1F800044;
     D_801E3200 = 0;
-    func_8014DD3C(D_801E2AB8[work[6]].entry_10);
+    func_8014DD3C(D_801E2AB8[scale_work[6]].entry_10);
 
     work = D_1F800044;
     work[0] = work[0] | 0x20;
@@ -31,8 +31,8 @@ void restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4(
     work = D_1F800044;
     work[0x48] = 2;
 
-    work = D_1F800044;
-    func_8014D6B8(D_801E2330[work[8]].request_00);
+    route_work = D_1F800044;
+    func_8014D6B8(D_801E2330[route_work[8]].request_00);
 
     work = D_1F800044;
     FIELD_REF(s32, work, 0x14) = -2;
