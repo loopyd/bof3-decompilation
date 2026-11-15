@@ -804,9 +804,6 @@ segments:
   - - 41632
     - asm
     - func_8019FAA0
-  - - 41976
-    - asm
-    - func_8019FBF8
   - - 42888
     - c
     - func_8019FF88
