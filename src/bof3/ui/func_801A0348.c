@@ -9,7 +9,7 @@ u8* func_801A0490(s16 x, s16 y, u16 index);
 /* @behavior returns byte 5 of the eight-byte bounding-box record that contains
  * the point (arg0, arg1) in the box list of the pending world id D_80143F00,
  * i.e. the byte behind the func_801A0490 pointer for that point; the caller
- * func_8019FBF8 publishes the result into D_80143F03.
+ * func_8019FAA0 publishes the result into D_80143F03.
  * @source 0x801A0348
  * @status exact
  * @match 100.00
