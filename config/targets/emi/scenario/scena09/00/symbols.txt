@@ -1,7 +1,7 @@
 scenarioScena0900Work = 0x1F800044;
-D_80143FFC = 0x80143FFC;
-D_80144000 = 0x80144000;
-D_80144004 = 0x80144004;
+effectRowGridXCoordinates = 0x80143FFC;
+effectRowGridYCoordinates = 0x80144000;
+effectRowGridSamples = 0x80144004;
 D_8014932A = 0x8014932A;
 func_801A7AD8 = 0x801A7AD8;
 dispatchWorkByte1HandlerScenarioScena0900_801F735C = 0x801F735C;

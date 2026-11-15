@@ -13,9 +13,9 @@ extern u16 D_80146876;
 extern u8 D_80143FC8[];
 extern u8 D_80143FCD[];
 extern u8 D_80143FD1[];
-extern u8 D_80143FFC[];
-extern u8 D_80144000[];
-extern u8 D_80144004[];
+extern u8 effectRowGridXCoordinates[]; /* @source 0x80143FFC @kind data */
+extern u8 effectRowGridYCoordinates[]; /* @source 0x80144000 @kind data */
+extern u8 effectRowGridSamples[]; /* @source 0x80144004 @kind data */
 extern u8 D_8014402C[];
 extern u8 D_80144030[];
 extern u8 D_80144034[];
@@ -43,8 +43,8 @@ extern u8 effectRowIndex; /* @source 0x801FE554 @kind data */
 u8 func_8019601C(void);
 /* GAME.EMI entry 0 helper at 0x801BE1B0. */
 void func_801BE1B0(u32 arg0);
-/* Distance helper of the shared main executable: it takes a signed 16.16 word
- * pair and answers their distance as a halfword. */
+/* Shared main-executable grid sampler. It bounds the signed 16.16 input pair
+ * by byte dimensions, then selects and scales signed cell samples. */
 s32 func_8015477C(s32 arg0, s32 arg1);
 /* Shared scenario flag-word bit-set helper at 0x8015B580. */
 void func_8015B580(u32 arg0, s32 arg1);
@@ -152,10 +152,10 @@ void waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsT
         D_80143FC8[effectRowIndex * 0x74] = 1;
         D_80143FCD[effectRowIndex * 0x74] = 0x2B;
         row = effectRowIndex * 0x74;
-        *(s32*)(D_80143FFC + row) = 0x238000;
-        *(s32*)(D_80144000 + row) = 0x1F8000;
-        *(s32*)(D_80144004 + effectRowIndex * 0x74) =
-            func_8015477C(*(s32*)(D_80143FFC + row), 0x1F8000) << 16;
+        *(s32*)(effectRowGridXCoordinates + row) = 0x238000;
+        *(s32*)(effectRowGridYCoordinates + row) = 0x1F8000;
+        *(s32*)(effectRowGridSamples + effectRowIndex * 0x74) =
+            func_8015477C(*(s32*)(effectRowGridXCoordinates + row), 0x1F8000) << 16;
       }
       D_80146876 = 0x5F;
       D_80146875 = 3;
