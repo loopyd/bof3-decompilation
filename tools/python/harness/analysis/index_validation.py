@@ -174,11 +174,7 @@ def validate_status_index(
                 macro_input_digest(macros),
             )
 
-        derived = [
-            derive(row)
-            for row in indexed
-            if scope is None or row[0] in scope
-        ]
+        derived = [derive(row) for row in indexed if scope is None or row[0] in scope]
         for (
             target,
             expected_types,
@@ -216,7 +212,7 @@ def validate_status_index(
                 for row in connection.execute(
                     "SELECT source_path, sha256, input_kind, owner_target "
                     "FROM macro_input_fingerprints WHERE target_id = ? "
-                    "ORDER BY source_path, owner_target",
+                    "ORDER BY source_path, sha256, input_kind, owner_target",
                     (target,),
                 )
             ]
@@ -365,7 +361,9 @@ def validate_index(
                     f"stale reverse index type inputs for {target}; run just index"
                 )
             macros = connection.execute(
-                "SELECT source_path, sha256, input_kind, owner_target FROM macro_input_fingerprints WHERE target_id = ? ORDER BY source_path, owner_target",
+                "SELECT source_path, sha256, input_kind, owner_target "
+                "FROM macro_input_fingerprints WHERE target_id = ? "
+                "ORDER BY source_path, sha256, input_kind, owner_target",
                 (target,),
             ).fetchall()
             expected_macros = list(repository.macro_input_rows[target])
@@ -382,13 +380,9 @@ def validate_index(
                 )
         if scope is None:
             if seen != set(loaded):
-                raise ValueError(
-                    "stale reverse index target coverage; run just index"
-                )
+                raise ValueError("stale reverse index target coverage; run just index")
         elif not scope <= seen:
-            raise ValueError(
-                "stale reverse index target coverage; run just index"
-            )
+            raise ValueError("stale reverse index target coverage; run just index")
     except (sqlite3.DatabaseError, ValueError, KeyError) as exc:
         if isinstance(exc, SnapshotBinaryError):
             raise ValueError(
