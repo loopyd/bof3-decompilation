@@ -4,7 +4,7 @@
  * words this body re-reads from it are used.
  * @source 0x1F800044 @kind unknown
  */
-extern u8 *D_1F800044;
+extern u8 *scratchpadWorkRecord;
 
 /* Shared projection setup consuming a 0x20-byte stack scratch area; only a0 is
  * live at the call site.
@@ -112,7 +112,7 @@ void advanceTrailProjectPointsFillHeadingsAndAverageAnglesWorld02Area08813_801F2
     buffer->records[i + 1] = buffer->records[i];
   }
 
-  work = D_1F800044;
+  work = scratchpadWorkRecord;
   buffer->records[0].x_00 = *(s32 *)(work + 0x34);
   buffer->records[0].y_04 = *(s32 *)(work + 0x38);
   buffer->records[0].z_08 = *(s32 *)(work + 0x3C);

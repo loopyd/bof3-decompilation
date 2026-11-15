@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x8014496D @kind unknown */
 extern u8 D_8014496D;
 /* @source 0x80146871 @kind unknown */
@@ -57,17 +57,17 @@ void initializeWorkAndStampMapA0UnlessGatedWorld02Area08813_801F5170(void) {
 
   func_8019A194();
   func_8014DD3C(0x205);
-  D_1F800044[0x48] = 0;
-  FIELD_REF(u8, D_1F800044, 0x24u) = 0;
-  FIELD_REF(u8, D_1F800044, 0x2Au) = 0;
-  FIELD_REF(u8, D_1F800044, 0x5Du) = 0;
-  FIELD_REF(u8, D_1F800044, 0x5Eu) = 0;
-  FIELD_REF(u8, D_1F800044, 0x5Fu) = 0;
+  scratchpadWorkRecord[0x48] = 0;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x24u) = 0;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x2Au) = 0;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x5Du) = 0;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x5Eu) = 0;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x5Fu) = 0;
 
-  index = D_1F800044[0x0B];
+  index = scratchpadWorkRecord[0x0B];
   *(u8*)(D_8014931C + D_801F591C[index][1] * D_80104000 +
          D_801F591C[index][0]) = 0xA0;
 
   func_8014D6B8(0);
-  FIELD_REF(u8, D_1F800044, 0x01u) = 1;
+  FIELD_REF(u8, scratchpadWorkRecord, 0x01u) = 1;
 }

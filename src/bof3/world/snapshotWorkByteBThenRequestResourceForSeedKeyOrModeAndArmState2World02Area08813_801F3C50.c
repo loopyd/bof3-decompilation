@@ -5,7 +5,7 @@
  * as a constant-address dereference the build materializes 0x1F800044 once into
  * a callee-saved register and grows the frame, while the named cell emits the
  * original's lui %hi plus offset lw at every read. */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
 
 /* Shared main-executable context seed this overlay's resource table is keyed
  * by; its generated auto-symbol row covers the address. */
@@ -61,10 +61,10 @@ void snapshotWorkByteBThenRequestResourceForSeedKeyOrModeAndArmState2World02Area
   u32 value;
   u32 state;
 
-  work = D_1F800044;
+  work = scratchpadWorkRecord;
   work[0x07] = work[0x0B];
 
-  if (D_1F800044[0x0B] == 1) {
+  if (scratchpadWorkRecord[0x0B] == 1) {
     value = D_80143F10;
     offset = 0;
   search:
@@ -88,13 +88,13 @@ void snapshotWorkByteBThenRequestResourceForSeedKeyOrModeAndArmState2World02Area
     }
   }
 found:
-  work = D_1F800044;
+  work = scratchpadWorkRecord;
   state = 2;
   FIELD_REF(u32, work, 0x18) = value;
   FIELD_REF(u32, work, 0x40) = 0;
   FIELD_REF(u32, work, 0x44) = 0x10000;
   work[0x48] = state;
-  D_1F800044[0x09] = 8;
+  scratchpadWorkRecord[0x09] = 8;
   value = FIELD_REF(u8, D_801F5902, row);
   goto request;
 mode_four:
@@ -107,8 +107,8 @@ arm:
   FIELD_REF(u32, work, 0x40) = 0;
   FIELD_REF(u32, work, 0x44) = 0x10000;
   work[0x48] = state;
-  D_1F800044[0x09] = 8;
+  scratchpadWorkRecord[0x09] = 8;
 request:
   func_8014D6B8(value);
-  D_1F800044[0x01] = state;
+  scratchpadWorkRecord[0x01] = state;
 }

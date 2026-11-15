@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 extern u8 D_80143BB0;
@@ -37,14 +37,14 @@ void decrementHalfword30By10AndAdvanceState3BelowC9AndSetState3To3WhenGatedThenD
   u8* draw;
   s16* half;
 
-  record = D_1F800044;
+  record = scratchpadWorkRecord;
   half = (s16*)(record + 0x30);
   *half = (s16)(*half - 0xA);
   if (*half < 0xC9) {
     record[3]++;
   }
   if (D_801454F2 != 0) {
-    if (D_1F800044[0x0B] != 0) {
+    if (scratchpadWorkRecord[0x0B] != 0) {
       goto force_state;
     }
   }
@@ -56,9 +56,9 @@ void decrementHalfword30By10AndAdvanceState3BelowC9AndSetState3To3WhenGatedThenD
   }
   goto draw_record;
 force_state:
-  forced = D_1F800044;
+  forced = scratchpadWorkRecord;
   forced[3] = 3;
 draw_record:
-  draw = D_1F800044;
+  draw = scratchpadWorkRecord;
   func_801F4C28(0x5C, FIELD_REF(s16, draw, 0x30));
 }

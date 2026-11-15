@@ -5,7 +5,7 @@
  * as a constant-address dereference the build materialized 0x1F800044 once into
  * a callee-saved register (lui + ori, then lw 0(base)) and grew the frame, while
  * the named cell emits the original's lui %hi plus offset lw at every store. */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
 
 /* Shared main-executable lookup helper: its exact lift at 0x8014DD3C
  * (src/bof3/world/applyMainLookupRecord.c) scans the published main lookup
@@ -31,12 +31,12 @@ void func_8014DD3C(u16 entry); /* @source 0x8014DD3C */
  * @residual none
  */
 void prepareWorkRecordForLookup157AndArmState1World02Area08813_801F3BC4(void) {
-  D_1F800044[0x24] = 0x80;
+  scratchpadWorkRecord[0x24] = 0x80;
   func_8014DD3C(0x157);
-  D_1F800044[0x29] = 5;
-  D_1F800044[0x2A] = 0;
-  D_1F800044[0x5D] = 0;
-  D_1F800044[0x5E] = 0;
-  D_1F800044[0x5F] = 0;
-  D_1F800044[0x01] = 1;
+  scratchpadWorkRecord[0x29] = 5;
+  scratchpadWorkRecord[0x2A] = 0;
+  scratchpadWorkRecord[0x5D] = 0;
+  scratchpadWorkRecord[0x5E] = 0;
+  scratchpadWorkRecord[0x5F] = 0;
+  scratchpadWorkRecord[0x01] = 1;
 }

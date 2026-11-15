@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x1F800044 @kind unknown */
-extern u8* D_1F800044;
+extern u8* scratchpadWorkRecord;
 /* @source 0x801454F2 @kind unknown */
 extern u8 D_801454F2;
 
@@ -31,16 +31,16 @@ void decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDr
   u8* draw;
   s16* half;
 
-  record = D_1F800044;
+  record = scratchpadWorkRecord;
   half = (s16*)(record + 0x2E);
   *half = (s16)(*half - 0x10);
   if (*half < -0x2F) {
     record[2] = 0;
   }
   if (D_801454F2 != 2) {
-    D_1F800044[2] = 1;
+    scratchpadWorkRecord[2] = 1;
   }
-  draw = D_1F800044;
+  draw = scratchpadWorkRecord;
   drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08813_801F4664(
       0x10, FIELD_REF(s16, draw, 0x2E));
 }

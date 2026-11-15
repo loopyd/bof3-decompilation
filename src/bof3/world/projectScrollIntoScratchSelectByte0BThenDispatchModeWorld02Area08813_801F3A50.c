@@ -15,7 +15,7 @@ typedef struct World02Area08813Scratch {
   u32 unk_10;
 } World02Area08813Scratch;
 
-extern volatile World02Area08813Scratch* D_1F800044;
+extern volatile World02Area08813Scratch* scratchpadWorkRecord; /* @source 0x1F800044 @kind unknown */
 
 /* Shared scroll fraction: the 16.16 scale both scroll words below are
  * multiplied by before the product is rounded to a halfword.
@@ -92,32 +92,32 @@ void projectScrollIntoScratchSelectByte0BThenDispatchModeWorld02Area08813_801F3A
   x = (D_80145EC4 + D_80145E9C * scale) >> 16;
   y = (D_80145EC8 + D_80145EA0 * scale) >> 16;
 
-  scratch = D_1F800044;
+  scratch = scratchpadWorkRecord;
   scratch->unk_0c = x;
   scratch->unk_10 = y;
 
   code = (u8)func_80166CB0(x, y);
   if (code == 0xA1) {
-    state = D_1F800044;
+    state = scratchpadWorkRecord;
     state->unk_0b = 1;
   } else {
     code = (u8)func_80166CB0(x, y);
     if (code == 0xA0) {
-      state = D_1F800044;
+      state = scratchpadWorkRecord;
       state->unk_0b = 2;
     } else {
       code = (u8)func_80166CB0(x, y);
       if (code == 0xAE) {
-        state = D_1F800044;
+        state = scratchpadWorkRecord;
         state->unk_0b = 3;
       } else if (D_8014625A & 0x1000) {
-        state = D_1F800044;
+        state = scratchpadWorkRecord;
         state->unk_0b = 4;
       } else {
-        D_1F800044->unk_0b = 0;
+        scratchpadWorkRecord->unk_0b = 0;
       }
     }
   }
 
-  D_801F61A0[D_1F800044->state_01]();
+  D_801F61A0[scratchpadWorkRecord->state_01]();
 }
