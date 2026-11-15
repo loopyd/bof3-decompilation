@@ -42,12 +42,12 @@ segments:
     - textbin
     - T_801F2F58
   - - 888
-    - asm
-    - func_801F2F78
+    - textbin
+    - T_801F2F78
   - - 1528
     - textbin
     - T_801F31F8
   - - 1624
-    - asm
-    - func_801F3258
+    - textbin
+    - T_801F3258
 - - 4616
