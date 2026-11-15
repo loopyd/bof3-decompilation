@@ -72,7 +72,7 @@ void displayBootExceptionDump(void) {
     for (; i < 0x12; i++) {
       drawGlyphString8x8(x1, y, 0, (const u8*)label_table[i]);
       sprintf((char*)D_80145AD4, D_80149990, saved_context[i + 2]);
-      drawGlyphString8x8((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
+      drawGlyphString8x8((s16)(x2 >> 16), y, 0, D_80145AD4);
       y += 8;
     }
 
@@ -83,7 +83,7 @@ void displayBootExceptionDump(void) {
     for (i = 0x12; i < 0x25; i++) {
       drawGlyphString8x8(x1, y, 0, (const u8*)label_table[i]);
       sprintf((char*)D_80145AD4, D_80149990, saved_context[i + 2]);
-      drawGlyphString8x8((s16)(x2 >> 16), y, 0, (const u8*)D_80145AD4);
+      drawGlyphString8x8((s16)(x2 >> 16), y, 0, D_80145AD4);
       y += 8;
     }
 
@@ -94,9 +94,9 @@ void displayBootExceptionDump(void) {
 
     fmt = D_80149990;
     sprintf((char*)D_80145AD4, fmt, (u32)exception_pc);
-    drawGlyphString8x8(0x46, 0x24, 3, (const u8*)D_80145AD4);
+    drawGlyphString8x8(0x46, 0x24, 3, D_80145AD4);
     sprintf((char*)D_80145AD4, fmt, exception_pc[0]);
-    drawGlyphString8x8(0x8e, 0x24, 4, (const u8*)D_80145AD4);
+    drawGlyphString8x8(0x8e, 0x24, 4, D_80145AD4);
 
     DrawSync(0);
     linkRenderOtPackets();

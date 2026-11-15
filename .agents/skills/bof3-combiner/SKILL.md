@@ -13,6 +13,9 @@ description: Combine or clean up BOF3 source files with meaningful grouping, dir
    relationships are leads. Choose a coherent operation or subsystem whose grouping
    improves navigation and removes repeated declarations or unnecessary files.
    Explain a no-op when the proposed grouping adds no useful clarity.
+   For qualifier or scratchpad argument-table cleanup, read
+   [cleanup discovery](references/cleanup.md) and route representation edits to
+   `$bof3-types`.
 3. Establish complete selected membership from target claims, attached metadata,
    maps and every reviewed Splat boundary. Include all functions in each writable
    source. Preserve independent target ownership, full original ranges, external

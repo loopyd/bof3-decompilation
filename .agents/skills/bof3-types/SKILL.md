@@ -9,7 +9,8 @@ description: Identify and refine BOF3 types, fields, layouts and function protot
    [target contract](../bof3-re/references/target-contract.md), then inspect
    `bin/harness types list TARGET --json`. Use `--kind uses`, `storage` or `all`
    for other facts. Missing or stale evidence blocks the affected conclusion.
-2. Before proposing a representation, read [type refinement](references/type-application.md).
+2. Before representation edits, cast reduction or declaration movement, read
+   [type refinement](references/type-application.md).
    Reuse target, shared and PsyQ declarations. Prove layout and ABI from original
    instructions and all consumers; indexed storage leads and casts are insufficient.
 3. For authorized edits, read [editing and recovery](../bof3-re/references/editing-recovery.md).
