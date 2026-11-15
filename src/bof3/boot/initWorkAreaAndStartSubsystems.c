@@ -10,7 +10,7 @@
  * live audit is instruction- and byte-exact.
  */
 void initWorkAreaAndStartSubsystems(s32 work_base, u_long disc_lba) {
-  volatile u8 scratch[0x30];
+  u8 scratch[0x30];
 
   (void)scratch;
   D_801EB448 = work_base + 0x2D00;

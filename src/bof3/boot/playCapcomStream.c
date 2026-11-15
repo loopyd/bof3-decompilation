@@ -10,7 +10,7 @@
  * live audit is instruction- and byte-exact.
  */
 void playCapcomStream(void) {
-  volatile u8 scratch[0x18];
+  u8 scratch[0x18];
   u_long      pad_state;
   int         stream_finished;
 
