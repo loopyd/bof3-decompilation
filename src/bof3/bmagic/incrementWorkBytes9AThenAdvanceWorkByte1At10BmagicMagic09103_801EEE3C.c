@@ -12,6 +12,14 @@
 
 extern u8 * volatile g_battle_work; /* @source 0x1F800044 @kind data */
 
+/* Four encoded addresses read by the work-byte-1 dispatcher. The selector
+ * bounds and callback signatures remain unresolved.
+ * @source 0x801EFC64 @kind table
+ */
+u32 workByte1HandlerAddressesBmagicMagic09103[] = {
+    0x801EEFFCu, 0x801EF09Cu, 0x801EF124u, 0x801EF1B8u
+};
+
 /* @source 0x801EEE3C
  * @behavior Increments scratchpad work-object byte 0x09 by one, re-reads the
  * work pointer cell at 0x1F800044 and increments byte 0x0A by one, then

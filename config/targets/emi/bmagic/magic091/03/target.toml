@@ -13,3 +13,9 @@ support_sources = [
     "src/bof3/support/magic091_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic091_03_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801EEE3C
+section = ".data"
+address = 0x801EFC64
+size = 0x10
