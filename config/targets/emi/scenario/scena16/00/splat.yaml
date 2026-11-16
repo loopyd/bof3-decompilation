@@ -88,8 +88,9 @@ segments:
     - '@source: src/bof3/scenario/dispatchRecordCallback_scena16.c'
     - '@behavior: Dispatches the record callback selected by byte 0x7A with the record and shared context word.'
   - - 6040
-    - asm
+    - c
     - returnZero
+    - '@source: src/bof3/scenario/returnZero_scena16.c'
   - - 6048
     - c
     - returnZero2
@@ -111,8 +112,9 @@ segments:
     - resetEffectBank
     - '@source: src/bof3/scenario/resetEffectBank_scena16.c'
   - - 6448
-    - asm
+    - c
     - noopRecordHandler
+    - '@source: src/bof3/scenario/noopRecordHandler_scena16.c'
   - - 6456
     - rodata
     - T_801F8538
