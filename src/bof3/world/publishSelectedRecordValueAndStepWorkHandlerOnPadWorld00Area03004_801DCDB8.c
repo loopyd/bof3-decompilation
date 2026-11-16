@@ -46,7 +46,7 @@ void publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8(
   direction = func_8014E640(*pad & 0x5000);
   if (*pad & D_80145AC4) {
     func_8015DF18(0x106);
-    D_801442AC = 0xFFFF;
+    selectedRecordValueState = 0xFFFF;
     work = D_1F800044;
     flag = &D_80144287;
     *flag = *flag | 0x80;
@@ -75,10 +75,10 @@ void publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8(
   if ((D_80144287 & 0x80) == 0) {
     if ((D_80144287 & 1u) == 0u) {
       index = D_80145028;
-      D_801442AC = index ? index + 4 : 0xFFFF;
+      selectedRecordValueState = index ? index + 4 : 0xFFFF;
     } else {
       index = D_80145026;
-      D_801442AC = index ? index + 4 : 0xFFFF;
+      selectedRecordValueState = index ? index + 4 : 0xFFFF;
     }
   }
   func_801647C4(0x1Cu, (u16)(((u32)(D_80144287 & 1u) << 4) + 0x58u), 0);

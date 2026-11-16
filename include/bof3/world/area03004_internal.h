@@ -205,13 +205,13 @@ extern u16 D_801442BC;    /* @source 0x801442BC @kind unknown */
  * publishes D_801442BE plus or minus one into D_801442BC, so the read and the
  * write of one step sit in adjacent cells. No other lifted body reads it. */
 extern u16 D_801442BE;    /* @source 0x801442BE @kind unknown */
-/* Main-executable halfword published by the AREA030 work-byte-4 steps as the
- * selection's value: the step at 0x801DCDB8 stores 0xFFFF while the selected
- * index byte 0x80145026/0x80145028 is zero and that index plus four otherwise,
- * and the step at 0x801DCFD0 stores the same pair of forms from its own index
- * byte. No lifted body reads it back, so the role stays address-anchored and
- * only the stored width and offsets are proven. */
-extern u16 D_801442AC;    /* @source 0x801442AC @kind unknown */
+/* Halfword published by AREA030 record-selection steps as 0xFFFF or a
+ * selected record byte plus four. The step at 0x801DCDB8 writes 0xFFFF on
+ * cancel or a zero chosen byte; retained 0x801DCFD0 tests record bytes.
+ * Downstream interpretation, other writers and storage stability remain
+ * unresolved. This target-local name describes publication without assigning
+ * a global owner, object extent or complete selection domain. */
+extern u16 selectedRecordValueState;    /* @source 0x801442AC @kind unknown */
 extern u8  D_80145E92;    /* @source 0x80145E92 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
 /* Shared AREA030 color-block row index byte:
