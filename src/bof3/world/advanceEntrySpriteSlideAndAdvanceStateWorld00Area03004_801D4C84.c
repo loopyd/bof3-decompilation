@@ -7,9 +7,9 @@ void func_801D7B64(void);
  * or right according to work byte 8, using the 0xFF unavailable-entry sentinel.
  * Draws the entry panels, header and mode indicators. At count 4, copies work
  * halfword 0x3C to 0x3E and advances state byte 1.
- * @status partial
- * @match 83.74
- * @residual index loads and scratch pointer registers differ from the original
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
   u8* step;
@@ -34,16 +34,18 @@ void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
   }
   sprite = D_1F800044;
   if (sprite[8] == 0) {
-    index = FIELD_REF(s16, sprite, 0x3E);
-    if (D_80144FE4[index] != 0) {
-      configureSpriteClut((s16)(128 - sprite[9] * 48), 91, (u8)index);
+    s16 slide_index = FIELD_REF(s16, sprite, 0x3E);
+
+    if (D_80144FE4[slide_index] != 0) {
+      configureSpriteClut((s16)(128 - sprite[9] * 48), 91, (u8)slide_index);
     } else {
       configureSpriteClut((s16)(128 - sprite[9] * 48), 91, 255);
     }
   } else {
-    index = FIELD_REF(s16, sprite, 0x3E);
-    if (D_80144FE4[index] != 0) {
-      configureSpriteClut((s16)(128 + sprite[9] * 48), 91, (u8)index);
+    s16 slide_index = FIELD_REF(s16, sprite, 0x3E);
+
+    if (D_80144FE4[slide_index] != 0) {
+      configureSpriteClut((s16)(128 + sprite[9] * 48), 91, (u8)slide_index);
     } else {
       configureSpriteClut((s16)(128 + sprite[9] * 48), 91, 255);
     }

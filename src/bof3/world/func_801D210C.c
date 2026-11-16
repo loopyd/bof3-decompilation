@@ -11,12 +11,11 @@
  * services and marks the selected entry record.
  * @source 0x801D210C
  * @status partial
- * @match 68.28
- * @residual 127 of 184 current instructions match 186 original; 736 current
- * bytes against 744 original. Entry scheduling, arithmetic allocation and budget
- * branches differ from the original.
+ * @match 96.24
+ * @residual initial setup and product input registers differ from the original
  */
 void func_801D210C(void) {
+  s8* mode;
   u8* s1;
   u8* s2;
   u8* s3;
@@ -28,22 +27,28 @@ void func_801D210C(void) {
   u8* s9;
   u8* s0;
   s32 level;
+  s32 remaining_budget;
   u32 value;
   u32 budget;
   u8 index;
 
   s1 = AREA030_SCRATCH;
   value = D_80145EC4;
-  budget = D_80145EC8;
-  *(volatile u32*)(s1 + 0x34u) = value;
-  *(u32*)(s1 + 0x38u) = budget - 0x8000u;
-  level = func_8015477c((s32)(*(volatile u32*)(s1 + 0x34u)), (s32)(budget - 0x8000u));
+  do {
+    budget = D_80145EC8;
+    *(volatile u32*)(s1 + 0x34u) = value;
+    *(u32*)(s1 + 0x38u) = budget - 0x8000u;
+    level = func_8015477c((s32)(*(volatile u32*)(s1 + 0x34u)), (s32)(budget - 0x8000u));
+  } while (0);
 
   s2 = AREA030_SCRATCH;
+  mode = D_801E320C;
   *(volatile u16*)(s2 + 0x3Eu) = (u16)(level + 0x100);
 
-  level = (s32)((u32)(u8)D_801E320C[2] * D_801440BC) / 255 + 8;
-  s2[6] = (u8)(level / 15);
+  do {
+    level = (s32)(D_801440BC * (u32)(u8)mode[2]) / 255 + 8;
+    s2[6] = (u8)(level / 15);
+  } while (0);
   s3 = AREA030_SCRATCH;
   *(volatile u32*)(s2 + 0x10) = (u32)level;
   if (s3[6] >= 4u) {
@@ -51,14 +56,14 @@ void func_801D210C(void) {
   }
 
   s4 = AREA030_SCRATCH;
-  level = (s32)(*(volatile u32*)(s4 + 0x38) - (*(volatile u32*)(s4 + 0x10) << 15));
-  *(u32*)(s4 + 0x10) = (u32)level;
-  if (level > 0x3BFFFF) {
+  remaining_budget = (s32)(*(volatile u32*)(s4 + 0x38) - (*(volatile u32*)(s4 + 0x10) << 15));
+  *(u32*)(s4 + 0x10) = (u32)remaining_budget;
+  if (remaining_budget > 0x3BFFFF) {
     D_8014930C = 0x3C0000u;
-  } else if (level > 0x14FFFF) {
-    D_8014930C = (u32)level;
-  } else {
+  } else if (remaining_budget <= 0x14FFFF) {
     D_8014930C = 0x150000u;
+  } else {
+    D_8014930C = (u32)remaining_budget;
   }
 
   s5 = AREA030_SCRATCH;

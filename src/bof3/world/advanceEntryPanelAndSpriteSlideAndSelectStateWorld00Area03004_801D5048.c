@@ -5,10 +5,9 @@
  * then increments that byte. Draws the header and mode indicators at sliding
  * positions, using the unavailable-entry sentinel when needed. At count four,
  * selects state byte 1 from work bytes 0x0B and 6.
- * @status partial
- * @match 80.98
- * @residual frame size, panel-mask branch topology, argument scheduling
- * and sprite index register allocation differ from the original
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void) {
   u8* panel;
@@ -21,7 +20,7 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
   u8* entry;
   u8* sprite;
   u8* state;
-  s32 index;
+  s16 index;
   u32 mask;
 
   panel = D_1F800044;
@@ -30,7 +29,14 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
     sliding = D_1F800044;
     drawLabeledStatusCellsWorld00Area03004_801D7C10(88 + sliding[9] * 45, 40, 0);
   } else {
-    WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
+    func_801D9534(20, 18, 280, 19, 0);
+    if (D_80145E93 >= 3u) {
+      mode = D_1F800044;
+      mask = (u8)(1u << mode[6]);
+    } else {
+      mask = 0u;
+    }
+    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
   step = D_1F800044;
   step[9]++;
@@ -41,8 +47,11 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
   if (D_80144FE4[index] != 0) {
     configureSpriteClut((s16)(128 + entry[9] * 48), 91, (u8)index);
     sprite = D_1F800044;
-    index = FIELD_REF(s16, sprite, 0x3E);
-    func_801E1004((u8)index, D_80144FE4[index], sprite[9]);
+    {
+      s16 sprite_index = FIELD_REF(s16, sprite, 0x3E);
+
+      func_801E1004((u8)sprite_index, D_80144FE4[sprite_index], sprite[9]);
+    }
   } else {
     configureSpriteClut((s16)(128 + entry[9] * 48), 91, 255);
     sprite = D_1F800044;
