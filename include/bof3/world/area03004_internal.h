@@ -650,11 +650,11 @@ void clearRecord(u8 record_index);
 /* Same-binary frontend selection-effect starter at 0x8015D4F8 (executable
  * space, called by the AREA030 selection step with (0, 0, 100, 8)). */
 void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
-/* Same-binary frontend selection-effect helper at 0x8015D49C (executable
- * space, 0x5C bytes before func_8015D4F8): the AREA030 work-record step at
- * 0x801DC93C calls it with the same (0, 0, 0x14, 0x10) argument shape its
- * sibling passes to func_8015D4F8. Body not lifted in this target. */
-extern void func_8015D49C(u32 arg0, u32 arg1, s32 arg2, s32 arg3); /* @source 0x8015D49C */
+/* Resident audio gain request at 0x8015D49C. When byte 0x80144954 is zero,
+ * it maps arg0 through a signed-byte table and prepares an indexed gain
+ * increase. The AREA030 work-record step calls it with (0, 0, 0x14, 0x10).
+ * The gate's meaning and the preceding halfword writes remain unresolved. */
+extern void requestMappedAudioGainIncrease(u32 arg0, u32 arg1, s32 arg2, s32 arg3); /* @source 0x8015D49C */
 /* Same-binary frontend selection-effect helper at 0x8015D404 (executable
  * space): the AREA030 dispatch step func_801DAFBC calls it with both arguments
  * zero, which is the same shape the commu00 and world00/area007 views declare

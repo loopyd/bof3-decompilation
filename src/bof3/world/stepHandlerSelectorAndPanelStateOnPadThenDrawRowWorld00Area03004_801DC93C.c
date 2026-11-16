@@ -9,7 +9,7 @@
  * 0x8000 decrements it, wrapping a negative byte to 2, and pad bit 0x2000
  * increments it, wrapping to 0 above 2, both with cue 0x100. Otherwise, while
  * a bit shared with the pressed mask D_80145AC4 is set, it submits
- * func_8015D49C with (0, 0, 0x14, 0x10), dispatches cue 0x106, steps the
+ * requestMappedAudioGainIncrease with (0, 0, 0x14, 0x10), dispatches cue 0x106, steps the
  * shared state byte D_80144281 (3 or 4 to 5, 8 to 0xB, 0xE to 0xF), clears the
  * byte 0x8014428B and publishes 4 into the record dispatch byte 3. Otherwise,
  * while a bit shared with the confirm mask D_80145AC2 is set, it dispatches
@@ -49,7 +49,7 @@ void stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C(v
             *selp = 0;
         }
     } else if (*pad & D_80145AC4) {
-        func_8015D49C(0, 0, 0x14, 0x10);
+        requestMappedAudioGainIncrease(0, 0, 0x14, 0x10);
         func_8015DF18(0x106);
         state = &D_80144281;
         if (*state == 3 || *state == 4) {
