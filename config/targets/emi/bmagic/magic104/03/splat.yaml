@@ -113,7 +113,7 @@ segments:
     - func_801F03C4
   - - 7336
     - textbin
-    - D_801F08A8
+    - workWord0C10SeedPairTable
   - - 7400
     - textbin
     - T_801F08E8

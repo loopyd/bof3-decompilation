@@ -2,6 +2,11 @@
 
 extern void (*workByte1HandlerTable[])(void); /* @source 0x801F0354 @kind table */
 
+/* Encoded addresses read by the work-byte-2 dispatchers at 0x801EF2BC and
+ * 0x801EF70C. Selector bounds and callback signatures remain unresolved. */
+extern u32 workByte2HandlerTableA[]; /* @source 0x801F0360 @kind table */
+extern u32 workByte2HandlerTableB[]; /* @source 0x801F036C @kind table */
+
 /* @source 0x801EF278
  * @behavior Overlay step dispatch: reads the state byte at +1 of
  *           the work record published at the scratchpad pointer cell

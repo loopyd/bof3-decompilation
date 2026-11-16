@@ -145,7 +145,7 @@ segments:
   - - 6252
     - textbin
     - T_801F046C
-  - - 6316
+  - - 6308
     - textbin
-    - D_801F04AC
+    - workByteBMotionPairTable
 - - 6356

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
-extern void (*D_801F0384[])(void); /* @source 0x801F0384 @kind data */
+extern void (*workByte2HandlerTableC[])(void); /* @source 0x801F0384 @kind data */
 extern void func_801EF1C8(void); /* @source 0x801EF1C8 @kind function */
 extern void func_801F01A8(void); /* @source 0x801F01A8 @kind function */
 
@@ -21,7 +21,7 @@ extern void func_801F01A8(void); /* @source 0x801F01A8 @kind function */
  */
 void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic08603_801F0038(
     void) {
-  D_801F0384[g_battle_work[2]]();
+  workByte2HandlerTableC[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     func_801EF1C8();
     func_801F01A8();

@@ -127,7 +127,13 @@ segments:
   - - 7572
     - textbin
     - workByte1HandlerTable
-  - - 7604
+  - - 7584
     - textbin
-    - D_801F09B4
+    - workByte2HandlerTableA
+  - - 7600
+    - textbin
+    - workByte2HandlerTableB
+  - - 7616
+    - textbin
+    - workByte2HandlerTableC
 - - 7632

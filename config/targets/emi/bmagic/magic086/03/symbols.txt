@@ -27,4 +27,6 @@ func_801F0100 = 0x801F0100;
 addWorkWord20ToWord14AccumulateIntoHalfword3EAndInvokeHelperBelowMinus16BmagicMagic08603_801F0154 = 0x801F0154;
 func_801F01A8 = 0x801F01A8;
 workByte1HandlerTable = 0x801F0354;
-D_801F0374 = 0x801F0374;
+workByte2HandlerTableA = 0x801F0360;
+workByte2HandlerTableB = 0x801F036C;
+workByte2HandlerTableC = 0x801F0384;

@@ -26,4 +26,6 @@ incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteA
 func_801F043C = 0x801F043C;
 func_801F070C = 0x801F070C;
 workByte1HandlerTable = 0x801F0994;
-D_801F09B4 = 0x801F09B4;
+workByte2HandlerTableA = 0x801F09A0;
+workByte2HandlerTableB = 0x801F09B0;
+workByte2HandlerTableC = 0x801F09C0;
