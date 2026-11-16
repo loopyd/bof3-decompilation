@@ -400,15 +400,15 @@ extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
 extern u8* g_PrimCursor;    /* @source 0x8014598C @kind bss */
 extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
-/* Shared AREA030 progress byte stepped by the pad-mode dispatch step
- * 0x801DB140, which advances it once per taken pad arm and steps it back when
- * pad bits 0x3000 of D_80145AA4 select the clearing arm. */
-/* @source 0x80144216 @kind unknown: byte-array view of that progress byte. The
- * two 0x40 arms of 0x801DB140 read and increment it through its materialized
- * base, while the same step's Cross/Pad arms store it as a plain scalar folded
- * at the symbol address. */
-extern u8  D_80144216[];
-extern u8  D_80144216_BYTE; /* @source 0x80144216 @kind unknown */
+/* AREA030 record-selection progress byte updated by 0x801DB140. A fresh
+ * 0xC000 press or nonzero countdown increments it; either nested 0x40 arm
+ * can increment it again. The 0x3000 arm decrements it; standalone 0x40
+ * increments it. Other paths can leave it unchanged. */
+/* @source 0x80144216 @kind unknown: existing unsized byte-array view.
+ * Element zero and the scalar below name the same byte. Its initial value,
+ * complete domain, storage owner and downstream interpretation are unresolved. */
+extern u8  recordSelectionProgressState[];
+extern u8  recordSelectionProgressByteState; /* @source 0x80144216 @kind unknown */
 /* Shared AREA030 selection-step byte at the head of the 0x8014421C region: the
  * dispatch step func_801DAFBC advances it once per pass through its gate. */
 extern u8  D_8014420D;     /* @source 0x8014420D @kind unknown */

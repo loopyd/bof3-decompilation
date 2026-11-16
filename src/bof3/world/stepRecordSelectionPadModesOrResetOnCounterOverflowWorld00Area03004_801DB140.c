@@ -61,13 +61,13 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
       D_801E31F8 = 2;
       D_8014421C = D_801E320C[5];
       func_8014D8D4(8);
-      D_80144216_BYTE++;
+      recordSelectionProgressByteState++;
     } else {
       work = D_1F800044;
       if (work[9] != 0) {
         work[9] = work[9] - 1;
         func_8014D978();
-        D_80144216_BYTE++;
+        recordSelectionProgressByteState++;
       } else {
         D_8014421C = 0;
         D_801E31F8 = 0;
@@ -79,19 +79,19 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
           (s8)(D_80146888[D_801E3208].unk_1C - (((u8*)D_801E320C)[3] + 2));
       func_8014D8D4(7);
       selectRecordValueAndSlot();
-      D_80144216[0]++;
+      recordSelectionProgressState[0]++;
     } else if (D_80145AA4 & 0x40) {
       setActiveSlotValueFromFrameMask();
       selectRecordValueAndSlot();
       func_8014D978();
-      D_80144216[0]++;
+      recordSelectionProgressState[0]++;
     }
   } else if (D_80145AA4 & 0x3000) {
     D_801E31F8 = 0;
     D_8014421C = D_801E320C[6];
     D_80146888[D_801E3208].unk_1C = 0;
     func_8014D8D4(0);
-    D_80144216_BYTE--;
+    recordSelectionProgressByteState--;
   } else if (D_80145AA4 & 0x40) {
     if (D_80145AA8 & 0x40) {
       D_80146888[D_801E3208].unk_1C =
@@ -103,7 +103,7 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
     D_8014421C = D_801E320C[4];
     func_8014D8D4(7);
     func_8014D978();
-    D_80144216_BYTE++;
+    recordSelectionProgressByteState++;
   } else {
     D_801E31F8 = 0;
     D_8014421C = 0;
