@@ -3,6 +3,9 @@
 /**
  * @source 0x801DDE94
  * @behavior Stores the requested state and advances selected shared modes.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801DDE94(s32 state)
 {

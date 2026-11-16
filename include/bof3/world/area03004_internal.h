@@ -778,6 +778,7 @@ void func_800F7094(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg4);
 const u8* func_8014FC90(s32 x, s32 y, s32 attributes, u32 limit,
                        const u8* input);
 void func_801DDFD4(void);
+void func_801DDE2C(void);
 void func_801DDE94(s32 state);
 void func_801DDEEC(void);
 void func_801DDD4C(void);

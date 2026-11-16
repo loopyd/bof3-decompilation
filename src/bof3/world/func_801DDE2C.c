@@ -5,6 +5,9 @@
  * index byte is nonzero, and D_801E320C to D_801E2748 + 10 * D_80145028
  * when that index byte is nonzero. Leaves each cursor unchanged for a
  * zero index.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801DDE2C(void)
 {

@@ -13,8 +13,8 @@
  * 0x801E320C + 6 in with request 0; pad bit 0x40 selects record value 1 with
  * 0x801E320C + 4 and request 7. Both 0x40 arms step the signed record cell down
  * by (0x801E320C + 3) + 2 and run selectRecordValueAndSlot, the second one
- * through setActiveSlotValueFromFrameMask, and every taken arm advances
- * D_80144216. Above that counter limit it resets the shared selection counter
+ * through setActiveSlotValueFromFrameMask. Local paths issue zero, one or two increments
+ * or one decrement of the progress byte. Above that counter limit it resets the shared selection counter
  * D_80144199 to 1, the state bytes D_8014419E and D_8014403D to 4, the mode byte
  * to 7, clears D_80143FC9 and D_8014420D, sets handler 6 on the active record,
  * plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8),
