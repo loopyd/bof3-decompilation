@@ -8,9 +8,8 @@ void func_801D7B64(void);
  * Draws the entry panels, header and mode indicators. At count 4, copies work
  * halfword 0x3C to 0x3E and advances state byte 1.
  * @status partial
- * @match 79.67
- * @residual 32-byte frame instead of 56 bytes and work-pointer/index
- * register allocation differ from the original
+ * @match 83.74
+ * @residual index loads and scratch pointer registers differ from the original
  */
 void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
   u8* step;
@@ -18,7 +17,7 @@ void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
   u8* sprite;
   u8* mode;
   u8* state;
-  s32 index;
+  s16 index;
   u32 amount;
   u32 mask;
 
