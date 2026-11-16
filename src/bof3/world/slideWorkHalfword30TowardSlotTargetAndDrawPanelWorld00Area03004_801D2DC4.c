@@ -43,17 +43,10 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 70.83
- * @residual 204 of 288 instructions match at 1124 of 1152 bytes; the prologue,
- * epilogue, both call groups, every stated constant and the tail control flow
- * agree, and the first difference is instruction 14, where the scratch-record
- * pointer of the approach block lands in $a3 instead of the original $a0. The
- * rest of the gap is the allocation and scheduling that follows from it, plus
- * three unproven spellings: the D_80146892 byte at +0x0A is read here with a
- * single lb where the original loads lbu and re-signs with sll 24/sra 24, the
- * clamp's default arm re-reads +0x30 as a plain lhu where this build forwards
- * the stored value, and the two func_801D3244 calls hoist their shared
- * arguments where the original sets them per arm.
+ * @match 71.18
+ * @residual 205 of 288 instructions match at 1144 of 1152 bytes. The first
+ * difference is at +0x38, where the scratch-record pointer uses a3 instead of
+ * the original a0.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      work;
@@ -65,7 +58,6 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      x;
   s32      keep;
   s32      v;
-  s32      y;
   s32      span;
   s8       level;
   s16      clamped;
@@ -117,11 +109,13 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   work = D_1F800044;
   level = D_80146892[D_801E3208 * 0x98];
   cur = *(u16*)(work + 0x30);
-  span = b * 8 + 0x18;
+  span = 0x18;
+  span = b * 8 + span;
   v = cur - b * 4 + 0xAD;
   x = v + b * 8 + 0x18;
-  y = (s32)level + 0xB9;
-  if (((s16)x < (s16)y) || ((s16)y < (s16)v)) {
+  clamped = (s32)level;
+  clamped = clamped + 0xB9;
+  if (((s16)x < (s16)clamped) || ((s16)clamped < (s16)v)) {
     func_801D3244((s16)v, 0xCB, span & 0xF8, (work[0xA] & 7) * 2, 2, 1);
   } else {
     func_801D3244((s16)v, 0xCB, span & 0xF8, (work[0xA] & 7) * 2, 2, 0);
@@ -140,11 +134,9 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     func_8014E5A0(2, 0x10);
 
     target = (s8)(~(*(u32*)(D_80146898 + D_801E3208 * 0x98)) >> 31);
-    if ((s16)y < 0x90) {
+    if ((s16)clamped < 0x90) {
       clamped = 0x90;
-    } else if ((s16)y < 0xE5) {
-      clamped = (s16)y;
-    } else {
+    } else if ((s16)clamped >= 0xE5) {
       clamped = 0xE4;
     }
     drawMirroredPanelCellQuadWorld00Area03004_801D2C34(clamped, 0xCB, (s8)target, 2);
