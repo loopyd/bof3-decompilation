@@ -21,7 +21,7 @@ void drawDecimalGlyphRun8x8(s32 arg0, s32 arg1, s32 arg2, u16 arg3) {
   u16  value;
 
   index = 0;
-  sprintf((char*)D_80145AD4, D_801D0C78, (u16)arg3);
+  sprintf((char*)D_80145AD4, minimumWidthThreeDecimalFormatStrings, (u16)arg3);
 
   SetDrawMode((DR_MODE*)g_PrimCursor, 0, 0, GetTPage(0, 0, 0x3c0, 0), 0);
   func_8014E5A0(1, 0xc);

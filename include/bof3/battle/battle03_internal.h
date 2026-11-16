@@ -461,7 +461,7 @@ extern u8*          g_PrimCursor; /* @source 0x8014598C @kind bss */
 extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind rodata */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
-extern const char   D_801D0C78[]; /* @source 0x801D0C78 @kind rodata */
+extern const char   minimumWidthThreeDecimalFormatStrings[]; /* @source 0x801D0C78 @kind rodata */
 extern Battle03FiveDispatchTable D_801D0C84; /* @source 0x801D0C84 @kind table */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */
 extern const u8     D_801EAF88[][6]; /* @source 0x801EAF88 */
