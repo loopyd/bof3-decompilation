@@ -12,6 +12,7 @@ from .tags import (
     SOURCE_TAG_RE,
     canonical_exact_progress,
     count_function_metadata,
+    is_declaration_metadata,
     lift_lifecycle,
     parse_behavior_tag,
     parse_progress_tags,
@@ -168,10 +169,7 @@ def parse_function_records(
         if _BEHAVIOR.search(comment.group()):
             candidates.append(comment)
         elif _SOURCE.search(comment.group()):
-            following = masked[comment.end() :].lstrip()
-            declaration = re.match(r"(?:extern|typedef)\b|#\s*define\b", following)
-            definition = re.match(r"extern\b[^;{}]*\([^;{}]*\)\s*\{", following)
-            if definition or not declaration:
+            if not is_declaration_metadata(text, comment.start(), comment.end()):
                 line_start = text.rfind("\n", 0, comment.start()) + 1
                 if not masked[line_start : comment.start()].strip():
                     raise ValueError("function metadata requires @behavior")

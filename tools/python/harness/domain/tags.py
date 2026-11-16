@@ -42,16 +42,7 @@ def count_function_metadata(text: str) -> int:
         body = match.group()
         behaviors = len(re.findall(r"@behavior\b", body))
         sources = len(re.findall(r"@source\b", body))
-        before = text[text.rfind("\n", 0, start) + 1 : start].strip()
-        after = text[end:].lstrip()
-        if (
-            not behaviors
-            and not re.match(r"extern\b[^;{}]*\([^;{}]*\)\s*\{", after)
-            and (
-                re.match(r"(?:extern|typedef)\b|#\s*define\b", after)
-                or re.search(r"\bextern\b|#\s*define\b|;", before)
-            )
-        ):
+        if not behaviors and is_declaration_metadata(text, start, end):
             sources = 0
         if groups and not text[groups[-1][0] : start].strip():
             _previous_end, previous_sources, previous_behaviors = groups[-1]
@@ -81,30 +72,31 @@ def parse_source_tag(text: str) -> int | None:
 
     A tag in the same comment block as a `@behavior` identifies the file's
     function and wins immediately. Tags attached to data declarations
-    (trailing on, or directly above, an extern/#define) record a symbol's
+    (trailing on, or directly above, a declaration/definition) record a symbol's
     origin address without identifying the function and are skipped.
     """
 
     require_single_function(text)
     fallback = None
+    comments = [
+        comment
+        for comment in iter_c_lexemes(text)
+        if comment.group().startswith(("/*", "//"))
+    ]
     for match in SOURCE_TAG_RE.finditer(text):
-        start = text.rfind("/*", 0, match.start())
-        prev_end = text.rfind("*/", 0, match.start())
-        end = text.find("*/", match.end())
-        block = (
-            text[start : end + 2]
-            if start != -1 and end != -1 and prev_end < start
-            else ""
+        comment = next(
+            (
+                comment
+                for comment in comments
+                if comment.start() <= match.start() < match.end() <= comment.end()
+            ),
+            None,
         )
-        if "@behavior" in block:
-            return int(match.group(1), 16)
-        line_start = text.rfind("\n", 0, match.start()) + 1
-        before = text[line_start : match.start()]
-        if "extern" in before or before.lstrip().startswith("#define"):
-            continue  # trailing tag on a data declaration
-        rest = text[end + 2 :].lstrip() if end != -1 else ""
-        if rest.startswith(("extern", "#define", "typedef")):
-            continue  # leading tag on a data declaration
+        if comment is not None:
+            if "@behavior" in comment.group():
+                return int(match.group(1), 16)
+            if is_declaration_metadata(text, comment.start(), comment.end()):
+                continue
         if fallback is None:
             fallback = int(match.group(1), 16)
     return fallback
@@ -305,35 +297,45 @@ def lift_lifecycle(text: str | None) -> str:
     return "invalid"
 
 
-def _declaration_line(line: str, name: str) -> bool:
-    match = re.search(rf"\b{re.escape(name)}\b", line)
-    if match is None:
-        return False
-    stripped = line.lstrip()
-    after_name = line[match.end() :].lstrip()
-    return (
-        "extern" in line
-        or stripped.startswith(("#define", "typedef"))
-        or after_name.startswith("(")
-        or (_any_declaration_line(line) and ";" in line)
-    )
+def _classify_declaration_line(text: str, name: str | None = None) -> str | None:
+    """Distinguish declaration starts from functions without parsing initializers."""
 
-
-def _any_declaration_line(line: str) -> bool:
-    code = line.split("/*", 1)[0].split("//", 1)[0].strip()
+    code = _COMMENT_RE.sub("", text).strip()
     if not code or code.startswith("*"):
-        return False
-    if code.startswith(("extern ", "#define ", "typedef ")):
-        return True
-    if re.search(r"\b[A-Za-z_]\w*\s*\([^;{}]*\)\s*[;{]", code):
-        return True
-    return bool(
-        re.match(
-            r"(?:static\s+)?(?:const\s+|volatile\s+)*"
-            r"(?:struct\s+\w+|union\s+\w+|enum\s+\w+|[A-Za-z_]\w*)"
-            r"(?:\s+|\s*\*+\s*)[A-Za-z_]\w*(?:\s*\[[^]]*\])?\s*(?:=[^;]*)?;\s*$",
-            code,
-        )
+        return None
+    named = re.search(rf"\b{re.escape(name)}\b", code) if name is not None else None
+    if name is not None and named is None:
+        return None
+    if re.match(r"extern\b[^;{}]*\([^;{}]*\)\s*\{", code):
+        return "function"
+    if re.match(r"(?:extern|typedef)\b|#\s*define\b", code):
+        return "declaration"
+    if re.match(r"(?:return|if|while|for|switch|goto|else|do)\b", code):
+        return None
+    data = re.match(
+        r"(?:(?:static|const|volatile|signed|unsigned|short|long)\s+)*"
+        r"(?:struct\s+\w+|union\s+\w+|enum\s+\w+|[A-Za-z_]\w*)"
+        r"(?:\s+|\s*\*+\s*)(?P<name>[A-Za-z_]\w*)"
+        r"(?:\s*\[[^]]*\])*\s*(?:=|;)",
+        code,
+    )
+    if data is not None:
+        return "declaration" if name is None or data.group("name") == name else None
+    if (named is not None and code[named.end() :].lstrip().startswith("(")) or (
+        re.search(r"\b[A-Za-z_]\w*\s*\([^;{}]*\)\s*[;{]", code)
+    ):
+        return "function"
+    return None
+
+
+def is_declaration_metadata(text: str, start: int, end: int) -> bool:
+    """Identify origin metadata attached to data, macros or non-body declarations."""
+
+    before = text[text.rfind("\n", 0, start) + 1 : start]
+    return (
+        before.rstrip().endswith(";")
+        or _classify_declaration_line(before) == "declaration"
+        or _classify_declaration_line(text[end:]) == "declaration"
     )
 
 
@@ -390,12 +392,14 @@ def parse_declaration_kind_tag(text: str, name: str) -> str | None:
 
     lines = text.splitlines()
     declaration_indexes = [
-        index for index, line in enumerate(lines) if _declaration_line(line, name)
+        index
+        for index, line in enumerate(lines)
+        if _classify_declaration_line(line, name) is not None
     ]
     tags = _kind_tags_by_line(text)
     values: list[str] = []
     for index, line in enumerate(lines):
-        if not _any_declaration_line(line):
+        if _classify_declaration_line(line) is None:
             continue
         start = _attached_comment_start(lines, index)
         candidate_lines = [
@@ -431,9 +435,9 @@ def parse_declaration_kind_tag(text: str, name: str) -> str | None:
 def parse_declaration_source_tag(text: str, name: str) -> int | None:
     """Return the @source address attached to `name`'s declaration, or None.
 
-    Considers declaration lines (`extern ... name ...;`, `#define name`, or
-    a function declaration/definition `type name(...)`). The tag is accepted
-    trailing on the declaration line or in the comment block directly above
+    Considers scalar/array declaration and definition starts, `#define name`,
+    and function declarations/definitions. Initializers may span lines. Tags are
+    accepted trailing on the declaration line or in the comment block directly above
     it (blank/comment lines only between tag and declaration; the nearest
     tag wins).
     """
@@ -442,14 +446,7 @@ def parse_declaration_source_tag(text: str, name: str) -> int | None:
         line_start = text.rfind("\n", 0, match.start()) + 1
         line_end = text.find("\n", match.end())
         line = text[line_start : line_end if line_end != -1 else len(text)]
-        stripped = line.lstrip()
-        after_name = line[match.end() - line_start :].lstrip()
-        is_decl = (
-            "extern" in line
-            or stripped.startswith("#define")
-            or after_name.startswith("(")
-        )
-        if not is_decl:
+        if _classify_declaration_line(line, name) is None:
             continue
         trailing = SOURCE_TAG_RE.search(line, match.end() - line_start)
         if trailing is not None:

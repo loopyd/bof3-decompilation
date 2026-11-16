@@ -1,7 +1,15 @@
 #include "bof3/bof3.h"
 
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
-extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
+extern void func_801E5988(void); /* @source 0x801E5988 */
+
+/* Four encoded addresses read by the work-byte-1 dispatcher. The selector
+ * bounds and callback signatures remain unresolved.
+ * @source 0x801EFC64 @kind table
+ */
+u32 workByte1HandlerAddressesBmagicMagic05503[] = {
+    0x801EEFFCu, 0x801EF09Cu, 0x801EF124u, 0x801EF1B8u
+};
 
 /* @source 0x801EF1B8
  * @behavior Decrement scratchpad work byte 9, add two to work byte 0xB,
