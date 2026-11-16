@@ -300,8 +300,9 @@ segments:
     - c
     - decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
   - - 18680
-    - asm
-    - func_801D54F8
+    - c
+    - drawHeaderStatusAndFixedEntryPanelWorld00Area03004_801D54F8
+    - '@source: src/bof3/world/drawHeaderStatusAndFixedEntryPanelWorld00Area03004_801D54F8.c'
   - - 18804
     - c
     - advanceEntryPanelSlideAndSelectStateWorld00Area03004_801D5574
