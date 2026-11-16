@@ -20,7 +20,7 @@ from ._asm_disasm import (
     extract_instructions,
     render_normalized,
 )
-from ._asm_link import _target_map_bindings, extract_section_bytes, function_bytes_match
+from ._asm_link import _target_bindings, extract_section_bytes, function_bytes_match
 from ._asm_resolve import (
     compiler_asm_path_for_object,
     default_binary_for_source,
@@ -236,10 +236,8 @@ def _asm_diff_compare(
     else:
         symbols_c_path = source_path.parent / "symbols.c"
     canonical_bindings = request.canonical_bindings
-    if canonical_bindings is None:
-        canonical_bindings = _target_map_bindings(
-            repo, symbols_c_path, manifest=manifest
-        )
+    if canonical_bindings is None and manifest is not None:
+        canonical_bindings = _target_bindings(repo, manifest)
     byte_match, compiled_bytes = function_bytes_match(
         object_path,
         function_name=function_name,

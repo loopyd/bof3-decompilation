@@ -8,7 +8,7 @@ from pathlib import Path
 
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import (
-    load_target_symbols,
+    load_target_bindings,
     load_weak_symbol_bindings,
     resolve_address_symbol,
 )
@@ -16,24 +16,9 @@ from ..io import RepoLayout, repo_layout
 from .extraction import _HEADER, _SECTION, Section, read_function_image
 
 
-def _target_map_bindings(
-    repo: RepoLayout, symbols_c_path: Path, *, manifest: TargetManifest | None = None
-) -> dict[str, int]:
-    """Load the canonical map only for the source target owning this link."""
-
-    if manifest is not None:
-        target = manifest.id.value
-        space = manifest.psyq_space
-    else:
-        try:
-            target = symbols_c_path.parent.relative_to(repo.root / "src").as_posix()
-        except ValueError:
-            return {}
-        space = None
-    return {
-        symbol.canonical_name: symbol.address
-        for symbol in load_target_symbols(repo.root, target, psyq_space=space)
-    }
+def _target_bindings(repo: RepoLayout, manifest: TargetManifest) -> dict[str, int]:
+    """Load effective bindings for the explicitly resolved target."""
+    return load_target_bindings(repo.root, manifest)
 
 
 def resolve_symbol_address(
@@ -45,8 +30,8 @@ def resolve_symbol_address(
     address = resolve_address_symbol(name)
     if address is not None:
         return address
-    if canonical_bindings is not None and name in canonical_bindings:
-        return canonical_bindings[name]
+    if canonical_bindings is not None:
+        return canonical_bindings.get(name)
     return load_weak_symbol_bindings(symbols_c_path).get(name)
 
 
@@ -165,11 +150,7 @@ def link_object_at_address(
     repo = layout or repo_layout()
     ld = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-ld"
     symbols_c = symbols_c_path or (repo.root / "src" / "boot" / "symbols.c")
-    bindings = (
-        dict(canonical_bindings)
-        if canonical_bindings is not None
-        else _target_map_bindings(repo, symbols_c)
-    )
+    bindings = None if canonical_bindings is None else dict(canonical_bindings)
     resolved_bindings: list[tuple[str, int]] = []
     for sym in undefined_symbols:
         addr = resolve_symbol_address(

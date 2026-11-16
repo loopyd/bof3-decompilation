@@ -262,6 +262,7 @@ class TestExplicitCompilerOverride:
                 return tmp_path / "requested"
 
         monkeypatch.setattr(flag_search, "lookup_variant", lambda *_args: Variant())
+        monkeypatch.setattr(flag_search, "_resolve_bindings", lambda *_args: {})
         calls: list[tuple[list[str], dict[str, str]]] = []
 
         def run(args: list[str], **kwargs: object) -> SimpleNamespace:
@@ -326,7 +327,7 @@ class TestResolveBindings:
         support.write_text("WEAK_SYMBOL_AT(foo, 0x801448eb);\n", encoding="utf-8")
         (root / "src/bof3/support/test_psyq.c").write_text("", encoding="utf-8")
         (root / "config/targets/emi/test/00/symbols.txt").write_text(
-            "foo = 0x801448EB;\n", encoding="utf-8"
+            "fooAddress = 0x801448EB;\n", encoding="utf-8"
         )
         sdk = root / "config/sdk"
         sdk.mkdir(parents=True)
@@ -340,23 +341,20 @@ class TestResolveBindings:
 
         source = self._migrated_target(tmp_path)
         layout = SimpleNamespace(root=tmp_path)
-        symbols_c_path, canonical = flag_search._resolve_bindings(  # type: ignore[arg-type]
+        canonical = flag_search._resolve_bindings(  # type: ignore[arg-type]
             layout, source
         )
-        assert symbols_c_path == tmp_path / "src/bof3/support/test_symbols.c"
+        assert canonical["fooAddress"] == 0x801448EB
         assert canonical is not None
         assert canonical["foo"] == 0x801448EB
         assert canonical["PadInit"] == 0x80174668
 
-    def test_legacy_falls_back_to_source_parent_symbols(self, tmp_path: Path) -> None:
+    def test_unclaimed_source_requires_target_owner(self, tmp_path: Path) -> None:
         import harness.match.flag_search as flag_search
 
         layout = SimpleNamespace(root=tmp_path)
         source = tmp_path / "src/exe/logo/func.c"
         source.parent.mkdir(parents=True)
         (source.parent / "symbols.c").write_text("", encoding="utf-8")
-        symbols_c_path, canonical = flag_search._resolve_bindings(  # type: ignore[arg-type]
-            layout, source
-        )
-        assert symbols_c_path == source.parent / "symbols.c"
-        assert canonical is None
+        with pytest.raises(ValueError, match="requires an explicit target owner"):
+            flag_search._resolve_bindings(layout, source)  # type: ignore[arg-type]

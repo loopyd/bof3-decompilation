@@ -11,6 +11,10 @@ from dataclasses import dataclass
 from collections.abc import Callable
 from pathlib import Path
 import re
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .manifests import TargetManifest
 
 
 _ENTRY = re.compile(
@@ -300,4 +304,39 @@ def load_weak_symbol_bindings(path: Path) -> dict[str, int]:
                     f"{previous:#x} and {address:#x}"
                 )
             bindings[name] = address
+    return bindings
+
+
+def load_target_bindings(
+    root: Path,
+    manifest: TargetManifest,
+    *,
+    read_file: Callable[[Path], bytes | None] | None = None,
+) -> dict[str, int]:
+    """Compose target maps and all claimed hand-maintained weak bindings."""
+    bindings = {
+        symbol.canonical_name: symbol.address
+        for symbol in load_target_symbols(
+            root,
+            manifest.id.value,
+            psyq_space=manifest.psyq_space,
+            read_file=read_file,
+        )
+    }
+    for claimed in manifest.support_sources:
+        if Path(claimed).suffix != ".c" or claimed == manifest.psyq_source:
+            continue
+        path = root / claimed
+        content = path.read_bytes() if read_file is None else read_file(path)
+        if content is None:
+            raise FileNotFoundError(f"missing claimed binding source: {claimed}")
+        for name, address in parse_weak_symbol_bindings(
+            content.decode("utf-8")
+        ).items():
+            previous = bindings.setdefault(name, address)
+            if previous != address:
+                raise ValueError(
+                    f"conflicting target binding for {name} in {claimed}: "
+                    f"0x{previous:08X} and 0x{address:08X}"
+                )
     return bindings

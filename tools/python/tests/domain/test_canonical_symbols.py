@@ -7,9 +7,11 @@ from types import SimpleNamespace
 import pytest
 
 from harness.domain.symbols import MapSymbol, format_map, parse_map, weak_bindings_c
+from harness.domain.ids import TargetId
+from harness.domain.manifests import TargetManifest
 from harness.commands.symbols import main as symbols_main
 from harness.match._asm_link import (
-    _target_map_bindings,
+    _target_bindings,
     link_object_at_address,
     resolve_symbol_address,
 )
@@ -224,16 +226,25 @@ def test_source_target_uses_its_canonical_map_for_link_bindings(tmp_path: Path) 
     target_map.parent.mkdir(parents=True)
     target_map.write_text("PadRead = 0x801CE760;\n", encoding="utf-8")
 
-    assert _target_map_bindings(
-        SimpleNamespace(root=tmp_path), source / "symbols.c"
-    ) == {"PadRead": 0x801CE760}
+    manifest = TargetManifest(
+        id=TargetId("exe/logo", "exe/logo"),
+        disc_id="exe/logo",
+        kind="executable",
+        source_dir="src/exe/logo",
+        binary="out/binaries/exe/logo.bin",
+        splat="config/targets/exe/logo/splat.yaml",
+        load_address=0x801CE000,
+    )
+    assert _target_bindings(SimpleNamespace(root=tmp_path), manifest) == {
+        "PadRead": 0x801CE760
+    }
 
 
 def test_link_uses_supplied_bindings_without_map_reload(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(
-        "harness.match._asm_link._target_map_bindings",
+        "harness.match._asm_link._target_bindings",
         lambda *_: (_ for _ in ()).throw(AssertionError("fallback map loaded")),
     )
     commands: list[list[str]] = []

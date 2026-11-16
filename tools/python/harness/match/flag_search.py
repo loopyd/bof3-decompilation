@@ -11,8 +11,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from ..domain.symbols import load_target_symbols
-from ..domain.claims import manifest_binding_sources
+from ..domain.symbols import load_target_bindings
 from ..domain.sources import owning_manifest
 from ..io import RepoLayout
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
@@ -72,32 +71,12 @@ def _strip_embedded_psx_gcc(command: list[str]) -> list[str]:
     return [*command[:3], *env, *command[index:]]
 
 
-def _resolve_bindings(
-    layout: RepoLayout, source: Path
-) -> tuple[Path, dict[str, int] | None]:
-    """Resolve the WEAK_SYMBOL_AT binding file and canonical map for linking.
-
-    Migrated targets: the claimed hand-maintained support binding source plus
-    the composed target map (target-qualified, never path ancestry).  Legacy
-    targets: ``source.parent/symbols.c`` with no canonical map.
-    """
-
+def _resolve_bindings(layout: RepoLayout, source: Path) -> dict[str, int]:
+    """Resolve effective bindings through the source's explicit target owner."""
     manifest = owning_manifest(layout.root, source)
-    if manifest is not None:
-        binding_files = manifest_binding_sources(layout.root, manifest)
-        symbols_c_path = (
-            binding_files[0]
-            if binding_files
-            else layout.root / manifest.source_dir / "symbols.c"
-        )
-        canonical_bindings = {
-            symbol.canonical_name: symbol.address
-            for symbol in load_target_symbols(
-                layout.root, manifest.id.value, psyq_space=manifest.psyq_space
-            )
-        }
-        return symbols_c_path, canonical_bindings
-    return source.parent / "symbols.c", None
+    if manifest is None:
+        raise ValueError(f"flag search requires an explicit target owner: {source}")
+    return load_target_bindings(layout.root, manifest)
 
 
 def _with_candidate(command: list[str], flags: list[str], output: Path) -> list[str]:
@@ -129,8 +108,12 @@ def search_flags(
     compiler_id: str | None = None,
 ) -> dict[str, Any]:
     source = source.expanduser().resolve()
+    canonical_bindings = _resolve_bindings(layout, source)
     baseline = run_asm_diff_one(
-        AsmDiffRequest(source_path=source, address=address), layout=layout
+        AsmDiffRequest(
+            source_path=source, address=address, canonical_bindings=canonical_bindings
+        ),
+        layout=layout,
     )
     original_path = Path(baseline["outputs"]["original"])
     original_size = baseline["original_size"]
@@ -161,7 +144,6 @@ def search_flags(
     cmd, cmd_dir = _compile_command(layout, source)
     if compiler_id is not None:
         cmd = _strip_embedded_psx_gcc(cmd)
-    symbols_c_path, canonical_bindings = _resolve_bindings(layout, source)
     manifest = owning_manifest(layout.root, source)
     placements = (
         () if manifest is None else manifest.section_placements.get(address, ())
@@ -224,7 +206,6 @@ def search_flags(
                     address=address,
                     size=original_size,
                     original_bytes=original_bytes,
-                    symbols_c_path=symbols_c_path,
                     canonical_bindings=canonical_bindings,
                     layout=layout,
                     section_addresses=section_addresses,

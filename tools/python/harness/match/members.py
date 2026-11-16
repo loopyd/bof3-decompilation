@@ -10,7 +10,7 @@ from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import _parse_manifest
 from harness.domain.psx import is_psx_exe, payload_for, validate_psx_header
-from harness.domain.symbols import load_target_symbols, parse_map
+from harness.domain.symbols import load_target_bindings, load_target_symbols, parse_map
 from harness.domain.functions import parse_function_records
 from harness.domain.sources import owning_manifest, compiled_symbol_name
 
@@ -121,6 +121,14 @@ def capture_members(root: Path, source: str) -> dict:
                 required=path != root / "config/targets/shared/symbols.txt",
             ),
         )
+        bindings = load_target_bindings(
+            root,
+            manifest,
+            read_file=lambda path: read(
+                path.relative_to(root).as_posix(),
+                required=path != root / "config/targets/shared/symbols.txt",
+            ),
+        )
         local_by_name = {symbol.canonical_name: symbol.address for symbol in local}
         functions = []
         singleton_claims = set()
@@ -224,7 +232,7 @@ def capture_members(root: Path, source: str) -> dict:
             member["address"]: manifest.section_placements.get(member["address"], ())
             for member in functions
         },
-        "bindings": {symbol.canonical_name: symbol.address for symbol in symbols},
+        "bindings": bindings,
         "data_sections": data_sections,
         "functions": sorted(functions, key=lambda member: member["selector"]),
     }
