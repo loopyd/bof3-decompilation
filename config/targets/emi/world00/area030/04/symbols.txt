@@ -1,9 +1,9 @@
 D_1F800044 = 0x1F800044;
-D_800100A0 = 0x800100A0;
+handlerSelectorZeroTextOffsetState = 0x800100A0;
 D_800100A2 = 0x800100A2;
 D_800100A4 = 0x800100A4;
-D_800100C0 = 0x800100C0;
-D_800100DE = 0x800100DE;
+handlerSelectorOneTextOffsetState = 0x800100C0;
+handlerSelectorTwoTextOffsetState = 0x800100DE;
 D_800100E0 = 0x800100E0;
 dispatchArea030CompanionHandler = 0x800F500C;
 D_80143C40 = 0x80143C40;

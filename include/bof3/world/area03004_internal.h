@@ -19,13 +19,13 @@ extern u16 D_800100E0;    /* @source 0x800100E0 @kind unknown */
  * 0x801DD664 and submitted to func_8014F800 offset by the same +0x80010000
  * base: (0x1D, 0x14, 0, 0xFF, base + halfword). */
 extern u16 D_800100C2;    /* @source 0x800100C2 @kind unknown */
-/* Main-executable VRAM halfwords selected by the low two bits of the shared
- * handler-selector byte 0x80144286: the AREA030 work-record step at 0x801DC93C
- * submits the chosen halfword offset by +0x80010000 to func_8014F800 as
- * (0x1D, 0x14, 0, 0xFF, base + halfword). */
-extern u16 D_800100A0;    /* @source 0x800100A0 @kind unknown */
-extern u16 D_800100C0;    /* @source 0x800100C0 @kind unknown */
-extern u16 D_800100DE;    /* @source 0x800100DE @kind unknown */
+/* Unsigned halfword text offsets used when work byte 3 is 2. Masked handler
+ * selectors 0, 1 and 2 choose 0x800100A0, 0x800100C0 or 0x800100DE.
+ * The step at 0x801DC93C adds 0x80010000 and submits the selected byte stream
+ * to func_8014F800. Live contents and resource ownership remain unresolved. */
+extern u16 handlerSelectorZeroTextOffsetState;    /* @source 0x800100A0 @kind unknown */
+extern u16 handlerSelectorOneTextOffsetState;    /* @source 0x800100C0 @kind unknown */
+extern u16 handlerSelectorTwoTextOffsetState;    /* @source 0x800100DE @kind unknown */
 /* Shared main-executable equipment record table: the AREA030 name steps scale
  * the selected equipment index by 20 bytes, the serialized record stride whose
  * leading 0x0C bytes are the record name the shared text drawer prints. */

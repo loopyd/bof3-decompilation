@@ -17,9 +17,9 @@
  * into 0xB and 0xE into 0xF, selector 1 turns 3 or 4 into 5 and 0xE into 0xF,
  * and selector 2 turns 3 or 4 into 5 and 8 into 0xB, each step with cue 0x102,
  * after which it increments the record dispatch byte 3. While that byte still
- * holds 2 it submits the main-executable VRAM halfword of the selector's low
- * two bits (0x800100A0, 0x800100C0 or 0x800100DE) offset by the 0x80010000
- * base to func_8014F800 as (0x1D, 0x14, 0, 0xFF, base + halfword) and submits
+ * holds 2, masked selectors 0, 1 and 2 read unsigned halfword text offsets from
+ * 0x800100A0, 0x800100C0 and 0x800100DE. It adds the 0x80010000 base and calls
+ * func_8014F800 as (0x1D, 0x14, 0, 0xFF, base + offset), then submits
  * func_801647C4 with (selector * 48 + 0x58, 0x2E, 0).
  * @status exact
  * @match 100.00
@@ -97,15 +97,15 @@ void stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C(v
         switch (D_80144286 & 3) {
         case 0:
             func_8014F800(0x1Du, 0x14, 0, 0xFFu,
-                          0x80010000u + (u32)D_800100A0);
+                          0x80010000u + (u32)handlerSelectorZeroTextOffsetState);
             break;
         case 1:
             func_8014F800(0x1Du, 0x14, 0, 0xFFu,
-                          0x80010000u + (u32)D_800100C0);
+                          0x80010000u + (u32)handlerSelectorOneTextOffsetState);
             break;
         case 2:
             func_8014F800(0x1Du, 0x14, 0, 0xFFu,
-                          0x80010000u + (u32)D_800100DE);
+                          0x80010000u + (u32)handlerSelectorTwoTextOffsetState);
             break;
         default:
             break;
