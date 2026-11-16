@@ -201,9 +201,9 @@ extern void func_80150224(s32 action_id);
  * the only overlay-local absolute words in it are the fourteen switch-table
  * entries at 0x801F6C94, which every other overlay would carry at their own
  * addresses.
- * @status partial
- * @match 99.18
- * @residual case 5 status/input scheduling; eight raw words differ at 0x801F8AEC..0x801F8B08
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void runPrimaryState3SubstateSequenceScenarioScena0900_801F8770(void) {
   switch (D_80146875) {
@@ -263,11 +263,14 @@ void runPrimaryState3SubstateSequenceScenarioScena0900_801F8770(void) {
     D_80146875 = 5u;
     break;
   case 5: {
-    u8 *count = &D_80146867;
+    u8 *count;
     u8 next_count;
     u16 next_channel;
 
-    D_80149333 = 2u;
+    do {
+      count = &D_80146867;
+      D_80149333 = 2u;
+    } while (0);
     next_count = *count;
     next_channel = D_8014932C;
     next_count += 1u;
