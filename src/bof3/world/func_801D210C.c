@@ -16,83 +16,82 @@
  */
 void func_801D210C(void) {
   s8* mode;
-  u8* s1;
-  u8* s2;
-  u8* s3;
-  u8* s4;
-  u8* s5;
-  u8* s6;
-  u8* s7;
-  u8* s8;
-  u8* s9;
-  u8* s0;
+  u8* seedWork;
+  u8* levelWork;
+  u8* indexWork;
+  u8* budgetWork;
+  u8* entryWork;
+  u8* setupWork;
+  u8* flagsWork;
+  u8* clearWork;
+  u8* stepWork;
   s32 level;
-  s32 remaining_budget;
+  s32 remainingBudget;
   u32 value;
   u32 budget;
   u8 index;
 
-  s1 = AREA030_SCRATCH;
+  seedWork = AREA030_SCRATCH;
   value = D_80145EC4;
   do {
     budget = D_80145EC8;
-    *(volatile u32*)(s1 + 0x34u) = value;
-    *(u32*)(s1 + 0x38u) = budget - 0x8000u;
-    level = func_8015477c((s32)(*(volatile u32*)(s1 + 0x34u)), (s32)(budget - 0x8000u));
+    *(volatile u32*)(seedWork + 0x34u) = value;
+    *(u32*)(seedWork + 0x38u) = budget - 0x8000u;
+    level = func_8015477c((s32)(*(volatile u32*)(seedWork + 0x34u)), (s32)(budget - 0x8000u));
   } while (0);
 
-  s2 = AREA030_SCRATCH;
+  levelWork = AREA030_SCRATCH;
   mode = D_801E320C;
-  *(volatile u16*)(s2 + 0x3Eu) = (u16)(level + 0x100);
+  *(volatile u16*)(levelWork + 0x3Eu) = (u16)(level + 0x100);
 
   do {
     level = (s32)(D_801440BC * (u32)(u8)mode[2]) / 255 + 8;
-    s2[6] = (u8)(level / 15);
+    levelWork[6] = (u8)(level / 15);
   } while (0);
-  s3 = AREA030_SCRATCH;
-  *(volatile u32*)(s2 + 0x10) = (u32)level;
-  if (s3[6] >= 4u) {
-    s3[6] = 3;
+  indexWork = AREA030_SCRATCH;
+  *(volatile u32*)(levelWork + 0x10) = (u32)level;
+  if (indexWork[6] >= 4u) {
+    indexWork[6] = 3;
   }
 
-  s4 = AREA030_SCRATCH;
-  remaining_budget = (s32)(*(volatile u32*)(s4 + 0x38) - (*(volatile u32*)(s4 + 0x10) << 15));
-  *(u32*)(s4 + 0x10) = (u32)remaining_budget;
-  if (remaining_budget > 0x3BFFFF) {
+  budgetWork = AREA030_SCRATCH;
+  remainingBudget = (s32)(*(volatile u32*)(budgetWork + 0x38) - (*(volatile u32*)(budgetWork + 0x10) << 15));
+  *(u32*)(budgetWork + 0x10) = (u32)remainingBudget;
+  if (remainingBudget > 0x3BFFFF) {
     D_8014930C = 0x3C0000u;
-  } else if (remaining_budget <= 0x14FFFF) {
+  } else if (remainingBudget <= 0x14FFFF) {
     D_8014930C = 0x150000u;
   } else {
-    D_8014930C = (u32)remaining_budget;
+    D_8014930C = (u32)remainingBudget;
   }
 
-  s5 = AREA030_SCRATCH;
+  entryWork = AREA030_SCRATCH;
   D_8014932E = 0u;
-  index = s5[6];
-  *(volatile u32*)(s5 + 0x0Cu) = 0u;
+  index = entryWork[6];
+  *(volatile u32*)(entryWork + 0x0Cu) = 0u;
   value = D_801E1D38[index].first;
-  index = s5[6];
-  *(volatile u32*)(s5 + 0x14u) = value;
-  *(volatile u32*)(s5 + 0x20u) = D_801E1D38[index].second;
-  s5[0x24u] = 0u;
+  index = entryWork[6];
+  *(volatile u32*)(entryWork + 0x14u) = value;
+  *(volatile u32*)(entryWork + 0x20u) = D_801E1D38[index].second;
+  entryWork[0x24u] = 0u;
 
-  s6 = AREA030_SCRATCH;
-  s6[0x29u] = 5u;
+  setupWork = AREA030_SCRATCH;
+  setupWork[0x29u] = 5u;
   AREA030_SCRATCH[0x48u] = 1u;
-  s7 = AREA030_SCRATCH;
-  s7[0] = (u8)(s7[0] & 0xDFu);
+  flagsWork = AREA030_SCRATCH;
+  flagsWork[0] = (u8)(flagsWork[0] & 0xDFu);
   AREA030_SCRATCH[0x0Bu] = 0u;
   AREA030_SCRATCH[0x5Du] = 0u;
   AREA030_SCRATCH[0x5Eu] = 0u;
   AREA030_SCRATCH[0x5Fu] = 0u;
-  s8 = AREA030_SCRATCH;
-  s8[0x2Au] = 0u;
-  s9 = AREA030_SCRATCH;
-  *(volatile u32*)(s8 + 0x60u) = 0u;
-  *(volatile u32*)(s8 + 0x64u) = 0u;
-  *(volatile u32*)(s8 + 0x68u) = 0u;
-  *(volatile u32*)(s8 + 0x6Cu) = 0u;
-  s9[0x48u] = 1u;
+  clearWork = AREA030_SCRATCH;
+  clearWork[0x2Au] = 0u;
+  stepWork = AREA030_SCRATCH;
+  *(volatile u32*)(clearWork + 0x60u) = 0u;
+  *(volatile u32*)(clearWork + 0x64u) = 0u;
+  *(volatile u32*)(clearWork + 0x68u) = 0u;
+  *(volatile u32*)(clearWork + 0x6Cu) = 0u;
+  stepWork[0x48u] = 1u;
 
   func_8014dd3c((s32)(*(volatile u16*)(D_801E3210 + 0x0Cu)));
   func_8014d6b8(1);
@@ -103,6 +102,6 @@ void func_801D210C(void) {
   }
 
   AREA030_SCRATCH[7] = D_801E3210[0x0Fu];
-  s9 = AREA030_SCRATCH;
-  s9[1] = (u8)(s9[1] + 1u);
+  stepWork = AREA030_SCRATCH;
+  stepWork[1] = (u8)(stepWork[1] + 1u);
 }
