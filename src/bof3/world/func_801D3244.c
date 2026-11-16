@@ -8,15 +8,11 @@
  * TILE at the primitive cursor with the caller colour 0xFF, the caller origin, the
  * arg2 width and height 8, and commits it through func_8014E5A0.
  * @source 0x801D3244
- * @status partial
- * @match 75.36
- * @residual 52 of 68 current instructions match 69 original at 272 of 276 bytes.
- * Both frames are 48 bytes. The current saved-register set omits the original
- * s6 save and restore, relocates the x coordinate and saves ra four bytes lower.
- * The original keeps the masked width in s6 and reuses the incoming width
- * register for the primitive cursor.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
-void func_801D3244(s16 arg0, s16 arg1, s32 arg2, s8 arg3, u8 arg4, u8 arg5) {
+void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, u8 arg5) {
   u8*  cell;
   TILE* tile;
   s32  shade;

@@ -738,7 +738,7 @@ void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void func_801D2AE0(void);
 void drawMirroredPanelCellQuadWorld00Area03004_801D2C34(s16 arg0, s16 arg1,
                                                         s8 arg2, u8 arg3);
-void func_801D3244(s16 arg0, s16 arg1, s32 arg2, s8 arg3, u8 arg4, u8 arg5);
+void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, u8 arg5);
 void advancePanelScroll(void);
 void func_801D6F08(void);
 void advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34(void);
