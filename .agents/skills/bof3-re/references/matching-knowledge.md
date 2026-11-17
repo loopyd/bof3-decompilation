@@ -1739,6 +1739,19 @@ blaming CSE or allocation.
    not recovered source spelling or a universal CSE/allocation rule. Add no pins,
    dummy work or accesses.
 
+For a narrow boolean return, keep a word local whose only definitions are zero
+and the final comparison. Reusing it for arithmetic can preserve a narrowing mask
+or add a return copy. A separate arithmetic local can still share the return
+register when their intervals do not overlap. Check both expansion and allocation
+before changing the return declaration.
+
+If that flag still misses the return register, trace hard-register conflicts from
+other value phases. Reusing real guard samples and comparison results can remove
+short-lived temporaries that occupy the preferred register. Splitting an inline
+field load from its subtraction can remove one such conflict. Preserve each read
+and calculation; require the whole-function gate rather than treating the desired
+register assignment as acceptance.
+
 ### Guard scheduling and value reuse
 
 Use when guard loads/tests and a product/store chain have correct operations but
