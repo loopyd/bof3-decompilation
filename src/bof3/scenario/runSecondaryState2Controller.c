@@ -64,7 +64,7 @@ void runSecondaryState2Controller(void) {
     }
 
     case 1:
-      func_8014F800(0x7a, 100, 0, 0xffu, SCENA16_VRAM_BASE + (u32)D_80010020);
+      SCENA16_DRAW_TEXT_OFFSET(0x7a, 100, D_80010020);
       if (D_80143C40 == 0u) {
         D_80146876 = 0u;
         D_80146875 = (u8)(D_80146875 + 1u);
@@ -76,7 +76,7 @@ void runSecondaryState2Controller(void) {
 
       *counter = (u16)(*counter + 1u);
       func_8016C0C0((s32)(s16)*counter, (s32)(s16)*counter);
-      func_8014F800(0x7a, 100, 0, 0xffu, SCENA16_VRAM_BASE + (u32)D_80010020);
+      SCENA16_DRAW_TEXT_OFFSET(0x7a, 100, D_80010020);
       if (*counter == 0x7fu) {
         func_8014ECAC(0u);
         *counter = 0u;
@@ -87,8 +87,7 @@ void runSecondaryState2Controller(void) {
 
     case 3:
       if (D_80143C40 != 0u) {
-        func_8014F800(0x7a, 100, 0, 0xffu,
-                      SCENA16_VRAM_BASE + (u32)D_80010020);
+        SCENA16_DRAW_TEXT_OFFSET(0x7a, 100, D_80010020);
         break;
       }
       D_8014832E = 0x1fu;
@@ -124,7 +123,7 @@ void runSecondaryState2Controller(void) {
     }
 
     case 6:
-      func_8014F800(0x50, 0x50, 0, 0xffu, SCENA16_VRAM_BASE + (u32)D_80010022);
+      SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010022);
       if (D_80143C40 == 0u) {
         D_80146876 = 0x7fu;
         D_80146875 = (u8)(D_80146875 + 1u);
@@ -134,7 +133,7 @@ void runSecondaryState2Controller(void) {
     case 7: {
       u16* counter = (u16*)&D_80146876;
 
-      func_8014F800(0x50, 0x50, 0, 0xffu, SCENA16_VRAM_BASE + (u32)D_80010022);
+      SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010022);
       *counter = (u16)(*counter - 1u);
       if (*counter == 0u) {
         func_8014ECAC(0u);
@@ -147,8 +146,7 @@ void runSecondaryState2Controller(void) {
       u8* next;
 
       if (D_80143C40 != 0u) {
-        func_8014F800(0x50, 0x50, 0, 0xffu,
-                      SCENA16_VRAM_BASE + (u32)D_80010022);
+        SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010022);
         break;
       }
       func_8019FA28(4u, 0x440000u, 0x80000u, 5u);

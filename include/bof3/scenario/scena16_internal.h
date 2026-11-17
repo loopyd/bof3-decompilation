@@ -157,4 +157,8 @@ void noopRecordHandler(void);
 #define SCENA16_PALETTE_DST        PSX_PTR(volatile u16, 0x80037800u)
 #define SCENA16_VRAM_BASE          (0x80010000u)
 
+/* offset is read once; this preserves its existing volatile or plain view. */
+#define SCENA16_DRAW_TEXT_OFFSET(x, y, offset) \
+  (func_8014F800((x), (y), 0, 0xffu, SCENA16_VRAM_BASE + (u32)(offset)))
+
 #endif

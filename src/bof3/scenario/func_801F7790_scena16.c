@@ -53,8 +53,7 @@ void func_801F7790(void) {
       break;
 
     case 1:
-      func_8014F800(0x50, 0x50, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010004);
+      SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010004);
       if (D_80143C40 == 0u) {
         D_80146876 = 0x7fu;
         D_80146875 = (u8)(D_80146875 + 1u);
@@ -64,8 +63,7 @@ void func_801F7790(void) {
     case 2: {
       u16* timer;
 
-      func_8014F800(0x50, 0x50, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010004);
+      SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010004);
       timer = &D_80146876;
       *timer = (u16)(*timer - 1u);
       if (*timer == 0u) {
@@ -77,8 +75,7 @@ void func_801F7790(void) {
 
     case 3:
       if (D_80143C40 != 0u) {
-        func_8014F800(0x50, 0x50, 0, 0xffu,
-                      SCENA16_VRAM_BASE + (u32)D_80010004);
+        SCENA16_DRAW_TEXT_OFFSET(0x50, 0x50, D_80010004);
         break;
       }
 
@@ -122,8 +119,7 @@ void func_801F7790(void) {
       u16* timer;
       u16  count;
 
-      func_8014F800(0x48, 0x50, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010006);
+      SCENA16_DRAW_TEXT_OFFSET(0x48, 0x50, D_80010006);
       timer = &D_80146876;
       count = (u16)(*timer + 1u);
       *timer = count;
@@ -140,8 +136,7 @@ void func_801F7790(void) {
     case 6: {
       u16* timer;
 
-      func_8014F800(0x48, 0x50, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010006);
+      SCENA16_DRAW_TEXT_OFFSET(0x48, 0x50, D_80010006);
       timer = &D_80146876;
       *timer = (u16)(*timer - 1u);
       if (*timer == 0u) {
@@ -157,8 +152,7 @@ void func_801F7790(void) {
       timer = &D_80146876;
       *timer = (u16)(*timer - 1u);
       if (*timer != 0u) {
-        func_8014F800(0x48, 0x50, 0, 0xffu,
-                      SCENA16_VRAM_BASE + (u32)D_80010006);
+        SCENA16_DRAW_TEXT_OFFSET(0x48, 0x50, D_80010006);
         clampPaletteChannels((u32)((u8)*timer));
         break;
       }

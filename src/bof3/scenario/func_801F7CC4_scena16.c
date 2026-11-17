@@ -107,8 +107,7 @@ void func_801F7CC4(void) {
       published = (u16*)&D_1F800000;
       *published = (u16)(0x130u - D_80146876);
       if (*published < 0xbfu) {
-        func_8014F800(0x48, 0x50, 0, 0xffu,
-                      SCENA16_VRAM_BASE + (u32)D_80010006);
+        SCENA16_DRAW_TEXT_OFFSET(0x48, 0x50, D_80010006);
         if (*published < 0x20u) {
           clampPaletteChannels((u32)((u8)*published));
         } else if (*published == 0x20u) {
@@ -226,8 +225,7 @@ void func_801F7CC4(void) {
       break;
 
     case 10:
-      func_8014F800(0x46, 100, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010008);
+      SCENA16_DRAW_TEXT_OFFSET(0x46, 100, D_80010008);
       if (D_80143C40 == 0u) {
         D_80146876 = 0x7fu;
         D_80146875 = (u8)(D_80146875 + 1u);
@@ -237,8 +235,7 @@ void func_801F7CC4(void) {
     case 11: {
       u16* counter;
 
-      func_8014F800(0x46, 100, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010008);
+      SCENA16_DRAW_TEXT_OFFSET(0x46, 100, D_80010008);
       counter = &D_80146876;
       *counter = (u16)(*counter - 1u);
       if (*counter != 0u) {
@@ -257,8 +254,7 @@ void func_801F7CC4(void) {
         break;
       }
 
-      func_8014F800(0x46, 100, 0, 0xffu,
-                    SCENA16_VRAM_BASE + (u32)D_80010008);
+      SCENA16_DRAW_TEXT_OFFSET(0x46, 100, D_80010008);
       break;
   }
 }
