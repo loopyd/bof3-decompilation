@@ -69,7 +69,7 @@ void drawShopSlotPriceList(u8 arg0, u16 arg1, u16 arg2, u8 arg3, u8 arg4) {
       func_8014F800((s16)(arg1 + 8), (s16)y, shade, 0xFF,
                     func_801502D0(i + 0xDE));
     }
-    sprintf((char*)D_80145AD4, D_801D0CDC, amount);
+    sprintf((char*)D_80145AD4, slotPriceFormatStrings, amount);
     D_80145AD4[3] = 0x60;
     func_8014FF0C((s16)(arg1 + 0x70), (s16)y, shade, D_80145AD4);
     y += 0xD;

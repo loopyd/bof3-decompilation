@@ -187,11 +187,10 @@ extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
  * bits and publishes the masked value back, and selects its main-executable
  * VRAM halfword through its bit 0. */
 extern u8  D_80144287;    /* @source 0x80144287 @kind unknown */
-/* Shared AREA030 byte cleared by the pressed-mask arm of the 0x801DC93C
- * work-record step at the same time it publishes 4 into the record dispatch
- * byte 3. No other lifted body in the target reads it, so the role stays
- * address-anchored; the stored width is proven. */
-extern u8  D_8014428B;    /* @source 0x8014428B @kind unknown */
+/* Byte cleared by AREA030's pressed-mask arm at 0x801DC93C when it
+ * publishes 4 into work-record dispatch byte 3. Its encoded meaning and
+ * storage kind remain unverified; no other current target body reads it. */
+extern u8  padPressedMaskTransitionClearedByteState; /* @source 0x8014428B @kind unknown */
 /* Shared AREA030 pad gate/latch byte directly after D_80144287: 0x801DD7CC
  * republishes 0xFF while the pad Cross bit D_80145AA8/0x4000 is set and 1
  * while the Triangle bit 0x1000 is set, and both 0x801DD7CC and 0x801D56F4

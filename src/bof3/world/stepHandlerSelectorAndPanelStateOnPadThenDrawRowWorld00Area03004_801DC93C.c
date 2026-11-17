@@ -59,7 +59,7 @@ void stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C(v
         } else if (*state == 0xE) {
             *state = 0xF;
         }
-        D_8014428B = 0;
+        padPressedMaskTransitionClearedByteState = 0;
         record = D_1F800044;
         record[3] = 4;
     } else if (*pad & D_80145AC2) {

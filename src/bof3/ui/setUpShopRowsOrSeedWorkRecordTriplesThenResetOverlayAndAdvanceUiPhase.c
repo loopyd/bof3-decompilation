@@ -98,24 +98,24 @@ void setUpShopRowsOrSeedWorkRecordTriplesThenResetOverlayAndAdvanceUiPhase(void)
     D_80146254 = func_801BDB7C(0);
     func_801C1400(0);
     for (i = 0; i < D_80146254; i++) {
-      D_1F800044 = &D_80145E90[i * 0x140];
-      func_801C1254(D_80145F09[i * 0x140], i);
-      func_8014D6B8(D_1F800044[8]);
-      *(u32*)(D_1F800044 + 0x34) = D_801E537C[group][i][0];
-      *(u32*)(D_1F800044 + 0x38) = D_801E537C[group][i][1];
+      scratchpadWorkRecordState = &workRecordTable[i * 0x140];
+      func_801C1254(workRecordField79Table[i * 0x140], i);
+      func_8014D6B8(scratchpadWorkRecordState[8]);
+      *(u32*)(scratchpadWorkRecordState + 0x34) = D_801E537C[group][i][0];
+      *(u32*)(scratchpadWorkRecordState + 0x38) = D_801E537C[group][i][1];
       /* The third word keeps its own name because the original loads it before
        * the first byte clear and stores it after the work cell is reloaded. */
       triple = D_801E537C[group][i][2];
-      D_1F800044[1] = 0;
-      *(u32*)(D_1F800044 + 0x3C) = triple;
-      D_1F800044[2] = 0;
-      D_1F800044[3] = 0;
-      D_1F800044[4] = 0;
+      scratchpadWorkRecordState[1] = 0;
+      *(u32*)(scratchpadWorkRecordState + 0x3C) = triple;
+      scratchpadWorkRecordState[2] = 0;
+      scratchpadWorkRecordState[3] = 0;
+      scratchpadWorkRecordState[4] = 0;
     }
-    D_80149308 = D_80145EC4;
+    copiedPositionFirstWordState = D_80145EC4;
     D_8014930C = D_80145EC8;
     func_80153DE8();
-    func_801A3E50(*(u32*)D_8017F974[D_80143F00]);
+    func_801A3E50(*(u32*)selectedRecordPointerTable[D_80143F00]);
   }
   /* The original materializes the phase-byte address once and reuses that base
    * for the increment load and store (lui plus addiu, then lbu and sb through

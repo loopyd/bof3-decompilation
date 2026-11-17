@@ -36,20 +36,20 @@ void armShopValueSelectionThenAdvanceUiSubstep(void) {
 
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   func_8014F800(0x1C, 0x16, 0, 0xFF, func_801502D0(D_801E60EC + 0x85));
-  D_8018E260_WORD = 0;
+  shopValueSelectionState = 0;
   func_801EEC30(0, 0, 0, 0, 0);
   armedActionId = D_8018E228;
-  D_8018E260_WORD = 1;
+  shopValueSelectionState = 1;
   func_801EEC30(0, 0, 0, 0, 0);
   currentActionId = D_8018E228;
   if (armedActionId == 0 || armedActionId == 2) {
     if (currentActionId == 0 || currentActionId == 2) {
       D_801E608C = 1;
-      D_8018E260_WORD = 0;
+      shopValueSelectionState = 0;
       D_801E6088 = 0;
       D_801E60F8 = 3;
     } else {
-      D_8018E260_WORD = 0;
+      shopValueSelectionState = 0;
       D_801E6088 = 0;
       D_801E608C = 0;
       D_801E60F8 = 1;
@@ -58,7 +58,7 @@ void armShopValueSelectionThenAdvanceUiSubstep(void) {
     if (currentActionId == 0 || currentActionId == 2) {
       D_801E6088 = 1;
       D_801E608C = 1;
-      D_8018E260_WORD = 1;
+      shopValueSelectionState = 1;
       D_801E60F8 = 2;
     } else {
       func_8015DF18(0x107);

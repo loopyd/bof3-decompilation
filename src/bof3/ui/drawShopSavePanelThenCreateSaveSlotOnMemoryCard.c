@@ -56,7 +56,7 @@ void drawShopSavePanelThenCreateSaveSlotOnMemoryCard(void) {
     return;
   }
   sprintf((char*)D_80145AD4, D_801D0C20, D_801E6074);
-  sprintf((char*)D_80145AD4, D_801D0C68, D_80144FC0, D_80144FC1, D_80144FC2);
+  sprintf((char*)D_80145AD4, saveTimestampFormatStrings, D_80144FC0, D_80144FC1, D_80144FC2);
   strcpy(stamp, (char*)D_80145AD4);
   sprintf((char*)D_80145AD4, D_801D0C20, D_801E6074);
   strcpy(name, (char*)D_80145AD4);
