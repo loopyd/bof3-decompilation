@@ -27,12 +27,6 @@ extern const char D_801D0CF8[];
 /* @source 0x801D0CFC @kind rodata */
 extern const char D_801D0CFC[];
 
-/* Caption drawer of the main executable: the two signed coordinates, the
- * alignment argument 0, the 0xFF mask and the caption address as the fifth
- * argument, which the original stores to the outgoing stack slot.
- * @source 0x8014F800 */
-extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-
 /* Sprite-record stream emitter of the main executable: the two signed
  * coordinates, the stream blob and the flag byte it carries.
  * @source 0x801AF390 */

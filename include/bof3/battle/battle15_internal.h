@@ -488,7 +488,7 @@ void func_8014E5A0(u32 ot_index, u32 primitive_size);
  * Argument widths come from func_800B0B0C's live original bytes: the two
  * coordinate arguments are zero-extended to u16 for func_801AE3F0 and
  * sign-extended to s16 for func_801AF390. func_8014F800 stays declared by
- * <gpu/prim.h> (s16, s16, s32, u32, u32). */
+ * <gpu/prim.h> (s32, s32, s32, u32, u32). */
 void func_801AE3F0(u16 arg0, u16 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5);
 void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, s32 arg3);
 /* INFERRED: 0x8014E3A0 is reached only from func_800A4BB4, which passes the

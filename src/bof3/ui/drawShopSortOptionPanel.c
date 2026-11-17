@@ -80,26 +80,26 @@ void drawShopSortOptionPanel(PanelTask* task) {
 
   func_801AE3F0(task->x + 3, task->field_06 + 3, 0x65,
                 D_801E5F0C[0] * 0x10 + 0x19, 0, D_80144952);
-  func_8014F800(task->x + 0x27, task->field_06 + 7, 0, 0xFF,
+  func_8014F800((s16)(task->x + 0x27), (s16)(task->field_06 + 7), 0, 0xFF,
                 (u32)D_801E5EFC[0]);
   func_801AF390(task->x, task->field_06, D_801E5E7C, 1);
   for (i = 0; i < D_801E5F0C[0]; i++) {
     caption = D_801E5EFC[D_801E5F0D[i]];
     if (i == *((u8*)task + 0xB)) {
       yRow = i * 0x10 + 0x1A;
-      func_8014F800(task->x + 7, task->field_06 + yRow, 7, 0xFF,
+      func_8014F800((s16)(task->x + 7), (s16)(task->field_06 + yRow), 7, 0xFF,
                     (u32)caption);
-      func_8014F800(task->x + 7, task->field_06 + yRow - 2, 2, 0xFF,
+      func_8014F800((s16)(task->x + 7), (s16)(task->field_06 + yRow - 2), 2, 0xFF,
                     (u32)caption);
     } else if (i == *((u8*)task + 0xA)) {
       yRow = i * 0x10 + 0x1A;
-      func_8014F800(task->x + 7, task->field_06 + yRow, 7, 0xFF,
+      func_8014F800((s16)(task->x + 7), (s16)(task->field_06 + yRow), 7, 0xFF,
                     (u32)caption);
-      func_8014F800(task->x + 7, task->field_06 + yRow - 2, 0, 0xFF,
+      func_8014F800((s16)(task->x + 7), (s16)(task->field_06 + yRow - 2), 0, 0xFF,
                     (u32)caption);
     } else {
       yRow = i * 0x10 + 0x1A;
-      func_8014F800(task->x + 7, task->field_06 + yRow, 0, 0xFF,
+      func_8014F800((s16)(task->x + 7), (s16)(task->field_06 + yRow), 0, 0xFF,
                     (u32)caption);
     }
     func_801AF390((s16)task->x, (s16)(task->field_06 + (i * 2 + 3) * 8),

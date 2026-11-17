@@ -10,13 +10,13 @@
  * copies the per-mode word pair, clears the record flags, starts the panel
  * services and marks the selected entry record.
  * @source 0x801D210C
- * @status partial
- * @match 98.39
- * @residual Three instructions assign the mode byte and shared scale to
- * different registers. The original 744-byte interval remains retained.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void initializeModePanelWorkAndAdvanceStep(void) {
-  s8* mode;
+  u32 modeWord;
+  u32 modeByte;
   u8* seedWork;
   u8* levelWork;
   u8* indexWork;
@@ -44,11 +44,13 @@ void initializeModePanelWorkAndAdvanceStep(void) {
   } while (0);
 
   levelWork = AREA030_SCRATCH;
-  mode = D_801E320C;
+  modeWord = (u32)D_801E320C;
   *(volatile u16*)(levelWork + 0x3Eu) = (u16)(level + 0x100);
 
   do {
-    level = (s32)(D_801440BC * (u32)(u8)mode[2]) / 255 + 8;
+    modeByte = *(u8*)(modeWord + 2);
+    modeWord = D_801440BC;
+    level = (s32)(modeByte * modeWord) / 255 + 8;
     levelWork[6] = (u8)(level / 15);
   } while (0);
   indexWork = AREA030_SCRATCH;

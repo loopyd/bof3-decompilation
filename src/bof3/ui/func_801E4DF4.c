@@ -21,5 +21,5 @@ void func_801E4DF4(PanelTask* task) {
   func_801AE3F0(task->x + 3, task->field_06 + 3, 0x9A, 0x39, 0, D_80144952);
   func_801DD350(task->x, task->field_06, 0x12, 6);
   texture = func_801502D0(*((u8*)task + 0xA) | 0x100);
-  func_8014F800(task->x + 0xE, task->field_06 + 4, 0, 0xFF, texture);
+  func_8014F800((s16)(task->x + 0xE), (s16)(task->field_06 + 4), 0, 0xFF, texture);
 }

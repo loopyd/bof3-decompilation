@@ -27,6 +27,6 @@ void func_801DA058(void) {
     }
     appendDimTile();
     func_801D9534(0x14, (0x12 - D_1F800044[9] * 8) & 0xFFFE, 0x118, 0x13, 0);
-    func_8014F800(0x1D, 0x15 - D_1F800044[9] * 8, 0, 0xFF,
+    func_8014F800(0x1D, (s16)(0x15 - D_1F800044[9] * 8), 0, 0xFF,
                   0x80010000u + PSX_PTR(u16, 0x80010000u)[0x40]);
 }

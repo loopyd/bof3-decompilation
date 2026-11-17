@@ -486,6 +486,11 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
 1. Bind RTL to source hashes. In GCC 2.7.2, trace `loop.c` strength reduction
    and invariant insertion, then `.sched`/`.sched2`. An index loop can acquire
    pointer setup after another initializer; scheduling may preserve that order.
+   When setup instructions fill earlier guard slots out of order, keep the real
+   counter, table base and coordinate initializers in their required order in
+   the `for` initializer. Moving the counter reset before the guards can retain
+   an extra loop-entry test; changing to `do` can alter allocation weights.
+   Trace the resulting loop notes and delay-slot output before measuring.
    Keep every dump out of the repository: `cc1 -da`/`-dR` writes `<basename>.*`
    into the compiler's working directory. `-dumpbase` takes a bare base name, so a
    `/tmp/...` path there does not move the files — run the compile from `/tmp`, or
@@ -1713,6 +1718,13 @@ byte for the keep arm. A separate narrow result can retain the byte copy where
 selecting into a word adds a sign extension. Trace the first copy, the guard's
 narrowing and the join, then require the complete native gate.
 
+A consumed address word can become a real arithmetic input after its last
+load. Reusing that scalar for the subsequently loaded factor separates the byte
+load from the dying pointer quantity and can retain the original register pair.
+Prove the 32-bit address round trip and unchanged multiplication, then inspect
+CSE and allocation. A separate byte local alone can instead move the whole
+division register group.
+
 For a local constant/pointer exchange, distinguish local quantity priority from
 global allocation. A pointer already used for the same field in a mutually
 exclusive arm can own both reloaded phases. Define it before every use, preserve
@@ -1860,6 +1872,11 @@ Nearby-version source supports a hypothesis, not owning-compiler proof.
    only when the product and copied value have real consumers. Confirm RTL avoids
    the swap and allocation coalesces the copy without extra instructions. Byte
    equality alone does not justify an unsigned product or changed narrowing.
+   Pointer addition can canonicalize the base first even when the source writes
+   the offset first. For a proven 32-bit PSX address calculation, an explicit
+   word-address expression can retain the original operand order. Verify the
+   pointer round trip, offset bounds and both RTL operands; never substitute a
+   hardcoded base or claim the cast is portable.
 3. Measure each predicted effect and their interaction through `lift sweep`.
    Bind dumps to source hashes; inspect the complete register web and memory
    events. Require full function/readonly bytes, live gate and independent review;

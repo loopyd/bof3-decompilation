@@ -41,11 +41,6 @@ extern void func_801D7418(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 extern void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4,
                           u32 arg5);
 
-/* Main-executable text submitter: the pen origin, the alignment, the shade and,
- * as its fifth argument, the glyph-code row it queues.
- * @source 0x8014F800 */
-extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-
 /* Main-executable equipment-icon cell helper: one cell at the two
  * zero-extended coordinates with the slot id byte and the caller flag. Both
  * coordinates arrive zero-extended by the andi 0xFFFF of the call site and the

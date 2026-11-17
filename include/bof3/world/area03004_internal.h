@@ -762,10 +762,6 @@ u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
  * AREA030 flagged handler passes the panel id 0x1C and the masked flag byte
  * scaled by 16 plus 0x58 as an unsigned halfword pair, and discards the result. */
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
-/* Same-binary shaded-panel helper at 0x8014F800 (executable space), called by
- * the AREA030 flagged handler with (0x1D, 0x14, 0, 0xFF) and the selected
- * main-executable halfword offset by the 0x80010000 VRAM base. */
-void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 /* Shared equipment icon helper at 0x800F7094. AREA030 passes signed screen
  * coordinates, the equipment-index byte, 3 and a selection flag of 0 or 1.
  * The callee body and payload owner are not established here. */

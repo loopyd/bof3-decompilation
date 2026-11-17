@@ -65,20 +65,20 @@ void func_801E1004(s32 arg0, s32 arg1, s32 arg2) {
     }
   }
   *dst = 0;
-  func_8014F800(0x70, 0x45 - ((u8)arg2 * 20), 0, 0xf, (u32)D_80145AD4);
+  func_8014F800(0x70, (s16)(0x45 - ((u8)arg2 * 20)), 0, 0xf, (u32)D_80145AD4);
 
   if ((arg0 & 0xff) != 0xff) {
     sprintf((char*)D_80145AD4, (const char*)D_801D0C38, arg1 & 0xff);
     for (i = 0; i < 3; i++) {
       if (D_80145AD4[i] == 0x20) D_80145AD4[i] = 0xff;
     }
-    func_8014F800(0x2f - ((u8)arg2 * 25), 0x73, 0, 3, (u32)D_80145AD4);
+    func_8014F800((s16)(0x2f - ((u8)arg2 * 25)), 0x73, 0, 3, (u32)D_80145AD4);
     sprintf((char*)D_80145AD4, (const char*)D_801D0C38,
             func_801E0ABC(arg0 & 0xff, arg1 & 0xff) & 0xffff);
     for (i = 0; i < 3; i++) {
       if (D_80145AD4[i] == 0x20) D_80145AD4[i] = 0xff;
     }
-    func_8014F800(((u8)arg2 * 25) + 0xef, 0x73, 0, 3,
+    func_8014F800((s16)(((u8)arg2 * 25) + 0xef), 0x73, 0, 3,
                   (u32)D_80145AD4);
   }
 }

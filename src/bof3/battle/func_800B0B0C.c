@@ -36,16 +36,16 @@ void func_800B0B0C(s16 base_x, s16 base_y) {
     if (selection & 0x80) {
       active = selection & 0x7F;
       if (slot == active) {
-        func_8014F800((s16)(slot_x + 4), cursor_y, 0, 0x10,
+        func_8014F800((s16)(slot_x + 4), (s16)cursor_y, 0, 0x10,
                       (u32)&D_800B6D30[slot * 3]);
         func_801AF390(slot_x, base_y, D_800B6D28, 1);
       } else {
-        func_8014F800((s16)(slot_x + 4), cursor_y, 7, 0x10,
+        func_8014F800((s16)(slot_x + 4), (s16)cursor_y, 7, 0x10,
                       (u32)&D_800B6D30[slot * 3]);
         func_801AF390(slot_x, base_y, D_800B6D20, 1);
       }
     } else {
-      func_8014F800((s16)(slot_x + 4), cursor_y, 0, 0x10,
+      func_8014F800((s16)(slot_x + 4), (s16)cursor_y, 0, 0x10,
                     (u32)&D_800B6D30[slot * 3]);
       func_801AF390(slot_x, base_y, D_800B6D20, 1);
     }

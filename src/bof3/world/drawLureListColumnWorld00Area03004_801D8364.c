@@ -108,9 +108,9 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
         if (FIELD_REF(s32, record, 0x10) != drawn) {
           goto unselected;
         }
-        func_8014F800(nameX, (s16)lineY, 7, 0xC,
+        func_8014F800((s16)nameX, (s16)lineY, 7, 0xC,
                       (u32)&D_801C9E7C[D_801451CC[i] * 20]);
-        func_8014F800(nameX, (s16)(baseY + lineOffset), 0, 0xC,
+        func_8014F800((s16)nameX, (s16)(baseY + lineOffset), 0, 0xC,
                       (u32)&D_801C9E7C[D_801451CC[i] * 20]);
         if (D_801453CC[i] >= 2) {
           sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);

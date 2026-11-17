@@ -90,13 +90,13 @@ void drawTwoRowNumberedPanelShisu00_801D94B0(s16 x, s16 y, u32 flags, u8 row,
   func_8014F800((s16)(x + 42), (s16)(y + 7), 0, 0xFF, texture);
 
   color = (flags & 1) ? 0 : 7;
-  func_8014F800(left, (s16)(y + 25), color, 0xFF, func_801502D0(0x85));
+  func_8014F800((s16)left, (s16)(y + 25), color, 0xFF, func_801502D0(0x85));
   right = (s16)(x + 94);
   text_y = (s16)(y + 25);
   func_8014FF0C(right, text_y, color, D_801D0D78);
 
   color = (flags & 2) ? 0 : 7;
-  func_8014F800(left, (s16)(y + 41), color, 0xFF, func_801502D0(0x85));
+  func_8014F800((s16)left, (s16)(y + 41), color, 0xFF, func_801502D0(0x85));
   text_y = (s16)(y + 41);
   func_8014FF0C(right, text_y, color, D_801D0D7C);
 

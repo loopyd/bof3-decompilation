@@ -26,12 +26,6 @@ extern const u8 D_801E55F4[];
 /* @source 0x801E55DC @kind unknown */
 extern const u8 D_801E55DC[];
 
-/* Text emitter of the main executable: the two signed coordinates, the
- * alignment argument, the mask and the caption run as the fifth argument, which
- * the original stores to the outgoing stack slot.
- * @source 0x8014F800 */
-extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-
 /* Sprite-record stream emitter of the main executable: the two signed
  * coordinates, the stream blob and the flag byte it carries.
  * @source 0x801AF390 */

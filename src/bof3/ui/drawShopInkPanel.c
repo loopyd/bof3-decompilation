@@ -41,12 +41,6 @@ extern const char D_801D0E84[];
 /* @source 0x801AF390 */
 extern void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, u8 arg3);
 
-/* Text emitter of the main executable: the two signed coordinates, the
- * alignment argument, the mask and the caption run as the fifth argument, which
- * the original stores to the outgoing stack slot.
- * @source 0x8014F800 */
-extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
-
 /* Command-code mapper of the main executable: it reports the mapped code of the
  * table it is given in the requested mode, and this body keeps only the low
  * halfword of that answer before formatting it.
