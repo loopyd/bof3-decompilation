@@ -43,8 +43,8 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 73.96
- * @residual 213 of 288 instructions match at 1152 of 1152 bytes. The first
+ * @match 77.08
+ * @residual 222 of 288 instructions match at 1152 of 1152 bytes. The first
  * difference is at +0x38, where the scratch-record pointer uses a3 instead of
  * the original a0.
  */
@@ -133,11 +133,9 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     func_8014E5A0(2, 0x10);
 
     target = (s8)(~(*(u32*)(D_80146898 + D_801E3208 * 0x98)) >> 31);
-    if ((s16)clamped < 0x90) {
-      clamped = 0x90;
-    } else if ((s16)clamped >= 0xE5) {
-      clamped = 0xE4;
-    }
+    clamped = (s16)clamped < 0x90
+                  ? 0x90
+                  : ((s16)clamped < 0xE5 ? clamped : 0xE4);
     drawMirroredPanelCellQuadWorld00Area03004_801D2C34(clamped, 0xCB, (s8)target, 2);
 
     if ((D_80145E92 == 4) && (D_8014688C[D_801E3208 * 0x98] != 3) &&
