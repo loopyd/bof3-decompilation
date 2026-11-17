@@ -101,7 +101,7 @@ fn retained(name: &str) -> Vec<(String, String)> {
         })
         .collect();
     assert!(!rows.is_empty(), "the retained baseline {name} is empty");
-    rows.sort();
+    rows.sort_by(|left, right| left.1.cmp(&right.1));
     rows
 }
 
@@ -252,7 +252,7 @@ fn every_archive_scans_byte_identically_to_the_retained_baseline() {
                 observed.extend(handle.join().expect("a scan worker failed"));
             }
         });
-        observed.sort();
+        observed.sort_by(|left, right| left.1.cmp(&right.1));
         let drifted: Vec<&(String, String)> = expected
             .iter()
             .zip(observed.iter())

@@ -11751,6 +11751,36 @@ pub fn payload_nontext_ranges(
                 evidence: "original US AREA024 entry 8 serialized palette/image words; staging 0x8014E284, descriptor 0x8014E22C and original SDK image-word profile 0x8017CE9C; exact source identity; no actual full-palette upload, sampling, display or text-absence claim",
             }])
         }
+        (13, 733_184, 0, 0x801f_2c00, 2_548)
+            if entry.check_word == 0x3b
+                && sha256_hex(data)
+                    == "b8369f325ddcc7250258e7709dc319ec7d9b7c4582ab6d3f23fb88a1954be356" =>
+        {
+            let mut ranges = Vec::new();
+            for offset in [
+                1_285, 1_301, 1_317, 1_332, 1_350, 1_368, 1_471, 1_487, 1_503, 1_518, 1_536,
+                1_554,
+            ] {
+                ranges.push(NontextRange {
+                    offset,
+                    length: 2,
+                    evidence: "Original US AREA007 entry 13, twelve two-byte numeric event selectors in root 0x801F30F4..0x801F3227. Original GAME type-1 constructor 0x801A50C0 reads record +0x0E/+0x0F and type-5 constructor 0x801A6F58 reads +0x0D/+0x0E, high byte first. Stores 0x801A52FC and 0x801A71B4 publish actor halfword +0x7C. The exact fields contain two copies of selectors 0x8000 through 0x8005. Exact original archive and payload identities; valid nonnegative slot below 30, ordinary returns, nonaliasing and stable resources are conditions. Other root bytes, actual construction, actor eligibility and lifetime, rendering and editing remain unqualified.",
+                });
+            }
+            for offset in [2_036, 2_060, 2_084, 2_108, 2_132, 2_156] {
+                ranges.push(NontextRange {
+                    offset,
+                    length: 23,
+                    evidence: "Original US AREA007 entry 13, six complete 23-byte event scripts selected by finite source-bound cases 0x8000 through 0x8005. Original GAME readers qualify two three-byte F0 headers, three four-byte D records, FD/FE conditional delimiters and the explicit FF end in each script. All operands are numeric control fields. Every D record has second byte zero and uses setter 0x801A72E8's halfword arm, not its callback-byte arm. Exact original archive and payload identities; construction, actor eligibility, lifetime, ordinary returns, nonaliasing and stable resources are conditions. No directory count, predicate meaning, actual invocation, callback 0x0C selection, rendering or editing claim.",
+                });
+            }
+            ranges.push(NontextRange {
+                offset: 2_192,
+                length: 24,
+                evidence: "Original US AREA007 entry 13, six little-endian event pointer cells at 0x801F3490..0x801F34A8. Source-bound selectors 0x8000 through 0x8005 select these exact cells through original GAME reader 0x801A17A0 and the world-7 descriptor's +4 directory pointer. The pool caller at 0x801A0790 passes actor +0x74, so reader input +8 aliases the constructors' actor +0x7C selector. Exact original archive and payload identities; eligible actor, stable resources, nonaliasing and ordinary returns are conditions. These finite cases do not establish directory count, neighboring cells, actual selection, rendering or editing.",
+            });
+            Some(ranges)
+        }
         (_, _, 0, 0x800e_3800, length)
             if length >= 4 && length == 4 + usize::from(data[0]) * 8 =>
         {

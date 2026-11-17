@@ -2624,6 +2624,51 @@ retain their prior status. An actual D directive selecting callback `0x0C`,
 eligible task, callback lifetime, invocation, ordinary menu route, matching ELF,
 argument or resource safety, rendering and safe editing remain unverified.
 
+## AREA007 selected event coverage
+
+Original US `AREA007.EMI#13` qualifies numeric selector fields, six complete event
+scripts and six pointer cells as nontext. The entry must use raw
+mode at archive offset 733184, load at `0x801F2C00`, have checkword `0x3B` and
+contain 2548 bytes. The whole archive must match the original disc manifest.
+The payload SHA-256 must be
+`b8369f325ddcc7250258e7709dc319ec7d9b7c4582ab6d3f23fb88a1954be356`.
+
+| Runtime range | Payload offsets | Archive offsets | Bytes |
+| --- | --- | --- | ---: |
+| `[0x801F33F4,0x801F340B)` | `[2036,2059)` | `[735220,735243)` | 23 |
+| `[0x801F340C,0x801F3423)` | `[2060,2083)` | `[735244,735267)` | 23 |
+| `[0x801F3424,0x801F343B)` | `[2084,2107)` | `[735268,735291)` | 23 |
+| `[0x801F343C,0x801F3453)` | `[2108,2131)` | `[735292,735315)` | 23 |
+| `[0x801F3454,0x801F346B)` | `[2132,2155)` | `[735316,735339)` | 23 |
+| `[0x801F346C,0x801F3483)` | `[2156,2179)` | `[735340,735363)` | 23 |
+| `[0x801F3490,0x801F34A8)` | `[2192,2216)` | `[735376,735400)` | 24 |
+
+Each script contains two three-byte `F0` headers, three four-byte `D` records,
+`FD` and `FE` conditional delimiters, and an explicit `FF` end. Original GAME
+readers consume these operands as numeric control fields. Every `D` record has
+second byte zero, so setter `0x801A72E8` uses its halfword arm. For example,
+`D0 00 00 0C` writes `0x000C` to work offset `0x7C` and leaves callback byte
+`0x7A` unchanged. It does not select callback `0x0C`.
+
+The root at `0x801F30F4..0x801F3227` supplies two copies of each selector
+`0x8000` through `0x8005`. Only these twelve two-byte fields are classified.
+Their payload offsets are 1285, 1301, 1317, 1332, 1350, 1368, 1471, 1487,
+1503, 1518, 1536 and 1554. Type-1 records store the high and low bytes at
+offsets `0x0E` and `0x0F`. Type-5 records use `0x0D` and `0x0E`.
+Original constructors `0x801A50C0` and `0x801A6F58` publish these values to
+actor halfword `+0x7C` at `0x801A52FC` and `0x801A71B4`.
+
+The pool caller at `0x801A0790` passes actor `+0x74` to reader `0x801A17A0`.
+Its field `+8` therefore refers to the same selector. Under world selector 7,
+the reader uses the descriptor's directory pointer to select these six cells.
+The cells point to the six scripts in order. These finite cases do not
+establish the directory count.
+
+Classification assumes a valid nonnegative actor slot below 30, ordinary
+returns, eligible actor lifetime, nonaliasing and stable code and resources.
+Other root fields and directory cells, predicate meanings, actual invocation,
+menu rendering and safe editing retain their prior status.
+
 ## COMMU00 callback instruction coverage
 
 Original US `COMMU00.EMI#0` qualifies the complete 64-byte instruction body at
