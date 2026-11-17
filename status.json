@@ -1,17 +1,17 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "dfea17417bb79f30fac1c34ba27eeb43d1680d52",
-  "published_at": "2026-11-17T13:24:21.902957+00:00",
+  "revision": "66d4fe177324e1ace1d274eb96d77bea8b5b8e18",
+  "published_at": "2026-11-17T17:10:18.861365+00:00",
   "counts": {
-    "completed": 5688,
+    "completed": 5689,
     "partial": 395,
-    "unlifted": 4443,
+    "unlifted": 4442,
     "invalid": 0,
     "total": 10526,
     "symbols": {
-      "named": 68735,
-      "raw": 55658,
+      "named": 68736,
+      "raw": 55657,
       "total": 124393
     }
   },
@@ -2436,14 +2436,14 @@
       "family": "boss",
       "archive": "boss025",
       "entry": "13",
-      "completed": 27,
+      "completed": 28,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 42,
       "symbols": {
-        "named": 190,
-        "raw": 144,
+        "named": 191,
+        "raw": 143,
         "total": 334
       }
     },
