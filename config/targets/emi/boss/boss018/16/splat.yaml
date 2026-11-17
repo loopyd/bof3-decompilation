@@ -35,6 +35,7 @@ segments:
   - - 76
     - c
     - dispatchStateByte1Table2cacBossBoss01816_800C184C
+    - '@source: src/bof3/boss/dispatchStateByte1Table2cacBossBoss01816_800C184C.c'
   - - 144
     - asm
     - func_800C1890
@@ -77,6 +78,7 @@ segments:
   - - 900
     - c
     - dispatchStateByte1Table2d24BossBoss01816_800C1B84
+    - '@source: src/bof3/boss/dispatchStateByte1Table2d24BossBoss01816_800C1B84.c'
   - - 968
     - asm
     - func_800C1BC8
@@ -101,12 +103,14 @@ segments:
   - - 1764
     - c
     - dispatchStateByte2Table2d94BossBoss01816_800C1EE4
+    - '@source: src/bof3/boss/dispatchStateByte2Table2d94BossBoss01816_800C1EE4.c'
   - - 1832
     - asm
     - func_800C1F28
   - - 2040
     - c
     - dispatchStateByte2Table2dacBossBoss01816_800C1FF8
+    - '@source: src/bof3/boss/dispatchStateByte2Table2dacBossBoss01816_800C1FF8.c'
   - - 2108
     - c
     - advanceWorkCursorOnFrameParityBossBoss01816_800C203C

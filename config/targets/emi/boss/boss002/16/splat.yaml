@@ -86,6 +86,7 @@ segments:
   - - 1112
     - c
     - dispatchStateByte1Table2054BossBoss00216_800C1C58
+    - '@source: src/bof3/boss/dispatchStateByte1Table2054BossBoss00216_800C1C58.c'
   - - 1180
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss00216_800C1C9C

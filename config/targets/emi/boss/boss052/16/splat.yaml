@@ -65,6 +65,7 @@ segments:
   - - 1364
     - c
     - dispatchStateByte1Table1fa4BossBoss05216_800C1D54
+    - '@source: src/bof3/boss/dispatchStateByte1Table1fa4BossBoss05216_800C1D54.c'
   - - 1432
     - asm
     - func_800C1D98

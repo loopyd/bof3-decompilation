@@ -44,6 +44,7 @@ segments:
   - - 596
     - c
     - dispatchStateByte2Table206cBossBoss03616_800C1A54
+    - '@source: src/bof3/boss/dispatchStateByte2Table206cBossBoss03616_800C1A54.c'
   - - 664
     - c
     - stepWorkWord34ByWordCThenAdvanceWorkByte2AtWord18AndCallEnemyReadyBossBoss03616_800C1A98

@@ -71,6 +71,7 @@ segments:
   - - 3964
     - c
     - dispatchWorkByte3Table0320PlcharPlp03400_801CF37C
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table0320PlcharPlp03400_801CF37C.c'
   - - 4032
     - c
     - probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp03400_801CF3C0
@@ -105,6 +106,7 @@ segments:
   - - 6200
     - c
     - dispatchWorkByte3Table0334PlcharPlp03400_801CFC38
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table0334PlcharPlp03400_801CFC38.c'
   - - 6268
     - c
     - queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp03400_801CFC7C
@@ -126,6 +128,7 @@ segments:
   - - 7248
     - c
     - dispatchWorkByte2Table0340PlcharPlp03400_801D0050
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0340PlcharPlp03400_801D0050.c'
   - - 7316
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094

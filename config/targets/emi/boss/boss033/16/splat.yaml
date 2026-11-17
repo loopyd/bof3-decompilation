@@ -87,6 +87,7 @@ segments:
   - - 1580
     - c
     - dispatchStateByte1Table27acBossBoss03316_800C1E2C
+    - '@source: src/bof3/boss/dispatchStateByte1Table27acBossBoss03316_800C1E2C.c'
   - - 1648
     - c
     - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBossBoss03316_800C1E70

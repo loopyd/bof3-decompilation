@@ -117,6 +117,7 @@ segments:
   - - 1712
     - c
     - dispatchStateByte1Table2744BossBoss00816_800C1EB0
+    - '@source: src/bof3/boss/dispatchStateByte1Table2744BossBoss00816_800C1EB0.c'
   - - 1780
     - c
     - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1EF4

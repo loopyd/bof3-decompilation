@@ -38,6 +38,7 @@ segments:
   - - 812
     - c
     - dispatchWorkByte2Table0864PlcharPlp05600_801CE72C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0864PlcharPlp05600_801CE72C.c'
   - - 880
     - asm
     - func_801CE770
@@ -68,6 +69,7 @@ segments:
   - - 3896
     - c
     - dispatchWorkByte2Table087cPlcharPlp05600_801CF338
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table087cPlcharPlp05600_801CF338.c'
   - - 3964
     - asm
     - func_801CF37C
@@ -80,6 +82,7 @@ segments:
   - - 4904
     - c
     - dispatchWorkByte2Table0888PlcharPlp05600_801CF728
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0888PlcharPlp05600_801CF728.c'
   - - 4972
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp05600_801CF76C
@@ -92,9 +95,11 @@ segments:
   - - 5460
     - c
     - dispatchWorkByte2Table0894PlcharPlp05600_801CF954
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0894PlcharPlp05600_801CF954.c'
   - - 5528
     - c
     - dispatchWorkByte3Table089cPlcharPlp05600_801CF998
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table089cPlcharPlp05600_801CF998.c'
   - - 5596
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp05600_801CF9DC
@@ -121,6 +126,7 @@ segments:
   - - 7748
     - c
     - dispatchWorkByte3Table08b0PlcharPlp05600_801D0244
+    - '@source: src/bof3/plchar/dispatchWorkByte3Table08b0PlcharPlp05600_801D0244.c'
   - - 7816
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp05600_801D0288

@@ -37,6 +37,7 @@ segments:
   - - 188
     - c
     - dispatchStateByte2Table1df4BossBoss05116_800C18BC
+    - '@source: src/bof3/boss/dispatchStateByte2Table1df4BossBoss05116_800C18BC.c'
   - - 256
     - asm
     - func_800C1900

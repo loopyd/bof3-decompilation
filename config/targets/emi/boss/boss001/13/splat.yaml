@@ -71,6 +71,7 @@ segments:
   - - 988
     - c
     - dispatchStateByte2Table224cBossBoss00113_800C1BDC
+    - '@source: src/bof3/boss/dispatchStateByte2Table224cBossBoss00113_800C1BDC.c'
   - - 1056
     - asm
     - func_800C1C20
