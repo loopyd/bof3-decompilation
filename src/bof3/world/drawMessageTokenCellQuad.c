@@ -25,19 +25,18 @@ extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
  * argument, and, when bit 0x80 of the width byte is set, moves the horizontal
  * texture coordinate 8 - width to the right so the quad shows the tail of the
  * cell. The 0x28-byte packet is appended at ordering-table slot 1.
- * @status partial
- * @match 91.84
- * @residual the arms, the cell arithmetic, the quad stores and the append
- *           reproduce the original's 245 instructions and 980 bytes, but the
- *           `prim->tpage` store of the 0x15 and default arms keeps the slot
- *           before the following division's `lui`, where the original takes it
- *           after, and the scheduler walks the tail store group in another order
- *           (the width mask and the right-corner sum land in $a1/$v1 against
- *           $v1/$v0). First difference: index 37 of 245.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawMessageTokenCellQuad(u8 arg0, u8* arg1, u8 arg2, s16 arg3) {
   POLY_FT4* prim;
-  u8 cellRight;
+  u8 packetByte;
+  u16 fieldCopy;
+  u32 coordinateWord;
+  u16* x2Bits;
+  u8 textureCopy;
+  s32 graphPage;
 
   prim = (POLY_FT4*)g_PrimCursor;
   SetPolyFT4(prim);
@@ -45,13 +44,18 @@ void drawMessageTokenCellQuad(u8 arg0, u8* arg1, u8 arg2, s16 arg3) {
   switch (*arg1) {
   case 0x15:
     arg1 += 1;
-    if (GetGraphType() == 1) {
-      prim->tpage = 0x8F;
-    } else if (GetGraphType() == 2) {
-      prim->tpage = 0x8F;
+    graphPage = GetGraphType();
+    if (graphPage == 1) {
+      graphPage = 0x8F;
     } else {
-      prim->tpage = 0x2F;
+      graphPage = GetGraphType();
+      if (graphPage == 2) {
+        graphPage = 0x8F;
+      } else {
+        graphPage = 0x2F;
+      }
     }
+    prim->tpage = graphPage;
     prim->u0 = (*arg1 + 0x5B) % 21 * 12;
     prim->v0 = (*arg1 + 0x5B) / 21 * 12;
     break;
@@ -77,37 +81,61 @@ void drawMessageTokenCellQuad(u8 arg0, u8* arg1, u8 arg2, s16 arg3) {
     break;
 
   default:
-    if (GetGraphType() == 1) {
-      prim->tpage = 0x8F;
-    } else if (GetGraphType() == 2) {
-      prim->tpage = 0x8F;
+    graphPage = GetGraphType();
+    if (graphPage == 1) {
+      graphPage = 0x8F;
     } else {
-      prim->tpage = 0x2F;
+      graphPage = GetGraphType();
+      if (graphPage == 2) {
+        graphPage = 0x8F;
+      } else {
+        graphPage = 0x2F;
+      }
     }
+    prim->tpage = graphPage;
     prim->u0 = (*arg1 - 0x30) % 31 * 8;
     prim->v0 = (*arg1 - 0x30) / 31 * 12 + 0x48;
     break;
   }
 
   if (arg2 & 0x80) {
-    cellRight = prim->u0 + 8;
-    prim->u0 = cellRight - (arg2 & 0x7F);
+    packetByte = prim->u0 + 8;
+    prim->u0 = packetByte - (arg2 & 0x7F);
   }
 
-  prim->x0 = arg3;
-  prim->x1 = arg3 + (arg2 & 0x7F);
-  prim->u1 = prim->u0 + (arg2 & 0x7F);
-  prim->v1 = prim->v0;
-  prim->u2 = prim->u0;
-  prim->v3 = prim->v2 = prim->v0 + 12;
-  prim->x2 = prim->x0;
-  prim->x3 = prim->x1;
-  prim->u3 = prim->u1;
-  prim->r0 = 0x80;
-  prim->g0 = 0x80;
-  prim->b0 = 0x80;
-  prim->clut = (arg0 & 0xF) | 0x7800;
-  prim->y0 = D_80144154 + 3;
+  do {
+    coordinateWord = arg2 & 0x7F;
+    graphPage = (u16)(arg3 + coordinateWord);
+    prim->x1 = graphPage;
+  } while (0);
+  do {
+    packetByte = prim->u0;
+    prim->x0 = arg3;
+    fieldCopy = prim->u0;
+    textureCopy = prim->v0;
+  } while (0);
+  packetByte += coordinateWord;
+  prim->u1 = packetByte;
+  prim->v1 = textureCopy;
+  textureCopy = prim->u1;
+  prim->u2 = fieldCopy;
+  packetByte = prim->v0;
+  packetByte += 12;
+  prim->v3 = prim->v2 = packetByte;
+  coordinateWord = (u16)prim->x0;
+  x2Bits = (u16*)&prim->x2;
+  *x2Bits = coordinateWord;
+  fieldCopy = prim->x1;
+  prim->x3 = fieldCopy;
+  prim->u3 = textureCopy;
+  fieldCopy = D_80144154;
+  packetByte = 0x80;
+  prim->r0 = packetByte;
+  prim->g0 = packetByte;
+  prim->b0 = packetByte;
+  packetByte = arg0 & 0xF;
+  prim->clut = packetByte | 0x7800;
+  prim->y0 = fieldCopy + 3;
   prim->y1 = prim->y0;
   prim->y3 = prim->y2 = prim->y0 + 12;
   GpuAppendPrim(1, 0x28);

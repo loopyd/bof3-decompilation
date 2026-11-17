@@ -1661,6 +1661,22 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+When a copied halfword store sinks below a fixed scalar read, inspect the
+owning scheduler's memory-dependence rules. GCC 2.7.2 can treat a varying
+`MEM_IN_STRUCT` halfword access as nonaliasing with a fixed scalar access while
+keeping byte accesses conservative. A scalar pointer to the actual compatible
+halfword field can retain the original dependency. Preserve alignment, access
+width and every memory event; inspect both scheduling passes and require the
+complete native gate.
+
+If a scope forces a store ahead of copy reads that should precede it, trace its
+first real input load as well as its last operation. Including that load makes
+`LOOP_BEG` attach there rather than to the store. An existing intervening store
+can invalidate CSE availability and preserve a later reload; ending the scope
+before the following arithmetic then orders that arithmetic after the whole
+group. Confirm the reload in CSE and the boundary dependencies in scheduling.
+Moving the scope alone does not establish either effect.
+
 Trace the instruction receiving a scope's `LOOP_END` dependency. A real constant
 initialization followed by a store can force an independent address definition
 after that store. When the original orders constant, address, store, put the
