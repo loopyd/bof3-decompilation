@@ -71,12 +71,17 @@ the gate fails on a body nobody edited, so the lane reports it blocked for a lif
 Verify once per lane - one naming check and, only if something was edited, one gate
 covering every selector - because a gate on a large target builds the whole target.
 
-A fresh lane starts on the first rung of the model
-ladder (`ninerouter/ds-combo`, then `ninerouter/gpt-combo`); a lane marked
-`kind: "partial"` starts on the strongest rung, because the cheap rung already
-produced the residual it would otherwise re-measure. `models` on a lane overrides the
-ladder for that lane only. Each rung after the first receives the previous rung's
-report and attacks the named residual. A 100% gate PASS ends the lane and goes to the
+The default ladder contains `{provider:"ninerouter",model:"ds-combo",thinking:"xhigh"}`
+then `{provider:"ninerouter",model:"gpt-combo",thinking:"high"}`. `args.models` replaces
+that list; `args.model` selects one object. A lane's `models` replaces its ladder.
+Every object requires `provider`, `model` and `thinking`. Thinking is the union
+`"off" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max"`. String entries,
+empty override lists and invalid thinking values fail before launch. Dispatch uses
+Pi Subagents' `provider/model:thinking` suffix, not a separate thinking argument.
+
+A fresh lane starts on the first rung. A lane marked `kind: "partial"` starts on the
+strongest rung because the cheap rung already produced its residual. Each later rung
+receives the previous rung's report and attacks the named residual. A 100% gate PASS ends the lane and goes to the
 naming transaction; the reviewer fires only when the whole ladder ended non-exact, and
 repair then runs on the strongest rung. Each rung returns a compact `ledger` of the
 shapes it measured, and the next rung, review and repair all inherit it. The ledger is

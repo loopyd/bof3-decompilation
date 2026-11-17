@@ -11,20 +11,55 @@ if (rawLanes.length === 0) {
   };
 }
 
-const DEFAULT_LADDER = ["ninerouter/ds-combo", "ninerouter/gpt-combo"];
+const THINKING_LEVELS = ["off", "minimal", "low", "medium", "high", "xhigh", "max"];
 
-const requestedModels = Array.isArray(args.models)
-  ? args.models
-  : typeof args.model === "string" && args.model.trim()
-    ? [args.model]
-    : [];
+const DEFAULT_LADDER = [
+  { provider: "ninerouter", model: "ds-combo", thinking: "xhigh" },
+  { provider: "ninerouter", model: "gpt-combo", thinking: "high" },
+];
 
-const modelLadder = (requestedModels.length ? requestedModels : DEFAULT_LADDER)
-  .map((value) => String(value || "").trim())
-  .filter(Boolean);
+const normalizeModel = (value, path) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`${path} must be an object with provider, model and thinking`);
+  }
+  const { provider, model, thinking } = value;
+  if (typeof provider !== "string" || !/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(provider)) {
+    throw new Error(`${path}.provider must be a nonempty provider id`);
+  }
+  if (typeof model !== "string" || !model || /[\s:]/.test(model)) {
+    throw new Error(
+      `${path}.model must be a nonempty model id without whitespace or a thinking suffix`,
+    );
+  }
+  if (!THINKING_LEVELS.includes(thinking)) {
+    throw new Error(`${path}.thinking must be one of ${THINKING_LEVELS.join(" | ")}`);
+  }
+  return { provider, model, thinking };
+};
 
-if (modelLadder.length === 0) {
-  return { ok: false, error: "bof3-lift-lanes: args.models resolved to an empty model ladder" };
+const normalizeModels = (values, path) => {
+  if (!Array.isArray(values) || values.length === 0) {
+    throw new Error(`${path} must be a nonempty array of model objects`);
+  }
+  return values.map((value, index) => normalizeModel(value, `${path}[${index}]`));
+};
+
+const modelSelector = ({ provider, model, thinking }) => `${provider}/${model}:${thinking}`;
+
+let modelLadder;
+let laneModels;
+try {
+  modelLadder =
+    args.models !== undefined
+      ? normalizeModels(args.models, "args.models")
+      : args.model !== undefined
+        ? [normalizeModel(args.model, "args.model")]
+        : DEFAULT_LADDER;
+  laneModels = rawLanes.map((lane, index) =>
+    lane.models === undefined ? [] : normalizeModels(lane.models, `args.lanes[${index}].models`),
+  );
+} catch (error) {
+  return { ok: false, error: String(error.message || error) };
 }
 
 const laneLadder = (lane) => {
@@ -34,12 +69,12 @@ const laneLadder = (lane) => {
 
 const laneModel = (lane, index) => {
   const { models } = laneLadder(lane);
-  return models[Math.min(index, models.length - 1)];
+  return modelSelector(models[Math.min(index, models.length - 1)]);
 };
 
 const laneLastModel = (lane) => laneModel(lane, laneLadder(lane).models.length - 1);
 
-const harvestModel = modelLadder[0];
+const harvestModel = modelSelector(modelLadder[0]);
 
 const ledgerKey = (row) => {
   const measured = String((row && row.measured) || "")
@@ -104,9 +139,7 @@ const lanes = rawLanes.map((lane, index) => ({
 
   ledger: Array.isArray(lane.ledger) ? dedupeLedger(lane.ledger) : [],
 
-  models: Array.isArray(lane.models)
-    ? lane.models.map((value) => String(value || "").trim()).filter(Boolean)
-    : [],
+  models: laneModels[index],
 
   note: typeof lane.note === "string" ? lane.note.trim() : "",
 }));
