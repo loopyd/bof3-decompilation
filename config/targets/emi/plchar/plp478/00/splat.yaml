@@ -63,6 +63,7 @@ segments:
   - - 2432
     - c
     - stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp47800_801CED80
+    - '@source: src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp47800_801CED80.c'
   - - 2668
     - asm
     - func_801CEE6C

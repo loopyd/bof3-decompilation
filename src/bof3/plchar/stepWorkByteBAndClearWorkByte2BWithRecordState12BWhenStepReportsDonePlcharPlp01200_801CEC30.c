@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/plchar/work_byte_b_step.h"
 
 /* Scratchpad work-object pointer cell of the shared main executable. The body
  * reads it once for the byte it dispatches on and re-reads it before every
@@ -78,32 +79,7 @@ void func_8014D978(void);
  * @match 100.00
  * @residual none
  */
-void stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp01200_801CEC30(
-    void) {
-  u8 step;
-  u8 done;
-
-  step = D_1F800044[0xB];
-  done = 0;
-  if (step != 0) {
-    if (step == 1) {
-      if (func_8014DAEC()) {
-        func_8014D6B8(D_1F800044[8]);
-        D_1F800044[0xB] = 2;
-      }
-    } else {
-      func_8014D978();
-      if (D_80143BB0 == 0) {
-        done = 1;
-      }
-    }
-  } else {
-    if (func_8014DAEC()) {
-      done = 1;
-    }
-  }
-  if (done) {
-    D_1F800044[0x2B] = 0;
-    D_80146250[0x12B] = 0;
-  }
-}
+PLCHAR_DEFINE_WORK_BYTE_B_STEP(
+    stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp01200_801CEC30,
+    D_1F800044, D_80146250, D_80143BB0,
+    func_8014DAEC, func_8014D6B8, func_8014D978)

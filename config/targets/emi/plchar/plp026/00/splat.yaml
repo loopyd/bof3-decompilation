@@ -29,6 +29,7 @@ segments:
   - - 4
     - c
     - dispatchStateByte2Table0a54PlcharPlp02600_801CE404
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a54PlcharPlp02600_801CE404.c'
   - - 72
     - asm
     - func_801CE448
@@ -38,6 +39,7 @@ segments:
   - - 812
     - c
     - dispatchStateByte2Table0a60PlcharPlp02600_801CE72C
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a60PlcharPlp02600_801CE72C.c'
   - - 880
     - asm
     - func_801CE770
@@ -61,6 +63,7 @@ segments:
   - - 3372
     - c
     - dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C.c'
   - - 3440
     - asm
     - func_801CF170
@@ -88,6 +91,7 @@ segments:
   - - 5412
     - c
     - dispatchStateByte2Table0a80PlcharPlp02600_801CF924
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a80PlcharPlp02600_801CF924.c'
   - - 5480
     - asm
     - func_801CF968
@@ -100,9 +104,11 @@ segments:
   - - 5968
     - c
     - dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50.c'
   - - 6036
     - c
     - dispatchStateByte3Table0a94PlcharPlp02600_801CFB94
+    - '@source: src/bof3/plchar/dispatchStateByte3Table0a94PlcharPlp02600_801CFB94.c'
   - - 6104
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshSelectSequenceAndAdvanceWorkByte3PlcharPlp02600_801CFBD8
@@ -139,6 +145,7 @@ segments:
   - - 8256
     - c
     - dispatchStateByte3Table0aa8PlcharPlp02600_801D0440
+    - '@source: src/bof3/plchar/dispatchStateByte3Table0aa8PlcharPlp02600_801D0440.c'
   - - 8324
     - c
     - refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp02600_801D0484
