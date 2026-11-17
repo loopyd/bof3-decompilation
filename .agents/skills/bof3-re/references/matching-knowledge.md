@@ -1694,6 +1694,13 @@ Operation scopes can then order independent results, but moving a scope also
 changes loop-depth reference weights. Recheck both the scheduler dependencies and
 local/global allocation before the complete native gate.
 
+If an operation scope fixes allocation but disturbs an independent input load,
+inspect the new scheduler edges before changing more source. A scope around a
+pointer definition can constrain later reads as well as raise its weighted
+reference count. A scope around another existing use may preserve the needed
+allocation without that earlier dependency. Trace both passes and measure the
+complete body; neither matching registers nor a matching prologue proves a match.
+
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:

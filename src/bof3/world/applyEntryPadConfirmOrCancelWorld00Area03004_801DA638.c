@@ -13,11 +13,9 @@
  * record state byte 2 and returns the record to step 0. The shared helper
  * func_8014D978 runs last on every path.
  * @source 0x801DA638
- * @status partial
- * @match 92.73
- * @residual 51 of 55 instructions match at the original 220-byte size.
- * The cancel arm's constant and work pointer use v0 and v1 respectively,
- * where the original uses v1 and v0.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void applyEntryPadConfirmOrCancelWorld00Area03004_801DA638(void) {
   u16 padMask;
@@ -36,13 +34,12 @@ void applyEntryPadConfirmOrCancelWorld00Area03004_801DA638(void) {
     work[9] = 0;
     D_1F800044[3] = 2;
   } else if ((padMask & D_80145AC4) && modeByte == 0) {
-    u8 state;
     do {
-      state = 1;
+      padMask = 1;
     } while (0);
     stateWork = D_1F800044;
     D_801440B1 = 0;
-    stateWork[2] = state;
+    stateWork[2] = padMask;
     D_1F800044[3] = 0;
   }
   func_8014D978();
