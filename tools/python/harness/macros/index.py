@@ -21,6 +21,8 @@ SHARED_MACRO_HEADERS = (
     Path("include/bof3/asm.h"),
     Path("include/bof3/emi/dispatchers.h"),
     Path("include/bof3/plchar/work_byte_b_step.h"),
+    Path("include/bof3/plchar/countdown_projected_cell_claim.h"),
+    Path("include/bof3/plchar/nearest_route_rearm.h"),
     Path("include/bof3/symbols.h"),
     Path("include/game/counter_step.h"),
     Path("include/game/workarea.h"),

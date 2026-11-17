@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/plchar/nearest_route_rearm.h"
 
 /* Scenario-state byte of the shared main executable: the signed leading byte of
  * the etc/game/00 scenario-state record. This body only compares it with 0xF and
@@ -67,30 +68,6 @@ extern s32 func_801B2D00(u8 index);
  * @match 100.00
  * @residual none
  */
-void clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp24700_801CEE5C(
-    void) {
-  s32 fromThree;
-  s32 fromFive;
-
-  if (D_80146870 == 0xF) {
-    D_80146250[0x12B] = 0;
-  } else {
-    fromThree = D_1F800044[8] - 3;
-    if (fromThree < 0) {
-      fromThree = -fromThree;
-    }
-    fromFive = D_1F800044[8] - 5;
-    if (fromFive < 0) {
-      fromFive = -fromFive;
-    }
-    if (fromFive < fromThree) {
-      D_1F800044[0xB] = func_801B2D00(5);
-      D_1F800044[3] = 5;
-    } else {
-      D_1F800044[0xB] = func_801B2D00(3);
-      D_1F800044[3] = 3;
-    }
-    D_1F800044[9] = 2;
-    D_1F800044[2] = D_1F800044[2] + 1;
-  }
-}
+PLCHAR_DEFINE_NEAREST_ROUTE_REARM(
+    clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp24700_801CEE5C,
+    D_80146870, D_80146250, D_1F800044, func_801B2D00)

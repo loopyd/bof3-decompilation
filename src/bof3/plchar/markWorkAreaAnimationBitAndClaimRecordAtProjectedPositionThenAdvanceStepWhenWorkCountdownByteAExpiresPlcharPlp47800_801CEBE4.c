@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/plchar/countdown_projected_cell_claim.h"
 
 /* Scratchpad work-object pointer cell of the shared main executable. The
  * original loads the cell once for the countdown store, re-reads it for the
@@ -104,43 +105,9 @@ u8 func_8014DAEC(void);
  * statement order, operand forms, offset spelling and declaration style follow
  * that lift with this payload's own handler as the callee.
  */
-void markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4(
-    void) {
-  u8* work;
-  u8 route;
-  s32 x;
-  s32 y;
-  s8 slot;
-  u8 claimed;
-  s16 cx;
-  s16 cy;
-  s32 off;
-  s32 y2;
-
-  D_1F800044[0x0A] -= 1;
-  work = D_1F800044;
-  if (work[0x0A] == 0) {
-    route = work[0x08];
-    x = *(s32*)(work + 0x34) + D_80181B94[route * 2] * 2;
-    y = *(s32*)(work + 0x38) + D_80181B98[route * 2] * 2;
-    y2 = y;
-    slot = func_801BDE14(x, y, 0);
-    if (slot != -1) {
-      off = slot * 0x98;
-      D_801468FC[off] |= 1;
-    }
-    cx = x >> 16;
-    cy = y >> 16;
-    claimed = func_801CEE6C(cx, cy);
-    if ((claimed & 0xFF) == 0) {
-      if ((x & 0xFFFF) != 0) {
-        claimed = func_801CEE6C(cx + 1, cy);
-      }
-      if ((claimed & 0xFF) == 0 && (y2 & 0xFFFF) != 0) {
-        func_801CEE6C(cx, cy + 1);
-      }
-    }
-    D_1F800044[0x02] += 1;
-  }
-  func_8014DAEC();
-}
+PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
+    markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp47800_801CEBE4,
+    D_1F800044, D_80181B94, D_80181B98, D_801468FC,
+    func_801BDE14,
+    func_801CEE6C,
+    func_8014DAEC)
