@@ -20,9 +20,9 @@
  * (each word doubled when its magnitude is below 0x401) equals the record step
  * pair and stores that route index, or 8 when none matches, into record byte
  * +0x08.
- * @status partial
- * @match 62.35
- * @residual Band-limit scheduling and route-scan allocation differ; current body is 632 bytes versus 648 original.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801E03F8(void) {
   u8* routeWork;
@@ -34,8 +34,7 @@ void func_801E03F8(void) {
   s32 shift;
   s32 m;
   s32 t;
-  s32 hi;
-  s32 lo;
+  s32 ceiling;
   s32 x;
   s32 y;
   s32 sx;
@@ -64,68 +63,74 @@ void func_801E03F8(void) {
     }
   }
 
-  m = *(u8*)((u8*)D_80146884 + 0x92);
-  bandWork = D_1F800044;
-  t = D_801E2AB8[bandWork[6]].unk_1B;
-  spread = m * 0xC0000;
-  shift = t * 15 << 16;
   do {
-    hi = 0x3E0000 - spread;
-    lo = 0x320000 - spread;
-    hi += shift;
-    lo -= shift;
+    m = *(u8*)((u8*)D_80146884 + 0x92);
+    i = 0x19FFFF;
+    spread = m << 1;
+    spread += m;
   } while (0);
-  if (0x19FFFF < hi) {
-    if (0x3E0000 < hi) {
-      hi = 0x3E0000;
-    }
+  bandWork = D_1F800044;
+  ceiling = 0x3E0000;
+  t = D_801E2AB8[bandWork[6]].unk_1B;
+  spread <<= 18;
+  sy = ceiling - spread;
+  shift = t << 4;
+  shift -= t;
+  shift <<= 16;
+  do {
+    sy += shift;
+  } while (0);
+  m = 0x320000 - spread;
+  do {
+    shift = m - shift;
+  } while (0);
+  i = i < sy;
+  if (i != 0) {
+    spread = (sy > ceiling) ? ceiling : sy;
   } else {
-    hi = 0x1A0000;
+    spread = 0x1A0000;
   }
-  if (0x10FFFF < lo) {
-    if (0x320000 < lo) {
-      lo = 0x320000;
-    }
-  } else {
-    lo = 0x110000;
-  }
+  sy = spread;
+  spread = (shift < 0x110000) ? 0x110000 :
+      ((shift > 0x320000) ? 0x320000 : shift);
+  shift = spread;
 
   yWork = D_1F800044;
   y = *(s32*)(yWork + 0x38);
-  if (y >= hi) {
+  if (y >= sy) {
     if (*(s32*)(yWork + 0x10) > 0) {
       *(s32*)(yWork + 0x10) = -*(s32*)(yWork + 0x10);
     }
-  } else if (y <= lo) {
+  } else if (y <= shift) {
     if (*(s32*)(yWork + 0x10) < 0) {
       *(s32*)(yWork + 0x10) = -*(s32*)(yWork + 0x10);
     }
   }
 
+  i = 0;
   scanWork = D_1F800044;
   offset = 0;
-  for (i = 0; i < 8; i++) {
+  for (; i < 8; i++) {
     sx = *(s32*)((u8*)D_80181AC0 + offset);
-    sy = *(s32*)((u8*)D_80181AC4 + offset);
-    magnitude = sx;
-    if (magnitude < 0) {
-      magnitude = -magnitude;
-    }
+    magnitude = (sx >= 0) ? sx : -sx;
     if (magnitude < 0x401) {
       sx = sx * 2;
     }
-    magnitude = sy;
-    if (magnitude < 0) {
-      magnitude = -magnitude;
-    }
+    sy = *(s32*)((u8*)D_80181AC4 + offset);
+    magnitude = (sy >= 0) ? sy : -sy;
     if (magnitude < 0x401) {
       sy = sy * 2;
     }
-    if (*(s32*)(scanWork + 0x0C) == sx && *(s32*)(scanWork + 0x10) == sy) {
-      break;
+    if (*(s32*)(scanWork + 0x0C) == sx) {
+      do {
+        magnitude = *(s32*)(scanWork + 0x10);
+      } while (0);
+      if (magnitude == sy) {
+        break;
+      }
     }
     offset += 8;
   }
 
-  scanWork[8] = i;
+  D_1F800044[8] = i;
 }

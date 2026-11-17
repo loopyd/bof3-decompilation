@@ -1680,6 +1680,20 @@ initialization in the loop preheader. A hand-carried cursor initialized before t
 guard may keep the same arithmetic but place the copy too early. Confirm the
 reduction in the loop dump and require the complete native gate.
 
+When an absolute-value guard copies an input and negates the copy in place,
+check whether expansion uses `ABS_EXPR`. A conditional absolute-value expression
+can reach that backend pattern while a manual branch keeps the original input as
+the negation operand. Confirm `abs:SI` in RTL and preserve the input for its later
+consumer; source equivalence alone does not establish the emitted branch shape.
+
+For a shift/add or shift/subtract scale, trace the intermediate destinations before
+allocation. An expression can introduce unnamed temporaries where the original
+accumulates each real intermediate in one register. Assign those consumed
+intermediates to the accumulator and check whether their definitions survive CSE.
+Operation scopes can then order independent results, but moving a scope also
+changes loop-depth reference weights. Recheck both the scheduler dependencies and
+local/global allocation before the complete native gate.
+
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:
