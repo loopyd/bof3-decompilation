@@ -57,6 +57,7 @@ segments:
   - - 876
     - c
     - dispatchStateByte1Table31f0BossBoss02513_800C1B6C
+    - '@source: src/bof3/boss/dispatchStateByte1Table31f0BossBoss02513_800C1B6C.c'
   - - 944
     - asm
     - func_800C1BB0
@@ -81,6 +82,7 @@ segments:
   - - 1416
     - c
     - dispatchStateByte1Table3244BossBoss02513_800C1D88
+    - '@source: src/bof3/boss/dispatchStateByte1Table3244BossBoss02513_800C1D88.c'
   - - 1484
     - c
     - publishWorkStepHandlerAndDataThenSetWorkByte8To3AndStateTo2ThenCallHelperBossBoss02513_800C1DCC
@@ -92,6 +94,7 @@ segments:
   - - 1736
     - c
     - dispatchStateByte2Table3274BossBoss02513_800C1EC8
+    - '@source: src/bof3/boss/dispatchStateByte2Table3274BossBoss02513_800C1EC8.c'
   - - 1804
     - c
     - callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C
@@ -103,6 +106,7 @@ segments:
   - - 2096
     - c
     - dispatchStateByte2Table327cBossBoss02513_800C2030
+    - '@source: src/bof3/boss/dispatchStateByte2Table327cBossBoss02513_800C2030.c'
   - - 2164
     - asm
     - func_800C2074
@@ -161,11 +165,14 @@ segments:
     - asm
     - func_800C2D7C
   - - 6004
-    - asm
-    - func_800C2F74
+    - c
+    - setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74
+    - '@source: src/bof3/boss/setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74.c'
+    - '@behavior: Battle setup hook of this overlay, the second member of the handler trio the installer 0x800C2B60 publishes into the shared battle hook slot 0x801463A8, with no jal naming it in this payload. Loads one pointer to the shared battle flag byte 0x801462ED and tests its low bits: while bit 0x1 is set it starts the enemy work record band 0x801EB630 for owner 1 through func_800AC870, and while bit 0x2 is set it starts the band 0x801EB748, one 0x118-byte record stride higher, for owner 2. Each band is then closed unconditionally by func_800AC844 with that band''s owner id, so a band starts only when its flag bit asks for it while the owner record is settled on every path. The flag byte is reloaded after each call, the saved register $s0 holds the byte pointer and the 0x18-byte frame keeps $ra at 0x14; it takes no arguments and returns nothing.'
   - - 6132
     - c
     - dispatchStateByte1Table32a0BossBoss02513_800C2FF4
+    - '@source: src/bof3/boss/dispatchStateByte1Table32a0BossBoss02513_800C2FF4.c'
   - - 6200
     - c
     - advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038

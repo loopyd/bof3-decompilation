@@ -6,7 +6,7 @@ typedef void (*Boss02513Handler)(void);
  * routines; the third is the overlay's hook-mode dispatcher, which reads a byte
  * mode in $a0 and returns zero, so it is stored through the void slot type. */
 void func_800C2D7C(void);
-void func_800C2F74(void);
+void setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74(void);
 u32 raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98(u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -21,9 +21,11 @@ extern Boss02513Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * the progress switch func_800C2D7C (tests bit 0x1 of D_80145E90 and
  * D_80145FD0, calls func_801DD14C, publishes the tested record into the
  * scratchpad work cell 0x1F800044 and starts the 0x800F0800 region through
- * func_8014D5F0) into 0x801463A4, the setup routine func_800C2F74 (starts the
- * 0x801EB630 and 0x801EB748 segments through func_800AC870 and flushes each
- * with func_800AC844) into 0x801463A8, and the hook-mode dispatcher
+ * func_8014D5F0) into 0x801463A4, the setup routine
+ * setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74 (starts
+ * the 0x801EB630 and 0x801EB748 owner records through func_800AC870 when bit
+ * 0x1 or bit 0x2 of D_801462ED asks for one and closes each with
+ * func_800AC844) into 0x801463A8, and the hook-mode dispatcher
  * raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98
  * (six-entry jump table at 0x800C1834) into 0x801463AC; the dispatcher's mode
  * argument is dropped by the void slot type. No in-payload caller: neither this
@@ -39,6 +41,6 @@ extern Boss02513Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss02513_800C2B60(void) {
   D_801463A4 = func_800C2D7C;
-  D_801463A8 = func_800C2F74;
+  D_801463A8 = setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74;
   D_801463AC = (Boss02513Handler)raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98;
 }
