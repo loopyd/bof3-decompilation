@@ -73,11 +73,13 @@ covering every selector - because a gate on a large target builds the whole targ
 
 The default ladder contains `{provider:"ninerouter",model:"ds-combo",thinking:"xhigh"}`
 then `{provider:"ninerouter",model:"gpt-combo",thinking:"high"}`. `args.models` replaces
-that list; `args.model` selects one object. A lane's `models` replaces its ladder.
-Every object requires `provider`, `model` and `thinking`. Thinking is the union
-`"off" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max"`. String entries,
-empty override lists and invalid thinking values fail before launch. Dispatch uses
-Pi Subagents' `provider/model:thinking` suffix, not a separate thinking argument.
+that list; `args.model` selects one entry. A lane's `models` replaces its ladder.
+Entries accept objects with `provider`, `model` and `thinking`, or fully qualified
+strings such as `ninerouter/ds-combo:xhigh`. Lists may mix both forms. Strings
+normalize to objects and require an explicit thinking suffix. Thinking is the union
+`"off" | "minimal" | "low" | "medium" | "high" | "xhigh" | "max"`. Empty override
+lists and malformed entries fail before launch. Dispatch uses Pi Subagents'
+`provider/model:thinking` suffix, not a separate thinking argument.
 
 A fresh lane starts on the first rung. A lane marked `kind: "partial"` starts on the
 strongest rung because the cheap rung already produced its residual. Each later rung

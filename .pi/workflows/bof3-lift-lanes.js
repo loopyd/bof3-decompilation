@@ -19,8 +19,15 @@ const DEFAULT_LADDER = [
 ];
 
 const normalizeModel = (value, path) => {
+  if (typeof value === "string") {
+    const match = /^([^/]+)\/(.+):([^:]+)$/.exec(value);
+    if (!match) {
+      throw new Error(`${path} must use provider/name:thinking`);
+    }
+    value = { provider: match[1], model: match[2], thinking: match[3] };
+  }
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error(`${path} must be an object with provider, model and thinking`);
+    throw new Error(`${path} must be a model object or provider/name:thinking string`);
   }
   const { provider, model, thinking } = value;
   if (typeof provider !== "string" || !/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(provider)) {
@@ -39,7 +46,9 @@ const normalizeModel = (value, path) => {
 
 const normalizeModels = (values, path) => {
   if (!Array.isArray(values) || values.length === 0) {
-    throw new Error(`${path} must be a nonempty array of model objects`);
+    throw new Error(
+      `${path} must be a nonempty array of model objects or provider/name:thinking strings`,
+    );
   }
   return values.map((value, index) => normalizeModel(value, `${path}[${index}]`));
 };
