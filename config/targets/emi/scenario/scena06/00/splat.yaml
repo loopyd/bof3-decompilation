@@ -134,8 +134,43 @@ segments:
     - asm
     - func_801F9DF4
   - - 14288
-    - asm
-    - func_801FA3D0
+    - c
+    - runSecondaryStateSequenceForPrimaryState9ScenarioScena0600_801FA3D0
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState9ScenarioScena0600_801FA3D0.c'
+    - '@behavior: Word 9 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a twenty-four-entry
+      case table, so every value of that byte at or above 0x18 falls to the
+      epilogue, as do the unclaimed states 4, 6, 8, 9, 11, 12, 13, 14 and 19:
+      state 0 arms progress 1 and secondary state 1 unless the front-end phase
+      byte D_80143BB0 reads 2; state 2 arms progress 1 and secondary state 3 on
+      the same test; states 1 and 3 share one body, which at progress 0x0A arms
+      secondary state 5, sets flag bit 0x1D of D_8014686C through func_8015B580,
+      raises D_80146866 to 4, sets bit 0 of D_80146871, runs func_8019FA28 with
+      seed 0x5C, context words 0x180000 and 0x3D0000 and kind 0x89, and stores
+      0x3C in D_80143F1F; state 5, at progress 0x0F, runs func_801C7A54 mode
+      0x1B and advances to secondary state 6; state 7 runs func_801BE1B0 mode
+      0x0E, arms secondary state 0x0A, sets flag bit 0x1F of D_8014686C through
+      func_8015B580, runs func_8019FA28 with seed 0x5C, 0x180000, 0x3C0000 and
+      0x8A, and stores 0xFF in D_80143F1F; state 10, at progress 0x14, runs
+      func_801C16B8, raises D_80146866 to 2, arms secondary state 6, toggles bit
+      0 of D_80146871 and runs func_8019FA28 with 0x57, 0x310000, 0x2D0000 and
+      4; state 15 runs func_801BE1B0 mode 0x0B and arms secondary state 0x10;
+      state 16, at progress 0x14, runs func_8014ECAC mode 0x0D, sets flag bit
+      0x20 of D_8014686C through func_8015B580 and arms secondary state 0x11;
+      state 17, while the gate halfword D_80143C40 reads zero, clears the effect
+      bank byte D_8014832E, queues front-end action 0x2B, latches D_80143BB0 to
+      2 and arms secondary state 0x12; state 20 runs func_801BE1B0 mode 0x0D and
+      arms secondary state 0x15; state 21, at progress 2, runs func_8014ECAC
+      mode 0x0D, sets flag bit 0x20 of D_8014686C through func_8015B580 and arms
+      secondary state 0x16; state 22, while D_80143C40 reads zero, clears
+      D_8014832E, queues action 0x29, latches D_80143BB0 to 2 and arms secondary
+      state 0x17; states 18 and 23 share one body, which unless D_80143BB0 reads
+      2 runs func_801C16B8, raises D_80146866 to 1, arms secondary state 6,
+      passes D_8014686C and bit 0x1D to func_8015B5A8, toggles bit 0 of
+      D_80146871 and repeats the state 10 request. The twenty-four-word case
+      table sits in the overlay rodata slot at 0x801F6FC4.'
   - - 15200
     - c
     - runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760

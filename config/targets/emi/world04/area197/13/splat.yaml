@@ -110,8 +110,9 @@ segments:
     - asm
     - func_801F3F80
   - - 5056
-    - asm
-    - func_801F3FC0
+    - c
+    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0
+    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0.c'
   - - 5200
     - asm
     - func_801F4050

@@ -89,8 +89,9 @@ segments:
     - dispatchStateByte1Table43ecWorld04Area19813_801F3A24
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 3688
-    - asm
-    - func_801F3A68
+    - c
+    - seedWorkPositionTripleFromByte7RecordApplyLookupRecordAndRequestResourceThenArmState1World04Area19813_801F3A68
+    - '@source: src/bof3/world/seedWorkPositionTripleFromByte7RecordApplyLookupRecordAndRequestResourceThenArmState1World04Area19813_801F3A68.c'
   - - 3992
     - asm
     - func_801F3B98

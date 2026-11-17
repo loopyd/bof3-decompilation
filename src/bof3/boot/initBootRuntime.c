@@ -15,7 +15,7 @@ void initBootRuntime(void) {
   work = D_80143D48;
   clearBootOtEntry(work);
   clearBootOtEntry(work + 0x90);
-  func_8014B6B4();
+  initCallbackSlots();
   D_80143D44 = 0;
   D_80143E68 = work;
   clearRenderRect(0, 0, 0x400, 0x200);

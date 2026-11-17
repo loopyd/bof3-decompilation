@@ -1,6 +1,7 @@
 #include "bof3/bof3.h"
 
-void func_801F55F0(u8 arg0);
+void queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0(
+    u8 arg0);
 
 /* @source 0x80143BB0 @kind unknown */
 extern u8 D_80143BB0;
@@ -24,7 +25,7 @@ extern u16* D_80148210;
  */
 void decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C(void) {
   if (D_80143BB0 == 5) {
-    func_801F55F0(0);
+    queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0(0);
   } else {
     D_80148210[5] -= 2;
   }

@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world02/area108/14.bin"
 splat = "config/targets/emi/world02/area108/14/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0.c",
+]
 support_sources = [
     "src/bof3/world/clearGlobalWorkFlagBit0AndResetScratchModeWhenMappedState5World02Area10814_801F4A98.c",
     "src/bof3/world/initializeFiftyFiveQuadMotionRecordsWorld02Area10814_801F321C.c",

@@ -10,7 +10,7 @@ WEAK_SYMBOL_AT(rebuildBootRenderTables, 0x8014b020);
 WEAK_SYMBOL_AT(linkRenderOtPackets, 0x8014b0f0);
 WEAK_SYMBOL_AT(captureBootVsync, 0x8014b17c);
 WEAK_SYMBOL_AT(dispatchCallbackSlots, 0x8014b33c);
-WEAK_SYMBOL_AT(func_8014B6B4, 0x8014b6b4);
+WEAK_SYMBOL_AT(initCallbackSlots, 0x8014b6b4);
 WEAK_SYMBOL_AT(tickCallbackSlotScheduler, 0x8014b73c);
 WEAK_SYMBOL_AT(installCallbackSlot, 0x8014b854);
 WEAK_SYMBOL_AT(func_8014E22C, 0x8014e22c);

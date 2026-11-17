@@ -23,7 +23,7 @@ void captureBootVsync(void);
 void runLogoExe(void);
 void func_8014AFC0(void);
 void dispatchCallbackSlots(void);
-void func_8014B6B4(void);
+void initCallbackSlots(void);
 void func_8014E22C(void);
 s32  func_8014E0FC(const char* path);
 void clearRenderRect(s16 x, s16 y, s16 width, s16 height);

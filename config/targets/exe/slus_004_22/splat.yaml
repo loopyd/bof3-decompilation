@@ -86,7 +86,7 @@ segments:
     subsegments:
       - [0xb4b3c, c, dispatchCallbackSlots, '@source: src/bof3/callback/dispatchCallbackSlots.c']
       - [0xb4bc4, c, displayBootExceptionDump, '@source: src/bof3/boot/displayBootExceptionDump.c']
-      - [0xb4eb4, asm, func_8014B6B4]
+      - [0xb4eb4, c, initCallbackSlots, '@source: src/bof3/callback/initCallbackSlots.c']
       - [0xb4f3c, c, tickCallbackSlotScheduler, '@source: src/bof3/callback/tickCallbackSlotScheduler.c']
       - [0xb5054, c, installCallbackSlot, '@source: src/bof3/callback/installCallbackSlot.c']
       - [0xb507c, c, yieldCallbackSlotScheduler, '@source: src/bof3/callback/yieldCallbackSlotScheduler.c']

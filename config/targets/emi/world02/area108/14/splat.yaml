@@ -237,8 +237,10 @@ segments:
     - asm
     - func_801F50F0
   - - 10736
-    - asm
-    - func_801F55F0
+    - c
+    - queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0
+    - '@source: src/bof3/world/queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0.c'
+    - '@behavior: Walks the four cells of the payload block table 0x801F63DC and hands each coordinate pair to the shared helpers 0x80155038 with size 0xE and 0x801A4BC0 with size 0x11, or to both with size 0 when the byte argument is zero.'
   - - 10976
     - c
     - noopHandlerWorld02Area10814_801F56E0
