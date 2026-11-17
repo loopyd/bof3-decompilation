@@ -1,11 +1,7 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena09_state.h"
 
 /* @source 0x8014686C @kind unknown */
 extern u32 D_8014686C;
-/* @source 0x80146874 @kind unknown */
-extern u8 D_80146874;
-/* @source 0x80146875 @kind unknown */
-extern u8 D_80146875;
 /* @source 0x80145F09 @kind unknown - party byte (+0x79) of the 0x140-byte
  * stride local work records based at 0x80145E90, so this reads record 0. */
 extern u8 D_80145F09;
@@ -13,7 +9,6 @@ extern u8 D_80145F09;
 extern u8 D_8014933B;
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
-void func_8015C088(void);
 
 /* @source 0x801FD7F4
  * @behavior Overlay handler reached only indirectly: the address is word 5
@@ -53,28 +48,20 @@ void func_8015C088(void);
 s32 waitFlags0D100FForParty5ThenRequestPrimaryState6Substate2Or3Or6ElseSetSharedByte3ScenarioScena0900_801FD7F4(void) {
   if (D_80145F09 == 5) {
     if (func_8015B5D4(D_8014686C, 0x0D) == 0) {
-      func_8015C088();
-      D_80146875 = 2;
-      D_80146874 = 6;
+      SCENA09_START_AND_REQUEST_STATE6(2);
       return 1;
     }
     if (func_8015B5D4(D_8014686C, 0x10) == 0) {
-      func_8015C088();
-      D_80146875 = 3;
-      D_80146874 = 6;
+      SCENA09_START_AND_REQUEST_STATE6(3);
       return 1;
     }
     if (func_8015B5D4(D_8014686C, 0x0F) == 0) {
-      func_8015C088();
-      D_80146875 = 6;
-      D_80146874 = 6;
+      SCENA09_START_AND_REQUEST_STATE6(6);
       return 1;
     }
     D_8014933B = 3;
     return 1;
   }
-  func_8015C088();
-  D_80146875 = 0;
-  D_80146874 = 6;
+  SCENA09_START_AND_REQUEST_STATE6(0);
   return 1;
 }
