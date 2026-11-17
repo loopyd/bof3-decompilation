@@ -62,6 +62,11 @@ set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposingThresholds_c -O2 -Wa,--
 # The canonical maspsx pass omits those traps; --expand-div restores them.
 # /* @source 0x801E0ABC */
 set(BOF3_OBJFLAGS_bof3_world_func_801E0ABC_c -O2 -Wa,--expand-div)
+
+# The scroll updater retains the original signed-division checks (break 7 / break 6).
+# The selector-specific expansion check verified the complete function.
+set(BOF3_OBJFLAGS_bof3_world_updateWorkScrollWordsWorld00Area03004_801E084C_c -O2 -Wa,--expand-div)
+
 # copyCurrentBattlerToQueuedSlot reloads the scratchpad work-pointer cell per access as a fresh
 # lui+lw pair; the canonical -G0 build CSEs the cell address into one
 # lui+addiu register. With -G4 the small-data threshold keeps the access

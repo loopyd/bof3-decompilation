@@ -1773,6 +1773,16 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+For division, include unused remainder outputs in the allocation trace even when
+no `mfhi` survives. CSE can forward a quotient and delete its copy back to a
+source local, leaving the sample and divisor on a pseudo with two deaths. The
+local allocator then excludes that pseudo. Split those real phases and inspect
+its eligibility again. A later sample can also reserve an earlier global word
+against the numerator; a separate local lets the allocator place that short sample
+first. Assign a consumed mask result back to its real result variable when the
+original masks in place, then check the removed temporary and hard-register
+conflicts. Require the complete native gate; each split can change the other path.
+
 Read `expr.c` for promoted-variable conversions and `combine.c`/`loop.c` for known
 bits and induction rewrites. Predict which temporary survives and which instruction
 changes. Verify that prediction in before/after RTL and a supported live comparison.
