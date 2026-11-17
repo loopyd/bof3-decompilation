@@ -43,18 +43,24 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 77.08
- * @residual 222 of 288 instructions match at 1152 of 1152 bytes. The first
- * difference is at +0x38, where the scratch-record pointer uses a3 instead of
- * the original a0.
+ * @match 80.90
+ * @residual 233 of 288 instructions match at 1152 of 1152 bytes. The first
+ * difference is at +0x8C, where the scaled approach band uses v1 instead of
+ * the original a3.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
+  u8*      approachWork;
   u8*      work;
   LINE_F2* prim;
-  s32      b;
+  s32      clampScale;
+  s32      rowScale;
   s32      cur;
   s32      target;
   s32      sum;
+  u16      limitedPosition;
+  s32      defaultPosition;
+  s32      lowerBound;
+  s32      upperBound;
   s32      x;
   s32      v;
   s32      span;
@@ -64,36 +70,50 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   submitTpageDrawMode(0, 2);
   func_801E0DCC(0x11, 2, 0x87, 0xB4);
 
-  work = D_1F800044;
-  if ((*(s32*)(work + 0x10) == 0) &&
-      ((((s32)*(s16*)(work + 0x30) + ((u8*)D_801E320C)[3] * 4) + 0xC) <
-           (s8)D_80146892[D_801E3208 * 0x98] ||
-       (s8)D_80146892[D_801E3208 * 0x98] <
-           ((s32)*(s16*)(work + 0x30) - ((u8*)D_801E320C)[3] * 4 - 0xC))) {
-    if (work[9] >= 0xF) {
-      if ((s8)D_80146892[D_801E3208 * 0x98] < *(s16*)(work + 0x30)) {
-        *(s32*)(work + 0x10) = -1;
-      } else if (*(s16*)(work + 0x30) < (s8)D_80146892[D_801E3208 * 0x98]) {
-        *(s32*)(work + 0x10) = 1;
+  approachWork = D_1F800044;
+  if (*(s32*)(approachWork + 0x10) == 0) {
+    s32 approachTarget;
+    s32 approachBand;
+
+    do {
+      approachTarget = (s8)D_80146892[D_801E3208 * 0x98];
+      cur = (s32)*(s16*)(approachWork + 0x30);
+      approachBand = ((u8*)D_801E320C)[3] * 4;
+    } while (0);
+    if (cur + approachBand + 0xC < approachTarget || approachTarget < cur - approachBand - 0xC) {
+      if (approachWork[9] >= 0xF) {
+        if ((s8)D_80146892[D_801E3208 * 0x98] < *(s16*)(approachWork + 0x30)) {
+          *(s32*)(approachWork + 0x10) = -1;
+        } else if (*(s16*)(approachWork + 0x30) < (s8)D_80146892[D_801E3208 * 0x98]) {
+          *(s32*)(approachWork + 0x10) = 1;
+        }
+      } else {
+        approachWork[9] = approachWork[9] + 1;
       }
     } else {
-      work[9] = work[9] + 1;
+      approachWork[9] = 0;
     }
   } else {
-    work[9] = 0;
+    approachWork[9] = 0;
   }
 
   work = D_1F800044;
   sum = (s32)*(u16*)(work + 0x30) + *(s32*)(work + 0x10);
   *(u16*)(work + 0x30) = (u16)sum;
-  x = (s16)*(u16*)(work + 0x30);
-  b = ((u8*)D_801E320C)[3];
-  *(u16*)(work + 0x30) =
-      x < b * 4 - 0x24
-          ? b * 4 - 0x24
-          : (0x24 - b * 4 < x ? 0x24 - b * 4 : (s32)*(u16*)(work + 0x30));
-
+  sum = (s16)sum;
+  clampScale = ((u8*)D_801E320C)[3];
+  defaultPosition = *(u16*)(work + 0x30);
+  lowerBound = clampScale * 4 - 0x24;
+  limitedPosition = (u16)lowerBound;
+  if (sum >= lowerBound) {
+    upperBound = 0x24 - clampScale * 4;
+    limitedPosition = (u16)upperBound;
+    if (sum <= upperBound) {
+      limitedPosition = defaultPosition;
+    }
+  }
   prim = (LINE_F2*)g_PrimCursor;
+  *(u16*)(work + 0x30) = (u16)limitedPosition;
   func_8017AA80(prim);
   prim->x0 = 0xB9;
   prim->x1 = 0xB9;
@@ -104,14 +124,14 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   prim->b0 = 0x80;
   func_8014E5A0(2, 0x10);
 
-  b = ((u8*)D_801E320C)[3];
+  rowScale = ((u8*)D_801E320C)[3];
   work = D_1F800044;
   level = D_80146892[D_801E3208 * 0x98];
   cur = *(u16*)(work + 0x30);
   span = 0x18;
-  span = b * 8 + span;
-  v = cur - b * 4 + 0xAD;
-  x = v + b * 8 + 0x18;
+  span = rowScale * 8 + span;
+  v = cur - rowScale * 4 + 0xAD;
+  x = v + rowScale * 8 + 0x18;
   clamped = (s32)level;
   clamped = clamped + 0xB9;
   if (((s16)x < (s16)clamped) || ((s16)clamped < (s16)v)) {
