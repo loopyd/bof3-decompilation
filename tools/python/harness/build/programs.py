@@ -11,6 +11,7 @@ from harness.build.observations import MAX_CANDIDATES, validate_description
 from harness.build.runtime import derive_candidates, describe_seeds
 from harness.common.lookups import LookupBatch
 from harness.common.observation import PathWatch
+from harness.common.paths import is_path_within
 from harness.common.process import resolve_supervisor
 from harness.common.quarantine import QUARANTINE_DIRECTORY
 
@@ -125,7 +126,9 @@ def _capture(root: Path, inputs: dict, *, expected: dict | None = None) -> dict:
         "runtime_edges": edges,
         "nodes": {
             name: {
-                "root": "repository" if Path(name).is_relative_to(root) else "external",
+                "root": "repository"
+                if is_path_within(Path(name), root)
+                else "external",
                 **node,
             }
             for name, node in nodes.items()
@@ -234,18 +237,18 @@ class ProgramSnapshot:
                     for path, kind in paths:
                         if (
                             artifact == path
-                            or path.is_relative_to(artifact)
+                            or is_path_within(path, artifact)
                             or (
                                 path.parent == artifact.parent
                                 and path.name.startswith(
                                     f".{artifact.name}.transaction-"
                                 )
                             )
-                            or path.is_relative_to(
-                                artifact.parent / QUARANTINE_DIRECTORY
+                            or is_path_within(
+                                path, artifact.parent / QUARANTINE_DIRECTORY
                             )
-                            or path.is_relative_to(quarantine)
-                            or (kind != "directory" and artifact.is_relative_to(path))
+                            or is_path_within(path, quarantine)
+                            or (kind != "directory" and is_path_within(artifact, path))
                         ):
                             raise ValueError(
                                 "compiler artifact collides with a program dependency"
@@ -265,7 +268,7 @@ class ProgramSnapshot:
             paths.update(path.resolve() for path in inputs)
             for path in paths:
                 for parent in {directory.absolute(), directory.resolve()}:
-                    if path.is_relative_to(parent) and path != parent:
+                    if is_path_within(path, parent) and path != parent:
                         if path.relative_to(parent).parts[0].startswith(prefix):
                             raise ValueError(
                                 "compiler staging family collides with a dependency"

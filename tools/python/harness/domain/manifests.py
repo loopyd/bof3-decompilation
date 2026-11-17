@@ -538,21 +538,24 @@ def load_manifest_generation(
             raise ValueError(f"duplicate target manifest: {manifest.id.value}")
         manifests[manifest.id.value] = manifest
     claims = cache.collect_claim_files(root, manifests, read_claim=read_claim)
-    _validate_companions(manifests)
-    _validate_replicas(manifests)
-    _validate_claim_overlap(manifests)
-    _validate_claimed_paths(manifests)
-    _validate_claim_files(root, manifests, dict(claims.canonical))
-    _validate_section_placements(manifests, claims)
-    for manifest in manifests.values():
-        if (
-            manifest.has_explicit_sources
-            and manifest.psyq_source
-            and manifest.psyq_source not in manifest.sources + manifest.support_sources
-        ):
-            raise ValueError(
-                f"{manifest.id.value}: psyq_source must be explicitly claimed "
-                "in sources or support_sources"
-            )
+    if not cache.has_validation(root, fingerprint, claims.fingerprint):
+        _validate_companions(manifests)
+        _validate_replicas(manifests)
+        _validate_claim_overlap(manifests)
+        _validate_claimed_paths(manifests)
+        _validate_claim_files(root, manifests, dict(claims.canonical))
+        _validate_section_placements(manifests, claims)
+        for manifest in manifests.values():
+            if (
+                manifest.has_explicit_sources
+                and manifest.psyq_source
+                and manifest.psyq_source
+                not in manifest.sources + manifest.support_sources
+            ):
+                raise ValueError(
+                    f"{manifest.id.value}: psyq_source must be explicitly claimed "
+                    "in sources or support_sources"
+                )
+        cache.store_validation(root, fingerprint, claims.fingerprint)
     cache.store_manifests(root, fingerprint, manifests)
     return ManifestGeneration(manifests, claims)

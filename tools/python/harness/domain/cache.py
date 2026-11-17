@@ -13,6 +13,7 @@ from typing import Any, Callable, Mapping
 from harness.common.directory import open_parent_fd
 from harness.common.inputs import InputBoundaryError, read_input, relative
 from harness.common.links import read_linked_input
+from harness.common.paths import is_path_within
 
 TargetManifest = Any
 
@@ -30,6 +31,22 @@ class ClaimFiles:
 
 
 _CACHE: dict[tuple[Path, ManifestFingerprint], dict[str, TargetManifest]] = {}
+_VALIDATED: tuple[Path, ManifestFingerprint, ValidationFingerprint] | None = None
+
+
+def has_validation(
+    root: Path, manifests: ManifestFingerprint, claims: ValidationFingerprint
+) -> bool:
+    """Return whether these exact freshly sampled inputs passed validation."""
+    return _VALIDATED == (root, manifests, claims)
+
+
+def store_validation(
+    root: Path, manifests: ManifestFingerprint, claims: ValidationFingerprint
+) -> None:
+    """Retain only the latest successful validation generation."""
+    global _VALIDATED
+    _VALIDATED = (root, manifests, claims)
 
 
 def collect_manifest_paths(root: Path) -> list[str]:
@@ -165,20 +182,20 @@ def collect_claim_files(
                 parents[path.parent] = (parent, _observe_claim_parent(parent))
             else:
                 parent = observation[0]
-            if not parent.is_relative_to(root):
+            if not is_path_within(parent, root):
                 raise InputBoundaryError(relative_path)
             resolved = parent / path.name
             if resolved.is_symlink():
                 resolved = resolved.resolve(strict=False)
                 aliases[path] = resolved
-            if not resolved.is_relative_to(root):
+            if not is_path_within(resolved, root):
                 raise InputBoundaryError(relative_path)
             if resolved.parent != parent and resolved.parent not in parents:
                 parents[resolved.parent] = (
                     resolved.parent,
                     _observe_claim_parent(resolved.parent),
                 )
-            _, content = read_input(resolved)
+            state, content = read_input(resolved)
         if content is not None and not isinstance(content, bytes):
             raise ValueError(
                 f"claim reader must return immutable bytes or None: {relative_path}"
@@ -188,7 +205,9 @@ def collect_claim_files(
                 (
                     relative_path,
                     len(content),
-                    hashlib.sha256(content).hexdigest(),
+                    hashlib.sha256(content).hexdigest()
+                    if read_claim is not None
+                    else state["sha256"],
                     resolved.as_posix(),
                 )
             )

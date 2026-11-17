@@ -226,6 +226,7 @@ def capture_members(root: Path, source: str) -> dict:
     return {
         "inputs": inputs,
         "target": manifest.id.value,
+        "manifest": manifest,
         "binary": manifest.binary,
         "load_address": manifest.load_address,
         "section_placements": {

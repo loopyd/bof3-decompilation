@@ -5,9 +5,16 @@ from __future__ import annotations
 import hashlib
 import os
 import stat
+from functools import lru_cache
 from pathlib import Path, PurePosixPath
 
 from harness.common.directory import validate_repo_path, open_parent_fd
+
+
+@lru_cache(maxsize=32768)
+def is_path_within(path: Path, parent: Path) -> bool:
+    """Cache lexical containment for immutable paths."""
+    return path.is_relative_to(parent)
 
 
 def format_relative_path(root: Path, path: Path) -> str:

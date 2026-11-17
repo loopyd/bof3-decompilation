@@ -58,6 +58,7 @@ def capture_source_images(
 def _capture_ordinary(root, source, output_root, members):
     layout = repo_layout(root)
     member = members["functions"][0]
+    manifests = {members["target"]: members["manifest"]}
     source_path = root / source
     configuration = {
         root / "config/compiler/object-flags.cmake",
@@ -83,7 +84,7 @@ def _capture_ordinary(root, source, output_root, members):
             diagnostics=False,
             image_evidence=True,
         )
-        resolved = _asm_diff_resolve(layout, request)
+        resolved = _asm_diff_resolve(layout, request, manifests=manifests)
         if any(
             resolved[key] != value
             for key, value in (
@@ -190,6 +191,7 @@ def _capture_ordinary(root, source, output_root, members):
             layout,
             request,
             resolved,
+            manifests=manifests,
             emitted=emitted,
             on_linked=capture_linked,
         )

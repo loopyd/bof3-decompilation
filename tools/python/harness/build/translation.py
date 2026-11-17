@@ -38,9 +38,9 @@ def prepare_translation(
     text = read_source(source).replace("\r\n", "\n").replace("\r", "\n")
     count = count_function_metadata(text)
     if count < 2:
-        if count == 1:
+        if count == 1 and requires_function_expansion(text):
             manifest = owning_manifest(root, source)
-            if manifest is not None and requires_function_expansion(text):
+            if manifest is not None:
                 if dispatch is None:
                     raise ValueError(
                         "translation expansion requires an active configured compiler invocation"
