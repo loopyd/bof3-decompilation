@@ -10,29 +10,46 @@ extern u8 workRecordCountsBySelectorAndColumnWorld00Area03004[]; /* @source 0x80
  * amounts from rand(), derives halfwords 0x8C/0x8E, optionally
  * increments the seeded amount, and clears work bytes 1-4 and 0x5C.
  * @status partial
- * @match 43.85
- * @residual Complete native bytes still differ. The original 748-byte
- * interval remains retained until exact reconstruction.
+ * @match 88.77
+ * @residual The original pointer copy and signed-division trap expansion
+ * still differ. The original 748-byte interval remains retained.
  */
 void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void) {
   s32 column;
   s32 recordIndex;
   s32 remaining;
   s32 attempts;
+  s32 retryCount;
   s32 i;
   s32 scaled;
-  u32 limit;
+  u32 amountLimit;
   u32 half;
+  u32 scaleOffset;
   u32 slot;
   u16 amount;
+  s32 pendingAmount;
+  s32 sampledAmount;
   u8* record;
-  u8* work;
+  u8* amountRecord;
+  u8* seedWork;
+  u8* amountWork;
+  u8* scaleWork;
+  u8* clearWork;
   Area030Range* range;
-  Area030ScaleRecord* row;
+  Area030Range* retryRange;
 
+  column = 0;
   recordIndex = 0;
-  for (column = 0; column < 0x17; column++) {
-    remaining = workRecordCountsBySelectorAndColumnWorld00Area03004[D_80143F1C * 0x17 + column];
+  for (; column < 0x17; column++) {
+    amountWork = workRecordCountsBySelectorAndColumnWorld00Area03004;
+    pendingAmount = D_80143F1C;
+    amountLimit = pendingAmount << 1;
+    amountLimit += pendingAmount;
+    amountLimit <<= 3;
+    amountLimit -= pendingAmount;
+    amountLimit = (u32)(amountWork + amountLimit);
+    amountLimit += column;
+    remaining = *(u8*)amountLimit;
     if (remaining > 0) {
       do {
         record = (u8*)&D_80146888[recordIndex];
@@ -40,66 +57,77 @@ void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void
         D_80146884 = (Area030Range*)record;
         record[0] = 0x21;
 
-        work = D_1F800044;
-        work[5] = (u8)recordIndex;
-        work = D_1F800044;
-        work[6] = (u8)column;
+        seedWork = D_1F800044;
+        seedWork[5] = (u8)recordIndex;
+        seedWork = D_1F800044;
+        seedWork[6] = (u8)column;
 
-        amount = (u8)rand();
-        record = (u8*)D_80146884;
-        work = D_1F800044;
+        pendingAmount = rand() & 0xFF;
+        amountRecord = (u8*)D_80146884;
+        amountWork = D_1F800044;
         for (;;) {
-          *(u16*)(record + 0x90u) = amount;
-          limit = D_801E2AB8[work[6]].limit;
-          amount = *(u16*)(record + 0x90u);
-          half = limit >> 1;
-
-          if (limit < amount) {
-            amount = (u16)(amount - half);
+          *(u16*)(amountRecord + 0x90u) = pendingAmount;
+          pendingAmount = amountWork[6];
+          amountLimit = pendingAmount << 3;
+          amountLimit += pendingAmount;
+          amountLimit <<= 2;
+          amountLimit = *((u8*)D_801E2AB8 + amountLimit + 0x1Fu);
+          sampledAmount = *(u16*)(amountRecord + 0x90u);
+          if (amountLimit < (u16)sampledAmount) {
+            pendingAmount = amountLimit >> 1;
+            pendingAmount = sampledAmount - pendingAmount;
             continue;
           }
-          if (amount < half) {
-            amount = (u16)half;
+          half = amountLimit >> 1;
+          amountLimit = sampledAmount;
+          if ((u16)sampledAmount < half) {
+            amountLimit = half;
           }
-          *(u16*)(record + 0x90u) = amount;
+          *(u16*)(amountRecord + 0x90u) = amountLimit;
           break;
         }
 
         range = D_80146884;
-        work = D_1F800044;
-        row = &D_801E2AB8[work[6]];
+        scaleWork = D_1F800044;
+        scaleOffset = scaleWork[6] * sizeof(Area030ScaleRecord);
         amount = *(u16*)((u8*)range + 0x90u);
-        scaled = (s32)row->unk_1C[2] *
-                 (((s32)amount * 10) / (s32)row->limit);
+        scaled = (s32)*((u8*)D_801E2AB8 + scaleOffset + 0x1Eu) *
+                 (((s32)amount * 10) /
+                  (s32)*((u8*)D_801E2AB8 + scaleOffset + 0x1Fu));
         scaled /= 10;
         range->limit_8C = (s16)scaled;
         range->value_8E = (s16)scaled;
 
-        slot = work[6];
+        slot = scaleWork[6];
         if (slot != 0x15u) {
-          limit = D_801E2AB8[slot].limit;
-          if (*(u16*)((u8*)range + 0x90u) == limit) {
-            attempts = (u8)(limit / 5u);
-            for (i = 0; i <= attempts; i++) {
-              if ((rand() & 1) == 0) {
-                break;
-              }
-              range = D_80146884;
-              *(u16*)((u8*)range + 0x90u) += 1;
+          amountLimit = D_801E2AB8[slot].limit;
+          if (*(u16*)((u8*)range + 0x90u) == amountLimit) {
+            retryCount = (u8)(amountLimit / 10u);
+            i = 0;
+            if (i <= retryCount) {
+              attempts = retryCount;
+              do {
+                if ((rand() & 1) == 0) {
+                  break;
+                }
+                retryRange = D_80146884;
+                *(u16*)((u8*)retryRange + 0x90u) += 1;
+                i++;
+              } while (i <= attempts);
             }
           }
         }
 
-        work = D_1F800044;
-        work[1] = 0;
-        work = D_1F800044;
-        work[2] = 0;
-        work = D_1F800044;
-        work[3] = 0;
-        work = D_1F800044;
-        work[4] = 0;
-        work = D_1F800044;
-        work[0x5C] = 0;
+        clearWork = D_1F800044;
+        clearWork[1] = 0;
+        clearWork = D_1F800044;
+        clearWork[2] = 0;
+        clearWork = D_1F800044;
+        clearWork[3] = 0;
+        clearWork = D_1F800044;
+        clearWork[4] = 0;
+        clearWork = D_1F800044;
+        clearWork[0x5C] = 0;
 
         recordIndex++;
         remaining--;

@@ -1790,6 +1790,25 @@ Do not infer exact allocator causality from matching scores, debug-register name
 or source formulas without accounting for suggestions and interference. Keep flags
 fixed; no automatic flag catalogs or compiler-variant batches.
 
+When a halfword store/readback becomes an `andi`, inspect the stored value's
+CSE quantity. Separate pending and sampled locals can still forward that value.
+Reusing the consumed pending word for the next real slot read can end that
+availability and restore the load. Preserve every memory event and check the
+subtraction range before removing a narrowing conversion.
+
+When loop motion hoists a table base into an extra saved register, source
+parentheses may leave the same canonical address tree. Trace the invariant in
+`.loop`. A cursor that consumes the table base and selected-row address before
+its later work-record phase can keep the base inside the loop. Check its actual
+definitions and every later use before accepting the allocation change.
+
+GCC 2.7.2 `make_regs_eqv` ranks equivalent pseudos by their whole first/last
+UIDs. Reusing a raw address for a later value can make CSE prefer that address
+for earlier loop accesses. Shortening it can instead leave a single-use
+load/copy pair that `combine` folds into one load. Trace both passes. Neither
+result justifies adding a consumer, access or unrelated value phase to keep
+the copy.
+
 ### Boolean return expansion
 
 For join-spanning booleans or extra return copies, inspect initial RTL before
