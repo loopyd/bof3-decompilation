@@ -7,7 +7,7 @@
  * and the mask argument is zero; once it is set the fixed rectangle is used with the
  * mask built from bit 0 shifted by scratch byte 6 while the shared byte 0x80145E93
  * holds three or more. The panel row is then drawn at 16 - 45 * count and the footer
- * at 164 + 45 * count, through func_801D7EB0 or
+ * at 164 + 45 * count, through drawRodListColumnWorld00Area03004_801D7EB0 or
  * drawLureListColumnWorld00Area03004_801D8364 depending on bit 0 of
  * work byte 7.
  * @source 0x801D4378
@@ -51,7 +51,7 @@ void func_801D4378(void) {
 
   cursor = (u8*)D_1F800044;
   if ((cursor[7u] & 1u) == 0u) {
-    func_801D7EB0((s16)(164 + cursor[9u] * 45), 64);
+    drawRodListColumnWorld00Area03004_801D7EB0((s16)(164 + cursor[9u] * 45), 64);
   } else {
     drawLureListColumnWorld00Area03004_801D8364(
         (s16)(164 + cursor[9u] * 45), 64);

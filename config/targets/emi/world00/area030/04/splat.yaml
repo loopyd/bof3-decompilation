@@ -131,7 +131,7 @@ segments:
     - c
     - func_801D28DC
     - '@source: src/bof3/world/func_801D28DC.c'
-    - '@behavior: AREA030 mode-5 handler of the local work-record mode table 0x801E1D20 (dispatched through scratch work-record byte 1): requests the shared selection effect 3 through func_8014D8D4, or effect 2 when the selected record value D_8014421C is negative, then seeds the scratch work record published at the scratchpad cursor 0x1F800044 with the x word at +0x34, the y word at +0x38 and the halfword counter at +0x3E of the active 0x98-byte work record D_80146888[D_801E3208]; it finally releases the shared hold through func_8014D978 and runs the per-record scroll updater func_801E084C.'
+    - '@behavior: AREA030 mode-5 handler of the local work-record mode table 0x801E1D20 (dispatched through scratch work-record byte 1): requests the shared selection effect 3 through func_8014D8D4, or effect 2 when the selected record value D_8014421C is negative, then seeds the scratch work record published at the scratchpad cursor 0x1F800044 with the x word at +0x34, the y word at +0x38 and the halfword counter at +0x3E of the active 0x98-byte work record D_80146888[D_801E3208]; it finally releases the shared hold through func_8014D978 and runs the per-record scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.'
   - - 7544
     - c
     - func_801D2978
@@ -457,8 +457,10 @@ segments:
     - '@source: src/bof3/world/func_801D7D68_area03004.c'
     - '@behavior: draws one 0x28 by 0x10 AREA030 status-panel cell at the requested origin: submits the inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte 0x80144952, selects graphics mode 8/1, then draws the flag-selected sprite (flag*4 + 0x1D) at (x, y), the (flag*4 + 0x1E) sprite on the y + 0x10 row, four (flag*4 + 0x1F) sprites spaced eight pixels from x + 8 on that row and finally the (flag*4 + 0x20) sprite at (x + 0x28, y + 0x10).'
   - - 29360
-    - asm
-    - func_801D7EB0
+    - c
+    - drawRodListColumnWorld00Area03004_801D7EB0
+    - '@source: src/bof3/world/drawRodListColumnWorld00Area03004_801D7EB0.c'
+    - '@behavior: Draw the ROD record list column and publish its matching-row count and selected slot index.'
   - - 30280
     - c
     - drawStretchedPanelColumnWorld00Area03004_801D8248
@@ -820,8 +822,10 @@ segments:
     - '@source: src/bof3/world/publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8.c'
     - '@behavior: AREA030 scratch work-record handler (entry 1 of the 0x801E22F0 handler table dispatched through scratch byte 4): it decodes the shared pad state 0x80145AA8 masked by 0x5000 through func_8014E640 and submits the fixed func_8014F800 panel texture row (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword 0x800100A4 while bit 0 of the shared panel flag byte 0x80144287 is set, else 0x800100A2); a pad bit shared with the cancel mask 0x80145AC4 plays cue 0x106, publishes 0xFFFF into the main-executable halfword 0x801442AC, sets bit 0x80 of the panel flag byte, decrements byte 3 of the work record published at the scratchpad cursor 0x1F800044, clears that record dispatch byte 4 and returns; a pad bit shared with the confirm mask 0x80145AC2 plays cue 0x103, sets bit 2 of the panel flag byte and advances dispatch byte 4 to entry 2; a decoded direction bit 0x5000 plays cue 0x100, toggles bit 0 of the panel flag byte, toggles the shared state byte 0x80144281 against 7 and steps dispatch byte 4 back to entry 0; unless bit 0x80 is set it then publishes into 0x801442AC the selected index byte 0x80145026 or 0x80145028 plus four, or 0xFFFF while that byte is zero, and submits func_801647C4 with (0x1C, flag bit 0 scaled by 16 plus 0x58, 0).'
   - - 50128
-    - asm
-    - func_801DCFD0
+    - c
+    - updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0
+    - '@source: src/bof3/world/updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0.c'
+    - '@behavior: Handle record confirmation, list movement and paging; publish the selected record and list marker.'
   - - 51812
     - c
     - stepSharedIndexLatchGateOnPadAndAdvanceStateWorld00Area03004_801DD664
@@ -912,8 +916,10 @@ segments:
     - '@source: src/bof3/world/func_801DE018_area03004.c'
     - '@behavior: walks the four AREA030 text slots: reads each slot text byte through the record pointer table D_801E28F4 at its counter D_801E31E0, classifies the slot from the state byte D_801E31F0 (refreshed by func_801DDFD4) and the slot timer D_801E31E4 into an action 0/1/2, then advances the counter with a 12-frame timer reload while the current character lacks the 0x80 terminator bit, or publishes the slot index D_801E28F8[offset] plus the record byte 0x0F into the message state D_80143FCF when the sum reaches its signed limit (also storing the record byte 0x10 at +3), or resets the slot.'
   - - 54720
-    - asm
-    - func_801DE1C0
+    - c
+    - initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0
+    - '@source: src/bof3/world/initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0.c'
+    - '@behavior: Initialize work records from the selected count-table row, seed amounts and clear work state bytes.'
   - - 55468
     - c
     - func_801DE4AC
@@ -940,8 +946,10 @@ segments:
     - '@source: src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c'
     - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through func_801E03F8, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while func_801E0770 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared func_801E0394/func_8014D978 pair.'
   - - 59188
-    - asm
-    - func_801DF334
+    - c
+    - updateWorkMotionAndStepModeOrAdvanceHandler
+    - '@source: src/bof3/world/updateWorkMotionAndStepModeOrAdvanceHandler.c'
+    - '@behavior: Update work motion, range and step mode or publish a threshold transition and advance handler byte 1.'
   - - 62376
     - c
     - func_801DFFA8
@@ -1008,13 +1016,15 @@ segments:
     - '@source: src/bof3/world/func_801E0770.c'
     - '@behavior: reports whether the work record published at the scratchpad cursor 0x1F800044 is inside the shared staging window of 0x80143FFC/0x80144000/0x80144006 (0x7FFF for x at +0x34 and y at +0x38, 0x400 for the signed timer at +0x3E), but only while the 0x80143FC9 mode byte is 4, the 0x801E3208 byte is 0xFF, the 0x80144199 gate byte is clear and the 0x80145E92 phase byte is 3.'
   - - 64588
-    - asm
-    - func_801E084C
+    - c
+    - updateWorkScrollWordsWorld00Area03004_801E084C
+    - '@source: src/bof3/world/updateWorkScrollWordsWorld00Area03004_801E084C.c'
+    - '@behavior: Save and restore work word 0x3C around the helper and derive words 0x40 and 0x44 from the signed scale divisions.'
   - - 64948
     - c
     - func_801E09B4
     - '@source: src/bof3/world/func_801E09B4_area03004.c'
-    - '@behavior: walks the 0x1E shared 0x98-byte work records at 0x80146888; for every active record it publishes that record as the scratchpad cursor at 0x1F800044 and runs the per-record scroll updater func_801E084C.'
+    - '@behavior: walks the 0x1E shared 0x98-byte work records at 0x80146888; for every active record it publishes that record as the scratchpad cursor at 0x1F800044 and runs the per-record scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.'
   - - 65072
     - c
     - func_801E0A30

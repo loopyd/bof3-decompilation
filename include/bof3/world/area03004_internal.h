@@ -522,7 +522,7 @@ typedef struct SpriteGeometry {
 
 extern SpriteGeometry D_801E2424[]; /* @source 0x801E2424 @kind table */
 
-/* AREA030 per-slot scale records: func_801DF334 forms
+/* AREA030 per-slot scale records: the motion/step handler at 0x801DF334 forms
  * `0x801E2AB8 + index * 36` and the sibling slot handlers read halfwords at
  * +0x10/+0x12 and bytes at +0x1A..+0x20 of the same records. Only the fields
  * with a proven consumer are named here. */
@@ -629,7 +629,7 @@ void drawEquipmentGuideColumn(s16 x, s16 y);
  * and the fixed (16, 64) panel steps call it through that column drawer. */
 void drawStatusBoxPair(s16 x, s16 y);
 void func_801D90FC(s16 x, s16 y);
-void func_801D7EB0(s16 arg0, s16 arg1);
+void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s16 arg1);
 /* Target-local drawer of the AREA030 lure column at 0x801D8364: the fixed
  * (164, 64) panel step and the sliding panel steps call it beside the
  * drawEquipmentGuideColumn equipment column at the same origin row. */
@@ -687,7 +687,7 @@ s32  func_801E0ABC(s32 arg0, s32 arg1);
  * fixed 0x4E row. */
 void drawArea030Panel(s16 x, s16 y);
 s32  func_801E1C10(void);
-void func_801E084C(void); /* per-record scroll updater on the 0x1F800044 cursor */
+void updateWorkScrollWordsWorld00Area03004_801E084C(void); /* per-record scroll updater on the 0x1F800044 cursor */
 /* Same-binary shared work-area selector at 0x80199440 (executable space, direct
  * `jal` at 0x801E0BD8): publishes one of the three shared work-area bases into
  * D_80146250 and the scratchpad cursor according to the load flags and takes no

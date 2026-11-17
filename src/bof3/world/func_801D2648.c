@@ -20,7 +20,7 @@
  * 0x5F, requests the frontend state selected by the sign of word 0x10 (2 when
  * positive, 3 at zero, 0 when negative) through func_8014D8D4, runs
  * func_8014D978, stores 2 in record byte 0x48 and finishes with the per-record
- * scroll updater func_801E084C.
+ * scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.
  * @status exact
  * @match 100.00
  * @residual none
@@ -113,5 +113,5 @@ void func_801D2648(void) {
   func_8014D978();
   tail = (u8*)D_1F800044;
   tail[0x48u] = 2u;
-  func_801E084C();
+  updateWorkScrollWordsWorld00Area03004_801E084C();
 }

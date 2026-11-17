@@ -9,6 +9,11 @@ load_address = 0x801d0c00
 
 
 sources = [
+    "src/bof3/world/drawRodListColumnWorld00Area03004_801D7EB0.c",
+    "src/bof3/world/initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0.c",
+    "src/bof3/world/updateWorkScrollWordsWorld00Area03004_801E084C.c",
+    "src/bof3/world/updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0.c",
+    "src/bof3/world/updateWorkMotionAndStepModeOrAdvanceHandler.c",
     "src/bof3/world/decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398.c",
     "src/bof3/world/drawHeaderStatusAndFixedEntryPanelWorld00Area03004_801D54F8.c",
     "src/bof3/world/dispatchStateByte2OrClearWorkFlagsWorld00Area03004_801D56F4.c",

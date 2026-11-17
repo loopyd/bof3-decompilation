@@ -15,5 +15,5 @@ void func_801D4570(void) {
 
   WORLD00_AREA030_DRAW_HEADER_AND_STATUS(cursor, mask);
   drawEquipmentGuideColumn(16, 64);
-  func_801D7EB0(164, 64);
+  drawRodListColumnWorld00Area03004_801D7EB0(164, 64);
 }

@@ -8,7 +8,7 @@
  * scratchpad cursor 0x1F800044 from the active 0x98-byte work record
  * D_80146888[D_801E3208]: the x word at +0x34, the y word at +0x38 and the
  * halfword counter at +0x3E; it finally releases the shared hold through
- * func_8014D978 and runs the per-record scroll updater func_801E084C.
+ * func_8014D978 and runs the per-record scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.
  * @status exact
  * @match 100.00
  * @residual none
@@ -44,5 +44,5 @@ void func_801D28DC(void) {
   *(s32*)(work + 0x38) = D_80146888[slot].y_38;
   *(u16*)(work + 0x3E) = *(u16*)((u8*)&D_80146888[slot] + 0x3E);
   func_8014D978();
-  func_801E084C();
+  updateWorkScrollWordsWorld00Area03004_801E084C();
 }
