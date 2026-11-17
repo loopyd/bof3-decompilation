@@ -43,8 +43,8 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 71.18
- * @residual 205 of 288 instructions match at 1144 of 1152 bytes. The first
+ * @match 73.96
+ * @residual 213 of 288 instructions match at 1152 of 1152 bytes. The first
  * difference is at +0x38, where the scratch-record pointer uses a3 instead of
  * the original a0.
  */
@@ -56,7 +56,6 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      target;
   s32      sum;
   s32      x;
-  s32      keep;
   s32      v;
   s32      span;
   s8       level;
@@ -89,10 +88,10 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   *(u16*)(work + 0x30) = (u16)sum;
   x = (s16)*(u16*)(work + 0x30);
   b = ((u8*)D_801E320C)[3];
-  keep = x < b * 4 - 0x24
-             ? b * 4 - 0x24
-             : (0x24 - b * 4 < x ? 0x24 - b * 4 : (s32)*(u16*)(work + 0x30));
-  *(u16*)(work + 0x30) = (u16)keep;
+  *(u16*)(work + 0x30) =
+      x < b * 4 - 0x24
+          ? b * 4 - 0x24
+          : (0x24 - b * 4 < x ? 0x24 - b * 4 : (s32)*(u16*)(work + 0x30));
 
   prim = (LINE_F2*)g_PrimCursor;
   func_8017AA80(prim);
