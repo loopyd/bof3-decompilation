@@ -28,4 +28,14 @@ void func_8015C088(void);
      D_80146875 = 0, \
      D_80146874 = (primary_state))
 
+/* Arguments are simple integer constants; the expression result is unused. */
+#define SCENA06_SET_SUBSTATE_RESET_PROGRESS_AND_REQUEST(substate, primary_state) \
+    (func_8015C088(), \
+     D_80146875 = (substate), \
+     g_ScenarioProgress = 0, \
+     D_80146865 = 0, \
+     D_80146866 = 0, \
+     D_80146867 = 0, \
+     D_80146874 = (primary_state))
+
 #endif

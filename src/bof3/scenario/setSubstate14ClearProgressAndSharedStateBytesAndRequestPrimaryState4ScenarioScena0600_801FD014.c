@@ -1,19 +1,4 @@
-#include "bof3/bof3.h"
-
-/* @source 0x80146864 @kind unknown */
-extern u8 g_ScenarioProgress;
-/* @source 0x80146865 @kind unknown */
-extern u8 D_80146865;
-/* @source 0x80146866 @kind unknown */
-extern u8 D_80146866;
-/* @source 0x80146867 @kind unknown */
-extern u8 D_80146867;
-/* @source 0x80146874 @kind unknown */
-extern s8 D_80146874;
-/* @source 0x80146875 @kind unknown */
-extern u8 D_80146875;
-
-void func_8015C088(void);
+#include "bof3/scenario/scena06_state.h"
 
 /* @source 0x801FD014
  * @behavior Word 7 of the overlay-local record callback table D_801FE42C
@@ -42,11 +27,5 @@ void func_8015C088(void);
  * @residual none
  */
 void setSubstate14ClearProgressAndSharedStateBytesAndRequestPrimaryState4ScenarioScena0600_801FD014(void) {
-  func_8015C088();
-  D_80146875 = 0x14;
-  g_ScenarioProgress = 0;
-  D_80146865 = 0;
-  D_80146866 = 0;
-  D_80146867 = 0;
-  D_80146874 = 4;
+  SCENA06_SET_SUBSTATE_RESET_PROGRESS_AND_REQUEST(0x14, 4);
 }
