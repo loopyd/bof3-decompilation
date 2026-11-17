@@ -2,7 +2,8 @@
 //
 // Usage (file-backed; the host reads this file before launching):
 //   subagent({
-//     workflowScriptPath: ".pi/workflows/bof3-lift-lanes.js",
+//     workflow: ".pi/workflows/bof3-lift-lanes.js",
+//     async: true,
 //     args: {
 //       lanes: [                       // one entry per lane; run them in parallel
 //         { key: "l1", target: "emi/battle/battle/15",
@@ -11,13 +12,28 @@
 //           refs: ["BIN/ETC/SHOP.EMI#0@0x801D7208"] }
 //       ]
 //     },
-//     globalConcurrencyLimit: 8
+//     options: { globalConcurrencyLimit: 8 }
 //   })
+// Next wave: same request, with options.missionId set to details.missionId.
+//
+// Run with concurrency eight. Keep the parent turn active until the planned
+// children have started; the async receipt alone does not prove approval. Await
+// completion, then invoke this file again with identical args and the mission id.
+// Never overlap
+// invocations for one mission. Each wave starts at most eight stages and never
+// starts successor stages after children settle. Finish when pending is false.
+// Do not reuse a mission for another batch. mission:false is unsupported.
 //
 // `refs` are registry references (`DISC_ID#INDEX@0xADDRESS`); every lookup is done
 // through harness commands (`bin/harness lift m2c|gate`), which resolve the ref
 // themselves. `target` is the manifest target id used by the gate's second
 // argument and by the lane's write set.
+//
+// Goal waits stop the parent's tool-call turn. Later subagent_launch calls from
+// a running chain are then refused. Mission state checkpoints let the parent
+// start each successor wave in a fresh turn without bypassing launch approval.
+// State is bounded by Pi's 256 KiB mission limit. A failed checkpoint or a stage
+// left running requires parent reconciliation, never an automatic relaunch.
 //
 // Stage order per lane:
 //   lift (model ladder) -> naming transaction (exact only) -> review (non-exact only)
@@ -36,7 +52,7 @@
 // evidence that already exists rather than searching for one; review and repair run on
 // the lane's strongest rung.
 //
-// After every lane closes, one harvest child rewrites the bof3-re references from
+// After every lane closes, a separate harvest wave updates the bof3-re references from
 // this batch's exact results only ($skill-master authoring, $unslop prose, $caveman
 // compaction) and runs the skills tests plus the docs drift check. It never commits.
 //
@@ -51,6 +67,9 @@
 //
 // Inputs are plain JSON only; no secrets.
 
+if (typeof state === "undefined") {
+  return { ok: false, error: "bof3-lift-lanes requires mission state; omit mission:false" };
+}
 const rawLanes = Array.isArray(args.lanes) ? args.lanes : [];
 
 if (rawLanes.length === 0) {
@@ -113,6 +132,9 @@ const lanes = rawLanes.map((lane, index) => ({
   note: typeof lane.note === "string" ? lane.note.trim() : "",
 }));
 
+if (new Set(lanes.map((lane) => lane.key)).size !== lanes.length) {
+  return { ok: false, error: "bof3-lift-lanes: lane keys must be unique" };
+}
 const bad = lanes.filter((lane) => !lane.target || lane.refs.length === 0 ||
   new Set(lane.refs).size !== lane.refs.length);
 // One disjoint target per lane is a write-set guarantee, not a style rule: two lanes on
@@ -713,6 +735,41 @@ const repairIdentity = (candidate, review) => {
 // Per-lane chain with isolation: any rejection becomes that lane's own result.
 // Bound output files add a human-readable suffix to result.output. Keep routing
 // inline and retain the actual reports/references in the aggregate instead.
+const checkpointKey = "bof3-lift-lanes-wave-v1";
+const batchIdentity = JSON.stringify({ lanes: rawLanes, models: modelLadder });
+const savedCheckpoint = await state.get(checkpointKey);
+if (savedCheckpoint && savedCheckpoint.identity !== batchIdentity) {
+  return { ok: false, error: "Mission belongs to another batch; use identical args or a new mission" };
+}
+const checkpoint = savedCheckpoint || { identity: batchIdentity, stages: {} };
+const compactResult = (result) => ({
+  ok: result.ok === true,
+  ...(result.runId ? { runId: result.runId } : {}),
+  output: String(result.output || ""),
+  ...(result.outputReference ? { outputReference: result.outputReference } : {}),
+  ...(result.artifactPaths ? { artifactPaths: result.artifactPaths } : {}),
+});
+const unsettled = Object.entries(checkpoint.stages)
+  .filter(([, stage]) => stage.status === "running").map(([key]) => key);
+if (unsettled.length) {
+  return { ok: false, reconciliationRequired: unsettled,
+    error: "Stage completion was not checkpointed; reconcile its real child before continuing" };
+}
+let checkpointWrites = Promise.resolve();
+const saveCheckpoint = () => {
+  checkpointWrites = checkpointWrites.then(() => state.set(checkpointKey, checkpoint));
+  return checkpointWrites;
+};
+const queuedStages = new Map();
+// Planning only: replay a terminal stage or queue its first missing successor.
+// Actual launches happen together below, never inside a completion callback.
+const runStage = (key, request) => {
+  const stage = checkpoint.stages[key];
+  if (stage?.status === "complete") return Promise.resolve(stage.result);
+  if (stage?.status === "failed") return Promise.reject(new Error(stage.error));
+  queuedStages.set(key, request);
+  return Promise.reject(new Error(`Stage ${key} awaits the next wave`));
+};
 const reports = [];
 const retainReport = (lane, key, result) => {
   reports.push({ lane: lane.key, target: lane.target, key, runId: result.runId,
@@ -743,8 +800,7 @@ const liftRung = (lane, index, priorText, firstPercent) => {
     : index === ladder.start && ladder.start > 0
       ? partialBrief(lane, model)
       : liftBrief(lane);
-  return runs
-    .run(liftKey, {
+  return runStage(liftKey, {
       label: `Lift ${lane.key} (${lane.target}) on ${model}`,
       agent: "bof3-lifter",
       model,
@@ -779,8 +835,7 @@ const liftRung = (lane, index, priorText, firstPercent) => {
 const namingDebtStage = (lane) => {
   const nameKey = `${lane.key}-name`;
   const model = laneModel(lane, 0);
-  return runs
-    .run(nameKey, {
+  return runStage(nameKey, {
       label: `Name debt ${lane.key} (${lane.target}) on ${model}`,
       agent: "bof3-namer",
       model,
@@ -932,8 +987,7 @@ const namingVerdict = (text) => {
 
 const namingStage = (lane, liftText, liftModel, liftRung) => {
   const nameKey = `${lane.key}-name`;
-  return runs
-    .run(nameKey, {
+  return runStage(nameKey, {
       label: `Name ${lane.key} (${lane.target}) after exact lift`,
       agent: "bof3-namer",
       // Naming is cheap: the evidence already exists and it applies one transaction, so
@@ -967,8 +1021,7 @@ const namingStage = (lane, liftText, liftModel, liftRung) => {
 
 const reviewOnce = (lane, proposedText, round, triedRepairs) => {
   const reviewKey = `${lane.key}-review-${round}`;
-  return runs
-    .run(reviewKey, {
+  return runStage(reviewKey, {
       label: `Review ${lane.key} non-exact lift`,
       agent: "bof3-reviewer",
       model: laneLastModel(lane),
@@ -993,8 +1046,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
         }
         triedRepairs.add(identity);
         const repairKey = `${lane.key}-repair-${round}`;
-        return runs
-          .run(repairKey, {
+        return runStage(repairKey, {
             label: `Repair ${lane.key} after review`,
             agent: "bof3-lifter",
             model: laneLastModel(lane),
@@ -1023,7 +1075,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
     );
 };
 
-const board = await runs.all(lanes.map((lane) => laneChain(lane)));
+const board = await Promise.all(lanes.map((lane) => laneChain(lane)));
 
 // Harvest only from exact results, and only once every lane has closed, so the child
 // writes references with no lift in flight. A harvest failure never fails the batch:
@@ -1031,8 +1083,9 @@ const board = await runs.all(lanes.map((lane) => laneChain(lane)));
 const exactRows = board.filter((row) => row.state === "complete" && isExactVerdict(row.verdict));
 const harvest = exactRows.length === 0
   ? { state: "skipped", reason: "no exact lane in this batch" }
-  : await runs
-      .run("knowledge-harvest", {
+  : queuedStages.size
+    ? { state: "pending", reason: "lane stages remain" }
+    : await runStage("knowledge-harvest", {
         label: "Harvest batch lessons into bof3-re references",
         agent: "bof3-lifter",
         model: harvestModel,
@@ -1044,7 +1097,39 @@ const harvest = exactRows.length === 0
         (error) => ({ state: "error", error: String(error).slice(0, 300) }),
       );
 
+const wave = [...queuedStages.entries()].slice(0, 8);
+if (wave.length) {
+  for (const [key] of wave) checkpoint.stages[key] = { status: "running" };
+  await saveCheckpoint();
+  // At concurrency eight, no request queues behind another stage in this wave.
+  // Omit child async so runs.run returns final results, not launch receipts.
+  // Observe every launch with Promise.all and persist each settlement separately.
+  // One refused child must not discard a sibling's completed result.
+  const results = await Promise.all(wave.map(([key, request]) =>
+    runs.run(key, request).then(
+      (result) => {
+        checkpoint.stages[key] = result?.ok === true
+          ? { status: "complete", result: compactResult(result) }
+          : { status: "failed", error: String(result?.error || "Child did not complete successfully"),
+            ...(result ? { result: compactResult(result) } : {}) };
+        return saveCheckpoint().then(() => ({ key, ...checkpoint.stages[key] }));
+      },
+      (error) => {
+        checkpoint.stages[key] = { status: "failed", error: String(error) };
+        return saveCheckpoint().then(() => ({ key, ...checkpoint.stages[key] }));
+      },
+    ),
+  ));
+  return {
+    pending: true,
+    next: "Invoke the same file with identical args and options.missionId; do not overlap waves",
+    launched: wave.map(([key]) => key),
+    // These are stage outcomes, not parent acceptance of the source.
+    results,
+  };
+}
 return {
+  pending: false,
   lanes: lanes.length,
   complete: board.filter((row) => row.state === "complete").length,
   laneErrors: board.filter((row) => row.state === "lane-error").length,

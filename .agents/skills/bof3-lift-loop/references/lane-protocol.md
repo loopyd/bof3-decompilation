@@ -3,20 +3,35 @@
 ## Launch
 
 Use [workflow file](../../../../.pi/workflows/bof3-lift-lanes.js), never a session-built
-lane loop. One invocation runs lift, conditional review, repair and naming
-with per-lane failure isolation and bounded concurrency.
+lane loop. Each invocation runs one wave of at most eight stages. Lift, review,
+repair, naming and harvest continue across waves with per-lane failure isolation.
 
 ```js
 subagent({
-  workflowScriptPath: ".pi/workflows/bof3-lift-lanes.js",
+  workflow: ".pi/workflows/bof3-lift-lanes.js",
+  async: true,
   args: { lanes: [
     { key: "l1", target: "<TARGET>", refs: ["<DISC_ID>#<INDEX>@0xADDRESS"] },
     { key: "l2", target: "<TARGET>", kind: "partial",
       refs: ["<DISC_ID>#<INDEX>@0xADDRESS"] }
   ] },
-  globalConcurrencyLimit: 8
+  options: { globalConcurrencyLimit: 8 }
 })
 ```
+
+After each completion notice, repeat the request with identical `args` and
+`options.missionId` set to the first receipt's `details.missionId`. Continue until
+`pending:false`, then perform parent acceptance. Never overlap waves or reuse a
+mission for a different batch. Keep concurrency at eight. Mission state retains
+settled reports; completed stages are replayed for routing, not relaunched. A
+failed stage stays failed. A stage left `running` after interruption requires
+parent reconciliation before further launches. `mission:false` is unsupported.
+
+Each wave launches its children before waiting for their results. Successor stages
+run only in the next invocation, avoiding goal post-stop refusal of background
+`subagent_launch` calls. Do not retry a refusal in the stopped turn or bypass its
+permission checks. Keep the parent turn active until the wave's planned children
+have started; the initial async receipt alone does not prove launch approval.
 
 Raise the open-tool notice threshold on every batch: pass
 `options: { control: { activeNoticeAfterMs: 3600000 } }`. The default is four
