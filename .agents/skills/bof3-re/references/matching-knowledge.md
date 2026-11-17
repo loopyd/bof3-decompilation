@@ -1650,6 +1650,18 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+Trace the instruction receiving a scope's `LOOP_END` dependency. A real constant
+initialization followed by a store can force an independent address definition
+after that store. When the original orders constant, address, store, put the
+existing address initialization immediately after the scope and leave the store
+after it. Preserve memory events and constrain the required definition.
+
+For a pseudo reused in separate phases, trace hard-register conflicts in each
+interval. A literal in a later phase can exclude its register from an earlier
+calculation carried by the same pseudo. Give the earlier real calculation its own
+local when that removes the proved conflict, then check the later phase and the
+complete body. Disjoint live intervals do not guarantee independent allocation.
+
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:

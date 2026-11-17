@@ -51,15 +51,9 @@ typedef struct Area030BounceStepState {
  * gradient bar of that width at (0x39, 0x97) in append mode 1, formats work byte
  * 6 through the "%2d" rodata string 0x801D0C04 into the shared 0x80145AD4 buffer
  * and submits the buffer at (0xAC, 0x94) in mode 0 through func_8014FF0C.
- * @status partial
- * @match 98.73
- * @residual The 0xFF re-seed block differs in two instruction slots only: the
- *           original carries the delta constant `li v1,4` in the delay slot of
- *           the `bne` and leaves the `lw` load-delay slot as a `nop`, while every
- *           measured clean-C spelling lets the scheduler fill that load-delay
- *           slot with the same `li v1,4` and leaves the branch delay slot as a
- *           `nop`. Registers (width base v0, delta v1), widths, stores and every
- *           other instruction match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 /* The published cursor cell 0x1F800044 is volatile, so every access group
  * re-reads it and keeps its own pointer local, as the exact siblings
@@ -73,12 +67,7 @@ typedef struct Area030BounceStepState {
  * from those siblings; this span's own table, priorities, END marker 0xFF, width
  * delta 4, bounce bounds 0/0x60, frame-counter bit 1 and draw coordinates come
  * from the original bytes.
- *
- * The re-seed block stores through one typed Area030BounceStepState view instead
- * of three `*(s32*)(cursor + N)` casts, and that spelling is a measured lever:
- * the cast form gated 148/158 with the work pointer in v1 and the delta in v0,
- * while the typed view carries both -- the base pointer takes v0 and the delta
- * constant v1 -- giving 156/158. */
+ */
 void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
   u8* work;
   u8* cursor;
@@ -95,10 +84,14 @@ void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
   if (work[9] == 0) {
     step = work[0xA];
     if (bounceStepRecordTableWorld00Area03004_801E2008[step].resource == 0xFF) {
+      s32 delta;
+      do {
+        delta = 4;
+      } while (0);
       work[0xA] = bounceStepRecordTableWorld00Area03004_801E2008[step].countdown;
       state = (Area030BounceStepState*)D_1F800044;
       state->width_0C = 0;
-      state->delta_18 = 4;
+      state->delta_18 = delta;
       state->count_06 = 0;
     }
     cursor = D_1F800044;

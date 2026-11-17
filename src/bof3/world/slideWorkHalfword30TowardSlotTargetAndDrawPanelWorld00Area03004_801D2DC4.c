@@ -43,8 +43,8 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 80.90
- * @residual 233 of 288 instructions match at 1152 of 1152 bytes. The first
+ * @match 81.94
+ * @residual 236 of 288 instructions match at 1152 of 1152 bytes. The first
  * difference is at +0x8C, where the scaled approach band uses v1 instead of
  * the original a3.
  */
@@ -55,6 +55,7 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      clampScale;
   s32      rowScale;
   s32      cur;
+  s32      rowPosition;
   s32      target;
   s32      sum;
   u16      limitedPosition;
@@ -63,7 +64,6 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      upperBound;
   s32      x;
   s32      v;
-  s32      span;
   s8       level;
   s16      clamped;
 
@@ -127,17 +127,17 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   rowScale = ((u8*)D_801E320C)[3];
   work = D_1F800044;
   level = D_80146892[D_801E3208 * 0x98];
-  cur = *(u16*)(work + 0x30);
-  span = 0x18;
-  span = rowScale * 8 + span;
-  v = cur - rowScale * 4 + 0xAD;
+  rowPosition = *(u16*)(work + 0x30);
+  cur = 0x18;
+  cur = rowScale * 8 + cur;
+  v = rowPosition - rowScale * 4 + 0xAD;
   x = v + rowScale * 8 + 0x18;
   clamped = (s32)level;
   clamped = clamped + 0xB9;
   if (((s16)x < (s16)clamped) || ((s16)clamped < (s16)v)) {
-    func_801D3244((s16)v, 0xCB, span & 0xF8, (work[0xA] & 7) * 2, 2, 1);
+    func_801D3244((s16)v, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 1);
   } else {
-    func_801D3244((s16)v, 0xCB, span & 0xF8, (work[0xA] & 7) * 2, 2, 0);
+    func_801D3244((s16)v, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 0);
   }
 
   if (D_80146889[D_801E3208 * 0x98] == 4) {

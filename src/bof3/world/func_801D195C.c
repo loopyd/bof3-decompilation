@@ -11,13 +11,9 @@
  * func_801D18CC with mode 2, where the shared word 0x80144006 yields the plain 180
  * for a positive value.
  * @source 0x801D195C
- * @status partial
- * @match 95.41
- * @residual 104 of 109 current instructions match 109 original at the same
- * 436-byte size. The panels, the line pair, the colour stores and the tail rounding
- * block all agree. The first rounding block, which folds the func_8015477C result
- * out of y, keeps the shifted value in a second register and repeats the shift:
- * the original leaves both in v0 with one sra.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801D195C(s16 arg0, s16 arg1) {
   Area030LinePair* prim;
@@ -36,12 +32,13 @@ void func_801D195C(s16 arg0, s16 arg1) {
   if (D_80143FC9 == 0u) {
     top = y;
   } else {
-    dy = func_8015477C(D_80143FFC, D_80144000);
-    if (dy < 0) {
-      dy += 31;
+    s32 scrollOffset;
+    scrollOffset = func_8015477C(D_80143FFC, D_80144000);
+    if (scrollOffset < 0) {
+      scrollOffset += 31;
     }
-    dy >>= 5;
-    top = y - dy;
+    scrollOffset >>= 5;
+    top = y - scrollOffset;
   }
   if ((s16)top < (s16)y) {
     top = y;

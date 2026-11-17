@@ -22,18 +22,9 @@
  * D_80145028 (flag bit 0 clear) plus four, or 0xFFFF while that index byte is
  * zero, and finally submits func_801647C4 with (0x1C, flag bit 0 scaled by 16
  * plus 0x58, 0).
- * @status partial
- * @match 99.25
- * @residual The cancel arm's store of 0xFFFF into D_801442AC is emitted after
- * the materialisation of the D_80144287 base in the build, where the original
- * issues the constant first (its ori v0,zero,0xFFFF at 0xC1FC, the base's
- * lui/addiu at 0xC200/0xC204). Body size is the original's 536 bytes and 133 of
- * 134 instructions match; the first difference is original index 17, the
- * constant's position. Six candidate shapes (pointer assignment before the
- * constant, work pointer first, split read-modify-write through a temporary, a
- * u16 and an s32 value local, |= and cast spellings) all measured the same
- * 133/134 at 536 bytes with that first difference, so the position is not a
- * statement-order lever for this body.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8(void) {
   u16* pad;
@@ -45,10 +36,14 @@ void publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8(
   pad = &D_80145AA8;
   direction = func_8014E640(*pad & 0x5000);
   if (*pad & D_80145AC4) {
+    u16 cancelValue;
     func_8015DF18(0x106);
-    selectedRecordValueState = 0xFFFF;
-    work = D_1F800044;
+    do {
+      cancelValue = 0xFFFF;
+    } while (0);
     flag = &D_80144287;
+    selectedRecordValueState = cancelValue;
+    work = D_1F800044;
     *flag = *flag | 0x80;
     work[3] = work[3] - 1;
     D_1F800044[4] = 0;
