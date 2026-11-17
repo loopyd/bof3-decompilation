@@ -20,19 +20,9 @@
  * plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8),
  * selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends
  * with func_801DDD4C.
- * @status partial
- * @match 95.40
- * @residual Two blocks differ by register allocation and intra-block
- * scheduling only, at an exact instruction and byte count (261/261, 1044 B).
- * The Cross/Pad arm 0x801E31F8 = 2 block keeps the 0x801E320C table pointer in
- * v1 where the original keeps it in v0, and therefore keeps `li 2` after the
- * cursor load instead of in the 0xC000 test delay slot; the 0x3000 arm keeps
- * that pointer in a1 and sinks the 0x8014421C store below the 0x98 index math
- * where the original stores it straight after the signed byte load. Measured
- * and reverted: pointer-cast forms of the 0x80146888 + 0x1C cell (materialised
- * base, 218/261), all-scalar progress byte (232/261), all-materialised array
- * view (208/261), arm statement orders A1/A2/va (239-249/261), 0x3000 arm
- * orders and an index or value temporary (239-249/261).
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140(void) {
   u8* work;
@@ -56,9 +46,13 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
   }
   if (D_80145AA4 & 0xC000) {
     if (D_80145AA8 & 0xC000) {
+      u8 selection;
+      do {
+        selection = 2;
+      } while (0);
       work = D_1F800044;
+      D_801E31F8 = selection;
       work[9] = 8;
-      D_801E31F8 = 2;
       D_8014421C = D_801E320C[5];
       func_8014D8D4(8);
       recordSelectionProgressByteState++;
@@ -87,9 +81,15 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
       recordSelectionProgressState[0]++;
     }
   } else if (D_80145AA4 & 0x3000) {
+    s8* mode;
+    u32 selected;
+    mode = D_801E320C;
+    selected = D_801E3208;
     D_801E31F8 = 0;
-    D_8014421C = D_801E320C[6];
-    D_80146888[D_801E3208].unk_1C = 0;
+    do {
+      D_8014421C = mode[6];
+    } while (0);
+    D_80146888[selected].unk_1C = 0;
     func_8014D8D4(0);
     recordSelectionProgressByteState--;
   } else if (D_80145AA4 & 0x40) {

@@ -14,14 +14,9 @@
  * sets work byte 0x08 to 4, clears the work word at 0x14, releases the entry
  * through func_8014D6B8(0) and advances the work handler byte 0x01.
  * @source 0x801DE5EC
- * @status partial
- * @match 95.14
- * @residual 137/144 instructions and an exact 576-byte body; two scheduler
- * placements remain. The scratch-cursor reload that feeds the heading mask
- * sits two instructions later than the original and pays a load-delay nop, and
- * the scale-shift of the counter lands in the rand delay slot where the
- * original keeps the negate there. Registers, statements and values are
- * otherwise identical.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC(void) {
   u8* yWork;
@@ -56,9 +51,16 @@ void applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_
   /* The x ceiling is materialized ahead of its rand call, so it rides in the
    * saved register the original keeps the y accumulator in. */
   base = 0x140000;
-  *(s32*)(D_1F800044 + 0x34) = base - ((rand() & 0xF) << 16);
-
-  heading = *(u8*)((u8*)D_80146884 + 0x92);
+  {
+    s32 xOffset;
+    u8* xWork;
+    u8* headingWork;
+    xOffset = (rand() & 0xF) << 16;
+    xWork = D_1F800044;
+    headingWork = (u8*)D_80146884;
+    *(s32*)(xWork + 0x34) = base - xOffset;
+    heading = headingWork[0x92];
+  }
   base = 0x3E0000;
   base -= heading * 3 << 18;
   base -= (rand() & 0xF) << 16;
@@ -67,8 +69,8 @@ void applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_
 
   /* Sign-extended scale byte, negated and scaled: the -base >> 16 pair is the
    * original's negate-then-shift of the byte placed in the high half. */
-  base = D_801E2AB8[yWork[6]].unk_1A << 24;
-  counter = (-base >> 16) - ((rand() & 7) << 5);
+  base = -(D_801E2AB8[yWork[6]].unk_1A << 24);
+  counter = (base >> 16) - ((rand() & 7) << 5);
 
   callWork = D_1F800044;
   *(s16*)(callWork + 0x3E) = counter;

@@ -1662,6 +1662,24 @@ calculation carried by the same pseudo. Give the earlier real calculation its ow
 local when that removes the proved conflict, then check the later phase and the
 complete body. Disjoint live intervals do not guarantee independent allocation.
 
+When pure arithmetic shares an expression with a call, check expansion order
+before scheduler tuning. A negation written left of a subtraction can still expand
+after the right operand calls a function. Assign the real negative accumulator in
+a preceding statement when the original computes it before the call. Verify that
+the CSE definition moves, then check its allocation and the complete native body.
+
+When a byte-backed index gains a redundant mask after an operation scope, trace
+its narrow-variable conversion. A word local can carry the already zero-extended
+byte into later index arithmetic without that mask. Keep the original byte load
+and verify the complete body; a local width change alone proves no access width.
+
+When a running coordinate's original copy follows the loop-entry guard, check
+whether it is a derived induction variable. Writing the coordinate as base plus
+index times stride lets loop reduction create the running value and place its
+initialization in the loop preheader. A hand-carried cursor initialized before the
+guard may keep the same arithmetic but place the copy too early. Confirm the
+reduction in the loop dump and require the complete native gate.
+
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:

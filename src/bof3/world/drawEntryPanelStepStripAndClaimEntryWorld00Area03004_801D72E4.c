@@ -29,13 +29,9 @@
  * into the shared 0x80145AD4 buffer, submitting it at (x + 0xCA, y + 0x92)
  * through func_80150098.
  * @source 0x801D72E4
- * @status partial
- * @match 96.96
- * @residual the strip-start pseudo is colored v0 where the original uses a1,
- * which keeps its phase-zero store out of the beqz delay slot, moves the loop
- * preheader copy of that value ahead of the strip clock read, and leaves the
- * footer CLUT address unfolded into each load instead of hoisted once; body
- * size, frame and every instruction shape otherwise agree.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 /* The published cursor cell 0x1F800044 is volatile, so every access group
  * re-reads it and keeps its own pointer local, as the record-family siblings
@@ -50,15 +46,7 @@
  * own literals - the 0xF2/0x9F panel, the 0x35 and 0x36 clock wraps, the nine
  * frames per step, the 0xC/0x19/0xD strip geometry, the 0x3D/0xCA/0x92 footer
  * offsets and the "%d/6" format - come from its original bytes.
- *
- * Measured spellings on the way to this body, each at the same size: one cursor
- * variable for every reload group scored 231/296 instructions (78.04%), because
- * one shared pseudo took one register for the whole function; splitting the
- * cursor per reload group scored 253/296, and splitting the strip-clock
- * temporary per site (tick, limit, stepTick, span) scored 277/296. The
- * pre-loop copy into the row cursor took it to 287/296 at the payload's own
- * 1184 bytes. A single row-cursor variable with no copy scored 277/296, and
- * inline or pre-branch geometry arithmetic scored 286 and 271.
+
  */
 void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
                                                                    s32 y) {
@@ -70,7 +58,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
   u8* values;
   u8* panel;
   u8* strip;
-  s32 startY;
+  u8* clut;
   s32 top;
   s32 count;
   s32 row;
@@ -157,25 +145,24 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
     top = y + 0x19;
     count = 9;
   }
-  startY = top;
 
   strip = D_1F800044;
   frame = strip[0x14];
   for (row = 0; row < count; row++) {
     sprite = D_801E2120[frame];
     if (sprite != 0xFFFF) {
-      func_8014f800((s16)(x + 6), (s16)startY, 0, 0xFF,
+      func_8014f800((s16)(x + 6), (s16)(top + row * 0xD), 0, 0xFF,
                     0x80010000u + PSX_PTR(u16, 0x80010000u)[sprite]);
     }
     frame++;
     if (frame >= 0x36) {
       frame = 0;
     }
-    startY += 0xD;
   }
 
-  func_801AE3F0((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, D_80144952);
-  func_801AE3F0((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, D_80144952);
+  clut = &D_80144952;
+  func_801AE3F0((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, *clut);
+  func_801AE3F0((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, *clut);
   func_8014f800((s16)(x + 0x3D), (s16)(y + 6), 0, 0xFF,
                 0x80010000u +
                     PSX_PTR(u16, 0x80010000u)[D_801E2114[FIELD_REF(
