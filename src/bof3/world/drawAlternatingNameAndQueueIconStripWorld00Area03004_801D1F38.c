@@ -11,17 +11,14 @@
  * byte 0x0F is clamped to 0..4 and, while it is nonzero, queues the two-icon
  * strip at (0x80143FF6 + 0x0A, 0x80143FF8 - 0x18) through queueIconStrip with
  * that value as the second icon variant.
- * @status partial
- * @match 90.48
- * @residual the clamp result is allocated to the queueIconStrip argument
- * register a3, so the original's keep-arm copy (move v1,a3) and join copy
- * (move a3,v1) collapse into that register: 57 of 63 instructions and 248 of
- * 252 bytes match, with the inner branch target four bytes late and the test
- * narrowing filling the delay slot the original gives to the keep-arm copy.
- * Clamp shapes, merge variables and declaration orders measured the same body.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38(void) {
   s8 level;
+  s32 selected;
+  s8 clamped;
   u8* record;
 
   if (D_80143E6C & 0x40) {
@@ -30,15 +27,21 @@ void drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38(void) {
     func_8014F800(0x8A, 0xC8, 0, 0xC, (u32)&D_801C9E7C[D_80145026 * 20]);
   }
   record = D_801E3210;
-  level = *(u8*)&D_80143FCF - record[0x0F];
-  if (level >= 0) {
-    if (level >= 5) {
-      level = 4;
+  selected = *(u8*)&D_80143FCF;
+  selected -= record[0x0F];
+  level = selected;
+  selected = (u32)selected << 24;
+  if ((selected >> 24) >= 0) {
+    if ((selected >> 24) >= 5) {
+      clamped = 4;
+    } else {
+      clamped = level;
     }
   } else {
-    level = 0;
+    clamped = 0;
   }
-  if (level == 0) {
+  level = clamped;
+  if ((s8)level == 0) {
     return;
   }
   queueIconStrip(D_80143FF6 + 0xA, D_80143FF8 - 0x18, 2, level);

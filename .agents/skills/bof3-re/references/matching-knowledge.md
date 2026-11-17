@@ -1707,6 +1707,12 @@ later masks can remain distinct without an added conversion instruction. Prove
 that every later consumer observes only the retained bits for every input value;
 require the complete native gate.
 
+A clamp can need a raw word and two narrow quantities: the saved input and the
+selected result. Compute and classify the raw word while preserving the saved
+byte for the keep arm. A separate narrow result can retain the byte copy where
+selecting into a word adds a sign extension. Trace the first copy, the guard's
+narrowing and the join, then require the complete native gate.
+
 For a local constant/pointer exchange, distinguish local quantity priority from
 global allocation. A pointer already used for the same field in a mutually
 exclusive arm can own both reloaded phases. Define it before every use, preserve
