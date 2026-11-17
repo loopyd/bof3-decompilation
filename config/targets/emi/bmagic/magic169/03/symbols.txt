@@ -14,8 +14,7 @@ setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic16903_801EF640
 func_801EF688 = 0x801EF688;
 func_801EF7D0 = 0x801EF7D0;
 dispatchStateByte1Table0420BmagicMagic16903_801EF860 = 0x801EF860;
-T_801EF8A4 = 0x801EF8A4;
-func_801EF8AC = 0x801EF8AC;
+dispatchWorkByte2HandlerThenDrawBetweenGraphTypeDrawModesAroundHelpersWhenWorkBytes0And2SetBmagicMagic16903_801EF8A4 = 0x801EF8A4;
 func_801EFA18 = 0x801EFA18;
 growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4 = 0x801EFBC4;
 func_801EFCF4 = 0x801EFCF4;
