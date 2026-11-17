@@ -30,22 +30,9 @@
  * countdown byte 0x09 restarts at 0x10 before the integrating pair. The
  * scratchpad cursor at 0x1F800044 is reloaded for every group of record
  * accesses.
- * @status partial
- * @match 95.22
- * @residual 219/230 instructions with an equal 920-byte body. The eleven
- * differing words are one allocation decision with two visible clusters and no
- * value difference: the original build homes the rand roll in $v1 with a caller
- * save to $s0 (`move v1,v0`, then `move s0,v1` in the D_801E3200 branch delay
- * slot) and tests the low two bits through $v1, where this body homes the roll
- * in $s0 directly and tests it there. That leaves the D_801E3200 byte in $v0
- * there and in $v1 here, which in turn denies the func_801E0680 branch delay
- * slot its `li v0,3` fill and moves that block's three leading words. The gate
- * branch (seven words) and the roll group (five words) close together or not at
- * all. Statements, literals, offsets, branch targets and the shared 0x14 store
- * block match word for word.
- * One cursor variable per scratchpad reload point is measured, not stylistic:
- * collapsing the eleven reload variables into one pointer drops the body to
- * 158/230, and the struct view of the record changes nothing.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C(
     void) {
@@ -53,6 +40,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
   u8* gateWork;
   u8* flags;
   u8* marker;
+  u8* entryMarker;
   u8* entry;
   u8* phase;
   u8* route;
@@ -62,17 +50,24 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
   u8* clearWork;
   s16 distance;
   s16 counter;
-  u32 roll;
+  u8 roll;
 
   timer = D_1F800044;
   if (timer[9] == 0) {
     if (func_801E0680()) {
-      D_1F800044[1] = 3;
+      u8 nextHandler;
+      do {
+        nextHandler = 3;
+      } while (0);
+      phase = D_1F800044;
+      phase[1] = nextHandler;
     } else {
-      roll = rand();
+      u32 initialRoll;
+      initialRoll = rand();
+      roll = initialRoll;
       if (D_801E3200 == 0) {
         gateWork = D_1F800044;
-        if (*(s16*)(gateWork + 0x3E) == 0 && (roll & 3) == 0 &&
+        if (*(s16*)(gateWork + 0x3E) == 0 && (initialRoll & 3) == 0 &&
             D_80145E92 != 4 && gateWork[6] != 0x16) {
           D_801E3200 = 1;
           func_8014DD3C(D_801E2AB8[gateWork[6]].entry_12);
@@ -81,8 +76,8 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
           }
           flags = D_1F800044;
           flags[0] = (u8)(flags[0] & 0xDF);
-          marker = D_1F800044;
-          marker[0x2A] = 0;
+          entryMarker = D_1F800044;
+          entryMarker[0x2A] = 0;
           entry = D_1F800044;
           entry[0x48] = 0;
           func_8014D6B8(0);

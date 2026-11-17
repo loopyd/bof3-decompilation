@@ -1701,6 +1701,18 @@ reference count. A scope around another existing use may preserve the needed
 allocation without that earlier dependency. Trace both passes and measure the
 complete body; neither matching registers nor a matching prologue proves a match.
 
+When a call answer needs an initial word copy and a saved masked value, inspect
+CSE's width conversions. A word local for the first guard and a narrow local for
+later masks can remain distinct without an added conversion instruction. Prove
+that every later consumer observes only the retained bits for every input value;
+require the complete native gate.
+
+For a local constant/pointer exchange, distinguish local quantity priority from
+global allocation. A pointer already used for the same field in a mutually
+exclusive arm can own both reloaded phases. Define it before every use, preserve
+each reload and access, and trace conflicts in both phases before measuring the
+complete body.
+
 For local allocation, use the quantity's birth and death in the scheduled
 instruction stream. The earlier flow dump's live-length statistic can be stale
 after scheduling, and a quantity may combine several real values. Trace those
