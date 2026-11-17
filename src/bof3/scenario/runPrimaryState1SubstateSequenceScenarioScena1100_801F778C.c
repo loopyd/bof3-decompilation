@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 extern u8 g_ScenarioProgress;
 extern u8 D_80143BB0;
@@ -7,12 +7,7 @@ extern u8 D_80143F1E;
 extern u8 D_80143F1F;
 extern u8 D_80145E98;
 extern u16 D_80146258;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
 extern u32 D_8014686C;
-extern u8 D_80146874;
-extern u8 D_80146875;
 extern u8 D_8014832E;
 extern u16 D_8014932A;
 extern u8 D_80149332;
@@ -243,11 +238,7 @@ void runPrimaryState1SubstateSequenceScenarioScena1100_801F778C(void) {
     func_8015C058();
     D_80146258 ^= 8u;
     *progress = 0u;
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
   case 0x32:

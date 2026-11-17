@@ -1,15 +1,10 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 extern u8 g_ScenarioProgress;
 extern u8 D_1F800000;
 extern u8 D_80143BB0;
 extern u16 D_80143C40;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
 extern u32 D_8014686C;
-extern u8 D_80146874;
-extern u8 D_80146875;
 extern u8 D_8014832E;
 /* The 0x74-byte row at D_80143FC8 is seeded through one extern base per field
  * because the original re-materialises `lui at,0x8014` for every statement: a
@@ -559,11 +554,7 @@ void runPrimaryState8SubstateSequenceScenarioScena1100_801F9184(void) {
       func_8015B580(D_8014686C, 0x12);
       func_8015C058();
       *progress = 0u;
-      D_80146865 = 0u;
-      D_80146866 = 0u;
-      D_80146867 = 0u;
-      D_80146875 = 0u;
-      D_80146874 = 0u;
+      SCENA11_CLEAR_SHARED_STATE();
       break;
     }
   }

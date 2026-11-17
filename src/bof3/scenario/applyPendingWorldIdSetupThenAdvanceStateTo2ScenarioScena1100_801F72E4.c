@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 /* Pending world id halfword of the shared EXE image: every arm of this body
  * gates on it and none of them writes it. */
@@ -26,11 +26,6 @@ extern u32 D_8014686C;
 
 /* Shared scenario progress byte and shared state bytes this body clears. */
 extern u8 g_ScenarioProgress;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
-extern u8 D_80146874;
-extern u8 D_80146875;
 
 /* Shared scenario state byte the progress dispatcher indexes; this body only
  * advances it to 2. */
@@ -265,11 +260,7 @@ void applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1100_801F72E4(void)
   if (D_80143F00 == 0x2D || D_80143F00 == 0x41 || D_80143F00 == 0x57 ||
       D_80143F00 == 0x10 || D_80143F00 == 0x73) {
     g_ScenarioProgress = 0;
-    D_80146865 = 0;
-    D_80146866 = 0;
-    D_80146867 = 0;
-    D_80146875 = 0;
-    D_80146874 = 0;
+    SCENA11_CLEAR_SHARED_STATE();
   }
   D_80146872 = 2;
 }

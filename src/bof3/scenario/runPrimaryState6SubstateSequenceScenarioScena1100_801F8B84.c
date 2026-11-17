@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 /* Shared front-end mode byte of the shared EXE image: every claim arm of this
  * payload treats 2 as busy and refuses to act, and the arms that start a
@@ -21,11 +21,6 @@ extern u32 D_8014686C;
  * byte below is its own switch word and the primary state byte selects the
  * handler run that reaches it. */
 extern u8 g_ScenarioProgress;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
-extern u8 D_80146874;
-extern u8 D_80146875;
 
 /* Shared effect-bank byte of the shared EXE image, armed with 0x1F by the arms
  * that start a front-end sequence and cleared by the arms that end one. */
@@ -214,11 +209,7 @@ void runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84(void) {
       break;
     }
     func_8015C058();
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   case 10:
     func_8015C088();
@@ -254,11 +245,7 @@ void runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84(void) {
       break;
     }
     func_8015C058();
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   case 20:
     if (D_80143BB0 != 0u) {
@@ -312,11 +299,7 @@ void runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84(void) {
     }
     func_8016813C(0xFFFF, 7u);
     func_8015C058();
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   case 40:
     D_8014832E = 0x1Fu;
@@ -384,11 +367,7 @@ void runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84(void) {
     }
     func_8015B580(D_8014686C, 0xCu);
     func_8015C058();
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
 }

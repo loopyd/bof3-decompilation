@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 /* PsyQ libc random source of the shared EXE image, outside this payload. The
  * body keeps only the low four bits of one roll and indexes the roll table
@@ -42,11 +42,6 @@ extern u8 *D_80146250;
  * the clearing tail zeroes all but the progress byte, which the arm zeroes
  * too. */
 extern u8 g_ScenarioProgress;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
-extern u8 D_80146874;
-extern u8 D_80146875;
 
 /* Twelve-byte name buffer of the shared EXE image and the terminator byte the
  * body clears directly after it. */
@@ -290,11 +285,7 @@ void runPrimaryState4SubstateSequenceScenarioScena1100_801F7F08(void) {
   case 0x32:
     func_8015C058();
     g_ScenarioProgress = 0;
-    D_80146865 = 0;
-    D_80146866 = 0;
-    D_80146867 = 0;
-    D_80146875 = 0;
-    D_80146874 = 0;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
 }

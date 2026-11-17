@@ -1,13 +1,8 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 extern u8 g_ScenarioProgress;
 extern u8 D_80143BB0;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
 extern u32 D_8014686C;
-extern u8 D_80146874;
-extern u8 D_80146875;
 
 /* Shared command-code mapper at 0x8016628C: table, code, mode. */
 extern s32 func_8016628C(s32 table, s32 code, s32 mode);
@@ -89,11 +84,7 @@ void runPrimaryState3SubstateSequenceScenarioScena1100_801F7CC8(void) {
     }
     func_8015B580(D_8014686C, 6);
     func_8015C058();
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   case 10:
     if (D_80143BB0 == 2u) {
@@ -125,11 +116,7 @@ void runPrimaryState3SubstateSequenceScenarioScena1100_801F7CC8(void) {
     }
     func_8015C058();
     *progress = 0u;
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
   case 15:
@@ -146,11 +133,7 @@ void runPrimaryState3SubstateSequenceScenarioScena1100_801F7CC8(void) {
     }
     func_8015C058();
     func_8015B580(D_8014686C, 9);
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
 }

@@ -1,15 +1,10 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena11_state.h"
 
 extern u8 g_ScenarioProgress;
 extern u8 D_80143BB0;
 extern u16 D_80143C40;
 extern u16 D_80146258;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
 extern u32 D_8014686C;
-extern u8 D_80146874;
-extern u8 D_80146875;
 extern u8 D_8014832E;
 
 /* GAME.EMI entry 0 helper at 0x801BE1B0. */
@@ -98,11 +93,7 @@ void runPrimaryState9SubstateSequenceScenarioScena1100_801FA3A4(void) {
     func_8015B580(D_8014686C, 0x13);
     func_8015C058();
     *progress = 0u;
-    D_80146865 = 0u;
-    D_80146866 = 0u;
-    D_80146867 = 0u;
-    D_80146875 = 0u;
-    D_80146874 = 0u;
+    SCENA11_CLEAR_SHARED_STATE();
     break;
   }
   case 5:
