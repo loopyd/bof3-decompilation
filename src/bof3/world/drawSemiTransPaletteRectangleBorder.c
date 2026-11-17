@@ -19,15 +19,9 @@ extern u16 D_80033A08[];
  *           draw mode of the first line, 7 when it is set and 6 when it is
  *           clear, and the opposite mode for the second line; each 0x18-byte
  *           packet is queued through func_8014E5A0(2, 0x18).
- * @status partial
- * @match 39.80
- * @residual the palette read, both tpage-mode selections, the two calls and
- *           every packet store agree with the original, but the shipped body
- *           recomputes each coordinate sum inside its own packet while this
- *           candidate keeps one x + w and one y + h for both packets: the
- *           longer live ranges force a saved copy of x and of y and one
- *           spilled channel byte (98 instructions and 392 bytes against 95
- *           and 380).
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawSemiTransPaletteRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 mode) {
   LINE_F3* line;
@@ -36,25 +30,25 @@ void drawSemiTransPaletteRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 mode) {
   u32 r;
   u32 g;
   u32 b;
-  u16 right;
-  u16 bottom;
 
   paletteOffset = (*(s8*)&D_80144952 << 6) | 0x20;
-  color = *(u16*)((u8*)D_80033A08 + paletteOffset);
+  color = *(u16*)(PSX_PTR(u8, 0x80033A08u) + paletteOffset);
   r = (color & 0x1F) << 3;
   g = (color >> 2) & 0xF8;
   b = (color >> 7) & 0xF8;
 
-  submitTpageDrawMode(mode != 0 ? 7 : 6, 2);
+  if (mode != 0) {
+    submitTpageDrawMode(7, 2);
+  } else {
+    submitTpageDrawMode(6, 2);
+  }
   line = (LINE_F3*)g_PrimCursor;
   SetLineF3(line);
-  right = x + w;
-  bottom = y + h;
-  line->x1 = right;
-  line->x2 = right;
+  line->x1 = x + w;
+  line->x2 = x + w;
   line->x0 = x;
-  line->y0 = bottom;
-  line->y1 = bottom;
+  line->y0 = y + h;
+  line->y1 = y + h;
   line->y2 = y;
   line->r0 = r;
   line->g0 = g;
@@ -62,15 +56,17 @@ void drawSemiTransPaletteRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 mode) {
   SetSemiTrans(line, 1);
   func_8014E5A0(2, 0x18);
 
-  submitTpageDrawMode(mode != 0 ? 6 : 7, 2);
+  if (mode != 0) {
+    submitTpageDrawMode(6, 2);
+  } else {
+    submitTpageDrawMode(7, 2);
+  }
   line = (LINE_F3*)g_PrimCursor;
   SetLineF3(line);
-  right = x + w;
-  bottom = y + h;
-  line->x2 = right;
   line->x0 = x;
   line->x1 = x;
-  line->y0 = bottom;
+  line->x2 = x + w;
+  line->y0 = y + h;
   line->y1 = y;
   line->y2 = y;
   line->r0 = r;

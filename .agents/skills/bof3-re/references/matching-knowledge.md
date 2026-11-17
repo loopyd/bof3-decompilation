@@ -145,7 +145,13 @@ turns back into an ordinary instruction diff as those arms reach their length. T
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. The single-call spelling fails at
+keeps the per-arm argument setup the original shows.
+The pre-CSE graph matters even when the final calls agree. Branch-local calls
+can keep separate joins through CSE and allocation, then merge in a late jump
+pass. Those joins can stop pure coordinate sums from surviving across packet
+calls, removing saved copies and spills. Compare early dumps with final
+instructions before treating the two call spellings as one optimizer class.
+The single-call spelling fails at
 that join when one arm passes a literal: a conditional expression, or an `if`/`else`
 assigning one argument local, hoists the literal above the test, fills the load-delay
 slot with it and drops the join's `j`, two instructions short at the original size.
@@ -1875,8 +1881,8 @@ Nearby-version source supports a hypothesis, not owning-compiler proof.
    Pointer addition can canonicalize the base first even when the source writes
    the offset first. For a proven 32-bit PSX address calculation, an explicit
    word-address expression can retain the original operand order. Verify the
-   pointer round trip, offset bounds and both RTL operands; never substitute a
-   hardcoded base or claim the cast is portable.
+   pointer round trip, offset bounds and both RTL operands. Keep the evidenced
+   base and do not claim the cast is portable.
 3. Measure each predicted effect and their interaction through `lift sweep`.
    Bind dumps to source hashes; inspect the complete register web and memory
    events. Require full function/readonly bytes, live gate and independent review;
