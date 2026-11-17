@@ -14,7 +14,7 @@
  * @match 96.24
  * @residual initial setup and product input registers differ from the original
  */
-void func_801D210C(void) {
+void initializeModePanelWorkAndAdvanceStep(void) {
   s8* mode;
   u8* seedWork;
   u8* levelWork;

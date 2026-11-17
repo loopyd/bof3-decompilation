@@ -29,7 +29,7 @@ sources = [
     "src/bof3/world/dispatchCompanion.c",
     "src/bof3/world/publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0.c",
     "src/bof3/world/func_801D23F4.c",
-    "src/bof3/world/func_801D210C.c",
+    "src/bof3/world/initializeModePanelWorkAndAdvanceStep.c",
     "src/bof3/world/dispatchStateByte3Table1d00World00Area03004_801D12C8.c",
     "src/bof3/world/func_801D1538.c",
     "src/bof3/world/func_801D159C.c",

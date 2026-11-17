@@ -113,8 +113,8 @@ segments:
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 5388
     - c
-    - func_801D210C
-    - '@source: src/bof3/world/func_801D210C.c'
+    - initializeModePanelWorkAndAdvanceStep
+    - '@source: src/bof3/world/initializeModePanelWorkAndAdvanceStep.c'
   - - 6132
     - c
     - func_801D23F4
