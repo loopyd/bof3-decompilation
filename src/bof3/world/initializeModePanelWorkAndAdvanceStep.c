@@ -11,8 +11,9 @@
  * services and marks the selected entry record.
  * @source 0x801D210C
  * @status partial
- * @match 96.24
- * @residual initial setup and product input registers differ from the original
+ * @match 98.39
+ * @residual Three instructions assign the mode byte and shared scale to
+ * different registers. The original 744-byte interval remains retained.
  */
 void initializeModePanelWorkAndAdvanceStep(void) {
   s8* mode;
@@ -27,17 +28,19 @@ void initializeModePanelWorkAndAdvanceStep(void) {
   u8* stepWork;
   s32 level;
   s32 remainingBudget;
+  u32 initialPanelWord;
   u32 value;
   u32 budget;
   u8 index;
 
   seedWork = AREA030_SCRATCH;
-  value = D_80145EC4;
+  initialPanelWord = D_80145EC4;
   do {
+    *(volatile u32*)(seedWork + 0x34u) = initialPanelWord;
     budget = D_80145EC8;
-    *(volatile u32*)(seedWork + 0x34u) = value;
     *(u32*)(seedWork + 0x38u) = budget - 0x8000u;
-    level = func_8015477c((s32)(*(volatile u32*)(seedWork + 0x34u)), (s32)(budget - 0x8000u));
+    value = *(volatile u32*)(seedWork + 0x34u);
+    level = func_8015477c((s32)value, (s32)(budget - 0x8000u));
   } while (0);
 
   levelWork = AREA030_SCRATCH;
