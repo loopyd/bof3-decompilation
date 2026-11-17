@@ -146,8 +146,9 @@ segments:
     - asm
     - func_801F4F60
   - - 9144
-    - asm
-    - func_801F4FB8
+    - c
+    - countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8
+    - '@source: src/bof3/world/countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8.c'
   - - 9196
     - asm
     - func_801F4FEC

@@ -89,7 +89,7 @@ segments:
     - c
     - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640
     - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld01Area06513_801F3640.c'
-    - '@behavior: Byte-2 state handler 3 of the byte-2 handler table 0x801F5290. Subtracts 0x10 from the signed halfword at record offset 0x2E of the work record published at scratchpad pointer cell 0x1F800044, clears state byte 0x02 while the stored value stays below -0x2F, writes 1 to state byte 0x02 through a second read of the cell unless the shared byte 0x801454F2 is 2, then reads the cell again and calls the local helper at 0x801F3B38 with 0x10 and the signed halfword at offset 0x2E. Takes no arguments and returns nothing.'
+    - '@behavior: Byte-2 state handler 3 of the byte-2 handler table 0x801F5290. Subtracts 0x10 from the signed halfword at record offset 0x2E of the work record published at scratchpad pointer cell 0x1F800044, clears state byte 0x02 while the stored value stays below -0x2F, writes 1 to state byte 0x02 through a second read of the cell unless the shared byte 0x801454F2 is 2, then reads the cell again and calls the local marker-sprite drawer at 0x801F3B38 with 0x10 and the signed halfword at offset 0x2E. Takes no arguments and returns nothing.'
   - - 2756
     - c
     - dispatchStateByte3Table52A0World01Area06513_801F36C4
@@ -112,8 +112,10 @@ segments:
     - asm
     - func_801F3A10
   - - 3896
-    - asm
-    - func_801F3B38
+    - c
+    - drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld01Area06513_801F3B38
+    - '@source: src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld01Area06513_801F3B38.c'
+    - '@behavior: Returns immediately unless the shared byte 0x8014832E has any of the bits 0x1B set. Then opens drawing mode on the primitive cursor with tpage 0x22C when GetGraphType reads 1 or 2 and 0x9C otherwise, reserves twelve bytes through 0x8014E5A0 and draws the first overlay sprite layer at the two signed arguments. It reads the map code under 0x8014930A and 0x8014930E and, unless that code is 0xA0, 0xA1 or 0xAE or bit 0x1000 of 0x8014625A is set, draws a second layer 0x30 to the right with the incremented record index from the four-byte layer table 0x801F5308 selected by mask 0x80145AB4, taking the plain record index on that exceptional path; the same split repeats at 0x10 below over eight entries under mask 0x80145AC0. A fourth layer 0x30 to the right and 0x18 below is drawn when 0x801B6610 still reads zero at the same coordinates, or bit 0x1000 of 0x8014625A, the low seven bits of 0x80145024 equal to 0x0C or bit 0x4000 of 0x80146258 is set, and the local panel 0x801F3F04 is always appended from 0x18 to the right and 0x18 below. Takes no arguments and returns nothing.'
   - - 4868
     - asm
     - func_801F3F04

@@ -198,8 +198,36 @@ segments:
     - asm
     - func_801FBD88
   - - 22680
-    - asm
-    - func_801FC498
+    - c
+    - runSecondaryStateSequenceForPrimaryState16ScenarioScena0600_801FC498
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState16ScenarioScena0600_801FC498.c'
+    - '@behavior: Word 16 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a 22-entry case
+      table in which only states 0, 1, 10, 12, 20 and 21 have a body; every
+      other value, and every value above 0x15, falls to the epilogue. State 0
+      arms progress 0x1E and secondary state 1 unless the shared phase byte
+      D_80143BB0 already reads 2. State 1, at progress 0x1F, advances the
+      shared selection counter 0x80144DF2 and gates the next entry through
+      func_801650B4 mode 1: a zero answer raises the progress byte to 0x20 and
+      joins the reset tail, while a nonzero answer copies the twelve-byte name
+      func_80165D48 answers for mode 1 and that entry into the shared name
+      buffer D_801490D8, clears its terminator D_801490E4, queues front-end
+      action 0x94 through func_80150224, latches the phase byte to 2, sets flag
+      bit 0x22 of the scenario flag word D_8014686C, queues cue 0x106 and arms
+      secondary state 0x15. State 10 latches progress 0x23 and secondary state
+      0x0C unless the phase byte reads 2. State 12 mirrors state 1 over the
+      second selection counter 0x80144DF5 at progress 0x24, with action 0x95,
+      flag bit 0x23 and the name buffer D_801490F8 with its terminator
+      D_80149104. State 20 requests front-end mode 1 through func_80150284,
+      latches the phase byte to 2 and arms secondary state 0x15. State 21,
+      unless the phase byte reads 2, clears the progress byte and joins the
+      reset tail, which clears D_80146865, runs the shared overlay release
+      helper func_8015C058 and clears the secondary and primary state bytes.
+      The 0x20-byte frame keeps $ra over $s1 and $s0, the state-byte load is
+      hoisted above the frame setup, and the 22-word case table sits in the
+      payload leading table data at 0x801F71F4.'
   - - 23320
     - c
     - runSecondaryStateSequenceForPrimaryState17ScenarioScena0600_801FC718

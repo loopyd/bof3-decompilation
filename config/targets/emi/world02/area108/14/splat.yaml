@@ -110,8 +110,10 @@ segments:
     - asm
     - func_801F3BA0
   - - 4228
-    - asm
-    - func_801F3C84
+    - c
+    - setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84
+    - '@source: src/bof3/world/setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84.c'
+    - '@behavior: Overlay work-record sweep run by the byte-1 steps 0x801F3920, 0x801F3A14 and 0x801F3A6C with no arguments: it reads the scratchpad pointer cell 0x1F800044 once and keeps the incoming value, walks the 30 shared 0x98-byte work records based at 0x80146888 publishing each through the cell and, for a record whose byte 0 has bit 0 set, storing 5 into its state byte 0x29 and running the shared service 0x8014D290 with no argument set, then walks the live local records counted by the shared byte 0x80146254 with a 0x140-byte stride from the base 0x80145E90 and publishes, marks and submits every one of them the same way, and finally restores the incoming cell value.'
   - - 4496
     - asm
     - func_801F3D90

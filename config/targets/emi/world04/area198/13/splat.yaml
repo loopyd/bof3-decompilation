@@ -62,8 +62,9 @@ segments:
     - asm
     - func_801F319C
   - - 1928
-    - asm
-    - func_801F3388
+    - c
+    - stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388
+    - '@source: src/bof3/world/stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388.c'
   - - 2344
     - asm
     - func_801F3528

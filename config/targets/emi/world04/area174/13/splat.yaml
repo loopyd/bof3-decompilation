@@ -103,8 +103,10 @@ segments:
     - '@source: src/bof3/world/seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C.c'
     - '@behavior: Seeds the 0x74-byte front-end record row selected by work byte 0x0B of the object published at scratchpad 0x1F800044: record byte 0x01 = 3, byte 0x5D = 0x70, byte 0x5E = 0x30.'
   - - 5116
-    - asm
-    - func_801F3FFC
+    - c
+    - stepScratchWorkCounterDownBy14RaiseLevelTripleToMin40ThenResetFlag20AtA00World04Area17413_801F3FFC
+    - '@source: src/bof3/world/stepScratchWorkCounterDownBy14RaiseLevelTripleToMin40ThenResetFlag20AtA00World04Area17413_801F3FFC.c'
+    - '@behavior: Per-frame step of the scratch work record published through the pointer cell at 0x1F800044: subtracts 0x14 from the record halfword at 0x3E, raises each signed level byte 0x5D, 0x5E and 0x5F by 2 while it reads below -0x40, and then, once the signed halfword at 0x3E reads 0xA00, clears flag bit 0x20 of record byte 0 and stores 0 into work byte 0x5C and the level bytes 0x5F, 0x5E and 0x5D; in the other arm it consumes two units of the halfword at 0x7E of the record published through 0x80146884.'
   - - 5376
     - asm
     - func_801F4100

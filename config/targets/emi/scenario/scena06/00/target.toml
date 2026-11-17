@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState1ScenarioScena0600_801F7A44.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState5ScenarioScena0600_801F8F18.c",
+    "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState16ScenarioScena0600_801FC498.c",
 ]
 support_sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FE0D0.c",
@@ -101,3 +102,9 @@ function = 0x801FA8EC
 section = ".rodata"
 address = 0x801F7044
 size = 0x28
+
+[[matching.section_placements]]
+function = 0x801FC498
+section = ".rodata"
+address = 0x801F71F4
+size = 0x58

@@ -15,11 +15,13 @@ extern u8* workRecord44World02Area10814; /* @source 0x1F800044 @kind data */
 
 /* Shared overlay helpers this step calls after its own update. 0x801F3BA0
  * builds the full-screen 0x140-by-0xF0 semi-transparent tile whose r0/g0/b0
- * bytes it reads from the work record's 0x5D/0x5E/0x5F triplet, and 0x801F3C84
- * walks the entity records and submits each through 0x8014D290. Both are still
- * unlifted assembly inside this target, so only their prototypes are declared. */
+ * bytes it reads from the work record's 0x5D/0x5E/0x5F triplet and is still
+ * unlifted assembly inside this target, while 0x801F3C84 walks the work records
+ * and submits each through 0x8014D290 and is this target's lift
+ * setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84. */
 void func_801F3BA0(void);
-void func_801F3C84(void);
+void setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84(
+    void);
 
 /* @source 0x801F3A6C
  * @behavior Overlay flash-fade step of the work record published at the
@@ -65,5 +67,5 @@ void fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area
     work[1] = 6;
   }
   func_801F3BA0();
-  func_801F3C84();
+  setWorkByte29To5OnActiveWorkRecordsThenOnEveryLiveLocalRecordWorld02Area10814_801F3C84();
 }
