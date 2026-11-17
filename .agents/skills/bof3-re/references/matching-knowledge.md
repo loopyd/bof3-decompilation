@@ -1701,6 +1701,18 @@ reference count. A scope around another existing use may preserve the needed
 allocation without that earlier dependency. Trace both passes and measure the
 complete body; neither matching registers nor a matching prologue proves a match.
 
+For local allocation, use the quantity's birth and death in the scheduled
+instruction stream. The earlier flow dump's live-length statistic can be stale
+after scheduling, and a quantity may combine several real values. Trace those
+combinations and weighted references before predicting a register exchange.
+
+When an array cell address becomes an unwanted carried pointer, inspect CSE and
+loop reduction together. An existing first store through the frame base and
+index can precede the local's transition to the cell address used by later
+consumers. CSE may share that address while keeping the base and cell as separate
+quantities. Confirm that the loop retains its original counter and require the
+complete native gate.
+
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:
