@@ -102,6 +102,14 @@ Read [matching knowledge](matching-knowledge.md) for each evidence branch. Runti
 work answers a named behavior question; it is not mandatory for a proven register
 permutation. An unauthorized permuter stays untried, not exhausted.
 
+An opt-in permuter requires a cited residual and parent authorization. Verify its
+generated `compile.sh` against the owning recipe before execution. Disable
+forbidden transformations and inspect the remaining implementations: names and
+randomization regions do not guarantee ABI or scope boundaries. Review the entire
+candidate; reject artificial aliases or qualifiers, undefined uses and changed
+memory or call behavior. Permuter scores guide search; only the complete owning
+native gate proves a match.
+
 Frame/size: types/calls, address-taken locals, aggregate copies and flow first.
 Relocation/load order: symbol representation and original reload evidence first.
 Entry copies: representation and live ranges before scheduler claims. For a lone
