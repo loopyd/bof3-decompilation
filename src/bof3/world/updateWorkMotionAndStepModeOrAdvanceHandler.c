@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 79.55
+ * @match 81.05
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -109,12 +109,13 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 countdownCurrent;
   s32 delta;
   s32 position;
+  s32 inwardStepPosition;
   s32 publishedInwardPosition;
   s32 publishedOutwardPosition;
   s32 velocity;
+  s32 selectedInwardVelocity;
   s32 classificationVelocity;
   s32 initialOutwardVelocity;
-  s32 timer;
   s32 outwardTimer;
   u16 outwardTimerValue;
   s32 numerator;
@@ -507,25 +508,28 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       numerator >>= 4;
       if (denominator != 0) {
         denominator = numerator / denominator;
-        velocity = denominator;
         FIELD_REF(s32, inwardConditionWork, 0x0C) = denominator;
-        if (velocity < -0x1000) {
-          velocity = -0x1000;
-        } else if (velocity > 0x1000) {
-          velocity = 0x1000;
+        if (denominator >= -0x1000) {
+          if (denominator < 0x1001) {
+            selectedInwardVelocity = denominator;
+          } else {
+            selectedInwardVelocity = 0x1000;
+          }
+        } else {
+          selectedInwardVelocity = -0x1000;
         }
-        FIELD_REF(s32, inwardConditionWork, 0x0C) = velocity;
+        FIELD_REF(s32, inwardConditionWork, 0x0C) = selectedInwardVelocity;
       } else {
         FIELD_REF(s32, inwardConditionWork, 0x0C) = 0;
       }
 
       inwardStepWork = D_1F800044;
-      position = FIELD_REF(s32, inwardStepWork, 0x34);
+      inwardStepPosition = FIELD_REF(s32, inwardStepWork, 0x34);
       velocity = FIELD_REF(s32, inwardStepWork, 0x0C);
-      timer = FIELD_REF(s16, inwardStepWork, 0x3E);
-      FIELD_REF(u32, inwardStepWork, 0x34) = (u32)position + (u32)velocity;
-      if (timer < 0) {
-        FIELD_REF(s16, inwardStepWork, 0x3E) = (s16)(timer + 8);
+      denominator = FIELD_REF(s16, inwardStepWork, 0x3E);
+      FIELD_REF(u32, inwardStepWork, 0x34) = (u32)inwardStepPosition + (u32)velocity;
+      if (denominator < 0) {
+        FIELD_REF(s16, inwardStepWork, 0x3E) = (s16)(denominator + 8);
       }
 
       inwardPositionWork = D_1F800044;
