@@ -1,10 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Scratchpad work-record pointer cell shared by the battle, bmagic, world and
- * boss overlays; this target's map binds the row. The original re-materialises
- * the cell with its own lui 0x1F80 / lw 0x44 pair before every store group in
- * this body, because a store through the loaded pointer may alias the cell. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
 
 /* Shared battle record pointer in main RAM, outside this overlay image; this
  * target's generated undefined_syms_auto.txt already binds the address. This
@@ -100,14 +96,14 @@ void clearWorkByte24Byte2AAndMode48SetByte29To2Lookup15CResource4CopyRecordPosit
   u16 distance;
   u32 slot;
 
-  D_1F800044[0x24] = 0;
-  D_1F800044[0x2A] = 0;
-  D_1F800044[0x48] = 0;
-  D_1F800044[0x29] = 2;
+  boss028CurrentWorkRecordState[0x24] = 0;
+  boss028CurrentWorkRecordState[0x2A] = 0;
+  boss028CurrentWorkRecordState[0x48] = 0;
+  boss028CurrentWorkRecordState[0x29] = 2;
   func_8014DD3C(0x15C);
   func_8014D6B8(4);
   record = D_801EB4E0;
-  work = D_1F800044;
+  work = boss028CurrentWorkRecordState;
   *(u16 *)(work + 0x36) = *(u16 *)(record + 0x36) + 7;
   *(s32 *)(work + 0x38) = *(s32 *)(record + 0x38);
   distance = *(u16 *)(record + 0x3E);
@@ -117,7 +113,7 @@ void clearWorkByte24Byte2AAndMode48SetByte29To2Lookup15CResource4CopyRecordPosit
   *(u16 *)(work + 0x3E) = distance + 0x1000;
   slot = (u8)func_801E590C(3, 2) * 0x78;
   D_801EC331[slot] = 1;
-  published = D_1F800044;
+  published = boss028CurrentWorkRecordState;
   *(u8 **)&D_801EC3A4[slot] = published;
   published[2]++;
 }

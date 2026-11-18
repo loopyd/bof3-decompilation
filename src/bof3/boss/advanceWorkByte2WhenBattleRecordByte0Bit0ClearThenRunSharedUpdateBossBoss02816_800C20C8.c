@@ -1,5 +1,7 @@
 #include "bof3/bof3.h"
 
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+
 /* Shared battle record pointer in main RAM, outside this overlay image; this
  * target's generated undefined_syms_auto.txt already binds the address. This
  * body only samples that record's unsigned byte 0, the flag byte whose bit 0
@@ -10,12 +12,6 @@
  * helper. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 
-/* Scratchpad work-record pointer cell. This target's map binds no row for it,
- * so the address keeps the D_ spelling the exact same-target sibling
- * dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0Set
- * BossBoss02816_800C1FB8 uses for the same cell. The original materialises the
- * cell with one lui 0x1F80 / lw 0x44 pair, which this body reads once. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* Shared main-executable per-frame update helper, bound by this target's
  * generated undefined_funcs_auto.txt row. It is not part of any payload here,
@@ -55,7 +51,7 @@ void func_8014D978(void);
 void advanceWorkByte2WhenBattleRecordByte0Bit0ClearThenRunSharedUpdateBossBoss02816_800C20C8(
     void) {
   if ((D_801EB4E0[0] & 1) == 0) {
-    D_1F800044[2]++;
+    boss028CurrentWorkRecordState[2]++;
   }
   func_8014D978();
 }

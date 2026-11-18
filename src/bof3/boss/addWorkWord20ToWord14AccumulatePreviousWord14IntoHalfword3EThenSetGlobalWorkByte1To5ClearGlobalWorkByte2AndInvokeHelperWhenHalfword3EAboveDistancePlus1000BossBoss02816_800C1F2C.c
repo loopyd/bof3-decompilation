@@ -1,12 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Scratchpad work-record pointer cell, bound by its own D_ name and not by
- * SPAD_PTR_SLOT: the original materialises the base once (lui $v0,0x1F80 /
- * lw $v0,68($v0)) ahead of its own frame setup and reaches every record access
- * through that one register, while the macro's absolute-constant lvalue makes
- * the compiler hold 0x1F800044 in a callee-saved register and load through
- * offset zero. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
 
 /* Shared battle work record pointer in main RAM, outside this overlay's image;
  * this target's own generated undefined_syms_auto.txt already binds the
@@ -97,7 +91,7 @@ void addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenSetGlobalWor
     void) {
   u8 *work;
 
-  work = D_1F800044;
+  work = boss028CurrentWorkRecordState;
   *(u16 *)(work + 0x3E) += *(u32 *)(work + 0x14);
   *(u32 *)(work + 0x14) += *(u32 *)(work + 0x20);
   if (*(s16 *)(work + 0x3E) >

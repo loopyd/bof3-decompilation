@@ -1,11 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Scratchpad work-record pointer cell shared by the battle, bmagic, world and
- * boss overlays; this target's map binds the row. This body materialises the
- * cell twice: once for the countdown store and again after the two calls for
- * the published pointer and the step advance, because a store through the
- * loaded pointer may republish the cell. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
 
 /* Current enemy work record pointer cell in main RAM, outside this overlay's
  * image. Its word 0xE8 is the in-row pointer whose halfword 0 carries the
@@ -103,7 +98,7 @@ void countDownWorkByte9SubmitWorkEffectOnExpiryThenOnEnemyReadyClaimActionSlotCl
   u8 *published;
   u32 slot;
 
-  work = D_1F800044;
+  work = boss028CurrentWorkRecordState;
   countdown = work[9] - 1;
   work[9] = countdown;
   if (countdown == 0) {
@@ -112,7 +107,7 @@ void countDownWorkByte9SubmitWorkEffectOnExpiryThenOnEnemyReadyClaimActionSlotCl
   if (func_801E30F8() != 0) {
     slot = (u8)func_801E590C(3, 2) * 0x78;
     D_801EC331[slot] = 0;
-    published = D_1F800044;
+    published = boss028CurrentWorkRecordState;
     *(u8 **)&D_801EC3A4[slot] = published;
     published[2]++;
   }

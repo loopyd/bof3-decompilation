@@ -1,5 +1,7 @@
 #include "bof3/bof3.h"
 
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+
 /* Current enemy work record pointer cell in main RAM, outside this overlay's
  * image: the battle code publishes the record the overlays run against. This
  * target's generated undefined_syms_auto.txt already binds the address and
@@ -7,11 +9,6 @@
  * only and the record's other bytes stay offset-anchored. */
 extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
 
-/* Scratchpad work-record pointer cell. The original materialises this cell
- * twice, once for the class-row store and once after the call, so the source
- * keeps the named cell form and evaluates it again per access; the store
- * through the loaded record may alias the cell. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* Shared main-executable enemy script byte helper: it selects the script byte
  * named by its argument from the current enemy work record's +0xEC script
@@ -65,7 +62,7 @@ void armCueCountdownFromClassRowRunScriptByte2ThenAdvanceWorkByte2BossBoss02816_
 
   work = D_801EB4E8;
   classIndex = work[0xE0];
-  D_1F800044[0x9] = PSX_REF(u8, 0x800E40CEu + classIndex * 0x88u);
+  boss028CurrentWorkRecordState[0x9] = PSX_REF(u8, 0x800E40CEu + classIndex * 0x88u);
   func_801E2314(2);
-  D_1F800044[0x2]++;
+  boss028CurrentWorkRecordState[0x2]++;
 }

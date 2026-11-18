@@ -1,6 +1,6 @@
 #include "bof3/emi/dispatchers.h"
 
-/* Interior base of the overlay's pointer run: the 0x40-byte D_800C2140 textbin
+/* Interior base of the overlay's pointer run: the 0x40-byte boss028WorkDataAndStateHandlerTable textbin
  * row covers 0x800C2140 through 0x800C217F and the reviewed Splat layout places
  * it whole, so only the entry base this dispatcher indexes is named here. From
  * 0x800C2154 the run holds eleven code pointers: 0x800C1848, 0x801E52E8,

@@ -1,20 +1,18 @@
 #include "bof3/bof3.h"
 
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+
 /*
  * Code pointer run at 0x800C21AC, the seven-slot work-state table this
  * dispatcher indexes: slot 0 = 0x800C1C9C, slot 1 = 0x800C1D90,
  * slot 2 = 0x800C1E80, slot 3 = 0x800C1F2C, slot 4 = 0x800C2024,
  * slot 5 = 0x800C20C8, slot 6 = 0x800C2120. Its first five words sit inside
  * the 0x800C2180 textbin row, which the reviewed Splat layout places whole, and
- * its last two are the words the layout labels func_800C21C0, so only the
+ * its last two are the words the layout labels T_800C21C0, so only the
  * indexed word is named here.
  */
 extern void (*D_800C21AC[])(void); /* @source 0x800C21AC @kind data */
 
-/* Work-record pointer cell in the scratchpad. The original re-materialises this
- * cell for the dispatch index and again after the indirect call, so it is read
- * through the named target symbol instead of the constant-address accessor. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* File-local prototype: the shared main-executable service func_8014D290 is
  * declared per caller; this caller passes no arguments. */
@@ -46,8 +44,8 @@ void func_8014D290(void);
  */
 void dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30(
     void) {
-  D_800C21AC[D_1F800044[2]]();
-  if (D_1F800044[0] & 1) {
+  D_800C21AC[boss028CurrentWorkRecordState[2]]();
+  if (boss028CurrentWorkRecordState[0] & 1) {
     func_8014D290();
   }
 }

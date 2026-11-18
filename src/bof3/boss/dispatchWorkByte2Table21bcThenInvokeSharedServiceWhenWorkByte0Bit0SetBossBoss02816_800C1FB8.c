@@ -1,5 +1,7 @@
 #include "bof3/bof3.h"
 
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+
 /*
  * Tail of the overlay's code pointer run, the three words this dispatcher
  * indexes from base 0x800C21BC: 0x800C21BC = 0x800C2024, 0x800C21C0 =
@@ -7,15 +9,11 @@
  * byte-indexed dispatcher dispatchIndexedHandlerBossBoss02816_800C1AF0 reads
  * starts 0x24 bytes earlier, so this base is that run's word 9, and the payload
  * ends at 0x800C21C8 with these three words. The last two are the words the
- * reviewed Splat layout labels func_800C21C0, so only the indexed word is named
+ * reviewed Splat layout labels T_800C21C0, so only the indexed word is named
  * here.
  */
 extern void (*D_800C21BC[])(void); /* @source 0x800C21BC @kind data */
 
-/* Work-record pointer cell in the scratchpad. The original re-materialises this
- * cell for the dispatch index and again after the indirect call, so it is read
- * through the named target symbol instead of the constant-address accessor. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* File-local prototype: the shared main-executable service func_8014D290 is
  * declared per caller; this caller passes no arguments. */
@@ -50,8 +48,8 @@ void func_8014D290(void);
  */
 void dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1FB8(
     void) {
-  D_800C21BC[D_1F800044[2]]();
-  if (D_1F800044[0] & 1) {
+  D_800C21BC[boss028CurrentWorkRecordState[2]]();
+  if (boss028CurrentWorkRecordState[0] & 1) {
     func_8014D290();
   }
 }

@@ -8,7 +8,7 @@ typedef void (*Boss02816StepHandler)(u8 index);
  * 0x800C2140 is that row's own label; 0x800C214C is its +0xC word, inside the
  * row and not a row boundary, so it is referenced as its own data symbol rather
  * than as a row start. */
-extern u8 D_800C2140; /* @source 0x800C2140 @kind data */
+extern u8 boss028WorkDataAndStateHandlerTable; /* @source 0x800C2140 @kind data */
 extern u8 D_800C214C; /* @source 0x800C214C @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -51,7 +51,7 @@ void func_8014D978(void);
 void publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848(void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &D_800C2140;
+  FIELD_REF(void *, work, 0xECu) = &boss028WorkDataAndStateHandlerTable;
   FIELD_REF(Boss02816StepHandler, work, 0xE4u) = dispatchIndexedHandlerBossBoss02816_800C1AF0;
   FIELD_REF(void *, work, 0xE8u) = &D_800C214C;
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;

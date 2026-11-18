@@ -1,12 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Scratchpad work-record pointer cell shared by the battle, bmagic, world and
- * boss overlays. This target's map binds the cell as D_1F800044, and the exact
- * same-target sibling
- * advanceWorkByte2WhenBattleRecordByte0Bit0ClearThenRunSharedUpdate
- * BossBoss02816_800C20C8 reads it the same way: one lui 0x1F80 / lw 0x44 pair
- * for the only access this body makes. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
 
 /* Battle state byte in main RAM, outside this overlay's image; this target's
  * generated undefined_syms_auto.txt already binds the address, so no target-map
@@ -59,5 +53,5 @@ void requestResource2SetStateByte80ApplyStateHandlerThenAdvanceWorkByte2BossBoss
   func_8014D6B8(2);
   D_80146384 = 0x80;
   func_800A9820(0x80);
-  D_1F800044[2]++;
+  boss028CurrentWorkRecordState[2]++;
 }

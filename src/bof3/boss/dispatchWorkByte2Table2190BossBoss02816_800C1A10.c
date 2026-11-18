@@ -2,7 +2,7 @@
 
 /* This overlay's in-image code pointer run fills 0x800C2180 through 0x800C21C7:
  * the reviewed `textbin` row T_800C2180 holds its first sixteen words and the
- * row labelled func_800C21C0 its last two, which are code pointers too. The run
+ * row labelled T_800C21C0 its last two, which are code pointers too. The run
  * is only referenced here. This dispatcher indexes it from the word 0x800C2190,
  * an interior word of it, so the run stays two reviewed rows and this
  * declaration binds only that word. The entries it reaches from there, up to the

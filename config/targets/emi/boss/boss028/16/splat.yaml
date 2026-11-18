@@ -29,6 +29,7 @@ segments:
   - - 4
     - c
     - dispatchStateByte1Table2154BossBoss02816_800C1804
+    - '@source: src/bof3/boss/dispatchStateByte1Table2154BossBoss02816_800C1804.c'
   - - 72
     - c
     - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848
@@ -51,6 +52,7 @@ segments:
   - - 528
     - c
     - dispatchWorkByte2Table2190BossBoss02816_800C1A10
+    - '@source: src/bof3/boss/dispatchWorkByte2Table2190BossBoss02816_800C1A10.c'
   - - 596
     - c
     - requestResource2SetStateByte80ApplyStateHandlerThenAdvanceWorkByte2BossBoss02816_800C1A54
@@ -123,11 +125,11 @@ segments:
     - invokeHelperBossBoss02816_800C2120
   - - 2368
     - textbin
-    - D_800C2140
+    - boss028WorkDataAndStateHandlerTable
   - - 2432
     - textbin
     - T_800C2180
   - - 2496
-    - asm
-    - func_800C21C0
+    - textbin
+    - T_800C21C0
 - - 2504

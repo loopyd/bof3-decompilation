@@ -1,12 +1,6 @@
 #include "bof3/bof3.h"
 
-/* Scratchpad work-record pointer cell, bound by its own D_ name and not by
- * SPAD_PTR_SLOT: the original materialises the base once (lui $v0,0x1F80 /
- * lw $v0,68($v0)) ahead of its own frame setup and reaches every access of its
- * first statement group through that one register, while the macro's
- * absolute-constant lvalue makes the compiler hold 0x1F800044 in a
- * callee-saved register and load through offset zero. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
 
 /* Shared main-program helper the whole boss archive family calls: it returns
  * the distance between the fixed-point position pair it takes as (x, z). Both
@@ -77,16 +71,16 @@ void addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenStoreZeroInW
     void) {
   u8 *work;
 
-  work = D_1F800044;
+  work = boss028CurrentWorkRecordState;
   *(u16 *)(work + 0x3E) += *(u32 *)(work + 0x14);
   *(u32 *)(work + 0x14) += *(u32 *)(work + 0x20);
   if (*(s16 *)(work + 0x3E) >
       func_8015477C(*(s32 *)(work + 0x34), *(s32 *)(work + 0x38)) + 0x400) {
-    *(u16 *)(D_1F800044 + 0x3E) =
-        func_8015477C(*(s32 *)(D_1F800044 + 0x34), *(s32 *)(D_1F800044 + 0x38)) +
+    *(u16 *)(boss028CurrentWorkRecordState + 0x3E) =
+        func_8015477C(*(s32 *)(boss028CurrentWorkRecordState + 0x34), *(s32 *)(boss028CurrentWorkRecordState + 0x38)) +
         0x400;
-    *(u32 *)(D_1F800044 + 0x14) = 0;
-    *(u32 *)(D_1F800044 + 0x20) = -0x40;
-    D_1F800044[2]--;
+    *(u32 *)(boss028CurrentWorkRecordState + 0x14) = 0;
+    *(u32 *)(boss028CurrentWorkRecordState + 0x20) = -0x40;
+    boss028CurrentWorkRecordState[2]--;
   }
 }

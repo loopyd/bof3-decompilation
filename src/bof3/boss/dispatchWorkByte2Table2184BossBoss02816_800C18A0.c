@@ -1,5 +1,7 @@
 #include "bof3/bof3.h"
 
+extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+
 /*
  * Code pointer run at 0x800C2184, the handler table this dispatcher indexes:
  * entry 0 = 0x800C18E4, entry 1 = 0x800C1950, entry 2 = 0x800C1A08,
@@ -10,10 +12,6 @@
  */
 extern void (*D_800C2184[])(void); /* @source 0x800C2184 @kind data */
 
-/* Work-record pointer cell in the scratchpad. The original materialises this
- * cell with its own lui/lw pair, so it is read through the named target symbol
- * instead of the constant-address accessor. */
-extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* @source 0x800C18A0
  * @behavior Overlay step dispatch on work-record byte 2: loads the work-record
@@ -37,5 +35,5 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  * @residual none
  */
 void dispatchWorkByte2Table2184BossBoss02816_800C18A0(void) {
-  D_800C2184[D_1F800044[2]]();
+  D_800C2184[boss028CurrentWorkRecordState[2]]();
 }

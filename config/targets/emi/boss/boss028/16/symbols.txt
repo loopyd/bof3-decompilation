@@ -1,4 +1,4 @@
-D_1F800044 = 0x1F800044;
+boss028CurrentWorkRecordState = 0x1F800044;
 dispatchStateByte1Table2154BossBoss02816_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848 = 0x800C1848;
 dispatchWorkByte2Table2184BossBoss02816_800C18A0 = 0x800C18A0;
@@ -26,9 +26,9 @@ dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss028
 clearWorkByte24Byte2AAndMode48SetByte29To5ApplyLookup15CRequestResource6CopyBattleRecordPositionSeedDistanceThenAdvanceStepBossBoss02816_800C2024 = 0x800C2024;
 advanceWorkByte2WhenBattleRecordByte0Bit0ClearThenRunSharedUpdateBossBoss02816_800C20C8 = 0x800C20C8;
 invokeHelperBossBoss02816_800C2120 = 0x800C2120;
-D_800C2140 = 0x800C2140;
+boss028WorkDataAndStateHandlerTable = 0x800C2140;
 T_800C2180 = 0x800C2180;
-func_800C21C0 = 0x800C21C0;
+T_800C21C0 = 0x800C21C0;
 initModeTuple510 = 0x801DDED8;
 initModeTuple520 = 0x801DDF00;
 func_801E5988 = 0x801E5988;
