@@ -1916,6 +1916,17 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+Global allocation also reserves preferences. In GCC 2.7.2, `prune_preferences`
+collects lower-priority conflicting pseudos' preferred hard registers in
+`regs_someone_prefers`; `find_reg` avoids them on its first pass. A raw value
+can outrank a narrow copy and still avoid its argument register. Inspect both
+preferences and conflicts in `.greg` before changing reference weights.
+`set_preference` looks through one operation and a `SUBREG`, so a promoted
+narrow argument can give its source that preference. Trace the argument SET
+through combine; a direct memory-to-argument load gives a removed local no
+preference. Use real value phases; never add a consumer or extend a lifetime
+to create a preference.
+
 Calculate local priority for the complete tied quantity. GCC 2.7.2 uses
 `floor_log2(refs) * refs * size / (death - birth)`, so crossing a power of two
 can change allocation more than the added reference suggests. A real coordinate
