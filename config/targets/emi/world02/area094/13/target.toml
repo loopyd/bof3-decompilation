@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2FD0.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3050.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3118.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld02Area09413_801F3198.c",
 ]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",

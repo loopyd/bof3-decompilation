@@ -58,8 +58,10 @@ segments:
     - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C
     - '@source: src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C.c'
   - - 1756
-    - asm
-    - func_801EF2DC
+    - c
+    - publishWorkByte9TimesTwentyEightToScratchpadHalfwordRaiseFlag10WhenByte9Is4ThenAdvanceWorkByte2WhenByte9Is12BmagicMagic05603_801EF2DC
+    - '@source: src/bof3/bmagic/publishWorkByte9TimesTwentyEightToScratchpadHalfwordRaiseFlag10WhenByte9Is4ThenAdvanceWorkByte2WhenByte9Is12BmagicMagic05603_801EF2DC.c'
+    - '@behavior: Word 5 of the in-image code pointer run based at 0x801F0744, the handler table the work-byte-2 dispatcher indexes, reached from outside the overlay: no jal and no other payload word names this span. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before its frame exists, and only when that object unsigned byte 9 reads 4 does it forward the battle target byte at 0x80146384 with the flag word 0x10 to the shared helper at 0x800A9610, the flag word filling the call delay slot. It re-reads the cell and stores that object unsigned byte 9 scaled by 0x1C at halfword width into the scratchpad halfword at 0x1F800000, the address materialised at the store site with lui at,0x1F80, then re-reads byte 9 through the same pointer, increments it at byte width and masks the stored register with andi 0xFF before comparing it against 0xC. Only when that counter has just reached 0xC does it re-read the cell and increment the work-object handler byte at offset 2 at byte width, advancing the work-byte-2 dispatcher. It takes no arguments, returns nothing and its 0x18-byte frame keeps only the return address at 0x10 across the conditional call.'
   - - 1916
     - c
     - publishWorkByte9TimesFourPlus120ToScratchpadHalfwordIncrementWorkByteAAndWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenByte9Is28BmagicMagic05603_801EF37C

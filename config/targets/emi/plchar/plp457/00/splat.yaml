@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Tablef900PlcharPlp45700_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef900PlcharPlp45700_801CE404.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2 from the first word of this target''s twenty-one-entry handler run at 0x801CF900: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the run based at 0x801CF900 with no arguments, discarding any result. The original does not bound the index before the scaled table load. It reads no other state and writes none; the 0x18-byte frame only keeps the return address across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Its only in-image reference is the word 0x801CE404 at 0x801CF93C, entry 15 of the twenty-one-entry run, so the overlay loader that steps that run enters it.'
   - - 72
     - asm
     - func_801CE448

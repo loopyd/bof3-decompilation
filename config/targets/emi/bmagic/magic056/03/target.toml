@@ -13,6 +13,7 @@ sources = [
     "src/bof3/bmagic/publishWorkByte9TimesFourPlus120ToScratchpadHalfwordIncrementWorkByteAAndWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenByte9Is28BmagicMagic05603_801EF37C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EF1F4.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EFA50.c",
+    "src/bof3/bmagic/publishWorkByte9TimesTwentyEightToScratchpadHalfwordRaiseFlag10WhenByte9Is4ThenAdvanceWorkByte2WhenByte9Is12BmagicMagic05603_801EF2DC.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4.c",

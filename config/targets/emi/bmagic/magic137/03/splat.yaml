@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF090
   - - 1396
-    - asm
-    - func_801EF174
+    - c
+    - advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174
+    - '@source: src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174.c'
+    - '@behavior: Advances the scratchpad work object one frame. The pointer cell at 0x1F800044 is read once, then work bytes 0xB and 9 are read through that pointer, one plus work byte 9 shifted right by six is added to byte 0xB and the sum stored at byte width. When bit 0 of the frame counter at 0x80143E6C is set the cell is re-read and work byte 0xA increments. The cell is re-read again, two is added to work byte 9 at byte width, and only when the stored byte truncated to eight bits equals 0xC0 does the body re-read the cell once more and increment work byte 2, the work-byte-2 step counter of the overlay dispatcher at 0x801EFC58. It takes no arguments, returns nothing, keeps no frame and writes no state outside the work object.'
   - - 1564
     - asm
     - func_801EF21C

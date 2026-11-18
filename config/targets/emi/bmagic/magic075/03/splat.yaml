@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038.c'
     - '@behavior: Step wrapper around one overlay work handler: publishes 0x800C3800 into the global at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object byte 2 by four and invokes the selected entry of the handler run based at 0x801EF7A4 (0x801EF0D0, 0x801EF2A8) with no arguments. After the handler returns it re-reads the pointer cell and, when the work object byte 0 and byte 2 are both non-zero, runs the shared main-executable service func_8014D290. It then publishes 0x800D3800 into 0x801459F0. Each literal reaches the cell through its own lui/ori pair and a lui %hi / sw %lo store; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 1232
-    - asm
-    - func_801EF0D0
+    - c
+    - decrementWorkByte9ThenSeedEffectStateFromAngularSamplesAndAdvanceWorkByte2BmagicMagic07503_801EF0D0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedEffectStateFromAngularSamplesAndAdvanceWorkByte2BmagicMagic07503_801EF0D0.c'
+    - '@behavior: Handler entry 0 of the two-entry code-pointer run based at 0x801EF7A4 that dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038 selects by scaling the work record unsigned byte 2 by four. It decrements the scratchpad work object unsigned byte 9 and returns while the truncated result is non-zero. On zero it reads that work object unsigned byte 0xB, masks it with 7, scales it by 512 and publishes that angle word into the scratchpad word at 0x1F800000, then offsets work words 0x34 and 0x38 from the corresponding words of the shared battle work record at 0x801EB4E0 by each angular sample times five, scaled by 0x2000 and truncated by twelve bits. It adds 0x180 to the shared record halfword 0x3E and stores the sum into work halfword 0x3E, seeds work byte 0x25 with 0x1D, byte 0x27 with 0xA0, bytes 0x24 and 0x29 with 4 and byte 0x2B with 1, clears work halfword 0x2C and work bytes 0x26, 0x28, 0x2A and 0x5C to 0x5F, submits work byte 0xB divided by three to the shared helper func_8014D6B8 and advances work byte 2. Each store group re-reads the scratchpad cell, so the pointer is rebuilt before every group. The 0x18-byte frame only keeps $ra at 0x14 and $s0 at 0x10, $s0 holding the address of the scratchpad angle word.'
   - - 1704
     - c
     - incrementGlobalWorkByteBAndInvokeHelperWhenHelperReadyBmagicMagic07503_801EF2A8

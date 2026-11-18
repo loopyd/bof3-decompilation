@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF508
   - - 2440
-    - asm
-    - func_801EF588
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06203_801EF588
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic06203_801EF588.c'
+    - '@behavior: Reads the scratchpad battle work pointer cell at 0x1F800044 once and increments the work object''s byte 9 with a byte-width add, then tests the truncated stored byte against 0x10 for equality; only on equality it re-reads the cell and increments byte 2, advancing the byte-0x2 step index the overlay''s 0x801EFBBC dispatcher selects on. Leaf, no frame, no arguments and no return value.'
   - - 2520
     - c
     - incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic06203_801EF5D8

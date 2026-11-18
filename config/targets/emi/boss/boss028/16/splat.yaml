@@ -36,8 +36,10 @@ segments:
     - c
     - dispatchWorkByte2Table2184BossBoss02816_800C18A0
   - - 228
-    - asm
-    - func_800C18E4
+    - c
+    - armCueCountdownFromClassRowRunScriptByte2ThenAdvanceWorkByte2BossBoss02816_800C18E4
+    - '@source: src/bof3/boss/armCueCountdownFromClassRowRunScriptByte2ThenAdvanceWorkByte2BossBoss02816_800C18E4.c'
+    - '@behavior: Handler entry 0 of this overlay byte-2 step run, the code pointer run at 0x800C2184 that the dispatcher dispatchWorkByte2Table2184BossBoss02816_800C18A0 indexes with scratch work byte +2: loads the current enemy work record pointer from 0x801EB4E8, takes that record byte +0xE0, scales it by the 0x88-byte class-row stride and stores the class-row byte at 0x800E40CE into scratch work byte +0x09, runs the shared enemy script byte helper func_801E2314 for script byte 2, then re-reads the pointer cell and advances scratch work byte +0x02, moving the dispatcher to entry 1 (0x800C1950), the handler that decrements that countdown byte.'
   - - 336
     - asm
     - func_800C1950

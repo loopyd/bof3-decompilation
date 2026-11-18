@@ -52,8 +52,10 @@ segments:
     - dispatchStateByte1Tablef3e8BmagicMagic16103_801EEF3C
     - '@source: src/bof3/bmagic/magic16103DispatchTables.c'
   - - 896
-    - asm
-    - func_801EEF80
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic16103_801EEF80
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic16103_801EEF80.c'
+    - '@behavior: Work byte 2 step dispatcher of this overlay, reached as entry 0 of the one-word work byte 1 table at 0x801EF3E8 that the dispatcher at 0x801EEF3C indexes with the work object''s unsigned byte 1. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x30-byte frame, copies the five-entry work byte 2 handler run at 0x801EEC10 (0x801EF024, 0x801EF06C, 0x801EF0E8, 0x801EF158, 0x801EF1BC) into that frame, and invokes the copied entry that the work object''s unsigned byte 2 selects, with no bounds test. When the handler returns it re-reads the pointer cell and, if work byte 0 and byte 2 are both non-zero, invokes the shared main-executable service at 0x8014D290. It takes no arguments, returns nothing and reads or writes no other state. All 41 words are identical to the span at 0x801EFF1C of emi/bmagic/magic015/00 except the copied run''s base, 0x801EEC54 there against 0x801EEC10 here (payload byte comparison).'
   - - 1060
     - c
     - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic16103_801EF024
