@@ -10,9 +10,9 @@ extern u8 workRecordCountsBySelectorAndColumnWorld00Area03004[]; /* @source 0x80
  * amounts from rand(), derives halfwords 0x8C/0x8E, optionally
  * increments the seeded amount, and clears work bytes 1-4 and 0x5C.
  * @status partial
- * @match 88.77
- * @residual The original pointer copy and signed-division trap expansion
- * still differ. The original 748-byte interval remains retained.
+ * @match 91.98
+ * @residual Signed-division trap expansion still differs. The compiled
+ * body is 712 of the original 748 bytes; the original interval remains retained.
  */
 void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void) {
   s32 column;
@@ -63,10 +63,11 @@ void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void
         seedWork[6] = (u8)column;
 
         pendingAmount = rand() & 0xFF;
-        amountRecord = (u8*)D_80146884;
+        amountLimit = (u32)D_80146884;
         amountWork = D_1F800044;
+        *(u16*)(amountLimit + 0x90u) = pendingAmount;
+        amountRecord = (u8*)amountLimit;
         for (;;) {
-          *(u16*)(amountRecord + 0x90u) = pendingAmount;
           pendingAmount = amountWork[6];
           amountLimit = pendingAmount << 3;
           amountLimit += pendingAmount;
@@ -76,6 +77,7 @@ void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void
           if (amountLimit < (u16)sampledAmount) {
             pendingAmount = amountLimit >> 1;
             pendingAmount = sampledAmount - pendingAmount;
+            *(u16*)(amountRecord + 0x90u) = pendingAmount;
             continue;
           }
           half = amountLimit >> 1;

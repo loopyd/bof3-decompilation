@@ -43,9 +43,9 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 89.24
- * @residual Approach comparisons and clamp allocation still differ. The
- * original 1152-byte interval remains retained until exact reconstruction.
+ * @match 94.79
+ * @residual Sum-store base, clamp read order and row-coordinate allocation
+ * still differ at the original 1152-byte size. The original interval remains retained.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      approachWork;
@@ -61,6 +61,7 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   u16      limitedPosition;
   s32      defaultPosition;
   s32      lowerBound;
+  s32      belowLower;
   s32      upperBound;
   s32      rowUpper;
   u16      upperSnapshot;
@@ -76,23 +77,24 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     s32 approachTarget;
     s32 approachBand;
     s32 approachValue;
+    s32 approachMode;
     u32 approachIndex;
 
     do {
       approachIndex = D_801E3208 * 19;
       cur = (s32)*(s16*)(approachWork + 0x30);
     } while (0);
-    approachValue = ((u8*)D_801E320C)[3];
+    approachMode = ((u8*)D_801E320C)[3];
     approachTarget = (s8)D_80146892[approachIndex * 8];
-    approachBand = approachValue * 4;
+    approachBand = approachMode * 4;
     approachValue = cur + approachBand;
     approachValue += 0xC;
-    approachValue = approachValue < approachTarget;
-    if (approachValue || approachTarget < cur - approachBand - 0xC) {
+    if (approachValue < approachTarget || approachTarget < cur - approachBand - 0xC) {
       if (approachWork[9] >= 0xF) {
-        if (approachTarget < cur) {
+        s8 directionTarget = (s8)approachTarget;
+        if (directionTarget < cur) {
           *(s32*)(approachWork + 0x10) = -1;
-        } else if (cur < approachTarget) {
+        } else if (cur < directionTarget) {
           *(s32*)(approachWork + 0x10) = 1;
         }
       } else {
@@ -106,15 +108,19 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   }
 
   sumWork = D_1F800044;
-  sum = (s32)*(u16*)(sumWork + 0x30) + *(s32*)(sumWork + 0x10);
+  lowerBound = *(s32*)(sumWork + 0x10);
+  sum = (s32)*(u16*)(sumWork + 0x30) + lowerBound;
   *(u16*)(sumWork + 0x30) = (u16)sum;
   work = sumWork;
   sum = (s16)sum;
   clampScale = ((u8*)D_801E320C)[3];
   defaultPosition = *(u16*)(work + 0x30);
-  lowerBound = clampScale * 4 - 0x24;
+  do {
+    lowerBound = clampScale * 4 - 0x24;
+    belowLower = sum < lowerBound;
+  } while (0);
   limitedPosition = (u16)lowerBound;
-  if (sum >= lowerBound) {
+  if (!belowLower) {
     upperBound = 0x24 - clampScale * 4;
     limitedPosition = (u16)upperBound;
     if (sum <= upperBound) {

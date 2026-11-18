@@ -1878,6 +1878,12 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+For a raw bound and a selected narrow copy, trace their overlap at the
+comparison. Capturing the existing comparison result before the copy can let
+the raw source die at that copy. Global allocation processes source deaths
+before destination births. Preserve branch polarity and effects, then inspect
+scheduling, interference and both selections in the complete native gate.
+
 For division, include unused remainder outputs in the allocation trace even when
 no `mfhi` survives. CSE can forward a quotient and delete its copy back to a
 source local, leaving the sample and divisor on a pseudo with two deaths. The
@@ -1913,6 +1919,12 @@ for earlier loop accesses. Shortening it can instead leave a single-use
 load/copy pair that `combine` folds into one load. Trace both passes. Neither
 result justifies adding a consumer, access or unrelated value phase to keep
 the copy.
+
+If the first initialization store is distinct from later reduction stores,
+let it consume the loaded address before capturing the retained loop cursor.
+That real consumer can preserve the load/copy pair through combine. Inspect
+later jump optimization for store merging and verify every executed access
+and post-loop reload.
 
 ### Boolean return expansion
 
