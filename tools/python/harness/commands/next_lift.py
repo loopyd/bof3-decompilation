@@ -16,6 +16,8 @@ import sys
 from pathlib import Path
 
 from harness.common.commands import command_at
+from harness.domain.claims import collect_manifest_source_addresses
+from harness.domain.registry import lookup_target_manifest
 
 _ROOT = Path(__file__).resolve().parents[4]
 _DIV_FUNCTS = {0x1A, 0x1B}
@@ -51,23 +53,12 @@ def _address(row: dict) -> int:
     return value if isinstance(value, int) else int(value, 0)
 
 
-def _claimed_addresses(root: Path) -> set[int]:
-    """Addresses already claimed in the working tree via ``@source 0x...`` tags.
-
-    The reverse-index snapshot can be days old, so ranked rows still list lifts
-    that sibling lanes already completed. Reading the working tree keeps
-    ``next-lift`` from handing a lane an already-lifted address.
-    """
-    claimed: set[int] = set()
-    pattern = re.compile(r"@source\s+0x([0-9A-Fa-f]+)")
-    for source in (root / "src").rglob("*.c"):
-        try:
-            text = source.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
-        for match in pattern.finditer(text):
-            claimed.add(int(match.group(1), 16))
-    return claimed
+def _claimed_addresses(root: Path, target: str) -> set[int]:
+    """Read current function claims owned by this target, not other overlays."""
+    manifest = lookup_target_manifest(root, target)
+    if manifest is None:
+        raise ValueError(f"unknown target: {target}")
+    return {address for _, address in collect_manifest_source_addresses(root, manifest)}
 
 
 def _drop_claimed(rows: list[dict], claimed: set[int]) -> list[dict]:
@@ -136,7 +127,7 @@ def _surviving_rows(root: Path, target: str, limit: int) -> tuple[list[dict], in
     """
 
     requested = max(1, limit)
-    claimed = _claimed_addresses(root)
+    claimed = _claimed_addresses(root, target)
     while True:
         rows = _ranked_rows(root, target, requested)
         survivors = _trap_screen(root, _drop_claimed(rows, claimed))
