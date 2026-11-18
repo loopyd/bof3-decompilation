@@ -72,8 +72,10 @@ segments:
     - c
     - retreatCounter3CloneWorld03Area13113_801F2ED0
   - - 748
-    - asm
-    - func_801F2EEC
+    - c
+    - advanceCounterWorld03Area13113_801F2EEC
+    - '@source: src/bof3/world/advanceCounterWorld03Area13113_801F2EEC.c'
+    - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 776
     - c
     - setWorld03Area13113_801F2F08

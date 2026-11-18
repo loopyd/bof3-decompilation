@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801F2EC4
   - - 748
-    - asm
-    - func_801F2EEC
+    - c
+    - raiseWorldFlag8World01Area03913_801F2EEC
+    - '@source: src/bof3/world/raiseWorldFlag8World01Area03913_801F2EEC.c'
+    - '@behavior: raises bit 0x8 of the shared world-flags halfword D_80146258 with one halfword read-modify-write through a folded lui/lhu load, an empty load delay slot, ori 0x8 and a halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 780
     - asm
     - func_801F2F0C

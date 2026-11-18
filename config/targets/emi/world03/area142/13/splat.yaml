@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/world/clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60.c'
     - '@behavior: Clears the scratchpad work-object byte at offset 0x09 with a zero byte store and then increments the work-object byte at offset 0x02 by one. The pointer cell at 0x1F800044 is read once per access, so the original re-materializes the cell address and reloads the work pointer for each of the two accesses: the zero byte is stored through the first load and the incremented byte through the second. The function takes no arguments and returns nothing.'
   - - 144
-    - asm
-    - func_801F2C90
+    - c
+    - advanceWorkByte9By2World03Area14213_801F2C90
+    - '@source: src/bof3/world/advanceWorkByte9By2World03Area14213_801F2C90.c'
+    - '@behavior: Advances the scratchpad work-object byte at offset 0x09 by two at byte width. The pointer cell at 0x1F800044 is loaded once and the same work pointer serves both the byte load and the byte store, so this body keeps one cell load where its neighbour at 0x801F2C60 re-materializes the cell for each of its two accesses. The span is entry 1 of the two-word handler run at the table base 0x801F3554, whose entry 0 is 0x801F2C60. The overlay entry at 0x801F2C04 indexes that run with the work object''s byte 2 scaled by four before dispatching, so byte 0x09 is the step byte this handler advances before 0x801F2CB0 consumes it. Takes no arguments and returns nothing.'
   - - 176
     - asm
     - func_801F2CB0

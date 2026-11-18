@@ -78,8 +78,10 @@ segments:
     - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4.c'
     - '@behavior: Adds one plus work byte 9 shifted right by six to byte B, decrements byte A when bit 0 of 0x80143E6C is set, subtracts two from byte 9, and advances byte 2 when the stored byte is 0x60.'
   - - 2460
-    - asm
-    - func_801EF59C
+    - c
+    - advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06703_801EF59C
+    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic06703_801EF59C.c'
+    - '@behavior: Steps the scratchpad work object one frame of a position advance: adds one plus work byte 9 shifted right by six to byte B, decrements work byte A when bit 0 of 0x80143E6C is set, stores the step word pair 0x2000 and 0 in work words 0xC and 0x10, invokes 0x801DD350 with the work pointer, subtracts two from byte 9 while adding the step pair into the position words 0x34 and 0x38, and on byte 9 reaching 0x30 decrements byte B of the record selected by 0x801EB4E0 and invokes 0x801E5988.'
   - - 2696
     - asm
     - func_801EF688

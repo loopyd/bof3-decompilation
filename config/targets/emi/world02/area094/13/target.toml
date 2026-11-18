@@ -22,6 +22,7 @@ sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0.c",
     "src/bof3/world/markSharedSelector7AndSetFlagBit1EOfSharedFlagWordWorld02Area09413_801F33B0.c",
     "src/bof3/world/setFlag42ClearFlag43ThenConsumeMapConditionRecordChainWorld02Area09413_801F3460.c",
+    "src/bof3/world/publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4.c",
 ]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",

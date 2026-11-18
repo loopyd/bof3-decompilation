@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801F2CB4
   - - 452
-    - asm
-    - func_801F2DC4
+    - c
+    - publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4
+    - '@source: src/bof3/world/publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4.c'
+    - '@behavior: publishes the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F535C into the shared status halfword 0x801490A8 and then acts on that same mode value. Mode 1 runs the shared main-EXE front-end startup helper 0x8015C088, stores 0x32 in the shared step byte 0x80146875, clears the shared scenario progress byte 0x80146864 and the three shared area state bytes 0x80146865/0x80146866/0x80146867, and stores 7 in the shared mode byte 0x80146874. Mode 2 first tests flag 0x20 of the shared flag word 0x8014686C through the shared flag tester 0x8015B5D4 and then runs 0x8015C088 and clears those four bytes on both arms, storing 0 in the step byte and 9 in the mode byte when the flag is clear and 2 in the step byte and 9 in the mode byte when it is set. Mode 0, a negative mode and every other mode publish the status halfword only.'
   - - 720
     - c
     - publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0

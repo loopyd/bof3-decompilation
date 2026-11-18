@@ -30,6 +30,7 @@ support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp56700_801CEC0C.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp56700_801D006C.c",
     "src/bof3/plchar/passWorkByte5PaletteRowThenStepWorkByteBThroughResourceRequestAndClearWorkByte2BWithRecordState12BWhenDonePlcharPlp56700_801CF000.c",
+    "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CE448.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CEA44.c",
     "src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp56700_801CEDB4.c",
     "src/bof3/plchar/refreshLayersThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp56700_801CF560.c",

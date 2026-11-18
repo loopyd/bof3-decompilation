@@ -32,8 +32,10 @@ segments:
     - '@source: src/bof3/plchar/dispatchWorkByte2Table078cPlcharPlp56700_801CE404.c'
     - '@behavior: Calls the handler indexed by work-record byte 2 from the twenty-four-word handler run at 0x801D078C.'
   - - 72
-    - asm
-    - func_801CE448
+    - c
+    - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CE448
+    - '@source: src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp56700_801CE448.c'
+    - '@behavior: Picks the nearer of route indices 3 and 5 to work byte 8, asks the shared helper 0x801B2D00 for that route''s step sign, stores the sign in work byte 0xB and the chosen route in byte 3, then sets countdown byte 9 to 2 and advances work byte 2.'
   - - 276
     - asm
     - func_801CE514

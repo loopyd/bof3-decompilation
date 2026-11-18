@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - advanceChannel932cByA00World00Area01913_801F2C04
+    - '@source: src/bof3/world/advanceChannel932cByA00World00Area01913_801F2C04.c'
+    - '@behavior: Reads the shared 16-bit channel at 0x8014932C, publishes mode 2 at the shared status byte 0x80149333 and writes the channel back advanced by 0xA00; the adjacent 0x801F2C2C twin subtracts it.'
   - - 44
     - c
     - retreatChannel932cByA00World00Area01913_801F2C2C
