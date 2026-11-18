@@ -18,6 +18,7 @@ support_sources = [
     "src/bof3/plchar/clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp56700_801CFAEC.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp56700_801CF704.c",
     "src/bof3/plchar/dispatchStateByte2Table07a4PlcharPlp56700_801CEA00.c",
+    "src/bof3/plchar/dispatchStateByte2Table0798PlcharPlp56700_801CE610.c",
     "src/bof3/plchar/dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C.c",
     "src/bof3/plchar/dispatchStateByte3Table07b8PlcharPlp56700_801CEC70.c",
     "src/bof3/plchar/dispatchStateByte3Table07ccPlcharPlp56700_801CF51C.c",

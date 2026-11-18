@@ -32,7 +32,7 @@ publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F
 publishWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06714_801F42A4 = 0x801F42A4;
 func_801F4324 = 0x801F4324;
 func_801F43A4 = 0x801F43A4;
-func_801F4424 = 0x801F4424;
+retreatCounterWorld01Area06714_801F4424 = 0x801F4424;
 advanceCounter2World01Area06714_801F4440 = 0x801F4440;
 retreatCounter2World01Area06714_801F445C = 0x801F445C;
 func_801F4478 = 0x801F4478;

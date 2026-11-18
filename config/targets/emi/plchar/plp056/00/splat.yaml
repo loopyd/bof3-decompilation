@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801CED1C
   - - 2836
-    - asm
-    - func_801CEF14
+    - c
+    - claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp05600_801CEF14
+    - '@source: src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp05600_801CEF14.c'
+    - '@behavior: Claim of the front-end record table at 0x801CEF14. It asks the shared allocator func_8019601C for a row index, masks the answer to a byte and, unless it reads 0xFF, scales it by the 0x74-byte row stride and seeds the row: occupancy byte 0 takes 1, handler selector byte 5 takes 0x34, entry state byte 1 takes the caller state byte, row word 0x34 takes the first signed coordinate shifted left 16 and row word 0x38 takes the second the same way. It then re-reads row word 0x34, passes it with the shifted second coordinate to the shared distance helper func_8015477C, stores that answer plus 0x100 in row halfword 0x3E and clears row byte 0x0B. Nothing is returned. The three call sites 0x801CED8C, 0x801CEE08 and 0x801CEE44 sit in the still-asm body func_801CED1C of this payload. All 0xE4 bytes match the exact plp015 body at the same address word for word.'
   - - 3064
     - asm
     - func_801CEFF8

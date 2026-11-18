@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2C88
   - - 280
-    - asm
-    - func_801F2D18
+    - c
+    - setHalfwordFF00AndTwoWorld01Area03913_801F2D18
+    - '@source: src/bof3/world/setHalfwordFF00AndTwoWorld01Area03913_801F2D18.c'
+    - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 312
     - c
     - setTwoWorld01Area03913_801F2D38

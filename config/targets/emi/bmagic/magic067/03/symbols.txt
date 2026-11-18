@@ -25,7 +25,7 @@ invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic0
 decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C = 0x801F033C;
 dispatchWorkByte2HandlerBmagicMagic06703_801F038C = 0x801F038C;
 clearWorkBytesBAnd9Invoke8014D6B8With3ThenAdvanceWorkByte2BmagicMagic06703_801F03EC = 0x801F03EC;
-func_801F043C = 0x801F043C;
+invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic06703_801F043C = 0x801F043C;
 invokeHelperBmagicMagic06703_801F0498 = 0x801F0498;
 func_801F04B8 = 0x801F04B8;
 func_801F04D8 = 0x801F04D8;

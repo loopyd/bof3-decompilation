@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801EEE94
   - - 992
-    - asm
-    - func_801EEFE0
+    - c
+    - callAEF98With4And0ClearRecordFlag40RaiseBattleTargetFlag10AndAdvanceWorkByte1WhenWorkByte9ZeroBmagicMagic15403_801EEFE0
+    - '@source: src/bof3/bmagic/callAEF98With4And0ClearRecordFlag40RaiseBattleTargetFlag10AndAdvanceWorkByte1WhenWorkByte9ZeroBmagicMagic15403_801EEFE0.c'
+    - '@behavior: Entry 2 of the four-entry work byte 1 handler run at 0x801EEC04 (0x801EEC90, 0x801EEE94, 0x801EEFE0, 0x801EF060) that the exact dispatcher dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 copies into its frame and invokes with no arguments, so the payload holds no jal here. It reads the scratchpad work-object pointer cell at 0x1F800044 once before its frame exists and tests work byte 9; while that byte is nonzero it returns writing nothing. At zero it dispatches event 4 with value 0 through the shared dispatcher func_800AEF98, clears bit 0x40 of byte 0 of the shared battle work record read through the pointer at 0x801EB4E0 with the 0xBF mask, raises flag 0x10 on the shared battle target byte at 0x80146384 through the helper func_800A9610, and then re-reads the pointer cell and increments work byte 1, advancing to run entry 3 (0x801EF060). The 0x18-byte frame keeps only $ra at 0x10; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 1120
     - c
     - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic15403_801EF060

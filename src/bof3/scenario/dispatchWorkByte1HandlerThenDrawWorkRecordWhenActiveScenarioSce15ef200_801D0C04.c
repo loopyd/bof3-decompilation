@@ -8,12 +8,14 @@
  * the row's own base name. */
 extern void (*func_801D1B1C[])(void);
 
-/* The draw helper at 0x801D1218 is a separate payload span, still on its `asm` row:
- * it takes the record this call site passes at work +0x34, the signed halfword it
- * loads with `lh` at work +0xC (the radius it scales its ring of 0x1C-byte sprite
- * packets by) and the flip-flag word whose three bits it turns into 0x80 texture
- * offsets before queueing each packet under OT slot 7. */
-void func_801D1218(u8* record, s16 radius, s32 flip_flags);
+/* The draw helper at 0x801D1218 is a separate payload span with its own source:
+ * it takes the record this call site passes at work +0x34 as the point it projects,
+ * the signed halfword it loads with `lh` at work +0xC as the extent that converter
+ * func_801AFFD8 turns into the fan radius, and the channel-mask word whose bits 2,
+ * 1 and 0 each light a 0x80 red, green and blue channel at the centre of the
+ * thirty-two opaque Gouraud sectors it queues under OT slot 7. */
+void drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218(
+    const void* origin, s16 extent, s32 channel_mask);
 
 /* @source 0x801D0C04
  * @behavior The overlay entry step. It loads the work-object pointer published at
@@ -23,10 +25,12 @@ void func_801D1218(u8* record, s16 radius, s32 flip_flags);
  * result; the original does not bound the index before the scaled table load. It
  * then reloads the same pointer cell into a second local, because the indirect call
  * may republish that cell, and gates on the same work byte: while that byte is
- * non-zero it hands func_801D1218 the work object's record at +0x34, the signed
- * halfword at +0xC and the literal 7. It takes no arguments and returns nothing;
- * the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the record
- * pointer's address computation fills the guard branch's delay slot.
+ * non-zero it hands
+ * drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218
+ * the work object's record at +0x34, the signed halfword at +0xC and the literal
+ * 7. It takes no arguments and returns nothing; the 0x18-byte frame only keeps
+ * $ra at 0x10 across the two calls, and the record pointer's address computation
+ * fills the guard branch's delay slot.
  *
  * Evidence: no `jal` and no word of this payload's only pointer run (the fourteen
  * words at 0x801D1B1C through 0x801D1B50) addresses 0x801D0C04, so the overlay
@@ -52,6 +56,7 @@ void dispatchWorkByte1HandlerThenDrawWorkRecordWhenActiveScenarioSce15ef200_801D
   func_801D1B1C[work[1]]();
   next = PSX_REF(u8*, SPAD_BASE + slot_offset);
   if (next[1] != 0) {
-    func_801D1218(next + 0x34, *(s16*)(next + 0xC), 7);
+    drawOpaqueSectorFanOfThirtyTwoGouraudTrianglesAroundProjectedCenterAtConvertedExtentScenarioSce15ef200_801D1218(
+        next + 0x34, *(s16*)(next + 0xC), 7);
   }
 }
