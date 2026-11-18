@@ -1,60 +1,37 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801DECDC
- * @behavior AREA030 work-record handler 3 of the overlay handler table
- * 0x801E2314. While the record countdown byte 0x09 is clear it asks the shared
- * entry gate func_801E0680 first and, when that reports no match, stores 1 in
- * record byte 0x01 and leaves through the shared step pair. Otherwise it rolls
- * rand() once and maps the difference between the shared reference position
- * 0x80143FFC / 0x80144000 and the record x 0x34 / y 0x38 onto the eight signed
- * octants, storing 0..7 in the record route index byte 0x08 and storing
- * nothing when both differences are zero. It then takes the difference between
- * the shared byte 0x80143FCF and the 16-byte direction row at +0x14 of the
- * 0x801E2AB8 scale record selected by record byte 0x06, indexed by the low
- * nibble of D_801E3210[0x0E], clamps its signed byte to -1..3 and dispatches
- * the roll-driven route nudge on that class: class 0 flips bit 2 of the route
- * index and then, while roll bit 0 is set, moves it by 1, classes 1 and 2 move
- * it by the roll low two bits while roll bits 5-7 are clear (class 1) or roll
- * bits 6-7 are clear (class 2), class 3 moves it by 1 under the class 2 gate
- * and class 4 leaves it untouched, each move taken up when roll bit 3 is set,
- * down otherwise, and masked to the eight routes. It then re-derives the steps
- * through func_801E03F8, sets the countdown step word 0x14 from the
- * func_8015477C distance of the record x/y advanced by the step words
- * 0x0C/0x10 shifted 4 - the distance less the record timer 0x3E divided by 16
- * while that timer sits below the distance, else 2 or -2 from the shared byte
- * 0x80144006 against the same timer, else zero - mirrors the step-mode row
- * trailing byte into record byte 0x2A and requests the row leading byte
- * through func_8014D8D4. When func_801E0770 reports the record inside the
- * shared window and either the roll low nibble is under the scale record byte
- * 0x1C or bit 7 of the shared 0x801E3210 flag byte is set, it keeps going
- * unless that direction row byte reads 9: it saves record byte 0x05 into
- * 0x801E3208, arms the phase bytes 0x80145E92 = 4 / 0x80145E93 = 0 /
- * 0x80143FC9 = 5, clears the shared words 0x80143FD4 / 0x80143FD8 /
- * 0x80143FDC together with record byte 0x09, words 0x0C/0x10/0x14 and bytes
- * 0x0A/0x0B, increments record byte 0x01, sets the route index to 1, mirrors
- * and requests that row again and leaves through func_8014D978 without the
- * shared step pair. The remaining paths store 0x10 in record byte 0x09 and,
- * when the signed direction class reads 3, double the record words 0x0C, 0x14
- * and 0x10 once the roll low two bits are clear, then run the shared step pair
- * func_801E0394 / func_8014D978.
- * @status partial
- * @match 78.68
- * @residual 321/408 instructions with an 8-byte body surplus. Statements,
- * offsets, literals, branch targets and the switch topology match; the residue
- * is scheduling and allocation only, in four clusters. The seven octant arm
- * stores: the original materializes each stored constant before the volatile
- * cursor load (`li v0,N` in the branch delay slot, every arm storing inline in
- * its own jump delay slot) where this body loads the cursor first and the seven
- * stores then merge into one shared `sb`. The four roll-nudge arms swap the
- * value and cursor registers ($v0/$v1 against $a0/$v1) while keeping the same
- * instructions. The clamp merges its three phi arms into $s1 directly where the
- * original routes them through $v1 and copies once at the join. The accept
- * block and the doubling triple schedule one cursor reload one slot apart. The
- * switch jump table is unplaced: the original five-entry table sits at
- * 0x801D0C1C in the overlay head rodata, so the emitted lui/lw pair cannot match
- * until a `[[matching.section_placements]]` entry for that span validates, and
- * that validation compares the linked table bytes against the original, which
- * needs the case labels on their original offsets first.
+ * @behavior AREA030 handler 3 of the work-record table at 0x801E2314.
+ * While countdown byte 9 is clear, asks func_801E0680 for the entry gate.
+ * A clear answer sets work byte 1 to 1. Otherwise, samples rand() and maps
+ * the shared reference position minus work coordinates 0x34/0x38 onto the
+ * eight route octants in byte 8; zero deltas leave that byte unchanged.
+ * Selects a direction byte from scale row D_801E2AB8[work[6]] at +0x14,
+ * indexed by D_801E3210[0x0E] & 15. Subtracts that direction byte from the
+ * unsigned shared byte D_80143FCF, classifies the signed low byte and clamps
+ * that class to -1..3, keeping the full raw difference on the in-range arm.
+ * For switch class 0, flips route bit 2 and nudges by 1 when roll bit 0 is
+ * set, with bit 1 choosing up or down. Class 1 nudges by roll & 3 when
+ * roll & 0xE0 is nonzero; class 2 uses the same nudge when roll & 0xC0 is
+ * zero. Class 3 nudges by 1 under the class 2 gate. Classes 1..3 choose up
+ * with roll bit 3 and down otherwise. Class 4 leaves the route unchanged.
+ * Each nudge wraps to eight routes.
+ * Recomputes steps through func_801E03F8 and derives work word 0x14 from
+ * the advanced coordinates' distance and timer 0x3E. Mirrors the route's
+ * step-mode byte into work byte 0x2A and requests its leading byte through
+ * func_8014D8D4. After func_801E0770 succeeds, a fresh random nibble below
+ * scale byte 0x1C or mode flag bit 7 permits entry when the direction byte
+ * is not 9. That path saves work byte 5 to D_801E3208, arms phase bytes
+ * D_80145E92/D_80145E93/D_80143FC9 as 4/0/5, clears shared motion words
+ * D_80143FD4/D_80143FD8/D_80143FDC and work byte 9, words 0x0C/0x10/0x14
+ * and bytes 0x0A/0x0B, increments work byte 1, selects route 1, requests
+ * that route and returns through func_8014D978. Other active paths set
+ * countdown byte 9 to 0x10; signed class 3 doubles the motion words and
+ * sets countdown 8 when a fresh rand() & 3 is zero. All paths except the
+ * accepted entry run func_801E0394 and func_8014D978.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC(
     void) {
@@ -62,32 +39,41 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
   u8* flip;
   u8* upOne;
   u8* downOne;
-  u8* upRoll;
-  u8* downRoll;
   u8* point;
   u8* rateWork;
   u8* marker;
   u8* arm;
   u8* staged;
+  u8* clear_work;
   u8* bump;
   u8* armed;
   u8* doubled;
   u8* scaled;
   u8* dirRow;
+  u8* direction_work;
+  u32 scale_index;
+  u32 row_offset;
+  u32 direction_index;
   u8* rowPtr;
-  u8 amount;
+  u32 staged_direction;
+  u32 staged_scale;
+  u32 staged_offset;
+  u32 amount;
+  u32 route_value;
   u8 gate;
   u8 mode;
   s32 dx;
   s32 dy;
-  s32 diff;
+  s16 diff;
+  s32 raw_class;
+  s16 selected_class;
   s16 dist;
   s16 counter;
   u32 roll;
 
   if (D_1F800044[9] == 0) {
     if (func_801E0680() == 0) {
-      D_1F800044[1] = 1;
+      SPAD_PTR_SLOT(u8, 0x44u)[1] = 1;
     } else {
       roll = rand();
       work = D_1F800044;
@@ -96,29 +82,46 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       if (dx < 0 && dy < 0) {
         work[8] = 0;
       } else if (dx == 0 && dy < 0) {
-        D_1F800044[8] = 1;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 1;
       } else if (dx > 0 && dy < 0) {
-        D_1F800044[8] = 2;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 2;
       } else if (dx > 0 && dy == 0) {
-        D_1F800044[8] = 3;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 3;
       } else if (dx > 0 && dy > 0) {
-        D_1F800044[8] = 4;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 4;
       } else if (dx == 0 && dy > 0) {
-        D_1F800044[8] = 5;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 5;
       } else if (dx < 0 && dy > 0) {
-        D_1F800044[8] = 6;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 6;
       } else if (dx < 0 && dy == 0) {
-        D_1F800044[8] = 7;
+        SPAD_PTR_SLOT(u8, 0x44u)[8] = 7;
       }
-      dirRow = (u8*)&D_801E2AB8[D_1F800044[6]] + 0x14;
-      diff = (u8)D_80143FCF - dirRow[D_801E3210[0x0E] & 0xF];
-      if ((s8)diff >= -1) {
-        if ((s8)diff > 3) {
-          diff = 3;
+      do {
+        direction_work = D_1F800044;
+      } while (0);
+      direction_index = (u32)D_801E3210;
+      do {
+        scale_index = direction_work[6];
+      } while (0);
+      direction_index = ((u8*)direction_index)[0x0E];
+      do {
+        row_offset = scale_index * sizeof(D_801E2AB8[0]);
+      } while (0);
+      direction_index &= 0xF;
+      dirRow = (u8*)D_801E2AB8 + row_offset + 0x14;
+      raw_class = (u8)D_80143FCF - dirRow[direction_index];
+      diff = raw_class;
+      raw_class = (u32)raw_class << 24;
+      if ((raw_class >> 24) >= -1) {
+        if ((raw_class >> 24) > 3) {
+          selected_class = 3;
+        } else {
+          selected_class = diff;
         }
       } else {
-        diff = -1;
+        selected_class = -1;
       }
+      diff = selected_class;
       switch ((s8)(diff + 1)) {
       case 0:
         flip = D_1F800044;
@@ -136,26 +139,42 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       case 1:
         if (roll & 0xE0) {
           if (roll & 8) {
-            upRoll = D_1F800044;
-            amount = (u8)(roll & 3);
-            upRoll[8] = (u8)((upRoll[8] + amount) & 7);
+            u8* cursor;
+            cursor = D_1F800044;
+            amount = roll & 3;
+            route_value = cursor[8];
+            route_value = route_value + amount;
+            route_value &= 7;
+            cursor[8] = (u8)route_value;
           } else {
-            downRoll = D_1F800044;
-            amount = (u8)(roll & 3);
-            downRoll[8] = (u8)((downRoll[8] - amount) & 7);
+            u8* cursor;
+            cursor = D_1F800044;
+            amount = roll & 3;
+            route_value = cursor[8];
+            route_value = route_value - amount;
+            route_value &= 7;
+            cursor[8] = (u8)route_value;
           }
         }
         break;
       case 2:
         if ((roll & 0xC0) == 0) {
           if (roll & 8) {
-            upRoll = D_1F800044;
-            amount = (u8)(roll & 3);
-            upRoll[8] = (u8)((upRoll[8] + amount) & 7);
+            u8* cursor;
+            cursor = D_1F800044;
+            amount = roll & 3;
+            route_value = cursor[8];
+            route_value = route_value + amount;
+            route_value &= 7;
+            cursor[8] = (u8)route_value;
           } else {
-            downRoll = D_1F800044;
-            amount = (u8)(roll & 3);
-            downRoll[8] = (u8)((downRoll[8] - amount) & 7);
+            u8* cursor;
+            cursor = D_1F800044;
+            amount = roll & 3;
+            route_value = cursor[8];
+            route_value = route_value - amount;
+            route_value &= 7;
+            cursor[8] = (u8)route_value;
           }
         }
         break;
@@ -196,9 +215,20 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       if (func_801E0770() != 0) {
         gate = D_801E2AB8[D_1F800044[6]].unk_1C[0];
         if ((rand() & 0xF) < gate || (D_801E3210[0x0E] & 0x80) != 0) {
-          staged = D_1F800044;
-          rowPtr = (u8*)&D_801E2AB8[staged[6]] + 0x14;
-          if ((s8)rowPtr[D_801E3210[0x0E] & 0xF] != 9) {
+          do {
+            staged = D_1F800044;
+          } while (0);
+          staged_direction = (u32)D_801E3210;
+          do {
+            staged_scale = staged[6];
+          } while (0);
+          staged_direction = ((u8*)staged_direction)[0x0E];
+          do {
+            staged_offset = staged_scale * sizeof(D_801E2AB8[0]);
+          } while (0);
+          staged_direction &= 0xF;
+          rowPtr = (u8*)D_801E2AB8 + staged_offset + 0x14;
+          if ((s8)rowPtr[staged_direction] != 9) {
             mode = staged[5];
             D_80145E92 = 4;
             D_80145E93 = 0;
@@ -208,10 +238,11 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
             D_80143FDC = 0;
             D_801E3208 = mode;
             staged[9] = 0;
+            clear_work = D_1F800044;
             *(s32*)(staged + 0x0C) = 0;
             *(s32*)(staged + 0x10) = 0;
             *(s32*)(staged + 0x14) = 0;
-            D_1F800044[0x0A] = 0;
+            clear_work[0x0A] = 0;
             D_1F800044[0x0B] = 0;
             bump = D_1F800044;
             bump[1] = (u8)(bump[1] + 1);

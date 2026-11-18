@@ -1661,6 +1661,22 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+A missing delay-slot store can begin as a common-tail merge in `.jump2`.
+Trace `.dbr` separately. GCC 2.7.2 treats volatile memory as a resource conflict,
+which can prevent the delay-slot scan from crossing a pointer-cell load to reach
+an independent value or store. Loop notes do not protect a common suffix from
+jump optimization. Choose qualifiers from the access contract and use the
+existing memory API. Preserve every original conditional read and store, then
+require the complete native gate.
+
+If CSE deletes a named narrow arithmetic input, trace the surviving word quantity
+and result chain through local allocation. A cursor reused in several blocks can
+die more than once and reach global allocation after an anonymous result chain
+has claimed its registers. Give each actual cursor sample its own local and retain
+shared word inputs and results when the arithmetic already uses that width.
+Check CSE survival, deaths and allocation classes. Preserve the byte loads and
+stores, unsigned wrap and reloads before requiring the complete native gate.
+
 When classification precedes a saved byte copy, keep the word sample and narrow
 snapshot as distinct quantities. Assign the snapshot after the rejecting guards.
 Check whether the sample stays live across index and category temporaries and

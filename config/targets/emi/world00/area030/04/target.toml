@@ -239,6 +239,12 @@ headers = [
     "include/bof3/world/area03004_internal.h",
 ]
 
+[[matching.section_placements]]
+function = 0x801DECDC
+section = ".rodata"
+address = 0x801D0C1C
+size = 0x14
+
 [[companion_overlays]]
 target = "emi/world00/area030/05"
 disc_id = "BIN/WORLD00/AREA030.EMI#5"
