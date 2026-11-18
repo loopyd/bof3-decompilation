@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801EEFE0
   - - 1120
-    - asm
-    - func_801EF060
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic15403_801EF060
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic15403_801EF060.c'
+    - '@behavior: Entry 3, the last, of the four-entry work byte 1 handler run at 0x801EEC04 (0x801EEC90, 0x801EEE94, 0x801EEFE0, 0x801EF060) that the exact dispatcher dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 copies into its frame and invokes with no arguments, so the payload holds no jal here. It reads the scratchpad work-object pointer cell at 0x1F800044 once before its frame exists and tests work byte 0xB; while that byte is nonzero it returns writing nothing. At zero it forwards the unsigned battle byte at 0x80146384 to the shared helper func_800A9820, raises mask 0x4 in the shared battle halfword at 0x801462E8 and calls the shared no-argument helper func_801E5988. The 0x18-byte frame keeps only $ra at 0x10; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 1216
     - c
     - dispatchStateByte1Tablef6ccBmagicMagic15403_801EF0C0

@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Table078cPlcharPlp56700_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table078cPlcharPlp56700_801CE404.c'
+    - '@behavior: Calls the handler indexed by work-record byte 2 from the twenty-four-word handler run at 0x801D078C.'
   - - 72
     - asm
     - func_801CE448

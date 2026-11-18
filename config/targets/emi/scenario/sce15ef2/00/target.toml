@@ -33,5 +33,6 @@ support_sources = [
     "src/bof3/scenario/drawRedGradientBandCenteredOnWorkEntryHalfwordWithFrameParityHalfHeightScenarioSce15ef200_801D1414.c",
     "src/bof3/scenario/drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8.c",
     "src/bof3/scenario/drawTranslucentFanOfThirtyTwoGouraudTrianglesAroundScreenBottomCenterScenarioSce15ef200_801D17A0.c",
+    "src/bof3/scenario/subtract16FromWorkWordCAndTickCountdownThenResetWorkStateWhenExpiredScenarioSce15ef200_801D0D5C.c",
 ]
 psyq_source = "src/bof3/support/sce15ef2_00_psyq.c"

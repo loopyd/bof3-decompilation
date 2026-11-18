@@ -1,5 +1,5 @@
 dispatchWorkByte2Tablef5ecPlcharPlp34900_801CE404 = 0x801CE404;
-func_801CE448 = 0x801CE448;
+pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp34900_801CE448 = 0x801CE448;
 func_801CE514 = 0x801CE514;
 dispatchWorkByte2Tablef5f8PlcharPlp34900_801CE610 = 0x801CE610;
 dispatchWorkByte3Tablef600PlcharPlp34900_801CE654 = 0x801CE654;
