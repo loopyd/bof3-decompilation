@@ -2055,6 +2055,12 @@ A narrow cast around a comparison need not create a narrow result phase. GCC
 local changes it back before expansion. Trace the assignment type and
 `do_store_flag` target before predicting an anonymous temporary or preference.
 
+Trace a boolean's RTL mode through branch combination. GCC 2.7.2 can rewrite
+integer-mode `EQ(result, 0)` for a known zero/one result as `XOR(result, 1)`.
+That later canonicalization can undo an earlier comparison simplification and
+leave a condition the branch pattern rejects. Follow the transformation through
+backend recognition before predicting that an inversion disappears.
+
 1. Compare `return condition;` with explicit constant-return arms:
 
    ```c
