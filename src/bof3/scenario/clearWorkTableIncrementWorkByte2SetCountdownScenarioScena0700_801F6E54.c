@@ -17,7 +17,9 @@ void func_801F8358(void);
  * at 0x801F6E10, which scales it by four and applies it to the handler table at
  * 0x801FDD3C) uses, and this function is that table's entry 0 (0x801F6E54 ==
  * 0x801FDD3C), so the increment moves the run on to its next entry; word 0x0C is
- * the countdown that the next entry, func_801F6E90 at 0x801F6E90, reads (its low
+ * the countdown that the next entry,
+ * claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90
+ * at 0x801F6E90, reads (its low
  * three bits select whether a free record is claimed and seeded this frame) and
  * decrements, incrementing byte 0x02 again once the decremented value reads
  * zero. It takes no arguments, returns nothing, reads only the pointer slot and

@@ -45,8 +45,10 @@ segments:
     - '@source: src/bof3/scenario/clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54.c'
     - '@behavior: Overlay work-state handler for scratch work-object byte 2 = 0: calls the table-clearing helper at 0x801F8358 (zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800, then the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8), then reloads the scratch work object at pointer slot 0x1F800044 + 0x44, stores 0x40 into its word at 0x0C and increments its byte at 0x02 so the run moves to the next handler; takes no arguments and returns nothing.'
   - - 656
-    - asm
-    - func_801F6E90
+    - c
+    - claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90
+    - '@source: src/bof3/scenario/claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90.c'
+    - '@behavior: Overlay work-state handler for scratch work-object byte 2 = 1, the middle entry of the three-entry handler run at 0x801FDD3C: it reads the scratchpad work object at pointer cell 0x1F800044 and, when that object''s 32-bit word at offset 0x0C reads zero in its low three bits, claims one work record through the scan at 0x801F8394 and passes a non-zero result in $a0 to the record seeder at 0x801F83D0; it then calls the work-table stepper at 0x801F85D8, re-reads the pointer cell, decrements the object''s word at 0x0C in place and, when the decremented count reads zero, increments its byte at 0x02 so the dispatcher at 0x801F6E10 moves the run to its next entry. Both written fields are the ones entry 0 (0x801F6E54) sets: 0x40 into word 0x0C and the byte 0x02 increment. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 788
     - c
     - clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14

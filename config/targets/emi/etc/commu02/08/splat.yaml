@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801D2CF8
   - - 8720
-    - asm
-    - func_801D2E10
+    - c
+    - queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0
+    - '@source: src/bof3/ui/queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0.c'
+    - '@behavior: queues cue 0x106 through func_8015DF18, starts action 0x72 through func_80150224, latches the main-RAM frontend mode byte 0x80143BB0 to 2, clears the byte-1 step index at 0x801F294D and advances the byte-0 step index at 0x801F294C by one'
   - - 8800
     - asm
     - func_801D2E60

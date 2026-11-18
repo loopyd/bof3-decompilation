@@ -136,8 +136,10 @@ segments:
     - c
     - noopHandlerScenarioScena1200_801F89FC
   - - 7684
-    - asm
-    - func_801F8A04
+    - c
+    - stepSubstatesRequestingFrontEndContextsGreyingPaletteAndArmingFlagRunFromWorkByteThenReleaseFrontEndAndResetStateScenarioScena1200_801F8A04
+    - '@source: src/bof3/scenario/stepSubstatesRequestingFrontEndContextsGreyingPaletteAndArmingFlagRunFromWorkByteThenReleaseFrontEndAndResetStateScenarioScena1200_801F8A04.c'
+    - '@behavior: Overlay second-level state handler, the word at 0x801FD1D4, entry 4 of the ten-word handler run at 0x801FD1C4 that dispatchSecondaryStateScenarioScena1200_801F886C selects with the signed shared state byte D_80146874, so it runs while that byte reads 4; no jal or j of the payload names 0x801F8A04 and that table word is its only image reference. It switches on the shared sub-state byte D_80146875 through the forty-entry absolute jump table jtbl_801F6CC4_main at 0x801F6CC4 in this payload leading tabledata blob, bounded by sltiu against 0x28, so sub-states 0 through 0x27 are its entries and table entries 3 through 9, 0x0C through 0x13 and 0x1F through 0x26 point at the body exit. The arms request front-end contexts through func_8019FA28 with the seeds 0x85 and 0x65 and the kinds 0x80, 0x82 and 0x83, queue actions 0xB and 0x11 through func_80150224, set bit 0x16 of the mode halfword D_80146258 in sub-state 2 and toggle it in sub-state 0x1A, step the effect bank through func_801BE1B0 with 1, set scenario flags 0x16, 0x17, 0x18 and 0x19 and drive the flag run 0x1A through 0x23 from the work byte D_80145024 masked with 0x7F through the twelve-word tables jtbl_801F6D64_main at 0x801F6D64 and jtbl_801F6D94_main at 0x801F6D94, the first setting one flag and the second setting one and clearing the other nine through func_8015B580 and func_8015B5A8. Sub-state 0x17 rewrites the whole 0x80037800 shadow palette block to grey through the 0xAAAAAAAB divide-by-three pack and publishes 1 in the palette-stage serial D_80145988. The arms that leave the walker run func_8015C058 and clear the sub-state byte D_80146875 and the state byte D_80146874, and all of them except sub-state 0xB also clear the bytes 0x80146865, 0x80146866 and 0x80146867 and the shared progress byte g_ScenarioProgress. It takes no arguments, returns nothing and its 0x18-byte frame keeps $ra and $s0, which holds the progress byte address sub-state 2 takes once and reuses across the release call.'
   - - 10880
     - c
     - stepSubstatesSeedingFieldRecordsRequestingFrontEndContextsThenHandOffToState6ScenarioScena1200_801F9680

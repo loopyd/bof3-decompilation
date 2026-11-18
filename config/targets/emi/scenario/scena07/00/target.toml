@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F80F0.c",
     "src/bof3/scenario/updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F805C.c",
     "src/bof3/scenario/updateTrailBufferAddWordsCAnd10And14ToWords34And38And3CSetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F7EF8.c",
+    "src/bof3/scenario/claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

@@ -6,8 +6,10 @@ extern s8 D_80146872;
  * shared main-RAM state byte D_80146872: its three code words are
  * seedSharedFieldsThenAdvanceStateScenarioScena0600_801F72D4 (0x801F72D4, the
  * state-0 handler that seeds the shared halfword fields and then advances that
- * byte to 1), func_801F7300 (0x801F7300) and func_801F7A00 (0x801F7A00, this
- * overlay's own primary state dispatcher). It sits at the tail of the code
+ * byte to 1),
+ * applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena0600_801F7300
+ * (0x801F7300) and func_801F7A00 (0x801F7A00, this overlay's own primary
+ * state dispatcher). It sits at the tail of the code
  * segment's pointer run and ends immediately before the next pointer label
  * D_801FE3E4.
  * @source 0x801FE3D8 @kind table

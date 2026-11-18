@@ -25,6 +25,7 @@ sources = [
     "src/bof3/ui/drawActiveRecordSlotBar.c",
     "src/bof3/ui/pickRandomValueOneThroughBound.c",
     "src/bof3/ui/commitCardRunIntoFlaggedFieldRecordAndStartActionF5.c",
+    "src/bof3/ui/queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

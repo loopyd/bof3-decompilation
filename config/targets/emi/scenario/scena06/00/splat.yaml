@@ -36,8 +36,37 @@ segments:
     - c
     - seedSharedFieldsThenAdvanceStateScenarioScena0600_801F72D4
   - - 1792
-    - asm
-    - func_801F7300
+    - c
+    - applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena0600_801F7300
+    - '@source: src/bof3/scenario/applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena0600_801F7300.c'
+    - '@behavior: Word 1 of the three-word outer state table at 0x801FE3D8,
+      which dispatchScenarioStateHandlerScenarioScena0600_801F7298
+      (0x801F7298) indexes with the signed shared main-RAM state byte
+      D_80146872. It reads the pending world id halfword D_80143F00 once per
+      arm, applies one arm per world id, and then stores 2 in D_80146872 so the
+      next frame dispatches word 2. World 0x27 probes flag 3 of D_8014686C and,
+      only when it reads clear, clears the progress byte g_ScenarioProgress and
+      0x80146865 and switches on the low seven bits of the front-end phase byte
+      D_80145024, clearing bit 0 of the record byte of two party slots per phase
+      (0/1, 1/2, 2/0 in slot order 0, 1, 2) and then dispatching scenario
+      handler 0, 1 or 2 through func_801C1E3C. World 0x2E requires flag 0xB set
+      and flag 0x3C clear, requests primary state 0x11, sets flag 0x3C and
+      dispatches handler 6 or 4 followed by handler 7, 8 or 9 per phase. World
+      0x35 clears the progress and state bytes unless flag 0xB reads set, and
+      arms the shared effect byte D_8014832E with 0x1F and runs func_801FCD38
+      when flag 0xE reads set while flag 0x11 reads clear. World 0x4C clears the
+      four state bytes, sets flag 0x3F and runs func_801A78F8. World 0x57
+      switches on the shared state byte D_80146866 through a pointer taken once,
+      running the front-end release helper func_8015C058 and clearing the
+      progress, state and request bytes on a clear flag probe (0x1F for state 1,
+      0x21 for state 2). World 0x5C switches on that state byte and clears or
+      arms D_8014832E, state 4 running func_801BFE34 with 0x1D0000, 0x3E0000 and
+      0x1B. World 0x5E switches on that state byte, arms D_8014832E or seeds the
+      shared counter D_8014932C with 0x480 and D_80149333 with 2, then requires
+      flag 0x11 set and flag 0x3B clear, sets flag 0x3B, clears D_8014832E, runs
+      func_801FCD38 and requests secondary state 0x1E with primary state 6.
+      Worlds 0x2D, 0x41, 0x57 and 0x10 fall into the clearing tail, which clears
+      g_ScenarioProgress and 0x80146865..0x80146867 in that order.'
   - - 3584
     - c
     - dispatchPrimaryStateHandlerScenarioScena0600_801F7A00

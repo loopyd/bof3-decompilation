@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801F3E64
   - - 4784
-    - asm
-    - func_801F3EB0
+    - c
+    - incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0
+    - '@source: src/bof3/world/incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0.c'
+    - '@behavior: Overlay progress step handler, entry 1 of the four-word handler row based at 0x801F5FAC: increments the per-phase frame counter halfword at +0x30 of the work record published at 0x1F800044, and whenever the low two bits of that record countdown halfword at +0x2E read clear it claims a free record through 0x801F4D80 and spawns it through 0x801F4DBC when that scan returns a record; then runs the per-frame record pass 0x801F4E7C, re-reads the work record through the cell, decrements the countdown halfword at +0x2E and, on the frame that countdown reaches zero, clears the record byte at +0x09 and advances the state byte at +0x01.'
   - - 4944
     - asm
     - func_801F3F50

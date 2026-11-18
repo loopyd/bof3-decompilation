@@ -188,8 +188,23 @@ segments:
     - asm
     - func_801FB868
   - - 20588
-    - asm
-    - func_801FBC6C
+    - c
+    - queueFrontEndMode6FAndRunCompletionSubstatesPublishingFrontEndRecordThenReleaseScenarioScena0200_801FBC6C
+    - '@source: src/bof3/scenario/queueFrontEndMode6FAndRunCompletionSubstatesPublishingFrontEndRecordThenReleaseScenarioScena0200_801FBC6C.c'
+    - '@behavior: Slot 30 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes
+      with the signed chain byte D_80146872. It steps the shared sub-state byte
+      D_80146875 through the 26-slot jump table at 0x801F7134: slot 0 requests
+      front-end mode 0x6F and arms the primary mode byte D_80143BB0 with 2,
+      slot 1 aborts to primary state 0 unless that mode byte still reads 2,
+      slot 5 gates on bit 2 of D_801490A4 and treats progress 0x5A as the abort
+      and 0x5B as the go-ahead that arms D_80146866 with 1, advances to 0x14
+      and requests front-end mode 0x0D, slots 0x14 through 0x19 run the
+      front-end completion ladder of field-record reinit, cue 0x21 stop, frame
+      timer re-arm, predicate wait, cue 0x21 finish and front selector context
+      0x1B and either publish the front-end record words once progress reads
+      0x5C or release the overlay, and slot 0x19 releases once the mode byte
+      reads 0.'
   - - 21284
     - c
     - startFrontEndOnSharedByte3ElseReleaseAndAdvanceScenarioScena0200_801FBF24
