@@ -144,8 +144,10 @@ segments:
     - '@source: src/bof3/world/setStatus77AndByte801F294D0AIfGateElseFFFFWorld04Area17513_801F3A84.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0xFFFF into the shared status halfword D_801490A8. Otherwise stores 0x77 into that halfword and 0x0A into the byte at 0x801F294D.'
   - - 3784
-    - asm
-    - func_801F3AC8
+    - c
+    - setStatus6FIfGateElse7C7DByWord80144F50World04Area17513_801F3AC8
+    - '@source: src/bof3/world/setStatus6FIfGateElse7C7DByWord80144F50World04Area17513_801F3AC8.c'
+    - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x6F into the shared status halfword D_801490A8 and clears the shared byte D_801448ED. Otherwise it compares the shared word D_80144F50 with an unsigned bound of 0x1F4: below the bound it stores 0x7C into D_801490A8 and 0xFF into byte 0x7A of the pointer held at D_80148208, and at or above the bound it stores 0x7D into D_801490A8 and 1 into D_801448ED.'
   - - 3916
     - c
     - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C

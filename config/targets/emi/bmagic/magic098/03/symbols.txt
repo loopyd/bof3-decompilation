@@ -1,10 +1,11 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEF38 = 0x801EEF38;
 dispatchStateByte1Table0340BmagicMagic09803_801EEF84 = 0x801EEF84;
 func_801EEFC8 = 0x801EEFC8;
 func_801EF124 = 0x801EF124;
-func_801EF1B4 = 0x801EF1B4;
+add4ToWorkByteAAndIncrementWorkByteBThenWhenByteAIs10SubmitSelectedRecordRaiseFlag10SetByte9To8AndAdvanceWorkByte2BmagicMagic09803_801EF1B4 = 0x801EF1B4;
 func_801EF334 = 0x801EF334;
 incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09803_801EF498 = 0x801EF498;
 func_801EF520 = 0x801EF520;

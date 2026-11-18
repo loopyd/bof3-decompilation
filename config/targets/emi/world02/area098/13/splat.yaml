@@ -154,8 +154,10 @@ segments:
     - countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8
     - '@source: src/bof3/world/countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8.c'
   - - 9196
-    - asm
-    - func_801F4FEC
+    - c
+    - stepWorkWord8IntoWord10ReleaseRecordOnCountdownZeroAndSetOneShotLatchWorld02Area09813_801F4FEC
+    - '@source: src/bof3/world/stepWorkWord8IntoWord10ReleaseRecordOnCountdownZeroAndSetOneShotLatchWorld02Area09813_801F4FEC.c'
+    - '@behavior: on its first pass sets the one-shot latch byte at 0x801F6514 to 1 when it reads zero, then decrements the record countdown byte at +0x02, adds 0x400 to the record word at +0x08 and adds that word into the record word at +0x10, subtracts 8 from the record byte at +0x03, and clears the record byte at +0x00 when the countdown reaches zero.'
   - - 9296
     - asm
     - func_801F5050

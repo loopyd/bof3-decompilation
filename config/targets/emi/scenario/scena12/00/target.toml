@@ -26,6 +26,7 @@ sources = [
     "src/bof3/scenario/stepSubstatesThroughFrontEndContextsAndFieldRecordSlotsThenReleaseStateScenarioScena1200_801F9F0C.c",
     "src/bof3/scenario/stepSubstatesThroughFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FA7DC.c",
     "src/bof3/scenario/applyPendingWorldIdSetupThenAdvanceStateTo2ScenarioScena1200_801F7F78.c",
+    "src/bof3/scenario/stepSubstatesSeedingFieldRecordsRequestingFrontEndContextsThenHandOffToState6ScenarioScena1200_801F9680.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",
@@ -86,3 +87,9 @@ function = 0x801FA7DC
 section = ".rodata"
 address = 0x801F6F0C
 size = 0xB0
+
+[[matching.section_placements]]
+function = 0x801F9680
+section = ".rodata"
+address = 0x801F6DC4
+size = 0xE8

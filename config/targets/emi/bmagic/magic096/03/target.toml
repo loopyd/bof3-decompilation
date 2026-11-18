@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF394.c",
+    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C.c",
 ]
 support_sources = [
     "src/bof3/support/magic096_03_psyq.c",

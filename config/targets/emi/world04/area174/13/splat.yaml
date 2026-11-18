@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801F3D78
   - - 4712
-    - asm
-    - func_801F3E68
+    - c
+    - claimFrontEndRecordHandler9DSeedByte6OneHalfword30A5AndWorkRecordSlotWorld04Area17413_801F3E68
+    - '@source: src/bof3/world/claimFrontEndRecordHandler9DSeedByte6OneHalfword30A5AndWorkRecordSlotWorld04Area17413_801F3E68.c'
+    - '@behavior: Claims one free row through the shared allocator func_8019601C and, for an index other than 0xFF, seeds the 0x74-byte row it selects at 0x80143FC8 with occupancy 1 at byte 0x00, handler selector 0x9D at byte 0x05, 1 at byte 0x06, 0xA5 at halfword 0x30, the slot of the 0x98-byte work record published at 0x80146884 at byte 0x0B and 0x18 times that slot plus 0xC at halfword 0x2E.'
   - - 4940
     - c
     - seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C

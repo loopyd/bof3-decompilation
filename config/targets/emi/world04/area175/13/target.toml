@@ -36,5 +36,6 @@ support_sources = [
     "src/bof3/world/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c",
     "src/bof3/world/dispatchWorkByte4Table5370World04Area17513_801F4204.c",
     "src/bof3/support/area175_13_psyq.c",
+    "src/bof3/world/setStatus6FIfGateElse7C7DByWord80144F50World04Area17513_801F3AC8.c",
 ]
 psyq_source = "src/bof3/support/area175_13_psyq.c"

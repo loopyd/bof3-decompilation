@@ -46,8 +46,9 @@ segments:
     - asm
     - func_801EF124
   - - 1460
-    - asm
-    - func_801EF1B4
+    - c
+    - add4ToWorkByteAAndIncrementWorkByteBThenWhenByteAIs10SubmitSelectedRecordRaiseFlag10SetByte9To8AndAdvanceWorkByte2BmagicMagic09803_801EF1B4
+    - '@source: src/bof3/bmagic/add4ToWorkByteAAndIncrementWorkByteBThenWhenByteAIs10SubmitSelectedRecordRaiseFlag10SetByte9To8AndAdvanceWorkByte2BmagicMagic09803_801EF1B4.c'
   - - 1844
     - asm
     - func_801EF334

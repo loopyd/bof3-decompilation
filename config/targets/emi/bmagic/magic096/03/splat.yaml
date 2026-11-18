@@ -80,8 +80,9 @@ segments:
     - asm
     - func_801EFA8C
   - - 3900
-    - asm
-    - func_801EFB3C
+    - c
+    - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C.c'
   - - 4596
     - asm
     - func_801EFDF4

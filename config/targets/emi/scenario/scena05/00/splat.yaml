@@ -174,8 +174,10 @@ segments:
     - asm
     - func_801FCBD4
   - - 24616
-    - asm
-    - func_801FCC28
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState10ScenarioScena0500_801FCC28
+    - '@source: src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState10ScenarioScena0500_801FCC28.c'
+    - '@behavior: Shared-state reset callback of the overlay record-callback run: it runs the shared front-end startup helper func_8015C088 (0x8015C088), then clears the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867, clears the shared sub-state byte D_80146875 and requests primary scene state 0x10 in the shared primary state byte D_80146874; it takes no arguments and returns nothing, the constant 0x10 is materialised once in $v0 immediately after the call while each of the five byte stores materialises the 0x8014 page in $at on its own, and the record-callback dispatcher dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58) reaches it only through word 5 of the nine-word overlay callback run at 0x801FD644 (0x801FD658 holds 0x801FCC28), so the record byte at offset 0x7A selects it with the value 5.'
   - - 24692
     - asm
     - func_801FCC74

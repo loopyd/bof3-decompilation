@@ -369,8 +369,33 @@ segments:
       frame setup, and the ten-word case table sits in the overlay rodata slot
       at 0x801F7044.'
   - - 16136
-    - asm
-    - func_801FAB08
+    - c
+    - runSecondaryStateSequenceForPrimaryState12ScenarioScena0600_801FAB08
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState12ScenarioScena0600_801FAB08.c'
+    - '@behavior: Word 12 (0-based) of the eighteen-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a twenty-entry case
+      table in which state 9 has no case and falls to the epilogue: state 0
+      claims front-end record 0x91 and arms state 1; state 1 runs func_801BE1B0
+      and func_801C601C with mode 0; states 2 to 6 each wait for one progress
+      value (1, 3, 5, 0x0A, 0x1D) and then advance one state; state 7, once the
+      gate halfword D_80143C40 is clear, clears the effect bank D_8014832E,
+      sets progress 0x1F, releases the front-end record through func_8015D404,
+      starts the shared timing through func_8015D300, queues action 0x0D and
+      latches the phase byte D_80143BB0 to 2; state 8 advances on bit 0x2 of
+      D_801490A4, runs func_801667A4 and clears the signed byte D_8014865F,
+      which state 0x0A tests; state 0x0B clears bit 0x2 of the record at
+      D_8014496F + 0xA4 * D_80181B12 and latches D_80148660, which state 0x0C
+      tests before arming the effect bank and falling through to state 0x0D;
+      states 0x0E to 0x10 gate on progress 0x3C, progress 5 and the gate
+      halfword; state 0x11 sets flag 1 of D_8014686C and dispatches on the
+      low seven bits of D_80145024; state 0x12 arms the effect bank with 0x1F
+      and state 0x13, at progress 0x14, queues action 0x44, clears the shared
+      bytes 0x80146865 to 0x80146867, releases the overlay and clears both state
+      bytes. The 0x18-byte frame keeps $ra across the calls, the state-byte load
+      and its bound test are hoisted above the frame setup, and the twenty-word
+      case table sits in the overlay rodata slot at 0x801F706C.'
   - - 17428
     - asm
     - func_801FB014
