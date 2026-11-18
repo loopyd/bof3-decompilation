@@ -1807,6 +1807,23 @@ that scope unless their allocation also needs the weight. Trace both passes and
 measure the complete body; neither matching registers nor a matching prologue
 proves a match.
 
+When a narrow coordinate addition hoists but its word form ties the input to the
+saved result, inspect both CSE passes. GCC 2.7.2's first CSE stops at `LOOP_END`;
+its post-loop CSE ignores that note. A scope around the real input capture can
+leave two nonconsecutive definitions for loop optimization, keeping the addition
+in its branch. Later CSE can forward the input and remove the capture after the
+only hoisting pass. Place that capture before an existing independent call when
+permitted: a boundary after the call can force the addition ahead of unrelated
+arguments. Prove the value, access and call independence before moving it.
+
+Check existing input sharing across the new boundary. If it separates an indexed
+argument from its guard, first CSE may retain a duplicate address computation.
+Loop optimization can then reduce the extra use into a carried pointer and change
+the whole register allocation. Sample the existing input once for its real guard
+and argument when no intervening effect can change it. Preserve its range and
+signedness, then check CSE, loop motion, both schedulers and the complete native
+gate. A correct local register change alone is insufficient.
+
 When a call answer needs an initial word copy and a saved masked value, inspect
 CSE's width conversions. A word local for the first guard and a narrow local for
 later masks can remain distinct without an added conversion instruction. Prove

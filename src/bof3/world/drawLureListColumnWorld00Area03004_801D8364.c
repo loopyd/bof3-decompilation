@@ -25,10 +25,9 @@ extern int sprintf(char* buffer, const char* format, ...);
  * whose height loses six pixels per row beyond the ninth and whose origin
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
- * @status partial
- * @match 99.43
- * @residual Count-X reload and addition use S0 where the original reloads T1.
- * The compiled body retains the original 1404-byte size.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   u16 x;
@@ -44,7 +43,8 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   s32 rows;
   s32 drawn;
   s32 i;
-  s32 textX;
+  u16 textX;
+  u32 count;
   u8 scroll;
   s32 columnEnd;
   u8 columnY;
@@ -113,9 +113,13 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
                       (u32)&D_801C9E7C[*slotCursor * 20]);
         func_8014F800(nameX, (s16)(baseY + lineOffset), 0, 0xC,
                       (u32)&D_801C9E7C[*slotCursor * 20]);
-        if (D_801453CC[i] >= 2) {
-          sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);
-          textX = x + 0x68;
+        count = D_801453CC[i];
+        if (count >= 2) {
+          do {
+            textX = x;
+          } while (0);
+          sprintf((char*)buf, (const char*)D_801D0C14, count);
+          textX += 0x68;
           func_80150098((s16)textX, (s16)(baseY + (s16)(textY + 4)), 7, buf);
           func_80150098((s16)textX, (s16)(baseY + (s16)(textY + 2)), 0, buf);
         }
