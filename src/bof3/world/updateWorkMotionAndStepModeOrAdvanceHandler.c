@@ -13,10 +13,10 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 87.20
- * @residual Frame size, value allocation, argument scheduling and division
- * expansion still differ. The original 3188-byte interval remains
- * retained until exact reconstruction.
+ * @match 87.95
+ * @residual Frame size, lower pointer allocation and argument scheduling
+ * still differ. The compiled body is 3184 of the original 3188 bytes;
+ * the original interval remains retained until exact reconstruction.
  */
 void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* upperThresholdWork;

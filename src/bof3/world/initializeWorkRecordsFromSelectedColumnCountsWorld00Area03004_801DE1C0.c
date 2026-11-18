@@ -9,10 +9,9 @@ extern u8 workRecordCountsBySelectorAndColumnWorld00Area03004[]; /* @source 0x80
  * initializes consecutive work records, seeds their halfword 0x90
  * amounts from rand(), derives halfwords 0x8C/0x8E, optionally
  * increments the seeded amount, and clears work bytes 1-4 and 0x5C.
- * @status partial
- * @match 91.98
- * @residual Signed-division trap expansion still differs. The compiled
- * body is 712 of the original 748 bytes; the original interval remains retained.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void) {
   s32 column;

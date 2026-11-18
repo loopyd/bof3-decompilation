@@ -63,6 +63,10 @@ set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposingThresholds_c -O2 -Wa,--
 # /* @source 0x801E0ABC */
 set(BOF3_OBJFLAGS_bof3_world_func_801E0ABC_c -O2 -Wa,--expand-div)
 
+# These AREA030 objects retain the original signed-division checks (break 7 / break 6).
+set(BOF3_OBJFLAGS_bof3_world_initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_bof3_world_updateWorkMotionAndStepModeOrAdvanceHandler_c -O2 -Wa,--expand-div)
+
 # The scroll updater retains the original signed-division checks (break 7 / break 6).
 # The selector-specific expansion check verified the complete function.
 set(BOF3_OBJFLAGS_bof3_world_updateWorkScrollWordsWorld00Area03004_801E084C_c -O2 -Wa,--expand-div)
