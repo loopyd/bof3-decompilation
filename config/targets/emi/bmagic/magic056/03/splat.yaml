@@ -72,8 +72,10 @@ segments:
     - '@source: src/bof3/bmagic/publishWorkByte9TimesFourPlus120ToScratchpadHalfwordIncrementWorkByteAAndWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenByte9Is28BmagicMagic05603_801EF37C.c'
     - '@behavior: Word 6 of the in-image code pointer run based at 0x801F0744. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before its frame exists, and stores that object byte 9 widened as (byte << 2) + 0x120 at halfword width into the scratchpad halfword at 0x1F800000. It then increments the same object byte 0xA at byte width, re-reads the cell, increments byte 9 at byte width and masks the stored register with andi 0xFF before comparing it against 0x28, and only when that counter has just reached 0x28 does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one at byte width and invoke the shared helper at 0x801E5988, the store filling the call delay slot. It takes no arguments, returns nothing and its 0x18-byte frame keeps only the return address.'
   - - 2064
-    - asm
-    - func_801EF410
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the scratchpad work-record pointer cell at 0x1F800044 once. It zeroes a rotation halfword triplet, then builds the work record position triplet whose first two elements are that record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 and whose third element is half the negated signed halfword 0x3E of the same record. RotTrans projects that position through the caller matrices into the translation field of a 0x20-byte scratch matrix while storing a flag word beside it, RotMatrix turns the zeroed triplet into a rotation in that same matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and the result is published through SetRotMatrix and SetTransMatrix. Takes no arguments, returns nothing, and its 0x50-byte frame keeps the return address at 0x4C and $s0 at 0x48 across the matrix calls.'
   - - 2240
     - asm
     - func_801EF4C0

@@ -10,9 +10,10 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * ends the work-byte-9 countdown. */
 void func_8015D71C(s32 arg0);
 
-/* Drawing routine of this overlay at 0x801EF1DC, still unlifted in its own
- * asm subsegment, which owns the symbol. */
-void func_801EF1DC(void);
+/* Drawing routine of this overlay at 0x801EF1DC, lifted in its own claimed
+ * source under this name. */
+void drawTwoTranslucentGouraudBandsGradedBetweenDarkRedAndWorkByte9TintThenRearmGraphTypeDrawModeBmagicMagic16103_801EF1DC(
+    void);
 
 /* Shared readiness helper of the main executable at 0x8014DAEC. */
 void func_8014DAEC(void);
@@ -45,6 +46,6 @@ void invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9The
   } else {
     work[9] = byte9 + 4;
   }
-  func_801EF1DC();
+  drawTwoTranslucentGouraudBandsGradedBetweenDarkRedAndWorkByte9TintThenRearmGraphTypeDrawModeBmagicMagic16103_801EF1DC();
   func_8014DAEC();
 }

@@ -64,8 +64,10 @@ segments:
     - asm
     - func_801EF38C
   - - 2124
-    - asm
-    - func_801EF44C
+    - c
+    - advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic06703_801EF44C
+    - '@source: src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic06703_801EF44C.c'
+    - '@behavior: Reads the scratchpad work pointer cell at 0x1F800044, adds one plus work byte 9 shifted right by six to work byte B, increments work byte A when bit 0 of 0x80143E6C is set, adds two to work byte 9, and advances work byte 2 when the stored byte is 0xC0.'
   - - 2292
     - c
     - advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic06703_801EF4F4

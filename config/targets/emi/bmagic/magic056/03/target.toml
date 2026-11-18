@@ -16,6 +16,7 @@ sources = [
     "src/bof3/bmagic/publishWorkByte9TimesTwentyEightToScratchpadHalfwordRaiseFlag10WhenByte9Is4ThenAdvanceWorkByte2WhenByte9Is12BmagicMagic05603_801EF2DC.c",
     "src/bof3/bmagic/clearRecordFlag40DispatchEvent1CForwardBattleByteThenSeedSelectedBattlerRecordAdvanceWorkByte1BmagicMagic05603_801EEF3C.c",
     "src/bof3/bmagic/seedWorkObjectClearBytesBAnd9DispatchEvent8ClaimSlot55CopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerCopyTwo15HalfwordBandsSet80145988CopyRecordStatsAndRaiseFlag40BmagicMagic05603_801EEC94.c",
+    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4.c",

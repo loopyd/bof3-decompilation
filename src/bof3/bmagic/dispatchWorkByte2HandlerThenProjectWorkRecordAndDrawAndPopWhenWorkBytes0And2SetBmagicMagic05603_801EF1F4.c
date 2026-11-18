@@ -17,8 +17,10 @@ extern void (*D_801F0754[])(void); /* @source 0x801F0754 @kind data */
 
 /* Pushes the GTE matrix stack, projects the work-record position through
  * RotTrans and installs the resulting transform with RotMatrix, MulMatrix2,
- * SetRotMatrix and SetTransMatrix. Still an asm row in this target. */
-extern void func_801EF410(void); /* @source 0x801EF410 @kind function */
+ * SetRotMatrix and SetTransMatrix. Lifted from its own span; this row used to
+ * be an asm row in this target. */
+extern void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410(
+    void); /* @source 0x801EF410 @kind function */
 
 /* Draws the work record's effect: reads the graph type, builds its primitives
  * with GetTPage/GetClut/SetDrawMode/SetSemiTrans and RotTransPers4 and emits
@@ -67,7 +69,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
     void) {
   D_801F0754[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
-    func_801EF410();
+    projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410();
     func_801EF4C0();
     PopMatrix();
   }

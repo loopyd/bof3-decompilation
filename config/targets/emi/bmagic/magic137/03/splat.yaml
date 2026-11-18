@@ -50,8 +50,10 @@ segments:
     - dispatchStateByte1Table00f8BmagicMagic13703_801EEFD4
     - '@source: src/bof3/bmagic/magic13703DispatchTables.c'
   - - 1048
-    - asm
-    - func_801EF018
+    - c
+    - dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF3B0AndF4C4AndPopWhenWorkByte0NonzeroBmagicMagic13703_801EF018.c'
+    - '@behavior: Dispatches one frame of the overlay work object through the work byte 2 step table at 0x801F0104: the work-object pointer cell at 0x1F800044 is read before the frame adjustment, its unsigned byte at offset 2 is scaled by four and selects the code pointer at 0x801F0104 plus that offset, which is invoked with no arguments. The table is indexed where it lives, so no table word is copied into the frame, and the selector is not bounds-checked. After the handler returns the pointer cell is read a second time and, when the work object byte 0 is non-zero, the helper at 0x801EF3B0, the helper at 0x801EF4C4 and then PopMatrix at 0x80178C18 run in that order, each call delay slot a nop. It takes no arguments and returns nothing; its 0x18-byte frame keeps only $ra at 0x10, and it writes no state. It is entry 0 of the in-image code pointer run at 0x801F00F8 that the byte-1 dispatcher at 0x801EEFD4 indexes, so no jal in the payload reaches it.'
   - - 1168
     - asm
     - func_801EF090
