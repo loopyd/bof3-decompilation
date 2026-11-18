@@ -1,5 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
+extern u8 firstFrontEndEntryFlags; /* @source 0x80143FC8 @kind bss */
+
 extern s16 workOffsetReferenceState; /* @source 0x8014423C @kind unknown */
 extern s32 func_801E02D4(u32 arg0, u32 arg1);
 
@@ -11,7 +13,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 81.43
+ * @match 82.06
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -164,8 +166,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       motionWork = D_1F800044;
       FIELD_REF(s32, motionWork, 0x10) = 0;
 
-      D_80143FC8[0].flags_00 =
-          (u8)(D_80143FC8[0].flags_00 & 0xBF);
+      firstFrontEndEntryFlags = (u8)(firstFrontEndEntryFlags & 0xBF);
     }
 
     countWork = D_1F800044;

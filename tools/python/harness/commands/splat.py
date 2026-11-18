@@ -2,20 +2,61 @@
 
 from __future__ import annotations
 
-import re
-
-import json
 import argparse
+import json
+import re
 import sys
 from pathlib import Path
+
+import yaml
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
 
 from ..domain.layout import parse_splat_layout
 from ..domain.registry import lookup_target_manifest
 from ..domain.sources import LiftMetadataError, lift_metadata
+from ..domain.symbols import parse_map
 from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
+
+
+def _project_symbol_maps(root: Path, manifest, output: Path) -> Path:
+    """Keep address owners in Splat maps; aliases remain in linker bindings."""
+    reviewed = root / manifest.splat
+    layout = parse_splat_layout(reviewed, manifest.load_address)
+    projected_maps: dict[str, str] = {}
+    for relative in layout.symbol_map_paths:
+        source = root / relative
+        text = source.read_text(encoding="utf-8")
+        aliases = {
+            row.name
+            for row in parse_map(text, source=str(source), canonicalize=False)
+            if row.is_alias
+        }
+        if not aliases:
+            continue
+        lines = []
+        for line in text.splitlines(keepends=True):
+            name, _, _ = line.partition("=")
+            if name.strip() not in aliases:
+                lines.append(line)
+        destination = output / "symbol-maps" / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_text("".join(lines), encoding="utf-8")
+        projected_maps[relative] = str(destination)
+    if not projected_maps:
+        return reviewed
+    document = yaml.safe_load(reviewed.read_text(encoding="utf-8"))
+    options = document["options"]
+    options["base_path"] = str(
+        (reviewed.parent / options.get("base_path", ".")).resolve()
+    )
+    options["symbol_addrs_path"] = [
+        projected_maps.get(relative, relative) for relative in layout.symbol_map_paths
+    ]
+    projected = output / "splat.yaml"
+    projected.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
+    return projected
 
 
 def _legacy_stub_candidates(root: Path, manifest) -> list[tuple[Path, Path, int]]:
@@ -131,7 +172,14 @@ def _sdk_text(object_path: Path, root: Path) -> bytes | None:
     if not executable.is_file():
         return None
     result = subprocess.run(
-        [str(executable), "-O", "binary", "--only-section=.text", str(object_path), "/dev/stdout"],
+        [
+            str(executable),
+            "-O",
+            "binary",
+            "--only-section=.text",
+            str(object_path),
+            "/dev/stdout",
+        ],
         capture_output=True,
     )
     if result.returncode != 0 or not result.stdout:
@@ -149,7 +197,7 @@ def _sdk_slot_report(root: Path, manifest) -> list[dict]:
 
     layout_text = (root / manifest.splat).read_text(encoding="utf-8")
     sdk_map: dict[int, str] = {}
-    for entry in re.findall(r'^\s*- (config/sdk/\S+\.txt)\s*$', layout_text, re.M):
+    for entry in re.findall(r"^\s*- (config/sdk/\S+\.txt)\s*$", layout_text, re.M):
         for line in (root / entry).read_text(encoding="utf-8").splitlines():
             match = re.match(r"\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;", line)
             if match:
@@ -159,7 +207,10 @@ def _sdk_slot_report(root: Path, manifest) -> list[dict]:
     # Claimed members are a reviewed sample, not every object the slot may come
     # from, so the whole staged SDK is searched before calling a slot a variant.
     claimed = re.findall(
-        r'"((?:[^"]*/)?psyq/[^"]+\.(?:o|obj))"', (root / "config/targets" / manifest.id.value / "target.toml").read_text(encoding="utf-8")
+        r'"((?:[^"]*/)?psyq/[^"]+\.(?:o|obj))"',
+        (root / "config/targets" / manifest.id.value / "target.toml").read_text(
+            encoding="utf-8"
+        ),
     )
     members = list(claimed)
     for library in sorted((root / "toolchains" / "psyq").glob("*/")):
@@ -204,12 +255,22 @@ def _sdk_slot_report(root: Path, manifest) -> list[dict]:
                 "object_offset": f"0x{owner[1]:X}" if owner else None,
             }
         )
-    destination = root / "out" / "psyq" / f"slots-{manifest.id.value.replace('/', '-')}.json"
+    destination = (
+        root / "out" / "psyq" / f"slots-{manifest.id.value.replace('/', '-')}.json"
+    )
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(rows, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    destination.write_text(
+        json.dumps(rows, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     for row in rows:
-        where = f"{row['object']}@{row['object_offset']}" if row["object"] else "no matching sdk object"
-        print(f"sdk-slot {row['status']} {row['function']} {row['name']} ({row['bytes']} B) {where}")
+        where = (
+            f"{row['object']}@{row['object_offset']}"
+            if row["object"]
+            else "no matching sdk object"
+        )
+        print(
+            f"sdk-slot {row['status']} {row['function']} {row['name']} ({row['bytes']} B) {where}"
+        )
     return rows
 
 
@@ -241,11 +302,12 @@ def run(args: argparse.Namespace) -> int:
     _assert_pre_run_safety(root, manifest)
     output = root / "out" / "splat" / manifest.id.value
     output.mkdir(parents=True, exist_ok=True)
+    splat_path = _project_symbol_maps(root, manifest, output)
     result = toolchain.execute(
         [
             "split",
             "--make-full-disasm-for-code",
-            str(root / manifest.splat),
+            str(splat_path),
             str(root / "config" / "splat.yaml"),
         ],
         capture_output=not args.verbose,

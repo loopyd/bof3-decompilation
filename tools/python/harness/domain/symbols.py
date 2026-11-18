@@ -1,6 +1,6 @@
 """Canonical target-local symbol maps and generated weak bindings.
 
-The map format deliberately stays Splat's small ``name = 0xADDRESS;`` syntax.
+Maps contain ``name = 0xADDRESS;`` definitions and same-map ``name = target;`` aliases.
 This module is the single parser so command-line tools, Rizin replay, C context,
 and link bindings cannot each grow a subtly different spelling rule.
 """
@@ -23,8 +23,8 @@ _ENTRY = re.compile(
 )
 # An alias binds a second name to a symbol already defined in the SAME map, so a cell
 # that is read at two widths (for example a byte flag also stored as a word) can be
-# named twice without claiming its address a second time. Splat already accepts symbol
-# arithmetic on the right-hand side, so the row stays inside the small map grammar.
+# named twice without claiming its address a second time. Linker bindings retain
+# aliases; the Splat adapter passes only address owners to its external symbol reader.
 #: Splat symbol types this harness models; mirrors splat's own accepted set.
 SYMBOL_TYPES = frozenset({"func", "jtbl", "jtbl_label", "label"})
 
