@@ -1866,6 +1866,17 @@ exclusive arm can own both reloaded phases. Define it before every use, preserve
 each reload and access, and trace conflicts in both phases before measuring the
 complete body.
 
+A captured literal can stay live across later independent publications when first
+scheduling delays its store. Trace that store before changing priorities. Group
+only the real publication and its next mode input when the original order supports
+that boundary; recheck literal intervals, pointer conflicts and both scheduling
+passes before the complete native gate.
+
+When lookup setup hoists before input arithmetic, inspect its address temporaries.
+A locally allocated table base can conflict with an earlier scalar and move its
+later phase to another register. Scope only the real arithmetic operation, then
+check that both schedulers remove the overlap and preserve the complete output.
+
 When initial RTL already has the wrong addition order, inspect frontend folding
 before CSE. Parentheses and equal-mode conversions may be reassociated. Signed
 and unsigned locals of one machine mode can take different narrowing and

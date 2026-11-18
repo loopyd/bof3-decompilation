@@ -13,17 +13,16 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 82.56
- * @residual Frame size, bound copies, branching, value allocation and
- * division expansion still differ. The original 3188-byte interval remains
+ * @match 84.44
+ * @residual Frame size, bound copies, value allocation and division expansion
+ * still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
  */
 void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* upperThresholdWork;
   u8* upperMotionWork;
-  u8* upperTransitionWork;
+  u8* transitionWork;
   u8* lowerThresholdWork;
-  u8* lowerTransitionWork;
   u8* upperMode;
   u8* lowerMode;
   u8* entryMode;
@@ -73,8 +72,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* motionWork;
   u8* countWork;
   u8* angleWork;
-  u8* chanceRow;
-  Area030ScaleRecord* scale;
+  u8* scaleBytes;
   Area030Range* classificationRange;
   Area030Range* retryRange;
   Area030Range* deltaRange;
@@ -130,9 +128,11 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   reference = ((u8*)&workOffsetReferenceState)[0];
   spread = entryMode[3] * 4;
   work = D_1F800044;
-  lower = reference - spread - 0x0C;
-  upper = reference + spread + 0x0C;
-  scale = &D_801E2AB8[work[6]];
+  do {
+    lower = reference - spread - 0x0C;
+    upper = reference + spread + 0x0C;
+  } while (0);
+  scaleBytes = (u8*)&D_801E2AB8[work[6]];
 
   if (FIELD_REF(s32, work, 0x38) <= 0x8000) {
     D_8014421C = -7;
@@ -207,12 +207,20 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
           upperMotionWork = D_1F800044;
           if (FIELD_REF(s32, upperMotionWork, 0x10) > 0) {
             if ((u8)func_801E02D4((u8)upper, 1) != 0) {
-              upperTransitionWork = D_1F800044;
-              D_8014421C = -7;
+              s32 transitionStatus;
+              u8 transitionMode;
+              do {
+                transitionStatus = -7;
+              } while (0);
+              transitionWork = D_1F800044;
+              do {
+                D_8014421C = transitionStatus;
+                transitionMode = 6;
+              } while (0);
               D_80143FC9 = 0;
-              D_80145E92 = 6;
+              D_80145E92 = transitionMode;
               D_80145E93 = 0;
-              upperTransitionWork[1] = (u8)(upperTransitionWork[1] + 1);
+              transitionWork[1] = (u8)(transitionWork[1] + 1);
               return;
             }
           }
@@ -228,11 +236,17 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       if (count >= threshold) {
         lowerThresholdWork[0x0B] = 0;
         if ((u8)func_801E02D4((u8)lower, 2) != 0) {
-          lowerTransitionWork = D_1F800044;
-          D_80145E92 = 7;
+          u8 transitionMode;
+          do {
+            transitionMode = 7;
+          } while (0);
+          transitionWork = D_1F800044;
+          do {
+            D_80145E92 = transitionMode;
+          } while (0);
           D_80145E93 = 0;
           D_80143FC9 = 0;
-          lowerTransitionWork[1] = (u8)(lowerTransitionWork[1] + 1);
+          transitionWork[1] = (u8)(transitionWork[1] + 1);
           return;
         }
       }
@@ -256,9 +270,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       level = initialCurrent < reference * 3;
     }
 
-    chanceRow = &scale->unk_00[level * 4];
     roll = rand();
-    if ((roll & 0x0F) < chanceRow[0]) {
+    if ((roll & 0x0F) < scaleBytes[level * 4]) {
       chanceGuardWork = D_1F800044;
       timerValue = FIELD_REF(s16, chanceGuardWork, 0x3E);
       if (timerValue >= -0x3F &&
@@ -294,7 +307,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     }
 
     roll = rand();
-    if ((roll & 0x0F) < chanceRow[1]) {
+    scaleBytes += level * 4;
+    if ((roll & 0x0F) < scaleBytes[1]) {
       retryRange = D_80146884;
       limit = retryRange->limit_8C;
       retryCurrent = retryRange->value_8E;
@@ -375,7 +389,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       activeStateWork[4] = 0;
     } else {
       roll = rand();
-      if ((roll & 0x0F) < chanceRow[2]) {
+      if ((roll & 0x0F) < scaleBytes[2]) {
         activeMotionWork = D_1F800044;
         FIELD_REF(s32, activeMotionWork, 0x0C) = 0;
         FIELD_REF(s32, activeMotionWork, 0x10) = 0;
