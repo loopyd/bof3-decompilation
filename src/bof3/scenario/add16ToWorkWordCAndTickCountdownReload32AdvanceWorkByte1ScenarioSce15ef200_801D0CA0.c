@@ -25,7 +25,9 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * so this body is element 1 of that run. The byte at +0x9 is the countdown the
  * exact lift tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00
  * ticks down and re-arms, and the word at +0xC is the accumulator that this
- * overlay resets in func_801D0C70 and ramps by -0x10 in func_801D0D5C.
+ * overlay resets in
+ * resetWorkWordCAndArmCountdown16ThenAdvanceWorkByte1ScenarioSce15ef200_801D0C70
+ * and ramps by -0x10 in func_801D0D5C.
  *
  * Shape evidence: the neighbouring span func_801D0D5C repeats this body word
  * for word with -0x10 instead of 0x10 and a call where the re-arm stands, and

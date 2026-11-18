@@ -20,7 +20,7 @@ decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic
 func_801EFDF8 = 0x801EFDF8;
 dispatchWorkByte2HandlerBmagicMagic13703_801EFFBC = 0x801EFFBC;
 func_801F001C = 0x801F001C;
-func_801F007C = 0x801F007C;
+invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C = 0x801F007C;
 invokeHelperBmagicMagic13703_801F00D8 = 0x801F00D8;
 func_801F00F8 = 0x801F00F8;
 func_801F0118 = 0x801F0118;

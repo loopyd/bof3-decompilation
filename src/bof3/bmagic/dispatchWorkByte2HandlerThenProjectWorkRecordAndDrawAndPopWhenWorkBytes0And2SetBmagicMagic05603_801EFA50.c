@@ -17,11 +17,12 @@ extern void (*D_801F0760[])(void); /* @source 0x801F0760 @kind data */
 extern void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410(
     void); /* @source 0x801EF410 @kind function */
 
-/* Second draw pass of the work record. Reads the graph type, selects its
- * semi-transparency mode and scale through GetGraphType, SetDrawMode,
- * SetSemiTrans and func_8014E5A0, then projects a triangle with RotTransPers3
- * and emits it through the primitive queue. Still an asm row in this target. */
-extern void func_801EFC74(void); /* @source 0x801EFC74 @kind function */
+/* Second draw pass of the work record, lifted from its own span: a
+ * semi-transparent fan of sixteen Gouraud triangles from the record origin,
+ * whose radius comes from record byte 9 with a pulse keyed on record byte 2 and
+ * whose tint comes from record byte 0xA. */
+extern void drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByte9TimesFourPlus528FadingFromWorkByteATintToBlackBmagicMagic05603_801EFC74(
+    void); /* @source 0x801EFC74 @kind function */
 
 /* @source 0x801EFA50
  * @behavior One frame of the overlay's second work-object frame driver over the
@@ -62,7 +63,7 @@ void dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And
   D_801F0760[g_battle_work[2]]();
   if (g_battle_work[0] != 0 && g_battle_work[2] != 0) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic05603_801EF410();
-    func_801EFC74();
+    drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadiusWorkByte9TimesFourPlus528FadingFromWorkByteATintToBlackBmagicMagic05603_801EFC74();
     PopMatrix();
   }
 }

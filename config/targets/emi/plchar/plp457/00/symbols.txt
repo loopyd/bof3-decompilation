@@ -20,6 +20,6 @@ claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWork
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp45700_801CF660 = 0x801CF660;
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744 = 0x801CF744;
 dispatchWorkHalfword2cTablef93cPlcharPlp45700_801CF878 = 0x801CF878;
-func_801CF8BC = 0x801CF8BC;
+dispatchWorkHalfword2cTablef948PlcharPlp45700_801CF8BC = 0x801CF8BC;
 func_801CF900 = 0x801CF900;
 func_801CF940 = 0x801CF940;

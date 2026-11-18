@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801EF3E4
   - - 2132
-    - asm
-    - func_801EF454
+    - c
+    - decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelperWhenTintChannel5FIsMinus80BmagicMagic15403_801EF454
+    - '@source: src/bof3/bmagic/decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelperWhenTintChannel5FIsMinus80BmagicMagic15403_801EF454.c'
+    - '@behavior: Work byte 1 step handler of this overlay work object, word 5 of the six-word code pointer run at 0x801EF6CC (0x801EF104, 0x801EF4B4, 0x801EF1EC, 0x801EF380, 0x801EF3E4, 0x801EF454) that the dispatcher dispatchStateByte1Tablef6ccBmagicMagic15403_801EF0C0 indexes with work-object byte 1 scaled by four. It reads the scratchpad work-object pointer cell at 0x1F800044 once before its frame exists, takes the object 16.16 motion word at 0x44 down by 0x1000 (lw / addiu -0x1000 / sw) and reads the signed tint channel 0x5F through that same loaded pointer. When the channel reads exactly -0x80 it decrements the shared battle work record global work byte 0xB at byte width through the pointer at 0x801EB4E0 and calls the shared helper at 0x801E5988, the byte 0xB store filling the call delay slot. The 0x18-byte frame keeps only $ra at 0x10; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 2228
     - c
     - dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic15403_801EF4B4

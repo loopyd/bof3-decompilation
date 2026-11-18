@@ -1,5 +1,5 @@
 func_801D0C04 = 0x801D0C04;
-func_801D0C70 = 0x801D0C70;
+resetWorkWordCAndArmCountdown16ThenAdvanceWorkByte1ScenarioSce15ef200_801D0C70 = 0x801D0C70;
 add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0 = 0x801D0CA0;
 tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00 = 0x801D0D00;
 func_801D0D5C = 0x801D0D5C;

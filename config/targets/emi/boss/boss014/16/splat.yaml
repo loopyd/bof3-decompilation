@@ -65,8 +65,10 @@ segments:
     - c
     - noopHandlerBossBoss01416_800C19E0
   - - 488
-    - asm
-    - func_800C19E8
+    - c
+    - publishBattleHooksBossBoss01416_800C19E8
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss01416_800C19E8.c'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots: func_800C1A28 into 0x801463A4, invokeZeroArgBossBoss01416_800C1A74 into 0x801463A8 and zeroResultBossBoss01416_800C1A20 into 0x801463AC'
   - - 544
     - c
     - zeroResultBossBoss01416_800C1A20

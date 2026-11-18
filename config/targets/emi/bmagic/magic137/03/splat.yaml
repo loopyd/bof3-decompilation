@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F001C
   - - 5244
-    - asm
-    - func_801F007C
+    - c
+    - invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C
+    - '@source: src/bof3/bmagic/invokeHelpers4D978And4D4E0ThenAdvanceWorkByte2WhenFlag4SetBmagicMagic13703_801F007C.c'
+    - '@behavior: Entry index 1 of the three-word work-byte-2 handler table based at 0x801EEC10 - entry 0 is 0x801F001C, entry 1 is this body and entry 2 is 0x801F00D8 - which the dispatcher at 0x801EFFBC indexes with the unsigned work byte at offset 2 of the scratchpad work object reached through 0x1F800044, so no jal in this payload names it: the table word at 0x801EEC14 proves this function-entry boundary. It invokes the shared main-executable helpers at 0x8014D978 and 0x8014D4E0 in that order with no arguments, discarding their results, then reads the shared battle global halfword at 0x801462E8 once and tests bit 0x0004. Only when that bit is set does it re-materialize the scratchpad pointer cell, reload the work-object pointer and increment work-object byte 2 modulo 256, which advances the byte-2 dispatcher to entry 2. It keeps only $ra at 0x10 of its 0x18-byte frame across the two calls, takes no arguments, returns nothing and reads or writes no other state.'
   - - 5336
     - c
     - invokeHelperBmagicMagic13703_801F00D8

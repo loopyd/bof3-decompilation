@@ -16,7 +16,7 @@ publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F3230 
 publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F32B0 = 0x801F32B0;
 publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3330 = 0x801F3330;
 func_801F33B0 = 0x801F33B0;
-func_801F33E0 = 0x801F33E0;
+publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0 = 0x801F33E0;
 func_801F3460 = 0x801F3460;
 func_801F3504 = 0x801F3504;
 T_801F47C4 = 0x801F47C4;

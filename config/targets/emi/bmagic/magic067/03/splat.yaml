@@ -113,8 +113,10 @@ segments:
     - dispatchStateByte2Table04e8BmagicMagic06703_801F02A0
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 5860
-    - asm
-    - func_801F02E4
+    - c
+    - invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic06703_801F02E4
+    - '@source: src/bof3/bmagic/invokeHelperWithWorkBytes4And3SetWorkByteBToOneAndIncrementWorkByte2BmagicMagic06703_801F02E4.c'
+    - '@behavior: Reads the scratchpad work record through the pointer cell 0x1F800044 and passes its unsigned byte 4 and unsigned byte 3 to the shared helper 0x800AEEC8, then stores 1 in work byte 0xB and increments work byte 2, which advances the two-entry handler table at 0x801F04E8 from its first word 0x801F02E4 to 0x801F033C.'
   - - 5948
     - c
     - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByteBZeroBmagicMagic06703_801F033C
