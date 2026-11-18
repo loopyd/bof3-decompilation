@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/world/stepScratchWorkAccumulatorsByPhaseTableWhileScenarioBehindRequirementElseSnapAndAdvanceSharedWorld04Area17413_801F4594.c",
     "src/bof3/world/stepScratchWorkCounterDownBy14RaiseLevelTripleToMin40ThenResetFlag20AtA00World04Area17413_801F3FFC.c",
     "src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3958World04Area17413_801F377C.c",
+    "src/bof3/world/cycleWorkByte8ThroughPairTableUntilRecordCommandByteElseAdvanceHalfword0aBy2World04Area17413_801F4810.c",
 ]
 psyq_source = "src/bof3/support/area174_13_psyq.c"

@@ -96,8 +96,8 @@ segments:
     - asm
     - func_800C1F2C
   - - 1976
-    - asm
-    - func_800C1FB8
+    - c
+    - dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1FB8
   - - 2084
     - asm
     - func_800C2024

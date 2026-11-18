@@ -148,8 +148,10 @@ segments:
     - asm
     - func_801FC8A0
   - - 24152
-    - asm
-    - func_801FCA58
+    - c
+    - dispatchRecordCallbackScenarioScena0500_801FCA58
+    - '@source: src/bof3/scenario/dispatchRecordCallbackScenarioScena0500_801FCA58.c'
+    - '@behavior: Overlay-local record-callback dispatcher: it reads the record pointer passed in $a0, takes its unsigned byte field at offset 0x7A, scales it by four and selects a callback word of the overlay-local nine-word table at 0x801FD644, then calls that callback with the record pointer unchanged as the first argument and the shared word D_8014686C as the second; it returns nothing and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 24216
     - c
     - noopHandlerScenarioScena0500_801FCA98

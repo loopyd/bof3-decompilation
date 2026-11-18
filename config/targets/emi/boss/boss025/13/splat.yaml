@@ -101,8 +101,10 @@ segments:
     - '@source: src/bof3/boss/callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C.c'
     - '@behavior: Work byte 9 handler of this overlay at 0x800C1F0C, reached from word 0 of the run based at 0x800C3274 indexed by work byte 2 and from word 12 of the table based at 0x800C3244 indexed by work byte 1, with no jal in the payload naming it. Calls the shared readiness helper 0x801E30F8 and discards its byte, decrements work-object byte 9 in place through the scratchpad pointer cell 0x1F800044 and returns while the stored byte is non-zero; on zero it submits halfword 0 of the row the current enemy work record pointer 0x801EB4E8 holds at record offset 0xE8 through the shared submitter 0x801E52F0, then re-reads the cell and advances work byte 2 by one. The 0x18-byte frame only keeps the return address at 0x10.'
   - - 1936
-    - asm
-    - func_800C1F90
+    - c
+    - forwardWorkRecordIndexAndRollRandomActionThenRaiseFlagBit4AndResetScratchStateWhenEnemyReadyBossBoss02513_800C1F90
+    - '@source: src/bof3/boss/forwardWorkRecordIndexAndRollRandomActionThenRaiseFlagBit4AndResetScratchStateWhenEnemyReadyBossBoss02513_800C1F90.c'
+    - '@behavior: Random-action handler of this overlay at 0x800C1F90, entry 1 of the handler run based at 0x800C3274 which the byte-2 dispatcher 0x800C1EC8 indexes with work record byte 2; entry 0 of that run is the adjacent 0x800C1F0C. It calls the shared readiness helper 0x801E30F8, masks the returned byte to eight bits and returns while it is zero; when the helper reports it forwards the shared battle byte 0x80146384 into the shared helper 0x800A9820, rolls rand() and, on a zero three-way roll, raises bit 0x80 of the shared battle flag halfword 0x801462E8 and bit 0x10 of the shared phase flag byte 0x801462ED and submits effect 2 as slot class 0 through the shared action-slot allocator 0x801E590C. Every reporting path then raises bit 0x4 of 0x801462E8 and calls the shared scratch-state reset 0x801E567C. The 0x18-byte frame only keeps the return address at 0x10.'
   - - 2096
     - c
     - dispatchStateByte2Table327cBossBoss02513_800C2030

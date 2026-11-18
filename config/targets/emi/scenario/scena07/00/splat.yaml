@@ -358,8 +358,10 @@ segments:
     - asm
     - func_801FD960
   - - 28212
-    - asm
-    - func_801FDA34
+    - c
+    - scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34
+    - '@source: src/bof3/scenario/scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34.c'
+    - '@behavior: Scans the live 0x140-byte-stride local work records based at 0x80145E90 for one whose party byte at +0x79 equals 2, returning 1 at the first match and 0 when the scan exhausts the D_80146254 live rows. It starts at row 0, reads only that one byte per row, writes nothing, takes no arguments and has no stack frame, so both returns share the single jr $ra epilogue at 0x801FDA90.'
   - - 28312
     - asm
     - func_801FDA98

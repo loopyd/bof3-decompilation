@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801F3AA4
   - - 3944
-    - asm
-    - func_801F3B68
+    - c
+    - startActionForFirstPresentPartyCandidateActions0ATo0DWorld04Area19713_801F3B68
+    - '@source: src/bof3/world/startActionForFirstPresentPartyCandidateActions0ATo0DWorld04Area19713_801F3B68.c'
+    - '@behavior: Handler slot of the overlay front-end party scan: it walks the four candidate party bytes of the local table at 0x801F4A44 and scans the live 0x140-byte work records for a row whose party byte +0x79 equals the candidate, then starts the paired halfword action of the local table at 0x801F4A48 through func_80150224, publishes phase 2 in the shared phase byte D_80143BB0 and returns.'
   - - 4140
     - asm
     - func_801F3C2C

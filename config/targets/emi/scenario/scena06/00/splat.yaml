@@ -271,8 +271,32 @@ segments:
     - asm
     - func_801FB014
   - - 18188
-    - asm
-    - func_801FB30C
+    - c
+    - runSecondaryStateSequenceForPrimaryState14ScenarioScena0600_801FB30C
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState14ScenarioScena0600_801FB30C.c'
+    - '@behavior: Word 14 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a 36-entry case
+      table in which only states 0, 1, 2, 5, 10, 11, 12, 13, 20, 21, 22, 23, 30
+      and 35 have a body; every other value falls to the epilogue. State 0
+      releases the overlay with mode 3 and runs func_801C601C mode 0; state 1,
+      at progress 4, queues cue 0x12, 0x11 and 0x10 for each selection slot
+      holding 2, 5 and 1 and latches the phase byte to 2; state 2, unless that
+      phase byte reads 2, publishes each of the three shared work records
+      D_80145E90, D_80145FD0 and D_80146110 as the scratchpad cursor for a
+      selection slot still reading zero, claims one front-end record per record
+      through func_8019601C and seeds the 0x74-byte row it selects at
+      0x80143FC8 with the occupancy byte, the handler selector 6, byte +6 = 3,
+      word +0x0C = 0, word +0x10 from the table byte D_801FE3BC and the work
+      halfwords at +0x2E and +0x30 before arming 5 in both scene state bytes;
+      states 5, 13 and 35 release the overlay with flag bits 0x28, 0x29 and 0x2A
+      and join one reset tail that clears the shared bytes and both scene state
+      bytes; states 10, 12 and 30 advance through the phase-byte guard; states
+      20 to 23 and 30 walk the remaining shared helpers. The 0x20-byte frame
+      keeps $ra, $s1 and $s0 across the calls, the state-byte load and its bound
+      test are hoisted above the frame setup, and the 36-word case table sits in
+      the overlay table data at 0x801F70E4.'
   - - 20616
     - asm
     - func_801FBC88
