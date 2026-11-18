@@ -1963,6 +1963,14 @@ through combine; a direct memory-to-argument load gives a removed local no
 preference. Use real value phases; never add a consumer or extend a lifetime
 to create a preference.
 
+Trace the consumer when a narrow snapshot disappears in CSE. A signed
+comparison can use a paradoxical `SUBREG` that CSE replaces with the raw word;
+a direct unsigned call argument can use `ZERO_EXTEND` and retain the snapshot.
+Check the argument preferences after combine as well. A conversion next to its
+call can fold into the hard argument, while a real argument calculation before
+an existing guard can keep its pseudo and preference. Preserve the actual value
+phases and inspect conflicts, reserved registers and the complete native output.
+
 `expand_preferences` also propagates preferences through a non-copy SET
 when its destination and dying source are nonconflicting global pseudos.
 This includes a load from a dying pointer. Trace those links before

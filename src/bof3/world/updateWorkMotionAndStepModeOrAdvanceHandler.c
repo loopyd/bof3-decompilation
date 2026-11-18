@@ -13,7 +13,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 85.32
+ * @match 85.82
  * @residual Frame size, bound copies, value allocation and division expansion
  * still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -86,7 +86,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 outwardAngle;
   s32 spread;
   s32 lower;
-  s32 upper;
+  u8 upper;
   s32 angle;
   s8 sampledAngle;
   s8 sampledMode3Angle;
@@ -130,9 +130,12 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   spread = entryMode[3] * 4;
   work = D_1F800044;
   do {
-    lower = reference - spread - 0x0C;
+    do {
+      lower = reference - spread - 0x0C;
+    } while (0);
     reference += spread;
-    upper = reference + 0x0C;
+    reference += 0x0C;
+    upper = (u8)reference;
   } while (0);
   scaleBytes = (u8*)&D_801E2AB8[work[6]];
 
@@ -196,7 +199,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
   if (D_80144199_BYTE == 0) {
     angle = (s8)work[0x0A];
-    if (angle > (s8)upper) {
+    if (angle > (s8)reference) {
       work[0x0B] = (u8)(work[0x0B] + 1);
 
       upperThresholdWork = D_1F800044;
@@ -235,9 +238,10 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       lowerMode = (u8*)D_801E320C;
       count = lowerThresholdWork[0x0B];
       threshold = lowerMode[9];
+      reference = (u8)lower;
       if (count >= threshold) {
         lowerThresholdWork[0x0B] = 0;
-        if ((u8)func_801E02D4((u8)lower, 2) != 0) {
+        if ((u8)func_801E02D4((u32)reference, 2) != 0) {
           u8 transitionMode;
           do {
             transitionMode = 7;
