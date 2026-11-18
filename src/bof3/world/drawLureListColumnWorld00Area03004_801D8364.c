@@ -26,8 +26,8 @@ extern int sprintf(char* buffer, const char* format, ...);
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
  * @status partial
- * @match 95.16
- * @residual origin setup, count-X setup and the footer keep-copy differ.
+ * @match 97.15
+ * @residual Count-X setup and the footer keep-copy still differ.
  * The compiled body is four bytes shorter than the original.
  */
 void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
@@ -37,8 +37,8 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   u8 scrollRows;
   s32 nameX;
   s32 shiftedNameX;
-  s32 baseY;
-  s32 lineY;
+  s16 baseY;
+  s16 lineY;
   s32 textY;
   s32 lineOffset;
   s32 rows;
@@ -89,10 +89,10 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   baseY = y;
   buf = D_80145AD4;
   slotCursor = D_801451CC;
-  shiftedNameX = (u32)(x + 5) << 16;
+  shiftedNameX = (u32)(u16)(x + 5) << 16;
   nameX = shiftedNameX >> 16;
-  textY = 0;
   baseY += (u8)columnY;
+  textY = 0;
   lineY = baseY;
   lineOffset = -2;
 
