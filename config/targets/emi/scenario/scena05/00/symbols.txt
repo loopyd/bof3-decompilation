@@ -1,6 +1,6 @@
 dispatchWorkByte1HandlerScenarioScena0500_801F73F8 = 0x801F73F8;
 incrementWorkByte1ClearCounterScenarioScena0500_801F743C = 0x801F743C;
-func_801F745C = 0x801F745C;
+drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C = 0x801F745C;
 invokeHelperScenarioScena0500_801F74CC = 0x801F74CC;
 func_801F74EC = 0x801F74EC;
 incrementWorkByte1SetCounterScenarioScena0500_801F7530 = 0x801F7530;

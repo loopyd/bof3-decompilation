@@ -69,6 +69,7 @@ support_sources = [
     "src/bof3/scenario/waitFlag27ElseMainRamFlags5Or6ElseFlag2CThenClearProgressAndSharedStateBytesAndRequestPrimaryState0FSubstate1EOr5ScenarioScena0600_801FDEA4.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState10ScenarioScena0600_801FA760.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState11ScenarioScena0600_801FA8EC.c",
+    "src/bof3/scenario/setProgressSubstateAndRequestPrimaryStateOnWorldAndPositionScenarioScena0600_801FD800.c",
 ]
 psyq_source = "src/bof3/support/scena06_00_psyq.c"
 

@@ -16,6 +16,7 @@ sources = [
     "src/bof3/scenario/runPrimaryState9SubstateSequenceScenarioScena0900_801FA8B8.c",
     "src/bof3/scenario/waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsThenClearStateScenarioScena0900_801FBD6C.c",
     "src/bof3/scenario/requestPrimaryStateOnWorldZoneAtPositionScenarioScena0900_801FC91C.c",
+    "src/bof3/scenario/runPrimaryState15SubstateSequenceScenarioScena0900_801FAE0C.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C.c",
@@ -152,6 +153,16 @@ function = 0x801FAC88
 section = ".rodata"
 address = 0x801F702C
 size = 0x3C
+
+# The 151-entry sub-state jump table of the primary-state-15 handler at
+# 0x801FAE0C follows the previous table in the leading table data, where the
+# overlay keeps it at 0x801F706C.
+[[matching.section_placements]]
+function = 0x801FAE0C
+section = ".rodata"
+address = 0x801F706C
+size = 0x25C
+
 
 [[matching.section_placements]]
 function = 0x801FBD6C

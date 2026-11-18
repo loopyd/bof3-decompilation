@@ -9,7 +9,8 @@
 extern u8 D_800C32B4; /* @source 0x800C32B4 @kind unknown */
 extern u8 D_800C32B8; /* @source 0x800C32B8 @kind unknown */
 
-/* The shared battle step byte this overlay's other step handler func_800C2D7C
+/* The shared battle step byte this overlay's other step handler
+ * refreshActivePartyRecordsThenSetStepByteByFlagBitsAndInitModeTuple530BossBoss02513_800C2D7C
  * also writes (0x0F, 7 and 0x14 there) immediately before the same mode-tuple
  * call, and the two halfwords of the 0x140-stride local work record based at
  * 0x80145E90 that this handler restores (record offsets 0x88 and 0x8A). */

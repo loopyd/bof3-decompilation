@@ -517,8 +517,14 @@ segments:
       clears handler index byte 4, else advances the depth by work word 0x14 shifted
       right 8 and adds the caller fifth argument to that word.'
   - - 27648
-    - asm
-    - func_801FD800
+    - c
+    - setProgressSubstateAndRequestPrimaryStateOnWorldAndPositionScenarioScena0600_801FD800
+    - '@source: src/bof3/scenario/setProgressSubstateAndRequestPrimaryStateOnWorldAndPositionScenarioScena0600_801FD800.c'
+    - '@behavior: Code-pointer word 2 of the five-word run at 0x801FE3C4, which
+      reaches it with two packed position words and no in-image jal. It gates the
+      shared world id halfword D_80143F00 on 0x27, 0x39, 0x43, 0x4D and 0x5E, tests
+      scenario flags in D_8014686C and a position window per world, and arms a
+      state tuple before answering 1; every other path answers 0.'
   - - 28948
     - c
     - dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14

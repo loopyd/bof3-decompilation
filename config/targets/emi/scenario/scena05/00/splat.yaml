@@ -38,8 +38,10 @@ segments:
     - c
     - incrementWorkByte1ClearCounterScenarioScena0500_801F743C
   - - 2140
-    - asm
-    - func_801F745C
+    - c
+    - drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C
+    - '@source: src/bof3/scenario/drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C.c'
+    - '@behavior: Work-byte-1 handler that the overlay dispatcher reaches through handler table word 1: it reads the work-object pointer cell at scratchpad 0x1F800044 before its frame is created, passes that object cursor triple at offsets 0x34, 0x38 and 0x3C plus its unsigned 16-bit word at offset 0x0C to the overlay-local drawing helper at 0x801F7660, then re-reads the same pointer cell, advances the 32-bit counter at offset 0x0C by 0x10 and, once the new value reaches 0x501, increments the object unsigned byte at offset 0x01 that indexes the handler table; it takes no arguments, returns nothing and its 0x18-byte frame only keeps $ra across the helper call.'
   - - 2252
     - c
     - invokeHelperScenarioScena0500_801F74CC

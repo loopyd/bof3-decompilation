@@ -164,8 +164,10 @@ segments:
     - asm
     - func_801F4D1C
   - - 8532
-    - asm
-    - func_801F4D54
+    - c
+    - passPaletteRowSelectedByWorkByte5ToPaletteBlockHelperFlag1World04Area17413_801F4D54
+    - '@source: src/bof3/world/passPaletteRowSelectedByWorkByte5ToPaletteBlockHelperFlag1World04Area17413_801F4D54.c'
+    - '@behavior: Loads the scratch work record once through the pointer cell 0x1F800044, reads work byte 0x05, scales it by 0x40 with a left shift of six, adds that offset to the fixed palette block base 0x80035600 and passes the resulting row to the main-executable palette block helper func_80166C48 together with the second argument 1. It has no test and no branch, the 0x18-byte frame only keeps $ra at 0x10 across the call, and it takes no arguments and returns nothing. No jal in the payload names it; its only in-image reference is the code-pointer word 0x801F6658, entry 18 of the overlay dispatch table at 0x801F6610.'
   - - 8592
     - asm
     - func_801F4D90

@@ -145,8 +145,10 @@ segments:
     - asm
     - func_801F4E7C
   - - 9056
-    - asm
-    - func_801F4F60
+    - c
+    - countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60
+    - '@source: src/bof3/world/countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60.c'
+    - '@behavior: adds 0x10 to the record byte at +0x03 and decrements the countdown byte at +0x02; while that countdown stays nonzero it returns, and when it reaches zero it reloads the countdown from the record byte at +0x04, increments the handler-index byte at +0x01 to hand the record to the next handler of its row, and sets the one-shot latch byte at 0x801F6510 to 1 if that latch still reads zero.'
   - - 9144
     - c
     - countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8

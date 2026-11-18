@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 76
-    - asm
-    - func_801F2C4C
+    - c
+    - queueSharedUiElementBlockCx1EAnd1CTo1DSizeC0World01Area03813_801F2C4C
+    - '@source: src/bof3/world/queueSharedUiElementBlockCx1EAnd1CTo1DSizeC0World01Area03813_801F2C4C.c'
+    - '@behavior: queues three shared world-marker elements through the shared queue func_801A4BC0 at (0xC, 0x1E), (0xC, 0x1C) and (0xC, 0x1D) with size 0xC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the calls.'
   - - 148
     - asm
     - func_801F2C94

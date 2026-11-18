@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8.c",
+    "src/bof3/world/countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60.c",
     "src/bof3/world/resetWorkTableAt800E4800AndRearmOneShotLatchesWorld02Area09813_801F4D44.c",
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8.c",
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5B0C.c",

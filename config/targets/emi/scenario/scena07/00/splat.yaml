@@ -188,8 +188,10 @@ segments:
     - asm
     - func_801F805C
   - - 5360
-    - asm
-    - func_801F80F0
+    - c
+    - updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F80F0
+    - '@source: src/bof3/scenario/updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F80F0.c'
+    - '@behavior: Overlay per-frame handler: entry 8 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDE0), which dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so this handler runs while that byte reads 8. It runs the trail rebuild at 0x801F88B8 and then the trail draw pass at 0x801F8BE8 on the trail buffer base 0x800E48E0, discarding both results; then reads the shared unsigned halfword at 0x800E4C1E and the work pointer cell at 0x1F800044, stores that halfword back minus 12, decrements the work object''s byte at offset 0x09, and when the decremented count reaches zero reloads the pointer cell and increments the work object''s byte at offset 0x02, the handler index, which advances the run. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the two calls; no in-image jal reaches the address and the run word at 0x801FDDE0 is its only reference. The 132 bytes are byte-identical to the already-exact body at 0x801F72E0.'
   - - 5492
     - c
     - incrementWorkByte2ScenarioScena0700_801F8174

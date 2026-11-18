@@ -10,6 +10,7 @@ load_address = 0x800C1800
 sources = [
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress1EBossBoss02816_800C1B80.c",
     "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenSetGlobalWorkByte1To5ClearGlobalWorkByte2AndInvokeHelperWhenHalfword3EAboveDistancePlus1000BossBoss02816_800C1F2C.c",
+    "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenStoreZeroInWord14AndMinus40InWord20DecrementWorkByte2WhenHalfword3EAboveRemeasuredDistancePlus400BossBoss02816_800C1E80.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02816_800C1AF0.c",

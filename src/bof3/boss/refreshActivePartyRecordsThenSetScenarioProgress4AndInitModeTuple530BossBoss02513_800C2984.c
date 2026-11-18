@@ -58,7 +58,8 @@ extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind unknown */
  * that call clobbers the register. The body takes no arguments, keeps the
  * family 0x18-byte frame with $ra at 0x14 and $s0 at 0x10, and returns nothing.
  * Its three record blocks are the same instructions as this payload's
- * 0x800C2D7C, which is still on its asm row: comparing the two spans of the
+ * 0x800C2D7C, which was still on its asm row when this comparison was
+ * measured: comparing the two spans of the
  * original payload leaves five differing words, three absolute jump targets
  * that move by the 0x3F8 offset between them, one branch offset, and the one
  * delay slot that carries the stored literal. That twin's tail stamps 0x0F,
