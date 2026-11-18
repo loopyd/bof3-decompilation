@@ -30,8 +30,10 @@ segments:
   vram: 2149526620
   subsegments:
   - - 92
-    - asm
-    - func_801F2C5C
+    - c
+    - publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C
+    - '@source: src/bof3/world/publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C.c'
+    - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5354, publishes it into the shared status halfword D_801490A8, and then sets flag bit 0x15 of the shared scenario flag word D_8014686C through the shared bit-set helper 0x8015B580 when that same mode reads 1.'
   - - 180
     - asm
     - func_801F2CB4

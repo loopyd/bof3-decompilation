@@ -103,8 +103,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic06703_801F001C.c'
     - '@behavior: Decrements work byte 0xA and, when it reaches zero, reloads the scratchpad work pointer and increments work byte 2.'
   - - 5224
-    - asm
-    - func_801F0068
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06703_801F0068
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06703_801F0068.c'
+    - '@behavior: Decrements work byte 9 of the scratchpad work object and tests the stored byte truncated to eight bits; only when it reaches zero does it decrement byte 0xB of the record selected by 0x801EB4E0 and invoke 0x801E5988.'
   - - 5316
     - asm
     - func_801F00C4
