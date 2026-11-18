@@ -15,9 +15,9 @@ extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
  * last row, or zero when there are no matching rows. Finishes with the
  * panel footer, stretched column and three-character ROD title.
  * @status partial
- * @match 97.39
- * @residual 224 of 230 instructions match at 920 of 920 bytes.
- * Saved-origin, row-coordinate and buffer setup still differ at entry,
+ * @match 98.70
+ * @residual 227 of 230 instructions match at 920 of 920 bytes.
+ * Saved-origin and row-coordinate setup still differ at entry,
  * beginning at +0x10.
  */
 void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
@@ -46,8 +46,8 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, arg1);
   slotIndex = 0;
   rows = 0;
-  slot = PSX_PTR(u8, (u32)options + 0x87Au);
   buffer = D_80145AD4;
+  slot = PSX_PTR(u8, (u32)options + 0x87Au);
   rowOffset = 0;
   nameX = (s16)(x + 5);
   countX = (s16)(x + 0x68);
