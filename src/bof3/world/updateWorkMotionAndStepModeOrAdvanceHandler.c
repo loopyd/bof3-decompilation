@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 79.42
+ * @match 79.55
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -100,6 +100,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u32 mode3Motion;
   u32 accumulatedMotion;
   s32 sampledMotion;
+  s32 positiveDirection;
   s32 selectedMotion;
   s32 quarter;
   s32 limit;
@@ -346,10 +347,14 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
         roll = rand();
         if ((roll & 1) != 0) {
           roll = rand();
-          directionMotionWork = D_1F800044;
           if ((roll & 1) != 0) {
-            FIELD_REF(s32, directionMotionWork, 0x0C) = 0x1000;
+            do {
+              positiveDirection = 0x1000;
+            } while (0);
+            directionMotionWork = D_1F800044;
+            FIELD_REF(s32, directionMotionWork, 0x0C) = positiveDirection;
           } else {
+            directionMotionWork = D_1F800044;
             FIELD_REF(s32, directionMotionWork, 0x0C) = -0x1000;
           }
         } else {
