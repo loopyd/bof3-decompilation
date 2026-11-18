@@ -3,7 +3,7 @@
 /* This overlay's handler pointer run starts at 0x8011818C and holds thirteen
  * in-image code pointers, 0x8011818C through 0x801181BC. This dispatcher indexes
  * it from 0x801181B4, so the base is entry 10 and the three reachable entries are
- * func_80117C38, func_80117C58 and func_80117DF0, the last word of the run. The
+ * func_80117C38, func_80117C58 and advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0, the last word of the run. The
  * Splat `textbin` row D_8011818C places the words, so the table is only
  * referenced here. */
 extern void (*D_801181B4[])(void); /* @source 0x801181B4 @kind data */

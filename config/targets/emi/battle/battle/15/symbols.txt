@@ -313,6 +313,7 @@ panelStepLeftSettle5B = 0x800B14BC;
 panelStepRightOrCallAbove15A = 0x800B1504;
 dispatchPanelStateTable6a40 = 0x800B155C;
 panelStepLeftClampA3 = 0x800B1664;
+panelStepRightOrCallAbove142 = 0x800B16D0;
 dispatchPanelTaskTable6e08 = 0x800B2088;
 func_800B20CC = 0x800B20CC;
 applyPanelPosition = 0x800B20D4;

@@ -30,7 +30,7 @@ segments:
     - c
     - dispatchWorkByte1Table818cWorld01Area04913_80117004
     - '@source: src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c'
-    - '@behavior: Overlay step dispatch: reads byte +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler at that index of the overlay''s unchecked handler table based at 0x8011818C (thirteen in-image pointers, func_80117048 through func_80117DF0). Takes no arguments and returns nothing.'
+    - '@behavior: Overlay step dispatch: reads byte +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler at that index of the overlay''s unchecked handler table based at 0x8011818C (thirteen in-image pointers, func_80117048 through advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0). Takes no arguments and returns nothing.'
   - - 72
     - c
     - bootHandlerSeedWorkCoordinateTripleResetRecordsThenAdvanceStateWorld01Area04913_80117048
@@ -64,7 +64,7 @@ segments:
     - c
     - dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610
     - '@source: src/bof3/world/dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610.c'
-    - '@behavior: Step dispatch of this overlay on work-record byte 1: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the overlay''s handler run based at 0x8011819C, entry 4 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C through func_80117DF0). The original bounds no index before the scaled load. Once the handler returns it runs the overlay''s record pass func_80117900. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slot after the index byte and the slot after the table load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
+    - '@behavior: Step dispatch of this overlay on work-record byte 1: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the overlay''s handler run based at 0x8011819C, entry 4 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C through advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0). The original bounds no index before the scaled load. Once the handler returns it runs the overlay''s record pass func_80117900. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slot after the index byte and the slot after the table load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
   - - 1628
     - c
     - raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C
@@ -102,7 +102,7 @@ segments:
     - c
     - dispatchWorkByte2Table81acWorld01Area04913_80117A30
     - '@source: src/bof3/world/dispatchWorkByte2Table81acWorld01Area04913_80117A30.c'
-    - '@behavior: Overlay step dispatch on work-record byte 2: reads the work-record pointer published at scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching unchecked entry of this overlay''s handler table based at 0x801181AC, the interior word 8 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries func_80117A74 through func_80117DF0). The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Takes no arguments and returns nothing.'
+    - '@behavior: Overlay step dispatch on work-record byte 2: reads the work-record pointer published at scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching unchecked entry of this overlay''s handler table based at 0x801181AC, the interior word 8 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries func_80117A74 through advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0). The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Takes no arguments and returns nothing.'
   - - 2676
     - asm
     - func_80117A74
@@ -118,7 +118,7 @@ segments:
     - c
     - dispatchWorkByte2Table81b4World01Area04913_80117BF4
     - '@source: src/bof3/world/dispatchWorkByte2Table81b4World01Area04913_80117BF4.c'
-    - '@behavior: Overlay step dispatch on work-record byte 2: reads the work-record pointer published at scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching unchecked entry of this overlay''s handler table based at 0x801181B4, the interior word 10 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries func_80117C38 through func_80117DF0). The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Takes no arguments and returns nothing.'
+    - '@behavior: Overlay step dispatch on work-record byte 2: reads the work-record pointer published at scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching unchecked entry of this overlay''s handler table based at 0x801181B4, the interior word 10 of the thirteen-pointer run the Splat textbin row D_8011818C places (reachable entries func_80117C38 through advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0). The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. Takes no arguments and returns nothing.'
   - - 3128
     - c
     - incrementWorkByte2World01Area04913_80117C38
@@ -126,8 +126,10 @@ segments:
     - asm
     - func_80117C58
   - - 3568
-    - asm
-    - func_80117DF0
+    - c
+    - advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0
+    - '@source: src/bof3/world/advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0.c'
+    - '@behavior: State-12 handler of the thirteen in-image pointers the Splat textbin row D_8011818C places: word 12 at 0x801181BC, the last entry of the run. On a frame whose shared per-frame counter 0x80143E6C has bit 0 clear it increments the work object''s byte at offset 9, the byte this overlay''s earlier handlers arm as a countdown, and here ramps upward instead. Once that byte reads 0x80 or more it resets the work object through the shared func_80196070 (clearWorkFlags in emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the overlay to work state 0. Every frame it then runs the overlay band draw func_80117E78 with 0x80 minus that byte and a zero second argument. The counter word is read before the frame is created, the 0x18-byte frame only keeps $ra at 0x10 across the two calls, and the slots after each pointer-cell load and after the countdown byte load stay nops. No call or pointer word in the payload names this function, so it is an overlay entry rather than an in-payload callee. Takes no arguments and returns nothing.'
   - - 3704
     - asm
     - func_80117E78

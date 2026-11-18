@@ -113,8 +113,13 @@ segments:
     - '@source: src/bof3/ui/drawComposedNameAndLabelRows.c'
     - '@behavior: writes 0x2A into the first byte of the shared text run at 0x80145AD4 and copies the text that the halfword offset selected by the name id at 0x801DB0AD from the table on the fixed 0x80010200 main-RAM address points at in the 0x80010000 pool, one byte per pass while also copying the byte after a 0x12 or 0x13, repeats that walk for the id at 0x801DB0AE unless it reads 0xFF, writes 0x2B and 0xFF into the run, appends the five bytes of the name table row that byte 5 of the commu task at 0x801F2948 selects, terminates the run and submits it through func_8014F800 at (0x32, 0x1E) with colour 0 and mask 0xFF before submitting the text the signed byte at 0x801DB0B4 selects from the table at 0x800101C6 at (0x32, 0x42)'
   - - 20828
+    - c
+    - dispatchStepByte0TableDec
+    - '@source: src/bof3/ui/dispatchStepByte0TableDec.c'
+    - '@behavior: reads the unsigned byte at 0x801F294C, scales it by four and calls the handler the five-entry run at 0x801DADEC selects, discarding any result, without bounding the index and without reading or writing any other state'
+  - - 20888
     - asm
-    - func_801D5D5C
+    - func_801D5D98
   - - 29284
     - c
     - countActiveRecords_commu02_08

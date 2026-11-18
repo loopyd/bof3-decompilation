@@ -80,6 +80,7 @@ support_sources = [
     "src/bof3/scenario/runSubstateProgressLadderThenToggleModeFlags8AndReleaseScenarioScena0200_801F9678.c",
     "src/bof3/scenario/queueFrontEndMode6FAndRunCompletionSubstatesPublishingFrontEndRecordThenReleaseScenarioScena0200_801FBC6C.c",
     "src/bof3/scenario/runSubstateLadderSeedingTwoFrontEndRecordRowsThenReleaseScenarioScena0200_801F9800.c",
+    "src/bof3/scenario/runSubstateLadderArmModeQueueActionSeedSelectorContextThenReleaseAndClearFlagBankScenarioScena0200_801F8538.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"
 
@@ -147,3 +148,9 @@ function = 0x801F8C78
 section = ".rodata"
 address = 0x801F6D54
 size = 0x20
+
+[[matching.section_placements]]
+function = 0x801F8538
+section = ".rodata"
+address = 0x801F6D0C
+size = 0x14

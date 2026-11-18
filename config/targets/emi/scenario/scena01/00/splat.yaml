@@ -153,8 +153,8 @@ segments:
     - asm
     - func_801FCCFC
   - - 24988
-    - asm
-    - func_801FCD9C
+    - c
+    - startAction34LatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState6ScenarioScena0100_801FCD9C
   - - 25136
     - c
     - startAction34LatchPhaseByteTwoThenReleaseFrontEndAndClearPrimaryStateScenarioScena0100_801FCE30

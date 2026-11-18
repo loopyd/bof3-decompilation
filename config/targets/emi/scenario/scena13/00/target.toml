@@ -28,6 +28,7 @@ sources = [
     "src/bof3/scenario/invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8.c",
     "src/bof3/scenario/requestPrimaryState8Substate0OnRoute8FPackedRangesOrSetFlagBit10OnRoute91PackedRangeScenarioScena1300_801FBA34.c",
     "src/bof3/scenario/resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444.c",
+    "src/bof3/scenario/runPrimaryState2SubstateSequenceScenarioScena1300_801F873C.c",
     "src/bof3/scenario/runPrimaryState3SubstateSequenceScenarioScena1300_801F8DFC.c",
     "src/bof3/scenario/runPrimaryState4SubstateSequenceScenarioScena1300_801F9570.c",
     "src/bof3/scenario/runPrimaryState5SubstateSequenceScenarioScena1300_801F9A44.c",
@@ -65,6 +66,16 @@ function = 0x801F84B8
 section = ".rodata"
 address = 0x801F6C04
 size = 0x18
+
+# The sub-state switch of the primary state 2 handler at 0x801F873C dispatches
+# twelve values through the twelve-word table the overlay keeps at 0x801F6C1C in
+# its leading table data; psyq gcc emits a switch table as .rodata, so this row
+# gives the comparator the payload address and size of that table.
+[[matching.section_placements]]
+function = 0x801F873C
+section = ".rodata"
+address = 0x801F6C1C
+size = 0x30
 
 # The sub-state switch of the primary state 7 handler at 0x801FA844 dispatches
 # twenty sub-state values out of the thirty-word table the overlay keeps at

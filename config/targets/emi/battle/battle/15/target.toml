@@ -317,6 +317,7 @@ sources = [
     "src/bof3/battle/raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1.c",
     "src/bof3/battle/panelStepLeftOrCallBelowNegA4.c",
     "src/bof3/battle/panelStepRightOrCallAbove15A.c",
+    "src/bof3/battle/panelStepRightOrCallAbove142.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

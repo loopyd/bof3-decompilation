@@ -1768,8 +1768,10 @@ segments:
     - '@source: src/bof3/battle/panelStepLeftClampA3.c'
     - '@behavior: Runs the panel-task pass func_800B1728, steps signed panel x left by 0x20 when it is at least 0xA4, then clamps a signed x below 0xA3 up to 0xA3.'
   - - 110288
-    - asm
-    - func_800B16D0
+    - c
+    - panelStepRightOrCallAbove142
+    - '@source: src/bof3/battle/panelStepRightOrCallAbove142.c'
+    - '@behavior: Runs the panel-task pass func_800B1728, then steps the signed panel x right by 0x20 while it is below 0x143 and runs func_80158E20 in place of that step once the signed x has reached 0x143.'
   - - 110376
     - asm
     - func_800B1728

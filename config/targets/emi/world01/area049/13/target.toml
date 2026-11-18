@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8.c",
     "src/bof3/world/lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768.c",
     "src/bof3/world/clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818.c",
+    "src/bof3/world/advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c",

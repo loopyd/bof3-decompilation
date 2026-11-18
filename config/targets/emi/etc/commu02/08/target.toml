@@ -32,6 +32,7 @@ sources = [
     "src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c",
     "src/bof3/ui/buildRandomTwoPartTextRun.c",
     "src/bof3/ui/drawComposedNameAndLabelRows.c",
+    "src/bof3/ui/dispatchStepByte0TableDec.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",
