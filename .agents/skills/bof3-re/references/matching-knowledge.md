@@ -2060,6 +2060,16 @@ That real consumer can preserve the load/copy pair through combine. Inspect
 later jump optimization for store merging and verify every executed access
 and post-loop reload.
 
+### Signed division expansion
+
+When division arithmetic and allocation agree but the linked body lacks the
+original `break 7` and `break 6` checks, compare compiler assembly with linked
+output and trace the effective assembler settings. Maspsx `--expand-div` can
+account for the nine missing check words and resulting branch offsets without
+a C change. Matching keeps the owning profile fixed; an assembler-profile
+repair needs explicit authority, both pipeline suites in their required order,
+and complete live comparisons for every affected function.
+
 ### Boolean return expansion
 
 For join-spanning booleans or extra return copies, inspect initial RTL before
