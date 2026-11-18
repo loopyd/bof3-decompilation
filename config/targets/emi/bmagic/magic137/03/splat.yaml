@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801EFD00
   - - 4432
-    - asm
-    - func_801EFD50
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50.c'
+    - '@behavior: Decrements the unsigned byte 0xA of the scratchpad work object read through the pointer cell at 0x1F800044 (lbu, addiu -1, sb) and tests the stored byte truncated to eight bits against zero. Only when that byte reaches zero does it read the cell a second time and increment the object byte 2 with a byte-width add, advancing the dispatcher at 0x801EFC58 to the next work-byte-2 handler step. It is entry index 2 of the four-word work-byte-2 step table at 0x801F0114, takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 4508
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic13703_801EFD9C

@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EEFF8
   - - 1328
-    - asm
-    - func_801EF130
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work object''s byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper func_801E5988. The 0x18-byte frame keeps only $ra across the two calls. Reached through word 5 of the overlay code pointer run at 0x801EEC04.'
   - - 1424
     - c
     - dispatchStateByte1Tablefd8cBmagicMagic04103_801EF190

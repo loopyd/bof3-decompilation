@@ -15,6 +15,7 @@ sources = [
     "src/bof3/boss/dispatchStateByte1Table2154BossBoss02816_800C1804.c",
     "src/bof3/boss/dispatchWorkByte2Table2190BossBoss02816_800C1A10.c",
     "src/bof3/boss/dispatchWorkByte2Table2184BossBoss02816_800C18A0.c",
+    "src/bof3/boss/dispatchWorkByte1Table21A4BossBoss02816_800C1BEC.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02816_800C1AF0.c",

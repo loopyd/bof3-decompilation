@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic05603_801EEC34.c",
     "src/bof3/bmagic/addWorkColorTripletBy16ThenClearFlag20SetByte5CToZeroSetWorkByte9To8AndAdvanceWorkByte2WhenChannelIsZeroBmagicMagic05603_801F0178.c",
     "src/bof3/bmagic/publishWorkByte9TimesFourPlus120ToScratchpadHalfwordIncrementWorkByteAAndWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenByte9Is28BmagicMagic05603_801EF37C.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EF1F4.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByte9UpTo2EThenDecrementWorkByteAAndDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic05603_801EFBF4.c",

@@ -49,8 +49,10 @@ segments:
     - dispatchStateByte1Table0744BmagicMagic05603_801EF1B0
     - '@source: src/bof3/bmagic/magic05603DispatchTables.c'
   - - 1524
-    - asm
-    - func_801EF1F4
+    - c
+    - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EF1F4
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkBytes0And2SetBmagicMagic05603_801EF1F4.c'
+    - '@behavior: Frame driver of the overlay work object, reached as words 0 and 1 of the code pointer run at 0x801F0744 that the byte-1 dispatcher indexes. It reads the scratchpad work-object pointer cell at 0x1F800044 before its frame exists, takes that object byte 2 scaled by four and calls the entry at that index of the handler table based at 0x801F0754 with no arguments and no bounds test. It re-reads the cell after the handler returns and tests the object byte 0 and then its byte 2 at unsigned byte width, and only when both are non-zero does it run the transform installer at 0x801EF410, the draw pass at 0x801EF4C0 and PopMatrix. It takes no arguments and returns nothing; its 0x18-byte frame keeps only the return address at 0x10.'
   - - 1660
     - c
     - copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic05603_801EF27C

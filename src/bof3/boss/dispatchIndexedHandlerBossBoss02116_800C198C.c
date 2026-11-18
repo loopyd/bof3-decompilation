@@ -4,8 +4,9 @@ typedef void (*Boss02116Handler)(void);
 
 /*
  * Handler table at 0x800C1D20, the table this dispatcher selects from:
- * entry 0 = 0x800C19C4, entry 1 = 0x800C19D4 and entry 2 = 0x800C19DC (inert
- * handlers of this overlay), entry 3 = 0x800C19E4, then main-program handlers
+ * entry 0 = 0x800C19C4 (clears the shared battle state byte 0x80146375),
+ * entry 1 = 0x800C19D4 and entry 2 = 0x800C19DC (inert handlers of this
+ * overlay), entry 3 = 0x800C19E4, then main-program handlers
  * from 0x801E52E8 on. The base sits inside the pointer run bound as the
  * reviewed textbin row at 0x800C1CB0, whose pointer words start at 0x800C1CD8.
  * The dispatchers at 0x800C1804 and 0x800C18B8 index the same run from its words

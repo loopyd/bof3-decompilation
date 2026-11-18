@@ -42,8 +42,10 @@ segments:
     - c
     - dispatchIndexedHandlerBossBoss02116_800C198C
   - - 452
-    - asm
-    - func_800C19C4
+    - c
+    - clearBossStateByteBossBoss02116_800C19C4
+    - '@source: src/bof3/boss/clearBossStateByteBossBoss02116_800C19C4.c'
+    - '@behavior: Overlay handler: writes zero to the shared battle state byte at 0x80146375, clearing it, and returns. Entry 0 of this overlay''s handler table at 0x800C1D20.'
   - - 468
     - c
     - noopHandlerBossBoss02116_800C19D4

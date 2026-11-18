@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF0D0
   - - 1704
-    - asm
-    - func_801EF2A8
+    - c
+    - incrementGlobalWorkByteBAndInvokeHelperWhenHelperReadyBmagicMagic07503_801EF2A8
+    - '@source: src/bof3/bmagic/incrementGlobalWorkByteBAndInvokeHelperWhenHelperReadyBmagicMagic07503_801EF2A8.c'
+    - '@behavior: Handler entry 1 of the two-entry code-pointer run based at 0x801EF7A4 (0x801EF0D0, 0x801EF2A8), selected by the work byte 2 dispatcher at 0x801EF038. Calls the shared main-executable readiness helper func_8014DAEC and keeps only the returned byte; while that byte is zero it writes nothing. On a ready byte it loads the shared battle work pointer cell 0x801EB4E0 of the main executable, advances the pointed-to unsigned byte 0xB by one, and invokes the shared helper func_801E5988 with no arguments. The 0x18-byte frame only keeps $ra at 0x10 across the two calls.'
   - - 1780
     - c
     - drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4

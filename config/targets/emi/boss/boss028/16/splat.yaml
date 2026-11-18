@@ -78,8 +78,8 @@ segments:
     - c
     - invokeZeroArgBossBoss02816_800C1BCC
   - - 1004
-    - asm
-    - func_800C1BEC
+    - c
+    - dispatchWorkByte1Table21A4BossBoss02816_800C1BEC
   - - 1072
     - c
     - dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30
