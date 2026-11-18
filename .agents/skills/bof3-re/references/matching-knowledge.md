@@ -1796,6 +1796,12 @@ exclusive arm can own both reloaded phases. Define it before every use, preserve
 each reload and access, and trace conflicts in both phases before measuring the
 complete body.
 
+When initial RTL already has the wrong addition order, inspect frontend folding
+before CSE. Parentheses and equal-mode conversions may be reassociated. A relative
+coordinate at its actual consumer width can preserve the intended phase without
+extra shifts. Prove its range, retain the final conversion and inspect the
+complete native diff; the intermediate type needs a representation reason.
+
 A small body change can exchange saved loop registers by changing live length,
 even when their weighted references stay fixed. Trace both values through
 `.flow`, `.sched` and `.lreg`, then compare global-allocation priorities. A

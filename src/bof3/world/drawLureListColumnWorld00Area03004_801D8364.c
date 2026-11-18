@@ -26,9 +26,9 @@ extern int sprintf(char* buffer, const char* format, ...);
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
  * @status partial
- * @match 93.16
- * @residual origin setup, count-coordinate grouping and the footer keep-copy
- * differ. The compiled body is four bytes shorter than the original.
+ * @match 95.16
+ * @residual origin setup, count-X setup and the footer keep-copy differ.
+ * The compiled body is four bytes shorter than the original.
  */
 void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   u16 x;
@@ -116,8 +116,8 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
         if (D_801453CC[i] >= 2) {
           sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);
           textX = x + 0x68;
-          func_80150098((s16)textX, (s16)(baseY + (textY + 4)), 7, buf);
-          func_80150098((s16)textX, (s16)(baseY + (textY + 2)), 0, buf);
+          func_80150098((s16)textX, (s16)(baseY + (s16)(textY + 4)), 7, buf);
+          func_80150098((s16)textX, (s16)(baseY + (s16)(textY + 2)), 0, buf);
         }
         goto row_drawn;
 unselected:
@@ -125,7 +125,7 @@ unselected:
                       (u32)&D_801C9E7C[*slotCursor * 20]);
         if (D_801453CC[i] >= 2) {
           sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);
-          func_80150098((s16)(x + 0x68), (s16)(baseY + (textY + 4)), 0, buf);
+          func_80150098((s16)(x + 0x68), (s16)(baseY + (s16)(textY + 4)), 0, buf);
         }
 row_drawn:
         record = D_1F800044;
@@ -160,7 +160,7 @@ row_drawn:
 
   i = 0;
   drawn = 0;
-  for (i = 0; i < 0x80; i++) {
+  for (; i < 0x80; i++) {
     columnWork = D_801C9E8A;
     columnWork += D_801451CC[i] * 20;
     if (*columnWork == 10) {

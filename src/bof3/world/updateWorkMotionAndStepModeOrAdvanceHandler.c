@@ -11,13 +11,30 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 47.68
- * @residual Complete native bytes still differ. The original 3188-byte
- * interval remains retained until exact reconstruction.
+ * @match 52.57
+ * @residual Frame size, bound copies, branching, value allocation and
+ * division expansion still differ. The original 3188-byte interval remains
+ * retained until exact reconstruction.
  */
 void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
-  u8* mode;
+  u8* upperThresholdWork;
+  u8* upperMotionWork;
+  u8* upperTransitionWork;
+  u8* lowerThresholdWork;
+  u8* lowerTransitionWork;
+  u8* upperMode;
+  u8* lowerMode;
+  u8* entryMode;
   u8* work;
+  u8* soundWork;
+  u8* flagWork;
+  u8* stepWork;
+  u8* requestWork;
+  u8* timerWork;
+  u8* idleWork;
+  u8* motionWork;
+  u8* countWork;
+  u8* angleWork;
   u8* chanceRow;
   Area030ScaleRecord* scale;
   Area030Range* range;
@@ -41,9 +58,9 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8 count;
   u8 threshold;
 
-  mode = (u8*)D_801E320C;
+  entryMode = (u8*)D_801E320C;
   reference = ((u8*)&workOffsetReferenceState)[0];
-  spread = mode[3] * 4;
+  spread = entryMode[3] * 4;
   work = D_1F800044;
   lower = reference - spread - 0x0C;
   upper = reference + spread + 0x0C;
@@ -60,45 +77,45 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
   if (work[4] == 3) {
     if (func_8014D978() != 0) {
-      work = D_1F800044;
-      func_8014DD3C(D_801E2AB8[work[6]].entry_10);
+      soundWork = D_1F800044;
+      func_8014DD3C(D_801E2AB8[soundWork[6]].entry_10);
 
-      work = D_1F800044;
-      work[0] = (u8)(work[0] | 0x20);
+      flagWork = D_1F800044;
+      flagWork[0] = (u8)(flagWork[0] | 0x20);
 
-      work = D_1F800044;
-      work[0x2A] = D_801E2330[work[8]].byte_01;
+      stepWork = D_1F800044;
+      stepWork[0x2A] = D_801E2330[stepWork[8]].byte_01;
 
-      work = D_1F800044;
-      func_8014D6B8(D_801E2330[work[8]].request_00);
+      requestWork = D_1F800044;
+      func_8014D6B8(D_801E2330[requestWork[8]].request_00);
 
-      work = D_1F800044;
-      FIELD_REF(s16, work, 0x3E) = -0x20;
-      work[4] = 0;
+      timerWork = D_1F800044;
+      FIELD_REF(s16, timerWork, 0x3E) = -0x20;
+      timerWork[4] = 0;
 
-      work = D_1F800044;
-      work[0x48] = 2;
+      idleWork = D_1F800044;
+      idleWork[0x48] = 2;
 
-      work = D_1F800044;
-      FIELD_REF(s32, work, 0x10) = 0;
+      motionWork = D_1F800044;
+      FIELD_REF(s32, motionWork, 0x10) = 0;
 
       D_80143FC8[0].flags_00 =
           (u8)(D_80143FC8[0].flags_00 & 0xBF);
     }
 
-    work = D_1F800044;
-    if (FIELD_REF(u16, work, 0x58) >= 0x15) {
-      value = FIELD_REF(s32, work, 0x10);
-      work[0x0A] = (u8)(work[0x0A] + (u32)value);
+    countWork = D_1F800044;
+    if (FIELD_REF(u16, countWork, 0x58) >= 0x15) {
+      value = FIELD_REF(s32, countWork, 0x10);
+      countWork[0x0A] = (u8)(countWork[0x0A] + (u32)value);
 
-      work = D_1F800044;
-      angle = (s8)work[0x0A];
+      angleWork = D_1F800044;
+      angle = (s8)angleWork[0x0A];
       if (angle < -0x30) {
         angle = -0x30;
       } else if (angle > 0x30) {
         angle = 0x30;
       }
-      work[0x0A] = (u8)angle;
+      angleWork[0x0A] = (u8)angle;
     }
     return;
   }
@@ -108,22 +125,22 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     if (angle > (s8)upper) {
       work[0x0B] = (u8)(work[0x0B] + 1);
 
-      work = D_1F800044;
-      mode = (u8*)D_801E320C;
-      count = work[0x0B];
-      threshold = mode[8];
+      upperThresholdWork = D_1F800044;
+      upperMode = (u8*)D_801E320C;
+      count = upperThresholdWork[0x0B];
+      threshold = upperMode[8];
       if (count >= threshold) {
-        work[0x0B] = 0;
+        upperThresholdWork[0x0B] = 0;
         if (D_8014421C < 0) {
-          work = D_1F800044;
-          if (FIELD_REF(s32, work, 0x10) > 0) {
+          upperMotionWork = D_1F800044;
+          if (FIELD_REF(s32, upperMotionWork, 0x10) > 0) {
             if ((u8)func_801E02D4((u8)upper, 1) != 0) {
-              work = D_1F800044;
+              upperTransitionWork = D_1F800044;
               D_8014421C = -7;
               D_80143FC9 = 0;
               D_80145E92 = 6;
               D_80145E93 = 0;
-              work[1] = (u8)(work[1] + 1);
+              upperTransitionWork[1] = (u8)(upperTransitionWork[1] + 1);
               return;
             }
           }
@@ -132,18 +149,18 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     } else if (angle < (s8)lower) {
       work[0x0B] = (u8)(work[0x0B] + 1);
 
-      work = D_1F800044;
-      mode = (u8*)D_801E320C;
-      count = work[0x0B];
-      threshold = mode[9];
+      lowerThresholdWork = D_1F800044;
+      lowerMode = (u8*)D_801E320C;
+      count = lowerThresholdWork[0x0B];
+      threshold = lowerMode[9];
       if (count >= threshold) {
-        work[0x0B] = 0;
+        lowerThresholdWork[0x0B] = 0;
         if ((u8)func_801E02D4((u8)lower, 2) != 0) {
-          work = D_1F800044;
+          lowerTransitionWork = D_1F800044;
           D_80145E92 = 7;
           D_80145E93 = 0;
           D_80143FC9 = 0;
-          work[1] = (u8)(work[1] + 1);
+          lowerTransitionWork[1] = (u8)(lowerTransitionWork[1] + 1);
           return;
         }
       }
