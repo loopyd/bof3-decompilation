@@ -1960,6 +1960,11 @@ which predecessor is released first. The second schedule rebuilds that order fro
 the first schedule's output. Verify both ready queues, the complete register web
 and the native gate before retaining an order change.
 
+A later source redefinition can release a copy through an anti-dependence
+and trigger its destination's birth boost before reload. Check which
+definitions survive flow and combine before using real value phases to change
+that priority.
+
 When a pointer copy survives CSE but a later store uses the copied base, trace
 GCC 2.7.2 `optimize_reg_copy_1`. It forwards source uses through the source's
 full-mode death. Definitions of either copied register and control or loop
