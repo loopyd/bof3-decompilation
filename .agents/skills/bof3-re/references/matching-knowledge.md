@@ -1905,6 +1905,22 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+Calculate local priority for the complete tied quantity. GCC 2.7.2 uses
+`floor_log2(refs) * refs * size / (death - birth)`, so crossing a power of two
+can change allocation more than the added reference suggests. A real coordinate
+operation that includes its final origin bias can cross that threshold without
+adding an instruction. Keep the initial width and later upper bound separate
+when a CSE boundary otherwise leaves two definitions on one pseudo and excludes
+it from local allocation. Check the merged quantities again after every scope
+change; a correct schedule can still exchange the byte and position registers.
+
+Use the allocator's half-instruction intervals. A normal `SET` births its output
+at `2 * instruction_number`; `CLOBBER` uses the preceding half-slot. An address
+that dies at a load therefore does not by itself exclude that register from the
+load's result. Reconcile births, deaths and tie order before predicting a register
+from an apparent address overlap. Preserve real operations and require the
+complete native gate.
+
 For a raw bound and a selected narrow copy, trace their overlap at the
 comparison. Capturing the existing comparison result before the copy can let
 the raw source die at that copy. Global allocation processes source deaths

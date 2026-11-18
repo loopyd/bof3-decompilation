@@ -43,8 +43,8 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 94.79
- * @residual Sum-store base, clamp read order and row-coordinate allocation
+ * @match 98.26
+ * @residual Sum-store base, clamp read order and signed-byte capture order
  * still differ at the original 1152-byte size. The original interval remains retained.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
@@ -64,10 +64,15 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      belowLower;
   s32      upperBound;
   s32      rowUpper;
+  s32      rowWidth;
   u16      upperSnapshot;
   u16      lowerSnapshot;
   s8       level;
   s16      clamped;
+  s16      rowCell;
+  s32      comparedCell;
+  u8*      rowMode;
+  u32      rowIndex;
 
   submitTpageDrawMode(0, 2);
   func_801E0DCC(0x11, 2, 0x87, 0xB4);
@@ -139,20 +144,36 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   prim->b0 = 0x80;
   func_8014E5A0(2, 0x10);
 
-  rowScale = ((u8*)D_801E320C)[3];
-  work = D_1F800044;
-  level = D_80146892[D_801E3208 * 0x98];
-  rowPosition = *(u16*)(work + 0x30);
-  rowUpper = rowScale * 8;
-  cur = rowUpper + 0x18;
-  rowScale *= 4;
-  rowScale = rowPosition - rowScale + 0xAD;
-  rowUpper = rowScale + rowUpper + 0x18;
+  do {
+    do {
+      rowMode = (u8*)D_801E320C;
+      rowIndex = D_801E3208;
+    } while (0);
+    work = D_1F800044;
+    rowScale = rowMode[3];
+    level = D_80146892[rowIndex * 0x98];
+  } while (0);
+  do {
+    rowPosition = *(u16*)(work + 0x30);
+  } while (0);
+  rowWidth = rowScale * 8;
+  cur = rowWidth + 0x18;
+  do {
+    rowScale *= 4;
+    rowPosition -= rowScale;
+    rowScale = rowPosition + 0xAD;
+  } while (0);
+  do {
+    rowCell = (s16)level;
+  } while (0);
+  rowUpper = rowScale + rowWidth + 0x18;
   upperSnapshot = (u16)rowUpper;
-  clamped = (s32)level;
-  clamped = clamped + 0xB9;
+  clamped = rowCell + 0xB9;
   lowerSnapshot = (u16)rowScale;
-  if (((s16)rowUpper < (s16)clamped) || ((s16)clamped < (s16)rowScale)) {
+  do {
+    comparedCell = (s16)clamped;
+  } while (0);
+  if (((s16)rowUpper < comparedCell) || (comparedCell < (s16)rowScale)) {
     func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 1);
   } else {
     func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 0);
