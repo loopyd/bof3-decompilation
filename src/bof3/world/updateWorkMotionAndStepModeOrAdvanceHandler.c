@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 72.52
+ * @match 78.42
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -87,9 +87,18 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 lower;
   s32 upper;
   s32 angle;
+  s8 sampledAngle;
+  s8 sampledMode3Angle;
+  u8 retainedMode3Angle;
+  u8 selectedMode3Angle;
+  u8 retainedAngle;
+  u8 selectedAngle;
+  s32 seedAngle;
   s32 level;
   s32 roll;
   s32 value;
+  u32 mode3Motion;
+  u32 accumulatedMotion;
   s32 sampledMotion;
   s32 selectedMotion;
   s32 quarter;
@@ -105,6 +114,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 classificationVelocity;
   s32 initialOutwardVelocity;
   s32 timer;
+  s32 outwardTimer;
+  u16 outwardTimerValue;
   s32 numerator;
   s32 denominator;
   u8 count;
@@ -157,17 +168,22 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
     countWork = D_1F800044;
     if (FIELD_REF(u16, countWork, 0x58) >= 0x15) {
-      value = FIELD_REF(s32, countWork, 0x10);
-      countWork[0x0A] = (u8)(countWork[0x0A] + (u32)value);
+      mode3Motion = FIELD_REF(u32, countWork, 0x10);
+      countWork[0x0A] = (u8)(countWork[0x0A] + mode3Motion);
 
       angleWork = D_1F800044;
-      angle = (s8)angleWork[0x0A];
-      if (angle < -0x30) {
-        angle = -0x30;
-      } else if (angle > 0x30) {
-        angle = 0x30;
+      sampledMode3Angle = (s8)angleWork[0x0A];
+      if (sampledMode3Angle >= -0x30) {
+        retainedMode3Angle = (u8)sampledMode3Angle;
+        if (sampledMode3Angle < 0x31) {
+          selectedMode3Angle = retainedMode3Angle;
+        } else {
+          selectedMode3Angle = 0x30;
+        }
+      } else {
+        selectedMode3Angle = 0xD0;
       }
-      angleWork[0x0A] = (u8)angle;
+      angleWork[0x0A] = selectedMode3Angle;
     }
     return;
   }
@@ -282,10 +298,10 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
         roll = rand();
         seedMotionWork = D_1F800044;
         value = D_801E2AB8[seedMotionWork[6]].unk_1C[1] & 7;
-        angle = (s8)seedMotionWork[0x0A];
+        seedAngle = (s8)seedMotionWork[0x0A];
         FIELD_REF(s32, seedMotionWork, 0x10) = (roll & value) + 1;
 
-        if (angle < 0) {
+        if (seedAngle < 0) {
           roll = rand();
           negativeMotionWork = D_1F800044;
           FIELD_REF(u32, negativeMotionWork, 0x10) =
@@ -398,19 +414,24 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     }
 
     accumulatedAngleWork = D_1F800044;
-    value = (s32)(FIELD_REF(u32, accumulatedAngleWork, 0x10) +
-                  FIELD_REF(u32, accumulatedAngleWork, 0x1C));
-    accumulatedAngleWork[0x0A] = (u8)(accumulatedAngleWork[0x0A] + (u32)value);
+    accumulatedMotion = FIELD_REF(u32, accumulatedAngleWork, 0x10) +
+                        FIELD_REF(u32, accumulatedAngleWork, 0x1C);
+    accumulatedAngleWork[0x0A] = (u8)(accumulatedAngleWork[0x0A] + accumulatedMotion);
   }
 
   boundedAngleWork = D_1F800044;
-  angle = (s8)boundedAngleWork[0x0A];
-  if (angle < -0x30) {
-    angle = -0x30;
-  } else if (angle > 0x30) {
-    angle = 0x30;
+  sampledAngle = (s8)boundedAngleWork[0x0A];
+  if (sampledAngle >= -0x30) {
+    retainedAngle = (u8)sampledAngle;
+    if (sampledAngle < 0x31) {
+      selectedAngle = retainedAngle;
+    } else {
+      selectedAngle = 0x30;
+    }
+  } else {
+    selectedAngle = 0xD0;
   }
-  boundedAngleWork[0x0A] = (u8)angle;
+  boundedAngleWork[0x0A] = selectedAngle;
 
   if (D_80149332 == 0) {
     D_8014932E = 0;
@@ -421,10 +442,12 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   outwardAngle = (s8)outwardConditionWork[0x0A];
   if (outwardAngle > outwardReference && FIELD_REF(s32, outwardConditionWork, 0x10) > 0) {
     position = FIELD_REF(s32, outwardConditionWork, 0x38);
-    timer = FIELD_REF(s16, outwardConditionWork, 0x3E);
+    outwardTimer = FIELD_REF(s16, outwardConditionWork, 0x3E);
+    outwardTimerValue = (u16)outwardTimer;
     FIELD_REF(u32, outwardConditionWork, 0x38) = (u32)position - 0x1000u;
-    if (timer < 0) {
-      FIELD_REF(s16, outwardConditionWork, 0x3E) = (s16)(timer + 8);
+    if (outwardTimer < 0) {
+      outwardTimerValue += 8;
+      FIELD_REF(u16, outwardConditionWork, 0x3E) = outwardTimerValue;
     }
 
     outwardPositionWork = D_1F800044;

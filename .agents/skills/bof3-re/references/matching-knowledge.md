@@ -1702,6 +1702,13 @@ Local allocation may then replace the raw comparison input with the result.
 Trace both passes, keep the assignment in its real arm and derive guard
 polarity from the original control flow.
 
+For a signed-byte sample used in comparisons and a byte result, trace the
+named byte quantity and its anonymous promotion through CSE and combine.
+The declared copy may disappear while combine creates the required word-to-byte
+copy. Check global allocation priorities and compiler-generated stack uses
+before explaining register or frame changes. Preserve the signed-byte domain
+and the original load and conversion sequence.
+
 Trace a pointer-cell sample separately from the later pointee read. If the
 original samples the cell before destination stores and reads the field after
 them, snapshot only the pointer before those stores. Prove the stores cannot
