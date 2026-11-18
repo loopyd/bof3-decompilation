@@ -12,17 +12,17 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * handler byte 1. Other paths update the motion words and select the
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
- * @status partial
- * @match 87.95
- * @residual Frame size, lower pointer allocation and argument scheduling
- * still differ. The compiled body is 3184 of the original 3188 bytes;
- * the original interval remains retained until exact reconstruction.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
+  /* Reconstruct the original 16-byte reservation without body accesses.
+   * Its original declaration and purpose are unknown. */
+  u8 unusedStackReservation[16];
   u8* upperThresholdWork;
   u8* upperMotionWork;
   u8* transitionWork;
-  u8* lowerThresholdWork;
   u8* upperMode;
   u8* lowerMode;
   u8* entryMode;
@@ -108,7 +108,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 initialCurrent;
   s32 retryCurrent;
   s32 countdownCurrent;
-  s32 delta;
+  s8 delta;
   s32 position;
   s32 inwardStepPosition;
   s32 publishedInwardPosition;
@@ -238,14 +238,13 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     } else if (angle < (s8)rawLower) {
       work[0x0B] = (u8)(work[0x0B] + 1);
 
-      lowerThresholdWork = D_1F800044;
+      reference = (s32)(u32)D_1F800044;
       lowerMode = (u8*)D_801E320C;
-      count = lowerThresholdWork[0x0B];
+      count = ((u8*)(u32)reference)[0x0B];
       threshold = lowerMode[9];
-      reference = lower;
       if (count >= threshold) {
-        lowerThresholdWork[0x0B] = 0;
-        if ((u8)func_801E02D4((u32)reference, 2) != 0) {
+        ((u8*)(u32)reference)[0x0B] = 0;
+        if ((u8)func_801E02D4((u32)lower, 2) != 0) {
           u8 transitionMode;
           do {
             transitionMode = 7;
@@ -431,14 +430,15 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
     countdownRange = D_80146884;
     delta = FIELD_REF(s8, countdownRange, 0x75);
-    if (delta > 0) {
+    reference = delta;
+    if (reference > 0) {
       if ((D_80143E6C & 0x0F) == 0) {
         countdownGuardWork = D_1F800044;
         if (FIELD_REF(s32, countdownGuardWork, 0x10) >= 0) {
           limit = countdownRange->limit_8C;
           countdownCurrent = countdownRange->value_8E;
           if (countdownCurrent < (limit >> 1)) {
-            func_801E026C((s8)delta);
+            func_801E026C((s8)reference);
           }
         }
       }

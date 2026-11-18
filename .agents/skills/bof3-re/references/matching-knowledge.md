@@ -1983,6 +1983,15 @@ through combine; a direct memory-to-argument load gives a removed local no
 preference. Use real value phases; never add a consumer or extend a lifetime
 to create a preference.
 
+A pseudo's own preference can cancel a same-size reservation in
+`prune_preferences` without guaranteeing allocation. Reuse only nonoverlapping
+real value phases and trace the later argument that supplies that preference.
+Pointer/numeric reuse can weaken signed-byte facts across labels. Keep the actual
+signed-byte sample separate from its word argument when that restores the original
+extension and register web. Reusing another byte local can change loads at its
+other consumers. Check complete combine/allocation output and the native body
+before applying the frame lever.
+
 Trace the consumer when a narrow snapshot disappears in CSE. A signed
 comparison can use a paradoxical `SUBREG` that CSE replaces with the raw word;
 a direct unsigned call argument can use `ZERO_EXTEND` and retain the snapshot.
