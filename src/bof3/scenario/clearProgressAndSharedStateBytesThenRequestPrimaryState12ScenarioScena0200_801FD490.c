@@ -1,13 +1,4 @@
-#include "bof3/bof3.h"
-
-extern u8 g_ScenarioProgress;
-extern u8 D_80146865;
-extern u8 D_80146866;
-extern u8 D_80146867;
-extern u8 D_80146874;
-extern u8 D_80146875;
-
-void func_8015C088(void);
+#include "bof3/scenario/scena02_state.h"
 
 /* @source 0x801FD490
  * @behavior Overlay record callback at index 17 of the local callback table
@@ -34,11 +25,5 @@ void func_8015C088(void);
  * @residual none
  */
 void clearProgressAndSharedStateBytesThenRequestPrimaryState12ScenarioScena0200_801FD490(void) {
-  func_8015C088();
-  g_ScenarioProgress = 0;
-  D_80146865 = 0;
-  D_80146866 = 0;
-  D_80146867 = 0;
-  D_80146875 = 0;
-  D_80146874 = 0x12;
+  SCENA02_START_AND_REQUEST(0, 0x12);
 }

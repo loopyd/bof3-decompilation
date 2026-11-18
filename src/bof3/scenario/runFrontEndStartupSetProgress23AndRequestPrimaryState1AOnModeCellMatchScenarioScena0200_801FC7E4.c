@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/scenario/scena02_state.h"
 
 /* Shared selector byte this overlay's front-end pattern code branches on; it is
  * read as the same absolute cell the resident front-end code uses.
@@ -23,27 +23,6 @@ extern u8 D_80145EDB;
  * @source 0x80145E98 @kind data
  */
 extern u8 D_80145E98;
-/* Shared progress byte and the sequence of state bytes this body clears after
- * it, then the requested primary-state byte at the end of the run.
- * @source 0x80146864 @kind data
- */
-extern u8 g_ScenarioProgress;
-/* @source 0x80146865 @kind data */
-extern u8 D_80146865;
-/* @source 0x80146866 @kind data */
-extern u8 D_80146866;
-/* @source 0x80146867 @kind data */
-extern u8 D_80146867;
-/* Shared sub-state byte and the shared primary-state byte after it.
- * @source 0x80146875 @kind data
- */
-extern u8 D_80146875;
-/* @source 0x80146874 @kind data */
-extern u8 D_80146874;
-
-/* Shared EXE-side front-end startup helper. */
-void func_8015C088(void);
-
 /* @source 0x801FC7E4
  * @behavior Front-end pattern trigger. It returns at once unless the shared
  *           selector byte D_80144F5A reads 0 or 3, and then runs the same
@@ -85,37 +64,19 @@ void runFrontEndStartupSetProgress23AndRequestPrimaryState1AOnModeCellMatchScena
         *(s16*)(D_80145ECA + 0x0) == 0x3F &&
         D_80145EDB == 0x42 &&
         D_80145E98 == 1) {
-      func_8015C088();
-      g_ScenarioProgress = 0x23;
-      D_80146865 = 0;
-      D_80146866 = 0;
-      D_80146867 = 0;
-      D_80146875 = 0;
-      D_80146874 = 0x1A;
+      SCENA02_START_AND_REQUEST(0x23, 0x1A);
     }
     if (*(s16*)(D_80145EC6 + 0x0) == 0x46 &&
         *(s16*)(D_80145ECA + 0x0) == 0x3E &&
         D_80145EDB == 0x45 &&
         D_80145E98 == 7) {
-      func_8015C088();
-      g_ScenarioProgress = 0x23;
-      D_80146865 = 0;
-      D_80146866 = 0;
-      D_80146867 = 0;
-      D_80146875 = 0;
-      D_80146874 = 0x1A;
+      SCENA02_START_AND_REQUEST(0x23, 0x1A);
     }
     if (*(s16*)(D_80145EC6 + 0x0) == 0x44 &&
         *(s16*)(D_80145ECA + 0x0) == 0x3E &&
         D_80145EDB == 0x43 &&
         D_80145E98 == 3) {
-      func_8015C088();
-      g_ScenarioProgress = 0x23;
-      D_80146865 = 0;
-      D_80146866 = 0;
-      D_80146867 = 0;
-      D_80146875 = 0;
-      D_80146874 = 0x1A;
+      SCENA02_START_AND_REQUEST(0x23, 0x1A);
     }
   }
 }

@@ -83,6 +83,7 @@ support_sources = [
     "src/bof3/scenario/runSubstateLadderArmModeQueueActionSeedSelectorContextThenReleaseAndClearFlagBankScenarioScena0200_801F8538.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"
+headers = ["include/bof3/scenario/scena02_state.h"]
 
 [[matching.section_placements]]
 function = 0x801F8070
