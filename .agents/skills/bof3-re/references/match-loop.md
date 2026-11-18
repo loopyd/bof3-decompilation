@@ -110,6 +110,11 @@ candidate; reject artificial aliases or qualifiers, undefined uses and changed
 memory or call behavior. Permuter scores guide search; only the complete owning
 native gate proves a match.
 
+A reported match count can rise when a new NOP restores later branch addresses
+while an earlier missing NOP and allocation error remain. Inspect the added
+instruction and changed delay slots before retaining the candidate. Check which
+local residual improved; equal size and more matching rows alone do not prove it.
+
 Frame/size: types/calls, address-taken locals, aggregate copies and flow first.
 Relocation/load order: symbol representation and original reload evidence first.
 Entry copies: representation and live ranges before scheduler claims. For a lone
