@@ -6,7 +6,7 @@
  * 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it
  * calls the same-binary frontend effect helper func_8015D404 with (0, 0),
  * queues the frontend cue func_80161C20(0x29, 100, 8), requests state 2 from
- * the target-local state helper func_801DDE94, advances the shared
+ * the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004, advances the shared
  * selection-step byte D_8014420D, clears byte 9 of the work record and
  * advances that record's dispatch byte 3; the shared helper func_8014D978 runs
  * unconditionally afterwards and no result is used here.
@@ -20,7 +20,7 @@ void func_801DAFBC(void) {
   if (D_80144199_BYTE == 3) {
     func_8015D404(0, 0);
     func_80161C20(0x29, 100, 8);
-    func_801DDE94(2);
+    storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(2);
     D_8014420D++;
     work = D_1F800044;
     work[9] = 0;

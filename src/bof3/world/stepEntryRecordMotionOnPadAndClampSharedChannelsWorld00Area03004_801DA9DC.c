@@ -2,7 +2,7 @@
 
 /* @behavior AREA030 front-end entry-record motion step, handler index 1 of the
  * 0x801E2258 table dispatched through work-record byte 3. It first retires the
- * scratch record byte 6 through func_801DDE94(1) once the shared selection gate
+ * scratch record byte 6 through storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(1) once the shared selection gate
  * D_80144199 holds 3; while the pad state D_80145AA8 carries Up and that gate is
  * 0 it queues cue 0x203, advances scratch record byte 3, clears D_801440B1 and
  * D_80143FC9 and stores 7 in modeByte; while the shared word D_80144000 exceeds
@@ -45,7 +45,7 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
   if (SPAD_PTR_SLOT(u8, 0x44u)[6] != 0) {
     if (D_80144199_BYTE == 3) {
       SPAD_PTR_SLOT(u8, 0x44u)[6] = 0;
-      func_801DDE94(1);
+      storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(1);
     }
   }
   if ((D_80145AA8 & 0x10) != 0) {

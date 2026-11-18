@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DC904(void)
+void advanceWorkStepIfStateIsThreeWorld00Area03004(void)
 {
   u8* record;
 

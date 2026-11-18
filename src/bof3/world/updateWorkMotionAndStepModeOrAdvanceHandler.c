@@ -307,7 +307,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
         chanceMotionWork = D_1F800044;
         FIELD_REF(s32, chanceMotionWork, 0x10) = -3;
-        func_801E026C(-5);
+        adjustAndClampCurrentWorkRangeValueWorld00Area03004(-5);
 
         chanceStateWork = D_1F800044;
         chanceStateWork[4] = 3;
@@ -438,12 +438,12 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
           limit = countdownRange->limit_8C;
           countdownCurrent = countdownRange->value_8E;
           if (countdownCurrent < (limit >> 1)) {
-            func_801E026C((s8)reference);
+            adjustAndClampCurrentWorkRangeValueWorld00Area03004((s8)reference);
           }
         }
       }
     } else if ((D_80143E6C & 1) != 0) {
-      func_801E026C((s8)delta);
+      adjustAndClampCurrentWorkRangeValueWorld00Area03004((s8)delta);
     }
 
     accumulatedAngleWork = D_1F800044;

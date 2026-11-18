@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DAE3C(void) {
+void seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004(void) {
     u8* work;
 
     if (D_80149332 == 0) {

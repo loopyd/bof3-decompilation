@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DC7EC(void)
+void initializeWorkDispatchBytesIfGateClearWorld00Area03004(void)
 {
   if (D_80143C40 == 0) {
     WORLD00_AREA030_SCRATCH_PTR[2] = 1;

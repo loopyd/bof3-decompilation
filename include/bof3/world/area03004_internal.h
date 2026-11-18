@@ -702,7 +702,7 @@ void func_8014BA54(void);
 /* Target-local 0x1E-record dispatcher at 0x801DE4AC: publishes every active
  * shared work record at the scratchpad cursor 0x1F800044 and dispatches its
  * handler byte through the overlay handler table D_801E2314. */
-void func_801DE4AC(void);
+void dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004(void);
 /* Target-local per-record scroll updater loop at 0x801E09B4. */
 void func_801E09B4(void);
 /* AREA030 overlay per-frame entry at 0x801E0BD0: invoked once by the
@@ -744,8 +744,8 @@ void func_801D6CB0(void);
 void func_801D6EC4(void);
 void advanceStepMode6(void);
 void clearFlagState10(void);
-void func_801E026C(s8 arg0);
-void func_801DAE3C(void);
+void adjustAndClampCurrentWorkRangeValueWorld00Area03004(s8 delta);
+void seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004(void);
 void dispatchCompanion(void);
 void func_801DFFA8(void);
 void func_801DCC74(void);
@@ -769,9 +769,9 @@ void func_800F7094(s16 arg0, s16 arg1, s32 arg2, s32 arg3, s32 arg4);
  * AREA030 discards the result. */
 const u8* func_8014FC90(s32 x, s32 y, s32 attributes, u32 limit,
                        const u8* input);
-void func_801DDFD4(void);
-void func_801DDE2C(void);
-void func_801DDE94(s32 state);
+void saveAndUpdateTextAdvanceStateWorld00Area03004(void);
+void updateRecordCursorsFromNonzeroIndicesWorld00Area03004(void);
+void storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(s32 state);
 void func_801DDEEC(void);
 void func_801DDD4C(void);
 void func_801DE018(void);
@@ -780,7 +780,7 @@ void func_801DC474(void);
 void func_801DC590(void);
 void func_801DC64C(void);
 void func_801DC708(void);
-void func_801DC7EC(void);
+void initializeWorkDispatchBytesIfGateClearWorld00Area03004(void);
 void func_801E0A30(void);
 void seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C(void);
 void func_801DA5F8(void);

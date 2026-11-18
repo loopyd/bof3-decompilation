@@ -11,7 +11,7 @@
  * requests resource 0xA with the second argument 2 (func_8014D6DC) while byte
  * 0x79 of the record at D_80146250 is clear and resource 0xB (func_8014D6B8)
  * otherwise, and finally stores 1 in that dispatch byte, the step the sibling
- * handler func_801DC7EC continues from.
+ * handler initializeWorkDispatchBytesIfGateClearWorld00Area03004 continues from.
  * @status exact
  * @match 100.00
  * @residual none

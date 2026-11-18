@@ -25,7 +25,7 @@
  * while per-access subscripts keep the original's folded
  * `lui $at,%hi(D_801468C0)` / `addu $at,$at,$v0` / `lw $v1,%lo(...)($at)` pair
  * for each of the three copies. The +0x3E counter is typed as the signed
- * countdown for its other readers (`lh` in func_801DE4AC/func_801E0770) but this
+ * countdown for its other readers (`lh` in dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004/func_801E0770) but this
  * copy site loads it with the original's unsigned `lhu`, so it reads through an
  * unsigned halfword view of the same cell.
  */

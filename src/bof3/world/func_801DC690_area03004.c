@@ -7,7 +7,7 @@
  * calls the frontend effect helper func_8015D404 with (0, 1), queues the
  * frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through
  * func_8015DF18, requests state 5 from the target-local state helper
- * func_801DDE94 and advances that record's dispatch byte 3; the shared helper
+ * storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record's dispatch byte 3; the shared helper
  * func_8014D978 runs unconditionally afterwards and no result is used here.
  * @status exact
  * @match 100.00
@@ -20,7 +20,7 @@ void func_801DC690(void) {
     func_8015D404(0, 1);
     func_80161C20(0x28, 100, 8);
     func_8015DF18(0x203);
-    func_801DDE94(5);
+    storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(5);
     work = D_1F800044;
     work[3]++;
   }

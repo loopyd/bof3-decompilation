@@ -2,7 +2,7 @@
 
 /**
  * @source 0x801DE018
- * @behavior Refreshes the AREA030 message state through func_801DDFD4, then
+ * @behavior Refreshes the AREA030 message state through saveAndUpdateTextAdvanceStateWorld00Area03004, then
  * walks the four text slots: each slot's current character is read through its
  * D_801E28F4 record pointer at the D_801E31E0 counter and classified with the
  * D_801E31F0 state byte and the D_801E31E4 slot timer into an action 0/1/2;
@@ -23,7 +23,7 @@ void func_801DE018(void) {
   Area030TextSlot *slot;
   s32 offset;
 
-  func_801DDFD4();
+  saveAndUpdateTextAdvanceStateWorld00Area03004();
 
   one = 1;
   limit = &D_80143FCF;

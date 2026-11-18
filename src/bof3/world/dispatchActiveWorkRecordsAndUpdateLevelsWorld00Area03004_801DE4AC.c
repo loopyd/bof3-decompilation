@@ -18,7 +18,7 @@
  * changes the caller-side register web. The level field is signed so both
  * level stores share the hoisted -0x40 constant.
  */
-void func_801DE4AC(void) {
+void dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004(void) {
   Area030WorkRecord* record;
   Area030WorkRecord* work;
   u8* cur;

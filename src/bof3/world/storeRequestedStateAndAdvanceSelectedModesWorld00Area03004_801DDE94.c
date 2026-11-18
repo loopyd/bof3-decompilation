@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DDE94(s32 state)
+void storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(s32 state)
 {
   u8* modePtr;
   s32 savedState;

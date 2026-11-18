@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DDE2C(void)
+void updateRecordCursorsFromNonzeroIndicesWorld00Area03004(void)
 {
     u8 index;
 

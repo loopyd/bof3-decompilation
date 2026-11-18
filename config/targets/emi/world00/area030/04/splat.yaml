@@ -193,8 +193,8 @@ segments:
     - '@source: src/bof3/world/func_801D35CC.c'
   - - 10832
     - c
-    - func_801D3650
-    - '@source: src/bof3/world/func_801D3650.c'
+    - seedWorkHalfword30AndAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/seedWorkHalfword30AndAdvanceHandlerWorld00Area03004_801D3650.c'
   - - 10884
     - c
     - func_801D3684
@@ -540,7 +540,7 @@ segments:
     - c
     - func_801D9D38
     - '@source: src/bof3/world/func_801D9D38_area03004.c'
-    - '@behavior: AREA030 panel-step initializer: runs the target-local record-pointer selector func_801DDE2C, clears the six step words at offsets 0x0C..0x20 and the countdown byte 9 of the scratch work record published at the scratchpad cursor 0x1F800044 while storing 0xFF in the shared active-record index D_801E3208, requests mode 6 from the shared state helper func_801DDE94 while either level flag 0x80145026/0x80145028 is clear (mode 0 when both are set), requests resource 0xA with the second argument 2 through the shared func_8014D6DC while byte 0x79 of the record at D_80146250 is clear and resource 0xB through the shared func_8014D6B8 otherwise, and finally advances dispatch byte 3 of the work record cursor at 0x1F800044.'
+    - '@behavior: AREA030 panel-step initializer: runs the target-local record-pointer selector updateRecordCursorsFromNonzeroIndicesWorld00Area03004, clears the six step words at offsets 0x0C..0x20 and the countdown byte 9 of the scratch work record published at the scratchpad cursor 0x1F800044 while storing 0xFF in the shared active-record index D_801E3208, requests mode 6 from the shared state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 while either level flag 0x80145026/0x80145028 is clear (mode 0 when both are set), requests resource 0xA with the second argument 2 through the shared func_8014D6DC while byte 0x79 of the record at D_80146250 is clear and resource 0xB through the shared func_8014D6B8 otherwise, and finally advances dispatch byte 3 of the work record cursor at 0x1F800044.'
   - - 37384
     - c
     - advanceStepMode6
@@ -625,11 +625,11 @@ segments:
     - c
     - stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC
     - '@source: src/bof3/world/stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC.c'
-    - '@behavior: AREA030 front-end entry-record motion step, handler index 1 of the 0x801E2258 table: retires scratch record byte 6 through func_801DDE94(1) while the shared selection gate holds 3, queues cue 0x203 and moves the shared mode bytes while the pad carries Up with a clear gate or while the shared word D_80144000 passes 0x3E7FFF, gates the random record-distance reseed on the selected entry byte 0x11 and the frame-counter nibble, applies the pad direction to the entry record motion triple 0x0C/0x10/0x14 and the selected value D_801E31F8 with the request passed to func_8014D8D4, publishes the entry record word 0x38 into D_8014930C and derives D_8014932E from word 0x10, clamps D_8014930C into 0x150000..0x3C0000 and stops entry record word 0x0C at the 0x80000/0x11FFFF x walls.'
+    - '@behavior: AREA030 front-end entry-record motion step, handler index 1 of the 0x801E2258 table: retires scratch record byte 6 through storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(1) while the shared selection gate holds 3, queues cue 0x203 and moves the shared mode bytes while the pad carries Up with a clear gate or while the shared word D_80144000 passes 0x3E7FFF, gates the random record-distance reseed on the selected entry byte 0x11 and the frame-counter nibble, applies the pad direction to the entry record motion triple 0x0C/0x10/0x14 and the selected value D_801E31F8 with the request passed to func_8014D8D4, publishes the entry record word 0x38 into D_8014930C and derives D_8014932E from word 0x10, clamps D_8014930C into 0x150000..0x3C0000 and stops entry record word 0x0C at the 0x80000/0x11FFFF x walls.'
   - - 41532
     - c
-    - func_801DAE3C
-    - '@source: src/bof3/world/func_801DAE3C.c'
+    - seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004
+    - '@source: src/bof3/world/seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004_801DAE3C.c'
     - '@behavior: initializes shared motion state and advances the scratch work-record action byte when the area gate flag is clear.'
   - - 41604
     - c
@@ -740,7 +740,7 @@ segments:
     - c
     - func_801DC514
     - '@source: src/bof3/world/func_801DC514_area03004.c'
-    - '@behavior: AREA030 mode-3 handler: when the shared selection gate byte D_80144199_BYTE holds 3, requests state 3 from func_801DDE94 and advances byte 3 of the scratch work-record cursor at 0x1F800044, then always calls the shared helper func_8014D978.'
+    - '@behavior: AREA030 mode-3 handler: when the shared selection gate byte D_80144199_BYTE holds 3, requests state 3 from storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances byte 3 of the scratch work-record cursor at 0x1F800044, then always calls the shared helper func_8014D978.'
   - - 47464
     - c
     - func_801DC568
@@ -755,7 +755,7 @@ segments:
     - c
     - func_801DC5D4
     - '@source: src/bof3/world/func_801DC5D4_area03004.c'
-    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22B0 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3 it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 4 from the target-local state helper func_801DDE94 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
+    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22B0 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3 it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 4 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47692
     - c
     - func_801DC64C
@@ -765,7 +765,7 @@ segments:
     - c
     - func_801DC690
     - '@source: src/bof3/world/func_801DC690_area03004.c'
-    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22BC selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 5 from the target-local state helper func_801DDE94 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
+    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22BC selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 5 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47880
     - c
     - func_801DC708
@@ -778,8 +778,8 @@ segments:
     - '@behavior: AREA030 work-record dispatch step, handler 0 of the local table at 0x801E22C8 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared gate halfword D_80143C40 holds 0, it arms the callback scheduler through func_8014B87C(1), commits the shared fixed-point channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay through func_80153DE8, clears the shared entry table through func_801E0A30, requests front-end mode 3 through func_8014ECAC, asks for resource 0xA with the second argument 2 while byte 0x79 of the record at D_80146250 is clear and resource 0xB otherwise, and stores 1 in that dispatch byte.'
   - - 48108
     - c
-    - func_801DC7EC
-    - '@source: src/bof3/world/func_801DC7EC.c'
+    - initializeWorkDispatchBytesIfGateClearWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchBytesIfGateClearWorld00Area03004_801DC7EC.c'
     - '@behavior: Initializes three scratch work-record bytes when the shared mode is zero.'
   - - 48184
     - c
@@ -793,8 +793,8 @@ segments:
     - '@behavior: AREA030 mode gate: while the shared mode byte modeByte (0x80144125) holds zero, requests the frontend selection effect through func_8015D4F8 with (0, 0, 0x14, 0x10), dispatches sound cue 0x102 through func_8015DF18, increments the shared state byte 0x80144281, clears byte 6 of the work record published at the scratchpad cursor 0x1F800044 and advances that record dispatch byte 3.'
   - - 48388
     - c
-    - func_801DC904
-    - '@source: src/bof3/world/func_801DC904.c'
+    - advanceWorkStepIfStateIsThreeWorld00Area03004
+    - '@source: src/bof3/world/advanceWorkStepIfStateIsThreeWorld00Area03004_801DC904.c'
     - '@behavior: Increments scratch-record byte 3 while state byte 0x80144281 is 3.'
   - - 48444
     - c
@@ -893,10 +893,12 @@ segments:
     - '@behavior: AREA030 selection-confirm step: requests the shared selection effect 9 through func_8014D8D4 and cue 0x204 through func_8015DF18, stores the AREA030 mode 7 in the shared mode byte and 3 in its companion byte 0x8014419E, advances the shared selection counter byte 0x80144199 and dispatch byte 3 of the scratch work record published at the scratchpad cursor 0x1F800044, then releases the shared hold through func_8014D978.'
   - - 53804
     - c
-    - func_801DDE2C
+    - updateRecordCursorsFromNonzeroIndicesWorld00Area03004
+    - '@source: src/bof3/world/updateRecordCursorsFromNonzeroIndicesWorld00Area03004_801DDE2C.c'
   - - 53908
     - c
-    - func_801DDE94
+    - storeRequestedStateAndAdvanceSelectedModesWorld00Area03004
+    - '@source: src/bof3/world/storeRequestedStateAndAdvanceSelectedModesWorld00Area03004_801DDE94.c'
   - - 53996
     - c
     - func_801DDEEC
@@ -909,12 +911,13 @@ segments:
     - '@behavior: AREA030 pad-mask gate: returns 0 when the shared pad state word D_80145AA8 shares no bit with the caller mask; otherwise requests frontend mode 2 through func_8014ECAC, stores 8 in byte 2 and clears byte 3 of the scratch work record published at the scratchpad cursor 0x1F800044, and returns 1.'
   - - 54228
     - c
-    - func_801DDFD4
+    - saveAndUpdateTextAdvanceStateWorld00Area03004
+    - '@source: src/bof3/world/saveAndUpdateTextAdvanceStateWorld00Area03004_801DDFD4.c'
   - - 54296
     - c
     - func_801DE018
     - '@source: src/bof3/world/func_801DE018_area03004.c'
-    - '@behavior: walks the four AREA030 text slots: reads each slot text byte through the record pointer table D_801E28F4 at its counter D_801E31E0, classifies the slot from the state byte D_801E31F0 (refreshed by func_801DDFD4) and the slot timer D_801E31E4 into an action 0/1/2, then advances the counter with a 12-frame timer reload while the current character lacks the 0x80 terminator bit, or publishes the slot index D_801E28F8[offset] plus the record byte 0x0F into the message state D_80143FCF when the sum reaches its signed limit (also storing the record byte 0x10 at +3), or resets the slot.'
+    - '@behavior: walks the four AREA030 text slots: reads each slot text byte through the record pointer table D_801E28F4 at its counter D_801E31E0, classifies the slot from the state byte D_801E31F0 (refreshed by saveAndUpdateTextAdvanceStateWorld00Area03004) and the slot timer D_801E31E4 into an action 0/1/2, then advances the counter with a 12-frame timer reload while the current character lacks the 0x80 terminator bit, or publishes the slot index D_801E28F8[offset] plus the record byte 0x0F into the message state D_80143FCF when the sum reaches its signed limit (also storing the record byte 0x10 at +3), or resets the slot.'
   - - 54720
     - c
     - initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0
@@ -922,8 +925,8 @@ segments:
     - '@behavior: Initialize work records from the selected count-table row, seed amounts and clear work state bytes.'
   - - 55468
     - c
-    - func_801DE4AC
-    - '@source: src/bof3/world/func_801DE4AC.c'
+    - dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004
+    - '@source: src/bof3/world/dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004_801DE4AC.c'
     - '@behavior: walks the 0x1E shared 0x98-byte work records at 0x80146888, publishes each active record as the scratchpad cursor at 0x1F800044 and as D_80146884, dispatches its handler byte 0x01 through the overlay handler table D_801E2314, and derives the record level byte 0x5D from flag 0x20 and the signed counter at 0x3E before mirroring it into 0x5E and 0x5F.'
   - - 55788
     - c
@@ -987,9 +990,9 @@ segments:
     - '@behavior: clears the scratch-record flag when the AREA030 state byte is >= 10.'
   - - 63084
     - c
-    - func_801E026C
-    - '@source: src/bof3/world/func_801E026C.c'
-    - '@behavior: advances the signed position by arg0 and clamps it to [0, limit].'
+    - adjustAndClampCurrentWorkRangeValueWorld00Area03004
+    - '@source: src/bof3/world/adjustAndClampCurrentWorkRangeValueWorld00Area03004_801E026C.c'
+    - '@behavior: advances the signed position by delta and clamps it to [0, limit].'
   - - 63188
     - c
     - func_801E02D4
@@ -1044,7 +1047,7 @@ segments:
     - c
     - updateArea030OverlayFrame
     - '@source: src/bof3/world/updateArea030OverlayFrame.c'
-    - '@behavior: AREA030 overlay per-frame entry invoked by the GAME.EMI entry-0 front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through func_801DE4AC and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
+    - '@behavior: AREA030 overlay per-frame entry invoked by the GAME.EMI entry-0 front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004 and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
   - - 65568
     - c
     - dispatchCompanion

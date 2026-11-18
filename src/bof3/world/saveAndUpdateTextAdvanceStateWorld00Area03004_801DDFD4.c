@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DDFD4(void)
+void saveAndUpdateTextAdvanceStateWorld00Area03004(void)
 {
   D_801E31F4 = D_801E31F0;
   if ((D_80145AA8 & 0xE040) != 0) {

@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D3650(void) {
+void seedWorkHalfword30AndAdvanceHandlerWorld00Area03004(void) {
   u8* cursor;
   u8* next;
 

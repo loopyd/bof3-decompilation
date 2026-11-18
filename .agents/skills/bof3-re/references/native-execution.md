@@ -37,6 +37,11 @@ Path-watch refusals retain the first refusing event's registered directory paths
 escaped entry bytes, watch ID, mask and cookie. Freshness guards remain effective.
 These fields identify the observed event, not its writer or a historical cause.
 
+If `PathWatch` initialization fails with `OSError: [Errno 24]` during a parallel
+build, confirm owned children have stopped, then lower CMake concurrency with
+`CMAKE_BUILD_PARALLEL_LEVEL=4 bin/harness build TARGET`. Keep observer guards,
+compiler settings and host limits unchanged.
+
 CLI adapters, lift gates and decompilation comparisons propagate
 `ProcessCleanupError` unchanged. Unconfirmed cleanup stops retries, fallback
 comparisons and later members. Keep POST and owned recovery until child
