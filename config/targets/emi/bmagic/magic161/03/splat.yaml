@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic16103_801EEC24.c'
     - '@behavior: Overlay entry dispatcher. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x28-byte frame, copies the three-entry handler pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) into that frame, and calls the entry its work byte at offset 1 selects. The selector is not bounds-checked, nothing outside the frame is written, and no value is returned.'
   - - 132
-    - asm
-    - func_801EEC84
+    - c
+    - seedWorkObjectFromBattleRecordThenClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerIncrementWorkByteBAndRaiseFlag40BmagicMagic16103_801EEC84
+    - '@source: src/bof3/bmagic/seedWorkObjectFromBattleRecordThenClaimSlotCopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerIncrementWorkByteBAndRaiseFlag40BmagicMagic16103_801EEC84.c'
+    - '@behavior: Entry 0 (index 0) of the three-entry code pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) that this overlay''s entry dispatcher copies into its own frame and selects with the work byte at offset 1. It copies the shared battle work record''s byte 8 and word triplet 0x34/0x38/0x3C from the pointer cell at 0x801EB4E0 into the scratchpad work object, clearing work byte 0xB between the last word read and that word''s store, increments work byte 1 and invokes the shared helper at 0x800AEF98 with 0xC and 2, then claims a slot through 0x801E590C(1, 0x54) and copies the acting battler''s 0x74-byte record head into that slot of the 0x78-byte-stride store at 0x801EC330. Selectors below 3 copy from the 0x140-byte party records at 0x80145E90 and others from the 0x118-byte enemy records at 0x801EB630 indexed by selector minus 3, with the acting battler byte at 0x80146374 as selector. It stamps slot bytes +0x06, +0x01, +0x02 and +0x05 with 1, 0, 0 and 0x54, publishes the work pointer at slot word +0x74, increments work byte 0xB and raises bit 0x40 of the work record''s byte 0. Takes no arguments, returns nothing and writes no other state.'
   - - 668
     - c
     - clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic16103_801EEE9C

@@ -105,8 +105,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic04103_801EF564.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 before the frame is set up, decrements the work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it reads the shared battle record pointer at 0x801EB4E0, decrements that record byte 0xB at byte width and invokes func_801E5988 with no arguments, the byte store filling the call delay slot. The 0x18-byte frame keeps only $ra. Reached through word 12 of the overlay code pointer run at 0x801EEC04.'
   - - 2496
-    - asm
-    - func_801EF5C0
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0.c'
+    - '@behavior: Pushes the GTE matrix stack with PushMatrix inside a 0x50-byte frame that keeps $ra at 0x4C and $s0 at 0x48, loads the scratchpad work-record pointer cell at 0x1F800044 once, and zeroes the halfword triplet at 0x18..0x1D. The three halfwords at 0x10..0x15 are built from that record: word 0x34 and word 0x38 each shifted right by nine and biased by minus 0x4000, and half the negated signed halfword 0x3E, negated and halved through the signed divide-by-two fixup sequence. RotTrans projects that triplet through the matrices the caller left installed, writing the result vector into the translation field of the 0x20-byte scratch matrix at 0x20 and a flag word at 0x40; RotMatrix turns the zeroed triplet into an identity rotation in that same matrix; MulMatrix2 composes the shared screen matrix at 0x801492E8 under it; and the composed matrix is published through SetRotMatrix and SetTransMatrix. It pops no matrix of its own, so both callers run PopMatrix after their draw pass. Takes no arguments, returns nothing, and its only in-image references are the jal words at 0x801EF254 and 0x801EF45C.'
   - - 2672
     - asm
     - func_801EF670

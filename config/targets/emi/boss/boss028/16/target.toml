@@ -18,6 +18,7 @@ sources = [
     "src/bof3/boss/dispatchWorkByte1Table21A4BossBoss02816_800C1BEC.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848.c",
     "src/bof3/boss/armCueCountdownFromClassRowRunScriptByte2ThenAdvanceWorkByte2BossBoss02816_800C18E4.c",
+    "src/bof3/boss/advanceWorkByte2WhenBattleRecordByte0Bit0ClearThenRunSharedUpdateBossBoss02816_800C20C8.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02816_800C1AF0.c",

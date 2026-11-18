@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC94
   - - 828
-    - asm
-    - func_801EEF3C
+    - c
+    - clearRecordFlag40DispatchEvent1CForwardBattleByteThenSeedSelectedBattlerRecordAdvanceWorkByte1BmagicMagic05603_801EEF3C
+    - '@source: src/bof3/bmagic/clearRecordFlag40DispatchEvent1CForwardBattleByteThenSeedSelectedBattlerRecordAdvanceWorkByte1BmagicMagic05603_801EEF3C.c'
+    - '@behavior: Word 1 of the three-entry code pointer run at 0x801EEC04. It returns at once when work byte 0xB is non-zero; otherwise it clears bit 0x40 of byte 0 of the shared battle record at 0x801EB4E0, calls the buffer-copy helper at 0x800AFC54, dispatches event 0x1C with the value 0 through 0x800AEF98, forwards the battle target byte at 0x80146384 to the readiness helper at 0x800A9820, seeds the selected battler record that the selection byte 0x80146374 names (gate byte 6, byte 2 set to 4, halfword 0x4000 and halfword 0 in the 0x140-byte-stride party entry or the 0x118-byte-stride enemy entry), submits it through func_80196718 and increments work byte 1, which selects run entry 2.'
   - - 1404
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic05603_801EF17C

@@ -59,8 +59,10 @@ segments:
     - '@source: src/bof3/bmagic/advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic13703_801EF174.c'
     - '@behavior: Advances the scratchpad work object one frame. The pointer cell at 0x1F800044 is read once, then work bytes 0xB and 9 are read through that pointer, one plus work byte 9 shifted right by six is added to byte 0xB and the sum stored at byte width. When bit 0 of the frame counter at 0x80143E6C is set the cell is re-read and work byte 0xA increments. The cell is re-read again, two is added to work byte 9 at byte width, and only when the stored byte truncated to eight bits equals 0xC0 does the body re-read the cell once more and increment work byte 2, the work-byte-2 step counter of the overlay dispatcher at 0x801EFC58. It takes no arguments, returns nothing, keeps no frame and writes no state outside the work object.'
   - - 1564
-    - asm
-    - func_801EF21C
+    - c
+    - advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic13703_801EF21C
+    - '@source: src/bof3/bmagic/advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic13703_801EF21C.c'
+    - '@behavior: Steps the scratchpad work object at 0x1F800044 one frame of a retreat. Work byte 0xB gains one plus work byte 9 shifted right by six, work byte 0xA is decremented when bit 0 of the frame counter at 0x80143E6C is set, then work byte 9 drops by two. Only when the stored byte 9 truncated to eight bits lands on 0x60 does it increment work byte 2, the work-byte-2 step counter of the overlay dispatcher at 0x801EFC58. The pointer cell is re-read before each access group because a store may alias it. It takes no arguments, returns nothing, keeps no frame and writes no state outside the work object.'
   - - 1732
     - c
     - advanceWorkByteBDecrementByteAOnGlobalBit0SetStepWordsThenStepPositionPairAndOnByte9At48DecrementGlobalWorkByteBAndInvokeHelperBmagicMagic13703_801EF2C4

@@ -1,0 +1,61 @@
+#include "bof3/bof3.h"
+
+/* Scratchpad work-object pointer cell. This target's map binds it at
+ * 0x1F800044 as g_battle_work, the name its lifted sources
+ * clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
+ * and decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZero
+ * BmagicMagic13703_801EFD9C already used. The original re-materialises the cell
+ * before each access group because a store through the pointer it supplied may
+ * alias the cell, so the body reads the named cell each time instead of holding
+ * one copy. */
+extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
+
+/* Frame counter of the main executable, outside this overlay image; bit 0 is
+ * the frame parity this body tests. Splat binds the address through this
+ * target's generated undefined_syms_auto.txt, so no target-map row is added. */
+extern u32 D_80143E6C; /* @source 0x80143E6C @kind unknown */
+
+/* @source 0x801EF21C
+ * @behavior Steps the scratchpad work object at 0x1F800044 one frame of a
+ *           retreat. The pointer cell is read once, work bytes 0xB and 9 are
+ *           read through that pointer, one plus work byte 9 shifted right by
+ *           six is added to byte 0xB and the sum stored at byte width, so byte
+ *           0xB gains one plus a sixth of byte 9. When bit 0 of the frame
+ *           counter at 0x80143E6C is set the cell is re-read and work byte 0xA
+ *           decrements at byte width. The cell is re-read again, two is
+ *           subtracted from work byte 9 at byte width, and only when the stored
+ *           byte truncated to eight bits equals 0x60 does the body re-read the
+ *           cell once more and increment work byte 2, the work-byte-2 step
+ *           counter of the overlay dispatcher at 0x801EFC58. It takes no
+ *           arguments, returns nothing, keeps no frame and writes no state
+ *           outside the work object. Roles of work bytes 2, 0xA, 0xB and 9 stay
+ *           address-anchored.
+ *
+ *           The body is byte-identical to emi/bmagic/magic067/03 0x801EF4F4,
+ *           which already carried a lifted source with an exact measurement
+ *           when this clone was generated: a payload comparison of the two
+ *           0xA8 spans reported no differing byte, so this source is the
+ *           generator's self-contained rewrite of that body with this target's
+ *           own cell binding restored. The nearest same-target sibling is
+ *           0x801EF174, the same body with inverted operations; a payload
+ *           comparison of the two spans reported three differing words - addiu
+ *           2 instead of addiu -2 on work byte 9, addiu 1 instead of addiu -1
+ *           on work byte 0xA, and the immediate 0xC0 instead of 0x60.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void advanceWorkByteBDecrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At96BmagicMagic13703_801EF21C(void) {
+  u8 *work;
+  u32 next;
+
+  work = g_battle_work;
+  next = work[0xB] + 1;
+  work[0xB] = next + (work[9] >> 6);
+  if (D_80143E6C & 1) {
+    g_battle_work[0xA]--;
+  }
+  if ((g_battle_work[9] -= 2) == 0x60) {
+    g_battle_work[2]++;
+  }
+}
