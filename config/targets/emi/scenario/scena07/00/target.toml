@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = [
     "src/bof3/scenario/scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34.c",
+    "src/bof3/scenario/tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

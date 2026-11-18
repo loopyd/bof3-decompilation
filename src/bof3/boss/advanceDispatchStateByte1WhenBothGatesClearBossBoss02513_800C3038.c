@@ -27,8 +27,11 @@ extern u8 D_80146329; /* @source 0x80146329 @kind unknown */
  *           decrements the same work byte when either gate is set, so the two
  *           handlers move the counter in opposite directions; only the
  *           increment constant, the store order and the branch sides differ,
- *           which makes that unmatching sibling shape evidence rather than a
- *           clone. The statement order, the incremented reference and the
+ *           which made that unmatching sibling shape evidence rather than a
+ *           clone when this handler was written. The neighbour has since been
+ *           authored exact at 0x800C3088 from this same gate pair, so both
+ *           directions of the transition are now lifted and the earlier
+ *           contrast stands as its seed evidence. The statement order, the incremented reference and the
  *           single cell load follow the exact work-byte advances of the bmagic
  *           overlays, for example
  *           setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C.

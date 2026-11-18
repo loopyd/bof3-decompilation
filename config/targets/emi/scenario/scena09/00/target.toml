@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/runPrimaryState8SubstateSequenceScenarioScena0900_801FA1F0.c",
     "src/bof3/scenario/runPrimaryState9SubstateSequenceScenarioScena0900_801FA8B8.c",
     "src/bof3/scenario/waitProgress25ThenSeedEffectRecordsWithHandler13And2BThroughCountdownStepsThenClearStateScenarioScena0900_801FBD6C.c",
+    "src/bof3/scenario/requestPrimaryStateOnWorldZoneAtPositionScenarioScena0900_801FC91C.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C.c",

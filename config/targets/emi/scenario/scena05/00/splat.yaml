@@ -30,8 +30,10 @@ segments:
   vram: 2149544952
   subsegments:
   - - 2040
-    - asm
-    - func_801F73F8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0500_801F73F8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F73F8.c'
+    - '@behavior: Per-frame handler dispatcher of this overlay''s first step: it reads the work-object pointer cell at scratchpad 0x1F800044 before the frame is created, takes that object''s unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler table at 0x801FD5A8, whose six code-pointer words are 0x801F743C, 0x801F745C, 0x801F74CC, 0x801F7530, 0x801F7554 and 0x801F7640, so the work byte selects which work-byte-1 handler runs this frame; it reads no other state and writes none, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 2108
     - c
     - incrementWorkByte1ClearCounterScenarioScena0500_801F743C

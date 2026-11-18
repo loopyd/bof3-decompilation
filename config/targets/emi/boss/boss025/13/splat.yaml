@@ -181,8 +181,10 @@ segments:
     - '@source: src/bof3/boss/advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038.c'
     - '@behavior: Fourth word of the five-entry handler run at 0x800C3294, entered through the sibling dispatcher 0x800C2FF4 when work-record byte 1 holds zero. Reads the global byte at 0x80148603 and returns when it is non-zero, then reads 0x80146329 and returns when bit 0x2 is set; only with both gates clear does it load the scratchpad work-object pointer cell 0x1F800044 once and increment the work object byte at offset 1, moving the dispatch state byte from zero to one. Takes no arguments and returns nothing.'
   - - 6280
-    - asm
-    - func_800C3088
+    - c
+    - drawTurnsLeftPanelAndStepDispatchStateByte1BackWhenGateSetBossBoss02513_800C3088
+    - '@source: src/bof3/boss/drawTurnsLeftPanelAndStepDispatchStateByte1BackWhenGateSetBossBoss02513_800C3088.c'
+    - '@behavior: Fifth word of the five-entry handler run at 0x800C3294, the word at 0x800C32A4, reached as the second entry of the sibling dispatcher 0x800C2FF4 when work-record byte 1 holds one. Draws the panel strip at (0x6B, 0x10) through the EXE drawer 0x801D8270, formats 0x15 minus the shared counter 0x801463D0 with the overlay format "%2d" at 0x800C184C into the shared text buffer 0x801490F8, submits that buffer at (0x70, 0x12) from offset 4 through 0x8014FF0C, and submits the overlay run 0x800C32A8, the text "turns" 0xFF "left", at (0x80, 0x12) with a zero third argument and 0xA as the fourth through 0x8014F800, so the panel shows the turns left of the counter 0x801463D0. Then, when either gate of the sibling handler 0x800C3038 is set (the global byte 0x80148603 non-zero or bit 0x2 of 0x80146329 set), it loads the scratchpad work-object pointer cell 0x1F800044 once and decrements the work object byte at offset 1 at byte width, moving the dispatch state byte from one back to zero; while the shared mode byte 0x801462E0 reads 5 it also calls the shared helper 0x801E5988. Takes no arguments and returns nothing.'
   - - 6516
     - textbin
     - D_800C3174

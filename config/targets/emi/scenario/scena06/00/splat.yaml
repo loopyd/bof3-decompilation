@@ -175,8 +175,71 @@ segments:
       thirty-three-word case table sits in the overlay rodata slot at
       0x801F6D94.'
   - - 11200
-    - asm
-    - func_801F97C0
+    - c
+    - runSecondaryStateSequenceForPrimaryState7ScenarioScena0600_801F97C0
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState7ScenarioScena0600_801F97C0.c'
+    - '@behavior: Word 7 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a sixty-three-entry
+      case table, so every value of that byte at or above 0x3F falls to the
+      epilogue, as do the unclaimed states 7 to 9, 12, 13, 16, 17, 22 to 24,
+      34, 38, 39, 41 to 44, 46 to 49 and 52 to 59: state 0 arms secondary state
+      1 unless the front-end phase byte D_80143BB0 reads 2; state 1 raises
+      D_80146866 to 1, arms secondary state 2, sets bit 0 of D_80146871, runs
+      func_8019FA28 with 0x5C, 0x0E0000, 0x3C0000 and 0x80 and stores 0xFF in
+      D_80143F1F; state 2 queues front-end action 1 through func_80150224,
+      latches D_80143BB0 to 2 and arms secondary state 3; state 3, unless
+      D_80143BB0 already reads 2, stores 0x1F in D_8014832E, runs func_801C601C
+      with mode 0 and arms secondary state 4; state 4, at progress 2, latches
+      D_80143BB0 to 7, clears D_8018E244 and D_8014832E and arms secondary
+      state 5; state 5, while D_80143BB0 reads zero, arms secondary state 6;
+      state 6 arms 0x0E while the shared byte D_80144DF2 reads zero, then 0x0A
+      while D_80144DF5 reads nonzero and 0x0E otherwise; state 0x0A raises
+      D_80146866 to 2, arms secondary state 0x0B, hands the flag word
+      D_8014686C and modes 0x1A and 0x1B to func_8015B580, runs func_8019FA28
+      with 0x5C, 0x190000, 0x3C0000 and 0x81 and stores 0x3C in D_80143F1F;
+      states 0x0B, 0x0F, 0x21, 0x2D and 0x33 share one body, which at progress 3
+      runs func_8015C058 and enters the clearing tail that zeroes D_80146865 to
+      D_80146867, D_80146875 and D_80146874; state 0x0E raises D_80146866 to 2,
+      arms secondary state 0x0F, hands D_8014686C and mode 0x17 to
+      func_8015B580 and runs func_8019FA28 with 0x5C, 0x190000, 0x3C0000 and
+      0x82; state 0x12, unless D_80143BB0 already reads 2, raises progress to 1,
+      hands D_8014686C and mode 0x1B to func_8015B580 and arms secondary state
+      0x13; state 0x13, at progress 2, runs func_8016666C with (1000, 0), raises
+      progress to 3 and arms secondary state 0x14; states 0x14 and 0x24 share
+      one body, which arms the next state, runs func_801C16B8, toggles bit 0 of
+      D_80146871, hands D_8014686C and modes 0x15 and 0x17 to func_8015B5A8 and
+      runs func_8019FA28 with 0x57, 0x310000, 0x2D0000 and 4, entered at
+      progress 4 by state 0x14 and at progress 3 by state 0x24; states 0x15 and
+      0x25 run func_8015C058, zero progress and enter that same clearing tail;
+      state 0x19, unless D_80143BB0 already reads 2, arms secondary state 0x1A;
+      state 0x1A on that same test clears D_8014832E, arms secondary state 0x1B,
+      sets bit 0 of D_80146871 and runs func_8019FA28 with 0x5C, 0x0E0000,
+      0x3C0000 and 0x80; state 0x1B queues front-end action 1 through
+      func_80150224, latches D_80143BB0 to 2 and arms secondary state 0x1C;
+      state 0x1C, unless D_80143BB0 already reads 2, stores 0x1F in D_8014832E,
+      runs func_801C601C with mode 0 and arms secondary state 0x1D; state 0x1D,
+      at progress 2, latches D_80143BB0 to 7, clears D_8018E244 and D_8014832E
+      and arms secondary state 0x1E; state 0x1E, while D_80143BB0 reads zero,
+      arms secondary state 0x1F; state 0x1F arms 0x20 while D_80144DF2 or
+      D_80144DF5 reads zero and 0x28 otherwise; state 0x20 raises D_80146866 to
+      2, arms secondary state 0x21, hands D_8014686C and mode 0x17 to
+      func_8015B580 and runs func_8019FA28 with 0x5C, 0x190000, 0x3C0000 and
+      0x82; state 0x23, unless D_80143BB0 already reads 2, raises progress to 1,
+      arms secondary state 0x24 and runs func_801BE1B0 with mode 3; state 0x28
+      arms 0x2D, raises D_80146866 to 2, hands D_8014686C and modes 0x1A and
+      0x1B to func_8015B580, runs func_8019FA28 with 0x5C, 0x190000, 0x3C0000
+      and 0x81 and stores 0x3C in D_80143F1F; state 0x32, unless D_80143BB0
+      already reads 2, arms secondary state 0x33, raises D_80146866 to 1, sets
+      bit 0 of D_80146871 and runs func_8019FA28 with 0x5C, 0x190000, 0x3C0000
+      and 0x88; state 0x3C, unless D_80143BB0 already reads 2, latches it to 7,
+      clears D_8018E244 and D_8014832E and arms secondary state 0x3D; state 0x3D,
+      while D_80143BB0 reads zero, arms secondary state 0x3E; state 0x3E arms
+      0x20 while D_80144DF2 reads zero, 0x28 while D_80144DF5 reads nonzero and
+      0x20 otherwise. The 0x18-byte frame keeps $ra and $s0, which holds the
+      progress byte address of state 0x13, and the sixty-three-word case table
+      sits in the overlay rodata slot at 0x801F6E1C.'
   - - 12788
     - asm
     - func_801F9DF4

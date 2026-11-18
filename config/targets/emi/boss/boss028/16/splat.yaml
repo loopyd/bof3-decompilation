@@ -72,8 +72,8 @@ segments:
     - c
     - zeroResultBossBoss02816_800C1B78
   - - 896
-    - asm
-    - func_800C1B80
+    - c
+    - initModeTuple510Or520ByFlagBitTwoSetScenarioProgress1EBossBoss02816_800C1B80
   - - 972
     - c
     - invokeZeroArgBossBoss02816_800C1BCC

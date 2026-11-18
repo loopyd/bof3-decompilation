@@ -110,8 +110,10 @@ segments:
     - c
     - drawWindowFrame
   - - 29784
-    - asm
-    - func_801D8058
+    - c
+    - drawActiveRecordSlotBar
+    - '@source: src/bof3/ui/drawActiveRecordSlotBar.c'
+    - '@behavior: draws the 0xAC by 0x1A active-record slot bar at (x, y) through func_801AE3F0 with shade 0x80 and the main-RAM clut-bank byte D_80144952, frames it through drawWindowFrame at the same origin, then draws the eight-wide sixteen-high slot tile piece 1 of the six-byte sprite rect table at 0x801DAE88 at (x + 7, y + 9) once per active record countActiveRecords_commu02_08 counts'
   - - 29996
     - c
     - drawPanelStripThenSubmitWorkImage

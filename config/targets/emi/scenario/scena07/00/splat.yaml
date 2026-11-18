@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801F76D0
   - - 2988
-    - asm
-    - func_801F77AC
+    - c
+    - tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC
+    - '@source: src/bof3/scenario/tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC.c'
+    - '@behavior: Per-frame tick of the effect object published in the overlay-local pointer cell at 0x801FDFBC: adds four to that object at offset 0x10 as an unsigned halfword and stores it back in the delay slot of the call, then calls the quad helper at 0x801F97E0 with the object pointer as its only argument, whose loop bound is the halfword this function advances (clamped to 0xFF), so the increment moves the drawn effect one step each call. The call clobbers the registers, so the scratchpad pointer slot at 0x1F800044 is read again afterwards; the function then decrements the work object word at offset 0x0C and, when the decremented countdown reads zero, increments the work object unsigned byte at offset 0x02, which is the handler index of the byte-2 state machine, so that increment advances the run. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the one call. The address is entry 2 of the four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / this function / 0x801F7810), which dispatchWorkByte2HandlerScenarioScena0700_801F75F4 indexes with the work object byte at offset 0x02, and that run word at 0x801FDD90 is the only image reference to the address.'
   - - 3088
     - asm
     - func_801F7810
