@@ -311,6 +311,7 @@ sources = [
     "src/bof3/battle/resolveDragonFormThenInstallRowAndRefresh.c",
     "src/bof3/battle/fillRecordSlotListFromFormAndGroups.c",
     "src/bof3/battle/copyWorkWord3CPlus4000000IntoWord20RequestWorkByte8Plus38SetWorkByteBTo10ThenAdvanceWorkByte1.c",
+    "src/bof3/battle/setSelectedKindQueueSlotFromGroupedTableAndPublishPointer.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

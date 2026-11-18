@@ -14,12 +14,12 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * 0x801F0DAC. This extern binds the interior word the scaled index is added to. */
 extern void (*D_801F0D98[])(void); /* @source 0x801F0D98 @kind data */
 
-/* This overlay's 0x5AC-byte primitive-drawing routine at 0x801F07A8, still
- * unlifted in its own asm subsegment, which owns the symbol. It reads the work
- * object's bytes 0x09, 0x0B, 0x2E and 0x30, emits up to 0x20 semi-transparent
- * quad pairs from g_PrimCursor through SetPolyG4, SetSemiTrans,
- * func_801782FC and func_8014E5A0, and takes no arguments. */
-void func_801F07A8(void);
+/* This overlay's 0x5AC-byte ribbon emitter at 0x801F07A8, which owns that
+ * symbol. It reads the work object's bytes 0x09, 0x0B and the screen halfword
+ * pair 0x2E/0x30, emits thirty-two passes of four semi-transparent Gouraud
+ * quads from g_PrimCursor through SetPolyG4, SetSemiTrans, func_801782FC and
+ * func_8014E5A0, and takes no arguments. */
+void drawTranslucentMirroredGouraudRibbonOfThirtyTwoSixtyFourthTurnStepsAroundWorkHalfwords2EAnd30InnerRadiusWorkByteBOuterTwiceItTintedByWorkByte9TimesFifteenAndEightBmagicMagic22203_801F07A8(void);
 
 /* @source 0x801F0504
  * @behavior Per-frame work-handler step, entry 3 of the sixteen-word code
@@ -35,8 +35,9 @@ void func_801F07A8(void);
  *           When that handler returns it re-reads the cell once for both gate
  *           bytes because the handler may have republished it, and when work
  *           byte 0 and work byte 2 are both non-zero it calls this overlay's
- *           drawing routine func_801F07A8 twice in a row, drawing the object's
- *           effect twice that frame. The 0x18-byte frame only keeps $ra at
+ *           drawing routine
+ *           drawTranslucentMirroredGouraudRibbonOfThirtyTwoSixtyFourthTurnStepsAroundWorkHalfwords2EAnd30InnerRadiusWorkByteBOuterTwiceItTintedByWorkByte9TimesFifteenAndEightBmagicMagic22203_801F07A8
+ *           twice in a row, drawing the object's ribbon twice that frame. The 0x18-byte frame only keeps $ra at
  *           0x10, an indirect call and each of the three remaining calls leaves
  *           its delay slot a nop, and it takes no arguments, returns nothing
  *           and reads or writes no other state. The 128-byte span is
@@ -58,7 +59,7 @@ void dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504(vo
     D_801F0D98[step_record[2]]();
     gate_record = g_battle_work;
     if (gate_record[0] != 0 && gate_record[2] != 0) {
-        func_801F07A8();
-        func_801F07A8();
+        drawTranslucentMirroredGouraudRibbonOfThirtyTwoSixtyFourthTurnStepsAroundWorkHalfwords2EAnd30InnerRadiusWorkByteBOuterTwiceItTintedByWorkByte9TimesFifteenAndEightBmagicMagic22203_801F07A8();
+        drawTranslucentMirroredGouraudRibbonOfThirtyTwoSixtyFourthTurnStepsAroundWorkHalfwords2EAnd30InnerRadiusWorkByteBOuterTwiceItTintedByWorkByte9TimesFifteenAndEightBmagicMagic22203_801F07A8();
     }
 }

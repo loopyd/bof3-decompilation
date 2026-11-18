@@ -97,8 +97,10 @@ segments:
     - dispatchStateByte1Table5facWorld02Area09813_801F3E20
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 4708
-    - asm
-    - func_801F3E64
+    - c
+    - resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64
+    - '@source: src/bof3/world/resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64.c'
+    - '@behavior: Overlay progress step handler, entry 0 of the four-word handler row based at 0x801F5FAC: calls the state-entry reset 0x801F4D44, which clears the 0x10 records of the 0x1C-byte-stride work table at 0x800E4800 and zeroes the one-shot latch bytes at 0x801F6510 and 0x801F6514, then reads the work record through the scratchpad pointer cell 0x1F800044, keeps that record byte at +0x01, stores 0x40 into the phase countdown halfword at +0x2E, stores zero into the phase frame counter halfword at +0x30, writes the kept byte plus one back to +0x01, which hands the record to entry 1 of the row, and queues cue 0x200 through 0x8015DF18.'
   - - 4784
     - c
     - incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0

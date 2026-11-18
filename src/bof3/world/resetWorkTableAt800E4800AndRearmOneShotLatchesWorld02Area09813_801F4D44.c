@@ -11,7 +11,9 @@
  *           it finds it zero, and func_801F4FEC does the same for 0x801F6514,
  *           so clearing them here re-arms those one-shot actions. It takes no
  *           arguments, returns nothing and reads no state. Its only caller
- *           inside this payload is func_801F3E64 at 0x801F3E64, which after the
+ *           inside this payload is
+ *           resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64
+ *           at 0x801F3E64, which after the
  *           call bumps the scratch work record's byte at offset 0x01, stores
  *           0x40 to that record's halfword at offset 0x2E, clears its halfword
  *           at offset 0x30 and queues cue 0x200. The loop half is the same

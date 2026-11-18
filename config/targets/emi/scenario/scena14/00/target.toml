@@ -45,6 +45,7 @@ support_sources = [
     "src/bof3/scenario/startCode2RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB46C.c",
     "src/bof3/scenario/startCode5RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB4C4.c",
     "src/bof3/scenario/startCode6RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB51C.c",
+    "src/bof3/scenario/dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320.c",
 ]
 psyq_source = "src/bof3/support/scena14_00_psyq.c"
 
@@ -61,3 +62,16 @@ function = 0x801F7BA0
 section = ".rodata"
 address = 0x801F6C04
 size = 0x68
+
+# The reviewed switch of the primary-state-5 handler dispatches the same shared
+# secondary sub-state byte through a 34-entry table that the original placed in
+# this payload's leading table data at 0x801F6DA4 (0x88 bytes, after the state
+# controller's own tables at 0x801F6D04 through 0x801F6D9C). That address is
+# 4-mod-8 as well, so the same placement route lowers the affected section's
+# alignment to the reviewed address's own alignment and the emitted lui/lw
+# relocation matches.
+[[matching.section_placements]]
+function = 0x801F9320
+section = ".rodata"
+address = 0x801F6DA4
+size = 0x88

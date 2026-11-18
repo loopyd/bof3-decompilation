@@ -32,7 +32,7 @@ incrementWorkByte2WhenGlobalWorkByte2Is10ThenInvokeHelperBmagicMagic06403_801F03
 func_801F0364 = 0x801F0364;
 func_801F03D8 = 0x801F03D8;
 dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448 = 0x801F0448;
-func_801F04A0 = 0x801F04A0;
+seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0 = 0x801F04A0;
 func_801F05A4 = 0x801F05A4;
 func_801F0B8C = 0x801F0B8C;
 func_801F0C38 = 0x801F0C38;

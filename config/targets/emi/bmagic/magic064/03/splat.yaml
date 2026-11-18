@@ -135,8 +135,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448.c'
     - '@behavior: Reads the current bmagic work record pointer from the cell at 0x801F28B4, seeds a two-entry local handler table with 0x801F04A0 and 0x801F05A4, and invokes the entry selected by the unsigned record byte at offset 1. Reads no other state and writes none; the 0x20-byte frame only keeps $ra across the indirect call.'
   - - 6304
-    - asm
-    - func_801F04A0
+    - c
+    - seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0
+    - '@source: src/bof3/bmagic/seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0.c'
+    - '@behavior: Entry 0 of the two-entry handler table that 0x801F0448 selects with the unsigned record byte at offset 1. Seeds the current bmagic work record: halfword 0x2 from rand() & 0xFFF, words 0xC and 0x10 from the shared work-object byte 0xB lifted into 16.16 form, words 0x18 and 0x14 from the constant velocities 0x19800 and 0x32000, and words 0x4 and 0x8 from a halfword of the acting battler 0x140-byte party record plus the signed offset pair selected from the 0x801F138C table by that record byte at offset 0. Increments the record handler byte at offset 1 so the next dispatch reaches entry 1. The 0x18-byte frame only keeps $ra across the rand call.'
   - - 6564
     - asm
     - func_801F05A4

@@ -1506,8 +1506,10 @@ segments:
     - asm
     - func_800AE1F8
   - - 96864
-    - asm
-    - func_800AE260
+    - c
+    - setSelectedKindQueueSlotFromGroupedTableAndPublishPointer
+    - '@source: src/bof3/battle/setSelectedKindQueueSlotFromGroupedTableAndPublishPointer.c'
+    - '@behavior: Stores the packed selection id in the selection-kind halfword D_801463C0, resolves the grouped byte at D_800B6AB0[selector >> 8][selector & 0xFF], claims a queued slot of mode 2 carrying that byte through func_801E590C, and publishes the second argument into the claimed slot''s +0x74 pointer word.'
   - - 96980
     - asm
     - func_800AE2D4

@@ -13,7 +13,7 @@ clearRecordFlagBitsSeedFrontSelectorContextThenRequestPrimaryState2AndClearFront
 func_801F88DC = 0x801F88DC;
 func_801F8CE4 = 0x801F8CE4;
 stepSharedViewOriginCellReferenceAndFirstWorkRecordThenRefreshDistancesScenarioScena1400_801F924C = 0x801F924C;
-func_801F9320 = 0x801F9320;
+dispatchSubStateByteTable6DA4ScenarioScena1400_801F9320 = 0x801F9320;
 func_801F9834 = 0x801F9834;
 startActionForFirstPresentPartyCandidateScenarioScena1400_801FA904 = 0x801FA904;
 func_801FA9C8 = 0x801FA9C8;

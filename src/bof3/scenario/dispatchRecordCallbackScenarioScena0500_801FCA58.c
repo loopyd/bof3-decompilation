@@ -7,7 +7,9 @@ extern u32 D_8014686C;
 /* Overlay-local per-record callback table at 0x801FD644, indexed by the
  * record's unsigned byte field at offset 0x7A: its nine code-pointer words run
  * from the inert noopHandlerScenarioScena0500_801FCA98 (0x801FCA98, word 0)
- * through func_801FCD0C (0x801FCD0C, word 8, the last pointer word), and the
+ * through
+ * clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C
+ * (0x801FCD0C, word 8, the last pointer word), and the
  * first non-pointer word, 0x07108434, sits immediately after them at
  * 0x801FD668. Every word is an overlay handler address reached only through
  * this dispatcher. These nine words are the last nine of the thirty-two-word

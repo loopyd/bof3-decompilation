@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/ui/queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0.c'
     - '@behavior: queues cue 0x106 through func_8015DF18, starts action 0x72 through func_80150224, latches the main-RAM frontend mode byte 0x80143BB0 to 2, clears the byte-1 step index at 0x801F294D and advances the byte-0 step index at 0x801F294C by one'
   - - 8800
-    - asm
-    - func_801D2E60
+    - c
+    - drawGreyHorizontalLinePrim
+    - '@source: src/bof3/ui/drawGreyHorizontalLinePrim.c'
+    - '@behavior: seeds the 0x10-byte flat line packet at g_PrimCursor through func_8017AA80, writes 0x80 into its three colour bytes, places its endpoints at (x, y) and (x + 8, y) and appends it as a 0x10-byte primitive at ordering-table slot 1 through func_8014E5A0'
   - - 8924
     - asm
     - func_801D2EDC

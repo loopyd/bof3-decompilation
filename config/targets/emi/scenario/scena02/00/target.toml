@@ -17,6 +17,7 @@ sources = [
     "src/bof3/scenario/runFrontEndStartupSetProgress23AndRequestPrimaryState1AOnModeCellMatchScenarioScena0200_801FC7E4.c",
     "src/bof3/scenario/setScenarioFlagBit23QueueCue106AndReturnHandler0OnSubstate0ScenarioScena0200_801FB300.c",
     "src/bof3/scenario/runFrontEndCompletionSubstatesSeedingSelectorContextsThenReleaseScenarioScena0200_801F936C.c",
+    "src/bof3/scenario/runSubstateSequenceSeedSelectorContextsArmModeFlagsAndReleaseScenarioScena0200_801F8070.c",
     "src/bof3/scenario/runSubstateSequenceQueueCueArmEffectBankSeedProgressAndReleaseScenarioScena0200_801FB0F0.c",
 ]
 support_sources = [
@@ -76,6 +77,12 @@ support_sources = [
     "src/bof3/scenario/queueFrontEndMode6FAndRunCompletionSubstatesPublishingFrontEndRecordThenReleaseScenarioScena0200_801FBC6C.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"
+
+[[matching.section_placements]]
+function = 0x801F8070
+section = ".rodata"
+address = 0x801F6CCC
+size = 0x24
 
 [[matching.section_placements]]
 function = 0x801FB6C4

@@ -45,7 +45,7 @@ clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FC
 clearSharedStateBytesThenRequestPrimaryState10ScenarioScena0500_801FCC28 = 0x801FCC28;
 clearSharedStateBytesThenRequestPrimaryState11ScenarioScena0500_801FCC74 = 0x801FCC74;
 clearSharedStateBytesThenRequestPrimaryState12ScenarioScena0500_801FCCC0 = 0x801FCCC0;
-func_801FCD0C = 0x801FCD0C;
+clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C = 0x801FCD0C;
 zeroResultScenarioScena0500_801FCD60 = 0x801FCD60;
 func_801FCD68 = 0x801FCD68;
 func_801FD110 = 0x801FD110;

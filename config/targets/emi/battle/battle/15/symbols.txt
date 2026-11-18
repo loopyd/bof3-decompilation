@@ -272,6 +272,7 @@ func_800ADFBC = 0x800ADFBC;
 dispatchLocalHandlerPair = 0x800AE014;
 setWorkByte9Advance = 0x800AE06C;
 func_800AE09C = 0x800AE09C;
+setSelectedKindQueueSlotFromGroupedTableAndPublishPointer = 0x800AE260;
 dispatchWorkTable6bf4 = 0x800AE34C;
 clearByte9AdvanceByte1 = 0x800AE390;
 func_800AE438 = 0x800AE438;

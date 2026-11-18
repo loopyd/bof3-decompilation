@@ -51,10 +51,12 @@ u8 func_801F4E7C(void);
  *           this address, so the absence of arguments is structural rather than
  *           declared.
  *
- *           Naming evidence: entry 0 of the same row, func_801F3E64, arms the
- *           two halfwords this body consumes - it stores 0x40 at +0x2E, stores
- *           zero at +0x30 and then advances the state byte to 1 - so +0x2E is
- *           the phase countdown in frames and +0x30 the phase frame counter.
+ *           Naming evidence: entry 0 of the same row, the
+ *           resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64
+ *           lift, arms the two halfwords this body consumes - it stores 0x40 at
+ *           +0x2E, stores zero at +0x30 and then advances the state byte - so
+ *           +0x2E is the phase countdown in frames and +0x30 the phase frame
+ *           counter.
  *           Entries 2 and 3, func_801F3F50 and func_801F400C, keep the same two
  *           halfwords as phase timer and fade counter, the latter with the same
  *           decrement, store, shift-and-branch countdown tail this span carries

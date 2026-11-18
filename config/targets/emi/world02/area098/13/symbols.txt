@@ -20,7 +20,7 @@ claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdv
 func_801F3CDC = 0x801F3CDC;
 func_801F3D98 = 0x801F3D98;
 dispatchStateByte1Table5facWorld02Area09813_801F3E20 = 0x801F3E20;
-func_801F3E64 = 0x801F3E64;
+resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64 = 0x801F3E64;
 incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0 = 0x801F3EB0;
 func_801F3F50 = 0x801F3F50;
 func_801F400C = 0x801F400C;
