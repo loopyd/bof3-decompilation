@@ -43,14 +43,14 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 81.94
- * @residual 236 of 288 instructions match at 1152 of 1152 bytes. The first
- * difference is at +0x8C, where the scaled approach band uses v1 instead of
- * the original a3.
+ * @match 89.24
+ * @residual Approach comparisons and clamp allocation still differ. The
+ * original 1152-byte interval remains retained until exact reconstruction.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      approachWork;
   u8*      work;
+  u8*      sumWork;
   LINE_F2* prim;
   s32      clampScale;
   s32      rowScale;
@@ -62,8 +62,9 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   s32      defaultPosition;
   s32      lowerBound;
   s32      upperBound;
-  s32      x;
-  s32      v;
+  s32      rowUpper;
+  u16      upperSnapshot;
+  u16      lowerSnapshot;
   s8       level;
   s16      clamped;
 
@@ -74,17 +75,24 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   if (*(s32*)(approachWork + 0x10) == 0) {
     s32 approachTarget;
     s32 approachBand;
+    s32 approachValue;
+    u32 approachIndex;
 
     do {
-      approachTarget = (s8)D_80146892[D_801E3208 * 0x98];
+      approachIndex = D_801E3208 * 19;
       cur = (s32)*(s16*)(approachWork + 0x30);
-      approachBand = ((u8*)D_801E320C)[3] * 4;
     } while (0);
-    if (cur + approachBand + 0xC < approachTarget || approachTarget < cur - approachBand - 0xC) {
+    approachValue = ((u8*)D_801E320C)[3];
+    approachTarget = (s8)D_80146892[approachIndex * 8];
+    approachBand = approachValue * 4;
+    approachValue = cur + approachBand;
+    approachValue += 0xC;
+    approachValue = approachValue < approachTarget;
+    if (approachValue || approachTarget < cur - approachBand - 0xC) {
       if (approachWork[9] >= 0xF) {
-        if ((s8)D_80146892[D_801E3208 * 0x98] < *(s16*)(approachWork + 0x30)) {
+        if (approachTarget < cur) {
           *(s32*)(approachWork + 0x10) = -1;
-        } else if (*(s16*)(approachWork + 0x30) < (s8)D_80146892[D_801E3208 * 0x98]) {
+        } else if (cur < approachTarget) {
           *(s32*)(approachWork + 0x10) = 1;
         }
       } else {
@@ -97,9 +105,10 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     approachWork[9] = 0;
   }
 
-  work = D_1F800044;
-  sum = (s32)*(u16*)(work + 0x30) + *(s32*)(work + 0x10);
-  *(u16*)(work + 0x30) = (u16)sum;
+  sumWork = D_1F800044;
+  sum = (s32)*(u16*)(sumWork + 0x30) + *(s32*)(sumWork + 0x10);
+  *(u16*)(sumWork + 0x30) = (u16)sum;
+  work = sumWork;
   sum = (s16)sum;
   clampScale = ((u8*)D_801E320C)[3];
   defaultPosition = *(u16*)(work + 0x30);
@@ -128,16 +137,19 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   work = D_1F800044;
   level = D_80146892[D_801E3208 * 0x98];
   rowPosition = *(u16*)(work + 0x30);
-  cur = 0x18;
-  cur = rowScale * 8 + cur;
-  v = rowPosition - rowScale * 4 + 0xAD;
-  x = v + rowScale * 8 + 0x18;
+  rowUpper = rowScale * 8;
+  cur = rowUpper + 0x18;
+  rowScale *= 4;
+  rowScale = rowPosition - rowScale + 0xAD;
+  rowUpper = rowScale + rowUpper + 0x18;
+  upperSnapshot = (u16)rowUpper;
   clamped = (s32)level;
   clamped = clamped + 0xB9;
-  if (((s16)x < (s16)clamped) || ((s16)clamped < (s16)v)) {
-    func_801D3244((s16)v, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 1);
+  lowerSnapshot = (u16)rowScale;
+  if (((s16)rowUpper < (s16)clamped) || ((s16)clamped < (s16)rowScale)) {
+    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 1);
   } else {
-    func_801D3244((s16)v, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 0);
+    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 0);
   }
 
   if (D_80146889[D_801E3208 * 0x98] == 4) {
@@ -159,7 +171,7 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     drawMirroredPanelCellQuadWorld00Area03004_801D2C34(clamped, 0xCB, (s8)target, 2);
 
     if ((D_80145E92 == 4) && (D_8014688C[D_801E3208 * 0x98] != 3) &&
-        (((s16)x < clamped) || (clamped < (s16)v)) &&
+        (((s16)upperSnapshot < clamped) || (clamped < (s16)lowerSnapshot)) &&
         ((D_80143E6C & 0xF) == 0)) {
       func_8015DF18(0x207);
     }
