@@ -1702,6 +1702,11 @@ Local allocation may then replace the raw comparison input with the result.
 Trace both passes, keep the assignment in its real arm and derive guard
 polarity from the original control flow.
 
+If CSE reverses a definition and its following copy, inspect its adjacent-copy
+optimization. An existing independent initialization between them can preserve
+which real quantity receives the result. Preserve effects and inspect both CSE
+passes, scheduling and allocation; never add dummy work to retain a copy.
+
 For a signed-byte sample used in comparisons and a byte result, trace the
 named byte quantity and its anonymous promotion through CSE and combine.
 The declared copy may disappear while combine creates the required word-to-byte
@@ -1818,10 +1823,12 @@ each reload and access, and trace conflicts in both phases before measuring the
 complete body.
 
 When initial RTL already has the wrong addition order, inspect frontend folding
-before CSE. Parentheses and equal-mode conversions may be reassociated. A relative
-coordinate at its actual consumer width can preserve the intended phase without
-extra shifts. Prove its range, retain the final conversion and inspect the
-complete native diff; the intermediate type needs a representation reason.
+before CSE. Parentheses and equal-mode conversions may be reassociated. Signed
+and unsigned locals of one machine mode can take different narrowing and
+refolding paths. A coordinate at its consumer width can preserve the intended
+phase without extra shifts. Prove its range or low-bit equivalence at every
+consumer, retain the final conversion and inspect the complete native diff.
+The intermediate type needs a representation reason.
 
 A small body change can exchange saved loop registers by changing live length,
 even when their weighted references stay fixed. Trace both values through
