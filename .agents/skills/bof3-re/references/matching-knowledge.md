@@ -1754,6 +1754,11 @@ before the following arithmetic then orders that arithmetic after the whole
 group. Confirm the reload in CSE and the boundary dependencies in scheduling.
 Moving the scope alone does not establish either effect.
 
+Loop-note dependencies can carry a load's latency even when the following
+operation does not consume its value. Read the scheduler's ready and queue trace.
+A one-cycle shift can sink past loads queued by that boundary despite equal
+scheduler priorities. Check the scope's first active instruction before moving it.
+
 Trace the instruction receiving a scope's `LOOP_END` dependency. A real constant
 initialization followed by a store can force an independent address definition
 after that store. When the original orders constant, address, store, put the
@@ -1797,6 +1802,12 @@ intermediates to the accumulator and check whether their definitions survive CSE
 Operation scopes can then order independent results, but moving a scope also
 changes loop-depth reference weights. Recheck both the scheduler dependencies and
 local/global allocation before the complete native gate.
+
+Casting a word through a signed halfword can create a shift temporary that takes
+the pointer's register. An explicit unsigned left shift followed by a signed right
+shift can retain that intermediate in the real word quantity. Prove the target's
+conversion semantics and group only actual inputs. Check that CSE and combine
+preserve the phases. Require unchanged reloads and the complete native gate.
 
 If an operation scope fixes allocation but disturbs an independent input load,
 inspect the new scheduler edges before changing more source. A scope around a

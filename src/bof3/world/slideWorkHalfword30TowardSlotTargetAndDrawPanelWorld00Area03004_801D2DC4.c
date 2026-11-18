@@ -43,14 +43,15 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 98.96
- * @residual Sum-store base and clamp read order still differ at the original
+ * @match 99.65
+ * @residual The sum-store base register still differs at the original
  * 1152-byte size. The original interval remains retained.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      approachWork;
   u8*      work;
   u8*      sumWork;
+  u8*      clampMode;
   LINE_F2* prim;
   s32      clampScale;
   s32      rowScale;
@@ -117,8 +118,12 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   sum = (s32)*(u16*)(sumWork + 0x30) + lowerBound;
   *(u16*)(sumWork + 0x30) = (u16)sum;
   work = sumWork;
-  sum = (s16)sum;
-  clampScale = ((u8*)D_801E320C)[3];
+  do {
+    sum = (s32)((u32)sum << 16);
+    clampMode = (u8*)D_801E320C;
+    sum >>= 16;
+  } while (0);
+  clampScale = clampMode[3];
   defaultPosition = *(u16*)(work + 0x30);
   do {
     lowerBound = clampScale * 4 - 0x24;
