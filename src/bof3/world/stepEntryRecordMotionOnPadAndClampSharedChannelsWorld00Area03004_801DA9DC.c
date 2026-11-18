@@ -28,31 +28,19 @@
  * 0x150000..0x3C0000, stops record word 0x0C at the 0x80000/0x11FFFF x walls and
  * runs func_8014D978 while record word 0x10 stays positive.
  * @source 0x801DA9DC
- * @status partial
- * @match 89.64
- * @residual same-size (1120/1120, 251/280 instructions). Five clusters remain,
- * all of address-form or scheduling class rather than of statement content. The
- * first is +0x00E4: the 0x3E7FFF arm keeps the scratch-cursor cell address in a
- * register and loads the cell after the two mode-byte stores, where the original
- * folds it into `lw v0,68(v0)` ahead of them. The others are the selected-entry
- * byte 0x11 read (measured `lbu` plus sign extension here against the original
- * `lb`), the D_8014930C read-modify-write in the random arm and again in the
- * clamp (the original keeps the cell address in $a0/$a1 and stores through it,
- * measured `lui at` absolute forms here), and the selected-entry load placement
- * inside the Square and no-direction arms. About 23 measured variants over six
- * shape sweeps spanned the cursor form (macro, volatile cell through one
- * variable, inline volatile, mixed), the pick width, the D_8014930C view (plain,
- * address expression, per-block pointer, function pointer, volatile cast), the
- * final-clamp shape (nested, three-way, value variable, pointer view) and the
- * pad-arm ordering; every one scored below this candidate. Next untried evidence
- * is an authorized compiler-profile probe or the signedness of the shared
- * D_8014930C declaration, which reaches other claimed spans.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(void) {
   u8* row;
-  s8 pick;
+  s32 pick;
   s16 dist;
   s32 value;
+  s32 selected;
+  u32* motionChannel;
+  u32* clampChannel;
+  u8* entry;
 
   if (SPAD_PTR_SLOT(u8, 0x44u)[6] != 0) {
     if (D_80144199_BYTE == 3) {
@@ -75,8 +63,8 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
     func_8015DF18(0x203);
     D_801440B1 = 0;
     D_80143FC9 = 0;
-    SPAD_PTR_SLOT(u8, 0x44u)[2] = 1;
-    SPAD_PTR_SLOT(u8, 0x44u)[3] = 0;
+    D_1F800044[2] = 1;
+    D_1F800044[3] = 0;
     return;
   }
   dist = func_8015477C(D_80143FFC, D_80144000);
@@ -87,12 +75,13 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
         D_80143FD4 = 0;
         D_80143FD8 = 0;
         D_80143FDC = 0;
-        if ((s32)D_8014930C < D_80144000) {
-          D_8014930C = D_80144000;
+        motionChannel = &D_8014930C;
+        if ((s32)*motionChannel < D_80144000) {
+          *motionChannel = D_80144000;
         }
         D_8014932E = 0x10;
-        SPAD_PTR_SLOT(u8, 0x44u)[2] = 5;
-        SPAD_PTR_SLOT(u8, 0x44u)[3] = 0;
+        D_1F800044[2] = 5;
+        D_1F800044[3] = 0;
         return;
       }
     }
@@ -103,9 +92,10 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
   D_801E31FC = D_801E31F8;
   if (row[0x0B] == 0) {
     if ((D_80145AA4 & 0x8000) != 0) {
+      entry = D_801E3210;
       *(s32*)(row + 0x0C) = -0x1000;
       *(s32*)(row + 0x10) = 0x1000;
-      *(s32*)(row + 0x14) = *(s32*)(D_801E3210 + 8);
+      *(s32*)(row + 0x14) = *(s32*)(entry + 8);
       D_801E31F8 = 1;
       func_8014D8D4(6);
     } else if ((D_80145AA4 & 0x2000) != 0) {
@@ -128,9 +118,10 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
         func_8014D8D4(3);
       }
     } else if (SPAD_REF(u8, 0) != 0) {
+      entry = D_801E3210;
       *(s32*)(row + 0x0C) = 0;
       *(s32*)(row + 0x10) = 0x1000;
-      *(s32*)(row + 0x14) = *(s32*)(D_801E3210 + 8);
+      *(s32*)(row + 0x14) = *(s32*)(entry + 8);
       D_801E31F8 = 2;
       func_8014D8D4(4);
     } else {
@@ -148,15 +139,18 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
   } else {
     D_8014932E = 0x10;
   }
-  value = D_8014930C;
+  clampChannel = &D_8014930C;
+  value = *clampChannel;
   if (value > 0x14FFFF) {
-    if (value > 0x3C0000) {
-      value = 0x3C0000;
+    if (value <= 0x3C0000) {
+      selected = value;
+    } else {
+      selected = 0x3C0000;
     }
   } else {
-    value = 0x150000;
+    selected = 0x150000;
   }
-  D_8014930C = value;
+  *clampChannel = selected;
   if ((*(s32*)(row + 0x34) <= 0x80000 && *(s32*)(row + 0x0C) < 0) ||
       (*(s32*)(row + 0x34) > 0x11FFFF && *(s32*)(row + 0x0C) > 0)) {
     *(s32*)(row + 0x0C) = 0;

@@ -1661,6 +1661,18 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+When the original keeps a clamp's raw sample and selected result in separate
+registers, give those real quantities separate locals and keep the explicit
+in-range assignment. Initializing the result to a bound before the test can merge
+that bound with the comparison constant. Check both quantities in CSE and the
+complete register web before retaining the change.
+
+Trace a pointer-cell sample separately from the later pointee read. If the
+original samples the cell before destination stores and reads the field after
+them, snapshot only the pointer before those stores. Prove the stores cannot
+change the pointer cell itself. Keep the field read after them, since the pointee
+may still alias the destination. Check both memory events and the native body.
+
 When a copied halfword store sinks below a fixed scalar read, inspect the
 owning scheduler's memory-dependence rules. GCC 2.7.2 can treat a varying
 `MEM_IN_STRUCT` halfword access as nonaliasing with a fixed scalar access while
