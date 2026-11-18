@@ -20,6 +20,7 @@ sources = [
     "src/bof3/scenario/setScenarioFlagBit14ScenarioScena0900_801FC810.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0900_801FE30C.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0900_801FE058.c",
+    "src/bof3/scenario/waitFlags10121D11ForParty5ThenRequestPrimaryState6Substate2Or3Or32ThenClearProgressOr7Or5ScenarioScena0900_801FD5A8.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C.c",

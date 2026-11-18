@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC84
   - - 668
-    - asm
-    - func_801EEE9C
+    - c
+    - clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic16103_801EEE9C
+    - '@source: src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic16103_801EEE9C.c'
+    - '@behavior: Entry 1 (index 1) of the three-entry code pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) that this overlay''s entry dispatcher copies and selects with the work byte at offset 1. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x18-byte frame and tests work byte 0xB: while that byte is non-zero nothing happens; when it is zero the handler clears bit 0x40 of byte 0 of the record reached through pointer cell 0x801EB4E0, calls the shared main-executable helper at 0x800AEF98 with the arguments 0x18 and 0, then reloads the work-object pointer and increments work byte 1. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 776
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08

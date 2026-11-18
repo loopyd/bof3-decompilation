@@ -11,7 +11,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * interior word without checking the byte-2 index, so the extern is declared at
  * the indexed word; the run's own first word keeps the reviewed `textbin` row for
  * 0x801F0744, and the generated undefined_syms_auto.txt row names this word. The
- * step dispatcher func_801EFA50 reads the same run seven words in, at 0x801F0760. */
+ * byte-2 step dispatcher at 0x801EFA50 reads the same run seven words in, at
+ * 0x801F0760. */
 extern void (*D_801F0754[])(void); /* @source 0x801F0754 @kind data */
 
 /* Pushes the GTE matrix stack, projects the work-record position through
@@ -54,9 +55,10 @@ extern void func_801EF4C0(void); /* @source 0x801EF4C0 @kind function */
  *           on a re-read cell, a transform installer, a draw pass and
  *           PopMatrix). The 0x88-byte span is not byte-identical to any span in
  *           the 122 payloads under out/binaries, so the clone lever was declined;
- *           this target's own span at 0x801EFA50 holds the same 34 instructions
- *           and differs only in its table word low half and in the draw it calls
- *           before PopMatrix, so that asm body is shape evidence for this one.
+ *           this target's own 0x88-byte span at 0x801EFA50 held the same 34
+ *           instructions and differed only in its table word low half and in the
+ *           draw it called before PopMatrix, so that row's asm body was shape
+ *           evidence for this one.
  * @status exact
  * @match 100.00
  * @residual none

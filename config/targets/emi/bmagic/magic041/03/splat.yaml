@@ -51,8 +51,10 @@ segments:
     - incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4
     - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBIs1BmagicMagic04103_801EEFC4.c'
   - - 1016
-    - asm
-    - func_801EEFF8
+    - c
+    - decrementWorkByte9RecordCountersThenSubmitRecordForwardBattleByteAndAdvanceWorkByte1WhenWorkByteAReachesZeroBmagicMagic04103_801EEFF8
+    - '@source: src/bof3/bmagic/decrementWorkByte9RecordCountersThenSubmitRecordForwardBattleByteAndAdvanceWorkByte1WhenWorkByteAReachesZeroBmagicMagic04103_801EEFF8.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, takes the work object byte at offset 0x9 as the index into the 12-byte counter records at 0x80145BD6 and subtracts 2 from the selected record byte 0x0, then re-reads the cell and the index byte for each of the remaining two counters and subtracts 1 from the selected record byte 0x1 and byte 0x2. Finally it re-reads the cell, decrements work object byte 0xA, zero-extends the stored byte and returns through the shared epilogue while the value stays non-zero; only on zero does it submit the battle record published at 0x8014638C through func_80196718, pass the shared battle byte at 0x80146384 to func_800AF814 and advance the work object state byte at offset 0x1. The 0x18-byte frame keeps only $ra across the two calls. Reached through word 4 of the overlay code pointer run at 0x801EEC04.'
   - - 1328
     - c
     - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130

@@ -30,8 +30,8 @@ segments:
     - c
     - dispatchStateByte1Table2154BossBoss02816_800C1804
   - - 72
-    - asm
-    - func_800C1848
+    - c
+    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848
   - - 160
     - c
     - dispatchWorkByte2Table2184BossBoss02816_800C18A0

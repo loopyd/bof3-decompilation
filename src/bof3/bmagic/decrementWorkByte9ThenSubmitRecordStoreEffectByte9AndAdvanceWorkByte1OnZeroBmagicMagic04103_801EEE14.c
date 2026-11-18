@@ -7,8 +7,7 @@
  * WorkByte1OnZeroBmagicMagic01000_801EEE20 calls the same address with that
  * same one-argument shape. That header belongs to another target, so the
  * prototype stays source-local and the link binds the address through the
- * generated undefined_funcs_auto.txt row, which the still-asm span
- * func_801EEFF8 of this overlay keeps alive. */
+ * generated undefined_funcs_auto.txt row for this target. */
 void func_80196718(void* arg0);
 
 /* Shared effect helper at 0x8019651C: submits a positional effect for the
@@ -26,8 +25,7 @@ extern s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
  * cell address into $s0 (lui/addiu) and re-loads the word with a zero
  * displacement for each call because a call may store through it. Its role is
  * not proven, so the name stays address-anchored and the link binds it through
- * the generated undefined_syms_auto.txt row, which the still-asm span
- * func_801EEFF8 of this overlay keeps alive. */
+ * the generated undefined_syms_auto.txt row for this target. */
 extern u8 *D_8014638C; /* @source 0x8014638C @kind unknown */
 
 /* Scratchpad work-object pointer cell at 0x1F800044, bound by this target's

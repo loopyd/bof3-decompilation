@@ -79,8 +79,10 @@ segments:
     - c
     - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
   - - 4352
-    - asm
-    - func_801EFD00
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic13703_801EFD00.c'
+    - '@behavior: Adds one to the scratchpad work object byte 9 reached through the pointer cell at 0x1F800044 (lbu, addiu 1, sb) and tests the stored byte truncated to eight bits against 0x10. Only when that byte is 0x10 does it read the cell a second time and increment the object byte 2 with a byte-width add, advancing the dispatcher at 0x801EFC58 to the next work-byte-2 handler step. It is entry index 1 of the four-word work-byte-2 step table at 0x801F0114, takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 4432
     - c
     - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13703_801EFD50
