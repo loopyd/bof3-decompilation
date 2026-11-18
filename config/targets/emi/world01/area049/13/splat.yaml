@@ -32,8 +32,10 @@ segments:
     - '@source: src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c'
     - '@behavior: Overlay step dispatch: reads byte +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler at that index of the overlay''s unchecked handler table based at 0x8011818C (thirteen in-image pointers, func_80117048 through func_80117DF0). Takes no arguments and returns nothing.'
   - - 72
-    - asm
-    - func_80117048
+    - c
+    - bootHandlerSeedWorkCoordinateTripleResetRecordsThenAdvanceStateWorld01Area04913_80117048
+    - '@source: src/bof3/world/bootHandlerSeedWorkCoordinateTripleResetRecordsThenAdvanceStateWorld01Area04913_80117048.c'
+    - '@behavior: Boot handler of this overlay: word 0 of the thirteen in-image handler pointers the textbin row D_8011818C places, selected by dispatchWorkByte1Table818cWorld01Area04913_80117004 while byte 1 of the work object published at the scratchpad pointer cell 0x1F800044 still reads 0. It stores the spawn coordinate triple into that object - its word at 0x38 takes 0x548000, its word at 0x34 takes 0x0B8000 and its word at 0x3C takes 0x01000000, the three words func_801172D0 and claimWorkRecordSeedWorkPositionWorld01Area04913_80117864 copy into the position triple at 0x04/0x08/0x0C of every 0x28-byte work record, and that the step handlers add their velocity words to. It then calls func_801172D0, which republishes the 0x800E4800 work table in D_801181DC and rewrites all sixteen of its records from this object, seeding each rand() velocity pair at 0x14/0x18, its claim byte at 0 to 1 and its step byte at 1 to 0. Finally it re-reads the pointer cell and increments the object byte at 1 by one, so the state 1 handler clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4 runs from the next frame on. The three word stores are scheduled as 0x38, 0x34, 0x3C with the last in the call delay slot; the 0x18-byte frame only keeps $ra at 0x10 across the single call. Takes no arguments and returns nothing.'
   - - 164
     - c
     - clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4

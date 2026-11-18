@@ -63,8 +63,10 @@ segments:
     - '@source: src/bof3/ui/drawGreyHorizontalLinePrim.c'
     - '@behavior: seeds the 0x10-byte flat line packet at g_PrimCursor through func_8017AA80, writes 0x80 into its three colour bytes, places its endpoints at (x, y) and (x + 8, y) and appends it as a 0x10-byte primitive at ordering-table slot 1 through func_8014E5A0'
   - - 8924
-    - asm
-    - func_801D2EDC
+    - c
+    - drawOpaqueSpriteFromSheetEntryTable
+    - '@source: src/bof3/ui/drawOpaqueSpriteFromSheetEntryTable.c'
+    - '@behavior: draws one sprite of the overlay sheet through SetSprt at the shared primitive cursor and appends it as 0x14 bytes at ordering-table slot 1 through func_8014E5A0, taking the cell u and v, the width and the height from the four-byte entry the sprite index selects in the sheet table at 0x801DAC60, leaving the three colour bytes at the opaque gray 0x80 and the CLUT word at the panel palette 0x7887'
   - - 9124
     - asm
     - func_801D2FA4

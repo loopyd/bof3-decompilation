@@ -17,7 +17,9 @@
  * 0x801F8394 at 0x801F6EB4 inside
  * claimFreeWorkRecordEveryEighthCountdownStepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F6E90
  * followed by func_801F83D0, and
- * jal 0x801F8394 at 0x801F7AE8 inside func_801F7AB0 followed by func_801F8478.
+ * jal 0x801F8394 at 0x801F7AE8 inside
+ * claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0
+ * followed by func_801F8478.
  * Its 0x3C bytes are instruction-for-instruction identical (branch
  * displacements included) to findFreeWorkRecordScenarioScena0800_801F8B14 at
  * 0x801F8B14 in emi/scenario/scena08/00, which is the same 0x8-entry/0x1C-stride

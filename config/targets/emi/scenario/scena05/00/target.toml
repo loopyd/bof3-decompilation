@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState12ScenarioScena0500_801FCCC0.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCBD4.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState0DScenarioScena0500_801FCD0C.c",
+    "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0500_801FD110.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F73F8.c",

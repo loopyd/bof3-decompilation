@@ -20,6 +20,7 @@ sources = [
     "src/bof3/scenario/selectFirstPartyMirrorIdOtherThan7Or4ThenArmEffectGroupAndResetEffectSlotsScenarioScena1400_801FC280.c",
     "src/bof3/scenario/requestPrimaryState4Substate0OnWorld94FrontSide4Position738000OrPrimaryState2Substate14OnWorldBFFlag5MapCodeA6NeighbourScenarioScena1400_801FB648.c",
     "src/bof3/scenario/dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0.c",
+    "src/bof3/scenario/dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",
@@ -62,6 +63,18 @@ function = 0x801F7BA0
 section = ".rodata"
 address = 0x801F6C04
 size = 0x68
+
+# The reviewed switch of the state controller dispatches the same shared
+# secondary sub-state byte through a 25-slot table that the original placed in
+# this payload's leading table data at 0x801F6D3C (0x64 bytes, between the
+# 0x801F6C6C table of the overlay move helper and the primary-state-5 table at
+# 0x801F6DA4). That address is 4-mod-8 too, so the same placement route lowers
+# the affected section's alignment and the emitted lui/lw relocation matches.
+[[matching.section_placements]]
+function = 0x801F8CE4
+section = ".rodata"
+address = 0x801F6D3C
+size = 0x64
 
 # The reviewed switch of the primary-state-5 handler dispatches the same shared
 # secondary sub-state byte through a 34-entry table that the original placed in

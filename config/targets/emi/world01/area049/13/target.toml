@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/world/stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C.c",
     "src/bof3/world/stepWorkRecordPositionPairByDoubledVelocityAdvanceHalfword24AndCountDownThenResetAndAdvanceHandlerIndexWorld01Area04913_80117514.c",
     "src/bof3/world/dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610.c",
+    "src/bof3/world/bootHandlerSeedWorkCoordinateTripleResetRecordsThenAdvanceStateWorld01Area04913_80117048.c",
 ]
 psyq_source = "src/bof3/support/area049_13_psyq.c"

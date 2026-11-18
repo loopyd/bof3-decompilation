@@ -133,8 +133,26 @@ segments:
       func_8015C058, clears the shared bytes 0x80146865 through 0x80146867 and
       returns to sub-state 0 and primary state 0.'
   - - 11264
-    - asm
-    - func_801F9800
+    - c
+    - runSubstateLadderSeedingTwoFrontEndRecordRowsThenReleaseScenarioScena0200_801F9800
+    - '@source: src/bof3/scenario/runSubstateLadderSeedingTwoFrontEndRecordRowsThenReleaseScenarioScena0200_801F9800.c'
+    - '@behavior: Slot 16 of the 31-word code-pointer run at 0x801FE288 (pointer
+      word at 0x801FE2C8) that dispatchProgressHandlerScenarioScena0200_801F719C
+      indexes with the signed chain byte D_80146872. It steps the shared
+      sub-state byte D_80146875 through the seven-slot jump table at 0x801F6E24:
+      slot 0 runs func_801BE1B0 with 6 and func_801C601C with 2 and advances;
+      slot 1 waits for progress 0x2B and takes the front-end word pair 0x100000
+      and 0x70000 with 0xA to func_801BFE34; slot 2 asks func_8019601C for an
+      object index, publishes it in scratchpad 0x1F800000 and, unless it reads
+      0xFF, seeds that objects 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13,
+      +9 = 0x14, -0x2BA at +0x64, the halfword D_801492DA at +0x68 and 0x260 at
+      +0x6C); slot 3 waits for progress 0x2F and runs func_801C7A54 with 0xA;
+      slot 4 waits for progress 0x30 and runs func_801BE1B0 with 0x16; slot 5
+      repeats the seed with -0x2AA at +0x64 and 0x200 at +0x6C; slot 6 waits for
+      progress 0x31, sets flag bits 0x12 and 0x13 of D_8014686C through
+      func_8015B580, releases the overlay through func_8015C058, clears the
+      shared bytes 0x80146865 through 0x80146867, the sub-state byte and
+      D_80146874 and returns to sub-state 0.'
   - - 12240
     - asm
     - func_801F9BD0

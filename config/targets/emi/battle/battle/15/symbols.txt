@@ -27,6 +27,7 @@ resetStateWhenUnlocked = 0x800975D4;
 func_8009761C = 0x8009761C;
 dispatchSubstateTable43f4 = 0x8009773C;
 func_80097778 = 0x80097778;
+initSelectionStateSlot4 = 0x80097C0C;
 queueEvent106ResetStateC = 0x80097CBC;
 dispatchSubstateTable4408 = 0x80097D1C;
 armFinalizeSlotFromKindFlags = 0x80097D58;

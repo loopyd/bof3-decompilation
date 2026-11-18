@@ -77,7 +77,9 @@ extern void func_80154698(void);
 /* @source 0x801F924C
  * @behavior Overlay view step of this scenario overlay. Three in-image jal sites
  *           reach it - 0x801F8F88, 0x801F8FCC and 0x801F90DC, all inside the
- *           state controller func_801F8CE4 - and each passes no argument and
+ *           state controller
+ *           dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4 - and each
+ *           passes no argument and
  *           ignores the result, so the body takes none and returns nothing.
  *           While the shared scroll word D_80149310 reads 0x77FF it consumes
  *           that request by rewriting the word as 0x63FF and moves the view one

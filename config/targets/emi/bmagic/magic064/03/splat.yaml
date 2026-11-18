@@ -170,8 +170,10 @@ segments:
     - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8.c'
     - '@behavior: Clears the scratchpad work-object byte at offset 0x9 with sb $zero and then increments the work-object byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb scheduled into the $ra delay slot). The pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps two separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs. Reads and writes no other state and the function has no frame.'
   - - 8664
-    - asm
-    - func_801F0DD8
+    - c
+    - decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8
+    - '@source: src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8.c'
+    - '@behavior: Handler step 1 of the four-word handler run at 0x801F1394 that the dispatcher at 0x801F0D64 selects with the scratchpad work object''s byte 0x2. Reads the work-object pointer cell at 0x1F800044 and decrements that object''s byte at offset 0x9 with a byte-width add (lbu, addiu $v1,$v1,-1, sb), then, only when the decremented value read back as a signed byte equals -6, re-reads the cell and increments the work object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb through the same base). Finally re-reads the cell a third time, loads byte 0x9 through a signed byte view (lb) and passes it to the shared function at 0x80155AF8; the 0x18-byte frame only keeps $ra across that call, whose delay slot is a nop, and nothing is returned.'
   - - 8784
     - c
     - incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50

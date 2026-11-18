@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801F7A30
   - - 3760
-    - asm
-    - func_801F7AB0
+    - c
+    - claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0
+    - '@source: src/bof3/scenario/claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0.c'
+    - '@behavior: Entry 1, the middle entry of the three-entry work-state handler run at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68) that dispatchWorkByte2HandlerScenarioScena0700_801F79EC indexes with the scratchpad work object''s byte at offset 0x02: it passes the overlay pointer cell 0x801FDFC0 to the worker at 0x801F9330, then, while the work object''s word at 0x0C still reads at least 9, claims a free record through the scan at 0x801F8394 and, on the frames whose 0x0C word reads zero in its low two bits, seeds that record through func_801F8478; it then calls the work-table stepper at 0x801F85D8, decrements the same 0x0C word in place and, only when the decremented count reads zero, increments byte 0x02 to advance the run. It takes no arguments, returns nothing, and its 0x18-byte frame keeps only $ra.'
   - - 3944
     - c
     - clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68

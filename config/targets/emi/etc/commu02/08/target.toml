@@ -27,6 +27,7 @@ sources = [
     "src/bof3/ui/commitCardRunIntoFlaggedFieldRecordAndStartActionF5.c",
     "src/bof3/ui/queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0.c",
     "src/bof3/ui/drawGreyHorizontalLinePrim.c",
+    "src/bof3/ui/drawOpaqueSpriteFromSheetEntryTable.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

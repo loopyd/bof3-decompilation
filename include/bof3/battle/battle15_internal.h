@@ -252,6 +252,11 @@ extern u8*           D_801EB4D8; /* @source 0x801EB4D8 @kind unknown */
 extern BattleLocalWork* D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 extern u8            D_801EBEFA[]; /* @source 0x801EBEFA @kind unknown */
 extern u8*           D_801EBF08; /* @source 0x801EBF08 @kind unknown */
+/* Sixteen-entry UI ring shared with the battle UI overlay: entries stride eight
+ * bytes from 0x801EB5B0 and D_801EC328 is the producer index. initSelectionStateSlot4
+ * marks byte 1 of the entry behind the producer index. */
+extern u8            D_801EB5B1[]; /* @source 0x801EB5B1 @kind unknown */
+extern volatile u8   D_801EC328; /* @source 0x801EC328 @kind unknown */
 extern u8            D_80148330[]; /* @source 0x80148330 @kind unknown */
 extern u8            D_801462E5; /* @source 0x801462E5 @kind unknown */
 extern u8            D_801462E6; /* @source 0x801462E6 @kind unknown */
