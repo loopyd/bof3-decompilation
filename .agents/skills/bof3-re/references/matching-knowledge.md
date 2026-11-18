@@ -2120,6 +2120,11 @@ Use for an early saved-argument copy or a persistent commutative operand swap.
 Keep owning settings fixed; inspect that compiler version, recipe and patches.
 Nearby-version source supports a hypothesis, not owning-compiler proof.
 
+For an inline indexed address, inspect initial RTL before blaming CSE. GCC 2.7.2
+`expr.c` can expand multiplication under `EXPAND_SUM` but emit a shift separately.
+Equivalent power-of-two indices can therefore start with opposite `PLUS` operands.
+Prove the promoted index range and inspect the complete output before retention.
+
 1. For entry copies, trace `cse.c::make_regs_eqv` and `canon_reg`, then scheduler
    and allocator output. GCC 2.6.3 can prefer an equivalent pseudo whose lifetime
    extends further beyond the block. After the argument's final consumer, test
