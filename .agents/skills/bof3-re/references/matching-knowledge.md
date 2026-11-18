@@ -1796,6 +1796,18 @@ exclusive arm can own both reloaded phases. Define it before every use, preserve
 each reload and access, and trace conflicts in both phases before measuring the
 complete body.
 
+A small body change can exchange saved loop registers by changing live length,
+even when their weighted references stay fixed. Trace both values through
+`.flow`, `.sched` and `.lreg`, then compare global-allocation priorities. A
+redundant `for` initializer can overwrite an earlier initialization that flow
+then deletes. Keep the earlier real initialization and remove the duplicate when
+its longer lifetime explains the original allocation. Recheck every saved role.
+
+When a count becomes a last index used by a store and a zero guard, name that
+consumed result once. A repeated expression such as `count - 1 != 0` can fold to
+`count != 1` before allocation and introduce a literal load. Check initial RTL,
+the retained store value and the branch operand before the complete native gate.
+
 For local allocation, use the quantity's birth and death in the scheduled
 instruction stream. The earlier flow dump's live-length statistic can be stale
 after scheduling, and a quantity may combine several real values. Trace those

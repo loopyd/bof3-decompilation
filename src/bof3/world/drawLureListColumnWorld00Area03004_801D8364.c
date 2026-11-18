@@ -1,5 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
+extern u8 D_801C9E8A[]; /* @source 0x801C9E8A @kind table */
+
 extern int sprintf(char* buffer, const char* format, ...);
 
 /* @source 0x801D8364
@@ -24,24 +26,17 @@ extern int sprintf(char* buffer, const char* format, ...);
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
  * @status partial
- * @match 56.41
- * @residual the control flow, every call site, the constants and the store
- * order transcribe the original, but its register allocation does not repeat:
- * the original keeps the two origin halfwords x and y in the frame (a halfword
- * store each, then a zero-extending reload per use) while this candidate's
- * allocator binds x to a callee-saved register and spills the loop row bases
- * instead, so the first difference is at candidate instruction 2 (a frame save
- * of that register where the original stores x) and the whole body shifts by
- * that allocation. Four highlight-test shapes (nested copies, single `&&` test,
- * goto, boolean flag), nineteen declaration orders of the same local set and
- * volatile-residency probes measured 42.74% to 56.41% with the same call
- * structure; the largest step came from completing the post-loop cursor update,
- * which the first seed omitted.
+ * @match 93.16
+ * @residual origin setup, count-coordinate grouping and the footer keep-copy
+ * differ. The compiled body is four bytes shorter than the original.
  */
 void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   u16 x;
   u16 y;
+  u8 rowLimit;
+  u8 scrollRows;
   s32 nameX;
+  s32 shiftedNameX;
   s32 baseY;
   s32 lineY;
   s32 textY;
@@ -50,53 +45,59 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   s32 drawn;
   s32 i;
   s32 textX;
-  u8 rowLimit;
-  u8 scrollRows;
   u8 scroll;
-  s32 columnHeight;
   s32 columnEnd;
   s32 columnY;
+  s32 rawColumnY;
   u8* record;
+  u8* columnWork;
   u8* buf;
+  u8* slotCursor;
 
   x = arg0;
   y = arg1;
   func_801AE3F0(x, (u16)(y + 1), 0x8B, 0x9E, 0x80, D_80144952);
 
-  record = D_1F800044;
-  if (record[0x0A] != 0) {
-    record[0x0A] = record[0x0A] - 1;
-    record = D_1F800044;
-    if (record[0x08] != 0) {
-      scrollRows = record[0x38];
+  {
+    u8* scrollWork;
+    scrollWork = D_1F800044;
+    if (scrollWork[0x0A] != 0) {
+      scrollWork[0x0A] = scrollWork[0x0A] - 1;
+      scrollWork = D_1F800044;
+      if (scrollWork[0x08] != 0) {
+        scrollRows = scrollWork[0x38];
+      } else {
+        scrollRows = scrollWork[0x38] - 1;
+      }
+      scrollWork = D_1F800044;
+      rowLimit = 10;
+      if (scrollWork[0x08] != 0) {
+        columnY = 0x19 - scrollWork[0x0A] * 4;
+      } else {
+        columnY = 0x19 - (3 - scrollWork[0x0A]) * 4;
+      }
     } else {
-      scrollRows = record[0x38] - 1;
+      scrollRows = scrollWork[0x38];
+      rowLimit = 9;
+      columnY = 0x19;
     }
-    record = D_1F800044;
-    rowLimit = 10;
-    if (record[0x08] != 0) {
-      columnHeight = 0x19 - record[0x0A] * 4;
-    } else {
-      columnHeight = 0x19 - (3 - record[0x0A]) * 4;
-    }
-  } else {
-    rowLimit = 9;
-    scrollRows = record[0x38];
-    columnHeight = 0x19;
   }
 
   i = 0;
   rows = 0;
   drawn = 0;
+  baseY = y;
   buf = D_80145AD4;
-  nameX = (s16)(x + 5);
+  slotCursor = D_801451CC;
+  shiftedNameX = (u32)(x + 5) << 16;
+  nameX = shiftedNameX >> 16;
   textY = 0;
-  baseY = y + (u8)columnHeight;
+  baseY += (u8)columnY;
   lineY = baseY;
   lineOffset = -2;
 
-  for (i = 0; i < 0x80; i++) {
-    if (D_801C9E7C[D_801451CC[i] * 20 + 0x0E] == 10) {
+  for (; i < 0x80; i++, slotCursor++) {
+    if (D_801C9E8A[*slotCursor * 20] == 10) {
       if ((rows >= scrollRows) && (drawn < rowLimit)) {
         if (D_80145E94[0] != 2) {
           goto unselected;
@@ -108,23 +109,23 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
         if (FIELD_REF(s32, record, 0x10) != drawn) {
           goto unselected;
         }
-        func_8014F800((s16)nameX, (s16)lineY, 7, 0xC,
-                      (u32)&D_801C9E7C[D_801451CC[i] * 20]);
-        func_8014F800((s16)nameX, (s16)(baseY + lineOffset), 0, 0xC,
-                      (u32)&D_801C9E7C[D_801451CC[i] * 20]);
+        func_8014F800(nameX, (s16)lineY, 7, 0xC,
+                      (u32)&D_801C9E7C[*slotCursor * 20]);
+        func_8014F800(nameX, (s16)(baseY + lineOffset), 0, 0xC,
+                      (u32)&D_801C9E7C[*slotCursor * 20]);
         if (D_801453CC[i] >= 2) {
           sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);
-          textX = (s16)(x + 0x68);
-          func_80150098(textX, (s16)(baseY + textY + 4), 7, buf);
-          func_80150098(textX, (s16)(baseY + textY + 2), 0, buf);
+          textX = x + 0x68;
+          func_80150098((s16)textX, (s16)(baseY + (textY + 4)), 7, buf);
+          func_80150098((s16)textX, (s16)(baseY + (textY + 2)), 0, buf);
         }
         goto row_drawn;
 unselected:
-        func_8014F800((s16)(x + 5), (s16)lineY, 0, 0xC,
-                      (u32)&D_801C9E7C[D_801451CC[i] * 20]);
+        func_8014F800(shiftedNameX >> 16, (s16)lineY, 0, 0xC,
+                      (u32)&D_801C9E7C[*slotCursor * 20]);
         if (D_801453CC[i] >= 2) {
           sprintf((char*)buf, (const char*)D_801D0C14, D_801453CC[i]);
-          func_80150098((s16)(x + 0x68), (s16)(baseY + textY + 4), 0, buf);
+          func_80150098((s16)(x + 0x68), (s16)(baseY + (textY + 4)), 0, buf);
         }
 row_drawn:
         record = D_1F800044;
@@ -140,13 +141,18 @@ row_drawn:
     }
   }
 
-  record = D_1F800044;
-  FIELD_REF(s32, record, 0x1C) = rows - 1;
-  if (FIELD_REF(s32, record, 0x10) >= drawn) {
-    if (((rows - 1) != 0) && (drawn != 0)) {
-      FIELD_REF(s32, record, 0x10) = drawn - 1;
-    } else {
-      FIELD_REF(s32, record, 0x10) = 0;
+  {
+    u8* selectedWork;
+    s32 lastRow;
+    lastRow = rows - 1;
+    selectedWork = D_1F800044;
+    FIELD_REF(s32, selectedWork, 0x1C) = lastRow;
+    if (FIELD_REF(s32, selectedWork, 0x10) >= drawn) {
+      if (((lastRow) != 0) && (drawn != 0)) {
+        FIELD_REF(s32, selectedWork, 0x10) = drawn - 1;
+      } else {
+        FIELD_REF(s32, selectedWork, 0x10) = 0;
+      }
     }
   }
 
@@ -155,7 +161,9 @@ row_drawn:
   i = 0;
   drawn = 0;
   for (i = 0; i < 0x80; i++) {
-    if (D_801C9E7C[D_801451CC[i] * 20 + 0x0E] == 10) {
+    columnWork = D_801C9E8A;
+    columnWork += D_801451CC[i] * 20;
+    if (*columnWork == 10) {
       drawn += 1;
     }
   }
@@ -166,15 +174,17 @@ row_drawn:
   } else {
     drawn -= 9;
     columnEnd = 0x72 - drawn * 6;
-    record = D_1F800044;
-    columnY = FIELD_REF(u16, record, 0x38) * 6 + 0x1C;
-    scroll = record[0x0A];
+    columnWork = D_1F800044;
+    rawColumnY = FIELD_REF(u16, columnWork, 0x38) * 6 + 0x1C;
+    scroll = columnWork[0x0A];
     if (scroll != 0) {
-      if (record[0x08] != 0) {
-        columnY = columnY + scroll * 2;
+      if (columnWork[0x08] != 0) {
+        columnY = rawColumnY + scroll * 2;
       } else {
-        columnY = columnY - scroll * 2;
+        columnY = rawColumnY - scroll * 2;
       }
+    } else {
+      columnY = rawColumnY;
     }
   }
 
