@@ -1697,6 +1697,10 @@ registers, give those real quantities separate locals and keep the explicit
 in-range assignment. Initializing the result to a bound before the test can merge
 that bound with the comparison constant. Check both quantities in CSE and the
 complete register web before retaining the change.
+A copy that survives CSE can move ahead of a comparison during scheduling.
+Local allocation may then replace the raw comparison input with the result.
+Trace both passes, keep the assignment in its real arm and derive guard
+polarity from the original control flow.
 
 Trace a pointer-cell sample separately from the later pointee read. If the
 original samples the cell before destination stores and reads the field after

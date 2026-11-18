@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 52.57
+ * @match 72.52
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -26,6 +26,43 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* lowerMode;
   u8* entryMode;
   u8* work;
+  u32* outwardPositionOutput;
+  u32* inwardPositionOutput;
+  u8* outwardConditionWork;
+  u8* outwardPositionWork;
+  u8* outwardVelocityWork;
+  u8* inwardConditionWork;
+  u8* inwardStepWork;
+  u8* inwardPositionWork;
+  u8* inwardModeWork;
+  u8* countdownGuardWork;
+  u8* accumulatedAngleWork;
+  u8* boundedAngleWork;
+  u8* stepSelectionWork;
+  u8* requestSelectionWork;
+  u8* activeMotionWork;
+  u8* activeModeWork;
+  u8* inactiveGuardWork;
+  u8* inactiveMotionWork;
+  u8* nextCountdownWork;
+  u8* seedMotionWork;
+  u8* negativeMotionWork;
+  u8* clampMotionWork;
+  u8* relativeAngleWork;
+  u8* clearMotionWork;
+  u8* capabilityWork;
+  u8* directionMotionWork;
+  u8* stationaryMotionWork;
+  u8* stepModeWork;
+  u8* activeStateWork;
+  u8* chanceGuardWork;
+  u8* chanceSoundWork;
+  u8* chanceFlagWork;
+  u8* chanceStepWork;
+  u8* chanceIdleWork;
+  u8* chanceTimerWork;
+  u8* chanceMotionWork;
+  u8* chanceStateWork;
   u8* soundWork;
   u8* flagWork;
   u8* stepWork;
@@ -37,8 +74,15 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* angleWork;
   u8* chanceRow;
   Area030ScaleRecord* scale;
-  Area030Range* range;
+  Area030Range* classificationRange;
+  Area030Range* retryRange;
+  Area030Range* deltaRange;
+  Area030Range* activeRange;
+  Area030Range* inactiveRange;
+  Area030Range* countdownRange;
   s32 reference;
+  s32 outwardReference;
+  s32 outwardAngle;
   s32 spread;
   s32 lower;
   s32 upper;
@@ -46,12 +90,20 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 level;
   s32 roll;
   s32 value;
+  s32 sampledMotion;
+  s32 selectedMotion;
   s32 quarter;
   s32 limit;
-  s32 current;
+  s32 initialCurrent;
+  s32 retryCurrent;
+  s32 countdownCurrent;
   s32 delta;
   s32 position;
+  s32 publishedInwardPosition;
+  s32 publishedOutwardPosition;
   s32 velocity;
+  s32 classificationVelocity;
+  s32 initialOutwardVelocity;
   s32 timer;
   s32 numerator;
   s32 denominator;
@@ -171,168 +223,172 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
   work = D_1F800044;
   if (work[9] == 0) {
-    range = D_80146884;
-    limit = range->limit_8C;
-    current = range->value_8E;
+    classificationRange = D_80146884;
+    limit = classificationRange->limit_8C;
+    initialCurrent = classificationRange->value_8E;
     quarter = limit >> 2;
 
-    if (current < quarter) {
+    if (initialCurrent < quarter) {
       level = 3;
-    } else if (current < (limit >> 1)) {
+    } else if (initialCurrent < (limit >> 1)) {
       level = 2;
     } else {
-      level = current < quarter * 3;
+      level = initialCurrent < quarter * 3;
     }
 
     chanceRow = &scale->unk_00[level * 4];
     roll = rand();
     if ((roll & 0x0F) < chanceRow[0]) {
-      work = D_1F800044;
-      if (FIELD_REF(s16, work, 0x3E) >= -0x3F &&
-          (s8)work[0x0A] > 0) {
+      chanceGuardWork = D_1F800044;
+      if (FIELD_REF(s16, chanceGuardWork, 0x3E) >= -0x3F &&
+          (s8)chanceGuardWork[0x0A] > 0) {
         D_80143FC8[0].flags_00 =
             (u8)(D_80143FC8[0].flags_00 | 0x40);
         func_8015DF18(0x206);
 
-        work = D_1F800044;
-        func_8014DD3C(D_801E2AB8[work[6]].entry_12);
+        chanceSoundWork = D_1F800044;
+        func_8014DD3C(D_801E2AB8[chanceSoundWork[6]].entry_12);
 
-        work = D_1F800044;
-        work[0] = (u8)(work[0] & 0xDF);
+        chanceFlagWork = D_1F800044;
+        chanceFlagWork[0] = (u8)(chanceFlagWork[0] & 0xDF);
 
-        work = D_1F800044;
-        work[0x2A] = 0;
+        chanceStepWork = D_1F800044;
+        chanceStepWork[0x2A] = 0;
 
-        work = D_1F800044;
-        work[0x48] = 0;
+        chanceIdleWork = D_1F800044;
+        chanceIdleWork[0x48] = 0;
 
-        work = D_1F800044;
-        FIELD_REF(s16, work, 0x3E) = 0;
+        chanceTimerWork = D_1F800044;
+        FIELD_REF(s16, chanceTimerWork, 0x3E) = 0;
         func_8014D6B8(0);
 
-        work = D_1F800044;
-        FIELD_REF(s32, work, 0x10) = -3;
+        chanceMotionWork = D_1F800044;
+        FIELD_REF(s32, chanceMotionWork, 0x10) = -3;
         func_801E026C(-5);
 
-        work = D_1F800044;
-        work[4] = 3;
+        chanceStateWork = D_1F800044;
+        chanceStateWork[4] = 3;
         return;
       }
     }
 
     roll = rand();
     if ((roll & 0x0F) < chanceRow[1]) {
-      range = D_80146884;
-      limit = range->limit_8C;
-      current = range->value_8E;
+      retryRange = D_80146884;
+      limit = retryRange->limit_8C;
+      retryCurrent = retryRange->value_8E;
 
-      if (current > (limit >> 4)) {
+      if (retryCurrent > (limit >> 4)) {
         roll = rand();
-        work = D_1F800044;
-        value = D_801E2AB8[work[6]].unk_1C[1] & 7;
-        angle = (s8)work[0x0A];
-        FIELD_REF(s32, work, 0x10) = (roll & value) + 1;
+        seedMotionWork = D_1F800044;
+        value = D_801E2AB8[seedMotionWork[6]].unk_1C[1] & 7;
+        angle = (s8)seedMotionWork[0x0A];
+        FIELD_REF(s32, seedMotionWork, 0x10) = (roll & value) + 1;
 
         if (angle < 0) {
           roll = rand();
-          work = D_1F800044;
-          FIELD_REF(u32, work, 0x10) =
-              FIELD_REF(u32, work, 0x10) + (u32)(roll & 1);
+          negativeMotionWork = D_1F800044;
+          FIELD_REF(u32, negativeMotionWork, 0x10) =
+              FIELD_REF(u32, negativeMotionWork, 0x10) + (u32)(roll & 1);
         }
 
-        work = D_1F800044;
-        value = FIELD_REF(s32, work, 0x10);
-        if (value < 0) {
-          value = 0;
-        } else if (value > 5) {
-          value = 5;
+        clampMotionWork = D_1F800044;
+        sampledMotion = FIELD_REF(s32, clampMotionWork, 0x10);
+        if (sampledMotion >= 0) {
+          if (sampledMotion < 6) {
+            selectedMotion = sampledMotion;
+          } else {
+            selectedMotion = 5;
+          }
+        } else {
+          selectedMotion = 0;
         }
-        FIELD_REF(s32, work, 0x10) = value;
+        FIELD_REF(s32, clampMotionWork, 0x10) = selectedMotion;
 
         if (D_8014421C < 0) {
-          work = D_1F800044;
-          value = (s8)work[0x0A] - workOffsetReferenceState;
+          relativeAngleWork = D_1F800044;
+          value = (s8)relativeAngleWork[0x0A] - workOffsetReferenceState;
           if (value < -0x30) {
-            range = D_80146884;
-            FIELD_REF(u8, range, 0x75) = 0xFD;
+            deltaRange = D_80146884;
+            FIELD_REF(u8, deltaRange, 0x75) = 0xFD;
           } else if (value < -0x18) {
-            range = D_80146884;
-            FIELD_REF(u8, range, 0x75) = 0xFE;
+            deltaRange = D_80146884;
+            FIELD_REF(u8, deltaRange, 0x75) = 0xFE;
           } else {
-            range = D_80146884;
-            FIELD_REF(u8, range, 0x75) = 0xFF;
+            deltaRange = D_80146884;
+            FIELD_REF(u8, deltaRange, 0x75) = 0xFF;
           }
         }
       } else {
-        work = D_1F800044;
-        FIELD_REF(s32, work, 0x10) = 0;
-        FIELD_REF(u8, range, 0x75) = 0;
+        clearMotionWork = D_1F800044;
+        FIELD_REF(s32, clearMotionWork, 0x10) = 0;
+        FIELD_REF(u8, retryRange, 0x75) = 0;
       }
 
-      work = D_1F800044;
-      if (D_801E2AB8[work[6]].unk_20[0] != 0) {
+      capabilityWork = D_1F800044;
+      if (D_801E2AB8[capabilityWork[6]].unk_20[0] != 0) {
         roll = rand();
         if ((roll & 1) != 0) {
           roll = rand();
-          work = D_1F800044;
+          directionMotionWork = D_1F800044;
           if ((roll & 1) != 0) {
-            FIELD_REF(s32, work, 0x0C) = 0x1000;
+            FIELD_REF(s32, directionMotionWork, 0x0C) = 0x1000;
           } else {
-            FIELD_REF(s32, work, 0x0C) = -0x1000;
+            FIELD_REF(s32, directionMotionWork, 0x0C) = -0x1000;
           }
         } else {
-          work = D_1F800044;
-          FIELD_REF(s32, work, 0x0C) = 0;
+          stationaryMotionWork = D_1F800044;
+          FIELD_REF(s32, stationaryMotionWork, 0x0C) = 0;
         }
       } else {
-        FIELD_REF(s32, work, 0x0C) = 0;
+        FIELD_REF(s32, capabilityWork, 0x0C) = 0;
       }
 
-      work = D_1F800044;
-      work[8] = 1;
-      work = D_1F800044;
-      work[4] = 0;
+      stepModeWork = D_1F800044;
+      stepModeWork[8] = 1;
+      activeStateWork = D_1F800044;
+      activeStateWork[4] = 0;
     } else {
       roll = rand();
       if ((roll & 0x0F) < chanceRow[2]) {
-        work = D_1F800044;
-        FIELD_REF(s32, work, 0x0C) = 0;
-        FIELD_REF(s32, work, 0x10) = 0;
+        activeMotionWork = D_1F800044;
+        FIELD_REF(s32, activeMotionWork, 0x0C) = 0;
+        FIELD_REF(s32, activeMotionWork, 0x10) = 0;
 
-        range = D_80146884;
-        FIELD_REF(u8, range, 0x75) = 1;
+        activeRange = D_80146884;
+        FIELD_REF(u8, activeRange, 0x75) = 1;
 
-        work = D_1F800044;
-        work[4] = 1;
+        activeModeWork = D_1F800044;
+        activeModeWork[4] = 1;
       } else {
-        work = D_1F800044;
-        if (work[0x0A] != 0) {
-          range = D_80146884;
-          FIELD_REF(u8, range, 0x75) = 0;
+        inactiveGuardWork = D_1F800044;
+        if (inactiveGuardWork[0x0A] != 0) {
+          inactiveRange = D_80146884;
+          FIELD_REF(u8, inactiveRange, 0x75) = 0;
 
-          work = D_1F800044;
-          FIELD_REF(s32, work, 0x10) = -1;
-          FIELD_REF(s32, work, 0x0C) = 0;
-          work[4] = 2;
+          inactiveMotionWork = D_1F800044;
+          FIELD_REF(s32, inactiveMotionWork, 0x10) = -1;
+          FIELD_REF(s32, inactiveMotionWork, 0x0C) = 0;
+          inactiveMotionWork[4] = 2;
         }
       }
     }
 
     roll = rand();
-    work = D_1F800044;
-    work[9] = (u8)((8 - level) * ((roll & 3) + 1));
+    nextCountdownWork = D_1F800044;
+    nextCountdownWork[9] = (u8)((8 - level) * ((roll & 3) + 1));
   } else {
     work[9] = (u8)(work[9] - 1);
 
-    range = D_80146884;
-    delta = FIELD_REF(s8, range, 0x75);
+    countdownRange = D_80146884;
+    delta = FIELD_REF(s8, countdownRange, 0x75);
     if (delta > 0) {
       if ((D_80143E6C & 0x0F) == 0) {
-        work = D_1F800044;
-        if (FIELD_REF(s32, work, 0x10) >= 0) {
-          limit = range->limit_8C;
-          current = range->value_8E;
-          if (current < (limit >> 1)) {
+        countdownGuardWork = D_1F800044;
+        if (FIELD_REF(s32, countdownGuardWork, 0x10) >= 0) {
+          limit = countdownRange->limit_8C;
+          countdownCurrent = countdownRange->value_8E;
+          if (countdownCurrent < (limit >> 1)) {
             func_801E026C((s8)delta);
           }
         }
@@ -341,128 +397,131 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       func_801E026C((s8)delta);
     }
 
-    work = D_1F800044;
-    value = (s32)(FIELD_REF(u32, work, 0x10) +
-                  FIELD_REF(u32, work, 0x1C));
-    work[0x0A] = (u8)(work[0x0A] + (u32)value);
+    accumulatedAngleWork = D_1F800044;
+    value = (s32)(FIELD_REF(u32, accumulatedAngleWork, 0x10) +
+                  FIELD_REF(u32, accumulatedAngleWork, 0x1C));
+    accumulatedAngleWork[0x0A] = (u8)(accumulatedAngleWork[0x0A] + (u32)value);
   }
 
-  work = D_1F800044;
-  angle = (s8)work[0x0A];
+  boundedAngleWork = D_1F800044;
+  angle = (s8)boundedAngleWork[0x0A];
   if (angle < -0x30) {
     angle = -0x30;
   } else if (angle > 0x30) {
     angle = 0x30;
   }
-  work[0x0A] = (u8)angle;
+  boundedAngleWork[0x0A] = (u8)angle;
 
   if (D_80149332 == 0) {
     D_8014932E = 0;
   }
 
-  work = D_1F800044;
-  reference = workOffsetReferenceState;
-  angle = (s8)work[0x0A];
-  if (angle > reference && FIELD_REF(s32, work, 0x10) > 0) {
-    position = FIELD_REF(s32, work, 0x38);
-    timer = FIELD_REF(s16, work, 0x3E);
-    FIELD_REF(u32, work, 0x38) = (u32)position - 0x1000u;
+  outwardConditionWork = D_1F800044;
+  outwardReference = workOffsetReferenceState;
+  outwardAngle = (s8)outwardConditionWork[0x0A];
+  if (outwardAngle > outwardReference && FIELD_REF(s32, outwardConditionWork, 0x10) > 0) {
+    position = FIELD_REF(s32, outwardConditionWork, 0x38);
+    timer = FIELD_REF(s16, outwardConditionWork, 0x3E);
+    FIELD_REF(u32, outwardConditionWork, 0x38) = (u32)position - 0x1000u;
     if (timer < 0) {
-      FIELD_REF(s16, work, 0x3E) = (s16)(timer + 8);
+      FIELD_REF(s16, outwardConditionWork, 0x3E) = (s16)(timer + 8);
     }
 
-    work = D_1F800044;
-    position = FIELD_REF(s32, work, 0x38);
-    if (position > 0x150000) {
+    outwardPositionWork = D_1F800044;
+    publishedOutwardPosition = FIELD_REF(s32, outwardPositionWork, 0x38);
+    if (publishedOutwardPosition > 0x150000) {
       D_8014932E = 0x10;
-      D_8014930C = (u32)position;
-      if (position > 0x3C0000) {
-        D_8014930C = 0x3C0000;
+      outwardPositionOutput = &D_8014930C;
+      *outwardPositionOutput = (u32)publishedOutwardPosition;
+      if (publishedOutwardPosition > 0x3C0000) {
+        *outwardPositionOutput = 0x3C0000;
       }
     }
 
-    work = D_1F800044;
-    velocity = FIELD_REF(s32, work, 0x0C);
-    if (velocity < 0) {
-      if (FIELD_REF(s32, work, 0x34) <= 0x60000) {
-        FIELD_REF(u32, work, 0x0C) = 0u - (u32)velocity;
-        work = D_1F800044;
+    outwardVelocityWork = D_1F800044;
+    initialOutwardVelocity = FIELD_REF(s32, outwardVelocityWork, 0x0C);
+    if (initialOutwardVelocity < 0) {
+      if (FIELD_REF(s32, outwardVelocityWork, 0x34) <= 0x60000) {
+        FIELD_REF(u32, outwardVelocityWork, 0x0C) = 0u - (u32)initialOutwardVelocity;
+        outwardVelocityWork = D_1F800044;
       }
     } else {
-      if (velocity > 0) {
-        if (FIELD_REF(s32, work, 0x34) > 0x13FFFF) {
-          FIELD_REF(u32, work, 0x0C) = 0u - (u32)velocity;
+      if (initialOutwardVelocity > 0) {
+        if (FIELD_REF(s32, outwardVelocityWork, 0x34) > 0x13FFFF) {
+          FIELD_REF(u32, outwardVelocityWork, 0x0C) = 0u - (u32)initialOutwardVelocity;
         }
       } else {
-        FIELD_REF(s32, work, 0x0C) = 0;
+        FIELD_REF(s32, outwardVelocityWork, 0x0C) = 0;
       }
-      work = D_1F800044;
+      outwardVelocityWork = D_1F800044;
     }
 
-    velocity = FIELD_REF(s32, work, 0x0C);
-    FIELD_REF(u32, work, 0x34) =
-        FIELD_REF(u32, work, 0x34) + (u32)velocity;
-    if (velocity < -0x800) {
-      work[8] = 0;
-    } else if (velocity > 0x800) {
-      work[8] = 2;
+    FIELD_REF(u32, outwardVelocityWork, 0x34) =
+        FIELD_REF(u32, outwardVelocityWork, 0x34) +
+        FIELD_REF(u32, outwardVelocityWork, 0x0C);
+    classificationVelocity = FIELD_REF(s32, outwardVelocityWork, 0x0C);
+    if (classificationVelocity < -0x800) {
+      outwardVelocityWork[8] = 0;
+    } else if (classificationVelocity > 0x800) {
+      outwardVelocityWork[8] = 2;
     } else {
-      work[8] = 1;
+      outwardVelocityWork[8] = 1;
     }
   } else {
-    work = D_1F800044;
+    inwardConditionWork = D_1F800044;
     reference = workOffsetReferenceState;
-    if ((s8)work[0x0A] < reference && D_8014421C < 0) {
-      denominator = 0x3E - FIELD_REF(s16, work, 0x3A);
+    if ((s8)inwardConditionWork[0x0A] < reference && D_8014421C < 0) {
+      denominator = 0x3E - FIELD_REF(s16, inwardConditionWork, 0x3A);
       numerator =
-          (s32)(0xF0000u - FIELD_REF(u32, work, 0x34));
+          (s32)(0xF0000u - FIELD_REF(u32, inwardConditionWork, 0x34));
       numerator >>= 4;
       if (denominator != 0) {
         velocity = numerator / denominator;
-        FIELD_REF(s32, work, 0x0C) = velocity;
+        FIELD_REF(s32, inwardConditionWork, 0x0C) = velocity;
         if (velocity < -0x1000) {
           velocity = -0x1000;
         } else if (velocity > 0x1000) {
           velocity = 0x1000;
         }
-        FIELD_REF(s32, work, 0x0C) = velocity;
+        FIELD_REF(s32, inwardConditionWork, 0x0C) = velocity;
       } else {
-        FIELD_REF(s32, work, 0x0C) = 0;
+        FIELD_REF(s32, inwardConditionWork, 0x0C) = 0;
       }
 
-      work = D_1F800044;
-      position = FIELD_REF(s32, work, 0x34);
-      velocity = FIELD_REF(s32, work, 0x0C);
-      timer = FIELD_REF(s16, work, 0x3E);
-      FIELD_REF(u32, work, 0x34) = (u32)position + (u32)velocity;
+      inwardStepWork = D_1F800044;
+      position = FIELD_REF(s32, inwardStepWork, 0x34);
+      velocity = FIELD_REF(s32, inwardStepWork, 0x0C);
+      timer = FIELD_REF(s16, inwardStepWork, 0x3E);
+      FIELD_REF(u32, inwardStepWork, 0x34) = (u32)position + (u32)velocity;
       if (timer < 0) {
-        FIELD_REF(s16, work, 0x3E) = (s16)(timer + 8);
+        FIELD_REF(s16, inwardStepWork, 0x3E) = (s16)(timer + 8);
       }
 
-      work = D_1F800044;
-      position = (s32)(FIELD_REF(u32, work, 0x38) + 0x1000u);
-      FIELD_REF(s32, work, 0x38) = position;
-      if (position > 0x150000) {
+      inwardPositionWork = D_1F800044;
+      publishedInwardPosition = (s32)(FIELD_REF(u32, inwardPositionWork, 0x38) + 0x1000u);
+      FIELD_REF(s32, inwardPositionWork, 0x38) = publishedInwardPosition;
+      if (publishedInwardPosition > 0x150000) {
         D_8014932E = 0x10;
-        D_8014930C = (u32)position;
-        if (position > 0x3C0000) {
-          D_8014930C = 0x3C0000;
+        inwardPositionOutput = &D_8014930C;
+        *inwardPositionOutput = (u32)publishedInwardPosition;
+        if (publishedInwardPosition > 0x3C0000) {
+          *inwardPositionOutput = 0x3C0000;
         }
       }
 
-      work = D_1F800044;
-      if (work[4] != 0) {
-        work[8] = 5;
+      inwardModeWork = D_1F800044;
+      if (inwardModeWork[4] != 0) {
+        inwardModeWork[8] = 5;
       } else {
-        work[8] = 1;
+        inwardModeWork[8] = 1;
       }
     }
   }
 
-  work = D_1F800044;
-  work[0x2A] = D_801E2330[work[8]].byte_01;
+  stepSelectionWork = D_1F800044;
+  stepSelectionWork[0x2A] = D_801E2330[stepSelectionWork[8]].byte_01;
 
-  work = D_1F800044;
-  func_8014D8D4(D_801E2330[work[8]].request_00);
+  requestSelectionWork = D_1F800044;
+  func_8014D8D4(D_801E2330[requestSelectionWork[8]].request_00);
   func_8014D978();
 }
