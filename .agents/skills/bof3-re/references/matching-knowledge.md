@@ -1913,6 +1913,10 @@ adding an instruction. Keep the initial width and later upper bound separate
 when a CSE boundary otherwise leaves two definitions on one pseudo and excludes
 it from local allocation. Check the merged quantities again after every scope
 change; a correct schedule can still exchange the byte and position registers.
+If the following real operation already orders an input capture, remove the
+capture's redundant scope before adding another boundary. Keeping the input
+outside that operation can preserve the required order without inflating its
+quantity's references. Check both interval lengths and weighted counts again.
 
 Use the allocator's half-instruction intervals. A normal `SET` births its output
 at `2 * instruction_number`; `CLOBBER` uses the preceding half-slot. An address

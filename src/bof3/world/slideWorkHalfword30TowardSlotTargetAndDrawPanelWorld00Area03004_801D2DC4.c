@@ -43,9 +43,9 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
  * @status partial
- * @match 98.26
- * @residual Sum-store base, clamp read order and signed-byte capture order
- * still differ at the original 1152-byte size. The original interval remains retained.
+ * @match 98.96
+ * @residual Sum-store base and clamp read order still differ at the original
+ * 1152-byte size. The original interval remains retained.
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      approachWork;
@@ -158,13 +158,11 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   } while (0);
   rowWidth = rowScale * 8;
   cur = rowWidth + 0x18;
+  rowCell = (s16)level;
   do {
     rowScale *= 4;
     rowPosition -= rowScale;
     rowScale = rowPosition + 0xAD;
-  } while (0);
-  do {
-    rowCell = (s16)level;
   } while (0);
   rowUpper = rowScale + rowWidth + 0x18;
   upperSnapshot = (u16)rowUpper;
