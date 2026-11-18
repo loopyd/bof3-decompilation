@@ -1945,6 +1945,13 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+Track a promoted narrow formal's raw word and mutable narrow pseudo separately.
+Reassigning the formal can define only the narrow pseudo, leaving the raw word
+local. A copy retained through combine can then share the incoming argument
+register and disappear as a self-copy after allocation. Narrowing a real consumer
+can remove an extension without restoring that copy. Check local allocation,
+register assignments and the second schedule before attributing the loss to CSE.
+
 When a pointer copy survives CSE but a later store uses the copied base, trace
 GCC 2.7.2 `optimize_reg_copy_1`. It forwards source uses through the source's
 full-mode death. Definitions of either copied register and control or loop
