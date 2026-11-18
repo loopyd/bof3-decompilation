@@ -30,8 +30,10 @@ segments:
   vram: 2149510180
   subsegments:
   - - 36
-    - asm
-    - func_801EEC24
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic15403_801EEC24
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15403_801EEC24.c'
+    - '@behavior: Work-record byte 1 handler dispatcher of this overlay. It reads the work-record pointer cell at 0x1F800044 once before its frame exists, copies the four-entry code pointer run at 0x801EEC04 (0x801EEC90, 0x801EEE94, 0x801EEFE0, 0x801EF060) into its own 0x28-byte frame at 0x10 as four word copies, and invokes the copied entry selected by that record unsigned byte 1 scaled by four, with no arguments and no bounds test, so the call target is read back from the copy. It takes no arguments, returns nothing and reads or writes no other state; the frame keeps the four-word copy at 0x10 and $ra at 0x20.'
   - - 144
     - asm
     - func_801EEC90

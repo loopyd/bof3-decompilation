@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC7C
   - - 764
-    - asm
-    - func_801EEEFC
+    - c
+    - decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic13703_801EEEFC
+    - '@source: src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic13703_801EEEFC.c'
+    - '@behavior: Counts down work byte 0x9 of the scratchpad work object reached through the pointer cell at 0x1F800044 with a byte-width read-modify-write (lbu, addiu -1, sb) and tests the truncated stored value (andi 0xFF, bnez with an empty delay slot). Only when that countdown reaches zero does it pass the shared battle target byte at 0x80146384 (unsigned load, zero-extended) and the flag word 0x20 to func_800A9610, which raises that flag on the battlers the byte selects, and then reload the work pointer cell and increment work byte 0x1 by one at byte width, advancing the work-byte-1 state the dispatcher at 0x801EEC1C uses to pick an entry of the three-word table at 0x801EEC04. This span is entry 1 of that table, so no jal in the payload reaches it. The leading pointer-cell load is hoisted above the frame setup, which only keeps $ra at 0x10 across the call. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 868
     - asm
     - func_801EEF64

@@ -1,6 +1,6 @@
 func_801E5988 = 0x801E5988;
 dispatchWorkByte2HandlerTable801EEC14 = 0x801EEC14;
-func_801EEC24 = 0x801EEC24;
+dispatchWorkByte1HandlerBmagicMagic15403_801EEC24 = 0x801EEC24;
 func_801EEC90 = 0x801EEC90;
 func_801EEE94 = 0x801EEE94;
 func_801EEFE0 = 0x801EEFE0;

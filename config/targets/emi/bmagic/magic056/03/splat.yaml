@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic05603_801EEC34.c'
     - '@behavior: Copies the three-entry code pointer run at 0x801EEC04 (0x801EEC94, 0x801EEF3C, 0x801EF17C) into its own 0x28-byte frame and invokes the entry selected by work byte 1 of the scratchpad work record at 0x1F800044 with no arguments, leaving the selector unchecked.'
   - - 148
-    - asm
-    - func_801EEC94
+    - c
+    - seedWorkObjectClearBytesBAnd9DispatchEvent8ClaimSlot55CopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerCopyTwo15HalfwordBandsSet80145988CopyRecordStatsAndRaiseFlag40BmagicMagic05603_801EEC94
+    - '@source: src/bof3/bmagic/seedWorkObjectClearBytesBAnd9DispatchEvent8ClaimSlot55CopyActingBattlerRecordHeadStampSlotBytesPublishWorkPointerCopyTwo15HalfwordBandsSet80145988CopyRecordStatsAndRaiseFlag40BmagicMagic05603_801EEC94.c'
+    - '@behavior: Word 0 of the three-entry code pointer run at 0x801EEC04 (0x801EEC94, 0x801EEF3C, 0x801EF17C) that the entry dispatcher dispatchWorkByte1HandlerBmagicMagic05603_801EEC34 copies into its own 0x28-byte frame and selects with work byte 1 scaled by four, so no jal in this payload names this body. It calls the shared seeding helper 0x800AFD9C, clears work bytes 0xB and 9, increments work byte 1 and dispatches event 8 with value 0 through 0x800AEF98. It claims a slot through func_801E590C(1, 0x55) and copies the acting battler 0x74-byte record head into that 0x78-byte-stride entry of 0x801EC330, from the 0x140-byte party records at 0x80145E90 when the shared selector byte 0x80146374 is below three and otherwise from the 0x118-byte enemy records at 0x801EB630 indexed by selector minus three. The claimed entry receives byte 1 of 3, byte 6 of 1, byte 2 of 0, byte 5 of 0x55 and the work pointer in word 0x74, and work byte 0xB counts the claim. It then clears the leading halfwords at 0x8003AC00 and 0x8003AC20 and copies fifteen halfwords into each following band from 0x80036C02 and 0x80036C22 with bit 15 set, publishes 1 into 0x80145988, stores the byte that 0x800AFB48 returns for the shared battle record in work byte 0x27, copies that record bytes 0x28 and 0x24 into the work object, calls 0x800AF8F0 with the work object and raises bit 0x40 of the shared record byte 0. Frame 0x18 keeps only the return address at 0x10.'
   - - 828
     - c
     - clearRecordFlag40DispatchEvent1CForwardBattleByteThenSeedSelectedBattlerRecordAdvanceWorkByte1BmagicMagic05603_801EEF3C

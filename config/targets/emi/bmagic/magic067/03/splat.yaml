@@ -30,8 +30,10 @@ segments:
   vram: 2149510180
   subsegments:
   - - 36
-    - asm
-    - func_801EEC24
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic06703_801EEC24
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06703_801EEC24.c'
+    - '@behavior: Dispatches the work byte at offset 1 of the scratchpad work object through the five-entry code pointer run at 0x801EEC04, copied into the function own frame, and invokes the selected handler with no arguments.'
   - - 148
     - asm
     - func_801EEC94

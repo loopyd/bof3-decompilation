@@ -34,14 +34,14 @@ void projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic0410
     void);
 
 /* This overlay's own triangle draw pass: it takes a draw mode from GetGraphType,
- * installs it with SetDrawMode, refreshes the scratchpad screen scale through
- * func_801782FC and func_801783C8 and emits the work-record effect with
- * SetSemiTrans and RotTransPers3 under a second draw mode, with func_8014E5A0
- * and func_8017A97C around it. Still an asm row in this target, so it keeps its
- * raw name; it draws under the matrix installed by
+ * installs it with SetDrawMode, publishes the scratchpad radius 0x88 and the
+ * tint from work byte 9, and emits sixteen RotTransPers3-projected Gouraud
+ * triangles with SetSemiTrans, func_8017A97C and func_8014E5A0 under a second
+ * draw mode. It draws under the matrix installed by
  * projectWorkRecordPositionAndInstallTransformWithZeroRotation and does not pop
  * it. */
-void func_801EFAB8(void);
+void drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8(
+    void);
 
 /* @source 0x801EF3D0
  * @behavior Dispatches one step of the overlay work handler: the work record is
@@ -55,7 +55,9 @@ void func_801EFAB8(void);
  *   for non-zero, so only when both hold does the arm run: it installs the work
  *   record's transform with
  *   projectWorkRecordPositionAndInstallTransformWithZeroRotation, draws the
- *   effect's triangles with func_801EFAB8 and then restores the GTE matrix stack
+ *   effect's triangles with
+ *   drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwo
+ *   and then restores the GTE matrix stack
  *   with PopMatrix. The frame keeps the copied table at 0x10 and $ra at 0x20;
  *   the pointer-cell load is issued before frame creation. Performs no stores of
  *   its own, ignores the handler result, takes no arguments and returns
@@ -72,7 +74,7 @@ void dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPo
   handlers.handlers[g_battle_work[2]]();
   if ((g_battle_work[0] & 1u) && (g_battle_work[2] != 0u)) {
     projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0();
-    func_801EFAB8();
+    drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8();
     PopMatrix();
   }
 }

@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801EF670
   - - 3768
-    - asm
-    - func_801EFAB8
+    - c
+    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8
+    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8.c'
+    - '@behavior: Second draw pass of the overlay work-record frame driver, run from the jal word at 0x801EF464 in dispatchWorkByte2FourEntryHandlerThenProjectWorkRecordAndDrawTrianglesAndPopWhenWorkByte0Bit0AndWorkByte2Set while work byte 0 bit 0 is set and work byte 2 is non-zero, between the transform installer and PopMatrix, so it pops no matrix of its own and takes no arguments. It picks the draw-mode texture page 0xA5 when GetGraphType returns 1 or 2 and 0x35 otherwise, arms SetDrawMode on g_PrimCursor with dfe 0, dtd 1 and a null RECT, links that 0xC-byte packet under slot 5, reads the work pointer cell at 0x1F800044 once and publishes 0x88 into the scratchpad radius halfword 0x1F800000 and work byte 9 shifted left three into the tint halfword 0x1F800006. It seeds the fan at phase zero through func_801782FC and func_801783C8 scaled by the signed radius and shifted right twelve, clears the three z halfwords, then runs sixteen passes advancing the phase by 0x100 each, projecting three vertices through RotTransPers3 into the primitive vertex pairs at 0x08, 0x10 and 0x18 and tinting the origin vertex 1/1/1, the rim red with the published tint and the rim green and blue with one quarter of it, each a fresh read of the tint cell, before linking each 0x1C-byte POLY_G3 packet under slot 5. After the loop it selects 0x25 when GetGraphType returns 1 or 2 and 0x15 otherwise, re-arms SetDrawMode and links a second 0xC-byte packet under slot 5. The 0x40-byte frame keeps $ra, $s4, $s3, $s2, $s1 and $s0.'
   - - 4492
     - asm
     - func_801EFD8C

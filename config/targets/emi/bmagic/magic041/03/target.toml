@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/seedWorkObjectFromBattleRecordTripletClearBytesBAndAQueueEightSlotsClearByte1StampByte9OrdinalStepPublishWorkPointerThenByte1SlotInvokeHelperAt100BmagicMagic04103_801EECB0.c",
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic04103_801EF5C0.c",
+    "src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius136GradedWhiteAtOriginToWorkByte9WeightedEightTwoTwoBmagicMagic04103_801EFAB8.c",
 ]
 support_sources = [
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic04103_801EF130.c",
