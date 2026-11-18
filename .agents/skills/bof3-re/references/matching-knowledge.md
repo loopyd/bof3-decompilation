@@ -1802,8 +1802,10 @@ If an operation scope fixes allocation but disturbs an independent input load,
 inspect the new scheduler edges before changing more source. A scope around a
 pointer definition can constrain later reads as well as raise its weighted
 reference count. A scope around another existing use may preserve the needed
-allocation without that earlier dependency. Trace both passes and measure the
-complete body; neither matching registers nor a matching prologue proves a match.
+allocation without that earlier dependency. Keep independent updates outside
+that scope unless their allocation also needs the weight. Trace both passes and
+measure the complete body; neither matching registers nor a matching prologue
+proves a match.
 
 When a call answer needs an initial word copy and a saved masked value, inspect
 CSE's width conversions. A word local for the first guard and a narrow local for
@@ -1994,8 +1996,11 @@ wrong order. Keep compiler/flags fixed; prove the first divergent pass.
 
    Use the result as the guard; repeat at the original latch. Preserve guard
    reads, paths and call/store order, including `continue` paths. Confirm both
-   definitions survive optimization and remove the observed boost. Dummy
-   assignments, duplicate reads and invented dependencies remain forbidden.
+   definitions survive optimization and remove the observed boost. Count them
+   immediately before scheduling. A narrow final update can survive CSE as a
+   named assignment while its consumer already reads the word temporary.
+   Combine then removes the unused capture, leaving the scheduling boost.
+   Dummy assignments, duplicate reads and invented dependencies remain forbidden.
 3. Separate scheduling from allocation. Correct order can still use wrong
    registers. Trace `.lreg`/`.greg`, block-local versus global allocation,
    suggestions and conflicts. After consumption, test a sample local reused for

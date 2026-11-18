@@ -15,10 +15,10 @@ extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
  * last row, or zero when there are no matching rows. Finishes with the
  * panel footer, stretched column and three-character ROD title.
  * @status partial
- * @match 94.35
- * @residual 217 of 230 instructions match at 920 of 920 bytes. The
- * remaining differences are the initial saved-origin, header-argument and
- * loop-state setup order, beginning at +0x10.
+ * @match 96.96
+ * @residual 223 of 230 instructions match at 920 of 920 bytes.
+ * Saved-origin, row-coordinate and buffer setup still differ at entry,
+ * beginning at +0x10.
  */
 void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   u16 x;
@@ -39,18 +39,16 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
 
   x = arg0;
   baseY = arg1;
+  options = &D_80144952;
+  rowY = arg1 + 0x19;
+  panelY = arg1 + 1;
+  arg1 = *options;
+  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, arg1);
   slotIndex = 0;
   rows = 0;
-  options = &D_80144952;
   slot = PSX_PTR(u8, (u32)options + 0x87Au);
   buffer = D_80145AD4;
   rowOffset = 0;
-  do {
-    rowY = arg1 + 0x19;
-    panelY = arg1 + 1;
-    arg1 = *options;
-  } while (0);
-  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, arg1);
   nameX = (s16)(x + 5);
   countX = (s16)(x + 0x68);
   for (; slotIndex < 0x80; slotIndex++, slot++) {
@@ -96,7 +94,9 @@ unselected:
     }
 
 row_drawn:
-    rowY += 0x0D;
+    do {
+      rowY += 0x0D;
+    } while (0);
     rowOffset += 0x0D;
     rows++;
   }
