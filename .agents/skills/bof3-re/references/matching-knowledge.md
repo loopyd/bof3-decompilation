@@ -2044,6 +2044,11 @@ and post-loop reload.
 For join-spanning booleans or extra return copies, inspect initial RTL before
 blaming CSE or allocation.
 
+A narrow cast around a comparison need not create a narrow result phase. GCC
+2.7.2 `convert.c` changes the comparison's type directly; assigning it to a word
+local changes it back before expansion. Trace the assignment type and
+`do_store_flag` target before predicting an anonymous temporary or preference.
+
 1. Compare `return condition;` with explicit constant-return arms:
 
    ```c
