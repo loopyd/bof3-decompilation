@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world04/area175/13.bin"
 splat = "config/targets/emi/world04/area175/13/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644.c",
+]
 support_sources = [
     "src/bof3/world/decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C.c",
     "src/bof3/world/setStatus5FAndIncrementByte801F294CIfGateElseFFFFAndClearByte801F294DWorld04Area17513_801F3998.c",

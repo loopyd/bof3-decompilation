@@ -165,8 +165,10 @@ segments:
     - c
     - clearWorkTableAt800E4800World02Area09813_801F5240
   - - 9836
-    - asm
-    - func_801F526C
+    - c
+    - claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C
+    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C.c'
+    - '@behavior: walks the 8 entries of the 0x18-byte-stride record table at 0x800E4800 and claims the first entry whose lead byte reads zero by storing 1 there, then seeds that record with byte 1 = 0, byte 2 = 0x10, the triple at 0x04/0x08/0x0C copied from words 0x34/0x38/0x3C of the scratch work object behind 0x1F800044, halfword 0x14 = 0x100, byte 0x16 = 0x40 and byte 0x17 = 0 before returning on the claim.'
   - - 9992
     - asm
     - func_801F5308

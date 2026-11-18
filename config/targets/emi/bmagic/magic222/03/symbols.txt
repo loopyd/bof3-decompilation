@@ -21,7 +21,7 @@ decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic
 func_801EF7CC = 0x801EF7CC;
 func_801EF87C = 0x801EF87C;
 func_801EFACC = 0x801EFACC;
-func_801EFDEC = 0x801EFDEC;
+dispatchWorkByte2HandlerThenDrawTransformedAndPopWhenWorkBytes0And2SetBmagicMagic22203_801EFDEC = 0x801EFDEC;
 func_801EFE74 = 0x801EFE74;
 func_801EFF7C = 0x801EFF7C;
 func_801F0070 = 0x801F0070;

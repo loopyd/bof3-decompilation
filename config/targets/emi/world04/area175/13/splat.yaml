@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F35B4
   - - 2628
-    - asm
-    - func_801F3644
+    - c
+    - drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644
+    - '@source: src/bof3/world/drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644.c'
+    - '@behavior: Overlay step handler, entry 2 of the local state-byte-1 handler table D_801F460C at 0x801F460C. Reads the work record published at the scratchpad pointer cell 0x1F800044 and calls the fan helper at 0x801F36DC with the record signed halfwords +0x2E and +0x30 as the fan center and its byte +0x09 as the radius scale, then decrements byte +0x09 and, when it reaches zero, re-reads the cell and advances the record state byte +0x01 by one.'
   - - 2748
     - c
     - invokeHelperWorld04Area17513_801F36BC

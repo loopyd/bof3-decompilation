@@ -84,8 +84,9 @@ segments:
     - drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C
     - '@source: src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C.c'
   - - 4596
-    - asm
-    - func_801EFDF4
+    - c
+    - drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4
+    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4.c'
   - - 5476
     - asm
     - func_801F0164

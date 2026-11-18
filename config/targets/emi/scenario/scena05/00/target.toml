@@ -11,6 +11,7 @@ sources = [
     "src/bof3/scenario/scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808.c",
     "src/bof3/scenario/drawWorkCursorThenTickProgressBy16AndAdvanceWorkByte1At501ScenarioScena0500_801F745C.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState10ScenarioScena0500_801FCC28.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState11ScenarioScena0500_801FCC74.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F73F8.c",

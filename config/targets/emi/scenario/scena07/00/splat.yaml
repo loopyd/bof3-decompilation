@@ -187,8 +187,10 @@ segments:
     - asm
     - func_801F7FA4
   - - 5212
-    - asm
-    - func_801F805C
+    - c
+    - updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F805C
+    - '@source: src/bof3/scenario/updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F805C.c'
+    - '@behavior: Overlay per-frame handler: entry 7 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDDC), which dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so this handler runs while that byte reads 7. It runs the trail rebuild at 0x801F88B8 and then the trail draw pass at 0x801F8BE8, both on the trail buffer base 0x800E48E0 and both results discarded, then adds 6 modulo 65536 to the shared unsigned halfword at 0x800E4C1E, decrements the work object''s countdown byte at +0x09 modulo 256, and when that count reaches zero stores 0x20 back into the same byte and increments the work object''s handler-index byte at +0x02 so the run advances. Each scratchpad work-pointer read at 0x1F800044 is its own named-cell load, so both pointer reads in the countdown arm keep their separate lui/lw pairs; the 0x20 is materialised in the branch delay slot of the countdown test. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the two calls. No in-image jal reaches the address: the run word at 0x801FDDDC is the only image word naming it.'
   - - 5360
     - c
     - updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F80F0

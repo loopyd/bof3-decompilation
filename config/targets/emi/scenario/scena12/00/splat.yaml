@@ -157,8 +157,10 @@ segments:
     - asm
     - func_801FAE04
   - - 19556
-    - asm
-    - func_801FB864
+    - c
+    - stepSubstatesSeedingFieldRecordsRequestingFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FB864
+    - '@source: src/bof3/scenario/stepSubstatesSeedingFieldRecordsRequestingFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FB864.c'
+    - '@behavior: Overlay secondary-state handler, the word at 0x801FD1E8 (entry 9 of the ten-word handler run at 0x801FD1C4) that dispatchSecondaryStateScenarioScena1200_801F886C indexes with the signed state byte D_80146874, so it runs while that byte reads 9. It switches on the sub-state byte D_80146875 through the forty-eight-entry absolute jump table at 0x801F70B4: the arms wait on the shared progress byte g_ScenarioProgress and on the gate bytes D_80149332, D_80143BB0 and D_80143C40, set scenario bits through func_8015B580, reset windows through func_801C601C, seed entries of the 0x74-byte record run at 0x80143FC8 with the slot index func_8019601C answers, run the action trigger func_80150224 with the ids 5, 4, 3, 2 and 0xB, request context pairs through func_801BFE34 and func_801C7A54 with the selection 0x26 and set front-end mode 0xD, and the closing arms release the front-end through func_8015C058 and clear D_80146875 and D_80146874 to return the overlay to its idle entry.'
   - - 22900
     - c
     - dispatchRecordCallbackByByte7AScenarioScena1200_801FC574
