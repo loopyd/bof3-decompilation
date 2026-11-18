@@ -462,8 +462,56 @@ segments:
     - asm
     - func_801FBC88
   - - 20872
-    - asm
-    - func_801FBD88
+    - c
+    - runSecondaryStateSequenceForPrimaryState15ScenarioScena0600_801FBD88
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState15ScenarioScena0600_801FBD88.c'
+    - '@behavior: Word 15 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a 31-entry case
+      table in which only states 0, 1, 5, 6, 9, 10, 11, 12, 13, 14, 17, 18, 19,
+      20, 21, 22 and 30 have a body; every other value, and every value above
+      0x1E, falls to the epilogue. State 0 queues front-end action 0x1A through
+      func_80150224, latches the front-end phase byte D_80143BB0 to 2 and arms
+      secondary state 1; state 1, unless that phase byte already reads 2,
+      clears the progress byte and joins the reset tail; state 5 queues action
+      0x1B, latches the phase byte to 2 and arms secondary state 6; state 6,
+      unless the phase byte reads 2, claims one front-end record through
+      func_8019601C and, unless the claim reads 0xFF, writes 1 to byte 0 and
+      0x4B to byte +5 of the 0x74-byte row the claim selects, then runs
+      func_801BE1B0 mode 6, arms the effect cue byte D_8014933B to 1, publishes
+      the shared flag bank 0x80144F28 through func_8015B580 mode 7, queues cues
+      0x207 and 0x201 and arms secondary state 9; state 9, at progress 0x29,
+      runs func_8014ECAC mode 0x0F and arms secondary state 0x0A; states 0x0A
+      and 0x0B wait on the gate halfword D_80143C40, where 0x0A runs
+      func_8014ECAC mode 0x10, func_801BE1B0 mode 7 and func_801C601C mode 2
+      before arming 0x0B, and 0x0B latches progress 0x2A and arms 0x0C; state
+      0x0C, at progress 0x2D, stores its claim in the scratchpad cell 0x1F800000
+      and, unless that claim reads 0xFF, seeds the selected row (+0 = 1, +5 =
+      0x13, +9 = 0x50, the signed word +0x64 = -0x32E, and +0x68 and +0x6C from
+      the signed halfwords D_801492DA and D_801492DC) before latching D_80146867
+      to the claimed index and arming 0x0D; state 0x0D stays while the row that
+      index names is still occupied and otherwise claims again with the same
+      field run (+0x64 = -0x2AA, +9 = 0x28) before arming 0x0E; state 0x0E, once
+      that row is free, latches progress 0x2F, clears D_80146867 and arms 0x11;
+      state 17 at progress 0x35 runs func_8015D404(0, 2) and
+      func_80161C20(0x5C, 0x64, 8) and arms 0x12; state 18 at progress 0x42
+      runs func_8015D554(0, 1, 4, 0x1E) and func_801636A0(2, 1) and arms 0x13;
+      state 19, once func_80163EA0 answers a nonzero low byte, queues the same
+      0x5C/0x64/8 cue, latches progress 0x43 and arms 0x14; state 20 at progress
+      0x47 walks the selection array 0x80144F5A three times, queueing action
+      0x25 for each slot holding 2, 0x24 for each slot holding 5 and 0x23 for
+      each slot holding 1, then latches the phase byte to 2 and arms 0x15; state
+      21, unless the phase byte reads 2, latches progress 0x48 and arms 0x16;
+      state 22 at progress 0x49 publishes D_8014686C through func_8015B580 mode
+      0x2C, runs func_801650B4(0, 0x57, 1, 0) and joins the reset tail; state 30
+      queues action 0x26, latches the phase byte to 2 and arms secondary state
+      1. States 1 and 22 join one reset tail that clears D_80146865 to
+      D_80146867, runs the shared overlay release helper func_8015C058 and
+      clears both scene state bytes. The 0x20-byte frame keeps $ra, $s1 and $s0
+      across the calls, the state-byte load and its bound test are hoisted above
+      the frame setup, and the 31-word case table sits in the payload leading
+      table data at 0x801F7174.'
   - - 22680
     - c
     - runSecondaryStateSequenceForPrimaryState16ScenarioScena0600_801FC498

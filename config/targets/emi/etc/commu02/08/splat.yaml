@@ -176,8 +176,10 @@ segments:
     - asm
     - func_801DA114
   - - 39844
-    - asm
-    - func_801DA7A4
+    - c
+    - commitCardRunIntoFlaggedFieldRecordAndStartActionF5
+    - '@source: src/bof3/ui/commitCardRunIntoFlaggedFieldRecordAndStartActionF5.c'
+    - '@behavior: snapshots the five card bytes of the flagged field record that findFlaggedFieldRecordSlot answers for the ordinal at 0x801DB0B4 into the shared buffer at 0x801490D8 and clears its terminator, copies the six-byte card run at 0x801DB080 into the shared buffer at 0x801490F8, writes that five-byte run back into the record prefix, starts action 0xF5 through func_80150224, latches the frontend mode byte at 0x80143BB0 to 2 and sets the step group at 0x801F294C to 3 with bytes 1 and 2 cleared'
   - - 40168
     - asm
     - func_801DA8E8

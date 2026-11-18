@@ -24,6 +24,7 @@ sources = [
     "src/bof3/ui/drawPanelStripThenSubmitWorkImage.c",
     "src/bof3/ui/drawActiveRecordSlotBar.c",
     "src/bof3/ui/pickRandomValueOneThroughBound.c",
+    "src/bof3/ui/commitCardRunIntoFlaggedFieldRecordAndStartActionF5.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

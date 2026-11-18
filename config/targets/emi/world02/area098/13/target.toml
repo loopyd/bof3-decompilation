@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8.c",
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5B0C.c",
     "src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C.c",
+    "src/bof3/world/claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4.c",
 ]
 support_sources = [
     "src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c",

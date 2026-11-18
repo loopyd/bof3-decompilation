@@ -224,8 +224,10 @@ segments:
     - asm
     - func_801F3EB4
   - - 4908
-    - asm
-    - func_801F3F2C
+    - c
+    - requestFrontSelectorContextOnceOnWorldZoneEntryWorld04Area17513_801F3F2C
+    - '@source: src/bof3/world/requestFrontSelectorContextOnceOnWorldZoneEntryWorld04Area17513_801F3F2C.c'
+    - '@behavior: Compares the integer halves of two 16.16 position arguments against one tile rectangle (first half in 0x41..0x44, second half in 0x14..0x17); outside it stores 1 into the latch byte 0x801455C7, and inside it acts only while that latch is nonzero, clearing the latch, queueing front-end cue 0x20C through func_8015DF18 and requesting the front selector context from the shared halfword 0x80145048 with 0x80145040 and 0x80145044 as kind 4 through func_8019FA28; returns 0 on every path.'
   - - 5052
     - c
     - invokeHelperArgWorld04Area17513_801F3FBC

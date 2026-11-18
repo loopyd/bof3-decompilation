@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801F3958
   - - 4236
-    - asm
-    - func_801F3C8C
+    - c
+    - allocateWorkPaletteSlotFromPayloadTableSetWorkByte2aAndRequestResource9World04Area17413_801F3C8C
+    - '@source: src/bof3/world/allocateWorkPaletteSlotFromPayloadTableSetWorkByte2aAndRequestResource9World04Area17413_801F3C8C.c'
+    - '@behavior: State handler of this overlay, reached through the word 0x801F6610, entry 0 of the dispatch table that publishes the handlers of this payload; no jal in the payload names it. It reads the work record published through the scratchpad cell 0x1F800044, passes that record to the main-executable helper 0x8014E4BC, allocates one palette slot with the record as its owner and the payload pointer run 0x801F66D4 as its source table, stores 1 into work byte 0x2A, and requests resource 9 through the shared helper 0x8014D6B8. Takes no arguments and returns nothing.'
   - - 4324
     - asm
     - func_801F3CE4

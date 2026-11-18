@@ -36,14 +36,9 @@ segments:
     - asm
     - func_801EED1C
   - - 380
-    - asm
-    - func_801EED7C
-  - - 444
-    - textbin
-    - T_801EEDBC
-  - - 508
-    - asm
-    - func_801EEDFC
+    - c
+    - dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C.c'
   - - 524
     - asm
     - func_801EEE0C

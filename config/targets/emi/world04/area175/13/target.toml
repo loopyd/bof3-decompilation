@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/drawWorkFanScaledByByte9AndAdvanceWorkByte1WhenCountdownExpiresWorld04Area17513_801F3644.c",
+    "src/bof3/world/requestFrontSelectorContextOnceOnWorldZoneEntryWorld04Area17513_801F3F2C.c",
 ]
 support_sources = [
     "src/bof3/world/decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C.c",

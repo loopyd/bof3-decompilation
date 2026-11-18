@@ -82,8 +82,10 @@ segments:
     - asm
     - func_801F3B5C
   - - 4052
-    - asm
-    - func_801F3BD4
+    - c
+    - claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4
+    - '@source: src/bof3/world/claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4.c'
+    - '@behavior: Overlay progress step handler, entry 6 of the nine-word handler row at 0x801F5F88: post-increments the work record byte at +0x06 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F526C; then runs the per-frame passes 0x801F5308 and 0x801F5940, renders the record through 0x801F48E8 with the triple at +0x18, the triple at +0x34 and the channel mask 0x40, subtracts 0x200 from the work word at +0x10 and 0x800 from the word at +0x0C, subtracts 4 from the byte at +0x03, adds the updated +0x0C word into +0x18 and the updated +0x10 word into +0x1C, decrements the countdown byte at +0x09 and, when it reaches zero, reloads it with 0x80 and advances the state byte at +0x01.'
   - - 4316
     - asm
     - func_801F3CDC

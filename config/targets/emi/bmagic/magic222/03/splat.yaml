@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801EFE74
   - - 4988
-    - asm
-    - func_801EFF7C
+    - c
+    - incrementWorkWord0CProjectPositionPairAtWorkByteBAngleThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic22203_801EFF7C
+    - '@source: src/bof3/bmagic/incrementWorkWord0CProjectPositionPairAtWorkByteBAngleThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic22203_801EFF7C.c'
+    - '@behavior: Per-frame work-handler step, entry 1 of the eight-entry handler table based at 0x801F0D8C whose word at 0x801F0D90 holds this function address, so the byte-1 dispatcher dispatchWorkByte2HandlerThenDrawTransformedAndPopWhenWorkBytes0And2SetBmagicMagic22203_801EFDEC selects it by work byte 2 while that work object byte 1 is 2 and no jal in this payload targets this address. It reads the scratchpad work object through the pointer cell at 0x1F800044 before it creates its frame, takes work byte 0xB as the sample angle shifted left nine into the halfword at 0x1F800004, and adds one to work word 0x0C. It samples 0x801782FC at that angle truncated to sixteen bits, re-reads the cell and stores the shared record word 0x34 plus that sample times work word 0x0C into work word 0x34. It then samples 0x801783C8 at the signed scratchpad halfword it published and stores the shared record word 0x38 plus that sample times work word 0x0C into work word 0x38. Finally it pre-decrements work byte 9 at byte width and, when that countdown reaches zero, re-reads the cell and adds one to work byte 2, which moves the dispatcher to the next byte-2 step. The 0x18-byte frame keeps only $ra and $s0; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 5232
     - asm
     - func_801F0070

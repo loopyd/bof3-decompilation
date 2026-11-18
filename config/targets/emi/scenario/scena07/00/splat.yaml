@@ -181,8 +181,10 @@ segments:
     - asm
     - func_801F7E68
   - - 4856
-    - asm
-    - func_801F7EF8
+    - c
+    - updateTrailBufferAddWordsCAnd10And14ToWords34And38And3CSetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F7EF8
+    - '@source: src/bof3/scenario/updateTrailBufferAddWordsCAnd10And14ToWords34And38And3CSetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F7EF8.c'
+    - '@behavior: Overlay per-frame handler: entry 5 of the twelve-word in-image code-pointer run based at 0x801FDDC0 (the word at 0x801FDDD4), which dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes with the scratchpad work object''s unsigned byte at offset 0x02, so this handler runs while that byte reads 5. It runs the trail rebuild at 0x801F88B8 on the trail buffer base 0x800E48E0, then the trail draw pass at 0x801F8BE8 on that same base, discarding both results; then loads the work-object pointer cell at 0x1F800044 once and, through that saved pointer, adds the work object''s word at 0x0C into its word at 0x34, its word at 0x10 into its word at 0x38 and its word at 0x14 into its word at 0x3C. When the updated word at 0x34 again reads equal to the target word at 0x18 and the updated word at 0x38 again reads equal to the target word at 0x1C, it stores 0x2F into the work object''s byte at offset 0x09 through that same saved pointer, then re-reads the pointer cell and increments the work object''s byte at offset 0x02, the state machine''s handler index, through the re-read pointer. Both comparisons re-read the words they just stored, and the 0x2F is materialised in the branch delay slot of the second comparison. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the two calls. No in-image jal reaches the address: the run word at 0x801FDDD4 is the only image word naming it.'
   - - 5028
     - asm
     - func_801F7FA4

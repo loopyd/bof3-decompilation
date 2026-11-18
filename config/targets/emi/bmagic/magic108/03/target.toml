@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic108/03.bin"
 splat = "config/targets/emi/bmagic/magic108/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C.c",
+]
 support_sources = [
     "src/bof3/support/magic108_03_psyq.c",
     "src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0.c",
