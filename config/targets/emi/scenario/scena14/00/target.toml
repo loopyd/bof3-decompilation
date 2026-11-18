@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/clearIndexedFlagBit0ArmEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FBF18.c",
     "src/bof3/scenario/selectFirstPartyMirrorIdOtherThan7Or4ThenArmEffectGroupAndResetEffectSlotsScenarioScena1400_801FC280.c",
     "src/bof3/scenario/requestPrimaryState4Substate0OnWorld94FrontSide4Position738000OrPrimaryState2Substate14OnWorldBFFlag5MapCodeA6NeighbourScenarioScena1400_801FB648.c",
+    "src/bof3/scenario/requestFrontEndStateForWorldFrontSideAndPositionZoneScenarioScena1400_801FB84C.c",
     "src/bof3/scenario/dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0.c",
     "src/bof3/scenario/dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4.c",
 ]

@@ -151,8 +151,10 @@ segments:
     - '@source: src/bof3/scenario/scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808.c'
     - '@behavior: Two mirrored scans of the three shared selection slots at D_80144F5A: the first stores 1 into the shared state byte D_80146865 for every slot that reads 5, the second stores 2 for every slot that reads 6, so the byte ends as 2 when any slot reads 6, as 1 when no slot reads 6 but one reads 5, and unchanged when no slot reads either value. It takes no arguments, returns nothing and its body is a leaf with no frame; each slot load adds the zero-extended index to the 0x8014 page in $at, and each scan hoists its own copy of the 0x80146865 address into $a1 beside its comparison and stored constants.'
   - - 23712
-    - asm
-    - func_801FC8A0
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0500_801FC8A0
+    - '@source: src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0500_801FC8A0.c'
+    - '@behavior: Publishes the shared work base D_80145E90 as the scratchpad cursor at 0x1F800044, stores the front-end record index returned by func_8019601C into that base''s byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte front-end record it selects at 0x80143FC8: record byte 0x00 = 1, byte 0x05 = 6, byte 0x06 = the argument plus 0x70 truncated to a byte, word 0x0C = 0, word 0x10 = the zero-extended byte D_801FD5C0[D_80144F5A] and the halfwords at 0x2E/0x30 copied from the work base at the same offsets. No in-image jal targets this body and no payload word holds its address, so the single argument stays structural; its 0x18-byte frame only keeps $ra and $s0, which holds that argument.'
   - - 24152
     - c
     - dispatchRecordCallbackScenarioScena0500_801FCA58

@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_801D0C04
   - - 6812
-    - asm
-    - func_801D269C
+    - c
+    - drawMarkerTriangleCommu0208_801D269C
+    - '@source: src/bof3/ui/drawMarkerTriangleCommu0208_801D269C.c'
+    - '@behavior: stamps the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 6, y - 6) and (x + 6, y - 6) of one opaque flat-shaded marker triangle, tints its green byte from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the 0x14-byte primitive as size class 1'
   - - 6992
     - c
     - pickRandomValueOneThroughBound

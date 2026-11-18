@@ -3,7 +3,9 @@
 /* Handler pointer run of this overlay. The Splat textbin row D_8011818C places
  * thirteen in-image code pointers, 0x8011818C through 0x801181BC. This
  * dispatcher indexes it from 0x8011819C, so the base is entry 4 and the nine
- * reachable entries are func_8011765C, func_801176B8, func_80117768,
+ * reachable entries begin with
+ * raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C,
+ * followed by func_801176B8, func_80117768,
  * func_80117818, func_80117A74, func_80117ACC, func_80117C38, func_80117C58 and
  * func_80117DF0, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated

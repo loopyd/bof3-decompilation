@@ -173,8 +173,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7D28.c'
     - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local ten-word in-image code-pointer run based at 0x801FDDC8 (the D_801FDDC0 run''s suffix from its third word, closed by the data label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 8 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 8.'
   - - 4460
-    - asm
-    - func_801F7D6C
+    - c
+    - seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C
+    - '@source: src/bof3/scenario/seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C.c'
+    - '@behavior: One-shot overlay handler, word 0 of the ten-word in-image code-pointer run based at 0x801FDDC8 (the word at 0x801FDDC8) that dispatchWorkByte2HandlerScenarioScena0700_801F7D28 indexes with the scratchpad work object''s unsigned byte at offset 0x02, so it runs while that byte reads 0; the address is also word 2 of the twelve-word run based at 0x801FDDC0 that dispatchWorkByte2HandlerScenarioScena0700_801F7B9C indexes, and those two run words are the only image words naming it. It loads the work-object pointer cell at 0x1F800044 before it creates its frame, seeds that object''s word at 0x34 from the shared coordinate word D_80145EC4 and its word at 0x38 from D_80145EC8, and stores into the object''s word at 0x3C the distance the shared main-executable helper func_8015477C computes from that pair, shifted left by 16, through a second read of the pointer cell. It then calls the overlay setup pass at 0x801FA01C with no arguments, and finally reads the pointer cell a third time, arms the object''s countdown word at 0x0C with 0x78 and increments the object''s byte at 0x02, the handler index that advances the run. Takes no arguments and returns nothing; its 0x28-byte frame only keeps $ra at 0x20.'
   - - 4572
     - asm
     - func_801F7DDC

@@ -49,6 +49,7 @@ queueEvent106ResetStateD = 0x80099114;
 dispatchSubstateTable446c = 0x80099178;
 dispatchSubstateTable447c = 0x80099328;
 dispatchSubstateTable448c = 0x80099F90;
+initSelectionStateSlot5 = 0x8009A468;
 dispatchSubstateTable44a0 = 0x8009A590;
 selectionSetupEnabledB = 0x8009AF7C;
 func_8009AF84 = 0x8009AF84;

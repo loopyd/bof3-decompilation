@@ -227,8 +227,10 @@ segments:
     - asm
     - func_8009A254
   - - 15464
-    - asm
-    - func_8009A468
+    - c
+    - initSelectionStateSlot5
+    - '@source: src/bof3/battle/initSelectionStateSlot5.c'
+    - '@behavior: Queues event 0x104, arms selection slot byte 5, marks the UI ring entry behind the ring tail, runs panel tasks 16..19 and resets the selection substate.'
   - - 15640
     - asm
     - func_8009A518

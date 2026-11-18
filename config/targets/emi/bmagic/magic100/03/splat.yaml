@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801EF4E8
   - - 3304
-    - asm
-    - func_801EF8E8
+    - c
+    - projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordHalfword3EOrPositionDistanceByWorkByte2BmagicMagic10003_801EF8E8
+    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordHalfword3EOrPositionDistanceByWorkByte2BmagicMagic10003_801EF8E8.c'
+    - '@behavior: Pushes the GTE matrix stack and reads the work record published at the scratchpad pointer cell 0x1F800044 once, before any call. Zeroes a translation halfword triplet in ascending element order, then builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000, and whose third element is half the negated work record signed halfword 0x3E when work byte 0x2 is below three and half the negated distance the shared main-executable helper 0x8015477C answers for that same word pair otherwise. RotTrans projects the triplet into the translation field of a 0x20-byte scratch matrix, RotMatrix turns the zeroed triplet into that same matrix rotation, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and the result is installed through SetRotMatrix and SetTransMatrix. Takes no arguments and returns nothing; no payload jal word and no payload data word names this address, so an out-of-payload or overlay-loader caller reaches it and its roles stay structural.'
   - - 3540
     - asm
     - func_801EF9D4

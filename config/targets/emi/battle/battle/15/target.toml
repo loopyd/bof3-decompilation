@@ -313,6 +313,7 @@ sources = [
     "src/bof3/battle/copyWorkWord3CPlus4000000IntoWord20RequestWorkByte8Plus38SetWorkByteBTo10ThenAdvanceWorkByte1.c",
     "src/bof3/battle/setSelectedKindQueueSlotFromGroupedTableAndPublishPointer.c",
     "src/bof3/battle/initSelectionStateSlot4.c",
+    "src/bof3/battle/initSelectionStateSlot5.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationAndHalfNegatedRecordHalfword3EPlus100BmagicMagic10003_801EF434.c",
+    "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHalfNegatedRecordHalfword3EOrPositionDistanceByWorkByte2BmagicMagic10003_801EF8E8.c",
 ]
 support_sources = [
     "src/bof3/support/magic100_03_psyq.c",

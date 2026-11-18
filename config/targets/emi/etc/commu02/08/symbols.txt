@@ -1,5 +1,5 @@
 D_801D0C04 = 0x801D0C04;
-func_801D269C = 0x801D269C;
+drawMarkerTriangleCommu0208_801D269C = 0x801D269C;
 pickRandomValueOneThroughBound = 0x801D2750;
 drawCardRowWithSlotOffsets = 0x801D2794;
 dealNineUniqueCardIds = 0x801D2870;

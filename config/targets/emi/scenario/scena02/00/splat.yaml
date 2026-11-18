@@ -90,8 +90,26 @@ segments:
     - asm
     - func_801F8C78
   - - 9524
-    - asm
-    - func_801F9134
+    - c
+    - runSubstateProgressLadderSeedSelectorContextSetFlagBitsThenReleaseScenarioScena0200_801F9134
+    - '@source: src/bof3/scenario/runSubstateProgressLadderSeedSelectorContextSetFlagBitsThenReleaseScenarioScena0200_801F9134.c'
+    - '@behavior: Slot 13 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872; its pointer word sits at 0x801FE2B4. It
+      switches the shared sub-state byte D_80146875 through the eleven-word case
+      table at 0x801F6D74, where sub-states 2 and 4 have no body. Sub-state 0
+      runs func_8015C088 and func_801BE1B0(3) and advances to 1. Sub-state 1, on
+      progress 1, stores 4 in the effect-bank byte D_80146866, advances to 3,
+      raises mode bit 8 of D_80146258 and seeds the front selector context
+      func_8019FA28(0x1B, 0x400000, 0x1B0000, 0x94). Sub-state 3, on progress 9,
+      sets flag bits 0xF of D_8014686C through func_8015B580, flips mode bit 8,
+      releases the overlay through func_8015C058, clears D_80146865, D_80146866
+      and D_80146867 and zeroes D_80146875 and D_80146874. Sub-states 5, 6, 7, 8
+      and 9 run func_801BE1B0(4), func_801C601C(0), func_801BFE34(0x200000,
+      0x260000, 8), func_801C7A54(8) and func_801BE1B0(0x12) on progress 1, 2,
+      0x10 and 0x11, each advancing to the next sub-state, and sub-state 0xA, on
+      progress 0x14, sets flag bit 0x10 of D_8014686C and takes the same release
+      and clear tail.'
   - - 10092
     - c
     - runFrontEndCompletionSubstatesSeedingSelectorContextsThenReleaseScenarioScena0200_801F936C
