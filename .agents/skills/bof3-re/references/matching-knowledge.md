@@ -1927,6 +1927,12 @@ through combine; a direct memory-to-argument load gives a removed local no
 preference. Use real value phases; never add a consumer or extend a lifetime
 to create a preference.
 
+`expand_preferences` also propagates preferences through a non-copy SET
+when its destination and dying source are nonconflicting global pseudos.
+This includes a load from a dying pointer. Trace those links before
+`prune_preferences`, which can remove a preference from the value while
+leaving it on the pointer.
+
 Calculate local priority for the complete tied quantity. GCC 2.7.2 uses
 `floor_log2(refs) * refs * size / (death - birth)`, so crossing a power of two
 can change allocation more than the added reference suggests. A real coordinate
