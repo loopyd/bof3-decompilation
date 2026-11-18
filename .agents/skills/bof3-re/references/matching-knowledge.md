@@ -1709,6 +1709,11 @@ copy. Check global allocation priorities and compiler-generated stack uses
 before explaining register or frame changes. Preserve the signed-byte domain
 and the original load and conversion sequence.
 
+A classification with a proven byte result can preserve the comparison's word
+result separately from the byte local. Trace that word-to-byte capture through
+combine and allocation when the original copies the result into a saved register.
+Prove the complete result range and every promoted consumer before narrowing.
+
 Trace a pointer-cell sample separately from the later pointee read. If the
 original samples the cell before destination stores and reads the field after
 them, snapshot only the pointer before those stores. Prove the stores cannot

@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 78.42
+ * @match 79.42
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -94,7 +94,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8 retainedAngle;
   u8 selectedAngle;
   s32 seedAngle;
-  s32 level;
+  u8 level;
   s32 roll;
   s32 value;
   u32 mode3Motion;
@@ -494,13 +494,16 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     inwardConditionWork = D_1F800044;
     reference = workOffsetReferenceState;
     if ((s8)inwardConditionWork[0x0A] < reference && D_8014421C < 0) {
-      denominator = 0x3E - FIELD_REF(s16, inwardConditionWork, 0x3A);
+      do {
+        denominator = 0x3E - FIELD_REF(s16, inwardConditionWork, 0x3A);
+      } while (0);
       numerator =
           (s32)(0xF0000u - FIELD_REF(u32, inwardConditionWork, 0x34));
       numerator >>= 4;
       if (denominator != 0) {
-        velocity = numerator / denominator;
-        FIELD_REF(s32, inwardConditionWork, 0x0C) = velocity;
+        denominator = numerator / denominator;
+        velocity = denominator;
+        FIELD_REF(s32, inwardConditionWork, 0x0C) = denominator;
         if (velocity < -0x1000) {
           velocity = -0x1000;
         } else if (velocity > 0x1000) {
