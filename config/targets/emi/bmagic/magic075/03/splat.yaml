@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC70
   - - 480
-    - asm
-    - func_801EEDE0
+    - c
+    - storeDoubleWorkByteBIntoWorkByteARecordTripletAndAdvanceWorkByte1WhenWorkByteBIs7BmagicMagic07503_801EEDE0
+    - '@source: src/bof3/bmagic/storeDoubleWorkByteBIntoWorkByteARecordTripletAndAdvanceWorkByte1WhenWorkByteBIs7BmagicMagic07503_801EEDE0.c'
+    - '@behavior: Per-frame effect step: reads the scratchpad work-object pointer cell at 0x1F800044 once per store group and writes the doubled unsigned work byte 0xB into the +0x2, +0x3 and +0x4 triplet bytes of the 12-byte effect record selected by the work object unsigned byte 0xA (the index is scaled by the record stride as idx*3*4). Each of the three stores re-reads the cell and both work bytes, so the cell address is rebuilt before every store. It then re-reads the cell and work byte 0xB and, when that byte is exactly 7, increments the work object byte 0x1 with a byte-width add; otherwise it returns. Leaf with no frame, no saved registers, no arguments, no calls and no return value.'
   - - 688
     - asm
     - func_801EEEB0

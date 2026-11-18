@@ -397,8 +397,9 @@ segments:
     - copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234
     - '@source: src/bof3/scenario/copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234.c'
   - - 30476
-    - asm
-    - func_801FE30C
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE30C
+    - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0900_801FE30C.c'
   - - 30516
     - c
     - invokeHelperArgThenHelperScenarioScena0900_801FE334

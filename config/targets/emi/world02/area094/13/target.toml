@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2F50.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area09413_801F2FD0.c",
 ]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",

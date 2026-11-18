@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EEF80
   - - 1060
-    - asm
-    - func_801EF024
+    - c
+    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic16103_801EF024
+    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic16103_801EF024.c'
+    - '@behavior: Work byte 2 step handler of this overlay. It calls the shared main-executable helper at 0x800AFF98 with no arguments, stores the returned byte in scratchpad work byte 9 through the pointer cell at 0x1F800044, then re-reads that cell and increments work byte 2 at byte width, advancing the dispatch state. The 0x18-byte frame only keeps the return address at 0x10, no other state is read or written, and nothing is returned. The 72-byte body is byte-identical to the bodies at 0x801F133C of emi/bmagic/magic008/00, 0x801EF9A0 of emi/bmagic/magic004/03 and 0x801EF2E0 of emi/bmagic/magic065/00 (payload byte comparison).'
   - - 1132
     - asm
     - func_801EF06C

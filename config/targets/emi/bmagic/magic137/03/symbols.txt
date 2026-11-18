@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801E5988 = 0x801E5988;
-func_801EEC1C = 0x801EEC1C;
+dispatchWorkByte1HandlerBmagicMagic13703_801EEC1C = 0x801EEC1C;
 func_801EEC7C = 0x801EEC7C;
 func_801EEEFC = 0x801EEEFC;
 func_801EEF64 = 0x801EEF64;
