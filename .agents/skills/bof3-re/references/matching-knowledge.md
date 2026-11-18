@@ -1965,6 +1965,15 @@ and trigger its destination's birth boost before reload. Check which
 definitions survive flow and combine before using real value phases to change
 that priority.
 
+Check the source pseudo's `reg_n_calls_crossed` before predicting initial
+readiness. GCC 2.7.2 orders reads of a pseudo with zero calls crossed before
+the next call. That call can release the copy and trigger its destination's
+birth boost. Moving an existing last use past the call can change this
+dependency. After rescheduling, a block-local pseudo's count can become zero.
+For `REG_BLOCK_GLOBAL` pseudos, the scheduler retains the previous count when
+the new count is zero. The retained count can exclude call-used registers
+during allocation.
+
 When a pointer copy survives CSE but a later store uses the copied base, trace
 GCC 2.7.2 `optimize_reg_copy_1`. It forwards source uses through the source's
 full-mode death. Definitions of either copied register and control or loop
