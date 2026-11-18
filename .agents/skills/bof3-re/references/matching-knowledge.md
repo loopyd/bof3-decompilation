@@ -2008,6 +2008,14 @@ After CSE preserves the copy, recheck deaths and allocation. Several real
 phases can exclude local allocation and change global priority, conflicts and
 preferences. Inspect the complete register web before a native probe.
 
+When CSE removes a copy into an increment result, capture the existing predicate
+before that copy. An earlier real sample of the same field can preserve the result
+quantity through CSE2. Keep the predicate and copy after the preceding publication
+operation's END, where first CSE would otherwise drop the comparison equivalence.
+Include only the operation's real inputs. Check both scheduling passes, reference
+thresholds, conflicts and the complete native output. A preserved copy alone does
+not establish a gain.
+
 If the first initialization store is distinct from later reduction stores,
 let it consume the loaded address before capturing the retained loop cursor.
 That real consumer can preserve the load/copy pair through combine. Inspect

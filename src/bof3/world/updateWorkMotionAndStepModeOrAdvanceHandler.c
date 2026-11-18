@@ -13,7 +13,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 82.06
+ * @match 82.56
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -34,7 +34,6 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* outwardPositionWork;
   u8* outwardVelocityWork;
   u8* inwardConditionWork;
-  u8* inwardStepWork;
   u8* inwardPositionWork;
   u8* inwardModeWork;
   u8* countdownGuardWork;
@@ -119,7 +118,9 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 classificationVelocity;
   s32 initialOutwardVelocity;
   s32 outwardTimer;
-  u16 outwardTimerValue;
+  s32 timerValue;
+  s32 outwardTimerNegative;
+  s32 inwardTimerNegative;
   s32 numerator;
   s32 denominator;
   u8 count;
@@ -259,7 +260,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     roll = rand();
     if ((roll & 0x0F) < chanceRow[0]) {
       chanceGuardWork = D_1F800044;
-      if (FIELD_REF(s16, chanceGuardWork, 0x3E) >= -0x3F &&
+      timerValue = FIELD_REF(s16, chanceGuardWork, 0x3E);
+      if (timerValue >= -0x3F &&
           (s8)chanceGuardWork[0x0A] > 0) {
         D_80143FC8[0].flags_00 =
             (u8)(D_80143FC8[0].flags_00 | 0x40);
@@ -450,11 +452,14 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   if (outwardAngle > outwardReference && FIELD_REF(s32, outwardConditionWork, 0x10) > 0) {
     position = FIELD_REF(s32, outwardConditionWork, 0x38);
     outwardTimer = FIELD_REF(s16, outwardConditionWork, 0x3E);
-    outwardTimerValue = (u16)outwardTimer;
-    FIELD_REF(u32, outwardConditionWork, 0x38) = (u32)position - 0x1000u;
-    if (outwardTimer < 0) {
-      outwardTimerValue += 8;
-      FIELD_REF(u16, outwardConditionWork, 0x3E) = outwardTimerValue;
+    do {
+      FIELD_REF(u32, outwardConditionWork, 0x38) = (u32)position - 0x1000u;
+    } while (0);
+    outwardTimerNegative = outwardTimer < 0;
+    timerValue = outwardTimer;
+    if (outwardTimerNegative) {
+      timerValue += 8;
+      FIELD_REF(u16, outwardConditionWork, 0x3E) = (u16)timerValue;
     }
 
     outwardPositionWork = D_1F800044;
@@ -524,13 +529,18 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
         FIELD_REF(s32, inwardConditionWork, 0x0C) = 0;
       }
 
-      inwardStepWork = D_1F800044;
-      inwardStepPosition = FIELD_REF(s32, inwardStepWork, 0x34);
-      velocity = FIELD_REF(s32, inwardStepWork, 0x0C);
-      denominator = FIELD_REF(s16, inwardStepWork, 0x3E);
-      FIELD_REF(u32, inwardStepWork, 0x34) = (u32)inwardStepPosition + (u32)velocity;
-      if (denominator < 0) {
-        FIELD_REF(s16, inwardStepWork, 0x3E) = (s16)(denominator + 8);
+      inwardConditionWork = D_1F800044;
+      inwardStepPosition = FIELD_REF(s32, inwardConditionWork, 0x34);
+      velocity = FIELD_REF(s32, inwardConditionWork, 0x0C);
+      do {
+        denominator = FIELD_REF(s16, inwardConditionWork, 0x3E);
+        FIELD_REF(u32, inwardConditionWork, 0x34) = (u32)inwardStepPosition + (u32)velocity;
+      } while (0);
+      inwardTimerNegative = denominator < 0;
+      timerValue = denominator;
+      if (inwardTimerNegative) {
+        timerValue += 8;
+        FIELD_REF(s16, inwardConditionWork, 0x3E) = (s16)timerValue;
       }
 
       inwardPositionWork = D_1F800044;
