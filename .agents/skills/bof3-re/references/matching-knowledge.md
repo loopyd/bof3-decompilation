@@ -1945,6 +1945,13 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+When a pointer copy survives CSE but a later store uses the copied base, trace
+GCC 2.7.2 `optimize_reg_copy_1`. It forwards source uses through the source's
+full-mode death. Definitions of either copied register and control or loop
+boundaries stop the scan. A real operation boundary must preserve the raw source
+through CSE2 and separate the scheduled copy from the store. Check both conditions
+before probing a scope. Source order or qualifiers alone do not stop forwarding.
+
 Global allocation also reserves preferences. In GCC 2.7.2, `prune_preferences`
 collects lower-priority conflicting pseudos' preferred hard registers in
 `regs_someone_prefers`; `find_reg` avoids them on its first pass. A raw value
