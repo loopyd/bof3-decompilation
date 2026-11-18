@@ -1,6 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
 extern int sprintf(char* buffer, const char* format, ...);
+extern u8 D_801C9E8A[]; /* @source 0x801C9E8A @kind table */
 extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
 
 /* @source 0x801D7EB0
@@ -14,16 +15,18 @@ extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
  * last row, or zero when there are no matching rows. Finishes with the
  * panel footer, stretched column and three-character ROD title.
  * @status partial
- * @match 76.96
- * @residual Complete native bytes still differ. The original 920-byte
- * interval remains retained until exact reconstruction.
+ * @match 94.35
+ * @residual 217 of 230 instructions match at 920 of 920 bytes. The
+ * remaining differences are the initial saved-origin, header-argument and
+ * loop-state setup order, beginning at +0x10.
  */
-void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s16 arg1) {
+void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   u16 x;
-  s32 baseY;
+  u16 baseY;
   s32 nameX;
   s32 countX;
   s32 rowY;
+  s32 panelY;
   s32 rowOffset;
   s32 rows;
   s32 slotIndex;
@@ -32,19 +35,26 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s16 arg1) {
   u8* slot;
   u8* work;
   u8* buffer;
+  u8* options;
 
   x = arg0;
   baseY = arg1;
+  slotIndex = 0;
   rows = 0;
-  slot = D_801451CC;
+  options = &D_80144952;
+  slot = PSX_PTR(u8, (u32)options + 0x87Au);
   buffer = D_80145AD4;
-  func_801AE3F0(x, (u16)(baseY + 1), 0x8B, 0x9E, 0xF0, D_80144952);
+  rowOffset = 0;
+  do {
+    rowY = arg1 + 0x19;
+    panelY = arg1 + 1;
+    arg1 = *options;
+  } while (0);
+  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, arg1);
   nameX = (s16)(x + 5);
   countX = (s16)(x + 0x68);
-  rowY = baseY + 0x19;
-  rowOffset = 0;
-  for (slotIndex = 0; slotIndex < 0x80; slotIndex++, slot++) {
-    if (D_801C9E7C[*slot * 20 + 0x0E] != 11) {
+  for (; slotIndex < 0x80; slotIndex++, slot++) {
+    if (D_801C9E8A[*slot * 20] != 11) {
       continue;
     }
     work = D_1F800044;
@@ -94,10 +104,10 @@ row_drawn:
   selectedRow = FIELD_REF(s32, work, 0x0C);
   FIELD_REF(s32, work, 0x18) = rows;
   if (selectedRow >= rows) {
-    if (rows != 0) {
-      FIELD_REF(s32, work, 0x0C) = rows - 1;
-    } else {
+    if (rows == 0) {
       FIELD_REF(s32, work, 0x0C) = 0;
+    } else {
+      FIELD_REF(s32, work, 0x0C) = rows - 1;
     }
   }
   func_801D90FC((s16)x, (s16)baseY);

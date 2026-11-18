@@ -1661,6 +1661,14 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+If a comparison result uses a fresh register where the original overwrites its
+bound, check the bound's local-allocation eligibility. Reusing one local for a raw
+input and a later bound can give its pseudo two deaths and exclude it from local
+allocation. Separate those real quantities, then check that the bound stays in
+one block and dies once. Inspect operand/result quantity tying and overlapping
+address temporaries before measuring the complete native body. A boolean
+assignment that CSE deletes does not by itself explain the register choice.
+
 When the original keeps a clamp's raw sample and selected result in separate
 registers, give those real quantities separate locals and keep the explicit
 in-range assignment. Initializing the result to a bound before the test can merge
