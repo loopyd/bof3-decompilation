@@ -34,8 +34,8 @@ void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void
   u8* amountWork;
   u8* scaleWork;
   u8* clearWork;
-  Area030Range* range;
-  Area030Range* retryRange;
+  Area030WorkRecord* range;
+  Area030WorkRecord* retryRange;
 
   column = 0;
   recordIndex = 0;
@@ -53,7 +53,7 @@ void initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0(void
       do {
         record = (u8*)&D_80146888[recordIndex];
         D_1F800044 = record;
-        D_80146884 = (Area030Range*)record;
+        D_80146884 = (Area030WorkRecord*)record;
         record[0] = 0x21;
 
         seedWork = D_1F800044;

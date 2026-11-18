@@ -9,7 +9,7 @@
  * @residual none
  */
 void func_801E026C(s8 arg0) {
-    Area030Range* range;
+    Area030WorkRecord* range;
     s16 value;
     s16 limit;
     s16 result;

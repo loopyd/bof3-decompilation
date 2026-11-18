@@ -29,7 +29,7 @@ void advanceEntrySlideAndSelectStateWorld00Area03004_801DC248(void) {
   configureSpriteClut((s16)(128 + D_1F800044[9] * 48), 91,
                       D_80146888[D_801E3208].unk_02[4]);
   func_801E1004(D_80146888[D_801E3208].unk_02[4],
-                D_80146888[D_801E3208].unk_60[0x30], D_1F800044[9]);
+                D_80146888[D_801E3208].unk_90[0], D_1F800044[9]);
   func_801E1320(176, (s16)(D_1F800044[9] * 30 + 156));
   work = D_1F800044;
   if (work[0xB] == 1) {

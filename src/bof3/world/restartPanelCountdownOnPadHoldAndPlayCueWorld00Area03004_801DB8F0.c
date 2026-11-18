@@ -29,7 +29,7 @@ void restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0(void) {
   u8* work;
 
   if (D_80145AA8 & 0x40) {
-    D_1F800044[9] = *(u16*)&D_80146888[D_801E3208].unk_60[0x30];
+    D_1F800044[9] = *(u16*)&D_80146888[D_801E3208].unk_90[0];
   } else {
     work = D_1F800044;
     work[9] = work[9] + 1;
@@ -37,7 +37,7 @@ void restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0(void) {
   submitPanelPair(0, 78);
   configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
   func_801E1004(D_80146888[D_801E3208].unk_02[4], D_1F800044[9], 0);
-  if (D_1F800044[9] == *(u16*)&D_80146888[D_801E3208].unk_60[0x30]) {
+  if (D_1F800044[9] == *(u16*)&D_80146888[D_801E3208].unk_90[0]) {
     if (D_801E3214) {
       func_8015DF18(0x20D);
     }

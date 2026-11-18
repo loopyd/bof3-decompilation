@@ -29,7 +29,7 @@ void func_801DE4AC(void) {
     if (D_80146888[i].flags_00 != 0) {
       record = &D_80146888[i];
       D_1F800044 = (u8*)record;
-      D_80146884 = (Area030Range*)record;
+      D_80146884 = record;
       D_801E2314[record->handler_01]();
       work = (Area030WorkRecord*)D_1F800044;
       if (work->flags_00 & 0x20) {

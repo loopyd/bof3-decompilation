@@ -74,12 +74,12 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* countWork;
   u8* angleWork;
   u8* scaleBytes;
-  Area030Range* classificationRange;
-  Area030Range* retryRange;
-  Area030Range* deltaRange;
-  Area030Range* activeRange;
-  Area030Range* inactiveRange;
-  Area030Range* countdownRange;
+  Area030WorkRecord* classificationRange;
+  Area030WorkRecord* retryRange;
+  Area030WorkRecord* deltaRange;
+  Area030WorkRecord* activeRange;
+  Area030WorkRecord* inactiveRange;
+  Area030WorkRecord* countdownRange;
   s32 reference;
   s32 inwardReference;
   s32 outwardReference;

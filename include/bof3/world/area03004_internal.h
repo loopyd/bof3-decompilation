@@ -466,14 +466,6 @@ typedef struct Area030SlotState {
 
 extern Area030SlotState D_801468A4[]; /* @source 0x801468A4 @kind unknown */
 
-typedef struct Area030Range {
-  u8 pad_00[0x8C];
-  s16 limit_8C;
-  s16 value_8E;
-} Area030Range;
-
-extern Area030Range* D_80146884; /* @source 0x80146884 @kind unknown */
-
 /* Shared 0x98-byte work records at 0x80146888 (0x1E slots). The AREA030
  * handlers walk them, publish the active record as the scratchpad cursor at
  * 0x1F800044 and as D_80146884, then dispatch the record's handler byte
@@ -492,9 +484,14 @@ typedef struct Area030WorkRecord {
   s8  level_5D;      /* +0x5D: level derived from counter_3E */
   u8  unk_5E;        /* +0x5E: level mirror */
   u8  unk_5F;        /* +0x5F: level mirror */
-  u8  unk_60[0x38];  /* +0x60-0x97 */
+  u8  unk_60[0x2C];  /* +0x60-0x8B */
+  s16 limit_8C;
+  s16 value_8E;
+  u8  unk_90[8];     /* +0x90-0x97 */
 } Area030WorkRecord;
 ASSERT_SIZE(Area030WorkRecord, 0x98);
+
+extern Area030WorkRecord* D_80146884; /* @source 0x80146884 @kind unknown */
 
 extern Area030WorkRecord D_80146888[]; /* @source 0x80146888 @kind unknown */
 extern void (*D_801E2314[])(void); /* @source 0x801E2314 @kind table */
@@ -832,7 +829,7 @@ void appendDimTile(void);
   (submitPanelPair(0, 78),                                                   \
    configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]),          \
    func_801E1004(D_80146888[D_801E3208].unk_02[4],                           \
-                 D_80146888[D_801E3208].unk_60[0x30], 0),                    \
+                 D_80146888[D_801E3208].unk_90[0], 0),                       \
    func_801E1320(176, (icon_row_y)))
 
 /* work_cell is read five times. Pass a volatile pointer-cell lvalue and distinct

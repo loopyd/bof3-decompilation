@@ -18,7 +18,7 @@ void func_801DB554(void) {
 
   if (D_80144199_BYTE == 4) {
     slot = D_80146888[D_801E3208].unk_02[4];
-    value = *(u16*)&D_80146888[D_801E3208].unk_60[0x30];
+    value = *(u16*)&D_80146888[D_801E3208].unk_90[0];
     if (D_80144FE4[slot] < value) {
       D_80144FE4[slot] = value;
       D_801E3214 = 1;
