@@ -21,6 +21,7 @@ sources = [
     "src/bof3/scenario/runSubstateSequenceSeedSelectorContextsArmModeFlagsAndReleaseScenarioScena0200_801F8070.c",
     "src/bof3/scenario/runSubstateSequenceQueueCueArmEffectBankSeedProgressAndReleaseScenarioScena0200_801FB0F0.c",
     "src/bof3/scenario/runSubstateLadderQueueFrontEndCuesSetFlagBitsSeedSelectorContextThenReleaseScenarioScena0200_801F9BD0.c",
+    "src/bof3/scenario/runSubstateLadderClaimFrontEndRecordsSeedSelectorContextsThenResetScenarioScena0200_801FAC54.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",
@@ -132,4 +133,10 @@ size = 0x68
 function = 0x801F9BD0
 section = ".rodata"
 address = 0x801F6E44
+size = 0x2C
+
+[[matching.section_placements]]
+function = 0x801FAC54
+section = ".rodata"
+address = 0x801F6FA4
 size = 0x2C

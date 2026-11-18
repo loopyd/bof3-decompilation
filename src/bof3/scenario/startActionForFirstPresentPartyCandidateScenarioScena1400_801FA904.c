@@ -24,8 +24,9 @@ void func_80150224(s32 arg0);
  *           0x801FC450 ({8, 2, 5, 4}) with 0x801FC458 ({2, 3, 4, 5}) at
  *           0x801F9938 and 0x801FC454 ({4, 5, 2, 8}) with 0x801FC460
  *           ({6, 7, 8, 9}) at 0x801F9A30, the two in-image jal sites inside
- *           func_801F9834. The candidate byte is the same +0x79 work-record byte
- *           the exact sibling findWorkByte79CandidateIndexWorld02Area10313_801F56B0
+ *           dispatchSubStateByteTable6E2CScenarioScena1400_801F9834. The
+ *           candidate byte is the same +0x79 work-record byte the exact sibling
+ *           findWorkByte79CandidateIndexWorld02Area10313_801F56B0
  *           scans, and that sibling's candidate-table/record-loop form is the
  *           seed shape; it is shape evidence only, because a payload scan of
  *           every out/binaries file finds this 196-byte span in this target

@@ -147,8 +147,10 @@ segments:
     - '@source: src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c'
     - '@behavior: emits one flat-shaded marker triangle at the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 4, y - 4) and (x + 4, y - 4) of the 0x14-byte packet, takes its green byte as the full 0xFF when the third byte argument is nonzero and otherwise from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the packet as size class 1'
   - - 32104
-    - asm
-    - func_801D8968
+    - c
+    - buildRandomTwoPartTextRun
+    - '@source: src/bof3/ui/buildRandomTwoPartTextRun.c'
+    - '@behavior: clears the six-byte work run at 0x801DB080 and refills it with at most six bytes of text taken from the fixed 0x80010000 main-RAM base plus a halfword offset that the pass picks from its own 64-entry table (0x800103E0 first, 0x80010460 second) with one rand() value masked to six bits, each walk stopping on the zero terminator'
   - - 32320
     - asm
     - func_801D8A40

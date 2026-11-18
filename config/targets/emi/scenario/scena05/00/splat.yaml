@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801F87C4
   - - 8084
-    - asm
-    - func_801F8B94
+    - c
+    - setScenarioFlagBit0AThenReleaseFrontEndAndRequestPrimaryState0AtProgress18ScenarioScena0500_801F8B94
+    - '@source: src/bof3/scenario/setScenarioFlagBit0AThenReleaseFrontEndAndRequestPrimaryState0AtProgress18ScenarioScena0500_801F8B94.c'
+    - '@behavior: Primary state 6 handler of this overlay, reached through word 6 of the thirty-two-word primary handler table at 0x801FD5E8: while the shared sub-state byte D_80146875 reads zero and the shared scenario progress byte g_ScenarioProgress reads 0x18 it sets flag bit 0xA of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580 (0x8015B580), runs the shared front-end release helper func_8015C058 (0x8015C058), clears the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867 and the shared sub-state byte D_80146875, and requests primary scene state 0 in the shared primary state byte D_80146874, leaving the progress byte unchanged; on any other sub-state or progress value it returns without touching anything. It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 across the body, which holds the D_80146875 address because that cell is both read and written, the three state bytes and the primary state byte materialise the 0x8014 page in $at on their own while the sub-state store uses that saved pointer, the constant 0x18 is materialised into $v0 in the delay slot of the sub-state test, no in-image jal targets the address and its only image word is 0x801FD600.'
   - - 8220
     - asm
     - func_801F8C1C

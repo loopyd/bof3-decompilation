@@ -19,7 +19,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * published object's words 0x34/0x38/0x3C, the coordinate triple the sibling
  * drawWorkCursorQuadWorld03Area14514_801F3938 projects and
  * claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0 also copies
- * into a record. Both callers, claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 and func_80117768, publish the
+ * into a record. Both callers, claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 and lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768, publish the
  * record in world01Area04913WorkRecordCursor and then overwrite the word at 0x1C with their own
  * value, so that clear is only the record's default. The renderer func_801170D8
  * tests the byte at 0x26 bitwise and substitutes the record's byte at 3 as one

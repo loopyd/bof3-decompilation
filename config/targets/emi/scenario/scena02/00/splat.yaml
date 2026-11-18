@@ -211,8 +211,35 @@ segments:
     - asm
     - func_801FAA68
   - - 16468
-    - asm
-    - func_801FAC54
+    - c
+    - runSubstateLadderClaimFrontEndRecordsSeedSelectorContextsThenResetScenarioScena0200_801FAC54
+    - '@source: src/bof3/scenario/runSubstateLadderClaimFrontEndRecordsSeedSelectorContextsThenResetScenarioScena0200_801FAC54.c'
+    - '@behavior: Slot 22 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872. It walks the shared sub-state byte
+      D_80146875 through the eleven-slot jump table at 0x801F6FA4: sub-states
+      0x0A through 0x11 hold bodies, 0x12 through 0x14 point at the body exit,
+      and a larger sub-state the unsigned bound rejects returns untouched.
+      0x0A sets flag bit 0x1D through func_8015B580 and seeds func_8019FA28 with
+      0x0B, 0x200000, 0x110000 and 0x80; 0x0B sets front-end mode 5 through
+      func_8014ECAC and arms the effect bank D_8014832E with 0x1F; 0x0C, once
+      D_80143C40 reads zero, stores 1 in g_ScenarioProgress and runs
+      func_801C601C with 0 before claiming a front-end record; 0x0D claims one
+      once g_ScenarioProgress reads 2. Both claims publish the index in
+      scratchpad 0x1F800000 and, unless it reads 0xFF, seed the 0x74-byte row of
+      D_80143FC8: +0 = 1, +5 = 0x13, +9 = 0xB4 (0x40 on 0x0D), the word at +0x64
+      = -0x4D0 (-0x2AA), the word at +0x68 = the signed halfword D_801492DA and
+      the word at +0x6C = 0x2B0 (0x200). 0x0E, once g_ScenarioProgress reads 3,
+      raises mode bit 8 of D_80146258 and runs func_801BE1B0 with 1; 0x0F, once
+      it reads 1 through an address-taken pointer, runs func_8015D404(0, 0) and
+      the cue func_80161C20(0x0D, 0x64, 8), advances, stores 0x1E, seeds
+      func_8019FA28 with 0x0B, 0x220000, 0x110000 and 0x82 and writes 0x0D to
+      D_80143F1F; 0x10, once it reads 0x27, takes the word pair 0x1E0000 and
+      0x110000 with 0x0D to func_801BFE34 and runs func_801C7A54 with 0x0D; 0x11,
+      once it reads 0x3C, clears the sub-state byte, D_80146874 and D_80146866,
+      sets flag bit 0x1E through func_8015B580, seeds func_8019FA28 with 3,
+      0x4F0000, 0x1A0000 and 0x80 and writes 0xFF to D_80143F1F, which ends the
+      chain.'
   - - 17640
     - c
     - noopHandlerScenarioScena0200_801FB0E8

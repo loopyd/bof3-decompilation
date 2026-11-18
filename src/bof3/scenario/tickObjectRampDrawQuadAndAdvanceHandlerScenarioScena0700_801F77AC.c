@@ -1,7 +1,9 @@
 #include "bof3/bof3.h"
 
 /* Overlay-local pointer cell holding the shared 0x800E5148 work structure that
- * the sibling run member func_801F7638 publishes into it. The cell sits in the
+ * the sibling run member
+ * seedSharedEffectObjectFromWorkPositionAndDistancePublishClearByte9ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7638
+ * publishes into it. The cell sits in the
  * payload's final data span (the Splat textbin block labelled T_801FDE34) and
  * has no target map row; the generated undefined_syms_auto.txt row binds it. */
 /* @source 0x801FDFBC @kind data */

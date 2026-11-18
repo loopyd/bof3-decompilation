@@ -192,8 +192,8 @@ segments:
     - c
     - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate0DScenarioScena0100_801FD6CC
   - - 27528
-    - asm
-    - func_801FD788
+    - c
+    - setRecordByte1MirrorWorkFacingThenClearProgressAndStateBytesRequestPrimaryState0DSubstate10ScenarioScena0100_801FD788
   - - 27724
     - c
     - setRecordByte1MirrorWorkFacingThenRequestPrimaryState0DSubstate10ScenarioScena0100_801FD84C

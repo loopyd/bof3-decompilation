@@ -23,6 +23,7 @@ sources = [
     "src/bof3/scenario/dispatchSubStateByteTable6C04ScenarioScena1400_801F7BA0.c",
     "src/bof3/scenario/dispatchSubStateByteTable6D3CScenarioScena1400_801F8CE4.c",
     "src/bof3/scenario/dispatchSubStateByteTable6C6CScenarioScena1400_801F7FB8.c",
+    "src/bof3/scenario/dispatchSubStateByteTable6E2CScenarioScena1400_801F9834.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1400_801F7014.c",
@@ -101,3 +102,15 @@ function = 0x801F9320
 section = ".rodata"
 address = 0x801F6DA4
 size = 0x88
+
+# The reviewed switch of the primary-state-6 handler dispatches the same shared
+# secondary sub-state byte through a 74-slot table that the original placed at
+# 0x801F6E2C (0x128 bytes, directly after the primary-state-5 table), so the
+# table follows the handler's own address order in the leading table data. That
+# address is 4-mod-8 as well, so the same placement route lowers the affected
+# section's alignment and the emitted lui/lw relocation matches.
+[[matching.section_placements]]
+function = 0x801F9834
+section = ".rodata"
+address = 0x801F6E2C
+size = 0x128

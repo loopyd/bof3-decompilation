@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/setWorkByte8Level7PublishQuadXScaledByte7ThenSetViewModeForStaticRecordElseArmRecordWorld03Area14113_801F35E4.c",
     "src/bof3/world/claimWorkRecordSetFlagPublishIndexActivateEntry4dfcAndRequestResource3World03Area14113_801F4508.c",
     "src/bof3/world/stampShapeRectangleCellsWithStepCountThenAttachCellTextureAndResetWorkAtEighteenWorld03Area14113_801F2FE4.c",
+    "src/bof3/world/drawSixteenBySixteenWarpGridTintedByWorkByte9AroundSeededDepthWhenNearSharedPointWorld03Area14113_801F3234.c",
 ]
 support_sources = [
     "src/bof3/support/area141_13_psyq.c",

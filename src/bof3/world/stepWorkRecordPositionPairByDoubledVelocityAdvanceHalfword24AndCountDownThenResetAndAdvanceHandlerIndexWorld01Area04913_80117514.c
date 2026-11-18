@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* Work-record pointer cell of this overlay. func_801172D0 seeds a record in it,
- * claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 and func_80117768 publish the record they claim in it, and the
+ * claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 and lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768 publish the record they claim in it, and the
  * record pass func_80117900 walks the sixteen records of the 0x800E4800 table
  * by repointing it. The word is zero in the image and lies inside the Splat
  * textbin row D_8011818C, so this declaration binds through the generated

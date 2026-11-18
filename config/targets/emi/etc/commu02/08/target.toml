@@ -30,6 +30,7 @@ sources = [
     "src/bof3/ui/drawOpaqueSpriteFromSheetEntryTable.c",
     "src/bof3/ui/drawMarkerTriangleCommu0208_801D269C.c",
     "src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c",
+    "src/bof3/ui/buildRandomTwoPartTextRun.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",
