@@ -1988,6 +1988,9 @@ for earlier loop accesses. Shortening it can instead leave a single-use
 load/copy pair that `combine` folds into one load. Trace both passes. Neither
 result justifies adding a consumer, access or unrelated value phase to keep
 the copy.
+After CSE preserves the copy, recheck deaths and allocation. Several real
+phases can exclude local allocation and change global priority, conflicts and
+preferences. Inspect the complete register web before a native probe.
 
 If the first initialization store is distinct from later reduction stores,
 let it consume the loaded address before capturing the retained loop cursor.
