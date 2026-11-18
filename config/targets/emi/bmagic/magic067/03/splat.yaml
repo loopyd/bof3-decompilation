@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC94
   - - 828
-    - asm
-    - func_801EEF3C
+    - c
+    - decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C
+    - '@source: src/bof3/bmagic/decrementWorkByte9RaiseBattleTargetFlag20AndAdvanceWorkByte1OnZeroBmagicMagic06703_801EEF3C.c'
+    - '@behavior: Reads the scratchpad work pointer cell at 0x1F800044 before creating its 0x18-byte frame, decrements work byte 9 at byte width and tests the stored byte truncated to eight bits. Only when that byte reaches zero does it pass the shared battle target byte at 0x80146384 and the flag word 0x20 to 0x800A9610, then reload the work pointer cell and increment work byte 1. Entry 1 of the five-word code pointer run at 0x801EEC04 that the overlay dispatcher at 0x801EEC24 indexes by work byte 1, so no jal in the payload reaches it.'
   - - 932
     - asm
     - func_801EEFA4

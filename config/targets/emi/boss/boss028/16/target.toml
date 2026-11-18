@@ -22,6 +22,7 @@ sources = [
     "src/bof3/boss/advanceWorkByte2WhenBattleRecordByte0Bit0ClearThenRunSharedUpdateBossBoss02816_800C20C8.c",
     "src/bof3/boss/requestResource2SetStateByte80ApplyStateHandlerThenAdvanceWorkByte2BossBoss02816_800C1A54.c",
     "src/bof3/boss/clearWorkByte24Byte2AAndMode48SetByte29To2Lookup15CResource4CopyRecordPositionSeedDistancePlus1000SetWord20Minus20Word14ZeroCountdown6ClaimSlotPublishWorkPointerThenAdvanceStepBossBoss02816_800C1C9C.c",
+    "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenResetToDistancePlus200ZeroWord14SetWord2040Call600AdvanceWorkByte2ByByte9CountdownWhenHalfword3EBelowThatBossBoss02816_800C1D90.c",
     "src/bof3/boss/raiseBattleFlagBit4RunSharedFlagRaiseAndSlotAllocatorAndResetScratchStateWhenEnemyReadyBossBoss02816_800C1AA0.c",
 ]
 support_sources = [

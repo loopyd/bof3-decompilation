@@ -14,6 +14,7 @@ sources = [
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic15403_801EF544.c",
     "src/bof3/bmagic/decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelperWhenTintChannel5FIsMinus80BmagicMagic15403_801EF454.c",
     "src/bof3/bmagic/decrementGlobalWorkByte9AndAdvanceWorkByte2WhenHelperReadyBmagicMagic15403_801EF648.c",
+    "src/bof3/bmagic/decrementWorkMotionPairAndByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15403_801EF3E4.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",

@@ -1,4 +1,4 @@
-func_801D0C04 = 0x801D0C04;
+dispatchWorkByte1HandlerThenDrawWorkRecordWhenActiveScenarioSce15ef200_801D0C04 = 0x801D0C04;
 resetWorkWordCAndArmCountdown16ThenAdvanceWorkByte1ScenarioSce15ef200_801D0C70 = 0x801D0C70;
 add16ToWorkWordCAndTickCountdownReload32AdvanceWorkByte1ScenarioSce15ef200_801D0CA0 = 0x801D0CA0;
 tickCountdownReload16AndAdvanceWorkByte1ScenarioSce15ef200_801D0D00 = 0x801D0D00;

@@ -63,8 +63,10 @@ segments:
     - incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380.c'
   - - 2020
-    - asm
-    - func_801EF3E4
+    - c
+    - decrementWorkMotionPairAndByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15403_801EF3E4
+    - '@source: src/bof3/bmagic/decrementWorkMotionPairAndByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic15403_801EF3E4.c'
+    - '@behavior: Per-frame step of this overlay work object, word 4 of the six-word code pointer run at 0x801EF6CC (0x801EF104, 0x801EF4B4, 0x801EF1EC, 0x801EF380, 0x801EF3E4, 0x801EF454) that the dispatcher indexes with work-object byte 0x1, so the payload holds no jal to this address. It reads the scratchpad work-object pointer cell at 0x1F800044 once at entry and takes the 16.16 motion pair down by 0x4000 at word 0x40 and by 0x8000 at word 0x44, then decrements the object countdown byte 9 at byte width and keeps the truncated value for its test. When that value is zero it decrements the shared battle record global work byte 0xB through the pointer at 0x801EB4E0 and invokes the shared helper at 0x801E5988. It takes no arguments, returns nothing, and keeps only $ra in its 0x18-byte frame across that one call.'
   - - 2132
     - c
     - decrementWorkMotionWord44By1000ThenDecrementGlobalWorkByteBAndInvokeHelperWhenTintChannel5FIsMinus80BmagicMagic15403_801EF454

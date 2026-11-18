@@ -19,6 +19,7 @@ sources = [
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F32B0.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F3330.c",
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area09413_801F33E0.c",
+    "src/bof3/world/markSharedSelector7AndSetFlagBit1EOfSharedFlagWordWorld02Area09413_801F33B0.c",
 ]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",
