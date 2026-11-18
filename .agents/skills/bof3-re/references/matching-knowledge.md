@@ -1945,6 +1945,13 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+A loop-invariant table base can affect allocation even when reload removes its
+preheader load. If a shared base binding survives CSE, it can place that existing
+instruction before another initializer instead of at `loop.c`'s hoisted position.
+Measure competing live intervals after the first schedule, then verify
+rematerialization at the original consumers and the second schedule. The binding
+must supply real consumers. Check the complete native diff.
+
 Track a promoted narrow formal's raw word and mutable narrow pseudo separately.
 Reassigning the formal can define only the narrow pseudo, leaving the raw word
 local. A copy retained through combine can then share the incoming argument

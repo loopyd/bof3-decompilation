@@ -14,11 +14,9 @@ extern const char D_801E21CC[]; /* @source 0x801E21CC @kind rodata */
  * to work word +0x18 and bounds an out-of-range upper selection to the
  * last row, or zero when there are no matching rows. Finishes with the
  * panel footer, stretched column and three-character ROD title.
- * @status partial
- * @match 98.70
- * @residual 227 of 230 instructions match at 920 of 920 bytes.
- * Saved-origin and row-coordinate setup still differ at entry,
- * beginning at +0x10.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   u16 x;
@@ -26,7 +24,7 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   s32 nameX;
   s32 countX;
   s32 rowY;
-  s32 panelY;
+  u16 panelY;
   s32 rowOffset;
   s32 rows;
   s32 slotIndex;
@@ -36,18 +34,19 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   u8* work;
   u8* buffer;
   u8* options;
+  u8* nameRecords;
 
   x = arg0;
   baseY = arg1;
   options = &D_80144952;
-  rowY = arg1 + 0x19;
   panelY = baseY + 1;
-  arg1 = *options;
-  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, arg1);
+  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, *options);
   slotIndex = 0;
   rows = 0;
   buffer = D_80145AD4;
   slot = PSX_PTR(u8, (u32)options + 0x87Au);
+  nameRecords = D_801C9E7C;
+  rowY = arg1 + 0x19;
   rowOffset = 0;
   nameX = (s16)(x + 5);
   countX = (s16)(x + 0x68);
@@ -70,9 +69,9 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
       goto unselected;
     }
     func_8014F800((s16)nameX, (s16)rowY, 7, 0x0C,
-                 (u32)&D_801C9E7C[*slot * 20]);
+                 *slot * 20 + (u32)nameRecords);
     func_8014F800((s16)nameX, (s16)(baseY + 0x17 + rowOffset),
-                 0, 0x0C, (u32)&D_801C9E7C[*slot * 20]);
+                 0, 0x0C, *slot * 20 + (u32)nameRecords);
     count = D_801453CC[slotIndex];
     if (count >= 2) {
       sprintf((char*)buffer, D_801D0C14, count);
@@ -85,7 +84,7 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
 
 unselected:
     func_8014F800((s16)nameX, (s16)rowY, 0, 0x0C,
-                 (u32)&D_801C9E7C[*slot * 20]);
+                 *slot * 20 + (u32)nameRecords);
     count = D_801453CC[slotIndex];
     if (count >= 2) {
       sprintf((char*)buffer, D_801D0C14, count);
