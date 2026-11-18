@@ -142,8 +142,10 @@ segments:
     - asm
     - func_801D875C
   - - 31908
-    - asm
-    - func_801D88A4
+    - c
+    - drawMarkerTriangleCommu0208_801D88A4
+    - '@source: src/bof3/ui/drawMarkerTriangleCommu0208_801D88A4.c'
+    - '@behavior: emits one flat-shaded marker triangle at the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 4, y - 4) and (x + 4, y - 4) of the 0x14-byte packet, takes its green byte as the full 0xFF when the third byte argument is nonzero and otherwise from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the packet as size class 1'
   - - 32104
     - asm
     - func_801D8968

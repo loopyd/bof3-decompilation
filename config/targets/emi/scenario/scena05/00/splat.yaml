@@ -167,8 +167,10 @@ segments:
     - asm
     - func_801FCAA0
   - - 24348
-    - asm
-    - func_801FCB1C
+    - c
+    - setScenarioFlagBit0BThenClearProgressAndSharedStateBytesAndRequestPrimaryState8ScenarioScena0500_801FCB1C
+    - '@source: src/bof3/scenario/setScenarioFlagBit0BThenClearProgressAndSharedStateBytesAndRequestPrimaryState8ScenarioScena0500_801FCB1C.c'
+    - '@behavior: Record-callback entry 2 of this overlay''s nine-word callback run: it sets flag bit 0xB of the shared scenario flag word D_8014686C through the shared bit-set helper func_8015B580 (0x8015B580), which receives that word loaded with lui/lw and the bit index 0xB, then runs the shared front-end startup helper func_8015C088 (0x8015C088), then clears the shared progress byte g_ScenarioProgress (0x80146864), the three shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867 and the shared sub-state byte D_80146875, and requests primary scene state 8 in the shared primary state byte D_80146874; it takes no arguments and returns nothing, the 0x18-byte frame only keeps $ra across the two calls, the constant 8 is materialised once in $v0 immediately after the second call to feed the last sb while each of the six byte stores materialises the 0x8014 page in $at on its own, and the record-callback dispatcher dispatchRecordCallbackScenarioScena0500_801FCA58 (0x801FCA58) reaches it only through word 2 of the nine-word overlay callback run at 0x801FD644 (0x801FD64C holds 0x801FCB1C), so the record byte at offset 0x7A selects it with the value 2.'
   - - 24448
     - asm
     - func_801FCB80

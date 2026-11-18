@@ -9,7 +9,7 @@ stepWorkRecordPositionPairByDoubledVelocityAdvanceHalfword24AndCountDownThenRese
 stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C = 0x8011759C;
 dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610 = 0x80117610;
 raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C = 0x8011765C;
-func_801176B8 = 0x801176B8;
+claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 = 0x801176B8;
 func_80117768 = 0x80117768;
 func_80117818 = 0x80117818;
 claimWorkRecordSeedWorkPositionWorld01Area04913_80117864 = 0x80117864;
@@ -25,4 +25,5 @@ func_80117C58 = 0x80117C58;
 func_80117DF0 = 0x80117DF0;
 func_80117E78 = 0x80117E78;
 D_8011818C = 0x8011818C;
+world01Area04913WorkRecordCursor = 0x801181DC;
 paletteStageSerial = 0x80145988;

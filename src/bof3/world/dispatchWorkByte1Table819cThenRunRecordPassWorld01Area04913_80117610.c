@@ -5,7 +5,7 @@
  * dispatcher indexes it from 0x8011819C, so the base is entry 4 and the nine
  * reachable entries begin with
  * raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C,
- * followed by func_801176B8, func_80117768,
+ * followed by claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8, func_80117768,
  * func_80117818, func_80117A74, func_80117ACC, func_80117C38, func_80117C58 and
  * func_80117DF0, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated
@@ -13,7 +13,7 @@
 extern void (*D_8011819C[])(void); /* @source 0x8011819C @kind data */
 
 /* Record pass of this overlay: sets the draw state up and walks the sixteen
- * records of the 0x800E4800 work table, repointing the record cell D_801181DC
+ * records of the 0x800E4800 work table, repointing the record cell world01Area04913WorkRecordCursor
  * once per record and running the renderer func_801170D8 on each claimed one. */
 extern void func_80117900(void); /* @source 0x80117900 */
 

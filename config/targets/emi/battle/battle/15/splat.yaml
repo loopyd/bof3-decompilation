@@ -1233,8 +1233,10 @@ segments:
     - asm
     - func_800A8D80
   - - 75240
-    - asm
-    - func_800A8DE8
+    - c
+    - raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1
+    - '@source: src/bof3/battle/raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1.c'
+    - '@behavior: Loads the scratch work object at the pointer cell 0x1F800044, raises bit 0x20 of byte 0, sets byte 0x5C to 3, writes -(byte 0xB << 4) to bytes 0x5D, 0x5F and 0x5E in that order, sets byte 0x9 to 8 and advances byte 0x01 before the readiness helper func_8014DAEC.'
   - - 75448
     - asm
     - func_800A8EB8

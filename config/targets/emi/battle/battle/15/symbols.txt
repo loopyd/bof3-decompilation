@@ -233,6 +233,7 @@ initRecordStateAdvanceWork = 0x800A8450;
 raiseFlag4WhenPendingBitsClear = 0x800A84FC;
 copyWorkWord3CPlus4000000IntoWord20RequestWorkByte8Plus38SetWorkByteBTo10ThenAdvanceWorkByte1 = 0x800A85A8;
 pollReadyThenInvokeHelperWhenWorkByte1Is5 = 0x800A8D3C;
+raiseByte0Flag20SetTriplet5D5F5EToMinus16xByteBSetByte5CTo3Byte9To8AdvanceWorkByte1 = 0x800A8DE8;
 func_800A99AC = 0x800A99AC;
 func_800AA874 = 0x800AA874;
 func_800AA8A4 = 0x800AA8A4;

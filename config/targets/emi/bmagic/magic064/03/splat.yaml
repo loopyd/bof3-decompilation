@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EED7C
   - - 540
-    - asm
-    - func_801EEE1C
+    - c
+    - publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C
+    - '@source: src/bof3/bmagic/publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C.c'
+    - '@behavior: Publishes the selected local work record as the scratchpad work object, polls the shared readiness helper against it, then restores the previous work object and steps the overlay handler state. Reads the battle selection byte at 0x80146374 unsigned, keeps the work-object pointer cell 0x1F800044 in a saved register, and stores the address of the 0x140-byte-stride record at that index of the D_80145E90 table into the cell. While that record is published it calls the shared readiness helper func_8014DAEC and keeps only the returned byte: a non-zero result restores the previous work object and advances its unsigned byte 2 by one, while a zero result restores it and writes 0x10 into byte 9. Takes no arguments and returns nothing; the 0x18-byte frame keeps the return address at 0x14 and the saved pointer at 0x10, and no other state is read or written.'
   - - 680
     - asm
     - func_801EEEA8

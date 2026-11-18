@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world01/area049/13.bin"
 splat = "config/targets/emi/world01/area049/13/splat.yaml"
 load_address = 0x80117000
 
-sources = []
+sources = [
+    "src/bof3/world/claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8.c",
+]
 support_sources = [
     "src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c",
     "src/bof3/world/claimWorkRecordSeedWorkPositionWorld01Area04913_80117864.c",

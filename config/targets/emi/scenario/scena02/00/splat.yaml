@@ -172,8 +172,32 @@ segments:
       shared bytes 0x80146865 through 0x80146867, the sub-state byte and
       D_80146874 and returns to sub-state 0.'
   - - 12240
-    - asm
-    - func_801F9BD0
+    - c
+    - runSubstateLadderQueueFrontEndCuesSetFlagBitsSeedSelectorContextThenReleaseScenarioScena0200_801F9BD0
+    - '@source: src/bof3/scenario/runSubstateLadderQueueFrontEndCuesSetFlagBitsSeedSelectorContextThenReleaseScenarioScena0200_801F9BD0.c'
+    - '@behavior: Slot 17 of the 31-word code-pointer run at 0x801FE288 (pointer
+      word at 0x801FE2CC) that dispatchProgressHandlerScenarioScena0200_801F719C
+      indexes with the signed chain byte D_80146872. It steps the shared
+      sub-state byte D_80146875 through the eleven-slot jump table at 0x801F6E44:
+      slots 0 through 10 are declared, and a sub-state of 11 or more, which the
+      unsigned bound rejects, and the empty slot 9 both return without touching
+      shared state. Slot 0 arms func_801BE1B0 with 9 when the party byte
+      D_80144F5A is non-zero and with 8 otherwise and advances to 1; slot 1 waits
+      for progress 0x3E and runs func_801C601C with 3; slot 2 waits for progress
+      0x41 and queues the front-end cue 0x204 through func_8015DF18; slot 3 waits
+      for progress 0x42, sets flag bit 0x17 of D_8014686C through func_8015B580
+      and takes the word pair 0x3B0000 and 0x488000 with 0xB to func_801BFE34;
+      slot 4 waits for progress 0x43 and runs func_801C7A54 with 0xB; slot 5
+      waits for progress 0x44 and arms func_801BE1B0 with 0x18 or 0x17 by the
+      same party byte; slot 6 waits for progress 0x46, writes 1 to D_80146866 and
+      seeds the front selector context func_8019FA28 with 0x1B, 0x3B0000 and
+      0x1A0000 and cue 0x8B or 0x8A by the party byte, then writes 0x22 to
+      D_80143F1F; slot 7 runs func_801C601C with 4 and advances to 8; slot 8 waits
+      for progress 0x4B, sets flag bit 0x14 through func_8015B580, writes 1 to
+      D_80146866, advances to 10 and seeds func_8019FA28 with 0x1B, 0x3C0000 and
+      0x480000; slot 10 releases the overlay through func_8015C058 and clears the
+      shared bytes 0x80146865 through 0x80146867, the sub-state byte and
+      D_80146874.'
   - - 12964
     - asm
     - func_801F9EA4

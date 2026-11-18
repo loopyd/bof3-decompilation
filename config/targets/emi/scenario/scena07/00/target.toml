@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/updateTrailBufferSubtractWork34AddWork14To3CAccelerate14SetCountdownByte9AtTargetAdvanceWorkByte2ScenarioScena0700_801F70F8.c",
     "src/bof3/scenario/claimFreeWorkRecordEveryFourthFrameWhileCountdownAtLeast9StepWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7AB0.c",
     "src/bof3/scenario/seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C.c",
+    "src/bof3/scenario/seedWorkPositionPairAndDistanceClearWorkTableSetTransitionByteArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7A30.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

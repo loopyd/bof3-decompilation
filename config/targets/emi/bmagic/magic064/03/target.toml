@@ -31,5 +31,6 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50.c",
     "src/bof3/bmagic/seedWorkRecordMotionThenAdvanceRecordByte1BmagicMagic06403_801F04A0.c",
     "src/bof3/bmagic/decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801F0DD8.c",
+    "src/bof3/bmagic/publishSelectedWorkRecordThenAdvanceWorkByte2WhenHelperReadyElseSetWorkByte9To16BmagicMagic06403_801EEE1C.c",
 ]
 psyq_source = "src/bof3/support/magic064_03_psyq.c"
