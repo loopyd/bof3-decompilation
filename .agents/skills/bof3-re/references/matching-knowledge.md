@@ -1892,6 +1892,12 @@ redundant `for` initializer can overwrite an earlier initialization that flow
 then deletes. Keep the earlier real initialization and remove the duplicate when
 its longer lifetime explains the original allocation. Recheck every saved role.
 
+A real consumer can make a saved input copy precede its calculation without a
+scope boundary. Trace that dependency through CSE, combine and both schedulers.
+The longer interval can offset an added reference in global priority, so
+calculate both changes before predicting allocation. An earlier failed form with
+different scope weights does not establish the result in the current body.
+
 When a count becomes a last index used by a store and a zero guard, name that
 consumed result once. A repeated expression such as `count - 1 != 0` can fold to
 `count != 1` before allocation and introduce a literal load. Check initial RTL,
