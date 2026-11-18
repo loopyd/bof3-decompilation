@@ -11,7 +11,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 81.05
+ * @match 81.43
  * @residual Frame size, bound copies, branching, value allocation and
  * division expansion still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -81,6 +81,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   Area030Range* inactiveRange;
   Area030Range* countdownRange;
   s32 reference;
+  s32 inwardReference;
   s32 outwardReference;
   s32 outwardAngle;
   s32 spread;
@@ -102,7 +103,6 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   s32 sampledMotion;
   s32 positiveDirection;
   s32 selectedMotion;
-  s32 quarter;
   s32 limit;
   s32 initialCurrent;
   s32 retryCurrent;
@@ -244,14 +244,14 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     classificationRange = D_80146884;
     limit = classificationRange->limit_8C;
     initialCurrent = classificationRange->value_8E;
-    quarter = limit >> 2;
+    reference = limit >> 2;
 
-    if (initialCurrent < quarter) {
+    if (initialCurrent < reference) {
       level = 3;
     } else if (initialCurrent < (limit >> 1)) {
       level = 2;
     } else {
-      level = initialCurrent < quarter * 3;
+      level = initialCurrent < reference * 3;
     }
 
     chanceRow = &scale->unk_00[level * 4];
@@ -498,8 +498,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     }
   } else {
     inwardConditionWork = D_1F800044;
-    reference = workOffsetReferenceState;
-    if ((s8)inwardConditionWork[0x0A] < reference && D_8014421C < 0) {
+    inwardReference = workOffsetReferenceState;
+    if ((s8)inwardConditionWork[0x0A] < inwardReference && D_8014421C < 0) {
       do {
         denominator = 0x3E - FIELD_REF(s16, inwardConditionWork, 0x3A);
       } while (0);
