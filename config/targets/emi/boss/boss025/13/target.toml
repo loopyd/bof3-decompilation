@@ -12,6 +12,7 @@ sources = [
     "src/bof3/boss/setupBattleWorkRecordsForFlaggedOwnersOneAndTwoBossBoss02513_800C2F74.c",
     "src/bof3/boss/forwardWorkRecordIndexAndRollRandomActionThenRaiseFlagBit4AndResetScratchStateWhenEnemyReadyBossBoss02513_800C1F90.c",
     "src/bof3/boss/drawTurnsLeftPanelAndStepDispatchStateByte1BackWhenGateSetBossBoss02513_800C3088.c",
+    "src/bof3/boss/refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984.c",
 ]
 support_sources = [
     "src/bof3/boss/callEnemyReadyThenCountDownWorkByte9AndSubmitEffectThenAdvanceWorkByte2BossBoss02513_800C1F0C.c",

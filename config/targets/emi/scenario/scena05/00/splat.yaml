@@ -144,8 +144,10 @@ segments:
     - asm
     - func_801FC778
   - - 23560
-    - asm
-    - func_801FC808
+    - c
+    - scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808
+    - '@source: src/bof3/scenario/scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808.c'
+    - '@behavior: Two mirrored scans of the three shared selection slots at D_80144F5A: the first stores 1 into the shared state byte D_80146865 for every slot that reads 5, the second stores 2 for every slot that reads 6, so the byte ends as 2 when any slot reads 6, as 1 when no slot reads 6 but one reads 5, and unchanged when no slot reads either value. It takes no arguments, returns nothing and its body is a leaf with no frame; each slot load adds the zero-extended index to the 0x8014 page in $at, and each scan hoists its own copy of the 0x80146865 address into $a1 beside its comparison and stored constants.'
   - - 23712
     - asm
     - func_801FC8A0

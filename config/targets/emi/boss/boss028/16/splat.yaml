@@ -93,8 +93,8 @@ segments:
     - asm
     - func_800C1E80
   - - 1836
-    - asm
-    - func_800C1F2C
+    - c
+    - addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenSetGlobalWorkByte1To5ClearGlobalWorkByte2AndInvokeHelperWhenHalfword3EAboveDistancePlus1000BossBoss02816_800C1F2C
   - - 1976
     - c
     - dispatchWorkByte2Table21bcThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1FB8

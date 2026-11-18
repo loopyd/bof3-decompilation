@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/cycleWorkByte8DownThroughPairTableUntilRecordCommandByteElseAdvanceHalfword0aBy2World04Area17413_801F48EC.c",
+    "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17413_801F37D8.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4.c",

@@ -1,3 +1,5 @@
+scenarioScena0700Work = 0x1F800044;
+scenarioScena0700Halfword800E4C1E = 0x800E4C1E;
 func_80196070 = 0x80196070;
 dispatchWorkByte1HandlerScenarioScena0700_801F6DCC = 0x801F6DCC;
 dispatchWorkByte2HandlerScenarioScena0700_801F6E10 = 0x801F6E10;
@@ -12,7 +14,7 @@ func_801F7050 = 0x801F7050;
 func_801F70F8 = 0x801F70F8;
 func_801F71C0 = 0x801F71C0;
 func_801F724C = 0x801F724C;
-func_801F72E0 = 0x801F72E0;
+updateTrailBufferSubtractHalfword800E4C1ETickCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F72E0 = 0x801F72E0;
 incrementWorkByte2ScenarioScena0700_801F7364 = 0x801F7364;
 incrementWorkByte2ScenarioScena0700_801F7384 = 0x801F7384;
 invokeHelperScenarioScena0700_801F73A4 = 0x801F73A4;

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801D269C
   - - 6992
-    - asm
-    - func_801D2750
+    - c
+    - pickRandomValueOneThroughBound
+    - '@source: src/bof3/ui/pickRandomValueOneThroughBound.c'
+    - '@behavior: draws a random nibble through rand() and redraws while that nibble is zero or above the exclusive limit bound plus one, returning a value in 1 through bound'
   - - 7060
     - c
     - drawCardRowWithSlotOffsets

@@ -33,7 +33,7 @@ setStepByte4RestoreSavedRecordHalfwordsAndInitModeTuple530BossBoss02513_800C2634
 enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680 = 0x800C2680;
 publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710 = 0x800C2710;
 accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760 = 0x800C2760;
-func_800C2984 = 0x800C2984;
+refreshActivePartyRecordsThenSetScenarioProgress4AndInitModeTuple530BossBoss02513_800C2984 = 0x800C2984;
 raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C = 0x800C2B2C;
 publishBattleHooksBossBoss02513_800C2B60 = 0x800C2B60;
 raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98 = 0x800C2B98;
@@ -50,4 +50,5 @@ D_801462E8 = 0x801462E8;
 D_801462ED = 0x801462ED;
 D_80146375 = 0x80146375;
 D_80146384 = 0x80146384;
+clearBattlerActionFlags = 0x801DD14C;
 initModeTuple530 = 0x801DDF28;

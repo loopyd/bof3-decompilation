@@ -69,8 +69,10 @@ segments:
     - c
     - setScenarioScena0900_801F790C
   - - 3360
-    - asm
-    - func_801F7920
+    - c
+    - applyPendingWorldIdStepsThenAdvanceStateTo2ScenarioScena0900_801F7920
+    - '@source: src/bof3/scenario/applyPendingWorldIdStepsThenAdvanceStateTo2ScenarioScena0900_801F7920.c'
+    - '@behavior: Per-frame pending-world-id handler of this overlay: it gates one arm per pending world id halfword D_80143F00 (0x80143F00, read with lhu, never written here) and then advances the shared scenario state byte D_80146872 (0x80146872) to 2 on every path, after which the same-overlay state dispatcher dispatchScenarioStateHandlerScenarioScena0900_801F78D0 (0x801F78D0) leaves state 2 for the primary state this body armed. The arms 0x25, 0x27, 0x29, 0x35, 0x37, 0x45, 0x31, 0x64, 0x76 and 0x77 probe the shared flag word D_8014686C (0x8014686C) with func_8015B5D4 and, where the probed step is ready, clear the effect bank byte D_8014832E (0x8014832E), arm the primary state byte D_80146874 (0x80146874) and the sub-state byte D_80146875 (0x80146875), clear the scenario progress byte g_ScenarioProgress (0x80146864), leave the world through bit 8 of the mode halfword D_80146258 (0x80146258) and run the front-end handlers selected by the low seven bits of the phase byte D_80145024 (0x80145024): the 0x25 and 0x37 arms index the two absolute jump tables in this payload''s leading data span at 0x801F6C04 and 0x801F6C34, while the 0x45 and 0x31 arms use a three-way compare tree. The 0x25 arm alone sets bit 0x3E of the second bank D_80144EB8 (0x80144EB8). The 0x76 arm alone seeds the shared field-record run D_80143FC8 (0x80143FC8): it publishes the slot query answer of func_8019601C in the scratchpad byte D_1F800000 (0x1F800000), seeds the record at the 0x74-byte stride unless the answer reads 0xFF, stores arm byte 0x96 in its +5 byte, and repeats once with 0x95 while the shared signed word D_80145ECC (0x80145ECC) still reads above 0x2000000. The last arm groups the pending world ids 0x2D, 0x41, 0x57, 0x10 and 0x73, which only clear the progress byte and the three shared route bytes D_80146865, D_80146866 and D_80146867. Its 0x28-byte frame holds $ra and the four saved registers the record seeding keeps live, and no in-image jal targets the address.'
   - - 6104
     - c
     - dispatchPrimaryStateHandlerScenarioScena0900_801F83D8

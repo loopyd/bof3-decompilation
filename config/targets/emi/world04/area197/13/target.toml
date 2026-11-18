@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78.c",
+    "src/bof3/world/stepSharedModeStartThenSetFlag55AndRequestSelectorAtCounter24World04Area19713_801F4164.c",
 ]
 support_sources = [
     "src/bof3/world/clearWorkTableAt800E5C00World04Area19713_801F3474.c",

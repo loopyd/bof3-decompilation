@@ -23,6 +23,7 @@ sources = [
     "src/bof3/ui/setFrontLocalMode0AndAdvanceStepByte1.c",
     "src/bof3/ui/drawPanelStripThenSubmitWorkImage.c",
     "src/bof3/ui/drawActiveRecordSlotBar.c",
+    "src/bof3/ui/pickRandomValueOneThroughBound.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

@@ -92,10 +92,24 @@ support_sources = [
     "src/bof3/scenario/waitFlags0D100FForParty5ThenRequestPrimaryState6Substate2Or3Or6ElseSetSharedByte3ScenarioScena0900_801FD7F4.c",
     "src/bof3/scenario/waitProgress15ThenSeedFrontSelectorContextsAndResetStateScenarioScena0900_801FAC88.c",
     "src/bof3/scenario/waitFlags0E100FForParty5ThenRequestPrimaryState6Substate2Or3Or28Or5ScenarioScena0900_801FD498.c",
+    "src/bof3/scenario/applyPendingWorldIdStepsThenAdvanceStateTo2ScenarioScena0900_801F7920.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"
 
 headers = ["include/bof3/scenario/scena09_state.h"]
+
+# The phase switch of the pending-world-id handler at 0x801F7920 dispatches
+# twelve values through the twelve-word table the overlay keeps at 0x801F6C04
+# in its leading table data, and the phase switch of its world 0x37 arm
+# dispatches eleven values through the eleven-word table at 0x801F6C34; psyq
+# gcc emits the switch tables of one translation unit as one .rodata section,
+# so this row gives the comparator the payload address and size of that
+# section, which holds the two tables in source order.
+[[matching.section_placements]]
+function = 0x801F7920
+section = ".rodata"
+address = 0x801F6C04
+size = 0x5C
 
 [[matching.section_placements]]
 function = 0x801F8504
