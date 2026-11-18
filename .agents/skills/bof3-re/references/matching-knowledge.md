@@ -1661,6 +1661,13 @@ narrow load (23 of 33 instructions at 128 bytes, first difference the second `lb
 
 ## Compiler evidence
 
+When classification precedes a saved byte copy, keep the word sample and narrow
+snapshot as distinct quantities. Assign the snapshot after the rejecting guards.
+Check whether the sample stays live across index and category temporaries and
+whether the saved copy fits the original branch delay slot. Preserve the byte
+load, guard outcomes and reloads after helpers. Trace deaths and register conflicts
+before measuring the complete native body.
+
 If a comparison result uses a fresh register where the original overwrites its
 bound, check the bound's local-allocation eligibility. Reusing one local for a raw
 input and a later bound can give its pseudo two deaths and exclude it from local
