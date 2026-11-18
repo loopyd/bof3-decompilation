@@ -402,6 +402,12 @@ Use when real initialization has the required lifetime but adjacent call argumen
 schedule incorrectly. Keep owning compiler/flags fixed; inspect both scheduling
 passes before changing scope placement.
 
+Under this MIPS profile, prologue save RTL enters after reload, before the
+second scheduling pass. An entry scope can add save dependencies absent
+from `.sched` and hold every save ahead of its first instruction. If saves
+cluster, inspect the scope edges in `.sched2` and compare compiler assembly
+before attributing the order to the assembler.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
@@ -1994,6 +2000,10 @@ for earlier loop accesses. Shortening it can instead leave a single-use
 load/copy pair that `combine` folds into one load. Trace both passes. Neither
 result justifies adding a consumer, access or unrelated value phase to keep
 the copy.
+Recheck those lifetimes before CSE2. The driver rescans register references
+after loop and jump optimization. A later phase canonicalized away during
+the first CSE no longer extends the pseudo for the second pass. Check
+adjacent-copy reversal when the load moves into the retained quantity.
 After CSE preserves the copy, recheck deaths and allocation. Several real
 phases can exclude local allocation and change global priority, conflicts and
 preferences. Inspect the complete register web before a native probe.
