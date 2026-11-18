@@ -13,7 +13,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 84.82
+ * @match 85.32
  * @residual Frame size, bound copies, value allocation and division expansion
  * still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -27,6 +27,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   u8* lowerMode;
   u8* entryMode;
   u8* work;
+  u8* countdownSelectionWork;
   u32* outwardPositionOutput;
   u32* inwardPositionOutput;
   u8* outwardConditionWork;
@@ -256,8 +257,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     }
   }
 
-  work = D_1F800044;
-  if (work[9] == 0) {
+  countdownSelectionWork = D_1F800044;
+  if (countdownSelectionWork[9] == 0) {
     classificationRange = D_80146884;
     limit = classificationRange->limit_8C;
     initialCurrent = classificationRange->value_8E;
@@ -418,7 +419,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
     nextCountdownWork = D_1F800044;
     nextCountdownWork[9] = (u8)((8 - level) * ((roll & 3) + 1));
   } else {
-    work[9] = (u8)(work[9] - 1);
+    countdownSelectionWork[9] = (u8)(countdownSelectionWork[9] - 1);
 
     countdownRange = D_80146884;
     delta = FIELD_REF(s8, countdownRange, 0x75);

@@ -1866,6 +1866,12 @@ exclusive arm can own both reloaded phases. Define it before every use, preserve
 each reload and access, and trace conflicts in both phases before measuring the
 complete body.
 
+A pointer local spanning separate real captures shares their allocation conflicts.
+When the original uses different registers, split the later capture and its
+consumers into their own local. Preserve every reload; check cross-block lifetime,
+local/global allocation and the complete output. Removing earlier conflicts can
+free the required register, but changed priorities can also move other quantities.
+
 A captured literal can stay live across later independent publications when first
 scheduling delays its store. Trace that store before changing priorities. Group
 only the real publication and its next mode input when the original order supports
