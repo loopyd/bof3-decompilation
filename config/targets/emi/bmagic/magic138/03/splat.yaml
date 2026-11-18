@@ -62,8 +62,10 @@ segments:
     - c
     - invokeHelperBmagicMagic13803_801EF50C
   - - 2348
-    - asm
-    - func_801EF52C
+    - c
+    - dispatchStateByte2Tableec1cBmagicMagic13803_801EF52C
+    - '@source: src/bof3/bmagic/dispatchStateByte2Tableec1cBmagicMagic13803_801EF52C.c'
+    - '@behavior: Copies the three code-pointer words at 0x801EEC1C, entries 6, 7 and 8 of the overlay header handler run at 0x801EEC04, into its own 0x28-byte frame, publishes 0x800F0800 into the shared cell at 0x801459F0, calls the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects, re-reads that cell and calls the shared service at 0x8014D290 when work byte 0 is nonzero, then publishes 0x800D3800 into 0x801459F0.'
   - - 2512
     - c
     - seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0

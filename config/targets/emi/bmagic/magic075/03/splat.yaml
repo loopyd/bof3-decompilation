@@ -30,8 +30,10 @@ segments:
   vram: 2149510160
   subsegments:
   - - 16
-    - asm
-    - func_801EEC10
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic07503_801EEC10
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic07503_801EEC10.c'
+    - '@behavior: Overlay entry dispatch: reads the work-object pointer cell at 0x1F800044, copies the three-entry code pointer run at 0x801EEC04 (0x801EEC70, 0x801EEDE0, 0x801EEEB0) into a local array in its own 0x28-byte frame, and calls the entry selected by work byte 1 with no arguments.'
   - - 112
     - asm
     - func_801EEC70

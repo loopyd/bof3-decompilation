@@ -65,8 +65,10 @@ segments:
     - dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectWorkRecordAndDrawAndPopWhenWorkByte0Bit0AndWorkByte2SetBmagicMagic04103_801EF1D4.c'
   - - 1660
-    - asm
-    - func_801EF27C
+    - c
+    - decrementWorkByte9ThenCopyWorkWordTripletClearBytes9AndAAndAdvanceWorkByte2OnZeroBmagicMagic04103_801EF27C
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyWorkWordTripletClearBytes9AndAAndAdvanceWorkByte2OnZeroBmagicMagic04103_801EF27C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, decrements the work object byte at offset 0x9 at byte width and returns while the stored value stays non-zero; only on zero it copies the shared battle record words 0x34, 0x38 and 0x3C read through 0x801EB4E0 into the work object, clears work bytes 9 and 0xA, and advances the work object byte at offset 0x2. The byte 9 clear shares the triplet pointer load while the byte 0xA clear and the byte 2 advance each reload the cell. Reached through word 6 of the overlay pointer run at 0x801EEC04.'
   - - 1800
     - c
     - add4ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic04103_801EF308

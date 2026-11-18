@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic161/03.bin"
 splat = "config/targets/emi/bmagic/magic161/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08.c",
+]
 support_sources = [
     "src/bof3/bmagic/invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic16103_801EF1BC.c",

@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801EEE9C
   - - 776
-    - asm
-    - func_801EEF08
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16103_801EEF08.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988. It is entry 2 of the three-entry handler run at 0x801EEC04 that this overlay entry dispatcher copies and selects with the work byte at offset 1. The original materializes the halfword address once in a register, keeps it live across the call, and writes the read-modify-write through that register, the halfword store filling the call delay slot. The 0x18-byte frame only keeps the return address at 0x10. Nothing is returned and no other state is read or written.'
   - - 828
     - c
     - dispatchStateByte1Tablef3e8BmagicMagic16103_801EEF3C

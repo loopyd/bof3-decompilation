@@ -203,8 +203,10 @@ segments:
     - c
     - setScenarioFlagBit10ScenarioScena0900_801FC7E8
   - - 23568
-    - asm
-    - func_801FC810
+    - c
+    - setScenarioFlagBit14ScenarioScena0900_801FC810
+    - '@source: src/bof3/scenario/setScenarioFlagBit14ScenarioScena0900_801FC810.c'
+    - '@behavior: Thin overlay wrapper: it reads the shared scenario flag word D_8014686C (0x8014686C, lui plus lw into $a0) and passes it with 0x14 to the shared bit-set helper func_8015B580, so it sets flag bit 0x14 of that word. It takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is 0x801FE45C, entry 10 of the 16-word in-image callback table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Its 0x28 bytes differ from the same-target sibling setScenarioFlagBit10ScenarioScena0900_801FC7E8 (0x801FC7E8) only in the stored flag-bit constant, and they equal the scena06 sibling setScenarioFlagBit0CScenarioScena0600_801FCF98 (0x801FCF98) apart from that same constant.'
   - - 23608
     - c
     - requestPrimaryState8Substate0FScenarioScena0900_801FC838

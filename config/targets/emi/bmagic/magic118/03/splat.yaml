@@ -44,8 +44,10 @@ segments:
     - c
     - incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C
   - - 704
-    - asm
-    - func_801EEEC0
+    - c
+    - decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic11803_801EEEC0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic11803_801EEEC0.c'
+    - '@behavior: Decrements the work object''s byte-9 countdown at byte width and, when it reaches zero, re-reads the scratchpad work pointer cell and increments work byte 1.'
   - - 780
     - asm
     - func_801EEF0C
