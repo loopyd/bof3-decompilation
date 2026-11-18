@@ -236,8 +236,10 @@ segments:
     - asm
     - func_801F8BE8
   - - 9024
-    - asm
-    - func_801F8F40
+    - c
+    - average12BitValuesScenarioScena0700_801F8F40
+    - '@source: src/bof3/scenario/average12BitValuesScenarioScena0700_801F8F40.c'
+    - '@behavior: Two-value average on the engine''s 0x1000-unit rotation scale: masks both arguments to their low twelve bits, orders the two masked values with an unsigned comparison so the smaller stays in the first argument register and the larger in the second (the swap stashes the smaller value in the scratch register in the branch delay slot), then takes the signed difference of the two 16-bit halves; below 0x800 it returns the logical half of their sum, and at or above 0x800 it returns the arithmetic half of their sum plus 0x800 truncated to 16 bits, which is the circular mean through the wrap point. It is a leaf - no call, no memory access, no frame - and its only reference in this overlay was the jal at 0x801F8B90 inside the span func_801F88B8.'
   - - 9104
     - asm
     - func_801F8F90

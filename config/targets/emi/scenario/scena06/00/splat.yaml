@@ -125,8 +125,55 @@ segments:
       bytes. The six-word case table sits in the overlay rodata slot at
       0x801F6D7C.'
   - - 9408
-    - asm
-    - func_801F90C0
+    - c
+    - runSecondaryStateSequenceForPrimaryState6ScenarioScena0600_801F90C0
+    - '@source: src/bof3/scenario/runSecondaryStateSequenceForPrimaryState6ScenarioScena0600_801F90C0.c'
+    - '@behavior: Word 6 (0-based) of the 18-word primary state table at
+      0x801FE3E4, which dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
+      indexes with the shared primary scene state byte D_80146874. It steps the
+      shared secondary scene state byte D_80146875 through a thirty-three-entry
+      case table, so every value of that byte at or above 0x21 falls to the
+      epilogue, as do the unclaimed states 11 to 19 and 25 to 29. State 0 runs
+      func_801BE1B0 mode 3 and advances to state 1; state 1, at progress 9, arms
+      secondary state 2, raises D_80146866 to 2, hands flag bit 0x12 of
+      D_8014686C and mode 0x12 to func_8015B580 and runs func_8019FA28 with
+      0x5E, 0x2E0000, 0x2E0000 and 0x84; state 2 queues front-end action 0x38
+      through func_80150224, latches D_80143BB0 to 2 and advances to state 3;
+      state 3, unless D_80143BB0 reads 2, runs func_8014ECAC mode 5, stores 0x1F
+      in D_8014832E and advances to state 4; state 4, while the gate halfword
+      D_80143C40 reads zero, raises progress to 1 and advances to state 5; state
+      5, at progress 2, claims a front-end record through func_8019601C,
+      publishes the index in the scratchpad byte D_1F800000 and, unless it is
+      0xFF, seeds the 0x74-byte record table at D_80143FC8 with flag 1, byte
+      0x13, word -0x210, the D_801492DA halfword, word 0x2F2 and byte 0x14,
+      then raises progress to 3 and advances to state 6; state 6 reseeds
+      D_80149333 with 2, decrements D_8014932C by 0x40 and counts D_80146867 up,
+      clearing D_8014932C and the count and advancing to state 7 once that count
+      reaches 0x12; state 7, at progress 0x13, runs func_801C601C mode 0, claims
+      a record through func_8019601C, publishes it in D_1F800000 and, unless it
+      is 0xFF, seeds it with flag 1, byte 0x13, word -0x2AA, the D_801492DA
+      halfword, word 0x200 and byte 0x1E, then advances to state 8 carrying the
+      index into D_80146867; state 8, once that record flag byte reads zero,
+      raises progress to 0x14 and advances to state 9; state 9, at progress
+      0x16, arms secondary state 0x0A, hands flag bit 0x13 and mode 0x13 to
+      func_8015B580, runs func_8019FA28 with 0x5E, 0x2C0000, 0x290000 and 0x85
+      and stores 0x42 in D_80143F1F; state 0x0A, at progress 0x22, hands flag
+      bit 0x10 and mode 0x10 to func_8015B580, runs func_8015C058, clears
+      D_80146865 to D_80146867 and enters the shared tail; state 0x14 runs
+      func_801BE1B0 mode 6, func_801C601C mode 1 and advances to state 0x15;
+      state 0x15, at progress 4, stores 0x20 in D_8014932E, advances to state
+      0x16 and copies D_80145EC4 and D_80145EC8 into D_80149308 and D_8014930C;
+      state 0x16, while D_80149332 reads zero, raises progress to 5 and advances
+      to state 0x17; state 0x17, at progress 7, runs func_8016666C with (1000,
+      0), raises progress to 8 and advances to state 0x18; state 0x18, at
+      progress 9, hands flag bit 0x14 and mode 0x14 to func_8015B580, runs
+      func_8015C058, clears D_80146865 to D_80146867 and enters the shared tail;
+      state 0x1E arms secondary state 0x1F and runs func_8019FA28 with 0x5E,
+      0x520000, 0x330000 and 0x8E; state 0x1F stores 0x1F in D_8014832E and arms
+      secondary state 0x20; state 0x20, at progress 0x36, runs func_8015C058 and
+      falls into the shared tail, which clears D_80146875 and D_80146874. The
+      thirty-three-word case table sits in the overlay rodata slot at
+      0x801F6D94.'
   - - 11200
     - asm
     - func_801F97C0

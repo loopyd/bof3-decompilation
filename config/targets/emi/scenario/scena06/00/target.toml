@@ -15,6 +15,7 @@ sources = [
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState1ScenarioScena0600_801F7A44.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState2ScenarioScena0600_801F7C6C.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState5ScenarioScena0600_801F8F18.c",
+    "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState6ScenarioScena0600_801F90C0.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState16ScenarioScena0600_801FC498.c",
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState9ScenarioScena0600_801FA3D0.c",
 ]
@@ -85,6 +86,12 @@ function = 0x801F8F18
 section = ".rodata"
 address = 0x801F6D7C
 size = 0x18
+
+[[matching.section_placements]]
+function = 0x801F90C0
+section = ".rodata"
+address = 0x801F6D94
+size = 0x84
 
 [[matching.section_placements]]
 function = 0x801FC718

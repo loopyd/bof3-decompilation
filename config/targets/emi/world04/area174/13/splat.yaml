@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F363C
   - - 2940
-    - asm
-    - func_801F377C
+    - c
+    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3958World04Area17413_801F377C
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3958World04Area17413_801F377C.c'
+    - '@behavior: Advances the scratch work record published through the pointer cell at 0x1F800044: adds 0x10 to its halfword at 0x30 and stores the sum back, then, once the signed value of that updated halfword has reached 0x80, increments work byte 0x2, the state selector the work-byte-2 dispatcher 0x801F344C indexes the local handler table 0x801F4FBC with, and finally calls the record renderer func_801F3958. Takes no arguments and returns nothing.'
   - - 3032
     - asm
     - func_801F37D8

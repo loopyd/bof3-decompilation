@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c",
     "src/bof3/world/invokeHelperWorld04Area19713_801F2E54.c",
     "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0.c",
+    "src/bof3/world/claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050.c",
     "src/bof3/support/area197_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area197_13_psyq.c"

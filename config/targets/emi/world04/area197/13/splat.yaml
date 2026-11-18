@@ -114,8 +114,10 @@ segments:
     - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0
     - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0.c'
   - - 5200
-    - asm
-    - func_801F4050
+    - c
+    - claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050
+    - '@source: src/bof3/world/claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050.c'
+    - '@behavior: Front-end record seeder: it claims one row through the shared allocator func_8019601C and, for a free index other than 0xFF, seeds the 0x74-byte row at 0x80143FC8 with occupancy 1, handler selector 0x92, the halfword -0x1E at row 0x30, 6 at row byte 0x29, zero at row halfword 0x2E and the slot index of the work record published at 0x80146884 in row byte 0x0B, then returns.'
   - - 5412
     - asm
     - func_801F4124

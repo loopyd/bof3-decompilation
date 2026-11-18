@@ -1,12 +1,12 @@
 #include "bof3/bof3.h"
 #include "gpu/prim.h"
 
-/* The overlay sprite-record emitter at 0x801F3A10, still an asm sibling in this
- * target: it selects its draw mode, queues one semi-transparent SPRT from its
- * own record table and sizes it from the entry its third argument indexes, so
- * this body keeps that argument as a plain immediate. Its two call sites here
- * take no result. */
-void func_801F3A10(s16 arg0, s16 arg1, u8 arg2);
+/* Semi-transparent sprite emitter of this target at 0x801F3A10: it selects its
+ * draw mode, queues one SPRT from its own four-byte entry table and sizes it
+ * from the entry its third argument indexes, so this body keeps that argument
+ * as a plain immediate. Its two call sites here take no result. */
+void emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+    s16 x, s16 y, u8 entry);
 
 /* @source 0x8014832E @kind unknown */
 extern u8 D_8014832E;
@@ -17,9 +17,9 @@ extern u16 D_80010004;
 /* @source 0x801F40FC
  * @behavior Draws the AREA065 sprite frame and its main-RAM texture row unless
  *           the shared display-enable byte 0x8014832E holds none of bits 0x1B.
- *           Through the overlay sprite-record emitter it queues entry 4 at
- *           (x, y) and entry 5 at (x + 0x80, y), then submits the texture
- *           whose handle is the 0x80010000 main-RAM base plus the offset-table
+ *           Through the semi-transparent sprite emitter 0x801F3A10 it queues
+ *           table entry 4 at (x, y) and entry 5 at (x + 0x80, y), then submits
+ *           the texture whose handle is the 0x80010000 main-RAM base plus the
  *           halfword D_80010004, the third entry of that halfword table, at
  *           (x + 4, y + 4) with colour 0 and flag 0xFF through func_8014F800.
  *           Both arguments are narrowed with `sll`/`sra 16` in this body. The
@@ -42,8 +42,10 @@ void drawSpriteFrameAndMainRamTexture2World01Area06513_801F40FC(s16 arg0,
 
   if ((D_8014832E & 0x1bu) != 0u) {
     y = arg1;
-    func_801F3A10(arg0, y, 4u);
-    func_801F3A10((s16)(arg0 + 0x80), y, 5u);
+    emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+        arg0, y, 4u);
+    emitSemiTransSpriteFromIndexedEntryTableWorld01Area06513_801F3A10(
+        (s16)(arg0 + 0x80), y, 5u);
     func_8014F800((s16)(arg0 + 4), (s16)(arg1 + 4), 0, 0xffu,
                   0x80010000u + (u32)D_80010004);
   }

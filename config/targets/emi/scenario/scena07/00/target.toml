@@ -43,5 +43,6 @@ support_sources = [
     "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7D28.c",
     "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7E24.c",
     "src/bof3/scenario/addFourTimesSignedTableStepToHalfword8014932AScenarioScena0700_801FCFB4.c",
+    "src/bof3/scenario/average12BitValuesScenarioScena0700_801F8F40.c",
 ]
 psyq_source = "src/bof3/support/scena07_00_psyq.c"
