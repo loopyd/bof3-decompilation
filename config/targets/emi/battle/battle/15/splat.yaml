@@ -1752,8 +1752,10 @@ segments:
     - '@source: src/bof3/battle/panelStepLeftSettle5B.c'
     - '@behavior: Runs the panel-task pass func_800B1728, then resets the panel x to 0x5B while it is below 0x5C and steps it left by 0x20 otherwise.'
   - - 109828
-    - asm
-    - func_800B1504
+    - c
+    - panelStepRightOrCallAbove15A
+    - '@source: src/bof3/battle/panelStepRightOrCallAbove15A.c'
+    - '@behavior: Runs the panel-task pass func_800B1728, then steps the signed panel x right by 0x20 while it is below 0x15B and runs func_80158E20 in place of that step once the signed x has reached 0x15B.'
   - - 109916
     - c
     - dispatchPanelStateTable6a40

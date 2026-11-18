@@ -19,6 +19,7 @@ sources = [
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0500_801FC8A0.c",
     "src/bof3/scenario/setScenarioFlagBit0BThenClearProgressAndSharedStateBytesAndRequestPrimaryState8ScenarioScena0500_801FCB1C.c",
     "src/bof3/scenario/setScenarioFlagBit0AThenReleaseFrontEndAndRequestPrimaryState0AtProgress18ScenarioScena0500_801F8B94.c",
+    "src/bof3/scenario/startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F73F8.c",

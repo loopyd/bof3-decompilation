@@ -87,8 +87,35 @@ segments:
     - asm
     - func_801F8740
   - - 8312
-    - asm
-    - func_801F8C78
+    - c
+    - runSubstateLadderSeedFrontEndRowsThenToggleModeFlagsAndReleaseScenarioScena0200_801F8C78
+    - '@source: src/bof3/scenario/runSubstateLadderSeedFrontEndRowsThenToggleModeFlagsAndReleaseScenarioScena0200_801F8C78.c'
+    - '@behavior: Slot 12 of the 31-word code-pointer run at 0x801FE288, the
+      chain table dispatchProgressHandlerScenarioScena0200_801F719C indexes with
+      the signed chain byte D_80146872; its pointer word sits at 0x801FE2B8. It
+      switches the shared sub-state byte D_80146875 through the eight-word case
+      table at 0x801F6D54; sub-states 0 through 7 select a case and any larger
+      value returns through the single epilogue. Sub-state 0 probes flag 0x35 of
+      the shared flag word D_8014686C and plays effect (0, 1) when that probe
+      reports zero and effect (0, 0) afterwards, then runs func_801BE1B0(0x18),
+      func_801C601C(5) and advances to 1. Sub-states 1 and 2 seed one 0x74-byte
+      front-end record at 0x80143FC8 from the object byte func_8019601C() kept
+      in scratchpad 0x1F800000: row byte 0 takes 1, +5 takes 0x13, +9 takes 0x10
+      and +0x64/+0x68 take the signed halfwords D_801492D8 and D_801492DA, while
+      +0x6C takes 0x2C6 in sub-state 1 and 0x1FE in sub-state 2; sub-state 2 only
+      runs on progress 0xA2 and then records the seeded slot in D_80146867 and
+      advances to 3, and an object byte of 0xFF skips the seeding. Sub-state 3
+      waits for that record row byte 0 to clear, then zeroes D_80146867, runs
+      func_801BE1B0(0xA) and advances to 4. Sub-state 4, on progress 0x63, raises
+      mode bit 8 of D_80146258, queues func_80161C20(0x20, 0x64, 8), advances to
+      5 and raises mode bit 0x80. Sub-state 5, on progress 0x71, runs
+      func_801C601C(1) and advances to 6. Sub-state 6, on progress 0x7E, clears
+      D_80146866, flips mode bit 8, runs func_801C1E3C(0), advances to 7, flips
+      mode bit 0x80 and seeds the front selector context
+      func_8019FA28(0x1B, 0x220000, 0x260000, 0x80). Sub-state 7 sets flag bits
+      0x3F of D_8014686C through func_8015B580, releases the overlay through
+      func_8015C058, stores 1 in D_80146866 and returns D_80146875 and
+      D_80146874 to zero.'
   - - 9524
     - c
     - runSubstateProgressLadderSeedSelectorContextSetFlagBitsThenReleaseScenarioScena0200_801F9134

@@ -21,6 +21,7 @@ sources = [
     "src/bof3/scenario/seedWorkPositionPairAndDistanceArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7D6C.c",
     "src/bof3/scenario/seedWorkPositionPairAndDistanceClearWorkTableSetTransitionByteArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7A30.c",
     "src/bof3/scenario/seedSharedEffectObjectFromWorkPositionAndDistancePublishClearByte9ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7638.c",
+    "src/bof3/scenario/seedWorkPositionPairAndDistancePublishBlockAt800E4C24SetHalfword800E5134ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7BE0.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

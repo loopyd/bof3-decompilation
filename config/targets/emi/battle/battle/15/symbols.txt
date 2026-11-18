@@ -310,6 +310,7 @@ panelStepLeftClamp11 = 0x800B0EC4;
 panelStepRightClamp5B = 0x800B0F30;
 dispatchPanelStateTable6a34 = 0x800B138C;
 panelStepLeftSettle5B = 0x800B14BC;
+panelStepRightOrCallAbove15A = 0x800B1504;
 dispatchPanelStateTable6a40 = 0x800B155C;
 panelStepLeftClampA3 = 0x800B1664;
 dispatchPanelTaskTable6e08 = 0x800B2088;

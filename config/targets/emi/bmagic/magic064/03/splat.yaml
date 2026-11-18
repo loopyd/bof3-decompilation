@@ -65,8 +65,10 @@ segments:
     - c
     - noopHandlerBmagicMagic06403_801EF29C
   - - 1700
-    - asm
-    - func_801EF2A4
+    - c
+    - publishSelectedWorkRecordLevelFourSpritePiecesByWorkByte9ThenStartStreamSlotFromSharedRecordAndAdvanceWorkByte2BmagicMagic06403_801EF2A4
+    - '@source: src/bof3/bmagic/publishSelectedWorkRecordLevelFourSpritePiecesByWorkByte9ThenStartStreamSlotFromSharedRecordAndAdvanceWorkByte2BmagicMagic06403_801EF2A4.c'
+    - '@behavior: Publishes the selected local work record as the scratchpad work object, re-levels the four sprite pieces that draw it by the previous work object byte 9 through the sprite-piece drawer at 0x801F0EEC, then starts the EMI stream slot the shared battle record selects and advances work byte 2. Reads the battle selection byte at 0x80146374 unsigned, keeps the work-object pointer cell 0x1F800044 in a saved register and stores the address of the 0x140-byte-stride record at that index of the D_80145E90 table into the cell. Pieces 1 and 2 take 0x80 minus the saved object byte 9 and pieces 0 and 3 take that byte unchanged, with the constant 0x80 materialised once into a saved register. Reads the shared battle record pointer at 0x801EB4E0, keeps its halfword 0x2C, restores the saved work object through the pointer cell and calls func_80161FDC with 0x240, 0x242, 0x241 or 0x243: the halfword being zero selects the 0x240/0x242 pair, a non-zero value the 0x241/0x243 pair, and the record unsigned byte 8 below 2 selects the even value of the pair. Finally re-reads the pointer cell and increments the restored work object byte 2. Takes no arguments and returns nothing; the 0x20-byte frame keeps the return address at 0x18, the saved pointer at 0x14 and the 0x80 constant at 0x10.'
   - - 1992
     - asm
     - func_801EF3C8
