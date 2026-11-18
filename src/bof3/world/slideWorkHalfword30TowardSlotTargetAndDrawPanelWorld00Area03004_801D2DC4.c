@@ -42,14 +42,14 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * Finally, when D_80145E92 is 4, D_8014688C's byte is not 3, the clamped cell
  * origin falls outside the span above it and the frame counter D_80143E6C low
  * nibble is clear, it requests sound cue 0x207 through func_8015DF18.
- * @status partial
- * @match 99.65
- * @residual The sum-store base register still differs at the original
- * 1152-byte size. The original interval remains retained.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(void) {
   u8*      approachWork;
   u8*      work;
+  u8*      rowWork;
   u8*      sumWork;
   u8*      clampMode;
   LINE_F2* prim;
@@ -154,12 +154,12 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
       rowMode = (u8*)D_801E320C;
       rowIndex = D_801E3208;
     } while (0);
-    work = D_1F800044;
+    rowWork = D_1F800044;
     rowScale = rowMode[3];
     level = D_80146892[rowIndex * 0x98];
   } while (0);
   do {
-    rowPosition = *(u16*)(work + 0x30);
+    rowPosition = *(u16*)(rowWork + 0x30);
   } while (0);
   rowWidth = rowScale * 8;
   cur = rowWidth + 0x18;
@@ -177,9 +177,9 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     comparedCell = (s16)clamped;
   } while (0);
   if (((s16)rowUpper < comparedCell) || (comparedCell < (s16)rowScale)) {
-    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 1);
+    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 1);
   } else {
-    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (work[0xA] & 7) * 2, 2, 0);
+    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 0);
   }
 
   if (D_80146889[D_801E3208 * 0x98] == 4) {
