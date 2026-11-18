@@ -1728,6 +1728,11 @@ halfword field can retain the original dependency. Preserve alignment, access
 width and every memory event; inspect both scheduling passes and require the
 complete native gate.
 
+After loop motion, inspect the next CSE pass for lost reloads. An ordinary
+pointer-cell sample moved into a loop can be hoisted yet make later pointer
+and pointee reloads redundant. Matching access widths alone does not preserve
+the original memory events.
+
 If a scope forces a store ahead of copy reads that should precede it, trace its
 first real input load as well as its last operation. Including that load makes
 `LOOP_BEG` attach there rather than to the store. An existing intervening store
