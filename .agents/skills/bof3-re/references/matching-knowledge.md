@@ -1714,6 +1714,14 @@ copy. Check global allocation priorities and compiler-generated stack uses
 before explaining register or frame changes. Preserve the signed-byte domain
 and the original load and conversion sequence.
 
+When a raw word feeds a selected byte result, keep the raw arithmetic and the
+consumed byte as separate quantities. An explicit keep-value capture before a
+guard can retain the original copy. If the raw word and pointer exchange
+registers, check the pointer's earlier definitions and weighted references.
+An already consumed record pointer can carry an earlier field-address phase
+without adding a local. Verify loop-invariant motion, stack homes and every
+earlier instruction before retaining the complete native result.
+
 A classification with a proven byte result can preserve the comparison's word
 result separately from the byte local. Trace that word-to-byte capture through
 combine and allocation when the original copies the result into a saved register.

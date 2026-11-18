@@ -26,9 +26,9 @@ extern int sprintf(char* buffer, const char* format, ...);
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
  * @status partial
- * @match 97.15
- * @residual Count-X setup and the footer keep-copy still differ.
- * The compiled body is four bytes shorter than the original.
+ * @match 99.43
+ * @residual Count-X reload and addition use S0 where the original reloads T1.
+ * The compiled body retains the original 1404-byte size.
  */
 void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   u16 x;
@@ -47,7 +47,7 @@ void drawLureListColumnWorld00Area03004_801D8364(s16 arg0, s16 arg1) {
   s32 textX;
   u8 scroll;
   s32 columnEnd;
-  s32 columnY;
+  u8 columnY;
   s32 rawColumnY;
   u8* record;
   u8* columnWork;
@@ -161,9 +161,9 @@ row_drawn:
   i = 0;
   drawn = 0;
   for (; i < 0x80; i++) {
-    columnWork = D_801C9E8A;
-    columnWork += D_801451CC[i] * 20;
-    if (*columnWork == 10) {
+    record = D_801C9E8A;
+    record += D_801451CC[i] * 20;
+    if (*record == 10) {
       drawn += 1;
     }
   }
@@ -176,6 +176,7 @@ row_drawn:
     columnEnd = 0x72 - drawn * 6;
     columnWork = D_1F800044;
     rawColumnY = FIELD_REF(u16, columnWork, 0x38) * 6 + 0x1C;
+    columnY = rawColumnY;
     scroll = columnWork[0x0A];
     if (scroll != 0) {
       if (columnWork[0x08] != 0) {
@@ -183,8 +184,6 @@ row_drawn:
       } else {
         columnY = rawColumnY - scroll * 2;
       }
-    } else {
-      columnY = rawColumnY;
     }
   }
 
