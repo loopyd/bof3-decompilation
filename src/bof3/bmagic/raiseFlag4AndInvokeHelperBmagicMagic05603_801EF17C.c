@@ -14,7 +14,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *           arguments. Its address is the third word (index 2) of the
  *           three-entry code pointer run at 0x801EEC04, whose words are
  *           0x801EEC94, 0x801EEF3C and 0x801EF17C; the dispatcher
- *           func_801EEC34 copies those three words into its 0x28-byte frame
+ *           dispatchWorkByte1HandlerBmagicMagic05603_801EEC34 copies those three words into its 0x28-byte frame
  *           and selects one with the scratchpad work object's byte at offset
  *           0x1 scaled by four. The original materializes the halfword address
  *           once in a register (unsigned halfword load, ori, halfword store

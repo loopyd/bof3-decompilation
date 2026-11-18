@@ -37,7 +37,7 @@ extern u8 func_8014DAEC(void); /* @source 0x8014DAEC */
  *           from with work byte 2 scaled by four, so
  *           the body runs as that dispatcher's step 1; the same word sits at
  *           0x801EEC14 of the twelve-word run based at 0x801EEC04, whose first
- *           three words the byte-1 dispatcher func_801EEC34 selects from. No jal
+ *           three words the byte-1 dispatcher dispatchWorkByte1HandlerBmagicMagic05603_801EEC34 selects from. No jal
  *           in this payload names 0x801F0024, so it is reached through the run
  *           alone. The 0x18-byte frame only keeps the return address at 0x10
  *           across its single call; the step takes no arguments, returns

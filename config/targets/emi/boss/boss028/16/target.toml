@@ -12,6 +12,7 @@ sources = [
     "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenSetGlobalWorkByte1To5ClearGlobalWorkByte2AndInvokeHelperWhenHalfword3EAboveDistancePlus1000BossBoss02816_800C1F2C.c",
     "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenStoreZeroInWord14AndMinus40InWord20DecrementWorkByte2WhenHalfword3EAboveRemeasuredDistancePlus400BossBoss02816_800C1E80.c",
     "src/bof3/boss/clearWorkByte24Byte2AAndMode48SetByte29To5ApplyLookup15CRequestResource6CopyBattleRecordPositionSeedDistanceThenAdvanceStepBossBoss02816_800C2024.c",
+    "src/bof3/boss/dispatchStateByte1Table2154BossBoss02816_800C1804.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02816_800C1AF0.c",

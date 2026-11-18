@@ -30,8 +30,10 @@ segments:
   vram: 2149510180
   subsegments:
   - - 36
-    - asm
-    - func_801EEC24
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic16103_801EEC24
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic16103_801EEC24.c'
+    - '@behavior: Overlay entry dispatcher. It reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x28-byte frame, copies the three-entry handler pointer run at 0x801EEC04 (0x801EEC84, 0x801EEE9C, 0x801EEF08) into that frame, and calls the entry its work byte at offset 1 selects. The selector is not bounds-checked, nothing outside the frame is written, and no value is returned.'
   - - 132
     - asm
     - func_801EEC84

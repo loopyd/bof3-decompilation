@@ -410,8 +410,8 @@ segments:
     - textbin
     - T_801FE3C4
   - - 30820
-    - asm
-    - func_801FE464
+    - textbin
+    - D_801FE464
   - - 30916
     - textbin
     - T_801FE4C4

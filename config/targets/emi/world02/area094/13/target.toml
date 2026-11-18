@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world02/area094/13.bin"
 splat = "config/targets/emi/world02/area094/13/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area09413_801F2ED0.c",
+]
 support_sources = [
     "src/bof3/support/area094_13_psyq.c",
     "src/bof3/world/copyModeByteWorld02Area09413_801F3218.c",

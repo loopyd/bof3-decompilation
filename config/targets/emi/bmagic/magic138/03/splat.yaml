@@ -30,8 +30,10 @@ segments:
   vram: 2149510184
   subsegments:
   - - 40
-    - asm
-    - func_801EEC28
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic13803_801EEC28
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13803_801EEC28.c'
+    - '@behavior: Overlay entry: reads the work-object pointer cell at 0x1F800044, copies the three-word code pointer prefix at 0x801EEC04 (0x801EEC88, 0x801EED60, 0x801EEED8) into its own 0x28-byte frame and invokes the entry the work-object state byte 1 selects, with no arguments.'
   - - 136
     - asm
     - func_801EEC88

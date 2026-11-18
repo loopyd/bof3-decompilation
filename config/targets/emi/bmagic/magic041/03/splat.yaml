@@ -30,8 +30,10 @@ segments:
   vram: 2149510200
   subsegments:
   - - 56
-    - asm
-    - func_801EEC38
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic04103_801EEC38
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04103_801EEC38.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, copies the six leading words of the code pointer run at 0x801EEC04 (0x801EECB0, 0x801EEE14, 0x801EEEB4, 0x801EEFC4, 0x801EEFF8, 0x801EF130) into its own 0x30-byte frame, and invokes the copy selected by the work object''s state byte at offset 0x1 with no arguments. It reads no other state and writes none.'
   - - 176
     - asm
     - func_801EECB0
