@@ -13,7 +13,7 @@ extern s32 func_801E02D4(u32 arg0, u32 arg1);
  * two-byte step-mode row from work byte 8. Preserves the separate
  * scratch-pointer captures, signed clamps and guarded division.
  * @status partial
- * @match 84.69
+ * @match 84.82
  * @residual Frame size, bound copies, value allocation and division expansion
  * still differ. The original 3188-byte interval remains
  * retained until exact reconstruction.
@@ -130,7 +130,8 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   work = D_1F800044;
   do {
     lower = reference - spread - 0x0C;
-    upper = reference + spread + 0x0C;
+    reference += spread;
+    upper = reference + 0x0C;
   } while (0);
   scaleBytes = (u8*)&D_801E2AB8[work[6]];
 
