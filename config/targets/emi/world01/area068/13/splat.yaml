@@ -81,8 +81,10 @@ segments:
     - c
     - noopHandlerWorld01Area06813_801F306C
   - - 1140
-    - asm
-    - func_801F3074
+    - c
+    - armState11WhenRecordedPadMatchCountElse22World01Area06813_801F3074
+    - '@source: src/bof3/world/armState11WhenRecordedPadMatchCountElse22World01Area06813_801F3074.c'
+    - '@behavior: Selects the state index this overlay stores into the work record byte at +0x01 through the scratchpad pointer cell 0x1F800044 by the recorded pad-match count D_801F4E08: while that count is nonzero it clears the attempt byte D_801F4E0C and stores 0xB (11, the pan state), and while it is zero it stores 0x16 (22). Leaf with no frame: takes no arguments, makes no call and returns nothing.'
   - - 1200
     - c
     - stepCoordinatePairByFaceButtonAndArmState12World01Area06813_801F30B0

@@ -57,7 +57,9 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
    renaming that row cleared it with no body change. That rename retires the
    function's naming debt, so a stale `func_` entry for it in
    `config/symbol-naming-baseline.json` survives with the symbols check already
-   passing: report it and leave the parent-owned baseline alone. A whole-target
+   passing: report it and leave the parent-owned baseline alone. Check the target prefix
+   on baseline rows. The same raw `func_<ADDRESS>` spelling in another target is
+   not this selector's debt. A whole-target
    naming check also fails on rows this lane never wrote: read such a row from
    `HEAD`, confirm the lane's own selectors report no findings, and run the same
    check on an unrelated target, which reports its own inherited findings, then

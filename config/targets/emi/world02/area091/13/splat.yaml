@@ -43,8 +43,10 @@ segments:
     - '@source: src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read and, while it is nonzero, stores the constant 7 into the shared status halfword at 0x801490A8 and then the constant 6 into the shared mode byte at 0x801D4285, materialising the 7 in the branch delay slot; when the gate byte is zero it stores 0xFFFF into 0x801490A8 instead and writes nothing else, then returns, taking no arguments; the payload names this body only as the address-taken word at 0x801F3B3C of the ordered handler run that also holds 0x801F2C04, 0x801F2C84, 0x801F2CB4 and 0x801F2D28, so no call site fixes a prototype.'
   - - 296
-    - asm
-    - func_801F2D28
+    - c
+    - setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2D28
+    - '@source: src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2D28.c'
+    - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read and, while it is nonzero, stores the constant 7 into the shared status halfword at 0x801490A8 and then the constant 6 into the shared mode byte at 0x801D4285, materialising the 7 in the branch delay slot; when the gate byte is zero it stores 0xFFFF into 0x801490A8 instead and writes nothing else, then returns, taking no arguments; the span is byte-identical to the earlier run entry 0x801F2CE4 except for its own internal jump immediate, and the payload names this body only as the address-taken word at 0x801F3B40 of the ordered handler run that also holds 0x801F2C04, 0x801F2C84, 0x801F2CB4 and 0x801F2CE4, so no call site fixes a prototype.'
   - - 364
     - c
     - dispatchWorkByte4Table3b44World02Area09113_801F2D6C

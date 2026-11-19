@@ -127,8 +127,10 @@ segments:
     - c
     - invokeHelperScenarioSce15ef300_801D16BC
   - - 2780
-    - asm
-    - func_801D16DC
+    - c
+    - clearWorkTableLeadBytesAt800E4800ScenarioSce15ef300_801D16DC
+    - '@source: src/bof3/scenario/clearWorkTableLeadBytesAt800E4800ScenarioSce15ef300_801D16DC.c'
+    - '@behavior: Clears the three lead bytes of each of the 0x100 0x18-byte work records at 0x800E4800.'
   - - 2844
     - asm
     - func_801D171C

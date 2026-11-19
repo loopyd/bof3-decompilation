@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801F360C
   - - 2704
-    - asm
-    - func_801F3690
+    - c
+    - dispatchStateByte3Table4f74World03Area11513_801F3690
+    - '@source: src/bof3/world/dispatchStateByte3Table4f74World03Area11513_801F3690.c'
+    - '@behavior: handler-table step dispatch: reads the state byte at offset 0x03 of the work record published at the scratchpad pointer cell 0x1F800044, scales it by four and calls that entry of the local handler table based at 0x801F4F74.'
   - - 2772
     - asm
     - func_801F36D4

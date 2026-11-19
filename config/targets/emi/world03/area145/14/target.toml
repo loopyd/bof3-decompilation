@@ -35,5 +35,6 @@ support_sources = [
     "src/bof3/world/requestPrimaryState14WithMatchedRowSubstateWhenFlag9SetWorld03Area14514_801F4504.c",
     "src/bof3/world/drawFullScreenSkyBlueToNavyGradientQuadWhileOverlayStateSetWorld03Area14514_801F532C.c",
     "src/bof3/world/drawTranslucentGouraudRingOfSixteenQuadsAroundWorkCursorWorld03Area14514_801F3980.c",
+    "src/bof3/world/dispatchStateByte4Table5c94World03Area14514_801F3DCC.c",
 ]
 psyq_source = "src/bof3/support/area145_14_psyq.c"
