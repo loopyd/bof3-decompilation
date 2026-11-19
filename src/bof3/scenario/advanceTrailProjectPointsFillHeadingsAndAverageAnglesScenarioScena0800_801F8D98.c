@@ -61,11 +61,9 @@ typedef struct ScenarioScena0800TrailBuffer {
  * overlay average helper into the record heading halfwords, seeding record 0
  * with the first heading and record 0x1F with the last one. Takes the buffer
  * pointer in a0 and returns nothing.
- * @status partial
- * @match 97.55
- * @residual Five heading-address additions in the sentinel-fill walk have
- *   their operands reversed. All other instructions, the 816-byte size and
- *   the 0x58 frame match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void advanceTrailProjectPointsFillHeadingsAndAverageAnglesScenarioScena0800_801F8D98(
     u8 *arg0) {
@@ -119,24 +117,24 @@ void advanceTrailProjectPointsFillHeadingsAndAverageAnglesScenarioScena0800_801F
   }
 
   for (i = 0; i < 0x1F; i++) {
-    if (buffer->headings[i] != 0x1000) {
+    if (*(u16 *)((u8 *)buffer + (i << 1) + 0x300) != 0x1000) {
       continue;
     }
     /* Both searches share one index: the forward value is dead before the
      * backward search initializes it, including the all-sentinel path. */
     for (j = i + 1; j < 0x1F; j++) {
-      if (buffer->headings[j] != 0x1000) {
-        buffer->headings[i] = buffer->headings[j];
+      if (*(u16 *)((u8 *)buffer + (j << 1) + 0x300) != 0x1000) {
+        *(u16 *)((u8 *)buffer + (i << 1) + 0x300) = *(u16 *)((u8 *)buffer + (j << 1) + 0x300);
         goto headingFilled;
       }
     }
     for (j = 0; j < i; j++) {
-      if (buffer->headings[j] != 0x1000) {
-        buffer->headings[i] = buffer->headings[j];
+      if (*(u16 *)((u8 *)buffer + (j << 1) + 0x300) != 0x1000) {
+        *(u16 *)((u8 *)buffer + (i << 1) + 0x300) = *(u16 *)((u8 *)buffer + (j << 1) + 0x300);
         goto headingFilled;
       }
     }
-    buffer->headings[j] = 0;
+    *(u16 *)((u8 *)buffer + (j << 1) + 0x300) = 0;
   headingFilled:;
   }
 

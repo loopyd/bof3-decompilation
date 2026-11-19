@@ -32,26 +32,9 @@ void func_8014D6DC(s32 id, s32 mode);
  * one, and resource 0x36. It takes no arguments and returns nothing; the
  * 0x20-byte frame keeps $ra plus $s0, $s1 and $s2, which hold the reused 0xFF
  * and 1 constants, the first entry base and the scratchpad halfword address.
- * @status partial
- * @match 95.95
- * @residual Frame, call order, record addressing and every stored value match;
- * 71 of 74 instructions and all 296 bytes agree, and only the placement of the
- * three instructions that materialise the 0x801FE9A0 entry base differ: the
- * original emits lui/addiu s1 plus the a0 copy ahead of the second record
- * scaled index, while this build emits them after it, so the multiply, the
- * flag store, the slot reload, the scratchpad base and the two calls keep
- * their original order and only those three slots are transposed. GCC 2.7.2
- * sched.c places them itself: the tail block keeps its pre-scheduling order
- * in both builds and the boosted single-set entry base is taken at the same
- * ready-list step. Measured and rejected this lane at an identical 71/74 and
- * 296 bytes: an explicit entry/scratch assignment before the scaled index,
- * addressing D_1F800000 directly, entry and scratch as declaration
- * initializers, a void argument type, u32 slot and offset locals, a 152
- * left-hand product, an unsigned or scalar D_801FE9A0 base, and reads of the
- * published slots back through 0x801FEA74 and 0x801FEA78. Flag catalogs,
- * compiler-variant batches and permuter work are not authorized for this lane
- * and remain untried; the shared slot allocator prototype is word-typed here
- * because this body stores its return unmasked.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C(void) {
   s32 first;
@@ -74,10 +57,9 @@ void claimTwoEffectSlotsThenActivateBothWithTemplatesScenarioScena0800_801FD07C(
     D_80146888[offset] = 0;
     return;
   }
-  offset = second * 152;
-  D_80146888[offset] = 1;
   entry = D_801FE9A0;
   scratch = &D_1F800000;
+  D_80146888[second * 152] = 1;
   *scratch = D_801FEA74;
   func_801A65A0(entry);
   func_8014D6DC(0x4C, 0);
