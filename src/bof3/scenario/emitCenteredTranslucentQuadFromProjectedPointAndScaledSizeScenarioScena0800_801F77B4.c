@@ -67,27 +67,24 @@ typedef struct ScenarioScena0800QuadRecord {
  * size, so each corner pair repeats a single stored halfword and the size
  * halfword at +0x00 of the second entry serves both axes. The CLUT is
  * GetClut(0xA0, 0x1E3) and the texture page GetTPage(0, 1, 0x2C0, 0x100); the
- * texels are the 0x20 by 0x20 cell at (0xE0, 0x30), stored as v0/v1, u0/u1,
- * u2/v2 and u3/v3 pairs in the order the original emits them, and the colour
- * bytes are green and blue cleared then red from the record byte at +0x03. It
+ * texels cover the 0x20 by 0x20 cell at (0xE0, 0x30). The record colour byte
+ * is sampled before green and blue are cleared, then published as red. It
  * closes by queueing the primitive through func_8014E5A0 with OT index 1 and
  * size 0x28. Takes the record pointer as its only argument, returns nothing, and
  * keeps a 0x40-byte frame for $ra and $s0..$s2 over the 0x20-byte scratch at
  * 0x10..0x2F. The record's remaining fields and the two resident helpers' wider
  * roles stay unknown.
- * @status partial
- * @match 92.47
- * @residual 86/93 instructions at unchanged 372 bytes; first difference +0x010C.
- *   The queue size enters $a1 before the texel stores, while the original keeps
- *   the shared 0xE0 texel constant there and loads the size after sampling the
- *   record colour. The earlier instructions match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4(void* arg0) {
-  ScenarioScena0800QuadScratch       scratch;
-  const ScenarioScena0800QuadRecord* record;
-  POLY_FT4*                          prim;
+  ScenarioScena0800QuadScratch scratch;
+  ScenarioScena0800QuadRecord* record;
+  POLY_FT4* prim;
+  u8 color;
 
-  record = (const ScenarioScena0800QuadRecord*)arg0;
+  record = (ScenarioScena0800QuadRecord*)arg0;
   prim = (POLY_FT4*)g_PrimCursor;
 
   SetPolyFT4(prim);
@@ -105,17 +102,18 @@ void emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800
   prim->y2 = prim->y3 = scratch.screen[0].y + scratch.screen[1].x;
   prim->clut = GetClut(0xa0, 0x1e3);
   prim->tpage = GetTPage(0, 1, 0x2c0, 0x100);
-  prim->v0 = 0x30;
-  prim->v1 = 0x30;
   prim->u0 = 0xe0;
+  prim->v0 = 0x30;
   prim->u1 = 0xff;
+  prim->v1 = 0x30;
   prim->u2 = 0xe0;
   prim->v2 = 0x4f;
   prim->u3 = 0xff;
   prim->v3 = 0x4f;
+  color = record->color_03;
   prim->g0 = 0;
   prim->b0 = 0;
-  prim->r0 = record->color_03;
+  prim->r0 = color;
 
   func_8014E5A0(1, 0x28);
 }

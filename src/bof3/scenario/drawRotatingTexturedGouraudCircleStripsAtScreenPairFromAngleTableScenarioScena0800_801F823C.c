@@ -5,51 +5,30 @@ s32 func_801786E8(s32 arg0);
 void func_8017A9E0(void* arg0);
 
 /* @source 0x801F823C
- * @behavior Fills a screen-aligned circle of radius arg2 with translucent
- * Gouraud-tinted textured strips: for each of the 2*arg2 rows it emits two
- * 0x34-byte POLY_GT4 quads, one for each half of the strip, so the pair covers
- * the row from the left rim to the right rim in one-pixel-tall bands. The row's
- * y is arg1 - arg2 + i, and its half width is the half chord
- * func_801786E8(arg2*arg2 - m*m) with m counting down from arg2 - 1, the
- * overlay-local square-root helper over the circle's own squared row offset;
- * that half chord also shifts with the rotating angle the overlay keeps in the
- * unsigned-halfword table at 0x801FE9EC, indexed by the row counter's low byte
- * and read through the local sine helper func_801782FC as
- * (arg3 * sine) >> 12, the same twelve-bit fixed-point scale the overlay's other
- * emitters apply. The left quad spans arg0 - half + offset to arg0 + offset and
- * the right quad arg0 + offset to arg0 + offset + half, where offset is that
- * scaled sine, so both quads share their inner edge. Both take the texture page
- * GetTPage(2, 0, 0x340, 0x100), are marked non-translucent through SetSemiTrans
- * with zero, are stamped through the cursor setter func_8017A9E0 and are
- * appended through func_8014E5A0 under allocation class 2. The left quad's
- * texture column runs from 0x40 - half to 0x40 and the right quad's from 0 to
- * half, so the 0x40-wide texture's centre sits on the shared inner edge; the row
- * index i - (arg2 - 0x40) is the texture row and the right quad samples it 0x80
- * higher, the second half of a 0x100-row texture. The left quad's first and
- * third vertices carry the blue-ish tint 0x40/0x40/0x80 and its second and
- * fourth the grey 0x60/0x60/0x60; the right quad's first and third carry that
- * grey and its second and fourth the red-ish 0x80/0x40/0x40, so each row fades
- * between the two rims. The cursor pointer is re-read for the second quad.
- * Callers: the overlay's per-frame drawing step at 0x801F8534 is the only
- * referral and passes the scratchpad work object's signed halfwords 0x2E, 0x30,
- * 0x32 and 0x2C; the argument roles above are read from those four halfwords and
- * from this body, which reads each once per row. The 0x78-byte frame keeps $ra,
- * $fp as the row counter and $s0-$s7 across the calls, and the four arguments,
- * the row counter and its two derived words sit in the frame's local halfword
- * slots.
+ * @behavior Narrows the four inputs to halfwords and emits two textured
+ * Gouraud quads per row of a circle. The signed radius is the low halfword of
+ * arg2; a nonpositive radius returns immediately. The byte row counter is
+ * compared with twice that radius, so radii 1..127 finish after twice the
+ * radius in rows, while radii 128..32767 cannot satisfy the exit test.
+ * For each row, func_801786E8 supplies the half chord from the squared radius
+ * and descending halfword row offset. A halfword table entry at 0x801FE9EC
+ * feeds func_801782FC; multiplying its answer by the signed low halfword of
+ * arg3 and shifting by 12 supplies the horizontal displacement. The quads
+ * share their inner edge and cover the left and right halves of the row.
+ * Both use GetTPage(2, 0, 0x340, 0x100), SetSemiTrans with zero and allocation
+ * class 2 with size 0x34. The left texture columns run from 0x40 minus the
+ * half chord to 0x40; the right columns run from zero to the half chord, with
+ * texture rows displaced by 0x80. The left quad fades blue to grey and the
+ * right fades grey to red. The primitive cursor is sampled separately for
+ * each quad. The caller at 0x801F8534 supplies scratchpad halfwords 0x2E,
+ * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
+ * preserved.
  * @status partial
- * @match 74.74
- * @residual Allocation and scheduling only: the body, call order, constants,
- * frame size and every local slot agree with the original, and 142 of its 190
- * instructions match. The original keeps the row value in $s0 and the
- * texture-row value in $s1 where this candidate has them exchanged across
- * $s0/$s1, its prologue places the loop guard and the four argument stores in a
- * different order, and its twelve colour stores come in a different order; the
- * extra move this candidate once emitted for the row-plus-one value is gone.
- * Probes that rewrote the texture-row expression as one or two forms, added or
- * removed the named row-plus-one and half-chord locals, reordered the argument
- * declarations and stores, and used initializer declarations all measured at or
- * below this score.
+ * @match 88.95
+ * @residual 169/190 instructions at the original 760 bytes; first difference
+ *   +0x00D0. Counter/cursor order, first-quad geometry and UV calculations,
+ *   and counter-increment placement differ. Saved register roles, both
+ *   colour sequences and the final loop-test sequence match.
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -68,6 +47,7 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   s32 half;
   s32 sine;
   s32 offset;
+  u8 half_uv;
   u8 nb;
   u8 i;
 
@@ -75,17 +55,22 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   y = arg1;
   n = arg2;
   r = arg3;
-  nn = (s16)n;
-  bound = nn * 2;
   m = n - 1;
-  nb = n;
-  for (i = 0; i < bound; i++) {
+  i = 0;
+  if ((s16)n * 2 > 0) {
+    nn = (s16)n;
+    bound = nn * 2;
+    nb = n;
+    do {
     half = func_801786E8(nn * nn - (s16)m * (s16)m);
     sine = func_801782FC(D_801FE9EC[i]);
-    m--;
+    do {
+    do {
     offset = ((s16)r * sine) >> 12;
     prim = (POLY_GT4*)g_PrimCursor;
+    m--;
     func_8017A9E0(prim);
+    do {
     SetSemiTrans(prim, 0);
     row = y - n + i;
     next = row + 1;
@@ -108,19 +93,15 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->u3 = 0x40;
     prim->v3 = i - (nb - 0x40) + 1;
     prim->tpage = GetTPage(2, 0, 0x340, 0x100);
-    prim->r0 = 0x40;
-    prim->g0 = 0x40;
+    prim->r0 = prim->g0 = 0x40;
     prim->b0 = 0x80;
-    prim->r1 = 0x60;
-    prim->g1 = 0x60;
-    prim->b1 = 0x60;
-    prim->r2 = 0x40;
-    prim->g2 = 0x40;
+    prim->r1 = prim->g1 = prim->b1 = 0x60;
+    prim->r2 = prim->g2 = 0x40;
     prim->b2 = 0x80;
-    prim->r3 = 0x60;
-    prim->g3 = 0x60;
-    prim->b3 = 0x60;
+    prim->r3 = prim->g3 = prim->b3 = 0x60;
     func_8014E5A0(2, 0x34);
+    } while (0);
+    } while (0);
     prim = (POLY_GT4*)g_PrimCursor;
     func_8017A9E0(prim);
     SetSemiTrans(prim, 0);
@@ -132,27 +113,25 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->y2 = next;
     prim->x3 = x + offset + half;
     prim->y3 = next;
+    half_uv = (u8)half;
     prim->u0 = 0;
     prim->v0 = i - (nb - 0x40) - 0x80;
-    prim->u1 = half;
+    prim->u1 = half_uv;
     prim->v1 = i - (nb - 0x40) - 0x80;
     prim->u2 = 0;
     prim->v2 = i - (nb - 0x40) - 0x7F;
-    prim->u3 = half;
+    prim->u3 = half_uv;
     prim->v3 = i - (nb - 0x40) - 0x7F;
     prim->tpage = GetTPage(2, 0, 0x340, 0x100);
-    prim->r0 = 0x60;
-    prim->g0 = 0x60;
-    prim->b0 = 0x60;
+    prim->r0 = prim->g0 = prim->b0 = 0x60;
     prim->r1 = 0x80;
-    prim->g1 = 0x40;
-    prim->b1 = 0x40;
-    prim->r2 = 0x60;
-    prim->g2 = 0x60;
-    prim->b2 = 0x60;
+    prim->g1 = prim->b1 = 0x40;
+    prim->r2 = prim->g2 = prim->b2 = 0x60;
     prim->r3 = 0x80;
-    prim->g3 = 0x40;
-    prim->b3 = 0x40;
+    prim->g3 = prim->b3 = 0x40;
     func_8014E5A0(2, 0x34);
+    } while (0);
+    i++;
+    } while (i < bound);
   }
 }

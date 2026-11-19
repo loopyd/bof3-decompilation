@@ -410,6 +410,11 @@ evidence that no cached answer local belongs ahead of it.
 
 ### Operation scopes and loop-note dependencies
 
+An operation scope can change CSE regions before scheduling. A loop-end note can
+end a region, allowing dead-copy cleanup to remove a narrow view that would
+otherwise serve later stores. Reconstruct the surviving quantity ties and live
+intervals before applying the scope's reference weights.
+
 Use when real initialization has the required lifetime but adjacent call arguments
 schedule incorrectly. Keep owning compiler/flags fixed; inspect both scheduling
 passes before changing scope placement.
@@ -1714,6 +1719,12 @@ groups. Disable every random pass when using only explicit choices. Require
 semantic review and the complete owning native gate.
 
 ## Compiler evidence
+
+A `const` pointee view can set `RTX_UNCHANGING_P` in GCC 2.7.2,
+suppressing dependencies on mutable stores. Check the RTL flag and the storage's
+writers before choosing the access view. An ordinary view of mutable storage can
+restore those dependencies. Preserve the original capture and publication order,
+then recheck every affected load and the complete native image.
 
 A missing delay-slot store can begin as a common-tail merge in `.jump2`.
 Trace `.dbr` separately. GCC 2.7.2 treats volatile memory as a resource conflict,
