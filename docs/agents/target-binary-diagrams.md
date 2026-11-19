@@ -6,6 +6,7 @@ the selected entry, excluding the archive header and other entries.
 
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
+Selection brightens the span's fill without drawing a border over neighboring bytes.
 Lifted functions also show their repository-relative C source path. One tooltip
 is shared across the cards and moves to the active diagram. Clicking outside
 the canvas or its navigation buttons closes it; leaving the component's keyboard
