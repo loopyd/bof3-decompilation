@@ -430,6 +430,15 @@ before the loop end, which makes a following load depend on that copy in the
 second schedule. The original multiply can precede a load while its result copy
 follows it. Check both instructions before accepting the scope boundary.
 
+For a special-register product, inspect preferred and alternate classes after
+changing real arithmetic phases. Loop-depth weights can remove a general-register
+alternate and make the narrow preferred class eligible for local allocation. If
+reload spills that local allocation, it cannot retry it through global allocation
+and may create a stack home. Trace output copies after producers separately from
+input copies before consumers. Equal producer and consumer depths can restore an
+alternate class, but following loop notes can still fence output copies. Check
+classes, allocation, notes, frame and both schedules before native comparison.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
