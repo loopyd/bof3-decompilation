@@ -24,11 +24,11 @@ void func_8017A9E0(void* arg0);
  * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
  * preserved.
  * @status partial
- * @match 88.95
- * @residual 169/190 instructions at the original 760 bytes; first difference
- *   +0x00D0. Counter/cursor order, first-quad geometry and UV calculations,
- *   and counter-increment placement differ. Saved register roles, both
- *   colour sequences and the final loop-test sequence match.
+ * @match 90.53
+ * @residual 172/190 instructions at the original 760 bytes; first difference
+ *   +0x00D0. Counter/cursor order, first-quad geometry order and UV calculations,
+ *   and counter-increment placement differ. Saved register roles, left/right
+ *   coordinate registers, both colour sequences and the final loop test match.
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -39,9 +39,7 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   u16 r;
   u16 m;
   u16 row;
-  u16 left;
   u16 next;
-  u16 right;
   s32 bound;
   s32 nn;
   s32 half;
@@ -72,18 +70,16 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     func_8017A9E0(prim);
     do {
     SetSemiTrans(prim, 0);
+    prim->x0 = x - half + offset;
     row = y - n + i;
-    next = row + 1;
-    left = x - half + offset;
-    right = left + half;
-    prim->x0 = left;
     prim->y0 = row;
-    prim->x1 = right;
+    prim->x1 = (u16)(x - half + offset) + half;
     prim->y1 = row;
-    prim->x2 = left;
+    next = row + 1;
     prim->y2 = next;
-    prim->x3 = right;
+    prim->x3 = (u16)(x - half + offset) + half;
     prim->y3 = next;
+    prim->x2 = x - half + offset;
     prim->u0 = 0x40 - half;
     prim->v0 = i - (nb - 0x40);
     prim->u1 = 0x40;

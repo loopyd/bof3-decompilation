@@ -2195,6 +2195,10 @@ capture's redundant scope before adding another boundary. Keeping the input
 outside that operation can preserve the required order without inflating its
 quantity's references. Check both interval lengths and weighted counts again.
 
+Sharing a word result at its stores can remove a narrow copy without changing
+allocation. Reordering proven independent stores can lengthen one quantity's
+interval and shorten another enough to reverse allocation priority.
+
 Use the allocator's half-instruction intervals. A normal `SET` births its output
 at `2 * instruction_number`; `CLOBBER` uses the preceding half-slot. An address
 that dies at a load therefore does not by itself exclude that register from the
