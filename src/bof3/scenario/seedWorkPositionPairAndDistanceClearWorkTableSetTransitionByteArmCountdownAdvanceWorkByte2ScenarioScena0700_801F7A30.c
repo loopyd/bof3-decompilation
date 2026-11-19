@@ -25,11 +25,10 @@ extern s32 D_80145EC8;
  */
 extern s32 func_8015477C(s32 x, s32 y);
 
-/* Table-clearing helper at 0x801F8358, an `asm` row of this target: it zeroes
- * the lead byte of each of the eight 0x1C-byte-stride records at 0x800E4800 and
- * then the two flag bytes at 0x801FDFC4 and 0x801FDFC8. It reads no argument:
- * its body takes $a0 from its own fixed address. */
-void func_801F8358(void);
+/* Table-clearing helper at 0x801F8358: it zeroes the lead byte of each of the
+ * eight 0x1C-byte-stride records at 0x800E4800 and then the two flag bytes at
+ * 0x801FDFC4 and 0x801FDFC8, and it takes no argument. */
+void clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358(void);
 
 /* @source 0x801F7A30
  * @behavior One-shot overlay handler, word 0 of the three-word in-image
@@ -99,7 +98,7 @@ void seedWorkPositionPairAndDistanceClearWorkTableSetTransitionByteArmCountdownA
   pairA = *(volatile s32*)&work[0x34];
   *(s32*)&work[0x38] = pairB;
   *(s32*)&scenarioScena0700Work[0x3C] = func_8015477C(pairA, pairB) << 16;
-  func_801F8358();
+  clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358();
   saved = scenarioScena0700Work;
   saved[6] = 1;
   advance = scenarioScena0700Work;

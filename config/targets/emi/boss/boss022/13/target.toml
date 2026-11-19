@@ -7,7 +7,9 @@ binary = "out/binaries/emi/boss/boss022/13.bin"
 splat = "config/targets/emi/boss/boss022/13/splat.yaml"
 load_address = 0x800C1800
 
-sources = []
+sources = [
+    "src/bof3/boss/dispatchWorkByte2Table1B5CBossBoss02213_800C18F4.c",
+]
 support_sources = [
     "src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938.c",
     "src/bof3/boss/initBattleEntryStateBossBoss02213_800C1A48.c",

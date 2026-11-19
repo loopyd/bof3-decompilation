@@ -60,8 +60,10 @@ segments:
     - c
     - noopHandlerBossBoss00216_800C1AA0
   - - 680
-    - asm
-    - func_800C1AA8
+    - c
+    - dispatchStateByte1Table2000BossBoss00216_800C1AA8
+    - '@source: src/bof3/boss/dispatchStateByte1Table2000BossBoss00216_800C1AA8.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x01, scales it by four and calls the handler pointer at that index of the local handler table based at 0x800C2000, the +0x64 word of the reviewed textbin row D_800C1F9C, with no arguments; the selected handler''s $v0 is left untouched through the epilogue. The original does not bound the index before the scaled table load, and the slots after the index byte and after that load stay nops. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and no word or jal site in the payload names this function, so its caller is outside this overlay and it takes no arguments.'
   - - 748
     - c
     - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00216_800C1AEC

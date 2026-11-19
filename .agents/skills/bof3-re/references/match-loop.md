@@ -173,6 +173,9 @@ negative batch or lack of a new idea does not prove it.
 
 Classify before first edit. Use eligible lever before clean-C attempts. Record
 ineligible/declined reasons; revisit only with new evidence.
+A frameless leaf can be a complete function. Verify its entry, control flow,
+accesses and return within the reviewed range; a `jr $ra` word alone is not proof
+that the range is code.
 
 | Condition | Lever | Evidence and authority |
 | --- | --- | --- |

@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void func_801F8358(void);
+void clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358(void);
 
 /* @source 0x801F6E54
  * @behavior Overlay work-state handler for scratch work-object byte 2 = 0: it
@@ -38,7 +38,7 @@ void func_801F8358(void);
 void clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54(void) {
   u8* work;
 
-  func_801F8358();
+  clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358();
   work = SPAD_PTR_SLOT(u8, 0x44);
   work[2]++;
   *(s32*)(work + 0xC) = 0x40;

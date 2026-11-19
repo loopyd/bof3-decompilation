@@ -39,8 +39,10 @@ segments:
     - dispatchStateByte2Table1ea4BossBoss01216_800C18B4
     - '@source: src/bof3/boss/dispatchStateByte2Table1ea4BossBoss01216_800C18B4.c'
   - - 248
-    - asm
-    - func_800C18F8
+    - c
+    - dispatchStateByte3Table1ebcBossBoss01216_800C18F8
+    - '@source: src/bof3/boss/dispatchStateByte3Table1ebcBossBoss01216_800C18F8.c'
+    - '@behavior: Overlay state dispatch on work-record byte 3: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the entry of the handler run based at 0x800C1EBC, so the handler''s result stays in the return register.'
   - - 316
     - asm
     - func_800C193C

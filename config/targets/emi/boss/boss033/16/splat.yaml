@@ -35,8 +35,10 @@ segments:
     - asm
     - func_800C1848
   - - 160
-    - asm
-    - func_800C18A0
+    - c
+    - dispatchStateByte2Table278cBossBoss03316_800C18A0
+    - '@source: src/bof3/boss/dispatchStateByte2Table278cBossBoss03316_800C18A0.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that record unsigned byte at offset 0x02 as the index, scales it by four and calls the matching entry of the code-pointer run based at 0x800C278C with no arguments. The original does not bound the index before the scaled table load, and the slots after the index byte, after the table load and in both branch delay slots stay nops. It writes no state and leaves the handler return register untouched; the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. The only payload word that names this address is 0x800C276C, word 4 of the run based at 0x800C275C that dispatchStateByte1Table275cBossBoss03316_800C1804 dispatches, and no jal in this payload names it, so that shim is its caller: it passes no arguments and forwards none. This base word 0x800C278C sits inside the reviewed 0x800C2744 textbin row and holds the next code span of this overlay, 0x800C18E4, as run word 12.'
   - - 228
     - asm
     - func_800C18E4

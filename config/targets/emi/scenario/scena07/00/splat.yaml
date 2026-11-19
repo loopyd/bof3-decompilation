@@ -227,8 +227,10 @@ segments:
     - asm
     - func_801F81D4
   - - 5976
-    - asm
-    - func_801F8358
+    - c
+    - clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358
+    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358.c'
+    - '@behavior: Overlay table-clearing helper, a leaf with no frame: zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 in a bottom-tested walk whose record-pointer advance sits in the back edge delay slot, then zeroes the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8; the lead byte is the claim flag the same-table scan at 0x801F8394 tests. Two in-payload calls name it, jal 0x801F8358 at 0x801F6E5C and 0x801F7A6C, and no image word holds its address.'
   - - 6036
     - c
     - findFreeWorkRecordScenarioScena0700_801F8394

@@ -38,8 +38,10 @@ segments:
     - asm
     - func_800C18B8
   - - 244
-    - asm
-    - func_800C18F4
+    - c
+    - dispatchWorkByte2Table1B5CBossBoss02213_800C18F4
+    - '@source: src/bof3/boss/dispatchWorkByte2Table1B5CBossBoss02213_800C18F4.c'
+    - '@behavior: Overlay workspace-state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay code pointer run based at 0x800C1B5C, which holds 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C1938, 0x801E4928, 0x800C19F0, 0x800C19F8 and 0x800C1A00 in that order; it bounds no index, writes no state, returns the handler result and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 312
     - c
     - accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938

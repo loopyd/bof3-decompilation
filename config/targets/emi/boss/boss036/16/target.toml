@@ -29,5 +29,6 @@ support_sources = [
     "src/bof3/boss/stepWorkWord34ByWordCThenAdvanceWorkByte2AtWord18AndCallEnemyReadyBossBoss03616_800C1A98.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1D40.c",
     "src/bof3/boss/dispatchStateByte2Table2064BossBoss03616_800C18B8.c",
+    "src/bof3/boss/dispatchStateByte1Table20bcBossBoss03616_800C1EA0.c",
 ]
 psyq_source = "src/bof3/support/boss036_16_psyq.c"
