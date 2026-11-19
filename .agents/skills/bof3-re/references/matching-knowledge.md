@@ -447,6 +447,14 @@ may then attach to the branch, freeing the reload to precede the mask. Verify
 both receiver and dependency in `.sched2`, preserve conversions and effects,
 and compare complete native output.
 
+In GCC 2.7.2's first schedule, inspect note payloads before interpreting ready
+priority. The scheduler removes `REG_DEAD(REG)` notes before adjustment and
+reconstructs them after selection. Loop markers use `REG_DEAD(CONST_INT)` and
+survive that removal. One or two markers halve priority and skip the birth boost.
+Moving a scope boundary therefore changes both dependency edges and priority.
+Trace the actual receiver and its surviving notes before predicting instruction
+order.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
