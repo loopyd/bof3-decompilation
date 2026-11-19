@@ -128,6 +128,7 @@ def prepare_target(
             if overlay_bytes is None
             else io.StringIO(overlay_bytes.decode("utf-8"), newline=None).read()
         )
+    # `aa` seeds the current seek; unmapped zero avoids an entry for rootless data.
     replay = (
         _baseline(
             load_target_symbols(
@@ -139,6 +140,11 @@ def prepare_target(
             roots,
         )
         + type_replay(root, overlay_text, files=files)
+        + (
+            f"s 0x{min(roots, default=0):08X}\n"
+            if manifest.kind == "emi" and manifest.load_address not in roots
+            else ""
+        )
         + overlay_text
     )
     # Explicit claim identity participates in the Rizin fingerprint: comment

@@ -91,6 +91,15 @@ def target_binary(root: Path, manifest, connection, catalogs: AssetCatalogs) -> 
         )
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     for boundary in layout.boundaries:
+        if (
+            manifest.kind == "emi"
+            and boundary.file_start == 0
+            and boundary.kind == "bin"
+            and boundary.name == "header"
+            and boundary.file_end is not None
+            and boundary.file_end >= 4
+        ):
+            spans.append(Span(0, 4, "header", "Reviewed EMI entry header word", 50))
         if boundary.kind in {"jtbl", ".jtbl"} and boundary.file_end is not None:
             spans.append(
                 Span(

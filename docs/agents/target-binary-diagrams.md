@@ -3,6 +3,9 @@
 Each dashboard target card maps original file bytes from left to right, then down.
 EXE maps include the original PS-X loader header. EMI maps start at byte zero of
 the selected entry, excluding the archive header and other entries.
+An EMI layout's leading `bin, header` marks its first four bytes as an entry
+header. Longer blocks with that name can contain mixed data or code; the name
+does not classify their remaining bytes. Untyped prefixes remain unknown.
 
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
@@ -29,7 +32,7 @@ also closes help when its button is focused. The legend appears only in help.
 
 | Category | Evidence |
 | --- | --- |
-| Header | Verified PS-X EXE loader header |
+| Header | Verified PS-X EXE loader header or reviewed EMI entry header word |
 | Audio | Recognized physical entry selected by the audio index/query tool |
 | Text | Verified text bank or literal allocation from text index/query |
 | Texture | Recognized stored graphics container or physical image/palette record |
