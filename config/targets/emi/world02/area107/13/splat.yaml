@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table2e44World02Area10713_801F2C04
     - '@source: src/bof3/world/area10713DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - setScratchWorkState1WhenFrontEndModeIs3World02Area10713_801F2C48
+    - '@source: src/bof3/world/setScratchWorkState1WhenFrontEndModeIs3World02Area10713_801F2C48.c'
+    - '@behavior: Runs as entry 0 of the state-byte-1 handler run based at 0x801F2E44, whose first word is this span and which the overlay dispatcher at 0x801F2C04 indexes with work-record byte 0x01 scaled by four. When the shared front-end mode byte at 0x80143BB0 reads exactly 3 it loads the work record published at the scratchpad pointer cell 0x1F800044 and stores 1 into that record''s byte at offset 0x01, handing state 0 of that run on to state 1. The compared 3 is materialized before the branch and the stored 1 fills that branch''s delay slot, and the pointer cell is read only on the storing path. Takes no arguments, makes no call and returns nothing.'
   - - 116
     - asm
     - func_801F2C74

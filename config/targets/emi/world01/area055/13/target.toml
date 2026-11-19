@@ -10,5 +10,6 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/support/area055_13_psyq.c",
+    "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld01Area05513_801F2CB8.c",
 ]
 psyq_source = "src/bof3/support/area055_13_psyq.c"

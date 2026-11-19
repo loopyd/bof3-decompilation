@@ -1179,7 +1179,11 @@ base register agree, the spelling is free: a displacement that folds makes a nam
 extern and the
 `SPAD_PTR_TABLE` accessor at that cell's own word emit the same `lui`/`lw` pair at
 each reload point, so neither spelling is owed a probe and the seeded sibling's form
-stands. When the count agrees and only the base register differs, read it as
+stands. Check that equivalence in the emitted address sequence. In one two-access body
+straddling a call, a constant-address accessor retained the address in a saved
+register and measured 15 of 23 instructions, growing from 92 to 108 bytes. A named
+pointer cell restored the original reloads and matched; single-access bodies still
+matched with the accessor. When the count agrees and only the base register differs, read it as
 volatility: a `volatile` named cell read on both sides of a call puts the post-call
 reload's base in `$a0` where the original builds `$v1`, and no regrouping of
 named-cell locals moved it (31 or 32 of 40 across three arrangements). The plain

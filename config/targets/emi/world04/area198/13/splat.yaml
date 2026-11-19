@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801F2F04
   - - 980
-    - asm
-    - func_801F2FD4
+    - c
+    - invokeHelperWithWorkWorld04Area19813_801F2FD4
+    - '@source: src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c'
+    - '@behavior: Thin overlay wrapper: loads the work-record pointer from the scratchpad pointer cell at byte offset 0x44, cell 0x11 of the pointer table, and passes it to the main-executable helper 0x8014E4BC as its only argument. Takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra at 0x10 across that call. Entry 3 of the thirteen-word code-pointer run at 0x801F4268 inside the textbin row D_801F3F10, so no jal in this payload names it.'
   - - 1020
     - asm
     - func_801F2FFC

@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D28
   - - 364
-    - asm
-    - func_801F2D6C
+    - c
+    - dispatchWorkByte4Table3b44World02Area09113_801F2D6C
+    - '@source: src/bof3/world/dispatchWorkByte4Table3b44World02Area09113_801F2D6C.c'
+    - '@behavior: reads the work-record pointer out of the scratchpad cell 0x1F800044 before reserving its 0x18-byte frame with ra at 0x10, then loads byte +4 of that record unsigned, scales it by four and calls the entry at that index of the local handler table based at 0x801F3B44 through jalr with a nop delay slot, after which it reloads ra, releases the frame and returns; the table starts with the neighbouring routines 0x801F2DB0, 0x801F2E6C, 0x801F312C, 0x801F3228, 0x801F3318 and 0x801F3504, and its seventh word at 0x801F3B5C publishes this dispatcher itself.'
   - - 432
     - asm
     - func_801F2DB0

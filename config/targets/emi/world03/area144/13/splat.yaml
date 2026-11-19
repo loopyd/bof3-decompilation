@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table3e68World03Area14413_801F2C04
     - '@source: src/bof3/world/area14413DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48
+    - '@source: src/bof3/world/latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48.c'
+    - '@behavior: Overlay step-0 handler, entry 0 of the per-frame handler table at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: latches the shared main-RAM byte 0x8014832E into record byte +0x06, stores 0x1B into that shared byte, calls the work-table bootstrap 0x801F2E18, then re-materialises the record pointer from the scratchpad cell 0x1F800044, zeroes the cue index at 0x801F4960 and advances record byte +0x01 by one. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 164
     - asm
     - func_801F2CA4

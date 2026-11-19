@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80.c",
     "src/bof3/world/fixedPointToUnitsWorld04Area19813_801F3DCC.c",
     "src/bof3/world/advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48.c",
+    "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",
 ]
 support_sources = [
     "src/bof3/support/area198_13_psyq.c",
