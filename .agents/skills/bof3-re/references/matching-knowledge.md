@@ -2041,6 +2041,15 @@ Preserve arithmetic types and execution paths.
 Local allocation requires one block and one death, not one definition. Multiple
 definitions alone do not prove that a pseudo needs global allocation.
 
+In GCC 2.7.2, `birthing_insn_p` requires a direct `REG` destination; a `SUBREG`
+misses that birth boost even with one definition. Trace adjusted priority and
+local intervals: a local crossing no calls can still change global hard conflicts
+and reload temporaries elsewhere. Compare call edges after reload. The pinned
+hard-SET loop indexes call-used flags by word offset without adding the destination
+register number, so a callee-saved destination can depend on the latest call.
+Verify both schedules, allocation and the complete native body; types still
+require representation evidence.
+
 A projection local can start with its actual shared multiplier, then hold its
 product and coordinate. A copy supplying the other projection can survive CSE
 and keep the first quantity born before its origin addition. Local allocation
