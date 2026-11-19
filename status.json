@@ -48,14 +48,14 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7391d6f1da953aab10aebbea6424d990a8afab98",
-  "published_at": "2026-11-19T19:38:16.148166+00:00",
+  "revision": "8662d05ea1fabe76590e0111bb8d00713e7cb156",
+  "published_at": "2026-11-19T19:41:19.444061+00:00",
   "counts": {
     "completed": 6264,
     "partial": 358,
-    "unlifted": 3902,
+    "unlifted": 3903,
     "invalid": 0,
-    "total": 10524,
+    "total": 10525,
     "symbols": {
       "named": 69352,
       "raw": 55073,
@@ -90003,9 +90003,9 @@
       "entry": null,
       "completed": 52,
       "partial": 4,
-      "unlifted": 65,
+      "unlifted": 66,
       "invalid": 0,
-      "total": 121,
+      "total": 122,
       "symbols": {
         "named": 231,
         "raw": 378,
@@ -90028,9 +90028,15 @@
           },
           {
             "start": 2048,
+            "end": 2049,
+            "category": "unknown",
+            "detail": "No verified classification"
+          },
+          {
+            "start": 2049,
             "end": 178176,
-            "category": "code-unlifted",
-            "detail": "fcn.80096800: unlifted indexed function"
+            "category": "empty",
+            "detail": "Observed zero fill; padding unproven"
           },
           {
             "start": 178176,
@@ -91666,18 +91672,12 @@
           },
           {
             "start": 739852,
-            "end": 739892,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "end": 740024,
+            "category": "code-unlifted",
+            "detail": "fcn.8014aa0c: unlifted indexed function"
           },
           {
-            "start": 739892,
-            "end": 739908,
-            "category": "empty",
-            "detail": "Observed zero fill; padding unproven"
-          },
-          {
-            "start": 739908,
+            "start": 740024,
             "end": 740040,
             "category": "unknown",
             "detail": "No verified classification"
@@ -92638,6 +92638,18 @@
           },
           {
             "start": 951092,
+            "end": 953548,
+            "category": "unknown",
+            "detail": "No verified classification"
+          },
+          {
+            "start": 953548,
+            "end": 953560,
+            "category": "code-unlifted",
+            "detail": "InitHeap: unlifted indexed function"
+          },
+          {
+            "start": 953560,
             "end": 953564,
             "category": "unknown",
             "detail": "No verified classification"
