@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/drawWorkCursorQuadWorld02Area10013_801F2D18.c",
     "src/bof3/world/drawWorkQuadAtFixedOffsetWorld02Area10013_801F31A0.c",
     "src/bof3/world/drawWorkCursorQuadWorld02Area10013_801F3D28.c",
+    "src/bof3/world/setSharedFlagBankBit45World02Area10013_801F3608.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area10013_801F3680.c",

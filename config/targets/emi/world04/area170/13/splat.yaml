@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D80
   - - 840
-    - asm
-    - func_801F2F48
+    - c
+    - stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48
+    - '@source: src/bof3/world/stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48.c'
+    - '@behavior: Handler at slot 2 of the overlay dispatch table at 0x801F57BC - the pointer word at 0x801F57C4 - stamps the 7x9 glyph grid of the overlay banner into the map cell codes by calling the stamp routine at 0x801F3994 with no arguments, then reads the scratchpad work record from the pointer cell 0x1F800044 and adds one to the record dispatch state byte at offset 0x01, the byte the dispatcher at 0x801F2CF8 scales by four and indexes into that pointer run, so the overlay steps from this slot to the helper slot at 0x801F2F80. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 896
     - c
     - invokeHelperWorld04Area17013_801F2F80

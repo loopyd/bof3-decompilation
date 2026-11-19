@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0DWorld00Area03713_801F3ADC.c",
     "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508.c",
     "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F354C.c",
+    "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld00Area03713_801F34D8.c",
     "src/bof3/world/setStatus74AndModeIndex6IfGateElseFFFFWorld00Area03713_801F35D4.c",
     "src/bof3/world/toggleModeFlagBit8World00Area03713_801F3B14.c",
 ]

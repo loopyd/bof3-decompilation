@@ -55,8 +55,10 @@ segments:
     - c
     - findFreeRecordBmagicMagic11603_801EEFB8
   - - 1012
-    - asm
-    - func_801EEFF4
+    - c
+    - clearAllRecordActiveBytesBmagicMagic11603_801EEFF4
+    - '@source: src/bof3/bmagic/clearAllRecordActiveBytesBmagicMagic11603_801EEFF4.c'
+    - '@behavior: Pool reset of this overlay, reached from the step at 0x801EEC80 through the jal at 0x801EECD4 and named by no table word in the payload. It walks the 0x80 records of the 0x3C-byte-stride pool at 0x801EF2A8 from its base word and stores zero to byte 0 of each record, leaving every other record byte as it was. Byte 0 is the active byte of this pool: 0x801EF020 sets it to 1 when it initialises a record and 0x801EEFB8 takes a record as free while it reads 0, so this body returns the whole pool to the free state. It takes no arguments, holds no frame and returns nothing; only a saved $ra reload sits in the tail.'
   - - 1056
     - asm
     - func_801EF020

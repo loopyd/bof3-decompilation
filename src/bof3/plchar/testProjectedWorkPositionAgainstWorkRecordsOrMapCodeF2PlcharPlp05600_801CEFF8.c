@@ -35,8 +35,9 @@ u8 func_80166CB0(s16 col, s16 row);
 
 /* @source 0x801CEFF8
  * @behavior Handler of the front-end work object read through the scratchpad
- *           pointer cell 0x1F800044, reached only from func_801CE770 in this
- *           payload: it projects the work position by adding the doubled
+ *           pointer cell 0x1F800044, reached only from the route-step handler
+ *           adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp05600_801CE770
+ *           of this payload: it projects the work position by adding the doubled
  *           movement offsets of 0x80181B94 and 0x80181B98 selected by the work
  *           route byte 0x08 to the work words 0x34 and 0x38. It hands that pair
  *           to the slot search func_801BDE14 at range 0 and starts its answer at

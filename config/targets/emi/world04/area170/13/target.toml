@@ -32,6 +32,7 @@ sources = [
     "src/bof3/world/drawRouteAxisSplitTexturedQuadPairAtWorkCellScaledByHalfword30World04Area17013_801F40F0.c",
     "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfword30WithFlagSelectedDepthWorld04Area17013_801F4640.c",
     "src/bof3/world/advanceStateByte1SetHalfword2eTo5AndPublishSelectedGlyphPhasePointerWorld04Area17013_801F2D3C.c",
+    "src/bof3/world/stampGlyphGridCellCodesThenAdvanceStateByte1World04Area17013_801F2F48.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area17013_801F2F80.c",

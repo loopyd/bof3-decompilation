@@ -29,6 +29,7 @@ support_sources = [
     "src/bof3/boss/initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1B14.c",
     "src/bof3/boss/dispatchStateByte1Table265cBossBoss01316_800C1A34.c",
+    "src/bof3/boss/raiseWorkHalfword94BossBoss01316_800C1A04.c",
     "src/bof3/boss/dispatchStateByte1Table2620BossBoss01316_800C181C.c",
 ]
 psyq_source = "src/bof3/support/boss013_16_psyq.c"

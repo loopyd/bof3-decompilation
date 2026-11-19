@@ -97,8 +97,9 @@ segments:
     - asm
     - func_801F3B98
   - - 4556
-    - asm
-    - func_801F3DCC
+    - c
+    - fixedPointToUnitsWorld04Area19813_801F3DCC
+    - '@source: src/bof3/world/fixedPointToUnitsWorld04Area19813_801F3DCC.c'
   - - 4604
     - textbin
     - D_801F3DFC
