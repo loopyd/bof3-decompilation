@@ -256,6 +256,9 @@ class BinaryDiagram extends HTMLElement {
     const rect = this.canvas.getBoundingClientRect();
     const left = event ? event.clientX - rect.left + 12 : 8;
     tooltip.style.left = `${left}px`;
+    const y = event ? (event.clientY - rect.top) / rect.height
+      : (Math.floor(span.start / this.binary.size * BinaryDiagram.rows) + .5) / BinaryDiagram.rows;
+    this.tooltipBand = Math.max(0, Math.min(2, Math.floor(y * 3)));
     this.previous.setAttribute("aria-disabled", index === 0);
     this.next.setAttribute("aria-disabled", index === this.binary.spans.length - 1);
     this.draw();
@@ -332,6 +335,7 @@ class BinaryDiagram extends HTMLElement {
       const tooltip = BinaryDiagram.tooltip;
       const gutter = this.navigation.hidden ? 6 : 50;
       tooltip.style.left = `${Math.max(gutter, Math.min(parseFloat(tooltip.style.left) || gutter, width - tooltip.offsetWidth - gutter))}px`;
+      tooltip.style.top = `${8 + this.tooltipBand / 2 * Math.max(0, height - tooltip.offsetHeight - 16)}px`;
     }
   }
 }
