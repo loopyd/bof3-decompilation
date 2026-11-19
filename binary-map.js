@@ -266,6 +266,9 @@ class BinaryDiagram extends HTMLElement {
         status.setAttribute("aria-label", label);
         status.title = label;
         row.append(status);
+        if (fn.status === "exact" || fn.status === "partial") {
+          row.append(BinaryDiagram.node("small", "binary-function-label", fn.status));
+        }
         if (fn.source) {
           const link = BinaryDiagram.node("a", "binary-source-link", "🔗");
           link.href = fn.source;
