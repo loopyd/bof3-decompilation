@@ -181,28 +181,7 @@ h1 em {
   padding-right:.13em
 }
 .section-heading {
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  align-items:center;
   margin-bottom:16px
-}
-.legend {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-  font-size:11px;
-  color:var(--muted)
-}
-.legend span {
-  display:flex;
-  gap:7px;
-  align-items:center
-}
-.legend i {
-  width:7px;
-  height:7px;
-  border-radius:2px
 }
 .completed {
   background:var(--completed)
@@ -218,14 +197,6 @@ h1 em {
 }
 .raw {
   background:var(--raw)
-}
-.legends {
-  display:grid;
-  gap:7px
-}
-.legend-label {
-  min-width:80px;
-  color:var(--text)
 }
 .metric-label {
   display:flex;
@@ -781,15 +752,6 @@ footer>a {
   }
   .snapshot-line {
     font-size:9px
-  }
-  .section-heading {
-    align-items:flex-start;
-    flex-direction:column;
-    gap:12px
-  }
-  .legend {
-    font-size:10px;
-    gap:20px
   }
   .overview {
     grid-template-columns:1fr;
