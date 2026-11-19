@@ -2090,6 +2090,14 @@ through combine; a direct memory-to-argument load gives a removed local no
 preference. Use real value phases; never add a consumer or extend a lifetime
 to create a preference.
 
+Local allocation uses interval hard-register occupancy without
+`regs_someone_prefers`. A local can take an incoming argument register after
+its entry use ends, then create a hard conflict for the overlapping global
+argument value. Reusing the local for later real phases can make it global
+and remove that conflict. The argument may then retain its preference even
+when the new global has higher priority. Compare `.lreg` assignments and
+`.greg` conflicts after changing allocation classes.
+
 A pseudo's own preference can cancel a same-size reservation in
 `prune_preferences` without guaranteeing allocation. Reuse only nonoverlapping
 real value phases and trace the later argument that supplies that preference.
