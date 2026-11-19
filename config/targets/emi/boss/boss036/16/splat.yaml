@@ -74,8 +74,10 @@ segments:
     - asm
     - func_800C1CDC
   - - 1344
-    - asm
-    - func_800C1D40
+    - c
+    - dispatchIndexedHandlerBossBoss03616_800C1D40
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1D40.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C20B0 handler run tail, leaving that handler result in $v0. No jal and no pointer word in the payload names 0x800C1D40, so the overlay loader is its caller.'
   - - 1400
     - asm
     - func_800C1D78

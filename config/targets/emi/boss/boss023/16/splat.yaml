@@ -47,8 +47,10 @@ segments:
     - c
     - noopHandlerBossBoss02316_800C197C
   - - 388
-    - asm
-    - func_800C1984
+    - c
+    - publishBattleHooksBossBoss02316_800C1984
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss02316_800C1984.c'
+    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots in ascending slot order: the state step at 0x800C19C4 into 0x801463A4, the owner record clear wrapper at 0x800C1A10 into 0x801463A8, and the zero-result accessor at 0x800C19BC into 0x801463AC. The body takes no arguments and returns no value.'
   - - 444
     - c
     - zeroResultBossBoss02316_800C19BC

@@ -72,8 +72,10 @@ segments:
     - c
     - noopHandlerBossBoss00716_800C1A04
   - - 524
-    - asm
-    - func_800C1A0C
+    - c
+    - publishBattleHooksBossBoss00716_800C1A0C
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss00716_800C1A0C.c'
+    - '@behavior: Hook installer of this overlay: stores the battle-flag state switch 0x800C1CB4 into the shared battle hook slot 0x801463A4, the two-call wrapper 0x800C1D50 into 0x801463A8 and this payload handler entry 0x800C1A44 into 0x801463AC, all three as void handlers; the body has no frame, makes no call and returns immediately.'
   - - 580
     - asm
     - func_800C1A44
