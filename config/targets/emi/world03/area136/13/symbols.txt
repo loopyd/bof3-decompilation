@@ -1,7 +1,7 @@
 workRecordCursor1F800044 = 0x1F800044;
 func_801F2C3C = 0x801F2C3C;
 func_801F2C94 = 0x801F2C94;
-func_801F2CF0 = 0x801F2CF0;
+publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0 = 0x801F2CF0;
 func_801F2D2C = 0x801F2D2C;
 func_801F2D68 = 0x801F2D68;
 queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08 = 0x801F2E08;

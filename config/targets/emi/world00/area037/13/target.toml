@@ -21,6 +21,7 @@ sources = [
     "src/bof3/world/toggleModeFlagBit8World00Area03713_801F3B14.c",
     "src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0.c",
     "src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4.c",
+    "src/bof3/world/setStatus9CAndModeIndex6IfGateElse9AWorld00Area03713_801F3728.c",
 ]
 support_sources = [
     "src/bof3/support/area037_13_psyq.c",

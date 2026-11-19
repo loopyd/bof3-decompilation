@@ -15,5 +15,6 @@ support_sources = [
     "src/bof3/world/initArea14613State.c",
     "src/bof3/world/clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68.c",
     "src/bof3/world/drawWorkCursorQuadWorld03Area14613_801F2E20.c",
+    "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34.c",
 ]
 psyq_source = "src/bof3/support/area146_13_psyq.c"

@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/bmagic/queueSlotPerEligibleEnemyAndPartyBattlerSetByte1To2OrdinalByte4SelectorByteBAndRecordPointerBmagicMagic06903_801F0274.c",
     "src/bof3/bmagic/drawTranslucentGreyDashedCircleOfFourArcsAtWorkHalfwords2EAnd30RadiusWorkByteAShadeWorkByteBBmagicMagic06903_801EFF14.c",
     "src/bof3/bmagic/drawGreyTexturedQuadAtWorkHalfwords2EAnd30Sized30ByWorkByteABmagicMagic06903_801EFA84.c",
+    "src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic06903_801EEC04.c",
 ]
 psyq_source = "src/bof3/support/magic069_03_psyq.c"

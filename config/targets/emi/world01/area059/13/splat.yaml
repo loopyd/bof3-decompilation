@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/world/requestFrontSelectorContextWorld01Area05913_801F2D30.c'
     - '@behavior: requests the shared front selector context through func_8019FA28 with the fixed tuple of selection seed 0x64, context pair 0x460000/0x340000 and kind 0x81; takes no arguments and returns nothing.'
   - - 348
-    - asm
-    - func_801F2D5C
+    - c
+    - clearWorkByte48ThenSubmitRecordWorld01Area05913_801F2D5C
+    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld01Area05913_801F2D5C.c'
+    - '@behavior: clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, then reloads that cell and passes the record to the shared submitter func_80196718.'
   - - 400
     - asm
     - func_801F2D90

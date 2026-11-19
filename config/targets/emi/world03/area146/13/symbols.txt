@@ -1,6 +1,6 @@
 func_8015C088 = 0x8015C088;
 requestFrontSelectorContextWorld03Area14613_801F2C04 = 0x801F2C04;
-func_801F2C34 = 0x801F2C34;
+clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34 = 0x801F2C34;
 clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68 = 0x801F2C68;
 func_801F2C9C = 0x801F2C9C;
 initArea14613State = 0x801F2D50;

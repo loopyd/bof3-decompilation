@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2C94
   - - 240
-    - asm
-    - func_801F2CF0
+    - c
+    - publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0
+    - '@source: src/bof3/world/publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0.c'
+    - '@behavior: Reads the shared mode byte 0x801490C7 once with lb and keeps it across the indexed load, publishes the matching halfword of this payload''s table 0x801F43F8 into the shared status halfword 0x801490A8, and stores 0x06 into the shared scenario progress byte 0x80146864 only while that mode byte is zero. Leaf, no arguments, no return value.'
   - - 300
     - asm
     - func_801F2D2C

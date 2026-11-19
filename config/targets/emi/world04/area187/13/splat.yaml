@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area18713_801F2C04
+    - '@source: src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area18713_801F2C04.c'
+    - '@behavior: Entry 0 of this payload handler table at 0x801F35D8: reads the shared gate byte D_801490C7, resets the shared status halfword D_801490A8 to 0xFFFF, and copies the two bytes of the gate-selected row of the 0x801F35CC row table into record words +0x18 and +0x1C of the pointer held at D_80148208.'
   - - 92
     - asm
     - func_801F2C5C

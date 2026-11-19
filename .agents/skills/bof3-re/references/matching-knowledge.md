@@ -1175,7 +1175,11 @@ A bare constant scratchpad address is CSE'd into one register: `lui` plus `ori` 
 then `lw 0(vN)` per access. When the original re-materialises the constant per access,
 name the cell: declare an extern at its fixed address so each access emits its own
 `lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
-per use; the named symbol in the map restores that repetition. The CSE also holds that
+per use; the named symbol in the map restores that repetition. For repeated reads, compare
+`SPAD_PTR_SLOT` with a named pointer-cell extern. In one 52-byte body the accessor
+materialized the address once with `lui`/`ori` and produced 56 bytes; the extern
+restored the original per-read `lui`/`lw` form and matched 13/13 instructions.
+Single-read exact bodies also use the accessor, so choose from the original loads. The CSE also holds that
 register across an intervening `jal`, so a cell read on both sides of a call costs a
 callee-saved register, its save/restore pair and frame bytes: a built `0x20` frame
 against the original's `0x10` or `0x18`, first mismatch the prologue's

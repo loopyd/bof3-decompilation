@@ -32,8 +32,10 @@ segments:
     - '@source: src/bof3/world/requestFrontSelectorContextWorld03Area14613_801F2C04.c'
     - '@behavior: Entry 0 of the three-entry handler run at 0x801F3AB0, which the overlay names through the pointer word at 0x801F3AF8 and whose word 1 is 0x801F2C34 and word 2 the record-flag clear at 0x801F2C68: requests the shared front selector context through func_8019FA28 with the fixed tuple selection seed 0x70, context pair 0xC8000/0x580000 and kind 0x81. It takes no arguments, returns nothing and reads no state of its own.'
   - - 52
-    - asm
-    - func_801F2C34
+    - c
+    - clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34
+    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34.c'
+    - '@behavior: Entry 1 of the three-entry handler run at 0x801F3AB0, which the overlay names through the pointer word at 0x801F3AF8 and whose word 0 is 0x801F2C04 and word 2 the record-flag clear at 0x801F2C68: clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, reloads that cell and passes the record to the shared submitter at 0x80196718. It takes no arguments, returns nothing and its only payload reference is the run word at 0x801F3AB4.'
   - - 104
     - c
     - clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68

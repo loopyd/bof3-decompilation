@@ -1,4 +1,4 @@
-func_801EEC04 = 0x801EEC04;
+dispatchWorkByte1LocalPairBmagicMagic04500_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEE58 = 0x801EEE58;
 dispatchStateByte1Tablef8d8BmagicMagic04500_801EEEA4 = 0x801EEEA4;
