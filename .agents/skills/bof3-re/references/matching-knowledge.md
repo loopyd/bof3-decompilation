@@ -1856,6 +1856,13 @@ operation does not consume its value. Read the scheduler's ready and queue trace
 A one-cycle shift can sink past loads queued by that boundary despite equal
 scheduler priorities. Check the scope's first active instruction before moving it.
 
+Classify true, anti and output dependencies before comparing boundary costs.
+The pinned GCC 2.7.2 MIPS scheduler uses effective cost 1 for anti/output
+edges, while a true R3000 MULT edge can cost 12. Moving a real normalization
+before the scope can therefore raise one path's priority alone. Recheck loop
+motion, spill homes and call delay slots; the same change can fix load order
+while displacing a store.
+
 Trace the instruction receiving a scope's `LOOP_END` dependency. A real constant
 initialization followed by a store can force an independent address definition
 after that store. When the original orders constant, address, store, put the
