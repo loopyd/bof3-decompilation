@@ -48,11 +48,11 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "237c1d958ccc87c2aa92aeb1e486ef5b4163d8da",
-  "published_at": "2026-11-19T22:10:29.620998+00:00",
+  "revision": "081bab299fc9a318b35c8ac28e1e85da674e1543",
+  "published_at": "2026-11-19T22:27:29.484779+00:00",
   "counts": {
-    "completed": 6302,
-    "partial": 358,
+    "completed": 6303,
+    "partial": 357,
     "unlifted": 3780,
     "invalid": 0,
     "total": 10440,
@@ -106359,8 +106359,8 @@
       "family": "scenario",
       "archive": "scena08",
       "entry": "00",
-      "completed": 91,
-      "partial": 1,
+      "completed": 92,
+      "partial": 0,
       "unlifted": 18,
       "invalid": 0,
       "total": 110,
@@ -106867,8 +106867,8 @@
             "functions": [
               {
                 "address": 2149548604,
-                "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C.c#L32"
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/scenario/drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C.c#L30"
               }
             ]
           },
