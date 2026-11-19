@@ -36,5 +36,6 @@ support_sources = [
     "src/bof3/world/drawRadialGouraudLineBurstAroundPointWorld01Area06714_801F31C8.c",
     "src/bof3/world/drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8.c",
     "src/bof3/world/publishModeStatusFromTable5384AndProgress6IfMode5World01Area06714_801F3E04.c",
+    "src/bof3/world/stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98.c",
 ]
 psyq_source = "src/bof3/support/area067_14_psyq.c"

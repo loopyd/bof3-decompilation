@@ -12,7 +12,8 @@
  *           free-record scan func_801F3A9C returns the first record whose +0xC
  *           counts zero, and the re-arm helper func_801F3D54 stores 0x20 there
  *           (`sh` at 0x801F3DD0), so this walk empties the whole pool. Its only
- *           in-payload caller is the phase-exit state handler func_801F2E98
+ *           in-payload caller is the phase-exit state handler
+ *           stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98
  *           (jal at 0x801F2F14), which runs it once its own frame counter
  *           expires. The 44 bytes have the same shape as the already-exact
  *           clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC in

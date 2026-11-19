@@ -26,5 +26,6 @@ support_sources = [
     "src/bof3/world/syncWorkRecordsFromAreaFlagsAndBoundsTableWorld01Area04914_801F2DCC.c",
     "src/bof3/world/retreatCounterWorld01Area04914_801F3410.c",
     "src/bof3/world/advanceCounter2By4World01Area04914_801F3728.c",
+    "src/bof3/world/publishModeStatusFromTable5cd8World01Area04914_801F2C54.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"

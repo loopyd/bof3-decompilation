@@ -47,8 +47,10 @@ segments:
     - '@source: src/bof3/plchar/dispatchStateByte2Table0798PlcharPlp56700_801CE610.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0798.'
   - - 596
-    - asm
-    - func_801CE654
+    - c
+    - adjustEvenWorkByte8ClaimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferenceSelectSequence42AndAdvanceStepPlcharPlp56700_801CE654
+    - '@source: src/bof3/plchar/adjustEvenWorkByte8ClaimWorkByte2BThenClearItWhenRouteThreeOrFiveSampleAbove64AndBeyondWorkReferenceSelectSequence42AndAdvanceStepPlcharPlp56700_801CE654.c'
+    - '@behavior: Entry 0 of the handler run based at 0x801D0798 that the byte-2 dispatcher 0x801CE610 indexes, so it runs while work byte 2 reads 0. It rewinds the work-object step byte 0x08 by one modulo 8 while bit 0 of that byte is clear, sets claim byte 0x2B to 1, then probes the shared layer offsets 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5: for each it projects the work words 0x34 and 0x38 by that offset pair, samples the point through func_80154F78 and, while gate byte 0x1F800000 reads nonzero and the sample narrowed to 16 bits is at least 0x41, clears the claim byte when the work reference halfword 0x3E is below the answer of func_80154F28. It then selects work sequence (step byte 0x08 >> 1) + 0x42 through func_8014D8D4 and advances work state byte 0x02.'
   - - 1056
     - c
     - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp56700_801CE820

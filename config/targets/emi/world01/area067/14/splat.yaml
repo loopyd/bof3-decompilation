@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2E48
   - - 664
-    - asm
-    - func_801F2E98
+    - c
+    - stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98
+    - '@source: src/bof3/world/stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98.c'
+    - '@behavior: steps the work-record halfword at +0x10 up by 1 and clamps it to 0x40, grows the halfword at +0x12 by 0x40 and redraws the quad at +0xC, then decrements the countdown byte at +9 and, once that byte reaches zero, clears the countdown halfword of every 0xE-stride record at 0x800E4800, zeroes the halfword at +0x14, clears its own +9 byte and advances the state byte at +1'
   - - 860
     - asm
     - func_801F2F5C
