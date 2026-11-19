@@ -14,7 +14,7 @@ typedef struct BossBoss05116DispatchTable {
  * 0x800C1804, whose code proper starts at 0x800C1814, so this declaration
  * binds the address-anchored map symbol that already covers that span.
  */
-extern BossBoss05116DispatchTable func_800C1804; /* @source 0x800C1804 @kind data */
+extern BossBoss05116DispatchTable D_800C1804; /* @source 0x800C1804 @kind data */
 
 /* @source 0x800C1AA8
  * @behavior Overlay step dispatch on work-record byte 1: copies the four
@@ -38,6 +38,6 @@ extern BossBoss05116DispatchTable func_800C1804; /* @source 0x800C1804 @kind dat
 void dispatchStateByte1Table1804BossBoss05116_800C1AA8(void) {
   BossBoss05116DispatchTable handlers;
 
-  handlers = func_800C1804;
+  handlers = D_800C1804;
   handlers.handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }
