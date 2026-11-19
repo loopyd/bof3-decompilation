@@ -1984,6 +1984,13 @@ phase without extra shifts. Prove its range or low-bit equivalence at every
 consumer, retain the final conversion and inspect the complete native diff.
 The intermediate type needs a representation reason.
 
+Distinguish frontend narrowing from RTL constant folding. A nonconst binding
+shared by real arithmetic consumers can defer constant discovery until CSE and
+change a byte-result subtraction's immediate. Readonly initializers can fold
+earlier. Verify that the initializer disappears and the result keeps its direct
+word mode, masks and register web. Compare the complete native image; a named
+binding alone proves no improvement.
+
 A new local hard-register assignment can change reload scratch choices throughout
 a function. Compare local assignments and whole-function spill ranking before
 attributing distant entry or multiply changes to scheduling. Require the complete

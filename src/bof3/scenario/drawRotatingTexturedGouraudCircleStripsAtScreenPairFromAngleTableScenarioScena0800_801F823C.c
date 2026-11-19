@@ -24,10 +24,10 @@ void func_8017A9E0(void* arg0);
  * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
  * preserved.
  * @status partial
- * @match 98.42
- * @residual 187/190 instructions at the original 760 bytes; first difference
+ * @match 98.95
+ * @residual 188/190 instructions at the original 760 bytes; first difference
  *   +0x00D0. Countdown/cursor loads and the decrement/argument move differ
- *   in order. The right upper UV offset uses +128 instead of -128.
+ *   in order.
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -44,6 +44,7 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   s32 half;
   s32 sine;
   s32 offset;
+  s32 right_texture_origin;
   u8 top;
   u8 texture_row;
   u8 half_uv;
@@ -114,12 +115,13 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->y2 = row + 1;
     prim->x3 = x + offset + half;
     half_uv = (u8)half;
-    prim->v0 = texture_row - 0x80;
+    right_texture_origin = 0x80;
+    prim->v0 = texture_row - right_texture_origin;
     prim->u1 = half_uv;
-    prim->v1 = texture_row - 0x80;
-    prim->v2 = texture_row - 0x7F;
+    prim->v1 = texture_row - right_texture_origin;
+    prim->v2 = texture_row - (right_texture_origin - 1);
     prim->u3 = half_uv;
-    prim->v3 = texture_row - 0x7F;
+    prim->v3 = texture_row - (right_texture_origin - 1);
     prim->y3 = row + 1;
     prim->u0 = 0;
     prim->u2 = 0;
