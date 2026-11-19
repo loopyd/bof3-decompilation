@@ -113,6 +113,11 @@ candidate; reject artificial aliases or qualifiers, undefined uses and changed
 memory or call behavior. Permuter scores guide search; only the complete owning
 native gate proves a match.
 
+`--best-only` can suppress valid candidates after an invalid result lowers the
+best score. In a bounded run, `--all-improvements --only-if-below N` permits
+candidates with higher scores below N and no worse than the base. Duplicate
+results are filtered; review each saved source.
+
 A reported match count can rise when a new NOP restores later branch addresses
 while an earlier missing NOP and allocation error remain. Inspect the added
 instruction and changed delay slots before retaining the candidate. Check which
