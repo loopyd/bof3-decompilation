@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss02213_800C19B8.c",
     "src/bof3/support/boss022_13_psyq.c",
     "src/bof3/boss/publishBattleHooksBossBoss02213_800C1A08.c",
+    "src/bof3/boss/dispatchWorkByte1Table1B2CBossBoss02213_800C1804.c",
 ]
 psyq_source = "src/bof3/support/boss022_13_psyq.c"

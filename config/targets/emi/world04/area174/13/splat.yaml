@@ -46,8 +46,10 @@ segments:
     - c
     - clearWorkTableByte3At800E4800World04Area17413_801F2E5C
   - - 648
-    - asm
-    - func_801F2E88
+    - c
+    - findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88
+    - '@source: src/bof3/world/findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88.c'
+    - '@behavior: Work-record claim scan of the 0x20 records of the 0x2C-byte-stride table at 0x800E4800: returns the address of the first record whose occupancy byte at offset 3 reads zero, or zero when all 0x20 records are claimed. Reads one byte per record, writes nothing and calls nothing, so the 0x3C bytes carry no frame and no saved register; the unsigned halfword counter is masked to 0xFFFF and compared below 0x20 on the back edge. Both callers in this payload discard a zero result and otherwise pass the returned pointer to func_801F3378, which writes 1 to that record byte 3 and seeds the record from the scratch work object published at pointer slot 0x1F800044.'
   - - 708
     - asm
     - func_801F2EC4

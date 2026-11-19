@@ -20,9 +20,10 @@ extern void func_801E52F0(u16 effect_id);
 
 /* @source 0x800C1A58
  * @behavior Byte-1 handler entry 13 of this overlay code-pointer run based at
- *           0x800C275C, the table the overlay entry dispatcher func_800C1804
- *           indexes with work byte 1 scaled by four; run word 13 at 0x800C2790
- *           holds this address and no jal in this payload names it. It loads the
+ *           0x800C275C, the table the overlay entry dispatcher
+ *           dispatchStateByte1Table275cBossBoss03316_800C1804 indexes with work
+ *           byte 1 scaled by four; run word 13 at 0x800C2790 holds this address
+ *           and no jal in this payload names it. It loads the
  *           scratch work object published at the pointer cell 0x1F800044 before
  *           it creates its frame, decrements that object unsigned byte 0xA as a
  *           countdown, stores it back and returns while the stored byte is

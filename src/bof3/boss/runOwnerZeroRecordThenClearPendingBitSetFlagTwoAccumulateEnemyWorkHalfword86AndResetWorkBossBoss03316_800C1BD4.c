@@ -55,9 +55,10 @@ extern void func_800ACFF4(void); /* @source 0x800ACFF4 */
 
 /* @source 0x800C1BD4
  * @behavior Byte-1 handler entry 16 of this overlay code-pointer run based at
- * 0x800C275C, the table the overlay entry dispatcher func_800C1804 indexes with
- * work byte 1 scaled by four; run word 16 at 0x800C279C holds this address and
- * no jal in this payload names it. It runs the shared readiness helper at
+ * 0x800C275C, the table the overlay entry dispatcher
+ * dispatchStateByte1Table275cBossBoss03316_800C1804 indexes with work byte 1
+ * scaled by four; run word 16 at 0x800C279C holds this address and no jal in
+ * this payload names it. It runs the shared readiness helper at
  * 0x8014DAEC with its result dropped, resolves the owner-0 scan record index
  * through the shared battle record scan at 0x800AC7D0, and hands that index
  * 0x98-byte record of the table at 0x801468FC to the shared record routine at

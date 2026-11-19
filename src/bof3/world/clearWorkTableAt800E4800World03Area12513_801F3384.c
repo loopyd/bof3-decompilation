@@ -8,10 +8,12 @@
  *           scheduled into the back edge's delay slot. It takes no arguments,
  *           returns nothing, reads no state and calls nothing, so its 44 bytes
  *           carry no prologue and no frame. Every caller in this payload is the
- *           overlay's own init path: func_801F2C48, the first word of the
- *           handler run selected by dispatchStateByte1Table36ccWorld03Area12513_801F2C04,
- *           calls it at 0x801F2C50 and afterwards advances byte 0x1 of the work
- *           object published at the scratchpad pointer cell 0x1F800044. It is
+ *           overlay's own init path:
+ *           clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48,
+ *           the first word of the handler run selected by
+ *           dispatchStateByte1Table36ccWorld03Area12513_801F2C04, calls it at
+ *           0x801F2C50 and afterwards advances byte 0x1 of the work object
+ *           published at the scratchpad pointer cell 0x1F800044. It is
  *           the overlay's own entry count: the same table is walked with stride
  *           0x28 by clearWorkTableAt800E4800ScenarioScena0800_801F7DE8 (0x40
  *           entries in its target) and with a 0x80-entry claim-byte sweep by

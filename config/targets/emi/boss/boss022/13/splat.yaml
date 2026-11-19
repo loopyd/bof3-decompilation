@@ -27,8 +27,10 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchWorkByte1Table1B2CBossBoss02213_800C1804
+    - '@source: src/bof3/boss/dispatchWorkByte1Table1B2CBossBoss02213_800C1804.c'
+    - '@behavior: Overlay workspace-state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay code pointer run based at 0x800C1B2C, which holds 0x800C1848, 0x800C18B8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x800C18F4, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8, 0x801E5288, 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C1938 and 0x801E4928 in that order; it bounds no index, writes no state, returns the handler result and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 72
     - asm
     - func_800C1848

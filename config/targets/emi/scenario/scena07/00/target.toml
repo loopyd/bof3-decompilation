@@ -8,6 +8,7 @@ splat = "config/targets/emi/scenario/scena07/00/splat.yaml"
 load_address = 0x801F6C00
 
 sources = [
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F6F48.c",
     "src/bof3/scenario/scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34.c",
     "src/bof3/scenario/tickObjectRampDrawQuadAndAdvanceHandlerScenarioScena0700_801F77AC.c",
     "src/bof3/scenario/updateTrailBufferAddHalfword800E4C1EReloadCountdownByte9AdvanceWorkByte2ScenarioScena0700_801F724C.c",

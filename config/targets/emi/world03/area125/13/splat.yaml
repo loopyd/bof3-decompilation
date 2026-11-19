@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table36ccWorld03Area12513_801F2C04
     - '@source: src/bof3/world/area12513DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48
+    - '@source: src/bof3/world/clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48.c'
+    - '@behavior: Entry 0 of the nine-word work-state handler run based at 0x801F36CC, selected by the exact dispatcher dispatchStateByte1Table36ccWorld03Area12513_801F2C04 through the unsigned work byte at +0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It calls the overlay work-table clear at 0x801F3384, loads that pointer cell once and advances the same work byte at +0x1 by one, so the next frame dispatches entry 1 at 0x801F2C80. The load sits after the call because the byte store through the loaded pointer may alias the cell. No arguments, no return, and a 0x18-byte frame that only holds the return address across the call.'
   - - 128
     - asm
     - func_801F2C80
@@ -83,7 +85,7 @@ segments:
     - c
     - clearWorkTableAt800E4800World03Area12513_801F3384
     - '@source: src/bof3/world/clearWorkTableAt800E4800World03Area12513_801F3384.c'
-    - '@behavior: Overlay work-table clear: zeroes the lead byte of each of the first 0x10 entries of the 0x28-byte-stride record table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop, takes no arguments, returns nothing, reads no state and calls nothing. Its only caller in this payload is func_801F2C48, the first word of the handler run selected by dispatchStateByte1Table36ccWorld03Area12513_801F2C04, which calls it and afterwards advances byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044.'
+    - '@behavior: Overlay work-table clear: zeroes the lead byte of each of the first 0x10 entries of the 0x28-byte-stride record table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop, takes no arguments, returns nothing, reads no state and calls nothing. Its only caller in this payload is clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48, the first word of the handler run selected by dispatchStateByte1Table36ccWorld03Area12513_801F2C04, which calls it and afterwards advances byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044.'
   - - 1968
     - c
     - rampIntensityIntegrateAndRenderActiveWorkRecordsWorld03Area12513_801F33B0

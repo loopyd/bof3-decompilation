@@ -1,6 +1,6 @@
 func_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854 = 0x800C1854;
-func_800C18B8 = 0x800C18B8;
+dispatchStateByte2Table2064BossBoss03616_800C18B8 = 0x800C18B8;
 func_800C18FC = 0x800C18FC;
 func_800C1980 = 0x800C1980;
 dispatchStateByte2Table206cBossBoss03616_800C1A54 = 0x800C1A54;

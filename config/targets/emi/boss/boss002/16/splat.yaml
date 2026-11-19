@@ -35,8 +35,10 @@ segments:
     - asm
     - func_800C1848
   - - 160
-    - asm
-    - func_800C18A0
+    - c
+    - dispatchStateByte2Table1FECBossBoss00216_800C18A0
+    - '@source: src/bof3/boss/dispatchStateByte2Table1FECBossBoss00216_800C18A0.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x02 as the index, scales it by four and calls that entry of this payload''s second handler run based at 0x800C1FEC with no arguments, leaving the selected handler result in the return register; the run words from 0x800C1F9C are the neighboring reviewed textbin row, whose base entry 0x800C18E4 and remaining payload entries 0x800C191C through 0x800C1B44 and shared main-executable handlers at 0x801E..... fill the twelve reachable slots. The only payload word naming this entry is the run word 0x800C1FE0 of the neighboring run at 0x800C1FBC, so the dispatcher at 0x800C1804 calls it with no arguments.'
   - - 228
     - asm
     - func_800C18E4
