@@ -1979,6 +1979,12 @@ parameter expansion, combine, scheduling, jump optimization and delay-slot filli
 (`reorg.c`), local/global allocation or reload. Debug dumps and assembly-only
 diagnostics are not linked acceptance evidence.
 
+When CSE forwards a seeded word that the original reloads, inspect real
+copy phases. For proven disjoint words, interleaving existing read/store pairs
+can break memory equivalences at varying addresses. Preserve access counts
+and store order. Check both CSE passes: a loop end stops the first pass, but
+the later pass can still forward the value. Require the complete native gate.
+
 A conditional branch whose delay slot holds one arm's constant while the `j` over
 the other arm is gone, with the build short by that `j` and its `nop`, is `reorg.c`:
 `fill_slots_from_thread` steals the branch's own fall-through arm constant, then
@@ -1995,6 +2001,12 @@ input to a result and sum reference counts. Ordinary priority uses merged refere
 register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
+
+For a block with exactly three local quantities, trace `block_alloc`'s direct
+sorting path before assuming priority order. Its comparisons use literal quantity
+indices while exchanges modify `qty_order`, so the two orders can differ.
+Check hard-register suggestions first. Recalculate complete tied references and
+half-instruction intervals after scope or schedule changes.
 
 Assigning a product before accumulating its origin can change the destination
 pseudo from initial RTL onward. Compare that real phase with the compound sum

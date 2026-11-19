@@ -30,17 +30,9 @@ void func_80196070(void);
  * reaches it through work byte 1; the operations below name the family's
  * fields the way the exact neighbour 0x801F74E0 does.
  *
- * Residual evidence: the compiler's own local-alloc dump for this source
- * places the reloaded work pointer in $v0 (5 references, first definition in
- * the tail block) and then gives the value halfword $a0 and the countdown
- * $v1. The original tail block instead holds the pointer in $a0 with the
- * countdown in $v0 and the value in $v1, which is the disposition this
- * compiler gives a work pointer that is globally allocated, as the
- * byte-adjacent 0x801F74E0 and 0x801F774C show. Every other instruction of
- * this function, its 0xA4 size and its 0x18-byte frame already match.
- * @status partial
- * @match 78.05
- * @residual The tail block's three quantities are cyclically rotated: the reloaded work pointer takes $v0 instead of $a0, so the value halfword takes $a0 and the countdown halfword $v1; every other instruction and the 0xA4 size match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void addRandomByteToWorkHalfword58AndTickCountdown5ADecrement2CAnd32ThenResetWorkFlagsScenarioScena0800_801F75E4(void) {
   s32 random;
@@ -60,10 +52,14 @@ void addRandomByteToWorkHalfword58AndTickCountdown5ADecrement2CAnd32ThenResetWor
     *(u16*)(next + 0x2C) -= 1;
   }
   after = scenarioScena0800Work;
-  value = *(u16*)(after + 0x32) - 1;
-  countdown = *(u16*)(after + 0x5A) - 1;
-  *(u16*)(after + 0x5A) = countdown;
-  *(u16*)(after + 0x32) = value;
+  do {
+    do {
+      value = *(u16*)(after + 0x32) - 1;
+      countdown = *(u16*)(after + 0x5A) - 1;
+    } while (0);
+    *(u16*)(after + 0x5A) = countdown;
+    *(u16*)(after + 0x32) = value;
+  } while (0);
   if (countdown == 0) {
     func_80196070();
   }
