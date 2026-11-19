@@ -1725,6 +1725,10 @@ optimization. An existing independent initialization between them can preserve
 which real quantity receives the result. Preserve effects and inspect both CSE
 passes, scheduling and allocation; never add dummy work to retain a copy.
 
+A loop end can make the first CSE pass prefer a copy whose last use lies beyond
+its block. The later pass ignores that note, so inspect both representatives
+and the surviving seed before attributing the copy's direction.
+
 For a signed-byte sample used in comparisons and a byte result, trace the
 named byte quantity and its anonymous promotion through CSE and combine.
 The declared copy may disappear while combine creates the required word-to-byte

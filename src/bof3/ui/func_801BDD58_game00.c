@@ -10,7 +10,7 @@
  * add field_0C * pad_09[0] to coord_x_34 and field_10 * pad_09[0] to coord_y_38.
  * Returns 0 when a gate fails.
  * @status partial
- * @match 76.60
+ * @match 78.72
  * @residual The rebuilt image is 188 bytes, matching the original size.
  * Multiply operands, product registers and bound setup still differ.
  */
@@ -18,6 +18,7 @@ u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
                  struct GameWorkArea* work) {
   s32 projected_x;
   s32 projected_y;
+  s32 x_coefficient;
   s32 distance;
   s32 bound;
   u8 matches;
@@ -30,8 +31,9 @@ u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
   }
   do {
     projected_x = work->pad_09[0];
+    x_coefficient = work->field_0C;
     projected_y = projected_x;
-    projected_x = work->field_0C * projected_x;
+    projected_x = x_coefficient * projected_x;
     projected_y = work->field_10 * projected_y;
     projected_x += work->coord_x_34;
     projected_y += work->coord_y_38;
