@@ -25,10 +25,14 @@ segments:
   type: code
   start: 4
   vram: 2148276228
+  subalign: 4
   subsegments:
   - - 4
+    - textbin
+    - D_800C1804
+  - - 16
     - asm
-    - func_800C1804
+    - func_800C1810
   - - 84
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854
