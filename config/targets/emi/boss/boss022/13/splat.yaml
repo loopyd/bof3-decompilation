@@ -35,8 +35,10 @@ segments:
     - asm
     - func_800C1848
   - - 184
-    - asm
-    - func_800C18B8
+    - c
+    - setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8
+    - '@source: src/bof3/boss/setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8.c'
+    - '@behavior: Overlay step handler on work-record byte 1: calls the shared readiness helper at 0x8014DAEC and, when the unsigned byte it answers is nonzero, stores 2 into byte 1 of the work object held by the scratchpad pointer cell 0x1F800044, the workspace-state byte the dispatcher at 0x800C1804 indexes the handler run at 0x800C1B2C with. It bounds nothing else, writes no other state, loads the pointer cell once, leaves the load and return delay slots as nops and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 244
     - c
     - dispatchWorkByte2Table1B5CBossBoss02213_800C18F4

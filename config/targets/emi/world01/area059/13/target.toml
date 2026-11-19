@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/setStatus4AndModeIndex6IfGateElse2World01Area05913_801F2C04.c",
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CA8.c",
+    "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC.c",
 ]
 support_sources = [
     "src/bof3/support/area059_13_psyq.c",

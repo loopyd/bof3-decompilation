@@ -1,5 +1,5 @@
 func_80196070 = 0x80196070;
-func_801D0C04 = 0x801D0C04;
+dispatchWorkByte1HandlerScenarioSce15ef300_801D0C04 = 0x801D0C04;
 func_801D0C48 = 0x801D0C48;
 func_801D0CC4 = 0x801D0CC4;
 invokeHelperScenarioSce15ef300_801D0D18 = 0x801D0D18;

@@ -54,8 +54,10 @@ segments:
     - c
     - noopHandlerBossBoss03316_800C1B50
   - - 856
-    - asm
-    - func_800C1B58
+    - c
+    - dispatchStateByte2Table2798BossBoss03316_800C1B58
+    - '@source: src/bof3/boss/dispatchStateByte2Table2798BossBoss03316_800C1B58.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before it creates its frame, takes that record unsigned byte at offset 0x02 as the index, scales it by four and calls the matching entry of the code-pointer run based at 0x800C2798 with no arguments. The original does not bound the index before the scaled table load, and the slots after the index byte, after the table load and in the jalr delay slot stay nops. It writes no state and leaves the handler return register untouched; the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No word and no jal in this payload names 0x800C1B58, so the caller that reaches this shim sits outside the payload. This base word 0x800C2798 sits inside the reviewed 0x800C2744 textbin row as word 15 of the code-pointer run that starts at 0x800C275C, and its sixteen reachable entries are 0x800C1B9C, 0x800C1BD4, 0x800C1CDC, 0x800C1D14, 0x800C1D68, 0x800C1E70, 0x800C256C, 0x800C1ED8, 0x800C1F38, 0x800C1F88, 0x800C20CC, 0x800C2310, 0x800C244C, 0x800C24DC, 0x800C25D4 and 0x800C26A4.'
   - - 924
     - asm
     - func_800C1B9C

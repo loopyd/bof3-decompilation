@@ -32,6 +32,7 @@ support_sources = [
     "src/bof3/boss/runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4.c",
     "src/bof3/boss/copyWorkHeadIntoMode6SlotTickByteBThenApplyHelper50ToStateRecordRequestResource5WhenRangeCoversWorkAdvanceWorkByte2BossBoss03316_800C20CC.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03316_800C1CA4.c",
+    "src/bof3/boss/dispatchStateByte2Table2798BossBoss03316_800C1B58.c",
     "src/bof3/boss/dispatchStateByte1Table275cBossBoss03316_800C1804.c",
     "src/bof3/boss/dispatchStateByte2Table278cBossBoss03316_800C18A0.c",
 ]

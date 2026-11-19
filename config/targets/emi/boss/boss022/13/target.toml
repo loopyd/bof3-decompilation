@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = [
     "src/bof3/boss/dispatchWorkByte2Table1B5CBossBoss02213_800C18F4.c",
+    "src/bof3/boss/setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8.c",
 ]
 support_sources = [
     "src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938.c",
