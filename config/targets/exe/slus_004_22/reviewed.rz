@@ -57,3 +57,7 @@ f data.D_80145E2C 4 @ 0x80145e2c
 CC "SwCARD/HwCARD event handles (openBootEventSet)" @ 0x80145e14
 
 fs functions
+
+# The raw payload load address is not the execution entry. Start automatic
+# analysis at the original PS-X EXE header's entry PC from file offset 0x10.
+s 0x8014AA0C
