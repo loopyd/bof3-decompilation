@@ -307,9 +307,9 @@ class BinaryDiagram extends HTMLElement {
     this.selected = -1;
     this.pinned = false;
     if (BinaryDiagram.active === this) {
+      BinaryDiagram.active = null;
       BinaryDiagram.tooltip.hidden = true;
       document.body.append(BinaryDiagram.tooltip);
-      BinaryDiagram.active = null;
     }
     this.canvas.removeAttribute("aria-describedby");
     delete this.dataset.selectedStart;
