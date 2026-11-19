@@ -2217,7 +2217,9 @@ birth boost. Moving an existing last use past the call can change this
 dependency. After rescheduling, a block-local pseudo's count can become zero.
 For `REG_BLOCK_GLOBAL` pseudos, the scheduler retains the previous count when
 the new count is zero. The retained count can exclude call-used registers
-during allocation.
+during allocation. A stack store created by reload does not establish a memory
+dependency in the first schedule. Trace the earlier pseudo's call crossings and
+dependencies, then check the reloaded access and second schedule.
 
 When a pointer copy survives CSE but a later store uses the copied base, trace
 GCC 2.7.2 `optimize_reg_copy_1`. It forwards source uses through the source's

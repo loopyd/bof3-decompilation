@@ -23,11 +23,9 @@ void func_8017A9E0(void* arg0);
  * each quad. The caller at 0x801F8534 supplies scratchpad halfwords 0x2E,
  * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
  * preserved.
- * @status partial
- * @match 98.95
- * @residual 188/190 instructions at the original 760 bytes; first difference
- *   +0x00D0. Countdown/cursor loads and the decrement/argument move differ
- *   in order.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -62,13 +60,14 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     bound = nn * 2;
     nb = n;
     do {
-    half = func_801786E8(nn * nn - (s16)m * (s16)m);
+    do {
+    do {
+    more = (s16)m;
+    m--;
+    half = func_801786E8(nn * nn - more * more);
     sine = func_801782FC(D_801FE9EC[i]);
-    do {
-    do {
     offset = ((s16)r * sine) >> 12;
     prim = (POLY_GT4*)g_PrimCursor;
-    m--;
     func_8017A9E0(prim);
     do {
     SetSemiTrans(prim, 0);
