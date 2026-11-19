@@ -1685,6 +1685,17 @@ statement, name the field inside each subscript and cache nothing, because a hoi
 `u8` local lets CSE share the two loads and the span measures short by that one
 narrow load (23 of 33 instructions at 128 bytes, first difference the second `lbu`).
 
+## Permuter input safety
+
+`perm_expand_expr` follows lexical assignments without proving dominance or
+unchanged operands. It can substitute a conditional write into a later return and
+bypass the condition. `perm_split_assignment` can turn `x = a * x` into
+`x = a; x = x * x`. Disable these passes for such inputs. For a finite search,
+`PERM_GENERAL` selects reviewed alternatives and `PERM_LINESWAP` permutes complete
+physical lines. Group dependent statements on one line and swap only independent
+groups. Disable every random pass when using only explicit choices. Require
+semantic review and the complete owning native gate.
+
 ## Compiler evidence
 
 A missing delay-slot store can begin as a common-tail merge in `.jump2`.
