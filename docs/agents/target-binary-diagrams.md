@@ -10,7 +10,8 @@ does not classify their remaining bytes. Untyped prefixes remain unknown.
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
 All span tooltips show byte ranges and sizes in the same smaller, darker,
-right-aligned summary. Clicking tooltip text also retains the displayed span.
+right-aligned summary. Sizes use `b` without a space, as in `60b`. Clicking tooltip
+text also retains the displayed span.
 Headers preview their first 32 bytes as spaced hexadecimal pairs, with `...` when
 more bytes remain. Four-byte EMI headers show all four pairs. Reviewed text rows
 show the text tool's decoded characters and command notation, limited to 160
