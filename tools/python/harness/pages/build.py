@@ -12,7 +12,7 @@ from harness.analysis.snapshot import snapshot_path
 from harness.domain.manifests import load_target_manifests
 from harness.pages.export import write_snapshot
 
-ASSETS = ("index.html", "style.css", "app.js", "bof3-logo.webp")
+ASSETS = ("index.html", "style.css", "binary-map.js", "app.js", "bof3-logo.webp")
 
 
 def prepare_index(root: Path, cache: Path) -> None:
@@ -45,7 +45,7 @@ def build_site(
     if cache is not None:
         prepare_index(root, cache)
     output.mkdir(parents=True, exist_ok=True)
-    write_snapshot(root, output / "status.json", revision)
+    write_snapshot(root, output / "status.json", revision, media_root=cache)
     for name in ASSETS:
         shutil.copyfile(root / "web" / name, output / name)
     (output / ".nojekyll").touch()

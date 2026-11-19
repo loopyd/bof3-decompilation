@@ -7,8 +7,10 @@ bin/harness pages install-hook
 ```
 
 The installer preserves existing hook configuration by refusing to replace it.
-The hook needs the repository Python environment, installed Rizin, and local
-target binaries. Prepare these with the repository's normal setup before pushing.
+The hook needs the repository Python environment, installed Rizin and PsyQo
+toolchains, Rust toolchains for the BOF3 text/audio/texture tools, local target
+binaries and original media under `out/extracted/`. Prepare these with the
+repository's normal setup before pushing.
 
 Push main normally. The hook builds from the exact commit being pushed in a
 temporary worktree, refreshes stale snapshots, rebuilds and validates the reverse
@@ -47,8 +49,13 @@ address. The index excludes aliases. Raw names match
 `harness.naming.debt.classify_raw_symbol`, which recognizes address-based `func_`
 and `D_` spellings. Named means all other indexed spellings, not proven semantic
 correctness or complete symbol discovery. Targets without indexed symbols show
-no symbol percentage. Snapshot schema `bof3.decomp-status/v2` includes named, raw,
-and total symbol counts for each target and overall.
+no symbol percentage. Snapshot schema `bof3.decomp-status/v3` includes named, raw,
+and total symbol counts for each target and overall, plus original-byte partitions.
+
+Each card also has a responsive binary diagram with an HTML color legend.
+Hover to inspect a span, click or tap to retain it, or use arrow keys with the
+canvas focused. See [target binary diagrams](../docs/agents/target-binary-diagrams.md)
+for categories, coordinate rules, keyboard controls and classification limits.
 
 Only HTML, CSS, JavaScript, the logo, status JSON, and `.nojekyll` reach the public
 branch. The original logo comes from

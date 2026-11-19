@@ -44,7 +44,7 @@ jobs:
           snapshot = json.loads((site / 'status.json').read_text())
           if snapshot['revision'] != os.environ['SOURCE_REVISION']:
               raise SystemExit('Snapshot does not match main. Install the pages pre-push hook and push again.')
-          allowed = {'index.html', 'style.css', 'app.js', 'bof3-logo.webp', 'status.json', '.nojekyll', '.git'}
+          allowed = {'index.html', 'style.css', 'binary-map.js', 'app.js', 'bof3-logo.webp', 'status.json', '.nojekyll', '.git'}
           if {p.name for p in site.iterdir()} != allowed:
               raise SystemExit('Unexpected file in public branch')
           for path in site.iterdir():

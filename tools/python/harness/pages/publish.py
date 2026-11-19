@@ -37,9 +37,10 @@ def build_revision(root: Path, revision: str, output: Path) -> None:
         git(root, "worktree", "add", "--detach", str(checkout), revision)
         try:
             # These are installed tools, never inputs copied into the public site.
-            (checkout / "toolchains" / "rizin").symlink_to(
-                root / "toolchains" / "rizin", target_is_directory=True
-            )
+            for toolchain in ("rizin", "psyqo"):
+                (checkout / "toolchains" / toolchain).symlink_to(
+                    root / "toolchains" / toolchain, target_is_directory=True
+                )
             env = {**os.environ, "PYTHONPATH": str(checkout / "tools/python")}
             command = [
                 sys.executable,

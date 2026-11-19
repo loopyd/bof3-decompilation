@@ -9,6 +9,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Coding standards](coding-standards.md) | Python naming, module ownership, DRY and checks |
 | [Project context](project-context.md) | Identity, authority and repository layout |
 | [Harness](harness.md) | Domain modules, transactions, native lifecycles and recovery |
+| [Target binary diagrams](target-binary-diagrams.md) | Byte classifications, canvas exploration and snapshot publication |
 | [Reconstruction](reconstruction.md) | Cumulative native attempts and interrupted-run recovery |
 | [PCSX-Redux Agentic harness](pcsx-redux-agentic.md) | Managed emulator build, embedded missions, skill links and runtime receipts |
 | [Text tool](../../.agents/skills/bof3-text/SKILL.md) | Text extraction, analysis, safe edits and source coverage refinement |
