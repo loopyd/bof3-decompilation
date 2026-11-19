@@ -27,13 +27,14 @@ One details tooltip is shared across cards and moves to the active diagram.
 Its vertical position snaps to the top, middle or bottom for selections in the
 corresponding canvas third. Pointer selection uses the pointer's y coordinate; keyboard and chevron
 navigation use the span's first row. Resizing preserves that position. Clicking
-outside the canvas, its navigation buttons or details closes it, except when using legend help.
-Moving keyboard focus away also clears selection, with the same help exception.
+outside the canvas, its navigation buttons or details closes it, except when using
+legend help or classification filters. Moving keyboard focus away also clears
+selection, with the same exceptions.
 
 Focused diagrams show circular left and right chevrons beside `?`, above the
-canvas. They retain selection while focused and dim at the first or last span,
-where navigation stops. Arrow keys also select adjacent spans, Home and End
-select the first and last spans, and Escape clears selection. The chevrons
+canvas. They retain selection while focused and dim at the first or last visible
+span, where navigation stops. Arrow keys also select adjacent visible spans,
+Home and End select the first and last visible spans, and Escape clears selection. The chevrons
 disappear when focus leaves the diagram.
 Resizing preserves physical offsets and selection.
 
@@ -41,6 +42,19 @@ The `?` button at the canvas's right edge opens the color legend. One help toolt
 is shared across cards, independently of span details, so both can remain open.
 Clicking outside help, scrolling or pressing its button again closes it. Escape
 also closes help when its button is focused. The legend appears only in help.
+
+The filter button immediately left of `?` opens classification checkboxes. Each
+diagram starts with every classification visible. Unchecked classifications stop
+drawing and responding to pointer selection; their byte positions stay fixed.
+Navigation skips hidden spans. Hiding the selected classification selects the next
+visible span, or the previous one if none follows. Hiding everything clears details
+and disables both chevrons.
+
+Filters apply to the current diagram. One filter menu is shared across cards;
+opening help closes the filter menu and vice versa. Span details can remain open
+with either. Outside clicks, focus departure, page scrolling, Escape or pressing
+the filter button again closes the menu. Space toggles a focused checkbox.
+Filtering does not change classifications, evidence or function counts.
 
 ## Classifications
 
@@ -54,7 +68,7 @@ also closes help when its button is focused. The legend appears only in help.
 | Code (lifted) | Indexed function with valid exact or partial source; details retain status |
 | Table | Reviewed jump table or recognized physical asset metadata table |
 | Unknown | No verified classification, or conflicting evidence at equal precedence |
-| Empty (padding) | At least 16 consecutive zero bytes outside stronger classifications |
+| Padding | At least 16 consecutive zero bytes outside stronger classifications |
 
 Zero fill does not prove semantic padding. Generic data and rodata are not
 automatically tables. Compressed graphics use their stored container range;
