@@ -2162,6 +2162,14 @@ and trigger its destination's birth boost before reload. Check which
 definitions survive flow and combine before using real value phases to change
 that priority.
 
+Flow precedes combine in GCC 2.7.2. Retargeting a self-source update into a later
+real snapshot can leave its old SET count and weighted references, even when the
+copy disappears. A surviving load can therefore miss its birth boost yet outrank
+another local quantity. CSE may remove an adjacent snapshot before flow, so check
+both CSE passes and the actual combine route. Derive ready priorities and
+quantity weights from the dumps; counting surviving definitions is insufficient.
+Require the complete register web and native gate.
+
 Check the source pseudo's `reg_n_calls_crossed` before predicting initial
 readiness. GCC 2.7.2 orders reads of a pseudo with zero calls crossed before
 the next call. That call can release the copy and trigger its destination's
