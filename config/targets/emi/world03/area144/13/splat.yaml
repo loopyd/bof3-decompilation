@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801F2E18
   - - 1228
-    - asm
-    - func_801F30CC
+    - c
+    - seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC
+    - '@source: src/bof3/world/seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC.c'
+    - '@behavior: Overlay step-0 bootstrap of the shared work table: seeds bytes 0x14 through 0x19 of each of the six 0x1C-byte-stride records of the main-RAM work table at 0x800E4800 with the fixed pattern 0x00, 0xF0, 0x00, 0x03, 0x01, 0x1E, walking the block with an unsigned 16-bit counter in a bottom-tested loop; it takes no arguments, returns nothing, calls nothing and reserves 0x10 bytes of stack it never uses.'
   - - 1316
     - asm
     - func_801F3124

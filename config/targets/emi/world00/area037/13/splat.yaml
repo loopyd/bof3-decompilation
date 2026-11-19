@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F3464
   - - 2216
-    - asm
-    - func_801F34A8
+    - c
+    - setStatusFFFFAndHandlerIndex3WhenGateWorld00Area03713_801F34A8
+    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld00Area03713_801F34A8.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 3 into the handler index byte at 0x801D4286; the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 2264
     - c
     - setStatusFFFFAndHandlerIndex5WhenGateWorld00Area03713_801F34D8

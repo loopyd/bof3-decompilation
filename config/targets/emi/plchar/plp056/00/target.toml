@@ -44,6 +44,7 @@ sources = [
     "src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp05600_801CFADC.c",
     "src/bof3/plchar/chooseRecordResourceByte4FromFlag16AndModeScanThenStoreRouteStepSignAndChosenIndexThenRearmWorkPlcharPlp05600_801CE448.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp05600_801CE770.c",
+    "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp05600_801CED1C.c",
 ]
 support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",

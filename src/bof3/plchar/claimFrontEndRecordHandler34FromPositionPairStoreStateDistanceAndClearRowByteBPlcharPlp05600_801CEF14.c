@@ -64,8 +64,8 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           func_8015477C, stores that answer plus 0x100 in row halfword 0x3E
  *           and clears row byte 0x0B. Nothing is returned and a full table
  *           leaves every row untouched. The three in-image call sites,
- *           0x801CED8C, 0x801CEE08 and 0x801CEE44, all sit in the still-`asm`
- *           body func_801CED1C of this payload: the first and the third pass
+ *           0x801CED8C, 0x801CEE08 and 0x801CEE44, all sit in the claim body at
+ *           0x801CED1C of this payload: the first and the third pass
  *           state 0 with unsigned argument copies and the second passes state 1
  *           with the sign-extended halves of its two arguments, and each
  *           ignores the result.

@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - requestFrontSelectorContextWorld00Area03613_801F2C04
+    - '@source: src/bof3/world/requestFrontSelectorContextWorld00Area03613_801F2C04.c'
+    - '@behavior: requests the shared front selector context through func_8019FA28 with selection seed 0x64, the context pair 0x460000/0x340000 and kind 0x81. The entry takes no arguments and returns nothing.'
   - - 48
     - asm
     - func_801F2C30

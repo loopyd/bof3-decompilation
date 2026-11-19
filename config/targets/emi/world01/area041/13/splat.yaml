@@ -154,8 +154,10 @@ segments:
     - asm
     - func_801F3FDC
   - - 5400
-    - asm
-    - func_801F4118
+    - c
+    - advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118
+    - '@source: src/bof3/world/advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118.c'
+    - '@behavior: adds the work-record step word at 0x0C of the record published at the scratchpad pointer cell 0x1F800044 into its accumulator word at 0x34 through one read of that cell, then adds 2 to each of the three counter bytes 0x0/0x1/0x2 of the 12-byte record selected by byte 0x13D of the record published through the global pointer cell 0x80146250, each access re-reading that cell and scaling the selected byte by the 12-byte stride.'
   - - 5624
     - c
     - queueSharedUiElementBlock40x27To28Size0World01Area04113_801F41F8

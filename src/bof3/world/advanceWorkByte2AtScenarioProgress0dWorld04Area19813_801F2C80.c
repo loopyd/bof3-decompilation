@@ -13,11 +13,13 @@ extern u8 g_ScenarioProgress; /* @source 0x80146864 @kind data */
  *           0x1F800044. On every other progress value it leaves that byte alone
  *           and returns, so the step holds until the progress reaches 0x0D.
  *           Neighbouring entries of the same table place this handler in the
- *           overlay's palette setup: entry 0 (func_801F2C48) runs the palette
- *           block scaler with the zero scale and then advances the same step
- *           byte, and entry 2 (func_801F2CB8) advances work-record byte 0x09,
- *           scales the palette blocks by it and calls func_80196070 once that
- *           byte reaches 0x80. This body therefore waits rather than drawing.
+ *           overlay's palette setup: entry 0
+ *           (advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48)
+ *           advances the same step byte after running the palette block scaler
+ *           with the zero scale, and entry 2 (func_801F2CB8) advances
+ *           work-record byte 0x09, scales the palette blocks by it and calls
+ *           func_80196070 once that byte reaches 0x80. This body therefore
+ *           waits rather than drawing.
  *           It takes no arguments, returns nothing and reserves no stack
  *           frame, which is what keeps the record pointer in the caller-saved
  *           registers across the whole body. The scratchpad cell is read

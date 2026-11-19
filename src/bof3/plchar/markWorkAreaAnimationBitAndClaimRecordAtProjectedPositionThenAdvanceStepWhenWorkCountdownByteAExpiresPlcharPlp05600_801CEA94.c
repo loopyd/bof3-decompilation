@@ -40,12 +40,14 @@ extern u8 D_801468FC[];
  * same address. */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Record claim of this same payload: it takes a signed sixteen-bit cell pair,
- * sign-extends both through `sll` plus `sra` in its own prologue and answers one
- * when it claimed a front-end record and zero when it did not. Its own Splat row
- * is declared two entries after this one, so the symbol is defined inside this
- * payload and needs no foreign binding. */
-u8 func_801CED1C(s16 x, s16 y);
+/* Record claim of this same payload, carried by the lift of its own row: it takes
+ * a signed sixteen-bit cell pair, sign-extends both through `sll` plus `sra` in
+ * its own prologue, claims a front-end record for the map cell codes 0xF2 and
+ * 0xF8 and answers one on both of those claiming paths and zero when the cell
+ * carries neither code. Its own Splat row is declared two entries after this one,
+ * so the symbol is defined inside this payload and needs no foreign binding. */
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp05600_801CED1C(
+    s16 x, s16 y);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it on both paths and discards the returned byte. */
@@ -67,11 +69,14 @@ u8 func_8014DAEC(void);
  *           bit 0 of the animation byte 0x74 of the found work record through
  *           the column base 0x801468FC and the slot stride 0x98. It then claims
  *           a front-end record at the projected point through this payload's
- *           claim func_801CED1C, passing the high half of each projected word:
- *           when that claim fails and the first word has a nonzero low half it
- *           retries one unit further on that axis, and when the retry also fails
- *           and the second word has a nonzero low half it retries one unit
- *           further on the second axis. The projected second word keeps a second
+ *           claim claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp05600_801CED1C,
+ *           passing the high half of each projected word. That claim answers one
+ *           on both of its claiming paths and zero when the map cell carries
+ *           neither of its codes, so the retry runs only when no record was
+ *           claimed: on a zero answer with a nonzero low half of the first word
+ *           it retries one unit further on that axis, and when the retry also
+ *           answers zero and the second word has a nonzero low half it retries
+ *           one unit further on the second axis. The projected second word keeps a second
  *           live copy because the two cell halves claim the register that holds
  *           it, so the last retry test reads that copy and the source binds it
  *           to a variable of its own. Both paths then increment the step counter
@@ -96,5 +101,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp05600_801CEA94,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    func_801CED1C,
+    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp05600_801CED1C,
     func_8014DAEC)

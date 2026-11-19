@@ -1,4 +1,4 @@
-func_801F2C04 = 0x801F2C04;
+requestFrontSelectorContextWorld00Area03613_801F2C04 = 0x801F2C04;
 func_801F2C30 = 0x801F2C30;
 func_801F2C64 = 0x801F2C64;
 dispatchStateByte1Table3304World00Area03613_801F2D18 = 0x801F2D18;

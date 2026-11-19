@@ -124,8 +124,10 @@ segments:
     - dispatchStateByte2Table58bcWorld04Area17013_801F44F8
     - '@source: src/bof3/world/area17013DispatchTables.c'
   - - 6460
-    - asm
-    - func_801F453C
+    - c
+    - clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C
+    - '@source: src/bof3/world/clearWorkHalfword30AndAdvanceWorkByte2ThenDrawWorld04Area17013_801F453C.c'
+    - '@behavior: Entry 0 of the three-entry byte-2 handler table based at 0x801F58BC, the table the overlay dispatcher at 0x801F44F8 indexes by the state byte at offset 0x02 of the work record published at the scratchpad pointer cell 0x1F800044. Reads that state byte, stores zero into the record halfword at 0x30 - the progress value the overlay draw routine at 0x801F4640 uses as its quad''s horizontal origin - and then stores the state byte advanced by one, so the next dispatch takes entry 1 at 0x801F4574. The draw routine at 0x801F4640 then runs with argument 0, the variant flag whose zero keeps its second rendering pass off. Takes no arguments, returns nothing and keeps a 0x18-byte frame holding only the return address.'
   - - 6516
     - c
     - advanceWorkByte2AndPlayCue200WhenFlag67SetThenDrawWorld04Area17013_801F4574

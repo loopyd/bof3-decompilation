@@ -31,8 +31,9 @@ segments:
     - dispatchStateByte2Table3dfcWorld04Area19813_801F2C04
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48
+    - '@source: src/bof3/world/advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48.c'
   - - 128
     - c
     - advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80
