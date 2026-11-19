@@ -2206,6 +2206,11 @@ load's result. Reconcile births, deaths and tie order before predicting a regist
 from an apparent address overlap. Preserve real operations and require the
 complete native gate.
 
+At a narrow capture, trace later uses of its word producer. A calculation held
+beyond a scope boundary can keep that word live and prevent coalescing. Keep
+related calculations together when their dependencies permit it, then verify the
+death note, allocated registers and native load delays.
+
 For a raw bound and a selected narrow copy, trace their overlap at the
 comparison. Capturing the existing comparison result before the copy can let
 the raw source die at that copy. Global allocation processes source deaths
