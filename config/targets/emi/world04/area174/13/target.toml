@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/claimFrontEndRecordHandler9DSeedByte6OneHalfword30A5AndWorkRecordSlotWorld04Area17413_801F3E68.c",
     "src/bof3/world/claimFrontEndRecordHandlerA3SeedByte6Byte7WorkSlotAndWorkPointerElseConsumeHalfword0aBy2World04Area17413_801F4D90.c",
     "src/bof3/world/allocateWorkPaletteSlotFromPayloadTableSetWorkByte2aAndRequestResource9World04Area17413_801F3C8C.c",
+    "src/bof3/world/decrementHalfword0aBy2WhenSharedByte5World04Area17413_801F3D40.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4.c",

@@ -62,8 +62,10 @@ segments:
     - c
     - noopHandlerBossBoss05116_800C1A0C
   - - 532
-    - asm
-    - func_800C1A14
+    - c
+    - publishBattleHooksBossBoss05116_800C1A14
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss05116_800C1A14.c'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the state switch 0x800C1A54 into 0x801463A4, the inert handler 0x800C1AA0 into 0x801463A8 and the zero-result accessor 0x800C1A4C into 0x801463AC. It writes no other state and returns nothing; no jal immediate and no pointer word of this payload names 0x800C1A14, so the main program reaches it through the overlay entry point.'
   - - 588
     - c
     - zeroResultBossBoss05116_800C1A4C

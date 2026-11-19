@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u8* func_801F3348(void);
+u8* findFreeWorkRecordAt800E4800World03Area12513_801F3348(void);
 
 /* The overlay's per-slot spawn tables, 16 entries of two signed halfwords each:
  * the ring positions at 0x801F364C and the direction vectors they are the fixed
@@ -61,7 +61,7 @@ void claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0(s3
   u8* record;
   s32 index;
 
-  record = func_801F3348();
+  record = findFreeWorkRecordAt800E4800World03Area12513_801F3348();
   if (record == 0) {
     return;
   }

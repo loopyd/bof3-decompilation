@@ -65,8 +65,10 @@ segments:
     - c
     - noopHandlerBossBoss04016_800C19EC
   - - 500
-    - asm
-    - func_800C19F4
+    - c
+    - publishBattleHooksBossBoss04016_800C19F4
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss04016_800C19F4.c'
+    - '@behavior: Overlay early battle-hook installer. It materializes three entrypoint addresses with lui/addiu pairs and stores them through lui bases into the shared battle hook slots: the mode-transition handler initModeTuple510Or520ByFlagBitTwoBossBoss04016_800C1A34 into 0x801463A4, the inert handler noopHandlerBossBoss04016_800C1A80 into 0x801463A8 and the zero-result accessor zeroResultBossBoss04016_800C1A2C into 0x801463AC, then returns without reading any state. The later installer at 0x800C1A88 overwrites the same three slots with the 0x26 mode-transition handler and the closing handlers of this overlay; no jal in this payload reaches this function, so the main program calls it through its overlay entry point'
   - - 556
     - c
     - zeroResultBossBoss04016_800C1A2C

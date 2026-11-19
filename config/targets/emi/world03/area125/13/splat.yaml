@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801F3268
   - - 1864
-    - asm
-    - func_801F3348
+    - c
+    - findFreeWorkRecordAt800E4800World03Area12513_801F3348
+    - '@source: src/bof3/world/findFreeWorkRecordAt800E4800World03Area12513_801F3348.c'
+    - '@behavior: Free-record scan of the shared 0x800E4800 work table: it walks the lead byte of the 0x10 records of 0x28-byte stride and returns the address of the first record whose lead byte reads zero, or zero when all 0x10 records are claimed. It reads only those lead bytes, writes nothing, makes no call and keeps no register, so its 0x3C bytes carry no frame; the back edge masks the unsigned byte counter to 0xFF, compares it below 0x10 and carries the pointer advance of 0x28 in its delay slot. The single in-image caller claimFreeWorkRecordSeedRingPositionAndDirectionWorld03Area12513_801F31B0 calls it at 0x801F31BC and stores 1 into the lead byte of the record it returns, so that byte is the record claim flag, and the adjacent clearWorkTableAt800E4800World03Area12513_801F3384 clears the same 0x10 records.'
   - - 1924
     - c
     - clearWorkTableAt800E4800World03Area12513_801F3384

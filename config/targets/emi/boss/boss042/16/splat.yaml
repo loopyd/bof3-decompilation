@@ -33,8 +33,10 @@ segments:
     - asm
     - func_800C1848
   - - 172
-    - asm
-    - func_800C18AC
+    - c
+    - dispatchIndexedHandlerBossBoss04216_800C18AC
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss04216_800C18AC.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C19D4 handler run inside this payload''s pointer run at 0x800C1990, so the selected handler''s result stays in the return register; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal and no payload word names it: the only in-payload reference is the address the step-setup publisher 0x800C1848 stores into +0xE4 of the current enemy work record.'
   - - 228
     - c
     - noopHandlerBossBoss04216_800C18E4

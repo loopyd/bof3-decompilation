@@ -78,8 +78,10 @@ segments:
     # @source 0x801EF600
     # @behavior Project work position pair from byte-derived radius and angle; advance byte 2 at byte 9 = 16.
   - - 2832
-    - asm
-    - func_801EF710
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs8BmagicMagic09303_801EF710.c'
+    - '@behavior: Increment work byte 2 of the scratchpad work object when the shared battle work record byte B is eight.'
   - - 2896
     - asm
     - func_801EF750

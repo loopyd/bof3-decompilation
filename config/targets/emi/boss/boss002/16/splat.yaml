@@ -27,8 +27,10 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchStateByte1Table1FBCBossBoss00216_800C1804
+    - '@source: src/bof3/boss/dispatchStateByte1Table1FBCBossBoss00216_800C1804.c'
+    - '@behavior: Overlay state dispatcher of this payload, the first code word after its four-byte entry header: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x01 as the index, scales it by four and calls that entry of the local handler run based at 0x800C1FBC with no arguments, leaving the selected handler result in the return register; the run words from 0x800C1F9C are the neighboring reviewed textbin row, whose base entry 0x800C1848 and entry 0x800C18A0 are this payload''s own functions and whose other entries are the shared main-executable handlers at 0x801E..... No word or jal site in the payload names this entry, so the overlay loader calls it.'
   - - 72
     - asm
     - func_800C1848

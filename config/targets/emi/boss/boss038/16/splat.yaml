@@ -84,8 +84,10 @@ segments:
     - c
     - noopHandlerBossBoss03816_800C1B74
   - - 892
-    - asm
-    - func_800C1B7C
+    - c
+    - publishBattleHooksBossBoss03816_800C1B7C
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss03816_800C1B7C.c'
+    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots in slot order: the battle-flag state switch 0x800C1BBC into 0x801463A4, the inert handler 0x800C1C08 into 0x801463A8 and the zero-result accessor 0x800C1BB4 into 0x801463AC, each materialised in $v0 with lui/addiu and stored through $at; the body has no frame, no saved register and no call, and no jal or pointer word in the payload names it.'
   - - 948
     - c
     - zeroResultBossBoss03816_800C1BB4

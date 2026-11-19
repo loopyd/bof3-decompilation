@@ -167,8 +167,10 @@ segments:
     - dispatchStateByte4Table4dccWorld01Area06813_801F3B18
     - '@source: src/bof3/world/area06813DispatchTables.c'
   - - 3932
-    - asm
-    - func_801F3B5C
+    - c
+    - armPhase16AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06813_801F3B5C
+    - '@source: src/bof3/world/armPhase16AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06813_801F3B5C.c'
+    - '@behavior: Entry handler of the byte-4 dispatch table at 0x801F4DCC, which lists this routine at index 0 and 0x801F3B9C at index 1: writes 0x10 into the phase byte 0x0A of the work record published at the scratchpad pointer cell 0x1F800044, then 1 into the record byte 0x04 that the local dispatcher dispatchStateByte4Table4dccWorld01Area06813 indexes that table with, re-reading the pointer cell for the second store, and finally subtracts two units from the halfword 0x122 of the shared work record published at 0x80146250. Takes no arguments and returns nothing.'
   - - 3996
     - asm
     - func_801F3B9C

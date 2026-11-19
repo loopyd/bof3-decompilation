@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801F3CE4
   - - 4416
-    - asm
-    - func_801F3D40
+    - c
+    - decrementHalfword0aBy2WhenSharedByte5World04Area17413_801F3D40
+    - '@source: src/bof3/world/decrementHalfword0aBy2WhenSharedByte5World04Area17413_801F3D40.c'
+    - '@behavior: State handler reached through the word 0x801F6610, entry 2 of the dispatch table that publishes this payload handlers; when the shared front-end phase byte at 0x80143BB0 reads 5 it lowers the halfword at offset 0x0A of the work record published through the global pointer cell 0x80148210 by 2.'
   - - 4472
     - asm
     - func_801F3D78

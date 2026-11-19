@@ -24,6 +24,7 @@ sources = [
     "src/bof3/world/stepCoordinatePairByFaceButtonAndArmState12World01Area06813_801F30B0.c",
     "src/bof3/world/clearStoryProgressAndArmState1World01Area06813_801F2D88.c",
     "src/bof3/world/armCountdownByte9To180AndArmState1World01Area06813_801F2C48.c",
+    "src/bof3/world/armPhase16AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06813_801F3B5C.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",
