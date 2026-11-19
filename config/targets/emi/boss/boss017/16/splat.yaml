@@ -57,8 +57,8 @@ segments:
     - c
     - noopHandlerBossBoss01716_800C19BC
   - - 452
-    - asm
-    - func_800C19C4
+    - c
+    - publishBattleHooksBossBoss01716_800C19C4
   - - 508
     - c
     - zeroResultBossBoss01716_800C19FC

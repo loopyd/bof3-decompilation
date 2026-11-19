@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00113_800C1E00.c",
     "src/bof3/boss/dispatchStateByte2Table224cBossBoss00113_800C1BDC.c",
     "src/bof3/support/boss001_13_psyq.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss00113_800C1AF0.c",
 ]
 psyq_source = "src/bof3/support/boss001_13_psyq.c"

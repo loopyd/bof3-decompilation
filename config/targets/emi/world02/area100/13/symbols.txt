@@ -11,7 +11,7 @@ advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area
 drawWorkQuadAtFixedOffsetWorld02Area10013_801F31A0 = 0x801F31A0;
 func_801F31E8 = 0x801F31E8;
 func_801F34FC = 0x801F34FC;
-func_801F35D4 = 0x801F35D4;
+clearWorkByte48ThenSubmitRecordWorld02Area10013_801F35D4 = 0x801F35D4;
 setSharedFlagBankBit45World02Area10013_801F3608 = 0x801F3608;
 advanceCounter2By4World02Area10013_801F3630 = 0x801F3630;
 retreatCounter2By4World02Area10013_801F3658 = 0x801F3658;

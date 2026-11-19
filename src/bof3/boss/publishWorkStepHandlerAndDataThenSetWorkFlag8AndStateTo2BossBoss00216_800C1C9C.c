@@ -14,7 +14,8 @@ typedef struct Boss00216PublishWork {
 /* The data pointer this publisher installs at +0xEC is the start of this
  * payload's 0xF4-byte data row at 0x800C1F9C, the run the Splat `textbin` row
  * places at the end of the code segment; its +0xAC word 0x800C2048 is the
- * handler table func_800C1C08 dispatches through. The second pointer this
+ * handler table dispatchIndexedHandlerBossBoss00216_800C1C08 dispatches
+ * through. The second pointer this
  * publisher installs, 0x800C1FB4, is the +0x18 word of that same row: it is
  * 0x800C1FAC + 8, index 4 of the 0x0600 halfword run the row holds from +0x10
  * to +0x1F, and not a row boundary, so it is referenced as its own data symbol

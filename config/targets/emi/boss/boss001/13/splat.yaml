@@ -51,8 +51,10 @@ segments:
     - c
     - invokeHelperBossBoss00113_800C1AD0
   - - 752
-    - asm
-    - func_800C1AF0
+    - c
+    - dispatchIndexedHandlerBossBoss00113_800C1AF0
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss00113_800C1AF0.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2210 handler table in this overlay payload, so the selected handler''s result stays in the return register.'
   - - 808
     - c
     - noopHandlerBossBoss00113_800C1B28

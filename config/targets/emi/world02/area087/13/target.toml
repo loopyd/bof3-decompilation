@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08713_801F4328.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld02Area08713_801F2C04.c",
+    "src/bof3/world/clearWorldFlag2000WhenGateIs3cWorld02Area08713_801F2C38.c",
 ]
 support_sources = [
     "src/bof3/world/area08713_work_state.c",
