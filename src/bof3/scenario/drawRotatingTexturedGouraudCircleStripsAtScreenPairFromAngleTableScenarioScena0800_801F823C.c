@@ -24,11 +24,12 @@ void func_8017A9E0(void* arg0);
  * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
  * preserved.
  * @status partial
- * @match 90.53
- * @residual 172/190 instructions at the original 760 bytes; first difference
- *   +0x00D0. Counter/cursor order, first-quad geometry order and UV calculations,
- *   and counter-increment placement differ. Saved register roles, left/right
- *   coordinate registers, both colour sequences and the final loop test match.
+ * @match 92.11
+ * @residual 175/190 instructions at the original 760 bytes; first difference
+ *   +0x00D0. Early counter/cursor order, first-quad geometry and texture-prefix
+ *   placement differ. The right upper UV offset uses +128 instead of -128.
+ *   Saved register roles, left/right coordinate registers, both colour
+ *   sequences, counter-increment placement and the final loop test match.
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -41,10 +42,13 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   u16 row;
   u16 next;
   s32 bound;
+  s32 more;
   s32 nn;
   s32 half;
   s32 sine;
   s32 offset;
+  u8 top;
+  u8 texture_row;
   u8 half_uv;
   u8 nb;
   u8 i;
@@ -79,15 +83,19 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->y2 = next;
     prim->x3 = (u16)(x - half + offset) + half;
     prim->y3 = next;
+    texture_row = i + 0x40u;
     prim->x2 = x - half + offset;
     prim->u0 = 0x40 - half;
-    prim->v0 = i - (nb - 0x40);
+    top = nb;
+    texture_row -= top;
+    top -= 0x40u;
+    prim->v0 = i - top;
     prim->u1 = 0x40;
-    prim->v1 = i - (nb - 0x40);
+    prim->v1 = i - top;
     prim->u2 = 0x40 - half;
-    prim->v2 = i - (nb - 0x40) + 1;
+    prim->v2 = texture_row + 1;
     prim->u3 = 0x40;
-    prim->v3 = i - (nb - 0x40) + 1;
+    prim->v3 = texture_row + 1;
     prim->tpage = GetTPage(2, 0, 0x340, 0x100);
     prim->r0 = prim->g0 = 0x40;
     prim->b0 = 0x80;
@@ -99,6 +107,7 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     } while (0);
     } while (0);
     prim = (POLY_GT4*)g_PrimCursor;
+    i++;
     func_8017A9E0(prim);
     SetSemiTrans(prim, 0);
     prim->x0 = x + offset;
@@ -111,13 +120,13 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->y3 = next;
     half_uv = (u8)half;
     prim->u0 = 0;
-    prim->v0 = i - (nb - 0x40) - 0x80;
+    prim->v0 = texture_row - 0x80;
     prim->u1 = half_uv;
-    prim->v1 = i - (nb - 0x40) - 0x80;
+    prim->v1 = texture_row - 0x80;
     prim->u2 = 0;
-    prim->v2 = i - (nb - 0x40) - 0x7F;
+    prim->v2 = texture_row - 0x7F;
     prim->u3 = half_uv;
-    prim->v3 = i - (nb - 0x40) - 0x7F;
+    prim->v3 = texture_row - 0x7F;
     prim->tpage = GetTPage(2, 0, 0x340, 0x100);
     prim->r0 = prim->g0 = prim->b0 = 0x60;
     prim->r1 = 0x80;
@@ -126,8 +135,8 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->r3 = 0x80;
     prim->g3 = prim->b3 = 0x40;
     func_8014E5A0(2, 0x34);
+    more = i < bound;
     } while (0);
-    i++;
-    } while (i < bound);
+    } while (more);
   }
 }

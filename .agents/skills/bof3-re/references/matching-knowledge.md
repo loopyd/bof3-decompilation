@@ -439,6 +439,14 @@ input copies before consumers. Equal producer and consumer depths can restore an
 alternate class, but following loop notes can still fence output copies. Check
 classes, allocation, notes, frame and both schedules before native comparison.
 
+Moving the last statement can make an implicit byte mask receive `LOOP_END` after
+reload. A bound reload fenced after that mask can gain a load-delay `nop` even
+with unchanged RTL operation counts. Where the same loop test remains valid,
+capture its consumed result inside the existing operation scope. The end note
+may then attach to the branch, freeing the reload to precede the mask. Verify
+both receiver and dependency in `.sched2`, preserve conversions and effects,
+and compare complete native output.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
