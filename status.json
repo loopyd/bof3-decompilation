@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "c916d02516f2718be0b689dd0c95b371939c1886",
-  "published_at": "2026-11-19T19:00:09.570284+00:00",
+  "revision": "0d1181a8947d17f7e0871d8118b382a08c4321fc",
+  "published_at": "2026-11-19T19:04:04.044837+00:00",
   "counts": {
-    "completed": 6244,
+    "completed": 6254,
     "partial": 358,
-    "unlifted": 3922,
+    "unlifted": 3912,
     "invalid": 0,
     "total": 10524,
     "symbols": {
-      "named": 69332,
-      "raw": 55093,
+      "named": 69342,
+      "raw": 55083,
       "total": 124425
     }
   },
@@ -26465,14 +26465,14 @@
       "family": "boss",
       "archive": "boss002",
       "entry": "16",
-      "completed": 27,
+      "completed": 28,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 190,
-        "raw": 139,
+        "named": 191,
+        "raw": 138,
         "total": 329
       },
       "binary": {
@@ -26547,8 +26547,8 @@
           {
             "start": 680,
             "end": 748,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1aa8: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c1aa8: exact indexed function"
           },
           {
             "start": 748,
@@ -27375,14 +27375,14 @@
       "family": "boss",
       "archive": "boss012",
       "entry": "16",
-      "completed": 10,
+      "completed": 11,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 18,
       "symbols": {
-        "named": 170,
-        "raw": 133,
+        "named": 171,
+        "raw": 132,
         "total": 303
       },
       "binary": {
@@ -27421,8 +27421,8 @@
           {
             "start": 248,
             "end": 316,
-            "category": "code-unlifted",
-            "detail": "fcn.800c18f8: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c18f8: exact indexed function"
           },
           {
             "start": 316,
@@ -28597,14 +28597,14 @@
       "family": "boss",
       "archive": "boss022",
       "entry": "13",
-      "completed": 10,
+      "completed": 11,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 13,
       "symbols": {
-        "named": 172,
-        "raw": 130,
+        "named": 173,
+        "raw": 129,
         "total": 302
       },
       "binary": {
@@ -28643,8 +28643,8 @@
           {
             "start": 244,
             "end": 312,
-            "category": "code-unlifted",
-            "detail": "fcn.800c18f4: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c18f4: exact indexed function"
           },
           {
             "start": 312,
@@ -29929,14 +29929,14 @@
       "family": "boss",
       "archive": "boss033",
       "entry": "16",
-      "completed": 23,
+      "completed": 24,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 182,
-        "raw": 137,
+        "named": 183,
+        "raw": 136,
         "total": 319
       },
       "binary": {
@@ -29969,8 +29969,8 @@
           {
             "start": 160,
             "end": 228,
-            "category": "code-unlifted",
-            "detail": "fcn.800c18a0: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c18a0: exact indexed function"
           },
           {
             "start": 228,
@@ -30577,14 +30577,14 @@
       "family": "boss",
       "archive": "boss036",
       "entry": "16",
-      "completed": 19,
+      "completed": 20,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 179,
-        "raw": 134,
+        "named": 180,
+        "raw": 133,
         "total": 313
       },
       "binary": {
@@ -30743,8 +30743,8 @@
           {
             "start": 1696,
             "end": 1764,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1ea0: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c1ea0: exact indexed function"
           },
           {
             "start": 1764,
@@ -57227,14 +57227,14 @@
       "family": "scenario",
       "archive": "scena07",
       "entry": "00",
-      "completed": 50,
+      "completed": 51,
       "partial": 0,
-      "unlifted": 57,
+      "unlifted": 56,
       "invalid": 0,
       "total": 107,
       "symbols": {
-        "named": 213,
-        "raw": 180,
+        "named": 214,
+        "raw": 179,
         "total": 393
       },
       "binary": {
@@ -57549,8 +57549,8 @@
           {
             "start": 5976,
             "end": 6036,
-            "category": "code-unlifted",
-            "detail": "fcn.801f8358: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f8358: exact indexed function"
           },
           {
             "start": 6036,
@@ -66883,14 +66883,14 @@
       "family": "world00",
       "archive": "area037",
       "entry": "13",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 166,
-        "raw": 141,
+        "named": 167,
+        "raw": 140,
         "total": 307
       },
       "binary": {
@@ -66959,8 +66959,8 @@
           {
             "start": 2448,
             "end": 2516,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3590: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3590: exact indexed function"
           },
           {
             "start": 2516,
@@ -67445,14 +67445,14 @@
       "family": "world01",
       "archive": "area041",
       "entry": "13",
-      "completed": 22,
+      "completed": 23,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 37,
       "symbols": {
-        "named": 180,
-        "raw": 144,
+        "named": 181,
+        "raw": 143,
         "total": 324
       },
       "binary": {
@@ -67605,8 +67605,8 @@
           {
             "start": 4404,
             "end": 4472,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3d34: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3d34: exact indexed function"
           },
           {
             "start": 4472,
@@ -68945,14 +68945,14 @@
       "family": "world01",
       "archive": "area050",
       "entry": "13",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 7,
       "symbols": {
-        "named": 161,
-        "raw": 127,
+        "named": 162,
+        "raw": 126,
         "total": 288
       },
       "binary": {
@@ -68991,8 +68991,8 @@
           {
             "start": 192,
             "end": 260,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2cc0: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2cc0: exact indexed function"
           },
           {
             "start": 260,
@@ -69397,14 +69397,14 @@
       "family": "world01",
       "archive": "area055",
       "entry": "13",
-      "completed": 2,
+      "completed": 3,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 6,
       "symbols": {
-        "named": 160,
-        "raw": 128,
+        "named": 161,
+        "raw": 127,
         "total": 288
       },
       "binary": {
@@ -69443,8 +69443,8 @@
           {
             "start": 232,
             "end": 300,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2ce8: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2ce8: exact indexed function"
           },
           {
             "start": 300,
