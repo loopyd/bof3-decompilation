@@ -10,8 +10,9 @@
  *           include/bof3/world/area13113_internal.h names both cells, so the
  *           immediate and the cell roles come from that same-target sibling.
  *           0x801F2E90 has no `jal` caller in the payload: its only in-image
- *           reference is a word of the code-pointer run based at 0x801F3C48,
- *           where it sits between func_801F2E68 and
+ *           reference is the word at 0x801F3CA8 of the code-pointer run that
+ *           starts at 0x801F3C8C, where it sits between
+ *           retreatCounter2By2World03Area13113_801F2E68 and
  *           copyModeByteWorld03Area13113_801F2EB8, so it is a dispatch entry
  *           and its prologue-less leaf shape (no frame, no saved register,
  *           `jr $ra` with a `nop` delay slot) is the entry shape, not a

@@ -1,5 +1,5 @@
 dispatchStateByte1Table3dd8WorldWorld03Area13213_801F2C04 = 0x801F2C04;
-func_801F2C48 = 0x801F2C48;
+resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48 = 0x801F2C48;
 func_801F2C6C = 0x801F2C6C;
 noopHandlerWorld03Area13213_801F2DA8 = 0x801F2DA8;
 dispatchStateByte1Table3de4WorldWorld03Area13213_801F2DB0 = 0x801F2DB0;

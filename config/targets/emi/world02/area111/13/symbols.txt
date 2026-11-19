@@ -10,7 +10,7 @@ zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Are
 func_801F319C = 0x801F319C;
 advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0 = 0x801F31F0;
 func_801F3244 = 0x801F3244;
-func_801F33D0 = 0x801F33D0;
+setStatus3IfGateElse2World02Area11113_801F33D0 = 0x801F33D0;
 setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8 = 0x801F33F8;
 copySharedWord7b5cTo7ac4World02Area11113_801F3448 = 0x801F3448;
 func_801F3460 = 0x801F3460;

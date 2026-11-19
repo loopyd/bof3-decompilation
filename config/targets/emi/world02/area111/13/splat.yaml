@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F3244
   - - 2000
-    - asm
-    - func_801F33D0
+    - c
+    - setStatus3IfGateElse2World02Area11113_801F33D0
+    - '@source: src/bof3/world/setStatus3IfGateElse2World02Area11113_801F33D0.c'
+    - '@behavior: Loads the shared gate byte at 0x801490C7 with a signed byte read and stores 3 into the shared status halfword at 0x801490A8 while that byte reads nonzero, and 2 when it reads zero. Takes no arguments, calls nothing and returns nothing.'
   - - 2040
     - c
     - setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8

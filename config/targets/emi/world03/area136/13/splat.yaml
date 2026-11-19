@@ -82,8 +82,10 @@ segments:
     - c
     - retreatCounter2By2World03Area13613_801F3148
   - - 1392
-    - asm
-    - func_801F3170
+    - c
+    - advanceCounter2By2World03Area13613_801F3170
+    - '@source: src/bof3/world/advanceCounter2By2World03Area13613_801F3170.c'
+    - '@behavior: Overlay handler step: reads the shared halfword counter at 0x8014932A, stores the constant 2 into the shared status byte at 0x80149333, then writes the counter back advanced by 0x02. Advance half of the pair whose retreat half is the adjacent retreatCounter2By2World03Area13613_801F3148; both are adjacent .word entries at 0x801F437C and 0x801F4380 in this payload''s handler table. Leaf, no arguments, no return value.'
   - - 1432
     - asm
     - func_801F3198

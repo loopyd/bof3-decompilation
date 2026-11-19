@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table3dd8WorldWorld03Area13213_801F2C04
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48
+    - '@source: src/bof3/world/resetWorkCountdownAndSelectHandler1World03Area13213_801F2C48.c'
+    - '@behavior: Entry 0 of the byte-1 handler pointer run based at 0x801F3DD8: loads the work record published at the scratchpad pointer cell 0x1F800044, clears its countdown byte at +0x09 to zero, then reads that cell again and stores 1 in the record state byte at +0x01 so the next step dispatches entry 1 at 0x801F2C6C.'
   - - 108
     - asm
     - func_801F2C6C

@@ -33,8 +33,10 @@ segments:
     - asm
     - func_800C1860
   - - 252
-    - asm
-    - func_800C18FC
+    - c
+    - dispatchIndexedHandlerBossBoss01316_800C18FC
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C18FC.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the run interior word 0x800C2650, so the selected handler result stays in the return register. The index is bounded only to a byte and never checked against the run length; the slot after the scaled table load and the indirect call delay slot both stay nops, and no argument is passed. The 0x18-byte frame only keeps the return address across the call, the epilogue leaves the return value untouched, and no jal or word of this payload names 0x800C18FC, so the overlay entry reaches it.'
   - - 308
     - asm
     - func_800C1934

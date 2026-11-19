@@ -1,7 +1,7 @@
 clearOwnerRecordFlag40 = 0x800AC844;
 func_800C1804 = 0x800C1804;
 func_800C1860 = 0x800C1860;
-func_800C18FC = 0x800C18FC;
+dispatchIndexedHandlerBossBoss01316_800C18FC = 0x800C18FC;
 func_800C1934 = 0x800C1934;
 func_800C1A04 = 0x800C1A04;
 noopHandlerBossBoss01316_800C1A2C = 0x800C1A2C;
