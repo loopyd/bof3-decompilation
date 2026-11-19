@@ -48,14 +48,14 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "b167873fa95f49d6d047d2419fd86c93e12ae7f3",
-  "published_at": "2026-11-19T20:34:15.537623+00:00",
+  "revision": "640df5122f27f8478fa9462106e6e795a357e17b",
+  "published_at": "2026-11-19T20:37:10.414655+00:00",
   "counts": {
     "completed": 6283,
     "partial": 358,
-    "unlifted": 3884,
+    "unlifted": 3799,
     "invalid": 0,
-    "total": 10525,
+    "total": 10440,
     "symbols": {
       "named": 69371,
       "raw": 55054,
@@ -71,9 +71,9 @@
       "entry": "00",
       "completed": 19,
       "partial": 3,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
-      "total": 32,
+      "total": 31,
       "symbols": {
         "named": 180,
         "raw": 141,
@@ -91,8 +91,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -345,9 +345,9 @@
       "entry": "00",
       "completed": 3,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
-      "total": 11,
+      "total": 10,
       "symbols": {
         "named": 161,
         "raw": 133,
@@ -365,8 +365,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -457,9 +457,9 @@
       "entry": "01",
       "completed": 0,
       "partial": 0,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 1,
+      "total": 0,
       "symbols": {
         "named": 158,
         "raw": 127,
@@ -491,9 +491,9 @@
       "entry": "03",
       "completed": 332,
       "partial": 31,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
-      "total": 375,
+      "total": 374,
       "symbols": {
         "named": 462,
         "raw": 403,
@@ -510,12 +510,12 @@
         "spans": [
           {
             "start": 0,
-            "end": 104,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
-            "start": 104,
+            "start": 4,
             "end": 112,
             "category": "unknown",
             "detail": "No verified classification"
@@ -6218,6 +6218,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 100,
             "category": "unknown",
             "detail": "No verified classification"
@@ -6450,6 +6456,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -6712,6 +6724,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -6860,6 +6878,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
             "category": "unknown",
             "detail": "No verified classification"
@@ -7043,9 +7067,9 @@
       "entry": "00",
       "completed": 47,
       "partial": 3,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 65,
+      "total": 64,
       "symbols": {
         "named": 210,
         "raw": 139,
@@ -7062,18 +7086,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 240,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 240,
-            "end": 244,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 244,
             "end": 348,
             "category": "code-lifted",
             "detail": "fcn.801eecf0: exact indexed function\nSource: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EECF0.c"
@@ -7492,6 +7516,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -7646,6 +7676,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -7711,8 +7747,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -7803,9 +7839,9 @@
       "entry": "03",
       "completed": 8,
       "partial": 1,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 24,
+      "total": 23,
       "symbols": {
         "named": 171,
         "raw": 138,
@@ -7822,9 +7858,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 20,
@@ -7993,9 +8035,9 @@
       "entry": "00",
       "completed": 36,
       "partial": 1,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
-      "total": 49,
+      "total": 48,
       "symbols": {
         "named": 199,
         "raw": 136,
@@ -8013,23 +8055,17 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
             "end": 160,
-            "category": "code-unlifted",
-            "detail": "workByte1HandlerTableBmagicMagic01500: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 160,
-            "end": 164,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 164,
             "end": 268,
             "category": "code-lifted",
             "detail": "fcn.801eeca0: exact indexed function\nSource: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic01500_801EECA0.c"
@@ -8352,6 +8388,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
             "category": "unknown",
             "detail": "No verified classification"
@@ -8488,6 +8530,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 72,
             "category": "unknown",
             "detail": "No verified classification"
@@ -8678,6 +8726,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -8856,6 +8910,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -8980,6 +9040,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 52,
             "category": "unknown",
             "detail": "No verified classification"
@@ -9146,6 +9212,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 32,
             "category": "unknown",
             "detail": "No verified classification"
@@ -9300,6 +9372,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
             "category": "unknown",
             "detail": "No verified classification"
@@ -9460,6 +9538,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -9597,8 +9681,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -9751,8 +9835,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -9874,6 +9958,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10040,6 +10130,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10152,6 +10248,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10264,6 +10366,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10352,6 +10460,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10536,6 +10650,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 44,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10654,6 +10774,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10772,6 +10898,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 52,
             "category": "unknown",
             "detail": "No verified classification"
@@ -10980,6 +11112,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 80,
             "category": "unknown",
             "detail": "No verified classification"
@@ -11158,6 +11296,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -11325,8 +11469,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -11496,6 +11640,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 52,
             "category": "unknown",
             "detail": "No verified classification"
@@ -11740,6 +11890,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -11930,6 +12086,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12132,6 +12294,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 124,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12454,6 +12622,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12566,6 +12740,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12726,6 +12906,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12934,6 +13120,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -13065,8 +13257,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -13248,6 +13440,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -13396,6 +13594,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -13525,9 +13729,9 @@
       "entry": "03",
       "completed": 2,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
-      "total": 18,
+      "total": 17,
       "symbols": {
         "named": 160,
         "raw": 141,
@@ -13544,18 +13748,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 40,
-            "end": 44,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec28: unlifted indexed function"
-          },
-          {
-            "start": 44,
             "end": 312,
             "category": "code-unlifted",
             "detail": "fcn.801eec28: unlifted indexed function"
@@ -13679,9 +13883,9 @@
       "entry": "03",
       "completed": 12,
       "partial": 3,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
-      "total": 23,
+      "total": 22,
       "symbols": {
         "named": 173,
         "raw": 131,
@@ -13698,18 +13902,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 40,
-            "end": 44,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec28: unlifted indexed function"
-          },
-          {
-            "start": 44,
             "end": 280,
             "category": "code-unlifted",
             "detail": "fcn.801eec28: unlifted indexed function"
@@ -13863,9 +14067,9 @@
       "entry": "03",
       "completed": 7,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 22,
+      "total": 21,
       "symbols": {
         "named": 165,
         "raw": 140,
@@ -13882,18 +14086,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 40,
-            "end": 44,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec28: unlifted indexed function"
-          },
-          {
-            "start": 44,
             "end": 280,
             "category": "code-unlifted",
             "detail": "fcn.801eec28: unlifted indexed function"
@@ -14041,9 +14245,9 @@
       "entry": "03",
       "completed": 9,
       "partial": 1,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 12,
+      "total": 11,
       "symbols": {
         "named": 169,
         "raw": 124,
@@ -14060,18 +14264,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 16,
-            "end": 20,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 20,
             "end": 112,
             "category": "code-lifted",
             "detail": "fcn.801eec10: exact indexed function\nSource: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic07503_801EEC10.c"
@@ -14147,9 +14351,9 @@
       "entry": "03",
       "completed": 15,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
-      "total": 25,
+      "total": 24,
       "symbols": {
         "named": 175,
         "raw": 132,
@@ -14166,18 +14370,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 40,
-            "end": 44,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec28: unlifted indexed function"
-          },
-          {
-            "start": 44,
             "end": 328,
             "category": "code-unlifted",
             "detail": "fcn.801eec28: unlifted indexed function"
@@ -14363,8 +14567,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -14533,9 +14737,9 @@
       "entry": "03",
       "completed": 13,
       "partial": 1,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
-      "total": 30,
+      "total": 29,
       "symbols": {
         "named": 173,
         "raw": 139,
@@ -14553,8 +14757,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -14767,8 +14971,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -14836,6 +15040,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 48,
             "category": "unknown",
             "detail": "No verified classification"
@@ -14990,6 +15200,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -15181,8 +15397,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -15382,6 +15598,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -15585,8 +15807,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -15768,6 +15990,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 32,
             "category": "unknown",
             "detail": "No verified classification"
@@ -15952,6 +16180,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -16071,8 +16305,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -16267,8 +16501,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -16455,9 +16689,9 @@
       "entry": "03",
       "completed": 6,
       "partial": 1,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
-      "total": 12,
+      "total": 11,
       "symbols": {
         "named": 167,
         "raw": 129,
@@ -16475,8 +16709,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -16580,6 +16814,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -16703,9 +16943,9 @@
       "entry": "03",
       "completed": 4,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
-      "total": 18,
+      "total": 17,
       "symbols": {
         "named": 165,
         "raw": 137,
@@ -16722,9 +16962,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 36,
@@ -16851,9 +17097,9 @@
       "entry": "03",
       "completed": 5,
       "partial": 1,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 15,
+      "total": 14,
       "symbols": {
         "named": 166,
         "raw": 138,
@@ -16871,8 +17117,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -16995,8 +17241,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -17112,6 +17358,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -17308,6 +17560,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -17438,6 +17696,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -17580,6 +17844,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -17686,6 +17956,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -17870,6 +18146,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -18030,6 +18312,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -18159,9 +18447,9 @@
       "entry": "03",
       "completed": 6,
       "partial": 1,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
-      "total": 14,
+      "total": 13,
       "symbols": {
         "named": 166,
         "raw": 132,
@@ -18179,8 +18467,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -18283,9 +18571,9 @@
       "entry": "03",
       "completed": 7,
       "partial": 3,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
-      "total": 17,
+      "total": 16,
       "symbols": {
         "named": 171,
         "raw": 130,
@@ -18303,8 +18591,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -18445,8 +18733,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -18549,9 +18837,9 @@
       "entry": "03",
       "completed": 1,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
-      "total": 7,
+      "total": 6,
       "symbols": {
         "named": 160,
         "raw": 127,
@@ -18568,9 +18856,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 20,
@@ -18650,6 +18944,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -18864,6 +19164,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19024,6 +19330,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19250,6 +19562,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 68,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19458,6 +19776,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19594,6 +19918,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19700,6 +20030,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19794,6 +20130,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -19918,6 +20260,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -20121,8 +20469,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -20251,8 +20599,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -20363,8 +20711,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -20492,6 +20840,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -20671,8 +21025,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -20855,8 +21209,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -21116,6 +21470,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -21276,6 +21636,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -21418,6 +21784,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -21776,6 +22148,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -21912,6 +22290,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -22090,6 +22474,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -22209,8 +22599,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -22327,8 +22717,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -22522,6 +22912,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -22634,6 +23030,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -22788,6 +23190,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 32,
             "category": "unknown",
             "detail": "No verified classification"
@@ -22930,6 +23338,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 80,
             "category": "unknown",
             "detail": "No verified classification"
@@ -23276,6 +23690,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -23413,8 +23833,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -23525,8 +23945,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -23624,6 +24044,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 36,
             "category": "unknown",
             "detail": "No verified classification"
@@ -23736,6 +24162,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
             "category": "unknown",
             "detail": "No verified classification"
@@ -23865,9 +24297,9 @@
       "entry": "03",
       "completed": 3,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
-      "total": 11,
+      "total": 10,
       "symbols": {
         "named": 163,
         "raw": 131,
@@ -23885,8 +24317,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -23971,9 +24403,9 @@
       "entry": "03",
       "completed": 8,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 23,
+      "total": 22,
       "symbols": {
         "named": 168,
         "raw": 137,
@@ -23990,9 +24422,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 28,
@@ -24143,9 +24581,9 @@
       "entry": "03",
       "completed": 2,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
-      "total": 18,
+      "total": 17,
       "symbols": {
         "named": 160,
         "raw": 139,
@@ -24162,18 +24600,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 40,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 40,
-            "end": 44,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec28: unlifted indexed function"
-          },
-          {
-            "start": 44,
             "end": 312,
             "category": "code-unlifted",
             "detail": "fcn.801eec28: unlifted indexed function"
@@ -24297,9 +24735,9 @@
       "entry": "03",
       "completed": 10,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
-      "total": 24,
+      "total": 23,
       "symbols": {
         "named": 171,
         "raw": 135,
@@ -24316,18 +24754,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 56,
-            "end": 60,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function; fcn.801eec38: unlifted indexed function"
-          },
-          {
-            "start": 60,
             "end": 396,
             "category": "code-unlifted",
             "detail": "fcn.801eec38: unlifted indexed function"
@@ -24487,9 +24925,9 @@
       "entry": "03",
       "completed": 8,
       "partial": 4,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
-      "total": 22,
+      "total": 21,
       "symbols": {
         "named": 171,
         "raw": 133,
@@ -24507,8 +24945,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -24673,8 +25111,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -24819,9 +25257,9 @@
       "entry": "03",
       "completed": 7,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 16,
+      "total": 15,
       "symbols": {
         "named": 168,
         "raw": 131,
@@ -24839,8 +25277,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -24974,6 +25412,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -25045,8 +25489,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -25150,6 +25594,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -25286,6 +25736,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -25488,6 +25944,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -25732,6 +26194,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -25892,6 +26360,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 20,
             "category": "unknown",
             "detail": "No verified classification"
@@ -26064,6 +26538,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -26279,8 +26759,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -26487,8 +26967,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -26737,8 +27217,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -26927,8 +27407,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -27063,8 +27543,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -27397,8 +27877,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -27544,6 +28024,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -27759,8 +28245,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -27919,8 +28405,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28019,8 +28505,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28143,8 +28629,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28471,8 +28957,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28619,8 +29105,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28737,8 +29223,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28837,8 +29323,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -28996,6 +29482,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 148,
             "category": "unknown",
             "detail": "No verified classification"
@@ -29289,8 +29781,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -29491,8 +29983,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -29571,9 +30063,9 @@
       "entry": "16",
       "completed": 12,
       "partial": 0,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
-      "total": 17,
+      "total": 16,
       "symbols": {
         "named": 171,
         "raw": 128,
@@ -29591,8 +30083,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -29707,9 +30199,9 @@
       "entry": "13",
       "completed": 7,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
-      "total": 13,
+      "total": 12,
       "symbols": {
         "named": 167,
         "raw": 132,
@@ -29727,8 +30219,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -29819,9 +30311,9 @@
       "entry": "16",
       "completed": 7,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
-      "total": 13,
+      "total": 12,
       "symbols": {
         "named": 167,
         "raw": 128,
@@ -29839,8 +30331,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -29931,9 +30423,9 @@
       "entry": "16",
       "completed": 26,
       "partial": 0,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
-      "total": 31,
+      "total": 30,
       "symbols": {
         "named": 185,
         "raw": 134,
@@ -29951,8 +30443,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -30151,9 +30643,9 @@
       "entry": "16",
       "completed": 13,
       "partial": 1,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
-      "total": 31,
+      "total": 30,
       "symbols": {
         "named": 174,
         "raw": 145,
@@ -30171,8 +30663,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -30391,8 +30883,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -30579,9 +31071,9 @@
       "entry": "16",
       "completed": 20,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 29,
+      "total": 28,
       "symbols": {
         "named": 180,
         "raw": 133,
@@ -30599,8 +31091,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -30807,8 +31299,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -30907,8 +31399,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31067,8 +31559,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31227,8 +31719,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31327,8 +31819,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31487,8 +31979,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31611,8 +32103,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31765,8 +32257,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -31907,8 +32399,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -32071,9 +32563,9 @@
       "entry": "16",
       "completed": 40,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
-      "total": 44,
+      "total": 43,
       "symbols": {
         "named": 204,
         "raw": 129,
@@ -32091,8 +32583,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1800: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -32394,6 +32886,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 32,
             "category": "unknown",
             "detail": "No verified classification"
@@ -33157,9 +33655,9 @@
       "entry": "00",
       "completed": 57,
       "partial": 1,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 67,
+      "total": 66,
       "symbols": {
         "named": 196,
         "raw": 221,
@@ -33177,8 +33675,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801eec00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -34331,9 +34829,9 @@
       "entry": "07",
       "completed": 33,
       "partial": 2,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 36,
+      "total": 35,
       "symbols": {
         "named": 195,
         "raw": 126,
@@ -34351,8 +34849,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -34593,9 +35091,9 @@
       "entry": "08",
       "completed": 25,
       "partial": 2,
-      "unlifted": 24,
+      "unlifted": 23,
       "invalid": 0,
-      "total": 51,
+      "total": 50,
       "symbols": {
         "named": 188,
         "raw": 145,
@@ -34613,8 +35111,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -35203,9 +35701,9 @@
       "entry": "06",
       "completed": 0,
       "partial": 2,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 162,
         "raw": 124,
@@ -35222,12 +35720,12 @@
         "spans": [
           {
             "start": 0,
-            "end": 16,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
-            "start": 16,
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -35317,8 +35815,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -35422,6 +35920,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 76,
             "category": "unknown",
             "detail": "No verified classification"
@@ -35516,6 +36020,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 2076,
             "category": "unknown",
             "detail": "No verified classification"
@@ -45431,9 +45941,9 @@
       "entry": "01",
       "completed": 20,
       "partial": 0,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 21,
+      "total": 20,
       "symbols": {
         "named": 202,
         "raw": 134,
@@ -45451,8 +45961,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -45611,8 +46121,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -46411,9 +46921,9 @@
       "entry": "00",
       "completed": 191,
       "partial": 15,
-      "unlifted": 26,
+      "unlifted": 25,
       "invalid": 0,
-      "total": 232,
+      "total": 231,
       "symbols": {
         "named": 300,
         "raw": 366,
@@ -46430,9 +46940,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 28,
@@ -48645,9 +49161,9 @@
       "entry": "00",
       "completed": 15,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
-      "total": 29,
+      "total": 28,
       "symbols": {
         "named": 174,
         "raw": 136,
@@ -48665,8 +49181,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -48847,9 +49363,9 @@
       "entry": "00",
       "completed": 13,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
-      "total": 27,
+      "total": 26,
       "symbols": {
         "named": 172,
         "raw": 137,
@@ -48867,8 +49383,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -49037,9 +49553,9 @@
       "entry": "00",
       "completed": 24,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
-      "total": 38,
+      "total": 37,
       "symbols": {
         "named": 183,
         "raw": 137,
@@ -49057,8 +49573,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -49299,9 +49815,9 @@
       "entry": "00",
       "completed": 15,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 30,
+      "total": 29,
       "symbols": {
         "named": 174,
         "raw": 137,
@@ -49319,8 +49835,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -49507,9 +50023,9 @@
       "entry": "00",
       "completed": 22,
       "partial": 1,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
-      "total": 41,
+      "total": 40,
       "symbols": {
         "named": 182,
         "raw": 141,
@@ -49527,8 +50043,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -49787,9 +50303,9 @@
       "entry": "00",
       "completed": 15,
       "partial": 1,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
-      "total": 34,
+      "total": 33,
       "symbols": {
         "named": 175,
         "raw": 140,
@@ -49807,8 +50323,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -50025,9 +50541,9 @@
       "entry": "00",
       "completed": 38,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
-      "total": 41,
+      "total": 40,
       "symbols": {
         "named": 196,
         "raw": 126,
@@ -50045,8 +50561,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -50319,8 +50835,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -50509,8 +51025,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -50697,9 +51213,9 @@
       "entry": "00",
       "completed": 24,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
-      "total": 41,
+      "total": 40,
       "symbols": {
         "named": 183,
         "raw": 140,
@@ -50717,8 +51233,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -50977,9 +51493,9 @@
       "entry": "00",
       "completed": 6,
       "partial": 0,
-      "unlifted": 22,
+      "unlifted": 21,
       "invalid": 0,
-      "total": 28,
+      "total": 27,
       "symbols": {
         "named": 166,
         "raw": 144,
@@ -50997,8 +51513,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -51199,8 +51715,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -51377,8 +51893,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -51573,8 +52089,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -51757,8 +52273,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -51987,9 +52503,9 @@
       "entry": "00",
       "completed": 14,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 23,
+      "total": 22,
       "symbols": {
         "named": 173,
         "raw": 131,
@@ -52007,8 +52523,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -52159,9 +52675,9 @@
       "entry": "00",
       "completed": 38,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
-      "total": 41,
+      "total": 40,
       "symbols": {
         "named": 196,
         "raw": 126,
@@ -52179,8 +52695,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -52433,9 +52949,9 @@
       "entry": "00",
       "completed": 14,
       "partial": 0,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
-      "total": 26,
+      "total": 25,
       "symbols": {
         "named": 174,
         "raw": 134,
@@ -52453,8 +52969,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -52623,9 +53139,9 @@
       "entry": "00",
       "completed": 29,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
-      "total": 38,
+      "total": 37,
       "symbols": {
         "named": 188,
         "raw": 132,
@@ -52643,8 +53159,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801ce400: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -53089,8 +53605,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -53231,8 +53747,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -53517,8 +54033,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -53713,8 +54229,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -54440,6 +54956,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1472,
             "category": "unknown",
             "detail": "No verified classification"
@@ -54912,6 +55434,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1436,
             "category": "unknown",
             "detail": "No verified classification"
@@ -55468,6 +55996,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 624,
             "category": "unknown",
             "detail": "No verified classification"
@@ -56006,6 +56540,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 256,
             "category": "unknown",
             "detail": "No verified classification"
@@ -56316,6 +56856,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 2040,
             "category": "unknown",
             "detail": "No verified classification"
@@ -56782,6 +57328,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1688,
             "category": "unknown",
             "detail": "No verified classification"
@@ -57229,9 +57781,9 @@
       "entry": "00",
       "completed": 51,
       "partial": 0,
-      "unlifted": 56,
+      "unlifted": 55,
       "invalid": 0,
-      "total": 107,
+      "total": 106,
       "symbols": {
         "named": 214,
         "raw": 179,
@@ -57248,9 +57800,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 460,
-            "category": "code-unlifted",
-            "detail": "fcn.801f6c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 460,
@@ -57911,9 +58469,9 @@
       "entry": "00",
       "completed": 91,
       "partial": 1,
-      "unlifted": 19,
+      "unlifted": 18,
       "invalid": 0,
-      "total": 111,
+      "total": 110,
       "symbols": {
         "named": 257,
         "raw": 141,
@@ -57931,23 +58489,17 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
             "end": 840,
-            "category": "code-unlifted",
-            "detail": "fcn.801f6c04: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 840,
-            "end": 844,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 844,
             "end": 908,
             "category": "code-lifted",
             "detail": "fcn.801f6f48: exact indexed function\nSource: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F6F48.c"
@@ -58648,6 +59200,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1884,
             "category": "unknown",
             "detail": "No verified classification"
@@ -59197,9 +59755,9 @@
       "entry": "00",
       "completed": 0,
       "partial": 0,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 1,
+      "total": 0,
       "symbols": {
         "named": 158,
         "raw": 123,
@@ -59216,12 +59774,6 @@
         "spans": [
           {
             "start": 0,
-            "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f6c00: unlifted indexed function"
-          },
-          {
-            "start": 4,
             "end": 32224,
             "category": "unknown",
             "detail": "No verified classification"
@@ -59256,6 +59808,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1204,
             "category": "unknown",
             "detail": "No verified classification"
@@ -59608,6 +60166,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1396,
             "category": "unknown",
             "detail": "No verified classification"
@@ -60050,6 +60614,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 676,
             "category": "unknown",
             "detail": "No verified classification"
@@ -60414,6 +60984,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 984,
             "category": "unknown",
             "detail": "No verified classification"
@@ -60718,6 +61294,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 824,
             "category": "unknown",
             "detail": "No verified classification"
@@ -61268,6 +61850,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 144,
             "category": "unknown",
             "detail": "No verified classification"
@@ -61679,8 +62267,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -61785,8 +62373,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -61871,9 +62459,9 @@
       "entry": "13",
       "completed": 2,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 4,
+      "total": 3,
       "symbols": {
         "named": 161,
         "raw": 126,
@@ -61890,12 +62478,12 @@
         "spans": [
           {
             "start": 0,
-            "end": 76,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
-            "start": 76,
+            "start": 4,
             "end": 140,
             "category": "unknown",
             "detail": "No verified classification"
@@ -61960,6 +62548,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 212,
             "category": "unknown",
             "detail": "No verified classification"
@@ -61987,9 +62581,9 @@
       "entry": "09",
       "completed": 0,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 158,
         "raw": 125,
@@ -62007,8 +62601,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62053,8 +62647,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62141,8 +62735,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62187,8 +62781,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62251,8 +62845,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62345,8 +62939,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62697,8 +63291,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62767,8 +63361,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62805,9 +63399,9 @@
       "entry": "13",
       "completed": 0,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 158,
         "raw": 125,
@@ -62825,8 +63419,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62871,8 +63465,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62927,9 +63521,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 159,
         "raw": 124,
@@ -62947,8 +63541,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -62973,9 +63567,9 @@
       "entry": "13",
       "completed": 6,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
-      "total": 12,
+      "total": 11,
       "symbols": {
         "named": 164,
         "raw": 131,
@@ -62993,8 +63587,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63343,8 +63937,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63401,8 +63995,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63489,8 +64083,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63552,6 +64146,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 16,
             "category": "unknown",
             "detail": "No verified classification"
@@ -63611,8 +64211,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63675,8 +64275,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -63939,9 +64539,9 @@
       "entry": "13",
       "completed": 0,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 158,
         "raw": 127,
@@ -63959,8 +64559,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -64485,8 +65085,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -66154,6 +66754,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 12,
             "category": "unknown",
             "detail": "No verified classification"
@@ -66439,8 +67045,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -66695,8 +67301,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -66759,8 +67365,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -66823,8 +67429,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -66905,8 +67511,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67107,8 +67713,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67171,8 +67777,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67313,8 +67919,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67467,8 +68073,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67729,8 +68335,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -67804,6 +68410,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 176,
             "category": "unknown",
             "detail": "No verified classification"
@@ -67881,8 +68493,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68125,8 +68737,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68189,8 +68801,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68319,8 +68931,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68569,8 +69181,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68759,8 +69371,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -68967,8 +69579,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69049,8 +69661,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69112,6 +69724,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 196,
             "category": "unknown",
             "detail": "No verified classification"
@@ -69309,8 +69927,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69367,8 +69985,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69419,8 +70037,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69507,8 +70125,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69673,8 +70291,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69743,8 +70361,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69795,8 +70413,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69905,9 +70523,9 @@
       "entry": "13",
       "completed": 2,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
-      "total": 6,
+      "total": 5,
       "symbols": {
         "named": 160,
         "raw": 127,
@@ -69925,8 +70543,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -69975,9 +70593,9 @@
       "entry": "13",
       "completed": 5,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 7,
+      "total": 6,
       "symbols": {
         "named": 163,
         "raw": 124,
@@ -69995,8 +70613,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70063,9 +70681,9 @@
       "entry": "13",
       "completed": 0,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 158,
         "raw": 126,
@@ -70083,8 +70701,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70115,9 +70733,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 160,
         "raw": 124,
@@ -70135,8 +70753,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70179,9 +70797,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 160,
         "raw": 124,
@@ -70199,8 +70817,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70263,8 +70881,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70513,8 +71131,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -70799,8 +71417,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71145,8 +71763,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71203,8 +71821,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71255,8 +71873,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71319,8 +71937,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71382,6 +72000,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 328,
             "category": "unknown",
             "detail": "No verified classification"
@@ -71441,8 +72065,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -71929,9 +72553,9 @@
       "entry": "13",
       "completed": 3,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
-      "total": 10,
+      "total": 9,
       "symbols": {
         "named": 161,
         "raw": 130,
@@ -71949,8 +72573,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72023,9 +72647,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
-      "total": 4,
+      "total": 3,
       "symbols": {
         "named": 160,
         "raw": 126,
@@ -72042,12 +72666,12 @@
         "spans": [
           {
             "start": 0,
-            "end": 116,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
-            "start": 116,
+            "start": 4,
             "end": 548,
             "category": "unknown",
             "detail": "No verified classification"
@@ -72107,8 +72731,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72259,9 +72883,9 @@
       "entry": "13",
       "completed": 3,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
-      "total": 7,
+      "total": 6,
       "symbols": {
         "named": 161,
         "raw": 127,
@@ -72279,8 +72903,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72355,8 +72979,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72725,8 +73349,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72771,8 +73395,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -72955,8 +73579,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73049,8 +73673,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73279,9 +73903,9 @@
       "entry": "13",
       "completed": 32,
       "partial": 4,
-      "unlifted": 13,
+      "unlifted": 12,
       "invalid": 0,
-      "total": 49,
+      "total": 48,
       "symbols": {
         "named": 195,
         "raw": 137,
@@ -73299,8 +73923,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73627,8 +74251,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73659,9 +74283,9 @@
       "entry": "13",
       "completed": 6,
       "partial": 2,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
-      "total": 16,
+      "total": 15,
       "symbols": {
         "named": 168,
         "raw": 132,
@@ -73679,8 +74303,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73808,6 +74432,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -73921,8 +74551,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -73972,6 +74602,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 92,
             "category": "unknown",
             "detail": "No verified classification"
@@ -74127,8 +74763,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -74251,8 +74887,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -74375,8 +75011,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -74439,8 +75075,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -74832,6 +75468,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 64,
             "category": "unknown",
             "detail": "No verified classification"
@@ -74926,6 +75568,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 48,
             "category": "unknown",
             "detail": "No verified classification"
@@ -75147,8 +75795,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -75283,8 +75931,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -75611,8 +76259,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -75710,6 +76358,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 72,
             "category": "unknown",
             "detail": "No verified classification"
@@ -75835,8 +76489,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -75916,6 +76570,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 68,
             "category": "unknown",
             "detail": "No verified classification"
@@ -76293,8 +76953,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -76357,8 +77017,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -76420,6 +77080,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 100,
             "category": "unknown",
             "detail": "No verified classification"
@@ -76622,6 +77288,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -76789,8 +77461,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -76876,6 +77548,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 104,
             "category": "unknown",
             "detail": "No verified classification"
@@ -76953,8 +77631,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -77197,8 +77875,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -77314,6 +77992,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -77523,8 +78207,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -77749,8 +78433,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -78046,6 +78730,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -78254,6 +78944,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 60,
             "category": "unknown",
             "detail": "No verified classification"
@@ -78679,8 +79375,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -78711,9 +79407,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 159,
         "raw": 125,
@@ -78731,8 +79427,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -78763,9 +79459,9 @@
       "entry": "13",
       "completed": 12,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
-      "total": 19,
+      "total": 18,
       "symbols": {
         "named": 170,
         "raw": 130,
@@ -78783,8 +79479,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -78923,9 +79619,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 1,
+      "unlifted": 0,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 160,
         "raw": 128,
@@ -78943,8 +79639,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -78969,9 +79665,9 @@
       "entry": "13",
       "completed": 5,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
-      "total": 9,
+      "total": 8,
       "symbols": {
         "named": 163,
         "raw": 130,
@@ -78989,8 +79685,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -79057,9 +79753,9 @@
       "entry": "13",
       "completed": 16,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
-      "total": 32,
+      "total": 31,
       "symbols": {
         "named": 178,
         "raw": 139,
@@ -79076,9 +79772,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 28,
@@ -79302,6 +80004,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 64,
             "category": "unknown",
             "detail": "No verified classification"
@@ -79439,8 +80147,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -79646,6 +80354,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 28,
             "category": "unknown",
             "detail": "No verified classification"
@@ -79717,8 +80431,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -80320,6 +81034,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 60,
             "category": "unknown",
             "detail": "No verified classification"
@@ -80463,8 +81183,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -80597,9 +81317,9 @@
       "entry": "13",
       "completed": 13,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
-      "total": 30,
+      "total": 29,
       "symbols": {
         "named": 172,
         "raw": 140,
@@ -80616,9 +81336,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 52,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 52,
@@ -80830,6 +81556,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 232,
             "category": "unknown",
             "detail": "No verified classification"
@@ -81001,9 +81733,9 @@
       "entry": "13",
       "completed": 5,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
-      "total": 9,
+      "total": 8,
       "symbols": {
         "named": 163,
         "raw": 129,
@@ -81021,8 +81753,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -81089,9 +81821,9 @@
       "entry": "13",
       "completed": 17,
       "partial": 2,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
-      "total": 36,
+      "total": 35,
       "symbols": {
         "named": 179,
         "raw": 143,
@@ -81109,8 +81841,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -81359,8 +82091,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -81535,9 +82267,9 @@
       "entry": "14",
       "completed": 26,
       "partial": 2,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 43,
+      "total": 42,
       "symbols": {
         "named": 190,
         "raw": 150,
@@ -81554,18 +82286,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 144,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 144,
-            "end": 148,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 148,
             "end": 212,
             "category": "code-lifted",
             "detail": "fcn.801f2c90: exact indexed function\nSource: src/bof3/world/area14514DispatchTables.c"
@@ -81853,8 +82585,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -81947,8 +82679,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -82034,6 +82766,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 92,
             "category": "unknown",
             "detail": "No verified classification"
@@ -82291,8 +83029,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -82438,6 +83176,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
             "category": "unknown",
             "detail": "No verified classification"
@@ -82509,8 +83253,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -82733,9 +83477,9 @@
       "entry": "13",
       "completed": 16,
       "partial": 2,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
-      "total": 36,
+      "total": 35,
       "symbols": {
         "named": 181,
         "raw": 140,
@@ -82753,8 +83497,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -82983,9 +83727,9 @@
       "entry": "13",
       "completed": 1,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 3,
+      "total": 2,
       "symbols": {
         "named": 159,
         "raw": 124,
@@ -83003,8 +83747,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83055,8 +83799,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83087,9 +83831,9 @@
       "entry": "13",
       "completed": 0,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
-      "total": 2,
+      "total": 1,
       "symbols": {
         "named": 158,
         "raw": 125,
@@ -83107,8 +83851,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83153,8 +83897,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83205,8 +83949,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83329,8 +84073,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83417,8 +84161,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83505,8 +84249,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83593,8 +84337,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83681,8 +84425,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83769,8 +84513,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83857,8 +84601,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -83969,8 +84713,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -84086,6 +84830,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 136,
             "category": "unknown",
             "detail": "No verified classification"
@@ -84330,6 +85080,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 56,
             "category": "unknown",
             "detail": "No verified classification"
@@ -84563,8 +85319,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -84680,6 +85436,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 248,
             "category": "unknown",
             "detail": "No verified classification"
@@ -84942,6 +85704,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 92,
             "category": "unknown",
             "detail": "No verified classification"
@@ -85091,8 +85859,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -85443,8 +86211,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -85752,6 +86520,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 24,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86164,6 +86938,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86234,6 +87014,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86304,6 +87090,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86374,6 +87166,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86444,6 +87242,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86514,6 +87318,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86584,6 +87394,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86654,6 +87470,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86724,6 +87546,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86794,6 +87622,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 1752,
             "category": "unknown",
             "detail": "No verified classification"
@@ -86871,8 +87705,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -86941,8 +87775,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -86991,9 +87825,9 @@
       "entry": "13",
       "completed": 31,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
-      "total": 46,
+      "total": 45,
       "symbols": {
         "named": 189,
         "raw": 139,
@@ -87010,9 +87844,15 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 60,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 60,
@@ -87301,9 +88141,9 @@
       "entry": "13",
       "completed": 14,
       "partial": 1,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
-      "total": 27,
+      "total": 26,
       "symbols": {
         "named": 174,
         "raw": 135,
@@ -87320,18 +88160,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 128,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 128,
-            "end": 132,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 132,
             "end": 196,
             "category": "code-lifted",
             "detail": "fcn.801f2c80: exact indexed function\nSource: src/bof3/world/area19113DispatchTables.c"
@@ -87503,9 +88343,9 @@
       "entry": "13",
       "completed": 9,
       "partial": 1,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
-      "total": 16,
+      "total": 15,
       "symbols": {
         "named": 168,
         "raw": 128,
@@ -87522,18 +88362,18 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 128,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c00: unlifted indexed function"
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
             "start": 128,
-            "end": 132,
-            "category": "unknown",
-            "detail": "Conflicting evidence: code-lifted, code-unlifted"
-          },
-          {
-            "start": 132,
             "end": 168,
             "category": "code-lifted",
             "detail": "fcn.801f2c80: exact indexed function\nSource: src/bof3/world/setStatusFFFFIfGateElse68World04Area19213_801F2C80.c"
@@ -87658,6 +88498,12 @@
         "spans": [
           {
             "start": 0,
+            "end": 4,
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
+          },
+          {
+            "start": 4,
             "end": 156,
             "category": "unknown",
             "detail": "No verified classification"
@@ -87747,8 +88593,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -87877,8 +88723,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -88103,8 +88949,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
@@ -88287,8 +89133,8 @@
           {
             "start": 0,
             "end": 4,
-            "category": "unknown",
-            "detail": "No verified classification"
+            "category": "header",
+            "detail": "Reviewed EMI entry header word"
           },
           {
             "start": 4,
