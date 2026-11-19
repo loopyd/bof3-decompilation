@@ -1979,6 +1979,12 @@ parameter expansion, combine, scheduling, jump optimization and delay-slot filli
 (`reorg.c`), local/global allocation or reload. Debug dumps and assembly-only
 diagnostics are not linked acceptance evidence.
 
+For an aggregate copy followed by a scratch-word reload, inspect the copy RTL
+before adding a qualifier. An opaque `mem:BLK` copy can survive both CSE passes
+and split after reload, leaving the ordinary word read intact. Check the owning
+backend's size and alignment path and the complete native result. A private
+scratch reload alone does not justify `volatile`.
+
 When CSE forwards a seeded word that the original reloads, inspect real
 copy phases. For proven disjoint words, interleaving existing read/store pairs
 can break memory equivalences at varying addresses. Preserve access counts
@@ -2001,6 +2007,12 @@ input to a result and sum reference counts. Ordinary priority uses merged refere
 register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
+
+For global priorities, use the reference counts and live lengths that reach
+`allocno_compare`. Local allocation can change them through copy optimization
+and discounts for recorded equivalences, including doubled live lengths.
+Earlier `.flow` statistics may predict the wrong order. Check the post-local
+values, conflicts and final assignments.
 
 For a block with exactly three local quantities, trace `block_alloc`'s direct
 sorting path before assuming priority order. Its comparisons use literal quantity

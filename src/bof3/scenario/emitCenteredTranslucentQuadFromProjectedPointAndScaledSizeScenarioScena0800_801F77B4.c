@@ -74,28 +74,13 @@ typedef struct ScenarioScena0800QuadRecord {
  * size 0x28. Takes the record pointer as its only argument, returns nothing, and
  * keeps a 0x40-byte frame for $ra and $s0..$s2 over the 0x20-byte scratch at
  * 0x10..0x2F. The record's remaining fields and the two resident helpers' wider
- * roles stay unknown; the shape follows the exact siblings
- * drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4 and this overlay's
- * own emitWorkObjectTexturedQuad_801F8BCC, which project a record point through
- * the same two helpers and emit the same textured quad with the same CLUT,
- * texture page and texel cell.
+ * roles stay unknown.
  * @status partial
  * @match 92.47
- * @residual Live audit: 86/93 instructions, 372 -> 372 bytes, first=+0x010c. The
- *   final texel/colour/queue block materialises the queue size 0x28 into $a1
- *   before the texel constants, so the shared 0xE0 constant takes $v0 and its two
- *   stores are issued next to each other, where the original keeps 0xE0 in $a1
- *   and interleaves the 0x14 store; the 0xFF constant and the colour source
- *   follow that register choice. Every earlier block, including the frame, the
- *   two Set calls, the size store, the 16-byte point copy with its read-back
- *   shift, both projector calls, the corner block and the CLUT/texture-page
- *   calls, is instruction-identical. Measured texel shapes with this first=:
- *   explicit v0/v1,u0/u1,u2/v2,u3/v3 order (retained) 86; setUVWH macro 84;
- *   chained texel pairs 83; colour block before the texel block 84; volatile
- *   colour stores 86 with the queue constant left after the call; colour written
- *   red-first 86; u2 before u1 86. All keep the same size and first
- *   difference, so the residual is the scheduler's constant-register choice, not
- *   the statement shape.
+ * @residual 86/93 instructions at unchanged 372 bytes; first difference +0x010C.
+ *   The queue size enters $a1 before the texel stores, while the original keeps
+ *   the shared 0xE0 texel constant there and loads the size after sampling the
+ *   record colour. The earlier instructions match.
  */
 void emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800_801F77B4(void* arg0) {
   ScenarioScena0800QuadScratch       scratch;
@@ -110,9 +95,7 @@ void emitCenteredTranslucentQuadFromProjectedPointAndScaledSizeScenarioScena0800
 
   scratch.screen[0].x = (u16)(record->size_24 >> 6);
   scratch.point = *(const ScenarioScena0800Point4*)((const u8*)record + 0x04);
-  /* The original stores the copy and then re-reads this word from the scratch
-   * before shifting it, so the read is volatile and the store is not. */
-  scratch.point.z = *(volatile s32*)((u8*)&scratch.point + 8) << 8;
+  scratch.point.z = (s32)((u32)scratch.point.z << 8);
   func_801AFFD8(&scratch.point, &scratch.screen[0], &scratch.screen[1]);
   func_801AFF04(&scratch.point, &scratch.screen[0]);
 

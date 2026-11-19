@@ -27,23 +27,9 @@ void func_801C16B8(void);
  * the two saved registers that hold the sub-state address and the address of
  * the progress byte.
  * @source 0x801FBA70
- * @status partial
- * @match 90.07
- * @residual Saved-register pair exchanged: the built body keeps the sub-state
- * address in $s0 and the progress-byte address in $s1 where the original holds
- * the sub-state address in $s1 and the progress-byte address in $s0, so 14 of
- * 141 instructions differ at unchanged size (564 bytes) and frame (0x20) with
- * the same save group. Seven clean-C variants measured through the sweeper:
- * three neutral (switch-value local, case-local progress pointer, both
- * together), two regressions that folded the case-4 address and lost the save
- * (function-scope progress pointer declared before or after the sub-state
- * pointer, 552 bytes), and two neutral separate-spelling variants
- * (0x80146864/0x80146875 forms of the same cell). The allocator margin is
- * measured: the sub-state pointer is 7 references across 91 live insns
- * (priority 1538) and the case-4 progress address 3 references across 20 live
- * insns (priority 1500), so the exchange needs 14/live_state < 3/live_progress,
- * i.e. 19 or fewer live insns for the progress address or 94 or more for the
- * sub-state pointer; every shape tried holds 91/20.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioScena0800_801FBA70(void) {
     u8 *state;
@@ -100,14 +86,16 @@ void gateProgressStepsRequestingFrontSelectorContextsThenResetHandlerScenarioSce
         if (*(u8 *)&g_ScenarioProgress != 8u) {
             break;
         }
-        func_801C16B8();
-        func_8015B580(D_8014686C, 7);
-        func_8019FA28(0x73u, 0x1b0000u, 0x210000u, 3u);
-        D_80146258 = (u16)(D_80146258 & 0xfff7u);
-        func_8015C058();
-        *(u8 *)&g_ScenarioProgress = 0;
-        D_80146874 = 0;
-        *state = 0u;
+        do {
+            func_801C16B8();
+            func_8015B580(D_8014686C, 7);
+            func_8019FA28(0x73u, 0x1b0000u, 0x210000u, 3u);
+            D_80146258 = (u16)(D_80146258 & 0xfff7u);
+            func_8015C058();
+            *(u8 *)&g_ScenarioProgress = 0;
+            D_80146874 = 0;
+            *state = 0u;
+        } while (0);
         break;
     }
 }
