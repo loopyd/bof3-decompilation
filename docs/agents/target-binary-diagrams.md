@@ -9,6 +9,10 @@ does not classify their remaining bytes. Untyped prefixes remain unknown.
 
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
+Headers preview their first 32 bytes as spaced hexadecimal pairs, with `...` when
+more bytes remain. Four-byte EMI headers show all four pairs. Reviewed text rows
+show the text tool's decoded characters and command notation, limited to 160
+characters with `...` for truncation. Text-bank metadata has no character preview.
 Selection brightens the span's fill without drawing a border over neighboring bytes.
 Lifted functions also show their repository-relative C source path. One tooltip
 is shared across the cards and moves to the active diagram. Its vertical position
@@ -64,11 +68,15 @@ stop publication.
 category IDs, labels and colors. Each target's `binary` contains `size`, `sha256`,
 `source` (`id`, original source `sha256`, archive `offset`) and ordered `spans`.
 Every span has half-open `start`/`end` file offsets, a `category` and evidence
-`detail`. Spans partition exactly `[0, size)`. Header evidence wins over asset
-ranges, which win over code, then zero fill, then unknown. Physical asset records
-can refine their enclosing container. Conflicts at the same priority are unknown.
+`detail`. Spans partition exactly `[0, size)`.
+Header and decoded text spans also carry a bounded `preview` string. Decoded
+rows retain their physical byte ranges; text-bank metadata remains separate.
+Header evidence wins over asset ranges, which win over code, then zero fill,
+then unknown. Physical asset records can refine their enclosing container.
+Conflicts at the same priority are unknown.
 The browser rejects old schemas, invalid categories, gaps and overlaps.
 
-Publication includes classification metadata and static page assets only. Original
-media, decoded assets, catalogs and absolute host paths stay outside the public
-output. Lifted span details include repository-relative C source paths.
+Publication includes classification metadata, bounded header/text previews and
+static page assets. Full source media, decoded asset files, catalogs and absolute
+host paths stay outside the public output. Lifted span details include
+repository-relative C source paths.

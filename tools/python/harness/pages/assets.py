@@ -188,22 +188,41 @@ class AssetCatalogs:
                         ),
                     )
                 )
+        banks = {
+            f"{path}#{row['entry']}@{row['ram_ptr']}": row
+            for row in text_index["entries"]
+            if row["class"] in {"dialogue", "battle"}
+        }
         for report in text_query["results"]:
-            if report.get("schema") != "bof3.literal-query/v1":
+            literal = report.get("schema") == "bof3.literal-query/v1"
+            bank = banks.get(report.get("source"))
+            if not literal and bank is None:
                 continue
-            if report["source_sha256"] != digest:
+            if literal and report["source_sha256"] != digest:
                 raise ValueError(f"text source identity differs: {disc_path}")
             for row in report["matches"]:
                 start, length = row["string_offset"], row["string_length"]
+                if bank and not (
+                    bank["offset"] <= start
+                    and start + length <= bank["offset"] + bank["size"]
+                ):
+                    raise ValueError(f"text row escapes verified bank: {disc_path}")
                 if length:
+                    detail = (
+                        f"text query: {report['source_schema']} at 0x{start:X}"
+                        if literal
+                        else f"text query: {bank['class']} bank {row['bank']} row {row['number']}"
+                    )
                     ranges.append(
                         (
-                            report.get("entry"),
+                            report.get("entry") if literal else bank["entry"],
                             Span(
                                 start,
                                 start + length,
                                 "text",
-                                f"text query: {report['source_schema']}",
+                                detail,
+                                30,
+                                row["text"],
                             ),
                         )
                     )
@@ -271,6 +290,7 @@ class AssetCatalogs:
                 span.category,
                 span.detail,
                 span.priority,
+                span.preview,
             )
             for slot, span in ranges
             if slot == entry

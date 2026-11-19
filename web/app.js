@@ -184,7 +184,9 @@ function validateSnapshot(snapshot) {
     let end = 0;
     for (const span of binary.spans) {
       if (!span || span.start !== end || !Number.isSafeInteger(span.end) || span.end <= end || span.end > binary.size
-        || !categories.some((row) => row.id === span.category) || typeof span.detail !== "string" || !span.detail) {
+        || !categories.some((row) => row.id === span.category) || typeof span.detail !== "string" || !span.detail
+        || (span.preview !== undefined && (typeof span.preview !== "string" || !span.preview
+          || Array.from(span.preview).length > 160 || !["header", "text"].includes(span.category)))) {
         throw new Error("The target binary partition is invalid.");
       }
       end = span.end;

@@ -951,6 +951,7 @@ binary-diagram {
   box-shadow: 0 3px 12px #0006;
 }
 .binary-help-tooltip { position: fixed; z-index: 5; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto; padding: 12px; white-space: normal; pointer-events: auto; }
+.binary-preview { margin: 5px 0; color: #fff; white-space: pre-wrap; }
 .binary-help-tooltip .metric-label { margin: 0 0 8px; }
 .binary-bounds { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0 0; font: 10px/1.5 monospace; color: #a5b2bc; }
 .binary-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; margin: 0; padding: 0; list-style: none; font-size: 11px; color: #c5cdd4; }

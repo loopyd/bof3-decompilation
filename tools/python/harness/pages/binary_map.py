@@ -29,6 +29,7 @@ class Span:
     category: str
     detail: str
     priority: int = 30
+    preview: str | None = None
 
 
 def partition(data: bytes, spans: list[Span]) -> list[dict]:
@@ -62,6 +63,7 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
             else:
                 active.remove(index)
         category, detail = "unknown", "No verified classification"
+        preview = None
         if active:
             priority = max(spans[index].priority for index in active)
             winners = [
@@ -71,16 +73,33 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
             if len(kinds) == 1:
                 category = winners[0].category
                 detail = "; ".join(sorted({span.detail for span in winners}))
+                if category == "text":
+                    previews = sorted(
+                        {span.preview for span in winners if span.preview}
+                    )
+                    preview = "\n".join(previews) or None
+                    if preview and len(preview) > 160:
+                        preview = preview[:157] + "..."
             else:
                 detail = "Conflicting evidence: " + ", ".join(sorted(kinds))
         if (
             result
             and result[-1]["category"] == category
             and result[-1]["detail"] == detail
+            and result[-1].get("preview") == preview
         ):
             result[-1]["end"] = end
         else:
             result.append(
                 {"start": start, "end": end, "category": category, "detail": detail}
             )
+            if preview is not None:
+                result[-1]["preview"] = preview
+    for span in result:
+        if span["category"] == "header":
+            span["preview"] = data[
+                span["start"] : min(span["end"], span["start"] + 32)
+            ].hex(" ")
+            if span["end"] - span["start"] > 32:
+                span["preview"] += " ..."
     return result
