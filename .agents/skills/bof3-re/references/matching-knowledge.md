@@ -2057,8 +2057,10 @@ through CSE and both schedules. GCC 2.7.2's `birthing_insn_p` requires one
 definition, so accumulation can remove its scheduling priority boost. Reusing a
 consumed input for its difference can then break a local quantity chain.
 Preserve arithmetic types and execution paths.
-Local allocation requires one block and one death, not one definition. Multiple
-definitions alone do not prove that a pseudo needs global allocation.
+Local allocation requires one block and one death, not one definition. Flow omits
+a `REG_DEAD` when the same instruction also sets the register, so actual in-place
+updates can retain one final death. Count surviving SETs and deaths separately;
+multiple definitions alone do not prove that a pseudo needs global allocation.
 
 In GCC 2.7.2, `birthing_insn_p` requires a direct `REG` destination; a `SUBREG`
 misses that birth boost even with one definition. Trace adjusted priority and
@@ -2124,6 +2126,12 @@ local. A copy retained through combine can then share the incoming argument
 register and disappear as a self-copy after allocation. Narrowing a real consumer
 can remove an extension without restoring that copy. Check local allocation,
 register assignments and the second schedule before attributing the loss to CSE.
+
+Moving a real snapshot past an existing rejecting guard can remove its producer's
+combine `LOG_LINK`. Loop notes alone do not create that basic-block boundary.
+Check last-value propagation too: single-definition registers can remain valid
+across labels. A surviving copy can become local and change input-register
+preferences; inspect the entry and complete register web before the native gate.
 
 Distinguish initially ready instructions from newly released predecessors in the
 backward scheduler. A single-definition destination does not alone prove a birth
