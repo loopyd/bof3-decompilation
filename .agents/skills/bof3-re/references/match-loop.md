@@ -113,7 +113,8 @@ generated `compile.sh` against the owning recipe before execution. Disable
 forbidden transformations and inspect the remaining implementations: names and
 randomization regions do not guarantee ABI or scope boundaries. Review the entire
 candidate; reject artificial aliases or qualifiers, undefined uses and changed
-memory or call behavior. Permuter scores guide search; only the complete owning
+memory or call behavior. Before expanding a saved expression, check intervening
+writes to all its inputs. Permuter scores guide search; only the complete owning
 native gate proves a match.
 
 `--best-only` can suppress valid candidates after an invalid result lowers the
