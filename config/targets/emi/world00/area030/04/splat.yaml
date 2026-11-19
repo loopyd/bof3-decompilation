@@ -54,8 +54,9 @@ segments:
     - '@source: src/bof3/world/func_801D1434.c'
   - - 2360
     - c
-    - func_801D1538
-    - '@source: src/bof3/world/func_801D1538.c'
+    - initializeWorkDispatchFromPhaseAndSignedGateWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchFromPhaseAndSignedGateWorld00Area03004_801D1538.c'
+    - '@behavior: When shared phase byte 0x80145E92 is one, selects work mode zero. Otherwise, when signed halfword 0x8014930E is below 56, selects work mode one. Either selected path clears work step byte 3.'
   - - 2460
     - c
     - func_801D159C
@@ -121,8 +122,8 @@ segments:
     - '@source: src/bof3/world/func_801D23F4.c'
   - - 6640
     - c
-    - func_801D25F0
-    - '@source: src/bof3/world/func_801D25F0.c'
+    - advanceWorkHandlerWhenQueryByteIsNonzeroWorld00Area03004
+    - '@source: src/bof3/world/advanceWorkHandlerWhenQueryByteIsNonzeroWorld00Area03004_801D25F0.c'
   - - 6728
     - c
     - func_801D2648
@@ -177,16 +178,19 @@ segments:
     - '@source: src/bof3/world/func_801D339C.c'
   - - 10400
     - c
-    - func_801D34A0
-    - '@source: src/bof3/world/func_801D34A0.c'
+    - decrementWorkHalfword2eAndArmCountdownAtLimitWorld00Area03004
+    - '@source: src/bof3/world/decrementWorkHalfword2eAndArmCountdownAtLimitWorld00Area03004_801D34A0.c'
+    - '@behavior: Decrements work halfword +0x2E by 30. When the narrowed signed result is below 161, seeds countdown byte 9 with 30, resets the halfword to 160 and advances handler byte 1. Always calls the bounded work-pointer queue appender.'
   - - 10512
     - c
-    - func_801D3510
-    - '@source: src/bof3/world/func_801D3510.c'
+    - decrementCountdownAdvanceHandlerOnExpiryAndQueueWorkPointerWorld00Area03004
+    - '@source: src/bof3/world/decrementCountdownAdvanceHandlerOnExpiryAndQueueWorkPointerWorld00Area03004_801D3510.c'
+    - '@behavior: Decrements work countdown byte 9, then reloads the work pointer. A zero reloaded countdown advances handler byte 1. Always calls the bounded work-pointer queue appender.'
   - - 10612
     - c
-    - func_801D3574
-    - '@source: src/bof3/world/func_801D3574.c'
+    - decrementWorkHalfword2eAndResetHandlerBelowLimitWorld00Area03004
+    - '@source: src/bof3/world/decrementWorkHalfword2eAndResetHandlerBelowLimitWorld00Area03004_801D3574.c'
+    - '@behavior: Decrements work halfword +0x2E by 30. When the narrowed signed result is below -69, resets the halfword to 160 and clears handler byte 1; otherwise calls the bounded work-pointer queue appender.'
   - - 10700
     - c
     - func_801D35CC
@@ -197,24 +201,24 @@ segments:
     - '@source: src/bof3/world/seedWorkHalfword30AndAdvanceHandlerWorld00Area03004_801D3650.c'
   - - 10884
     - c
-    - func_801D3684
-    - '@source: src/bof3/world/func_801D3684.c'
+    - advancePanelYAndDrawRectangleWorld00Area03004
+    - '@source: src/bof3/world/advancePanelYAndDrawRectangleWorld00Area03004_801D3684.c'
   - - 11000
     - c
     - func_801D36F8
     - '@source: src/bof3/world/func_801D36F8.c'
   - - 11300
     - c
-    - func_801D3824
-    - '@source: src/bof3/world/func_801D3824.c'
+    - drawFixedPanelAndSelectedMessageWorld00Area03004
+    - '@source: src/bof3/world/drawFixedPanelAndSelectedMessageWorld00Area03004_801D3824.c'
   - - 11416
     - c
-    - func_801D3898
-    - '@source: src/bof3/world/func_801D3898.c'
+    - advancePanelScrollAndDrawSelectedMessageWorld00Area03004
+    - '@source: src/bof3/world/advancePanelScrollAndDrawSelectedMessageWorld00Area03004_801D3898.c'
   - - 11528
     - c
-    - func_801D3908
-    - '@source: src/bof3/world/func_801D3908.c'
+    - drawFixedPanelRectangleWorld00Area03004
+    - '@source: src/bof3/world/drawFixedPanelRectangleWorld00Area03004_801D3908.c'
   - - 11576
     - c
     - advancePanelScroll
@@ -330,8 +334,8 @@ segments:
     - '@behavior: AREA030 panel-step initializer (handler index 2 of the work-byte-3 table at 0x801E1FD4): requests resource 0x21 through the shared func_8014DD3C helper, writes 0x80 to work-record byte 0x24, writes 1 to bytes 0x29 and 0x2A, clears byte 0x48, stores the halfwords 0xA2 at 0x2E and 0xC2 at 0x30, clears bytes 0x5D..0x5F, 9, 0xA and 6 twice, clears the word at 0xC, stores 4 at the word 0x18, requests resource 0 through the shared func_8014D6B8 helper and finally increments dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
   - - 20296
     - c
-    - func_801D5B48
-    - '@source: src/bof3/world/func_801D5B48_area03004.c'
+    - stepWorkPairSequenceAndQueueWorkPointerWorld00Area03004
+    - '@source: src/bof3/world/stepWorkPairSequenceAndQueueWorkPointerWorld00Area03004_801D5B48.c'
     - '@behavior: AREA030 panel state handler selected by the overlay handler pointer word at 0x801E1FE0: calls the shared helper func_8014D978 and then func_8014D4E0 without arguments and returns.'
   - - 20336
     - c
@@ -375,9 +379,9 @@ segments:
     - '@behavior: AREA030 scratch work-record initializer for the 0x2B step: requests resource 0x2B through the shared func_8014DD3C helper, stores 0x80 in work-record byte 0x24, clears bytes 0x29/0x2A, stores 2 in byte 0x48, clears bytes 0x5D..0x5F, stores 0x8000 in the work-record step words at 0x40/0x44, stores 0x40 in byte 9, clears byte 6, requests resource 3 through the shared func_8014D6B8 helper and finally increments the dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
   - - 22760
     - c
-    - func_801D64E8
-    - '@source: src/bof3/world/func_801D64E8_area03004.c'
-    - '@behavior: decrements byte 9 of the AREA030 work record published at the scratchpad cursor 0x1F800044 and dispatches on the remaining count: a zero count runs the shared func_80196070 helper, otherwise the shared func_8014D4E0 helper runs when bit 3 of that count is set.'
+    - decrementWorkCountdownThenClearFlagsOrQueuePointerWorld00Area03004
+    - '@source: src/bof3/world/decrementWorkCountdownThenClearFlagsOrQueuePointerWorld00Area03004_801D64E8.c'
+    - '@behavior: Decrements work countdown byte 9 and reloads the work pointer. A zero reloaded countdown calls the shared clearWorkFlags helper; otherwise, bit 3 of that reloaded countdown gates a call to the bounded work-pointer queue appender.'
   - - 22868
     - c
     - func_801D6554
@@ -420,8 +424,8 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E20C4.'
   - - 25352
     - c
-    - func_801D6F08
-    - '@source: src/bof3/world/func_801D6F08.c'
+    - seedMenuScratchAndSetWorkByteBWorld00Area03004
+    - '@source: src/bof3/world/seedMenuScratchAndSetWorkByteBWorld00Area03004_801D6F08.c'
     - '@behavior: Seeds the menu scratch record, then stores 0x37 at cursor+0xB.'
   - - 25396
     - c
@@ -523,13 +527,13 @@ segments:
     - '@behavior: AREA030 work-byte-3 handler-table entry 0 at 0x801E2210: clears the overlay flag bytes D_801E3200/D_801E3204/D_801E3214, stores 5 in work-record byte 0x29, publishes the func_8015477C distance of the record x at +0x34 and y at +0x38 into its signed timer at +0x3E, requests the resource 0xA with the second argument 2 through func_8014D6DC while byte 0x79 of the record at D_80146250 is clear and the resource 0xB through func_8014D6B8 otherwise, then advances the record dispatch byte 3.'
   - - 36940
     - c
-    - func_801D9C4C
-    - '@source: src/bof3/world/func_801D9C4C.c'
-    - '@behavior: Advances two counters when the area timer is inactive.'
+    - clearSharedByteAndAdvanceCountersIfGateClearWorld00Area03004
+    - '@source: src/bof3/world/clearSharedByteAndAdvanceCountersIfGateClearWorld00Area03004_801D9C4C.c'
+    - '@behavior: When shared halfword 0x80143C40 is zero, clears byte 0x8014419E and increments shared byte 0x80144199 and work byte 3.'
   - - 37020
     - c
-    - func_801D9C9C
-    - '@source: src/bof3/world/func_801D9C9C.c'
+    - advanceCounterAndWorkModeIfStateIsFourWorld00Area03004
+    - '@source: src/bof3/world/advanceCounterAndWorkModeIfStateIsFourWorld00Area03004_801D9C9C.c'
     - '@behavior: Advances the shared counters and clears work byte 3 in mode 4.'
   - - 37108
     - c
@@ -550,11 +554,11 @@ segments:
     - c
     - func_801D9E40
     - '@source: src/bof3/world/func_801D9E40_area03004.c'
-    - '@behavior: dispatches the shared pad-state mask D_80145AA8 & 0xD4 over the AREA030 mode handlers, setting modeByte to 7 and D_8014403D to 4 for the 0x04/0x40/0x80 keys and arming byte 2 and byte 3 of the work record published at the scratchpad cursor 0x1F800044; the 0x10 key only advances the record byte 3, and the 0x40 key requires the D_80145026 / D_80145028 level flags together with a full func_801E1C10 icon row before it arms byte 3 and sets D_801E3204.'
+    - '@behavior: Dispatches shared pad-state mask D_80145AA8 & 0xD4. The 0x04 and 0x80 arms select work modes 0x0A and 9; the 0x10 arm advances work step 3. The 0x40 arm selects mode 9 when either shared byte D_80145026 or D_80145028 is zero. Otherwise it tests the matching-slot count: a passing test with D_801E3204 zero sets that byte to 1 and selects work step 7. A failed test clears D_801E3204. The other count-test paths select work mode 2 and clear work step 3.'
   - - 37864
     - c
-    - func_801D9FE8
-    - '@source: src/bof3/world/func_801D9FE8_area03004.c'
+    - seedWorkCountdownAndAdvanceStepIfModeClearAndStateOneWorld00Area03004
+    - '@source: src/bof3/world/seedWorkCountdownAndAdvanceStepIfModeClearAndStateOneWorld00Area03004_801D9FE8.c'
     - '@behavior: AREA030 handler: while the shared mode byte at 0x80144125 is still 0 and the shared state byte at 0x8014403D holds 1, it stores 4 in byte 9 of the work record published at the scratchpad cursor 0x1F800044, dispatches sound cue 0x102 through func_8015DF18 and advances the record dispatch byte 3; the dim tile is appended through appendDimTile last and unconditionally.'
   - - 37976
     - c
@@ -578,8 +582,8 @@ segments:
     - '@behavior: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 + 0x50 * remaining count through drawArea030Panel, then once that count reaches zero arms byte 6 of the record and advances its dispatch byte 3; the dim tile is appended through appendDimTile last.'
   - - 39064
     - c
-    - func_801DA498
-    - '@source: src/bof3/world/func_801DA498_area03004.c'
+    - drawPanelAndAdvanceWorkStepOnInputMaskWorld00Area03004
+    - '@source: src/bof3/world/drawPanelAndAdvanceWorkStepOnInputMaskWorld00Area03004_801DA498.c'
     - '@behavior: draws the AREA030 panel combination for the shared 0x44/0x4E origin through drawArea030Panel; when the shared pad state word D_80145AA8 shares a bit with the pressed-button masks D_80145AC2 / D_80145AC4 it advances byte 3 of the work record published at the scratchpad cursor 0x1F800044; then appends the dim tile through appendDimTile.'
   - - 39176
     - c
@@ -593,8 +597,8 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2248.'
   - - 39416
     - c
-    - func_801DA5F8
-    - '@source: src/bof3/world/func_801DA5F8_area03004.c'
+    - incrementSharedCounterAndSetWorkStepWorld00Area03004
+    - '@source: src/bof3/world/incrementSharedCounterAndSetWorkStepWorld00Area03004_801DA5F8.c'
     - '@behavior: increments the shared byte counter at 0x801440B1, calls func_8014D8D4 with 1, then stores 1 in byte 3 of the work record published at the scratchpad cursor 0x1F800044.'
   - - 39480
     - c
@@ -603,8 +607,8 @@ segments:
     - '@behavior: AREA030 work-record pad decision step, the index-1 handler of the record step table at 0x801E2248: when the shared pad state D_80145AA8 shares a bit with the mask D_80145AC2 it clears the shared word D_801440C8, plays sound cue 0x200 through func_8015DF18, disables the selected-record cue bytes D_801E31FC and D_801E31F8 with 0xFF, requests resource 2 through func_8014D8D4, then restarts the work record published at the scratchpad cursor 0x1F800044 with the position word 0x410000 at offset 0x38, a cleared slide count byte 9 and step byte 3 set to 2; otherwise, when the pad state shares a bit with the second mask D_80145AC4 and the shared mode byte modeByte is clear, it clears the shared counter D_801440B1, stores 1 in the record state byte 2 and returns the record to step 0. The shared helper func_8014D978 runs last on every path.'
   - - 39700
     - c
-    - func_801DA714
-    - '@source: src/bof3/world/func_801DA714_area03004.c'
+    - stepWorkPairSequenceAndSelectStepThreeWhenHalfword58IsSixWorld00Area03004
+    - '@source: src/bof3/world/stepWorkPairSequenceAndSelectStepThreeWhenHalfword58IsSixWorld00Area03004_801DA714.c'
     - '@behavior: AREA030 work-record step handler: calls the shared helper func_8014D978; then, when the halfword at offset 0x58 of the work record published at the scratchpad cursor 0x1F800044 equals 6, increments the shared byte counter D_80143FC9, clears record bytes 0x0B and 0x07 and stores 3 in record byte 0x03.'
   - - 39820
     - c
@@ -633,8 +637,8 @@ segments:
     - '@behavior: initializes shared motion state and advances the scratch work-record action byte when the area gate flag is clear.'
   - - 41604
     - c
-    - func_801DAE84
-    - '@source: src/bof3/world/func_801DAE84.c'
+    - initializeWorkDispatchBytesIfBothGatesClearWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchBytesIfBothGatesClearWorld00Area03004_801DAE84.c'
     - '@behavior: clears the scratch work-record action byte after setting its state byte when both area flags are zero.'
   - - 41684
     - c
@@ -665,7 +669,7 @@ segments:
     - c
     - stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140
     - '@source: src/bof3/world/stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB140.c'
-    - '@behavior: AREA030 work-record dispatch step, handler 2 of the local table 0x801E2268 selected by scratch work-record byte 3: saves the selected-record value byte 0x801E31F8 into 0x801E31FC. While the shared counter 0x80144000 reads at most 0x3E7FFF it walks the two pad halfwords: pad bits 0xC000 of 0x80145AA4 select record value 2 with the fresh countdown 8 in scratch byte 9 and the byte at 0x801E320C + 5 published into 0x8014421C, otherwise the existing countdown is decremented and serviced by func_8014D978 or, once it reads zero, record value 0 with request 7 is restored; pad bits 0x3000 clear the record value and the signed record cell at 0x801468A4 while sliding the byte at 0x801E320C + 6 in with request 0 and stepping 0x80144216 back; pad bit 0x40 selects record value 1 with the byte at 0x801E320C + 4 and request 7. Both 0x40 arms step the signed record cell down by the byte at 0x801E320C + 3 plus 2 and run selectRecordValueAndSlot, the second one through setActiveSlotValueFromFrameMask. Local paths issue zero, one or two increments or one decrement of the progress byte. Above that counter limit it resets the shared selection counter 0x80144199 to 1, the state bytes 0x8014419E and 0x8014403D to 4, the mode byte 0x80144125 to 7, clears 0x80143FC9 and 0x8014420D, sets handler 6 on the active record, plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8), selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends with func_801DDD4C.'
+    - '@behavior: AREA030 work-record dispatch step, handler 2 of the local table 0x801E2268 selected by scratch work-record byte 3: saves the selected-record value byte 0x801E31F8 into 0x801E31FC. While the shared counter 0x80144000 reads at most 0x3E7FFF it walks the two pad halfwords: pad bits 0xC000 of 0x80145AA4 select record value 2 with the fresh countdown 8 in scratch byte 9 and the byte at 0x801E320C + 5 published into 0x8014421C, otherwise the existing countdown is decremented and serviced by func_8014D978 or, once it reads zero, record value 0 with request 7 is restored; pad bits 0x3000 clear the record value and the signed record cell at 0x801468A4 while sliding the byte at 0x801E320C + 6 in with request 0 and stepping 0x80144216 back; pad bit 0x40 selects record value 1 with the byte at 0x801E320C + 4 and request 7. Both 0x40 arms step the signed record cell down by the byte at 0x801E320C + 3 plus 2 and run selectRecordValueAndSlot, the second one through setActiveSlotValueFromFrameMask. Local paths issue zero, one or two increments or one decrement of the progress byte. Above that counter limit it resets the shared selection counter 0x80144199 to 1, the state bytes 0x8014419E and 0x8014403D to 4, the mode byte 0x80144125 to 7, clears 0x80143FC9 and 0x8014420D, sets handler 6 on the active record, plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8), selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends with playCueForChangedSelectedValueWorld00Area03004.'
   - - 43348
     - c
     - func_801DB554
@@ -695,12 +699,12 @@ segments:
     - c
     - func_801DBA94
     - '@source: src/bof3/world/func_801DBA94_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156 + 30 * remaining count) through func_801E1320 and the extra icon through func_801E1C7C, advances scratch byte 3 when the count expired, then runs func_8014D978 and appends the dim tile.'
+    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156 + 30 * remaining count) through func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004, advances scratch byte 3 when the count expired, then runs func_8014D978 and appends the dim tile.'
   - - 44972
     - c
     - choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC
     - '@source: src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c'
-    - '@behavior: AREA030 panel step, entry 9 of the local work-record step table 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) through func_801E1320 and the extra icon through func_801E1C7C. While the shared pad mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and scratch byte 0xB, then picks the panel open state: record byte 6 equal to 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing func_801650B4(0, byte 6 + 0x38, 1, 0) gate arms byte 9 with 4 and stores 2 in byte 0xB, and a passing gate advances dispatch byte 3 to 0x0E; it then plays cue 0x102 and increments that dispatch byte. Finally it runs func_8014D978 and appends the dim tile.'
+    - '@behavior: AREA030 panel step, entry 9 of the local work-record step table 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) through func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and scratch byte 0xB, then picks the panel open state: record byte 6 equal to 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing func_801650B4(0, byte 6 + 0x38, 1, 0) gate arms byte 9 with 4 and stores 2 in byte 0xB, and a passing gate advances dispatch byte 3 to 0x0E; it then plays cue 0x102 and increments that dispatch byte. Finally it runs func_8014D978 and appends the dim tile.'
   - - 45420
     - c
     - func_801DBD6C
@@ -733,19 +737,19 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22A4.'
   - - 47288
     - c
-    - func_801DC4B8
-    - '@source: src/bof3/world/func_801DC4B8_area03004.c'
-    - '@behavior: retire the AREA030 level flag: calls the frontend slot setter func_801665A0 with (3, the shared level byte 0x80145026, 1, 0) and, when that helper reports a zero low byte, clears both 0x80145026 and its companion byte 0x80145027, then always runs the local overlay step confirmSelectionStep.'
+    - consumeEntryUnitOrClearPairedBytesThenConfirmSelectionStepWorld00Area03004
+    - '@source: src/bof3/world/consumeEntryUnitOrClearPairedBytesThenConfirmSelectionStepWorld00Area03004_801DC4B8.c'
+    - '@behavior: Attempts to consume one unit of the entry ID in byte 0x80145026 through func_801665A0(3, entry ID, 1, 0). A zero low-byte result clears bytes 0x80145026 and 0x80145027. Always runs confirmSelectionStep afterward.'
   - - 47380
     - c
-    - func_801DC514
-    - '@source: src/bof3/world/func_801DC514_area03004.c'
+    - requestStateThreeAndAdvanceWorkStepIfStateIsThreeWorld00Area03004
+    - '@source: src/bof3/world/requestStateThreeAndAdvanceWorkStepIfStateIsThreeWorld00Area03004_801DC514.c'
     - '@behavior: AREA030 mode-3 handler: when the shared selection gate byte D_80144199_BYTE holds 3, requests state 3 from storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances byte 3 of the scratch work-record cursor at 0x1F800044, then always calls the shared helper func_8014D978.'
   - - 47464
     - c
-    - func_801DC568
-    - '@source: src/bof3/world/func_801DC568_area03004.c'
-    - '@behavior: AREA030 pad-mask wrapper: calls the target-local gate func_801DDF7C with the shared pad mask 0x50, discards the gate result, then calls the shared helper func_8014D978 without arguments.'
+    - enterWorkModeEightOnPadMaskThenStepWorkPairSequenceWorld00Area03004
+    - '@source: src/bof3/world/enterWorkModeEightOnPadMaskThenStepWorkPairSequenceWorld00Area03004_801DC568.c'
+    - '@behavior: AREA030 pad-mask wrapper: calls the target-local gate enterWorkModeEightIfInputMaskSetWorld00Area03004 with the shared pad mask 0x50, discards the gate result, then calls the shared helper func_8014D978 without arguments.'
   - - 47504
     - c
     - func_801DC590
@@ -753,8 +757,8 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22B0.'
   - - 47572
     - c
-    - func_801DC5D4
-    - '@source: src/bof3/world/func_801DC5D4_area03004.c'
+    - requestStateFourAndAdvanceWorkStepIfStateIsThreeWorld00Area03004
+    - '@source: src/bof3/world/requestStateFourAndAdvanceWorkStepIfStateIsThreeWorld00Area03004_801DC5D4.c'
     - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22B0 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3 it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 4 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47692
     - c
@@ -763,8 +767,8 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22BC.'
   - - 47760
     - c
-    - func_801DC690
-    - '@source: src/bof3/world/func_801DC690_area03004.c'
+    - requestStateFiveAndAdvanceWorkStepIfStateIsThreeWorld00Area03004
+    - '@source: src/bof3/world/requestStateFiveAndAdvanceWorkStepIfStateIsThreeWorld00Area03004_801DC690.c'
     - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22BC selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 5 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47880
     - c
@@ -783,8 +787,8 @@ segments:
     - '@behavior: Initializes three scratch work-record bytes when the shared mode is zero.'
   - - 48184
     - c
-    - func_801DC838
-    - '@source: src/bof3/world/func_801DC838.c'
+    - appendDimTileAndDispatchWorkStepWorld00Area03004
+    - '@source: src/bof3/world/appendDimTileAndDispatchWorkStepWorld00Area03004_801DC838.c'
     - '@behavior: Appends the dim tile, then dispatches the scratch work-record mode.'
   - - 48264
     - c
@@ -800,12 +804,12 @@ segments:
     - c
     - stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C
     - '@source: src/bof3/world/stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C.c'
-    - '@behavior: AREA030 work-record step, entry 2 of the 0x801E22D0 handler table that func_801DC838 dispatches through scratch record byte 3: it steps the shared handler-selector byte 0x80144286 over its 0..2 range on pad bits 0x8000 and 0x2000, steps the shared state byte 0x80144281 on the pressed mask D_80145AC4 and the confirm mask D_80145AC2, and while the record dispatch byte 3 still holds 2 it submits the selector VRAM halfword (0x800100A0, 0x800100C0 or 0x800100DE, offset by 0x80010000) to func_8014F800 and the selector-scaled 0x58 + 48 * selector row to func_801647C4.'
+    - '@behavior: AREA030 work-record step, entry 2 of the 0x801E22D0 handler table that appendDimTileAndDispatchWorkStepWorld00Area03004 dispatches through scratch record byte 3: it steps the shared handler-selector byte 0x80144286 over its 0..2 range on pad bits 0x8000 and 0x2000, steps the shared state byte 0x80144281 on the pressed mask D_80145AC4 and the confirm mask D_80145AC2, and while the record dispatch byte 3 still holds 2 it submits the selector VRAM halfword (0x800100A0, 0x800100C0 or 0x800100DE, offset by 0x80010000) to func_8014F800 and the selector-scaled 0x58 + 48 * selector row to func_801647C4.'
   - - 49268
     - c
-    - func_801DCC74
-    - '@source: src/bof3/world/func_801DCC74.c'
-    - '@behavior: dispatches through the handler table indexed by the selector byte `D_80144286` (tail call via jalr, no arguments).'
+    - dispatchHandlerBySelectorByteWorld00Area03004
+    - '@source: src/bof3/world/dispatchHandlerBySelectorByteWorld00Area03004_801DCC74.c'
+    - '@behavior: Calls the handler selected by shared selector byte D_80144286 through the local handler table, with no arguments.'
   - - 49328
     - c
     - func_801DCCB0
@@ -838,8 +842,8 @@ segments:
     - '@behavior: AREA030 pad handler (entry 2 of the 0x801E22E4 dispatch table selected by the shared byte D_80144286): it first submits the fixed func_8014F800 panel texture row (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword D_800100E0); then, only while the shared state byte D_80144281 holds 0x0E and the shared pad gate byte 0x80144288 is clear, it reacts to the shared pad state D_80145AA8: a bit shared with the pressed mask D_80145AC4 dispatches cue 0x106, clears byte 4 of the work record published at the scratchpad cursor 0x1F800044 and decrements that record dispatch byte 3; the Cross bit 0x4000 publishes 0xFF into the gate byte and steps the shared index D_801442BC up over the 0..5 range; the Triangle bit 0x1000 publishes 1 into the gate byte and steps that index down, wrapping to 5 below zero.'
   - - 52492
     - c
-    - func_801DD90C
-    - '@source: src/bof3/world/func_801DD90C.c'
+    - initializeWorkDispatchAndAdvanceCounterIfStateClearWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchAndAdvanceCounterIfStateClearWorld00Area03004_801DD90C.c'
     - '@behavior: when the area gate is clear, advances its counter and initializes bytes 2 and 3 of the current scratch work record.'
   - - 52572
     - c
@@ -853,8 +857,8 @@ segments:
     - '@behavior: while the area gate byte D_80149332 is clear it drives the shared view pair: when the shared pad word D_80145AA4 holds bit 0x10 or the shared view y word D_8014930C equals 0x150000, and the shared mode byte is clear, it arms the view scale halfword D_8014932E with 0x40, snaps D_8014930C to 0x3C0000 and stores 1 into byte 3 of the scratch work record at the scratchpad cursor 0x1F800044; otherwise it arms D_8014932E with 0x20 and steps D_8014930C down by 0x8000. On the frames whose shared frame counter D_80143E6C holds bit 2 it emits five 0x10-byte grey 0x80 projected line primitives at ordering-table slot 2, projecting a local vertex whose x is -0x4000 then -0x3100 with z 0 and whose y is ((0x3E0000 - phase) >> 9) - 0x4000 into the primitive vertex pairs at offsets 0x08/0x0A and 0x0C/0x0E while the phase advances by 0xA0000 per step.'
   - - 53108
     - c
-    - func_801DDB74
-    - '@source: src/bof3/world/func_801DDB74.c'
+    - initializeWorkDispatchAndAdvanceCounterIfByteGateClearWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchAndAdvanceCounterIfByteGateClearWorld00Area03004_801DDB74.c'
     - '@behavior: When the guard byte is clear, advances the area state and initializes scratch-record bytes 2 and 3.'
   - - 53192
     - c
@@ -863,29 +867,29 @@ segments:
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2304.'
   - - 53260
     - c
-    - func_801DDC0C
-    - '@source: src/bof3/world/func_801DDC0C_area03004.c'
+    - requestLocalModeZeroAndAdvanceWorkStepIfGateClearWorld00Area03004
+    - '@source: src/bof3/world/requestLocalModeZeroAndAdvanceWorkStepIfGateClearWorld00Area03004_801DDC0C.c'
     - '@behavior: when the shared mode byte is clear, calls the shared mode helper func_8014ECAC with mode 0 and increments byte 3 of the scratch work record published at the scratchpad cursor 0x1F800044.'
   - - 53332
     - c
-    - func_801DDC54
-    - '@source: src/bof3/world/func_801DDC54.c'
-    - '@behavior: when the shared transition is idle, clears companion state, advances the scratch work-record phase, and selects state 3.'
+    - clearSharedBytesAndAdvanceWorkStepIfGateClearWorld00Area03004
+    - '@source: src/bof3/world/clearSharedBytesAndAdvanceWorkStepIfGateClearWorld00Area03004_801DDC54.c'
+    - '@behavior: When shared halfword 0x80143C40 is zero, clears bytes 0x800F724C through 0x800F724F and 0x8014832E, writes halfword 3 at 0x80143B92 and advances work step byte 3.'
   - - 53432
     - c
-    - func_801DDCB8
-    - '@source: src/bof3/world/func_801DDCB8_area03004.c'
+    - requestLocalModeOneSeedSharedByteAndAdvanceWorkStepWorld00Area03004
+    - '@source: src/bof3/world/requestLocalModeOneSeedSharedByteAndAdvanceWorkStepWorld00Area03004_801DDCB8.c'
     - '@behavior: calls the shared mode helper func_8014ECAC with mode 1, stores 0x1F in the shared byte D_8014832E, then increments byte 3 of the scratch work record published at the scratchpad cursor 0x1F800044.'
   - - 53496
     - c
-    - func_801DDCF8
-    - '@source: src/bof3/world/func_801DDCF8.c'
+    - initializeWorkDispatchAndAdvanceCounterIfHalfwordGateClearWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkDispatchAndAdvanceCounterIfHalfwordGateClearWorld00Area03004_801DDCF8.c'
     - '@behavior: Advances the area counter and seeds two scratch-record bytes while the shared state is clear.'
   - - 53580
     - c
-    - func_801DDD4C
-    - '@source: src/bof3/world/func_801DDD4C_area03004.c'
-    - '@behavior: Plays the cue of the newly selected AREA030 record value: while the selected-record byte D_801E31F8 differs from the last-cued byte D_801E31FC, func_8015DF18 receives cue 0x203 for value 0, 0x202 for value 1 and 0x205 for value 2; any other value stays silent.'
+    - playCueForChangedSelectedValueWorld00Area03004
+    - '@source: src/bof3/world/playCueForChangedSelectedValueWorld00Area03004_801DDD4C.c'
+    - '@behavior: When selected value byte D_801E31F8 differs from saved previous selection byte D_801E31FC, calls func_8015DF18 with cue 0x203 for value 0, 0x202 for value 1 or 0x205 for value 2. Other values stay silent. Does not write the saved selection byte.'
   - - 53692
     - c
     - confirmSelectionStep
@@ -906,8 +910,8 @@ segments:
     - '@behavior: arms the AREA030 hold marker and reloads the work-record timer at +0xA while the shared pad flag 0x4000 at 0x80145AA8 is set; otherwise the 0x80145AA4 flag counts that timer down and an unarmed path clears the marker.'
   - - 54140
     - c
-    - func_801DDF7C
-    - '@source: src/bof3/world/func_801DDF7C_area03004.c'
+    - enterWorkModeEightIfInputMaskSetWorld00Area03004
+    - '@source: src/bof3/world/enterWorkModeEightIfInputMaskSetWorld00Area03004_801DDF7C.c'
     - '@behavior: AREA030 pad-mask gate: returns 0 when the shared pad state word D_80145AA8 shares no bit with the caller mask; otherwise requests frontend mode 2 through func_8014ECAC, stores 8 in byte 2 and clears byte 3 of the scratch work record published at the scratchpad cursor 0x1F800044, and returns 1.'
   - - 54228
     - c
@@ -937,7 +941,7 @@ segments:
     - c
     - runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C
     - '@source: src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c'
-    - '@behavior: AREA030 work-record handler 1 of the 0x801E2314 table: while the record step countdown byte 0x09 is non-zero it only integrates the step through func_801E0394 and runs func_8014D978, and the entry gate func_801E0680 matching sets handler byte 0x01 to 3 before that same pair; with the gate clear it rolls rand once and reuses the single roll, either arming the entry latch D_801E3200 when that latch is clear, the record signed timer 0x3E is zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not 0x16 - loading the scale record entry halfword 0x12 through func_8014DD3C, queueing cue 0x206 unless record flag 0x80 is set, clearing record flag bit 5 and bytes 0x2A/0x48, releasing the entry through func_8014D6B8(0) and advancing handler byte 0x01 - or stepping the route index byte 0x08 to the neighbouring route by one modulo 8 from roll bits 4 and 8, re-deriving the steps through func_801E03F8, mirroring the step-mode row trailing byte into record byte 0x2A and selecting the row leading byte through func_8014D8D4, then setting the countdown step word 0x14 from the func_8015477C distance of the record x/y advanced by the step words shifted 4, forcing it to 2 or -2 from roll bits 0x20 and 0x10 against the scale byte 0x1A, clearing the three step words on roll bit 0x40 and restarting the countdown byte 0x09 at 0x10 before the integration pair.'
+    - '@behavior: AREA030 work-record handler 1 of the 0x801E2314 table: while the record step countdown byte 0x09 is non-zero it only integrates the step through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the entry gate func_801E0680 matching sets handler byte 0x01 to 3 before that same pair; with the gate clear it rolls rand once and reuses the single roll, either arming the entry latch D_801E3200 when that latch is clear, the record signed timer 0x3E is zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not 0x16 - loading the scale record entry halfword 0x12 through func_8014DD3C, queueing cue 0x206 unless record flag 0x80 is set, clearing record flag bit 5 and bytes 0x2A/0x48, releasing the entry through func_8014D6B8(0) and advancing handler byte 0x01 - or stepping the route index byte 0x08 to the neighbouring route by one modulo 8 from roll bits 4 and 8, re-deriving the steps through func_801E03F8, mirroring the step-mode row trailing byte into record byte 0x2A and selecting the row leading byte through func_8014D8D4, then setting the countdown step word 0x14 from the func_8015477C distance of the record x/y advanced by the step words shifted 4, forcing it to 2 or -2 from roll bits 0x20 and 0x10 against the scale byte 0x1A, clearing the three step words on roll bit 0x40 and restarting the countdown byte 0x09 at 0x10 before the integration pair.'
   - - 57284
     - c
     - restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4
@@ -947,7 +951,7 @@ segments:
     - c
     - steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC
     - '@source: src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c'
-    - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through func_801E03F8, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while func_801E0770 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared func_801E0394/func_8014D978 pair.'
+    - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through func_801E03F8, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while func_801E0770 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared applyWorkStepTripleWhileCountdownActiveWorld00Area03004/func_8014D978 pair.'
   - - 59188
     - c
     - updateWorkMotionAndStepModeOrAdvanceHandler
@@ -960,9 +964,9 @@ segments:
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2340.'
   - - 62444
     - c
-    - func_801DFFEC
-    - '@source: src/bof3/world/func_801DFFEC.c'
-    - '@behavior: computes signed step values from the scratch work-record x/y coordinates at offsets 0x34/0x38, stores them at offsets 0x0C/0x10, sets work byte +0x09 to 8, and increments work byte +0x02.'
+    - seedMaskedCoordinateStepsAndAdvanceWorkModeWorld00Area03004
+    - '@source: src/bof3/world/seedMaskedCoordinateStepsAndAdvanceWorkModeWorld00Area03004_801DFFEC.c'
+    - '@behavior: Forms masked-coordinate differences from work words +0x34 and +0x38 using unsigned logical right shifts by three, stores the steps at +0x0C and +0x10, seeds byte 9 with 8 and advances work mode byte 2.'
   - - 62532
     - c
     - func_801E0044
@@ -980,8 +984,8 @@ segments:
     - '@behavior: AREA030 work-record entry-phase start (handler 0 of the 0x801E2348 table dispatched through scratch work-record byte 2): it queues cue 0x206 through func_8015DF18 and clears the 32-bit record word at 0x3C, then loads the entry halfword at 0x12 of the D_801E2AB8 scale record selected by record byte 0x06 through func_8014DD3C; next it clears bit 5 of record byte 0 and zeroes record byte 0x2A, loads entry 0 through func_8014D6B8 and zeroes record byte 0x48, and finally advances the phase byte 0x02 that selects the next handler of the same table.'
   - - 62940
     - c
-    - func_801E01DC
-    - '@source: src/bof3/world/func_801E01DC_area03004.c'
+    - advanceWorkModeAtIndexedOffsetElseStepSequenceWorld00Area03004
+    - '@source: src/bof3/world/advanceWorkModeAtIndexedOffsetElseStepSequenceWorld00Area03004_801E01DC.c'
     - '@behavior: AREA030 work-record phase check: compares the halfword at offset 0x58 of the scratch work record published at the scratchpad cursor 0x1F800044 with the per-index halfword of D_801E2354 selected by the record byte at 0x06; when the two differ it calls the shared helper func_8014D978, otherwise it increments the record phase byte at offset 0x02.'
   - - 63036
     - c
@@ -1000,9 +1004,9 @@ segments:
     - '@behavior: AREA030 distance-gated per-frame chance: builds the span (((byte 3 of the D_801E320C record) * 8) + 0x18) * (arg1 & 0xFF) and the absolute distance between the signed byte 0xA of the scratch work record at 0x1F800044 and the low byte of arg0, then returns whether a 4-bit rand() draw falls below the span quarter/half/full/quadruple ladder 1, 2, 4, 8, 0xE.'
   - - 63380
     - c
-    - func_801E0394
-    - '@source: src/bof3/world/func_801E0394.c'
-    - '@behavior: Advances the active scratch work record while its timer is nonzero.'
+    - applyWorkStepTripleWhileCountdownActiveWorld00Area03004
+    - '@source: src/bof3/world/applyWorkStepTripleWhileCountdownActiveWorld00Area03004_801E0394.c'
+    - '@behavior: When captured work countdown byte 9 is nonzero, decrements it and reloads the work pointer to add words +0x0C and +0x10 to words +0x34 and +0x38, and word +0x14 to halfword +0x3E. Applies these steps even when the decrement reaches zero.'
   - - 63480
     - c
     - func_801E03F8
@@ -1040,9 +1044,9 @@ segments:
     - '@behavior: rescales a slot amount to its AREA030 summary value using the slot record limit at +0x1F and value at +0x22.'
   - - 65388
     - c
-    - func_801E0B6C
-    - '@source: src/bof3/world/func_801E0B6C_area03004.c'
-    - '@behavior: sums the AREA030 summary value reported by func_801E0ABC (0x801E0ABC) for every nonzero amount byte among the 32 shared amount bytes at 0x80144FE4, masked to 16 bits.'
+    - sumValuesForNonzeroSlotAmountsWorld00Area03004
+    - '@source: src/bof3/world/sumValuesForNonzeroSlotAmountsWorld00Area03004_801E0B6C.c'
+    - '@behavior: Sums the values reported by func_801E0ABC for the nonzero amounts among the 32 shared slot amount bytes at 0x80144FE4, and returns the total masked to 16 bits.'
   - - 65488
     - c
     - updateArea030OverlayFrame
@@ -1110,13 +1114,13 @@ segments:
     - '@behavior: draws the AREA030 panel combination at the requested origin: submits the 0xB3 by 0x42 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, fifteen 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x98 and x + 0xB0, the two func_801D799C text rows of width 0x28 at (x, y + 0x18) and (x + 0xB0, y + 0x18), the 0x30 sprite at x on the y + 0x40 row, twenty-one 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0xB0 on that row, and finally the two main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x3E, y + 6) and (x + 6, y + 0x19) with colour 0 and flag 0xFF through func_8014F800.'
   - - 69648
     - c
-    - func_801E1C10
-    - '@source: src/bof3/world/func_801E1C10.c'
-    - '@behavior: counts the slots whose 0x8014504C byte matches a candidate 0x38..0x4D while the 0x8014524C byte holds the sentinel 0x63, and reports whether at least 22 matches exist.'
+    - hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004
+    - '@source: src/bof3/world/hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004_801E1C10.c'
+    - '@behavior: Scans 128 slots for each candidate value 0x38 through 0x4D, counting slots whose byte at 0x8014504C matches that value and whose companion byte at 0x8014524C is 0x63. Reports whether at least 22 slots match; duplicate values in separate slots count separately.'
   - - 69756
     - c
-    - func_801E1C7C
-    - '@source: src/bof3/world/func_801E1C7C_area03004.c'
+    - drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004
+    - '@source: src/bof3/world/drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004_801E1C7C.c'
     - '@behavior: draws the AREA030 extra icon when the D_801E3214 flag byte is set and the shared frame counter D_80143E6C has bit 3 set: submits texture-page draw mode 3/1 through submitTpageDrawMode and appends sprite 0x47 at (0x1A, 0x5C) through func_801E0DCC.'
   - - 69844
     - rodata

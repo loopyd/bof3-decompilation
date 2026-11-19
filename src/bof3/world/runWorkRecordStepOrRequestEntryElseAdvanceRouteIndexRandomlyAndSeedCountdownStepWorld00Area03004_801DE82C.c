@@ -3,7 +3,7 @@
 /* @source 0x801DE82C
  * @behavior AREA030 work-record handler 1 of the 0x801E2314 table. While the
  * record step countdown byte 0x09 is non-zero it only integrates that step
- * through func_801E0394 and runs func_8014D978, and the same pair closes every
+ * through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the same pair closes every
  * other path except the entry request below. Otherwise it first consults the
  * shared entry gate func_801E0680 and, when that reports a match, sets the
  * work-record handler byte 0x01 to 3 and leaves through that pair. With the gate
@@ -137,6 +137,6 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
       D_1F800044[9] = 0x10;
     }
   }
-  func_801E0394();
+  applyWorkStepTripleWhileCountdownActiveWorld00Area03004();
   func_8014D978();
 }

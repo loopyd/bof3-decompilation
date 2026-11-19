@@ -2,7 +2,7 @@
 
 /* @source 0x801DC93C
  * @behavior AREA030 work-record step, entry 2 of the five-entry handler table
- * at 0x801E22D0 that func_801DC838 dispatches through byte 3 of the scratch
+ * at 0x801E22D0 that appendDimTileAndDispatchWorkStepWorld00Area03004 dispatches through byte 3 of the scratch
  * work record published at the scratchpad cursor 0x1F800044. It decodes the
  * shared pad state D_80145AA8 masked by 0xA000 through func_8014E640 and steps
  * the shared handler-selector byte D_80144286 over its 0..2 range: pad bit

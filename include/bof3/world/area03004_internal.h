@@ -300,7 +300,7 @@ extern void (*D_801E22FC[])(void); /* @source 0x801E22FC @kind table */
 extern void (*D_801E2304[])(void); /* @source 0x801E2304 @kind table */
 extern void (*D_801E2340[])(void); /* @source 0x801E2340 @kind table */
 extern void (*D_801E2348[])(void); /* @source 0x801E2348 @kind table */
-/* Per-index halfword limits compared by func_801E01DC with the work-record
+/* Per-index halfword limits compared by advanceWorkModeAtIndexedOffsetElseStepSequenceWorld00Area03004 with the work-record
  * halfword at +0x58, selected by the record byte at +0x06. */
 extern u16 D_801E2354[];  /* @source 0x801E2354 @kind table */
 extern void (*D_801E22E4[])(void); /* @source 0x801E22E4 @kind table */
@@ -420,22 +420,21 @@ extern u8  D_8014524C[];   /* @source 0x8014524C @kind unknown */
 extern u8  D_801E31F0;     /* @source 0x801E31F0 @kind unknown */
 extern u8  D_801E31F4;     /* @source 0x801E31F4 @kind unknown */
 extern u8  D_801E31F8;     /* @source 0x801E31F8 @kind unknown */
-/* Companion byte of the 0x801E31F8 selected-record value: the byte holding the
- * record value whose cue was played last, read by func_801DDD4C as a plain
- * scalar at its own address. */
+/* Saved previous selection byte, read by playCueForChangedSelectedValueWorld00Area03004 as a plain scalar.
+ * The selection callers save 0x801E31F8 here before changing the selection. */
 extern u8  D_801E31FC;     /* @source 0x801E31FC @kind unknown */
 /* AREA030 text slot tables walked by func_801DE018: D_801E31E0 holds the four
  * per-slot character counters and D_801E31E4 the four per-slot frame timers. */
 extern u8  D_801E31E0[];   /* @source 0x801E31E0 @kind unknown */
 extern u8  D_801E31E4[];   /* @source 0x801E31E4 @kind unknown */
 /* Nonzero byte flag at the end of this overlay's data; read by
- * func_801E1C7C to gate its extra icon and cleared by func_801DBBAC while
+ * drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004 to gate its extra icon and cleared by func_801DBBAC while
  * the shared pad mask 0x80145AA8/0x50 is set. */
 extern u8  D_801E3214;     /* @source 0x801E3214 @kind unknown */
 extern u8 D_80145026;      /* @source 0x80145026 @kind unknown */
-/* Companion byte of the 0x80145026 AREA030 level flag: cleared together with
- * the flag by func_801DC4B8 when the frontend slot setter reports the flag
- * cannot be registered, and read as a plain scalar at its own address. */
+/* Companion byte cleared together with entry-ID byte 0x80145026 by
+ * consumeEntryUnitOrClearPairedBytesThenConfirmSelectionStepWorld00Area03004 when the matching-entry amount consumer reports failure.
+ * Read as a plain scalar at its own address; broader purpose is unknown. */
 extern u8 D_80145027;      /* @source 0x80145027 @kind unknown */
 extern u8 D_80145028;      /* @source 0x80145028 @kind unknown */
 extern u8 D_801E2720[];    /* @source 0x801E2720 @kind unknown */
@@ -445,8 +444,8 @@ extern u8 D_801E2748[];    /* @source 0x801E2748 @kind unknown */
  * (sb at 0x801DE8E4) and cleared again by func_801DEBC4 (sb at 0x801DEBEC).
  * Role not established; kept address-anchored. */
 extern u8  D_801E3200;     /* @source 0x801E3200 @kind unknown */
-/* Flag byte armed/cleared by the 0x40 mode handler func_801D9E40: set when the
- * func_801E1C10 icon row is full, cleared otherwise. */
+/* Latch used by func_801D9E40 after the hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004 matching-slot test.
+ * A passing test sets it only when zero; a failed test clears it. */
 extern u8  D_801E3204;      /* @source 0x801E3204 @kind unknown */
 extern u8  D_801E3208;      /* @source 0x801E3208 @kind unknown */
 extern s8* D_801E320C;     /* @source 0x801E320C @kind unknown */
@@ -553,15 +552,16 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
 void func_8014D290(void);
 u8   func_8014D978(void);
-/* Same-binary frontend slot setter at 0x801665A0: the AREA030 call sites pass
- * (slot 3, a byte value, 1, 0) and either discard the result or test only its
- * low byte, so the AREA030 view declares a four-argument byte-valued helper. */
+/* Executable matching-entry amount consumer at 0x801665A0. AREA030 sites
+ * pass (group 3, entry ID, 1, 0) and discard the result or test its low byte.
+ * Preserve this scoped four-argument byte-result view; live group ownership
+ * and initialization are not established. */
 u8   func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 /* Target-local pad-mask gate at 0x801DDF7C: its `and` of D_80145AA8 with the
  * caller's argument selects the gate path and it returns nonzero on the taken
- * path (frontend mode 2 plus scratch bytes 2/3). Only the argument matters to
+ * path (a local-mode-2 request plus scratch bytes 2/3). Only the argument matters to
  * the AREA030 call site, which discards the gate result. */
-u32  func_801DDF7C(u16 mask);
+u32  enterWorkModeEightIfInputMaskSetWorld00Area03004(u16 mask);
 void func_8014D4E0(void);
 /* Target-local AREA030 selection helpers at 0x801DB04C and 0x801DB0AC: the
  * pad-mode dispatch step 0x801DB140 calls each with no arguments and discards
@@ -595,7 +595,7 @@ void func_801E1320(s16 x, s16 y);
  * it with (8, 148, 66). */
 void func_801E162C(s32 x, s32 y, u16 image);
 void submitTpageDrawMode(s32 arg0, s32 arg1);
-u32 func_801E0B6C(void);
+u32 sumValuesForNonzeroSlotAmountsWorld00Area03004(void);
 extern u8 D_801454EC; /* @source 0x801454EC @kind unknown */
 u8*  func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3);
 void func_801D799C(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
@@ -683,7 +683,7 @@ s32  func_801E0ABC(s32 arg0, s32 arg1);
  * slide steps call it with the sliding 0x44 +/- 0x50 * count origin on the
  * fixed 0x4E row. */
 void drawArea030Panel(s16 x, s16 y);
-s32  func_801E1C10(void);
+s32  hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004(void);
 void updateWorkScrollWordsWorld00Area03004_801E084C(void); /* per-record scroll updater on the 0x1F800044 cursor */
 /* Same-binary shared work-area selector at 0x80199440 (executable space, direct
  * `jal` at 0x801E0BD8): publishes one of the three shared work-area bases into
@@ -717,7 +717,7 @@ void publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0(void);
 void dispatchStateByte3Table1d00World00Area03004_801D12C8(void);
 void func_801D9B14(void);
 void func_801D9B58(void);
-void func_801D9C9C(void);
+void advanceCounterAndWorkModeIfStateIsFourWorld00Area03004(void);
 void func_801D9CF4(void);
 void func_801D5C48(void);
 void func_801D6000(void);
@@ -736,7 +736,7 @@ void drawMirroredPanelCellQuadWorld00Area03004_801D2C34(s16 arg0, s16 arg1,
                                                         s8 arg2, u8 arg3);
 void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, u8 arg5);
 void advancePanelScroll(void);
-void func_801D6F08(void);
+void seedMenuScratchAndSetWorkByteBWorld00Area03004(void);
 void advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34(void);
 void seedMenuScratch(void);
 void func_801D6B28(u8 arg0);
@@ -748,7 +748,7 @@ void adjustAndClampCurrentWorkRangeValueWorld00Area03004(s8 delta);
 void seedSharedValuesAndAdvanceWorkStepIfGateClearWorld00Area03004(void);
 void dispatchCompanion(void);
 void func_801DFFA8(void);
-void func_801DCC74(void);
+void dispatchHandlerBySelectorByteWorld00Area03004(void);
 void func_801DCCB0(void);
 void func_801DCCF4(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */
 /* Same-binary availability gate at 0x801650B4 (executable space): the AREA030
@@ -773,7 +773,7 @@ void saveAndUpdateTextAdvanceStateWorld00Area03004(void);
 void updateRecordCursorsFromNonzeroIndicesWorld00Area03004(void);
 void storeRequestedStateAndAdvanceSelectedModesWorld00Area03004(s32 state);
 void func_801DDEEC(void);
-void func_801DDD4C(void);
+void playCueForChangedSelectedValueWorld00Area03004(void);
 void func_801DE018(void);
 void func_801DDDBC(void);
 void func_801DC474(void);
@@ -783,10 +783,10 @@ void func_801DC708(void);
 void initializeWorkDispatchBytesIfGateClearWorld00Area03004(void);
 void func_801E0A30(void);
 void seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C(void);
-void func_801DA5F8(void);
+void incrementSharedCounterAndSetWorkStepWorld00Area03004(void);
 void applyEntryPadConfirmOrCancelWorld00Area03004_801DA638(void);
 void func_801DA8E8(void);
-void func_801DAE84(void);
+void initializeWorkDispatchBytesIfBothGatesClearWorld00Area03004(void);
 void func_801DAED4(void);
 /* Target-local panel decoration/label drawer at 0x801E1004: the AREA030 panel
  * steps pass the active record's byte 6 as the selected character, an unused
@@ -794,7 +794,7 @@ void func_801DAED4(void);
 void func_801E1004(s32 arg0, s32 arg1, s32 arg2);
 /* Target-local extra-icon drawer at 0x801E1C7C, gated by the D_801E3214 flag
  * byte and bit 3 of the shared frame counter D_80143E6C. */
-void func_801E1C7C(void);
+void drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004(void);
 /* Target-local AREA030 work-record entry gate at 0x801E0680: reports whether
  * the record already sits at its entry position without arming it. */
 u8 func_801E0680(void);
@@ -804,7 +804,7 @@ void func_801E03F8(void);
 /* Target-local AREA030 step integrator at 0x801E0394: while the record
  * countdown byte 0x09 is non-zero it decrements it, adds the step words into
  * the record position words and the countdown step word into the timer. */
-void func_801E0394(void);
+void applyWorkStepTripleWhileCountdownActiveWorld00Area03004(void);
 /* Target-local AREA030 staging-window probe at 0x801E0770: reports whether the
  * record published at the scratchpad cursor 0x1F800044 sits inside the shared
  * reference window without arming anything. */

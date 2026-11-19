@@ -2,15 +2,13 @@
 
 /**
  * @source 0x801D9E40
- * @behavior Dispatches the shared pad-state mask D_80145AA8 & 0xD4 over the
- * AREA030 mode handlers. The 0x04, 0x40 and 0x80 keys set modeByte to 7 and
- * D_8014403D to 4 before arming the work record published at the scratchpad
- * cursor 0x1F800044: byte 2 holds the per-key mode constant (0x0A for 0x04,
- * 9 for 0x80, and 9 or 2 for the two 0x40 outcomes) and byte 3 is cleared.
- * The 0x10 key only advances the record's byte 3. The 0x40 key requires the
- * D_80145026 / D_80145028 level flags; when func_801E1C10 reports a full icon
- * row it arms byte 3 with the mode constant and sets D_801E3204, otherwise it
- * clears D_801E3204 and arms byte 2 with 2.
+ * @behavior Dispatches shared pad-state mask D_80145AA8 & 0xD4. The 0x04 and
+ * 0x80 arms select work modes 0x0A and 9; the 0x10 arm advances work
+ * step 3. The 0x40 arm selects mode 9 when either shared byte
+ * D_80145026 or D_80145028 is zero. Otherwise it tests the
+ * matching-slot count: a passing test with D_801E3204 zero sets that
+ * byte to 1 and selects work step 7. A failed test clears D_801E3204.
+ * The other count-test paths select work mode 2 and clear work step 3.
  * @status exact
  * @match 100.00
  * @residual none
@@ -49,7 +47,7 @@ void func_801D9E40(void) {
       work[2] = 9;
       D_1F800044[3] = 0;
     } else {
-      if ((u8)func_801E1C10() != 0) {
+      if ((u8)hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004() != 0) {
         if (D_801E3204 == 0) {
           D_801E3204 = 1;
           work = WORLD00_AREA030_SCRATCH_PTR;

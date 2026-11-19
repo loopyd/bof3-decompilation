@@ -19,7 +19,7 @@
  * to 7, clears D_80143FC9 and D_8014420D, sets handler 6 on the active record,
  * plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8),
  * selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends
- * with func_801DDD4C.
+ * with playCueForChangedSelectedValueWorld00Area03004.
  * @status exact
  * @match 100.00
  * @residual none
@@ -110,5 +110,5 @@ void stepRecordSelectionPadModesOrResetOnCounterOverflowWorld00Area03004_801DB14
     D_80146888[D_801E3208].unk_1C = 0;
     func_8014D8D4(7);
   }
-  func_801DDD4C();
+  playCueForChangedSelectedValueWorld00Area03004();
 }

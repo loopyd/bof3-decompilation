@@ -3,7 +3,7 @@
 /* @source 0x801E1320
  * @behavior draws the AREA030 value row at the requested origin: selects
  * graphics mode 3/1, draws sprites 6 and 7 at (x, y) and (x + 0x58, y), reads
- * the func_801E0B6C summary value, scans the 13 halfword thresholds of the
+ * the sumValuesForNonzeroSlotAmountsWorld00Area03004 summary value, scans the 13 halfword thresholds of the
  * frame copy of D_801D0C70 for the first entry above that value's low 16 bits,
  * publishes the resulting index into D_801454EC and draws the icon record of
  * the matching frame copy of D_801D0C3C at (x + 0x1D, y + 0x1D) followed by
@@ -28,7 +28,7 @@ void func_801E1320(s16 x, s16 y)
     func_801E0DCC(6, 1, x, y);
     func_801E0DCC(7, 1, (s16)(x + 0x58), y);
 
-    value = func_801E0B6C();
+    value = sumValuesForNonzeroSlotAmountsWorld00Area03004();
     index = 0;
     while (1) {
         if ((value & 0xFFFF) < thresholds.thresholds[index]) {

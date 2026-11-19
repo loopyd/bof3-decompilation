@@ -28,7 +28,7 @@
  * that route and returns through func_8014D978. Other active paths set
  * countdown byte 9 to 0x10; signed class 3 doubles the motion words and
  * sets countdown 8 when a fresh rand() & 3 is zero. All paths except the
- * accepted entry run func_801E0394 and func_8014D978.
+ * accepted entry run applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and func_8014D978.
  * @status exact
  * @match 100.00
  * @residual none
@@ -268,6 +268,6 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       }
     }
   }
-  func_801E0394();
+  applyWorkStepTripleWhileCountdownActiveWorld00Area03004();
   func_8014D978();
 }

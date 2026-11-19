@@ -6,7 +6,7 @@
  * with CLUT 91 and byte 6 of the active 0x98-byte work record
  * D_80146888[D_801E3208], draws that record byte together with the record byte
  * at +0x90 through func_801E1004, draws the icon row at (176, 156) through
- * func_801E1320 and the extra icon through func_801E1C7C. While the shared pad
+ * func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad
  * mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and
  * scratch byte 0xB, then picks the panel open state: record byte 6 equal to
  * 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing
@@ -33,7 +33,7 @@ void choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC(void) {
   u8 recordId;
 
   WORLD00_AREA030_DRAW_PANEL_ROW(156);
-  func_801E1C7C();
+  drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004();
   if ((D_80145AA8 & 0x50) != 0) {
     cursor = D_1F800044;
     D_801E3214 = 0;

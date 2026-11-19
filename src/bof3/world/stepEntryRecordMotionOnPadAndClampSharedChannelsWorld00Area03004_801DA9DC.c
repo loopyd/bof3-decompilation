@@ -22,7 +22,7 @@
  * same word and request 5, Down (0x40) with the selection state 2/1 and request
  * 4/3 split by scratch byte 0 and the third word from selected entry word 8/4,
  * and no direction at all with request 4/3 split the same way - passing that
- * request to func_8014D8D4. Finally it plays the selection cue func_801DDD4C,
+ * request to func_8014D8D4. Finally it plays the selection cue playCueForChangedSelectedValueWorld00Area03004,
  * publishes record word 0x38 into D_8014930C, derives D_8014932E from record
  * word 0x10 (>> 8, or 0x10 when clear), clamps D_8014930C into
  * 0x150000..0x3C0000, stops record word 0x0C at the 0x80000/0x11FFFF x walls and
@@ -132,7 +132,7 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
       func_8014D8D4(3);
     }
   }
-  func_801DDD4C();
+  playCueForChangedSelectedValueWorld00Area03004();
   D_8014930C = *(s32*)(row + 0x38);
   if (*(s32*)(row + 0x10) != 0) {
     D_8014932E = *(s32*)(row + 0x10) >> 8;
