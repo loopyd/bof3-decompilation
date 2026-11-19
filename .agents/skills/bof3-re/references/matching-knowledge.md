@@ -418,6 +418,11 @@ from `.sched` and hold every save ahead of its first instruction. If saves
 cluster, inspect the scope edges in `.sched2` and compare compiler assembly
 before attributing the order to the assembler.
 
+For a scoped multiply, inspect its output after reload. Reload can insert `mflo`
+before the loop end, which makes a following load depend on that copy in the
+second schedule. The original multiply can precede a load while its result copy
+follows it. Check both instructions before accepting the scope boundary.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
