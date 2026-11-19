@@ -136,7 +136,9 @@ class BinaryDiagram extends HTMLElement {
     this.canvas.addEventListener("pointerleave", (event) => {
       if (!this.pinned && !BinaryDiagram.tooltip.contains(event.relatedTarget)) this.clear();
     });
+    this.canvas.addEventListener("mousedown", (event) => event.preventDefault());
     this.canvas.addEventListener("click", (event) => {
+      this.canvas.focus({ preventScroll: true });
       this.pinned = true;
       this.select(this.hit(event), event);
     });
@@ -254,21 +256,24 @@ class BinaryDiagram extends HTMLElement {
     this.selected = index;
     const span = this.binary.spans[index];
     const category = this.categories.find((row) => row.id === span.category);
-    const text = `${category.label} · ${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
+    const bounds = `${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
     const tooltip = BinaryDiagram.tooltip;
-    tooltip.replaceChildren(document.createTextNode(text));
+    tooltip.replaceChildren();
     if (span.functions) {
+      const summary = BinaryDiagram.node("div", "binary-function-summary");
+      summary.append(
+        BinaryDiagram.node("span", "", category.label),
+        BinaryDiagram.node("small", "binary-function-range", bounds),
+      );
+      tooltip.append(summary);
       for (const fn of span.functions) {
         const row = BinaryDiagram.node("div", "binary-function");
-        const label = { exact: "Exact", partial: "Partial", unlifted: "Unlifted", invalid: "Invalid lift" }[fn.status];
-        const status = BinaryDiagram.node("span", "binary-function-status", { exact: "✓", partial: "⏳" }[fn.status] || label);
+        const label = { exact: "Exact", partial: "Partial", unlifted: "Not started", invalid: "Invalid lift" }[fn.status];
+        const status = BinaryDiagram.node("span", "binary-function-status", { exact: "✓", partial: "⏳", unlifted: "×", invalid: "×" }[fn.status]);
         status.setAttribute("role", "img");
         status.setAttribute("aria-label", label);
         status.title = label;
-        row.append(status);
-        if (fn.status === "exact" || fn.status === "partial") {
-          row.append(BinaryDiagram.node("small", "binary-function-label", fn.status));
-        }
+        row.append(status, BinaryDiagram.node("small", "binary-function-label", label.toLowerCase()));
         if (fn.source) {
           const link = BinaryDiagram.node("a", "binary-source-link", "🔗");
           link.href = fn.source;
@@ -281,7 +286,7 @@ class BinaryDiagram extends HTMLElement {
         tooltip.append(row);
       }
     } else {
-      tooltip.append(document.createElement("br"), document.createTextNode(span.detail));
+      tooltip.append(document.createTextNode(`${category.label} · ${bounds}`), document.createElement("br"), document.createTextNode(span.detail));
     }
     if (span.preview !== undefined) {
       const preview = BinaryDiagram.node("div", "binary-preview", span.preview);
