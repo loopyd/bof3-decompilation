@@ -1966,6 +1966,14 @@ Preserve arithmetic types and execution paths.
 Local allocation requires one block and one death, not one definition. Multiple
 definitions alone do not prove that a pseudo needs global allocation.
 
+A projection local can start with its actual shared multiplier, then hold its
+product and coordinate. A copy supplying the other projection can survive CSE
+and keep the first quantity born before its origin addition. Local allocation
+then cannot absorb that established destination into the origin input. Verify
+the copy's real consumers, quantity deaths and origin-load assignments. Consuming
+the final difference into that same local can also tie its absolute-value result,
+change quantity priority and undo the gain. Check the complete register web.
+
 Locate the pointer's last access after scheduling before predicting an entry
 register exchange. Assigning an input register to an earlier field load can
 conflict with both the input and the still-live pointer. A global result's return
