@@ -48,14 +48,14 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7300b7c762c1e51877662b76fb2a95d77749958e",
-  "published_at": "2026-11-19T22:59:13.585352+00:00",
+  "revision": "569e53104955a65b6bc3901708fb033760d6720b",
+  "published_at": "2026-11-19T23:11:50.162665+00:00",
   "counts": {
     "completed": 6322,
     "partial": 357,
-    "unlifted": 3761,
+    "unlifted": 3760,
     "invalid": 0,
-    "total": 10440,
+    "total": 10439,
     "symbols": {
       "named": 69409,
       "raw": 55018,
@@ -51458,9 +51458,9 @@
       "entry": "13",
       "completed": 8,
       "partial": 0,
-      "unlifted": 17,
+      "unlifted": 16,
       "invalid": 0,
-      "total": 25,
+      "total": 24,
       "symbols": {
         "named": 166,
         "raw": 142,
@@ -51484,25 +51484,18 @@
           },
           {
             "start": 4,
-            "end": 100,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2148276228,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "end": 96,
+            "category": "unknown",
+            "detail": "No verified classification"
           },
           {
-            "start": 100,
+            "start": 96,
             "end": 164,
             "category": "code-unlifted",
             "detail": "Indexed function",
             "functions": [
               {
-                "address": 2148276324,
+                "address": 2148276320,
                 "status": "unlifted",
                 "source": null
               }
