@@ -23,14 +23,22 @@ class BinaryDiagram extends HTMLElement {
     const tooltip = document.createElement("div");
     tooltip.className = "binary-tooltip";
     tooltip.id = "binary-span-tooltip";
-    tooltip.setAttribute("role", "tooltip");
+    tooltip.setAttribute("role", "group");
+    tooltip.setAttribute("aria-label", "Binary span details");
     tooltip.setAttribute("aria-live", "polite");
     tooltip.hidden = true;
+    tooltip.addEventListener("pointerdown", (event) => {
+      if (event.target.closest(".binary-source-link")) event.preventDefault();
+    });
+    tooltip.addEventListener("pointerleave", (event) => {
+      const active = this.active;
+      if (active && !active.pinned && event.relatedTarget !== active.canvas) active.clear();
+    });
     document.body.append(tooltip);
     this.tooltip = tooltip;
     const dismissOutside = (event) => {
       const active = this.active;
-      if (!active || event.target === active.canvas || active.navigation.contains(event.target) || this.isHelpTarget(event.target)) return;
+      if (!active || event.target === active.canvas || active.navigation.contains(event.target) || tooltip.contains(event.target) || this.isHelpTarget(event.target)) return;
       active.clear();
       active.navigation.hidden = true;
       if (active.contains(document.activeElement)) document.activeElement.blur();
@@ -125,8 +133,8 @@ class BinaryDiagram extends HTMLElement {
     this.canvas.addEventListener("pointermove", (event) => {
       if (!this.pinned && !BinaryDiagram.active?.pinned) this.select(this.hit(event), event);
     });
-    this.canvas.addEventListener("pointerleave", () => {
-      if (!this.pinned) this.clear();
+    this.canvas.addEventListener("pointerleave", (event) => {
+      if (!this.pinned && !BinaryDiagram.tooltip.contains(event.relatedTarget)) this.clear();
     });
     this.canvas.addEventListener("click", (event) => {
       this.pinned = true;
@@ -139,7 +147,8 @@ class BinaryDiagram extends HTMLElement {
       if (!this.surface.contains(event.target) || this.surface.contains(event.relatedTarget)) return;
       this.navigation.hidden = false;
       this.pinned = true;
-      this.select(Math.max(0, this.selected));
+      if (BinaryDiagram.tooltip.contains(event.target)) this.draw();
+      else this.select(Math.max(0, this.selected));
     }, { signal: this.events.signal });
     this.addEventListener("focusout", (event) => {
       if (this.contains(event.relatedTarget)) return;
@@ -247,7 +256,30 @@ class BinaryDiagram extends HTMLElement {
     const category = this.categories.find((row) => row.id === span.category);
     const text = `${category.label} · ${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
     const tooltip = BinaryDiagram.tooltip;
-    tooltip.replaceChildren(document.createTextNode(text), document.createElement("br"), document.createTextNode(span.detail));
+    tooltip.replaceChildren(document.createTextNode(text));
+    if (span.functions) {
+      for (const fn of span.functions) {
+        const row = BinaryDiagram.node("div", "binary-function");
+        const label = { exact: "Exact", partial: "Partial", unlifted: "Unlifted", invalid: "Invalid lift" }[fn.status];
+        const status = BinaryDiagram.node("span", "binary-function-status", { exact: "✓", partial: "⏳" }[fn.status] || label);
+        status.setAttribute("role", "img");
+        status.setAttribute("aria-label", label);
+        status.title = label;
+        row.append(status);
+        if (fn.source) {
+          const link = BinaryDiagram.node("a", "binary-source-link", "🔗");
+          link.href = fn.source;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.setAttribute("aria-label", "Open function source on main");
+          link.title = "Open function source on main";
+          row.append(link);
+        }
+        tooltip.append(row);
+      }
+    } else {
+      tooltip.append(document.createElement("br"), document.createTextNode(span.detail));
+    }
     if (span.preview !== undefined) {
       const preview = BinaryDiagram.node("div", "binary-preview", span.preview);
       tooltip.insertBefore(preview, tooltip.lastChild);
@@ -291,6 +323,7 @@ class BinaryDiagram extends HTMLElement {
   key(event) {
     if (event.key === "Escape") {
       event.preventDefault();
+      if (BinaryDiagram.tooltip.contains(event.target)) this.canvas.focus();
       this.clear();
       return;
     }
@@ -302,6 +335,7 @@ class BinaryDiagram extends HTMLElement {
     else if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = Math.max(0, this.selected - 1);
     else return;
     event.preventDefault();
+    if (BinaryDiagram.tooltip.contains(event.target)) this.canvas.focus();
     this.pinned = true;
     this.select(next);
   }

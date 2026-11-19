@@ -189,6 +189,15 @@ function validateSnapshot(snapshot) {
           || Array.from(span.preview).length > 160 || !["header", "text"].includes(span.category)))) {
         throw new Error("The target binary partition is invalid.");
       }
+      const functions = span.functions;
+      if (span.category.startsWith("code-") ? !Array.isArray(functions) || !functions.length
+        || functions.some((fn) => !fn || !Number.isSafeInteger(fn.address) || fn.address < 0 || fn.address > 0xffffffff
+          || (span.category === "code-lifted" ? !["exact", "partial"].includes(fn.status)
+            || typeof fn.source !== "string" || !/^https:\/\/github\.com\/loopyd\/bof3-decompilation\/blob\/main\/src\/[^?#]+\.c#L[1-9][0-9]*$/.test(fn.source)
+            : !["unlifted", "invalid"].includes(fn.status) || fn.source !== null))
+        : functions !== undefined) {
+        throw new Error("The target function metadata is invalid.");
+      }
       end = span.end;
     }
     if (end !== binary.size) throw new Error("The target binary partition is incomplete.");
