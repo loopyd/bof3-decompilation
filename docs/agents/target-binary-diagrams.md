@@ -8,8 +8,11 @@ Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
 Selection brightens the span's fill without drawing a border over neighboring bytes.
 Lifted functions also show their repository-relative C source path. One tooltip
-is shared across the cards and moves to the active diagram. Clicking outside
-the canvas or its navigation buttons closes it, except when using legend help.
+is shared across the cards and moves to the active diagram. Its vertical position
+snaps to the top, middle or bottom for selections in the corresponding canvas
+third. Pointer selection uses the pointer's y coordinate; keyboard and chevron
+navigation use the span's first row. Resizing preserves that position. Clicking
+outside the canvas or its navigation buttons closes it, except when using legend help.
 Moving keyboard focus away also clears selection, with the same help exception.
 
 Focused diagrams show left and right chevrons for adjacent spans. Arrow keys
