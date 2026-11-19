@@ -27,8 +27,12 @@ class BinaryDiagram extends HTMLElement {
     tooltip.setAttribute("aria-label", "Binary span details");
     tooltip.setAttribute("aria-live", "polite");
     tooltip.hidden = true;
-    tooltip.addEventListener("pointerdown", (event) => {
-      if (event.target.closest(".binary-source-link")) event.preventDefault();
+    tooltip.addEventListener("pointerdown", (event) => event.preventDefault());
+    tooltip.addEventListener("click", (event) => {
+      const active = this.active;
+      if (!active || event.target.closest(".binary-source-link")) return;
+      active.pinned = true;
+      active.canvas.focus({ preventScroll: true });
     });
     tooltip.addEventListener("pointerleave", (event) => {
       const active = this.active;
@@ -115,7 +119,6 @@ class BinaryDiagram extends HTMLElement {
       event.preventDefault();
       this.closeHelp();
     });
-    heading.append(node("p", "metric-label", "Binary layout"), this.helpButton);
     this.navigation = node("div", "binary-navigation");
     this.navigation.hidden = true;
     this.previous = node("button", "", "‹");
@@ -126,7 +129,10 @@ class BinaryDiagram extends HTMLElement {
       button.addEventListener("click", () => this.navigate(step));
       this.navigation.append(button);
     }
-    this.surface.append(this.canvas, this.navigation);
+    const controls = node("div", "binary-controls");
+    controls.append(this.navigation, this.helpButton);
+    heading.append(node("p", "metric-label", "Binary layout"), controls);
+    this.surface.append(this.canvas);
     const bounds = node("p", "binary-bounds");
     bounds.append(node("span", "", "0x000000"), node("span", "", `${this.hex(this.binary.size - 1)} · ${this.binary.size.toLocaleString("en-US")} bytes`));
     this.replaceChildren(heading, this.surface, bounds);
@@ -143,13 +149,13 @@ class BinaryDiagram extends HTMLElement {
       this.select(this.hit(event), event);
     });
     this.addEventListener("keydown", (event) => {
-      if (this.surface.contains(event.target)) this.key(event);
+      if (this.isSelectionTarget(event.target)) this.key(event);
     }, { signal: this.events.signal });
     this.addEventListener("focusin", (event) => {
-      if (!this.surface.contains(event.target) || this.surface.contains(event.relatedTarget)) return;
+      if (!this.isSelectionTarget(event.target) || this.isSelectionTarget(event.relatedTarget)) return;
       this.navigation.hidden = false;
       this.pinned = true;
-      if (BinaryDiagram.tooltip.contains(event.target)) this.draw();
+      if (BinaryDiagram.active === this && this.selected >= 0) this.draw();
       else this.select(Math.max(0, this.selected));
     }, { signal: this.events.signal });
     this.addEventListener("focusout", (event) => {
@@ -247,6 +253,11 @@ class BinaryDiagram extends HTMLElement {
     return low;
   }
 
+  isSelectionTarget(target) {
+    return target === this.canvas || this.navigation.contains(target)
+      || (BinaryDiagram.active === this && BinaryDiagram.tooltip.contains(target));
+  }
+
   select(index, event) {
     if (BinaryDiagram.active !== this) {
       BinaryDiagram.active?.clear();
@@ -258,14 +269,13 @@ class BinaryDiagram extends HTMLElement {
     const category = this.categories.find((row) => row.id === span.category);
     const bounds = `${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
     const tooltip = BinaryDiagram.tooltip;
-    tooltip.replaceChildren();
+    const summary = BinaryDiagram.node("div", "binary-summary");
+    summary.append(
+      BinaryDiagram.node("span", "binary-category", span.functions ? "Code" : category.label),
+      BinaryDiagram.node("small", "binary-range", bounds),
+    );
+    tooltip.replaceChildren(summary);
     if (span.functions) {
-      const summary = BinaryDiagram.node("div", "binary-function-summary");
-      summary.append(
-        BinaryDiagram.node("span", "", category.label),
-        BinaryDiagram.node("small", "binary-function-range", bounds),
-      );
-      tooltip.append(summary);
       for (const fn of span.functions) {
         const row = BinaryDiagram.node("div", "binary-function");
         const label = { exact: "Exact", partial: "Partial", unlifted: "Not started", invalid: "Invalid lift" }[fn.status];
@@ -286,7 +296,7 @@ class BinaryDiagram extends HTMLElement {
         tooltip.append(row);
       }
     } else {
-      tooltip.append(document.createTextNode(`${category.label} · ${bounds}`), document.createElement("br"), document.createTextNode(span.detail));
+      tooltip.append(BinaryDiagram.node("div", "binary-detail", span.detail));
     }
     if (span.preview !== undefined) {
       const preview = BinaryDiagram.node("div", "binary-preview", span.preview);
@@ -379,7 +389,7 @@ class BinaryDiagram extends HTMLElement {
     }
     if (BinaryDiagram.active === this) {
       const tooltip = BinaryDiagram.tooltip;
-      const gutter = this.navigation.hidden ? 6 : 50;
+      const gutter = 6;
       tooltip.style.left = `${Math.max(gutter, Math.min(parseFloat(tooltip.style.left) || gutter, width - tooltip.offsetWidth - gutter))}px`;
       tooltip.style.top = `${8 + this.tooltipBand / 2 * Math.max(0, height - tooltip.offsetHeight - 16)}px`;
     }

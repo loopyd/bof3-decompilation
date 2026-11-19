@@ -9,16 +9,17 @@ does not classify their remaining bytes. Untyped prefixes remain unknown.
 
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
+All span tooltips show byte ranges and sizes in the same smaller, darker,
+right-aligned summary. Clicking tooltip text also retains the displayed span.
 Headers preview their first 32 bytes as spaced hexadecimal pairs, with `...` when
 more bytes remain. Four-byte EMI headers show all four pairs. Reviewed text rows
 show the text tool's decoded characters and command notation, limited to 160
 characters with `...` for truncation. Text-bank metadata has no character preview.
 Selection brightens the span's fill without drawing a border over neighboring bytes.
-Function details omit analyzer names. Exact lifts show ✓ and partial lifts show
+Function headings say `Code` and omit analyzer names. Exact lifts show ✓ and partial lifts show
 ⏳ on the left, beside small `exact` or `partial` labels. Unlifted functions use
 the same layout with × and `not started`, without a source link. Invalid lifts
-retain an `invalid lift` label. Function byte ranges and sizes use smaller,
-darker text aligned right. The right-aligned 🔗 icon opens a lifted function's C
+retain an `invalid lift` label. The right-aligned 🔗 icon opens a lifted function's C
 source line on the repository's `main` branch in a new tab. Tab can focus the
 link. Enter opens it.
 One details tooltip is shared across cards and moves to the active diagram.
@@ -28,9 +29,11 @@ navigation use the span's first row. Resizing preserves that position. Clicking
 outside the canvas, its navigation buttons or details closes it, except when using legend help.
 Moving keyboard focus away also clears selection, with the same help exception.
 
-Focused diagrams show left and right chevrons for adjacent spans. Arrow keys
-also select adjacent spans, Home and End select the first and last spans, and
-Escape clears selection. The chevrons disappear when focus leaves the diagram.
+Focused diagrams show circular left and right chevrons beside `?`, above the
+canvas. They retain selection while focused and dim at the first or last span,
+where navigation stops. Arrow keys also select adjacent spans, Home and End
+select the first and last spans, and Escape clears selection. The chevrons
+disappear when focus leaves the diagram.
 Resizing preserves physical offsets and selection.
 
 The `?` button at the canvas's right edge opens the color legend. One help tooltip

@@ -914,9 +914,10 @@ binary-diagram {
 .binary-surface { position: relative; margin-top: 10px; }
 .binary-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .binary-heading .metric-label { margin: 0; }
-.binary-help-button { flex: 0 0 auto; width: 28px; height: 28px; padding: 0; border: 1px solid #8a9dab; border-radius: 50%; background: #0c131c; color: #dce6ec; font: 600 14px/1 sans-serif; cursor: pointer; }
+.binary-controls { display: flex; align-items: center; gap: 6px; }
+.binary-help-button, .binary-navigation button { flex: 0 0 auto; width: 28px; height: 28px; padding: 0; border: 1px solid #8a9dab; border-radius: 50%; background: #0c131c; color: #dce6ec; font: 600 14px/1 sans-serif; cursor: pointer; }
 .binary-help-button[aria-expanded="true"] { background: #293b4b; border-color: #f3ce69; }
-.binary-help-button:focus-visible { outline: 2px solid #f3ce69; outline-offset: 2px; }
+.binary-help-button:focus-visible, .binary-navigation button:focus-visible { outline: 2px solid #f3ce69; outline-offset: 2px; }
 .binary-canvas {
   display: block;
   width: 100%;
@@ -925,12 +926,10 @@ binary-diagram {
   touch-action: pan-y;
 }
 .binary-canvas:focus-visible { outline: 2px solid #f3ce69; outline-offset: 3px; }
-.binary-navigation { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.binary-navigation { display: flex; align-items: center; gap: 6px; }
 .binary-navigation[hidden] { display: none; }
-.binary-navigation button { width: 38px; height: 44px; padding: 0; border: 1px solid #8a9dab; border-radius: 4px; background: #0c131cf2; color: #f1f4f6; font: 30px/1 monospace; cursor: pointer; pointer-events: auto; }
+.binary-navigation button { font: 24px/1 monospace; }
 .binary-navigation button[aria-disabled="true"] { opacity: .5; cursor: default; }
-.binary-navigation button:focus-visible { outline: 2px solid #f3ce69; outline-offset: 2px; }
-.binary-navigation:not([hidden]) ~ .binary-tooltip { max-width: calc(100% - 100px); }
 .binary-tooltip, .binary-help-tooltip {
   position: absolute;
   z-index: 2;
@@ -952,8 +951,8 @@ binary-diagram {
 }
 .binary-help-tooltip { position: fixed; z-index: 5; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto; padding: 12px; white-space: normal; pointer-events: auto; }
 .binary-tooltip { pointer-events: auto; }
-.binary-function-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
-.binary-function-range { margin-left: auto; font-size: 10px; color: #8b9aa7; text-align: right; }
+.binary-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.binary-range { margin-left: auto; font-size: 10px; color: #8b9aa7; text-align: right; }
 .binary-function { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .binary-function-label { font-size: 10px; }
 .binary-source-link { display: inline-flex; align-items: center; justify-content: center; margin-left: auto; min-width: 28px; min-height: 28px; color: inherit; text-decoration: none; border-radius: 3px; }
