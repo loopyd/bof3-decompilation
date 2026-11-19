@@ -21,6 +21,7 @@ support_sources = [
     "src/bof3/world/advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0.c",
     "src/bof3/world/drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C.c",
     "src/bof3/world/drawProjectedEffectDotAndTileWorld03Area12013_801F3468.c",
+    "src/bof3/world/setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320.c",
 ]
 psyq_source = "src/bof3/support/area120_13_psyq.c"
 

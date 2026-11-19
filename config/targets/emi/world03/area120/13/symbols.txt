@@ -27,7 +27,7 @@ advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12
 func_801F3E7C = 0x801F3E7C;
 drawTwoPassTexturedQuadAtWorkHalfwords36And3aWithArgSpreadAndByteARowWorld03Area12013_801F3F5C = 0x801F3F5C;
 setStatusFFFFAndScenarioProgress14IfGateElse0AWorld03Area12013_801F42F0 = 0x801F42F0;
-func_801F4320 = 0x801F4320;
+setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320 = 0x801F4320;
 setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350 = 0x801F4350;
 D_801F43B8 = 0x801F43B8;
 T_801F45CC = 0x801F45CC;

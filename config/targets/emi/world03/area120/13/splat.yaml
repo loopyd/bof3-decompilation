@@ -124,8 +124,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress14IfGateElse0AWorld03Area12013_801F42F0.c'
     - '@behavior: Loads the shared gate byte D_801490C7 (s8), stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x14 into the shared scenario progress byte g_ScenarioProgress while the gate byte is nonzero, and 0xA when it is zero.'
   - - 5920
-    - asm
-    - func_801F4320
+    - c
+    - setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320
+    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress1EIfGateElse28World03Area12013_801F4320.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword D_801490A8 unconditionally, then stores 0x1E into the shared scenario progress byte g_ScenarioProgress while the gate byte is nonzero, and 0x28 when it is zero. Leaf, no arguments, no return value.'
   - - 5968
     - c
     - setStatus35IfGateElseResetStatusAndIncrementWorkHalfword7EState0DSubstate8World03Area12013_801F4350

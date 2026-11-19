@@ -33,8 +33,10 @@ segments:
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09113_801F2C84
   - - 180
-    - asm
-    - func_801F2CB4
+    - c
+    - setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09113_801F2CB4
+    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09113_801F2CB4.c'
+    - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read and, while it is nonzero, stores the constant 5 into the handler index byte at 0x801D4286 with the constant materialised in the branch delay slot; it then stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and returns, taking no arguments and writing nothing else; the payload names this body only as the address-taken word at 0x801F3B38 of the ordered handler run that also holds 0x801F2C04, 0x801F2C84, 0x801F2CE4 and 0x801F2D28, so no call site fixes a prototype.'
   - - 228
     - asm
     - func_801F2CE4

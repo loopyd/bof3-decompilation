@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801F3400
   - - 2480
-    - asm
-    - func_801F35B0
+    - c
+    - publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0
+    - '@source: src/bof3/world/publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0.c'
+    - '@behavior: Entry handler that latches the halfword indexed by the shared gate byte at 0x801490C7 from the target-local halfword table at 0x801F5058 into the shared status halfword at 0x801490A8, then acts on that gate byte: gate 0 stores 0xA into the shared sub-state byte at 0x80146875, zeroes the shared scenario progress byte at 0x80146864 and the shared bytes at 0x80146865, 0x80146866 and 0x80146867, and stores 6 into the shared primary state request byte at 0x80146874; gate 1 zeroes only 0x80146864; any other gate value leaves those cells untouched.'
   - - 2620
     - asm
     - func_801F363C

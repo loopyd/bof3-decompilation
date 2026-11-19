@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatus4AndModeIndex6IfGateElse2World01Area05913_801F2C04
+    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElse2World01Area05913_801F2C04.c'
+    - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is zero it stores 2 into the shared status halfword D_801490A8, and while it is nonzero it stores 4 into D_801490A8 and then 6 into the shared mode index byte D_801D4285.'
   - - 72
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05913_801F2C48

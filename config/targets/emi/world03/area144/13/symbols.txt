@@ -1,7 +1,7 @@
 dispatchStateByte1Table3e68World03Area14413_801F2C04 = 0x801F2C04;
 latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48 = 0x801F2C48;
 func_801F2CA4 = 0x801F2CA4;
-func_801F2CFC = 0x801F2CFC;
+advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC = 0x801F2CFC;
 copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44 = 0x801F2D44;
 incrementWorkByte1World03Area14413_801F2D70 = 0x801F2D70;
 incrementWorkByte1World03Area14413_801F2D90 = 0x801F2D90;

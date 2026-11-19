@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2CA4
   - - 252
-    - asm
-    - func_801F2CFC
+    - c
+    - advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC
+    - '@source: src/bof3/world/advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC.c'
+    - '@behavior: Overlay step handler, entry 2 of the per-frame handler pointer run at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: runs the record-walk helper 0x801F34FC, which leaves 1 in its return register once a work record of the shared table at 0x800E4800 has run its own handler and 0 when none did, and only when the low byte of that result is zero advances byte +0x01 of the record published through the scratchpad pointer cell 0x1F800044 by one, handing the step to the next handler of the same run. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 324
     - c
     - copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44

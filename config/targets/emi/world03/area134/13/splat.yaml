@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table5744World03Area13413_801F2C04
     - '@source: src/bof3/world/area13413DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - resetScratchStateToMode1World03Area13413_801F2C48
+    - '@source: src/bof3/world/resetScratchStateToMode1World03Area13413_801F2C48.c'
+    - '@behavior: Clears the work byte at offset 0x09 of the record published at scratchpad pointer cell 0x1F800044, arms that record state byte at offset 0x01 with 1 and clears its byte at offset 0x02, re-reading the pointer cell before every store. Takes no arguments and returns nothing.'
   - - 120
     - asm
     - func_801F2C78
