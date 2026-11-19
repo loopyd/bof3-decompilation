@@ -439,6 +439,9 @@ and may create a stack home. Trace output copies after producers separately from
 input copies before consumers. Equal producer and consumer depths can restore an
 alternate class, but following loop notes can still fence output copies. Check
 classes, allocation, notes, frame and both schedules before native comparison.
+A reload needed elsewhere in the same block can evict an LO allocation despite
+disjoint lifetimes. A general-register alternate does not remove a multiply's
+mandatory LO output.
 
 Moving the last statement can make an implicit byte mask receive `LOOP_END` after
 reload. A bound reload fenced after that mask can gain a load-delay `nop` even
