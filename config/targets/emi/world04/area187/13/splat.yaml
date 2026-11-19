@@ -40,8 +40,10 @@ segments:
     - c
     - setWorld04Area18713_801F2C90
   - - 164
-    - asm
-    - func_801F2CA4
+    - c
+    - releaseOverlayAndClearSharedStateBytesWorld04Area18713_801F2CA4
+    - '@source: src/bof3/world/releaseOverlayAndClearSharedStateBytesWorld04Area18713_801F2CA4.c'
+    - '@behavior: Runs the shared front-end release helper func_8015C058 and then writes zero to the three consecutive shared state bytes at 0x801448EB, 0x801448EC and 0x801448ED in ascending address order. Takes no arguments, returns nothing, and the 0x18-byte frame only holds the return address across the call. Called twice by the state dispatcher at 0x801F2CDC (its offsets 0x16C and 0x190).'
   - - 220
     - asm
     - func_801F2CDC

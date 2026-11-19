@@ -206,8 +206,10 @@ segments:
     - '@source: src/bof3/world/queueSharedUiElement25xBSize0World01Area06714_801F45BC.c'
     - '@behavior: queues the shared UI element at (0x25, 0xB) with size 0 through the shared marker queue func_801A4BC0'
   - - 6628
-    - asm
-    - func_801F45E4
+    - c
+    - initArea06714State
+    - '@source: src/bof3/world/initArea06714State.c'
+    - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 1 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED'
   - - 6692
     - textbin
     - D_801F4624

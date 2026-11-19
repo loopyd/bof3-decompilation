@@ -40,5 +40,6 @@ support_sources = [
     "src/bof3/world/stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98.c",
     "src/bof3/world/tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8.c",
     "src/bof3/world/raiseSharedDecisionFlag2SetScenarioProgress32ThenResetWorkAreaWorld01Area06714_801F318C.c",
+    "src/bof3/world/initArea06714State.c",
 ]
 psyq_source = "src/bof3/support/area067_14_psyq.c"

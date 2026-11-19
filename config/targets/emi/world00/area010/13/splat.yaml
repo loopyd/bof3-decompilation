@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area01013_801F2C04
+    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area01013_801F2C04.c'
+    - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x64 into g_ScenarioProgress when that byte reads 0 and 0x65 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 68
     - asm
     - func_801F2C44

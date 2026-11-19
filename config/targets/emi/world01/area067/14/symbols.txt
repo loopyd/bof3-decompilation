@@ -40,5 +40,5 @@ stopSelectionEffectPairZeroOneWorld01Area06714_801F4478 = 0x801F4478;
 func_801F449C = 0x801F449C;
 clearWorkAnimBit0ThenRunStartupAndClearProgressAndRequestPrimaryState4Substate0IfPartyByte6World01Area06714_801F451C = 0x801F451C;
 queueSharedUiElement25xBSize0World01Area06714_801F45BC = 0x801F45BC;
-func_801F45E4 = 0x801F45E4;
+initArea06714State = 0x801F45E4;
 D_801F4624 = 0x801F4624;

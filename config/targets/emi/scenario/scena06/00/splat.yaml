@@ -752,8 +752,16 @@ segments:
     - c
     - armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE15C
   - - 30104
-    - asm
-    - func_801FE198
+    - c
+    - armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE198
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE198.c'
+    - '@behavior: Word 11 (0-based) of the 22-word coordinate-lookup handler run
+      at 0x801FE48C, whose word at 0x801FE4B8 is the only image mention of the
+      address. Re-arms the overlay effect group for ids 0, 1 and 2 through
+      func_80166E88, calls the helper at 0x801C1400 with the constant argument
+      0, and finishes with the per-id helper func_801C187C on id 2. It takes no
+      arguments, returns nothing, reads no memory of its own and writes none,
+      and its 0x18-byte frame only keeps $ra across the three calls.'
   - - 30164
     - c
     - armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE1D4

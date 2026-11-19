@@ -71,7 +71,10 @@ Before first gate: evidence-backed name/module, complete ownership and canonical
 metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect
 measurements. Placeholder tags (`@status partial`, `@match 0.00`) fail the gate on
 byte-identical code, so write the measured tags in the same edit as the source
-instead of spending a gate cycle on metadata alone. Name no tag inside prose: a
+instead of spending a gate cycle on metadata alone. If the gate reports
+`metadata: no @status/@match/@residual declared`, byte comparison can pass without
+progress-metadata verification. Add the measured tags and renew the gate before
+claiming metadata agreement. Name no tag inside prose: a
 comment carrying `@behavior`, or `@source` alone on its own line above a definition,
 parses as that function's metadata block and refuses the gate with `invalid_metadata`
 before it compiles, while the same words after code on the line stay prose; delete
