@@ -1,5 +1,5 @@
 D_8014932A = 0x8014932A;
-func_801F2C04 = 0x801F2C04;
+publishModeStatusFromTable5cd4AndSetFlagBit3BWhenModeZeroWorld01Area04914_801F2C04 = 0x801F2C04;
 publishModeStatusFromTable5cd8World01Area04914_801F2C54 = 0x801F2C54;
 func_801F2C80 = 0x801F2C80;
 clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0 = 0x801F2CC0;

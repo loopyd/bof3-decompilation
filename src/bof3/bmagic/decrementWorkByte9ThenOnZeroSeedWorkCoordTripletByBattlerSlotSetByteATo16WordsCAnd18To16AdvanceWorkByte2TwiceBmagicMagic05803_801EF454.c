@@ -49,13 +49,14 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 /* @source 0x801EF454
  * @behavior Overlay step body, word 6 of the nine-word step table the payload
  *           header holds at 0x801EEC04, dispatched between func_801EF338 and
- *           func_801EF5D4. It decrements work byte 0x09 and returns while the
- *           countdown is non-zero; when it reaches zero it seeds the work
- *           coordinate triplet from a battler action record: work byte 0x0B is
- *           the battler slot, and while it is below 3 the row comes from the
- *           0x140-byte party array at 0x80145EC4 at that slot, otherwise from
- *           the 0x118-byte enemy array at 0x801EB664 at slot minus three. The
- *           row words 0, 4 and 8 land in work words 0x34, 0x38 and 0x3C. It then
+ *           the width-ramp step body at 0x801EF5D4. It decrements work byte
+ *           0x09 and returns while the countdown is non-zero; when it reaches
+ *           zero it seeds the work coordinate triplet from a battler action
+ *           record: work byte 0x0B is the battler slot, and while it is below 3
+ *           the row comes from the 0x140-byte party array at 0x80145EC4 at that
+ *           slot, otherwise from the 0x118-byte enemy array at 0x801EB664 at
+ *           slot minus three. The row words 0, 4 and 8 land in work words 0x34,
+ *           0x38 and 0x3C. It then
  *           sets work byte 0x0A to 0x10, the work words 0x0C and 0x18 to 0x10,
  *           and advances work byte 0x02 twice, the second increment reading the
  *           work pointer cell again because the increment store may alias it. The original re-reads work byte 0x0B before

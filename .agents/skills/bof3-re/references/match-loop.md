@@ -67,7 +67,10 @@ the receiving span's own bytes. The cell-access spelling carries the same way: a
 pointer cell written by name and a paraphrase of it into a fixed-address constant
 address compile differently, so a seed that swaps one for the other opens a rung-1
 base-materialisation miss ([scratchpad cells](matching-knowledge.md#scratchpad-cells-and-record-views)), and
-that miss is this transcription rather than a wrong donor. Obtain a live
+that miss is this transcription rather than a wrong donor. For an extra base-building
+`addiu` before a fixed-address halfword access, test the pointer-local form in
+[halfword read-modify-write](matching-knowledge.md#halfword-read-modify-write)
+before rejecting the donor's statement shape. Obtain a live
 [native diff](native-execution.md) before another edit. Missing-source errors supply
 no baseline; seeds grant no score or acceptance. Unresolved
 ownership/ABI or failed native gates stop matching. Require final byte match and

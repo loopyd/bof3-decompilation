@@ -937,7 +937,12 @@ adjacent fields of one record are updated in a row.
    `*half = (s16)(*half + delta);` then compare `*half`. The add stays on the
    zero-extended load, the store truncates, and the sign extension happens after
    the store. That reproduces the usual `lhu`, `addiu`, `sh`, `sll`/`sra`, `slti`
-   sequence.
+   sequence. For a fixed-address extern halfword, test
+   `p = &CELL; value = *p; ...; *p = value;` when the first mismatch is an extra
+   base-building `addiu` before a zero-displacement access. This address form
+   improved 9/15 instructions and 64 bytes to 15/15 and the original 60 bytes in
+   a read/store pair separated by another store. Keep the value and statement
+   order fixed while testing the address form.
 2. When the cell is volatile and the original does not reload it, keep the
    decremented value in an `s32` local and cast at both uses:
    `value = *(volatile u16*)(p + n) - delta; *(volatile s16*)(p + n) = (s16)value;`
