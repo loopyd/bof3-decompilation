@@ -57,8 +57,10 @@ segments:
     - c
     - noopHandlerBossBoss01816_800C19E0
   - - 488
-    - asm
-    - func_800C19E8
+    - c
+    - dispatchStateByte1Table2ce8BossBoss01816_800C19E8
+    - '@source: src/bof3/boss/dispatchStateByte1Table2ce8BossBoss01816_800C19E8.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay''s handler table based at 0x800C2CE8 with no arguments, so the selected handler''s result stays in the return register.'
   - - 556
     - asm
     - func_800C1A2C

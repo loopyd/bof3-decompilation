@@ -8,8 +8,8 @@ extern u8 D_80149333;
  *           0x8014932A, stores the constant 2 into the shared status byte at
  *           0x80149333, then writes the counter back advanced by 0x12. This is
  *           the advance half of the pair whose retreat half is the adjacent
- *           func_801F2D38: same load-first idiom and same counter halfword with
- *           the immediate negated.
+ *           retreatCounter2By18World00Area02313_801F2D38: same load-first idiom
+ *           and same counter halfword with the immediate negated.
  * @status exact
  * @match 100.00
  * @residual none

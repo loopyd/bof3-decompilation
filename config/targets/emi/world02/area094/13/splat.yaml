@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/world/publishModeStatusFromTable5354AndSetFlagBit15World02Area09413_801F2C5C.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5354, publishes it into the shared status halfword D_801490A8, and then sets flag bit 0x15 of the shared scenario flag word D_8014686C through the shared bit-set helper 0x8015B580 when that same mode reads 1.'
   - - 180
-    - asm
-    - func_801F2CB4
+    - c
+    - publishModeStatusFromTable5358ThenSetFlag16AndRequestPrimaryState7Substate19Or32ByFlag1AWorld02Area09413_801F2CB4
+    - '@source: src/bof3/world/publishModeStatusFromTable5358ThenSetFlag16AndRequestPrimaryState7Substate19Or32ByFlag1AWorld02Area09413_801F2CB4.c'
+    - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5358, publishes it into the shared status halfword D_801490A8, and then acts only on mode 1. With flag 0x16 of the shared flag word D_8014686C clear it sets that flag through the shared bit-set helper 0x8015B580, runs the shared front-end startup helper 0x8015C088, clears the shared scenario progress byte 0x80146864, the three shared area state bytes 0x80146865/0x80146866/0x80146867 and the shared sub-state byte 0x80146875, and stores 7 in the shared primary-state byte 0x80146874. With flag 0x16 set it tests flag 0x1A of the same word through the shared flag tester 0x8015B5D4, runs 0x8015C088 and stores 0x19 in the shared sub-state byte 0x80146875 when that flag is clear or 0x32 when it is set, then clears the progress and state bytes and stores 7 in the primary-state byte. Mode 0, a negative mode and every other mode publish the status halfword only.'
   - - 452
     - c
     - publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4

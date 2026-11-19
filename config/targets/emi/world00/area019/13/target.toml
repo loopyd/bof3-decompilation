@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/advanceChannel932cByA00World00Area01913_801F2C04.c",
+    "src/bof3/world/stopSelectionEffectWorld00Area01913_801F2D6C.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperArgWorld00Area01913_801F2CB4.c",

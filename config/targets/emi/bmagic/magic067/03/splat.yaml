@@ -65,8 +65,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvoke0688And079CAndPopWhenWorkByte0NonzeroBmagicMagic06703_801EF314.c'
     - '@behavior: Dispatches unsigned work byte 2 through table 0x801F04C8, reloads the scratchpad work pointer, and invokes 0x801EF688, 0x801EF79C, and PopMatrix when work byte 0 is nonzero.'
   - - 1932
-    - asm
-    - func_801EF38C
+    - c
+    - seedMotionOffsetPositionPairCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic06703_801EF38C
+    - '@source: src/bof3/bmagic/seedMotionOffsetPositionPairCue100AndRearmFieldsThenAdvanceWorkByte2BmagicMagic06703_801EF38C.c'
+    - '@behavior: Invokes the shared helper 0x800AFD9C, seeds work word 0xC with 0xFFFC0000 and work word 0x10 with zero, runs 0x801DD350 on the work pointer, publishes the absolute position pair by adding 0x80149308 and 0x8014930C to those step words into work words 0x34 and 0x38, dispatches cue 0x100 through 0x8015DF18, then sets work byte 0xB to 0x34, work word 0x14 to 0x2FFF, clears work byte 9, sets work byte 0xA to 0x10 and increments work byte 2.'
   - - 2124
     - c
     - advanceWorkByteBIncrementByteAOnGlobalBit0AndByte9ByTwoThenAdvanceByte2At192BmagicMagic06703_801EF44C

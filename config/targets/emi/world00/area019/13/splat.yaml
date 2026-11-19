@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801F2CD4
   - - 364
-    - asm
-    - func_801F2D6C
+    - c
+    - stopSelectionEffectWorld00Area01913_801F2D6C
+    - '@source: src/bof3/world/stopSelectionEffectWorld00Area01913_801F2D6C.c'
+    - '@behavior: Calls the executable-side frontend helper at 0x8015D404 with both arguments zero, stopping selection effect group 0 id 0, and returns; no overlay cell is read or written.'
 - - 400
   - bin
   - tail

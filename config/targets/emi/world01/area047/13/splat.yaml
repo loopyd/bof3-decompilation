@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table39c8World01Area04713_801F2C04
     - '@source: src/bof3/world/area04713DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48
+    - '@source: src/bof3/world/armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48.c'
+    - '@behavior: reads the state byte at +1 of the work record published by the scratchpad pointer cell 0x1F800044, stores 0x3C into the record 32-bit countdown word at +0xC and writes the state byte back incremented by one, so the next dispatch of the same byte enters the following handler; takes no arguments, returns nothing and uses no frame.'
   - - 108
     - asm
     - func_801F2C6C

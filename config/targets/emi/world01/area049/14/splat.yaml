@@ -70,8 +70,10 @@ segments:
     - advanceCounterWorld01Area04914_801F33E8
     - '@source: src/bof3/world/advanceCounterWorld01Area04914_801F33E8.c'
   - - 2064
-    - asm
-    - func_801F3410
+    - c
+    - retreatCounterWorld01Area04914_801F3410
+    - '@source: src/bof3/world/retreatCounterWorld01Area04914_801F3410.c'
+    - '@behavior: Retreats the shared 16-bit overlay counter at 0x8014932A by 0x14 and marks the shared area status byte at 0x80149333 with the constant 2. Takes no arguments and returns nothing.'
   - - 2104
     - c
     - setTwoWorld01Area04914_801F3438

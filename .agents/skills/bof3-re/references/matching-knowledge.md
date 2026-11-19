@@ -171,7 +171,9 @@ left 28 of 39 instructions at the original size, while a separate pointer base f
 the increment arm restored the per-arm store. Read the store count off the
 original before choosing that: the cross-jump applies where the original stores once
 per arm, while an original that stores once after the branch keeps the store there and
-selects in the arms. A guard that picks the sign of one delta on a shared halfword is
+selects in the arms. This also applies when both arms choose the same constant. A literal at the join
+left one instruction different; separate arm stores added twelve bytes. Assigning
+the constant to a local in each arm, then storing it once after the branch, matched. A guard that picks the sign of one delta on a shared halfword is
 that second case: assign one pointer and one value local in each arm and store once
 after the branch, so each arm keeps its own base materialisation and load while the
 join holds the single store. That merge also needs each arm
@@ -270,7 +272,10 @@ group that carries a value read: kept as the `for` increment the counter schedul
 after that group and matched, while the same body with `i++` written among those
 stores measured three instructions short with the first difference inside the group,
 and the same two spellings with no read in the group measured alike. Read the
-increment's placement before spending a sweep on the stores. The guard applies with
+increment's placement before spending a sweep on the stores. Keep only the counter increment in the `for` clause when the body must update a
+stored value first. Putting both updates in the clause, or both in the body, added
+one instruction and four bytes. Incrementing the counter in a `do`/`while` condition
+also matched. The guard applies with
 no zeroing in play as
 well: when the original leaves load-delay `nop`s ahead of the loop's own setup, a
 plain `while` hoists that setup into a preheader and fills them, so write an explicit
@@ -1136,6 +1141,11 @@ pair and shifts the whole block out of the original's order. Which pointer a lat
 member casts from is part of the spelling, the far one taking the neighbouring vertex
 pointer rather than the base. Order is not the lever here: eight further permutations
 of the block measured the same count.
+
+Test the pointer type as well as each cast. A word-pointer element form measured
+39 of 48 instructions, four bytes short; a shared word temporary measured 33 of 48
+at the original size. A `u8 *` working pointer with `*(u32 *)(p + offset)` at each
+store matched.
 
 The form is per access, not per family, body or cell, so count the original's cell
 loads before copying a sibling's spelling: a member that reads the cell once and

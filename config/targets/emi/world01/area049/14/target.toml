@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/world/seedFrontEndRecordKind6CQueueCue209AndClearWorkAnimBit0ThenRequestPrimaryState4Substate30IfPartyByte5World01Area04914_801F360C.c",
     "src/bof3/world/queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC.c",
     "src/bof3/world/syncWorkRecordsFromAreaFlagsAndBoundsTableWorld01Area04914_801F2DCC.c",
+    "src/bof3/world/retreatCounterWorld01Area04914_801F3410.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"
