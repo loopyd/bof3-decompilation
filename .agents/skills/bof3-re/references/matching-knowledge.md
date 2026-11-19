@@ -459,6 +459,10 @@ Moving a scope boundary therefore changes both dependency edges and priority.
 Trace the actual receiver and its surviving notes before predicting instruction
 order.
 
+Check block heads when tracing a scope across a guard. GCC 2.7.2 skips leading
+labels and notes during scheduling. A scope end before the success label can
+change reference weights without fencing that path's first instruction.
+
 1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
    handling. Loop notes can attach dependencies to the next instruction: pending
    uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
