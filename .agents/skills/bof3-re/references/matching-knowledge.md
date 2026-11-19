@@ -1979,6 +1979,12 @@ negation and join where the equivalent ternary folds to `ABS_EXPR`. The join
 changes local allocation eligibility. Check load sharing and quantity classes
 again; a surviving global distance does not establish its register.
 
+A magnitude assignment can still take an anonymous local difference as its
+operand. When one word local represents successive real values, start with the
+actual signed sample, then apply its subtraction and magnitude. Confirm the load
+and arithmetic destinations after CSE; block membership and deaths, rather than
+declaration spelling, determine local eligibility.
+
 Global allocation can derive a general preference from an arithmetic source's
 first operand and merge preferences from other dying global operands. The latter
 merges copy preferences only for a whole-source register copy. Expansion precedes
