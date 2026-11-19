@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "32a2501b53331a529a6523c6b172d13e81552bac",
-  "published_at": "2026-11-19T19:24:29.237494+00:00",
+  "revision": "d7f7711d306e5c5174e87222a216fae36a654baf",
+  "published_at": "2026-11-19T19:27:29.135006+00:00",
   "counts": {
-    "completed": 6254,
+    "completed": 6264,
     "partial": 358,
-    "unlifted": 3912,
+    "unlifted": 3902,
     "invalid": 0,
     "total": 10524,
     "symbols": {
-      "named": 69342,
-      "raw": 55083,
+      "named": 69352,
+      "raw": 55073,
       "total": 124425
     }
   },
@@ -26465,14 +26465,14 @@
       "family": "boss",
       "archive": "boss002",
       "entry": "16",
-      "completed": 28,
+      "completed": 29,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 191,
-        "raw": 138,
+        "named": 192,
+        "raw": 137,
         "total": 329
       },
       "binary": {
@@ -26559,8 +26559,8 @@
           {
             "start": 836,
             "end": 904,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1b44: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c1b44: exact indexed function\nSource: src/bof3/boss/dispatchStateByte2Table2030BossBoss00216_800C1B44.c"
           },
           {
             "start": 904,
@@ -28597,14 +28597,14 @@
       "family": "boss",
       "archive": "boss022",
       "entry": "13",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
       "total": 13,
       "symbols": {
-        "named": 173,
-        "raw": 129,
+        "named": 174,
+        "raw": 128,
         "total": 302
       },
       "binary": {
@@ -28637,8 +28637,8 @@
           {
             "start": 184,
             "end": 244,
-            "category": "code-unlifted",
-            "detail": "fcn.800c18b8: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c18b8: exact indexed function\nSource: src/bof3/boss/setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8.c"
           },
           {
             "start": 244,
@@ -29929,14 +29929,14 @@
       "family": "boss",
       "archive": "boss033",
       "entry": "16",
-      "completed": 24,
+      "completed": 25,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 183,
-        "raw": 136,
+        "named": 184,
+        "raw": 135,
         "total": 319
       },
       "binary": {
@@ -29999,8 +29999,8 @@
           {
             "start": 856,
             "end": 924,
-            "category": "code-unlifted",
-            "detail": "fcn.800c1b58: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.800c1b58: exact indexed function\nSource: src/bof3/boss/dispatchStateByte2Table2798BossBoss03316_800C1B58.c"
           },
           {
             "start": 924,
@@ -53691,14 +53691,14 @@
       "family": "scenario",
       "archive": "sce15ef3",
       "entry": "00",
-      "completed": 13,
+      "completed": 14,
       "partial": 0,
-      "unlifted": 31,
+      "unlifted": 30,
       "invalid": 0,
       "total": 44,
       "symbols": {
-        "named": 172,
-        "raw": 156,
+        "named": 173,
+        "raw": 155,
         "total": 328
       },
       "binary": {
@@ -53719,8 +53719,8 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
-            "detail": "fcn.801d0c04: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801d0c04: exact indexed function\nSource: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0C04.c"
           },
           {
             "start": 72,
@@ -66883,14 +66883,14 @@
       "family": "world00",
       "archive": "area037",
       "entry": "13",
-      "completed": 9,
+      "completed": 10,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 167,
-        "raw": 140,
+        "named": 168,
+        "raw": 139,
         "total": 307
       },
       "binary": {
@@ -66971,8 +66971,8 @@
           {
             "start": 2584,
             "end": 2652,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3618: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3618: exact indexed function\nSource: src/bof3/world/setStatus74AndModeIndex6CloneWorld00Area03713_801F3618.c"
           },
           {
             "start": 2652,
@@ -69397,14 +69397,14 @@
       "family": "world01",
       "archive": "area055",
       "entry": "13",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 6,
       "symbols": {
-        "named": 161,
-        "raw": 127,
+        "named": 162,
+        "raw": 126,
         "total": 288
       },
       "binary": {
@@ -69449,8 +69449,8 @@
           {
             "start": 300,
             "end": 368,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2d2c: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2d2c: exact indexed function\nSource: src/bof3/world/setStatus24AndModeIndex6CloneWorld01Area05513_801F2D2C.c"
           },
           {
             "start": 368,
@@ -69773,14 +69773,14 @@
       "family": "world01",
       "archive": "area059",
       "entry": "13",
-      "completed": 5,
+      "completed": 6,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 163,
-        "raw": 133,
+        "named": 164,
+        "raw": 132,
         "total": 296
       },
       "binary": {
@@ -69825,8 +69825,8 @@
           {
             "start": 236,
             "end": 304,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2cec: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2cec: exact indexed function\nSource: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC.c"
           },
           {
             "start": 304,
@@ -69973,14 +69973,14 @@
       "family": "world01",
       "archive": "area061",
       "entry": "13",
-      "completed": 2,
+      "completed": 3,
       "partial": 0,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
       "total": 7,
       "symbols": {
-        "named": 160,
-        "raw": 127,
+        "named": 161,
+        "raw": 126,
         "total": 287
       },
       "binary": {
@@ -70019,8 +70019,8 @@
           {
             "start": 176,
             "end": 244,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2cb0: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2cb0: exact indexed function\nSource: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CB0.c"
           },
           {
             "start": 244,
@@ -70777,14 +70777,14 @@
       "family": "world01",
       "archive": "area068",
       "entry": "13",
-      "completed": 31,
+      "completed": 32,
       "partial": 1,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 50,
       "symbols": {
-        "named": 190,
-        "raw": 143,
+        "named": 191,
+        "raw": 142,
         "total": 333
       },
       "binary": {
@@ -71051,8 +71051,8 @@
           {
             "start": 4140,
             "end": 4208,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3c2c: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3c2c: exact indexed function\nSource: src/bof3/world/dispatchStateByte4Table4de4World01Area06813_801F3C2C.c"
           },
           {
             "start": 4208,
@@ -73657,14 +73657,14 @@
       "family": "world02",
       "archive": "area091",
       "entry": "13",
-      "completed": 4,
+      "completed": 5,
       "partial": 2,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 16,
       "symbols": {
-        "named": 166,
-        "raw": 134,
+        "named": 167,
+        "raw": 133,
         "total": 300
       },
       "binary": {
@@ -73703,8 +73703,8 @@
           {
             "start": 228,
             "end": 296,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2ce4: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2ce4: exact indexed function\nSource: src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4.c"
           },
           {
             "start": 296,
