@@ -222,13 +222,13 @@ class BinaryDiagram extends HTMLElement {
     const context = this.canvas.getContext("2d");
     context.scale(ratio, ratio);
     for (const span of this.binary.spans) {
-      context.fillStyle = this.categories.find((row) => row.id === span.category).color;
+      let color = this.categories.find((row) => row.id === span.category).color;
+      if (span === this.binary.spans[this.selected]) {
+        color = color.replace(/[0-9a-f]{2}/gi, (channel) =>
+          Math.round(parseInt(channel, 16) * .65 + 255 * .35).toString(16).padStart(2, "0"));
+      }
+      context.fillStyle = color;
       this.rectangles(span, width, height, (x, y, w, h) => context.fillRect(x, y, w, h));
-    }
-    if (this.selected >= 0) {
-      context.strokeStyle = "#fff";
-      context.lineWidth = 1.5;
-      this.rectangles(this.binary.spans[this.selected], width, height, (x, y, w, h) => context.strokeRect(x + 0.75, y + 0.75, Math.max(1, w - 1.5), h - 1.5));
     }
     if (BinaryDiagram.active === this) {
       const tooltip = BinaryDiagram.tooltip;
