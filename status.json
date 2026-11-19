@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "bc798e8c9d600ceca0f8a41b6092660e05950cbc",
-  "published_at": "2026-11-19T20:15:15.068653+00:00",
+  "revision": "49bd6aa4fd3d232473d4423893a3d13e243a7581",
+  "published_at": "2026-11-19T20:24:06.253297+00:00",
   "counts": {
-    "completed": 6274,
+    "completed": 6283,
     "partial": 358,
-    "unlifted": 3893,
+    "unlifted": 3884,
     "invalid": 0,
     "total": 10525,
     "symbols": {
-      "named": 69362,
-      "raw": 55063,
+      "named": 69371,
+      "raw": 55054,
       "total": 124425
     }
   },
@@ -11137,14 +11137,14 @@
       "family": "bmagic",
       "archive": "magic058",
       "entry": "03",
-      "completed": 12,
+      "completed": 13,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 173,
-        "raw": 131,
+        "named": 174,
+        "raw": 130,
         "total": 304
       },
       "binary": {
@@ -11237,8 +11237,8 @@
           {
             "start": 2516,
             "end": 2588,
-            "category": "code-unlifted",
-            "detail": "fcn.801ef5d4: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801ef5d4: exact indexed function\nSource: src/bof3/bmagic/accumulateWorkWordCByWord18StepDecrementWord18ThenAdvanceWorkByte2WhenWord18Reaches16BmagicMagic05803_801EF5D4.c"
           },
           {
             "start": 2588,
@@ -66883,14 +66883,14 @@
       "family": "world00",
       "archive": "area037",
       "entry": "13",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 169,
-        "raw": 138,
+        "named": 170,
+        "raw": 137,
         "total": 307
       },
       "binary": {
@@ -66983,8 +66983,8 @@
           {
             "start": 2720,
             "end": 2788,
-            "category": "code-unlifted",
-            "detail": "fcn.801f36a0: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f36a0: exact indexed function\nSource: src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0.c"
           },
           {
             "start": 2788,
@@ -68737,14 +68737,14 @@
       "family": "world01",
       "archive": "area049",
       "entry": "14",
-      "completed": 18,
+      "completed": 19,
       "partial": 1,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 177,
-        "raw": 134,
+        "named": 178,
+        "raw": 133,
         "total": 311
       },
       "binary": {
@@ -68765,8 +68765,8 @@
           {
             "start": 4,
             "end": 84,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c04: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2c04: exact indexed function\nSource: src/bof3/world/publishModeStatusFromTable5cd4AndSetFlagBit3BWhenModeZeroWorld01Area04914_801F2C04.c"
           },
           {
             "start": 84,
@@ -69773,14 +69773,14 @@
       "family": "world01",
       "archive": "area059",
       "entry": "13",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 15,
       "symbols": {
-        "named": 164,
-        "raw": 132,
+        "named": 165,
+        "raw": 131,
         "total": 296
       },
       "binary": {
@@ -69879,8 +69879,8 @@
           {
             "start": 1120,
             "end": 1192,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3060: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3060: exact indexed function\nSource: src/bof3/world/passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060.c"
           },
           {
             "start": 1192,
@@ -69973,14 +69973,14 @@
       "family": "world01",
       "archive": "area061",
       "entry": "13",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 7,
       "symbols": {
-        "named": 162,
-        "raw": 125,
+        "named": 163,
+        "raw": 124,
         "total": 287
       },
       "binary": {
@@ -70001,8 +70001,8 @@
           {
             "start": 4,
             "end": 80,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c04: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2c04: exact indexed function\nSource: src/bof3/world/setStatus3AndModeIndex6IfGateElse2Clear44F50World01Area06113_801F2C04.c"
           },
           {
             "start": 80,
@@ -70491,14 +70491,14 @@
       "family": "world01",
       "archive": "area067",
       "entry": "14",
-      "completed": 27,
+      "completed": 28,
       "partial": 2,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 188,
-        "raw": 137,
+        "named": 189,
+        "raw": 136,
         "total": 325
       },
       "binary": {
@@ -70567,8 +70567,8 @@
           {
             "start": 1420,
             "end": 1480,
-            "category": "code-unlifted",
-            "detail": "fcn.801f318c: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f318c: exact indexed function\nSource: src/bof3/world/raiseSharedDecisionFlag2SetScenarioProgress32ThenResetWorkAreaWorld01Area06714_801F318C.c"
           },
           {
             "start": 1480,
@@ -70777,14 +70777,14 @@
       "family": "world01",
       "archive": "area068",
       "entry": "13",
-      "completed": 33,
+      "completed": 34,
       "partial": 1,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 50,
       "symbols": {
-        "named": 192,
-        "raw": 141,
+        "named": 193,
+        "raw": 140,
         "total": 333
       },
       "binary": {
@@ -71009,8 +71009,8 @@
           {
             "start": 3472,
             "end": 3540,
-            "category": "code-unlifted",
-            "detail": "fcn.801f3990: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f3990: exact indexed function\nSource: src/bof3/world/setStatus84AndModeIndex6IfGateElseFFFFWorld01Area06813_801F3990.c"
           },
           {
             "start": 3540,
@@ -76931,14 +76931,14 @@
       "family": "world03",
       "archive": "area115",
       "entry": "13",
-      "completed": 17,
+      "completed": 18,
       "partial": 2,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 177,
-        "raw": 140,
+        "named": 178,
+        "raw": 139,
         "total": 317
       },
       "binary": {
@@ -76959,8 +76959,8 @@
           {
             "start": 4,
             "end": 56,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2c04: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2c04: exact indexed function\nSource: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld03Area11513_801F2C04.c"
           },
           {
             "start": 56,
@@ -81831,14 +81831,14 @@
       "family": "world03",
       "archive": "area146",
       "entry": "13",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
       "total": 9,
       "symbols": {
-        "named": 161,
-        "raw": 131,
+        "named": 162,
+        "raw": 130,
         "total": 292
       },
       "binary": {
@@ -81901,8 +81901,8 @@
           {
             "start": 544,
             "end": 616,
-            "category": "code-unlifted",
-            "detail": "fcn.801f2e20: unlifted indexed function"
+            "category": "code-lifted",
+            "detail": "fcn.801f2e20: exact indexed function\nSource: src/bof3/world/drawWorkCursorQuadWorld03Area14613_801F2E20.c"
           },
           {
             "start": 616,
