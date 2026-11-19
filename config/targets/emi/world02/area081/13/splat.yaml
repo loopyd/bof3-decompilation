@@ -39,8 +39,8 @@ segments:
     - c
     - retreatCounter2By15World02Area08113_801F2D14
   - - 316
-    - asm
-    - func_801F2D3C
+    - c
+    - advanceCounter2By15World02Area08113_801F2D3C
   - - 356
     - c
     - setTwoWorld02Area08113_801F2D64

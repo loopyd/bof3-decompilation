@@ -37,6 +37,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Table0870PlcharPlp05600_801CF12C.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp05600_801CEF14.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp05600_801CEA94.c",
+    "src/bof3/plchar/requestWorkResourceByte4WithCount2For50ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp05600_801CE628.c",
 ]
 support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",

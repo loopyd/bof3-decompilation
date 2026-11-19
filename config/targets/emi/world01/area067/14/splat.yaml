@@ -96,8 +96,10 @@ segments:
     - '@source: src/bof3/world/seedRandomWorkRecordPositionAroundWorkObjectAndArmCountdownWorld01Area06714_801F3D54.c'
     - '@behavior: seeds one 0xE-byte work record from a random angle (`rand() & 0xFC0`) and reach (`rand() & 0x38`): +0x0 takes scratch work halfword +0xC plus (cosine * reach) >> 12, +0x2 and +0xA take work halfword +0xE plus (sine * reach) >> 13, +0x4/+0x6/+0x8 take zero, and +0xC takes the 0x20 re-arm countdown'
   - - 4612
-    - asm
-    - func_801F3E04
+    - c
+    - publishModeStatusFromTable5384AndProgress6IfMode5World01Area06714_801F3E04
+    - '@source: src/bof3/world/publishModeStatusFromTable5384AndProgress6IfMode5World01Area06714_801F3E04.c'
+    - '@behavior: publishes the mode-indexed halfword from the halfword run at 0x801F5384 into the shared status halfword at 0x801490A8 and stores scenario progress 6 when the same mode byte reads 5'
   - - 4688
     - c
     - publishModeStatusFromTable5390World01Area06714_801F3E50

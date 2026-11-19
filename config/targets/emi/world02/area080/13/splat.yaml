@@ -98,8 +98,10 @@ segments:
     - c
     - retreatCounter2By20World02Area08013_801F3CE4
   - - 4364
-    - asm
-    - func_801F3D0C
+    - c
+    - advanceCounter2By20World02Area08013_801F3D0C
+    - '@source: src/bof3/world/advanceCounter2By20World02Area08013_801F3D0C.c'
+    - '@behavior: overlay counter step, entry 4 of the eight-word pointer run at 0x801F4434; reads the shared halfword counter D_8014932A, stores 2 into the shared status byte D_80149333 and writes the counter back advanced by 0x14; no arguments, no call, no frame'
   - - 4404
     - c
     - setTwoWorld02Area08013_801F3D34

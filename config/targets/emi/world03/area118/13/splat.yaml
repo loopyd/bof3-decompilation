@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - resetStepCounterHalfwordAndAdvanceWorkByte1World03Area11813_801F2C48
+    - '@source: src/bof3/world/resetStepCounterHalfwordAndAdvanceWorkByte1World03Area11813_801F2C48.c'
+    - '@behavior: Byte-1 state handler that the first byte-1 dispatch table of this overlay (0x801F5124, indexed by the dispatcher at 0x801F2C04) lists at entry 0. Reads the work record published at the scratchpad pointer cell 0x1F800044, stores zero into the target halfword at 0x801F59E4 and increments the record state byte at 0x01, so the next dispatch takes entry 1 of the same table (0x801F2C6C). The cleared halfword is the packed counter word the neighbouring entry 1 handler reads back as a flag bit 15, a seven-bit counter at bits 8 to 14 and an eight-bit counter at bits 0 to 7. Takes no arguments and returns nothing; the body is a leaf with no frame and the work pointer is loaded once and used by both record accesses.'
   - - 108
     - asm
     - func_801F2C6C

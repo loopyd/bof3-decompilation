@@ -55,8 +55,10 @@ segments:
     - '@source: src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp56700_801CE820.c'
     - '@behavior: Runs the shared no-argument update helper func_8014D978 and returns while the work-object halfword 0x58 read through the scratchpad pointer cell 0x1F800044 does not read 0x0A; when it does, claims a front-end record through the allocator func_8019601C, stores the answer in work byte 0x0B and, unless that byte reads 0xFF, seeds the 0x74-byte row at 0x80143FC8 with occupancy flag 1 in row byte 0 and handler selector 0x3A in row byte 5, then queues cue 0x100 plus work halfword 0x2C through func_8015DF18, clears work byte 0x07 and increments the work step counter byte 0x02.'
   - - 1324
-    - asm
-    - func_801CE92C
+    - c
+    - selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp56700_801CE92C
+    - '@source: src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp56700_801CE92C.c'
+    - '@behavior: Overlay step reached from entry 5 of the pointer run at 0x801D078C, which this payload''s byte-2 dispatcher 0x801CE404 indexes by work byte 2, and from index 2 of the run at 0x801D0798, which the byte-2 dispatcher 0x801CE610 indexes. While the work-object byte 0x07 read through the scratchpad pointer cell 0x1F800044 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and otherwise hands work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag. While that flag reads zero it runs the same helper, and once ready, while the 0x74-byte row at 0x80143FC8 that work byte 0x0B selects still has its occupancy byte 0 clear, it clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250.'
   - - 1536
     - c
     - dispatchStateByte2Table07a4PlcharPlp56700_801CEA00

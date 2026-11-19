@@ -20,6 +20,7 @@ sources = [
     "src/bof3/bmagic/callAEF98WithCAnd2ClaimSlot52CopySelectedBattlerRecordHeadStampSlotBytesPublishWorkPointerCopy16HalfwordsSet80145988RaiseRecordFlag40SetWorkBytesBAnd9ThenAdvanceWorkByte1BmagicMagic15403_801EEC90.c",
     "src/bof3/bmagic/seedWorkObjectFromBattleRecordClearWordCSeedWord10Minus18000ClaimSixSlots52StepByte9ByThreePublishWorkPointerCountWorkByteBAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic15403_801EEE94.c",
     "src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperPairWhenZeroOrReadinessHelperReadyClearWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic15403_801EF58C.c",
+    "src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerThenInvokeD290WhenWorkBytes0And2SetBmagicMagic15403_801EF104.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",

@@ -59,8 +59,10 @@ segments:
     - dispatchStateByte1Tablef6ccBmagicMagic15403_801EF0C0
     - '@source: src/bof3/bmagic/magic15403DispatchTables.c'
   - - 1284
-    - asm
-    - func_801EF104
+    - c
+    - setDrawModeThenDispatchWorkByte2HandlerThenInvokeD290WhenWorkBytes0And2SetBmagicMagic15403_801EF104
+    - '@source: src/bof3/bmagic/setDrawModeThenDispatchWorkByte2HandlerThenInvokeD290WhenWorkBytes0And2SetBmagicMagic15403_801EF104.c'
+    - '@behavior: Work byte 2 step entry of this overlay work object, entry 0 of the six-word code pointer run at 0x801EF6CC (0x801EF104, 0x801EF4B4, 0x801EF1EC, 0x801EF380, 0x801EF3E4, 0x801EF454) that the exact lift dispatchStateByte1Tablef6ccBmagicMagic15403_801EF0C0 indexes with work-object byte 1. It selects the draw-mode tpage from GetGraphType, 0xA5 for graph types 1 and 2 and 0x35 otherwise, seeds SetDrawMode on the shared primitive cursor at 0x8014598C with dfe 0, dtd 1 and a null tw, and appends a 0xC-byte primitive for output list 3 through the shared primitive-append helper at 0x8014E5A0. It publishes 0x800C3800 into the shared cell at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object''s unsigned byte 2 by four and invokes the selected entry of the four-word handler run based at 0x801EF6D4 with no arguments and no bounds test. After the handler returns it re-reads the pointer cell and, when the work object''s byte 0 and byte 2 are both non-zero, runs the shared main-executable service func_8014D290, then publishes 0x800D3800 into 0x801459F0. It takes no arguments, returns nothing, and its 0x20-byte frame keeps only $ra.'
   - - 1516
     - c
     - decrementWorkByte9ThenSeedWorkHeaderAndAdvanceWorkByte2BmagicMagic15403_801EF1EC

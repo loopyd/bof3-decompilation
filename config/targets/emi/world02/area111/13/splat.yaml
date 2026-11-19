@@ -86,8 +86,10 @@ segments:
     - publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4
     - '@source: src/bof3/world/publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4.c'
   - - 2920
-    - asm
-    - func_801F3768
+    - c
+    - publishWorkRecordSlotCodeFromPublishedIndexByteWorld02Area11113_801F3768
+    - '@source: src/bof3/world/publishWorkRecordSlotCodeFromPublishedIndexByteWorld02Area11113_801F3768.c'
+    - '@behavior: Seeds the shared overlay step-state byte at 0x80146867 with 0x10 shifted left by the signed word at offset 0x18 of the work record published through the scratchpad pointer cell 0x1F800044. Takes no arguments, calls nothing and returns nothing.'
   - - 2960
     - c
     - decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790
