@@ -1957,6 +1957,20 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+Assigning a product before accumulating its origin can change the destination
+pseudo from initial RTL onward. Compare that real phase with the compound sum
+through CSE and both schedules. GCC 2.7.2's `birthing_insn_p` requires one
+definition, so accumulation can remove its scheduling priority boost. Reusing a
+consumed input for its difference can then break a local quantity chain.
+Preserve arithmetic types and execution paths.
+Local allocation requires one block and one death, not one definition. Multiple
+definitions alone do not prove that a pseudo needs global allocation.
+
+Locate the pointer's last access after scheduling before predicting an entry
+register exchange. Assigning an input register to an earlier field load can
+conflict with both the input and the still-live pointer. A global result's return
+preference also does not reserve that register against local allocation.
+
 A loop-invariant table base can affect allocation even when reload removes its
 preheader load. If a shared base binding survives CSE, it can place that existing
 instruction before another initializer instead of at `loop.c`'s hoisted position.
