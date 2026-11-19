@@ -920,6 +920,12 @@ binary-diagram {
   touch-action: pan-y;
 }
 .binary-canvas:focus-visible { outline: 2px solid #f3ce69; outline-offset: 3px; }
+.binary-navigation { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.binary-navigation[hidden] { display: none; }
+.binary-navigation button { width: 38px; height: 44px; padding: 0; border: 1px solid #8a9dab; border-radius: 4px; background: #0c131cf2; color: #f1f4f6; font: 30px/1 monospace; cursor: pointer; pointer-events: auto; }
+.binary-navigation button[aria-disabled="true"] { opacity: .5; cursor: default; }
+.binary-navigation button:focus-visible { outline: 2px solid #f3ce69; outline-offset: 2px; }
+.binary-surface:focus-within .binary-tooltip { max-width: calc(100% - 100px); }
 .binary-tooltip {
   position: absolute;
   z-index: 2;
@@ -933,6 +939,7 @@ binary-diagram {
   background: #0c131cf2;
   color: #f1f4f6;
   font: 11px/1.5 monospace;
+  white-space: pre-line;
   overflow-wrap: anywhere;
   pointer-events: none;
   box-sizing: border-box;
