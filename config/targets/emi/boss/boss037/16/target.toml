@@ -16,5 +16,6 @@ support_sources = [
     "src/bof3/boss/noopHandlerBoss037_800C18EC.c",
     "src/bof3/boss/noopHandlerBoss037_800C18E4.c",
     "src/bof3/support/boss037_16_psyq.c",
+    "src/bof3/boss/publishBattleHooksBossBoss03716_800C18FC.c",
 ]
 psyq_source = "src/bof3/support/boss037_16_psyq.c"

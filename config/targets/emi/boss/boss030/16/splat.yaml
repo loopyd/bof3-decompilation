@@ -69,8 +69,10 @@ segments:
     - c
     - noopHandlerBossBoss03016_800C19D4
   - - 476
-    - asm
-    - func_800C19DC
+    - c
+    - publishBattleHooksBossBoss03016_800C19DC
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss03016_800C19DC.c'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots: the state switch at 0x800C1A1C into 0x801463A4, the owner record head clearing hook 0x800C1A84 into 0x801463A8 and the zero-result accessor 0x800C1A14 into 0x801463AC, so the main program reaches the trio through those three slot words; no jal immediate and no pointer word of this payload names this span.'
   - - 532
     - c
     - zeroResultBossBoss03016_800C1A14

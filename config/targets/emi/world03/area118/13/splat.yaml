@@ -46,8 +46,10 @@ segments:
     - dispatchStateByte1Table5130WorldWorld03Area11813_801F2E20
     - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 612
-    - asm
-    - func_801F2E64
+    - c
+    - resetWorkByte9AndSeedColourRampThenAdvanceWorkByte1World03Area11813_801F2E64
+    - '@source: src/bof3/world/resetWorkByte9AndSeedColourRampThenAdvanceWorkByte1World03Area11813_801F2E64.c'
+    - '@behavior: Entry 0 of the second byte-1 dispatch table of this overlay (0x801F5130, indexed by the dispatcher at 0x801F2E20). Reads the work record published at the scratchpad pointer cell 0x1F800044, stores zero into the record byte at offset 0x09 and 1 into the record state byte at offset 0x01 so the next dispatch of that table takes entry 1 (0x801F2EA0), then seeds the two overlay cells that entry 1 works from: 0xF into the colour byte at 0x801F59EC and zero into the phase byte at 0x801F59E8, the index entry 1 keeps in the eight-byte ramp table 0x801F511C and advances modulo 8 before loading the indexed ramp byte into 0x801F59EC and stamping it as the RGB colour of the semi-transparent G4 it emits. Takes no arguments and returns nothing; the body is a leaf with no frame and the record pointer is reloaded for the second record access.'
   - - 672
     - asm
     - func_801F2EA0

@@ -45,8 +45,10 @@ segments:
     - c
     - noopHandlerBossBoss04216_800C18F4
   - - 252
-    - asm
-    - func_800C18FC
+    - c
+    - publishBattleHooksBossBoss04216_800C18FC
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss04216_800C18FC.c'
+    - '@behavior: Publishes this overlay handler trio into the shared hook slots of the archive family in slot order: the state handler at 0x800C193C into 0x801463A4, the empty handler noopHandlerBossBoss04216_800C1988 into 0x801463A8, and the zero-result accessor zeroResultBossBoss04216_800C1934 into 0x801463AC through the void slot type. The 0x38-byte body reserves no frame and keeps nothing across the three stores. No word of this payload names this function and no jal reaches it, so it is an overlay entry reached from outside the payload.'
   - - 308
     - c
     - zeroResultBossBoss04216_800C1934

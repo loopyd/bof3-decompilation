@@ -48,8 +48,10 @@ segments:
     - asm
     - func_800C198C
   - - 452
-    - asm
-    - func_800C19C4
+    - c
+    - dispatchIndexedHandlerBossBoss05116_800C19C4
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss05116_800C19C4.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the three-word run based at 0x800C1DFC, the 0x4C-byte offset of the payload-final textbin row D_800C1DB0 whose three words are the inert handlers 0x800C19FC, 0x800C1A04 and 0x800C1A0C. The original bounds nothing before the scaled table load and the selected handler result stays in the return register; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal names 0x800C19C4: the step-setup publisher at 0x800C1858 materializes the address and stores it into +0xE4 of the current enemy work record, so whoever calls that stored slot supplies the index.'
   - - 508
     - c
     - noopHandlerBossBoss05116_800C19FC

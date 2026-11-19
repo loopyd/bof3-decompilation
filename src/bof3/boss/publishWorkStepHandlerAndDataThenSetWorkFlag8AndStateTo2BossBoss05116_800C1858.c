@@ -29,7 +29,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
  * publisher installs at +0xE4: it masks its argument with 0xFF, scales it by
  * four and calls the entry of the 0x800C1DFC run, the three inert handlers at
  * 0x800C19FC, 0x800C1A04 and 0x800C1A0C. */
-void func_800C19C4(u8 index);
+void dispatchIndexedHandlerBossBoss05116_800C19C4(u8 index);
 
 /* Shared main-program helper the whole boss archive family calls at the end of
  * its step setup, for example 0x800C1C68 and 0x800C1D40 of BIN/BOSS/BOSS008.EMI
@@ -66,7 +66,7 @@ void publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05116_800C1
   u8 *state;
 
   work->data_row = &D_800C1DB0;
-  work->step_handler = func_800C19C4;
+  work->step_handler = dispatchIndexedHandlerBossBoss05116_800C19C4;
   work->step_data = &D_800C1DBC;
   state = SPAD_PTR_SLOT(u8, 0x44u);
   work->flags |= 8u;
