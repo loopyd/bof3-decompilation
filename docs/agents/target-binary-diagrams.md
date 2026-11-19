@@ -9,14 +9,18 @@ hexadecimal bounds, byte length and evidence. Click or tap to retain a selection
 Selection brightens the span's fill without drawing a border over neighboring bytes.
 Lifted functions also show their repository-relative C source path. One tooltip
 is shared across the cards and moves to the active diagram. Clicking outside
-the canvas or its navigation buttons closes it; leaving the component's keyboard
-focus also clears selection.
+the canvas or its navigation buttons closes it, except when using legend help.
+Moving keyboard focus away also clears selection, with the same help exception.
 
 Focused diagrams show left and right chevrons for adjacent spans. Arrow keys
 also select adjacent spans, Home and End select the first and last spans, and
 Escape clears selection. The chevrons disappear when focus leaves the diagram.
-The HTML legend lists all supported colors. Resizing preserves physical offsets
-and selection.
+Resizing preserves physical offsets and selection.
+
+The `?` button at the canvas's right edge opens the color legend. One help tooltip
+is shared across cards, independently of span details, so both can remain open.
+Clicking outside help, scrolling or pressing its button again closes it. Escape
+also closes help when its button is focused. The legend appears only in help.
 
 ## Classifications
 
