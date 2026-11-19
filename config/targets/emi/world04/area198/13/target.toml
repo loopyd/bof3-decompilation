@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388.c",
     "src/bof3/world/seedWorkPositionTripleFromByte7RecordApplyLookupRecordAndRequestResourceThenArmState1World04Area19813_801F3A68.c",
+    "src/bof3/world/advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80.c",
 ]
 support_sources = [
     "src/bof3/support/area198_13_psyq.c",

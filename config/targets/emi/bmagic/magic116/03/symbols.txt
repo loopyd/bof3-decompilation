@@ -1,4 +1,5 @@
-func_801EEC14 = 0x801EEC14;
+g_battle_work = 0x1F800044;
+dispatchWorkByte1HandlerBmagicMagic11603_801EEC14 = 0x801EEC14;
 func_801EEC80 = 0x801EEC80;
 func_801EED2C = 0x801EED2C;
 func_801EEDB0 = 0x801EEDB0;

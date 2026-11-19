@@ -30,8 +30,10 @@ segments:
     - textbin
     - T_800C1804
   - - 28
-    - asm
-    - func_800C181C
+    - c
+    - dispatchStateByte1Table2620BossBoss01316_800C181C
+    - '@source: src/bof3/boss/dispatchStateByte1Table2620BossBoss01316_800C181C.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C2620, the reviewed textbin row word 18 D_800C2620, with no arguments, so the selected handler result stays in the return register. Entry 0 is this payload next body 0x800C1860, entries 1 through 11 are the shared main-executable handlers 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and 0x801E5288, and the next dispatcher base 0x800C2650 follows that span. The index is bounded only to a byte and never checked against the run length, so the scaled load can leave the base; the slot after the index byte load and the indirect call delay slot both stay nops, and the call passes no argument. The 0x18-byte frame only keeps the return address at 0x10 across that call, and the epilogue leaves the return value untouched. No jal and no word of this payload names 0x800C181C, so the overlay entry is what reaches it.'
   - - 96
     - asm
     - func_800C1860

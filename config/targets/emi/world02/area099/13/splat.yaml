@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F2FD4
   - - 1192
-    - asm
-    - func_801F30A8
+    - c
+    - setScenarioFlagBit1F
+    - '@source: src/bof3/world/setScenarioFlagBit1F.c'
+    - '@behavior: Sets bit 0x1F of the active scenario flag bank with one call to the shared bit setter func_8015B5F4, handing it the pointer published at 0x8014686C and the bit index 0x1F.'
   - - 1232
     - c
     - queueSharedUiElement23x4FSize50Or51OnFlagPair1C1DWorld02Area09913_801F30D0

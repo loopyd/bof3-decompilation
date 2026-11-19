@@ -1,6 +1,6 @@
 clearOwnerRecordFlag40 = 0x800AC844;
 T_800C1804 = 0x800C1804;
-func_800C181C = 0x800C181C;
+dispatchStateByte1Table2620BossBoss01316_800C181C = 0x800C181C;
 func_800C1860 = 0x800C1860;
 dispatchIndexedHandlerBossBoss01316_800C18FC = 0x800C18FC;
 func_800C1934 = 0x800C1934;

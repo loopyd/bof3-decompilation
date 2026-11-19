@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C.c",
+    "src/bof3/world/setStatusFFFFAndScenarioProgress23IfGateElse1EWorld03Area14413_801F3CE4.c",
 ]
 support_sources = [
     "src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c",

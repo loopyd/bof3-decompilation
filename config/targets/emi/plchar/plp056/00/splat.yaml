@@ -30,8 +30,10 @@ segments:
     - c
     - dispatchWorkByte2HandlerPlcharPlp05600_801CE404
   - - 72
-    - asm
-    - func_801CE448
+    - c
+    - chooseRecordResourceByte4FromFlag16AndModeScanThenStoreRouteStepSignAndChosenIndexThenRearmWorkPlcharPlp05600_801CE448
+    - '@source: src/bof3/plchar/chooseRecordResourceByte4FromFlag16AndModeScanThenStoreRouteStepSignAndChosenIndexThenRearmWorkPlcharPlp05600_801CE448.c'
+    - '@behavior: Work-state handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload because no jal immediate targets the body address and no word of the payload holds it. It takes no arguments and answers no value. Byte 0x04 is the record resource id of the work object, byte 0x08 the route index of the eight-entry route window, byte 0x03 the chosen candidate index, byte 0x0B the step sign, byte 0x09 the countdown and byte 0x02 the step counter. The body first asks the shared flag tester func_8015B5D4 for flag 0x16 of the bank based at D_80144E90 and, while that flag reads clear, stores 0x41 into the resource byte; when it reads set the body scans with func_801BDB7C(0) and stores 0x50 there if that answer is exactly 1 while bit 0x40 of the front-end flag byte D_80143F02 reads clear, and 0x40 otherwise. It then dispatches on that resource byte: 0x41 stores the step sign func_801B2D00(5) in byte 0x0B and the chosen index 5 in byte 0x03, 0x40 does the same for route 3, and 0x50 computes the distance of route byte 0x08 from 5 and from 3, five first, each as the absolute value of the difference, and stores the sign and index of 3 when the distance to 3 is the smaller one, otherwise those of 5 plus 0x52 into the resource byte itself; any other value writes nothing in the dispatch. Every path joins on the tail that sets countdown byte 0x09 to 2 and increments the step counter byte 0x02. The 0x18-byte frame only keeps the return address at 0x10 across the three calls, the pointer cell is re-read before every store, the 0x41 and 0x40 stores share one store site with their constants materialised in the delay slots of the entry test and of the jump to that site, and the resource test loads the cell once for both the dispatch byte and the 0x50 arm route byte. The 0x1E0-byte span is byte-identical to the same-address span of the plp012, plp015, plp016, plp025, plp026 and plp034 payloads, whose rows all still stand on asm.'
   - - 552
     - c
     - requestWorkResourceByte4WithCount2For50ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp05600_801CE628

@@ -132,8 +132,10 @@ segments:
     - seedWorkWord3CScaledDistanceAndAdvanceStateByte1World02Area10013_801F3CDC
     - '@source: src/bof3/world/seedWorkWord3CScaledDistanceAndAdvanceStateByte1World02Area10013_801F3CDC.c'
   - - 4392
-    - asm
-    - func_801F3D28
+    - c
+    - drawWorkCursorQuadWorld02Area10013_801F3D28
+    - '@source: src/bof3/world/drawWorkCursorQuadWorld02Area10013_801F3D28.c'
+    - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that dispatchStateByte1Table4f68World02Area10013_801F3C98 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
   - - 4464
     - asm
     - func_801F3D70

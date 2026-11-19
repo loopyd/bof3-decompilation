@@ -34,8 +34,9 @@ segments:
     - asm
     - func_801F2C48
   - - 128
-    - asm
-    - func_801F2C80
+    - c
+    - advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80
+    - '@source: src/bof3/world/advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80.c'
   - - 184
     - asm
     - func_801F2CB8

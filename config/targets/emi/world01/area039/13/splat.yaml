@@ -71,8 +71,10 @@ segments:
     - c
     - invokeHelperByteArgWorld01Area03913_801F2E9C
   - - 708
-    - asm
-    - func_801F2EC4
+    - c
+    - queueFrontendCueA3World01Area03913_801F2EC4
+    - '@source: src/bof3/world/queueFrontendCueA3World01Area03913_801F2EC4.c'
+    - '@behavior: Queues the frontend cue 0xA3 with level 0x64 and shape 8 through the shared front cue helper func_80161C20 and returns; takes no arguments, reads no state and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 748
     - c
     - raiseWorldFlag8World01Area03913_801F2EEC
