@@ -1985,6 +1985,13 @@ actual signed sample, then apply its subtraction and magnitude. Confirm the load
 and arithmetic destinations after CSE; block membership and deaths, rather than
 declaration spelling, determine local eligibility.
 
+If an output initializer hoists across local arithmetic, inspect its hard-register
+conflicts. A single-execution scope around the real producer group through its
+consumed predicate can keep the initializer after that work. Check `LOOP_END`,
+both schedulers and global conflicts; an old result overwritten on success may
+already be dead on that path. Confirm the return register and guarded returns in
+complete native output.
+
 Global allocation can derive a general preference from an arithmetic source's
 first operand and merge preferences from other dying global operands. The latter
 merges copy preferences only for a whole-source register copy. Expansion precedes
