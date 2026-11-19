@@ -42,7 +42,7 @@ extern u8 D_801468FC[];
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range);
 
-/* Map cell claim of this same payload, still an asm row at 0x801D02F4: its
+/* Map cell claim of this same payload, lifted exact at 0x801D02F4: its
  * prologue sign-extends both arguments through sll 16 plus sra 16, probes the
  * map cell code through the shared func_80166CB0 and claims a front-end record
  * through claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp56700_801D04EC
@@ -51,7 +51,8 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * signed sixteen-bit values, so the original converts each retry index to that
  * width before the call.
  */
-u8 func_801D02F4(s16 col, s16 row);
+u8 claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp56700_801D02F4(
+    s16 col, s16 row);
 
 /* Shared readiness helper of the shared EXE image, outside this payload. This
  * body calls it last on every path and discards the returned byte. */
@@ -74,11 +75,12 @@ u8 func_8014DAEC(void);
  *           bit 0 of the animation byte 0x74 of the found work record through
  *           the column base 0x801468FC and the slot stride 0x98. It then claims
  *           a map cell record at the projected point through this payload claim
- *           handler func_801D02F4, passing the high half of each projected word
- *           as a signed half: when that claim fails and the first word has a
- *           nonzero low half it retries one unit further on that axis, and when
- *           the retry also fails and the second word has a nonzero low half it
- *           retries one unit further on the second axis. The projected second
+ *           handler claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp56700_801D02F4,
+ *           passing the high half of each projected word as a signed half: when
+ *           that claim fails and the first word has a nonzero low half it
+ *           retries one unit further on that axis, and when the retry also
+ *           fails and the second word has a nonzero low half it retries one
+ *           unit further on the second axis. The projected second
  *           word keeps a second live copy because the two cell halves claim the
  *           register that holds it, so the last retry test reads that copy and
  *           the source binds it to a variable of its own. Both paths then
@@ -102,5 +104,5 @@ PLCHAR_DEFINE_COUNTDOWN_PROJECTED_CELL_CLAIM(
     markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp56700_801D006C,
     D_1F800044, D_80181B94, D_80181B98, D_801468FC,
     func_801BDE14,
-    func_801D02F4,
+    claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp56700_801D02F4,
     func_8014DAEC)

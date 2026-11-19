@@ -49,8 +49,10 @@ segments:
     - '@source: src/bof3/world/stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC.c'
     - '@behavior: Steps the work record published through the scratchpad pointer cell at 0x1F800044 by one entry of the signed 16-entry phase table at 0x801F4990: it subtracts the entry selected by the low nibble of the record phase byte at 0x0A, scaled by 0x800, from the word at 0x38, decrements that phase byte, and consumes two units of the halfword at 0x7E of the record published through 0x80146884; once the phase byte reads zero it instead clears the handler byte at 0x04.'
   - - 600
-    - asm
-    - func_801F2E58
+    - c
+    - dispatchWorkByte4Table49a0World02Area09913_801F2E58
+    - '@source: src/bof3/world/dispatchWorkByte4Table49a0World02Area09913_801F2E58.c'
+    - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044, indexing the overlay''s second unchecked handler table at 0x801F49A0, whose entries are the routines at 0x801F2E9C and 0x801F2FD4.'
   - - 668
     - asm
     - func_801F2E9C

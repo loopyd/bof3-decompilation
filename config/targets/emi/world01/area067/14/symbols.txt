@@ -1,4 +1,5 @@
 D_1F800044 = 0x1F800044;
+game_stop_selection_fx = 0x8015D404;
 dispatchStateByte1Table4624World01Area06714_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0 = 0x801F2DA0;
@@ -35,7 +36,7 @@ func_801F43A4 = 0x801F43A4;
 retreatCounterWorld01Area06714_801F4424 = 0x801F4424;
 advanceCounter2World01Area06714_801F4440 = 0x801F4440;
 retreatCounter2World01Area06714_801F445C = 0x801F445C;
-func_801F4478 = 0x801F4478;
+stopSelectionEffectPairZeroOneWorld01Area06714_801F4478 = 0x801F4478;
 func_801F449C = 0x801F449C;
 clearWorkAnimBit0ThenRunStartupAndClearProgressAndRequestPrimaryState4Substate0IfPartyByte6World01Area06714_801F451C = 0x801F451C;
 queueSharedUiElement25xBSize0World01Area06714_801F45BC = 0x801F45BC;

@@ -68,8 +68,10 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           helper func_8015477C, stores that answer plus 0x100 in row
  *           halfword 0x3E, and finally clears row byte 0x0B. Nothing is
  *           returned and a full table leaves every row untouched. The three
- *           in-image call sites are inside this payload's unlifted
- *           func_801D02F4: at 0x801D0364 and 0x801D041C it passes state 0 with
+ *           in-image call sites are inside this payload
+ *           claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp56700_801D02F4,
+ *           the map cell claim lifted exact at 0x801D02F4: at 0x801D0364 and
+ *           0x801D041C it passes state 0 with
  *           the sign-extended halves of its own two arguments, and at
  *           0x801D03E0 it passes state 1 with those same halves after the
  *           first claim; each site ignores the result.
@@ -86,7 +88,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  * coordinate in $s2 and the second in $s3; the compiler places the state-byte
  * store after the re-read of row word 0x34, and the 0x28-byte frame only keeps
  * $ra at 0x20 across the two calls. No other payload word names this address,
- * so the three sites in func_801D02F4 are its callers and its own return path
+ * so the three sites in that claim handler are its callers and its own return path
  * places the boundary.
  */
 void claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp56700_801D04EC(

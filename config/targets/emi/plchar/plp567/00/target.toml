@@ -46,6 +46,7 @@ support_sources = [
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp56700_801CF7A0.c",
     "src/bof3/plchar/selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp56700_801CE92C.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp56700_801D05D0.c",
+    "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp56700_801D02F4.c",
     "src/bof3/support/plp567_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/plp567_00_psyq.c"

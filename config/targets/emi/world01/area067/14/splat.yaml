@@ -186,8 +186,10 @@ segments:
     - '@source: src/bof3/world/retreatCounter2World01Area06714_801F445C.c'
     - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6264
-    - asm
-    - func_801F4478
+    - c
+    - stopSelectionEffectPairZeroOneWorld01Area06714_801F4478
+    - '@source: src/bof3/world/stopSelectionEffectPairZeroOneWorld01Area06714_801F4478.c'
+    - '@behavior: stops the selection-specific frontend effect pair (group 0, id 1) through the executable-side helper at 0x8015D404 and returns'
   - - 6300
     - asm
     - func_801F449C

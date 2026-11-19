@@ -37,8 +37,10 @@ segments:
     - '@source: src/bof3/world/armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48.c'
     - '@behavior: Overlay step handler, entry 0 of the local handler table at 0x801F4C10 that the dispatcher at 0x801F2C04 reaches with the work record byte at +0x04. It stores 0x40 in the phase byte at +0x0A of the work record published at the scratchpad pointer cell 0x1F800044, reads that cell again and stores 1 in the handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F2C88, then lowers the unsigned halfword at +0x7E of the record published at 0x80146884 by 2. Takes no arguments, returns nothing and builds no frame.'
   - - 136
-    - asm
-    - func_801F2C88
+    - c
+    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88
+    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88.c'
+    - '@behavior: Overlay step handler, entry 1 of the local handler table at 0x801F4C10 that the dispatcher at 0x801F2C04 reaches with the work record byte at +0x04. It loads the work record published at the scratchpad pointer cell 0x1F800044 and, while its phase byte at +0x0A is nonzero, moves the record words at +0x34 and +0x38 apart by the signed phase-table entry at 0x801F4C18 selected by the phase nibble and scaled by 0x800, decrements the phase byte and lowers the unsigned halfword at +0x7E of the record published at 0x80146884 by 2. Once the phase byte reads zero it clears the handler byte at +0x04 instead, which reselects entry 0 at 0x801F2C48. Takes no arguments, returns nothing and builds no frame.'
   - - 280
     - c
     - setHalfwordFF00AndTwoWorld01Area03913_801F2D18

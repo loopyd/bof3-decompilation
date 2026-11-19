@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/world/advanceCounter2By4World01Area04914_801F3728.c",
     "src/bof3/world/publishModeStatusFromTable5cd8World01Area04914_801F2C54.c",
     "src/bof3/world/clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0.c",
+    "src/bof3/world/setScenarioFlagBit3FWorld01Area04914_801F3288.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"

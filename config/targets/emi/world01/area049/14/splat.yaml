@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801F3194
   - - 1672
-    - asm
-    - func_801F3288
+    - c
+    - setScenarioFlagBit3FWorld01Area04914_801F3288
+    - '@source: src/bof3/world/setScenarioFlagBit3FWorld01Area04914_801F3288.c'
+    - '@behavior: Reads the shared scenario flag word D_8014686C and hands it to the shared block bit-set helper at 0x8015B580 with bit 0x3F. Takes no arguments, uses its 0x18-byte frame only to keep $ra across that call, and returns nothing.'
   - - 1712
     - asm
     - func_801F32B0

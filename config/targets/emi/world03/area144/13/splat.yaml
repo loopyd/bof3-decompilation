@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F34FC
   - - 2924
-    - asm
-    - func_801F376C
+    - c
+    - storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C
+    - '@source: src/bof3/world/storeMidpointOfTwoPointRecordsIntoThirdWorld03Area14413_801F376C.c'
+    - '@behavior: Componentwise midpoint of three point rows of this overlay''s own table at 0x801F3D80: masks the three byte arguments, scales each by the 0x10-byte row stride and, for each of the row''s first three words, adds the signed word of the row named by arg0 to the word of the row named by arg1 and stores the arithmetic half of the sum into the same word of the row named by arg2; the fourth word of every row is left alone.'
   - - 3096
     - asm
     - func_801F3818

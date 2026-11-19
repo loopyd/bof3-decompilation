@@ -122,8 +122,10 @@ segments:
     - c
     - adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp05600_801CF9DC
   - - 5852
-    - asm
-    - func_801CFADC
+    - c
+    - queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp05600_801CFADC
+    - '@source: src/bof3/plchar/queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCellAndAdvanceWorkByte3PlcharPlp05600_801CFADC.c'
+    - '@behavior: Work byte 3 == 1 step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 1 of the three-word code-pointer run based at 0x801D089C, which is word 17 of the twenty-four-entry run the textbin row at 0x801D0858 places, reached by the byte-3 dispatcher at 0x801CF998 which scales work byte 3, so the body word 0x801CFADC sits at 0x801D08A0. While work countdown byte 0x0A reads nonzero the step only decrements it and writes nothing else. When that countdown reaches zero it queues the cue computed from work halfword 0x2C plus 0x100 through the shared cue dispatcher func_8015DF18 and asks the no-argument slot search func_801B5AE4 for a front-end row: when the answer is not -1 it queues the literal cue 0x10B, writes 1 into field 0x0A and work route byte 0x08 into field 0x08 of the 0x74-byte row the answer indexes, copies the answer byte itself into work byte 0x06 and advances work byte 3 here, so that path raises the step counter twice. When the answer is -1 it projects the work position from work words 0x34 and 0x38 and the doubled movement offsets at 0x80181B94 and 0x80181B98 selected by route byte 0x08, hands the pair to the range-0 slot search func_801BDE14, raises bit 0 of the animation byte 0x801468FC + slot * 0x98 for the record that search reports unless it answers -1 as well, then claims a front-end record at the high half of the projected pair through the claim at 0x801CFF4C with one-unit retries along each axis while the matching low half is nonzero. Every path increments work byte 3 once more and the body closes by running the shared readiness helper func_8014DAEC. It takes no arguments and returns nothing, and the 0x30-byte frame keeps $ra at 0x28 and six saved registers across the calls.'
   - - 6440
     - c
     - passWorkByte5PaletteRowThenRequestWorkByte8ResourceAndClearWhenWorkByteBReportsDonePlcharPlp05600_801CFD28
