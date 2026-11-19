@@ -1,8 +1,8 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "348a8e685cc355f8be2d0f15bd6d539d31c59a4d",
-  "published_at": "2026-11-19T03:04:46.643900+00:00",
+  "revision": "d3f4cda42ff613f270c467c9e2a35add4d9452f4",
+  "published_at": "2026-11-19T03:08:55.827640+00:00",
   "counts": {
     "completed": 6097,
     "partial": 366,
@@ -10,9 +10,9 @@
     "invalid": 0,
     "total": 10524,
     "symbols": {
-      "named": 69189,
+      "named": 69190,
       "raw": 55231,
-      "total": 124420
+      "total": 124421
     }
   },
   "targets": [
@@ -2289,9 +2289,9 @@
       "invalid": 0,
       "total": 29,
       "symbols": {
-        "named": 180,
+        "named": 181,
         "raw": 136,
-        "total": 316
+        "total": 317
       }
     },
     {
