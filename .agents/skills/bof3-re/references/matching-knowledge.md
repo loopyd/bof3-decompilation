@@ -2192,6 +2192,12 @@ Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
 the first CSE no longer extends the pseudo for the second pass. Check
 adjacent-copy reversal when the load moves into the retained quantity.
+
+An intervening real instruction can prevent adjacent producer retargeting
+without preserving the copy. CSE can replace every copied use with the
+equivalent source, leaving an unused SET in `.cse2` that flow deletes before
+combine. Trace the consumers and `.flow` before assigning the removal to combine.
+
 After CSE preserves the copy, recheck deaths and allocation. Several real
 phases can exclude local allocation and change global priority, conflicts and
 preferences. Inspect the complete register web before a native probe.
