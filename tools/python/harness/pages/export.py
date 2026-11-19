@@ -67,8 +67,8 @@ def target_binary(root: Path, manifest, connection, catalogs: AssetCatalogs) -> 
     if header:
         validate_psx_header(data, manifest.load_address, binary_name=manifest.binary)
         spans.append(Span(0, header, "header", "PS-X EXE loader header", 50))
-    for address, size, reviewed_size, status, name in connection.execute(
-        "SELECT address, size, reviewed_size, lift_status, name FROM functions WHERE target_id = ?",
+    for address, size, reviewed_size, status, name, source_path in connection.execute(
+        "SELECT address, size, reviewed_size, lift_status, name, source FROM functions WHERE target_id = ?",
         (manifest.id.value,),
     ):
         length = reviewed_size or size
@@ -76,12 +76,16 @@ def target_binary(root: Path, manifest, connection, catalogs: AssetCatalogs) -> 
             continue
         start = address - manifest.load_address + header
         category = "code-lifted" if status in {"exact", "partial"} else "code-unlifted"
+        detail = f"{name}: {status} indexed function"
+        if category == "code-lifted":
+            path = (root / source_path).resolve().relative_to(root.resolve())
+            detail += f"\nSource: {path.as_posix()}"
         spans.append(
             Span(
                 start,
                 start + length,
                 category,
-                f"{name}: {status} indexed function",
+                detail,
                 10,
             )
         )

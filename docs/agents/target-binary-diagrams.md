@@ -6,9 +6,16 @@ the selected entry, excluding the archive header and other entries.
 
 Hover over the canvas to highlight a span and show its category, inclusive
 hexadecimal bounds, byte length and evidence. Click or tap to retain a selection.
-With the canvas focused, arrow keys select adjacent spans, Home and End select
-the first and last spans, and Escape clears selection. The HTML legend lists
-all supported colors. Resizing preserves physical offsets and selection.
+Lifted functions also show their repository-relative C source path. One tooltip
+is shared across the cards and moves to the active diagram. Clicking outside
+the canvas or its navigation buttons closes it; leaving the component's keyboard
+focus also clears selection.
+
+Focused diagrams show left and right chevrons for adjacent spans. Arrow keys
+also select adjacent spans, Home and End select the first and last spans, and
+Escape clears selection. The chevrons disappear when focus leaves the diagram.
+The HTML legend lists all supported colors. Resizing preserves physical offsets
+and selection.
 
 ## Classifications
 
@@ -52,4 +59,5 @@ can refine their enclosing container. Conflicts at the same priority are unknown
 The browser rejects old schemas, invalid categories, gaps and overlaps.
 
 Publication includes classification metadata and static page assets only. Original
-media, decoded assets, catalogs and local paths stay outside the public output.
+media, decoded assets, catalogs and absolute host paths stay outside the public
+output. Lifted span details include repository-relative C source paths.
