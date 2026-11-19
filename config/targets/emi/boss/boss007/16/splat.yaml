@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenClearWorkByte8AndSetStateTo2BossBoss00716_800C1950.c'
     - '@behavior: Step setup, entry 0 of the twelve-word handler run 0x800C1DDC: publishes this payload data row pointer 0x800C1D84 into +0xEC of the current enemy work record from 0x801EB4E8, the next step dispatcher 0x800C19B4 into +0xE4 and the in-row pointer 0x800C1D98 into +0xE8, clears byte +8 of the work record published at the scratchpad pointer cell 0x1F800044, stores 2 into that record byte +1 and calls func_8014D978.'
   - - 436
-    - asm
-    - func_800C19B4
+    - c
+    - dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4
+    - '@source: src/bof3/boss/dispatchIndexedHandlerTable1e0cBossBoss00716_800C19B4.c'
+    - '@behavior: Index-argument overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the three-word handler run based at 0x800C1E0C, the tail of this payload 0x800C1D78 data row holding the inert handler 0x800C19EC, the record-halfword clear 0x800C19F4 and the inert handler 0x800C1A04, so the selected handler result stays in the return register. The original bounds nothing before the scaled table load, and the slots after the index shift and after the table load stay nops. It reads no state and writes none; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names 0x800C19B4, and its address appears only in the step-setup publisher 0x800C1950, which stores it into +0xE4 of the current enemy work record.'
   - - 492
     - c
     - noopHandlerBossBoss00716_800C19EC

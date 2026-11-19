@@ -31,5 +31,6 @@ support_sources = [
     "src/bof3/support/boss033_16_psyq.c",
     "src/bof3/boss/runOwnerZeroRecordThenClearPendingBitSetFlagTwoAccumulateEnemyWorkHalfword86AndResetWorkBossBoss03316_800C1BD4.c",
     "src/bof3/boss/copyWorkHeadIntoMode6SlotTickByteBThenApplyHelper50ToStateRecordRequestResource5WhenRangeCoversWorkAdvanceWorkByte2BossBoss03316_800C20CC.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss03316_800C1CA4.c",
 ]
 psyq_source = "src/bof3/support/boss033_16_psyq.c"

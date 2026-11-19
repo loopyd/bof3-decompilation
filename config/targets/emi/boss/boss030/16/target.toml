@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss03016_800C18A0.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848.c",
     "src/bof3/boss/zeroResultBossBoss03016_800C1A14.c",
     "src/bof3/boss/clearOwnerRecordHeadsBossBoss03016_800C1A84.c",

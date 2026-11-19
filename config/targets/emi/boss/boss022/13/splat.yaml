@@ -44,8 +44,10 @@ segments:
     - '@source: src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938.c'
     - '@behavior: Battle-step handler of this overlay: runs the shared readiness helper at 0x8014DAEC and the shared enemy accumulation pass at 0x801E54EC, then overrides that pass re-arm by raising bit 0x1000 of word +0x100 of the current enemy work record published at 0x801EB4E8, clearing the accumulate flag 0x40 of byte 0 of the work object held by the scratchpad pointer cell 0x1F800044 and writing 3, 0, 0 into its bytes 1, 2 and 3.'
   - - 440
-    - asm
-    - func_800C19B8
+    - c
+    - dispatchIndexedHandlerBossBoss02213_800C19B8
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02213_800C19B8.c'
+    - '@behavior: Byte-indexed overlay dispatcher: it masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1B74 handler table, whose three words are this overlay inert handlers, so the selected handler result stays in the return register and the handler sees the scaled index in a0'
   - - 496
     - c
     - noopHandlerBossBoss02213_800C19F0

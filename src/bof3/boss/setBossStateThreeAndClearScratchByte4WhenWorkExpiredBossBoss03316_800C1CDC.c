@@ -12,10 +12,11 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80146375; /* @source 0x80146375 @kind unknown */
 
 /* @source 0x800C1CDC
- * @behavior Entry 0 of the per-index handler table based at 0x800C27A0, which
- * the work-step handler func_800C1CA4 indexes with the low byte of its argument
- * (scaled by four) and calls; the same word is entry 17 of the code-pointer run
- * that starts at 0x800C275C. It takes no arguments and returns nothing. It
+ * @behavior Entry 0 of the per-index handler run based at 0x800C27A0, which
+ * dispatchIndexedHandlerBossBoss03316_800C1CA4 indexes with the low byte of its
+ * argument (scaled by four) and calls; the same word is entry 17 of the
+ * code-pointer run that starts at 0x800C275C. It takes no arguments and returns
+ * nothing. It
  * loads the current enemy work record pointer published at 0x801EB4E8 and reads
  * that record's halfword at byte offset 0x94, the field the sibling at
  * 0x800C1D14 overwrites with 0xFFFF once its remaining-versus-count test is

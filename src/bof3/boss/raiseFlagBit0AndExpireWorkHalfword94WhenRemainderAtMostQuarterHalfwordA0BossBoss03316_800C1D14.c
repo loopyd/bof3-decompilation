@@ -8,12 +8,12 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
 extern u8 D_801462ED; /* @source 0x801462ED @kind unknown */
 
 /* @source 0x800C1D14
- * @behavior Entry 1 of the three-word handler table based at 0x800C27A0, whose
+ * @behavior Entry 1 of the fourteen-word handler run based at 0x800C27A0, whose
  * entry 0 is the already-exact sibling at 0x800C1CDC and whose entry 2 is the
- * inert noopHandlerBossBoss03316_800C1D68: the work-step dispatcher
- * func_800C1CA4 masks its argument with 0xFF, scales it by four and calls that
- * run, and the installer func_800C1848 publishes that dispatcher into byte
- * offset 0xE4 of the work record. It takes no arguments and returns nothing. It
+ * inert noopHandlerBossBoss03316_800C1D68: the indexed dispatcher
+ * dispatchIndexedHandlerBossBoss03316_800C1CA4 masks its argument with 0xFF,
+ * scales it by four and calls that run, and the installer func_800C1848
+ * publishes that dispatcher into byte offset 0xE4 of the work record. It takes no arguments and returns nothing. It
  * loads the current enemy work record pointer published at 0x801EB4E8, forms
  * the record halfword at 0x94 minus its signed halfword at 0xF8, and compares
  * that signed remainder against the record halfword at 0xA0 shifted right by

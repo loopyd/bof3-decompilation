@@ -59,8 +59,10 @@ segments:
     - c
     - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1A28
   - - 640
-    - asm
-    - func_800C1A80
+    - c
+    - dispatchIndexedHandlerBossBoss02116_800C1A80
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss02116_800C1A80.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1D5C handler table, whose three words are the inert handlers 0x800C1AB8, 0x800C1AC0 and 0x800C1AC8.'
   - - 696
     - c
     - noopHandlerBossBoss02116_800C1AB8

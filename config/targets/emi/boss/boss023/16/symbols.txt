@@ -1,7 +1,7 @@
 clearOwnerRecordHead = 0x800AC934;
 func_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
-func_800C1934 = 0x800C1934;
+dispatchIndexedHandlerBossBoss02316_800C1934 = 0x800C1934;
 noopHandlerBossBoss02316_800C196C = 0x800C196C;
 noopHandlerBossBoss02316_800C1974 = 0x800C1974;
 noopHandlerBossBoss02316_800C197C = 0x800C197C;

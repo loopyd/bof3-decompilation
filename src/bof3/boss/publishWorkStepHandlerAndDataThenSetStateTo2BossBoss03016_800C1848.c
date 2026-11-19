@@ -19,7 +19,7 @@ extern u8 *D_801EB4E8; /* @source 0x801EB4E8 @kind unknown */
  * scales it by four and calls the entry of the 0x800C1B0C run, whose entries 0
  * through 2 are the noop handlers at 0x800C18D8, 0x800C18E0 and 0x800C18E8 and
  * whose entry 3 is the sibling publisher at 0x800C1934. */
-void func_800C18A0(u8 index);
+void dispatchIndexedHandlerBossBoss03016_800C18A0(u8 index);
 
 /* Shared main-program helper the whole boss archive family calls at the end of
  * its step setup, for example 0x800C1C68 and 0x800C1D40 of BIN/BOSS/BOSS008.EMI
@@ -29,11 +29,12 @@ void func_8014D978(void);
 /* @source 0x800C1848
  * @behavior Step-0 setup of this overlay's work state machine: publishes three
  * words into the current enemy work record loaded from 0x801EB4E8 -- the data
- * row pointer 0x800C1AB4 into +0xEC, the step dispatcher func_800C18A0 into
- * +0xE4 and the data pointer 0x800C1ACC (0x800C1AB4 + 0x18, inside that same
- * row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record
- * the main program publishes at the scratchpad pointer cell 0x1F800044 and
- * calls func_8014D978. The state byte is the value func_800C1804 and
+ * row pointer 0x800C1AB4 into +0xEC, the step dispatcher
+ * dispatchIndexedHandlerBossBoss03016_800C18A0 into +0xE4 and the data pointer
+ * 0x800C1ACC (0x800C1AB4 + 0x18, inside that same row) into +0xE8 -- then
+ * stores 2 into the state byte at +1 of the work record the main program
+ * publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.
+ * The state byte is the value func_800C1804 and
  * func_800C18F0 index their 0x800C1ADC and 0x800C1B18 tables by, so writing 2
  * selects the next handler instead of re-entering this one: the word
  * 0x800C1848 at 0x800C1ADC is entry 0 of that state table and this function's
@@ -50,7 +51,8 @@ void publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848(void) {
   u8 *work = D_801EB4E8;
 
   FIELD_REF(void *, work, 0xECu) = &D_800C1AB4;
-  FIELD_REF(Boss03016StepHandler, work, 0xE4u) = func_800C18A0;
+  FIELD_REF(Boss03016StepHandler, work, 0xE4u) =
+      dispatchIndexedHandlerBossBoss03016_800C18A0;
   FIELD_REF(void *, work, 0xE8u) = &D_800C1ACC;
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;
   func_8014D978();
