@@ -1946,6 +1946,11 @@ A locally allocated table base can conflict with an earlier scalar and move its
 later phase to another register. Scope only the real arithmetic operation, then
 check that both schedulers remove the overlap and preserve the complete output.
 
+Successive definitions of real arithmetic intermediates can preserve grouping
+lost by folding. An assignment destination may remain a register operand that
+CSE does not substitute with its nonconstant definition. Check both CSE passes
+and combine; preserved grouping does not establish allocation or native improvement.
+
 When initial RTL already has the wrong addition order, inspect frontend folding
 before CSE. Parentheses and equal-mode conversions may be reassociated. Signed
 and unsigned locals of one machine mode can take different narrowing and
@@ -1953,6 +1958,11 @@ refolding paths. A coordinate at its consumer width can preserve the intended
 phase without extra shifts. Prove its range or low-bit equivalence at every
 consumer, retain the final conversion and inspect the complete native diff.
 The intermediate type needs a representation reason.
+
+A new local hard-register assignment can change reload scratch choices throughout
+a function. Compare local assignments and whole-function spill ranking before
+attributing distant entry or multiply changes to scheduling. Require the complete
+native result.
 
 A small body change can exchange saved loop registers by changing live length,
 even when their weighted references stay fixed. Trace both values through
