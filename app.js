@@ -6,6 +6,7 @@ const format = new Intl.NumberFormat("en-US");
 const byId = (id) => document.getElementById(id);
 const percent = (count, total) => total ? `${(100 * count / total).toFixed(1)}%` : "—";
 let targets = [];
+let binaryCategories = [];
 let selectedKind = "exe";
 const collapsedFamilies = new Set();
 
@@ -50,6 +51,12 @@ function symbolProgress(symbols) {
   return section;
 }
 
+function binaryDiagram(target) {
+  const diagram = document.createElement("binary-diagram");
+  diagram.configure(target.binary, binaryCategories, target.id);
+  return diagram;
+}
+
 function executable(target) {
   const article = element("article", "executable");
   const heading = element("div", "target-heading");
@@ -61,7 +68,7 @@ function executable(target) {
   const completion = element("div", "target-percent", percent(target.completed, target.total));
   completion.append(element("small", "", target.total ? "completed" : "no indexed functions"));
   heading.append(identity, completion);
-  article.append(heading, element("div", "metric-label", "Decompilation"), progressBar(target), counts(target), symbolProgress(target.symbols));
+  article.append(heading, element("div", "metric-label", "Decompilation"), progressBar(target), counts(target), symbolProgress(target.symbols), binaryDiagram(target));
   return article;
 }
 
@@ -75,7 +82,7 @@ function emiCard(target) {
   progress.append(progressBar(target), value);
   article.append(heading, element("p", "target-path", target.id), element("div", "metric-label decomp-label", "Decompilation"), progress, counts(target));
   if (!target.total) article.append(element("p", "target-path", "No indexed functions"));
-  article.append(symbolProgress(target.symbols));
+  article.append(symbolProgress(target.symbols), binaryDiagram(target));
   return article;
 }
 
@@ -135,9 +142,17 @@ function selectTab(kind, focus = false) {
 }
 
 function validateSnapshot(snapshot) {
-  if (snapshot.schema !== "bof3.decomp-status/v2" || !/^[0-9a-f]{40,64}$/.test(snapshot.revision)
+  if (snapshot.schema !== "bof3.decomp-status/v3" || !/^[0-9a-f]{40,64}$/.test(snapshot.revision)
     || !Array.isArray(snapshot.targets) || !snapshot.targets.length || !Number.isFinite(Date.parse(snapshot.published_at))) {
     throw new Error("The progress snapshot has an unsupported format.");
+  }
+  const requiredCategories = ["header", "audio", "text", "texture", "code-unlifted", "code-lifted", "table", "unknown", "empty"];
+  const categories = snapshot.binary_categories;
+  if (!Array.isArray(categories) || categories.length < requiredCategories.length
+    || categories.some((row) => !row || !/^[a-z][a-z0-9-]*$/.test(row.id) || typeof row.label !== "string" || !row.label || !/^#[0-9a-f]{6}$/i.test(row.color))
+    || new Set(categories.map((row) => row.id)).size !== categories.length
+    || requiredCategories.some((id) => !categories.some((row) => row.id === id))) {
+    throw new Error("The binary classification legend is invalid.");
   }
   const seen = new Set();
   const countKeys = [...states, "total", "invalid"];
@@ -159,6 +174,22 @@ function validateSnapshot(snapshot) {
       throw new Error("The progress snapshot contains an invalid target.");
     }
     seen.add(target.id);
+    const binary = target.binary;
+    if (!binary || !Number.isSafeInteger(binary.size) || binary.size <= 0 || !/^[0-9a-f]{64}$/.test(binary.sha256)
+      || !binary.source || typeof binary.source.id !== "string" || !binary.source.id || !/^[0-9a-f]{64}$/.test(binary.source.sha256)
+      || !Number.isSafeInteger(binary.source.offset) || binary.source.offset < 0
+      || !Array.isArray(binary.spans) || !binary.spans.length || binary.spans.length > binary.size) {
+      throw new Error("The target binary identity is invalid.");
+    }
+    let end = 0;
+    for (const span of binary.spans) {
+      if (!span || span.start !== end || !Number.isSafeInteger(span.end) || span.end <= end || span.end > binary.size
+        || !categories.some((row) => row.id === span.category) || typeof span.detail !== "string" || !span.detail) {
+        throw new Error("The target binary partition is invalid.");
+      }
+      end = span.end;
+    }
+    if (end !== binary.size) throw new Error("The target binary partition is incomplete.");
   }
   if (countKeys.some((key) => snapshot.targets.reduce((total, row) => total + row[key], 0) !== snapshot.counts[key])) {
     throw new Error("The progress totals do not match the targets.");
@@ -193,6 +224,7 @@ async function initialize() {
     const snapshot = await response.json();
     validateSnapshot(snapshot);
     targets = snapshot.targets;
+    binaryCategories = snapshot.binary_categories;
     renderOverview(snapshot);
     for (const kind of ["exe", "emi"]) {
       byId(`${kind}-count`).textContent = targets.filter((target) => target.kind === kind).length;
