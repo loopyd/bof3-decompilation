@@ -2127,6 +2127,13 @@ register number, so a callee-saved destination can depend on the latest call.
 Verify both schedules, allocation and the complete native body; types still
 require representation evidence.
 
+An internal width rewrite needs proof of its conversions on every baseline-defined
+path, with accesses and ABI preserved. It need not recover the original local
+declarations. Trace tree folding and partial-register liveness: a narrowed sum
+can become word arithmetic while its separate wide capture still emits a
+high-word fill and occupies a pair. A lowpart use alone does not prove that
+upper-word work is dead.
+
 A projection local can start with its actual shared multiplier, then hold its
 product and coordinate. A copy supplying the other projection can survive CSE
 and keep the first quantity born before its origin addition. Local allocation
