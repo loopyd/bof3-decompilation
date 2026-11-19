@@ -353,8 +353,10 @@ class BinaryDiagram extends HTMLElement {
 
   hit(event) {
     const rect = this.canvas.getBoundingClientRect();
-    const row = Math.min(BinaryDiagram.rows - 1, Math.max(0, Math.floor((event.clientY - rect.top) / rect.height * BinaryDiagram.rows)));
-    const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const pointX = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
+    const pointY = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
+    const row = Math.min(BinaryDiagram.rows - 1, Math.floor(pointY / rect.height * BinaryDiagram.rows));
+    const x = pointX / rect.width;
     const offset = Math.min(this.binary.size - 1, Math.floor((row + x) / BinaryDiagram.rows * this.binary.size));
     let low = 0;
     let high = this.binary.spans.length - 1;
@@ -363,7 +365,22 @@ class BinaryDiagram extends HTMLElement {
       if (this.binary.spans[middle].end <= offset) low = middle + 1;
       else high = middle;
     }
-    return this.isVisible(low) ? low : -1;
+    if (this.isVisible(low)) return low;
+    let nearest = -1;
+    let distance = Infinity;
+    for (let index = 0; index < this.binary.spans.length; index++) {
+      if (!this.isVisible(index)) continue;
+      this.rectangles(this.binary.spans[index], rect.width, rect.height, (left, top, width, height) => {
+        const dx = Math.max(left - pointX, 0, pointX - left - width);
+        const dy = Math.max(top - pointY, 0, pointY - top - height);
+        const squared = dx * dx + dy * dy;
+        if (squared < distance) {
+          nearest = index;
+          distance = squared;
+        }
+      });
+    }
+    return nearest;
   }
 
   isVisible(index) {
@@ -379,8 +396,7 @@ class BinaryDiagram extends HTMLElement {
   }
 
   updateNavigation() {
-    const previousStart = this.selected < 0 ? this.binary.spans.length : this.selected;
-    this.previous.setAttribute("aria-disabled", this.findVisible(previousStart, -1) < 0);
+    this.previous.setAttribute("aria-disabled", this.findVisible(this.selected, -1) < 0);
     this.next.setAttribute("aria-disabled", this.findVisible(this.selected, 1) < 0);
   }
 
@@ -482,8 +498,7 @@ class BinaryDiagram extends HTMLElement {
   }
 
   navigate(step) {
-    const start = this.selected < 0 && step < 0 ? this.binary.spans.length : this.selected;
-    const next = this.findVisible(start, step);
+    const next = this.findVisible(this.selected, step);
     if (next < 0) return;
     this.pinned = true;
     this.select(next);
@@ -500,7 +515,7 @@ class BinaryDiagram extends HTMLElement {
     if (event.key === "Home") next = this.findVisible(-1, 1);
     else if (event.key === "End") next = this.findVisible(this.binary.spans.length, -1);
     else if (["ArrowRight", "ArrowDown"].includes(event.key)) next = this.findVisible(this.selected, 1);
-    else if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = this.findVisible(this.selected < 0 ? this.binary.spans.length : this.selected, -1);
+    else if (["ArrowLeft", "ArrowUp"].includes(event.key)) next = this.findVisible(this.selected, -1);
     else return;
     event.preventDefault();
     if (BinaryDiagram.tooltip.contains(event.target)) this.canvas.focus();

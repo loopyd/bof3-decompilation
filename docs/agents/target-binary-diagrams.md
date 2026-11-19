@@ -36,6 +36,8 @@ canvas. They retain selection while focused and dim at the first or last visible
 span, where navigation stops. Arrow keys also select adjacent visible spans,
 Home and End select the first and last visible spans, and Escape clears selection. The chevrons
 disappear when focus leaves the diagram.
+After clearing selection, backward navigation stays disabled; forward navigation
+starts at the first visible span.
 Resizing preserves physical offsets and selection.
 
 The `?` button at the canvas's right edge opens the color legend. One help tooltip
@@ -44,8 +46,10 @@ Clicking outside help, scrolling or pressing its button again closes it. Escape
 also closes help when its button is focused. The legend appears only in help.
 
 The filter button immediately left of `?` opens classification checkboxes. Each
-diagram starts with every classification visible. Unchecked classifications stop
-drawing and responding to pointer selection; their byte positions stay fixed.
+diagram starts with every classification visible. Unchecked classifications
+disappear from the canvas; their byte positions stay fixed.
+Tapping or hovering over hidden bytes selects the nearest visible block on the
+canvas. Equal distances choose the earlier span in byte order.
 Navigation skips hidden spans. Hiding the selected classification selects the next
 visible span, or the previous one if none follows. Hiding everything clears details
 and disables both chevrons.
