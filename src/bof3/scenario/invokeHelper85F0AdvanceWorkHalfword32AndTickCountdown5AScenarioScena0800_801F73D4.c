@@ -12,9 +12,9 @@ void func_80196070(void);
  * work-flag reset helper at 0x80196070 when the countdown reaches zero.
  * Takes no arguments and returns nothing. The local helper's wider role
  * and the work fields' meanings remain unknown.
- * @status partial
- * @match 69.23
- * @residual Countdown and advanced-value quantities use opposite v0/v1 registers in eight instructions.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void invokeHelper85F0AdvanceWorkHalfword32AndTickCountdown5AScenarioScena0800_801F73D4(void) {
   u8* before;
@@ -26,10 +26,14 @@ void invokeHelper85F0AdvanceWorkHalfword32AndTickCountdown5AScenarioScena0800_80
   func_801F85F0(*(s16*)(before + 0x2E), *(s16*)(before + 0x30),
                 *(s16*)(before + 0x32));
   after = scenarioScena0800Work;
-  countdown = *(u16*)(after + 0x5A) - 1;
-  value = *(u16*)(after + 0x32) + 16;
-  *(u16*)(after + 0x5A) = countdown;
-  *(u16*)(after + 0x32) = value;
+  do {
+    do {
+      countdown = *(u16*)(after + 0x5A) - 1;
+      value = *(u16*)(after + 0x32) + 16;
+    } while (0);
+    *(u16*)(after + 0x5A) = countdown;
+    *(u16*)(after + 0x32) = value;
+  } while (0);
   if (countdown == 0) {
     func_80196070();
   }

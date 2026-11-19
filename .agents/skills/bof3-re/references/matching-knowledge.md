@@ -497,6 +497,12 @@ follows it. Check both instructions before accepting the scope boundary.
    representation-level partial whose only difference was that hunk, variants that
    reused a consumed local for the flag measured below the partial, and the scope
    matched.
+   If a computation-only scope fixes store order but exchanges locals, retain
+   the outer update scope and group the real computations inside it. The inner
+   `LOOP_END` can order arithmetic before the first store while the outer one
+   keeps stores before the following narrowed comparison during scheduling.
+   Verify both receiving instructions, local quantities and final delay slots.
+   The later delay-slot pass can move a store past the scheduling boundary.
 3. Compare plain initialization, PRE placement and proposed placement through
    `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
    another placement may retain allocation while freeing argument order. Bind

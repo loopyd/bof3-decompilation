@@ -14,9 +14,9 @@ void func_80196070(void);
  * wider role and the work fields' meanings remain unknown; the shape and
  * helper identity follow the byte-adjacent sibling 0x801F73D4, which
  * advances the same halfword by 16.
- * @status partial
- * @match 96.15
- * @residual The countdown store precedes the value subtraction instead of following it; all other instructions match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C(void) {
   u8* before;
@@ -29,8 +29,10 @@ void invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena
                 *(s16*)(before + 0x32));
   after = scenarioScena0800Work;
   do {
-    countdown = *(u16*)(after + 0x5A) - 1;
-    value = *(u16*)(after + 0x32) - 0x10;
+    do {
+      countdown = *(u16*)(after + 0x5A) - 1;
+      value = *(u16*)(after + 0x32) - 0x10;
+    } while (0);
     *(u16*)(after + 0x5A) = countdown;
     *(u16*)(after + 0x32) = value;
   } while (0);
