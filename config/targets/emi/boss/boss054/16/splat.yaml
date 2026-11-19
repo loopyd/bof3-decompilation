@@ -40,8 +40,10 @@ segments:
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05416_800C187C.c'
     - '@behavior: Step setup of this overlay work state machine: publishes the data row pointer 0x800C2078, the indexed handler 0x800C18E0 and the in-row pointer 0x800C2084 into words +0xEC, +0xE4 and +0xE8 of the current work record loaded from 0x801EB4E8, raises bit 0x8 of that record +0x104 flag word, stores 2 into the state byte at +1 of the record published at scratchpad pointer cell 0x1F800044 and calls func_8014D978; no jal names it, its only in-image reference being entry 0 of the 0x800C2090 handler run inside the 0x800C2078 data row.'
   - - 224
-    - asm
-    - func_800C18E0
+    - c
+    - dispatchIndexedHandlerBossBoss05416_800C18E0
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss05416_800C18E0.c'
+    - '@behavior: Byte-indexed handler dispatch of this overlay: masks the index argument with 0xFF, scales it by four and calls the entry of the three-word handler run at 0x800C20C0, which holds this overlay''s inert handlers 0x800C1918, 0x800C1920 and 0x800C1928, inside a 0x18-byte frame that keeps the return address at 0x10 so the selected handler result survives; 0x800C187C stores the address into work record word +0xE4 and no jal names it.'
   - - 280
     - c
     - noopHandlerBossBoss05416_800C1918

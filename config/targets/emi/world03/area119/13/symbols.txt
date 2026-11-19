@@ -21,7 +21,7 @@ incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913
 func_801F3298 = 0x801F3298;
 func_801F3324 = 0x801F3324;
 dispatchStateByte2Table4604WorldWorld03Area11913_801F358C = 0x801F358C;
-func_801F35D0 = 0x801F35D0;
+advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0 = 0x801F35D0;
 func_801F3608 = 0x801F3608;
 func_801F369C = 0x801F369C;
 dispatchStateByte2Table460cWorldWorld03Area11913_801F3AFC = 0x801F3AFC;

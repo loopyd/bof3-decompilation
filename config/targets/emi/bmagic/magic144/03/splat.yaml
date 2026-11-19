@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EF078
   - - 1308
-    - asm
-    - func_801EF11C
+    - c
+    - incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBFlag80SetBmagicMagic14403_801EF11C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, when bit 0x80 of the work object byte at offset 0xB is set, increments the byte at offset 0x2 through the same pointer.'
   - - 1364
     - c
     - decrementWorkByte9ThenSubmitRecordForwardBattleByteDecrementGlobalWorkByteBAndInvokeHelperWhenWorkByteB80BmagicMagic14403_801EF154

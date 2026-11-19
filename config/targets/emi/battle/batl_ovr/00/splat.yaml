@@ -27,8 +27,10 @@ segments:
   vram: 2149510148
   subsegments:
   - - 4
-    - asm
-    - func_801EEC04
+    - c
+    - dispatchSubstateTableF5f8
+    - '@source: src/bof3/battle/dispatchSubstateTableF5f8.c'
+    - '@behavior: Reads the shared battle substate byte D_801462E3, scales it by four and calls the handler pointer at that index of this overlay dispatch run D_801EF5F8, whose five entries are the substate handlers 0x801EEC40, 0x801EEC7C, 0x801EEEB8, 0x801EEF10 and 0x801EF0A8; the words after entry 4 are scalars, not code pointers.'
   - - 64
     - asm
     - func_801EEC40

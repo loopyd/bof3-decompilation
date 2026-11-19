@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED28
   - - 616
-    - asm
-    - func_801EEE68
+    - c
+    - incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, tests the work object''s unsigned byte at offset 0xB with sltiu against 2 and, only below that bound, increments the work byte at offset 0x1 by one through the same base; takes no arguments, returns nothing and keeps no frame.'
   - - 672
     - asm
     - func_801EEEA0

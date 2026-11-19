@@ -176,7 +176,11 @@ original before choosing that: the cross-jump applies where the original stores 
 per arm, while an original that stores once after the branch keeps the store there and
 selects in the arms. This also applies when both arms choose the same constant. A literal at the join
 left one instruction different; separate arm stores added twelve bytes. Assigning
-the constant to a local in each arm, then storing it once after the branch, matched. A guard that picks the sign of one delta on a shared halfword is
+the constant to a local in each arm, then storing it once after the branch, matched.
+For a three-way chain over one loaded byte, storing a constant in each arm merged
+into the original's single post-branch store and matched. Selecting into a local
+instead mismatched at the original size. Reusing the loaded byte's local for the
+result put the constant in the wrong register, with the first difference at `li`. A guard that picks the sign of one delta on a shared halfword is
 that second case: assign one pointer and one value local in each arm and store once
 after the branch, so each arm keeps its own base materialisation and load while the
 join holds the single store. That merge also needs each arm

@@ -95,8 +95,10 @@ segments:
     - dispatchStateByte2Table4604WorldWorld03Area11913_801F358C
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 2512
-    - asm
-    - func_801F35D0
+    - c
+    - advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0
+    - '@source: src/bof3/world/advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0.c'
+    - '@behavior: Overlay step handler and first entry of the two-entry handler table at 0x801F4604: when the shared overlay state byte at 0x8014933B is nonzero it increments the work record state byte at offset 0x02, advancing the byte-2 dispatch to 0x801F3608.'
   - - 2568
     - asm
     - func_801F3608

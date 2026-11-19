@@ -51,8 +51,10 @@ segments:
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03516_800C1994
   - - 504
-    - asm
-    - func_800C19F8
+    - c
+    - dispatchIndexedHandlerBossBoss03516_800C19F8
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03516_800C19F8.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1D98 handler table, so the value the selected handler returns stays in the return register. The step setup 0x800C1994 publishes this function address into the slot at offset 0xE4 of the work record it reaches through the main-program cell 0x801EB4E8, so the main program calls it through that slot with the step index byte of that record. The table base 0x800C1D98 sits inside the reviewed textbin row at 0x800C1D04 and holds four overlay handlers followed by eleven main-program handlers.'
   - - 560
     - c
     - setBossBoss03516_800C1A30

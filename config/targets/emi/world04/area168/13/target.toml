@@ -28,6 +28,7 @@ support_sources = [
     "src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4.c",
     "src/bof3/world/dispatchSharedModeByteTable2C04World04Area16813_801F4A0C.c",
     "src/bof3/world/drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040.c",
+    "src/bof3/world/setStatus12Or13Or14ByGateWorld04Area16813_801F49D4.c",
 ]
 psyq_source = "src/bof3/support/area168_13_psyq.c"
 
