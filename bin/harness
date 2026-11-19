@@ -13,6 +13,10 @@ ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
 domain="${1:-}"
 action="${2:-}"
 
+if [ "$domain" = "cleanup" ]; then
+    export PYTHONDONTWRITEBYTECODE=1
+fi
+
 policy=override
 missing_status=2
 missing_hint=''

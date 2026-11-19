@@ -32,6 +32,16 @@ def _lift(name: str, help: str, example: str = "") -> Action:
 
 
 DOMAINS: Mapping[str, Domain] = {
+    "cleanup": Domain(
+        "assess or remove disposable local outputs",
+        actions={},
+        passthrough=Action(
+            "remove stale outputs with optional history, evidence and worktree scopes",
+            "harness.cleanup.cli",
+            kind="passthrough",
+            example="bin/harness cleanup --dry-run",
+        ),
+    ),
     "pages": Domain(
         "export and publish decompilation progress",
         actions={},

@@ -38,6 +38,7 @@ pythonpath = [
     "tools/python/tests/analysis",
     "tools/python/tests/application",
     "tools/python/tests/build",
+    "tools/python/tests/cleanup",
     "tools/python/tests/commands",
     "tools/python/tests/decomp",
     "tools/python/tests/domain",

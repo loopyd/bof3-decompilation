@@ -17,6 +17,7 @@ scoped documentation as maintenance/research input, not required runtime reading
 | Function/global index conflict or isolated `textbin` probe | [Boundary evidence](agents/boundary-evidence.md) | Tooling route for implementation; matching route before target edits |
 | Area dialogue text extraction, editing or repacking | [Dialogue text](specs/formats/dialogue-text.md) | [Tool usage](agents/tool-usage.md#area-text); binary-format evidence only, no runtime acceptance |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
+| Local disk usage and disposable outputs | [Disk cleanup](agents/disk-cleanup.md) | `bin/harness cleanup --dry-run`; optional evidence, session history and worktrees |
 | Test-unit organization, scoping or optimization | [Tests](agents/coding-standards.md#tests) | `$bof3-test`; [unit map](../.agents/skills/bof3-test/references/unit-map.md); `just check` (scoped) / `just check-all` / `just check-unit` |
 | Codex MCP or Pi extension migration | [Codex configuration](agents/codex.md) | Global settings stay in `~/.codex`; project skills below |
 | Autonomous lift/naming/type/macro loop or resume | [`$bof3-lift-loop`](../.agents/skills/bof3-lift-loop/SKILL.md) | Active-session mission protocol; parallel independent reads/reviews, serialized writes; no harness model launcher |

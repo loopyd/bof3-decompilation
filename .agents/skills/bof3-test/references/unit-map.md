@@ -6,7 +6,8 @@ Counts describe this inventory, not pytest case totals.
 
 Contents: [analysis](#analysis-8---harnessanalysis),
 [application](#application-1---common-file-and-index-safety),
-[build](#build-8---harnessbuild), [commands](#commands-11---harnesscommands),
+[build](#build-8---harnessbuild), [cleanup](#cleanup-3---harnesscleanup),
+[commands](#commands-11---harnesscommands),
 [decomp](#decomp-2---harnessdecomp), [domain](#domain-10---harnessdomain),
 [emi](#emi-2---harnessemi), [macros](#macros-3---harnessmacros),
 [naming](#naming-2---harnessnaming), [perf](#perf-2---cross-cutting-performance-budgets),
@@ -46,6 +47,17 @@ Run: `just check-unit build`
 - `build/test_lift.py`
 - `build/test_permute.py`
 - `build/test_splat.py`
+
+## cleanup (3) - harness.cleanup
+
+Run: `just check-unit cleanup`
+
+- `cleanup/test_cli.py`
+- `cleanup/test_inventory.py`
+- `cleanup/test_operations.py`
+
+Deletion tests use temporary repositories. Public dry runs must preserve files,
+Git state and worktree registrations without creating import caches or locks.
 
 ## commands (11) - harness.commands
 
@@ -153,5 +165,5 @@ Run: `just check-unit types`
 
 `native_result_fixture.py`, `fixtures/`
 
-Total: 64 test files across 14 units. Inventory from
+Total: 67 test files across 15 units. Inventory from
 `tools/python/tests/*/test_*.py`; count files, not collected cases.

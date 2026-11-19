@@ -286,6 +286,7 @@ def test_package_initializer_edges_are_locked() -> None:
         "harness.types": set(),
         "harness.common": set(),
         "harness.build": set(),
+        "harness.cleanup": set(),
         "harness.decomp": set(),
         "harness.domain": set(),
         "harness.docs": set(),
