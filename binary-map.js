@@ -248,6 +248,10 @@ class BinaryDiagram extends HTMLElement {
     const text = `${category.label} · ${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
     const tooltip = BinaryDiagram.tooltip;
     tooltip.replaceChildren(document.createTextNode(text), document.createElement("br"), document.createTextNode(span.detail));
+    if (span.preview !== undefined) {
+      const preview = BinaryDiagram.node("div", "binary-preview", span.preview);
+      tooltip.insertBefore(preview, tooltip.lastChild);
+    }
     tooltip.hidden = false;
     this.canvas.setAttribute("aria-describedby", tooltip.id);
     this.dataset.selectedStart = span.start;
