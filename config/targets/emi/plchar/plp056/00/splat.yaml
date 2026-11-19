@@ -87,8 +87,10 @@ segments:
     - dispatchWorkByte2Table087cPlcharPlp05600_801CF338
     - '@source: src/bof3/plchar/dispatchWorkByte2Table087cPlcharPlp05600_801CF338.c'
   - - 3964
-    - asm
-    - func_801CF37C
+    - c
+    - stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp05600_801CF37C
+    - '@source: src/bof3/plchar/stepEvenRouteByteBackClaimWorkAndProbeRouteThreeAndFiveLayersThenSelectSequence42PlusHalfRouteAndAdvanceStepPlcharPlp05600_801CF37C.c'
+    - '@behavior: Entry 9 of the twenty-four-word handler run at 0x801D0858 and index 0 from the base 0x801D087C that the dispatcher at 0x801CF338 addresses from work byte 2; the word at 0x801D087C is its only in-image reference and no jal in the payload targets it. It steps an even route index one back inside the eight-entry window, claims the work by storing 1 into byte 0x2B, then probes two fixed layer offset pairs 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5, clearing the claim byte when the narrowed sample of a probe reads at least 0x41 and the reference halfword 0x3E is below the screen-space answer for the same point, gated by scratchpad byte 0x1F800000. It selects sequence 0x42 plus half the route index through func_8014D8D4 and increments step counter byte 0x02. The 460-byte span is byte-identical to the exact lifts at 0x801CE870 of plp457, 0x801CEE4C of plp257 and 0x801CFB74 of plp025.'
   - - 4424
     - c
     - claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp05600_801CF548

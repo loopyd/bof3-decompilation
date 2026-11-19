@@ -26,11 +26,12 @@ extern u16 D_801F362C[]; /* @source 0x801F362C @kind table */
  *           holds each overlay's own `%lo` (0x3AD4 there, 0x362C here), so this
  *           range is not byte-identical to that lifted span and the literals
  *           are written from this span's bytes rather than cloned. This
- *           target's own remaining sibling func_801F2CB0 has the same body and
- *           reads the neighbouring halfword table at 0x801F3634, eight bytes
- *           past this one: that is still an `asm` row, but its disassembly is
- *           original bytes, so it independently confirms the statement order
- *           and the table-pair layout.
+ *           target's own neighbouring sibling
+ *           publishModeStatusFromTable3634World00Area01013_801F2CB0 has the
+ *           same body and reads the neighbouring halfword table at 0x801F3634,
+ *           eight bytes past this one; its original-byte disassembly
+ *           independently confirms the statement order and the table-pair
+ *           layout.
  * @status exact
  * @match 100.00
  * @residual none

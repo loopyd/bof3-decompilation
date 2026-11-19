@@ -28,5 +28,6 @@ support_sources = [
     "src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348.c",
     "src/bof3/boss/initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1B14.c",
+    "src/bof3/boss/dispatchStateByte1Table265cBossBoss01316_800C1A34.c",
 ]
 psyq_source = "src/bof3/support/boss013_16_psyq.c"

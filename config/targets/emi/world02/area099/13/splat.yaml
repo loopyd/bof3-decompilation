@@ -39,8 +39,10 @@ segments:
     - dispatchWorkByte4Table4988World02Area09913_801F2D68
     - '@source: src/bof3/world/dispatchWorkByte4Table4988World02Area09913_801F2D68.c'
   - - 428
-    - asm
-    - func_801F2DAC
+    - c
+    - armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC
+    - '@source: src/bof3/world/armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC.c'
+    - '@behavior: Overlay step handler, entry 0 of the local handler table at 0x801F4988 that the dispatcher at 0x801F2D68 reaches with the work record byte at +0x04: it loads the work record published at the scratchpad pointer cell 0x1F800044 and stores 0x48 in the record phase byte at +0x0A, reads that cell again and stores 1 in the record handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F2DEC, then loads the pointer cell at 0x80146884 and lowers the unsigned halfword at +0x7E of its record by 2.'
   - - 492
     - c
     - stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC

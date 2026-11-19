@@ -47,8 +47,10 @@ segments:
     - c
     - noopHandlerBossBoss01316_800C1A2C
   - - 564
-    - asm
-    - func_800C1A34
+    - c
+    - dispatchStateByte1Table265cBossBoss01316_800C1A34
+    - '@source: src/bof3/boss/dispatchStateByte1Table265cBossBoss01316_800C1A34.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C265C, the textbin row D_800C25D8 word 33, so the selected handler result stays in the return register. Entry 0 of that base is this payload next body 0x800C1A78, entries 12 through 15 are the payload steps 0x800C1B4C, 0x800C1C4C, 0x800C1CBC and 0x800C1D08, entry 24 and entries 27 through 32 are the later payload steps, and the zero word 0x800C26E0 at entry 33 ends it. The index is bounded only to a byte and never checked against the run length, so that zero word is reachable; the slot after the scaled table load and the indirect call delay slot both stay nops, and the call passes no argument. The 0x18-byte frame only keeps the return address at 0x10 across that call, and the epilogue leaves the return value untouched. No jal and no word of this payload names 0x800C1A34, so the overlay entry is what reaches it.'
   - - 632
     - asm
     - func_800C1A78

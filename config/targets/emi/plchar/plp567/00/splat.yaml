@@ -169,8 +169,10 @@ segments:
     - '@source: src/bof3/plchar/dispatchStateByte2Table07e4PlcharPlp56700_801CFCDC.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D07E4.'
   - - 6432
-    - asm
-    - func_801CFD20
+    - c
+    - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp56700_801CFD20
+    - '@source: src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp56700_801CFD20.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, entry 0 of the three-word handler run at 0x801D07E4 that the byte-2 dispatcher 0x801CFCDC indexes, and no jal in this payload names it. When the route byte 0x08 is even it stores the decremented route, runs the step test 0x801D05D0 and, while that answer reads zero, stores the neighbour two steps the other way and runs the same test again, putting the byte back when that answer also reads zero. It then projects the work position by the route-selected movement offsets of 0x80181B94/0x80181B98, keeps the func_80154F28 sample of that point less the reference halfword 0x3E and queries func_80154F78 with the route byte. While the gate byte 0x1F800000 reads nonzero and that difference is at least 0x41 it selects work sequence (byte 8 - 1) / 2 + 0x46 and counts the step twice. Every other case claims work byte 0x2B, probes the layers 0x80181BAC/0x80181BB0 with route 3 and 0x80181BBC/0x80181BC0 with route 5, clearing the claim byte wherever the reference halfword 0x3E stays below the layer sample, then requests the cue halfword 0x2C + 0x100, selects sequence (byte 8 - 1) / 2 + 0x42 and arms countdown byte 0x0A with 5. A shared tail clears step sign byte 0x0B and increments step counter byte 0x02.'
   - - 7276
     - c
     - markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp56700_801D006C

@@ -7,7 +7,9 @@
  *           scenario overlays), walking the table with an unsigned byte counter
  *           in a bottom-tested loop; it takes no arguments, returns nothing and
  *           reads no state. The field it clears is that record's countdown: the
- *           overlay's own ticker func_801F39D8 tests the same +0xC halfword of
+ *           overlay's own ticker
+ *           tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8
+ *           tests the same +0xC halfword of
  *           every 0xE-stride record with `lh`/`beqz` and decrements it, the
  *           free-record scan func_801F3A9C returns the first record whose +0xC
  *           counts zero, and the re-arm helper func_801F3D54 stores 0x20 there

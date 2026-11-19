@@ -6,7 +6,9 @@
  *           this overlay shares with the world and scenario overlays) and
  *           returns the address of the first record whose +0xC halfword counts
  *           zero (read as a signed halfword, the same `lh` the overlay's own
- *           ticker func_801F39D8 uses on that field), or zero when all 0x80
+ *           ticker
+ *           tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8
+ *           uses on that field), or zero when all 0x80
  *           records are busy. The countdown halfword is the free marker: the
  *           exact sibling clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC
  *           at 0x801F39AC clears that field over the same table and the re-arm

@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchWorkByte4Table4c10World01Area03913_801F2C04
+    - '@source: src/bof3/world/dispatchWorkByte4Table4c10World01Area03913_801F2C04.c'
+    - '@behavior: Overlay step dispatch: reads the handler byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044, scales it by four and calls that entry of the local handler table at 0x801F4C10, whose two entries are the routines at 0x801F2C48 and 0x801F2C88. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 72
     - c
     - armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48

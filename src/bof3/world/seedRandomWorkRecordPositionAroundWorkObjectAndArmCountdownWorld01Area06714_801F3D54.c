@@ -14,7 +14,9 @@ s32 func_801782FC(s32 arg0);
 
 /* @source 0x801F3D54
  * @behavior Seeds one 0xE-byte work record - the record kind the overlay's own
- *           ticker func_801F39D8 walks in the table at 0x800E4800 and hands to
+ *           ticker
+ *           tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8
+ *           walks in the table at 0x800E4800 and hands to
  *           drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0 as a flat
  *           vertical bar. It draws a random column angle from `rand() & 0xFC0`
  *           and a random reach from `rand() & 0x38`, then stores, all as

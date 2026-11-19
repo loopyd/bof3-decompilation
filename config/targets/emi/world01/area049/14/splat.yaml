@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801F2C80
   - - 192
-    - asm
-    - func_801F2CC0
+    - c
+    - clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0
+    - '@source: src/bof3/world/clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0.c'
+    - '@behavior: Overlay dispatch handler: when its argument word is exactly 0x4D8000 and the shared front-side byte 0x80143F03 reads 0 it runs the target-local flag transition at 0x801F2C80, which clears bit 2 and sets bit 3 of the shared flag bank 0x80144F28, and every path returns 0.'
   - - 256
     - c
     - findWorkPositionBoundsIndexWorld01Area04914_801F2D00

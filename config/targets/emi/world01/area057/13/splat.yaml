@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - publishModeStatusFromTable4afcWorld01Area05713_801F2C04
+    - '@source: src/bof3/world/publishModeStatusFromTable4afcWorld01Area05713_801F2C04.c'
+    - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F4AFC and publishes it into the shared status halfword at 0x801490A8.'
   - - 48
     - asm
     - func_801F2C30

@@ -17,7 +17,8 @@ void func_80155A08(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  *           links the 0x18-byte packet as grid kind 4 through the shared
  *           grid-cell linker func_80155A08 with the target-local word pair at
  *           0x801F53A0/0x801F53A4 as its two coordinates. The overlay's ticker
- *           func_801F39D8 (jal at 0x801F3A10) calls it once per 0xE-stride
+ *           tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8
+ *           (jal at 0x801F3A10) calls it once per 0xE-stride
  *           record whose +0xC countdown halfword is still running, passing the
  *           record base in $a0, and then steps that record's +0x2 halfword down
  *           by +0x6 while growing +0x4, so the drawn bar keeps a fixed bottom

@@ -1,5 +1,5 @@
 func_801F2C04 = 0x801F2C04;
 func_801F2C44 = 0x801F2C44;
 publishModeStatusFromTable362cWorld00Area01013_801F2C84 = 0x801F2C84;
-func_801F2CB0 = 0x801F2CB0;
+publishModeStatusFromTable3634World00Area01013_801F2CB0 = 0x801F2CB0;
 seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC = 0x801F2CDC;

@@ -38,8 +38,10 @@ segments:
     - '@source: src/bof3/world/publishModeStatusFromTable362cWorld00Area01013_801F2C84.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F362C and publishes it into the shared status halfword at 0x801490A8.'
   - - 176
-    - asm
-    - func_801F2CB0
+    - c
+    - publishModeStatusFromTable3634World00Area01013_801F2CB0
+    - '@source: src/bof3/world/publishModeStatusFromTable3634World00Area01013_801F2CB0.c'
+    - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F3634 and publishes it into the shared status halfword at 0x801490A8.'
   - - 220
     - c
     - seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC
