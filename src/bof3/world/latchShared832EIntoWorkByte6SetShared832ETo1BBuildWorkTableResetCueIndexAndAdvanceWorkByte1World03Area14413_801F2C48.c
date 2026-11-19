@@ -7,7 +7,9 @@ extern volatile u8 D_8014832E;
 extern u8 D_801F4960;
 
 /* @source 0x801F2E18 @kind function */
-extern void func_801F2E18(void);
+extern void
+seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18(
+    void);
 
 /* @source 0x1F800044 @kind data */
 extern u8* D_1F800044;
@@ -55,7 +57,7 @@ void latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAnd
   work = D_1F800044;
   work[6] = D_8014832E;
   D_8014832E = 0x1B;
-  func_801F2E18();
+  seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18();
   work = D_1F800044;
   D_801F4960 = 0;
   work[1]++;

@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC.c",
     "src/bof3/world/latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48.c",
     "src/bof3/world/advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC.c",
+    "src/bof3/world/seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18.c",
 ]
 support_sources = [
     "src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c",

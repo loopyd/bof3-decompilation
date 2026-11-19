@@ -16,7 +16,8 @@ extern s32 func_8015477C(s32 x, s32 y);
 
 /* @source 0x801FD748
  * @behavior Handler 2 of the three-word handler table at 0x801FE46C, which
- *           func_801FD34C indexes with work byte 0x04 of the scratchpad work
+ *           forwardArgsToWorkByte4HandlerScenarioScena0600_801FD34C
+ *           indexes with work byte 0x04 of the scratchpad work
  *           object that pointer cell 0x1F800044 publishes. That dispatcher
  *           reads the byte with lbu, scales it by four, loads the table word
  *           and calls it through jalr, so the four register arguments this

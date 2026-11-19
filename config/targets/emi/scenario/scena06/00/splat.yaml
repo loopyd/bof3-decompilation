@@ -633,8 +633,20 @@ segments:
     - c
     - seedSharedFieldsScenarioScena0600_801FD29C
   - - 26444
-    - asm
-    - func_801FD34C
+    - c
+    - forwardArgsToWorkByte4HandlerScenarioScena0600_801FD34C
+    - '@source: src/bof3/scenario/forwardArgsToWorkByte4HandlerScenarioScena0600_801FD34C.c'
+    - '@behavior: Overlay step dispatch on work byte 0x04 of the record that the
+      scratchpad pointer cell 0x1F800044 publishes. It scales that unsigned byte
+      by four and calls the matching word of the three-word in-image handler run
+      at 0x801FE46C (0x801FD3BC, 0x801FD568, 0x801FD748), forwarding all seven
+      arguments: the register arguments after the entry conversions that
+      sign-extend argument 1 and 2 as signed bytes and argument 3 as a signed
+      halfword, and the stack arguments 4, 5 and 6 read from the caller slots
+      0x10, 0x14 and 0x18 as a signed halfword and two unsigned bytes. The
+      handler answer returns as a signed byte. No word of the payload or of the
+      main executable names 0x801FD34C, so the overlay loader that steps the run
+      is its caller and the argument roles stay address-anchored.'
   - - 26556
     - asm
     - func_801FD3BC

@@ -111,8 +111,10 @@ segments:
     - dispatchStateByte4Table4a80World04Area19713_801F3F3C
     - '@source: src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c'
   - - 4992
-    - asm
-    - func_801F3F80
+    - c
+    - armWorkPhase4SelectHandler1ThenLowerSharedHalfword7eBy2World04Area19713_801F3F80
+    - '@source: src/bof3/world/armWorkPhase4SelectHandler1ThenLowerSharedHalfword7eBy2World04Area19713_801F3F80.c'
+    - '@behavior: Overlay step handler that the dispatcher at 0x801F3F3C reaches as entry 0 of the local handler table at 0x801F4A80 through the work record byte at +0x04. It stores 4 in the record phase byte at +0x0A, re-reads the scratchpad pointer cell 0x1F800044 and stores 1 in the handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F3FC0, then lowers the unsigned halfword at +0x7E of the work-entity cursor at 0x80146884 by 2 and returns.'
   - - 5056
     - c
     - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0

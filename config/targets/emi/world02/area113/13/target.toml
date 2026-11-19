@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area113_13_psyq.c",
     "src/bof3/world/initArea11313State.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld02Area11313_801F2C60.c",
+    "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area11313_801F2C90.c",
 ]
 psyq_source = "src/bof3/support/area113_13_psyq.c"

@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0.c",
     "src/bof3/world/publishModeStatusFromTable5058ThenClearSharedBytesAndRequestPrimaryState6SubstateAWhenGate0OrClearProgressWhenGate1World03Area13013_801F35B0.c",
+    "src/bof3/world/seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60.c",
 ]
 support_sources = [
     "src/bof3/world/invokeFourConstantArgsWorld03Area13013_801F3760.c",

@@ -53,7 +53,7 @@ clearProgressAndSharedByteThenWaitFlag22SubstateZeroOr14AndRequestPrimaryState10
 clearProgressAndSharedByteThenWaitFlag23Substate0AOr14AndRequestPrimaryState10ScenarioScena0600_801FD234 = 0x801FD234;
 zeroResultScenarioScena0600_801FD294 = 0x801FD294;
 seedSharedFieldsScenarioScena0600_801FD29C = 0x801FD29C;
-func_801FD34C = 0x801FD34C;
+forwardArgsToWorkByte4HandlerScenarioScena0600_801FD34C = 0x801FD34C;
 func_801FD3BC = 0x801FD3BC;
 func_801FD568 = 0x801FD568;
 advanceCursorDepthOrResnapAndClearHandlerIndexScenarioScena0600_801FD748 = 0x801FD748;

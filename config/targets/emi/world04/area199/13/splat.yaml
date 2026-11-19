@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 80
-    - asm
-    - func_801F2C50
+    - c
+    - setWorkState2To4WhenScrollWordIs16ffWorld04Area19913_801F2C50
+    - '@source: src/bof3/world/setWorkState2To4WhenScrollWordIs16ffWorld04Area19913_801F2C50.c'
+    - '@behavior: Overlay step hook with no arguments and no return value: it reads the shared scroll word at 0x80149310 once and compares it against the single packed position 0x16FF, and only on equality loads the work record pointer published at scratchpad cell 0x1F800044 and stores 4 into that record byte 2, the step the overlay dispatcher indexes its handler run with. It allocates no frame, calls nothing and has one exit through $ra.'
   - - 124
     - asm
     - func_801F2C7C

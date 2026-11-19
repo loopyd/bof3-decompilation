@@ -34,8 +34,10 @@ segments:
     - dispatchStateByte1Table3ed8World03Area13013_801F2C1C
     - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 96
-    - asm
-    - func_801F2C60
+    - c
+    - seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60
+    - '@source: src/bof3/world/seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60.c'
+    - '@behavior: Overlay step handler, entry 0 of the seven-word handler run D_801F3ED8 that the dispatcher 0x801F2C1C indexes with the unsigned work byte at +0x1 of the work record published at the scratchpad pointer cell 0x1F800044. It walks the 0x2C-byte-stride effect table at 0x800E4800 with an unsigned byte counter over its 0x20 entries, calling the per-entry seed helper 0x801F30D0 once for each entry and advancing the entry cursor by 0x2C per iteration, then zeroes the work byte at +0x9 and increments the state byte at +0x1 so the next frame dispatches entry 1, the draw pass 0x801F2CDC.'
   - - 220
     - asm
     - func_801F2CDC

@@ -33,7 +33,7 @@ extern World03Area14413Point D_801F3D80[];
  *           return delay slot stays empty.
  *
  *           Both ends of the argument range are set by its only caller, the
- *           unlifted asm body at 0x801F2E18, which issues six calls through the
+ *           step-0 bootstrap at 0x801F2E18, which issues six calls through the
  *           jal sites at 0x801F2F04, 0x801F2F5C, 0x801F2FB0, 0x801F2FF8,
  *           0x801F304C and 0x801F307C with the index triplets (0,5,8), (0,3,9),
  *           (2,4,10), (2,7,11), (4,7,12) and (3,5,13), so the rows it derives

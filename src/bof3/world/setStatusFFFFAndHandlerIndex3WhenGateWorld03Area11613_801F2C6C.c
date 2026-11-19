@@ -21,9 +21,10 @@ extern u8 D_801D4286;
  *           world01/area059/13@0x801F2C48, world00/area003/13@0x801F2C48,
  *           world01/area041/13@0x801F3CD4 and world00/area037/13@0x801F34A8,
  *           which supply this body's statement order, operand forms and
- *           declaration style. The index-5 neighbour func_801F2C9C directly
- *           after this span is the same body differing in that one stored
- *           immediate word and nothing else.
+ *           declaration style. The index-5 neighbour
+ *           setStatusFFFFAndHandlerIndex5WhenGateWorld03Area11613_801F2C9C
+ *           directly after this span is the same body differing in that one
+ *           stored immediate word and nothing else.
  *           Role evidence: D_801D4286 is the shared handler index byte that the
  *           menu handler tables are dispatched through (`D_801D4240[D_801D4286]`
  *           and neighbours), and 0x801490A8/0x801490C7 are the shared status

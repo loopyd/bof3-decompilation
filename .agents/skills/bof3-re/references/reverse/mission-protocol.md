@@ -73,7 +73,10 @@ before it compiles, while the same words after code on the line stay prose; dele
 the token, since rewording around it still matches. Do not repeat progress-tag tokens in prose either. The gate counts `@status`,
 `@match` and `@residual` occurrences and can reject byte-identical code with
 `metadata: progress metadata tags must occur exactly once`. Remove the duplicate
-mention, not the measured metadata. After PASS, confirm naming
+mention, not the measured metadata. If the gate reports
+`metadata: not compared (multiple function metadata blocks require address-scoped access)`,
+report metadata agreement as unverified even when the native comparison matches.
+That message does not establish address-scoped tag agreement. After PASS, confirm naming
 without rewriting correct source. A retained comment that reports a sibling's or a callee's lift
 status is a measurement from when the seed was written, so write it in the past
 tense with the measurement it rests on, because a sibling or callee lifted exact
