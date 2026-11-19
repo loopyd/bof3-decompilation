@@ -24,12 +24,10 @@ void func_8017A9E0(void* arg0);
  * 0x30, 0x32 and 0x2C. The original 0x78-byte frame and ten calls per row are
  * preserved.
  * @status partial
- * @match 92.11
- * @residual 175/190 instructions at the original 760 bytes; first difference
- *   +0x00D0. Early counter/cursor order, first-quad geometry and texture-prefix
- *   placement differ. The right upper UV offset uses +128 instead of -128.
- *   Saved register roles, left/right coordinate registers, both colour
- *   sequences, counter-increment placement and the final loop test match.
+ * @match 98.42
+ * @residual 187/190 instructions at the original 760 bytes; first difference
+ *   +0x00D0. Countdown/cursor loads and the decrement/argument move differ
+ *   in order. The right upper UV offset uses +128 instead of -128.
  */
 void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioScena0800_801F823C(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3) {
@@ -40,7 +38,6 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
   u16 r;
   u16 m;
   u16 row;
-  u16 next;
   s32 bound;
   s32 more;
   s32 nn;
@@ -75,14 +72,13 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     do {
     SetSemiTrans(prim, 0);
     prim->x0 = x - half + offset;
-    row = y - n + i;
-    prim->y0 = row;
+    prim->y0 = y - n + i;
     prim->x1 = (u16)(x - half + offset) + half;
-    prim->y1 = row;
-    next = row + 1;
-    prim->y2 = next;
+    prim->y1 = y - n + i;
+    prim->y2 = (y - n + i) + 1;
     prim->x3 = (u16)(x - half + offset) + half;
-    prim->y3 = next;
+    prim->y3 = (y - n + i) + 1;
+    row = y - n + i;
     texture_row = i + 0x40u;
     prim->x2 = x - half + offset;
     prim->u0 = 0x40 - half;
@@ -115,18 +111,18 @@ void drawRotatingTexturedGouraudCircleStripsAtScreenPairFromAngleTableScenarioSc
     prim->x1 = x + offset + half;
     prim->y1 = row;
     prim->x2 = x + offset;
-    prim->y2 = next;
+    prim->y2 = row + 1;
     prim->x3 = x + offset + half;
-    prim->y3 = next;
     half_uv = (u8)half;
-    prim->u0 = 0;
     prim->v0 = texture_row - 0x80;
     prim->u1 = half_uv;
     prim->v1 = texture_row - 0x80;
-    prim->u2 = 0;
     prim->v2 = texture_row - 0x7F;
     prim->u3 = half_uv;
     prim->v3 = texture_row - 0x7F;
+    prim->y3 = row + 1;
+    prim->u0 = 0;
+    prim->u2 = 0;
     prim->tpage = GetTPage(2, 0, 0x340, 0x100);
     prim->r0 = prim->g0 = prim->b0 = 0x60;
     prim->r1 = 0x80;

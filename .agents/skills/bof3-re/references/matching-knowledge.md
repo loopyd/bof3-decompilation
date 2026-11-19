@@ -2241,6 +2241,11 @@ quantity's references. Check both interval lengths and weighted counts again.
 Sharing a word result at its stores can remove a narrow copy without changing
 allocation. Reordering proven independent stores can lengthen one quantity's
 interval and shorten another enough to reverse allocation priority.
+Check both schedules. A store moved later to extend a quantity's interval before
+allocation can move earlier after reload. Compare ready priorities and LUIDs of
+surrounding independent stores when the final order still differs. Reordering
+those stores can preserve the longer interval while restoring publication order;
+require the complete native comparison.
 
 Use the allocator's half-instruction intervals. A normal `SET` births its output
 at `2 * instruction_number`; `CLOBBER` uses the preceding half-slot. An address
