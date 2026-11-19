@@ -255,6 +255,7 @@ class BinaryDiagram extends HTMLElement {
     const legend = node("ul", "binary-legend");
     legend.setAttribute("aria-label", "Binary classification legend");
     for (const category of this.categories) {
+      if (this.hiddenCategories.has(category.id)) continue;
       const item = node("li", "");
       const chip = node("i", "binary-chip");
       chip.style.backgroundColor = category.color;
@@ -263,7 +264,8 @@ class BinaryDiagram extends HTMLElement {
       legend.append(item);
     }
     const tooltip = BinaryDiagram.helpTooltip;
-    tooltip.replaceChildren(node("p", "metric-label", "Binary legend"), legend);
+    tooltip.replaceChildren(node("p", "metric-label", "Binary legend"),
+      legend.childElementCount ? legend : node("div", "", "No classifications visible."));
     this.append(tooltip);
     BinaryDiagram.helpOwner = this;
     this.helpButton.setAttribute("aria-expanded", "true");

@@ -43,7 +43,9 @@ Resizing preserves physical offsets and selection.
 The `?` button at the canvas's right edge opens the color legend. One help tooltip
 is shared across cards, independently of span details, so both can remain open.
 Clicking outside help, scrolling or pressing its button again closes it. Escape
-also closes help when its button is focused. The legend appears only in help.
+also closes help when its button is focused. The legend appears only in help
+and lists the diagram's enabled classifications. If all filters are off, help
+shows `No classifications visible.`
 
 The filter button immediately left of `?` opens classification checkboxes. Each
 diagram starts with every classification visible. Unchecked classifications
