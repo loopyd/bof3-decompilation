@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801F2C7C
   - - 216
-    - asm
-    - func_801F2CD8
+    - c
+    - setStatus1IfGateElse14World01Area05113_801F2CD8
+    - '@source: src/bof3/world/setStatus1IfGateElse14World01Area05113_801F2CD8.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 1 into the shared status halfword D_801490A8; when the gate byte is zero it stores 0x14 into D_801490A8 instead.'
   - - 256
     - asm
     - func_801F2D00

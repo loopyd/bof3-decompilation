@@ -23,6 +23,7 @@ sources = [
     "src/bof3/world/setStatus82Or83Or84AndModeIndex6ByGateOrLookupIndex1World01Area06813_801F38C8.c",
     "src/bof3/world/stepCoordinatePairByFaceButtonAndArmState12World01Area06813_801F30B0.c",
     "src/bof3/world/clearStoryProgressAndArmState1World01Area06813_801F2D88.c",
+    "src/bof3/world/armCountdownByte9To180AndArmState1World01Area06813_801F2C48.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

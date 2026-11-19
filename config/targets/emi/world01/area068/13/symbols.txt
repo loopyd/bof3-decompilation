@@ -1,6 +1,6 @@
 func_8015C088 = 0x8015C088;
 dispatchStateByte1Table3ff4World01Area06813_801F2C04 = 0x801F2C04;
-func_801F2C48 = 0x801F2C48;
+armCountdownByte9To180AndArmState1World01Area06813_801F2C48 = 0x801F2C48;
 func_801F2C6C = 0x801F2C6C;
 func_801F2CF8 = 0x801F2CF8;
 clearStoryProgressAndArmState1World01Area06813_801F2D88 = 0x801F2D88;

@@ -48,8 +48,10 @@ segments:
     - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss01816_800C197C.c'
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2CDC handler table of this overlay, so the selected handler''s result stays in the return register.'
   - - 436
-    - asm
-    - func_800C19B4
+    - c
+    - setBossStateFiveWhenStateFourBossBoss01816_800C19B4
+    - '@source: src/bof3/boss/setBossStateFiveWhenStateFourBossBoss01816_800C19B4.c'
+    - '@behavior: Overlay handler: when the record state byte at 0x80145FA8 equals 4, publishes 5 into the shared boss state byte at 0x80146384; otherwise it returns without touching any state.'
   - - 472
     - c
     - noopHandlerBossBoss01816_800C19D8

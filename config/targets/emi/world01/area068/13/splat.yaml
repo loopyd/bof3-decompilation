@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table3ff4World01Area06813_801F2C04
     - '@source: src/bof3/world/area06813DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - armCountdownByte9To180AndArmState1World01Area06813_801F2C48
+    - '@source: src/bof3/world/armCountdownByte9To180AndArmState1World01Area06813_801F2C48.c'
+    - '@behavior: Overlay step handler at index 0 of the local handler table at 0x801F3FF4 that the local dispatcher dispatchStateByte1Table3ff4World01Area06813 selects from with the work record byte at +1: stores 0xB4 (180) into the record byte at +9, then arms the state byte at +1 with 1, the index of the handler func_801F2C6C in the same table. The scratchpad pointer cell 0x1F800044 is read twice, once per store, and the second store fills the return delay slot. Takes no arguments and returns nothing. Leaf, no frame.'
   - - 108
     - asm
     - func_801F2C6C

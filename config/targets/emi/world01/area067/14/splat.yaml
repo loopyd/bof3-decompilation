@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801F3E04
   - - 4688
-    - asm
-    - func_801F3E50
+    - c
+    - publishModeStatusFromTable5390World01Area06714_801F3E50
+    - '@source: src/bof3/world/publishModeStatusFromTable5390World01Area06714_801F3E50.c'
+    - '@behavior: publishes the mode-indexed halfword from the table at 0x801F5390 into the shared status halfword at 0x801490A8'
   - - 4732
     - c
     - publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C

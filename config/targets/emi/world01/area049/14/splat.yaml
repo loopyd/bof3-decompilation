@@ -104,8 +104,10 @@ segments:
     - retreatCounter2By4World01Area04914_801F3700
     - '@source: src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c'
   - - 2856
-    - asm
-    - func_801F3728
+    - c
+    - advanceCounter2By4World01Area04914_801F3728
+    - '@source: src/bof3/world/advanceCounter2By4World01Area04914_801F3728.c'
+    - '@behavior: Overlay counter step: marks the shared counter active by storing 2 into the area status byte at 0x80149333, then advances the halfword counter at 0x8014932A by 0x04.'
   - - 2896
     - c
     - setTwoWorld01Area04914_801F3750

@@ -62,8 +62,10 @@ segments:
     - setStatusElevenUnlessGateWorld01Area05613_801F30F4
     - '@source: src/bof3/world/area05613_gate_status.c'
   - - 1308
-    - asm
-    - func_801F311C
+    - c
+    - setStatusTwelveIfGateTwoElseFFFFWorld01Area05613_801F311C
+    - '@source: src/bof3/world/setStatusTwelveIfGateTwoElseFFFFWorld01Area05613_801F311C.c'
+    - '@behavior: loads the shared gate byte D_801490C7 and stores 0xC into the shared status halfword D_801490A8 while the gate byte equals 2, and stores 0xFFFF into D_801490A8 when it differs.'
   - - 1348
     - c
     - setStatusThirteenIfGateElseFFFFWorld01Area05613_801F3144
