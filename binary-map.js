@@ -134,7 +134,7 @@ class BinaryDiagram extends HTMLElement {
     heading.append(node("p", "metric-label", "Binary layout"), controls);
     this.surface.append(this.canvas);
     const bounds = node("p", "binary-bounds");
-    bounds.append(node("span", "", "0x000000"), node("span", "", `${this.hex(this.binary.size - 1)} · ${this.binary.size.toLocaleString("en-US")} bytes`));
+    bounds.append(node("span", "", "0x000000"), node("span", "", `${this.hex(this.binary.size - 1)} · ${this.binary.size.toLocaleString("en-US")}b`));
     this.replaceChildren(heading, this.surface, bounds);
     this.canvas.addEventListener("pointermove", (event) => {
       if (!this.pinned && !BinaryDiagram.active?.pinned) this.select(this.hit(event), event);
@@ -267,7 +267,7 @@ class BinaryDiagram extends HTMLElement {
     this.selected = index;
     const span = this.binary.spans[index];
     const category = this.categories.find((row) => row.id === span.category);
-    const bounds = `${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
+    const bounds = `${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")}b`;
     const tooltip = BinaryDiagram.tooltip;
     const summary = BinaryDiagram.node("div", "binary-summary");
     summary.append(
