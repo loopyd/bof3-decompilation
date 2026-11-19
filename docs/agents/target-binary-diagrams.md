@@ -15,9 +15,12 @@ show the text tool's decoded characters and command notation, limited to 160
 characters with `...` for truncation. Text-bank metadata has no character preview.
 Selection brightens the span's fill without drawing a border over neighboring bytes.
 Function details omit analyzer names. Exact lifts show ✓ and partial lifts show
-⏳ on the left, beside small `exact` or `partial` labels. The right-aligned 🔗 icon
-opens the function's C source line on the repository's `main` branch in a new tab.
-Tab can focus the link. Enter opens it.
+⏳ on the left, beside small `exact` or `partial` labels. Unlifted functions use
+the same layout with × and `not started`, without a source link. Invalid lifts
+retain an `invalid lift` label. Function byte ranges and sizes use smaller,
+darker text aligned right. The right-aligned 🔗 icon opens a lifted function's C
+source line on the repository's `main` branch in a new tab. Tab can focus the
+link. Enter opens it.
 One details tooltip is shared across cards and moves to the active diagram.
 Its vertical position snaps to the top, middle or bottom for selections in the
 corresponding canvas third. Pointer selection uses the pointer's y coordinate; keyboard and chevron
