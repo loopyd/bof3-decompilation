@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/invokeHelperArgWorld04Area18013_801F3328.c",
     "src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area18013_801F3378.c",
+    "src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area18013_801F3348.c",
     "src/bof3/support/area180_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area180_13_psyq.c"

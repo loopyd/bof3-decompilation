@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EED18
   - - 976
-    - asm
-    - func_801EEFD0
+    - c
+    - incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0.c'
+    - '@behavior: Dispatch-reached leaf step of the overlay work record published at the scratchpad pointer cell 0x1F800044. It loads that cell once, tests the record unsigned byte 0x0B against zero with a plain branch on the loaded byte, and only when that byte is zero increments the record work byte 0x01 by one at byte width through the same base, testing no stored sum. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 1028
     - asm
     - func_801EF004

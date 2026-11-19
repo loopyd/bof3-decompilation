@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_801EEC10 = 0x801EEC10;
 func_801EED18 = 0x801EED18;
-func_801EEFD0 = 0x801EEFD0;
+incrementWorkByte1WhenWorkByteBZeroBmagicMagic14603_801EEFD0 = 0x801EEFD0;
 func_801EF004 = 0x801EF004;
 dispatchStateByte1Tablef9b4BmagicMagic14603_801EF04C = 0x801EF04C;
 dispatchStateByte2Tablef9b8BmagicMagic14603_801EF090 = 0x801EF090;
