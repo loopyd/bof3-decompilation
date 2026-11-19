@@ -942,5 +942,3 @@ binary-diagram {
 .binary-legend { display: flex; flex-wrap: wrap; gap: 7px 12px; margin: 0; padding: 0; list-style: none; font-size: 11px; color: #c5cdd4; }
 .binary-legend li { display: flex; align-items: center; gap: 5px; }
 .binary-chip { display: inline-block; width: 9px; height: 9px; border: 1px solid #ffffff30; border-radius: 2px; }
-.binary-selection { min-height: 2.8em; font: 11px/1.4 monospace; color: #e1e8ed; overflow-wrap: anywhere; margin: 12px 0 8px; }
-.binary-instructions, .binary-note { color: #98a8b5; font-size: 11px; line-height: 1.5; margin: 6px 0 0; }

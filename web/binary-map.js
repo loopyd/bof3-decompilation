@@ -24,14 +24,12 @@ class BinaryDiagram extends HTMLElement {
     this.canvas = node("canvas", "binary-canvas");
     this.canvas.tabIndex = 0;
     this.canvas.setAttribute("role", "img");
-    this.canvas.setAttribute("aria-label", `${this.target}: original binary byte map`);
+    this.canvas.setAttribute("aria-label", `${this.target}: original binary byte map. Arrow keys select spans; Home and End select bounds; Escape clears selection.`);
     this.tooltip = node("div", "binary-tooltip");
     this.tooltip.id = `binary-tooltip-${++BinaryDiagram.sequence}`;
     this.tooltip.setAttribute("role", "tooltip");
+    this.tooltip.setAttribute("aria-live", "polite");
     this.tooltip.hidden = true;
-    const instructions = node("p", "binary-instructions", "Hover to explore. Click or tap to keep a span. Arrow keys move between spans; Home/End select bounds; Escape clears.");
-    instructions.id = `${this.tooltip.id}-help`;
-    this.canvas.setAttribute("aria-describedby", instructions.id);
     surface.append(this.canvas, this.tooltip);
     const bounds = node("p", "binary-bounds");
     bounds.append(node("span", "", "0x000000"), node("span", "", `${this.hex(this.binary.size - 1)} · ${this.binary.size.toLocaleString("en-US")} bytes`));
@@ -45,10 +43,7 @@ class BinaryDiagram extends HTMLElement {
       item.append(chip, category.label);
       legend.append(item);
     }
-    this.selection = node("p", "binary-selection", "No span selected.");
-    this.selection.setAttribute("aria-live", "polite");
-    const note = node("p", "binary-note", "Original file order, left to right, then down. Tiny spans may be subpixel; use arrow keys for exact access. Lifted includes exact and partial source. Empty means zero fill; semantic padding is unproven.");
-    this.replaceChildren(node("p", "metric-label", "Binary layout"), surface, bounds, legend, this.selection, instructions, note);
+    this.replaceChildren(node("p", "metric-label", "Binary layout"), surface, bounds, legend);
     this.canvas.addEventListener("pointermove", (event) => {
       if (!this.pinned) this.select(this.hit(event), event);
     });
@@ -110,8 +105,7 @@ class BinaryDiagram extends HTMLElement {
     const text = `${category.label} · ${this.hex(span.start)}–${this.hex(span.end - 1)} · ${(span.end - span.start).toLocaleString("en-US")} bytes`;
     this.tooltip.replaceChildren(document.createTextNode(text), document.createElement("br"), document.createTextNode(span.detail));
     this.tooltip.hidden = false;
-    this.selection.textContent = `${this.pinned ? "Selected" : "Exploring"}: ${text}. ${span.detail}`;
-    this.canvas.setAttribute("aria-describedby", `${this.tooltip.id}-help ${this.tooltip.id}`);
+    this.canvas.setAttribute("aria-describedby", this.tooltip.id);
     this.dataset.selectedStart = span.start;
     this.dataset.selectedEnd = span.end;
     this.dataset.selectedCategory = span.category;
@@ -125,8 +119,7 @@ class BinaryDiagram extends HTMLElement {
     this.selected = -1;
     this.pinned = false;
     this.tooltip.hidden = true;
-    this.selection.textContent = "No span selected.";
-    this.canvas.setAttribute("aria-describedby", `${this.tooltip.id}-help`);
+    this.canvas.removeAttribute("aria-describedby");
     delete this.dataset.selectedStart;
     delete this.dataset.selectedEnd;
     delete this.dataset.selectedCategory;
