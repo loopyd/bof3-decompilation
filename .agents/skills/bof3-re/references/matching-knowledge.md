@@ -84,7 +84,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `andi 1`, `sll 1` and `addiu -1` ahead of one `mult` | The sign is arithmetic, not a select: write `s = (gate & 1) * 2 - 1;` on an `s32` and multiply the scaled value with it (`(u16)(s * (count >> 1))`), so a value the product consumes carries it instead of a branch on the bit |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Boolean flag seeded once from a probe and only ever set to `1` by the later arms | Seed the flag with that probe's own comparison (`hit = (probe(x, y, 0) != -1);`) and let the arms overwrite it, so the call's answer is consumed inline and the flag's initial value is the tested boolean rather than an initialised flag the negative path branches away from. Two targets matched that shape on the first gate with no probe-result local |
-| Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
+| Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup or derived narrow counters, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes: where that load's only consumer is the following call, its destination register is that call's argument number, so write the value in the argument list rather than as a body value that lands in a scratch register. A row byte kept as a body value measured 46 of 48 with `first=` at that load, and eight statement-order, local-spelling and guard variants held the same 46 until the byte was passed as the callee's third argument and matched on the next gate; a value the arm also tests still needs its own local |
@@ -1882,6 +1882,13 @@ index times stride lets loop reduction create the running value and place its
 initialization in the loop preheader. A hand-carried cursor initialized before the
 guard may keep the same arithmetic but place the copy too early. Confirm the
 reduction in the loop dump and require the complete native gate.
+
+Before deriving one narrow counter from another, check `.loop` for recognition
+of the base induction variable and reduction of the new expression. GCC 2.7.2
+explicitly unwraps SUBREGs marked `SUBREG_PROMOTED_VAR_P` and follows
+`SIGN_EXTEND`; ordinary narrowing and `ZERO_EXTEND` do not receive that handling.
+Preserve unsigned wrap and verify emitted code: algebraic equivalence alone does
+not remove extra arithmetic.
 
 When an absolute-value guard copies an input and negates the copy in place,
 check whether expansion uses `ABS_EXPR`. A conditional absolute-value expression
