@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801F3800
   - - 3164
-    - asm
-    - func_801F385C
+    - c
+    - clearWorkTableClaimBytesWorld03Area13213_801F385C
+    - '@source: src/bof3/world/clearWorkTableClaimBytesWorld03Area13213_801F385C.c'
+    - '@behavior: Table reset helper: publishes the base 0x800E4800 of the 0x18-byte-stride work table in main RAM into its own cursor cell 0x801F4A88, then walks the 0x20 records of that table with an unsigned byte counter in a bottom-tested loop, clearing the claim byte at offset 0 of each record and advancing the published cursor by 0x18 per record, so the cell ends one stride past the last record; it takes no arguments, returns nothing and reads no other state, and its two in-payload callers are the raw rows at 0x801F2E38 and 0x801F2F98, each calling it through jal at 0x801F2E40 and 0x801F2FC4 with no argument setup.'
   - - 3248
     - c
     - tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0

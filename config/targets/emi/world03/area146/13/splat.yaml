@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - requestFrontSelectorContextWorld03Area14613_801F2C04
+    - '@source: src/bof3/world/requestFrontSelectorContextWorld03Area14613_801F2C04.c'
+    - '@behavior: Entry 0 of the three-entry handler run at 0x801F3AB0, which the overlay names through the pointer word at 0x801F3AF8 and whose word 1 is 0x801F2C34 and word 2 the record-flag clear at 0x801F2C68: requests the shared front selector context through func_8019FA28 with the fixed tuple selection seed 0x70, context pair 0xC8000/0x580000 and kind 0x81. It takes no arguments, returns nothing and reads no state of its own.'
   - - 52
     - asm
     - func_801F2C34

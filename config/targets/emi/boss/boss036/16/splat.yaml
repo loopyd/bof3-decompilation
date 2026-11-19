@@ -31,8 +31,10 @@ segments:
     - textbin
     - D_800C1804
   - - 16
-    - asm
-    - func_800C1810
+    - c
+    - dispatchStateByte1Table2034BossBoss03616_800C1810
+    - '@source: src/bof3/boss/dispatchStateByte1Table2034BossBoss03616_800C1810.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at its first pointer word 0x800C2034, with no arguments. The original does not bound the index before the scaled table load, writes no state, and leaves the selected handler result in $v0. The payload holds neither a jal nor a pointer word naming 0x800C1810, so the overlay loader is its caller.'
   - - 84
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854

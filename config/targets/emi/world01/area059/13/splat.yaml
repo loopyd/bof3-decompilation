@@ -52,8 +52,10 @@ segments:
     - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode index byte at 0x801D4285, and while the byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 304
-    - asm
-    - func_801F2D30
+    - c
+    - requestFrontSelectorContextWorld01Area05913_801F2D30
+    - '@source: src/bof3/world/requestFrontSelectorContextWorld01Area05913_801F2D30.c'
+    - '@behavior: requests the shared front selector context through func_8019FA28 with the fixed tuple of selection seed 0x64, context pair 0x460000/0x340000 and kind 0x81; takes no arguments and returns nothing.'
   - - 348
     - asm
     - func_801F2D5C

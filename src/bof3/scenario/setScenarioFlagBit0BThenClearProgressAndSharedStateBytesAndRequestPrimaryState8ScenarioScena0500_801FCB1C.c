@@ -43,7 +43,9 @@ void func_8015C088(void);
  * (0x801FCBD4) preceded by that flag-bit call. The neighbouring word 1
  * callback func_801FCAA0 differs by guarding the whole body on the shared flag
  * test func_8015B5D4 (0x8015B5D4) and by its own bit index 2 and stored
- * 0x15, and word 3's func_801FCB80 omits the flag-bit call and stores 0xC.
+ * 0x15, and word 3's
+ * clearProgressAndSharedStateBytesThenRequestPrimaryState0CScenarioScena0500_801FCB80
+ * (0x801FCB80) omits the flag-bit call and stores 0xC.
  * @status exact
  * @match 100.00
  * @residual none

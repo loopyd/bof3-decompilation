@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/setStatus3AndModeIndex6IfGateElse2Clear44F50World01Area06113_801F2C04.c",
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CB0.c",
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area06113_801F2CF4.c",
+    "src/bof3/world/initFrontendStateSelector4AndSecondStateByte1World01Area06113_801F2D38.c",
 ]
 support_sources = [
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06113_801F2C50.c",

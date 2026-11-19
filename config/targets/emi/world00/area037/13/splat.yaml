@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2788
-    - asm
-    - func_801F36E4
+    - c
+    - setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4
+    - '@source: src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36E4.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2856
     - asm
     - func_801F3728
