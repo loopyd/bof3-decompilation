@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/world/stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C.c",
     "src/bof3/support/area125_13_psyq.c",
     "src/bof3/world/drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4.c",
+    "src/bof3/world/armCountdownByte9To150ThenAdvanceStateByte1World03Area12513_801F2D3C.c",
 ]
 psyq_source = "src/bof3/support/area125_13_psyq.c"

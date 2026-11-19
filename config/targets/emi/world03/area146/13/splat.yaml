@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801F2C34
   - - 104
-    - asm
-    - func_801F2C68
+    - c
+    - clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68
+    - '@source: src/bof3/world/clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68.c'
+    - '@behavior: Entry 2 of the three-entry handler run at 0x801F3AB0, which the overlay names through the pointer word at 0x801F3AF8: clears bit 0 of the flags byte at 0x12C of the record published at 0x80146250, then stores the shared main-executable byte 0x8014933E into byte 0x29 of the work record reached through the scratchpad pointer cell 0x1F800044. It takes no arguments, returns nothing, calls nothing and reserves no frame.'
   - - 156
     - asm
     - func_801F2C9C

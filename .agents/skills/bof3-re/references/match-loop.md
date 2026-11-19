@@ -243,8 +243,10 @@ Search the applicable levers before exhaustion. Byte identity proves no shared o
 
 For a grouped representative, use `--from TARGET@0xADDRESS` to select one attached
 function. Clone retains common declarations and includes and rejects target-local
-`*_internal.h` headers. It compares both complete reviewed ranges using validated
-PS-X payload placement. Address rewriting changes only the selected source tag;
+`*_internal.h` headers. If one proven-equal donor is refused for that reason, try a
+sibling with file-local externs before transcribing the body by hand. A dry run
+checks clone eligibility without a native gate. Clone compares both complete
+reviewed ranges using validated PS-X payload placement. Address rewriting changes only the selected source tag;
 body literals stay unchanged.
 
 ## Review and stop

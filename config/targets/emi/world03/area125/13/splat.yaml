@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2CD8
   - - 316
-    - asm
-    - func_801F2D3C
+    - c
+    - armCountdownByte9To150ThenAdvanceStateByte1World03Area12513_801F2D3C
+    - '@source: src/bof3/world/armCountdownByte9To150ThenAdvanceStateByte1World03Area12513_801F2D3C.c'
+    - '@behavior: Entry 3 of the nine-word work-state handler run based at 0x801F36CC, selected by the exact dispatcher dispatchStateByte1Table36ccWorld03Area12513_801F2C04 through the unsigned work byte at +0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It stores 0x96 into that object byte at +0x9 and advances the same work byte at +0x1 by one, so the next frame dispatches entry 4 at 0x801F2D6C, which decrements the +0x9 byte each frame and calls 0x801F3268 with mode word 2 whenever it is a multiple of 0x0F. Each half re-reads the pointer cell because the byte store through the loaded pointer may alias it. No arguments, no return, no calls and no frame.'
   - - 364
     - asm
     - func_801F2D6C

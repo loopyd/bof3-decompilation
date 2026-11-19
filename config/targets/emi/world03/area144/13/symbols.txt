@@ -1,3 +1,4 @@
+clearWorkFlags = 0x80196070;
 dispatchStateByte1Table3e68World03Area14413_801F2C04 = 0x801F2C04;
 latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48 = 0x801F2C48;
 func_801F2CA4 = 0x801F2CA4;
@@ -7,7 +8,7 @@ incrementWorkByte1World03Area14413_801F2D70 = 0x801F2D70;
 incrementWorkByte1World03Area14413_801F2D90 = 0x801F2D90;
 incrementWorkByte1World03Area14413_801F2DB0 = 0x801F2DB0;
 incrementWorkByte1World03Area14413_801F2DD0 = 0x801F2DD0;
-func_801F2DF0 = 0x801F2DF0;
+resetWorkAreaAndClearCountdownWorld03Area14413_801F2DF0 = 0x801F2DF0;
 seedSixWorkTableRecordsPointersAndTailBytesThenDeriveMidpointRowsAt800E4800World03Area14413_801F2E18 = 0x801F2E18;
 seedSixWorkTableRecordsBytes14To19At800E4800World03Area14413_801F30CC = 0x801F30CC;
 func_801F3124 = 0x801F3124;

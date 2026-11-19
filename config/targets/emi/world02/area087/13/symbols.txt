@@ -1,5 +1,5 @@
 scratchpadWorkRecord = 0x1F800044;
-func_801F2C04 = 0x801F2C04;
+setStatusFFFFAndSelectMode2IfGateClearWorld02Area08713_801F2C04 = 0x801F2C04;
 func_801F2C38 = 0x801F2C38;
 func_801F2C6C = 0x801F2C6C;
 func_801F2F20 = 0x801F2F20;

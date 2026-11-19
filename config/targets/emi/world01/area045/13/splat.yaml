@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatusFFFFAndSelectMode2IfGateClearWorld01Area04513_801F2C04
+    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld01Area04513_801F2C04.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword D_801490A8 on every path, and first writes 2 to the shared mode byte D_801448EC when the shared gate byte D_801490C7 is zero.'
   - - 56
     - asm
     - func_801F2C38
