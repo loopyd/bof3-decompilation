@@ -57,8 +57,10 @@ segments:
     - fadeWorkTintTripletStepPositionByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroBmagicMagic04500_801EF2B0
     - '@source: src/bof3/bmagic/fadeWorkTintTripletStepPositionByAngleWord0CAddWord20ToWord14AccumulateIntoHalfword3ECountdownWorkByte9AdvanceWorkByte2OnZeroBmagicMagic04500_801EF2B0.c'
   - - 2008
-    - asm
-    - func_801EF3D8
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF3D8
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic04500_801EF3D8.c'
+    - '@behavior: Work-byte-2 handler, entry 3 of this overlay''s eight-entry handler-pointer run based at 0x801EF8E0, selected by the step wrapper at 0x801EEEE8 with the scratchpad work object''s unsigned byte 2 scaled by four; the table word at 0x801EF8EC is the only in-image reference to this address. Reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width and then invokes the shared helper at 0x801E5988 unconditionally, the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. Takes no arguments and returns nothing.'
   - - 2060
     - asm
     - func_801EF40C

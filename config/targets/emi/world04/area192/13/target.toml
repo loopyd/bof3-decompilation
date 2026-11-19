@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4.c",
     "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548.c",
     "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19213_801F2E44.c",
+    "src/bof3/world/setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19213_801F2D7C.c",
     "src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19213_801F2CFC.c",
     "src/bof3/world/setStatusFFFFIfGateElse68World04Area19213_801F2C80.c",
     "src/bof3/world/setStatusFFFFIfGateElse6CWorld04Area19213_801F2D54.c",

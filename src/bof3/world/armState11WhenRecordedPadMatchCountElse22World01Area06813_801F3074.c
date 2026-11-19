@@ -21,12 +21,14 @@ extern u8 D_801F4E0C;  /* @source 0x801F4E0C @kind unknown */
  *           merges them into the single store that follows the branch, each
  *           arm's state constant filling a branch delay slot. Leaf with no
  *           frame: it takes no arguments, makes no call and returns nothing.
- *           Shape evidence, no clone: the neighbour func_801F3764 was still on
- *           its asm row when this body was written, and it reads the same
- *           recorded count against the live counter, clears D_801F4E0C in its
- *           matching arm and stores 0x15 or 0x16 through the same pointer cell
- *           into the same record byte, so its statement order is followed here
- *           while this function's own test and literals come from these bytes;
+ *           Shape evidence, no clone: the neighbour
+ *           armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764
+ *           was still on its asm row when this body was written and has been
+ *           lifted exact since; it reads the same recorded count against the
+ *           live counter, clears D_801F4E0C in its matching arm and stores
+ *           0x15 or 0x16 through the same pointer cell into the same record
+ *           byte, so its statement order is followed here while this
+ *           function's own test and literals come from these bytes;
  *           the same-target exact sibling
  *           countdownStepArmState14Or10ByPad40Else11World01Area06813 supplies
  *           the per-arm pointer-cell reload and merged-store spelling. No

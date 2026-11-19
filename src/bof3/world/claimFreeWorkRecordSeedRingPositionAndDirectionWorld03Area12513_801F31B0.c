@@ -34,13 +34,14 @@ extern s16 D_801F368C[16][2];
  *           restores the frame before jr, leaving that delay slot unfilled.
  *
  * Name evidence: the only in-image callers are this overlay's own spawners.
- *           func_801F2C80 calls it at 0x801F2C88, 0x801F2C90 and 0x801F2C98 with
- *           6, 9 and 0xD and then arms the work object byte 9 with 0x3C and
- *           advances work byte 1, and func_801F3268 fills a stack array with the
- *           bytes 0 to 15, shuffles it with rand, and calls this address once
- *           per entry of the shuffled list up to its own argument, so the
- *           argument is a ring slot index and the caller above covers the ring
- *           in shuffled order. The callee is this target's free-entry scan and
+ *           spawnRingRecordsSlotsSixNineThirteenArmCountdownByte9To60ThenAdvanceStateByte1World03Area12513_801F2C80
+ *           (0x801F2C80) calls it at 0x801F2C88, 0x801F2C90 and 0x801F2C98 with
+ *           the ring slots 6, 9 and 0xD in order and then arms the work object
+ *           byte 9 with 0x3C and advances work byte 1, and func_801F3268 fills
+ *           a stack array with the bytes 0 to 15, shuffles it with rand, and
+ *           calls this address once per entry of the shuffled list up to its
+ *           own argument, so the argument is a ring slot index and the two
+ *           callers lay the same ring down in fixed and in shuffled order. The callee is this target's free-entry scan and
  *           the shape is this overlay family's claim-then-seed record spawn, as
  *           in claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0 and
  *           claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C,

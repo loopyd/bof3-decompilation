@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801EEEB0
   - - 992
-    - asm
-    - func_801EEFE0
+    - c
+    - decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0.c'
+    - '@behavior: Step index 2 of this overlay: returns immediately when work byte 0xB is non-zero, otherwise decrements work byte 9 and, when the stored byte reaches zero, reloads the scratchpad work pointer at 0x1F800044 and advances work byte 1.'
   - - 1084
     - asm
     - func_801EF03C

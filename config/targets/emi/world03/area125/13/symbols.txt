@@ -1,6 +1,6 @@
 dispatchStateByte1Table36ccWorld03Area12513_801F2C04 = 0x801F2C04;
 clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48 = 0x801F2C48;
-func_801F2C80 = 0x801F2C80;
+spawnRingRecordsSlotsSixNineThirteenArmCountdownByte9To60ThenAdvanceStateByte1World03Area12513_801F2C80 = 0x801F2C80;
 func_801F2CD8 = 0x801F2CD8;
 armCountdownByte9To150ThenAdvanceStateByte1World03Area12513_801F2D3C = 0x801F2D3C;
 func_801F2D6C = 0x801F2D6C;

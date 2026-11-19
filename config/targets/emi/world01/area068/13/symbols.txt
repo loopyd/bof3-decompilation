@@ -25,7 +25,7 @@ countdownStepArmState14Or11ByPad40ElseAdvanceState10Or16World01Area06813_801F357
 func_801F3658 = 0x801F3658;
 countdownStepArmState14Or10ByPad40Else11World01Area06813_801F36CC = 0x801F36CC;
 noopHandlerWorld01Area06813_801F375C = 0x801F375C;
-func_801F3764 = 0x801F3764;
+armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764 = 0x801F3764;
 func_801F37BC = 0x801F37BC;
 setSubstate8AndClearWorkFlagsWorld01Area06813_801F37F0 = 0x801F37F0;
 publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C = 0x801F381C;

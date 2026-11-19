@@ -67,8 +67,10 @@ segments:
     # @source 0x801EF260
     # @behavior Calls helper and adds four to work byte 9 below 12; otherwise advances work byte 2.
   - - 1740
-    - asm
-    - func_801EF2CC
+    - c
+    - decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC.c'
+    - '@behavior: Returns unchanged when scratchpad work byte B is nonzero; otherwise decrements the shared battle work record byte B and increments work byte 2.'
   - - 1832
     - c
     - invokeHelperBmagicMagic02103_801EF328

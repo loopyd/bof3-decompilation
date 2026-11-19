@@ -776,8 +776,18 @@ segments:
     - c
     - invokeHelperArgThenHelperScenarioScena0600_801FE30C
   - - 30516
-    - asm
-    - func_801FE334
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0600_801FE334
+    - '@source: src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0600_801FE334.c'
+    - '@behavior: Word 19 (0-based) of the 22-word code-pointer run at 0x801FE48C,
+      whose word is the only image mention of the address. A thin wrapper that
+      calls the helper at 0x801C1ABC with the constant argument 6, then the same
+      helper with the constant argument 2, and finally the helper at 0x801C1630
+      with no arguments; it takes no arguments, returns nothing and stores
+      nothing, and its 0x18-byte frame only keeps $ra across the three calls.
+      dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14 indexes that run
+      with the answer of func_801A7AD8, whose four five-byte lookup records at
+      0x801FE478 reach entries 0 through 3 only.'
   - - 30564
     - c
     - invokeHelperArgThenHelperScenarioScena0600_801FE364

@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic02103_801EFDB0.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic02103_801EF328.c",
+    "src/bof3/bmagic/decrementGlobalWorkByteBAndAdvanceWorkByte2WhenWorkByteBIsZeroBmagicMagic02103_801EF2CC.c",
     "src/bof3/bmagic/magic02103DispatchTables.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic02103_801EFD4C.c",
     "src/bof3/support/magic021_03_psyq.c",

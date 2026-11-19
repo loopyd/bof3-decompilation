@@ -121,8 +121,10 @@ segments:
     - c
     - noopHandlerWorld01Area06813_801F375C
   - - 2916
-    - asm
-    - func_801F3764
+    - c
+    - armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764
+    - '@source: src/bof3/world/armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764.c'
+    - '@behavior: Reads the recorded pad-match count 0x801F4E08 and the live press counter 0x801F4E04, then selects the state byte at +0x01 of the work record published at the scratchpad pointer cell 0x1F800044, the byte the local dispatchers at 0x801F2C04 and 0x801F2DA4 index their handler tables with: while the live counter lies outside the band one press either side of the recorded count it arms state 0x16, otherwise it clears the attempt byte 0x801F4E0C and arms state 0x15. Both arms read the pointer cell through the same base, so the two record-byte stores merge into one store after the branch. Leaf, no frame.'
   - - 3004
     - asm
     - func_801F37BC

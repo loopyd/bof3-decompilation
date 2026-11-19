@@ -26,6 +26,7 @@ sources = [
     "src/bof3/scenario/runSecondaryStateSequenceForPrimaryState15ScenarioScena0600_801FBD88.c",
     "src/bof3/scenario/forwardArgsToWorkByte4HandlerScenarioScena0600_801FD34C.c",
     "src/bof3/scenario/setSubstate14ClearProgressAndSharedStateBytesAndRequestPrimaryState6ScenarioScena0600_801FD0C4.c",
+    "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0600_801FE334.c",
 ]
 support_sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena0600_801FE0D0.c",
