@@ -1974,6 +1974,22 @@ the copy's real consumers, quantity deaths and origin-load assignments. Consumin
 the final difference into that same local can also tie its absolute-value result,
 change quantity priority and undo the gain. Check the complete register web.
 
+A statement `if (distance < 0) distance = -distance;` can retain a branch,
+negation and join where the equivalent ternary folds to `ABS_EXPR`. The join
+changes local allocation eligibility. Check load sharing and quantity classes
+again; a surviving global distance does not establish its register.
+
+Global allocation can derive a general preference from an arithmetic source's
+first operand and merge preferences from other dying global operands. The latter
+merges copy preferences only for a whole-source register copy. Expansion precedes
+conflict pruning, so a preference removed from an input can survive on its later,
+nonconflicting result. Inspect both preference sets and actual conflicts.
+
+An explicit shift can honor an assignment target where power-of-two multiply
+synthesis creates a fresh result. Prove the arithmetic domain before substituting
+it. Two surviving definitions remove the single-definition scheduling boost; an
+earlier lifetime and inherited operand preference can defeat the intended reuse.
+
 Locate the pointer's last access after scheduling before predicting an entry
 register exchange. Assigning an input register to an earlier field load can
 conflict with both the input and the still-live pointer. A global result's return

@@ -10,14 +10,15 @@
  * add field_0C * pad_09[0] to coord_x_34 and field_10 * pad_09[0] to coord_y_38.
  * Returns 0 when a gate fails.
  * @status partial
- * @match 53.19
- * @residual The rebuilt image is 184 bytes versus 188 original bytes.
- * Guarded returns, multiply operands and coordinate-result registers still differ.
+ * @match 55.32
+ * @residual The rebuilt image is 180 bytes versus 188 original bytes.
+ * Guarded returns, multiply operands and projection/bound setup still differ.
  */
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
                  struct GameWorkArea* work) {
   s32 projected_x;
   s32 projected_y;
+  s32 x_distance;
 
   if (abs((s16)work->counter_3E - reference) >
       (range + work->speed_70) * 128 + 256) {
@@ -29,9 +30,13 @@ u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
   projected_y = work->field_10 * projected_y;
   projected_x += work->coord_x_34;
   projected_y += work->coord_y_38;
-  x -= projected_x;
-  if (abs(x) >= (range + work->speed_70 + 2) * 32768) {
-    return 0;
+  x_distance = projected_x - x;
+  if (x_distance < 0) {
+    x_distance = -x_distance;
+  }
+  x_distance = x_distance < (range + work->speed_70 + 2) * 32768;
+  if (!x_distance) {
+    return x_distance;
   }
   return abs(y - projected_y) < (range + work->speed_70 + 2) * 32768;
 }
