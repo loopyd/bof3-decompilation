@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 import re
 
 CATEGORIES = [
@@ -23,6 +23,13 @@ CATEGORIES = [
 
 
 @dataclass(frozen=True)
+class IndexedFunction:
+    address: int
+    status: str
+    source: str | None = None
+
+
+@dataclass(frozen=True)
 class Span:
     start: int
     end: int
@@ -30,6 +37,7 @@ class Span:
     detail: str
     priority: int = 30
     preview: str | None = None
+    function: IndexedFunction | None = None
 
 
 def partition(data: bytes, spans: list[Span]) -> list[dict]:
@@ -64,6 +72,7 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
                 active.remove(index)
         category, detail = "unknown", "No verified classification"
         preview = None
+        functions = []
         if active:
             priority = max(spans[index].priority for index in active)
             winners = [
@@ -73,6 +82,13 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
             if len(kinds) == 1:
                 category = winners[0].category
                 detail = "; ".join(sorted({span.detail for span in winners}))
+                functions = [
+                    asdict(function)
+                    for function in sorted(
+                        {span.function for span in winners if span.function},
+                        key=lambda function: function.address,
+                    )
+                ]
                 if category == "text":
                     previews = sorted(
                         {span.preview for span in winners if span.preview}
@@ -87,6 +103,7 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
             and result[-1]["category"] == category
             and result[-1]["detail"] == detail
             and result[-1].get("preview") == preview
+            and result[-1].get("functions", []) == functions
         ):
             result[-1]["end"] = end
         else:
@@ -95,6 +112,8 @@ def partition(data: bytes, spans: list[Span]) -> list[dict]:
             )
             if preview is not None:
                 result[-1]["preview"] = preview
+            if functions:
+                result[-1]["functions"] = functions
     for span in result:
         if span["category"] == "header":
             span["preview"] = data[

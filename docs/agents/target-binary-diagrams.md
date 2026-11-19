@@ -14,12 +14,14 @@ more bytes remain. Four-byte EMI headers show all four pairs. Reviewed text rows
 show the text tool's decoded characters and command notation, limited to 160
 characters with `...` for truncation. Text-bank metadata has no character preview.
 Selection brightens the span's fill without drawing a border over neighboring bytes.
-Lifted functions also show their repository-relative C source path. One tooltip
-is shared across the cards and moves to the active diagram. Its vertical position
-snaps to the top, middle or bottom for selections in the corresponding canvas
-third. Pointer selection uses the pointer's y coordinate; keyboard and chevron
+Function details omit analyzer names. Exact lifts show ✓ and partial lifts show
+⏳, with accessible status labels. The 🔗 icon opens the function's C source line
+on the repository's `main` branch in a new tab. Tab can focus the link. Enter opens it.
+One details tooltip is shared across cards and moves to the active diagram.
+Its vertical position snaps to the top, middle or bottom for selections in the
+corresponding canvas third. Pointer selection uses the pointer's y coordinate; keyboard and chevron
 navigation use the span's first row. Resizing preserves that position. Clicking
-outside the canvas or its navigation buttons closes it, except when using legend help.
+outside the canvas, its navigation buttons or details closes it, except when using legend help.
 Moving keyboard focus away also clears selection, with the same help exception.
 
 Focused diagrams show left and right chevrons for adjacent spans. Arrow keys
@@ -71,6 +73,9 @@ Every span has half-open `start`/`end` file offsets, a `category` and evidence
 `detail`. Spans partition exactly `[0, size)`.
 Header and decoded text spans also carry a bounded `preview` string. Decoded
 rows retain their physical byte ranges; text-bank metadata remains separate.
+Code spans carry `functions` with indexed `address`, `status` and a `source` URL
+for valid exact or partial lifts. Unlifted and invalid records use a null source.
+Function metadata preserves separate function boundaries and overlapping records.
 Header evidence wins over asset ranges, which win over code, then zero fill,
 then unknown. Physical asset records can refine their enclosing container.
 Conflicts at the same priority are unknown.
@@ -78,5 +83,5 @@ The browser rejects old schemas, invalid categories, gaps and overlaps.
 
 Publication includes classification metadata, bounded header/text previews and
 static page assets. Full source media, decoded asset files, catalogs and absolute
-host paths stay outside the public output. Lifted span details include
-repository-relative C source paths.
+host paths stay outside the public output. Source URLs point to C files on `main`
+and their function declaration lines.

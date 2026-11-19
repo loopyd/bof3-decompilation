@@ -7,14 +7,16 @@ import json
 from contextlib import closing
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import quote
 
 from harness.analysis.index import SCHEMA_VERSION, connect_status
+from harness.domain.functions import parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.psx import binary_offset_for, validate_psx_header
 from harness.naming.debt import classify_raw_symbol
 from harness.pages.assets import AssetCatalogs
-from harness.pages.binary_map import CATEGORIES, Span, partition
+from harness.pages.binary_map import CATEGORIES, IndexedFunction, Span, partition
 
 STATUSES = {
     "exact": "completed",
@@ -67,8 +69,9 @@ def target_binary(root: Path, manifest, connection, catalogs: AssetCatalogs) -> 
     if header:
         validate_psx_header(data, manifest.load_address, binary_name=manifest.binary)
         spans.append(Span(0, header, "header", "PS-X EXE loader header", 50))
-    for address, size, reviewed_size, status, name, source_path in connection.execute(
-        "SELECT address, size, reviewed_size, lift_status, name, source FROM functions WHERE target_id = ?",
+    source_records = {}
+    for address, size, reviewed_size, status, source_path in connection.execute(
+        "SELECT address, size, reviewed_size, lift_status, source FROM functions WHERE target_id = ?",
         (manifest.id.value,),
     ):
         length = reviewed_size or size
@@ -76,17 +79,27 @@ def target_binary(root: Path, manifest, connection, catalogs: AssetCatalogs) -> 
             continue
         start = address - manifest.load_address + header
         category = "code-lifted" if status in {"exact", "partial"} else "code-unlifted"
-        detail = f"{name}: {status} indexed function"
+        source_url = None
         if category == "code-lifted":
             path = (root / source_path).resolve().relative_to(root.resolve())
-            detail += f"\nSource: {path.as_posix()}"
+            if path not in source_records:
+                source_records[path] = {
+                    record.address: record.line
+                    for record in parse_function_records((root / path).read_text())
+                }
+            line = source_records[path][address]
+            source_url = (
+                "https://github.com/loopyd/bof3-decompilation/blob/main/"
+                f"{quote(path.as_posix())}#L{line}"
+            )
         spans.append(
             Span(
                 start,
                 start + length,
                 category,
-                detail,
+                "Indexed function",
                 10,
+                function=IndexedFunction(address, status, source_url),
             )
         )
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
