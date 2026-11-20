@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v37";
+pub const SCHEMA: &str = "bof3.inline-text/v38";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -31,6 +31,7 @@ pub(crate) enum Codec {
     AsciiI32WideDecimalFormat,
     AsciiI16PlusOneDecimalFormat,
     AsciiSignedDecimalPairFormat,
+    AsciiI8PlusOneU8DecimalPairFormat,
     AsciiU8DecimalFormat,
     AsciiU8PlusOneDecimalFormat,
     AsciiU8DecimalFieldFormat,
@@ -145,6 +146,7 @@ impl Codec {
             Self::AsciiI32WideDecimalFormat => (&[11], 11, 8),
             Self::AsciiI16PlusOneDecimalFormat => (&[6], 6, 4),
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9, 4),
+            Self::AsciiI8PlusOneU8DecimalPairFormat => (&[4, 3], 8, 4),
             Self::AsciiU8DecimalPairFormat => (&[3, 3], 7, 4),
             Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16, 4),
             Self::AsciiU8DecimalFormat
@@ -237,6 +239,7 @@ impl Codec {
             Self::AsciiI32WideDecimalFormat => "ascii-i32-wide-decimal-format",
             Self::AsciiI16PlusOneDecimalFormat => "ascii-i16-plus-one-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
+            Self::AsciiI8PlusOneU8DecimalPairFormat => "ascii-i8-plus-one-u8-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
             Self::AsciiU8PlusOneDecimalFormat => "ascii-u8-plus-one-decimal-format",
             Self::AsciiU8DecimalFieldFormat => "ascii-u8-decimal-field-format",
@@ -843,6 +846,26 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801f2901, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f290a, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f2913, 5, &[0x8014f800]),
+        ],
+    },
+    Layout {
+        name: "US COMMU05 faery labels and counts",
+        load: 0x801d0c00,
+        size: 3576,
+        sha256: "6198548df37a48b467055356db0754306c2a9fe1bfc0ebbd9cf49e03696a2ec4",
+        consumers: &[0x801d0d4c, 0x801d1048, 0x801d129c],
+        allocations: &[
+            Allocation::bounded_format(
+                0x801d0c04,
+                6,
+                Codec::AsciiI8PlusOneU8DecimalPairFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0c0c, 4, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::literal(0x801d195c, 8, &[], &[0x8014f800]),
+            Allocation::literal(0x801d1964, 6, &[], &[0x8014f800]),
+            Allocation::literal(0x801d196c, 8, &[], &[0x8014f800]),
+            Allocation::literal(0x801d1974, 6, &[], &[0x8014f800]),
         ],
     },
     Layout {

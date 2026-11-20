@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v37`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v38`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v37` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v38` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3355,6 +3355,45 @@ An empty renderer array retains formatter-to-buffer evidence without claiming a
 display consumer. Keep this array unchanged when editing. Code references are pinned
 outside the allocations; no pointer-word reference is inferred from them.
 Observed rendering remains unverified for all three formats.
+
+The `US COMMU05 faery labels and counts` layout covers entry 7 of original US
+`BIN/ETC/COMMU05.EMI`, loaded at `0x801D0C00`. It exposes six fields:
+
+| Address | Original text | Capacity including NUL | Codec | Maximum formatted bytes before NUL |
+| --- | --- | --- | --- | --- |
+| `0x801D0C04` | `%d/%d` | 6 | `ascii-i8-plus-one-u8-decimal-pair-format` | 8 |
+| `0x801D0C0C` | `%2d` | 4 | `ascii-u8-decimal-format` | 3 |
+| `0x801D195C` | `faeries` | 8 | `game-literal` | Not formatted |
+| `0x801D1964` | `faery` | 6 | `game-literal` | Not formatted |
+| `0x801D196C` | `faeries` | 8 | `game-literal` | Not formatted |
+| `0x801D1974` | `faery` | 6 | `game-literal` | Not formatted |
+
+The four labels retain their original spelling and separate allocations.
+Readers `0x801D1048` and `0x801D129C` choose singular text when their respective
+unsigned count byte equals one, otherwise plural text. Calls `0x801D1180` and
+`0x801D13CC` pass the selected label to `0x8014F800`; both delay slots set a
+seven-character limit. Shorter or empty literal edits retain NUL and zero-fill
+the remaining allocation. Preserve the alignment bytes at `0x801D196A..0x801D196B`
+and `0x801D197A..0x801D197B`.
+
+Formatter call `0x801D0EC0` uses `%d/%d`. Its first argument is a signed byte
+plus one, bounded by `[-127, 128]`. Its second is the sum of three unsigned count
+bytes masked to eight bits, bounded by `[0, 255]`. The pair codec retains two
+ordered decimal conversions with digit budgets of four and three, an eight-byte
+output limit, and optional widths from 1 through 4 when they fit. It does not
+reuse the larger signed-pair bound. Call `0x801D0ED4` draws the scratch output
+at `0x80145AD4` through `0x80150098`.
+
+Calls `0x801D1114` and `0x801D1364` pass unsigned bytes to the `%2d` format and
+use the same scratch destination. It retains one decimal conversion and at most
+three encoded bytes plus NUL, with a three-byte formatted bound. Calls
+`0x801D1130` and `0x801D1380` draw through `0x8014FF0C`. Preserve both formats'
+NULs and the alignment bytes at `0x801D0C0A..0x801D0C0B`. All six fields use
+direct code addresses and retain empty pointer-reference lists. Recognition pins
+the complete payload outside these allocations; packing binds the original
+archive identity and preserves other entries. Original instructions establish
+these source and output bounds. Natural selection and edited rendering remain
+unverified.
 
 The `US AREA030 panel text` layout covers entry 4 of the original US
 `WORLD00/AREA030.EMI`, `WORLD02/AREA089.EMI` and `WORLD03/AREA129.EMI` archives
