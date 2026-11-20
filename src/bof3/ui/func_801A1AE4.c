@@ -8,12 +8,16 @@ extern s32 func_801BE0C0(s32 arg0, s32 arg1, u8 arg2);
  *        using two offset tables.
  * @source 0x801A1AE4
  * @status partial
- * @match 70.91
- * @residual non-exact live comparison: 39/55 instructions; 220 original bytes versus 200 current.
+ * @match 92.73
+ * @residual 51/55 instructions at the original 220-byte size. Guard and
+ * return layout still differ; complete byte comparison remains different.
  */
 s32 func_801A1AE4(struct GameWorkArea* arg) {
   s32 s0;
   s32 s1;
+  s32 second_x;
+  s32 second_y;
+  s32 result;
   volatile struct GameWorkArea* work;
   u8  route;
 
@@ -21,11 +25,16 @@ s32 func_801A1AE4(struct GameWorkArea* arg) {
   s0 = arg->coord_x_34 + D_80181B94[route * 2];
   s1 = arg->coord_y_38 + D_80181B98[route * 2];
 
-  if (!(func_801A1BC0(arg) & 0xFF)) {
+  result = func_801A1BC0(arg);
+  second_x = s0;
+  second_y = s1;
+  if (!(result & 0xFF)) {
     work = g_game_work;
-    if ((s8)func_801BDE14(s0, s1, work->speed_70) == -1) {
+    s0 = func_801BDE14(s0, s1, work->speed_70);
+    if ((s8)s0 == -1) {
       work = g_game_work;
-      return (s8)func_801BE0C0(s0, s1, work->speed_70) != -1;
+      s1 = work->speed_70;
+      return (s8)func_801BE0C0(second_x, second_y, (u8)s1) != -1;
     }
   }
   return 1;

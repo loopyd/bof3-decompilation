@@ -7,17 +7,16 @@
  *           resolves the 0x70/0xFF/0xB0 command families and then the
  *           0xA0-0xA3 and 0x20 families against the work-area route bit,
  *           returning 0 when no family matches.
- * @status partial
- * @match 99.55
- * @residual 219/220 instructions at the original 880-byte size. The inner
- * count guard fills its delay slot with the selected-byte pointer copy;
- * the original masks the count there and copies the pointer after the guard.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 func_801B9F08(u8 arg0, u8 arg1, u8 arg2) {
   u8 buf[3];
   u8 *p;
   u8 n;
   s32 i;
+  s32 j;
 
   buf[0] = arg0;
   buf[1] = arg1;
@@ -91,9 +90,9 @@ s32 func_801B9F08(u8 arg0, u8 arg1, u8 arg2) {
       if ((buf[i] & 0xF0) != 0x20) {
         continue;
       }
-      p = &buf[i];
-      for (i = 0; i < n; i++) {
-        if ((buf[i] & 0xF0) == 0x20 && *p != buf[i]) {
+      for (j = 0; j < n; j++) {
+        p = &buf[i];
+        if ((buf[j] & 0xF0) == 0x20 && *p != buf[j]) {
           return 0x20;
         }
       }

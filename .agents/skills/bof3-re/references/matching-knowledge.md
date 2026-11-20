@@ -1977,6 +1977,14 @@ initialization in the loop preheader. A hand-carried cursor initialized before t
 guard may keep the same arithmetic but place the copy too early. Confirm the
 reduction in the loop dump and require the complete native gate.
 
+For nested scans, resetting the selected outer index in the inner loop can
+invalidate an existing element address. Keep separate counters when the inner
+scan does not advance that selection. Derive the selected pointer in the inner
+body: loop motion can hoist it after the entry guard, where CSE2 can reuse the
+outer address. Verify that the inner counter disappears, no second address
+calculation survives and the copy leaves the predecessor block. Inspect delay
+filling and require the complete native gate.
+
 Before deriving one narrow counter from another, check `.loop` for recognition
 of the base induction variable and reduction of the new expression. GCC 2.7.2
 explicitly unwraps SUBREGs marked `SUBREG_PROMOTED_VAR_P` and follows
@@ -2558,6 +2566,12 @@ An intervening real instruction can prevent adjacent producer retargeting
 without preserving the copy. CSE can replace every copied use with the
 equivalent source, leaving an unused SET in `.cse2` that flow deletes before
 combine. Trace the consumers and `.flow` before assigning the removal to combine.
+
+A consumed source can take a real helper answer or later sample before its
+snapshot is used. Early dead-CSE counts uses across the whole pseudo; later cleanup may
+remove the later phase after it has preserved the copy. Check actual consumers
+and global conflicts. A shorter CSE scan can make the snapshot canonical,
+forward earlier consumers and remove interference while the copy SET survives.
 
 Preserving a handoff can require two real value changes. An operand overwrite
 between producer and capture can block moving the producer. Overwriting the
