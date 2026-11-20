@@ -48,11 +48,11 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "1ed0d8fd1134a9a03736fc91fb78df35432bc8d9",
-  "published_at": "2026-11-20T15:39:19.327847+00:00",
+  "revision": "a63b020c9a20ee479ae2e116f82f708d86a9e879",
+  "published_at": "2026-11-20T16:19:02.009231+00:00",
   "counts": {
-    "completed": 6522,
-    "partial": 353,
+    "completed": 6523,
+    "partial": 352,
     "unlifted": 3560,
     "invalid": 0,
     "total": 10435,
@@ -67479,8 +67479,8 @@
       "family": "etc",
       "archive": "game",
       "entry": "00",
-      "completed": 231,
-      "partial": 16,
+      "completed": 232,
+      "partial": 15,
       "unlifted": 299,
       "invalid": 0,
       "total": 546,
@@ -71320,8 +71320,8 @@
             "functions": [
               {
                 "address": 2149250480,
-                "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801AF5B0.c#L27"
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801AF5B0.c#L23"
               }
             ]
           },
