@@ -9625,6 +9625,222 @@ pub fn payload_nontext_ranges(
                 .collect(),
         );
     }
+    let replacement_sprite_ranges: &[(usize, usize)] = if entry.index == 3
+        && entry.transfer_mode == 0
+        && entry.check_word == 0x10
+        && usize::try_from(entry.size).ok() == Some(data.len())
+    {
+        match (
+            entry.offset,
+            entry.ram_ptr,
+            data.len(),
+            sha256_hex(data).as_str(),
+        ) {
+            // CRYUD01.
+            (
+                43_008,
+                0x8003_b80c,
+                110_592,
+                "8e109d9442d43c46aab8f73e6dbaddbe3e9dc4daddee891a960ea9dd94bbdbcd",
+            ) => &[
+                (0, 4),
+                (16, 68),
+                (88, 824),
+                (916, 1_907),
+                (2_824, 9_584),
+                (12_412, 1_464),
+                (13_880, 1_485),
+                (15_368, 8),
+                (15_380, 909),
+                (16_292, 8),
+                (16_304, 3_459),
+                (19_764, 4_104),
+                (23_872, 8),
+                (23_884, 1_593),
+                (25_480, 8),
+                (25_492, 1_866),
+                (27_360, 5_480),
+                (32_844, 2_496),
+                (35_344, 4_369),
+                (39_716, 8),
+                (39_728, 321),
+            ],
+            // CRYUU01.
+            (
+                43_008,
+                0x8003_b80c,
+                110_592,
+                "bcf1849fd598d529fd441f4d09561ccc7c143c03babbf3142d24d051ce8b81fe",
+            ) => &[
+                (0, 4),
+                (16, 32),
+                (52, 5_504),
+                (5_560, 1_382),
+                (6_944, 8),
+                (6_956, 4_310),
+                (11_268, 8),
+                (11_280, 931),
+                (12_212, 8),
+                (12_224, 824),
+                (13_052, 1_599),
+                (14_652, 2_748),
+                (17_404, 1_567),
+                (22_788, 6_844),
+                (29_636, 4_104),
+                (33_744, 8),
+                (33_756, 1_684),
+                (35_444, 4_245),
+                (39_692, 8),
+                (39_704, 321),
+            ],
+            // DRG00_01, DRG00_02, DRG00_03, DRG00_04.
+            (
+                40_960,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                44_404,
+                "1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1",
+            ) => &[(0, 4), (16, 20_508)],
+            // DRG01_01, DRG01_02, DRG01_03, DRG01_04.
+            (
+                40_960,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                38_844,
+                "2d8dada5f5112fbc1363e54a2b12ed8d31cd12df53f7456d42015d65e1c47c33",
+            ) => &[
+                (0, 4),
+                (16, 10_984),
+                (11_004, 6_035),
+                (17_040, 8),
+                (17_052, 6_199),
+                (23_252, 8),
+                (23_264, 5_244),
+                (28_512, 4_443),
+                (32_956, 2_752),
+            ],
+            // DRG02_01, DRG02_02, DRG02_03, DRG02_04.
+            (
+                20_480,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                72_420,
+                "46af6dbcedb4eab31ae5d2db9195c3dbc968840c316d08d04b1ca95a1762efb3",
+            ) => &[
+                (0, 4),
+                (16, 12_328),
+                (12_348, 13_672),
+                (26_024, 6_850),
+                (32_876, 8),
+                (32_888, 7_098),
+                (39_988, 8),
+                (40_000, 7_408),
+                (47_412, 14_440),
+            ],
+            // DRG03_01, DRG03_02, DRG03_03, DRG03_04.
+            (
+                40_960,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                76_072,
+                "0d918e6fdd6852c3d184213423c02b2aa46ea0cee36d156153e22b55a546d574",
+            ) => &[
+                (0, 4),
+                (16, 8_232),
+                (8_252, 9_576),
+                (17_832, 5_761),
+                (23_596, 8),
+                (23_608, 5_396),
+                (29_008, 5_090),
+                (34_100, 8),
+                (34_112, 5_607),
+                (39_720, 8_200),
+                (47_924, 8_200),
+            ],
+            // DRG05_01, DRG05_02, DRG05_03, DRG05_04.
+            (
+                38_912,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                70_700,
+                "4297311b37aa27df957dbacaca840945875fafab5c4fab1238a34252938e6ac7",
+            ) => &[
+                (0, 4),
+                (16, 23_260),
+                (23_280, 8),
+                (23_292, 8_457),
+                (31_752, 8),
+                (31_764, 8_063),
+                (39_828, 8),
+                (39_840, 8_189),
+                (48_032, 8),
+                (48_044, 8_027),
+                (56_072, 5_480),
+            ],
+            // DRG07_01, DRG07_02, DRG07_03, DRG07_04.
+            (
+                38_912,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                42_264,
+                "c8743de97beea25057b3db3bdf89819fc7e43ce89483fe30d8ea54c297a2338f",
+            ) => &[
+                (0, 4),
+                (16, 4_136),
+                (4_156, 5_480),
+                (9_640, 5_646),
+                (15_288, 8),
+                (15_300, 5_253),
+                (20_556, 8),
+                (20_568, 5_175),
+                (25_744, 8),
+                (25_756, 4_815),
+                (30_572, 5_480),
+            ],
+            // DRG08_01, DRG08_02, DRG08_03, DRG08_04.
+            (
+                20_480,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                84_732,
+                "ecb3e431738d1e065eb0e90a47c392368be4fa84a08fb90ec928659c40d19b36",
+            ) => &[
+                (0, 4),
+                (16, 12_328),
+                (12_348, 8),
+                (12_360, 5_700),
+                (18_064, 6_533),
+                (24_600, 8_200),
+                (32_804, 12_296),
+                (45_104, 8),
+                (45_116, 5_893),
+                (51_012, 8),
+                (51_024, 13_836),
+            ],
+            // PAPYD01, PAPYD02, PAPYD03, PAPYD04.
+            (
+                32_768,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                11_796,
+                "feea0916b287895af705b3598c55581a2fdaa3657ce7e0b3efff68a47f1c0338",
+            ) => &[(0, 4), (16, 6_872), (6_892, 631), (7_524, 1_376)],
+            // PAPYU01, PAPYU02, PAPYU03, PAPYU04.
+            (
+                32_768,
+                0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c,
+                17_400,
+                "f9d984db05b512d943860a31776800a6678c772bf322f265f4339f0f3704b864",
+            ) => &[(0, 4), (16, 15_092)],
+            _ => &[],
+        }
+    } else {
+        &[]
+    };
+    if !replacement_sprite_ranges.is_empty() {
+        return Some(
+            replacement_sprite_ranges
+                .iter()
+                .map(|&(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: "Original US MAGIC131 raw replacements: 38 documented entry-3 archives, image section word, selected image directory words and consumed image headers/packed words/mode-2 tokens. Original GAME phase table 0x801C7B54 selects family-1/2 BPL request 0x80197BC0 and publisher 0x80197C9C -> 0x801C1400 -> 0x801C1254, which installs the documented identifier-selected root at actor+0x4C before the battle overlay request. Original MAGIC131 handlers 0x801EF1C0/0x801EF3D0 request the same BPL family/hint and BATTLE entry-15 form-table u16 indexed by hint; SLUS LBA rows and complete physical disc user bytes bind each archive and replacement destination. This is conditional source-use: actor root, actor+0x24=1, original hint/source/code/tables and noninterfering ordinary helpers must survive battle setup and replacement. A finite actor-0 case supplies the documented identifier at 0x80144F5D, active count 1 and an unset special-BPL flag. Post-load call 0x801EF508 -> 0x8014D6B8 with (actor[8]+4)&255 uses documented selectors below 128, avoids reinitialization and reaches 0x8014DC08; queued images reach 0x8014E6D0 and its original readers. Exact original archive and entry/offset/mode/load/checkword/size/payload identities, successful unskipped loads, loader-ready gates, valid animation records, queue capacity and bounded nonaliasing outputs including final-token overshoot are required. Palette storage, CRYUU01 image slot 8 and its directory word, opaque mode-2 prefixes, tails, programs and selection storage are excluded. Natural root retention, selector production, invocation, runtime residency, transfer, live CLUT, display, rasterized-text absence and safe editing remain unverified.",
+                })
+                .collect(),
+        );
+    }
     if entry.transfer_mode == 0
         && entry.ram_ptr == 0x801e_ec00
         && entry.check_word == 0x141

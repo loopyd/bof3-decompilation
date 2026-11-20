@@ -145,6 +145,75 @@ unresolved because this route has no valid selection case for them. Only the
 listed consumed image storage, selected directory words and palette records
 qualify. The conditions, exclusions and evidence limits above still apply.
 
+### MAGIC131 raw replacements
+
+Coverage also recognizes 38 original raw replacement archives in `BIN/BPLCHAR`.
+Each profile requires its exact original archive, entry 3, payload offset and
+hash, raw mode, checkword `0x10`, payload size and reviewed destination.
+The following finite cases bind the original BATTLE entry-15 form table to the
+hint-indexed `u16` request in `MAGIC131.EMI#3@0x801EF3D0`. Slots in each range
+follow archive suffixes `01..04` in order. Image selectors follow image-slot order.
+
+| Archives | Form | Family | Slots | Image selectors |
+| --- | --- | --- | --- | --- |
+| `DRG00_01..04.EMI` | 1 | 1 | 526..529 | 6, 4 |
+| `DRG01_01..04.EMI` | 14 | 1 | 531..534 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG02_01..04.EMI` | 21 | 1 | 536..539 | 4, 6, 44, 12, 46, 14, 16, 18 |
+| `DRG03_01..04.EMI` | 15 | 1 | 541..544 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG05_01..04.EMI` | 17 | 1 | 547..550 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG07_01..04.EMI` | 2 | 1 | 553..556 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG08_01..04.EMI` | 23 | 1 | 558..561 | 4, 12, 44, 16, 6, 14, 46, 18 |
+| `PAPYD01..04.EMI` | 0 | 1 | 563..566 | 4, 16, 28, 6 |
+| `PAPYU01..04.EMI` | 0 | 2 | 568..571 | 4, 6, 12, 16, 28 |
+| `CRYUD01.EMI` | 25 | 1 | 522 | Same as `CRYUD00` above |
+| `CRYUU01.EMI` | 25 | 2 | 524 | Same as `CRYUU00` above |
+
+The suffix determines the finite hint, preceding BPL bank and selected root.
+`D/U` selects the family-1/family-2 bank. The ordinal is the identifier's position
+in the original three-byte hint row at `0x80181B34 + 3*hint`.
+
+| Suffix | Hint | BPL bank | Identifier | Ordinal | Replacement destination |
+| --- | --- | --- | --- | --- | --- |
+| DRG/PAPY `01` | 7 | `BPLD/U247.EMI` | 7 | 2 | `0x8007A80C` |
+| DRG/PAPY `02` | 10 | `BPLD/U278.EMI` | 7 | 1 | `0x8005F80C` |
+| DRG/PAPY `03` | 13 | `BPLD/U457.EMI` | 7 | 2 | `0x8007180C` |
+| DRG/PAPY `04` | 15 | `BPLD/U478.EMI` | 7 | 1 | `0x8005680C` |
+| CRYU `01` | 5 | `BPLD/U034.EMI` | 0 | 0 | `0x8003B80C` |
+
+This is a conditional source-use path. GAME's original phase table at
+`0x801C7B54` selects the family-1/2 BPL request at `0x80197BC0` before phase 3
+calls `0x801C1400` with argument 1 at `0x80197C9C`. With active count 1 and the
+listed identifier at `0x80144F5D`, its call at `0x801C14BC` reaches initializer
+`0x801C1254`, which publishes the selected root at actor offset `0x4C` and writes
+actor byte `0x24 = 1`. Phase gates, successful unskipped loads, stable original
+tables and the root array, ordinary helper returns and noninterference are
+required. Root retention through battle setup and the later MAGIC131 states is
+an explicit condition; natural retention has not been established.
+
+MAGIC131's preceding handler at `0x801EF1C0` requests the same BPL family and hint
+only if no active actor has both byte `+0x79 == 4` and bit 0 of word `+0x128`
+set. Family selection uses bit 1 of `0x801462EC`. Its next handler indexes the
+form's slot table by the hint. The SLUS LBA table and complete matching physical
+disc user bytes bind both requests to their original archives. Independently
+decoded BPL roots reproduce the texture tool's decoded hashes and select the
+raw replacement destination.
+
+After loader-ready, `0x801EF488` sets actor byte 0 to 1 and calls `0x8014D6B8`
+at `0x801EF508` with `(actor[8]+4)&255`. Each listed selector is below 128.
+Retaining actor byte `0x24 = 1` avoids root reinitialization in `0x8014D6DC` and
+reaches `0x8014DC08`. Valid selected animation records, queue capacity, stable
+source and code, and bounded nonaliasing output remain conditions. The queued
+image reader at `0x8014E6D0` consumes the same packed, raw or mode-2 image storage
+described above, including any final-token overshoot.
+
+Only the image section word, selected image-directory words, image headers and
+consumed image words or tokens qualify. CRYUU01 image slot 8 and its directory
+word remain unresolved. This route has no bound palette-copy call after the
+replacement, so its palette section word, directory and records remain unresolved.
+Opaque mode-2 prefixes, tails, programs and selection storage also stay unresolved.
+These profiles establish no natural selector production, invocation, runtime
+residency, transfer, live CLUT, display, absence of rasterized text or safe editing.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
