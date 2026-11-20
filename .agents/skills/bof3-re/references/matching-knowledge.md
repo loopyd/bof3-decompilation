@@ -2565,6 +2565,13 @@ and restoring the older representative. Compare the `Processing block` ranges
 and first/last UIDs in both dumps. Block skipping can cross a branch around NEG
 without invalidating an unchanged pointer equivalence.
 
+For a promoted narrow read, track its `QI` or `HI` memory value separately
+from the `SI` result. With `flag_force_mem`, overwriting the promoted index
+can leave the narrow memory equivalence available. Moving a later read before
+the intervening store can then merge the samples. Verify invalidation of the
+memory representative in both CSE passes; a later combine fold cannot undo
+earlier sharing.
+
 Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
 the first CSE no longer extends the pseudo for the second pass. Check
