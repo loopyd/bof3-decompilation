@@ -47,8 +47,8 @@ extern void func_8014D6B8(u32 flag);
  * record, applies its saved-state gate, and advances the entity count.
  * @source 0x801A7330
  * @status partial
- * @match 88.16
- * @residual Native comparison: 216/245 instructions at the original 980 bytes.
+ * @match 90.20
+ * @residual Native comparison: 221/245 instructions at the original 980 bytes.
  * Register choices, instruction order and the late packed-word OR operands
  * still differ. The spawn record remains a volatile view to preserve its
  * repeated byte samples, including spawn[0], spawn[3] and spawn[0xC].
@@ -71,9 +71,14 @@ void func_801A7330(const volatile u8* spawn) {
     return;
   }
 
-  work = (struct GameWorkArea*)((u8*)D_80146888 + (u32)slot * ENTITY_SLOT_SIZE);
-  g_game_work = work;
-  GAME_WORK_AREA_PTR = work;
+  {
+    struct GameWorkArea* selected_work;
+
+    selected_work = (struct GameWorkArea*)((u8*)D_80146888 +
+                                         (u32)slot * ENTITY_SLOT_SIZE);
+    g_game_work = selected_work;
+    GAME_WORK_AREA_PTR = selected_work;
+  }
   ENTITY_ENTRY_DATA = (u16)(((u32)spawn[1] << 8) | spawn[2]);
 
   func_801A4AA8();

@@ -2221,6 +2221,13 @@ a `REG_DEAD` when the same instruction also sets the register, so actual in-plac
 updates can retain one final death. Count surviving SETs and deaths separately;
 multiple definitions alone do not prove that a pseudo needs global allocation.
 
+Reusing a pointer for initial publication and later record work can exclude it
+from local allocation. Separate the initial selection when only those publications
+consume it. The new local may tie to a dying address input and change post-reload
+store order without loop notes. A do-while-zero group is a separate change: its
+`LOOP_END` splits first CSE, and CSE2 may then reuse a live base for later symbol
+accesses. Check both CSE passes, allocation, call delays and the complete native body.
+
 In GCC 2.7.2, `birthing_insn_p` requires a direct `REG` destination; a `SUBREG`
 misses that birth boost even with one definition. Trace adjusted priority and
 local intervals: a local crossing no calls can still change global hard conflicts
