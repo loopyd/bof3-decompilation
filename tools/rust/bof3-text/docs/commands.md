@@ -194,7 +194,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v35`. An omitted layout selector fails before
+labels through `bof3.inline-text/v36`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -208,7 +208,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v35` document with ten counted labels, eight default names,
+`bof3.inline-text/v36` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels and fifteen fixed-width settings fields.
@@ -254,7 +254,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v35`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v36`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
@@ -357,7 +357,11 @@ retains `renderers: []`. See [inline formats](formats.md#inline-overlay-text)
 for its supported arguments and limits.
 
 AREA030, AREA089 and AREA129 entry 4 each include five numeric formats, one
-nonempty digit literal and two twelve-byte fixed labels. Prefix arguments include
+nonempty digit literal, two twelve-byte fixed labels and seven packed menu labels.
+The menu labels are `Gear`, `Data`, `Rule`, `ROD`, `LURE`, `EQUIP` and `GUIDE`.
+Their `game-fixed-literal` fields use every recorded byte without reserving NUL;
+shorter edits zero-fill the field. Keep their empty pointer-reference lists and
+preserve adjacent padding. Prefix arguments include
 a signed halfword plus one and an unsigned halfword plus one. Their output bounds
 are six, seven and four bytes for `%2d`, `%d/6` and `*%2d`, respectively. Do not
 truncate the `%d/6` argument at 65535. Use `analyze` for each allocation's encoded
@@ -404,7 +408,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v35`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v36`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

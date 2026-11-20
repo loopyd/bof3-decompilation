@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v35";
+pub const SCHEMA: &str = "bof3.inline-text/v36";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -820,10 +820,10 @@ const LAYOUTS: &[Layout] = &[
         name: "US AREA030 panel text",
         load: 0x801d0c00,
         size: 75285,
-        sha256: "eabce73b703310917226643497362aede63d8be552dc3a9f4b4339608ae6f21e",
+        sha256: "35bd175147e86460c2ceecbf6b74e9c73112910a0cf449691f970f31b582d3ed",
         consumers: &[
-            0x801d159c, 0x801d5d88, 0x801d6f34, 0x801d72e4, 0x801d7b64, 0x801d7eb0, 0x801d8364,
-            0x801e1004, 0x801e1320,
+            0x801d159c, 0x801d5d88, 0x801d6f34, 0x801d72e4, 0x801d7b64, 0x801d7c10, 0x801d7eb0,
+            0x801d8364, 0x801d88e0, 0x801e1004, 0x801e1320,
         ],
         allocations: &[
             Allocation::bounded_format(
@@ -849,6 +849,13 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0c8c, 4, Codec::AsciiU16DecimalFormat, &[0x8014f800]),
             Allocation::fixed_literal(0x801e28c4, 12, &[0x8014f800]),
             Allocation::fixed_literal(0x801e28d0, 12, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21c0, 4, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21c4, 4, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21c8, 4, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21cc, 3, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21d0, 4, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21d4, 5, &[0x8014f800]),
+            Allocation::fixed_literal(0x801e21d9, 5, &[0x8014f800]),
         ],
     },
     Layout {

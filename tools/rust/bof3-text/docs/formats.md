@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v35`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v36`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v35` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v36` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3361,10 +3361,9 @@ The `US AREA030 panel text` layout covers entry 4 of the original US
 below `BIN`. Each payload loads at `0x801D0C00`. Each archive requires its own
 source-bound document and edited output.
 
-This is a fishing UI layout. The original payload contains `ROD`, `LURE`,
-`EQUIP` and `GUIDE`, and consumer `0x801E1004` resolves fish names through
-GAME item records. Those menu labels and dynamic names are outside this
-layout's editable allocations.
+This is a fishing UI layout. It includes seven packed menu labels. Consumer
+`0x801E1004` also resolves fish names through GAME item records; these dynamic
+names are outside this layout's editable allocations.
 
 | Address | Original text | Capacity | Codec |
 | --- | --- | --- | --- |
@@ -3376,6 +3375,25 @@ layout's editable allocations.
 | `0x801D0C8C` | `%4d` | 4 | `ascii-u16-decimal-format` |
 | `0x801E28C4` | `Manillo` | 12 | `game-fixed-literal` |
 | `0x801E28D0` | `????????????` | 12 | `game-fixed-literal` |
+| `0x801E21C0` | `Gear` | 4 | `game-fixed-literal` |
+| `0x801E21C4` | `Data` | 4 | `game-fixed-literal` |
+| `0x801E21C8` | `Rule` | 4 | `game-fixed-literal` |
+| `0x801E21CC` | `ROD` | 3 | `game-fixed-literal` |
+| `0x801E21D0` | `LURE` | 4 | `game-fixed-literal` |
+| `0x801E21D4` | `EQUIP` | 5 | `game-fixed-literal` |
+| `0x801E21D9` | `GUIDE` | 5 | `game-fixed-literal` |
+
+The seven menu labels use every byte of their fixed fields without reserving
+NUL. Shorter edits zero-fill the field. The status-cell reader at `0x801D7C10`
+passes `Gear`, `Data` and `Rule` to renderer `0x8014F800` at calls `0x801D7CD0`,
+`0x801D7D04` and `0x801D7D38`, each with a four-glyph limit. The rod and lure
+readers call that renderer at `0x801D820C` and `0x801D88A4` with limits of three
+and four. The equipment reader at `0x801D88E0` draws `EQUIP` and `GUIDE` at
+`0x801D894C` and `0x801D8CF0`, each with a five-glyph limit. Preserve the zero
+bytes at `0x801E21CF` and `0x801E21DE..0x801E21DF`. Code supplies the field
+addresses directly; pointer-reference arrays stay empty. Original instruction
+evidence establishes these source and draw-call bindings. Edited rendering
+remains unverified.
 
 The `%2d` field at `0x801D0C04` has four consumers. Their argument domain
 includes a signed halfword plus one, covering `[-32767, 32768]`. Its codec retains
