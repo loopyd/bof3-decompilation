@@ -1541,6 +1541,71 @@ still requires its own reviewed descriptor tuple and checked field layout.
 These bindings establish neither actual selection and consumption nor universal
 pointer stability through scene rebuilds.
 
+## Battle resident animation field coverage
+
+Coverage also recognizes selected fields in the original US resident bank loaded
+at `0x800F0800`. The raw payload has size 3692, checkword 12 and SHA-256
+`2cd03f3e11d86c2de1fdcc3b3c996eece1c02c45957f71a94362ac95e8959934`.
+Its reviewed entry-index/archive-offset pairs are `2/153600`, `5/417792`,
+`5/419840`, `5/425984`, `5/430080` and `5/442368`. The containing archive must
+match the original disc manifest. Each archive also contains the exact common
+battle payload described under battle overlay instruction coverage.
+
+The original dispatcher at `0x801E6C84` copies five handler words from
+`0x801D0F44..0x801D0F58`, then tests global byte `0x801462E0`. When that byte
+is not 5, it writes `0x800F0800` to `0x801459F0` and calls the handler selected
+by work byte `+1`. After an ordinary return, it writes `0x800D3800` to that
+shared pointer. This replaces the base with a constant rather than restoring
+its previous value.
+
+For initialized state 1, handler `0x801E6E54` clears work byte `+0xB` before
+calling selector `0x801E8FA8`. The selector masks its input with `0x58`, so
+the possible results are 0, 3, 4 and 6. Request table `0x801EB494` maps these
+to `0xFF`, 5, 4 and 3. Result 0 takes the no-request guard. The other results
+set work byte `+0x24` to `0x80`, group halfword `+0x2C` to 1 and byte `+0x48`
+to zero before requesting the program through `0x8014D6B8`. The handler then
+advances state 1 to state 3. The continuing handler at `0x801E6FB0` preserves
+the selected group and uses the same finite request alternatives while its
+completion and countdown guards permit progression.
+
+Original consumers `0x8014D6DC`, `0x8014D910`, `0x8014DB98` and `0x8014D978`
+read the selected group, program offsets, step counts, duration/operand pairs
+and relative cell words. Group 1 starts at payload offset 1792. Its selected
+programs are:
+
+| Program index | Payload offset | Steps | Referenced cells |
+| ---: | ---: | ---: | ---: |
+| 3 | 2210 | 17 | 16 |
+| 4 | 2400 | 12 | 12 |
+| 5 | 2572 | 4 | 4 |
+
+Program 3 ends with duration/operand `0x80/1`, which redirects progression to
+step 1. The finite forward walks qualify payload intervals `[4,8)`,
+`[1798,1804)`, `[2211,2399)`, `[2401,2572)` and `[2573,2619)`. These intervals
+contain the fetched fields and counted five-byte cell parts. Program header
+byte 0, other roots and programs, allocation gaps and tails retain their prior
+status. Part control bits `0x70` still have no qualified meaning.
+
+State 3 calls the progress reader at `0x801E7174` and queue helper at
+`0x801E717C`. The latter stores the work pointer in the array at `0x80148214`
+only while count byte `0x8014832C` is below 30. Drawing happens later.
+With byte `0x8014832E` bit 0 set, `0x8014BB20` restores each queued pointer
+to scratch cell `0x1F800044` and calls `0x8014C4D4`. The cell reader adds the
+retained work `+0x54` table pointer to the `+0x5A` relative offset. It does
+not need the temporary shared base to remain selected. Work byte 0 bit `0x40`
+must be clear, and the X/Y coordinate guards must pass before the cell read.
+
+Coverage separately recognizes the five copied handler words and request bytes
+at table indices 0, 3, 4 and 6 in the exact common battle payload. Other request
+bytes receive no classification from this review.
+
+These roles require the exact raw transfers to complete, ordinary helper
+returns, valid nonaliasing memory and frames, stable code and tables, and the
+same bank and work fields to survive until the queued draw. They establish
+conditional stored-field use. They do not establish actual invocation, loading,
+residency, image or CLUT bindings, uploads, display, absence of rasterized text
+or safe editing.
+
 ## START initializer instruction coverage
 
 Coverage recognizes the complete instruction body at `0x801D15C0..0x801D1740`

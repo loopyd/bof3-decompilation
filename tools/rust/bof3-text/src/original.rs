@@ -60,6 +60,8 @@ pub struct NontextRange {
 const SPRITE_CONSUMER_INSTRUCTION_EVIDENCE: &str = "Original US sprite consumer instructions; complete bodies with conditional original direct-call or finite handler-cell entries, full raw-word and structural control-flow review, and all control-transfer delay words including returns. The five-case switch at 0x8014CE78 uses the separately qualified table at 0x80149998. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. tools/rust/bof3-text/docs/formats.md lists the body boundaries and entry routes. Ordinary callee returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors are excluded. No matching ELF, observed invocation, all-path feasibility, general selector bounds, transitive effects, resource safety, display or safe-edit claim.";
 const BATTLE_CALLEE_INSTRUCTION_EVIDENCE: &str = "Original US shared battle instructions; 33 complete bodies with original direct-call entries from already qualified instructions, full raw-word and structural control-flow review, and all 602 control-transfer delay words including returns. The bounded switches at 0x800A805C and 0x800B3AE8 use separately qualified numeric tables. Exact original archive/raw-payload identities and load address gate classification. tools/rust/bof3-text/docs/formats.md records boundaries and entry sites. Call continuations assume ordinary returns, valid nonaliasing memory, intact frames and stable code/tables. Referenced data and external callees retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
 const BATTLE_CALLEE_TABLE_EVIDENCE: &str = "Original US shared battle numeric jump tables at 0x80096974..0x80096994 and 0x80096A5C..0x80096A74. Complete original bodies 0x800A805C and 0x800B3AE8 apply unsigned bounds of eight and six before scaled table loads and register jumps. Every original target lies inside its consumer body. Exact original archive/raw-payload identities and load address gate classification. Neighboring bytes retain prior status. Stable tables and valid nonaliasing memory remain conditions. No observed invocation, general selector bound, resource-safety or safe-edit claim.";
+const BATTLE_RESIDENT_FIELD_EVIDENCE: &str = "Original US battle resident animation fields at 0x800F0800. Exact whole-archive, raw-entry descriptor and payload identities bind the co-resident 0x801D0C00 consumer. Original dispatcher 0x801E6C84 temporarily publishes this base. Initialized state 1 selects group 1 and programs 3/4/5 through mask 0x58; state 3 advances their finite forward walks and queues the same work pointer. SLUS 0x8014BB20 restores that queued pointer, and 0x8014C4D4 reads the retained work+0x54 table and work+0x5A offset after the shared base changes. Only fetched root/program/cell numeric fields qualify. Ordinary noninterfering returns, valid nonaliasing memory, stable bank/work/pointers, queue capacity, enabled drain and visible-coordinate guards remain conditions. Program header byte zero, unselected programs/cells, gaps, tails and control bits 0x70 retain their prior status. No actual invocation, loading, residency, upload, display, rasterized-text absence or safe-edit claim.";
+const BATTLE_RESIDENT_TABLE_EVIDENCE: &str = "Original US battle resident animation numeric tables. Dispatcher 0x801E6C84 copies all five address words at 0x801D0F44..0x801D0F58 before its guarded indirect call. Initializer 0x801E6E54 and continuing handler 0x801E6FB0 read request-table indices 0/3/4/6 at 0x801EB494 under the reviewed mask-0x58 selector and initialized state. Exact original archive and raw-payload identities bind the consumer. Stable tables, valid work and nonaliasing memory remain conditions. Other request bytes retain their prior status. No general selector bound, actual invocation, indirect-call safety, display or safe-edit claim.";
 
 /// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
@@ -11241,6 +11243,31 @@ pub fn payload_nontext_ranges(
         return resident_animation_payload_ranges(entry, data);
     }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (_, _, 0, 0x800f_0800, 3_692)
+            if entry.check_word == 12
+                && matches!(
+                    (entry.index, entry.offset),
+                    (2, 153_600)
+                        | (5, 417_792)
+                        | (5, 419_840)
+                        | (5, 425_984)
+                        | (5, 430_080)
+                        | (5, 442_368)
+                )
+                && sha256_hex(data)
+                    == "2cd03f3e11d86c2de1fdcc3b3c996eece1c02c45957f71a94362ac95e8959934" =>
+        {
+            Some(
+                [(4, 4), (1_798, 6), (2_211, 188), (2_401, 171), (2_573, 46)]
+                    .into_iter()
+                    .map(|(offset, length)| NontextRange {
+                        offset,
+                        length,
+                        evidence: BATTLE_RESIDENT_FIELD_EVIDENCE,
+                    })
+                    .collect(),
+            )
+        }
         (0, 2_048, 0, 0x801d_0c00, 87_660)
             if entry.check_word == 0x13
                 && sha256_hex(data)
@@ -11632,6 +11659,26 @@ pub fn payload_nontext_ranges(
                 == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1" =>
         {
             Some(vec![
+                NontextRange {
+                    offset: 0x344,
+                    length: 20,
+                    evidence: BATTLE_RESIDENT_TABLE_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a894,
+                    length: 1,
+                    evidence: BATTLE_RESIDENT_TABLE_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a897,
+                    length: 2,
+                    evidence: BATTLE_RESIDENT_TABLE_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a89a,
+                    length: 1,
+                    evidence: BATTLE_RESIDENT_TABLE_EVIDENCE,
+                },
                 NontextRange {
                     offset: 0x320,
                     length: 12,
