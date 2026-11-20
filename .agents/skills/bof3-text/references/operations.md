@@ -56,6 +56,11 @@ also display through ordinary diary interaction after loading a game-created sav
 The original-label route has created and reloaded one save. Selected value-panel
 calls, the unique supplier and persistence of the edited labels remain unverified.
 
+For the title rows in AREA175 through AREA185, select entry 11 and use a version 3
+bank document. Keep each archive's source identity separate. Follow the
+[sound-test title contract](../../../../tools/rust/bof3-text/docs/formats.md#sound-test-title-lookup).
+The active bank, selection limit and edited rendering remain unverified.
+
 For the main US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
 Its `bof3.executable-text/v18` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumers, output, codec,

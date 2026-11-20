@@ -507,6 +507,17 @@ bin/harness text query out/extracted/BIN/ETC/SISYOU.EMI --entry 0 --grep Pwr --j
 bin/harness text query out/extracted/SLUS_004.22 --grep "Exception" --json
 ```
 
+The existing bank query also exposes the
+[sound-test title rows](formats.md#sound-test-title-lookup):
+
+```sh
+bin/harness text query out/extracted/BIN/WORLD04/AREA175.EMI --entry 11 --grep "Country Living" --json
+```
+
+The result identifies bank 0, row 626. Use `analyze` for its allocation and
+`extract` for an editable bank document. The active supplying archive remains
+unverified.
+
 Literal results use `bof3.literal-query/v1`, retain the source schema and identity,
 and report allocation metadata in `matches`. Literal-only rows use `reading: literal`.
 The battle append row uses `reading: command-aware`; glyph commands and their

@@ -4037,6 +4037,25 @@ strings[]                         ; begins at byte pointer_bytes
   battle/system text subfiles (`0x8001A000`, sizes 14428/16872) use it and round-trip
   byte-identically; packing preserves the header.
 
+### Sound-test title lookup
+
+US `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI` entry 11 contain identical
+18,161-byte payloads with 677 rows in bank 0. The offset-table cell at payload
+offset `0x4E2` stores `0x4194`, the start of row 626, `    Country Living{end}`.
+
+COMMU03 reader `0x801D1250` loads `u16[0x800104E2 + 2 * selection]`, adds
+`0x80010000`, and passes the resulting text pointer to `0x8014F800` with count
+`0xFF`. That wrapper calls `0x8014F84C`, which handles `0x00` as termination,
+`0x01` as newline and `0xFF` as space. The existing bank codec represents these
+as `{end}`, `{nl}` and a space. With one of these banks resident, selection zero
+addresses row 626. This title lookup is separate from COMMU03's inline labels.
+
+Extraction uses `bof3.dialogue-text/v3`. Packing preserves the offset table and
+each row's original extent. Every archive requires its own source-bound document
+and output. Active-bank publication, the valid selection limit and edited title
+rendering remain unverified. The bank's row count does not establish how many
+titles are selectable.
+
 ### Card-choice bank aliases
 
 US `BIN/ETC/AFLDKWA.EMI` entry 0 and `BIN/ETC/FIRST.EMI` entry 11 contain
