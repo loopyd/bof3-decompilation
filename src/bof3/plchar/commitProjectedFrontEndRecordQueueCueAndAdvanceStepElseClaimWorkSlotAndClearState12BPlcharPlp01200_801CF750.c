@@ -98,9 +98,10 @@ void func_801B0DFC(void);
 /* @source 0x801CF750
  * @behavior Overlay step of the front-end work object read through the
  *           scratchpad pointer cell 0x1F800044, reached only through the
- *           eight-word pointer run based at 0x801CFDB8 that func_801CF70C
- *           indexes with the work step counter byte 0x02: this body's own
- *           address is word 0 of that run, which is also word 14 of the
+ *           eight-word pointer run based at 0x801CFDB8 that
+ *           dispatchWorkByte2Tablefdb8PlcharPlp01200_801CF70C indexes with the
+ *           work step counter byte 0x02: this body's own address is word 0 of
+ *           that run, which is also word 14 of the
  *           sixteen-word run starting at 0x801CFD80, and no jal in this payload
  *           names it. The body first asks the record lookup at 0x801CF9A8 for
  *           the front-end record that holds the projected work position and

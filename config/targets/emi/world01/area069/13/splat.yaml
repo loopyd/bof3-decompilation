@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchWorkByte4Table3df0World01Area06913_801F2C04
+    - '@source: src/bof3/world/dispatchWorkByte4Table3df0World01Area06913_801F2C04.c'
+    - '@behavior: Overlay step dispatch at the head of the overlay main segment: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes its byte at offset 4, scales that byte by four and calls the matching entry of this overlay''s two-entry handler table at 0x801F3DF0 with no arguments, discarding any result. The chosen entry is read from the table itself, not from a frame copy. It reads no other state and writes none; the 0x18-byte frame only keeps the return address at 0x10 across the indirect call.'
   - - 72
     - c
     - armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06913_801F2C48

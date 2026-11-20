@@ -81,8 +81,10 @@ segments:
     - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CED34.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044 and entry 6 of this payload handler run at 0x801CF900, the word 0x801CF918: when the current route index byte 0x08 equals the chosen candidate index byte 0x03 it selects that route arrival sequence through the shared selector func_8014D8D4, sequence 0x40 for route 3 and 0x41 for route 5 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index, masks that index with 7 and selects the sequence of the new route index.'
   - - 2608
-    - asm
-    - func_801CEE30
+    - c
+    - dispatchWorkByte2Tablef920PlcharPlp27a00_801CEE30
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef920PlcharPlp27a00_801CEE30.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2 read through the scratchpad pointer cell 0x1F800044: it scales that unsigned byte by four and calls the matching entry of this payload handler run based at 0x801CF920 with no arguments, so its base is entry 8 of the seventeen-word run at 0x801CF900 and it reaches entries 8 through 16. It reads no other state and writes none; the 0x18-byte frame only keeps the return address across the indirect call. Its own word sits at 0x801CF93C, entry 15 of that run.'
   - - 2676
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp27a00_801CEE74

@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801F2E60
   - - 744
-    - asm
-    - func_801F2EE8
+    - c
+    - dispatchWorkByte4Table0fcWorld00Area01513_801F2EE8
+    - '@source: src/bof3/world/dispatchWorkByte4Table0fcWorld00Area01513_801F2EE8.c'
+    - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044 through the unchecked two-entry table at 0x801F40FC, whose entries are the sequence-selection handler at 0x801F2F2C and the step handler at 0x801F2E60. Takes no arguments and returns nothing; the payload step run at 0x801F40A0 publishes this function as its second entry.'
   - - 812
     - c
     - selectSequenceByFrameParitySeedWorkByteARandom7ArmHandler1AndDecrementRecordHalfword0aWorld00Area01513_801F2F2C
