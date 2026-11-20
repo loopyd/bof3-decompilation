@@ -9841,6 +9841,260 @@ pub fn payload_nontext_ranges(
                 .collect(),
         );
     }
+    let ryu_replacement_evidence = "Original US RYUD/U00..03 and RYUD/U10..13 entry 3 conditional MAGIC131 image storage. Original BATTLE entry-15 form 25 or 4 and stable finite hints bind slots 580..595 through the original SLUS LBA table and complete matching disc user bytes. GAME phase-1 BPL family request and phase-3 call to 0x801C1400(1) precede initializer 0x801C1254 publishing a decoded original BPL root at actor +0x4C and byte +0x24=1. The ordinary MAGIC131 BPL flag must remain zero; original request 0x801EF3D0 and ready handler 0x801EF488 reach SLUS 0x8014D6B8 with (actor[8]+4)&255, then 0x8014DC08 and queued reader 0x8014E6D0. Only the image section word, reachable directory words and consumed image headers/packed words/mode-2 tokens qualify. Exact original archive/entry/offset/raw-mode/load/checkword/size/payload identities, retained root/byte24, stable original source/code/tables, ordinary noninterfering helper returns, valid animation records, queue capacity and bounded nonaliasing outputs including final-token overshoot are conditions. Form-4 image slot 13 and its directory word, all palettes, opaque mode-2 prefixes, tails, programs and selections are excluded. No natural state/selector/root retention, invocation, residency, transfer, display, rasterized-text absence or safe-edit claim.";
+    let rei_replacement_evidence = "Original US REID/U00..01 entry 3 conditional image and palette storage. GAME original BPL publication selects ordinal 0 at 0x8003B80C with hint 0/id 0, or ordinal 1 at 0x8005F80C with hint 10/id 7, and writes actor byte +0x24=1. Original BATTLE03 producer 0x801D6818 with cursor 0, available actor and actor byte +0x79=4 stores actor 0 in queued mode-0 selector-11 slot +0x74. Original dispatcher 0x801E5824 publishes that pointer at 0x801EB4E0; 0x801E5AF4 and table 0x801D0CD0 reach 0x801E74B8. States 2/3 call request 0x801E75B0 and post-load reader 0x801E7634. The same retained actor halfword +0x2C selects suffix 00/01, and actor byte 8 below 2 selects REID or otherwise REIU. Reader argument (actor[8]+4)&255 and request predicates jointly restrict admitted images. Calls 0x801E7698/0x801E76E4 reach SLUS image selection and palette index 0. Slots 572..575 match the complete original physical archive bytes. Exact original archive/entry/offset/raw-mode/load/checkword/size/payload identities, retained actor root/selector, bounded dispatch states, successful unskipped loads, clear image-skip bit, stable original source/code/tables, ordinary noninterfering helper returns, valid animation records and bounded nonaliasing work/queue/output including final-token overshoot are conditions. Only section words 0/4, reachable image directory words and consumed image storage, palette directory word 0 and its 32 halfwords qualify. REID image slots other than 1, remaining palettes, opaque mode-2 prefixes, tails, programs and selection storage are excluded. No natural state/selector/root retention, invocation, residency, transfer, display, rasterized-text absence or safe-edit claim.";
+    let rt_replacement_evidence = "Original US RTD/U00..01 entry 3 conditional image and palette storage. GAME original BPL publication selects ordinal 0 at 0x8003B80C with hint 0/id 0, or ordinal 1 at 0x8005F80C with hint 10/id 7, and writes actor byte +0x24=1. Original BATTLE15 0x800AE108 with action 64 maps byte 77 at 0x800B6550, queues mode 2 and publishes incoming A1 at slot +0x74; conditional A1=GAME actor 0 and selection byte 0x80146374=0 bind request and reader to that actor. Code request 0x800AE1F8 uses row 0x800B6860 slot 336, whose complete physical archive is MAGIC064.EMI. With global flag 0x801462E8 bit 0x800, queued dispatcher 0x801E5824 and 0x800ADFBC call row handler 0x801EEC7C. Bounded outer state 1 and inner states 8/9 reach original MAGIC064 request 0x801EF2A4 and post-load reader 0x801EF3C8. Stable actor halfword +0x2C selects suffix 00/01 and byte 8 below 2 selects RTD or otherwise RTU. After saved work byte 9 equals 0x80 and loader-ready, reader passes actor byte 8 unchanged through 0x8014D8D4 and copies palette index 0. Request predicates restrict RTD to image slot 3; RTU has finite below-128 cases for all six images. Slots 576..579 match complete original physical archives. Exact original archive/entry/offset/raw-mode/load/checkword/size/payload identities, retained root/selector/byte24, changed image selector, clear image-skip bit, successful unskipped loads, stable original source/code/tables, ordinary noninterfering helper returns, valid animation records and bounded nonaliasing work/queue/output including final-token overshoot are conditions. Only section words 0/4, reachable image directory words and consumed image storage, palette directory word 0 and its 32 halfwords qualify. Other RTD images, remaining palettes, opaque mode-2 prefixes, tails, programs and selection storage are excluded. No natural incoming arguments/state/selector/root retention, invocation, residency, transfer, display, rasterized-text absence or safe-edit claim.";
+    let (remaining_sprite_ranges, remaining_sprite_evidence): (&[(usize, usize)], &str) =
+        if entry.index == 3
+            && entry.transfer_mode == 0
+            && entry.check_word == 0x10
+            && usize::try_from(entry.size).ok() == Some(data.len())
+        {
+            match (
+                entry.offset,
+                entry.ram_ptr,
+                data.len(),
+                sha256_hex(data).as_str(),
+            ) {
+                // RYUD00, RYUD01, RYUD02, RYUD03.
+                (
+                    40_960,
+                    0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+                    110_592,
+                    "c5b66a9d3aa3aa53f0a01ffdd83227ff46656c424318444f26e5a9080920bcf5",
+                ) => (
+                    &[
+                        (0, 4),
+                        (16, 5_552),
+                        (5_572, 2_055),
+                        (7_628, 8),
+                        (7_640, 4_033),
+                        (11_676, 8),
+                        (11_688, 5_699),
+                        (17_388, 8),
+                        (17_400, 6_847),
+                        (24_248, 8),
+                        (24_260, 2_565),
+                        (26_828, 8),
+                        (26_840, 1_378),
+                        (28_220, 8),
+                        (28_232, 899),
+                        (29_132, 8),
+                        (29_144, 1_625),
+                        (30_772, 8),
+                        (30_784, 823),
+                        (31_608, 6_844),
+                        (38_456, 2_438),
+                        (40_896, 8),
+                        (40_908, 5_708),
+                        (46_620, 5_493),
+                        (52_116, 8),
+                        (52_128, 499),
+                    ],
+                    ryu_replacement_evidence,
+                ),
+                // RYUD10, RYUD11, RYUD12, RYUD13.
+                (
+                    40_960,
+                    0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+                    61_260,
+                    "79ab35585a155a4d67210af5b64140f4dfb971e4cd8f97517ac75c51b758b048",
+                ) => (
+                    &[
+                        (0, 4),
+                        (16, 52),
+                        (72, 5_496),
+                        (5_572, 2_055),
+                        (7_628, 8),
+                        (7_640, 4_033),
+                        (11_676, 8),
+                        (11_688, 5_699),
+                        (17_388, 8),
+                        (17_400, 6_847),
+                        (24_248, 8),
+                        (24_260, 2_565),
+                        (26_828, 8),
+                        (26_840, 1_378),
+                        (28_220, 8),
+                        (28_232, 899),
+                        (29_132, 8),
+                        (29_144, 1_625),
+                        (30_772, 8),
+                        (30_784, 823),
+                        (31_608, 6_844),
+                        (38_456, 2_438),
+                        (46_608, 8),
+                        (46_620, 5_493),
+                        (52_116, 8),
+                        (52_128, 499),
+                    ],
+                    ryu_replacement_evidence,
+                ),
+                // RYUU00, RYUU01, RYUU02, RYUU03.
+                (
+                    40_960,
+                    0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+                    110_592,
+                    "fdfe8bd3a62f759adba71e370483e2b6d3c70a0419ed152c3518ad10fd68b8c1",
+                ) => (
+                    &[
+                        (0, 4),
+                        (16, 5_552),
+                        (5_572, 2_063),
+                        (7_636, 8),
+                        (7_648, 3_788),
+                        (11_440, 6_603),
+                        (18_044, 8),
+                        (18_056, 6_510),
+                        (24_568, 8),
+                        (24_580, 2_400),
+                        (26_984, 1_371),
+                        (28_356, 8),
+                        (28_368, 830),
+                        (29_200, 8),
+                        (29_212, 1_388),
+                        (30_604, 6_272),
+                        (36_880, 2_020),
+                        (38_904, 4_918),
+                        (43_824, 8),
+                        (43_836, 4_542),
+                        (48_380, 8),
+                        (48_392, 499),
+                    ],
+                    ryu_replacement_evidence,
+                ),
+                // RYUU10, RYUU11, RYUU12, RYUU13.
+                (
+                    40_960,
+                    0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+                    57_480,
+                    "10dafbb38ae2aa7d798a2b6d02f35b88d89aa833f61015415ad8185a1c0f2f4d",
+                ) => (
+                    &[
+                        (0, 4),
+                        (16, 52),
+                        (72, 5_496),
+                        (5_572, 2_063),
+                        (7_636, 8),
+                        (7_648, 3_788),
+                        (11_440, 6_603),
+                        (18_044, 8),
+                        (18_056, 6_510),
+                        (24_568, 8),
+                        (24_580, 2_400),
+                        (26_984, 1_371),
+                        (28_356, 8),
+                        (28_368, 830),
+                        (29_200, 8),
+                        (29_212, 1_388),
+                        (30_604, 6_272),
+                        (36_880, 2_012),
+                        (43_824, 8),
+                        (43_836, 4_542),
+                        (48_380, 8),
+                        (48_392, 499),
+                    ],
+                    ryu_replacement_evidence,
+                ),
+                // REID00, REID01.
+                (
+                    38_912,
+                    0x8003_b80c | 0x8005_f80c,
+                    110_592,
+                    "30da9d48edceff573fa4d61982f76f79faa0a0f0b10095d5aee55428df03b271",
+                ) => (
+                    &[(0, 8), (20, 4), (13_732, 4_104), (69_700, 4), (69_708, 64)],
+                    rei_replacement_evidence,
+                ),
+                // REIU00, REIU01.
+                (
+                    38_912,
+                    0x8003_b80c | 0x8005_f80c,
+                    110_592,
+                    "674e66c3fb9779917786c30c579456ebeace8419c19a9a11907037a0b96a7e40",
+                ) => (
+                    &[
+                        (0, 8),
+                        (16, 4_156),
+                        (4_176, 13_672),
+                        (17_852, 5_205),
+                        (23_060, 8),
+                        (23_072, 5_574),
+                        (28_648, 10_940),
+                        (39_592, 971),
+                        (40_564, 8),
+                        (40_576, 7_598),
+                        (48_176, 8),
+                        (48_188, 4_986),
+                        (53_176, 8),
+                        (53_188, 3_549),
+                        (56_740, 8),
+                        (56_752, 5_350),
+                        (62_104, 8),
+                        (62_116, 6_111),
+                        (68_228, 8),
+                        (68_240, 4_513),
+                        (72_756, 8),
+                        (72_768, 504),
+                        (73_276, 64),
+                    ],
+                    rei_replacement_evidence,
+                ),
+                // RTD00, RTD01.
+                (
+                    26_624,
+                    0x8003_b80c | 0x8005_f80c,
+                    110_592,
+                    "436640506a37ffea2605d20e1b1f63983d8cd019399279ed3f62e5fb17be9e18",
+                ) => (
+                    &[
+                        (0, 8),
+                        (28, 4),
+                        (13_660, 8),
+                        (13_672, 7_143),
+                        (37_984, 4),
+                        (37_992, 64),
+                    ],
+                    rt_replacement_evidence,
+                ),
+                // RTU00, RTU01.
+                (
+                    26_624,
+                    0x8003_b80c | 0x8005_f80c,
+                    110_592,
+                    "834705a61dc821f942d47bc68d3a9a08c5c924f1266527aec14173ac9aa532e1",
+                ) => (
+                    &[
+                        (0, 8),
+                        (16, 10_976),
+                        (10_996, 2_718),
+                        (13_716, 8),
+                        (13_728, 6_667),
+                        (20_396, 8),
+                        (20_408, 8_609),
+                        (29_020, 8),
+                        (29_032, 8_536),
+                        (37_572, 64),
+                    ],
+                    rt_replacement_evidence,
+                ),
+                _ => (&[], ""),
+            }
+        } else {
+            (&[], "")
+        };
+    if !remaining_sprite_ranges.is_empty() {
+        return Some(
+            remaining_sprite_ranges
+                .iter()
+                .map(|&(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: remaining_sprite_evidence,
+                })
+                .collect(),
+        );
+    }
     if entry.transfer_mode == 0
         && entry.ram_ptr == 0x801e_ec00
         && entry.check_word == 0x141

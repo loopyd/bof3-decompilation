@@ -214,6 +214,94 @@ Opaque mode-2 prefixes, tails, programs and selection storage also stay unresolv
 These profiles establish no natural selector production, invocation, runtime
 residency, transfer, live CLUT, display, absence of rasterized text or safe editing.
 
+The same MAGIC131 route qualifies image storage in sixteen original
+`RYUD/U00..03.EMI` and `RYUD/U10..13.EMI` archives. Each requires entry 3 at
+offset 40960, raw mode, checkword `0x10`, its reviewed destination, exact payload
+size and hash, and the complete original archive identity. The first group has
+110592-byte payloads. The second has 61260 bytes for `D` and 57480 for `U`.
+
+| Archives | Form | Family | Slots | Reachable image slots |
+| --- | --- | --- | --- | --- |
+| `RYUD00..03.EMI` | 25 | 1 | 580..583 | 0..15 |
+| `RYUU00..03.EMI` | 25 | 2 | 588..591 | 0..15 |
+| `RYUD10..13.EMI` | 4 | 1 | 584..587 | 0..12, 14, 15 |
+| `RYUU10..13.EMI` | 4 | 2 | 592..595 | 0..12, 14, 15 |
+
+In image-slot order, the first group uses selectors
+`4,6,8,40,0,12,44,36,16,24,28,32,20,56,60,48`. The second omits selector 60
+and image slot 13. Selector 0 requires actor byte 8 equal to 252. The request
+and retained-root conditions above still apply, and all palettes remain unresolved.
+
+| Suffix | Hint | BPL bank | Identifier | Ordinal | Replacement destination |
+| --- | --- | --- | --- | --- | --- |
+| `00` | 7 | `BPLD/U247.EMI` | 7 | 2 | `0x8007A80C` |
+| `10` | 3 | `BPLD/U025.EMI` | 5 | 2 | `0x8007A80C` |
+| `01`, `11` | 10 | `BPLD/U278.EMI` | 7 | 1 | `0x8005F80C` |
+| `02`, `12` | 13 | `BPLD/U457.EMI` | 7 | 2 | `0x8007180C` |
+| `03`, `13` | 15 | `BPLD/U478.EMI` | 7 | 1 | `0x8005680C` |
+
+### REI and RT raw replacements
+
+Eight original `REID/U00..01.EMI` and `RTD/U00..01.EMI` archives have a separate
+conditional image and palette path. Each profile requires its complete original
+archive, entry 3, raw mode, checkword `0x10`, 110592-byte payload, exact payload
+hash and reviewed destination. REI payloads start at offset 38912; RT payloads
+start at 26624.
+
+GAME's BPL request and root publisher above provide two finite root cases.
+Suffix `00` uses hint 0, `BPLD/U012.EMI`, identifier 0 and ordinal 0 at
+`0x8003B80C`. Suffix `01` uses hint 10, `BPLD/U278.EMI`, identifier 7 and
+ordinal 1 at `0x8005F80C`. The initializer writes that ordinal to actor halfword
+`+0x2C`. The replacement request tests this same halfword for zero or nonzero,
+so the request suffix and retained root agree. Successful unskipped loading and
+retained actor root and byte `+0x24 = 1` remain conditions.
+
+REI's original BATTLE03 queue producer at `0x801D6818`, with cursor 0, an
+available actor and actor byte `+0x79 = 4`, allocates mode 0, selector 11 and
+stores actor 0 at queued-slot offset `+0x74`. Dispatcher `0x801E5824` publishes
+this pointer at `0x801EB4E0`. The mode-0 table and `0x801E5AF4` reach
+`0x801E74B8`, whose states 2 and 3 call request `0x801E75B0` and post-load
+reader `0x801E7634`. The reader selects this queued actor and passes
+`(actor[8]+4)&255` to `0x8014D6B8` at `0x801E7698`. Its call at `0x801E76E4`
+copies palette index 0 through `0x80166C48`.
+
+RT's original BATTLE15 producer at `0x800AE108`, with action 64, reads byte 77
+at `0x800B6550`, allocates mode 2 and stores incoming argument 1 at slot
+`+0x74`. Argument 1 equal to GAME actor 0 and selection byte `0x80146374 = 0`
+are explicit conditions. Code request `0x800AE1F8` uses action row `0x800B6860`
+to request slot 336, bound to the complete original `MAGIC064.EMI` disc bytes.
+With flag `0x801462E8 & 0x800`, the queued dispatcher and `0x800ADFBC` reach
+row handler `0x801EEC7C`. Outer state 1 and inner states 8 and 9 call the
+original MAGIC064 request at `0x801EF2A4` and reader at `0x801EF3C8`.
+The reader requires saved work byte 9 equal to `0x80` and loader-ready. It passes
+the selected actor's byte 8 unchanged to `0x8014D8D4`, which requires a changed
+selector, and copies palette index 0 at `0x801EF4E0`.
+
+Both request handlers test actor byte 8 below 2 for `D`, or otherwise select `U`.
+The same retained byte must satisfy the request and reader. This restricts REID
+selectors to 4 or 5 and RTD selectors to 0 or 1. REIU admits below-128 selectors
+whose pre-add actor byte is at least 2, including wrapped selectors 0..3.
+RTU admits selectors 2..127. Only the following finite cases qualify; selector
+lists follow the listed image-slot order.
+
+| Archives | Slots | Image slots | Selectors |
+| --- | --- | --- | --- |
+| `REID00..01.EMI` | 572..573 | 1 | 4 |
+| `REIU00..01.EMI` | 574..575 | 0..12 | 6, 0, 16, 20, 32, 28, 12, 8, 36, 40, 44, 56, 48 |
+| `RTD00..01.EMI` | 576..577 | 3 | 0 |
+| `RTU00..01.EMI` | 578..579 | 0..5 | 4, 6, 16, 48, 56, 58 |
+
+The SLUS LBA table and complete original physical user bytes bind these slots.
+Only root words 0 and 4, reachable image-directory words, consumed image storage,
+palette-directory word 0 and its 32 halfwords qualify. Other images and directory
+words, palette index 1, opaque mode-2 prefixes, tails, programs and selections
+remain unresolved. Stable original code and source, bounded dispatch states,
+ordinary noninterfering helper returns, clear image-skip bit, valid animation
+records, queue capacity and bounded nonaliasing work and output are conditions.
+Output bounds include mode-2 final-token overshoot. Natural incoming arguments,
+state progression, selector and root retention, invocation, residency, transfer,
+display, absence of rasterized text and safe editing remain unverified.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
