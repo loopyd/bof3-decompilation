@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/queueSharedUiElementBlock11x15To16And12x16Size0World00Area03313_801F2CD0.c",
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04.c",
+    "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440.c",
 ]
 support_sources = [
     "src/bof3/world/area03313_work_state.c",

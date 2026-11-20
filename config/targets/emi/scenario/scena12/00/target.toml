@@ -32,6 +32,7 @@ sources = [
     "src/bof3/scenario/stepSubstatesRequestingFrontEndContextsGreyingPaletteAndArmingFlagRunFromWorkByteThenReleaseFrontEndAndResetStateScenarioScena1200_801F8A04.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState1ScenarioScena1200_801FC5E4.c",
     "src/bof3/scenario/setSubstate14ClearSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC690.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCFD4.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

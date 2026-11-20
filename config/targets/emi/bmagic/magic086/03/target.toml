@@ -20,6 +20,7 @@ sources = [
     "src/bof3/bmagic/addWorkWord20ToWord14AccumulateIntoHalfword3EAndInvokeHelperBelowMinus16BmagicMagic08603_801F0154.c",
     "src/bof3/bmagic/decrementWorkByte9IfNonZeroThenDecrementWorkByteAAndSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic08603_801EF974.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08603_801EF784.c",
+    "src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte2At16BmagicMagic08603_801EF850.c",
 ]
 support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic08603_801EEC1C.c",

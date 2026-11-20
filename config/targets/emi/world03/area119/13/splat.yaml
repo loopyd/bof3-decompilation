@@ -41,8 +41,10 @@ segments:
     - countdownScratchStateToMode3World03Area11913_801F2CE0
     - '@source: src/bof3/world/area11913_countdown.c'
   - - 280
-    - asm
-    - func_801F2D18
+    - c
+    - retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18
+    - '@source: src/bof3/world/retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18.c'
+    - '@behavior: Third handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, subtracts 0x400 from that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 7, restores the saved scratchpad pointer and clears the saved record countdown byte 9 to 0.'
   - - 364
     - asm
     - func_801F2D6C

@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_800C1804
   - - 16
-    - asm
-    - func_800C1810
+    - c
+    - dispatchStateByte1Table1b4cBossBoss05016_800C1810
+    - '@source: src/bof3/boss/dispatchStateByte1Table1b4cBossBoss05016_800C1810.c'
+    - '@behavior: Overlay step dispatch on work-record state byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of the handler run based at 0x800C1B4C with no arguments, without bounding the index before the scaled table load; the overlay loader that steps this pointer run is its caller.'
   - - 84
     - asm
     - func_800C1854

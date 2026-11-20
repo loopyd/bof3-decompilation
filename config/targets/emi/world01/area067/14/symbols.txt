@@ -1,9 +1,10 @@
 D_1F800044 = 0x1F800044;
 game_stop_selection_fx = 0x8015D404;
+dispatchSoundCue = 0x8015DF18;
 dispatchStateByte1Table4624World01Area06714_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0 = 0x801F2DA0;
-func_801F2E48 = 0x801F2E48;
+armWorkCountdownByte9At5aResetHalves10And12AdvanceWorkByte1AndQueueCue201World01Area06714_801F2E48 = 0x801F2E48;
 stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98 = 0x801F2E98;
 func_801F2F5C = 0x801F2F5C;
 func_801F3048 = 0x801F3048;

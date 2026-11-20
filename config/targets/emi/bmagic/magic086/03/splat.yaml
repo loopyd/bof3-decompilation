@@ -97,8 +97,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkBytesA9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2At18BmagicMagic08603_801EF7D4.c'
     - '@behavior: Increment work byte A then byte 9; when the stored byte 9 equals 0x18, set global work byte B to one and advance work byte 2.'
   - - 3152
-    - asm
-    - func_801EF850
+    - c
+    - incrementWorkByteAAndAdvanceWorkByte2At16BmagicMagic08603_801EF850
+    - '@source: src/bof3/bmagic/incrementWorkByteAAndAdvanceWorkByte2At16BmagicMagic08603_801EF850.c'
+    - '@behavior: Per-step handler of the work-object state machine published at the scratchpad pointer cell 0x1F800044. It loads that cell once, increments the object byte at offset 0xA by one at byte width and compares the truncated stored value with 0x16; only when that byte equals 0x16 it re-materializes the cell with its own lui/lw pair and increments the object byte at offset 0x2 by one at byte width. Takes no arguments, returns nothing and keeps no frame; the pointer word at 0x801F0374 in workByte2HandlerTableB is its only in-image reference.'
   - - 3232
     - c
     - decrementWorkByteBThenIncrementWorkByte2WhenZeroBmagicMagic08603_801EF8A0

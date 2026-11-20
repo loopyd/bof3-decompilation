@@ -39,8 +39,10 @@ segments:
     - '@source: src/bof3/world/stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0.c'
     - '@behavior: steps the work-record halfword at +0x10 by -2 while the countdown byte at +9 reads below 0x1A and by +2 otherwise, grows the halfword at +0x12 by 0x40 and redraws the quad at +0xC, then decrements the byte at +9 and advances the state byte at +1 when it reaches zero'
   - - 584
-    - asm
-    - func_801F2E48
+    - c
+    - armWorkCountdownByte9At5aResetHalves10And12AdvanceWorkByte1AndQueueCue201World01Area06714_801F2E48
+    - '@source: src/bof3/world/armWorkCountdownByte9At5aResetHalves10And12AdvanceWorkByte1AndQueueCue201World01Area06714_801F2E48.c'
+    - '@behavior: reads the scratchpad work record published at pointer cell 0x1F800044, arms that record''s countdown byte at +9 with 0x5A, zeroes the halfwords at +0x10 and +0x12 through the pointer read before the byte store, then advances the state byte at +1 through a second read of the same cell and queues the front-end sound cue 0x201'
   - - 664
     - c
     - stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98

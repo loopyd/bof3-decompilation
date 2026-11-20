@@ -85,8 +85,10 @@ segments:
     - dispatchStateByte2Table4f80World00Area03313_801F33FC
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 2112
-    - asm
-    - func_801F3440
+    - c
+    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440
+    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440.c'
+    - '@behavior: Entry 0 of the work-byte-2 handler run based at 0x801F4F80 in this overlay, and entry 2 of the work-byte-1 run based at 0x801F4F78. Returns when the shared mode byte 0x801454F2 reads 2 or bit 0x100 of halfword 0x80146258 is set. Otherwise writes -0x30 to halfword 0x2E of the work record published at the scratchpad pointer cell 0x1F800044 and increments that record state byte 0x02.'
   - - 2192
     - c
     - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld00Area03313_801F3490
