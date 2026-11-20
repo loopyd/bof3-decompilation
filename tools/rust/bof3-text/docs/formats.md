@@ -3440,6 +3440,72 @@ bytes retain their prior status. This classification does not establish an ELF
 match, observed invocation, all-path feasibility, general selector bounds,
 transitive effects, resource safety, display or safe editing.
 
+## Shared battle direct-call coverage
+
+Coverage recognizes these complete original BATTLE entry-15 bodies, loaded at
+`0x80096800`. Each has an original direct-call entry from an already qualified
+instruction body. Every raw word and structural path reconciles, including
+all branch, call, computed-jump and return delay words. The existing exact
+archive and raw-payload identity gates apply to each original archive location.
+
+| Runtime span | Conditional original entry |
+| --- | --- |
+| `[0x80097EC0,0x80097FE8)` | BATTLE 15 JAL `0x80096FD0` |
+| `[0x8009AF84,0x8009B03C)` | BATTLE 15 JAL `0x8009841C` |
+| `[0x8009DCC8,0x8009DD20)` | BATTLE 15 JAL `0x8009F298` |
+| `[0x8009E500,0x8009E7C4)` | BATTLE 15 JAL `0x800A2580` |
+| `[0x800A30E8,0x800A31E0)` | BATTLE 15 JAL `0x8009DE30` |
+| `[0x800A31E0,0x800A3638)` | BATTLE 3 JAL `0x801DBF80` |
+| `[0x800A3B6C,0x800A3C9C)` | BATTLE 15 JAL `0x800A252C` |
+| `[0x800A3C9C,0x800A3DF8)` | BATTLE 15 JAL `0x800A1B50` |
+| `[0x800A3DF8,0x800A3F28)` | BATTLE 3 JAL `0x801DBF68` |
+| `[0x800A3F28,0x800A403C)` | BATTLE 15 JAL `0x8009DA9C` |
+| `[0x800A403C,0x800A40D0)` | BATTLE 15 JAL `0x8009E1E8` |
+| `[0x800A4294,0x800A4458)` | BATTLE 15 JAL `0x8009DDA0` |
+| `[0x800A4458,0x800A4688)` | BATTLE 3 JAL `0x801E0DB4` |
+| `[0x800A6E14,0x800A7648)` | BATTLE 15 JAL `0x800A6AC4` |
+| `[0x800A805C,0x800A82A0)` | BATTLE 15 JAL `0x800A6DD4` |
+| `[0x800A8F58,0x800A9304)` | BATTLE 3 JAL `0x801DFA98` |
+| `[0x800A9304,0x800A94A8)` | BATTLE 3 JAL `0x801E2824` |
+| `[0x800A94A8,0x800A955C)` | BATTLE 3 JAL `0x801D399C` |
+| `[0x800A955C,0x800A9610)` | BATTLE 3 JAL `0x801D3974` |
+| `[0x800A9820,0x800A99AC)` | BATTLE 3 JAL `0x801DFBAC` |
+| `[0x800A9BD8,0x800A9FC4)` | BATTLE 3 JAL `0x801E0A24` |
+| `[0x800AAC88,0x800AAEBC)` | BATTLE 3 JAL `0x801E0634` |
+| `[0x800AAEBC,0x800AB0B8)` | BATTLE 3 JAL `0x801E1594` |
+| `[0x800ABCE0,0x800ABF5C)` | BATTLE 15 JAL `0x800ABC9C` |
+| `[0x800AC218,0x800AC704)` | BATTLE 15 JAL `0x800AC1AC` |
+| `[0x800B0498,0x800B06F4)` | BATTLE 15 JAL `0x800B03A0` |
+| `[0x800B0B0C,0x800B0CE4)` | BATTLE 15 JAL `0x800B0A98` |
+| `[0x800B1728,0x800B1A74)` | BATTLE 15 JAL `0x800B14C4` |
+| `[0x800B25C0,0x800B2C90)` | BATTLE 15 JAL `0x800B2140` |
+| `[0x800B2C90,0x800B326C)` | BATTLE 15 JAL `0x800B2294` |
+| `[0x800B3324,0x800B3AE8)` | BATTLE 15 JAL `0x800B23A0` |
+| `[0x800B3AE8,0x800B4220)` | BATTLE 15 JAL `0x800B24B4` |
+| `[0x800B4220,0x800B43B8)` | BATTLE 15 JAL `0x800B25A8` |
+
+Two computed jumps use separate numeric tables. Body `0x800A805C` subtracts
+one from a stack byte, then accepts an unsigned index below eight at
+`0x800A80F8`. Its scaled load at `0x800A810C` and jump at `0x800A8114`
+read eight words at `0x80096974..0x80096994`. In order, their targets are
+`0x800A811C`, `0x800A8160`, `0x800A825C`, `0x800A8180`,
+`0x800A81CC`, `0x800A8218`, `0x800A825C` and `0x800A811C`.
+
+Body `0x800B3AE8` bounds argument byte 9 below six at `0x800B3B18`.
+Its scaled load at `0x800B3B2C` and jump at `0x800B3B34` read six words
+at `0x80096A5C..0x80096A74`. Their targets are `0x800B3B3C`,
+`0x800B3B44`, `0x800B3B44`, `0x800B3B44`, `0x800B3B4C` and
+`0x800B3B4C`. Both loads have a NOP load delay, and both jumps have a NOP
+branch delay. Every table target lies inside its consumer body.
+
+Coverage records the 23,204 instruction bytes and 56 numeric table bytes
+separately. Ordinary callee returns, stable code and tables, intact frames and
+valid nonaliasing memory remain conditions. Referenced fields, buffers,
+external callees and neighboring bytes retain their prior status. These
+records establish source-byte roles. They do not establish ELF matches,
+observed invocation, all-path feasibility, transitive effects, resource safety,
+display or safe editing.
+
 ## Guarded executable switch coverage
 
 For the exact original US `SLUS_004.22`, coverage recognizes the complete

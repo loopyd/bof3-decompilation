@@ -58,6 +58,8 @@ pub struct NontextRange {
 }
 
 const SPRITE_CONSUMER_INSTRUCTION_EVIDENCE: &str = "Original US sprite consumer instructions; complete bodies with conditional original direct-call or finite handler-cell entries, full raw-word and structural control-flow review, and all control-transfer delay words including returns. The five-case switch at 0x8014CE78 uses the separately qualified table at 0x80149998. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. tools/rust/bof3-text/docs/formats.md lists the body boundaries and entry routes. Ordinary callee returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors are excluded. No matching ELF, observed invocation, all-path feasibility, general selector bounds, transitive effects, resource safety, display or safe-edit claim.";
+const BATTLE_CALLEE_INSTRUCTION_EVIDENCE: &str = "Original US shared battle instructions; 33 complete bodies with original direct-call entries from already qualified instructions, full raw-word and structural control-flow review, and all 602 control-transfer delay words including returns. The bounded switches at 0x800A805C and 0x800B3AE8 use separately qualified numeric tables. Exact original archive/raw-payload identities and load address gate classification. tools/rust/bof3-text/docs/formats.md records boundaries and entry sites. Call continuations assume ordinary returns, valid nonaliasing memory, intact frames and stable code/tables. Referenced data and external callees retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
+const BATTLE_CALLEE_TABLE_EVIDENCE: &str = "Original US shared battle numeric jump tables at 0x80096974..0x80096994 and 0x80096A5C..0x80096A74. Complete original bodies 0x800A805C and 0x800B3AE8 apply unsigned bounds of eight and six before scaled table loads and register jumps. Every original target lies inside its consumer body. Exact original archive/raw-payload identities and load address gate classification. Neighboring bytes retain prior status. Stable tables and valid nonaliasing memory remain conditions. No observed invocation, general selector bound, resource-safety or safe-edit claim.";
 
 /// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
@@ -13757,6 +13759,50 @@ pub fn payload_nontext_ranges(
                 length: 1_096,
                 evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
             }])
+            .chain([
+                (0x16c0, 296),
+                (0x4784, 184),
+                (0x74c8, 88),
+                (0x7d00, 708),
+                (0xc8e8, 248),
+                (0xc9e0, 1112),
+                (0xd36c, 304),
+                (0xd49c, 348),
+                (0xd5f8, 304),
+                (0xd728, 276),
+                (0xd83c, 148),
+                (0xda94, 452),
+                (0xdc58, 560),
+                (0x10614, 2100),
+                (0x1185c, 580),
+                (0x12758, 940),
+                (0x12b04, 420),
+                (0x12ca8, 180),
+                (0x12d5c, 180),
+                (0x13020, 396),
+                (0x133d8, 1004),
+                (0x14488, 564),
+                (0x146bc, 508),
+                (0x154e0, 636),
+                (0x15a18, 1260),
+                (0x19c98, 604),
+                (0x1a30c, 472),
+                (0x1af28, 844),
+                (0x1bdc0, 1744),
+                (0x1c490, 1500),
+                (0x1cb24, 1988),
+                (0x1d2e8, 1848),
+                (0x1da20, 408),
+            ].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: BATTLE_CALLEE_INSTRUCTION_EVIDENCE,
+            }))
+            .chain([(0x174, 32), (0x25c, 24)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: BATTLE_CALLEE_TABLE_EVIDENCE,
+            }))
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
