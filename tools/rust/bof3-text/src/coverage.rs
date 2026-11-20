@@ -441,6 +441,8 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 allocations.sort_by_key(|text| text.offset);
                                 let nontext_gap = if entry.transfer_mode == 1 {
                                     "compressed-bank bytes outside reviewed token metadata"
+                                } else if entry.transfer_mode == 3 {
+                                    "raw VRAM chunks outside reviewed in-bounds submissions"
                                 } else if entry.ram_ptr == 0x8009_6800 {
                                     "payload bytes outside reviewed instruction bodies"
                                 } else {

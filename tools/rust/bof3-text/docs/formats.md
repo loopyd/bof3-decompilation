@@ -4281,3 +4281,14 @@ whole sectors, a sector count divisible by the row width, and a complete
 rectangle within 32 columns and 16 rows of tiles. The payload's first word
 must equal the TOC check word at `+8`, and the transfer mode at `+12` must be 3.
 Partial sectors, wrapped coordinates, and incomplete rows remain unresolved.
+
+Coverage also qualifies the complete in-bounds prefix when later rows are clipped.
+It shares mode, size, check-word and geometry checks with the payload filter.
+The filter requires every source row to fit before excluding a whole payload.
+Original producer `0x80162698..0x80162790` constructs each chunk's coordinates; consumer
+`0x80163378..0x80163418` calls `LoadImage` only inside the 1024-by-512-word VRAM
+bounds. Coverage stops at the last complete row inside those bounds and leaves
+the clipped tail unresolved. Uploads that wrap the consumer's six-bit Y coordinate
+remain unresolved. The ranges establish conditional word submission. Completed
+loading, hardware transfer, CLUT selection, display and safe edits need separate
+qualification.

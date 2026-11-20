@@ -420,23 +420,6 @@ pub fn paired_vab_body(header: &[u8], body: &[u8]) -> bool {
     total == body.len() && !body.is_empty()
 }
 
-/// Whole sectors sent as 32-by-32-word tiles by the original-US mode-3 consumer.
-fn vram_tiles(entry: crate::models::Entry, payload: &[u8]) -> bool {
-    if entry.transfer_mode != 3
-        || payload.is_empty()
-        || payload.len() % 0x800 != 0
-        || payload.len() != entry.size as usize
-        || u32::from_le_bytes(payload[..4].try_into().unwrap()) != entry.check_word
-    {
-        return false;
-    }
-    let column = ((entry.ram_ptr >> 24) & 0x3f) as usize;
-    let row = ((entry.ram_ptr >> 16) & 0x1f) as usize;
-    let width = ((entry.ram_ptr >> 8) & 0x3f) as usize;
-    let sectors = payload.len() / 0x800;
-    width > 0 && sectors % width == 0 && column + width <= 32 && row + sectors / width <= 16
-}
-
 /// One identified family, as the inventory states it.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PayloadFamily {
@@ -609,7 +592,11 @@ impl KnownPayload {
                             .find(|(earlier, _)| earlier.transfer_mode == 6)
                             .is_some_and(|(_, header)| paired_vab_body(header, input.payload))
                 }
-                "original_us_vram_tiles" => input.original_us && vram_tiles(entry, input.payload),
+                "original_us_vram_tiles" => {
+                    input.original_us
+                        && crate::original::vram_tile_prefix_bytes(entry, input.payload)
+                            == Some(input.payload.len())
+                }
                 _ => false,
             })
     }

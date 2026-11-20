@@ -9311,6 +9311,30 @@ fn compression_metadata_ranges(
     Some(ranges)
 }
 
+/// Complete mode-3 tile rows inside VRAM, excluding clipped or wrapped rows.
+pub fn vram_tile_prefix_bytes(entry: Entry, data: &[u8]) -> Option<usize> {
+    if entry.transfer_mode != 3
+        || data.is_empty()
+        || data.len() % 0x800 != 0
+        || data.len() != entry.size as usize
+        || data[..4] != entry.check_word.to_le_bytes()
+    {
+        return None;
+    }
+    let column = ((entry.ram_ptr >> 24) & 0x3f) as usize;
+    let row = ((entry.ram_ptr >> 16) & 0x1f) as usize;
+    let width = ((entry.ram_ptr >> 8) & 0x3f) as usize;
+    let sectors = data.len() / 0x800;
+    if width == 0 || sectors % width != 0 || column + width > 32 {
+        return None;
+    }
+    let rows = sectors / width;
+    if row + rows > 64 {
+        return None;
+    }
+    Some(16usize.saturating_sub(row).min(rows) * width * 0x800)
+}
+
 /// Reviewed payload fields and instruction bodies; no display claim.
 pub fn payload_nontext_ranges(
     entry: Entry,
@@ -9319,6 +9343,16 @@ pub fn payload_nontext_ranges(
 ) -> Option<Vec<NontextRange>> {
     if !original_us {
         return None;
+    }
+    if let Some(length) = vram_tile_prefix_bytes(entry, data)
+        && length > 0
+        && length < data.len()
+    {
+        return Some(vec![NontextRange {
+            offset: 0,
+            length,
+            evidence: "original US partial mode-3 VRAM submission prefix; exact whole-archive identity, TOC size/mode/checkword and complete nonwrapping tile rows; original SLUS 0x80162698..0x80162790 constructs ring-state-3 coordinates and 0x80163378..0x80163418 conditionally submits each in-bounds 0x800-byte chunk as 32-by-32 words through LoadImage; only the complete prefix inside 1024-by-512-word VRAM qualifies; clipped tail excluded; no completed loading, hardware transfer, CLUT, display or safe-edit claim",
+        }]);
     }
     if entry.transfer_mode == 0
         && entry.ram_ptr >= 0x8003_3800
