@@ -9524,117 +9524,260 @@ fn model_palette_zero_fields(decoded: &[u8], typed: &[u8]) -> Vec<(usize, usize)
 
 const BPLU_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLU selector-2 program and sprite-cell numeric fields; exact archive and entry geometry, mode, load, checkword and payload identities; the preserved family-2 request, hint/triplet, slot/LBA supplier, successful unskipped load and GAME publisher/reselection bind the same three roots with count 1, work index 0 and clear record masks; original D910/DB98/D978 readers qualify finite fetched pairs, jump operands and selected cell-relative halfwords; original GAME 0x801BDAB8 and SLUS 0x8014D290/0x8014BA54/0x8014BC70 carry the same work into 0x8014C4D4, whose counted part loop and 0x8014CF9C consume control, signed X/Y and unsigned U/V; stable work, work[0]=1, work+0x24=1, work+0x28=0, retained work+0x2A in 0..1, work+0x48=0, valid visible geometry, queue capacity, readable prefetch slots, ordinary helper returns and nonaliased frames/packets remain conditions; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell union, with previous evidence preserved; program header byte 0, unfetched high-bit predicates, other programs/cells and allocation tails excluded; part control bits 0x70 remain opaque; no natural state production, actual invocation, loading, residency, transfer, display, rasterized-text absence or safe-edit claim";
 
-fn bplu_selector_two_payload(entry: Entry, data: &[u8]) -> bool {
-    if entry.index != 7
-        || entry.transfer_mode != 1
-        || entry.ram_ptr != 0x8003_b800
-        || entry.size as usize != data.len()
+const BPLD_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLD selector-0 program and sprite-cell numeric fields; exact archive and entry geometry, mode, load, checkword and payload identities; the family-1 request with flag byte zero, hint/triplet, slot/LBA supplier, successful unskipped load and GAME publisher/reselection bind the same three roots with count 1, work index 0 and clear record masks; original D910/DB98/D978 readers qualify finite fetched pairs, jump operands and selected cell-relative halfwords; original GAME 0x801BDAB8 and SLUS 0x8014D290/0x8014BA54/0x8014BC70 carry the same work into 0x8014C4D4, whose counted part loop and 0x8014CF9C consume control, signed X/Y and unsigned U/V; stable work, work[0]=1, initialized work+0x24=1 and work+0x28=2, retained work+0x2A in 0..1, work+0x48=0, valid visible geometry, queue capacity, readable prefetch slots, ordinary helper returns and nonaliased frames/packets remain conditions; palette mode 2 selects original 0x8014CF10 and the renderer page-adjustment paths; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell union, with previous evidence preserved; program header byte 0, unfetched high-bit predicates, selection mode bytes, other programs/cells and allocation tails excluded; part control bits 0x70 remain opaque; no natural state production, actual invocation, loading, residency, transfer, display, rasterized-text absence or safe-edit claim";
+
+fn bpl_selected_sprite_profile(entry: Entry, data: &[u8]) -> Option<(u8, &'static str)> {
+    if entry.transfer_mode != 1 || entry.ram_ptr != 0x8003_b800 || entry.size as usize != data.len()
     {
-        return false;
+        return None;
     }
-    matches!(
+    let digest = sha256_hex(data);
+    let identity = (
+        entry.index,
+        entry.offset,
+        entry.check_word,
+        data.len(),
+        digest.as_str(),
+    );
+    if matches!(
+        identity,
         (
-            entry.offset,
-            entry.check_word,
-            data.len(),
-            sha256_hex(data).as_str()
-        ),
-        (
+            7,
             98_304,
             368_652,
             164_994,
             "e2a34bb38b0a2f4640b12edcf99abfbdfbfe94899e16dbedcf4f19654bb46dc2"
         ) | (
+            7,
             98_304,
             331_788,
             171_761,
             "6b07b7680c06ab63614b5d824df4482b293d7f19ed7af15dfa9506c25c151202"
         ) | (
+            7,
             98_304,
             331_788,
             124_778,
             "09a3ac9e9463bbd28d007c0fa1e12d6349b3ad21f81c40726887b1e1df6a918f"
         ) | (
+            7,
             98_304,
             368_652,
             192_570,
             "8a3d4406db576778f6c28da82cc74da24d043a0a9814eba7573f09bb3572b716"
         ) | (
+            7,
             98_304,
             368_652,
             145_584,
             "3a3756665db495864c14e4d3ed169a56e599f0da6562da57a439ad28a5ea30ec"
         ) | (
+            7,
             98_304,
             331_788,
             134_569,
             "2b9702dd8b5a617ac209ac4463a7c2f352fc190487ce826f970a36f0012d3f66"
         ) | (
+            7,
             96_256,
             331_788,
             152_690,
             "dca408e86ea40dbb6cb9b411fd82d4ebf59ae7dff4438e69f111d6de17145d4c"
         ) | (
+            7,
             96_256,
             368_652,
             196_697,
             "e346011032cbdeb18efbe5519dfed41ee48379d9f122aa021b757bdefd45edd6"
         ) | (
+            7,
             98_304,
             368_652,
             208_309,
             "04c55b4f45a62a7cbb50e400e643553f8d3e76cef8929bec6853877ca1758d65"
         ) | (
+            7,
             100_352,
             368_652,
             161_332,
             "49b75da89fb00ed33e435221f0a44ed40a065e405d3b267f1c5068432bc97af2"
         ) | (
+            7,
             98_304,
             368_652,
             203_533,
             "e89f0b3b8ed58b12352cba5516071aaa14dcd825a604a234b7adf2ed8b824fd6"
         ) | (
+            7,
             98_304,
             275_460,
             133_381,
             "d7dfb508ba4366c13a87fba1d91af0166170839f651f4952dd6d54fa44c815d7"
         ) | (
+            7,
             94_208,
             331_788,
             203_819,
             "53db0e87ff007d5f285f369e8fe831c69ade60fb52fae4f324ac0bf30256ad3c"
         ) | (
+            7,
             96_256,
             331_788,
             156_785,
             "3dc9d693b853e79393b206dddd5215c8bb94ff88cfe9805d1afa0543cfdf6ddd"
         ) | (
+            7,
             94_208,
             331_788,
             198_974,
             "dd9c4770ba3eab3f49cabedeeb8b8939876b9e0cdf403edf0ccd59ca0d3d3428"
         ) | (
+            7,
             98_304,
             331_788,
             168_385,
             "6b299fd8cea814cf90575f7b0f803a9b300f8cc6cf0b1d2c10b10555cb20f063"
         ) | (
+            7,
             96_256,
             331_788,
             210_574,
             "0eaa04778217afe8fe7793e4666a48bbd8ecf5f92cf9324d25c6aca5c3edcbfc"
         ) | (
+            7,
             98_304,
             331_788,
             163_590,
             "5d47579d411fd999b25bf7627e0a246e84653f8450e955b57ab75c7bee013a75"
         )
-    )
+    ) {
+        Some((2, BPLU_SELECTED_SPRITE_EVIDENCE))
+    } else if matches!(
+        identity,
+        (
+            7,
+            98_304,
+            368_652,
+            166_846,
+            "053c5e252a85d53b7ddedd9043fe09427c21a6869d7df79e6e27f049a318058b"
+        ) | (
+            7,
+            98_304,
+            331_788,
+            168_143,
+            "58818212b2924ea74f946de57fcb2ca5217df55df59c13c7efc64b712c1e8441"
+        ) | (
+            7,
+            98_304,
+            331_788,
+            126_764,
+            "5788a3234f6ce4d8ee0075d9345b4b4a9958f2adf7d319b95dacefc2b6385268"
+        ) | (
+            7,
+            98_304,
+            368_652,
+            197_048,
+            "b266a31ac21b11a086c4fe548fb5bdc170b15fd5f9e2d4601dc90930bc9b0e7b"
+        ) | (
+            7,
+            98_304,
+            368_652,
+            155_687,
+            "3ae2a261a6fac405171fc8051dc88247c5290806c9d06c247099cdd3631ad7b7"
+        ) | (
+            7,
+            98_304,
+            331_788,
+            129_525,
+            "e4dcdf27c2d790c1731de7c1d3a4186a2427ba64243bcc2e40d9270a3bbf65bf"
+        ) | (
+            7,
+            96_256,
+            331_788,
+            157_020,
+            "a08ce37780b173281c607a3cdff5c4291458fbce794d9a571198aae46092515a"
+        ) | (
+            7,
+            96_256,
+            368_652,
+            199_085,
+            "21e3a59a7b0771d43f42babd465142899935f87e50188b7c6829fba8959c4ee1"
+        ) | (
+            7,
+            98_304,
+            368_652,
+            213_807,
+            "b627b7492e8462589d8ed191e365b6c53c3595c86d8efa4209cf59128b963a45"
+        ) | (
+            7,
+            100_352,
+            368_652,
+            172_578,
+            "d96a0b1fc1f3e9cb0d19c349459d60e336a114a9d402261d6d6b83cd52c5b018"
+        ) | (
+            7,
+            98_304,
+            368_652,
+            210_377,
+            "145a87d311cce9f157630b5c77b4bd97f54afc5d10fcf5f5ed3ce5d3e53afa8a"
+        ) | (
+            7,
+            98_304,
+            269_856,
+            138_325,
+            "b9dd8cb2698064159c49a3bb1abb550c7163ac7622d23a3fe07d3033f73d5dd0"
+        ) | (
+            0,
+            2_048,
+            331_788,
+            129_413,
+            "b9229f2ef691a502bf1c9d5a94626f2ed97b9922d92ff1e6db96e6a03662f8e4"
+        ) | (
+            7,
+            94_208,
+            331_788,
+            200_599,
+            "b682d37a2ec37adf08dde1a514f98b85ae4aa0ac68e616cdbb697e140ba5b858"
+        ) | (
+            7,
+            96_256,
+            331_788,
+            159_254,
+            "0a2c91b60f2eaf4ec493d6014c0eabacc06979c481d07fab1367710eaeace1f8"
+        ) | (
+            7,
+            94_208,
+            331_788,
+            196_922,
+            "a48d4b434e176f043f2482050906d13788c979bdebe252807952b1e148922802"
+        ) | (
+            7,
+            98_304,
+            331_788,
+            173_974,
+            "03cf547e8cfedee08e9581d4202e1f41425d83e6daebb6c4495098f464e7d3af"
+        ) | (
+            7,
+            96_256,
+            331_788,
+            211_642,
+            "4b321cc1ff09b75bad5cd7a34cc1ef806fffcc7c26adb618279d04c07e0857cc"
+        ) | (
+            7,
+            98_304,
+            331_788,
+            170_285,
+            "69136a4e291a626a5285c1168642a726bedfc670a593589b3f5fec9c3998cb02"
+        )
+    ) {
+        Some((0, BPLD_SELECTED_SPRITE_EVIDENCE))
+    } else {
+        None
+    }
 }
 
-/// Only the finite selector-2 walks in pinned original BPLU banks qualify.
-fn bplu_selected_sprite_fields(data: &[u8]) -> Option<Vec<(usize, usize)>> {
+/// Only finite walks selected by pinned original BPL profiles qualify.
+fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, usize)>> {
     if data.len() > 1024 * 1024 {
         return None;
     }
@@ -9665,7 +9808,7 @@ fn bplu_selected_sprite_fields(data: &[u8]) -> Option<Vec<(usize, usize)>> {
         {
             return None;
         }
-        let selection = selections.checked_add(6)?;
+        let selection = selections.checked_add(3 * usize::from(selector))?;
         let program_index = usize::from(*data.get(selection + 1)?);
         let directory_size = half(programs)?;
         let directory_end = programs.checked_add(directory_size)?;
@@ -9787,8 +9930,8 @@ fn compression_metadata_ranges(
         length: 4,
         evidence,
     }];
-    let with_selected_cells = bplu_selector_two_payload(entry, data);
-    let track_literals = with_selected_cells
+    let selected_profile = bpl_selected_sprite_profile(entry, data);
+    let track_literals = selected_profile.is_some()
         || !literal_fields.is_empty()
         || !additional_fields.is_empty()
         || !program_fields.is_empty();
@@ -9883,8 +10026,8 @@ fn compression_metadata_ranges(
             *role |= 24;
         }
     }
-    if with_selected_cells {
-        for (start, end) in bplu_selected_sprite_fields(&decoded_bytes)? {
+    if let Some((selector, _)) = selected_profile {
+        for (start, end) in bpl_selected_sprite_fields(&decoded_bytes, selector)? {
             for role in typed.get_mut(start..end)? {
                 *role |= 16;
             }
@@ -9911,7 +10054,7 @@ fn compression_metadata_ranges(
         } else if role & 8 != 0 {
             "original US source-bound compressed sprite palette-zero relative words and 32-halfword record; existing reviewed image-root and source bindings, GAME 0x801C1254/0x801C1308/0x801C13DC and SLUS 0x80166C48..0x80166CAC; complete checked decode and every decoded alias confined to the reviewed image/program/palette field union; previous records retain their evidence; no actual loading, active CLUT, transfer, display, rasterized-text absence or safe-edit claim"
         } else {
-            BPLU_SELECTED_SPRITE_EVIDENCE
+            selected_profile?.1
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {
@@ -13244,7 +13387,7 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US BPLU349 image headers, packed words, mode-2 tokens and 32-halfword palette records; consumers 0x8014E6D0, 0x8014E7F8, 0x8014E8FC and 0x80166C48; opaque prefixes excluded; exact source identity; no rasterized-text absence or runtime claim",
             })
-            .chain(bplu_selected_sprite_fields(data)?.into_iter().map(|(start, end)| NontextRange {
+            .chain(bpl_selected_sprite_fields(data, 2)?.into_iter().map(|(start, end)| NontextRange {
                 offset: start,
                 length: end - start,
                 evidence: BPLU_SELECTED_SPRITE_EVIDENCE,

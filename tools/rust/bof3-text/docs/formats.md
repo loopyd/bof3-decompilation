@@ -1203,6 +1203,74 @@ Neither the raw fields nor compressed literals establish actual requests,
 execution, cadence, allocation success, residency, upload, display, absence of
 rasterized text or safe editing.
 
+## Selected BPLD program and cell fields
+
+Coverage recognizes selector-0 program and cell fields in all nineteen original
+US `BPLD` banks. Each requires the original archive identity and exact entry
+index, offset, packed size, payload hash, transfer mode 1, destination
+`0x8003B800`, and decoded-size checkword. `BPLD349` uses entry 0; the other
+banks use entry 7. The family-1 request at GAME `0x80197BC0` uses
+plain hints 0 through 18 with global flag byte `0x801462EC = 0`. Original
+slots `475 + hint` and their physical LBA extents bind the complete archives.
+The identifier triplet at `0x80181B34 + 3 * hint` selects each root separately.
+
+Successful unskipped loading, stable hints and roots, count 1, work index 0,
+clear record masks `0x0080/0x4000`, valid nonaliased memory and ordinary helper
+returns remain conditions. GAME `0x801C1254` publishes the root and initializes
+work bytes `+0x24 = 1` and `+0x28 = 2`. The wrapper at `0x801C14D0` clears
+`+0x48`. The reselection call at `0x801BF56C` preserves the zero flag byte
+as selector 0. `0x8014D6DC` starts its selected program at pair 0.
+
+The [finite program walk and same-actor draw path](#selected-bplu-program-and-cell-fields)
+apply here with palette mode 2 retained. The selected mode byte at `+0x2A` is
+0 or 1. Original palette setup `0x8014CE78` selects jump-table entry
+`0x8014CF10` for mode 2. The renderer and complete `0x8014CF9C` helper adjust
+texture-page and UV fields for this mode. Their part readers still consume
+one control byte, signed X and Y, and unsigned U and V. The low four control
+bits select dimensions; bits `0x70` remain opaque. Visible geometry, display
+flag byte 2, sort mode 6, a single queued actor, no competing stream items,
+readable prefetch slots and bounded nonaliased frames and packets remain
+explicit conditions.
+
+The following decoded program offsets and selected cell counts follow roots
+0, 1 and 2 in order. The texture tool's `query --records` output supplies
+individual source coordinates and hashes.
+
+| Archive | Program offsets | Selected cells |
+| --- | --- | --- |
+| `BPLD012` | 39374 / 165242 / 327374 | 15 / 29 / 15 |
+| `BPLD015` | 39374 / 165242 / 305206 | 15 / 29 / 22 |
+| `BPLD016` | 39374 / 165242 / 269356 | 15 / 29 / 7 |
+| `BPLD025` | 39374 / 216782 / 342070 | 15 / 15 / 22 |
+| `BPLD026` | 39374 / 216782 / 306220 | 15 / 15 / 7 |
+| `BPLD034` | 40662 / 145640 / 286900 | 15 / 9 / 16 |
+| `BPLD056` | 39374 / 194614 / 269356 | 15 / 22 / 7 |
+| `BPLD247` | 106190 / 217340 / 311980 | 15 / 17 / 25 |
+| `BPLD257` | 106190 / 231478 / 311980 | 15 / 22 / 25 |
+| `BPLD267` | 106190 / 195628 / 311980 | 15 / 7 / 25 |
+| `BPLD278` | 106190 / 201388 / 344856 | 15 / 25 / 26 |
+| `BPLD27A` | 106190 / 201388 / 267514 | 15 / 25 / 4 |
+| `BPLD349` | 35048 / 176308 / 261846 | 9 / 16 / 15 |
+| `BPLD457` | 69884 / 194614 / 275116 | 17 / 22 / 25 |
+| `BPLD467` | 69884 / 158764 / 275116 | 17 / 7 / 25 |
+| `BPLD478` | 69884 / 164524 / 307992 | 17 / 25 / 26 |
+| `BPLD567` | 84022 / 158764 / 275116 | 22 / 7 / 25 |
+| `BPLD578` | 84022 / 164524 / 307992 | 22 / 25 / 26 |
+| `BPLD678` | 48172 / 164524 / 307992 | 7 / 25 / 26 |
+
+Only fetched pairs, redirect operands, consumed root/selection/directory fields,
+selected cell-relative halfwords, part counts and counted parts qualify.
+Program header byte zero, selection mode bytes, unfetched high-bit predicates,
+unselected programs and cells, and allocation tails remain unresolved.
+Every declared cell allocation must fit before any selected cell qualifies.
+For a compressed literal, every decoded alias must belong to the reviewed
+image, program, palette-zero or selected-cell union. Previous classifications
+and evidence remain unchanged.
+
+These conditional source paths do not establish natural state progression,
+actual requests or invocation, frame cadence, residency, transfer, upload,
+display, absence of rasterized text or safe editing.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
