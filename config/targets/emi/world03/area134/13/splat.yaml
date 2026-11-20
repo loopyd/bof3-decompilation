@@ -109,8 +109,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkWord38AndSetScratchStateToMode18World03Area13413_801F331C.c'
     - '@behavior: Publishes the work record at 0x80146888, adds 0x4000 twice to its word at offset 0x38, sets the saved record state byte to mode 18 and restores the scratchpad work pointer.'
   - - 1904
-    - asm
-    - func_801F3370
+    - c
+    - advanceWorkByte2AndSetScratchStateToMode20Below15ElseMode13World03Area13413_801F3370
+    - '@source: src/bof3/world/advanceWorkByte2AndSetScratchStateToMode20Below15ElseMode13World03Area13413_801F3370.c'
+    - '@behavior: Reads the work pointer published at the scratchpad cell 0x1F800044, increments the record byte at offset 0x02 and arms the record state byte at offset 0x01 with 0x14 while the previous counter value was below 0x0F, else with 0x0D, reloading the pointer cell before each state store.'
   - - 1976
     - c
     - noopHandlerWorld03Area13413_801F33B8

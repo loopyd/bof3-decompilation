@@ -63,8 +63,10 @@ segments:
     - '@source: src/bof3/world/clearWorkTableByte14At800E4800World01Area04713_801F3298.c'
     - '@behavior: zeroes byte 0x14 of each of the 0x10 records of the 0x18-byte-stride work table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop; takes no arguments and returns nothing.'
   - - 1732
-    - asm
-    - func_801F32C4
+    - c
+    - claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4
+    - '@source: src/bof3/world/claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4.c'
+    - '@behavior: scans the 0x18-byte-stride work table at 0x800E4800 with an unsigned byte counter for the first of its 0x10 records whose state byte +0x14 reads zero, marks it active by storing 1 into that byte and clears the record sub-phase byte +0x15, then stops; a table with no free record is left unchanged. Takes no arguments and returns nothing.'
   - - 1804
     - c
     - updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C

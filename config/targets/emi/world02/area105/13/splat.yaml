@@ -34,8 +34,10 @@ segments:
     - asm
     - func_801F2C48
   - - 148
-    - asm
-    - func_801F2C94
+    - c
+    - advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94
+    - '@source: src/bof3/world/advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94.c'
+    - '@behavior: state-1 handler of the work-byte-2 dispatch: while the shared main-executable byte 0x8014933B reads anything but 1 it returns without writing, and once it reads 1 it advances the work record state byte at +2, reached through the scratchpad pointer cell 0x1F800044, and calls this overlay''s cell-quad draw with a zero displacement.'
   - - 220
     - asm
     - func_801F2CDC

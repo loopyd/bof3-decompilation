@@ -37,6 +37,7 @@ sources = [
     "src/bof3/world/endAreaWhenThirdWorkWord34ExceedsLimitElseSeedRandomWorkByte9AndArmMode3OrAdvanceSharedModeByteWorld03Area13413_801F3F78.c",
     "src/bof3/world/drawTexturedRibbonAlongWorkSpanWorld03Area13413_801F4B6C.c",
     "src/bof3/world/resetScratchStateToMode1World03Area13413_801F2C48.c",
+    "src/bof3/world/advanceWorkByte2AndSetScratchStateToMode20Below15ElseMode13World03Area13413_801F3370.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

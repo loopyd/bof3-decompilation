@@ -27,6 +27,7 @@ sources = [
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithRecordHalfword3EAt8014638CBmagicMagic01500_801F131C.c",
     "src/bof3/bmagic/applyHelper60ToBattleRecordThenOnRangeHitInvokeAFC98With2ForPartyAndD71CWith203ThenForwardBattleByteToA9820SetHeadingTowardRecordSeedWord14CountdownByte9StepWord20AndAdvanceWorkByte2BmagicMagic01500_801EFBD8.c",
     "src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic01500_801EFB90.c",
+    "src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic01500_801F014C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkCountdownThenSeedMotionPairAndSetTintFromWorkByteBAt4ThenAdvanceWorkByte2BmagicMagic01500_801F0654.c",

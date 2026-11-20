@@ -274,7 +274,11 @@ spend no variant on the loop keyword. That neutrality holds only while the latch
 compare is the exit: a counted body whose only exit is a `break` at the top needs the
 `for` form, because `do { ... } while (i < N)` re-emits the stop test at the back
 edge, measured five instructions and 20 bytes over the original with the first
-difference on that back edge. Neutrality also ends where the body closes with a store
+difference on that back edge. A constant-bound walk can also need a top test. With a zero-initialised
+counter and a nonzero constant bound, the original had no entry branch. The
+`do`/`while` form peeled the first iteration and duplicated the body, matching
+8 of 18 instructions at 116 bytes. Both `for` and `while` matched all 18 at the
+original 72 bytes. Neutrality also ends where the body closes with a store
 group that carries a value read: kept as the `for` increment the counter schedules
 after that group and matched, while the same body with `i++` written among those
 stores measured three instructions short with the first difference inside the group,

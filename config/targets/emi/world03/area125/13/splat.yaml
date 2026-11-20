@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801F2D6C
   - - 528
-    - asm
-    - func_801F2E10
+    - c
+    - advanceWorkByte1WhenNoRecordActiveWorld03Area12513_801F2E10
+    - '@source: src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld03Area12513_801F2E10.c'
+    - '@behavior: Entry 5 of the nine-word state-handler run based at 0x801F36CC, selected by the exact dispatcher dispatchStateByte1Table36ccWorld03Area12513_801F2C04 through the unsigned work byte at +0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It runs this overlay record sweep at 0x801F33B0, which leaves 1 in its return register once at least one record of the 0x800E4800 table was active and 0 when none was, and only when the low byte of that result is zero does it advance the same work byte at +0x1, handing the next frame to entry 6 at 0x801F2E58, which clears the two halfwords at +0x2E and +0x30 and advances that byte again. The pointer cell is loaded once on the zero path only, so the increment reads and writes no other state, and the 0x18-byte frame only keeps the return address at 0x10 across the call. No arguments and no return.'
   - - 600
     - c
     - clearWorkHalfwords2eAnd30ThenAdvanceStateByte1World03Area12513_801F2E58

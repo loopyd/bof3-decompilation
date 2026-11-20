@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World03Area14313_801F3D38.c",
     "src/bof3/world/clearWorkTableLeadBytesAt800E4800World03Area14313_801F2D3C.c",
     "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14313_801F3BCC.c",
+    "src/bof3/world/clearWorkByteBAndWord3CThenAdvanceStateByte2WhenOverlayStateIs1World03Area14313_801F3230.c",
 ]
 support_sources = [
     "src/bof3/world/draw32TexturedRingStripsWorld03Area14313_801F3584.c",
