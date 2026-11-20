@@ -13,11 +13,11 @@
  *           the leading byte when style bit 0x80 of +2 is set) equal the
  *           candidate is returned; a completed scan returns 0.
  * @status partial
- * @match 86.82
- * @residual Native comparison: 112/129 instructions, 516 original bytes versus
- * 500 current. Shared branches, coordinate-add operand order and body size
- * still differ. Halfword candidate arithmetic preserves every scan result;
- * comparisons observe only the low byte. */
+ * @match 88.37
+ * @residual Native comparison: 114/129 instructions, 516 original bytes versus
+ * 500 current. Shared branches and body size still differ. Halfword candidate
+ * arithmetic preserves every scan result; comparisons observe only the low
+ * byte. */
 u8 *func_801B5C54(void) {
   u8  *world;
   u8  *rec;
@@ -61,10 +61,20 @@ u8 *func_801B5C54(void) {
           } else {
             signed_dx = ((s8 *)D_80181B00)[g_game_work->route_index_08 * 2];
             sx = *(s16 *)((u8 *)g_game_work + 0x36);
-            x = sx + (signed_dx == 1 ? 2 : signed_dx);
+            if (signed_dx != 1) {
+              sx += signed_dx;
+              x = sx;
+            } else {
+              x = sx + 2;
+            }
             signed_dy = ((s8 *)D_80181B01)[g_game_work->route_index_08 * 2];
             sy = *(s16 *)((u8 *)g_game_work + 0x3A);
-            y = sy + (signed_dy == 1 ? 2 : signed_dy);
+            if (signed_dy != 1) {
+              sy += signed_dy;
+              y = sy;
+            } else {
+              y = sy + 2;
+            }
             if (g_game_work->route_index_08 == 1 ||
                 g_game_work->route_index_08 == 5) {
               limit = *(u16 *)((u8 *)g_game_work + 0x34) != 0;

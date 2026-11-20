@@ -10,23 +10,24 @@
  * 0x80181AC4 shifted up by four, the step byte at 0x09 with 0x0E, and clears
  * 0x0B before advancing the work substate byte at 0x01.
  * @status partial
- * @match 55.17
- * @residual scheduling residual: the 58-instruction multiset and the 232-byte
- * size are already exact, but this build fills the g_game_work pointer-load slot
- * with nop and issues the D_80145EC4 load after the route-byte load, while the
- * original issues that global load first and keeps the later statements' loads in
- * source order. Publishing the base words through locals (before or after the
- * pointer assignment) and casting the route index leave the schedule unchanged;
- * swapping the y and counter statements drops six matched instructions.
+ * @match 64.41
+ * @residual 38/58 instructions, 232 original bytes versus 236 current. The
+ * X-base register and load scheduling still differ, including an extra NOP.
+ * Complete byte comparison remains different.
  */
 void func_8019EB38(void)
 {
     struct GameWorkArea *work;
+    u32 coordinate_x;
 
     g_game_work->route_index_08 = D_80145E98[0].field_00;
     work = g_game_work;
-    work->coord_x_34 = D_80145EC4 + D_80181B94[work->route_index_08 * 2];
-    work->coord_y_38 = D_80145EC8 + D_80181B98[work->route_index_08 * 2];
+    do {
+        coordinate_x = D_80145EC4;
+        coordinate_x += D_80181B94[work->route_index_08 * 2];
+        work->coord_x_34 = coordinate_x;
+        work->coord_y_38 = D_80145EC8 + D_80181B98[work->route_index_08 * 2];
+    } while (0);
     work->counter_3E = D_80145ECE + 0xC0;
     work->field_0C = D_80181AC0[work->route_index_08 * 2] << 4;
     work->pad_09[1] = 0xE;

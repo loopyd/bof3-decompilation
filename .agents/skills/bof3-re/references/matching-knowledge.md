@@ -1794,6 +1794,12 @@ change another path's registers. Separate only genuine captures of distinct memo
 reads. Preserve signed word consumers before narrowing, then check both CSE
 passes, flow, the complete register graph and native output.
 
+A word result captured into a halfword after a join can leave a copy because
+GCC's combine links do not cross blocks. Keep the actual arithmetic and its
+narrowing capture in the producing branch, then check that combine absorbs the
+capture. Preserve signed word arithmetic until the capture and inspect the
+complete register graph, assembler directives and native result.
+
 Before attributing an invariant-address hoist to allocation, reconstruct its
 lifetime from the pre-loop instruction IDs. GCC 2.7.2 counts non-line notes,
 including markers left when declaration-free compound blocks are discarded.
