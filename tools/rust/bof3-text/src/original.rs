@@ -10523,7 +10523,39 @@ pub fn payload_nontext_ranges(
     if let Some(copies) = stored_sprite_record_copy_ranges(entry, data) {
         ranges.get_or_insert_with(Vec::new).extend(copies);
     }
+    if let Some(fields) = drg00_sprite_ranges(entry, data) {
+        ranges.get_or_insert_with(Vec::new).extend(fields);
+    }
     ranges
+}
+
+fn drg00_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    if entry.index != 3
+        || entry.transfer_mode != 0
+        || entry.offset != 40_960
+        || entry.check_word != 0x10
+        || entry.size != 44_404
+        || data.len() != 44_404
+        || !matches!(
+            entry.ram_ptr,
+            0x8003_b80c | 0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c
+        )
+        || sha256_hex(data) != "1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1"
+    {
+        return None;
+    }
+    let mut fields = bpl_root_sprite_fields(data, 0, data.len(), 6)?;
+    fields.extend(bpl_root_sprite_fields(data, 0, data.len(), 4)?);
+    Some(
+        merge_bpl_sprite_fields(fields)
+            .into_iter()
+            .map(|(start, end)| NontextRange {
+                offset: start,
+                length: end - start,
+                evidence: "Original US DRG00 selected program and cell fields. Five exact raw entry-3 originals bind selectors 6 and 4 to programs at payload offsets 31254 and 21080. The original retained-root selector, initialization and forward readers preserve the same actor and cell-relative table; each finite eight-pair walk selects eight bounded cell records. The original GAME actor-array and draw route reaches the counted five-byte reader with publisher-retained mode 2. Stable original bytes, successful unskipped loading, retained actor/root/program, no overriding request, repeated same-actor forward calls, bounded visible geometry, lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unselected programs/cells, mirror bytes and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.",
+            })
+            .collect(),
+    )
 }
 
 fn stored_image_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {

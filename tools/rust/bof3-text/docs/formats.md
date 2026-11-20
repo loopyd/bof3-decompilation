@@ -369,6 +369,48 @@ This rule establishes stored numeric fields. It does not extend selector lists
 or establish destination selection, invocation, animation timing, live CLUTs,
 display, absence of rasterized text or safe editing.
 
+## DRG00 selected program and cell fields
+
+The five original `DRG00_00..04.EMI` entry-3 banks also qualify numeric fields
+for selectors 6 and 4. Each requires raw mode, entry offset 40960, checkword
+`0x10`, size 44404, its reviewed destination and payload SHA-256
+`1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1`.
+The standalone and MAGIC131 routes above retain each source and root binding.
+
+| Selector | Selection triple | Program offset | Cell-table offset | Selected cell interval |
+| --- | --- | --- | --- | --- |
+| 6 | `0,3,0` | 31254 | 31272 | `[31288,34701)` |
+| 4 | `1,0,0` | 21080 | 21098 | `[21114,23842)` |
+
+The original selector at `0x8014DC08` stores this actor's selected program at
+`+0x50`. The unconditional call at `0x8014D8B0` reaches `0x8014D910`, which
+publishes the cell-relative table at `+0x54` in its call delay. Fetch reader
+`0x8014DB98` stores the selected relative offset at `+0x5A` in its return delay.
+Each program contains eight pairs, `(3,0)` through `(3,7)`. Repeated same-actor
+forward calls at `0x8014D978` fetch all eight cells. Coverage includes the two
+section words, first two bytes of each selection triple, selected program
+directory words, pair counts, fetched pairs, relative cell words and counted
+five-byte cell records. Program header byte zero, mirror bytes, other programs
+and cells, and allocation tails retain their prior status.
+
+MAGIC131 and GAME's loop at `0x801BDAB8` use the same actor array at
+`0x80145E90`, with stride `0x140` bytes. The reviewed sort and draw path republishes
+this actor before `0x8014C4D4`, which reads `actor[+0x54] + u16(actor+0x5A)`.
+The publisher-retained mode byte `+0x28 = 2` selects palette leaf `0x8014CF10`
+through the original table at `0x80149998`. Its page and U-wrap arithmetic
+preserves the same five-byte cell reads.
+
+Successful unskipped loading, retained `+0x24 = 1`, root and program pointers,
+stable original bytes and bounded nonaliased memory remain conditions. After
+MAGIC131 initialization, require actor halfword `+0x80 & 0x2880 == 0` and
+`0x801DB524(index)&255 == 0`; otherwise later requests can replace the program.
+Continuing calls must select this same actor. The bounded draw case requires
+active state, `+0x48 = 0`, selected `+0x2A = 0`, visible geometry, sort height
+below 55, list capacity, display flags 2, sort mode 6, valid prefetch/packet
+storage and ordinary noninterfering helper returns. This identifies stored
+fields without establishing natural state production, call scheduling,
+invocation, cadence, live CLUTs, transfer, display or safe editing.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
