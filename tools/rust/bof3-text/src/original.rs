@@ -12960,6 +12960,150 @@ fn compressed_sprite_copy_fields(
     )
 }
 
+fn compressed_program_copy_fields(
+    entry: Entry,
+    data: &[u8],
+) -> (&'static [(usize, usize)], &'static str) {
+    if entry.transfer_mode != 1
+        || entry.ram_ptr != 0x8003_b800
+        || usize::try_from(entry.size).ok() != Some(data.len())
+    {
+        return (&[], "");
+    }
+    let fields: &[(usize, usize)] = match (
+        entry.index,
+        entry.offset,
+        entry.check_word,
+        data.len(),
+        sha256_hex(data).as_str(),
+    ) {
+        (
+            3,
+            67_584,
+            275_288,
+            214_266,
+            "cc36dfd4a9c994f92cec65e5f118d33bcff1d005dcc264afccf5dec74ec4fcc4",
+        ) => &[(128_679, 128_686), (128_696, 128_701)],
+        (
+            3,
+            71_680,
+            344_824,
+            284_731,
+            "ee268e24edccaf3ada151d42ad718a261dcc0b88d16498bb647aad01f5804a0e",
+        ) => &[(128_679, 128_686), (128_696, 128_701)],
+        (
+            3,
+            71_680,
+            408_396,
+            327_152,
+            "0ed30aece981f5c9b97ca1cd96ce35f55c51e905b29225feba5e014a41edc895",
+        ) => &[(327_055, 327_062), (327_072, 327_077)],
+        (
+            3,
+            73_728,
+            330_744,
+            268_792,
+            "23ed7ca1e3ab1711d3c43f508d9de4fb5073055a38803af9b9b763f1dd717d5a",
+        ) => &[(128_679, 128_686), (128_696, 128_701)],
+        (
+            7,
+            81_920,
+            331_788,
+            166_017,
+            "e42ef5798590f2dd63a854eab7f7875be0daa3fe900a75f96315f74bcff9200e",
+        ) => &[(41_300, 41_301), (42_124, 42_125)],
+        (
+            7,
+            81_920,
+            331_788,
+            169_202,
+            "e483530c86f92c5773f595aa0efd2048f9550bab209652826fdf645c8919cde2",
+        ) => &[
+            (39_583, 39_584),
+            (39_586, 39_608),
+            (42_073, 42_075),
+            (42_077, 42_084),
+            (42_260, 42_269),
+            (42_274, 42_284),
+            (42_891, 42_897),
+            (42_900, 42_914),
+        ],
+        (
+            7,
+            81_920,
+            331_788,
+            170_862,
+            "45f75644733e12bde6badf26a49398e68f4699466e5ff41a0cea6b2662e952b6",
+        ) => &[(41_300, 41_301), (42_124, 42_125)],
+        (
+            7,
+            81_920,
+            331_788,
+            172_879,
+            "457cf5138ff71487486d0f48fa423d587b11a49d7ebaa70fa05ac1c02d3d62b0",
+        ) => &[
+            (39_583, 39_584),
+            (39_586, 39_608),
+            (42_073, 42_075),
+            (42_077, 42_084),
+            (42_260, 42_269),
+            (42_274, 42_284),
+            (42_891, 42_897),
+            (42_900, 42_914),
+        ],
+        (
+            7,
+            83_968,
+            331_788,
+            123_828,
+            "a99542bf45778bf7f6ccd47334ef7e0808d4cd7b99e46a1133b59dd201a4868d",
+        ) => &[(41_300, 41_301), (42_124, 42_125)],
+        (
+            7,
+            83_968,
+            331_788,
+            131_534,
+            "7478852c3c488a95220d88e748296f04e44f0001cd741b19ba7405592f56e22b",
+        ) => &[
+            (39_583, 39_584),
+            (39_586, 39_608),
+            (42_073, 42_075),
+            (42_077, 42_084),
+            (42_260, 42_269),
+            (42_274, 42_284),
+            (42_891, 42_897),
+            (42_900, 42_914),
+        ],
+        (
+            7,
+            83_968,
+            368_652,
+            163_748,
+            "baa3b5279e41b88d1c2a6ff0ce8a0186201517232e4d5e25164f179e1ed72d08",
+        ) => &[(188_756, 188_757), (189_580, 189_581)],
+        (
+            7,
+            83_968,
+            368_652,
+            171_442,
+            "3ccf09c57d2675a5938c5a5350cc936d238388039dc1b040c126db70ab7880c8",
+        ) => &[
+            (187_039, 187_064),
+            (189_529, 189_531),
+            (189_533, 189_540),
+            (189_716, 189_725),
+            (189_730, 189_740),
+            (190_347, 190_353),
+            (190_356, 190_370),
+        ],
+        _ => return (&[], ""),
+    };
+    (
+        fields,
+        "Original US copied sprite-program metadata. Complete decoded programs match independently qualified original raw REID00 or RTD00 programs within native root, program-directory, declared-cell and allocation bounds. Exact original archive, transfer mode 1, entry index, offset, size, destination, checkword and complete packed identity bind each profile. Only frozen donor-known fields transfer; program header byte zero, metadata aliases, unfetched fields and tails receive no new role. Checked complete decompression tracks every ultimate physical origin through overlapping references. Every decoded use must have a copied or previously reviewed role; framing, unused origins and opaque aliases receive no new role. Earlier physical records retain their evidence. Stored numeric representation only; no destination selection, invocation, cadence, live CLUT, display, rasterized-text absence or safe-edit claim.",
+    )
+}
+
 fn additional_model_decoded_nontext_fields(
     entry: Entry,
     data: &[u8],
@@ -14304,6 +14448,7 @@ fn compression_metadata_ranges(
     let copy_profiles = [
         compressed_image_copy_fields(entry, data),
         compressed_sprite_copy_fields(entry, data),
+        compressed_program_copy_fields(entry, data),
     ];
     let check_word = entry.check_word;
     let header = data.get(..6)?;
@@ -14588,6 +14733,11 @@ pub fn payload_nontext_ranges(
         stored_raw_sprite_record_copy_ranges(entry, data, ranges.as_deref().unwrap_or_default())
     {
         ranges.get_or_insert_with(Vec::new).extend(copies);
+    }
+    if let Some(instructions) =
+        matched_payload_instruction_ranges(entry, data, ranges.as_deref().unwrap_or_default())
+    {
+        ranges.get_or_insert_with(Vec::new).extend(instructions);
     }
     ranges
 }
@@ -14907,6 +15057,164 @@ fn uncovered_nontext_ranges(
         }
     }
     Some(additions)
+}
+
+fn matched_payload_instruction_ranges(
+    entry: Entry,
+    data: &[u8],
+    previous: &[NontextRange],
+) -> Option<Vec<NontextRange>> {
+    if entry.transfer_mode != 0 || usize::try_from(entry.size).ok() != Some(data.len()) {
+        return None;
+    }
+    let instructions: &[(usize, usize)] = match (
+        entry.index,
+        entry.offset,
+        entry.ram_ptr,
+        entry.check_word,
+        data.len(),
+        sha256_hex(data).as_str(),
+    ) {
+        (
+            0,
+            2_048,
+            0x8019_5800,
+            30,
+            229_720,
+            "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff",
+        ) => &[
+            (2_076, 320),
+            (4_284, 736),
+            (5_360, 148),
+            (6_008, 1_704),
+            (8_660, 704),
+            (9_812, 244),
+            (10_608, 256),
+            (11_436, 60),
+            (12_100, 60),
+            (12_548, 60),
+            (12_996, 60),
+            (13_252, 116),
+            (13_484, 1_292),
+            (15_032, 80),
+            (15_208, 216),
+            (15_704, 548),
+            (16_364, 128),
+            (16_696, 192),
+            (18_660, 792),
+            (19_772, 68),
+            (20_436, 304),
+            (21_060, 364),
+            (21_556, 80),
+            (21_872, 120),
+            (22_764, 100),
+            (23_396, 68),
+            (26_580, 84),
+            (26_916, 288),
+            (28_192, 68),
+            (28_944, 68),
+            (29_588, 68),
+            (34_252, 136),
+            (34_700, 40),
+            (35_428, 68),
+            (35_876, 132),
+            (36_736, 68),
+            (37_144, 68),
+            (37_588, 100),
+            (38_416, 212),
+            (39_628, 184),
+            (40_984, 40),
+            (41_356, 276),
+            (42_888, 192),
+            (43_752, 152),
+            (44_176, 396),
+            (49_700, 192),
+            (73_476, 372),
+            (73_976, 28),
+            (74_456, 536),
+            (76_700, 64),
+            (77_524, 84),
+            (79_028, 132),
+            (91_872, 80),
+            (94_448, 464),
+            (95_172, 276),
+            (95_760, 284),
+            (97_116, 88),
+            (97_356, 144),
+            (97_948, 152),
+            (98_756, 44),
+            (99_480, 92),
+            (105_072, 288),
+            (105_904, 592),
+            (112_124, 72),
+            (120_064, 220),
+            (121_440, 180),
+            (121_736, 256),
+            (122_176, 172),
+            (122_480, 32),
+            (122_652, 76),
+            (123_900, 208),
+            (126_100, 72),
+            (130_496, 196),
+            (131_064, 140),
+            (131_508, 304),
+            (132_060, 120),
+            (132_796, 172),
+            (133_188, 152),
+            (134_168, 88),
+            (135_616, 68),
+            (137_180, 248),
+            (137_836, 216),
+            (138_160, 156),
+            (139_444, 212),
+            (140_304, 144),
+            (140_544, 372),
+            (141_804, 160),
+            (142_712, 72),
+            (143_212, 76),
+            (145_480, 88),
+            (145_868, 68),
+            (146_840, 72),
+            (150_136, 1_024),
+            (155_376, 380),
+            (155_880, 76),
+            (164_732, 380),
+            (165_208, 432),
+            (167_696, 40),
+            (168_224, 656),
+            (176_396, 424),
+            (177_460, 32),
+            (177_736, 1_036),
+            (180_288, 60),
+            (181_744, 552),
+            (183_352, 256),
+            (184_080, 208),
+            (184_468, 536),
+            (186_708, 328),
+            (187_800, 180),
+            (188_304, 152),
+            (188_660, 292),
+            (190_016, 64),
+            (192_300, 64),
+            (193_820, 60),
+            (195_928, 200),
+            (196_504, 28),
+            (196_596, 128),
+            (197_756, 56),
+            (202_708, 144),
+            (203_144, 60),
+        ],
+        _ => return None,
+    };
+    let ranges = instructions
+        .iter()
+        .map(|&(offset, length)| NontextRange {
+            offset,
+            length,
+            evidence: "Original US matched overlay instruction bodies. Fresh target-owned native comparisons reconcile complete function sections, original placements and every linked byte with the original raw entry. The complete selected entry and original archive reconstruct byte-identically. Exact original archive, raw mode, entry geometry, RAM base, size, checkword and full payload identity bind each profile. Existing physical ranges retain their evidence. Initialized data, retained source regions, external callees and referenced storage receive no new role. Complete original instruction role only; no source-only reconstruction, semantic approval, observed invocation, full compiler-input closure, rendering or safe-edit claim.",
+        })
+        .collect();
+    uncovered_nontext_ranges(data.len(), ranges, previous)
 }
 
 fn stored_resident_record_copy_ranges(

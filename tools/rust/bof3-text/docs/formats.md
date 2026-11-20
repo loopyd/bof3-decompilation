@@ -426,6 +426,9 @@ halfwords. Cells require a declared program reference and exactly
 Complete record bytes must agree, including excluded bytes. These matches have
 no metadata aliases or empty cells.
 
+The program-only copy pass uses qualified metadata from raw `REID00` and `RTD00`
+records. It follows the same complete-record and physical-origin rules.
+
 Only donor fields classified before this rule transfer. Program header byte zero,
 unfetched fields, opaque packed bits and allocation tails retain their prior
 status. The complete outer decode tracks every overlapping-reference origin.
@@ -2145,10 +2148,14 @@ must match its original US disc identity.
 | `AREA121.EMI` | 14 | `0x801F2C00` | `0xAD` | 15547 | `42da9ce8b9e2225fc93ed1bcb0296fd7a42a341f5a81187fcb0025ac5365a275` |
 | `AREA077.EMI` | 14 | `0x801F2C00` | `0x81` | 16248 | `0987764aeff328845033df60674008b12b1af555fe888c68445459964c292e9e` |
 | `SCE15EF1.EMI` | 0 | `0x801D0C00` | `0x11B` | 13496 | `0af89b01778db26d220b3fe5975f766edf0b798c96dc6df1c82031fb9cbea361` |
+| `GAME.EMI` | 0 | `0x80195800` | `0x1E` | 229720 | `1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff` |
 
 Offsets below are relative to the selected entry. Runtime addresses are the
 load address plus these offsets. Adjacent complete functions are coalesced
 only for coverage accounting.
+
+The GAME pass preserves earlier physical ranges and their evidence. Use
+`bin/harness text coverage --root out/extracted --json` for its admitted extents.
 
 | Archive | Payload intervals | Complete functions | Bytes |
 | --- | --- | ---: | ---: |
@@ -2163,13 +2170,15 @@ only for coverage accounting.
 | AREA121 | `[60,304)`, `[448,540)`, `[1144,1284)`, `[1596,1720)`, `[2072,3864)`, `[5340,5584)`, `[5900,6460)`, `[6624,6692)`, `[6996,7036)`, `[7936,8012)`, `[9080,10020)`, `[10112,11160)`, `[11544,13004)`, `[13304,14552)` | 48 | 8076 |
 | AREA077 | `[4,72)`, `[2936,3224)`, `[4212,4388)`, `[4612,4680)`, `[4872,5556)`, `[5664,6088)`, `[6480,7784)`, `[8412,8480)`, `[8900,10828)`, `[10948,13904)` | 55 | 7964 |
 | SCE15EF1 | `[4,72)`, `[192,3856)`, `[4308,6048)`, `[6844,7476)`, `[8004,9176)`, `[10908,11544)` | 31 | 7912 |
+| GAME | Reported by `text coverage --json` | 236 | 27632 |
 
 Fresh native compilation and relocation reproduce all complete sized ELF
 function symbols. Compiler assembly separates instructions from initialized
 data. Headers, initialized sections, retained functions and gaps remain outside
 these ranges. SISYOU's literal allocations retain their text classification.
-This proof establishes stored instruction representation. It does not establish
-execution, callee semantics, resource safety, rendering or safe editing.
+These profiles record stored instruction roles. Check current source matches with
+`bin/harness lift status TARGET`. Execution, callee semantics, resource safety,
+rendering and safe editing need separate evidence.
 
 ## Scenario instruction and dispatch-table coverage
 
