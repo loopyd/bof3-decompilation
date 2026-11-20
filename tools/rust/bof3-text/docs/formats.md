@@ -346,6 +346,33 @@ This rule establishes stored image encoding. It does not extend the destination
 selector lists or establish destination selection, invocation, transfer,
 residency, display, absence of rasterized text or safe editing.
 
+## Compressed image copies
+
+The four original US BRTD entry-7 banks below contain complete image records
+identical to reviewed raw `RTD00.EMI` and `RYUD00.EMI` records. They retain the
+exact archive, transfer-mode-1, destination, offset, size, checkword and payload
+identities listed under [BRT image fields](#compressed-brt-image-and-palette-fields).
+All donor images belong to root 0.
+
+| Destination archives | Copies of RTD00 images 0..5 | Copies of RYUD00 images 0..15 |
+| --- | --- | --- |
+| `BRTD247.EMI` | Root 1, images 0..5 | Root 2, images 0..15 |
+| `BRTD457.EMI`, `BRTD467.EMI` | Root 0, images 0..5 | Root 2, images 0..15 |
+| `BRTD478.EMI` | Root 0, images 0..5 | Root 1, images 0..15 |
+
+Native root and relative-directory parsing establishes each record's allocation.
+Complete record bytes, dimensions, mode, consumed length, decoded image bytes
+and final-token overshoot match the donor. Only previously qualified donor
+fields transfer. RTD00 retains its existing RTU00 copy provenance.
+
+The complete outer decompression walk tracks every physical literal origin,
+including overlapping references. A literal qualifies only when every decoded
+use belongs to an existing reviewed numeric field or a copied donor field.
+Existing physical records retain their evidence. Newly qualified mixed origins
+cite this combined proof. Mode-2 prefixes, unconsumed tails and conflicting
+opaque aliases remain excluded. Stored encoding does not establish destination
+selection, invocation, display or safe editing.
+
 ## Stored sprite-record copies
 
 Coverage also recognizes exact copies of independently reviewed animation

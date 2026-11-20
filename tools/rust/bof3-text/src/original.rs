@@ -8949,6 +8949,187 @@ fn model_decoded_nontext_fields(
     }
 }
 
+fn compressed_image_copy_fields(
+    entry: Entry,
+    data: &[u8],
+) -> (&'static [(usize, usize)], &'static str) {
+    if entry.index != 7
+        || entry.transfer_mode != 1
+        || entry.ram_ptr != 0x8003_b800
+        || usize::try_from(entry.size).ok() != Some(data.len())
+    {
+        return (&[], "");
+    }
+    let fields: &[(usize, usize)] = match (
+        entry.offset,
+        entry.check_word,
+        data.len(),
+        sha256_hex(data).as_str(),
+    ) {
+        (
+            81_920,
+            331_788,
+            172_879,
+            "457cf5138ff71487486d0f48fa423d587b11a49d7ebaa70fa05ac1c02d3d62b0",
+        ) => &[
+            (52, 10_996),
+            (13_672, 13_680),
+            (13_684, 20_827),
+            (20_828, 20_836),
+            (20_840, 29_449),
+            (29_452, 29_460),
+            (29_464, 37_996),
+            (221_276, 226_764),
+            (226_768, 228_823),
+            (228_824, 228_832),
+            (228_836, 232_869),
+            (232_872, 232_880),
+            (232_884, 238_583),
+            (238_584, 238_592),
+            (238_596, 245_443),
+            (245_444, 245_452),
+            (245_456, 248_021),
+            (248_024, 248_032),
+            (248_036, 249_414),
+            (249_416, 249_424),
+            (249_428, 250_327),
+            (250_328, 250_336),
+            (250_340, 251_965),
+            (251_968, 251_976),
+            (251_980, 252_803),
+            (252_804, 259_648),
+            (259_652, 262_090),
+            (262_092, 262_100),
+            (262_104, 267_812),
+            (267_816, 273_309),
+            (273_312, 273_320),
+            (273_324, 273_823),
+        ],
+        (
+            83_968,
+            331_788,
+            131_534,
+            "7478852c3c488a95220d88e748296f04e44f0001cd741b19ba7405592f56e22b",
+        ) => &[
+            (52, 10_996),
+            (13_672, 13_680),
+            (13_684, 20_827),
+            (20_828, 20_836),
+            (20_840, 29_449),
+            (29_452, 29_460),
+            (29_464, 37_996),
+            (221_276, 226_764),
+            (226_768, 228_823),
+            (228_824, 228_832),
+            (228_836, 232_869),
+            (232_872, 232_880),
+            (232_884, 238_583),
+            (238_584, 238_592),
+            (238_596, 245_443),
+            (245_444, 245_452),
+            (245_456, 248_021),
+            (248_024, 248_032),
+            (248_036, 249_414),
+            (249_416, 249_424),
+            (249_428, 250_327),
+            (250_328, 250_336),
+            (250_340, 251_965),
+            (251_968, 251_976),
+            (251_980, 252_803),
+            (252_804, 259_648),
+            (259_652, 262_090),
+            (262_092, 262_100),
+            (262_104, 267_812),
+            (267_816, 273_309),
+            (273_312, 273_320),
+            (273_324, 273_823),
+        ],
+        (
+            81_920,
+            331_788,
+            169_202,
+            "e483530c86f92c5773f595aa0efd2048f9550bab209652826fdf645c8919cde2",
+        ) => &[
+            (52, 10_996),
+            (13_672, 13_680),
+            (13_684, 20_827),
+            (20_828, 20_836),
+            (20_840, 29_449),
+            (29_452, 29_460),
+            (29_464, 37_996),
+            (110_684, 116_172),
+            (116_176, 118_231),
+            (118_232, 118_240),
+            (118_244, 122_277),
+            (122_280, 122_288),
+            (122_292, 127_991),
+            (127_992, 128_000),
+            (128_004, 134_851),
+            (134_852, 134_860),
+            (134_864, 137_429),
+            (137_432, 137_440),
+            (137_444, 138_822),
+            (138_824, 138_832),
+            (138_836, 139_735),
+            (139_736, 139_744),
+            (139_748, 141_373),
+            (141_376, 141_384),
+            (141_388, 142_211),
+            (142_212, 149_056),
+            (149_060, 151_498),
+            (151_500, 151_508),
+            (151_512, 157_220),
+            (157_224, 162_717),
+            (162_720, 162_728),
+            (162_732, 163_231),
+        ],
+        (
+            83_968,
+            368_652,
+            171_442,
+            "3ccf09c57d2675a5938c5a5350cc936d238388039dc1b040c126db70ab7880c8",
+        ) => &[
+            (147_508, 158_452),
+            (161_128, 161_136),
+            (161_140, 168_283),
+            (168_284, 168_292),
+            (168_296, 176_905),
+            (176_908, 176_916),
+            (176_920, 185_452),
+            (258_140, 263_628),
+            (263_632, 265_687),
+            (265_688, 265_696),
+            (265_700, 269_733),
+            (269_736, 269_744),
+            (269_748, 275_447),
+            (275_448, 275_456),
+            (275_460, 282_307),
+            (282_308, 282_316),
+            (282_320, 284_885),
+            (284_888, 284_896),
+            (284_900, 286_278),
+            (286_280, 286_288),
+            (286_292, 287_191),
+            (287_192, 287_200),
+            (287_204, 288_829),
+            (288_832, 288_840),
+            (288_844, 289_667),
+            (289_668, 296_512),
+            (296_516, 298_954),
+            (298_956, 298_964),
+            (298_968, 304_676),
+            (304_680, 310_173),
+            (310_176, 310_184),
+            (310_188, 310_687),
+        ],
+        _ => return (&[], ""),
+    };
+    (
+        fields,
+        "Original US BRTD247/457/467/478 entry-7 stored image copies. Complete decoded image records, native root/directory/allocation bounds, dimensions, modes, consumed bytes, decoded image bytes and final-token overshoot match independently qualified RTD00 and RYUD00 raw records. Exact original archive, TOC transfer mode 1, entry geometry, destination, checkword and complete packed/decoded identities bind the source. The checked outer stream propagates ultimate physical origins through initialized overlapping references. Every decoded alias must lie in copied donor-known image fields or the unchanged reviewed numeric fields. Prior physical records retain their evidence. Mode-2 prefixes, tails and other opaque aliases remain excluded. Stored encoding only; no destination selection, invocation, residency, upload, display, rasterized-text absence or safe-edit claim.",
+    )
+}
+
 fn additional_model_decoded_nontext_fields(
     entry: Entry,
     data: &[u8],
@@ -10290,6 +10471,7 @@ fn compression_metadata_ranges(
     let (literal_fields, literal_evidence) = literal_profile;
     let (additional_fields, additional_evidence) = additional_literal_profile;
     let (program_fields, program_evidence) = program_literal_profile;
+    let (copy_fields, copy_evidence) = compressed_image_copy_fields(entry, data);
     let check_word = entry.check_word;
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
@@ -10308,7 +10490,8 @@ fn compression_metadata_ranges(
         || brt_profile.is_some()
         || !literal_fields.is_empty()
         || !additional_fields.is_empty()
-        || !program_fields.is_empty();
+        || !program_fields.is_empty()
+        || !copy_fields.is_empty();
     let mut typed = vec![0_u8; if track_literals { expected } else { 0 }];
     // Each bit identifies a reviewed field union. Intersect all decoded aliases
     // before qualifying a physical literal, preserving earlier evidence first.
@@ -10478,6 +10661,38 @@ fn compression_metadata_ranges(
             length: at - start,
             evidence,
         });
+    }
+    if !copy_fields.is_empty() {
+        for &(start, end) in copy_fields {
+            typed.get_mut(start..end)?.fill(127);
+        }
+        literal_roles.fill(None);
+        for (&origin, &known) in origins.iter().zip(&typed) {
+            let role = literal_roles.get_mut(origin)?;
+            *role = Some(role.unwrap_or(1) & u8::from(known != 0));
+        }
+        // Keep earlier physical records and attribute mixed origins to the copy proof.
+        for range in &ranges {
+            literal_roles
+                .get_mut(range.offset..range.offset.checked_add(range.length)?)?
+                .fill(Some(0));
+        }
+        let mut at = 0;
+        while at < literal_roles.len() {
+            if literal_roles[at] != Some(1) {
+                at += 1;
+                continue;
+            }
+            let start = at;
+            while at < literal_roles.len() && literal_roles[at] == Some(1) {
+                at += 1;
+            }
+            ranges.push(NontextRange {
+                offset: start,
+                length: at - start,
+                evidence: copy_evidence,
+            });
+        }
     }
     ranges.sort_by_key(|range| range.offset);
     Some(ranges)
