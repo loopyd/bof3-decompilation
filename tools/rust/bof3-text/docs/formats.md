@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v44`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v45`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3070,7 +3070,23 @@ The consumer selects the header and three rows through pointer table
 `0x801E5EFC` and count/index bytes `03 01 02 03` at `0x801E5F0C`.
 Each path calls `0x8014F800` with count `0xFF`; NUL bounds each field.
 
-Both additions use `game-literal`. Shorter or empty edits retain NUL and
+SHOP also exposes twenty-two command labels selected by nine five-byte records
+at `0x801E59C0`. Each field permits three or four body bytes plus NUL.
+Code 13, `Bttn`, remains unsupported. Caller `0x801E29C8` loads group and
+selection from panel-task bytes +0xA and +0xB, then calls `0x801DA77C`.
+The reader selects pointer words from `0x801E5964`, queries the same GAME
+width reader, and draws through `0x8014F800` with count sixteen. Retain group
+0..8, a valid panel root and a returning valid state handler. The caller does
+not establish the natural group bound.
+
+Three SHOP stat captions, `Pwr`, `Def` and `Agl`, occupy six-byte records at
+`0x801E5A10`. Only each record's first four bytes are editable, including NUL;
+its final two padding bytes stay protected. Fields have empty pointer-reference
+lists because the reader computes their addresses. Dispatcher `0x801E2C18`
+calls `0x801DB9F0`, whose loop draws exactly three rows through `0x8014F800`
+with count `0xFF`. Preserve valid task, record and returning-helper conditions.
+
+These fields use `game-literal`. Shorter or empty edits retain NUL and
 zero-fill the field. Packing preserves alignment bytes, pointers and selection
 records. No relocation is supported. Natural entry, producer bounds, visual
 fit, rendering and resource safety remain unverified.
@@ -3204,7 +3220,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v44` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v45` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

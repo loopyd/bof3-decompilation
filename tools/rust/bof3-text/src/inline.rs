@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v44";
+pub const SCHEMA: &str = "bof3.inline-text/v45";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1607,13 +1607,13 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "6a27c66ba0e57ac8ff5ce07fd3b370bbd25966b8675ec7f7673742ce3bc7ae02",
+        sha256: "034615c9a90ed5b19ee303b46c15a1a26170ec79faeeac7d2361aea95bce6d46",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
             0x801da47c, 0x801dc6fc, 0x801dd578, 0x801ddcb0, 0x801d826c, 0x801d86d4, 0x801d8c58,
             0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98, 0x801d71f0, 0x801e3f34,
-            0x801e3f5c,
+            0x801e3f5c, 0x801da77c, 0x801e29c8, 0x801af20c,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -1740,6 +1740,31 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801e5ee4, 5, &[0x801e5f00], &[0x8014f800]),
             Allocation::literal(0x801e5eec, 8, &[0x801e5f04], &[0x8014f800]),
             Allocation::literal(0x801e5ef4, 7, &[0x801e5f08], &[0x8014f800]),
+            Allocation::literal(0x801e58b8, 4, &[0x801e5964], &[0x8014f800]),
+            Allocation::literal(0x801e58bc, 5, &[0x801e5968], &[0x8014f800]),
+            Allocation::literal(0x801e58c4, 5, &[0x801e596c], &[0x8014f800]),
+            Allocation::literal(0x801e58cc, 5, &[0x801e5970], &[0x8014f800]),
+            Allocation::literal(0x801e58d4, 5, &[0x801e5974], &[0x8014f800]),
+            Allocation::literal(0x801e58dc, 5, &[0x801e5978], &[0x8014f800]),
+            Allocation::literal(0x801e58e4, 4, &[0x801e597c], &[0x8014f800]),
+            Allocation::literal(0x801e58e8, 5, &[0x801e5980], &[0x8014f800]),
+            Allocation::literal(0x801e58f0, 5, &[0x801e5984], &[0x8014f800]),
+            Allocation::literal(0x801e58f8, 5, &[0x801e5988], &[0x8014f800]),
+            Allocation::literal(0x801e5900, 5, &[0x801e598c], &[0x8014f800]),
+            Allocation::literal(0x801e5908, 5, &[0x801e5990], &[0x8014f800]),
+            Allocation::literal(0x801e5910, 5, &[0x801e5994], &[0x8014f800]),
+            Allocation::literal(0x801e5920, 5, &[0x801e599c], &[0x8014f800]),
+            Allocation::literal(0x801e5928, 5, &[0x801e59a0], &[0x8014f800]),
+            Allocation::literal(0x801e5930, 5, &[0x801e59a4], &[0x8014f800]),
+            Allocation::literal(0x801e5938, 5, &[0x801e59a8], &[0x8014f800]),
+            Allocation::literal(0x801e5940, 5, &[0x801e59ac], &[0x8014f800]),
+            Allocation::literal(0x801e5948, 5, &[0x801e59b0], &[0x8014f800]),
+            Allocation::literal(0x801e5950, 4, &[0x801e59b4], &[0x8014f800]),
+            Allocation::literal(0x801e5958, 5, &[0x801e59b8], &[0x8014f800]),
+            Allocation::literal(0x801e5960, 4, &[0x801e59bc], &[0x8014f800]),
+            Allocation::literal(0x801e5a10, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801e5a16, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801e5a1c, 4, &[], &[0x8014f800]),
         ],
     },
     Layout {
