@@ -51,9 +51,10 @@ archive into a separate output. Editing one alias leaves the other unchanged;
 the active supplier remains unresolved. See the
 [card-choice allocation contract](../../../../tools/rust/bof3-text/docs/formats.md#card-choice-bank-aliases)
 for capacities and consumers.
-Controlled packed-media checks verify the edited prompt, title and both slot
-labels through a frontend-state fixture. Ordinary menu availability, the unique
-supplier and card-save persistence remain unverified.
+Controlled checks verify the edited prompt, title and slot labels. The edits
+also display through ordinary diary interaction after loading a game-created save.
+The original-label route has created and reloaded one save. Selected value-panel
+calls, the unique supplier and persistence of the edited labels remain unverified.
 
 For the main US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
 Its `bof3.executable-text/v18` document uses ASCII. Re-extract older documents.
@@ -122,30 +123,32 @@ labels, one numeric format, five item-category labels, four skill-category label
 three equipment-category labels and fifteen fixed-width settings fields through
 `bof3.inline-text/v32`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
-Controlled Config rendering of all fifteen edited fields is verified with a menu
-availability fixture.
+All fifteen edited Config fields render in a controlled fixture and through
+ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
+game-created save. Observed ordinary reader and draw calls return; individual
+call pixels, other draw paths, general bounds and Manual/Auto remain unverified.
 Packed START media verifies the four edited menu labels and the first ordinary
 keyboard cell edited from `A` to `Z` during new-game name entry. Selection renders
 `Z` in the entered name. START confirmation copies the normalized five-byte name
-to the main character record at `0x80144968`. Other cells, pages, STATUS
-rendering, other contexts and memory-card persistence remain unverified.
+to the main character record at `0x80144968`. Other keyboard cells, pages,
+STATUS name-entry contexts and memory-card persistence remain unverified.
 Re-extract older inline documents. Use a separate document and output for each
 archive. Editing one does not update the other or a save. Counted formation labels
-use separate groups for one, two and three party members. Controlled packed-media
-observations verify all ten counted labels and the five edited category labels in
-Items. WEAPON, ARMOR, OPTION and VITAL use separate controlled records with
-categories 1 through 4. These observations accept category-label glyphs only. A
-preinstruction capture binds the selected ITEM pointer and its record with
-category 0. Other selected calls, general selector bounds, natural availability
-and the START or STATUS supplier remain unverified.
-Controlled Ability rendering verifies first-glyph edits in HEAL, ASSIST, ATTACK
-and SKILL. Preinstruction captures bind the selected HEAL and SKILL pointers.
-Selected ASSIST and ATTACK calls, general selector bounds and natural
-availability remain unverified.
-Controlled Equipment rendering verifies first-glyph edits in WEAPON, ARMOR and
-OPTION at observed selectors 0, 1 and 4. These captures follow ordinary menu
-inputs from the controlled availability fixture. Selected calls, general selector
-bounds and natural availability remain unverified.
+use separate groups for one, two and three party members. Controlled observations
+verify all ten counted formation labels and the five
+edited Items category labels. WEAPON, ARMOR, OPTION and VITAL use separate
+controlled records with categories 1 through 4. A preinstruction capture binds
+ITEM at category 0. Controlled Ability checks verify first-glyph edits in HEAL,
+ASSIST, ATTACK and SKILL, with preinstruction pointers bound for HEAL and SKILL.
+Controlled Equipment checks verify first-glyph edits in WEAPON, ARMOR and OPTION
+at selectors 0, 1 and 4.
+
+Ordinary Items, Ability and Equipment navigation after loading a game-created
+save displays those original category labels. Ordinary Equipment uses selectors
+0, 1 and 5. Each selected category call reaches `0x8014F800` with the expected
+return address and text pointer at `SP + 0x10`, verifying its JAL and delay store.
+Row reads and completed rendering for those individual invocations, general
+selector bounds and the unique START or STATUS supplier remain unverified.
 See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
 before choosing a duplicate label.
 
@@ -271,7 +274,10 @@ replacements, which can expose stale scratch bytes after the initial NUL.
 Controlled SHOP party-change checks cover the split HP/AP fields. Edit both
 halves together and keep their separators in the same formatted character
 column, since both draw at the same coordinates. Identical format-pair
-allocations remain indistinguishable; other SHOP rendering remains unverified.
+allocations remain indistinguishable. Ordinary Buy-list checks verify the edited
+price suffix; Sell quantity previews verify the edited price and total suffixes.
+Other quantity paths, larger quantities, purchase effects and sale effects remain
+unverified.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. BATTLE rows 4 and 5, `Defend` and `Charge`, use `game-literal`

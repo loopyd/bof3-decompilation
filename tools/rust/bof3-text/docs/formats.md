@@ -1989,6 +1989,38 @@ bounded numeric table. They do not establish matching ELF output, observed
 invocation, feasible paths, transitive effects, resource safety, display or safe
 editing.
 
+## Further direct-call instruction coverage
+
+The following bodies use the exact GAME and shared battle identities under
+[instruction coverage from original calls](#instruction-coverage-from-original-calls).
+Each has an original JAL entry in previously qualified instructions. Review
+covers every raw instruction, structural branch and control-transfer delay word.
+Runtime ends are exclusive; the battle entry label refers to `BATTLE.EMI#15`.
+
+| Body source | Runtime interval | Original call source | JAL address |
+| --- | --- | --- | --- |
+| BATTLE#15 | `[0x800A7B40,0x800A7C14)` | BATTLE#15 | `0x800A7954` |
+| GAME#0 | `[0x8019625C,0x8019651C)` | GAME#0 | `0x801992E8` |
+| GAME#0 | `[0x80196784,0x801968BC)` | GAME#0 | `0x801965C8` |
+| GAME#0 | `[0x801A18C8,0x801A1A24)` | GAME#0 | `0x801A0898` |
+| GAME#0 | `[0x801C2438,0x801C24D0)` | GAME#0 | `0x801BF088` |
+| GAME#0 | `[0x801C2894,0x801C29A0)` | GAME#0 | `0x801BF2E8` |
+| GAME#0 | `[0x801C29A0,0x801C2AAC)` | GAME#0 | `0x801BF204` |
+
+GAME body `0x80196784..0x801968BC` also qualifies the five-word numeric table
+at `0x80195804..0x80195818`, payload bytes `[4,24)`. It masks the selector to
+eight bits, tests unsigned `< 5` at `0x801967C8` and branches to `0x801968A0`
+outside that bound. The scaled load at `0x801967EC` and jump at `0x801967F4`
+select `0x80196888`, `0x801967FC`, `0x80196870`, `0x80196854` or `0x80196830`
+in table order. Every target stays inside the complete consumer; guard, load,
+jump and delay words reconcile with the original table.
+
+Call continuations assume ordinary returns, valid nonaliasing memory, intact
+frames and stable code and tables. Referenced storage, external callees and
+neighboring bytes retain their prior status. These ranges establish stored
+instructions and numeric targets, without matching ELF, observed invocation,
+feasible-path, transitive-effect, resource-safety, display or safe-edit acceptance.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw
@@ -3777,6 +3809,19 @@ zero coding information and an entirely zero 2048-byte user payload. Only
 `[2336*s+8, 2336*s+2056)` becomes known nontext. Nonzero Form 1 payloads stay
 unresolved. Empty payloads do not establish padding, unused allocation or their
 original purpose and consumer.
+
+The XA initializer at `0x801636A0` clears EMI progress byte `0x80146494`
+before calling the cue selector. The EMI READY callback at `0x80162230`
+returns before reading a sector unless that byte equals one; XA completion
+sets it to three. The initializer replaces the SYNC callback and preserves the
+separate READY callback storage. A retained EMI callback therefore does not
+establish consumption while its progress gate stays disabled.
+
+This guard does not close other transfer paths. The SDK read callback at
+`0x80177D08` can read sectors using destination and count storage at
+`0x80185AA0` and `0x80185AA8`. Its lifetime during XA, other READY callbacks
+and intervening progress writers remain unresolved. Submode bits and a single
+callback observation do not prove that nonzero Form 1 payloads are unused.
 
 The same exact-source qualification identifies duplicated subheaders at `[0,8)`
 within each sector. Form 1 correction fields at `[2056,2336)` contain EDC and

@@ -66,6 +66,9 @@ const BATTLE_RESIDENT_TABLE_EVIDENCE: &str = "Original US battle resident animat
 const US_DIRECT_CALL_INSTRUCTION_EVIDENCE: &str = "Original US direct-call instruction bodies; original JAL entries from previously qualified instruction records, complete raw-word and structural control-flow review, and every control-transfer delay word including returns. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. GAME 0x801AF494 uses the separately qualified five-case numeric table. SYSCALL continuations at 0x8017EE10/0x8017EE20 assume exception return to the next instruction. The five-word 0x8017F3D0 body ends in an opaque pointer-loaded tail transfer; pointer storage, target and effects are excluded. tools/rust/bof3-text/docs/formats.md records body boundaries and entry sites. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
 const US_DIRECT_CALL_TABLE_EVIDENCE: &str = "Original US direct-call numeric jump table at 0x80195F7C..0x80195F90; five little-endian targets. Complete original GAME body 0x801AF494..0x801AF5B0 masks the selector to eight bits and applies unsigned < 5 before the scaled table load and register jump. Every original target stays inside the consumer; complete guard, table, load/jump and delay words reconcile. Exact original archive/raw-payload identities and load address gate classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring bytes retain prior status. No actual dispatch, general selector bound, resource safety, display or safe-edit claim.";
 
+const US_FOLLOWUP_INSTRUCTION_EVIDENCE: &str = "Original US further direct-call instructions; complete original GAME and shared battle bodies with original JAL entries in previously qualified instruction records. All raw words, structural control flow and control-transfer delay words reconcile. GAME 0x80196784 uses the separately qualified five-case table at 0x80195804. Exact original archive/raw-payload identities and load addresses gate classification. tools/rust/bof3-text/docs/formats.md records boundaries and entries. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced storage, external callees and neighboring bytes retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
+const GAME_SLOT_TABLE_EVIDENCE: &str = "Original US GAME five-case slot jump table at 0x80195804..0x80195818; five original little-endian target words. Complete original body 0x80196784..0x801968BC masks its selector to eight bits and tests unsigned < 5 at 0x801967C8 before scaled load 0x801967EC and JR 0x801967F4. Original guard, table, branch/load/jump delay words and all internal targets reconcile. Exact original archive/raw-payload identities and load address gate classification. Stable code/table and valid nonaliasing memory remain conditions. No actual dispatch, general selector bound, referenced-storage, resource-safety or safe-edit claim.";
+
 /// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     if data.len() == 122_880
@@ -11566,6 +11569,41 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 0xa5c,
+                    length: 704,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0xf84,
+                    length: 312,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0xc0c8,
+                    length: 348,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2cc38,
+                    length: 152,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2d094,
+                    length: 268,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2d1a0,
+                    length: 268,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 4,
+                    length: 20,
+                    evidence: GAME_SLOT_TABLE_EVIDENCE,
+                },
+                NontextRange {
                     offset: 0xd1c,
                     length: 340,
                     evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
@@ -14023,6 +14061,13 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
             }))
+            .chain([
+                NontextRange {
+                    offset: 0x11340,
+                    length: 212,
+                    evidence: US_FOLLOWUP_INSTRUCTION_EVIDENCE,
+                },
+            ])
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)
