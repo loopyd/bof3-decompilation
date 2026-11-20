@@ -2728,7 +2728,7 @@ const AREA_ANIMATION_PROFILES: &[(usize, usize, usize, u32, &str)] = &[
 ];
 
 // Original BPLU349 entry0: image headers, packed words, token streams and palettes.
-// Mode-2 opaque prefixes and every other byte remain unresolved.
+// Selected program/cell fields qualify separately. Mode-2 prefixes stay unresolved.
 const BPLU349_GRAPHICS_RANGES: &[(usize, usize)] = &[
     (76, 4104),
     (4184, 8),
@@ -9522,9 +9522,252 @@ fn model_palette_zero_fields(decoded: &[u8], typed: &[u8]) -> Vec<(usize, usize)
     fields
 }
 
+const BPLU_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLU selector-2 program and sprite-cell numeric fields; exact archive and entry geometry, mode, load, checkword and payload identities; the preserved family-2 request, hint/triplet, slot/LBA supplier, successful unskipped load and GAME publisher/reselection bind the same three roots with count 1, work index 0 and clear record masks; original D910/DB98/D978 readers qualify finite fetched pairs, jump operands and selected cell-relative halfwords; original GAME 0x801BDAB8 and SLUS 0x8014D290/0x8014BA54/0x8014BC70 carry the same work into 0x8014C4D4, whose counted part loop and 0x8014CF9C consume control, signed X/Y and unsigned U/V; stable work, work[0]=1, work+0x24=1, work+0x28=0, retained work+0x2A in 0..1, work+0x48=0, valid visible geometry, queue capacity, readable prefetch slots, ordinary helper returns and nonaliased frames/packets remain conditions; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell union, with previous evidence preserved; program header byte 0, unfetched high-bit predicates, other programs/cells and allocation tails excluded; part control bits 0x70 remain opaque; no natural state production, actual invocation, loading, residency, transfer, display, rasterized-text absence or safe-edit claim";
+
+fn bplu_selector_two_payload(entry: Entry, data: &[u8]) -> bool {
+    if entry.index != 7
+        || entry.transfer_mode != 1
+        || entry.ram_ptr != 0x8003_b800
+        || entry.size as usize != data.len()
+    {
+        return false;
+    }
+    matches!(
+        (
+            entry.offset,
+            entry.check_word,
+            data.len(),
+            sha256_hex(data).as_str()
+        ),
+        (
+            98_304,
+            368_652,
+            164_994,
+            "e2a34bb38b0a2f4640b12edcf99abfbdfbfe94899e16dbedcf4f19654bb46dc2"
+        ) | (
+            98_304,
+            331_788,
+            171_761,
+            "6b07b7680c06ab63614b5d824df4482b293d7f19ed7af15dfa9506c25c151202"
+        ) | (
+            98_304,
+            331_788,
+            124_778,
+            "09a3ac9e9463bbd28d007c0fa1e12d6349b3ad21f81c40726887b1e1df6a918f"
+        ) | (
+            98_304,
+            368_652,
+            192_570,
+            "8a3d4406db576778f6c28da82cc74da24d043a0a9814eba7573f09bb3572b716"
+        ) | (
+            98_304,
+            368_652,
+            145_584,
+            "3a3756665db495864c14e4d3ed169a56e599f0da6562da57a439ad28a5ea30ec"
+        ) | (
+            98_304,
+            331_788,
+            134_569,
+            "2b9702dd8b5a617ac209ac4463a7c2f352fc190487ce826f970a36f0012d3f66"
+        ) | (
+            96_256,
+            331_788,
+            152_690,
+            "dca408e86ea40dbb6cb9b411fd82d4ebf59ae7dff4438e69f111d6de17145d4c"
+        ) | (
+            96_256,
+            368_652,
+            196_697,
+            "e346011032cbdeb18efbe5519dfed41ee48379d9f122aa021b757bdefd45edd6"
+        ) | (
+            98_304,
+            368_652,
+            208_309,
+            "04c55b4f45a62a7cbb50e400e643553f8d3e76cef8929bec6853877ca1758d65"
+        ) | (
+            100_352,
+            368_652,
+            161_332,
+            "49b75da89fb00ed33e435221f0a44ed40a065e405d3b267f1c5068432bc97af2"
+        ) | (
+            98_304,
+            368_652,
+            203_533,
+            "e89f0b3b8ed58b12352cba5516071aaa14dcd825a604a234b7adf2ed8b824fd6"
+        ) | (
+            98_304,
+            275_460,
+            133_381,
+            "d7dfb508ba4366c13a87fba1d91af0166170839f651f4952dd6d54fa44c815d7"
+        ) | (
+            94_208,
+            331_788,
+            203_819,
+            "53db0e87ff007d5f285f369e8fe831c69ade60fb52fae4f324ac0bf30256ad3c"
+        ) | (
+            96_256,
+            331_788,
+            156_785,
+            "3dc9d693b853e79393b206dddd5215c8bb94ff88cfe9805d1afa0543cfdf6ddd"
+        ) | (
+            94_208,
+            331_788,
+            198_974,
+            "dd9c4770ba3eab3f49cabedeeb8b8939876b9e0cdf403edf0ccd59ca0d3d3428"
+        ) | (
+            98_304,
+            331_788,
+            168_385,
+            "6b299fd8cea814cf90575f7b0f803a9b300f8cc6cf0b1d2c10b10555cb20f063"
+        ) | (
+            96_256,
+            331_788,
+            210_574,
+            "0eaa04778217afe8fe7793e4666a48bbd8ecf5f92cf9324d25c6aca5c3edcbfc"
+        ) | (
+            98_304,
+            331_788,
+            163_590,
+            "5d47579d411fd999b25bf7627e0a246e84653f8450e955b57ab75c7bee013a75"
+        )
+    )
+}
+
+/// Only the finite selector-2 walks in pinned original BPLU banks qualify.
+fn bplu_selected_sprite_fields(data: &[u8]) -> Option<Vec<(usize, usize)>> {
+    if data.len() > 1024 * 1024 {
+        return None;
+    }
+    let word = |at: usize| {
+        Some(u32::from_le_bytes(data.get(at..at.checked_add(4)?)?.try_into().ok()?) as usize)
+    };
+    let half = |at: usize| {
+        Some(usize::from(u16::from_le_bytes(
+            data.get(at..at.checked_add(2)?)?.try_into().ok()?,
+        )))
+    };
+    let roots = [word(0)?, word(4)?, word(8)?];
+    if roots[0] != 12 || roots[0] >= roots[1] || roots[1] >= roots[2] || roots[2] >= data.len() {
+        return None;
+    }
+    let mut fields = vec![(0, 12)];
+    for (ordinal, &root) in roots.iter().enumerate() {
+        let root_end = roots.get(ordinal + 1).copied().unwrap_or(data.len());
+        let image = root.checked_add(word(root)?)?;
+        let palette = root.checked_add(word(root + 4)?)?;
+        let programs = root.checked_add(word(root + 8)?)?;
+        let selections = root.checked_add(word(root + 12)?)?;
+        if !(root + 16 <= image
+            && image < palette
+            && palette < programs
+            && programs < selections
+            && selections < root_end)
+        {
+            return None;
+        }
+        let selection = selections.checked_add(6)?;
+        let program_index = usize::from(*data.get(selection + 1)?);
+        let directory_size = half(programs)?;
+        let directory_end = programs.checked_add(directory_size)?;
+        if directory_size == 0
+            || directory_size % 2 != 0
+            || directory_end > selections
+            || program_index >= directory_size / 2
+            || selection + 3 > root_end
+        {
+            return None;
+        }
+        let starts = (0..directory_size / 2)
+            .map(|index| programs.checked_add(half(programs + 2 * index)?))
+            .collect::<Option<Vec<_>>>()?;
+        if starts
+            .iter()
+            .any(|&start| !(directory_end..selections).contains(&start))
+        {
+            return None;
+        }
+        let program = starts[program_index];
+        let end = starts
+            .iter()
+            .copied()
+            .filter(|&start| start > program)
+            .min()
+            .unwrap_or(selections);
+        let cells = usize::from(*data.get(program)?);
+        let steps = usize::from(*data.get(program + 1)?);
+        let pairs = program.checked_add(2)?;
+        let table = pairs.checked_add(steps.checked_mul(2)?)?;
+        let table_end = table.checked_add(cells.checked_mul(2)?)?;
+        if cells == 0 || steps == 0 || table_end > end {
+            return None;
+        }
+        let offsets = (0..cells)
+            .map(|index| table.checked_add(half(table + 2 * index)?))
+            .collect::<Option<Vec<_>>>()?;
+        if offsets[0] != table_end
+            || offsets
+                .iter()
+                .any(|&cell| !(table_end..end).contains(&cell))
+        {
+            return None;
+        }
+        let mut distinct = offsets.clone();
+        distinct.sort_unstable();
+        distinct.dedup();
+        for (index, &cell) in distinct.iter().enumerate() {
+            let allocation_end = distinct.get(index + 1).copied().unwrap_or(end);
+            if cell.checked_add(1 + 5 * usize::from(*data.get(cell)?))? > allocation_end {
+                return None;
+            }
+        }
+        fields.extend([
+            (root + 8, root + 16),
+            (selection, selection + 2),
+            (
+                programs + 2 * program_index,
+                programs + 2 * program_index + 2,
+            ),
+            (program + 1, program + 2),
+        ]);
+        let mut visited = vec![false; steps];
+        let mut index = 0;
+        while !*visited.get(index)? {
+            visited[index] = true;
+            let pair = pairs + 2 * index;
+            let operand = usize::from(*data.get(pair + 1)?);
+            let cell = *offsets.get(operand)?;
+            fields.extend([
+                (pair, pair + 2),
+                (table + 2 * operand, table + 2 * operand + 2),
+                (cell, cell + 1 + 5 * usize::from(*data.get(cell)?)),
+            ]);
+            index += 1;
+            if index == steps {
+                index = 0;
+            } else if *data.get(pairs + 2 * index)? >= 0x80 {
+                let jump = pairs + 2 * index + 1;
+                fields.push((jump, jump + 1));
+                index = usize::from(*data.get(jump)?);
+            }
+        }
+    }
+    fields.sort_unstable();
+    let mut merged: Vec<(usize, usize)> = Vec::new();
+    for (start, end) in fields {
+        if let Some(previous) = merged.last_mut()
+            && start <= previous.1
+        {
+            previous.1 = previous.1.max(end);
+            continue;
+        }
+        merged.push((start, end));
+    }
+    Some(merged)
+}
+
 fn compression_metadata_ranges(
+    entry: Entry,
     data: &[u8],
-    check_word: u32,
     literal_profile: (&[(usize, usize)], &'static str),
     additional_literal_profile: (&[(usize, usize)], &'static str),
     program_literal_profile: (&[(usize, usize)], &'static str),
@@ -9532,6 +9775,7 @@ fn compression_metadata_ranges(
     let (literal_fields, literal_evidence) = literal_profile;
     let (additional_fields, additional_evidence) = additional_literal_profile;
     let (program_fields, program_evidence) = program_literal_profile;
+    let check_word = entry.check_word;
     let header = data.get(..6)?;
     if check_word == 0 || u32::from_le_bytes(header[..4].try_into().unwrap()) != check_word {
         return None;
@@ -9543,22 +9787,25 @@ fn compression_metadata_ranges(
         length: 4,
         evidence,
     }];
-    let track_literals =
-        !literal_fields.is_empty() || !additional_fields.is_empty() || !program_fields.is_empty();
+    let with_selected_cells = bplu_selector_two_payload(entry, data);
+    let track_literals = with_selected_cells
+        || !literal_fields.is_empty()
+        || !additional_fields.is_empty()
+        || !program_fields.is_empty();
     let mut typed = vec![0_u8; if track_literals { expected } else { 0 }];
     // Each bit identifies a reviewed field union. Intersect all decoded aliases
     // before qualifying a physical literal, preserving earlier evidence first.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(15);
+        typed.get_mut(start..end)?.fill(31);
     }
     for &(start, end) in additional_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 14;
+            *role |= 30;
         }
     }
     for &(start, end) in program_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 12;
+            *role |= 28;
         }
     }
     let mut origins = Vec::new();
@@ -9633,13 +9880,20 @@ fn compression_metadata_ranges(
     }
     for (start, end) in model_palette_zero_fields(&decoded_bytes, &typed) {
         for role in typed.get_mut(start..end)? {
-            *role |= 8;
+            *role |= 24;
+        }
+    }
+    if with_selected_cells {
+        for (start, end) in bplu_selected_sprite_fields(&decoded_bytes)? {
+            for role in typed.get_mut(start..end)? {
+                *role |= 16;
+            }
         }
     }
     let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
     for (&origin, &known) in origins.iter().zip(&typed) {
         let role = literal_roles.get_mut(origin)?;
-        *role = Some(role.unwrap_or(15) & known);
+        *role = Some(role.unwrap_or(31) & known);
     }
     let mut at = 0;
     while at < literal_roles.len() {
@@ -9654,8 +9908,10 @@ fn compression_metadata_ranges(
             additional_evidence
         } else if role & 4 != 0 {
             program_evidence
-        } else {
+        } else if role & 8 != 0 {
             "original US source-bound compressed sprite palette-zero relative words and 32-halfword record; existing reviewed image-root and source bindings, GAME 0x801C1254/0x801C1308/0x801C13DC and SLUS 0x80166C48..0x80166CAC; complete checked decode and every decoded alias confined to the reviewed image/program/palette field union; previous records retain their evidence; no actual loading, active CLUT, transfer, display, rasterized-text absence or safe-edit claim"
+        } else {
+            BPLU_SELECTED_SPRITE_EVIDENCE
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {
@@ -10503,8 +10759,8 @@ pub fn payload_nontext_ranges(
     }
     if entry.transfer_mode == 1 {
         return compression_metadata_ranges(
+            entry,
             data,
-            entry.check_word,
             model_decoded_nontext_fields(entry, data),
             additional_model_decoded_nontext_fields(entry, data),
             model_program_decoded_nontext_fields(entry, data),
@@ -12988,6 +13244,11 @@ pub fn payload_nontext_ranges(
                 length,
                 evidence: "original US BPLU349 image headers, packed words, mode-2 tokens and 32-halfword palette records; consumers 0x8014E6D0, 0x8014E7F8, 0x8014E8FC and 0x80166C48; opaque prefixes excluded; exact source identity; no rasterized-text absence or runtime claim",
             })
+            .chain(bplu_selected_sprite_fields(data)?.into_iter().map(|(start, end)| NontextRange {
+                offset: start,
+                length: end - start,
+                evidence: BPLU_SELECTED_SPRITE_EVIDENCE,
+            }))
             .collect())
         }
         (13, 733_184, 0, 0x801f_2c00, 2_548)

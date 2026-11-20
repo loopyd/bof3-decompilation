@@ -61,10 +61,10 @@ It requires the original archive identity, raw transfer mode, load address
 `0x8003B800` and the exact 331,788-byte payload hash. The fixed ranges use payload
 coordinates and become file offsets by adding the entry's 2048-byte offset.
 
-Only these serialized graphics ranges become known nontext. Mode-2 four-byte
-opaque prefixes, allocation gaps, selection data and all other bytes remain
-unresolved. Packed words contain unused bits; classification does not assign
-those bits a meaning. It does not establish the absence of rasterized text,
+This graphics rule excludes mode-2 four-byte opaque prefixes, allocation gaps
+and selection data. The [selected BPLU program and cell rule](#selected-bplu-program-and-cell-fields)
+qualifies separate numeric fields. Packed words contain unused bits; classification
+does not assign those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
@@ -1112,10 +1112,96 @@ control bytes remain unresolved unless a direct fetch reads them.
 
 A physical literal qualifies only when every decoded alias has an image or
 selected-program role. Existing image records retain their boundaries and
-evidence. Selection mode bytes, program header byte zero, unselected programs and selectors,
-cell counts and part fields, palettes, tails and opaque aliases remain
-unresolved. Actual invocation, cadence, transfer, residency, resource safety,
-upload, display, rasterized-text absence and safe editing remain unverified.
+evidence. This program-only rule excludes selection mode bytes, program header
+byte zero, unselected programs and selectors, cell counts and part fields,
+palettes, tails and opaque aliases. The selected-cell rule below extends the
+reviewed field union without changing these earlier records. Actual invocation,
+cadence, transfer, residency, resource safety, upload, display, rasterized-text
+absence and safe editing remain unverified.
+
+## Selected BPLU program and cell fields
+
+Coverage also recognizes finite selector-2 program and cell fields in all
+nineteen original US `BPLU` banks for family-2 hints 0 through 18. Compressed
+banks require their original entry-7 geometry and payload identities above.
+Raw `BPLU349` requires its entry-0 identity. Every archive must match the
+original disc inventory. For hint 12, the original LBA table binds slot 506
+to the complete `BPLU349.EMI` archive, and the identifier triplet is `3,4,9`.
+The same loader, publisher and reselection conditions apply to all three roots.
+Each root is a separate count-1, work-index-0 case with its own identifier.
+
+The walk starts at pair 0. On countdown expiry, `0x8014D978` wraps an index
+equal to the declared pair count. A following high-bit duration redirects
+once through its operand; `0x8014DB98` then fetches that destination directly,
+even if its duration also has the high bit set. The walk stops when a fetched
+index repeats. A zero duration expires after 256 decrements. Repeated calls
+and stable program/work fields are conditions, not observed frame timing.
+Only fetched duration/index pairs, redirect operands, selected relative
+halfwords and their cell records qualify. The header's first byte bounds the
+host parser but remains unresolved because these original readers do not use it.
+Every declared cell allocation is checked before selected cells are admitted.
+
+The original GAME loop at `0x801BDAB8..0x801BDB7C` selects the same actor array
+used by the publisher. With actor byte 0 equal to 1 and byte `+0x24` equal to 1,
+its call through `0x8014D290` inserts the actor into the secondary draw list
+when its computed sort height is below 55 and that list has space.
+`0x8014BA54` calls `0x8014BC70..0x8014C47C`. With display flag byte
+`0x8014832E = 2`, sort mode byte `0x8014933E = 6`, one actor and no competing
+stream items, the latter copies the same work pointer into scratchpad and
+calls `0x8014C4D4` at `0x8014C35C`. Valid list prefetch slots, sort tables,
+queue heads, helper returns and bounded nonaliased work, frames and packets
+remain conditions. This source path does not establish natural state production.
+
+The complete renderer `0x8014C4D4..0x8014CE48` reads the cell at
+`work[0x54] + u16(work+0x5A)`. For visible coordinates, work bytes
+`+0x28` and `+0x48` equal to zero, the selected `+0x2A` value 0 or 1, and the
+retained `+0x24 = 1`, it reads the part count and advances five bytes per part. Each part contains
+one control byte, signed X and Y, and unsigned U and V. Control bit `0x80`
+selects horizontal flipping, and the low four bits select width and height
+through the original table at `0x8017F53C`. Bits `0x70` remain opaque.
+Both the inline quad path and complete helper `0x8014CF9C..0x8014D260`
+consume these fields. The palette setup leaf `0x8014CE78..0x8014CF9C` uses
+the original jump table; work byte `+0x28 = 0` selects `0x8014CEC8`.
+
+Cell counts below list roots 0, 1 and 2 in order. Their offsets come from the
+selected program's cell-relative table. Use the texture tool's `query --records`
+output to inspect their individual source coordinates and hashes.
+
+| Archive | Selected cells |
+| --- | --- |
+| `BPLU012` | 13 / 29 / 16 |
+| `BPLU015` | 13 / 29 / 22 |
+| `BPLU016` | 13 / 29 / 6 |
+| `BPLU025` | 13 / 16 / 22 |
+| `BPLU026` | 13 / 16 / 6 |
+| `BPLU034` | 13 / 10 / 19 |
+| `BPLU056` | 13 / 22 / 6 |
+| `BPLU247` | 16 / 19 / 25 |
+| `BPLU257` | 16 / 22 / 25 |
+| `BPLU267` | 16 / 6 / 25 |
+| `BPLU278` | 16 / 25 / 23 |
+| `BPLU27A` | 16 / 25 / 4 |
+| `BPLU349` | 10 / 19 / 13 |
+| `BPLU457` | 19 / 22 / 25 |
+| `BPLU467` | 19 / 6 / 25 |
+| `BPLU478` | 19 / 25 / 23 |
+| `BPLU567` | 22 / 6 / 25 |
+| `BPLU578` | 22 / 25 / 23 |
+| `BPLU678` | 6 / 25 / 23 |
+
+`BPLU27A` selects programs at decoded offsets `89142`, `197690` and `274014`.
+`BPLU349` selects programs at payload offsets `35904`, `178828` and `261354`,
+with pair counts `10`, `19` and `13`. The other program offsets remain as listed
+above. Root-array words and consumed program/selection fields qualify separately
+from image storage. Selection mode bytes, unfetched high-bit predicates,
+unselected programs/cells and allocation tails stay unresolved.
+
+For compressed storage, every decoded alias of a literal must belong to the
+reviewed image, program, palette-zero or selected-cell union. Earlier image,
+program and palette records retain their exact evidence and classification.
+Neither the raw fields nor compressed literals establish actual requests,
+execution, cadence, allocation success, residency, upload, display, absence of
+rasterized text or safe editing.
 
 ## Area surface field coverage
 
