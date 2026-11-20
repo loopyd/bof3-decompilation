@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v39";
+pub const SCHEMA: &str = "bof3.inline-text/v40";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -783,11 +783,11 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US COMMU00 default names",
+        name: "US COMMU00 names and numeric format",
         load: 0x801eec00,
         size: 15696,
-        sha256: "31bd7bc6ff38c18b17747fdf8c1344deabe8fcc646cca5e0bf2b8f5a9b2ed586",
-        consumers: &[0x801d6a1c, 0x801d693c, 0x801d83d0],
+        sha256: "c32b898b62336437f97fb135fa3197d1ce1405ec6cc43228d4bd6217b832902e",
+        consumers: &[0x801d6a1c, 0x801d693c, 0x801d83d0, 0x801f1318, 0x801f13b8],
         allocations: &[
             Allocation::fixed_literal(0x801f2700, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f2709, 5, &[0x8014f800]),
@@ -849,6 +849,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801f2901, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f290a, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f2913, 5, &[0x8014f800]),
+            Allocation::bounded_format(0x801eec44, 3, Codec::AsciiI32DecimalFormat, &[]),
         ],
     },
     Layout {
@@ -881,6 +882,30 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d1964, 6, &[], &[0x8014f800]),
             Allocation::literal(0x801d196c, 8, &[], &[0x8014f800]),
             Allocation::literal(0x801d1974, 6, &[], &[0x8014f800]),
+        ],
+    },
+    Layout {
+        name: "US SCENA12 counter text",
+        load: 0x801f6c00,
+        size: 26250,
+        sha256: "9b84ae69ac1d5e40d08c1ae382df0160a057bb5571395effb7f1502131cfa232",
+        consumers: &[0x801f75ec],
+        allocations: &[Allocation::bounded_format(
+            0x801f6c04,
+            5,
+            Codec::AsciiU8DecimalFormat,
+            &[0x8014ff0c],
+        )],
+    },
+    Layout {
+        name: "US BOSS025 turn-count text",
+        load: 0x800c1800,
+        size: 6844,
+        sha256: "a8ce67f13802cef17556859ddfd2bb9f48fa3f42f097662b3765ab00ad4195d2",
+        consumers: &[0x800c3088],
+        allocations: &[
+            Allocation::bounded_format(0x800c184c, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::literal(0x800c32a8, 11, &[], &[0x8014f800]),
         ],
     },
     Layout {

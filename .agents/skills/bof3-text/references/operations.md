@@ -121,7 +121,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v39`. Select that entry without class or latch selectors.
+`bof3.inline-text/v40`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 All fifteen edited Config fields render in a controlled fixture and through
 ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
@@ -175,9 +175,15 @@ and draw calls belong to the companion COMMU02 overlay. Controlled availability
 verifies one edited name through the empty-name fallback. Natural availability,
 other names and save propagation remain unverified.
 
+Each matching COMMU00 payload also exposes the shared `%d` field through
+`ascii-i32-decimal-format`. Its three-byte allocation permits only the original
+format plus NUL. The eleven-byte formatted bound covers five full-word arguments
+as well as two unsigned bytes. Preserve `renderers: []`; actions `0x55/0x56`
+do not establish a final display consumer.
+
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v39`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v40`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -226,6 +232,15 @@ The latter's allocation fits only `%d` plus NUL. Retain each codec and empty
 reference list, and inspect encoded and formatted bounds with `analyze`.
 The inline format contract lists capacities, consumers and protected padding.
 Natural selection and edited rendering remain unverified.
+
+SCENA12 entry 0 exposes `%03d` with an unsigned-byte output bound of three.
+BOSS025 entry 13 exposes `%2d` with a signed-word bound of eleven and the
+`turns left` literal, also present in the identical BOSS027 entry 16 payload.
+Each archive needs its own source-bound document. Bounds exclude NUL. The
+wrapping subtraction has no proved
+0..21 range. Preserve per-field codecs, empty reference lists and all adjacent
+bytes. Use the inline format contract for capacities and consumers. Natural
+selection and edited rendering remain unverified.
 
 COMMU05 entry 7 exposes four literal `faeries`/`faery` labels and two decimal
 formats. The pair codec bounds a signed byte plus one and an unsigned byte to

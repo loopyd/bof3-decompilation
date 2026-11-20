@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v39`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v40`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v39` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v40` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3309,14 +3309,14 @@ ASCII renderer `0x80150098` at call `0x801D4E54`. It retains raw byte `0x2D`,
 which differs from the game encoding's hyphen byte `0x3D`. Packing preserves
 the copies' boundaries, the trailing alignment byte and the keyboard glyph table.
 
-The `US COMMU00 default names` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
+The `US COMMU00 names and numeric format` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
 and entry 14 of `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI`. Each payload
 loads at `0x801EEC00`. Its sixty nine-byte records start at `0x801F2700`.
 The first five bytes of each record use `game-fixed-literal`; the remaining
 four attribute bytes stay unchanged. All five name bytes are available for
 literal game characters. Shorter edits zero-fill unused bytes.
 
-The consumers belong to `BIN/ETC/COMMU02.EMI` entry 8, also present as
+The name consumers belong to `BIN/ETC/COMMU02.EMI` entry 8, also present as
 `COMMU02B.EMI` entry 7, loaded at `0x801D0C00`. Call `0x801D6A1C` selects
 a record, then the loop at `0x801D6A24..0x801D6A54` copies its five name bytes
 into `0x801DB080`. Call `0x801D693C` uses that buffer, and `0x801D83D0`
@@ -3327,6 +3327,18 @@ Each archive needs its own document and output. Controlled availability verifies
 one edited record through the empty-name fallback and its name-panel display.
 Identical standalone and embedded payloads leave the supplying archive ambiguous.
 Natural availability, other records and save-name propagation remain unverified.
+
+The same layout appends `%d` at `0x801EEC44`, with capacity three including
+NUL and codec `ascii-i32-decimal-format`. Its source allocation fits only the
+original format. Preserve the alignment byte at `0x801EEC47`. Original consumers
+`0x801F1318` and `0x801F13B8` issue seven formatter calls using two unsigned
+byte arguments and five full-word arguments. All calls use the shared format.
+Within each consumer, successive calls write `0x20`-spaced slots from
+`0x801490D8`. Signed-word arguments
+require at most eleven decimal bytes plus NUL. The first consumer dispatches
+action `0x55`; the second dispatches `0x56`. Their final display consumer remains
+unverified, so this row retains `renderers: []` and an empty pointer-reference
+list. The previous sixty name rows retain their identities and order.
 
 The `US AREA008 decimal formats` layout covers entry 13 of the original US
 `BIN/WORLD00/AREA008.EMI`, loaded at `0x801F2C00`. Three ASCII allocations use
@@ -3383,6 +3395,38 @@ empty pointer-reference lists. Recognition pins the payload outside these
 allocations, and packing binds the original archive identity. Original
 instructions establish source and output bounds; natural selection and edited
 rendering remain unverified.
+
+The `US SCENA12 counter text` layout covers entry 0 of original US
+`BIN/SCENARIO/SCENA12.EMI`, loaded at `0x801F6C00`. Its `%03d` field at
+`0x801F6C04` has capacity five including NUL and uses
+`ascii-u8-decimal-format`. Original consumer `0x801F75EC` reads unsigned byte
+`0x801FD288`, formats into `0x80145AD4` at call `0x801F762C`, then draws through
+`0x8014FF0C` at call `0x801F7640`. Both calls assign their buffer argument in
+the delay slot. Retain one decimal argument, at most four encoded bytes before
+NUL and three formatted bytes before NUL. Bytes from `0x801F6C09` stay protected.
+
+The `US BOSS025 turn-count text` layout covers entry 13 of original US
+`BIN/BOSS/BOSS025.EMI` and its identical payload in `BOSS027.EMI` entry 16,
+both below `BIN/BOSS` and loaded at `0x800C1800`:
+
+| Address | Original text | Capacity including NUL | Codec | Maximum formatted bytes before NUL |
+| --- | --- | --- | --- | --- |
+| `0x800C184C` | `%2d` | 4 | `ascii-i32-decimal-format` | 11 |
+| `0x800C32A8` | `turns left` | 11 | `game-literal` | Not formatted |
+
+Original consumer `0x800C3088` loads a full word from `0x801463D0` and computes
+wrapping `21 - word` in the formatter call's delay slot at `0x800C30C4`.
+There is no proved 0..21 bound. Preserve the signed-word maximum of eleven
+decimal bytes plus NUL. Call `0x800C30D4` draws the result from `0x801490F8`
+through `0x8014FF0C`. Call `0x800C30F4` draws the label through `0x8014F800`
+with limit ten, passing its pointer in the delay slot. Shorter or empty label
+edits zero-fill the eleven-byte field. Preserve all nine trailing zeros from
+`0x800C32B3` through `0x800C32BB`.
+
+Both layouts retain empty pointer-reference lists and pin all payload bytes
+outside their allocations. Packing binds each original archive. Original
+instructions establish conditional source and output bounds; natural selection
+and edited rendering remain unverified.
 
 The `US COMMU05 faery labels and counts` layout covers entry 7 of original US
 `BIN/ETC/COMMU05.EMI`, loaded at `0x801D0C00`. It exposes six fields:
