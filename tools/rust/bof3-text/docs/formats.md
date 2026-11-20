@@ -867,6 +867,109 @@ container gaps remain unresolved. Actual invocation, transfer, residency,
 argument and resource safety, upload, display, rasterized-text absence and
 safe editing remain unqualified.
 
+## Compressed BRT image and palette fields
+
+Coverage recognizes the following original US `BIN/BPLCHAR/` entry-7
+profiles under the whole-archive identity gate. Each requires transfer mode 1,
+destination `0x8003B800`, and its exact file offset, packed size, decoded size
+and checkword, and payload SHA-256.
+
+| Archive | Hint / slot | Physical LBAs | File offset | Packed bytes | Decoded bytes / checkword | Payload SHA-256 |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| `BRTD247` | 7 / 513 | [54987,55131) | 83968 | 171442 | 368652 | `3ccf09c57d2675a5938c5a5350cc936d238388039dc1b040c126db70ab7880c8` |
+| `BRTD457` | 13 / 514 | [55131,55275) | 81920 | 172879 | 331788 | `457cf5138ff71487486d0f48fa423d587b11a49d7ebaa70fa05ac1c02d3d62b0` |
+| `BRTD467` | 14 / 515 | [55275,55400) | 83968 | 131534 | 331788 | `7478852c3c488a95220d88e748296f04e44f0001cd741b19ba7405592f56e22b` |
+| `BRTD478` | 15 / 516 | [55400,55540) | 81920 | 169202 | 331788 | `e483530c86f92c5773f595aa0efd2048f9550bab209652826fdf645c8919cde2` |
+| `BRTU247` | 7 / 517 | [55540,55680) | 83968 | 163748 | 368652 | `baa3b5279e41b88d1c2a6ff0ce8a0186201517232e4d5e25164f179e1ed72d08` |
+| `BRTU457` | 13 / 518 | [55680,55823) | 81920 | 170862 | 331788 | `45f75644733e12bde6badf26a49398e68f4699466e5ff41a0cea6b2662e952b6` |
+| `BRTU467` | 14 / 519 | [55823,55944) | 83968 | 123828 | 331788 | `a99542bf45778bf7f6ccd47334ef7e0808d4cd7b99e46a1133b59dd201a4868d` |
+| `BRTU478` | 15 / 520 | [55944,56083) | 81920 | 166017 | 331788 | `e42ef5798590f2dd63a854eab7f7875be0daa3fe900a75f96315f74bcff9200e` |
+
+The source binding starts with the conditional GAME family-1/2 publisher path
+and each hint row's three identifiers. At work index 0 with count 1,
+`0x801C1254` publishes the chosen root and sets actor byte `+0x24` to 1.
+The original BATTLE entry-15 call at `0x800A69D4` enters `0x800A7C14`
+when the resolved form is not `0xFF`. Its first loop copies the complete
+320-byte actor record from `0x80145E90` to `0x801EBF20`, preserving the
+root at `+0x4C`, byte `+0x24` and the active flag. Returning helpers, stable
+code and tables, valid nonaliased memory, and retention of these saved fields
+remain conditions.
+
+Original BATTLE entry-3 `0x801E12DC` requires no scanned actor to have
+flag `0x2000`. With actor byte `+0x79` different from 4 and a free slot,
+it allocates mode 0, selector 12 and publishes the actor pointer at queued
+slot `+0x74`. The standard dispatchers `0x801E5824` and `0x801E5AF4`
+reach `0x801E7818`, whose byte-1 table selects the request and post-load
+handlers. The request at `0x801E7948` requires flag `0x8000`, exact plain
+hint 7, 13, 14 or 15, and a true result from `0x801E7B34`. One finite
+case has saved record 0 active and its word `+0x128` bit 0 set. Request
+actor byte 8 below 2 selects slots 513..516; other values select 517..520.
+
+The complete physical archive bytes match the original SLUS LBA-table
+supplier. On the successful normal unskipped path without flag `0x20` early
+completion, raw entry 3 finishes before compressed entry 7 replaces the bank
+at the same destination. Each preceding BPL root address equals the
+corresponding decoded BRT root address. BRT247 roots are 12, 147468 and
+258060; the other roots are 12, 110604 and 221196. Identifiers follow the
+immutable hint row, not an inference from the filename.
+
+After loader readiness, `0x801E7BA0` copies the saved actor record back,
+restoring its root and byte `+0x24`. It captures request actor byte 8 before
+that copy and restores it afterward. The finite path requires counts at
+`0x801462F0` and `0x801463CF` equal to 1, actor index 0, valid nonzero
+stat divisors, bounded writes and queues, and helpers that return without
+changing the root, selector or bank. Call `0x801E8414` supplies
+`(actor[8]+4)&255` to `0x8014D6B8`; call `0x801E8438` supplies palette
+index 0 to `0x80166C48`. The image path uses the shared readers
+`0x8014DC08`, `0x8014E6D0`, `0x8014E7F8` and `0x8014E8FC`.
+
+D variants admit selectors 4 and 5. Selector 4 reaches one image in each root.
+U variants admit below-128 selectors whose pre-add actor byte is at least 2,
+including wrapped selectors 0..3. The following finite selectors have valid
+image and program records. Each list follows admitted image-slot order;
+excluded slots remain unresolved.
+
+| Archive | Root | Admitted image slots | Selectors |
+| --- | ---: | --- | --- |
+| `BRTD247` | 0 | 6 | 4 |
+| `BRTD247` | 1 | 0 | 4 |
+| `BRTD247` | 2 | 0 | 4 |
+| `BRTD457` | 0 | 0 | 4 |
+| `BRTD457` | 1 | 2 | 4 |
+| `BRTD457` | 2 | 0 | 4 |
+| `BRTD467` | 0 | 0 | 4 |
+| `BRTD467` | 1 | 0 | 4 |
+| `BRTD467` | 2 | 0 | 4 |
+| `BRTD478` | 0 | 0 | 4 |
+| `BRTD478` | 1 | 0 | 4 |
+| `BRTD478` | 2 | 1 | 4 |
+| `BRTU247` | 0 | 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13 | 6, 0, 8, 12, 16, 24, 28, 32, 40, 44, 36, 48, 50 |
+| `BRTU247` | 1 | 0, 1, 2, 3, 4, 5 | 8, 6, 16, 48, 56, 58 |
+| `BRTU247` | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 65, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48 |
+| `BRTU457` | 0 | 0, 1, 2, 3, 4, 5 | 8, 6, 16, 48, 56, 58 |
+| `BRTU457` | 1 | 0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 | 57, 6, 24, 16, 36, 20, 28, 40, 44, 32, 48, 12, 8 |
+| `BRTU457` | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 65, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48 |
+| `BRTU467` | 0 | 0, 1, 2, 3, 4, 5 | 8, 6, 16, 48, 56, 58 |
+| `BRTU467` | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 | 57, 6, 16, 24, 28, 0, 20, 32, 8, 12, 40, 44, 36, 48, 50 |
+| `BRTU467` | 2 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 65, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48 |
+| `BRTU478` | 0 | 0, 1, 2, 3, 4, 5 | 8, 6, 16, 48, 56, 58 |
+| `BRTU478` | 1 | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 65, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48 |
+| `BRTU478` | 2 | 0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12 | 57, 6, 8, 40, 16, 24, 36, 44, 12, 20, 32, 48 |
+
+Each profile qualifies the root-relative image and palette words, selected
+image-directory words, image headers and consumed encodings, palette-directory
+word 0, and its 32-halfword record. A physical literal qualifies only when
+every decoded alias belongs to that union. Complete independent decoding
+reproduces the native texture index's decoded hash and every queried record.
+Mode-2 prefixes remain opaque. Root-array words are excluded because this
+path restores a saved root rather than reading the BRT array. Programs,
+selection triples, cells, allocation tails and aliases with unresolved uses
+also remain unresolved.
+
+These are conditional source uses. Natural state and selector production,
+actual requests, invocation, residency, transfer, upload, display,
+rasterized-text absence and safe editing remain unverified.
+
 ## Compressed BPLU27A image fields
 
 Coverage recognizes image fields in original US `BIN/BPLCHAR/BPLU27A.EMI`
