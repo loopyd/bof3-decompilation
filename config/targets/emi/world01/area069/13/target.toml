@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06913_801F2C48.c",
     "src/bof3/support/area069_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area069_13_psyq.c"

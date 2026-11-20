@@ -34,8 +34,9 @@ segments:
     - dispatchWorkByte4Table4c7cWorld02Area07913_801F2E24
     - '@source: src/bof3/world/dispatchWorkByte4Table4c7cWorld02Area07913_801F2E24.c'
   - - 616
-    - asm
-    - func_801F2E68
+    - c
+    - armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld02Area07913_801F2E68
+    - '@source: src/bof3/world/armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld02Area07913_801F2E68.c'
   - - 680
     - asm
     - func_801F2EA8

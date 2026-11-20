@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 116
-    - asm
-    - func_801F2C74
+    - c
+    - advanceWorkWord34By8000WhenWorkByte79Is2World01Area04013_801F2C74
+    - '@source: src/bof3/world/advanceWorkWord34By8000WhenWorkByte79Is2World01Area04013_801F2C74.c'
+    - '@behavior: reads mode byte 0x79 of the work record published through the global pointer cell 0x80146250 and, only when that byte is 2, adds 0x8000 to the word at 0x34 of the record published through the scratchpad pointer cell 0x1F800044, so the 16.16 x position of that record moves by half a unit.'
   - - 180
     - asm
     - func_801F2CB4

@@ -92,8 +92,10 @@ segments:
     - dispatchStateByte1Table50a8World04Area17213_801F33AC
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 2032
-    - asm
-    - func_801F33F0
+    - c
+    - seedScratchWorkByte9At20ClearWord0cAndEffectBankThenAdvanceStateWorld04Area17213_801F33F0
+    - '@source: src/bof3/world/seedScratchWorkByte9At20ClearWord0cAndEffectBankThenAdvanceStateWorld04Area17213_801F33F0.c'
+    - '@behavior: Entry 0 of the work state byte 1 handler run at 0x801F50A8. It seeds byte 0x09 of the work record published at the scratchpad pointer cell 0x1F800044 with 0x20, clears the record word at 0x0C, advances the state byte at 0x01 read through a fresh load of that cell and clears the shared effect-bank byte 0x8014832E. Takes no arguments and returns nothing.'
   - - 2092
     - c
     - advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C
