@@ -1780,6 +1780,16 @@ semantic review and the complete owning native gate.
 
 ## Compiler evidence
 
+Before attributing an invariant-address hoist to allocation, reconstruct its
+lifetime from the pre-loop instruction IDs. GCC 2.7.2 counts non-line notes,
+including markers left when declaration-free compound blocks are discarded.
+Unnecessary braces around single statements can therefore change loop-motion
+profitability without emitting an instruction. Remove only those unneeded blocks;
+preserve real scopes, declarations, operations and access domains. Verify the
+changed lifetime and profitability test, which inputs still hoist, both schedules
+and the complete native image. A single-iteration operation group is not a
+selective loop-motion fence: the optimizer can reject it as a phony loop.
+
 A literal scan bound that folds into an immediate can belong to a real bound
 quantity shared across dispatch arms. Reuse only those upper limits, preserving
 the scan start and success calculations. GCC 2.7.2 can shorten two zero-extended

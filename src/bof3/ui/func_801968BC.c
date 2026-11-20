@@ -8,14 +8,9 @@
  * alignment; a run that does not reach the accepted end or an unlisted mode
  * continues the scan, and the scan reports 0xff when no run matches.
  * @source 0x801968BC
- * @status partial
- * @match 92.81
- * @residual 142/153 sequence matches at the original 612-byte size. The
- * complete 20-byte jump table matches its reviewed original placement at
- * 0x8019581C. Dispatch-address hoisting and register allocation still differ:
- * this build forms the complete table address at entry rather than once per
- * row, exchanging its base and index registers with the palette base and
- * row-eight scale. The complete linked function has 15 differing words.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 u8 func_801968BC(u8 mode) {
   u8 row;
@@ -32,53 +27,45 @@ u8 func_801968BC(u8 mode) {
           case 0u:
             return (u8)(column + row * 16u - 0x40u);
           case 1u:
-            if (column != 0u) {
+            if (column != 0u)
               break;
-            }
             end = column;
             run_limit = 0x0f;
-            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu)
               end++;
-            }
             if (end == 0x10u) {
               return (u8)(row + (column >> 4) + 0x1cu);
             }
             break;
           case 2u:
-            if ((column & 1u) != 0u) {
+            if ((column & 1u) != 0u)
               break;
-            }
             run_limit = column + 1;
             end = column;
-            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu)
               end++;
-            }
             if (end == column + 2) {
               return (u8)(row * 8u + (column >> 1) - 0x20u);
             }
             break;
           case 3u:
-            if ((column & 3u) != 0u) {
+            if ((column & 3u) != 0u)
               break;
-            }
             run_limit = column + 3;
             end = column;
-            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu)
               end++;
-            }
             if (end == column + 4) {
               return (u8)(row * 4u + (column >> 2) + 0x70u);
             }
             break;
           case 4u:
-            if ((column & 7u) != 0u) {
+            if ((column & 7u) != 0u)
               break;
-            }
             run_limit = column + 7;
             end = column;
-            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu)
               end++;
-            }
             if (end == column + 8) {
               return (u8)(row * 2u + (column >> 3) + 0x38u);
             }
