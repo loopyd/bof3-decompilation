@@ -2402,6 +2402,13 @@ for earlier loop accesses. Shortening it can instead leave a single-use
 load/copy pair that `combine` folds into one load. Trace both passes. Neither
 result justifies adding a consumer, access or unrelated value phase to keep
 the copy.
+The longer-lived equivalent pseudo becomes canonical only when its first or last
+reference lies outside the current CSE scan range. GCC 2.7.2 ignores `LOOP_END`
+in the second pass and can scan a larger path, leaving both references inside
+and restoring the older representative. Compare the `Processing block` ranges
+and first/last UIDs in both dumps. Block skipping can cross a branch around NEG
+without invalidating an unchanged pointer equivalence.
+
 Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
 the first CSE no longer extends the pseudo for the second pass. Check
