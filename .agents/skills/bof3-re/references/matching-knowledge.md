@@ -2063,6 +2063,13 @@ phase without extra shifts. Prove its range or low-bit equivalence at every
 consumer, retain the final conversion and inspect the complete native diff.
 The intermediate type needs a representation reason.
 
+Trace a packed value's final conversion before blaming allocation. A redundant
+halfword cast can create a fresh word result, letting combine move the OR into
+that result instead of the real accumulator. Remove it only after proving the
+packed range and the destination conversion equivalent. Check both CSE passes,
+combine, access order and the complete native gate. Restoring the destination
+does not establish the OR operand order or an exact match.
+
 Consumer width can change sign-extension lowering. In a measured low-byte-only
 coordinate loop, a halfword carrier retained the QI-to-HI shift pair where a word
 carrier folded it into a signed load. Signed word use of the other path's base
@@ -2465,6 +2472,14 @@ all uses after it in one basic block. Capturing after an existing length guard
 can fail that test and retain the cursor copy when uses cross blocks. Preserve
 empty-record handling and inspect CSE2, allocation and the complete native gate.
 Do not add a guard or consumer solely to preserve a copy.
+
+A consumed definition before the loop can also prevent whole-GIV replacement:
+GCC checks that the GIV definition is the register's first recorded reference. Reuse only
+real phases, such as the table head and later selected record. Strength reduction
+can still introduce a cursor-initialization copy across a guard. Placing the real
+initialization after the existing guard can put its arithmetic and that copy in
+one basic block, enabling combine to retarget the producer. Verify both stages,
+iteration counts, terminal address arithmetic and the complete native gate.
 
 When loop motion hoists a table base into an extra saved register, source
 parentheses may leave the same canonical address tree. Trace the invariant in

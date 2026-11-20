@@ -13,16 +13,15 @@
  *           the leading byte when style bit 0x80 of +2 is set) equal the
  *           candidate is returned; a completed scan returns 0.
  * @status partial
- * @match 72.87
- * @residual Native comparison: 94/129 instructions, 516 original bytes versus
+ * @match 74.42
+ * @residual Native comparison: 96/129 instructions, 516 original bytes versus
  * 504 current. Register choices and branch placement still differ. The guarded
  * record capture and halfword candidate arithmetic preserve every scan result;
  * coordinate comparisons observe only the low byte. */
 u8 *func_801B5C54(void) {
   u8  *world;
-  u8  *table;
   u8  *rec;
-  u8  *cursor;
+  u32  cursor_address;
   u8   count;
   s8   dx;
   s8   dy;
@@ -38,54 +37,59 @@ u8 *func_801B5C54(void) {
 
   world = (u8 *)D_8017F974[D_80143F00];
   count = *(u8 *)(world + 0x31);
-  table = *(u8 **)(world + 0x2C);
-  for (i = count; i >= 0; i--) {
-    cursor = table + i * 8;
-    j = cursor[3] - 1;
-    if (j >= 0) {
-      rec = cursor;
-      do {
-        limit = 1;
-        if (g_game_work->speed_70 == 0) {
-          off = g_game_work->route_index_08 * 2;
-          dx = (s8)D_80181B00[off];
-          dy = (s8)D_80181B01[off];
-          x = *(u16 *)((u8 *)g_game_work + 0x36) + dx;
-          y = *(u16 *)((u8 *)g_game_work + 0x3A) + dy;
-          if (*(u16 *)((u8 *)g_game_work + 0x34) == 0) {
-            limit = *(u16 *)((u8 *)g_game_work + 0x38) != 0;
-          }
-        } else {
-          sx = ((s8 *)D_80181B00)[g_game_work->route_index_08 * 2];
-          x = *(s16 *)((u8 *)g_game_work + 0x36) + (sx == 1 ? 2 : sx);
-          sy = ((s8 *)D_80181B01)[g_game_work->route_index_08 * 2];
-          y = *(s16 *)((u8 *)g_game_work + 0x3A) + (sy == 1 ? 2 : sy);
-          if (g_game_work->route_index_08 == 1 ||
-              g_game_work->route_index_08 == 5) {
-            limit = *(u16 *)((u8 *)g_game_work + 0x34) != 0;
-          } else {
-            limit = *(u16 *)((u8 *)g_game_work + 0x38) != 0;
-          }
-        }
-        for (k = 0; k <= limit; k++) {
-          if (rec[2] & 0x80) {
-            if ((u8)x == rec[0] && (u8)y == rec[1] + j) {
-              return rec;
+  rec = *(u8 **)(world + 0x2C);
+  i = count;
+  if (i >= 0) {
+    cursor_address = (u32)i * 8 + (u32)rec;
+    do {
+      j = ((u8 *)cursor_address)[3] - 1;
+      if (j >= 0) {
+        rec = (u8 *)cursor_address;
+        do {
+          limit = 1;
+          if (g_game_work->speed_70 == 0) {
+            off = g_game_work->route_index_08 * 2;
+            dx = (s8)D_80181B00[off];
+            dy = (s8)D_80181B01[off];
+            x = *(u16 *)((u8 *)g_game_work + 0x36) + dx;
+            y = *(u16 *)((u8 *)g_game_work + 0x3A) + dy;
+            if (*(u16 *)((u8 *)g_game_work + 0x34) == 0) {
+              limit = *(u16 *)((u8 *)g_game_work + 0x38) != 0;
             }
           } else {
-            if ((u8)x == rec[0] + j && (u8)y == rec[1]) {
-              return rec;
+            sx = ((s8 *)D_80181B00)[g_game_work->route_index_08 * 2];
+            x = *(s16 *)((u8 *)g_game_work + 0x36) + (sx == 1 ? 2 : sx);
+            sy = ((s8 *)D_80181B01)[g_game_work->route_index_08 * 2];
+            y = *(s16 *)((u8 *)g_game_work + 0x3A) + (sy == 1 ? 2 : sy);
+            if (g_game_work->route_index_08 == 1 ||
+                g_game_work->route_index_08 == 5) {
+              limit = *(u16 *)((u8 *)g_game_work + 0x34) != 0;
+            } else {
+              limit = *(u16 *)((u8 *)g_game_work + 0x38) != 0;
             }
           }
-          if (g_game_work->route_index_08 == 1 ||
-              g_game_work->route_index_08 == 5) {
-            x++;
-          } else {
-            y++;
+          for (k = 0; k <= limit; k++) {
+            if (rec[2] & 0x80) {
+              if ((u8)x == rec[0] && (u8)y == rec[1] + j) {
+                return rec;
+              }
+            } else {
+              if ((u8)x == rec[0] + j && (u8)y == rec[1]) {
+                return rec;
+              }
+            }
+            if (g_game_work->route_index_08 == 1 ||
+                g_game_work->route_index_08 == 5) {
+              x++;
+            } else {
+              y++;
+            }
           }
-        }
-      } while (--j >= 0);
-    }
+        } while (--j >= 0);
+      }
+      i--;
+      cursor_address -= 8;
+    } while (i >= 0);
   }
   return 0;
 }

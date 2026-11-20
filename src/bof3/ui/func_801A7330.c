@@ -47,29 +47,23 @@ extern void func_8014D6B8(u32 flag);
  * record, applies its saved-state gate, and advances the entity count.
  * @source 0x801A7330
  * @status partial
- * @match 78.37
- * @residual live audit 192/245 instructions; 980 original bytes versus 976
- * current, so the range is one instruction short. Every other instruction
- * class is emitted in exactly the original's quantity; the single missing
- * instruction is a delay-slot `nop`. The original fills the slot after the
- * spawn-counter reload that precedes the 0x80146904 store with the high half
- * of the work-pointer reload, while this source leaves that slot empty and
- * reloads the pointer after the store, so the branch and jump displacements
- * that follow diverge as well. Register naming differs too (a2 versus the
- * original's a1/a0 for the reloaded pointer). Residual class: scheduling and
- * allocation. The six per-entity field labels and the spawn-gate table label
- * are canonical Splat labels whose roles are not yet reviewed. The spawn
- * record stays a volatile view because the original reloads every spawn byte,
- * including spawn[0], spawn[3] and spawn[0xC] twice.
+ * @match 88.16
+ * @residual Native comparison: 216/245 instructions at the original 980 bytes.
+ * Register choices, instruction order and the late packed-word OR operands
+ * still differ. The spawn record remains a volatile view to preserve its
+ * repeated byte samples, including spawn[0], spawn[3] and spawn[0xC].
  */
 void func_801A7330(const volatile u8* spawn) {
   struct GameWorkArea* work;
+  struct GameWorkArea* field_work;
   s16                  slot;
+  s16                  field_slot;
   s16                  state;
   s16                  dist;
   s32                  coord_x;
   s32                  coord_y;
   s32                  result;
+  u32                  packed_entry;
   u8                   check;
 
   slot = ENTITY_COUNT_S16;
@@ -129,11 +123,17 @@ void func_801A7330(const volatile u8* spawn) {
   g_game_work->flags_5C = spawn[3] & 0xF;
   g_game_work->unk_29 = state;
 
-  ENTITY_SLOT_FIELD(u16, D_80146904) = 0;
-
-  work = g_game_work;
-  work->unk_18 = (s32)(u16)(((u32)spawn[9] << 8) | spawn[0xA]);
-  work->field_05 = spawn[8];
+  field_slot = ENTITY_COUNT_S16;
+  field_work = g_game_work;
+  PSX_REF(u16, (u8*)D_80146904 +
+                   (u32)field_slot * ENTITY_SLOT_SIZE) = 0;
+  do {
+    packed_entry = spawn[9];
+    packed_entry <<= 8;
+    packed_entry |= spawn[0xA];
+    field_work->unk_18 = (s32)packed_entry;
+  } while (0);
+  field_work->field_05 = spawn[8];
   g_game_work->field_0B = spawn[0xC];
   g_game_work->unk_2A = (u8)((g_game_work->unk_07 >> 4) & 1);
 
