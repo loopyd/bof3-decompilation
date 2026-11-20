@@ -2388,6 +2388,25 @@ first. Assign a consumed mask result back to its real result variable when the
 original masks in place, then check the removed temporary and hard-register
 conflicts. Require the complete native gate; each split can change the other path.
 
+An operation scope also changes register-class costs. A product can become a
+local LO-only quantity and remain live through the next multiply. Reload can then
+spill it to a stack home, even when the following arithmetic still uses the MFLO
+temporary and no load from that home survives. Inspect preferred and alternate
+classes, the hard-LO assignment and reload spills before attributing a larger
+frame to address-taking. Preserve arithmetic and require the complete native gate.
+
+For affine record addresses, inspect GIV replaceability before induction merging.
+A reused parameter can fail the first-definition check and lose address derivation
+across a loop branch. A fresh local for the real per-record tail can pass that
+check and let its field addresses share one reduced cursor. Confirm the merged
+class, both cursor updates and complete native output; algebra alone predicts none
+of those choices.
+
+Shared accepted returns can lower a hoisted narrow result's weighted references
+without changing the final branch-delay copies. Preserve every guarded read, then
+trace conversion uses, global priorities and conflicts. Check the final control
+flow and complete native gate before attributing a register change to that merge.
+
 Read `expr.c` for promoted-variable conversions and `combine.c`/`loop.c` for known
 bits and induction rewrites. Predict which temporary survives and which instruction
 changes. Verify that prediction in before/after RTL and a supported live comparison.
