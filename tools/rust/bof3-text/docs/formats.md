@@ -339,6 +339,36 @@ This rule establishes stored image encoding. It does not extend the destination
 selector lists or establish destination selection, invocation, transfer,
 residency, display, absence of rasterized text or safe editing.
 
+## Stored sprite-record copies
+
+Coverage also recognizes exact copies of independently reviewed animation
+metadata, sprite cells and 32-halfword palettes. Qualification requires the
+original US archive, raw entry descriptor, complete payload identity and native
+root, directory and allocation relationships. Complete logical records must
+match. Only witness fields qualified before this rule transfer to the copy.
+
+| Destination archives | Witness archives |
+| --- | --- |
+| `BPLU349.EMI`, `CRYUD00..01.EMI`, `CRYUU00..01.EMI` | `BPLU349.EMI` |
+| `DRG00`, `DRG01`, `DRG02`, `DRG03`, `DRG05`, `DRG07`, `DRG08`, each `_01..04.EMI` | The corresponding `_00.EMI` |
+| `PAPYD00..04.EMI`, `PAPYU01..04.EMI` | `BPLU349.EMI`, `PAPYD00.EMI` |
+| `REID00..01.EMI`, `REIU00..01.EMI` | `BPLU349.EMI` |
+| `RTD00..01.EMI`, `RTU00..01.EMI` | `REID00.EMI` |
+| `RYUD00..03.EMI`, `RYUD10..13.EMI`, `RYUU00..03.EMI`, `RYUU10..13.EMI` | `BPLU349.EMI` |
+
+Animation metadata has `2 + 2*steps + 2*declared_cells` bytes. The ignored
+first header byte and unfetched control fields retain their prior status.
+Cells have `1 + 5*part_count` bytes within their declared allocation, with an
+independently checked program-cell reference. This rule admits no empty
+one-byte cells or metadata aliases. Palette records require a palette-directory
+reference and a complete 64-byte allocation. Unused packed bits receive no new
+meaning. Directory words, selection data and allocation tails retain their
+prior status. Physical copies retain separate source identities.
+
+This rule establishes stored numeric fields. It does not extend selector lists
+or establish destination selection, invocation, animation timing, live CLUTs,
+display, absence of rasterized text or safe editing.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
