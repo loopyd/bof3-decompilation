@@ -435,6 +435,30 @@ physical record retains its evidence. The rule establishes stored numeric
 representation. Destination selection, invocation, animation timing, live CLUTs,
 display, absence of rasterized text and safe editing remain unverified.
 
+## Stored resident-record copies
+
+Coverage recognizes complete program metadata and nonempty cell records copied
+between original US resident-animation banks. Profiles require the exact original
+archive, raw transfer mode, entry descriptor and complete payload hash.
+
+| Profile family | Entries | Destination |
+| --- | --- | --- |
+| Reviewed AREA resident banks | 4 or 10 | `0x800D3800` |
+| Shared BATTLE, BATTLE2 and BOSS resident bank | 2 or 5 | `0x800F0800` |
+
+Native parsing checks group-relative program directories, declared cell offsets
+and containing allocations in both copies. Complete record bytes must agree.
+Program metadata has `2 + 2*steps + 2*declared_cells` bytes. Cells have
+`1 + 5*part_count` bytes and require a declared program reference.
+Only donor fields classified before this rule transfer. Program header byte zero,
+metadata aliases, empty cells, unfetched fields, opaque packed bits and tails
+receive no new role. Existing physical ranges retain their evidence.
+
+Use `bin/harness text coverage --root out/extracted --json` to inspect admitted
+sources and byte extents. Matching stored fields does not establish a destination
+selector, resident-base publication, callback binding, invocation, animation
+timing, live CLUT, display, absence of rasterized text or safe editing.
+
 ## DRG00 selected program and cell fields
 
 The five original `DRG00_00..04.EMI` entry-3 banks also qualify numeric fields
