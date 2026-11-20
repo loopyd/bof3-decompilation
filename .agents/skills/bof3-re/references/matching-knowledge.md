@@ -2143,7 +2143,9 @@ pseudo from initial RTL onward. Compare that real phase with the compound sum
 through CSE and both schedules. GCC 2.7.2's `birthing_insn_p` requires one
 definition, so accumulation can remove its scheduling priority boost. Reusing a
 consumed input for its difference can then break a local quantity chain.
-Preserve arithmetic types and execution paths.
+Preserve arithmetic types and execution paths. Post-flow cleanup can change
+commutative operand order while retaining earlier SET counts. Check the resulting
+operands and allocation.
 Local allocation requires one block and one death, not one definition. Flow omits
 a `REG_DEAD` when the same instruction also sets the register, so actual in-place
 updates can retain one final death. Count surviving SETs and deaths separately;
@@ -2469,6 +2471,15 @@ integer-mode `EQ(result, 0)` for a known zero/one result as `XOR(result, 1)`.
 That later canonicalization can undo an earlier comparison simplification and
 leave a condition the branch pattern rejects. Follow the transformation through
 backend recognition before predicting that an inversion disappears.
+
+GCC 2.7.2 searches before a branch for a delay-slot instruction before
+eagerly scanning its arms. A real result assignment before the branch can
+therefore determine the fill before fall-through work is considered. A target
+zero inside a jump-delay sequence can still be stolen. Check shared labels,
+known bits, return conversions and allocation. At a shared narrow return,
+multiple zero definitions alone can leave known bits unknown. A real comparison
+definition can establish 0/1 bounds. Require the complete native gate and add no
+artificial definition.
 
 1. Compare `return condition;` with explicit constant-return arms:
 
