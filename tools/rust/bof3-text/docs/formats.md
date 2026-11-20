@@ -403,6 +403,38 @@ This rule establishes stored numeric fields. It does not extend selector lists
 or establish destination selection, invocation, animation timing, live CLUTs,
 display, absence of rasterized text or safe editing.
 
+## Compressed sprite-record copies
+
+The original US compressed banks below contain complete animation metadata,
+nonempty sprite cells and 32-halfword palettes identical to reviewed raw
+`BPLCHAR` records. Each profile requires its original archive, transfer mode 1,
+entry index, offset, size, destination `0x8003B800`, checkword and payload hash.
+
+| Destination archives | Entry |
+| --- | ---: |
+| `PL012`, `PL015`, `PL016`, `PL025`, `PL026`, `PL034`, `PL056`, `PL247`, `PL257`, `PL267`, `PL278`, `PL27A`, `PL349`, `PL457`, `PL467`, `PL478`, `PL567`, `PL578`, `PL678`, each `.EMI` | 3 |
+| The corresponding `BPLD` archives except `BPLD349.EMI` | 7 |
+| `BPLD349.EMI` | 0 |
+| The corresponding `BPLU` archives except raw `BPLU349.EMI` | 7 |
+| `BRTD247`, `BRTD457`, `BRTD467`, `BRTD478`, and their `BRTU` counterparts, each `.EMI` | 7 |
+| `START.EMI` | 7 |
+
+Native root, relative-directory and allocation checks bind both copies. Program
+metadata includes both count bytes, all declared step pairs and cell-relative
+halfwords. Cells require a declared program reference and exactly
+`1 + 5*part_count` bytes. Palettes require a directory reference and 64 bytes.
+Complete record bytes must agree, including excluded bytes. These matches have
+no metadata aliases or empty cells.
+
+Only donor fields classified before this rule transfer. Program header byte zero,
+unfetched fields, opaque packed bits and allocation tails retain their prior
+status. The complete outer decode tracks every overlapping-reference origin.
+Every decoded use of a physical literal must belong to a copied donor field or
+an existing reviewed field. The image-copy pass runs first, and every prior
+physical record retains its evidence. The rule establishes stored numeric
+representation. Destination selection, invocation, animation timing, live CLUTs,
+display, absence of rasterized text and safe editing remain unverified.
+
 ## DRG00 selected program and cell fields
 
 The five original `DRG00_00..04.EMI` entry-3 banks also qualify numeric fields
