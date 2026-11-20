@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7af11fbe617115a87824bff13d744925b4a81084",
-  "published_at": "2026-11-20T03:53:18.212920+00:00",
+  "revision": "e2f34e344e65c5355db7e3abeb88039a7f90468a",
+  "published_at": "2026-11-20T04:24:13.291841+00:00",
   "counts": {
-    "completed": 6411,
+    "completed": 6421,
     "partial": 358,
-    "unlifted": 3667,
+    "unlifted": 3656,
     "invalid": 0,
-    "total": 10436,
+    "total": 10435,
     "symbols": {
-      "named": 6550,
-      "raw": 5002,
+      "named": 6561,
+      "raw": 4991,
       "total": 11552
     }
   },
@@ -58002,14 +58002,14 @@
       "family": "boss",
       "archive": "boss034",
       "entry": "16",
-      "completed": 15,
+      "completed": 16,
       "partial": 1,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 30,
       "symbols": {
-        "named": 16,
-        "raw": 15,
+        "named": 17,
+        "raw": 14,
         "total": 31
       },
       "binary": {
@@ -58226,13 +58226,13 @@
           {
             "start": 1456,
             "end": 1524,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148277680,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table273cBossBoss03416_800C1DB0.c#L39"
               }
             ]
           },
@@ -87676,14 +87676,14 @@
       "family": "plchar",
       "archive": "plp012",
       "entry": "00",
-      "completed": 16,
+      "completed": 17,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 18,
-        "raw": 11,
+        "named": 19,
+        "raw": 10,
         "total": 29
       },
       "binary": {
@@ -87744,13 +87744,13 @@
           {
             "start": 812,
             "end": 880,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377836,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Tablefd8cPlcharPlp01200_801CE72C.c#L42"
               }
             ]
           },
@@ -88068,14 +88068,14 @@
       "family": "plchar",
       "archive": "plp015",
       "entry": "00",
-      "completed": 14,
+      "completed": 15,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 16,
-        "raw": 11,
+        "named": 17,
+        "raw": 10,
         "total": 27
       },
       "binary": {
@@ -88136,13 +88136,13 @@
           {
             "start": 812,
             "end": 880,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377836,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Tablefb90PlcharPlp01500_801CE72C.c#L29"
               }
             ]
           },
@@ -88434,14 +88434,14 @@
       "family": "plchar",
       "archive": "plp016",
       "entry": "00",
-      "completed": 25,
+      "completed": 26,
       "partial": 0,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 37,
       "symbols": {
-        "named": 26,
-        "raw": 12,
+        "named": 27,
+        "raw": 11,
         "total": 38
       },
       "binary": {
@@ -88502,13 +88502,13 @@
           {
             "start": 812,
             "end": 880,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377836,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Table063cPlcharPlp01600_801CE72C.c#L28"
               }
             ]
           },
@@ -88956,14 +88956,14 @@
       "family": "plchar",
       "archive": "plp025",
       "entry": "00",
-      "completed": 16,
+      "completed": 17,
       "partial": 0,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 18,
-        "raw": 12,
+        "named": 19,
+        "raw": 11,
         "total": 30
       },
       "binary": {
@@ -89024,13 +89024,13 @@
           {
             "start": 812,
             "end": 880,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377836,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Tableffb4PlcharPlp02500_801CE72C.c#L42"
               }
             ]
           },
@@ -89922,14 +89922,14 @@
       "family": "plchar",
       "archive": "plp034",
       "entry": "00",
-      "completed": 16,
+      "completed": 17,
       "partial": 1,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 33,
       "symbols": {
-        "named": 18,
-        "raw": 16,
+        "named": 19,
+        "raw": 15,
         "total": 34
       },
       "binary": {
@@ -89990,13 +89990,13 @@
           {
             "start": 812,
             "end": 880,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377836,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Table0300PlcharPlp03400_801CE72C.c#L44"
               }
             ]
           },
@@ -90947,14 +90947,14 @@
       "family": "plchar",
       "archive": "plp247",
       "entry": "00",
-      "completed": 13,
+      "completed": 14,
       "partial": 0,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 14,
-        "raw": 12,
+        "named": 15,
+        "raw": 11,
         "total": 26
       },
       "binary": {
@@ -90976,13 +90976,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377028,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2TablefafcPlcharPlp24700_801CE404.c#L32"
               }
             ]
           },
@@ -91313,14 +91313,14 @@
       "family": "plchar",
       "archive": "plp257",
       "entry": "00",
-      "completed": 15,
+      "completed": 16,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 12,
       "invalid": 0,
-      "total": 29,
+      "total": 28,
       "symbols": {
-        "named": 16,
-        "raw": 14,
+        "named": 18,
+        "raw": 12,
         "total": 30
       },
       "binary": {
@@ -91342,13 +91342,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377028,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2TablefedcPlcharPlp25700_801CE404.c#L29"
               }
             ]
           },
@@ -91706,15 +91706,8 @@
           {
             "start": 6876,
             "end": 6968,
-            "category": "code-unlifted",
-            "detail": "Indexed function",
-            "functions": [
-              {
-                "address": 2149383900,
-                "status": "unlifted",
-                "source": null
-              }
-            ]
+            "category": "unknown",
+            "detail": "No verified classification"
           }
         ]
       }
@@ -91725,14 +91718,14 @@
       "family": "plchar",
       "archive": "plp267",
       "entry": "00",
-      "completed": 24,
+      "completed": 25,
       "partial": 0,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 40,
       "symbols": {
-        "named": 25,
-        "raw": 16,
+        "named": 26,
+        "raw": 15,
         "total": 41
       },
       "binary": {
@@ -91754,13 +91747,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377028,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Table0988PlcharPlp26700_801CE404.c#L36"
               }
             ]
           },
@@ -92286,14 +92279,14 @@
       "family": "plchar",
       "archive": "plp278",
       "entry": "00",
-      "completed": 6,
+      "completed": 7,
       "partial": 0,
-      "unlifted": 21,
+      "unlifted": 20,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 8,
-        "raw": 21,
+        "named": 9,
+        "raw": 20,
         "total": 29
       },
       "binary": {
@@ -92315,13 +92308,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149377028,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkByte2Tablefcb4PlcharPlp27800_801CE404.c#L35"
               }
             ]
           },
