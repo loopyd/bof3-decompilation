@@ -207,8 +207,10 @@ image reader at `0x8014E6D0` consumes the same packed, raw or mode-2 image stora
 described above, including any final-token overshoot.
 
 Only the image section word, selected image-directory words, image headers and
-consumed image words or tokens qualify. CRYUU01 image slot 8 and its directory
-word remain unresolved. This route has no bound palette-copy call after the
+consumed image words or tokens qualify under this route. CRYUU01 image slot 8
+has no qualified selection or directory word. The
+[stored-copy rule](#stored-image-copies) separately identifies its encoding.
+This route has no bound palette-copy call after the
 replacement, so its palette section word, directory and records remain unresolved.
 Opaque mode-2 prefixes, tails, programs and selection storage also stay unresolved.
 These profiles establish no natural selector production, invocation, runtime
@@ -231,6 +233,8 @@ In image-slot order, the first group uses selectors
 `4,6,8,40,0,12,44,36,16,24,28,32,20,56,60,48`. The second omits selector 60
 and image slot 13. Selector 0 requires actor byte 8 equal to 252. The request
 and retained-root conditions above still apply, and all palettes remain unresolved.
+The stored-copy rule separately identifies image 13 in the form-4 banks without
+adding a reachable selector.
 
 | Suffix | Hint | BPL bank | Identifier | Ordinal | Replacement destination |
 | --- | --- | --- | --- | --- | --- |
@@ -293,14 +297,47 @@ lists follow the listed image-slot order.
 
 The SLUS LBA table and complete original physical user bytes bind these slots.
 Only root words 0 and 4, reachable image-directory words, consumed image storage,
-palette-directory word 0 and its 32 halfwords qualify. Other images and directory
-words, palette index 1, opaque mode-2 prefixes, tails, programs and selections
-remain unresolved. Stable original code and source, bounded dispatch states,
+palette-directory word 0 and its 32 halfwords qualify under these routes.
+The stored-copy rule separately identifies the image encodings listed below.
+Other image bytes and directory words, palette index 1, opaque mode-2 prefixes,
+tails, programs and selections remain unresolved. Stable original code and source, bounded dispatch states,
 ordinary noninterfering helper returns, clear image-skip bit, valid animation
 records, queue capacity and bounded nonaliasing work and output are conditions.
 Output bounds include mode-2 final-token overshoot. Natural incoming arguments,
 state progression, selector and root retention, invocation, residency, transfer,
 display, absence of rasterized text and safe editing remain unverified.
+
+## Stored image copies
+
+Coverage identifies the following original raw image records as exact stored
+copies of independently reviewed image encodings. Each destination retains its
+original archive identity and requires entry 3, raw mode, checkword `0x10`, its
+reviewed offset and load argument, and the complete payload size and SHA-256.
+The sprite-bank root and image directory bind each record to its containing
+allocation. Complete record bytes, dimensions, mode, consumed length, decoded
+output and final-token overshoot match the witness.
+
+All offsets below use entry-payload coordinates. Each destination has root 0.
+
+| Destination archives | Image slots | Record offsets | Witness archive and entry | Witness root and slots | Witness record offsets |
+| --- | --- | --- | --- | --- | --- |
+| `CRYUU00.EMI` | 8 | 16736 | `BPLU349.EMI` entry 0 | Root 2, slot 8 | 240168 |
+| `CRYUU01.EMI` | 8 | 18972 | `BPLU349.EMI` entry 0 | Root 2, slot 8 | 240168 |
+| `REID00..01.EMI` | 2 | 17840 | `REIU00.EMI` entry 3 | Root 0, slot 2 | 17840 |
+| `REID00..01.EMI` | 12 | 69188 | `BPLU349.EMI` entry 0 | Root 1, slot 11 | 178076 |
+| `RTD00..01.EMI` | 0, 1, 4, 5 | 40, 5512, 20816, 29440 | `RTU00.EMI` entry 3 | Root 0, slots 0, 1, 4, 5 | 40, 5512, 20396, 29020 |
+| `RYUD10..13.EMI` | 13 | 40896 | `RYUD00.EMI` entry 3 | Root 0, slot 13 | 40896 |
+| `RYUU10..13.EMI` | 13 | 38892 | `RYUU00.EMI` entry 3 | Root 0, slot 13 | 38892 |
+
+Only translated witness fields already classified as known nontext qualify.
+These are the eight-byte image header and consumed packed words or mode-2
+tokens. The four-byte mode-2 prefix at relative `[8,12)` remains unresolved.
+The rule excludes directory words, palettes, programs, selection storage and
+allocation tails. Physical copies retain separate source identities.
+
+This rule establishes stored image encoding. It does not extend the destination
+selector lists or establish destination selection, invocation, transfer,
+residency, display, absence of rasterized text or safe editing.
 
 ## Save-icon source coverage
 

@@ -10516,6 +10516,109 @@ pub fn payload_nontext_ranges(
     if !original_us {
         return None;
     }
+    let mut ranges = reviewed_payload_nontext_ranges(entry, data);
+    if let Some(copies) = stored_image_copy_ranges(entry, data) {
+        ranges.get_or_insert_with(Vec::new).extend(copies);
+    }
+    ranges
+}
+
+fn stored_image_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    if entry.index != 3
+        || entry.transfer_mode != 0
+        || entry.check_word != 0x10
+        || usize::try_from(entry.size).ok() != Some(data.len())
+    {
+        return None;
+    }
+    let (ranges, evidence): (&[(usize, usize)], &str) = match (
+        entry.offset,
+        entry.ram_ptr,
+        data.len(),
+        sha256_hex(data).as_str(),
+    ) {
+        // CRYUU00 image 8, copied from BPLU349 root 2 image 8.
+        (
+            40_960,
+            0x8003_b80c,
+            110_592,
+            "440f35b120293916a9d19a7c60a6589dfe47800b9e8dbab95de24d25a4d4f58e",
+        ) => (
+            &[(16_736, 8), (16_748, 3_803)],
+            "Original US stored image-format copy. CRYUU00 entry 3 image 8 matches BPLU349 entry 0 root 2 image 8 at payload offset 240168. Exact original archive, raw entry geometry, complete payload and record identities bind the copied header and consumed mode-2 tokens. Opaque prefix, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        // CRYUU01 image 8 has the same complete image record.
+        (
+            43_008,
+            0x8003_b80c,
+            110_592,
+            "bcf1849fd598d529fd441f4d09561ccc7c143c03babbf3142d24d051ce8b81fe",
+        ) => (
+            &[(18_972, 8), (18_984, 3_803)],
+            "Original US stored image-format copy. CRYUU01 entry 3 image 8 matches BPLU349 entry 0 root 2 image 8 at payload offset 240168. Exact original archive, raw entry geometry, complete payload and record identities bind the copied header and consumed mode-2 tokens. Opaque prefix, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        // REID00/01 images 2 and 12 match REIU00 and BPLU349 records.
+        (
+            38_912,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "30da9d48edceff573fa4d61982f76f79faa0a0f0b10095d5aee55428df03b271",
+        ) => (
+            &[(17_840, 8), (17_852, 5_205), (69_188, 8), (69_200, 500)],
+            "Original US stored image-format copies. REID00/01 entry 3 images 2 and 12 match REIU00 entry 3 image 2 at payload offset 17840 and BPLU349 entry 0 root 1 image 11 at 178076, respectively. Exact original archive, raw entry geometry, complete payload and record identities bind the copied headers and consumed mode-2 tokens. Opaque prefixes, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        // RTD00/01 images 0, 1, 4 and 5 match RTU00 records.
+        (
+            26_624,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "436640506a37ffea2605d20e1b1f63983d8cd019399279ed3f62e5fb17be9e18",
+        ) => (
+            &[
+                (40, 5_472),
+                (5_512, 5_472),
+                (20_816, 8),
+                (20_828, 8_609),
+                (29_440, 8),
+                (29_452, 8_532),
+            ],
+            "Original US stored image-format copies. RTD00/01 entry 3 images 0, 1, 4 and 5 match RTU00 entry 3 records at payload offsets 40, 5512, 20396 and 29020, respectively. Exact original archive, raw entry geometry, complete payload and record identities bind the copied headers, consumed mode-1 words and mode-2 tokens. Opaque mode-2 prefixes, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        // RYUD10..13 image 13 matches RYUD00 image 13.
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            61_260,
+            "79ab35585a155a4d67210af5b64140f4dfb971e4cd8f97517ac75c51b758b048",
+        ) => (
+            &[(40_896, 8), (40_908, 5_700)],
+            "Original US stored image-format copies. RYUD10..13 entry 3 image 13 matches RYUD00 entry 3 image 13 at payload offset 40896. Exact original archive, raw entry geometry, complete payload and record identities bind the copied header and consumed mode-2 tokens. Opaque prefix, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        // RYUU10..13 image 13 matches RYUU00 image 13.
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            57_480,
+            "10dafbb38ae2aa7d798a2b6d02f35b88d89aa833f61015415ad8185a1c0f2f4d",
+        ) => (
+            &[(38_892, 8), (38_904, 4_918)],
+            "Original US stored image-format copies. RYUU10..13 entry 3 image 13 matches RYUU00 entry 3 image 13 at payload offset 38892. Exact original archive, raw entry geometry, complete payload and record identities bind the copied header and consumed mode-2 tokens. Opaque prefix, directory words and allocation tails retain prior status. No destination selection, invocation, display, rasterized-text absence or safe-edit claim.",
+        ),
+        _ => return None,
+    };
+    Some(
+        ranges
+            .iter()
+            .map(|&(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence,
+            })
+            .collect(),
+    )
+}
+
+fn reviewed_payload_nontext_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
     if entry.transfer_mode == 0
         && entry.index == 3
         && entry.offset == 26_624
