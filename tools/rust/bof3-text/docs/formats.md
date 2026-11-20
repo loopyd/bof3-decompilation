@@ -2028,8 +2028,9 @@ independent captures, or identify the description-bank supplier.
 
 Coverage recognizes complete instruction bodies in the following original US
 entries. Each uses raw mode 0. Entry 0 starts at archive offset 2048;
-COMMU01 entry 7 starts at offset 143360. The complete archive must match its
-original US disc identity.
+COMMU01 entry 7 starts at offset 143360. AREA121 entry 14 starts at offset
+815104, and AREA077 entry 14 starts at offset 819200. The complete archive
+must match its original US disc identity.
 
 | Archive | Entry | Load address | Checkword | Payload bytes | Payload SHA-256 |
 | --- | ---: | --- | --- | ---: | --- |
@@ -2039,6 +2040,11 @@ original US disc identity.
 | `SISYOU.EMI` | 0 | `0x801D0C00` | `0x1F` | 13963 | `42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af` |
 | `SCENA04.EMI` | 0 | `0x801F6C00` | `0x109` | 14176 | `cb0ff0c46ea33d5c9eef07493b7b2c2673278dbb97373c3eb8f77b8adfdbcb9f` |
 | `PLP056.EMI` | 0 | `0x801CE400` | `0x27` | 9428 | `98b83aa1d6951af3844ea34058e34fbcc18acb5d5e8f69eb4aa289107564bfa8` |
+| `PLP567.EMI` | 0 | `0x801CE400` | `0x31` | 9224 | `3eee6be151e6a3ffff13ca98efad8521719a29bcd7ffd465f37f2ec5188389e3` |
+| `SCENA03.EMI` | 0 | `0x801F6C00` | `0x108` | 25672 | `3570700503e37f2a43a3ad9877521773532fd8b2278ceb70ca1f7cb4e37ef7e8` |
+| `AREA121.EMI` | 14 | `0x801F2C00` | `0xAD` | 15547 | `42da9ce8b9e2225fc93ed1bcb0296fd7a42a341f5a81187fcb0025ac5365a275` |
+| `AREA077.EMI` | 14 | `0x801F2C00` | `0x81` | 16248 | `0987764aeff328845033df60674008b12b1af555fe888c68445459964c292e9e` |
+| `SCE15EF1.EMI` | 0 | `0x801D0C00` | `0x11B` | 13496 | `0af89b01778db26d220b3fe5975f766edf0b798c96dc6df1c82031fb9cbea361` |
 
 Offsets below are relative to the selected entry. Runtime addresses are the
 load address plus these offsets. Adjacent complete functions are coalesced
@@ -2052,6 +2058,11 @@ only for coverage accounting.
 | SISYOU | `[24,2116)`, `[2940,4692)`, `[6048,11812)`, `[12912,13144)` | 43 | 9840 |
 | SCENA04 | `[256,676)`, `[812,2492)`, `[2984,4336)`, `[4800,5172)`, `[5412,6784)`, `[9112,12788)`, `[13264,13696)` | 38 | 9304 |
 | PLP056 | `[4,9304)` | 38 | 9300 |
+| PLP567 | `[4,9100)` | 38 | 9096 |
+| SCENA03 | `[624,692)`, `[1632,2380)`, `[3604,7420)`, `[8196,8704)`, `[9972,10040)`, `[11256,11392)`, `[13476,14156)`, `[22452,23724)`, `[23876,25112)`, `[25308,25380)` | 66 | 8604 |
+| AREA121 | `[60,304)`, `[448,540)`, `[1144,1284)`, `[1596,1720)`, `[2072,3864)`, `[5340,5584)`, `[5900,6460)`, `[6624,6692)`, `[6996,7036)`, `[7936,8012)`, `[9080,10020)`, `[10112,11160)`, `[11544,13004)`, `[13304,14552)` | 48 | 8076 |
+| AREA077 | `[4,72)`, `[2936,3224)`, `[4212,4388)`, `[4612,4680)`, `[4872,5556)`, `[5664,6088)`, `[6480,7784)`, `[8412,8480)`, `[8900,10828)`, `[10948,13904)` | 55 | 7964 |
+| SCE15EF1 | `[4,72)`, `[192,3856)`, `[4308,6048)`, `[6844,7476)`, `[8004,9176)`, `[10908,11544)` | 31 | 7912 |
 
 Fresh native compilation and relocation reproduce all complete sized ELF
 function symbols. Compiler assembly separates instructions from initialized
