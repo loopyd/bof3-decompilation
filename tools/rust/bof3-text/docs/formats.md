@@ -1900,6 +1900,95 @@ Review covers all 36 original words and every branch, jump and return delay
 slot. Referenced input and repeat-state fields remain outside the classification.
 Physical button mapping and input cadence remain separate requirements.
 
+## Instruction coverage from original calls
+
+The following complete original US bodies qualify as known nontext. Every body
+has an original direct JAL entry in a previously qualified instruction record.
+Review covers every raw instruction word, structural branch and control-transfer
+delay word. SLUS uses the exact executable identity in
+[SLUS instruction coverage](#slus-instruction-coverage). EMI ranges require an
+original whole archive, raw mode, load address, payload size and payload SHA-256:
+
+| Payload | Load address | Bytes | SHA-256 |
+| --- | --- | ---: | --- |
+| `GAME.EMI#0` | `0x80195800` | 229720 | `1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff` |
+| Shared battle consumer | `0x801D0C00` | 118224 | `f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1` |
+| Shared battle consumer | `0x80096800` | 133316 | `77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140` |
+
+GAME additionally requires entry 0 at archive offset 2048 and check word `0x1E`.
+Shared battle entry indices and archive offsets may differ. The entry labels below
+refer to `BIN/BATTLE/BATTLE.EMI`; the same exact payloads qualify in other original
+archives. Runtime ends are exclusive. Each row lists one qualifying original call.
+
+| Body source | Runtime interval | Original call source | JAL address |
+| --- | --- | --- | --- |
+| SLUS | `[0x8014D4E0,0x8014D54C)` | SLUS | `0x8014D2B4` |
+| SLUS | `[0x8014ECAC,0x8014ECEC)` | BATTLE#3 | `0x801E57F4` |
+| SLUS | `[0x80150098,0x801501E4)` | BATTLE#3 | `0x801D911C` |
+| SLUS | `[0x80161454,0x80161808)` | SLUS | `0x8014D4C8` |
+| SLUS | `[0x8016728C,0x80167344)` | GAME#0 | `0x80197BC0` |
+| SLUS | `[0x8017212C,0x801721FC)` | SLUS | `0x8016DFB0` |
+| SLUS | `[0x8017A5E4,0x8017A620)` | SLUS | `0x8014AE4C` |
+| SLUS | `[0x8017A620,0x8017A6F0)` | BATTLE#3 | `0x801D754C` |
+| SLUS | `[0x8017A8C8,0x8017A8EC)` | SLUS | `0x8014C030` |
+| SLUS | `[0x8017A904,0x8017A92C)` | SLUS | `0x8014CD5C` |
+| SLUS | `[0x8017AA6C,0x8017AA80)` | BATTLE#3 | `0x801D9950` |
+| SLUS | `[0x8017C2D8,0x8017C330)` | SLUS | `0x8014BDDC` |
+| SLUS | `[0x8017EE0C,0x8017EE1C)` | SLUS | `0x8014AD78` |
+| SLUS | `[0x8017EE1C,0x8017EE2C)` | SLUS | `0x8014ADA4` |
+| SLUS | `[0x8017F3D0,0x8017F3E4)` | SLUS | `0x8017F1D4` |
+| GAME#0 | `[0x8019651C,0x80196670)` | GAME#0 | `0x801C15C4` |
+| GAME#0 | `[0x80196670,0x80196718)` | GAME#0 | `0x80196750` |
+| GAME#0 | `[0x801992B8,0x80199308)` | GAME#0 | `0x80197ABC` |
+| GAME#0 | `[0x801A0514,0x801A061C)` | GAME#0 | `0x801993B8` |
+| GAME#0 | `[0x801A06D8,0x801A0AE4)` | GAME#0 | `0x80197AB4` |
+| GAME#0 | `[0x801AF390,0x801AF494)` | BATTLE#15 | `0x800B0C54` |
+| GAME#0 | `[0x801AF494,0x801AF5B0)` | BATTLE#15 | `0x800B26D4` |
+| GAME#0 | `[0x801AF5B0,0x801AF800)` | BATTLE#15 | `0x800B2D68` |
+| GAME#0 | `[0x801AF800,0x801AF930)` | BATTLE#15 | `0x800B277C` |
+| GAME#0 | `[0x801AF930,0x801AFA1C)` | BATTLE#15 | `0x800B2E3C` |
+| GAME#0 | `[0x801AFA1C,0x801AFD10)` | BATTLE#15 | `0x800B1074` |
+| GAME#0 | `[0x801AFD10,0x801AFE18)` | BATTLE#15 | `0x800B2630` |
+| GAME#0 | `[0x801BEE5C,0x801BF11C)` | GAME#0 | `0x80197AAC` |
+| GAME#0 | `[0x801BF11C,0x801BF448)` | GAME#0 | `0x80197C24` |
+| GAME#0 | `[0x801C3204,0x801C329C)` | GAME#0 | `0x801C15D4` |
+| BATTLE#3 | `[0x801DCAD8,0x801DCCB0)` | BATTLE#3 | `0x801DC234` |
+| BATTLE#3 | `[0x801E2E30,0x801E30B8)` | BATTLE#3 | `0x801E2990` |
+| BATTLE#15 | `[0x800A78B8,0x800A7B40)` | BATTLE#15 | `0x800A761C` |
+| BATTLE#15 | `[0x800A9FC4,0x800AA368)` | BATTLE#15 | `0x800A9C0C` |
+| BATTLE#15 | `[0x800B06F4,0x800B09CC)` | BATTLE#15 | `0x800B04C4` |
+
+Info-page exports narrow the search; original bytes determine body boundaries.
+The SLUS bodies ending at `0x801721FC` and `0x8017A620` include the return
+delay words at `0x801721F8` and `0x8017A61C`. GAME bodies beginning at
+`0x801AF494`, `0x801AF930`, `0x801AFA1C` and `0x801AFD10` have independent
+original call entries even when an exported span combines them with a neighbor.
+The following body at `0x801AFE18..0x801AFF04` remains outside this rule because
+its entry has not been qualified.
+
+GAME body `0x801AF494..0x801AF5B0` also qualifies its five-word numeric jump
+table at `0x80195F7C..0x80195F90`, payload bytes `[1916,1936)`. It masks the
+selector with `0xFF`, tests unsigned `< 5` at `0x801AF4B0` and branches to the
+default at `0x801AF598` when outside that bound. The scaled load at `0x801AF4C4`
+and register jump at `0x801AF4CC` select only `0x801AF598`, `0x801AF4D4`,
+`0x801AF544`, `0x801AF558` or `0x801AF578`. All targets stay inside the complete
+consumer. Guard, load, jump and delay words reconcile with the original table.
+
+The two SLUS bodies at `0x8017EE0C` and `0x8017EE1C` contain SYSCALL at
+`0x8017EE10` and `0x8017EE20`. Their structural continuations assume exception
+return to the following instruction; they do not establish the handler or its
+effects. The five-word body at `0x8017F3D0` loads a pointer from `0x8018B2F8`
+and ends with `JR t1` at `0x8017F3DC` and its delay word. Only those instruction
+words qualify. Pointer storage, target identity and outgoing effects remain
+outside this rule.
+
+Call continuations assume ordinary returns, valid nonaliasing memory, intact
+frames and stable code and tables. Other referenced data and external callees
+retain their prior status. These ranges establish stored instructions and the
+bounded numeric table. They do not establish matching ELF output, observed
+invocation, feasible paths, transitive effects, resource safety, display or safe
+editing.
+
 ## Shared battle instruction coverage
 
 Coverage recognizes the following complete instruction bodies in original US raw

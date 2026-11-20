@@ -63,6 +63,9 @@ const BATTLE_CALLEE_TABLE_EVIDENCE: &str = "Original US shared battle numeric ju
 const BATTLE_RESIDENT_FIELD_EVIDENCE: &str = "Original US battle resident animation fields at 0x800F0800. Exact whole-archive, raw-entry descriptor and payload identities bind the co-resident 0x801D0C00 consumer. Original dispatcher 0x801E6C84 temporarily publishes this base. Initialized state 1 selects group 1 and programs 3/4/5 through mask 0x58; state 3 advances their finite forward walks and queues the same work pointer. SLUS 0x8014BB20 restores that queued pointer, and 0x8014C4D4 reads the retained work+0x54 table and work+0x5A offset after the shared base changes. Only fetched root/program/cell numeric fields qualify. Ordinary noninterfering returns, valid nonaliasing memory, stable bank/work/pointers, queue capacity, enabled drain and visible-coordinate guards remain conditions. Program header byte zero, unselected programs/cells, gaps, tails and control bits 0x70 retain their prior status. No actual invocation, loading, residency, upload, display, rasterized-text absence or safe-edit claim.";
 const BATTLE_RESIDENT_TABLE_EVIDENCE: &str = "Original US battle resident animation numeric tables. Dispatcher 0x801E6C84 copies all five address words at 0x801D0F44..0x801D0F58 before its guarded indirect call. Initializer 0x801E6E54 and continuing handler 0x801E6FB0 read request-table indices 0/3/4/6 at 0x801EB494 under the reviewed mask-0x58 selector and initialized state. Exact original archive and raw-payload identities bind the consumer. Stable tables, valid work and nonaliasing memory remain conditions. Other request bytes retain their prior status. No general selector bound, actual invocation, indirect-call safety, display or safe-edit claim.";
 
+const US_DIRECT_CALL_INSTRUCTION_EVIDENCE: &str = "Original US direct-call instruction bodies; original JAL entries from previously qualified instruction records, complete raw-word and structural control-flow review, and every control-transfer delay word including returns. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. GAME 0x801AF494 uses the separately qualified five-case numeric table. SYSCALL continuations at 0x8017EE10/0x8017EE20 assume exception return to the next instruction. The five-word 0x8017F3D0 body ends in an opaque pointer-loaded tail transfer; pointer storage, target and effects are excluded. tools/rust/bof3-text/docs/formats.md records body boundaries and entry sites. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
+const US_DIRECT_CALL_TABLE_EVIDENCE: &str = "Original US direct-call numeric jump table at 0x80195F7C..0x80195F90; five little-endian targets. Complete original GAME body 0x801AF494..0x801AF5B0 masks the selector to eight bits and applies unsigned < 5 before the scaled table load and register jump. Every original target stays inside the consumer; complete guard, table, load/jump and delay words reconcile. Exact original archive/raw-payload identities and load address gate classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring bytes retain prior status. No actual dispatch, general selector bound, resource safety, display or safe-edit claim.";
+
 /// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     if data.len() == 122_880
@@ -115,6 +118,81 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
         return Vec::new();
     }
     vec![
+        NontextRange {
+            offset: 0xb74e0,
+            length: 108,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xb8cac,
+            length: 64,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xba098,
+            length: 332,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xcb454,
+            length: 948,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xd128c,
+            length: 184,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xdc12c,
+            length: 208,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe45e4,
+            length: 60,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe4620,
+            length: 208,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe48c8,
+            length: 36,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe4904,
+            length: 40,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe4a6c,
+            length: 20,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe62d8,
+            length: 88,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe8e0c,
+            length: 16,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe8e1c,
+            length: 16,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xe93d0,
+            length: 20,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
         NontextRange {
             offset: 735_640,
             length: 20,
@@ -11488,6 +11566,86 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 0xd1c,
+                    length: 340,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0xe70,
+                    length: 168,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x3ab8,
+                    length: 80,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0xad14,
+                    length: 264,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0xaed8,
+                    length: 1036,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x19b90,
+                    length: 260,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x19c94,
+                    length: 284,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x19db0,
+                    length: 592,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a000,
+                    length: 304,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a130,
+                    length: 236,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a21c,
+                    length: 756,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x1a510,
+                    length: 264,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2965c,
+                    length: 704,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2991c,
+                    length: 812,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x2da04,
+                    length: 152,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x77c,
+                    length: 20,
+                    evidence: US_DIRECT_CALL_TABLE_EVIDENCE,
+                },
+                NontextRange {
                     offset: 3_864,
                     length: 108,
                     evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
@@ -11659,6 +11817,16 @@ pub fn payload_nontext_ranges(
                 == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1" =>
         {
             Some(vec![
+                NontextRange {
+                    offset: 0xbed8,
+                    length: 472,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 0x12230,
+                    length: 648,
+                    evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+                },
                 NontextRange {
                     offset: 0x344,
                     length: 20,
@@ -13849,6 +14017,11 @@ pub fn payload_nontext_ranges(
                 offset,
                 length,
                 evidence: BATTLE_CALLEE_TABLE_EVIDENCE,
+            }))
+            .chain([(0x110b8, 648), (0x137c4, 932), (0x19ef4, 728)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
             }))
             .collect())
         }
