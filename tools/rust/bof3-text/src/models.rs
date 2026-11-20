@@ -43,7 +43,7 @@ pub fn invalid<T>(message: impl Into<String>) -> Result<T> {
 }
 
 /// One TOC entry of an EMI archive.
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Eq)]
 pub struct Entry {
     pub index: usize,
     pub offset: usize,
@@ -496,8 +496,8 @@ pub struct PreFilterInput<'a> {
     pub class: Option<TextClass>,
     /// The current TOC record, absent for inputs outside an EMI archive.
     pub toc: Option<Entry>,
-    /// Actual archive bytes match an original-US EMI in the disc manifest.
-    pub original_us: bool,
+    /// Source-bound graphics classification supplied by the texture component.
+    pub textures: Option<&'a crate::textures::ArchiveContext>,
     /// Earlier TOC entries and payloads in container order. Mode 7 uses the latest mode-6 header.
     pub preceding: &'a [(Entry, &'a [u8])],
 }

@@ -37,7 +37,7 @@ check: venv
     @{{ root }}/bin/harness text build-index
     @{{ root }}/bin/harness source docs
     @just check-textures
-    @cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml --target-dir build/tools/rust/bof3-text
+    @PSX_BOF3_TEXTURES={{ root }}/build/tools/rust/bof3-textures/release/bof3-textures cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml --target-dir build/tools/rust/bof3-text
     @{{ root }}/bin/harness text build-index --check
     @{{ root }}/bin/harness text verify
     @{{ root }}/bin/harness text search --verify-entries

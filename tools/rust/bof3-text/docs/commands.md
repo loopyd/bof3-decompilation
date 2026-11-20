@@ -56,7 +56,7 @@ Recognition establishes build identity, not complete text coverage. Other builds
 EU and JP support is explicitly unverified. Unknown consumers, nonzero container
 gaps and unverified non-EMI ranges stay unresolved. Supported executable ASCII
 allocations carry their pointer and consumer evidence. Exact-source rules also
-identify the [SLUS geometry table](formats.md#executable-geometry-table-coverage)
+identify the [SLUS geometry table](../../bof3-textures/docs/byte-ranges.md#executable-geometry-table-coverage)
 and [LOGO instruction bodies](formats.md#executable-instruction-coverage) as known
 nontext. Other executable bytes remain unresolved. Matching unpacked payload sidecars and
 matching extraction manifests are marked as derivatives of their EMI archive,
@@ -483,11 +483,13 @@ exit status is non-zero, so an offender is never hidden behind a summary count.
 Builds the classified-window registry: the byte ranges an existing owner already accounts for, so
 heuristic latching does not run inside them. Windows come from the sources that already know — the
 **parse** (a known-class subfile's whole payload, its pointer table and every row extent, read from the
-crate's own parse rather than re-derived), the **payload inventory** (each identified subfile as a
+crate's own parse rather than re-derived), the **payload inventory** (each registry-eligible subfile as a
 `known_payload` window naming its record and check), and the **reviewed records** (the `textbin`
 subsegments the boundary review produced, each cross-checked against its target's load address). Nothing
 is inferred from a byte pattern: a window exists only because a parse, the inventory or a reviewed record
 says so, and a window with no named owner is refused rather than invented.
+Whole-VRAM recognition is checked against the current archive by the texture
+owner; it does not produce unconditional registry windows.
 
 ## `vocabulary [--index PATH] [--out PATH]`
 
@@ -508,8 +510,10 @@ real thresholds rather than a re-implementation of them.
 
 Lists the payloads the inventory identifies, one row per identified subfile, with the family, the
 magic, the record that names it and the structural check that confirmed it. This is what
-`bin/harness text windows` reads to register `known_payload` windows, so the identification lives in
-one place (`filters.rs`) and the checks are not re-implemented.
+`bin/harness text windows` reads registry-eligible records to register
+`known_payload` windows. `filters.rs` composes admission using inventory checks
+and live graphics recognition from the texture owner. See
+[owner setup](getting-started.md#prerequisites) for direct binary invocations.
 
 ## `map [--root DIR] [--out PATH] [--windows PATH] [--no-windows]`
 
@@ -570,7 +574,8 @@ output carries `"regenerated": true`). `build-index --check` is the refusing mod
 that wants to detect staleness without writing.
 
 Freshness also binds the loaded ownership registry, payload inventory, vocabulary,
-readability settings and verified literal codec schemas through `inputs.filters_hash`.
+readability settings, verified literal codec schemas and the texture owner's
+interpretation through `inputs.filters_hash`.
 Changing their contents
 or using `--no-windows`, `--no-payloads`, `--no-readable` or `--no-vocabulary`
 invalidates the index. Older index schemas are rebuilt. Use a

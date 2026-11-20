@@ -13,6 +13,10 @@ Use `coverage` for full extracted-tree accounting, `extract-corpus` for verified
 bank, inline string, supported record name and executable ASCII exports, and `analyze` for original
 allocations, references and command operands.
 
+Graphics ranges come from [`bof3-textures`](../../bof3-textures/docs/byte-ranges.md).
+The harness builds and supplies that tool. Direct binary invocations require
+`bof3-textures` on `PATH` or `PSX_BOF3_TEXTURES` set to its executable.
+
 Three classes are modelled: `dialogue` and `battle` are located structurally, and `heuristic`
 marks a raw-text instance found by scanning — a lead, not verified text. Original archives are
 never modified.
@@ -55,9 +59,9 @@ bin/harness text pack --original out/extracted/BIN/WORLD00/AREA000.EMI \
 ```
 
 Corpus search uses `out/extracted/BIN` and refreshes its retained index when
-archive bytes, ownership windows, payload inventory, vocabulary or filter
-settings change. Each hit names its archive, entry and containing string's byte
-range; `--match-offset` selects the matching phrase's range. See
+archive bytes, ownership windows, payload inventory, vocabulary, filter settings
+or the texture owner's interpretation change. Each hit names its archive, entry
+and containing string's byte range; `--match-offset` selects the matching phrase's range. See
 [commands.md](commands.md) for filters and [getting-started.md](getting-started.md)
 for the Rust build and required local inputs.
 
@@ -80,7 +84,9 @@ bin/harness text pack --original out/extracted/BIN/WORLD00/AREA000.EMI \
   `models.rs`: a `PreFilter` answers which byte ranges may be latched at all, and a `PostFilter`
   decides whether a produced candidate is worth reporting. The classified-window barrier and the
   payload inventory are the pre-filters; the scanner's quality floors and the readability rule are the
-  post-filters, and no consumer applies a filter of its own.
+  post-filters, and no consumer applies a filter of its own. Graphics facts come
+  from the texture owner. Whole-VRAM recognition checks the current archive;
+  it does not add unconditional registry windows.
 - **Identified non-text payloads are never searched.** `bin/harness text payloads` lists the payloads
   the inventory identifies — `pBAV` (audio) and `pQES` (music) today — each named by an in-repo record
   and confirmed by a structural check; they are excluded both as `known_payload` windows and by the

@@ -30,6 +30,7 @@ mod search;
 mod segmentmap;
 mod syntax;
 mod textindex;
+mod textures;
 mod windows;
 
 fn main() {

@@ -250,6 +250,12 @@ archive copy retains its own IDs. These source relationships do not establish
 BIOS timing or edited display. Record edits remain subject to the parent
 package's supported edit rules.
 
+The separate [`bof3.texture-ranges/v1` protocol](byte-ranges.md) supplies reviewed
+physical fields to consumers such as the text tool. Logical record extents do
+not automatically qualify physical bytes. Consumers validate source, entry and
+payload identities, evidence and bounds, and include the owner identity in
+their retained-index fingerprints. See the [ranges commands](../README.md#qualified-byte-ranges).
+
 Coverage schema `bof3.textures-coverage/v3` reports physical resources separately
 from logical records and their kinds. Each category has `physical_resources`
 and `logical_records`, sorted and deduplicated by ID, with

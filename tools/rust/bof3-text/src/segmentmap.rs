@@ -140,7 +140,7 @@ pub fn build(
             .map_err(|error| Error::Invalid(format!("{}: {error}", path.display())))?;
         let name = crate::textindex::relative_archive(root, &path);
         let mut subfiles = Vec::new();
-        let original_us = crate::original::archive(&data)?;
+        let textures = filters.payloads.archive_context(&data)?;
         let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
         for (entry, payload) in lexagraph::entries(&data)? {
             let class = TextClass::from_load_argument(entry.ram_ptr);
@@ -151,7 +151,7 @@ pub fn build(
                 payload,
                 class,
                 toc: Some(entry),
-                original_us,
+                textures: Some(&textures),
                 preceding: &preceding,
             };
             let mut parsed = false;

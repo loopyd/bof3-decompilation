@@ -804,7 +804,7 @@ fn query_latches(
     let key = window_key(windows, &archive_label(archive))?
         .unwrap_or("")
         .to_string();
-    let original_us = crate::original::archive(data)?;
+    let textures = payloads.archive_context(data)?;
     let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(data)? {
         let input = crate::models::PreFilterInput {
@@ -814,7 +814,7 @@ fn query_latches(
             class: TextClass::from_load_argument(entry.ram_ptr),
             // The container's earlier payloads, so the pairing rule works on this path too.
             toc: Some(entry),
-            original_us,
+            textures: Some(&textures),
             preceding: &preceding,
         };
         let filters = crate::filters::compose(
@@ -1967,7 +1967,7 @@ fn identified_payloads(
             .map_err(|_| Error::Invalid(format!("{}: outside {}", path.display(), base.display())))?
             .to_string_lossy()
             .replace('\\', "/");
-        let original_us = crate::original::archive(&data)?;
+        let textures = payloads.archive_context(&data)?;
         let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
         for (entry, payload) in crate::lexagraph::entries(&data)? {
             let identified = payloads.identify(payload).or_else(|| {
@@ -1977,7 +1977,7 @@ fn identified_payloads(
                     payload,
                     class: None,
                     toc: Some(entry),
-                    original_us,
+                    textures: Some(&textures),
                     preceding: &preceding,
                 })
             });

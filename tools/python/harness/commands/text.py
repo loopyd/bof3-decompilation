@@ -11,6 +11,7 @@ from pathlib import Path
 
 from harness.common.cli import add_example_argument
 from harness.common.native import exec_tool
+from harness.commands.textures import build_binary as build_texture_binary
 from harness.io import repo_layout
 
 
@@ -19,7 +20,17 @@ def tool_binary() -> str | None:
 
     Shared with `bin/harness text windows`, which needs the same freshness guarantee.
     """
-    return _binary(repo_layout())
+    layout = repo_layout()
+    executable = _binary(layout)
+    if executable is None:
+        return None
+    if not os.environ.get("PSX_BOF3_TEXTURES"):
+        try:
+            os.environ["PSX_BOF3_TEXTURES"] = str(build_texture_binary(layout))
+        except RuntimeError as error:
+            print(error, file=sys.stderr)
+            return None
+    return executable
 
 
 def _sources_newer(layout, binary: Path) -> bool:
@@ -138,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
     if example is not None:
         print(example)
         return 0
-    executable = _binary(repo_layout())
+    executable = tool_binary()
     if executable is None:
         return 2
     exec_tool(executable, args)

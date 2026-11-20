@@ -17,14 +17,16 @@
 | `monsters.rs` | Encounter-template monster name fields and eight-byte writes |
 | `inline.rs` | Pinned overlay labels, default names and bounded decimal formats, with per-row renderer evidence |
 | `digest.rs` | Shared SHA-256 content identities |
+| `textures.rs` | Graphics-owner protocol client, source validation and range lookup |
 | `extract.rs` | EMI TOC discovery, bank parsing, document construction, fingerprint |
 | `pack.rs` | Edit planning, span-preserving rebuild, payload replacement |
 | `query.rs` | Index records, row queries, command accounting |
 | `models.rs` | Dialogue/bank/terminator models, the generic `Command` model and per-command `CommandClass` implementations, the character table |
 
 Dependency direction: `cli` → {`extract`, `pack`, `query`, `syntax`, `logging`};
-`pack` → `syntax`; `syntax` → `command`; everything → `models`. `models` depends
-on nothing local, so the shared vocabulary stays importable and cycle-free.
+`pack` → `syntax`; `syntax` → `command`; shared types live in `models`.
+`filters` composes text admission from graphics facts supplied by `textures`.
+Graphics parsing and source profiles live in `bof3-textures`.
 
 ## Toolchain
 
@@ -88,7 +90,9 @@ cargo fmt --manifest-path tools/rust/bof3-text/Cargo.toml -- --check
 cargo build --release --manifest-path tools/rust/bof3-text/Cargo.toml
 
 # the crate's unit tests (nothing else runs them)
-cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml \
+bin/harness textures build
+PSX_BOF3_TEXTURES="$PWD/build/tools/rust/bof3-textures/release/bof3-textures" \
+  cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml \
     --target-dir build/tools/rust/bof3-text
 
 # corpus gates: every text subfile round-trips, and the index describes the archives

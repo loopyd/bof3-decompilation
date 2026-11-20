@@ -169,6 +169,12 @@ pub fn interpretation_hash() -> String {
             include_str!("field.rs"),
             include_str!("media.rs"),
             include_str!("save_icon.rs"),
+            include_str!("ranges/mod.rs"),
+            include_str!("ranges/api.rs"),
+            include_str!("ranges/compressed.rs"),
+            include_str!("ranges/copies.rs"),
+            include_str!("ranges/resident.rs"),
+            include_str!("ranges/sprite.rs"),
             include_str!("verification.rs"),
         ]
         .join("\n")

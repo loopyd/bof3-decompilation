@@ -1,11 +1,11 @@
-use std::io::{self, Write};
+use std::io::{self, Read, Write};
 use std::path::PathBuf;
 use std::process::ExitCode;
 
 use bof3_textures::{
     Error, Result,
     catalog::{self, Filter, Index},
-    package, sources,
+    package, ranges, sources,
 };
 use clap::{Parser, Subcommand};
 
@@ -21,6 +21,17 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Report reviewed physical graphics fields without classifying opaque bytes.
+    Ranges {
+        #[arg(required_unless_present_any = ["stdin", "identity"], conflicts_with_all = ["stdin", "identity"])]
+        input: Option<PathBuf>,
+        #[arg(long, conflicts_with = "identity")]
+        stdin: bool,
+        #[arg(long)]
+        identity: bool,
+        #[arg(long)]
+        json: bool,
+    },
     /// Export Rust sources, required local crate sources, lockfiles, and build instructions.
     Package {
         output: PathBuf,
@@ -128,6 +139,27 @@ fn print_json(value: &impl serde::Serialize) -> Result<()> {
 
 fn run(cli: Cli) -> Result<bool> {
     match cli.command {
+        Command::Ranges {
+            input,
+            stdin,
+            identity,
+            ..
+        } => {
+            if identity {
+                print_json(ranges::identity())?;
+            } else {
+                let bytes = if stdin {
+                    let mut bytes = Vec::new();
+                    io::stdin()
+                        .take(sources::MAX_FILE_BYTES + 1)
+                        .read_to_end(&mut bytes)?;
+                    bytes
+                } else {
+                    sources::read_bounded(&input.unwrap(), sources::MAX_FILE_BYTES)?
+                };
+                print_json(&ranges::classify(bytes)?)?;
+            }
+        }
         Command::Package {
             output,
             source_root,

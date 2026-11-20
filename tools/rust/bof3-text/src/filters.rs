@@ -477,6 +477,7 @@ pub struct KnownPayload {
     families: Vec<PayloadFamily>,
     /// The family the inventory names for a body identified by pairing, when it names one.
     context_families: Vec<PayloadFamily>,
+    texture_owner: Option<crate::textures::Owner>,
 }
 
 impl KnownPayload {
@@ -540,7 +541,12 @@ impl KnownPayload {
         Ok(Self {
             families: inventory.exclusions,
             context_families,
+            texture_owner: Some(crate::textures::Owner::load()?),
         })
+    }
+
+    pub fn archive_context(&self, bytes: &[u8]) -> Result<crate::textures::ArchiveContext> {
+        crate::textures::ArchiveContext::load(bytes, self.texture_owner.as_ref())
     }
 
     /// The recorded removal counts per family, for reporting once per run rather than once per
@@ -592,11 +598,9 @@ impl KnownPayload {
                             .find(|(earlier, _)| earlier.transfer_mode == 6)
                             .is_some_and(|(_, header)| paired_vab_body(header, input.payload))
                 }
-                "original_us_vram_tiles" => {
-                    input.original_us
-                        && crate::original::vram_tile_prefix_bytes(entry, input.payload)
-                            == Some(input.payload.len())
-                }
+                "original_us_vram_tiles" => input
+                    .textures
+                    .is_some_and(|textures| textures.whole_vram_tiles(entry)),
                 _ => false,
             })
     }
@@ -778,7 +782,7 @@ impl ScanFilters<'_> {
     /// Bump the policy version when filter or reading semantics change.
     pub fn fingerprint(&self) -> Result<String> {
         let bytes = serde_json::to_vec(&(
-            "bof3.text-filters/v23",
+            "bof3.text-filters/v24",
             [
                 crate::executable::SCHEMA,
                 crate::inline::SCHEMA,
@@ -788,6 +792,11 @@ impl ScanFilters<'_> {
             self.windows.source_hash(),
             &self.payloads.families,
             &self.payloads.context_families,
+            self.payloads
+                .texture_owner
+                .as_ref()
+                .map(crate::textures::Owner::fingerprint)
+                .transpose()?,
             self.readable,
             self.vocabulary.disabled,
             &self.vocabulary.words,

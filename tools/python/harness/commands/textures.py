@@ -111,6 +111,7 @@ def build_parser() -> argparse.ArgumentParser:
             "frame",
             "verify",
             "coverage",
+            "ranges",
             "package",
         ),
     )

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 from tempfile import TemporaryDirectory
@@ -55,6 +56,7 @@ class AssetCatalogs:
         process = subprocess.run(
             [str(tool), *map(str, arguments)],
             cwd=self.root,
+            env={**os.environ, "PSX_BOF3_TEXTURES": str(self.textures)},
             capture_output=True,
             text=True,
             check=False,

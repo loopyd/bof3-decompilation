@@ -12,6 +12,7 @@ argument vector, and it can return the tool's text only by passing both streams 
 
 from __future__ import annotations
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -50,7 +51,15 @@ def _run(*args: str) -> subprocess.CompletedProcess:
 def _direct(*args: str) -> subprocess.CompletedProcess:
     assert BINARY.is_file(), f"the tool binary is missing at {BINARY}; run `just setup`"
     return subprocess.run(
-        [str(BINARY), *args], cwd=ROOT, capture_output=True, text=True
+        [str(BINARY), *args],
+        cwd=ROOT,
+        env={
+            **os.environ,
+            "PSX_BOF3_TEXTURES": os.environ.get("PSX_BOF3_TEXTURES")
+            or str(ROOT / "build/tools/rust/bof3-textures/release/bof3-textures"),
+        },
+        capture_output=True,
+        text=True,
     )
 
 

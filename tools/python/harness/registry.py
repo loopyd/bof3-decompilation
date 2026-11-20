@@ -464,6 +464,12 @@ DOMAINS: Mapping[str, Domain] = {
                 kind="passthrough",
                 example="bin/harness textures categories --json",
             ),
+            "ranges": Action(
+                "report qualified physical graphics fields",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures ranges out/extracted/SLUS_004.22 --json",
+            ),
             "index": Action(
                 "index original US graphics",
                 "harness.commands.textures",

@@ -268,7 +268,8 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             "EMI header and TOC".into(),
                         ));
                         let mut cursor = header_end;
-                        let original_us = crate::original::archive(&bytes)?;
+                        let textures = inventory.archive_context(&bytes)?;
+                        let original_us = textures.original_us;
                         let mut preceding = Vec::new();
                         let mut expected_metadata = Vec::new();
                         for (entry, payload) in &entries {
@@ -303,7 +304,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     payload,
                                     class: None,
                                     toc: Some(*entry),
-                                    original_us,
+                                    textures: Some(&textures),
                                     preceding: &preceding,
                                 })
                             }) {
@@ -425,6 +426,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 *entry,
                                 payload,
                                 original_us,
+                                textures.payload_ranges(*entry),
                             ) {
                                 allocations.extend(spans.into_iter().map(|span| RangeRecord {
                                     offset: entry.offset + span.offset,
@@ -558,20 +560,24 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         } else if crate::executable::is_executable(&bytes) && crate::executable::supports(&bytes) {
             match crate::executable::extract(path, &bytes) {
                 Ok(document) => {
+                    let textures = inventory.archive_context(&bytes)?;
                     let mut spans: Vec<_> = document.strings.into_iter().map(|text| {
                         range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output))
                     }).collect();
                     spans.extend(
-                        crate::original::executable_nontext_ranges(&bytes)
-                            .into_iter()
-                            .map(|field| {
-                                range(
-                                    field.offset,
-                                    field.length,
-                                    "known-nontext",
-                                    field.evidence.into(),
-                                )
-                            }),
+                        crate::original::executable_nontext_ranges(
+                            &bytes,
+                            textures.executable_ranges(),
+                        )
+                        .into_iter()
+                        .map(|field| {
+                            range(
+                                field.offset,
+                                field.length,
+                                "known-nontext",
+                                field.evidence.into(),
+                            )
+                        }),
                     );
                     spans.sort_by_key(|span| span.offset);
                     let mut cursor = 0;

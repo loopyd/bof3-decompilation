@@ -80,7 +80,7 @@ The package does not vendor them or install tools.
 
 ## Inputs and commands
 
-Inputs must match the complete `SLUS_004.22` qualification manifest in
+Catalog and edit inputs must match the complete `SLUS_004.22` qualification manifest in
 [config/original-us-disc.json](../../../config/original-us-disc.json). Supply an original EMI or a complete
 extracted-disc root. Generated entry dumps are not additional original files.
 Other releases and PSP data are unsupported. An individual archive whose bytes
@@ -112,6 +112,21 @@ Exit 0 means the requested operation succeeded, exit 1 means required coverage o
 verification remains incomplete, and exit 2 reports invalid input or an operation
 failure. JSON errors are written to standard error. Query results and reports use
 JSON on standard output, including when `--json` is omitted.
+
+## Qualified byte ranges
+
+```sh
+bin/harness textures ranges FILE --json
+bin/harness textures ranges --stdin --json
+bin/harness textures ranges --identity --json
+```
+
+`bof3.texture-ranges/v1` reports reviewed graphics fields in original EMI
+payloads and the US executable. Each response binds physical stored ranges to
+source and payload hashes, entry descriptors, evidence and the owner's
+interpretation. `--identity` reports that interpretation without reading input.
+Unknown inputs return `source: null`; unresolved bytes stay unclassified.
+See [byte ranges](docs/byte-ranges.md) for coordinates, qualification and limits.
 
 ## Catalog
 

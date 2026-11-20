@@ -4,8 +4,9 @@
 
 - Rust and Cargo. The crate targets **edition 2024** with `rust-version = "1.85"`,
   and is validated with `cargo 1.98.1` (managed by mise: `mise up rust`).
-- No other tooling. Dependencies are `clap`, `owo-colors`, `log`, `env_logger`,
-  `serde` and `serde_json`, pinned in `Cargo.toml`.
+- The [texture tool](../../bof3-textures/README.md#build) and its installed
+  Rust toolchain for graphics range queries. The harness builds it automatically.
+- Rust dependencies are pinned in `Cargo.toml` and `Cargo.lock`.
 - An extracted US BOF3 corpus under `out/extracted/BIN/` for corpus search,
   or one US EMI archive for the individual archive commands.
 
@@ -22,6 +23,10 @@ CARGO_TARGET_DIR=build/tools/rust/bof3-text \
 
 A plain `cargo build --release` inside the crate directory only refreshes
 `tools/rust/bof3-text/target/`, which the harness does not read.
+
+For direct text binary invocations, build the graphics owner with
+`bin/harness textures build`, then set `PSX_BOF3_TEXTURES` to the printed path
+or put `bof3-textures` on `PATH`.
 
 ## Run
 
@@ -61,6 +66,7 @@ the binary directly. Documents are always JSON — there is no second codec.
 | Variable | Effect |
 | --- | --- |
 | `PSX_BOF3_TEXT` | Absolute path to a different `bof3-text` binary; the harness uses it instead of the published one |
+| `PSX_BOF3_TEXTURES` | Path to the graphics owner; without an override, the harness builds and supplies the repository tool |
 | `RUST_LOG` | Overrides the level implied by `-v` flags (`env_logger` filter syntax) |
 | `NO_COLOR` | Disables colour, like `--no-color` |
 
