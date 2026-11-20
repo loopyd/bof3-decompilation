@@ -2407,6 +2407,13 @@ without changing the final branch-delay copies. Preserve every guarded read, the
 trace conversion uses, global priorities and conflicts. Check the final control
 flow and complete native gate before attributing a register change to that merge.
 
+A global accumulator can inherit hard-register conflicts from its earlier real
+phase. Reusing it for a later, nonoverlapping accumulation can therefore change
+allocation even when neither value crosses a call. GCC 2.7.2 accumulates conflicts
+for the whole allocno. Require a complete definition at each phase, preserve all
+accesses and arithmetic, and inspect the shared pseudo and complete register web.
+Independent locals do not inherit each other's conflicts.
+
 Read `expr.c` for promoted-variable conversions and `combine.c`/`loop.c` for known
 bits and induction rewrites. Predict which temporary survives and which instruction
 changes. Verify that prediction in before/after RTL and a supported live comparison.
@@ -2508,6 +2515,13 @@ known bits, return conversions and allocation. At a shared narrow return,
 multiple zero definitions alone can leave known bits unknown. A real comparison
 definition can establish 0/1 bounds. Require the complete native gate and add no
 artificial definition.
+
+An early return graph can still change during delay-slot reorganization. If a
+constant return value is unused on the other path because a later call overwrites
+the return register, GCC 2.7.2 can move it into the guard's delay slot and invert
+the branch around an unconditional jump. Compare `.sched2` with `.dbr` before
+trying another spelling of the same guard graph. Early branch agreement alone
+does not establish the final return layout.
 
 1. Compare `return condition;` with explicit constant-return arms:
 
