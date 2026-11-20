@@ -30,8 +30,9 @@ void func_8015C088(void);
  * (0x801FD4EC of emi/scenario/scena02/00), which runs the same helper with the
  * same five stores and the same order, differing only in the two stored
  * constants (0x1E and 2 there); the neighbouring word 10 of the same run,
- * func_801FC690 (0x801FC690), is the same shape with primary state 5. The name
- * records the proven behavior and the address anchor keeps it target-qualified.
+ * setSubstate14ClearSharedStateBytesAndRequestPrimaryState5ScenarioScena1200_801FC690
+ * (0x801FC690), is the same shape with primary state 5. The name records the
+ * proven behavior and the address anchor keeps it target-qualified.
  * @status exact
  * @match 100.00
  * @residual none

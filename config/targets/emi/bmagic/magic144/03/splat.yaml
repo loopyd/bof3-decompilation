@@ -104,8 +104,10 @@ segments:
     - clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034
     - '@source: src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletClearByte9ThenAdvanceWorkByte2BmagicMagic14403_801F0034.c'
   - - 5280
-    - asm
-    - func_801F00A0
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic14403_801F00A0.c'
+    - '@behavior: Adds two to scratchpad work-object byte 9 modulo 256 through the pointer cell at 0x1F800044, then re-reads the cell and the stored byte and increments work-object byte 2 only when that byte equals 0x10. Entry 13 of the handler-pointer run based at 0x801F04D0.'
   - - 5360
     - c
     - incrementWorkByte2WhenGlobalWorkByteBFlag80SetBmagicMagic14403_801F00F0

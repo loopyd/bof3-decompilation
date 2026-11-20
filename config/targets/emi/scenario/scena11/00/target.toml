@@ -25,6 +25,7 @@ sources = [
     "src/bof3/scenario/runPrimaryState6SubstateSequenceScenarioScena1100_801F8B84.c",
     "src/bof3/scenario/runPrimaryState5SubstateSequenceScenarioScena1100_801F83C8.c",
     "src/bof3/scenario/runPrimaryState8SubstateSequenceScenarioScena1100_801F9184.c",
+    "src/bof3/scenario/setSubstate1EClearSharedStateBytesAndRequestPrimaryState0EScenarioScena1100_801FA9D4.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",

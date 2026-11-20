@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EF048
   - - 1368
-    - asm
-    - func_801EF158
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16803_801EF158
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16803_801EF158.c'
+    - '@behavior: Reads the shared work-object pointer cell at 0x1F800044 once, loads the work-object byte at 0xB and compares it against five with an unsigned bound, and only below five stores 8 into the work byte at 0x9 and then re-reads the cell and increments the work byte at 0x1 by one at byte width. The entry dispatcher at 0x801EEC28 indexes the six-word run at 0x801EEC04 with that byte, and this address is word 3 of that run, so the arm advances the stage to word 4. Takes no arguments, returns nothing and keeps no frame.'
   - - 1440
     - asm
     - func_801EF1A0

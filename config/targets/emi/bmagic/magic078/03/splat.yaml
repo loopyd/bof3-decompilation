@@ -93,8 +93,10 @@ segments:
     - asm
     - func_801F0024
   - - 5280
-    - asm
-    - func_801F00A0
+    - c
+    - clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0
+    - '@source: src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the record pointer held in that object''s word 0x4C and tests that record''s byte 0xB against 1; only on equality it clears the work object''s byte 0xA through the loaded pointer, reloads the pointer cell and increments the work object''s byte 0x2. Takes no arguments and returns nothing.'
   - - 5356
     - c
     - incrementWorkByte9Until8ThenInvokeHelperAt101AndAdvanceWorkByte2BmagicMagic07803_801F00EC

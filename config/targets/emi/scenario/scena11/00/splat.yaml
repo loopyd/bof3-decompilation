@@ -166,8 +166,9 @@ segments:
     - c
     - clearSharedStateBytesThenRequestPrimaryState0EScenarioScena1100_801FA988
   - - 15828
-    - asm
-    - func_801FA9D4
+    - c
+    - setSubstate1EClearSharedStateBytesAndRequestPrimaryState0EScenarioScena1100_801FA9D4
+    - '@source: src/bof3/scenario/setSubstate1EClearSharedStateBytesAndRequestPrimaryState0EScenarioScena1100_801FA9D4.c'
   - - 15908
     - c
     - setSubstate28ClearSharedStateBytesAndRequestPrimaryState5ScenarioScena1100_801FAA24

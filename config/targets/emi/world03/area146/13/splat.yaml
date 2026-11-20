@@ -53,8 +53,10 @@ segments:
     - dispatchStateByte1Table3b00World03Area14613_801F2D90
     - '@source: src/bof3/world/area14613DispatchTables.c'
   - - 468
-    - asm
-    - func_801F2DD4
+    - c
+    - seedWorkWord3CScaledDistanceAndAdvanceStateByte1World03Area14613_801F2DD4
+    - '@source: src/bof3/world/seedWorkWord3CScaledDistanceAndAdvanceStateByte1World03Area14613_801F2DD4.c'
+    - '@behavior: Entry 0 of the two-entry step dispatch table based at 0x801F3B00, whose word 0 names this span and whose word 1 names the quad draw at 0x801F2E20 and which the overlay dispatcher at 0x801F2D90 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work record, passes its words at +0x34 and +0x38 to the shared main-executable distance helper 0x8015477C, reloads the record, stores the returned halfword scaled by 0x10000 into the record word at +0x3C and then advances that state byte so the next frame dispatches the draw entry. It takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the distance call.'
   - - 544
     - c
     - drawWorkCursorQuadWorld03Area14613_801F2E20

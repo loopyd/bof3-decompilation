@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801EF70C
   - - 2948
-    - asm
-    - func_801EF784
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08603_801EF784
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic08603_801EF784.c'
+    - '@behavior: Increment scratchpad work-object byte 9 and, when the value just stored equals 0x10, re-read the pointer cell and increment byte 2.'
   - - 3028
     - c
     - incrementWorkBytesA9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2At18BmagicMagic08603_801EF7D4

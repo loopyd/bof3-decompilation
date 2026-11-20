@@ -53,8 +53,10 @@ segments:
     - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8
     - '@source: src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8.c'
   - - 1272
-    - asm
-    - func_801EF0F8
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic22303_801EF0F8.c'
+    - '@behavior: Per-frame overlay work-step handler reached as entry 2 of the nine-word handler run at 0x801EFC2C: advances work-object byte 9 through the scratchpad pointer cell at 0x1F800044 and, when the stored byte equals 0x10, re-reads the cell and increments work-object byte 2, with no frame, arguments or return value.'
   - - 1352
     - c
     - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148

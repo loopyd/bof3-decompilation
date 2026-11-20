@@ -9,12 +9,13 @@ typedef struct Boss05016DispatchTable {
 /*
  * Handler table at 0x800C1804, the three pointers this dispatcher copies into
  * its frame: entry 0 = 0x800C1A08, entry 1 = 0x800C1A84 and entry 2 =
- * 0x800C1AEC, the three step handlers that follow it in this overlay. The run
- * occupies the first twelve bytes of the span mapped at 0x800C1804, whose code
- * proper starts at 0x800C1810, so this declaration binds the address-anchored
- * map symbol that already covers that span.
+ * 0x800C1AEC, the three step handlers that follow it in this overlay. The run is
+ * the whole of the reviewed `textbin` row D_800C1804, which covers the twelve
+ * bytes 0x800C1804 through 0x800C180F and ends where this payload's state
+ * dispatcher row begins at 0x800C1810, so it is placed by the reviewed Splat
+ * layout and only referenced here.
  */
-extern Boss05016DispatchTable func_800C1804; /* @source 0x800C1804 @kind data */
+extern Boss05016DispatchTable D_800C1804; /* @source 0x800C1804 @kind data */
 
 /* @source 0x800C19A8
  * @behavior Overlay step dispatch on work-record byte 1: copies the three
@@ -40,6 +41,6 @@ extern Boss05016DispatchTable func_800C1804; /* @source 0x800C1804 @kind data */
 void dispatchStateByte1Table1804BossBoss05016_800C19A8(void) {
   Boss05016DispatchTable handlers;
 
-  handlers = func_800C1804;
+  handlers = D_800C1804;
   handlers.handlers[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
 }
