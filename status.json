@@ -48,18 +48,18 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "8cb5f903b2726ecc984540698a704c338bc582bf",
-  "published_at": "2026-11-20T07:11:17.107109+00:00",
+  "revision": "ed01dc60828b225ea673ac235340395c2bbee63c",
+  "published_at": "2026-11-20T07:18:20.995729+00:00",
   "counts": {
-    "completed": 6472,
+    "completed": 6482,
     "partial": 357,
-    "unlifted": 3606,
+    "unlifted": 3596,
     "invalid": 0,
     "total": 10435,
     "symbols": {
-      "named": 6616,
-      "raw": 4941,
-      "total": 11557
+      "named": 6627,
+      "raw": 4931,
+      "total": 11558
     }
   },
   "targets": [
@@ -16128,14 +16128,14 @@
       "family": "bmagic",
       "archive": "magic015",
       "entry": "00",
-      "completed": 36,
+      "completed": 37,
       "partial": 1,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 48,
       "symbols": {
-        "named": 41,
-        "raw": 12,
+        "named": 42,
+        "raw": 11,
         "total": 53
       },
       "binary": {
@@ -16371,13 +16371,13 @@
           {
             "start": 3984,
             "end": 4056,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149514128,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic01500_801EFB90.c#L42"
               }
             ]
           },
@@ -26432,14 +26432,14 @@
       "family": "bmagic",
       "archive": "magic071",
       "entry": "03",
-      "completed": 2,
+      "completed": 3,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 2,
-        "raw": 16,
+        "named": 3,
+        "raw": 15,
         "total": 18
       },
       "binary": {
@@ -26519,13 +26519,13 @@
           {
             "start": 1372,
             "end": 1444,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149511516,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C.c#L35"
               }
             ]
           },
@@ -27319,14 +27319,14 @@
       "family": "bmagic",
       "archive": "magic074",
       "entry": "03",
-      "completed": 7,
+      "completed": 8,
       "partial": 0,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 21,
       "symbols": {
-        "named": 7,
-        "raw": 17,
+        "named": 8,
+        "raw": 16,
         "total": 24
       },
       "binary": {
@@ -27458,13 +27458,13 @@
           {
             "start": 2256,
             "end": 2328,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149512400,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0.c#L34"
               }
             ]
           },
@@ -45822,14 +45822,14 @@
       "family": "bmagic",
       "archive": "magic162",
       "entry": "03",
-      "completed": 6,
+      "completed": 7,
       "partial": 2,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 9,
-        "raw": 11,
+        "named": 10,
+        "raw": 10,
         "total": 20
       },
       "binary": {
@@ -45909,13 +45909,13 @@
           {
             "start": 1368,
             "end": 1440,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149511512,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158.c#L35"
               }
             ]
           },
@@ -95135,14 +95135,14 @@
       "family": "plchar",
       "archive": "plp578",
       "entry": "00",
-      "completed": 18,
+      "completed": 19,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
       "total": 25,
       "symbols": {
-        "named": 20,
-        "raw": 7,
+        "named": 21,
+        "raw": 6,
         "total": 27
       },
       "binary": {
@@ -95476,13 +95476,13 @@
           {
             "start": 5748,
             "end": 5816,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149382772,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/plchar/dispatchWorkHalfword2cTablefb08PlcharPlp57800_801CFA74.c#L35"
               }
             ]
           },
@@ -141299,14 +141299,14 @@
       "family": "world02",
       "archive": "area113",
       "entry": "13",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 6,
       "symbols": {
-        "named": 3,
-        "raw": 2,
+        "named": 4,
+        "raw": 1,
         "total": 5
       },
       "binary": {
@@ -141367,13 +141367,13 @@
           {
             "start": 192,
             "end": 260,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149526720,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0.c#L34"
               }
             ]
           },
@@ -149436,15 +149436,15 @@
       "family": "world03",
       "archive": "area142",
       "entry": "13",
-      "completed": 5,
+      "completed": 6,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 8,
       "symbols": {
-        "named": 5,
-        "raw": 4,
-        "total": 9
+        "named": 7,
+        "raw": 3,
+        "total": 10
       },
       "binary": {
         "size": 3972,
@@ -149530,13 +149530,13 @@
           {
             "start": 2068,
             "end": 2136,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149528596,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchWorkByte4Table3b7cWorld03Area14213_801F3414.c#L34"
               }
             ]
           },
@@ -149581,14 +149581,14 @@
       "family": "world03",
       "archive": "area143",
       "entry": "13",
-      "completed": 19,
+      "completed": 20,
       "partial": 2,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 35,
       "symbols": {
-        "named": 21,
-        "raw": 15,
+        "named": 22,
+        "raw": 14,
         "total": 36
       },
       "binary": {
@@ -149909,13 +149909,13 @@
           {
             "start": 4044,
             "end": 4112,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149530572,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld03Area14313_801F3BCC.c#L21"
               }
             ]
           },
@@ -151846,14 +151846,14 @@
       "family": "world03",
       "archive": "area149",
       "entry": "13",
-      "completed": 5,
+      "completed": 6,
       "partial": 0,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 16,
       "symbols": {
-        "named": 5,
-        "raw": 12,
+        "named": 6,
+        "raw": 11,
         "total": 17
       },
       "binary": {
@@ -151966,13 +151966,13 @@
           {
             "start": 764,
             "end": 832,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149527292,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchStateByte4Table4580World03Area14913_801F2EFC.c#L21"
               }
             ]
           },
@@ -151985,7 +151985,7 @@
               {
                 "address": 2149527360,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40.c#L79"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/requestProgress0AAndCue1When932cBelow880AdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F2F40.c#L81"
               }
             ]
           },
@@ -152011,7 +152011,7 @@
               {
                 "address": 2149527656,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068.c#L93"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/requestProgress14AndCue1When932cZeroSetFlag3WhileCoordBelowSharedXWindowAdvanceWorkStepInvokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3068.c#L95"
               }
             ]
           },
@@ -156861,14 +156861,14 @@
       "family": "world04",
       "archive": "area172",
       "entry": "13",
-      "completed": 37,
+      "completed": 38,
       "partial": 1,
-      "unlifted": 14,
+      "unlifted": 13,
       "invalid": 0,
       "total": 52,
       "symbols": {
-        "named": 38,
-        "raw": 15,
+        "named": 39,
+        "raw": 14,
         "total": 53
       },
       "binary": {
@@ -157306,13 +157306,13 @@
           {
             "start": 6088,
             "end": 6156,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149532616,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/dispatchWorkByte4Table6770World04Area17213_801F43C8.c#L16"
               }
             ]
           },
