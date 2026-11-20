@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v42";
+pub const SCHEMA: &str = "bof3.inline-text/v43";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -884,15 +884,35 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US COMMU01 footer text",
+        name: "US COMMU01 list and footer text",
         load: 0x801d0c00,
         size: 16948,
-        sha256: "67864c4611efa4de48415dee5ff9d70b6198c3a01ff40b543151968dbb754ddf",
-        consumers: &[0x801d3038],
+        sha256: "78ff172036bc1f7be63f0750c280da5a921f78b68175d329fe562053aeac7710",
+        consumers: &[0x801d3038, 0x801d4178, 0x801d44e0],
         allocations: &[
             Allocation::bounded_format(0x801d0c10, 4, Codec::AsciiI8DecimalFormat, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0c14, 3, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
             Allocation::literal(0x801d4c30, 8, &[], &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d34, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d3c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d44, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d4c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d54, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d5c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d64, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d6c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d74, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d7c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d84, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d8c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d94, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4d9c, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4da4, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4dac, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4db4, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4dbc, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4dc4, 8, &[0x8014f800]),
+            Allocation::fixed_literal(0x801d4dcc, 8, &[0x8014f800]),
         ],
     },
     Layout {

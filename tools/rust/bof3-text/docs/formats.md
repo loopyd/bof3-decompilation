@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v42`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v43`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v42` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v43` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3368,8 +3368,8 @@ display consumer. Keep this array unchanged when editing. Code references are pi
 outside the allocations; no pointer-word reference is inferred from them.
 Observed rendering remains unverified for all three formats.
 
-The `US COMMU01 footer text` layout covers entry 7 of original US
-`BIN/ETC/COMMU01.EMI`, loaded at `0x801D0C00`. It exposes three fields:
+The `US COMMU01 list and footer text` layout covers entry 7 of original US
+`BIN/ETC/COMMU01.EMI`, loaded at `0x801D0C00`. It exposes three footer fields:
 
 | Address | Original text | Capacity including NUL | Codec | Maximum formatted bytes before NUL |
 | --- | --- | --- | --- | --- |
@@ -3390,11 +3390,22 @@ scratch output through `0x8014FF0C`, with the source set in their delay slots.
 Call `0x801D3534` draws `Culture` through `0x8014F800`, with a seven-character
 limit and the source pointer stored in its delay slot. Shorter or empty literal
 edits retain NUL and zero-fill the remaining field. Preserve the alignment byte
-at `0x801D0C17` and all following data from `0x801D4C38`. All three fields retain
-empty pointer-reference lists. Recognition pins the payload outside these
-allocations, and packing binds the original archive identity. Original
-instructions establish source and output bounds; natural selection and edited
-rendering remain unverified.
+at `0x801D0C17` and the icon data at `[0x801D4C38,0x801D4D34)`.
+
+Twenty separate eight-byte list fields occupy `[0x801D4D34,0x801D4DD4)`.
+They use `game-fixed-literal` and reserve no terminator byte. `Merchant`,
+`Explorer`, `Antiques` and `Handyman` occupy all eight bytes without NUL.
+Shorter or empty edits zero-fill their remaining bytes. Consumer `0x801D4178`
+selects the first ten rows by index. Consumer `0x801D44E0` selects the lower
+ten through four first/count pairs at `[0x801D4DD4,0x801D4DDC)`. Both pass a
+count of eight to `0x8014F800`. That reader looks ahead one following byte
+before exiting without processing it. The kind table stays protected.
+
+The list count must be at most ten and the kind index must be 0..3. These
+callers do not enforce those producer bounds. All twenty-three fields retain
+empty pointer-reference lists. Recognition pins the payload outside the fields,
+and packing binds the original archive identity. Natural selection, visual fit,
+producer bounds and edited rendering remain unverified.
 
 The `US SCENA17 credits text` layout covers entry 0 of original US
 `BIN/SCENARIO/SCENA17.EMI`, loaded at `0x801F6C00`. It exposes 167 disjoint
