@@ -435,6 +435,23 @@ physical record retains its evidence. The rule establishes stored numeric
 representation. Destination selection, invocation, animation timing, live CLUTs,
 display, absence of rasterized text and safe editing remain unverified.
 
+## Stored raw sprite-record copies
+
+Coverage also recognizes complete program metadata and nonempty cell records
+copied into original US raw sprite banks. Profiles require the exact
+original archive, raw entry descriptor and complete payload hash. Native parsing
+checks the destination root, program directories, declared cell references and
+allocation bounds. Donors use their actual sprite-bank or resident layout.
+
+Complete record bytes must match. Only fields already classified in the donor
+transfer, so a later-qualified donor can resolve another copy without widening
+the field's role. Program header byte zero, metadata aliases, empty cells,
+unfetched fields, opaque bits and allocation tails receive no new role. Earlier
+physical ranges retain their evidence. Use `bin/harness text coverage --root
+out/extracted --json` to inspect admitted sources and byte extents. These stored
+field copies do not establish selection, invocation, display, absence of
+rasterized text or safe editing.
+
 ## Stored resident-record copies
 
 Coverage recognizes complete program metadata and nonempty cell records copied
