@@ -2561,6 +2561,9 @@ Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
 the first CSE no longer extends the pseudo for the second pass. Check
 adjacent-copy reversal when the load moves into the retained quantity.
+Use RTL arm order for this comparison. The first jump pass can invert a
+two-return conditional and exchange its arms before CSE, making the later
+source return an earlier reference.
 
 An intervening real instruction can prevent adjacent producer retargeting
 without preserving the copy. CSE can replace every copied use with the
