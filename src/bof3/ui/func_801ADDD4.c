@@ -36,48 +36,33 @@ extern GameLevelRow D_801CB8DC[][99];
  * @source 0x801ADDD4
  * @see docs/specs/data/characters.md
  * @status partial
- * @match 72.43
- * @residual live audit 197/272 instructions; 1088 original bytes versus 1076
- * current, frame 0x30 on both. Residual class: allocation and scheduling.
- * Address representation and the clamps are measured out: the reviewed 8-byte
- * row type makes every level-table read the original per-access
- * `lui at,0x801d` / `addu` / `lbu %lo(at)` form, the clamps re-materialise
- * `li v0,999` per site, and both tail spellings (symbolic index and array
- * decay) emit byte-identical code. The one remaining operation deficit is the
- * original's second character * 0xA4 chain in the growth-loop preheader:
- * giving the loop its own offset restores 272 instructions but drops the match
- * to 160/272 because the allocator then renames the saved registers, so one
- * offset stays live in a saved register instead. The loop setup precedes the
- * record read, as the original's prologue does, which recovered the exp_total
- * argument register; the growth accumulator still lands in v1 rather than a1,
- * new_level in s3 rather than s4, and the last clamp repeats one `move a1`
- * argument setup. The growth-rate bytes are read through a plain signed byte
- * view, which emits the original single `lb` per rate.
+ * @match 79.04
+ * @residual 215/272 instructions; 1088 original bytes versus 1076 current,
+ * with a 48-byte frame on both. The growth-loop record stride still shares
+ * the early record offset instead of being recomputed. Entry and saved
+ * registers, preparation order, the last clamp's argument setup and tail
+ * address forms remain different.
  */
 void func_801ADDD4(s32 arg0) {
   u8  character;
   s32 character_offset;
   s32 exp;
-  s32 exp_total;
+  s32 accumulator;
   u8  new_level;
   u8  current_level;
   u8  level;
-  s32 growth;
   s32 value;
 
   character = (u8)arg0;
   new_level = 1;
-  exp_total = 0;
+  accumulator = 0;
 
-  /* The original computes the level-row base (character * 99 * 8) before the
-   * character-record offset (character * 0xA4), so the record read follows the
-   * loop setup rather than preceding it. */
   character_offset = character * CHARACTER_STRIDE;
   exp = CHARACTER_EXP(character_offset);
 
   while (new_level < LEVEL_MAX) {
-    exp_total += D_801CB8DC[character][new_level].exp;
-    if (exp < exp_total) {
+    accumulator += D_801CB8DC[character][new_level].exp;
+    if (exp < accumulator) {
       break;
     }
     new_level++;
@@ -97,72 +82,72 @@ void func_801ADDD4(s32 arg0) {
   if ((u32)current_level < (u32)new_level) {
     level = current_level;
     do {
-      growth = (s32)D_801CB8DC[character][level].growth[0] +
+      accumulator = (s32)D_801CB8DC[character][level].growth[0] +
                (s32)CHARACTER_RATES(character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(character_offset) + growth;
+      value = (s32)CHARACTER_STATS(character_offset) + accumulator;
       CHARACTER_STATS(character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
         CHARACTER_STATS(character_offset) = (u16)value;
       }
 
-      growth = (s32)D_801CB8DC[character][level].growth[1] +
+      accumulator = (s32)D_801CB8DC[character][level].growth[1] +
                (s32)CHARACTER_RATES(1 + character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(2 + character_offset) + growth;
+      value = (s32)CHARACTER_STATS(2 + character_offset) + accumulator;
       CHARACTER_STATS(2 + character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
         CHARACTER_STATS(2 + character_offset) = (u16)value;
       }
 
-      growth = (s32)(D_801CB8DC[character][level].growth[2] >> 4) +
+      accumulator = (s32)(D_801CB8DC[character][level].growth[2] >> 4) +
                (s32)CHARACTER_RATES(2 + character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(4 + character_offset) + growth;
+      value = (s32)CHARACTER_STATS(4 + character_offset) + accumulator;
       CHARACTER_STATS(4 + character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
         CHARACTER_STATS(4 + character_offset) = (u16)value;
       }
 
-      growth = (s32)(D_801CB8DC[character][level].growth[2] & 0x0F) +
+      accumulator = (s32)(D_801CB8DC[character][level].growth[2] & 0x0F) +
                (s32)CHARACTER_RATES(3 + character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(6 + character_offset) + growth;
+      value = (s32)CHARACTER_STATS(6 + character_offset) + accumulator;
       CHARACTER_STATS(6 + character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
         CHARACTER_STATS(6 + character_offset) = (u16)value;
       }
 
-      growth = (s32)(D_801CB8DC[character][level].growth[3] >> 4) +
+      accumulator = (s32)(D_801CB8DC[character][level].growth[3] >> 4) +
                (s32)CHARACTER_RATES(4 + character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(8 + character_offset) + growth;
+      value = (s32)CHARACTER_STATS(8 + character_offset) + accumulator;
       CHARACTER_STATS(8 + character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
         CHARACTER_STATS(8 + character_offset) = (u16)value;
       }
 
-      growth = (s32)(D_801CB8DC[character][level].growth[3] & 0x0F) +
+      accumulator = (s32)(D_801CB8DC[character][level].growth[3] & 0x0F) +
                (s32)CHARACTER_RATES(5 + character_offset);
-      if (growth < 0) {
-        growth = 0;
+      if (accumulator < 0) {
+        accumulator = 0;
       }
-      value = (s32)CHARACTER_STATS(0x0A + character_offset) + growth;
+      value = (s32)CHARACTER_STATS(0x0A + character_offset) + accumulator;
       CHARACTER_STATS(0x0A + character_offset) = (u16)value;
       if ((u16)value >= STAT_MAX) {
         value = STAT_CLAMP;
