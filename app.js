@@ -44,9 +44,7 @@ function counts(target, categories = states) {
 function symbolProgress(symbols) {
   const section = element("div", "symbol-progress");
   const label = element("div", "metric-label");
-  label.append(element("span", "", "Symbols"), element("span", "", symbols.total
-    ? `${percent(symbols.named, symbols.total)} named`
-    : "No indexed symbols"));
+  label.append(element("span", "", "Symbols"), element("span", "", `${percent(symbols.named, symbols.total)} named`));
   section.append(label, progressBar(symbols, symbolStates, "symbols"), counts(symbols, symbolStates));
   return section;
 }
@@ -65,10 +63,16 @@ function executable(target) {
   const label = target.archive.replace(/_(\d{3})_(\d{2})$/, "_$1.$2").toUpperCase();
   name.append(element("h2", "target-title", label), element("p", "target-path", target.id));
   identity.append(element("span", "target-icon", "EXE"), name);
-  const completion = element("div", "target-percent", percent(target.completed, target.total));
-  completion.append(element("small", "", target.total ? "completed" : "no indexed functions"));
-  heading.append(identity, completion);
-  article.append(heading, element("div", "metric-label", "Decompilation"), progressBar(target), counts(target), symbolProgress(target.symbols), binaryDiagram(target));
+  heading.append(identity);
+  if (target.total) {
+    const completion = element("div", "target-percent", percent(target.completed, target.total));
+    completion.append(element("small", "", "completed"));
+    heading.append(completion);
+  }
+  article.append(heading);
+  if (target.total) article.append(element("div", "metric-label", "Decompilation"), progressBar(target), counts(target));
+  if (target.symbols.total) article.append(symbolProgress(target.symbols));
+  article.append(binaryDiagram(target));
   return article;
 }
 
@@ -76,13 +80,16 @@ function emiCard(target) {
   const article = element("article", "target-card");
   const heading = element("div", "card-top");
   heading.append(element("h3", "target-title", `${target.archive.toUpperCase()}.EMI`), element("span", "entry", `#${target.entry}`));
-  const progress = element("div", "card-progress");
-  const value = element("span", "percent", percent(target.completed, target.total));
-  value.title = target.total ? "Completed indexed functions" : "No indexed functions";
-  progress.append(progressBar(target), value);
-  article.append(heading, element("p", "target-path", target.id), element("div", "metric-label decomp-label", "Decompilation"), progress, counts(target));
-  if (!target.total) article.append(element("p", "target-path", "No indexed functions"));
-  article.append(symbolProgress(target.symbols), binaryDiagram(target));
+  article.append(heading, element("p", "target-path", target.id));
+  if (target.total) {
+    const progress = element("div", "card-progress");
+    const value = element("span", "percent", percent(target.completed, target.total));
+    value.title = "Completed indexed functions";
+    progress.append(progressBar(target), value);
+    article.append(element("div", "metric-label decomp-label", "Decompilation"), progress, counts(target));
+  }
+  if (target.symbols.total) article.append(symbolProgress(target.symbols));
+  article.append(binaryDiagram(target));
   return article;
 }
 
