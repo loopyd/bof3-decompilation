@@ -194,7 +194,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v40`. An omitted layout selector fails before
+labels through `bof3.inline-text/v41`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -208,7 +208,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v40` document with ten counted labels, eight default names,
+`bof3.inline-text/v41` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels and fifteen fixed-width settings fields.
@@ -256,7 +256,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v40`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v41`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
@@ -365,6 +365,12 @@ format has a three-byte bound, and its source allocation fits only the original
 source binding and padding. See [inline formats](formats.md#inline-overlay-text)
 for capacities and consumers. Edited rendering remains unverified.
 
+SCENA10 entry 0 exposes `%02d` and `*%2d` through existing unsigned-word and
+unsigned-byte field codecs. Each five-byte allocation includes NUL. Formatted
+bounds are five and four bytes before NUL. The first draw retains its original
+two-character limit. The adjacent `%s` field remains unsupported. Use `analyze`
+for capacities and retain the recorded codecs and renderers.
+
 SCENA12 entry 0 exposes one `%03d` counter format with unsigned-byte output
 bound three. BOSS025 entry 13 exposes `%2d` with a signed-word output bound of
 eleven, plus the `turns left` literal. BOSS027 entry 16 contains the same payload
@@ -444,7 +450,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v40`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v41`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

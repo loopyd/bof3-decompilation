@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v40`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v41`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v40` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v41` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3395,6 +3395,28 @@ empty pointer-reference lists. Recognition pins the payload outside these
 allocations, and packing binds the original archive identity. Original
 instructions establish source and output bounds; natural selection and edited
 rendering remain unverified.
+
+The `US SCENA10 numeric text` layout covers entry 0 of original US
+`BIN/SCENARIO/SCENA10.EMI`, loaded at `0x801F6C00`. Both allocations include NUL:
+
+| Address | Original format | Capacity | Codec | Maximum formatted bytes before NUL | Renderer |
+| --- | --- | --- | --- | --- | --- |
+| `0x801F6C08` | `%02d` | 5 | `ascii-u16-decimal-format` | 5 | `0x8014F800` |
+| `0x801F6C10` | `*%2d` | 5 | `ascii-u8-decimal-field-format` | 4 | `0x80150098` |
+
+Consumer `0x801F719C` obtains a value from `0x8016628C`, masks it to sixteen
+bits in formatter call `0x801F7330`'s delay slot and writes to `0x80145AD4`.
+Draw call `0x801F7364` retains a two-character limit. That count does not
+establish a two-digit argument bound. Consumer `0x801F7AD4` masks its value to
+eight bits at `0x801F7B84`, formats it at `0x801F7BCC` and passes the same
+buffer to `0x80150098` at `0x801F7BE8`.
+
+Each format retains one decimal argument with optional width 1..4 and zero
+padding. Printable ASCII literals must fit both the five-byte allocation and
+the formatted bound. Preserve the unsupported `%s` field at `0x801F6C04`,
+three alignment bytes at `0x801F6C0D..0x801F6C10` and the nonzero bytes after
+`0x801F6C15`. Code addressing retains empty pointer-reference lists. Natural
+selection and edited rendering remain unverified.
 
 The `US SCENA12 counter text` layout covers entry 0 of original US
 `BIN/SCENARIO/SCENA12.EMI`, loaded at `0x801F6C00`. Its `%03d` field at

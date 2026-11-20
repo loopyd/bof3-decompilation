@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v40";
+pub const SCHEMA: &str = "bof3.inline-text/v41";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -882,6 +882,22 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d1964, 6, &[], &[0x8014f800]),
             Allocation::literal(0x801d196c, 8, &[], &[0x8014f800]),
             Allocation::literal(0x801d1974, 6, &[], &[0x8014f800]),
+        ],
+    },
+    Layout {
+        name: "US SCENA10 numeric text",
+        load: 0x801f6c00,
+        size: 32224,
+        sha256: "e53877204d30b2225a709a5683fe360b65a3a50b108de6ed788c86e207877465",
+        consumers: &[0x801f719c, 0x801f7ad4],
+        allocations: &[
+            Allocation::bounded_format(0x801f6c08, 5, Codec::AsciiU16DecimalFormat, &[0x8014f800]),
+            Allocation::bounded_format(
+                0x801f6c10,
+                5,
+                Codec::AsciiU8DecimalFieldFormat,
+                &[0x80150098],
+            ),
         ],
     },
     Layout {
