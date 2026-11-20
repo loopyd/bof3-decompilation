@@ -68,6 +68,28 @@ those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
+## Save-icon source coverage
+
+Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
+producer, palette and three icon frames. Qualification requires the exact original
+archive, reviewed entry index and offset, raw mode, load address `0x801EEC00`,
+checkword `0x141`, size 5268 and payload SHA-256
+`6e7b93d4fd75586413b5ab3a6785d7b2492d8d1b566a3a6d79941bb656131a4d`.
+Each physical copy retains its own source identity.
+
+Coverage includes the complete instruction body at `0x801EF27C..0x801EF96C`,
+including its return delay slot. The original SHOP call at `0x801D6A08` supplies
+mode `0x13` in its delay slot. This mode copies the 32-byte palette at payload
+offset `0x1268` and the three 128-byte packed 4-bit frames at offsets `0x1294`,
+`0x1354` and `0x1414` into the `SC` header at `0x800C1800`, at header offsets
+`0x60`, `0x80`, `0x100` and `0x180` respectively. Only those stored image fields
+and the reviewed body qualify; surrounding code and frame gaps stay unresolved.
+
+The path requires successful original loading, stable source and code, a bounded
+valid title, an ordinary returning helper, an intact frame and nonaliased work.
+These source extents do not establish actual invocation, the active supplying
+archive, BIOS animation, displayed pixels or safe editing.
+
 ## Compressed bank metadata coverage
 
 Coverage recognizes compression metadata in transfer-mode-1 entries whose

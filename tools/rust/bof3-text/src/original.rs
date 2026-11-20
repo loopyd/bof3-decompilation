@@ -9351,6 +9351,31 @@ pub fn payload_nontext_ranges(
     if !original_us {
         return None;
     }
+    if entry.transfer_mode == 0
+        && entry.ram_ptr == 0x801e_ec00
+        && entry.check_word == 0x141
+        && entry.size == 5_268
+        && matches!((entry.index, entry.offset), (8, 231_424) | (9, 479_232))
+        && data.len() == 5_268
+        && sha256_hex(data) == "6e7b93d4fd75586413b5ab3a6785d7b2492d8d1b566a3a6d79941bb656131a4d"
+    {
+        let images = "original US SHOP entry 8 or START entry 9 save-icon palette and three packed 4-bit frames; complete original producer 0x801EF27C..0x801EF96C copies 32 bytes at 0x801EFE68 to SC header +0x60 and, in mode 0x13, 128 bytes each at 0x801EFE94/0x801EFF54/0x801F0014 to +0x80/+0x100/+0x180; original SHOP call 0x801D6A08 supplies mode 0x13 in its delay slot; exact original archive, entry geometry, raw load, checkword, size and payload identities; stable source/code, bounded valid title, ordinary returning helper, intact frame and nonaliased work are conditions; producer gaps and surrounding bytes excluded; no actual invocation, active supplier, BIOS animation, display or safe-edit claim";
+        let mut ranges = vec![NontextRange {
+            offset: 0x67c,
+            length: 0x6f0,
+            evidence: "original US SHOP entry 8 or START entry 9 complete save-header producer instruction body 0x801EF27C..0x801EF96C including return delay slot; all 444 original words and 47 control transfers reviewed, conditional original incoming SHOP call at 0x801D6A08; sole external call 0x8017E394 requires an ordinary return and bounded valid title; exact original archive, entry geometry, raw load, checkword, size and payload identities; stable source/code, intact frame and nonaliased work are conditions; neighboring functions and data excluded; no observed execution, source-loading, active-supplier, BIOS animation, rendering or safe-edit claim",
+        }];
+        ranges.extend(
+            [(0x1268, 32), (0x1294, 128), (0x1354, 128), (0x1414, 128)]
+                .into_iter()
+                .map(|(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: images,
+                }),
+        );
+        return Some(ranges);
+    }
     if let Some(length) = vram_tile_prefix_bytes(entry, data)
         && length > 0
         && length < data.len()
