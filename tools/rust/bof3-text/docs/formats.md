@@ -486,10 +486,47 @@ their prior status. These rules
 establish no natural production, scheduling, invocation, cadence, live CLUTs,
 transfer, display or safe editing.
 
-REI remains outside this extension. Its mandatory post-reader rebuild at
-`0x801E0B64` calls `0x80164A44` at `0x801E0B9C`; program/control retention
-across that call is unresolved. The rebuild's own stores do not establish
-its callees' effects.
+## REI selected program and mirror fields
+
+The same readers also qualify `REID/U00..01.EMI` under the original source,
+root and selector bindings in [REI raw replacements](#rei-and-rt-raw-replacements).
+Each requires raw entry 3 at offset 38912, checkword `0x10`, size 110592,
+its reviewed destination and exact payload SHA-256. REID uses selector 4;
+REIU uses `6,0,16,20,32,28,12,8,36,40,44,56,48`. Only consumed numeric
+program fields, selected relative cell words, counted five-byte cells and
+selected mirror bytes qualify. Earlier field evidence is preserved.
+
+The post-reader at `BATTLE#3@0x801E7634` requires the same active actor,
+effect-pointer exclusion, allocation-skip bit and bounded palette staging as RT.
+Its store at `0x801E7744` clears actor word `+0x128` bit zero before calling
+`0x801E0B64`. This rebuild passes the character record at
+`0x80144968 + 0xA4*actor[0x13C]` to `SLUS@0x80164A44` through
+`0x801E0B9C/0x801E0BA0`. Require a character index below eight and battle
+actor count at most three, with stable original code and tables, separate intact
+frames and valid nonaliasing character, actor and enemy-record storage.
+
+The complete SLUS rebuild copies and adjusts character stat fields through
+`0x80165760`, `0x801658DC`, `0x80165B3C` and `0x801648A0`. Their four
+bounded jump tables target their respective bodies; their callees store only
+through supplied stat-field pointers. The last reader requires a bounded list
+ending in opcode 14 or its explicit character byte `+0x1B == 255` skip case.
+The rebuild's optional cap calls also remain within the same character record.
+These records are separate from the actor array at `0x80145E90`, stride `0x140`.
+
+The remaining `BATTLE#15` calls at `0x800AAA74`, `0x800A4458` and
+`0x800A9BD8` update stat storage without changing actor root, program, cell
+table, mirror, palette mode or draw controls. The bounded actor count restricts
+the last call to its player branch through `0x800A9FC4`; its arithmetic leaves
+perform no stores. Valid nonaliased enemy-record storage remains required for
+its final status operations. The REI reader restores its saved scratchpad
+pointer before updating the separate queued work.
+
+Continued reads and drawing require the same retained actor, palette mode two,
+mirror zero or one, no overriding request, bounded geometry, lists and packets,
+and ordinary noninterfering palette helpers. Opaque headers, unfetched predicates,
+other records and allocation tails retain prior status. These fields establish
+no natural selector or state production, scheduling, invocation, cadence, live
+CLUTs, transfer, display, rasterized-text absence or safe editing.
 
 ## Save-icon source coverage
 

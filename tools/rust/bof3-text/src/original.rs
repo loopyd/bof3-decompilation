@@ -10537,6 +10537,9 @@ const US_DRG_MIRROR_EVIDENCE: &str = "Original US DRG selected mirror bytes. Exa
 const US_RAW_SPRITE_FIELD_EVIDENCE: &str = "Original US CRYU, PAPY, RYU and RT selected program and cell fields. Exact original raw entry-3 profiles retain documented source/root bindings and finite selectors. Original initialization, forward/direct-fetch and same-actor draw readers bind consumed numeric fields and counted five-byte cell records. Complete native directory, allocation and finite-walk checks preserve opaque headers, unfetched predicates, other records and tails. Retained palette mode 2 and mirror 0/1 use reviewed renderer paths. RT requires an active actor and changed selector, no matching effect pointer, actor halfword +0x80 bit 0x80 clear and bounded nonaliased palette staging. Successful unskipped loading, stable source/code/root/program/control, no overriding request, repeated same-actor calls, visible bounded geometry, lists/packets and ordinary noninterfering helpers remain conditions. No natural producer, schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.";
 const US_RAW_SPRITE_MIRROR_EVIDENCE: &str = "Original US CRYU, PAPY, RYU and RT selected mirror bytes. Exact original raw entry-3 source/root profiles and finite selectors bind selection byte 2 to load 0x8014DD00, same-actor store 0x8014DD08 and renderer read/dispatch 0x8014C720..0x8014C730. Native values 0/1 select reviewed counted-cell paths with retained palette mode 2. The documented source, initialization, post-reader helper and bounded same-actor draw conditions remain required. Other selectors/control values retain prior status. No natural selection, scheduling, invocation, live CLUT, display, rasterized-text absence or safe-edit claim.";
 
+const US_REI_SPRITE_FIELD_EVIDENCE: &str = "Original US REI selected program and cell fields. Four exact original raw entry-3 profiles retain their documented source/root bindings and finite selectors. Original initialization, forward/direct-fetch and same-actor draw readers bind consumed numeric fields and counted five-byte cells. Complete original post-reader and stat-rebuild bodies preserve actor/root/program/control with character index below eight, battle actor count at most three, bounded terminated stat lists or the explicit skip case, valid nonaliased character/enemy records and intact frames. Require an active actor, no matching effect pointer, actor halfword +0x80 bit 0x80 clear and bounded palette staging. Native directory, allocation and finite-fetch checks exclude opaque headers, unfetched predicates, other records and tails. Successful unskipped loads, stable original source/code/tables, retained palette mode 2 and mirror 0/1, no overriding request, repeated same-actor reads, bounded geometry/lists/packets and ordinary noninterfering palette helpers remain conditions. No natural producer, schedule, invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.";
+const US_REI_MIRROR_EVIDENCE: &str = "Original US REI selected mirror bytes. Exact original raw entry-3 source/root profiles and finite selectors bind selection byte 2 to load 0x8014DD00, same-actor store 0x8014DD08 and renderer read/dispatch 0x8014C720..0x8014C730. Native selected values 0/1 use reviewed counted-cell paths with retained palette mode 2. The documented bounded post-reader stat rebuild, source, initialization, same-actor retention and draw conditions remain required. Other selectors/control values retain prior status. No natural selection, scheduling, invocation, live CLUT, display, rasterized-text absence or safe-edit claim.";
+
 fn raw_sprite_program_ranges(
     entry: Entry,
     data: &[u8],
@@ -10764,6 +10767,22 @@ fn raw_sprite_program_ranges(
             &[4, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 48],
             US_RAW_SPRITE_FIELD_EVIDENCE,
             US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            38_912,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "30da9d48edceff573fa4d61982f76f79faa0a0f0b10095d5aee55428df03b271",
+        ) => (&[4], US_REI_SPRITE_FIELD_EVIDENCE, US_REI_MIRROR_EVIDENCE),
+        (
+            38_912,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "674e66c3fb9779917786c30c579456ebeace8419c19a9a11907037a0b96a7e40",
+        ) => (
+            &[6, 0, 16, 20, 32, 28, 12, 8, 36, 40, 44, 56, 48],
+            US_REI_SPRITE_FIELD_EVIDENCE,
+            US_REI_MIRROR_EVIDENCE,
         ),
         _ => return None,
     };
