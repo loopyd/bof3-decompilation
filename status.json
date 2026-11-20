@@ -48,18 +48,18 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "a4e3457a0dad8246c2e51a38e26be2b0fc46a001",
-  "published_at": "2026-11-20T03:08:27.289769+00:00",
+  "revision": "364917b71b40e51a4e50a49f282203e78c5c3eb3",
+  "published_at": "2026-11-20T03:15:58.586179+00:00",
   "counts": {
-    "completed": 6391,
+    "completed": 6401,
     "partial": 358,
-    "unlifted": 3690,
+    "unlifted": 3680,
     "invalid": 0,
     "total": 10439,
     "symbols": {
-      "named": 6527,
-      "raw": 5024,
-      "total": 11551
+      "named": 6537,
+      "raw": 5015,
+      "total": 11552
     }
   },
   "targets": [
@@ -57177,14 +57177,14 @@
       "family": "boss",
       "archive": "boss031",
       "entry": "13",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 12,
       "symbols": {
-        "named": 8,
-        "raw": 5,
+        "named": 9,
+        "raw": 4,
         "total": 13
       },
       "binary": {
@@ -57232,13 +57232,13 @@
           {
             "start": 160,
             "end": 228,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276384,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte2Table1afcBossBoss03113_800C18A0.c#L41"
               }
             ]
           },
@@ -57374,15 +57374,15 @@
       "family": "boss",
       "archive": "boss032",
       "entry": "16",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 12,
       "symbols": {
-        "named": 8,
+        "named": 9,
         "raw": 2,
-        "total": 10
+        "total": 11
       },
       "binary": {
         "size": 1172,
@@ -57429,13 +57429,13 @@
           {
             "start": 172,
             "end": 240,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276396,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte2Table1c70BossBoss03216_800C18AC.c#L39"
               }
             ]
           },
@@ -58002,14 +58002,14 @@
       "family": "boss",
       "archive": "boss034",
       "entry": "16",
-      "completed": 13,
+      "completed": 14,
       "partial": 1,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 30,
       "symbols": {
-        "named": 14,
-        "raw": 17,
+        "named": 15,
+        "raw": 16,
         "total": 31
       },
       "binary": {
@@ -58057,13 +58057,13 @@
           {
             "start": 184,
             "end": 252,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276408,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte2Table26fcBossBoss03416_800C18B8.c#L40"
               }
             ]
           },
@@ -58433,14 +58433,14 @@
       "family": "boss",
       "archive": "boss035",
       "entry": "16",
-      "completed": 18,
+      "completed": 19,
       "partial": 0,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 18,
-        "raw": 9,
+        "named": 19,
+        "raw": 8,
         "total": 27
       },
       "binary": {
@@ -58540,13 +58540,13 @@
           {
             "start": 336,
             "end": 404,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276560,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table1d68BossBoss03516_800C1950.c#L32"
               }
             ]
           },
@@ -59235,14 +59235,14 @@
       "family": "boss",
       "archive": "boss037",
       "entry": "16",
-      "completed": 7,
+      "completed": 8,
       "partial": 0,
-      "unlifted": 3,
+      "unlifted": 2,
       "invalid": 0,
       "total": 10,
       "symbols": {
-        "named": 7,
-        "raw": 4,
+        "named": 8,
+        "raw": 3,
         "total": 11
       },
       "binary": {
@@ -59264,13 +59264,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276228,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table19a4BossBoss03716_800C1804.c#L39"
               }
             ]
           },
@@ -59406,14 +59406,14 @@
       "family": "boss",
       "archive": "boss038",
       "entry": "16",
-      "completed": 15,
+      "completed": 16,
       "partial": 1,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 16,
-        "raw": 5,
+        "named": 17,
+        "raw": 4,
         "total": 21
       },
       "binary": {
@@ -59435,13 +59435,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276228,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table1c24BossBoss03816_800C1804.c#L40"
               }
             ]
           },
@@ -59707,14 +59707,14 @@
       "family": "boss",
       "archive": "boss040",
       "entry": "16",
-      "completed": 15,
+      "completed": 16,
       "partial": 0,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 15,
-        "raw": 6,
+        "named": 16,
+        "raw": 5,
         "total": 21
       },
       "binary": {
@@ -59736,13 +59736,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276228,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table1b30BossBoss04016_800C1804.c#L43"
               }
             ]
           },
@@ -60008,14 +60008,14 @@
       "family": "boss",
       "archive": "boss042",
       "entry": "16",
-      "completed": 7,
+      "completed": 8,
       "partial": 0,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 11,
       "symbols": {
-        "named": 7,
-        "raw": 4,
+        "named": 8,
+        "raw": 3,
         "total": 11
       },
       "binary": {
@@ -60037,13 +60037,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276228,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table19a4BossBoss04216_800C1804.c#L39"
               }
             ]
           },
@@ -60186,14 +60186,14 @@
       "family": "boss",
       "archive": "boss049",
       "entry": "16",
-      "completed": 14,
+      "completed": 15,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 14,
-        "raw": 7,
+        "named": 15,
+        "raw": 6,
         "total": 21
       },
       "binary": {
@@ -60215,13 +60215,13 @@
           {
             "start": 4,
             "end": 72,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276228,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte1Table1b30BossBoss04916_800C1804.c#L40"
               }
             ]
           },
@@ -61004,14 +61004,14 @@
       "family": "boss",
       "archive": "boss052",
       "entry": "16",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 8,
-        "raw": 10,
+        "named": 9,
+        "raw": 9,
         "total": 18
       },
       "binary": {
@@ -61059,13 +61059,13 @@
           {
             "start": 184,
             "end": 252,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276408,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/dispatchStateByte2Table1f80BossBoss05216_800C18B8.c#L35"
               }
             ]
           },
