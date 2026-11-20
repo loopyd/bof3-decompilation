@@ -57,6 +57,8 @@ pub struct NontextRange {
     pub evidence: &'static str,
 }
 
+const SPRITE_CONSUMER_INSTRUCTION_EVIDENCE: &str = "Original US sprite consumer instructions; complete bodies with conditional original direct-call or finite handler-cell entries, full raw-word and structural control-flow review, and all control-transfer delay words including returns. The five-case switch at 0x8014CE78 uses the separately qualified table at 0x80149998. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. tools/rust/bof3-text/docs/formats.md lists the body boundaries and entry routes. Ordinary callee returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors are excluded. No matching ELF, observed invocation, all-path feasibility, general selector bounds, transitive effects, resource safety, display or safe-edit claim.";
+
 /// Reviewed numeric fields and instruction bodies in exact original executables.
 pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
     if data.len() == 122_880
@@ -109,6 +111,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
         return Vec::new();
     }
     vec![
+        NontextRange {
+            offset: 735_640,
+            length: 20,
+            evidence: "Original US sprite palette jump table; five little-endian numeric targets at 0x80149998..0x801499AC. Complete original SLUS body 0x8014CE78..0x8014CF9C bounds the selector by unsigned < 5 before scaled load 0x8014CEB8 and JR 0x8014CEC0. All five original targets remain inside that body; raw words, guard and load/jump delays reconcile under exact whole executable identity. Numeric storage only; stable code/table and valid nonaliasing memory remain conditions. No actual dispatch, general selector bound, resource safety, display or editing claim.",
+        },
         NontextRange {
             offset: 738_132,
             length: 20,
@@ -215,6 +222,41 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             evidence: "original US SLUS; complete instruction body 0x8014B900..0x8014B954 including return delay slot; complete original word and control-flow review, sized executable ELF function section and all 7 text relocations reconcile with original and captured resident bytes; exact whole executable identity; neighboring functions, tables and text allocations excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
         },
         NontextRange {
+            offset: 744_020,
+            length: 100,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 744_224,
+            length: 336,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 744_560,
+            length: 2_060,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 746_708,
+            length: 2_420,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 749_176,
+            length: 292,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 749_468,
+            length: 708,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 750_224,
+            length: 592,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
             offset: 751_288,
             length: 36,
             evidence: "original US SLUS 0x8014D6B8..0x8014D6DC; complete nine-word instruction-only wrapper including direct-call and return delay slots; original whole executable/raw payload and retained resident RAM bytes agree; conditionally entered by original START#8 JAL at 0x801E3FB8 under the reviewed initializer route; all words and structural call/return flow reviewed; ordinary-return/frame/nonalias assumptions; exact executable identity; no callee semantics, actual START invocation, argument/resource safety, transfer, display or whole-layout claim",
@@ -223,6 +265,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 751_324,
             length: 504,
             evidence: "original US SLUS 0x8014D6DC..0x8014D8D4; complete 126-word instruction-only body including all 11 control delay slots; original whole executable/raw and retained resident RAM bytes agree; conditional original entry at reviewed wrapper JAL 0x8014D6C4; all words and four conditional/two internal direct/four external direct/sole return transfers reviewed, internal CFG closed; ordinary external-return/frame/nonalias assumptions; exact executable identity; no callee semantics, data/argument/resource safety, actual START invocation, transfer, display or whole-layout claim",
+        },
+        NontextRange {
+            offset: 751_828,
+            length: 60,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
         },
         NontextRange {
             offset: 751_888,
@@ -238,6 +285,11 @@ pub fn executable_nontext_ranges(data: &[u8]) -> Vec<NontextRange> {
             offset: 752_536,
             length: 112,
             evidence: "original US SLUS 0x8014DB98..0x8014DC08; complete 28-word call-free body conditionally entered by original JAL 0x8014D960 after its 0x8014D964 delay; all words and the sole JR RA delay match original raw bytes and retained shared code RAM; exact whole executable identity; stored instruction role under ordinary caller return/frame/nonalias and stable incoming work assumptions; no actual execution, matching ELF, resource/field semantics or rendering claim",
+        },
+        NontextRange {
+            offset: 752_648,
+            length: 308,
+            evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
         },
         NontextRange {
             offset: 752_956,
@@ -11407,6 +11459,31 @@ pub fn payload_nontext_ranges(
         {
             Some(vec![
                 NontextRange {
+                    offset: 3_864,
+                    length: 108,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 5_020,
+                    length: 240,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 8_868,
+                    length: 376,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 9_244,
+                    length: 120,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
+                    offset: 9_364,
+                    length: 448,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
                     offset: 15_256,
                     length: 88,
                     evidence: "Original US GAME entry 0, complete 22-word instruction body 0x80199398..0x801993F0. All original ASM words, local control flow, delay slots and restored frame agree with original archive and retained RAM. The complete 88-byte AX text and sized function in the retained relocatable object reproduce all original words after its eight R_MIPS_26 relocations. JAL 0x801993D0 with NOP delay conditionally calls SLUS 0x80158C80. Exact archive and payload identities gate classification. Stable code, valid nonaliasing memory, intact frames and ordinary callee returns remain conditions. Callees and referenced data are excluded. No fresh build, linked-executable match, historical execution, resource-safety, rendering or editing claim follows.",
@@ -11487,6 +11564,11 @@ pub fn payload_nontext_ranges(
                     evidence: "Original US GAME entry 0, complete 29-word instruction body 0x801B00F8..0x801B016C. Original JAL 0x8019948C and its NOP delay conditionally enter this reader. Every original ASM word, local branch, two direct calls, opaque indirect call, return and all five delay slots agree with the original archive and retained RAM. The 24-byte frame and RA are restored on return. Exact original archive and entry identities gate classification. Ordinary callee returns and preservation, valid selected work and memory, intact nonaliasing frames and stable code and pointers remain conditions. Table cells, selected handlers, work fields and neighbors are excluded. No observed entry, selector bound, callee effects, resource safety, rendering, editing or ELF match is established.",
                 },
                 NontextRange {
+                    offset: 109_344,
+                    length: 76,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
                     offset: 154_296,
                     length: 1_080,
                     evidence: "original US GAME entry 0 complete 1080-byte instruction body 0x801BB2B8..0x801BB6F0; retained native PC 0x801BB52C and original caller/return words bind execution inside this body; all 270 original words, 50 conditional branches, 19 internal jumps, eight direct calls, sole JR RA and delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, incoming-register validity, sampler semantics, argument/resource safety, rendering or editing claim",
@@ -11502,9 +11584,19 @@ pub fn payload_nontext_ranges(
                     evidence: "original US GAME entry 0 complete 80-byte instruction body 0x801BB760..0x801BB7B0; original JAL 0x801BB520 and retained paired native PCs 0x801BB77C/0x801BB52C with return addresses 0x801BB77C/0x801BB528 and restored 24-byte frame bind execution inside this body; all 20 original words, one direct call, one conditional branch, sole JR RA and three delay slots structurally covered; original and retained origin/endpoint RAM agree; exact original archive, raw mode, load, entry, size, checkword and payload identity; ordinary call-return/frame/nonalias/stable-code assumptions; neighboring functions and referenced data excluded; no matching ELF, native first-instruction or all-path execution, sampler semantics, argument/resource safety, rendering or editing claim",
                 },
                 NontextRange {
+                    offset: 164_536,
+                    length: 196,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
                     offset: 164_804,
                     length: 308,
                     evidence: "Original US GAME entry 0, complete 77-word instruction body 0x801BDBC4..0x801BDCF8. Original JAL 0x801B0124 and its NOP delay conditionally enter this call-free helper. Every original ASM word, local branch and jump, return and all nine delay slots agree with the original archive and retained RAM. The eight-byte frame is restored and RA and saved registers are unchanged. Exact original archive and entry identities gate classification. Valid readable actors and state, writable output, incoming return control, nonaliasing memory and stable code remain conditions. Actor fields, output storage and neighbors are excluded. No observed entry, argument validity, resource safety, rendering, editing or ELF match is established.",
+                },
+                NontextRange {
+                    offset: 171_080,
+                    length: 352,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
                 },
                 NontextRange {
                     offset: 176_744,
@@ -11515,6 +11607,11 @@ pub fn payload_nontext_ranges(
                     offset: 178_772,
                     length: 428,
                     evidence: "Original US GAME entry 0, complete 107-word instruction body 0x801C1254..0x801C1400. Original type-6 constructor JAL 0x801A660C and its NOP delay conditionally enter this helper. Every original ASM word, local branch, two calls, return and five delay slots agrees with original archive and retained RAM bytes. The 32-byte frame and S0/S1/S2/RA are restored on return. The exact original archive and entry identities gate classification. Valid record/table/scratch-selected work and resource memory, ordinary callee returns and ABI preservation, intact disjoint frame, nonaliasing and stable code/data remain conditions. Referenced fields, tables, external helpers and neighbors are excluded. No invocation, lookup success, resource-pointer safety, transitive effects, callback producer, lifetime, rendering, editing or ELF-match claim.",
+                },
+                NontextRange {
+                    offset: 179_200,
+                    length: 560,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
                 },
                 NontextRange {
                     offset: 183_608,
@@ -12242,6 +12339,11 @@ pub fn payload_nontext_ranges(
                     offset: 0xef64,
                     length: 120,
                     evidence: "original US battle payload; complete instruction body 0x801DFB64..0x801DFBDC including return delay slot; complete original control-flow review, sized executable ELF function section and all 8 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
+                },
+                NontextRange {
+                    offset: 61_404,
+                    length: 68,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
                 },
                 NontextRange {
                     offset: 0xf020,
@@ -13019,6 +13121,11 @@ pub fn payload_nontext_ranges(
                     evidence: "original US battle payload; complete instruction body 0x801E7B34..0x801E7BA0 including return delay slot; complete original control-flow review, sized executable ELF function section and all 4 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
                 },
                 NontextRange {
+                    offset: 94_112,
+                    length: 2_488,
+                    evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+                },
+                NontextRange {
                     offset: 0x17958,
                     length: 212,
                     evidence: "original US battle payload; complete instruction body 0x801E8558..0x801E862C including return delay slot; complete original control-flow review, sized executable ELF function section and all 16 text relocations reconcile with original and captured resident bytes; exact archive and payload identities; neighboring functions and data excluded; no observed execution, argument-validity, callee-semantics, resource-safety or duplicate-source ownership claim",
@@ -13645,6 +13752,11 @@ pub fn payload_nontext_ranges(
                     evidence: "original US shared battle payload; complete instruction body 0x800B1F04..0x800B2088 including all eleven control-transfer delay slots; complete original ASM word and structural control-flow review and captured resident bytes reconcile; conditional entry through qualified original JAL site 0x800B131C; call continuations assume ordinary returns, preserved saved values, intact frames and live local bytes, and nonaliasing dynamic stores; exact archive and payload identities; referenced flags, data, pointed storage and callees excluded; no ELF-match, observed-execution, feasible-path, argument-validity, callee-semantics, resource-safety, safe-editing, unique-supplier or duplicate-source ownership claim",
                 },
             ])
+            .chain([NontextRange {
+                offset: 70_676,
+                length: 1_096,
+                evidence: SPRITE_CONSUMER_INSTRUCTION_EVIDENCE,
+            }])
             .collect())
         }
         (0, 2048, 0, 0x8003_b800, 331_788)

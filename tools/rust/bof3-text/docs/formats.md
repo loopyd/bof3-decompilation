@@ -3386,6 +3386,60 @@ contents, returned-pointer validity and consumer safety remain unqualified.
 Invocation, runtime feasibility, resource safety, safe editing and source
 semantics also remain unqualified.
 
+## Sprite consumer instruction coverage
+
+Coverage also recognizes the following complete original bodies. Each span
+includes its return delay word. Original words and structural control flow
+establish the instruction role, including call continuations under ordinary
+callee returns. The existing whole-executable or archive and raw-payload
+identity gates apply. Shared battle copies retain their own archive locations.
+
+| Source and entry | Runtime span | Conditional original entry |
+| --- | --- | --- |
+| GAME 0 | `[0x80196718,0x80196784)` | JAL `0x801C12C8` |
+| GAME 0 | `[0x80196B9C,0x80196C8C)` | BATTLE 3 JAL `0x801E8474` |
+| GAME 0 | `[0x80197AA4,0x80197C1C)` | Phase 1, cell `0x801C7B58` |
+| GAME 0 | `[0x80197C1C,0x80197C94)` | Phase 2, cell `0x801C7B5C` |
+| GAME 0 | `[0x80197C94,0x80197E54)` | Phase 3, cell `0x801C7B60` |
+| GAME 0 | `[0x801B0320,0x801B036C)` | Work byte 1 equal to 1, cell `0x801CD0B0` |
+| GAME 0 | `[0x801BDAB8,0x801BDB7C)` | JAL `0x801993B0` |
+| GAME 0 | `[0x801BF448,0x801BF5A8)` | JAL `0x80197CA4` |
+| GAME 0 | `[0x801C1400,0x801C1630)` | JAL `0x80197C9C` |
+| BATTLE 3 | `[0x801DFBDC,0x801DFC20)` | State 6, cell `0x801EB138` |
+| BATTLE 3 | `[0x801E7BA0,0x801E8558)` | Handler 3, cell `0x801D0F78` |
+| BATTLE 15 | `[0x800A7C14,0x800A805C)` | JAL `0x800A69D4` |
+| SLUS | `[0x8014BA54,0x8014BAB8)` | GAME 0 JAL `0x801993C8` |
+| SLUS | `[0x8014BB20,0x8014BC70)` | JAL `0x8014BA7C` |
+| SLUS | `[0x8014BC70,0x8014C47C)` | JAL `0x8014BA84` |
+| SLUS | `[0x8014C4D4,0x8014CE48)` | JAL `0x8014BC2C` |
+| SLUS | `[0x8014CE78,0x8014CF9C)` | JAL `0x8014C6FC` |
+| SLUS | `[0x8014CF9C,0x8014D260)` | JAL `0x8014C760` |
+| SLUS | `[0x8014D290,0x8014D4E0)` | GAME 0 JAL `0x801BDB44` |
+| SLUS | `[0x8014D8D4,0x8014D910)` | BATTLE 3 JAL `0x801DF334` |
+| SLUS | `[0x8014DC08,0x8014DD3C)` | JAL `0x8014D868` |
+
+GAME dispatcher `0x80197A24` reads the phase table at `0x801C7B54` using
+halfword `0x80143B92`. Dispatcher `0x801B00F8` reads the table at
+`0x801CD0AC` using work byte 1. BATTLE dispatcher `0x801DEEB4` reads
+`0x801EB120` using work byte 1. Dispatcher `0x801E7818` reads
+`0x801D0F6C` using work byte 2. These finite entry cases do not establish
+the complete selector domains or qualify the supporting table storage.
+
+The SLUS palette helper at `0x8014CE78` has one computed jump. Its unsigned
+guard accepts selectors below 5 before the scaled load at `0x8014CEB8`
+and jump at `0x8014CEC0`. Five original words at
+`0x80149998..0x801499AC` target `0x8014CEC8`, `0x8014CEF0`,
+`0x8014CF10`, `0x8014CF3C` and `0x8014CF68`. All targets lie inside the
+body and close its structural flow. Coverage qualifies these 20 table bytes
+separately as numeric data. Other indirect calls retain opaque targets and
+assume ordinary returns.
+
+Stable code and applicable tables, valid nonaliasing memory and intact frames
+remain conditions. Referenced fields, buffers, external callees and neighboring
+bytes retain their prior status. This classification does not establish an ELF
+match, observed invocation, all-path feasibility, general selector bounds,
+transitive effects, resource safety, display or safe editing.
+
 ## Guarded executable switch coverage
 
 For the exact original US `SLUS_004.22`, coverage recognizes the complete
