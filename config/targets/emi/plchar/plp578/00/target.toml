@@ -12,6 +12,7 @@ sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp57800_801CE820.c",
     "src/bof3/plchar/dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefae8PlcharPlp57800_801CF65C.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablefac4PlcharPlp57800_801CE610.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefafcPlcharPlp57800_801CFA30.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp57800_801CF9C4.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp57800_801CF444.c",

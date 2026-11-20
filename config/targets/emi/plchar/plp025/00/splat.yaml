@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801CF23C
   - - 3896
-    - asm
-    - func_801CF338
+    - c
+    - dispatchWorkByte2TableffccPlcharPlp02500_801CF338
+    - '@source: src/bof3/plchar/dispatchWorkByte2TableffccPlcharPlp02500_801CF338.c'
+    - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls that entry of this overlay handler run from its interior base 0x801CFFCC, entry 9 of the sixteen-word run based at 0x801CFFA8, with no arguments and discarding any result; the original does not bound the index before the scaled table load, so its index values 0 through 13 reach 0x801CF37C through 0x801CFB30, of which 0x801B2D54 is the shared main-executable handler at index 4 and the last seven of those words sit in the seven-word run based at 0x801CFFE8, while index values 14 and 15 scale past the payload end at 0x801D0004, and the payload publishes this function as the word at 0x801CFFFC, entry 6 of that seven-word run'
   - - 3964
     - asm
     - func_801CF37C

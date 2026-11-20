@@ -41,8 +41,10 @@ segments:
     - c
     - getAndClearPlcharPlp47800_801CE610
   - - 544
-    - asm
-    - func_801CE620
+    - c
+    - dispatchWorkByte2Tablef6e4PlcharPlp47800_801CE620
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef6e4PlcharPlp47800_801CE620.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF6E4 with no arguments, discarding any result. It does not bound the index before the scaled table load, so that load reads the word at the run base and entry 0 is 0x801CE664. The pointer-cell load precedes the 0x18-byte frame that keeps $ra at 0x10 across the indirect call. The only in-image reference to this body is the word 0x801CE620 at 0x801CF714, entry 15 of the twenty-word run the textbin row T_801CF6D8 declares, so the overlay loader that steps that run enters it: it has no jal caller and takes no arguments.'
   - - 612
     - asm
     - func_801CE664

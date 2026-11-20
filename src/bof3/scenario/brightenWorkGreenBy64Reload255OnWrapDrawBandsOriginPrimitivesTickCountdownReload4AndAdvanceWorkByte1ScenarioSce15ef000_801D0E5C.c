@@ -13,7 +13,7 @@ void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPoints
 
 /* @source 0x801D0E5C
  * @behavior Entry 3 of the overlay's step-handler run at 0x801D1F88, which the
- * overlay entry func_801D0C04 indexes with the unsigned work byte at offset
+ * overlay entry dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 indexes with the unsigned work byte at offset
  * +0x1 of the scratchpad work object published at pointer slot 0x1F800044
  * (`sll $v0,$v0,2` then `lw` from the run base and `jalr`). It takes no
  * arguments and returns nothing. It first raises the work object's green
@@ -38,7 +38,7 @@ void drawTintedPairOfGouraudSliversAndEightSteppedSegmentsBetweenProjectedPoints
  * Evidence: the run word at 0x801D1F94 is 0x801D0E5C and the eight words from
  * 0x801D1F88 are 0x801D0C48, 0x801D0CEC, 0x801D0DB0, 0x801D0E5C, 0x801D0F44,
  * 0x801D101C, 0x801D10C4 and 0x801D11B4, so this body is element 3 of the run
- * whose base func_801D0C04 loads. This address has no in-payload `jal` and no
+ * whose base dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04 loads. This address has no in-payload `jal` and no
  * other word in the payload holds it, so the entry is reached only through that
  * run. The `lbu`/`addiu 0x40`/`sb` head and the inline cell spelling follow the
  * target's own lift dimWorkGreenBy64DrawBandsOriginPrimitivesAndZigzagTickCountdownReload60AndAdvanceWorkByte1ScenarioSce15ef000_801D0F44,

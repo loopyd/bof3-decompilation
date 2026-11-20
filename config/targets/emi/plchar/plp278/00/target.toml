@@ -13,6 +13,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablefcc8PlcharPlp27800_801CEBFC.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefcd4PlcharPlp27800_801CEE30.c",
     "src/bof3/plchar/dispatchWorkByte2TablefcecPlcharPlp27800_801CFA64.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablefce0PlcharPlp27800_801CF858.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefcf4PlcharPlp27800_801CFC2C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefd00PlcharPlp27800_801CFC70.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0.c",

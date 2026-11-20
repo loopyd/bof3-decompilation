@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801CF724
   - - 5208
-    - asm
-    - func_801CF858
+    - c
+    - dispatchWorkByte2Tablefce0PlcharPlp27800_801CF858
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefce0PlcharPlp27800_801CF858.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of the handler run based at 0x801CFCE0 with no arguments, discarding any result. The original does not bound the index before the scaled table load, so it reads from entry 11 of the run at 0x801CFCB4 onwards, through that run''s last five words, the payload''s six trailing words at 0x801CFCF4 and past the payload end above index 10. It reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. Its only in-image reference is the word 0x801CF858 at 0x801CFCFC, entry 2 of the payload''s trailing six words, so the overlay loader that steps that run enters it.'
   - - 5276
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27800_801CF89C

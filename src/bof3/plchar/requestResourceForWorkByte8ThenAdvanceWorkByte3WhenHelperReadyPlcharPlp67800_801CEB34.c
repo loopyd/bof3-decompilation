@@ -28,10 +28,11 @@ extern void func_8014D6B8(u32 flag);
 /* @source 0x801CEB34
  * @behavior Overlay step published at the code-pointer word 0x801D0584, entry 8
  *           of this overlay's thirty-word handler run based at 0x801D0564 that
- *           the byte-2 dispatcher func_801CE404 indexes with work-record byte 2
- *           scaled by four before its indirect call, so the body runs while that
- *           byte reads 8; the same word is also index 3 of the byte-3 table
- *           based at 0x801D0578 that 0x801CE674 indexes with record byte 3, and
+ *           the byte-2 dispatcher dispatchWorkByte2Table0564PlcharPlp67800_801CE404
+ *           indexes with work-record byte 2 scaled by four before its indirect
+ *           call, so the body runs while that byte reads 8; the same word is
+ *           also index 3 of the byte-3 table based at 0x801D0578 that 0x801CE674
+ *           indexes with record byte 3, and
  *           index 5 of the byte-2 table based at 0x801D0570 that 0x801CE630
  *           indexes with record byte 2, so no jal in this payload names it. It
  *           calls the shared readiness helper func_8014DAEC and keeps only the

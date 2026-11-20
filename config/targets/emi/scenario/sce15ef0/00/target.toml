@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/sce15ef0/00.bin"
 splat = "config/targets/emi/scenario/sce15ef0/00/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04.c",
+]
 support_sources = [
     "src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c",
     "src/bof3/support/sce15ef0_00_psyq.c",

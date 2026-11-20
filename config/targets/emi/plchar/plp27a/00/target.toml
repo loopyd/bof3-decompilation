@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablef900PlcharPlp27a00_801CE404.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablef90cPlcharPlp27a00_801CE610.c",
 ]
 support_sources = [
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp27a00_801CF448.c",

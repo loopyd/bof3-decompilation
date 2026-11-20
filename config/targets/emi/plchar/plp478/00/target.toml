@@ -14,6 +14,7 @@ sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ClaimFrontEndRecordHandler1BSelectSequenceAndQueueCueThenAdvanceWorkByte2PlcharPlp47800_801CF4CC.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp47800_801CE898.c",
     "src/bof3/plchar/dispatchWorkByte2Tablef6d8PlcharPlp47800_801CE404.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablef6e4PlcharPlp47800_801CE620.c",
 ]
 support_sources = [
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp47800_801CF064.c",

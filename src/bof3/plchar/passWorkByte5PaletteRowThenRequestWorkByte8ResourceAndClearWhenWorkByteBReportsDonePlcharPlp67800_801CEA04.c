@@ -75,11 +75,12 @@ extern void func_80166C48(u8* row, s32 mode);
  *           payload, as the word 0x801CEA04 at 0x801D0580, entry 7 of the
  *           thirty-word code-pointer run based at 0x801D0564, which this
  *           overlay places as its textbin row at that base, and the byte-2
- *           dispatcher func_801CE404 indexes that run with work-record byte 2
- *           scaled by four before its indirect call, so the body runs while
- *           that byte reads 7 and no jal or j word of the payload names it. It
- *           takes no arguments and any result is discarded. When work byte 0x0B
- *           reads 1 the body first passes the 0x40-byte palette row at
+ *           dispatcher dispatchWorkByte2Table0564PlcharPlp67800_801CE404
+ *           indexes that run with work-record byte 2 scaled by four before its
+ *           indirect call, so the body runs while that byte reads 7 and no jal
+ *           or j word of the payload names it. It takes no arguments and any
+ *           result is discarded. When work byte 0x0B reads 1 the body first
+ *           passes the 0x40-byte palette row at
  *           0x80035600 selected by work byte 5 to the shared palette helper
  *           func_80166C48 with mode 0 and writes 2 into byte 0x0B, so a first
  *           call opens with that palette step and then dispatches again on the

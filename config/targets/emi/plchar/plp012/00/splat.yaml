@@ -88,8 +88,10 @@ segments:
     - '@source: src/bof3/plchar/selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF23C.c'
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: when the route index byte 0x08 equals the chosen candidate byte 0x03 the walk has arrived, so the body selects that route arrival sequence through the shared helper func_8014D8D4, sequence 0x40 for route 1 and 0x41 for route 7 and none for any other route, then increments the step counter byte 0x02; otherwise it stores the countdown byte 0x09 one lower and, when that reaches zero, puts it back to 2, adds the step sign byte 0x0B into the route index byte 0x08, masks it into the eight-entry window with 7 and selects the sequence of the new route index through the same helper.'
   - - 3896
-    - asm
-    - func_801CF338
+    - c
+    - dispatchWorkByte2Tablefda4PlcharPlp01200_801CF338
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefda4PlcharPlp01200_801CF338.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFDA4 with no arguments, discarding any result. That base is entry 9 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF37C and the entries it can reach are 0x801CF37C, 0x801CF494, 0x801CF544, 0x801CF610, the shared main-executable handler 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF338 at 0x801CFDD0, entry 4 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 3964
     - asm
     - func_801CF37C
