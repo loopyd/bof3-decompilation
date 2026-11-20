@@ -254,6 +254,7 @@ async function initialize() {
       });
     }
     for (const family of [...new Set(targets.filter((target) => target.kind === "emi").map((target) => target.family))]) {
+      collapsedFamilies.add(family);
       const option = element("option", "", family.toUpperCase());
       option.value = family;
       byId("family").append(option);
