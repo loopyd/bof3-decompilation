@@ -2221,6 +2221,12 @@ both CSE passes and the actual combine route. Derive ready priorities and
 quantity weights from the dumps; counting surviving definitions is insufficient.
 Require the complete register web and native gate.
 
+When packing disappears during combine, inspect surviving `USE` instructions.
+GCC 2.7.2 can preserve death notes this way. Register-class analysis skips their
+costs, but reload can still allocate stack homes. A `USE(MEM)` may emit nothing
+while its frame remains. Check the final frame and surviving producer before
+claiming that deleted packing preserves a useful scheduling quantity.
+
 Check the source pseudo's `reg_n_calls_crossed` before predicting initial
 readiness. GCC 2.7.2 orders reads of a pseudo with zero calls crossed before
 the next call. That call can release the copy and trigger its destination's
