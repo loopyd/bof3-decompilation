@@ -2063,6 +2063,13 @@ phase without extra shifts. Prove its range or low-bit equivalence at every
 consumer, retain the final conversion and inspect the complete native diff.
 The intermediate type needs a representation reason.
 
+Consumer width can change sign-extension lowering. In a measured low-byte-only
+coordinate loop, a halfword carrier retained the QI-to-HI shift pair where a word
+carrier folded it into a signed load. Signed word use of the other path's base
+still retained LH. This is a measured lowering, not a general effect of `u16`.
+Prove wrapping equivalence at every observation and check both paths, loads,
+masks, spills and the complete native gate.
+
 Distinguish frontend narrowing from RTL constant folding. A nonconst binding
 shared by real arithmetic consumers can defer constant discovery until CSE and
 change a byte-result subtraction's immediate. Readonly initializers can fold
@@ -2451,6 +2458,13 @@ CSE quantity. Separate pending and sampled locals can still forward that value.
 Reusing the consumed pending word for the next real slot read can end that
 availability and restore the load. Preserve every memory event and check the
 subtraction range before removing a narrowing conversion.
+
+When strength reduction removes a real record-pointer capture, inspect GIV
+replaceability in `.loop`. GCC 2.7.2 requires an unconditional definition or
+all uses after it in one basic block. Capturing after an existing length guard
+can fail that test and retain the cursor copy when uses cross blocks. Preserve
+empty-record handling and inspect CSE2, allocation and the complete native gate.
+Do not add a guard or consumer solely to preserve a copy.
 
 When loop motion hoists a table base into an extra saved register, source
 parentheses may leave the same canonical address tree. Trace the invariant in
