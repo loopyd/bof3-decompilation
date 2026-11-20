@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v47`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v48`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -2990,7 +2990,42 @@ group tables, alignment, task priority and overlay residency. NormalAbil and
 CombatAbil remain unsupported. Natural activation, edited rendering and visual
 fit remain unverified.
 
-Retain all 148 allocations and edit only `text`. Re-extract older inline
+Fifteen command captions use `game-literal` and renderer `0x8014F800`.
+Capacities include NUL. Preserve alignment and the pointer, group and dispatch
+tables.
+
+| Caption | Address | Capacity | Reference |
+| --- | --- | --- | --- |
+| Use | `0x801EC9D4` | 4 | `0x801ECA80` |
+| Sort | `0x801EC9D8` | 5 | `0x801ECA84` |
+| Drop | `0x801EC9E0` | 5 | `0x801ECA88` |
+| Eqip | `0x801EC9E8` | 5 | `0x801ECA8C` |
+| Opti | `0x801EC9F0` | 5 | `0x801ECA90` |
+| Abil | `0x801EC9F8` | 5 | `0x801ECA94` |
+| Vtal | `0x801ECA1C` | 5 | `0x801ECAA8` |
+| Quit | `0x801ECA24` | 5 | `0x801ECAAC` |
+| Form | `0x801ECA2C` | 5 | `0x801ECAB0` |
+| Init | `0x801ECA3C` | 5 | `0x801ECAB8` |
+| Note | `0x801ECA44` | 5 | `0x801ECABC` |
+| Fast | `0x801ECA4C` | 5 | `0x801ECAC0` |
+| Pool | `0x801ECA54` | 5 | `0x801ECAC4` |
+| Ally | `0x801ECA5C` | 5 | `0x801ECAC8` |
+| Gene | `0x801ECA64` | 5 | `0x801ECACC` |
+
+Fresh main-menu choices 0, 2 and 1 reach publishers `0x801D4884`, `0x801D667C`
+and `0x801D9110`. Each initializes task `0x801484E0` with type 6, dispatch 13,
+state 2 and group 0, 1 or 2. Handler `0x801EA158` preserves the group before
+wrapper `0x801EA0B0` calls reader `0x801DDC74`. Those groups select eleven
+captions. Fresh choice 3 reaches initializer `0x801D9748`, which publishes
+task `0x801485B8` with the same type, dispatch and state, but group 7. This group
+selects Form and Ally through the same reader. The fresh selection-5 route
+reaches initializer `0x801DB5E8`, which sets selectors `0x80148652/53` to 0/2.
+Its selected handler calls wrapper `0x801E2668` with fixed group 6 to select
+Quit and Init. The reader calls the renderer with count 16. Other command groups
+and reset bypass remain unqualified.
+Natural activation, edited rendering and visual fit remain unverified.
+
+Retain all 163 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -3256,7 +3291,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v47` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v48` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
