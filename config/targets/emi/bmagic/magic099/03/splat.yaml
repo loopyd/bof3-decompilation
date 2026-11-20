@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EEE70
   - - 920
-    - asm
-    - func_801EEF98
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98.c'
+    - '@behavior: On work byte 0xB non-zero, store 8 into work byte 9 and advance work byte 1.'
   - - 988
     - asm
     - func_801EEFDC

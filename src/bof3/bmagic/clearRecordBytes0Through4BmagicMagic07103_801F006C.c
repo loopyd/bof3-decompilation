@@ -1,8 +1,9 @@
 #include "bof3/bof3.h"
 
 /* Pointer cell at 0x801F17B4 in this overlay's trailing data block. It holds
- * the bmagic work record being stepped: func_801EF33C selects a handler with
- * that record's byte 1 through the table at 0x801F01B0, and func_801EF380
+ * the bmagic work record being stepped:
+ * dispatchWorkRecordByte1HandlerBmagicMagic07103_801EF33C selects a handler
+ * with that record's byte 1 through the table at 0x801F01B0, and func_801EF380
  * selects one with byte 2. The cell is reloaded once per access, so the
  * original re-materializes its address (lui $v0,0x801F / lw
  * $v0,%lo(D_801F17B4)($v0)) before each byte store. The cell sits inside the

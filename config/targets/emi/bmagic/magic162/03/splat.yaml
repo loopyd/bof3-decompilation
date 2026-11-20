@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EF2D8
   - - 1848
-    - asm
-    - func_801EF338
+    - c
+    - dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338.c'
+    - '@behavior: Handler dispatch of the bmagic frame loop. Reads the work record pointer from the cell at 0x801F17B0 before reserving its 0x18-byte frame, loads the record unsigned byte at offset 0x1, scales it by four and calls the entry of the handler table based at 0x801F01AC that the byte selects, passing no arguments; the only table word on disc sits at index 0 and holds 0x801EF37C. Reads no other state, writes none, and keeps only $ra in the frame. Its 68-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF338.'
   - - 1916
     - asm
     - func_801EF37C

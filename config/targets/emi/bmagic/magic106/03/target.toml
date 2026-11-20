@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/countDownWorkByteAThenSeedWorkRadiusAngleRandomTripletAndAdvanceWorkByte2BmagicMagic10603_801EEFAC.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24.c",
     "src/bof3/bmagic/drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4.c",
     "src/bof3/support/magic106_03_psyq.c",

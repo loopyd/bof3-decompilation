@@ -38,6 +38,11 @@ and what stayed equal around it. Discovery of further actions: `bin/harness lift
 
 ## First source
 
+If only the branch
+polarity differs and its target offset matches, retain the donor's arms and invert
+the condition. That opcode difference is not a relocation delta, so the twin is a
+shape seed, not clone-eligible.
+
 For genuinely absent C, require parent admission for the selected source. Pin original
 bytes/load, reviewed boundary, caller/callee evidence, PRE absence, owned source/
 header/map/layout paths and attempts. Create evidenced C89 with `@source`/`@behavior`,

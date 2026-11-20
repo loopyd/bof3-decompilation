@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801EF0F8
   - - 1352
-    - asm
-    - func_801EF148
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22303_801EF148.c'
+    - '@behavior: Battle work step reached as word 3 of the nine-word handler table based at 0x801EFC2C that increments the scratchpad work object''s byte 2 when byte 0xB of the shared record at 0x801EB4E0 is below two, with no frame, arguments or return value.'
   - - 1420
     - asm
     - func_801EF18C

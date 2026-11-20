@@ -45,8 +45,10 @@ segments:
     - c
     - setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2CF8
   - - 312
-    - asm
-    - func_801F2D38
+    - c
+    - setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38
+    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress0AOr2ByGateWorld02Area07813_801F2D38.c'
+    - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read, stores 0xFFFF into the shared status halfword at 0x801490A8, then stores 0xA into the shared scenario progress byte at 0x80146864 when the gate byte reads 0 and 0x2 when it reads 1, leaving that byte untouched for any other gate value.'
   - - 376
     - asm
     - func_801F2D78
