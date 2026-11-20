@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v41`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v42`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v41` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v42` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3395,6 +3395,30 @@ empty pointer-reference lists. Recognition pins the payload outside these
 allocations, and packing binds the original archive identity. Original
 instructions establish source and output bounds; natural selection and edited
 rendering remain unverified.
+
+The `US SCENA17 credits text` layout covers entry 0 of original US
+`BIN/SCENARIO/SCENA17.EMI`, loaded at `0x801F6C00`. It exposes 167 disjoint
+literal runs through `ascii-credits-literal`, totaling 2,383 editable bytes.
+Each run requires exactly its original byte count and permits only ASCII A-Z,
+a-z and spaces. Pad shorter wording with spaces. Runs reserve no terminator
+byte. NUL, punctuation, digits and command introducers are refused.
+
+The pointer reader `0x801F938C` calls parser `0x801F91F0`, whose original
+instructions map uppercase letters to atlas indices 0..25 and lowercase to
+26..51. ASCII space advances X by twelve. Commands `!n`, `#n` and `@` set
+style, select special glyphs or submit a special image. All 91 command bytes,
+145 parent-string NULs, padding and offsets remain protected. The table's 172
+pointers name 145 parent strings. Only 162 pointers directly target a first
+literal run and appear in its references. Ten pointers target nine strings
+with a protected command prefix. Those words remain pinned and must not be
+attributed to later literal-run addresses. No relocation is supported.
+
+The reader's complete callers are `0x801F8110` and `0x801F8170`. Its stream
+index has no local upper bound, and its sixteen-word terminal probe can read
+one word beyond the recorded table at `0x801F981C..0x801F9DBC`. These edits
+preserve that original behavior. Exact byte widths do not establish equal
+pixel widths or glyph draw counts. Natural selection, whole-roll traversal,
+GPU resource safety and edited rendering remain unverified.
 
 The `US SCENA10 numeric text` layout covers entry 0 of original US
 `BIN/SCENARIO/SCENA10.EMI`, loaded at `0x801F6C00`. Both allocations include NUL:

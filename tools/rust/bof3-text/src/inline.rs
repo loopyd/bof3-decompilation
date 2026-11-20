@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v41";
+pub const SCHEMA: &str = "bof3.inline-text/v42";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -23,6 +23,7 @@ pub(crate) enum Codec {
     ShiftJisDigit,
     ShiftJisTitleFormat,
     AsciiLiteral,
+    AsciiCreditsLiteral,
     AsciiFormatLiteral,
     AsciiDigitGlyphLiteral,
     AsciiDashGlyphLiteral,
@@ -61,6 +62,18 @@ impl Codec {
                 }
             };
             return Ok(vec![0x82, 0x4f + digit]);
+        }
+        if self == Self::AsciiCreditsLiteral {
+            if text.len() != capacity
+                || !text
+                    .bytes()
+                    .all(|byte| byte.is_ascii_alphabetic() || byte == b' ')
+            {
+                return invalid(format!(
+                    "credits text requires exactly {capacity} ASCII letters or spaces; pad shorter wording with spaces"
+                ));
+            }
+            return Ok(text.as_bytes().to_vec());
         }
         if self == Self::GameExactLiteral {
             let bytes = encode_name(text, capacity)?;
@@ -186,6 +199,12 @@ impl Codec {
                 .unwrap()
                 .to_string());
         }
+        if self == Self::AsciiCreditsLiteral {
+            let text =
+                std::str::from_utf8(bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+            self.encode(text, bytes.len())?;
+            return Ok(text.into());
+        }
         if matches!(self, Self::GameKeyboardCharacter | Self::GameExactLiteral) {
             let text = decode_name(bytes, file_offset)?;
             self.encode(&text, bytes.len())?;
@@ -233,6 +252,7 @@ impl Codec {
             Self::ShiftJisDigit => "shift-jis-digit",
             Self::ShiftJisTitleFormat => "shift-jis-title-format",
             Self::AsciiLiteral => "ascii-literal",
+            Self::AsciiCreditsLiteral => "ascii-credits-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
             Self::AsciiDashGlyphLiteral => "ascii-dash-glyph-literal",
@@ -259,6 +279,7 @@ impl Codec {
     pub(crate) const fn terminator_bytes(self) -> usize {
         match self {
             Self::GameFixedLiteral
+            | Self::AsciiCreditsLiteral
             | Self::GameExactLiteral
             | Self::GameCountedLiteral
             | Self::GameKeyboardCharacter => 0,
@@ -522,6 +543,16 @@ impl Allocation {
             references: &[],
             renderers: &[0x80150098],
             codec: Codec::AsciiLiteral,
+        }
+    }
+
+    const fn credits_literal(address: u32, capacity: usize, references: &'static [u32]) -> Self {
+        Self {
+            address,
+            capacity,
+            references,
+            renderers: &[0x801f91f0],
+            codec: Codec::AsciiCreditsLiteral,
         }
     }
 
@@ -882,6 +913,186 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d1964, 6, &[], &[0x8014f800]),
             Allocation::literal(0x801d196c, 8, &[], &[0x8014f800]),
             Allocation::literal(0x801d1974, 6, &[], &[0x8014f800]),
+        ],
+    },
+    Layout {
+        name: "US SCENA17 credits text",
+        load: 0x801f6c00,
+        size: 12764,
+        sha256: "38459e1bee02f415e6bcf37b17ffe359b6dac2e492d6972b3dac12379beb6cc0",
+        consumers: &[0x801f8110, 0x801f8170, 0x801f938c],
+        allocations: &[
+            Allocation::credits_literal(0x801f6c04, 16, &[0x801f9d94]),
+            Allocation::credits_literal(0x801f6c18, 10, &[0x801f9d64]),
+            Allocation::credits_literal(0x801f6c24, 10, &[0x801f9d60]),
+            Allocation::credits_literal(0x801f6c32, 8, &[]),
+            Allocation::credits_literal(0x801f6c3c, 19, &[0x801f9d3c]),
+            Allocation::credits_literal(0x801f6c52, 18, &[]),
+            Allocation::credits_literal(0x801f6c68, 21, &[0x801f9d28]),
+            Allocation::credits_literal(0x801f6c82, 16, &[]),
+            Allocation::credits_literal(0x801f6c94, 20, &[0x801f9d14]),
+            Allocation::credits_literal(0x801f6cae, 21, &[]),
+            Allocation::credits_literal(0x801f6cc4, 11, &[0x801f9cfc]),
+            Allocation::credits_literal(0x801f6cd0, 24, &[0x801f9cf8]),
+            Allocation::credits_literal(0x801f6cec, 5, &[0x801f9cf0]),
+            Allocation::credits_literal(0x801f6cf3, 8, &[]),
+            Allocation::credits_literal(0x801f6cfc, 5, &[0x801f9cec]),
+            Allocation::credits_literal(0x801f6d03, 8, &[]),
+            Allocation::credits_literal(0x801f6d0c, 5, &[0x801f9ce8]),
+            Allocation::credits_literal(0x801f6d13, 6, &[]),
+            Allocation::credits_literal(0x801f6d1c, 5, &[0x801f9ce4]),
+            Allocation::credits_literal(0x801f6d23, 6, &[]),
+            Allocation::credits_literal(0x801f6d2c, 5, &[0x801f9ce0]),
+            Allocation::credits_literal(0x801f6d33, 4, &[]),
+            Allocation::credits_literal(0x801f6d38, 10, &[0x801f9cdc]),
+            Allocation::credits_literal(0x801f6d44, 19, &[0x801f9cd0]),
+            Allocation::credits_literal(0x801f6d58, 22, &[0x801f9ccc]),
+            Allocation::credits_literal(0x801f6d70, 18, &[0x801f9cc8]),
+            Allocation::credits_literal(0x801f6d84, 7, &[0x801f9cc0]),
+            Allocation::credits_literal(0x801f6d8c, 11, &[0x801f9cb4]),
+            Allocation::credits_literal(0x801f6d9b, 9, &[]),
+            Allocation::credits_literal(0x801f6da8, 19, &[0x801f9cb0]),
+            Allocation::credits_literal(0x801f6dbc, 17, &[0x801f9cac]),
+            Allocation::credits_literal(0x801f6dd0, 11, &[0x801f9ca8]),
+            Allocation::credits_literal(0x801f6ddc, 12, &[0x801f9ca0]),
+            Allocation::credits_literal(0x801f6dec, 15, &[0x801f9c9c]),
+            Allocation::credits_literal(0x801f6dfc, 11, &[0x801f9c98]),
+            Allocation::credits_literal(0x801f6e08, 20, &[0x801f9c94]),
+            Allocation::credits_literal(0x801f6e20, 17, &[0x801f9c90]),
+            Allocation::credits_literal(0x801f6e34, 9, &[0x801f9c8c]),
+            Allocation::credits_literal(0x801f6e40, 21, &[0x801f9c84]),
+            Allocation::credits_literal(0x801f6e58, 17, &[0x801f9c80]),
+            Allocation::credits_literal(0x801f6e6c, 18, &[0x801f9c7c]),
+            Allocation::credits_literal(0x801f6e80, 5, &[0x801f9c78]),
+            Allocation::credits_literal(0x801f6e88, 8, &[0x801f9c70]),
+            Allocation::credits_literal(0x801f6e92, 3, &[]),
+            Allocation::credits_literal(0x801f6e98, 18, &[0x801f9c6c]),
+            Allocation::credits_literal(0x801f6eac, 17, &[0x801f9c68]),
+            Allocation::credits_literal(0x801f6ec0, 9, &[0x801f9c64]),
+            Allocation::credits_literal(0x801f6ecc, 21, &[0x801f9c58]),
+            Allocation::credits_literal(0x801f6ee4, 17, &[0x801f9c54, 0x801f9cc4]),
+            Allocation::credits_literal(0x801f6ef8, 19, &[0x801f9c50]),
+            Allocation::credits_literal(0x801f6f0c, 17, &[0x801f9c4c]),
+            Allocation::credits_literal(0x801f6f20, 17, &[0x801f9c48]),
+            Allocation::credits_literal(0x801f6f34, 17, &[0x801f9c44]),
+            Allocation::credits_literal(0x801f6f48, 5, &[0x801f9c38]),
+            Allocation::credits_literal(0x801f6f51, 14, &[]),
+            Allocation::credits_literal(0x801f6f64, 13, &[0x801f9c1c]),
+            Allocation::credits_literal(0x801f6f74, 18, &[0x801f9c18]),
+            Allocation::credits_literal(0x801f6f88, 16, &[0x801f9c14]),
+            Allocation::credits_literal(0x801f6f9c, 18, &[0x801f9c10]),
+            Allocation::credits_literal(0x801f6fb0, 14, &[0x801f9c0c]),
+            Allocation::credits_literal(0x801f6fc0, 17, &[0x801f9c08]),
+            Allocation::credits_literal(0x801f6fd4, 23, &[0x801f9c00]),
+            Allocation::credits_literal(0x801f6fec, 4, &[0x801f9bfc]),
+            Allocation::credits_literal(0x801f6ff4, 18, &[]),
+            Allocation::credits_literal(0x801f700c, 21, &[0x801f9bdc]),
+            Allocation::credits_literal(0x801f7024, 15, &[0x801f9bd8]),
+            Allocation::credits_literal(0x801f7034, 15, &[0x801f9bd4]),
+            Allocation::credits_literal(0x801f7044, 16, &[0x801f9bd0]),
+            Allocation::credits_literal(0x801f7058, 15, &[0x801f9bcc]),
+            Allocation::credits_literal(0x801f7068, 16, &[0x801f9bc8]),
+            Allocation::credits_literal(0x801f707c, 20, &[0x801f9bc4]),
+            Allocation::credits_literal(0x801f7094, 16, &[0x801f9bc0]),
+            Allocation::credits_literal(0x801f70a8, 5, &[0x801f9bb4]),
+            Allocation::credits_literal(0x801f70b1, 12, &[]),
+            Allocation::credits_literal(0x801f70c0, 21, &[0x801f9b9c]),
+            Allocation::credits_literal(0x801f70d8, 17, &[0x801f9b98]),
+            Allocation::credits_literal(0x801f70ec, 2, &[0x801f9b88]),
+            Allocation::credits_literal(0x801f70f0, 1, &[]),
+            Allocation::credits_literal(0x801f70f3, 18, &[]),
+            Allocation::credits_literal(0x801f7108, 16, &[0x801f9b7c]),
+            Allocation::credits_literal(0x801f711a, 6, &[]),
+            Allocation::credits_literal(0x801f7124, 7, &[0x801f9b70]),
+            Allocation::credits_literal(0x801f712f, 10, &[]),
+            Allocation::credits_literal(0x801f713c, 5, &[0x801f9b6c]),
+            Allocation::credits_literal(0x801f7145, 12, &[]),
+            Allocation::credits_literal(0x801f7154, 21, &[0x801f9b5c]),
+            Allocation::credits_literal(0x801f716c, 12, &[0x801f9b58]),
+            Allocation::credits_literal(0x801f717c, 16, &[0x801f9b4c, 0x801f9b8c]),
+            Allocation::credits_literal(0x801f7190, 15, &[0x801f9b48, 0x801f9b80, 0x801f9b90]),
+            Allocation::credits_literal(0x801f71a0, 17, &[0x801f9b44]),
+            Allocation::credits_literal(0x801f71b4, 16, &[0x801f9b30]),
+            Allocation::credits_literal(0x801f71c8, 19, &[0x801f9b2c]),
+            Allocation::credits_literal(0x801f71dc, 8, &[0x801f9b20]),
+            Allocation::credits_literal(0x801f71e8, 10, &[0x801f9b1c]),
+            Allocation::credits_literal(0x801f71f4, 16, &[0x801f9b14]),
+            Allocation::credits_literal(0x801f7208, 10, &[0x801f9b10]),
+            Allocation::credits_literal(0x801f7214, 8, &[]),
+            Allocation::credits_literal(0x801f7220, 16, &[0x801f9af8]),
+            Allocation::credits_literal(0x801f7234, 20, &[0x801f9aec]),
+            Allocation::credits_literal(0x801f724c, 17, &[0x801f9ae8, 0x801f9afc]),
+            Allocation::credits_literal(0x801f7260, 18, &[0x801f9ae4]),
+            Allocation::credits_literal(0x801f7274, 14, &[0x801f9ae0]),
+            Allocation::credits_literal(0x801f7284, 19, &[0x801f9adc]),
+            Allocation::credits_literal(0x801f7298, 16, &[0x801f9ad8]),
+            Allocation::credits_literal(0x801f72ac, 18, &[0x801f9acc]),
+            Allocation::credits_literal(0x801f72c0, 17, &[0x801f9ac0, 0x801f9ad4]),
+            Allocation::credits_literal(0x801f72d4, 4, &[0x801f9abc]),
+            Allocation::credits_literal(0x801f72da, 14, &[]),
+            Allocation::credits_literal(0x801f72ec, 14, &[0x801f9aa4]),
+            Allocation::credits_literal(0x801f72fc, 18, &[0x801f9aa0]),
+            Allocation::credits_literal(0x801f7310, 17, &[0x801f9a9c]),
+            Allocation::credits_literal(0x801f7324, 16, &[0x801f9a98]),
+            Allocation::credits_literal(0x801f7338, 19, &[0x801f9a94]),
+            Allocation::credits_literal(0x801f734c, 16, &[0x801f9a90]),
+            Allocation::credits_literal(0x801f7360, 15, &[0x801f9a84]),
+            Allocation::credits_literal(0x801f7370, 15, &[0x801f9a80]),
+            Allocation::credits_literal(0x801f7380, 8, &[0x801f9a7c]),
+            Allocation::credits_literal(0x801f738c, 23, &[0x801f9a78]),
+            Allocation::credits_literal(0x801f73a4, 18, &[0x801f9a6c]),
+            Allocation::credits_literal(0x801f73b8, 17, &[0x801f9a68]),
+            Allocation::credits_literal(0x801f73cc, 16, &[0x801f9a64]),
+            Allocation::credits_literal(0x801f73e0, 19, &[0x801f9a60]),
+            Allocation::credits_literal(0x801f73f4, 15, &[0x801f9a54]),
+            Allocation::credits_literal(0x801f7404, 4, &[0x801f9a3c]),
+            Allocation::credits_literal(0x801f740a, 16, &[]),
+            Allocation::credits_literal(0x801f741c, 19, &[0x801f9a2c]),
+            Allocation::credits_literal(0x801f7430, 4, &[0x801f9a1c]),
+            Allocation::credits_literal(0x801f7436, 11, &[]),
+            Allocation::credits_literal(0x801f7444, 21, &[0x801f9a00]),
+            Allocation::credits_literal(0x801f745c, 25, &[0x801f99ec]),
+            Allocation::credits_literal(0x801f7478, 9, &[0x801f99dc]),
+            Allocation::credits_literal(0x801f7483, 13, &[]),
+            Allocation::credits_literal(0x801f7494, 19, &[0x801f99c4, 0x801f99f0, 0x801f9be0]),
+            Allocation::credits_literal(0x801f74a8, 17, &[0x801f99c0]),
+            Allocation::credits_literal(0x801f74bc, 25, &[0x801f99b0]),
+            Allocation::credits_literal(0x801f74d8, 17, &[0x801f99a4]),
+            Allocation::credits_literal(0x801f74ec, 10, &[0x801f9998]),
+            Allocation::credits_literal(0x801f74f8, 20, &[0x801f9984, 0x801f99b4, 0x801f9a08]),
+            Allocation::credits_literal(0x801f7510, 18, &[0x801f997c]),
+            Allocation::credits_literal(0x801f7524, 13, &[0x801f9978]),
+            Allocation::credits_literal(0x801f7534, 18, &[0x801f9968]),
+            Allocation::credits_literal(0x801f7548, 13, &[0x801f9958]),
+            Allocation::credits_literal(0x801f7558, 10, &[0x801f9940, 0x801f9a04]),
+            Allocation::credits_literal(0x801f7564, 5, &[0x801f993c]),
+            Allocation::credits_literal(0x801f756b, 17, &[]),
+            Allocation::credits_literal(0x801f7580, 18, &[0x801f992c, 0x801f99f4]),
+            Allocation::credits_literal(0x801f7594, 17, &[0x801f9928]),
+            Allocation::credits_literal(0x801f75a8, 19, &[0x801f9918, 0x801f9a40]),
+            Allocation::credits_literal(0x801f75bc, 18, &[0x801f9914]),
+            Allocation::credits_literal(0x801f75d0, 15, &[0x801f9908, 0x801f9b18]),
+            Allocation::credits_literal(0x801f75e0, 18, &[0x801f9904]),
+            Allocation::credits_literal(0x801f75f4, 15, &[0x801f98f8, 0x801f999c, 0x801f9a30]),
+            Allocation::credits_literal(0x801f7604, 14, &[0x801f98f4, 0x801f995c, 0x801f9a20]),
+            Allocation::credits_literal(0x801f7614, 13, &[0x801f98f0]),
+            Allocation::credits_literal(0x801f7624, 21, &[0x801f98d8, 0x801f9a5c]),
+            Allocation::credits_literal(0x801f763e, 16, &[]),
+            Allocation::credits_literal(0x801f7650, 15, &[0x801f98c8, 0x801f9ad0]),
+            Allocation::credits_literal(0x801f7662, 16, &[]),
+            Allocation::credits_literal(0x801f7674, 18, &[0x801f98b8, 0x801f9a58]),
+            Allocation::credits_literal(0x801f768a, 13, &[]),
+            Allocation::credits_literal(
+                0x801f7698,
+                23,
+                &[0x801f98a8, 0x801f991c, 0x801f996c, 0x801f9980],
+            ),
+            Allocation::credits_literal(0x801f76b2, 15, &[]),
+            Allocation::credits_literal(0x801f76c4, 18, &[0x801f9898, 0x801f99a0, 0x801f99e0]),
+            Allocation::credits_literal(0x801f76da, 8, &[]),
+            Allocation::credits_literal(0x801f76e4, 9, &[0x801f9888]),
+            Allocation::credits_literal(0x801f76f1, 5, &[]),
+            Allocation::credits_literal(0x801f76fc, 20, &[0x801f985c]),
         ],
     },
     Layout {
