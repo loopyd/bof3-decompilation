@@ -34,8 +34,10 @@ segments:
     - asm
     - func_801F2C48
   - - 136
-    - asm
-    - func_801F2C88
+    - c
+    - advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88
+    - '@source: src/bof3/world/advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88.c'
+    - '@behavior: Second handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, adds 0x400 to that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 2, restores the saved scratchpad pointer and sets the saved record countdown byte 9 to 4.'
   - - 224
     - c
     - countdownScratchStateToMode3World03Area11913_801F2CE0

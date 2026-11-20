@@ -50,8 +50,10 @@ segments:
     - '@source: src/bof3/world/decrementCountdownAdjustWorkWordsRearm24World02Area08213_801F2D30.c'
     - '@behavior: decrements countdown +0x2C, adds 0x400000 to word +0x3C, subtracts six from word +0x64 and adds six to word +0x68; on expiry rearms the countdown to 24 and increments dispatch byte +0x01.'
   - - 400
-    - asm
-    - func_801F2D90
+    - c
+    - decrementCountdownAdd3Word64Subtract3Word68World02Area08213_801F2D90
+    - '@source: src/bof3/world/decrementCountdownAdd3Word64Subtract3Word68World02Area08213_801F2D90.c'
+    - '@behavior: loads the work record from scratchpad pointer-slot 0x1F800044, decrements its unsigned halfword countdown at +0x2C, adds three to the word at +0x64 and subtracts three from the word at +0x68; when the decremented countdown reaches zero it rearms it to 0x10 and increments dispatch byte +0x01.'
   - - 484
     - asm
     - func_801F2DE4

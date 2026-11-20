@@ -1,5 +1,5 @@
 g_battle_work = 0x1F800044;
-func_801EEC04 = 0x801EEC04;
+dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EED1C = 0x801EED1C;
 dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C = 0x801EED7C;

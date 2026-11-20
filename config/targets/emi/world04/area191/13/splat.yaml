@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F2F40
   - - 916
-    - asm
-    - func_801F2F94
+    - c
+    - setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94
+    - '@source: src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94.c'
+    - '@behavior: Entry 2 of the handler pointer run at 0x801F4168: reads the shared gate byte D_801490C7, resets the shared status halfword D_801490A8 to 0xFFFF, and copies the two bytes of the gate-selected row of the 0x801F41D0 row table into record words +0x18 and +0x1C of the pointer held at D_80148208.'
   - - 1004
     - c
     - setStatusFFFFIfGateElse6CWorld04Area19113_801F2FEC

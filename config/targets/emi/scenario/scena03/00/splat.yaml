@@ -361,8 +361,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4.c'
     - '@behavior: Word 19 of the overlay 32-word code-pointer run at 0x801FCF84 forwards its two unsigned halfword coordinates with the single five-byte lookup record at 0x801FD030 (route key 0x63, coordinates 0x23 and 0x4F, flags 0x01, span count 1) and the length 1 to the resident helper func_801A7AD8, which matches that record against the shared route word D_80143F00 and the coordinate pair; a negative signed-byte answer returns -1 without touching any other state, otherwise it calls the indexed no-argument handler of the run at 0x801FD038 (0x801FCE18, 0x801FCE6C, 0x801FCEDC, 0x801FCEFC, of which only entry 0 is reachable with a single record) and answers the constant 1, discarding the handler result. It performs no stores of its own and its 0x18-byte frame only keeps $ra across the two calls.'
   - - 25112
-    - asm
-    - func_801FCE18
+    - c
+    - startAction19LatchPhaseByteTwoAndRequestPrimaryState7ArmCountdown30ScenarioScena0300_801FCE18
+    - '@source: src/bof3/scenario/startAction19LatchPhaseByteTwoAndRequestPrimaryState7ArmCountdown30ScenarioScena0300_801FCE18.c'
+    - '@behavior: Word 0 of the overlay four-word no-argument handler run at 0x801FD038 ({0x801FCE18, 0x801FCE6C, 0x801FCEDC, 0x801FCEFC}), which dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4 (0x801FCDB4) indexes with the signed-byte answer of the resident route lookup func_801A7AD8 and calls after its gate, discarding the handler answer; that pointer word is its only in-image reference and no jal or j word of the payload targets it, so it takes no arguments. It starts front-end action 0x19 through the shared action helper func_80150224, latches the shared front-end phase byte D_80143BB0 to 2, runs the shared front-end startup helper func_8015C088, then requests primary scene state 7 by storing 7 in the shared state byte D_80146874, clears the shared sub-state byte D_80146875 and arms the shared countdown D_80146876 with 0x1E (30), in the original store order 0x1E, then 7, then 0. It answers nothing: the body ends on jr $ra with no value setup, and the value 7 that remains in $v0 afterwards is the constant of that final store. The 84 bytes use a 0x18-byte frame that keeps only $ra across the two calls, every shared store re-materialises the 0x8014 page in $at on its own, and the zero store writes $zero directly, so all four stored values are literals.'
   - - 25196
     - asm
     - func_801FCE6C
