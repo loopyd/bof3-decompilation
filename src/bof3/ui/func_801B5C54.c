@@ -13,11 +13,11 @@
  *           the leading byte when style bit 0x80 of +2 is set) equal the
  *           candidate is returned; a completed scan returns 0.
  * @status partial
- * @match 80.62
- * @residual Native comparison: 104/129 instructions, 516 original bytes versus
- * 500 current. The record capture fills the length guard delay slot. Register
- * choices, shared branches and body size still differ. Halfword candidate
- * arithmetic preserves every scan result; comparisons observe only the low byte. */
+ * @match 86.82
+ * @residual Native comparison: 112/129 instructions, 516 original bytes versus
+ * 500 current. Shared branches, coordinate-add operand order and body size
+ * still differ. Halfword candidate arithmetic preserves every scan result;
+ * comparisons observe only the low byte. */
 u8 *func_801B5C54(void) {
   u8  *world;
   u8  *rec;
@@ -34,6 +34,8 @@ u8 *func_801B5C54(void) {
   s32  sy;
   u16  x;
   u16  y;
+  s8   signed_dx;
+  s8   signed_dy;
 
   world = (u8 *)D_8017F974[D_80143F00];
   count = *(u8 *)(world + 0x31);
@@ -46,8 +48,8 @@ u8 *func_801B5C54(void) {
       rec = (u8 *)cursor_address;
       if (j >= 0) {
         do {
-          limit = 1;
           if (g_game_work->speed_70 == 0) {
+            limit = 1;
             off = g_game_work->route_index_08 * 2;
             dx = (s8)D_80181B00[off];
             dy = (s8)D_80181B01[off];
@@ -57,10 +59,12 @@ u8 *func_801B5C54(void) {
               limit = *(u16 *)((u8 *)g_game_work + 0x38) != 0;
             }
           } else {
-            sx = ((s8 *)D_80181B00)[g_game_work->route_index_08 * 2];
-            x = *(s16 *)((u8 *)g_game_work + 0x36) + (sx == 1 ? 2 : sx);
-            sy = ((s8 *)D_80181B01)[g_game_work->route_index_08 * 2];
-            y = *(s16 *)((u8 *)g_game_work + 0x3A) + (sy == 1 ? 2 : sy);
+            signed_dx = ((s8 *)D_80181B00)[g_game_work->route_index_08 * 2];
+            sx = *(s16 *)((u8 *)g_game_work + 0x36);
+            x = sx + (signed_dx == 1 ? 2 : signed_dx);
+            signed_dy = ((s8 *)D_80181B01)[g_game_work->route_index_08 * 2];
+            sy = *(s16 *)((u8 *)g_game_work + 0x3A);
+            y = sy + (signed_dy == 1 ? 2 : signed_dy);
             if (g_game_work->route_index_08 == 1 ||
                 g_game_work->route_index_08 == 5) {
               limit = *(u16 *)((u8 *)g_game_work + 0x34) != 0;

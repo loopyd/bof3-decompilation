@@ -1788,6 +1788,12 @@ and linked words before treating the body as unchanged. Move only a genuine
 capture whose semantics permit both paths; verify accesses, allocation and the
 complete native result.
 
+A narrow capture shared by mutually exclusive paths can become global before
+combine removes one definition. The classification can survive that removal and
+change another path's registers. Separate only genuine captures of distinct memory
+reads. Preserve signed word consumers before narrowing, then check both CSE
+passes, flow, the complete register graph and native output.
+
 Before attributing an invariant-address hoist to allocation, reconstruct its
 lifetime from the pre-loop instruction IDs. GCC 2.7.2 counts non-line notes,
 including markers left when declaration-free compound blocks are discarded.
