@@ -27,8 +27,10 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchStateByte1Table19a4BossBoss04216_800C1804
+    - '@source: src/bof3/boss/dispatchStateByte1Table19a4BossBoss04216_800C1804.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 before the frame is created, takes that record unsigned byte at offset 0x01, scales it by four and calls that entry of the handler run based at 0x800C19A4 with no arguments, so the selected handler result stays in the return register; the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal and no payload word names it: word 0 of that run is this payload step-setup publisher 0x800C1848, which stores the step byte this dispatcher reads.'
   - - 72
     - asm
     - func_800C1848

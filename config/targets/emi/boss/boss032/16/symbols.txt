@@ -2,6 +2,7 @@ D_1F800044 = 0x1F800044;
 findOwnerRecord = 0x800AC754;
 clearOwnerRecordFlag40 = 0x800AC844;
 dispatchStateByte1Table1c40BossBoss03216_800C1804 = 0x800C1804;
+dispatchStateByte2Table1c70BossBoss03216_800C18AC = 0x800C18AC;
 dispatchIndexedHandlerBossBoss03216_800C1978 = 0x800C1978;
 noopHandlerBossBoss03216_800C19B0 = 0x800C19B0;
 noopHandlerBossBoss03216_800C19B8 = 0x800C19B8;

@@ -8,6 +8,7 @@ splat = "config/targets/emi/boss/boss038/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
+    "src/bof3/boss/dispatchStateByte1Table1c24BossBoss03816_800C1804.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C18EC.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03816_800C19E4.c",
     "src/bof3/boss/publishBattleHooksBossBoss03816_800C1B7C.c",

@@ -1,4 +1,4 @@
-func_800C1804 = 0x800C1804;
+dispatchStateByte1Table1c24BossBoss03816_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
 dispatchIndexedHandlerBossBoss03816_800C18EC = 0x800C18EC;
 noopHandlerBossBoss03816_800C1924 = 0x800C1924;

@@ -45,8 +45,10 @@ segments:
     - asm
     - func_800C190C
   - - 336
-    - asm
-    - func_800C1950
+    - c
+    - dispatchStateByte1Table1d68BossBoss03516_800C1950
+    - '@source: src/bof3/boss/dispatchStateByte1Table1d68BossBoss03516_800C1950.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C1D68 with no arguments, leaving the selected handler result in the return register.'
   - - 404
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03516_800C1994

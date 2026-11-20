@@ -35,8 +35,10 @@ segments:
     - asm
     - func_800C1848
   - - 172
-    - asm
-    - func_800C18AC
+    - c
+    - dispatchStateByte2Table1c70BossBoss03216_800C18AC
+    - '@source: src/bof3/boss/dispatchStateByte2Table1c70BossBoss03216_800C18AC.c'
+    - '@behavior: Second-level overlay dispatch on the work record byte at offset 2: reads the work-record pointer from the scratchpad cell 0x1F800044, scales that byte by four and calls the handler selected from the pointer run based at 0x800C1C70, whose entries there are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C18F0, 0x801E4928, 0x800C19B0, 0x800C19B8 and 0x800C19C0, returning the selected handler result in the return register; slot 6 of the byte-1 run at 0x800C1C40, the word 0x800C1C58, names this span.'
   - - 240
     - asm
     - func_800C18F0

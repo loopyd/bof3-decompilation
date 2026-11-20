@@ -33,8 +33,10 @@ segments:
     - asm
     - func_800C1854
   - - 184
-    - asm
-    - func_800C18B8
+    - c
+    - dispatchStateByte2Table1f80BossBoss05216_800C18B8
+    - '@source: src/bof3/boss/dispatchStateByte2Table1f80BossBoss05216_800C18B8.c'
+    - '@behavior: Overlay step dispatcher on work-record byte 2: takes the scratchpad work-record pointer published at 0x1F800044, reads that record byte 0x02, and calls the handler at that index of the local handler table based at 0x800C1F80 in the 0x800C1F3C textbin code-pointer run, so the handler result stays in the return register. The payload names this address only at 0x800C1F68, word 6 of that same run.'
   - - 252
     - asm
     - func_800C18FC
