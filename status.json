@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "aee4650b5421e06d4e42f149931471ccf99bbf5d",
-  "published_at": "2026-11-20T06:59:24.289102+00:00",
+  "revision": "8cb5f903b2726ecc984540698a704c338bc582bf",
+  "published_at": "2026-11-20T07:11:17.107109+00:00",
   "counts": {
     "completed": 6472,
     "partial": 357,
