@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v32`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v33`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3011,11 +3011,18 @@ Pointer words at `0x801D190C`, `0x801D1908` and `0x801D1904` supply the strings
 to calls at `0x801D1468` and `0x801D1430`. The overlay-local renderer at
 `0x801D1714` stops at NUL, advances eight pixels per character and treats
 ASCII `0x20` as a space. Edits accept printable ASCII within each allocation.
-Pointer words, alignment padding, other labels and arrow glyphs remain protected.
-Controlled runtime observations verify all three edited labels. The display
+Three further `game-literal` fields at `0x801D18F4`, `0x801D18F8` and
+`0x801D18FC` contain `...`, `△` and `×` in the game character table. Their
+capacities are four, two and two bytes including NUL. Calls at `0x801D1490`
+and `0x801D14D8` pass the first field to `0x8014FC90` with a three-glyph limit.
+Calls at `0x801D14B8` and `0x801D1500` pass the other fields with one-glyph
+limits. The renderer stops at NUL or its count. These fields have direct address
+references and retain empty pointer-reference arrays. The two alignment bytes
+after each single-glyph field, pointer words and other labels remain protected.
+Controlled runtime observations verify the three edited ASCII labels. The display
 selects `STEREO` when byte `0x80144951` is zero and `MONO` when it is nonzero.
-Natural menu and configuration producers, audio output and the other labels'
-consumers remain unverified.
+Edited game-glyph rendering, natural menu and configuration producers, audio
+output and the other labels' consumers remain unverified.
 
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
@@ -3151,7 +3158,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v32` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v33` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

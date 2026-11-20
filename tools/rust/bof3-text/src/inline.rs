@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v32";
+pub const SCHEMA: &str = "bof3.inline-text/v33";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -491,8 +491,10 @@ const LAYOUTS: &[Layout] = &[
         name: "US COMMU03 audio menu labels",
         load: 0x801d0c00,
         size: 3404,
-        sha256: "e048461790edc3765ec361da4e7a931851f862c990103b99e1abcdc0ad870e52",
-        consumers: &[0x801d1430, 0x801d1468],
+        sha256: "e72a4ab5d560e64cfaeebc0964eb8ee67e196a5a6106d135af8bc5732e5dd280",
+        consumers: &[
+            0x801d1430, 0x801d1468, 0x801d1490, 0x801d14b8, 0x801d14d8, 0x801d1500,
+        ],
         allocations: &[
             Allocation {
                 address: 0x801d0c1c,
@@ -515,6 +517,9 @@ const LAYOUTS: &[Layout] = &[
                 renderers: &[0x801d1714],
                 codec: Codec::AsciiLiteral,
             },
+            Allocation::literal(0x801d18f4, 4, None, &[0x8014fc90]),
+            Allocation::literal(0x801d18f8, 2, None, &[0x8014fc90]),
+            Allocation::literal(0x801d18fc, 2, None, &[0x8014fc90]),
         ],
     },
     Layout {
