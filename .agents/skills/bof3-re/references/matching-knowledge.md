@@ -1780,6 +1780,21 @@ semantic review and the complete owning native gate.
 
 ## Compiler evidence
 
+A literal scan bound that folds into an immediate can belong to a real bound
+quantity shared across dispatch arms. Reuse only those upper limits, preserving
+the scan start and success calculations. GCC 2.7.2 can shorten two zero-extended
+byte operands to an unsigned comparison before RTL; inspect the first dump before
+blaming CSE or combine. A bound stored in its proven signed-word domain can
+retain the original literal plus register comparison. Verify every definition,
+read bound, initialization order, other arm and complete native result.
+
+A volatile symbol access can retain a register address while a neighboring offset
+folds into the memory operand. Trace address selection: CSE may prefer a bare
+register by cost, but fold its non-register offset in the later pass. Struct
+membership alone does not bypass that address-selection rule. Choose volatility from the access
+contract; any revised view must preserve every original memory event and pass the
+complete native check. Do not add address aliases to evade the selection rule.
+
 A `const` pointee view can set `RTX_UNCHANGING_P` in GCC 2.7.2,
 suppressing dependencies on mutable stores. Check the RTL flag and the storage's
 writers before choosing the access view. An ordinary view of mutable storage can

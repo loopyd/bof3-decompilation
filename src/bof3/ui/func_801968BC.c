@@ -9,39 +9,25 @@
  * continues the scan, and the scan reports 0xff when no run matches.
  * @source 0x801968BC
  * @status partial
- * @match 88.24
- * @residual 135 of 153 instructions at the original 612 bytes. The scan, the
- * four accepted-run lengths, the success codes and the scratchpad column/row
- * pair match. Remaining classes: the mode dispatch reads the jump table at
- * 0x80196B20, which the layout places directly after the text, while the
- * original table sits at 0x8019581C in the payload's leading table blob inside
- * the raw `header` segment, so the table base, its register and the dispatch
- * load cannot agree without a reviewed layout that exposes that table (parent
- * owned); the scratchpad pair costs five instructions (`lui v0,0x1f80`,
- * `ori v0,0x1`, `lui v1,0x1f80`, two `sb`) where the original holds `$at` for
- * both symbol-relative stores; and the mode-1 length bound reads signed 0xF
- * while this build folds it to `sltiu`, 0x10. Measured and rejected: named
- * array scratchpad stores with the bound test first (81/153 at 608 bytes),
- * named array stores with the earlier unsigned bounds (45/153 at 724 bytes),
- * the original unsigned `end < 0x10u` bounds with the run test first (73/153 at
- * 740 bytes, frame introduced), masked run-end comparisons (105/153 at 620
- * bytes) and unsigned bound suffixes (81/153 at 608 bytes); the signed and
- * unsigned spellings of the mode-1 bound both measure 135/153. Dropping
- * `volatile` from the two scratchpad stores does fold them to the original's
- * four-instruction `$at` pair, but the run scan's register web then diverges and
- * the candidate measures 81/153 at 608 bytes, the same result as the named-array
- * stores: the store form is not what holds this residual.
+ * @match 92.81
+ * @residual 142/153 sequence matches at the original 612-byte size. The
+ * complete 20-byte jump table matches its reviewed original placement at
+ * 0x8019581C. Dispatch-address hoisting and register allocation still differ:
+ * this build forms the complete table address at entry rather than once per
+ * row, exchanging its base and index registers with the palette base and
+ * row-eight scale. The complete linked function has 15 differing words.
  */
 u8 func_801968BC(u8 mode) {
   u8 row;
   u8 column;
   u8 end;
+  s32 run_limit;
 
   for (row = 0u; row < 4u; row++) {
     for (column = 0u; column < 0x10u; column++) {
       if (D_80145D54[row][column] == 0xffu) {
-        SPAD_REF(volatile u8, 0x00u) = row;
-        SPAD_REF(volatile u8, 0x01u) = column;
+        D_1F800000[0] = row;
+        D_1F800000[1] = column;
         switch (mode) {
           case 0u:
             return (u8)(column + row * 16u - 0x40u);
@@ -50,7 +36,8 @@ u8 func_801968BC(u8 mode) {
               break;
             }
             end = column;
-            while (end <= 0x0fu && D_80145D54[row][end] == 0xffu) {
+            run_limit = 0x0f;
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
               end++;
             }
             if (end == 0x10u) {
@@ -61,8 +48,9 @@ u8 func_801968BC(u8 mode) {
             if ((column & 1u) != 0u) {
               break;
             }
+            run_limit = column + 1;
             end = column;
-            while (end <= column + 1 && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
               end++;
             }
             if (end == column + 2) {
@@ -73,8 +61,9 @@ u8 func_801968BC(u8 mode) {
             if ((column & 3u) != 0u) {
               break;
             }
+            run_limit = column + 3;
             end = column;
-            while (end <= column + 3 && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
               end++;
             }
             if (end == column + 4) {
@@ -85,8 +74,9 @@ u8 func_801968BC(u8 mode) {
             if ((column & 7u) != 0u) {
               break;
             }
+            run_limit = column + 7;
             end = column;
-            while (end <= column + 7 && D_80145D54[row][end] == 0xffu) {
+            while (end <= run_limit && D_80145D54[row][end] == 0xffu) {
               end++;
             }
             if (end == column + 8) {
