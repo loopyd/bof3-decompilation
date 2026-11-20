@@ -17,6 +17,7 @@ sources = [
     "src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic07803_801F07C8.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0.c",
     "src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenWorkRecordByteBIs1BmagicMagic07803_801F00A0.c",
+    "src/bof3/bmagic/add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c",

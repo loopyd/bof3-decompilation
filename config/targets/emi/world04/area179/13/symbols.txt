@@ -1,4 +1,4 @@
-func_801F32D8 = 0x801F32D8;
+initAreaModuleAndQueueFrontCue20CWorld04Area17913_801F32D8 = 0x801F32D8;
 invokeHelperArgWorld04Area17913_801F3328 = 0x801F3328;
 copySharedXToWorkXIfInRangeWorld04Area17913_801F3348 = 0x801F3348;
 selectAreaStateForMatchedArgumentsWorld04Area17913_801F3378 = 0x801F3378;

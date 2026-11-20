@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2C78
   - - 404
-    - asm
-    - func_801F2D94
+    - c
+    - advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F2D94
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode3World03Area13413_801F2D94.c'
+    - '@behavior: Overlay work-record handoff: saves the scratchpad work pointer at 0x1F800044, publishes the work record at 0x80146888 in its place, adds 0x4000 to its word at offset 0x34 four times in a bottom-tested loop, sets the saved record state byte at offset 0x01 to mode 3 and restores the saved work pointer.'
   - - 488
     - c
     - selectScratchState4Or13ByWorkWordWorld03Area13413_801F2DE8

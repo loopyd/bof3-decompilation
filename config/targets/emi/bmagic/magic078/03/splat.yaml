@@ -67,8 +67,10 @@ segments:
     - '@source: src/bof3/bmagic/clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228.c'
     - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once and tests that record''s byte at offset 0xB against two; only when it equals 2 it clears the scratchpad work-object byte at offset 0xA and rewrites the work-object byte at offset 0x2 with a fresh pointer-cell load. Takes no arguments, returns nothing and keeps no frame.'
   - - 1656
-    - asm
-    - func_801EF278
+    - c
+    - add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278
+    - '@source: src/bof3/bmagic/add8ToWorkByteAThenAdvanceWorkByte2WhenAtLeast81BmagicMagic07803_801EF278.c'
+    - '@behavior: Entry 7 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: adds eight to the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write through the pointer cell at 0x1F800044, re-materializes the cell and re-reads that byte, takes an unsigned bound of 0x81 and, when the byte is at least that bound, increments the work-object byte at offset 0x2 through the same loaded pointer. Takes no arguments, returns nothing and keeps no frame.'
   - - 1740
     - asm
     - func_801EF2CC
