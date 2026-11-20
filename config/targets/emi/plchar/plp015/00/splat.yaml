@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Tablefb84PlcharPlp01500_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb84PlcharPlp01500_801CE404.c'
+    - '@behavior: Overlay step dispatch of this front-end payload. It reads the work object through the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte 0x02, the step counter the payload step bodies increment, scales it by four and calls the matching entry of the sixteen-word handler run based at 0x801CFB84 with no arguments, discarding any result, so the call walks the run one step at a time. The original does not bound the index before the scaled table load, and it reads no other state and writes none. Its only in-image reference is the word 0x801CE404 at 0x801CFBC8, entry 1 of the seven-word code-pointer run at 0x801CFBC4 that the sibling dispatcher at 0x801CFAFC indexes from 0x801CFBC8, so that dispatcher and the overlay loader that steps the run are what enter it.'
   - - 72
     - asm
     - func_801CE448
@@ -125,7 +127,7 @@ segments:
     - dispatchWorkHalfword2cTablefbd4PlcharPlp01500_801CFB40
   - - 6020
     - textbin
-    - func_801CFB84
+    - T_801CFB84
   - - 6084
     - textbin
     - T_801CFBC4

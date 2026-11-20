@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Table0630PlcharPlp01600_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0630PlcharPlp01600_801CE404.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record byte at offset 2, scales it by four and calls the matching entry of this payload handler run based at 0x801D0630 with no arguments, discarding any result. The original does not bound the index before the scaled table load. It reads no other state and writes none; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No word and no jump of this payload names the body, which is the entry the shared main executable runs, so the roles stay structural.'
   - - 72
     - asm
     - func_801CE448

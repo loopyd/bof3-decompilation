@@ -11,6 +11,7 @@ sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03416_800C1E58.c",
     "src/bof3/boss/publishBattleHooksBossBoss03416_800C2340.c",
     "src/bof3/boss/dispatchStateByte2Table26fcBossBoss03416_800C18B8.c",
+    "src/bof3/boss/dispatchStateByte3Table2714BossBoss03416_800C18FC.c",
 ]
 support_sources = [
     "src/bof3/boss/invokeHelperBossBoss03416_800C1D40.c",

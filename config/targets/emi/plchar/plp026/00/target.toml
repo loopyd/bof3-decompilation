@@ -7,7 +7,9 @@ binary = "out/binaries/emi/plchar/plp026/00.bin"
 splat = "config/targets/emi/plchar/plp026/00/splat.yaml"
 load_address = 0x801CE400
 
-sources = []
+sources = [
+    "src/bof3/plchar/dispatchStateByte2Table0a78PlcharPlp02600_801CF338.c",
+]
 support_sources = [
     "src/bof3/plchar/dispatchStateByte2Table0a54PlcharPlp02600_801CE404.c",
     "src/bof3/plchar/dispatchStateByte2Table0a60PlcharPlp02600_801CE72C.c",

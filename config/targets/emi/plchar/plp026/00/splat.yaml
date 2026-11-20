@@ -71,8 +71,9 @@ segments:
     - asm
     - func_801CF23C
   - - 3896
-    - asm
-    - func_801CF338
+    - c
+    - dispatchStateByte2Table0a78PlcharPlp02600_801CF338
+    - '@source: src/bof3/plchar/dispatchStateByte2Table0a78PlcharPlp02600_801CF338.c'
   - - 3964
     - asm
     - func_801CF37C

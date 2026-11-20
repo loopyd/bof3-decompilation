@@ -1,4 +1,4 @@
-func_801CE404 = 0x801CE404;
+dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE628 = 0x801CE628;
 func_801CE72C = 0x801CE72C;
@@ -26,5 +26,5 @@ claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aTh
 selectArrivalSequenceForWorkByte8AndClearWorkByte7WhenHelperReadyElseClearWorkByte2BAndState12BWhenFrontEndRowUnoccupiedPlcharPlp02500_801CFE4C = 0x801CFE4C;
 dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20 = 0x801CFF20;
 dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64 = 0x801CFF64;
-func_801CFFA8 = 0x801CFFA8;
+T_801CFFA8 = 0x801CFFA8;
 T_801CFFE8 = 0x801CFFE8;

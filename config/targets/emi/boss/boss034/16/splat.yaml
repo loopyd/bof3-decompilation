@@ -38,8 +38,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2Table26fcBossBoss03416_800C18B8.c'
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C26FC of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18B8; the one pointer word that names it is the run entry at 0x800C26E4.'
   - - 252
-    - asm
-    - func_800C18FC
+    - c
+    - dispatchStateByte3Table2714BossBoss03416_800C18FC
+    - '@source: src/bof3/boss/dispatchStateByte3Table2714BossBoss03416_800C18FC.c'
+    - '@behavior: Overlay state dispatch on work-record byte 3: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the matching entry of this overlay''s handler run based at the interior word 0x800C2714 of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18FC; the one pointer word that names it is the run entry at 0x800C270C.'
   - - 320
     - asm
     - func_800C1940

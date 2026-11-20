@@ -1,4 +1,4 @@
-func_801CE404 = 0x801CE404;
+dispatchWorkByte2Tablefd80PlcharPlp01200_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 requestResourceForWorkByte4ThenAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CE628 = 0x801CE628;
 func_801CE72C = 0x801CE72C;
@@ -25,5 +25,5 @@ testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C = 0x801CFB0C
 testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC = 0x801CFBDC;
 dispatchWorkHalfword2cTablefdc0PlcharPlp01200_801CFCF8 = 0x801CFCF8;
 dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C = 0x801CFD3C;
-func_801CFD80 = 0x801CFD80;
+T_801CFD80 = 0x801CFD80;
 T_801CFDC0 = 0x801CFDC0;

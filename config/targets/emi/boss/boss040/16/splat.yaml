@@ -47,8 +47,10 @@ segments:
     - c
     - noopHandlerBossBoss04016_800C18F4
   - - 252
-    - asm
-    - func_800C18FC
+    - c
+    - dispatchStateByte1Table1b6cBossBoss04016_800C18FC
+    - '@source: src/bof3/boss/dispatchStateByte1Table1b6cBossBoss04016_800C18FC.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-pointer handler run based at 0x800C1B6C with no arguments. The original does not bound the index before the scaled table load, and the slots after the index byte, after the table load and in the return delay slot stay nops. It writes no state and returns whatever the called handler leaves in $v0; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. Entry 0 of that run is the installer at 0x800C1940 and the following eleven entries are main-executable handlers. No word of this payload holds 0x800C18FC, no jal reaches it and no lui/addiu pair materializes its address, so the overlay loader enters it from outside the payload'
   - - 320
     - asm
     - func_800C1940

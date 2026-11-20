@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404.c'
+    - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls the matching entry of this overlay sixteen-word handler run based at 0x801CFFA8 with no arguments, discarding any result; the payload publishes this function as the word at 0x801CFFEC, entry 1 of the seven-word code-pointer run at 0x801CFFE8, so the 0x801CFFEC interior base of this target two work-halfword 0x2C dispatchers is what reaches it'
   - - 72
     - asm
     - func_801CE448
@@ -140,7 +142,7 @@ segments:
     - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales the u16 at 0x2C by four and calls that entry of this overlay handler run based at 0x801CFFF8 with no arguments, discarding any result'
   - - 7080
     - textbin
-    - func_801CFFA8
+    - T_801CFFA8
   - - 7144
     - textbin
     - T_801CFFE8
