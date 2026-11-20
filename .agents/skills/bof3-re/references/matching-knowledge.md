@@ -1577,6 +1577,14 @@ In GCC 2.7.2, a folded address can leave an internal `USE` of a
 pseudo whose definition disappeared. Reload may allocate a slot for that pseudo
 even though the `USE` emits no instruction.
 
+Before treating an internal `USE` as a register reservation, follow combine's
+backward search for the removed consumer's death note. In GCC 2.7.2, a prior
+surviving reference or definition can receive the note; combine inserts a label
+`USE` only if neither provides a location before the label. Giving an orphan a
+real earlier producer can therefore remove the orphan and shorten its live
+interval. Check post-combine death notes and allocation intervals; a usable
+register class alone does not prove occupancy at a later operation.
+
 An original frame larger than this body's own locals is a second cause: the
 reservation comes from a declaration the original translation unit carried that
 emitted no code. Read that gap off the rows that name `sp`, not off the entry
