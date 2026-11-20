@@ -8,6 +8,8 @@ class BinaryDiagram extends HTMLElement {
   static helpTooltip = null;
   static filterOwner = null;
   static filterMenu = null;
+  static hiddenCategories = new Set();
+  static instances = new Set();
 
   static node(tag, className, text) {
     const result = document.createElement(tag);
@@ -18,6 +20,15 @@ class BinaryDiagram extends HTMLElement {
 
   static categoryLabel(category) {
     return category.id === "empty" ? "Padding" : category.label;
+  }
+
+  static setCategoryVisible(category, visible) {
+    if (visible) this.hiddenCategories.delete(category);
+    else this.hiddenCategories.add(category);
+    for (const button of this.filterMenu.querySelectorAll("button[data-category]")) {
+      button.setAttribute("aria-pressed", !this.hiddenCategories.has(button.dataset.category));
+    }
+    for (const diagram of this.instances) diagram.refreshFilters();
   }
 
   static isAuxiliaryTarget(target) {
@@ -129,7 +140,6 @@ class BinaryDiagram extends HTMLElement {
     this.binary = binary;
     this.categories = categories;
     this.target = target;
-    this.hiddenCategories = new Set();
   }
 
   connectedCallback() {
@@ -200,7 +210,8 @@ class BinaryDiagram extends HTMLElement {
     const bounds = node("p", "binary-bounds");
     bounds.append(node("span", "", "0x000000"), node("span", "", `${this.hex(this.binary.size - 1)} · ${this.binary.size.toLocaleString("en-US")}b`));
     this.replaceChildren(heading, this.surface, bounds);
-    this.updateNavigation();
+    BinaryDiagram.instances.add(this);
+    this.refreshFilters();
     this.canvas.addEventListener("pointermove", (event) => {
       if (!this.pinned && !BinaryDiagram.active?.pinned) this.select(this.hit(event), event);
     });
@@ -240,6 +251,7 @@ class BinaryDiagram extends HTMLElement {
   }
 
   disconnectedCallback() {
+    BinaryDiagram.instances.delete(this);
     this.closeFilter();
     this.closeHelp();
     if (this.canvas) this.clear();
@@ -255,7 +267,7 @@ class BinaryDiagram extends HTMLElement {
     const legend = node("ul", "binary-legend");
     legend.setAttribute("aria-label", "Binary classification legend");
     for (const category of this.categories) {
-      if (this.hiddenCategories.has(category.id)) continue;
+      if (BinaryDiagram.hiddenCategories.has(category.id)) continue;
       const item = node("li", "");
       const chip = node("i", "binary-chip");
       chip.style.backgroundColor = category.color;
@@ -295,16 +307,17 @@ class BinaryDiagram extends HTMLElement {
     const node = BinaryDiagram.node;
     const options = node("div", "binary-filters");
     for (const category of this.categories) {
-      const label = node("label", "");
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = !this.hiddenCategories.has(category.id);
-      checkbox.addEventListener("change", () => this.setCategoryVisible(category.id, checkbox.checked));
+      const button = node("button", "");
+      button.type = "button";
+      button.dataset.category = category.id;
+      button.setAttribute("aria-pressed", !BinaryDiagram.hiddenCategories.has(category.id));
+      button.addEventListener("click", () =>
+        BinaryDiagram.setCategoryVisible(category.id, BinaryDiagram.hiddenCategories.has(category.id)));
       const chip = node("i", "binary-chip");
-      chip.style.backgroundColor = category.color;
+      chip.style.setProperty("--category-color", category.color);
       chip.setAttribute("aria-hidden", "true");
-      label.append(checkbox, chip, BinaryDiagram.categoryLabel(category));
-      options.append(label);
+      button.append(chip, BinaryDiagram.categoryLabel(category));
+      options.append(button);
     }
     const menu = BinaryDiagram.filterMenu;
     menu.replaceChildren(node("p", "metric-label", "Visible classifications"), options);
@@ -315,7 +328,7 @@ class BinaryDiagram extends HTMLElement {
     this.filterScrollY = window.scrollY;
     menu.hidden = false;
     this.positionFilter();
-    menu.querySelector("input").focus({ preventScroll: true });
+    menu.querySelector("button").focus({ preventScroll: true });
   }
 
   closeFilter() {
@@ -387,7 +400,7 @@ class BinaryDiagram extends HTMLElement {
 
   isVisible(index) {
     const span = this.binary.spans[index];
-    return span !== undefined && !this.hiddenCategories.has(span.category);
+    return span !== undefined && !BinaryDiagram.hiddenCategories.has(span.category);
   }
 
   findVisible(index, step) {
@@ -402,10 +415,8 @@ class BinaryDiagram extends HTMLElement {
     this.next.setAttribute("aria-disabled", this.findVisible(this.selected, 1) < 0);
   }
 
-  setCategoryVisible(category, visible) {
-    if (visible) this.hiddenCategories.delete(category);
-    else this.hiddenCategories.add(category);
-    this.filterButton.dataset.filtered = String(this.hiddenCategories.size > 0);
+  refreshFilters() {
+    this.filterButton.dataset.filtered = String(BinaryDiagram.hiddenCategories.size > 0);
     if (this.selected >= 0 && !this.isVisible(this.selected)) {
       const next = this.findVisible(this.selected, 1);
       this.select(next >= 0 ? next : this.findVisible(this.selected, -1));
@@ -548,7 +559,7 @@ class BinaryDiagram extends HTMLElement {
     const context = this.canvas.getContext("2d");
     context.scale(ratio, ratio);
     for (const span of this.binary.spans) {
-      if (this.hiddenCategories.has(span.category)) continue;
+      if (BinaryDiagram.hiddenCategories.has(span.category)) continue;
       let color = this.categories.find((row) => row.id === span.category).color;
       if (span === this.binary.spans[this.selected]) {
         color = color.replace(/[0-9a-f]{2}/gi, (channel) =>

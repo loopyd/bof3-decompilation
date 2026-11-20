@@ -44,22 +44,25 @@ The `?` button at the canvas's right edge opens the color legend. One help toolt
 is shared across cards, independently of span details, so both can remain open.
 Clicking outside help, scrolling or pressing its button again closes it. Escape
 also closes help when its button is focused. The legend appears only in help
-and lists the diagram's enabled classifications. If all filters are off, help
+and lists only enabled classifications. If all filters are off, help
 shows `No classifications visible.`
 
-The filter button immediately left of `?` opens classification checkboxes. Each
-diagram starts with every classification visible. Unchecked classifications
-disappear from the canvas; their byte positions stay fixed.
+The filter button immediately left of `?` opens classification toggle rows.
+Active rows use normal text and category colors. Inactive rows use muted text
+and gray swatches. Click or tap a row to toggle it. Disabled classifications
+disappear from every diagram; their byte positions stay fixed.
 Tapping or hovering over hidden bytes selects the nearest visible block on the
 canvas. Equal distances choose the earlier span in byte order.
 Navigation skips hidden spans. Hiding the selected classification selects the next
 visible span, or the previous one if none follows. Hiding everything clears details
 and disables both chevrons.
 
-Filters apply to the current diagram. One filter menu is shared across cards;
+Filters apply to all binary diagrams on the page and remain set when search,
+family filters or tab changes recreate cards. A fresh page starts with all
+classifications visible. One filter menu is shared across cards;
 opening help closes the filter menu and vice versa. Span details can remain open
 with either. Outside clicks, focus departure, page scrolling, Escape or pressing
-the filter button again closes the menu. Space toggles a focused checkbox.
+the filter button again closes the menu. Space or Enter toggles a focused row.
 Filtering does not change classifications, evidence or function counts.
 
 ## Classifications

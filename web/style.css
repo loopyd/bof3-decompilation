@@ -924,8 +924,12 @@ binary-diagram {
 .binary-preview { margin: 5px 0; color: #fff; white-space: pre-wrap; }
 .binary-help-tooltip .metric-label, .binary-filter-menu .metric-label { margin: 0 0 8px; }
 .binary-filters { display: grid; gap: 3px; }
-.binary-filters label { display: flex; align-items: center; gap: 8px; min-height: 28px; cursor: pointer; }
-.binary-filters input { width: 14px; height: 14px; margin: 0; accent-color: #f3ce69; }
+.binary-filters button { display: flex; align-items: center; gap: 8px; min-height: 28px; padding: 3px 4px; border: 0; border-radius: 3px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.binary-filters button:hover { background: #293b4b; }
+.binary-filters button:focus-visible { outline: 2px solid #f3ce69; outline-offset: -2px; }
+.binary-filters .binary-chip { background: var(--category-color); }
+.binary-filters button[aria-pressed="false"] { color: var(--muted); }
+.binary-filters button[aria-pressed="false"] .binary-chip { background: #59636d; border-color: #ffffff20; }
 .binary-bounds { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0 0; font: 10px/1.5 monospace; color: #a5b2bc; }
 .binary-legend { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 12px; margin: 0; padding: 0; list-style: none; font-size: 11px; color: #c5cdd4; }
 .binary-legend li { display: flex; align-items: center; gap: 5px; }
