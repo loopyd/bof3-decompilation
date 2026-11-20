@@ -120,9 +120,13 @@ Edited category rendering and natural selector bounds remain unverified.
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
-three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v45`. Select that entry without class or latch selectors.
+three equipment-category labels, fifteen fixed-width settings fields and six
+configuration captions through
+`bof3.inline-text/v46`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
+Configuration captions use `game-literal` and reserve one NUL byte within their
+exact capacities. Preserve alignment and the following tables. Their source
+proof does not establish edited rendering or visual fit.
 All fifteen edited Config fields render in a controlled fixture and through
 ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
 game-created save. Observed ordinary reader and draw calls return; individual
@@ -183,7 +187,7 @@ do not establish a final display consumer.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v45`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v46`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use

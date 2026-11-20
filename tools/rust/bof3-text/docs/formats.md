@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v45`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v46`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -2954,7 +2954,18 @@ path, glyph reads, pixels tied to individual calls, transitive callee effects,
 general selector bounds, Manual/Auto consumption and the unique START or STATUS
 supplier remain unverified.
 
-Retain all 133 allocations and edit only `text`. Re-extract older inline
+Six configuration captions use `game-literal` with these capacities, including
+NUL: `Msg Speed` at `0x801D0DE0`, 10 bytes; `Window Clr` at `0x801D0DEC`, 11;
+`Background` at `0x801D0DF8`, 11; `Sound` at `0x801D0E04`, 6; `Autorun` at
+`0x801D0E0C`, 8; and `Controller` at `0x801D0E14`, 11. Spaces encode as `0xFF`.
+The reader at `0x801E2898` copies each field to its own stack buffer and draws it
+through `0x8014F800` or `0x8014FC90` with count `0xFF`. Its caller at
+`0x801E26A8` supplies exactly six row selectors. References remain empty because
+the reader forms these addresses in instructions. Preserve alignment and the
+following tables. These captions have source proof only; the settings-field
+observations above do not establish their edited rendering or visual fit.
+
+Retain all 139 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -3220,7 +3231,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v45` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v46` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

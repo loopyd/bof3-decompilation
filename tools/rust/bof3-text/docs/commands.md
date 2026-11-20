@@ -194,7 +194,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v45`. An omitted layout selector fails before
+labels through `bof3.inline-text/v46`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -208,10 +208,14 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v45` document with ten counted labels, eight default names,
+`bof3.inline-text/v46` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
-labels, three equipment-category labels and fifteen fixed-width settings fields.
+labels, three equipment-category labels, fifteen fixed-width settings fields and
+six configuration captions.
+Configuration captions use `game-literal`, reserve one NUL byte and retain their
+exact capacities. Shorter or empty edits zero-fill the field. Spaces encode as
+`0xFF`; alignment and configuration tables remain protected.
 Settings fields use their recorded glyph limits without reserving a NUL byte.
 The category labels reserve one NUL byte and retain their pointer references.
 Each stat label permits three encoded bytes plus NUL. Preserve the two trailing
@@ -256,7 +260,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v45`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v46`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
@@ -474,7 +478,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v45`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v46`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.
