@@ -49,12 +49,13 @@ u32 func_8014D8D4(u8 arg0);
 
 /* @source 0x801CFB74
  * @behavior Fourth entry of the front-end work handler run based at 0x801CFFD4,
- *           the word at 0x801CFFE0, which the step dispatcher func_801CF924
- *           enters after scaling the work byte 0x02 by four; no jal in the
- *           payload targets this body, so the overlay loader that steps the run
- *           is what calls it. Work object of the scratchpad pointer cell
- *           0x1F800044: byte 0x08 is the route index of the eight-entry route
- *           window, byte 0x2B the claim byte, byte 0x02 the step counter,
+ *           the word at 0x801CFFE0, which the step dispatcher
+ *           dispatchWorkByte2Tableffd4PlcharPlp02500_801CF924 enters after
+ *           scaling the work byte 0x02 by four; no jal in the payload targets
+ *           this body, so the overlay loader that steps the run is what calls
+ *           it. Work object of the scratchpad pointer cell 0x1F800044: byte 0x08
+ *           is the route index of the eight-entry route window, byte 0x2B the
+ *           claim byte, byte 0x02 the step counter,
  *           halfword 0x3E the reference sample and words 0x34 and 0x38 the work
  *           position. While the route index is even the body first steps it one
  *           back inside the window by storing ((index - 1) & 7). It then claims

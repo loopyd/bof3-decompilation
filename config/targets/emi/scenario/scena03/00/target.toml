@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/scena03/00.bin"
 splat = "config/targets/emi/scenario/scena03/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F7A9C.c",
+]
 support_sources = [
     "src/bof3/scenario/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04.c",
     "src/bof3/scenario/requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C.c",

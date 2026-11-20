@@ -2,7 +2,8 @@
 
 /* @source 0x801F7AE0
  * @behavior Entry 0 of the overlay's work-object handler table at 0x801FCF70
- * (D_801FCF70), which the frame dispatcher func_801F7A9C selects with byte 0x1
+ * (workByte1HandlersScenarioScena0300_801FCF70), which the dispatcher
+ * dispatchWorkByte1HandlerScenarioScena0300_801F7A9C selects with byte 0x1
  * of the work object published at scratchpad pointer slot 0x1F800044 and calls
  * with no arguments: it arms that work object's countdown byte at +0x9 with 0xF
  * (15) and then advances the work byte at +0x1 to 1, so the next frame

@@ -27,8 +27,10 @@ segments:
   vram: 2149387268
   subsegments:
   - - 4
-    - asm
-    - func_801D0C04
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04.c'
+    - '@behavior: First per-frame step dispatcher of the overlay step-handler run at 0x801D3918: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the overlay-local code-pointer run at 0x801D3918 with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 72
     - asm
     - func_801D0C48

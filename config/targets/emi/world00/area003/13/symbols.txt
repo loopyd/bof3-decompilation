@@ -1,4 +1,4 @@
-func_801F2C04 = 0x801F2C04;
+setStatus44AndModeIndex6IfGateElse42World00Area00313_801F2C04 = 0x801F2C04;
 setStatusFFFFAndHandlerIndex3WhenGateWorld00Area00313_801F2C48 = 0x801F2C48;
 setStatusFFFFAndHandlerIndex5WhenGateWorld00Area00313_801F2C78 = 0x801F2C78;
 setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8 = 0x801F2CA8;

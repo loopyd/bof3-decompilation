@@ -66,8 +66,10 @@ segments:
     - c
     - testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp27a00_801CEAE0
   - - 2044
-    - asm
-    - func_801CEBFC
+    - c
+    - dispatchWorkByte2Tablef914PlcharPlp27a00_801CEBFC
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef914PlcharPlp27a00_801CEBFC.c'
+    - '@behavior: Overlay step dispatch on the work-record byte 0x02 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, takes its unsigned byte 2, scales it by four and calls the matching entry of this payload handler run based at 0x801CF914 with no arguments, discarding any result; the index is not bounded before the scaled table load, and that interior base is entry 5 of the seventeen-word run at 0x801CF900, so entry 0 is 0x801CEC40. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 2112
     - c
     - clearStateByte12BWhenScenarioIs0FElsePickNearerRouteIndexAndRearmWorkPlcharPlp27a00_801CEC40

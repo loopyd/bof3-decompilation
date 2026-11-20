@@ -76,7 +76,7 @@ segments:
     - c
     - dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C
     - '@source: src/bof3/plchar/dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C.c'
-    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD98 with no arguments, discarding any result. That base is entry 6 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF170 and the entries it can reach are 0x801CF170, 0x801CF23C, the shared main-executable handler 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF500, 0x801CF610, 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF12C at 0x801CFDC4, entry 1 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD98 with no arguments, discarding any result. That base is entry 6 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF170 and the entries it can reach are 0x801CF170, 0x801CF23C, the shared main-executable handler 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF544, 0x801CF610, 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF12C at 0x801CFDC4, entry 1 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 3440
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01200_801CF170
@@ -99,8 +99,10 @@ segments:
     - asm
     - func_801CF494
   - - 4352
-    - asm
-    - func_801CF500
+    - c
+    - dispatchWorkByte2TablefdacPlcharPlp01200_801CF500
+    - '@source: src/bof3/plchar/dispatchWorkByte2TablefdacPlcharPlp01200_801CF500.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFDAC with no arguments, discarding any result. That base is entry 11 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF544 and the entries it can reach are 0x801CF544, 0x801CF610, the shared main-executable handler 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF500 at 0x801CFDC8, entry 2 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 4420
     - asm
     - func_801CF544

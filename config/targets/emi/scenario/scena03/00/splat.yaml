@@ -75,8 +75,10 @@ segments:
     - '@source: src/bof3/scenario/submitTwoSelectedWorkRecordsThenResetWorkAreaScenarioScena0300_801F7A14.c'
     - '@behavior: Entry 2 of the work-byte-1 handler table at 0x801FCF50; submits the 0x98-byte record at 0x80146888 selected by work byte 3 and then the record selected by work byte 4 through func_80196718, reloading the scratchpad work pointer from 0x1F800044 for each index, then clears the scratchpad work-area header through func_80196070.'
   - - 3740
-    - asm
-    - func_801F7A9C
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F7A9C
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F7A9C.c'
+    - '@behavior: Dispatches the overlay work-object handler selected by unsigned byte 1 of the work object published at scratchpad pointer cell 0x1F800044, scaled by four, through the table based at 0x801FCF70, whose first two words are the countdown arm handler 0x801F7AE0 and the countdown tick handler 0x801F7B10; it reads the pointer cell before the frame is created, makes no stores of its own, discards the handler result and requires a valid index. No word of this payload holds 0x801F7A9C and no jal targets it.'
   - - 3808
     - c
     - armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0

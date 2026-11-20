@@ -7,7 +7,7 @@
  * layout places all sixteen words in the one `textbin` row at 0x801CFD80, so the
  * run is only referenced here. This dispatcher indexes it from 0x801CFD98, entry
  * 6 of the run, so the entries it can reach from that base are 0x801CF170,
- * 0x801CF23C, 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF500, 0x801CF610,
+ * 0x801CF23C, 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF544, 0x801CF610,
  * 0x801B2D54, 0x801CF750 and 0x801CF938. */
 extern void (*D_801CFD98[])(void); /* @source 0x801CFD98 @kind data */
 

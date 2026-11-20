@@ -24,6 +24,7 @@ sources = [
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp57800_801CF528.c",
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp57800_801CEC78.c",
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp57800_801CF24C.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablefad0PlcharPlp57800_801CEA00.c",
 ]
 support_sources = [
     "src/bof3/support/plp578_00_psyq.c",

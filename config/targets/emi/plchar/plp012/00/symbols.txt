@@ -14,7 +14,7 @@ selectArrivalSequence40ForRouteOneAnd41ForRouteSevenAndAdvanceStepWhenRouteReach
 dispatchWorkByte2Tablefda4PlcharPlp01200_801CF338 = 0x801CF338;
 func_801CF37C = 0x801CF37C;
 func_801CF494 = 0x801CF494;
-func_801CF500 = 0x801CF500;
+dispatchWorkByte2TablefdacPlcharPlp01200_801CF500 = 0x801CF500;
 func_801CF544 = 0x801CF544;
 selectArrivalSequence41ForRouteThreeAnd40ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp01200_801CF610 = 0x801CF610;
 func_801CF70C = 0x801CF70C;

@@ -1,6 +1,6 @@
 dispatchSoundCue = 0x8015DF18;
 func_80196070 = 0x80196070;
-func_801D0C04 = 0x801D0C04;
+dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04 = 0x801D0C04;
 func_801D0C48 = 0x801D0C48;
 advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0 = 0x801D0CC0;
 invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54 = 0x801D0D54;

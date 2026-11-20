@@ -47,8 +47,10 @@ segments:
     - c
     - setTwoWorld00Area01513_801F2D5C
   - - 376
-    - asm
-    - func_801F2D78
+    - c
+    - dispatchWorkByte4Table0f0World00Area01513_801F2D78
+    - '@source: src/bof3/world/dispatchWorkByte4Table0f0World00Area01513_801F2D78.c'
+    - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044. The unchecked two-entry handler table at 0x801F40F0 holds the routines at 0x801F2DBC and 0x801F2E60. Takes no arguments and returns nothing.'
   - - 444
     - asm
     - func_801F2DBC

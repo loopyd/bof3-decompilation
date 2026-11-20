@@ -19,12 +19,13 @@ u32 func_8014D8D4(u8 arg0);
  *           scratchpad pointer cell 0x1F800044, reached from outside this
  *           payload: the body address appears once in the payload, as word
  *           0x801CFFD8, entry 1 of the handler run that starts at 0x801CFFD4 and
- *           that the step dispatcher func_801CF924 enters after scaling the work
- *           byte 0x02 by four. Byte 0x08 is the current route index of the
- *           eight-entry route window, byte 0x03 the chosen candidate index that
- *           the re-arm step stores, byte 0x09 the countdown, byte 0x02 the step
- *           counter and byte 0x0B the step sign of that route walk. When the
- *           current route index already equals the chosen index the walk has
+ *           that the step dispatcher
+ *           dispatchWorkByte2Tableffd4PlcharPlp02500_801CF924 enters after
+ *           scaling the work byte 0x02 by four. Byte 0x08 is the current route
+ *           index of the eight-entry route window, byte 0x03 the chosen candidate
+ *           index that the re-arm step stores, byte 0x09 the countdown, byte 0x02
+ *           the step counter and byte 0x0B the step sign of that route walk. When
+ *           the current route index already equals the chosen index the walk has
  *           arrived, so the body selects that route arrival sequence through the
  *           shared selector func_8014D8D4, sequence 0x40 for route 3 and
  *           sequence 0x41 for route 5, and no sequence at all for any other
