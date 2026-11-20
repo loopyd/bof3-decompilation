@@ -9105,6 +9105,63 @@ fn model_program_decoded_nontext_fields(
     (&[], "")
 }
 
+fn model_palette_zero_fields(decoded: &[u8], typed: &[u8]) -> Vec<(usize, usize)> {
+    let word = |at: usize| {
+        decoded
+            .get(at..at.checked_add(4)?)
+            .map(|bytes| u32::from_le_bytes(bytes.try_into().unwrap()) as usize)
+    };
+    let [Some(first), Some(second), Some(third)] = [word(0), word(4), word(8)] else {
+        return Vec::new();
+    };
+    if first != 12 || first >= second || second >= third || third >= decoded.len() {
+        return Vec::new();
+    }
+    let roots = [first, second, third];
+    let reviewed = |at: usize| {
+        typed
+            .get(at..at + 4)
+            .is_some_and(|roles| roles.iter().all(|role| role & 3 != 0))
+    };
+    let mut fields = Vec::new();
+    for (index, &root) in roots.iter().enumerate() {
+        let end = roots.get(index + 1).copied().unwrap_or(decoded.len());
+        if root + 16 > end || !reviewed(index * 4) || !reviewed(root) {
+            continue;
+        }
+        let Some((palette_relative, program_relative)) = word(root + 4).zip(word(root + 8)) else {
+            continue;
+        };
+        let Some(table) = root.checked_add(palette_relative) else {
+            continue;
+        };
+        let Some(program) = root.checked_add(program_relative) else {
+            continue;
+        };
+        if !(root + 16..program).contains(&table) || program >= end || table + 4 > program {
+            continue;
+        }
+        let Some(relative) = word(table) else {
+            continue;
+        };
+        let Some(record) = table.checked_add(relative) else {
+            continue;
+        };
+        if relative < 4
+            || relative % 4 != 0
+            || record.checked_add(64).is_none_or(|end| end > program)
+        {
+            continue;
+        }
+        fields.extend([
+            (root + 4, root + 8),
+            (table, table + 4),
+            (record, record + 64),
+        ]);
+    }
+    fields
+}
+
 fn compression_metadata_ranges(
     data: &[u8],
     check_word: u32,
@@ -9129,23 +9186,23 @@ fn compression_metadata_ranges(
     let track_literals =
         !literal_fields.is_empty() || !additional_fields.is_empty() || !program_fields.is_empty();
     let mut typed = vec![0_u8; if track_literals { expected } else { 0 }];
-    // The low bits preserve primary and additional records; the third bit
-    // accepts their union with the program fields.
+    // Each bit identifies a reviewed field union. Intersect all decoded aliases
+    // before qualifying a physical literal, preserving earlier evidence first.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(7);
+        typed.get_mut(start..end)?.fill(15);
     }
     for &(start, end) in additional_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 6;
+            *role |= 14;
         }
     }
     for &(start, end) in program_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 4;
+            *role |= 12;
         }
     }
     let mut origins = Vec::new();
-    let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
+    let mut decoded_bytes = Vec::new();
     let mut at = 6;
     let mut decoded = 0_usize;
     loop {
@@ -9199,14 +9256,13 @@ fn compression_metadata_ranges(
             data.get(at..at.checked_add(count)?)?;
         }
         if track_literals {
-            for (index, &known) in typed.get(decoded..end)?.iter().enumerate() {
+            for index in 0..count {
                 let origin = if literal {
                     at + index
                 } else {
                     *origins.get(origins.len().checked_sub(distance)?)?
                 };
-                let role = literal_roles.get_mut(origin)?;
-                *role = Some(role.unwrap_or(7) & known);
+                decoded_bytes.push(*data.get(origin)?);
                 origins.push(origin);
             }
         }
@@ -9214,6 +9270,16 @@ fn compression_metadata_ranges(
             at += count;
         }
         decoded = end;
+    }
+    for (start, end) in model_palette_zero_fields(&decoded_bytes, &typed) {
+        for role in typed.get_mut(start..end)? {
+            *role |= 8;
+        }
+    }
+    let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
+    for (&origin, &known) in origins.iter().zip(&typed) {
+        let role = literal_roles.get_mut(origin)?;
+        *role = Some(role.unwrap_or(15) & known);
     }
     let mut at = 0;
     while at < literal_roles.len() {
@@ -9226,8 +9292,10 @@ fn compression_metadata_ranges(
             literal_evidence
         } else if role & 2 != 0 {
             additional_evidence
-        } else {
+        } else if role & 4 != 0 {
             program_evidence
+        } else {
+            "original US source-bound compressed sprite palette-zero relative words and 32-halfword record; existing reviewed image-root and source bindings, GAME 0x801C1254/0x801C1308/0x801C13DC and SLUS 0x80166C48..0x80166CAC; complete checked decode and every decoded alias confined to the reviewed image/program/palette field union; previous records retain their evidence; no actual loading, active CLUT, transfer, display, rasterized-text absence or safe-edit claim"
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {

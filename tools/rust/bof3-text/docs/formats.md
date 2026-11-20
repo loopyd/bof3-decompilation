@@ -90,6 +90,28 @@ overlap earlier output. Neither those references nor their literal dependencies
 establish the roles of decoded bytes, the absence of rasterized text or runtime
 behavior. Other transfer modes retain their existing classification.
 
+## Compressed sprite palette-zero coverage
+
+Existing source-qualified compressed image profiles also qualify palette slot 0
+for roots whose array word and image-section word already have reviewed image
+roles. The complete checked decode must contain three ordered roots. Each new
+palette pointer and its 64-byte record must fit the root's palette section.
+
+GAME `0x801C1254` publishes the selected root at `0x801C1308` and calls
+`SLUS_004.22@0x80166C48` with palette index 0 at `0x801C13DC`. The reader
+follows the root's palette-section word and first directory word, then copies
+32 halfwords to the primary and mirrored staging buffers. Coverage qualifies
+those two relative words and that record under the existing source profile's
+selection and loading conditions.
+
+A physical literal qualifies only when every decoded occurrence belongs to the
+union of reviewed image, program and palette fields. Earlier classifications
+retain their evidence. Other palette slots, opaque aliases and allocation tails
+retain their prior status. This establishes stored representation; completed
+loading, active CLUT selection, hardware transfer, display, rasterized-text
+absence and safe edits remain separate requirements. Standalone roots without a
+qualified installation path remain unresolved.
+
 ## Compressed PL025 numeric and image fields
 
 For original US `BIN/PLCHAR/PL025.EMI` entry 3, coverage also recognizes stored
