@@ -48,11 +48,11 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "349e85d148f4a8672218108e197d32d1b5afec24",
-  "published_at": "2026-11-20T17:56:57.943161+00:00",
+  "revision": "5023fc2088ad18c53efacda9e32cc8f13e663468",
+  "published_at": "2026-11-20T18:12:14.398311+00:00",
   "counts": {
-    "completed": 6524,
-    "partial": 351,
+    "completed": 6525,
+    "partial": 350,
     "unlifted": 3560,
     "invalid": 0,
     "total": 10435,
@@ -67479,8 +67479,8 @@
       "family": "etc",
       "archive": "game",
       "entry": "00",
-      "completed": 233,
-      "partial": 14,
+      "completed": 234,
+      "partial": 13,
       "unlifted": 299,
       "invalid": 0,
       "total": 546,
@@ -70237,7 +70237,7 @@
               {
                 "address": 2149194468,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801A1AE4.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801A1AE4.c#L15"
               }
             ]
           },
@@ -72955,8 +72955,8 @@
             "functions": [
               {
                 "address": 2149293832,
-                "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B9F08.c#L16"
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801B9F08.c#L14"
               }
             ]
           },
