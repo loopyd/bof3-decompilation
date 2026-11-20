@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801CE628
   - - 812
-    - asm
-    - func_801CE72C
+    - c
+    - dispatchWorkByte2Tableffb4PlcharPlp02500_801CE72C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tableffb4PlcharPlp02500_801CE72C.c'
+    - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls that entry of the handler run from its interior base 0x801CFFB4, entry 3 of the sixteen-word run based at 0x801CFFA8, with no arguments and discarding any result; the original does not bound the index before the scaled table load, so the reachable entries are 0x801CE770 through 0x801CF12C, and the payload publishes this function as the word at 0x801CFFF8, entry 4 of the seven-word code-pointer run at 0x801CFFE8, the interior base the sibling work-halfword 0x2C dispatcher at 0x801CFF64 indexes at index zero'
   - - 880
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp02500_801CE770

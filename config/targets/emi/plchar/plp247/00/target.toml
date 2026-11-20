@@ -7,7 +7,9 @@ binary = "out/binaries/emi/plchar/plp247/00.bin"
 splat = "config/targets/emi/plchar/plp247/00/splat.yaml"
 load_address = 0x801CE400
 
-sources = []
+sources = [
+    "src/bof3/plchar/dispatchWorkByte2TablefafcPlcharPlp24700_801CE404.c",
+]
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp24700_801CF090.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp24700_801CF85C.c",

@@ -56,8 +56,8 @@ u8 func_8014DAEC(void);
  * @behavior Work byte 2 == 1 step of the front-end work object read through the
  *           scratchpad pointer cell 0x1F800044, entry 1 of the three-word
  *           handler run based at 0x801D063C whose own word sits at 0x801D0640;
- *           the byte-2 dispatcher func_801CE72C, still `asm` in this target,
- *           indexes that run by the work byte 2. It decrements the work
+ *           the byte-2 dispatcher 0x801CE72C indexes that run by the work byte
+ *           2. It decrements the work
  *           object's countdown byte 0x0A and does nothing else while that byte
  *           stays nonzero. When it reaches zero the step projects the work
  *           position: the work words 0x34 and 0x38 are offset by the movement

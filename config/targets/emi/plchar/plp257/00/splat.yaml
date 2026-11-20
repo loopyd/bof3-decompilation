@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2TablefedcPlcharPlp25700_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2TablefedcPlcharPlp25700_801CE404.c'
+    - '@behavior: Overlay step entry of the front-end payload, placed in the first code subsegment after the four-byte header. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes that record unsigned byte at offset 0x02, scales it by four without bounding the index and calls the matching entry of this overlay twenty-three-word handler run based at 0x801CFEDC with no arguments, discarding any result. The body reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No jal of the payload targets it; its word appears once, as 0x801CE404 at 0x801CFF20, entry 17 of that same run, which the sibling halfword dispatcher at 0x801CFE54 indexes from that entry, so the overlay loader enters the body from outside the payload.'
   - - 72
     - asm
     - func_801CE448
@@ -134,7 +136,7 @@ segments:
     - dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98
   - - 6876
     - textbin
-    - func_801CFEDC
+    - T_801CFEDC
   - - 6940
     - textbin
     - T_801CFF1C

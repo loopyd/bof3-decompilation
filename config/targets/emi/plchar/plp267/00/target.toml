@@ -8,6 +8,7 @@ splat = "config/targets/emi/plchar/plp267/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
+    "src/bof3/plchar/dispatchWorkByte2Table0988PlcharPlp26700_801CE404.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp26700_801CF38C.c",
     "src/bof3/plchar/clearWorkByte2BAndStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp26700_801CF900.c",
     "src/bof3/plchar/dispatchWorkByte3Table09c4PlcharPlp26700_801CF718.c",

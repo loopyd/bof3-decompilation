@@ -22,7 +22,7 @@ u32 func_8014D8D4(u8 arg0);
  *           payload: the body address appears once in the payload, as word
  *           0x801CF330 at 0x801CFF0C, entry 12 of the twenty-three-entry handler
  *           run based at 0x801CFEDC, whose entries 0 through 15 sit in the
- *           `textbin` row func_801CFEDC. This payload's own byte-2 dispatcher at
+ *           `textbin` row T_801CFEDC. This payload's own byte-2 dispatcher at
  *           0x801CF1F8 indexes that run from 0x801CFF08, which is entry 11, so
  *           work byte 2 value 1 selects this body. Byte 0x08 is the current
  *           route index of the eight-entry route window, byte 0x03 the chosen

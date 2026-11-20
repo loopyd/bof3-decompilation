@@ -76,8 +76,10 @@ segments:
     - c
     - noopHandlerBossBoss03416_800C1DA8
   - - 1456
-    - asm
-    - func_800C1DB0
+    - c
+    - dispatchStateByte1Table273cBossBoss03416_800C1DB0
+    - '@source: src/bof3/boss/dispatchStateByte1Table273cBossBoss03416_800C1DB0.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row D_800C26B8, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
   - - 1524
     - asm
     - func_800C1DF4

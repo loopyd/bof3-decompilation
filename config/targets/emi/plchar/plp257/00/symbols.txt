@@ -1,5 +1,5 @@
 func_8015477C = 0x8015477C;
-func_801CE404 = 0x801CE404;
+dispatchWorkByte2TablefedcPlcharPlp25700_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE514 = 0x801CE514;
 func_801CE610 = 0x801CE610;
@@ -27,5 +27,5 @@ claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPl
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp25700_801CFD20 = 0x801CFD20;
 dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54 = 0x801CFE54;
 dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98 = 0x801CFE98;
-func_801CFEDC = 0x801CFEDC;
+T_801CFEDC = 0x801CFEDC;
 T_801CFF1C = 0x801CFF1C;

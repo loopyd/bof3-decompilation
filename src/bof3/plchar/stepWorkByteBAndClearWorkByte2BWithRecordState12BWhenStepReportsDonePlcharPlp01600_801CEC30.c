@@ -43,7 +43,7 @@ void func_8014D978(void);
  * @behavior Work-step handler of the front-end work object read through the
  *           scratchpad pointer cell 0x1F800044. Its only in-image reference is
  *           the word 0x801D0644, entry 2 of this payload's three-word handler
- *           run based at 0x801D063C, which the dispatcher func_801CE72C indexes
+ *           run based at 0x801D063C, which the dispatcher 0x801CE72C indexes
  *           with the work-object byte 0x02; no jal in this payload names it, so
  *           it is reached through the run alone. The body dispatches on the
  *           unsigned byte 0x0B of the work object and keeps one "done" flag
