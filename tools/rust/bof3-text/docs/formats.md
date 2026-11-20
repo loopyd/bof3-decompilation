@@ -3823,6 +3823,30 @@ This guard does not close other transfer paths. The SDK read callback at
 and intervening progress writers remain unresolved. Submode bits and a single
 callback observation do not prove that nonzero Form 1 payloads are unused.
 
+The original SDK poll at `0x80178218` can take its timeout branch at
+`0x80178258` and return without restoring READY. With no intervening READY
+writer, its final `CdReady` call can return without dispatching an event or
+changing the pointer.
+This establishes a retained-callback path in the SDK read machinery. It does
+not establish that this path occurs before XA or that a subsequent sector
+transfer occurs.
+
+Coverage separately identifies the complete SDK read callback instruction body
+at `[0x80177D08,0x80177F1C)`, executable file offsets `[0xE1D08,0xE1F1C)`.
+The exact original executable identity remains required. The qualified installer
+at `0x80177F1C` loads that address at `0x80178068` and `0x8017806C`, then calls
+setter `0x80175698` at `0x80178078`. The setter stores it at `0x80185784`.
+The qualified dispatcher at `0x80176468` loads the slot at `0x801765EC` and
+conditionally calls it at `0x80176608`. Registration, setter, dispatch and all
+133 body words, including every control-transfer delay word, reconcile.
+
+This instruction classification assumes pointer continuity, ordinary helper
+returns, valid nonaliasing memory, intact frames and stable code. The completion
+callback loaded from `0x80185A94`, referenced data and neighboring bytes retain
+their prior status. Matching ELF output, actual invocation, callback lifetime,
+feasible paths, transfer safety, XA payload roles, display and safe editing remain
+unverified.
+
 The same exact-source qualification identifies duplicated subheaders at `[0,8)`
 within each sector. Form 1 correction fields at `[2056,2336)` contain EDC and
 ECC P/Q, verified against the [disk sector owner](../../bof3-disk/src/replace/sector.rs).
