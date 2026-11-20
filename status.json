@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "889b9edb47410c3110f18732346cd44fa9b38d12",
-  "published_at": "2026-11-20T09:19:41.371607+00:00",
+  "revision": "56a23b93f2bb8db3649238a483cdd71bc253a499",
+  "published_at": "2026-11-20T09:23:29.730737+00:00",
   "counts": {
     "completed": 6491,
     "partial": 357,
@@ -57,9 +57,9 @@
     "invalid": 0,
     "total": 10435,
     "symbols": {
-      "named": 6730,
-      "raw": 4828,
-      "total": 11558
+      "named": 6732,
+      "raw": 4827,
+      "total": 11559
     }
   },
   "targets": [
@@ -67479,9 +67479,9 @@
       "invalid": 0,
       "total": 546,
       "symbols": {
-        "named": 137,
-        "raw": 222,
-        "total": 359
+        "named": 139,
+        "raw": 221,
+        "total": 360
       },
       "binary": {
         "size": 229720,
@@ -73158,7 +73158,7 @@
               {
                 "address": 2149309784,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BDD58_game00.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/matchesProjectedWorkBounds.c#L16"
               }
             ]
           },
@@ -118687,7 +118687,7 @@
               {
                 "address": 2149388736,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0.c#L17"
               }
             ]
           },
@@ -118934,7 +118934,7 @@
               {
                 "address": 2149393904,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceWorkHandlerWhenQueryByteIsNonzeroWorld00Area03004_801D25F0.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceWorkHandlerWhenSequenceEndsOrRedirectsWorld00Area03004_801D25F0.c#L11"
               }
             ]
           },
@@ -119272,7 +119272,7 @@
               {
                 "address": 2149399668,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelMessageScrollAndArmEntry.c#L32"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelMessageScrollAndArmEntry.c#L33"
               }
             ]
           },
@@ -119285,7 +119285,7 @@
               {
                 "address": 2149400384,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelMessageLineUnrevealAndAdvanceState.c#L40"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelMessageLineUnrevealAndAdvanceState.c#L39"
               }
             ]
           },
@@ -119558,7 +119558,7 @@
               {
                 "address": 2149407064,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepSequenceAndReloadCountdownWorld00Area03004_801D5958.c#L28"
               }
             ]
           },
@@ -119571,7 +119571,7 @@
               {
                 "address": 2149407304,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004_801D5A48.c#L11"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004_801D5A48.c#L12"
               }
             ]
           },
@@ -119597,7 +119597,7 @@
               {
                 "address": 2149407600,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/initializePanelWorkAndDecrementHandlerWorld00Area03004_801D5B70.c#L17"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/initializePanelWorkAndDecrementHandlerWorld00Area03004_801D5B70.c#L18"
               }
             ]
           },
@@ -119636,7 +119636,7 @@
               {
                 "address": 2149408136,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88.c#L71"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88.c#L73"
               }
             ]
           },
@@ -119675,7 +119675,7 @@
               {
                 "address": 2149409064,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128.c#L48"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepSequenceAndDrawBouncingMarkerWorld00Area03004_801D6128.c#L48"
               }
             ]
           },
@@ -119740,7 +119740,7 @@
               {
                 "address": 2149410436,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684.c#L27"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684.c#L28"
               }
             ]
           },
@@ -119831,7 +119831,7 @@
               {
                 "address": 2149412660,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c#L44"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c#L45"
               }
             ]
           },
@@ -119909,7 +119909,7 @@
               {
                 "address": 2149416296,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawGroupedCellSpritesWorld00Area03004_801D7D68.c#L15"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawGroupedCellSpritesWorld00Area03004_801D7D68.c#L16"
               }
             ]
           },
@@ -119948,7 +119948,7 @@
               {
                 "address": 2149417828,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c#L32"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c#L33"
               }
             ]
           },
@@ -119974,7 +119974,7 @@
               {
                 "address": 2149420400,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawStatusBoxPair.c#L24"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawStatusBoxPair.c#L25"
               }
             ]
           },
@@ -120078,7 +120078,7 @@
               {
                 "address": 2149424028,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/armDistanceTimerAndRequestResourceWorld00Area03004_801D9B9C.c#L24"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedWorkCounterFromMapHeightAndSelectSequenceWorld00Area03004_801D9B9C.c#L25"
               }
             ]
           },
@@ -120182,7 +120182,7 @@
               {
                 "address": 2149425240,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/decrementCompactPanelSlideAndAdvanceStepAtZeroWorld00Area03004_801DA058.c#L16"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/decrementCompactPanelSlideAndAdvanceStepAtZeroWorld00Area03004_801DA058.c#L17"
               }
             ]
           },
@@ -120195,7 +120195,7 @@
               {
                 "address": 2149425512,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168.c#L21"
               }
             ]
           },
@@ -120208,7 +120208,7 @@
               {
                 "address": 2149425824,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/incrementCompactPanelSlideAndUpdateCountersAtFiveWorld00Area03004_801DA2A0.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/incrementCompactPanelSlideAndUpdateCountersAtFiveWorld00Area03004_801DA2A0.c#L19"
               }
             ]
           },
@@ -120351,7 +120351,7 @@
               {
                 "address": 2149427676,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC.c#L35"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC.c#L40"
               }
             ]
           },
@@ -120546,7 +120546,7 @@
               {
                 "address": 2149432236,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c#L30"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c#L32"
               }
             ]
           },
@@ -120741,7 +120741,7 @@
               {
                 "address": 2149435212,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c#L21"
               }
             ]
           },
@@ -120806,7 +120806,7 @@
               {
                 "address": 2149435708,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepHandlerSelectorAndPanelStateOnPadThenDrawRowWorld00Area03004_801DC93C.c#L29"
               }
             ]
           },
@@ -120858,7 +120858,7 @@
               {
                 "address": 2149436856,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8.c#L29"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8.c#L28"
               }
             ]
           },
@@ -120897,7 +120897,7 @@
               {
                 "address": 2149439436,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC.c#L20"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC.c#L19"
               }
             ]
           },
@@ -121157,7 +121157,7 @@
               {
                 "address": 2149443052,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/applySlotEntrySeedWorkPoseAndCounterThenAdvanceWorkHandlerWorld00Area03004_801DE5EC.c#L22"
               }
             ]
           },
@@ -121170,7 +121170,7 @@
               {
                 "address": 2149443628,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c#L37"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c#L40"
               }
             ]
           },
@@ -121196,7 +121196,7 @@
               {
                 "address": 2149444828,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c#L36"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c#L37"
               }
             ]
           },
@@ -121274,7 +121274,7 @@
               {
                 "address": 2149450020,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/resetWorkRecordAndRequestEntryWorld00Area03004_801E0124.c#L21"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/resetWorkRecordAndSelectSequenceZeroWorld00Area03004_801E0124.c#L22"
               }
             ]
           },
@@ -121391,7 +121391,7 @@
               {
                 "address": 2149451852,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/updateWorkScrollWordsWorld00Area03004_801E084C.c#L14"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/updateWorkScrollWordsWorld00Area03004_801E084C.c#L13"
               }
             ]
           },
@@ -121612,7 +121612,7 @@
               {
                 "address": 2149456332,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawArea030Panel.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/drawArea030Panel.c#L20"
               }
             ]
           },
@@ -124756,7 +124756,7 @@
               {
                 "address": 2149527484,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/submitWorkRequestEntry1BDSeedPairE000ArmTintPlus20ThenSetByte2BTo3World01Area04313_801F2FBC.c#L80"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/submitWorkRequestEntry1BDSeedPairE000ArmTintPlus20ThenSetByte2BTo3World01Area04313_801F2FBC.c#L81"
               }
             ]
           },
