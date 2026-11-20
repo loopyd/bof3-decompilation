@@ -52,7 +52,8 @@ void func_801F3140(s16 step_code);
 
 /* @source 0x801F3068
  * @behavior Step 2 of this overlay's four-entry handler run based at 0x801F4580,
- * which func_801F2EFC indexes with work byte 4. Reads the shared signed
+ * which dispatchStateByte4Table4580World03Area14913_801F2EFC indexes with work
+ * byte 4. Reads the shared signed
  * halfword 0x8014932C once, before the frame is set up, and only when it is zero
  * stores 0x14 into the scenario progress byte, queues front-end cue 1 through
  * func_8015DF18 and increments byte 4 of the scratchpad work record published at
@@ -67,7 +68,8 @@ void func_801F3140(s16 step_code);
  *
  * Name evidence: the role comes from the payload's own dispatch table. The four
  * words at 0x801F4580 are 0x801F2F40, 0x801F2FC4, 0x801F3068 and 0x801F3108
- * (payload offset 0x1980, read as little-endian words), and func_801F2EFC loads
+ * (payload offset 0x1980, read as little-endian words), and
+ * dispatchStateByte4Table4580World03Area14913_801F2EFC loads
  * the scratchpad work record, scales its byte 4 by four and calls the pointer at
  * that index, so this body is the third entry, step 2, and its own byte-4
  * increment is the step advance. No in-image caller exists beyond that table

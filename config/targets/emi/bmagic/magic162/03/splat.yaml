@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801EF048
   - - 1368
-    - asm
-    - func_801EF158
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158.c'
+    - '@behavior: Step of the scratchpad work object that the entry dispatcher at 0x801EEC28 runs: reads the work-object pointer cell at 0x1F800044 once, loads the work object byte 0xB and compares it against five with an unsigned bound (lbu/sltiu), so the arm is taken for every value below five. Only on that path it stores 8 into the work byte at 0x9 - the countdown the overlay''s source at 0x801EEFA0 decrements and re-arms to 8 when it reaches zero - then re-reads the cell and increments the work byte at 0x1, the stage index the dispatcher copies the six words at 0x801EEC04 into its frame and indexes with that byte scaled by four, by one at byte width. This address is word 3 of that run, so the arm advances the stage to word 4. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state. Its 72-byte body is byte-identical to emi/bmagic/magic070/03, magic071/03 and magic072/03 0x801EF15C and to emi/bmagic/magic168/03 0x801EF158.'
   - - 1440
     - asm
     - func_801EF1A0

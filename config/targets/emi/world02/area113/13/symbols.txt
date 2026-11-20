@@ -1,5 +1,5 @@
 setStatusFFFFAndHandlerIndex3WhenGateWorld02Area11313_801F2C60 = 0x801F2C60;
 setStatusFFFFAndHandlerIndex5WhenGateWorld02Area11313_801F2C90 = 0x801F2C90;
-func_801F2CC0 = 0x801F2CC0;
+setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0 = 0x801F2CC0;
 func_801F2D04 = 0x801F2D04;
 initArea11313State = 0x801F2D48;

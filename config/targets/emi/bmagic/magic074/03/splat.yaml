@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801EF3C0
   - - 2256
-    - asm
-    - func_801EF4D0
+    - c
+    - setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0.c'
+    - '@behavior: Sets work byte 9 to 8 and increments work byte 2 at byte width while work byte 0xB is below five.'
   - - 2328
     - asm
     - func_801EF518

@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EF04C
   - - 1372
-    - asm
-    - func_801EF15C
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, takes the arm only while the work object''s unsigned byte 0xB stays below five, stores 8 into the work byte at 0x9, then re-reads the cell and increments the work byte at 0x1, the stage index the entry dispatcher func_801EEC28 indexes the six-word run at 0x801EEC04 with, by one at byte width; it keeps no frame and writes no other state.'
   - - 1444
     - asm
     - func_801EF1A4

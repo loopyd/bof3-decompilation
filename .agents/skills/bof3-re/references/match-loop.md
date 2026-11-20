@@ -2,6 +2,11 @@
 
 ## Required loop
 
+`another source transaction holds the writer lease`
+means that selector was not measured. Leave its source and bindings unchanged,
+confirm the owning writer has terminated, then re-gate it. Matches for other batch
+members do not validate the refused selector.
+
 Before changing existing C, obtain a live normal asm diff. For absent C, follow
 the [first-source route](#first-source). A gate that stops before comparison yields
 no `first=`: `undefined reference` at link is a binding gap, so add the row for the

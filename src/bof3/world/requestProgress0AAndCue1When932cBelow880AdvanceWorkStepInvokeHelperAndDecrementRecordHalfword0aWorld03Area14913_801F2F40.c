@@ -39,7 +39,8 @@ void func_801F3140(s16 step_code);
 
 /* @source 0x801F2F40
  * @behavior Step 0 of this overlay's four-entry handler run based at 0x801F4580,
- * which func_801F2EFC indexes with work byte 4. Reads the shared signed
+ * which dispatchStateByte4Table4580World03Area14913_801F2EFC indexes with work
+ * byte 4. Reads the shared signed
  * halfword 0x8014932C once, before the frame is set up, and when it is below
  * 0x880 stores 1 into the shared flag byte 0x80147AD0, stores 0xA into the
  * scenario progress byte, queues front-end cue 1 through func_8015DF18, and
@@ -50,8 +51,9 @@ void func_801F3140(s16 step_code);
  * no arguments and returns nothing; the 0x18-byte frame keeps $ra at +0x10 and
  * the original's two unfilled load delay slots stay nops.
  *
- * Name evidence: the role comes from the payload's own dispatch tables. func_
- * 801F2EFC (0x801F2EFC) loads the scratch work record, scales its byte 4 by
+ * Name evidence: the role comes from the payload's own dispatch tables.
+ * dispatchStateByte4Table4580World03Area14913_801F2EFC (0x801F2EFC) loads the
+ * scratch work record, scales its byte 4 by
  * four and calls the pointer at that index of the four-word table at
  * 0x801F4580, whose words are 0x801F2F40, 0x801F2FC4, 0x801F3068 and
  * 0x801F3108, so this body is step 0 of that run and its own byte-4 increment is

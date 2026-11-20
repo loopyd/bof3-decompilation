@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/bmagic/advanceWorkByte2ByPartyOrEnemyStepThenCopyRecordByte27SeedByte2BAndCopyRecordTripletBmagicMagic01500_801EFAE4.c'
     - '@behavior: Entry 12 of the overlay handler table at 0x801EEC04, the word stored at 0x801EEC34: it advances work byte 2, the handler index, by one when the acting battler byte 0x80146374 is a party member (below three) and by two otherwise, storing the new value once after the branch with each arm re-materializing the scratchpad work pointer cell 0x1F800044, then refreshes the work object from the shared battle work record read through 0x801EB4E0 by copying byte 0x27, setting byte 0x2B to 1 and copying the words at 0x34, 0x38 and 0x3C. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 3984
-    - asm
-    - func_801EFB90
+    - c
+    - advanceWorkByte2WhenHelperReadyBmagicMagic01500_801EFB90
+    - '@source: src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic01500_801EFB90.c'
+    - '@behavior: Entry 13 of the overlay handler table that starts at 0x801EEC04, the word the header table stores at 0x801EEC38 and index 1 of the eight-word sub-run at 0x801EEC34 that dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkBytes0And2SetBmagicMagic01500_801EFA28 copies into its frame and selects with unsigned work byte 2 of the scratchpad work object held in the pointer cell 0x1F800044. The payload holds that one table word and no jal or j word to this address, so the call site is that indirect dispatch. Per frame it calls the shared readiness helper 0x8014DAEC and tests the byte that helper returns: while the helper reports not-ready the handler does nothing, and once it reports ready it loads the work object through the pointer cell 0x1F800044 and increments work byte 2, the handler index, with a byte-width add, which selects run entry 2 at 0x801EFBD8. The 0x18-byte frame only keeps the return address at 0x10 across the call. The 0x48-byte body is byte-identical to the span at 0x801F014C of this same payload, proven by a payload cmp of the two spans, and the exact lift at 0x801F117C of bmagic magic008/00 supplied the statement order. Nothing is returned and no other state is read or written.'
   - - 4056
     - c
     - applyHelper60ToBattleRecordThenOnRangeHitInvokeAFC98With2ForPartyAndD71CWith203ThenForwardBattleByteToA9820SetHeadingTowardRecordSeedWord14CountdownByte9StepWord20AndAdvanceWorkByte2BmagicMagic01500_801EFBD8
