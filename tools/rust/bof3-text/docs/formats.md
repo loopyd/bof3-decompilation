@@ -795,12 +795,16 @@ classified fields and preserves their records. A missing complete extent leaves
 the earlier profile intact and admits no prefix.
 
 The sampler also reads a separate signed-byte plane. Its relative offset is the
-u16 field at payload bytes `[42,44)`, multiplied by four. The complete original
-setter at `0x80155038..0x8015507C` uses the same offset for numeric byte writes.
-Coverage includes that two-byte field when present. Initialization and ownership
-of the separate plane remain unresolved, and the rule excludes its storage.
-Integral alternatives qualify the stored main words without proving neighbor
-safety for fractional coordinates, terrain meaning or actual visitation.
+u16 field at payload bytes `[42,44)`, multiplied by four. For integral coordinates,
+the `LB` at `0x80154B84` reads `base + y * width + x` and the sampler multiplies
+that signed byte numerically. The complete original setter at
+`0x80155038..0x8015507C` uses the same address for byte writes. Coverage includes
+the two-byte offset field when present and the `width * height` stored plane only
+when its complete extent fits the payload. Finite declared-grid coordinates select
+each byte; earlier field records remain intact. Offsets at or beyond the payload
+end qualify no storage. These rules establish neither initialization nor ownership
+of external storage, global caller bounds, neighbor safety for fractional
+coordinates, terrain meaning or actual visitation.
 
 The original initializer at `0x80157F98..0x801580A4` reads the unsigned-u16
 relative offset at payload bytes `[32,34)`, multiplies it by four and adds

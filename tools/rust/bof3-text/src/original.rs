@@ -3137,8 +3137,15 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
             numeric_planes.push((start, end, "original US raw area first callback-list zero terminator; original initializer 0x80157F98..0x801580A4 uses the unsigned-u16 offset at payload bytes 32..34, scaled by four, for LW 0x80157FD4 and zero-test 0x80157FDC; complete four-byte source extent is checked and must contain u32 zero; exact original archive, raw mode, load and checkword agreement; prior fields retain their own evidence; nonzero records, subsequent list words, callback targets and auxiliary storage excluded; no actual invocation, initialization, ownership, callback semantics, resource safety, rendering or editing claim"));
         }
     }
-    if data.get(42..44).is_some() {
+    if let Some(offset) = half(42) {
         numeric_planes.push((42, 44, "original US raw area unsigned-u16 relative-offset field at payload bytes 42..44; original sampler 0x80154ABC..0x80154ED0 and complete setter 0x80155038..0x8015507C scale the field by four and add payload base 0x80104000 before numeric signed-byte reads or writes; exact original archive, raw mode, load, checkword agreement and checked two-byte source extent; prior fields retain their own evidence; auxiliary storage, initialization, ownership, coordinate safety, terrain semantics, full allocation, rendering and editing excluded"));
+        if let Some((start, end)) = offset.checked_mul(4).and_then(|start| {
+            let end = start.checked_add(cells)?;
+            data.get(start..end)?;
+            Some((start, end))
+        }) {
+            numeric_planes.push((start, end, "original US raw area stored signed-byte auxiliary plane; complete original sampler 0x80154ABC..0x80154ED0 scales the unsigned-u16 offset at payload bytes 42..44 by four and reads base+y*width+x through LB 0x80154B84 for integral coordinates, then multiplies the signed byte numerically; complete setter 0x80155038..0x8015507C uses the same address for SB; finite declared-grid coordinates cover every width*height byte with signed16-safe inputs; exact original archive, raw mode, load, checkword agreement and complete checked in-payload extent; prior fields retain their own evidence; no partial prefix, external storage, initialization, global caller bounds, fractional neighbor safety, natural visitation, terrain semantics, rendering or editing claim"));
+        }
     }
     if let Some(end) = cells
         .checked_mul(4)
