@@ -121,7 +121,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v38`. Select that entry without class or latch selectors.
+`bof3.inline-text/v39`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 All fifteen edited Config fields render in a controlled fixture and through
 ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
@@ -177,7 +177,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v38`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v39`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -220,6 +220,13 @@ three. Optional widths use 1..4 with optional zero padding; other conversions ar
 refused. The masked row's final renderer is unverified and records `renderers: []`.
 Retain that empty array. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
+COMMU01 entry 7 exposes `Culture` and two footer formats. The signed-byte format
+permits four formatted bytes before NUL; the unsigned-byte format permits three.
+The latter's allocation fits only `%d` plus NUL. Retain each codec and empty
+reference list, and inspect encoded and formatted bounds with `analyze`.
+The inline format contract lists capacities, consumers and protected padding.
+Natural selection and edited rendering remain unverified.
+
 COMMU05 entry 7 exposes four literal `faeries`/`faery` labels and two decimal
 formats. The pair codec bounds a signed byte plus one and an unsigned byte to
 eight formatted bytes; the single unsigned-byte format permits three. Both

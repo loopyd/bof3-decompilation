@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v38`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v39`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v38` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v39` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3355,6 +3355,34 @@ An empty renderer array retains formatter-to-buffer evidence without claiming a
 display consumer. Keep this array unchanged when editing. Code references are pinned
 outside the allocations; no pointer-word reference is inferred from them.
 Observed rendering remains unverified for all three formats.
+
+The `US COMMU01 footer text` layout covers entry 7 of original US
+`BIN/ETC/COMMU01.EMI`, loaded at `0x801D0C00`. It exposes three fields:
+
+| Address | Original text | Capacity including NUL | Codec | Maximum formatted bytes before NUL |
+| --- | --- | --- | --- | --- |
+| `0x801D0C10` | `%2d` | 4 | `ascii-i8-decimal-format` | 4 |
+| `0x801D0C14` | `%d` | 3 | `ascii-u8-decimal-format` | 3 |
+| `0x801D4C30` | `Culture` | 8 | `game-literal` | Not formatted |
+
+Original consumer `0x801D3038` loads a signed byte from `0x801455C2` and an
+unsigned byte from `0x801455C4`. Formatter calls `0x801D3500` and `0x801D354C`
+write into `0x80145AD4`, with the destination set in each call's delay slot.
+The signed domain `[-128, 127]` needs at most four decimal bytes; the unsigned
+domain `[0, 255]` needs at most three. The signed codec retains one decimal
+conversion with optional width 1..4 and zero padding when both encoded and
+formatted limits fit. The three-byte unsigned allocation fits only `%d` plus
+NUL. Its format cannot change. Calls `0x801D3514` and `0x801D3560` draw the
+scratch output through `0x8014FF0C`, with the source set in their delay slots.
+
+Call `0x801D3534` draws `Culture` through `0x8014F800`, with a seven-character
+limit and the source pointer stored in its delay slot. Shorter or empty literal
+edits retain NUL and zero-fill the remaining field. Preserve the alignment byte
+at `0x801D0C17` and all following data from `0x801D4C38`. All three fields retain
+empty pointer-reference lists. Recognition pins the payload outside these
+allocations, and packing binds the original archive identity. Original
+instructions establish source and output bounds; natural selection and edited
+rendering remain unverified.
 
 The `US COMMU05 faery labels and counts` layout covers entry 7 of original US
 `BIN/ETC/COMMU05.EMI`, loaded at `0x801D0C00`. It exposes six fields:

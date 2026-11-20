@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v38";
+pub const SCHEMA: &str = "bof3.inline-text/v39";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -30,6 +30,7 @@ pub(crate) enum Codec {
     AsciiI32DecimalFormat,
     AsciiI32WideDecimalFormat,
     AsciiI16PlusOneDecimalFormat,
+    AsciiI8DecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiI8PlusOneU8DecimalPairFormat,
     AsciiU8DecimalFormat,
@@ -145,6 +146,7 @@ impl Codec {
             Self::AsciiI32DecimalFormat => (&[11], 11, 7),
             Self::AsciiI32WideDecimalFormat => (&[11], 11, 8),
             Self::AsciiI16PlusOneDecimalFormat => (&[6], 6, 4),
+            Self::AsciiI8DecimalFormat => (&[4], 4, 4),
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9, 4),
             Self::AsciiI8PlusOneU8DecimalPairFormat => (&[4, 3], 8, 4),
             Self::AsciiU8DecimalPairFormat => (&[3, 3], 7, 4),
@@ -238,6 +240,7 @@ impl Codec {
             Self::AsciiI32DecimalFormat => "ascii-i32-decimal-format",
             Self::AsciiI32WideDecimalFormat => "ascii-i32-wide-decimal-format",
             Self::AsciiI16PlusOneDecimalFormat => "ascii-i16-plus-one-decimal-format",
+            Self::AsciiI8DecimalFormat => "ascii-i8-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiI8PlusOneU8DecimalPairFormat => "ascii-i8-plus-one-u8-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
@@ -846,6 +849,18 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801f2901, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f290a, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f2913, 5, &[0x8014f800]),
+        ],
+    },
+    Layout {
+        name: "US COMMU01 footer text",
+        load: 0x801d0c00,
+        size: 16948,
+        sha256: "67864c4611efa4de48415dee5ff9d70b6198c3a01ff40b543151968dbb754ddf",
+        consumers: &[0x801d3038],
+        allocations: &[
+            Allocation::bounded_format(0x801d0c10, 4, Codec::AsciiI8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0c14, 3, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::literal(0x801d4c30, 8, &[], &[0x8014f800]),
         ],
     },
     Layout {
