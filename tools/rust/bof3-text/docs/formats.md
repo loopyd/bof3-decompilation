@@ -393,6 +393,8 @@ directory words, pair counts, fetched pairs, relative cell words and counted
 five-byte cell records. Program header byte zero, mirror bytes, other programs
 and cells, and allocation tails retain their prior status.
 
+The separate selected-mirror rule below qualifies the third selection bytes.
+
 MAGIC131 and GAME's loop at `0x801BDAB8` use the same actor array at
 `0x80145E90`, with stride `0x140` bytes. The reviewed sort and draw path republishes
 this actor before `0x8014C4D4`, which reads `actor[+0x54] + u16(actor+0x5A)`.
@@ -410,6 +412,46 @@ below 55, list capacity, display flags 2, sort mode 6, valid prefetch/packet
 storage and ordinary noninterfering helper returns. This identifies stored
 fields without establishing natural state production, call scheduling,
 invocation, cadence, live CLUTs, transfer, display or safe editing.
+
+## Additional DRG program and mirror fields
+
+The same conditional readers qualify original `DRG01`, `DRG02`, `DRG03`,
+`DRG05`, `DRG07` and `DRG08` banks with suffixes `_00..04.EMI`, plus
+`DRG04_00.EMI` and `DRG06_00.EMI`. Each requires its original archive,
+entry 3, raw mode, checkword `0x10`, reviewed offset and destination, and exact
+payload length and SHA-256. The source bindings and finite selector lists remain
+those in [standalone sprite coverage](#standalone-sprite-coverage) and
+[MAGIC131 raw replacements](#magic131-raw-replacements). DRG06 has seven
+selectors; DRG04 and DRG06 have no additional suffixes under these routes.
+
+Each walk starts at pair zero. Continuing reads decrement the byte countdown,
+wrap at the pair count, or follow one high-bit redirect before a direct fetch.
+That destination may itself have a high-bit duration. Coverage follows fetched
+pairs until an index repeats and includes redirect operands, selected relative
+cell words and bounded counted-cell records. Native checks reconcile complete
+programs, declared allocations and every direct fetch. Metadata aliases and
+out-of-declared-table fetches do not qualify. Header byte zero, unfetched
+high-bit predicates, other programs/cells and allocation tails retain their
+prior status. The texture tool's `query --records` output gives each source's
+logical program and cell coordinates.
+
+With selected mirror one and actor `+0x48 = 0`, part control bit 7 selects
+renderer case 2 or 3. Case 2 uses the inline path at `0x8014C884..0x8014C8C8`;
+case 3 calls `0x8014CF9C..0x8014D260`. Both consume the same five-byte parts.
+The retained `+0x28 = 2` palette and page case remains valid. Selected mirror
+values zero or one replace DRG00's `+0x2A = 0` condition; all other source,
+program-retention, continuing-call and bounded-draw conditions above still apply.
+This establishes stored fields without natural selector production,
+scheduling, invocation, cadence, live CLUTs, transfer, display or safe editing.
+
+A separate record qualifies each selected third byte in these banks and
+`DRG00_00..04.EMI`. The original load at `0x8014DD00` and store at
+`0x8014DD08` publish that byte as this actor's `+0x2A`. The renderer reads
+it at `0x8014C720` and uses it at `0x8014C728..0x8014C730` to select the
+reviewed mirror cases. Every qualified stored value is zero or one. The same
+source/root/selector and retained same-actor draw conditions apply. This rule
+adds no meaning for other selectors or control values and changes no shared
+BPL field mask.
 
 ## Save-icon source coverage
 

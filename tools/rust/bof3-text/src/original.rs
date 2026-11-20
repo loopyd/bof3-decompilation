@@ -10523,39 +10523,134 @@ pub fn payload_nontext_ranges(
     if let Some(copies) = stored_sprite_record_copy_ranges(entry, data) {
         ranges.get_or_insert_with(Vec::new).extend(copies);
     }
-    if let Some(fields) = drg00_sprite_ranges(entry, data) {
+    if let Some(fields) = drg_sprite_ranges(entry, data) {
         ranges.get_or_insert_with(Vec::new).extend(fields);
     }
     ranges
 }
 
-fn drg00_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+const US_DRG_SPRITE_FIELD_EVIDENCE: &str = "Original US DRG selected program and cell fields. Exact original DRG01..08 raw entry-3 profiles retain their documented source/root bindings and finite selectors. Original selection, initialization, forward and draw readers preserve the same actor, program and relative cell table. Complete native directory, allocation and finite forward/direct-fetch checks qualify only consumed numeric fields and counted five-byte cell records. Retained mode 2 and mirror 0/1 use the reviewed renderer paths. Successful unskipped loading, stable original bytes and actor/root/program, no overriding request, repeated same-actor calls, bounded geometry/lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unfetched predicates, other programs/cells and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.";
+const US_DRG_MIRROR_EVIDENCE: &str = "Original US DRG selected mirror bytes. Exact original DRG00..08 raw entry-3 source/root profiles and finite selectors bind selection byte 2 to the load at 0x8014DD00, same-actor store at 0x8014DD08 and renderer read/dispatch at 0x8014C720..0x8014C730. Native selected values 0/1 select the reviewed counted-cell paths with retained mode 2. Successful loading, unchanged source, retained same-actor root/program/control, bounded draw state/storage and ordinary noninterfering helpers remain conditions. Other selectors and control values retain prior status. No natural selection, scheduling, invocation, live CLUT, display, rasterized-text absence or safe-edit claim.";
+
+fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
     if entry.index != 3
         || entry.transfer_mode != 0
-        || entry.offset != 40_960
         || entry.check_word != 0x10
-        || entry.size != 44_404
-        || data.len() != 44_404
-        || !matches!(
-            entry.ram_ptr,
-            0x8003_b80c | 0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c
-        )
-        || sha256_hex(data) != "1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1"
+        || usize::try_from(entry.size).ok() != Some(data.len())
     {
         return None;
     }
-    let mut fields = bpl_root_sprite_fields(data, 0, data.len(), 6)?;
-    fields.extend(bpl_root_sprite_fields(data, 0, data.len(), 4)?);
-    Some(
-        merge_bpl_sprite_fields(fields)
-            .into_iter()
-            .map(|(start, end)| NontextRange {
-                offset: start,
-                length: end - start,
-                evidence: "Original US DRG00 selected program and cell fields. Five exact raw entry-3 originals bind selectors 6 and 4 to programs at payload offsets 31254 and 21080. The original retained-root selector, initialization and forward readers preserve the same actor and cell-relative table; each finite eight-pair walk selects eight bounded cell records. The original GAME actor-array and draw route reaches the counted five-byte reader with publisher-retained mode 2. Stable original bytes, successful unskipped loading, retained actor/root/program, no overriding request, repeated same-actor forward calls, bounded visible geometry, lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unselected programs/cells, mirror bytes and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.",
-            })
-            .collect(),
-    )
+    let (selectors, evidence): (&[u8], &str) = match (
+        entry.offset,
+        entry.ram_ptr,
+        data.len(),
+        sha256_hex(data).as_str(),
+    ) {
+        (
+            40_960,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            44_404,
+            "1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1",
+        ) => (
+            &[6, 4],
+            "Original US DRG00 selected program and cell fields. Five exact raw entry-3 originals bind selectors 6 and 4 to programs at payload offsets 31254 and 21080. The original retained-root selector, initialization and forward readers preserve the same actor and cell-relative table; each finite eight-pair walk selects eight bounded cell records. The original GAME actor-array and draw route reaches the counted five-byte reader with publisher-retained mode 2. Stable original bytes, successful unskipped loading, retained actor/root/program, no overriding request, repeated same-actor forward calls, bounded visible geometry, lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unselected programs/cells, mirror bytes and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.",
+        ),
+        (
+            40_960,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            38_844,
+            "2d8dada5f5112fbc1363e54a2b12ed8d31cd12df53f7456d42015d65e1c47c33",
+        ) => (
+            &[4, 6, 12, 14, 44, 46, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            20_480,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            72_420,
+            "46af6dbcedb4eab31ae5d2db9195c3dbc968840c316d08d04b1ca95a1762efb3",
+        ) => (
+            &[4, 6, 44, 12, 46, 14, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            76_072,
+            "0d918e6fdd6852c3d184213423c02b2aa46ea0cee36d156153e22b55a546d574",
+        ) => (
+            &[4, 6, 12, 14, 44, 46, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            26_624,
+            0x8003_b80c,
+            313_320,
+            "6669621720080f29b7a431d150ade295210ecef49d1dec3085b4e828c962f538",
+        ) => (
+            &[4, 6, 12, 14, 44, 46, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            38_912,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            70_700,
+            "4297311b37aa27df957dbacaca840945875fafab5c4fab1238a34252938e6ac7",
+        ) => (
+            &[4, 6, 12, 14, 44, 46, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            34_816,
+            0x8003_b80c,
+            233_124,
+            "ccc2b49c546625cb6fbdf3d51996d3eba0ec25bb2b3c71fdf8e5b753a9d872a6",
+        ) => (&[4, 16, 6, 44, 46, 12, 14], US_DRG_SPRITE_FIELD_EVIDENCE),
+        (
+            38_912,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            42_264,
+            "c8743de97beea25057b3db3bdf89819fc7e43ce89483fe30d8ea54c297a2338f",
+        ) => (
+            &[4, 6, 12, 14, 44, 46, 16, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        (
+            20_480,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            84_732,
+            "ecb3e431738d1e065eb0e90a47c392368be4fa84a08fb90ec928659c40d19b36",
+        ) => (
+            &[4, 12, 44, 16, 6, 14, 46, 18],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+        ),
+        _ => return None,
+    };
+    let mut fields = Vec::new();
+    let mut mirrors = Vec::new();
+    for &selector in selectors {
+        fields.extend(bpl_root_sprite_fields(data, 0, data.len(), selector)?);
+        let selection_table = u32::from_le_bytes(data[12..16].try_into().ok()?) as usize;
+        let mirror = selection_table + 3 * usize::from(selector) + 2;
+        if *data.get(mirror)? > 1 {
+            return None;
+        }
+        mirrors.push(mirror);
+    }
+    let mut ranges: Vec<_> = merge_bpl_sprite_fields(fields)
+        .into_iter()
+        .map(|(start, end)| NontextRange {
+            offset: start,
+            length: end - start,
+            evidence,
+        })
+        .collect();
+    ranges.extend(mirrors.into_iter().map(|offset| NontextRange {
+        offset,
+        length: 1,
+        evidence: US_DRG_MIRROR_EVIDENCE,
+    }));
+    Some(ranges)
 }
 
 fn stored_image_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {

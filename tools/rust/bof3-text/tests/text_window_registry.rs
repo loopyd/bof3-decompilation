@@ -157,7 +157,7 @@ fn every_window_names_an_owner_and_a_hash() {
     assert_eq!(kinds["known_payload"].as_u64().unwrap_or(0), 2_159);
     assert_eq!(kinds["pointer_table"].as_u64().unwrap_or(0), 288);
     assert_eq!(kinds["row_extent"].as_u64().unwrap_or(0), 46_057);
-    assert_eq!(kinds["reviewed_textbin"].as_u64().unwrap_or(0), 416);
+    assert_eq!(kinds["reviewed_textbin"].as_u64().unwrap_or(0), 417);
     for window in registry["windows"].as_array().cloned().unwrap_or_default() {
         let owner = &window["owner"];
         assert!(
