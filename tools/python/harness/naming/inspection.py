@@ -150,7 +150,7 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
         names = set()
         if selected:
             for value in selected:
-                resolved = resolve_function(root, value)
+                resolved = resolve_function(root, value, manifests={target: manifest})
                 if resolved.source is None or resolved.compiled_symbol is None:
                     raise ValueError(
                         f"selector has no reviewed authored function: {value}"
