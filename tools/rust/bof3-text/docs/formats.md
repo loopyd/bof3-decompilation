@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v34`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v35`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3136,7 +3136,7 @@ formatted bytes. Each argument is an unsigned byte. Widths use 1..4 with optiona
 zero padding; other conversions are refused. Consumer `0x801D5894` loads the
 three clock bytes and calls formatter `0x8017E3F4` at `0x801D597C`, then copies
 the result to a stack buffer. A rendered consumer is unverified, so `renderers`
-remains empty. The filename and Shift-JIS header formats are unsupported.
+remains empty. The filename format remains unsupported.
 
 SHOP's ten Shift-JIS digit strings at `0x801E540C + 4*i`, for `i` from 0 to 9,
 use `shift-jis-digit`. Each three-byte allocation holds one full-width digit
@@ -3146,8 +3146,23 @@ original addresses. The save-title formatter at `0x801D7080` selects seven
 strings and calls `sprintf` at `0x801D71F0`. It substitutes the slot, hour,
 minute and level digits into the Shift-JIS title. Replacements must retain one
 full-width digit and cannot change the formatted byte count. Keep `renderers: []`.
-Edited title rendering and the scratch buffer's complete extent remain unverified.
-The title format at `0x801D0C98` stays protected.
+The title format at `0x801D0C98` uses `shift-jis-title-format` in a 65-byte
+allocation including NUL. It retains seven plain `%s` conversions and exactly
+64 encoded bytes. The literals use full-width Latin letters, digits, ideographic
+space, parentheses and full stop. Each conversion receives a two-byte digit,
+so the formatted title also fills 64 bytes. Pad shorter wording with ideographic
+spaces. Other conversions, ASCII literals and different lengths are refused.
+Packing preserves the following nonzero bytes and all argument selectors.
+
+Static original instructions establish the title path. Its caller passes
+`0x80145AD4` to the save-header producer at `0x801EF27C` from call site
+`0x801D6A08`. The producer's BIOS `strcpy`
+call at `0x801EF2E8` copies it to `0x800C1804`. The title occupies 64 bytes;
+its NUL replaces the first reserved byte, already zeroed by the producer.
+Retaining the full title width preserves the original write span and prevents
+stale trailing title bytes. As in the original, all seven selectors must
+name digit strings: slot is at most 9, and the sampled hour, minute-tens and
+level-tens bytes are at most 99. Edits do not change these conditions.
 
 SHOP's `%d` at `0x801D0C1C` uses `ascii-u16-decimal-format` in a three-byte
 allocation including NUL. Its encoded limit permits only `%d`; the codec's
@@ -3169,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v34` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v35` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

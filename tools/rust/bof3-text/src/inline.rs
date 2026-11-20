@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v34";
+pub const SCHEMA: &str = "bof3.inline-text/v35";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -20,6 +20,7 @@ pub(crate) enum Codec {
     GameCountedLiteral,
     GameGlyphs,
     ShiftJisDigit,
+    ShiftJisTitleFormat,
     AsciiLiteral,
     AsciiFormatLiteral,
     AsciiDigitGlyphLiteral,
@@ -43,6 +44,9 @@ pub(crate) enum Codec {
 
 impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
+        if self == Self::ShiftJisTitleFormat {
+            return encode_title(text, capacity);
+        }
         if self == Self::ShiftJisDigit {
             let mut characters = text.chars();
             let digit = match (characters.next(), characters.next()) {
@@ -99,6 +103,9 @@ impl Codec {
     }
 
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
+        if self == Self::ShiftJisTitleFormat {
+            return Ok(Some(encode_title(text, 64)?.len()));
+        }
         if self == Self::AsciiDashGlyphLiteral {
             if text.is_empty() || !text.bytes().all(|byte| byte == b' ' || byte == b'-') {
                 return invalid("dash glyph literal requires one or more spaces or '-' glyphs");
@@ -150,6 +157,9 @@ impl Codec {
     }
 
     fn decode(self, bytes: &[u8], file_offset: usize) -> Result<String> {
+        if self == Self::ShiftJisTitleFormat {
+            return decode_title(bytes, file_offset);
+        }
         if self == Self::ShiftJisDigit {
             if bytes.len() != 3
                 || bytes[0] != 0x82
@@ -206,6 +216,7 @@ impl Codec {
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::ShiftJisDigit => "shift-jis-digit",
+            Self::ShiftJisTitleFormat => "shift-jis-title-format",
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
@@ -274,6 +285,72 @@ impl Codec {
 
 fn keyboard_character(byte: u8) -> bool {
     byte.is_ascii_alphanumeric() || matches!(byte, 0x3c..=0x3e | 0x5c | 0x5d | 0xff)
+}
+
+fn encode_title(text: &str, capacity: usize) -> Result<Vec<u8>> {
+    let mut characters = text.chars();
+    let mut bytes = Vec::new();
+    let mut arguments = 0;
+    while let Some(character) = characters.next() {
+        let pair = match character {
+            '%' if characters.next() == Some('s') => {
+                arguments += 1;
+                *b"%s"
+            }
+            '　' => [0x81, 0x40],
+            '（' => [0x81, 0x69],
+            '）' => [0x81, 0x6a],
+            '．' => [0x81, 0x44],
+            '０'..='９' => [0x82, 0x4f + (character as u32 - '０' as u32) as u8],
+            'Ａ'..='Ｚ' => [0x82, 0x60 + (character as u32 - 'Ａ' as u32) as u8],
+            'ａ'..='ｚ' => [0x82, 0x81 + (character as u32 - 'ａ' as u32) as u8],
+            _ => {
+                return invalid(
+                    "Shift-JIS title requires full-width Latin letters, digits, space, parentheses or full stop, and plain %s conversions",
+                );
+            }
+        };
+        bytes.extend_from_slice(&pair);
+        if bytes.len() > capacity {
+            return invalid("Shift-JIS title format exceeds its allocation");
+        }
+    }
+    if arguments != 7 || bytes.len() != 64 {
+        return invalid(
+            "Shift-JIS title must retain seven %s conversions and exactly 64 encoded bytes; pad with full-width spaces",
+        );
+    }
+    Ok(bytes)
+}
+
+fn decode_title(bytes: &[u8], file_offset: usize) -> Result<String> {
+    if bytes.len() != 65 || bytes[64] != 0 {
+        return invalid(format!("invalid Shift-JIS title at {file_offset:#x}"));
+    }
+    let mut text = String::new();
+    for pair in bytes[..64].chunks_exact(2) {
+        let scalar = match (pair[0], pair[1]) {
+            (b'%', b's') => {
+                text.push_str("%s");
+                continue;
+            }
+            (0x81, 0x40) => '　' as u32,
+            (0x81, 0x69) => '（' as u32,
+            (0x81, 0x6a) => '）' as u32,
+            (0x81, 0x44) => '．' as u32,
+            (0x82, trail @ 0x4f..=0x58) => '０' as u32 + u32::from(trail - 0x4f),
+            (0x82, trail @ 0x60..=0x79) => 'Ａ' as u32 + u32::from(trail - 0x60),
+            (0x82, trail @ 0x81..=0x9a) => 'ａ' as u32 + u32::from(trail - 0x81),
+            _ => {
+                return invalid(format!(
+                    "unsupported Shift-JIS title bytes at {file_offset:#x}"
+                ));
+            }
+        };
+        text.push(char::from_u32(scalar).unwrap());
+    }
+    encode_title(&text, 64)?;
+    Ok(text)
 }
 
 fn decimal_format_size(text: &str, arguments: &[usize], max_width: usize) -> Result<usize> {
@@ -1150,7 +1227,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "37a051bea1fd61fa1c4bf0d5232af413a18bd92bf7a677894f45368a2bc23d44",
+        sha256: "b57c4e56e2f0509284aa79755dbd0ebb2888551e37c9b972b1cfa685f9d39e1a",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
@@ -1277,6 +1354,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::shift_jis_digit(0x801e5428, 0x801e5450),
             Allocation::shift_jis_digit(0x801e542c, 0x801e5454),
             Allocation::shift_jis_digit(0x801e5430, 0x801e5458),
+            Allocation::bounded_format(0x801d0c98, 65, Codec::ShiftJisTitleFormat, &[]),
         ],
     },
     Layout {
