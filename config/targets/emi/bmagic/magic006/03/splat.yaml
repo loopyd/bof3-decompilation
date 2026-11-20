@@ -30,8 +30,10 @@ segments:
   vram: 2149510200
   subsegments:
   - - 56
-    - asm
-    - func_801EEC38
+    - c
+    - dispatchWorkByte1LocalPairBmagicMagic00603_801EEC38
+    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairBmagicMagic00603_801EEC38.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, seeds 0x801EEC90 into entry 0 and 0x801EEDA4 into entry 1 of a two-entry local handler array in its own 0x20-byte frame, and invokes the entry selected by the work object''s unsigned byte at offset 1 with no arguments. The index is unchecked, and the frame only keeps $ra at 0x18 across the indirect call.'
   - - 144
     - asm
     - func_801EEC90

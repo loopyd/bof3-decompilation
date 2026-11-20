@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18.c",
     "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88.c",
+    "src/bof3/world/advanceWorkWord34AndSetScratchStateToMode5WithCountdownWorld03Area11913_801F2D6C.c",
 ]
 support_sources = [
     "src/bof3/world/advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0.c",

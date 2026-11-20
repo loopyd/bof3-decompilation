@@ -56,8 +56,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table1b18BossBoss03016_800C18F0.c'
     - '@behavior: Second entry dispatcher of this overlay and the state dispatch on work-record byte 1: it loads the work-record pointer from the scratchpad cell 0x1F800044 before creating its 0x18-byte frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code-pointer run based at 0x800C1B18, whose entry 0 is the publisher 0x800C1934 and whose entries 1 through 11 are shared main-executable handlers. The original does not bound the index before the scaled load, writes no state and leaves the handler return register untouched; no word and no jal of this payload names 0x800C18F0, so the overlay entry is its caller.'
   - - 308
-    - asm
-    - func_800C1934
+    - c
+    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1934
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1934.c'
+    - '@behavior: Step setup of this overlay''s work state machine: publishes the in-row data pointer 0x800C1AC0 into +0xEC of the current enemy work record from 0x801EB4E8, the step dispatcher 0x800C198C into +0xE4 and the in-row data pointer 0x800C1AD4 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The body''s own address word is entry 3 of the 0x800C1B0C step run and entry 0 of the 0x800C1B18 state run, its only in-image references, so no jal of this payload names it.'
   - - 396
     - c
     - dispatchIndexedHandlerBossBoss03016_800C198C

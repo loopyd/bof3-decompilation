@@ -1,5 +1,5 @@
 dispatchStateByte1Table2660BossBoss00816_800C1804 = 0x800C1804;
-func_800C1848 = 0x800C1848;
+publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1848 = 0x800C1848;
 dispatchStateByte2Table2690BossBoss00816_800C18A0 = 0x800C18A0;
 dispatchStateByte3Table26a8BossBoss00816_800C18E4 = 0x800C18E4;
 dispatchStateByte4Table26b0BossBoss00816_800C1928 = 0x800C1928;

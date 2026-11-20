@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table2660BossBoss00816_800C1804
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 72
-    - asm
-    - func_800C1848
+    - c
+    - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1848
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1848.c'
+    - '@behavior: Entry 0 of this overlay work step run based at 0x800C2660, which the byte-1 dispatcher at 0x800C1804 indexes with the work record state byte at +1 and whose word at its base is the only in-image reference that names this function. It publishes this payload data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C1C88 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044, which hands the record to entry 2 of the same run at 0x801E35D8, and calls func_8014D978.'
   - - 160
     - c
     - dispatchStateByte2Table2690BossBoss00816_800C18A0

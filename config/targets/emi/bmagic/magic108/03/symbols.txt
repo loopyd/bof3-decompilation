@@ -6,7 +6,7 @@ dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_
 func_801EEE0C = 0x801EEE0C;
 func_801EEF48 = 0x801EEF48;
 incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020 = 0x801EF020;
-func_801EF090 = 0x801EF090;
+add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090 = 0x801EF090;
 incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0 = 0x801EF0E0;
 incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130 = 0x801EF130;
 func_801EF180 = 0x801EF180;
