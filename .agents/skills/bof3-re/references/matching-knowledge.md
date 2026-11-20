@@ -434,6 +434,13 @@ from `.sched` and hold every save ahead of its first instruction. If saves
 cluster, inspect the scope edges in `.sched2` and compare compiler assembly
 before attributing the order to the assembler.
 
+After reload, a scope end can attach to a hard call-argument SET when self-copies
+disappear, forcing a calculation ahead of that argument. Keep a promoted argument
+separate from its derived offset. Offsets from different record families can use
+distinct locals and share a saved register on exclusive arms. A single-definition
+offset may then receive the scheduling boost before reload. Inspect the actual
+boundary receivers, both schedules and the complete native body.
+
 For a scoped multiply, inspect its output after reload. Reload can insert `mflo`
 before the loop end, which makes a following load depend on that copy in the
 second schedule. The original multiply can precede a load while its result copy
@@ -2285,6 +2292,13 @@ local. A copy retained through combine can then share the incoming argument
 register and disappear as a self-copy after allocation. Narrowing a real consumer
 can remove an extension without restoring that copy. Check local allocation,
 register assignments and the second schedule before attributing the loss to CSE.
+
+A scope around an existing narrow parameter capture can change its weighted
+references while combine still removes the incoming formal copy. Keep both
+definitions in one basic block when that substitution is needed. Moving the
+capture across a guard can preserve the formal and add a handoff even when it
+fixes allocation. Check the complete register web and prologue before native
+comparison.
 
 Moving a real snapshot past an existing rejecting guard can remove its producer's
 combine `LOG_LINK`. Loop notes alone do not create that basic-block boundary.
