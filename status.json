@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "3639a54b054a83200eaa36db1d9ac6eba484fb36",
-  "published_at": "2026-11-20T14:35:30.916805+00:00",
+  "revision": "8f4189213ea42939409f562faee18f282fd5f2d7",
+  "published_at": "2026-11-20T14:51:11.803705+00:00",
   "counts": {
     "completed": 6522,
     "partial": 353,
@@ -67884,7 +67884,7 @@
               {
                 "address": 2149153444,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_80197AA4.c#L25"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_80197AA4.c#L17"
               }
             ]
           },
@@ -69769,7 +69769,7 @@
               {
                 "address": 2149182264,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_8019EB38.c#L22"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_8019EB38.c#L18"
               }
             ]
           },
@@ -71308,7 +71308,7 @@
               {
                 "address": 2149249936,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawSpriteRecordTable.c#L28"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawSpriteRecordTable.c#L19"
               }
             ]
           },
