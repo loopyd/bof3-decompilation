@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v49`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v50`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3298,7 +3298,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v49` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v50` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3449,10 +3449,15 @@ original format. Preserve the alignment byte at `0x801EEC47`. Original consumers
 byte arguments and five full-word arguments. All calls use the shared format.
 Within each consumer, successive calls write `0x20`-spaced slots from
 `0x801490D8`. Signed-word arguments
-require at most eleven decimal bytes plus NUL. The first consumer dispatches
-action `0x55`; the second dispatches `0x56`. Their final display consumer remains
-unverified, so this row retains `renderers: []` and an empty pointer-reference
-list. The previous sixty name rows retain their identities and order.
+require at most eleven decimal bytes plus NUL. The first consumer selects
+zero-based dialogue row `0x55`; the second selects `0x56`, through `0x80150224`.
+With the original AREA175 through AREA185 entry 11 bank resident, these are
+bank 0 rows 86 and 87. Their `0x07` commands insert slots zero through three
+and zero through two, respectively. The generic dialogue draw loop sends each
+inserted character to `0x8014F800` with count one. This row records that renderer
+and retains an empty pointer-reference list. The previous sixty name rows retain
+their identities and order. Active-bank publication, natural activation and
+observed numeric output remain unverified.
 
 The `US AREA008 decimal formats` layout covers entry 13 of the original US
 `BIN/WORLD00/AREA008.EMI`, loaded at `0x801F2C00`. Three ASCII allocations use
@@ -3475,12 +3480,14 @@ Consumer `0x801F3C2C` supplies a signed byte and a second signed byte scaled by
 100/30 with truncation toward zero. Consumer `0x801F3D18` supplies an unsigned
 byte. Both format into `0x80145AD4` and call renderer `0x8014FF0C`.
 Consumers `0x801F437C` and `0x801F43C8` mask an unsigned byte with `0x7F`,
-format into `0x801490D8`, then call `0x80150224` with actions `0x54` and `0x56`.
-Their final renderer remains unverified; that row records `renderers: []`.
-An empty renderer array retains formatter-to-buffer evidence without claiming a
-display consumer. Keep this array unchanged when editing. Code references are pinned
-outside the allocations; no pointer-word reference is inferred from them.
-Observed rendering remains unverified for all three formats.
+format into `0x801490D8`, then call `0x80150224` with zero-based dialogue
+selectors `0x54` and `0x56`. With AREA008 entry 11 resident at `0x80010000`,
+these select bank 0 rows 85 and 87. Both rows insert slot zero through command
+`0x07`. The shared reset preserves its 32-byte allocation, and the generic
+dialogue draw loop passes each inserted character to `0x8014F800` with count
+one. The masked format records this renderer. Code references are pinned outside
+the allocations; no pointer-word reference is inferred from them. Active-bank
+publication, natural activation and observed rendering remain unverified.
 
 The `US COMMU01 list and footer text` layout covers entry 7 of original US
 `BIN/ETC/COMMU01.EMI`, loaded at `0x801D0C00`. It exposes three footer fields:
@@ -4175,9 +4182,11 @@ the row's `{end}`:
 This is B3  {nl}Do you want to ride{nl}the lift?  {choice(0x00, 0x0c, 0x13)}Go to B1{end}Go to B2{end}Quit{end}
 ```
 
-`index` reports how many rows carry such a list (`OPTIONS`), `query` flags them
-(`+opt`), and editing them is ordinary text editing — they count against the same
-extent, so a longer option list can overrun the row's capacity and is then refused.
+`index` reports rows with nonempty content after a decoded `{end}` as `OPTIONS`.
+`query` marks them with `+opt`. Zero command operands and trailing NUL padding do
+not count. These flags identify structural content. Consumer evidence establishes
+choice behavior. Editing a choice list uses the same row extent, so packing
+refuses a list that exceeds its capacity.
 
 ## Character table
 

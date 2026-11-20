@@ -246,7 +246,7 @@ pub fn query(
                     None => continue,
                 },
             };
-            let options = row.encoded[..row.encoded.len().saturating_sub(1)].contains(&0x00);
+            let options = extract::has_options(&text);
             // A row span is relative to its **bank**, so the bank's start must be added: without
             // it every bank-1 offset of a two-bank subfile was short by the bank's start.
             let row_start = bank.start + start;

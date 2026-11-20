@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v49";
+pub const SCHEMA: &str = "bof3.inline-text/v50";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -880,7 +880,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801f2901, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f290a, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801f2913, 5, &[0x8014f800]),
-            Allocation::bounded_format(0x801eec44, 3, Codec::AsciiI32DecimalFormat, &[]),
+            Allocation::bounded_format(0x801eec44, 3, Codec::AsciiI32DecimalFormat, &[0x8014f800]),
         ],
     },
     Layout {
@@ -1229,7 +1229,7 @@ const LAYOUTS: &[Layout] = &[
                 &[0x8014ff0c],
             ),
             Allocation::bounded_format(0x801f2c10, 4, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
-            Allocation::bounded_format(0x801f2c14, 3, Codec::AsciiU7DecimalFormat, &[]),
+            Allocation::bounded_format(0x801f2c14, 3, Codec::AsciiU7DecimalFormat, &[0x8014f800]),
         ],
     },
     Layout {

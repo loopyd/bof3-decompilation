@@ -149,8 +149,9 @@ selectors. An absent selection fails.
 `executable_ascii`; their `rows` count is the number of allocated strings or names.
 Their bank-only fields `banks`, `used` and `options` are null. Executable `entry`
 and `ram_ptr` are also null. The text table prints null fields as `-`.
-For banks, `options` counts rows whose extent carries a choice option list after
-its `{end}`.
+For banks, `options` counts rows with nonempty content after a decoded `{end}`.
+Zero command operands and trailing NUL padding do not count. Consumer evidence
+determines whether the trailing content is a choice list.
 
 ## `extract ARCHIVE.EMI -o|--output OUT [-e|--entry N] [--class CLASS] [--latch ENTRY:OFFSET+LENGTH]`
 
@@ -194,7 +195,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v49`. An omitted layout selector fails before
+labels through `bof3.inline-text/v50`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -208,7 +209,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v49` document with ten counted labels, eight default names,
+`bof3.inline-text/v50` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels, fifteen fixed-width settings fields,
@@ -244,8 +245,8 @@ For COMMU00 names and numeric format, select `--entry 0` in `ETC/COMMU00.EMI` or
 `--entry 14` in `WORLD04/AREA175.EMI` through `AREA185.EMI`, below `BIN`.
 The inline document contains sixty five-byte name fields and one shared `%d`
 format. The format's three-byte allocation fits only its original text plus
-NUL; retain its `renderers: []` and eleven-byte formatted bound. Edit only `text`;
-retain all allocations and metadata. Packing preserves each record's four
+NUL. Retain renderer `0x8014F800` and the eleven-byte formatted bound. Edit only
+`text`, retaining all allocations and metadata. Packing preserves each record's four
 attribute bytes and refuses name growth beyond five encoded bytes. Each archive
 requires its own document and output. See [inline formats](formats.md#inline-overlay-text)
 for the cross-overlay consumers and remaining runtime limits.
@@ -262,7 +263,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v49`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v50`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
@@ -360,8 +361,8 @@ Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-b
 field capacity. All eight records and their allocation identities are required.
 AREA008 entry 13 includes three decimal formats with separate encoded and
 formatted output limits. Use `analyze` to inspect `max_formatted_size` before
-editing. The deferred masked-byte format has an unverified final renderer and
-retains `renderers: []`. See [inline formats](formats.md#inline-overlay-text)
+editing. The deferred masked-byte format records renderer `0x8014F800` through
+the shared dialogue slots. See [inline formats](formats.md#inline-overlay-text)
 for its supported arguments and limits.
 
 COMMU01 entry 7 includes the `Culture` literal and two decimal footer formats.
@@ -485,7 +486,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v49`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v50`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

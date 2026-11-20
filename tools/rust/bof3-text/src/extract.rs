@@ -223,13 +223,19 @@ pub fn document(
     }
 }
 
-/// Number of rows whose extent carries text after its `{end}` (option lists).
+/// Whether decoded text has content after an end command, apart from NUL padding.
+/// Consumer evidence determines whether that content is a choice list.
+pub fn has_options(text: &str) -> bool {
+    text.trim_end_matches("{end}").contains("{end}")
+}
+
+/// Number of rows with content after an end command, apart from NUL padding.
 pub fn option_rows(section: &Section) -> usize {
     section
         .banks
         .iter()
         .flat_map(|bank| bank.rows.iter())
-        .filter(|row| row.encoded[..row.encoded.len().saturating_sub(1)].contains(&0x00))
+        .filter(|row| has_options(&crate::command::deserialize(&row.encoded)))
         .count()
 }
 

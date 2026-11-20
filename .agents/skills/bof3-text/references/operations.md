@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v49`.
+`bof3.inline-text/v50`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -189,12 +189,14 @@ other names and save propagation remain unverified.
 Each matching COMMU00 payload also exposes the shared `%d` field through
 `ascii-i32-decimal-format`. Its three-byte allocation permits only the original
 format plus NUL. The eleven-byte formatted bound covers five full-word arguments
-as well as two unsigned bytes. Preserve `renderers: []`; actions `0x55/0x56`
-do not establish a final display consumer.
+as well as two unsigned bytes. Retain renderer `0x8014F800`. With the original
+AREA175 through AREA185 dialogue bank resident, selectors `0x55` and `0x56`
+expand its formatted slots through the shared dialogue draw loop. Active-bank
+publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v49`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v50`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -234,8 +236,9 @@ AREA008 entry 13 also exposes three bounded decimal formats. Preserve their
 ordered arguments and both encoded and formatted limits. The signed pair permits
 at most nine output bytes; the unsigned byte and masked seven-bit rows permit
 three. Optional widths use 1..4 with optional zero padding; other conversions are
-refused. The masked row's final renderer is unverified and records `renderers: []`.
-Retain that empty array. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
+refused. Retain `0x8014F800` for the masked row's deferred slot renderer.
+Active-bank publication and observed rendering remain unverified. See the
+[inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
 COMMU01 entry 7 exposes `Culture` and two footer formats. The signed-byte format
 permits four formatted bytes before NUL; the unsigned-byte format permits three.
