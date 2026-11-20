@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v43";
+pub const SCHEMA: &str = "bof3.inline-text/v44";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1509,7 +1509,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "98d777a6fc806f6ae1b341c37e6f4c807d738d395a66ca6d44a012a567f5d7b0",
+        sha256: "b0689ef5f8584801cf4040036b35b75f9410bf6edfeed4ae09a4577144095a51",
         consumers: &[
             0x801d3888, 0x801d38b0, 0x801d3c90, 0x801d3cac, 0x801d3cd8, 0x801d3d04, 0x801d3d20,
             0x801d3d40, 0x801d3d6c, 0x801d3d88, 0x801d3da8, 0x801d3dc8, 0x801d3de4, 0x801d3dfc,
@@ -1520,7 +1520,8 @@ const LAYOUTS: &[Layout] = &[
             0x801d677c, 0x801d678c, 0x801d67a8, 0x801d67b8, 0x801d67d4, 0x801d68e8, 0x801d690c,
             0x801d7058, 0x801d7084, 0x801d70c0, 0x801d70e8, 0x801d70f8, 0x801d7114, 0x801d7124,
             0x801d7140, 0x801d71b4, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
-            0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0,
+            0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0, 0x801d5c7c,
+            0x801af20c,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
@@ -1585,18 +1586,34 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d9ec4, 6, &[0x801d9ee4], &[0x8014f800]),
             Allocation::literal(0x801d9ecc, 7, &[0x801d9ee8], &[0x8014f800]),
             Allocation::literal(0x801d9ed4, 6, &[0x801d9eec], &[0x8014f800]),
+            Allocation::literal(0x801d9be0, 4, &[0x801d9c8c], &[0x8014f800]),
+            Allocation::literal(0x801d9be4, 5, &[0x801d9c90], &[0x8014f800]),
+            Allocation::literal(0x801d9bec, 5, &[0x801d9c94], &[0x8014f800]),
+            Allocation::literal(0x801d9bf4, 5, &[0x801d9c98], &[0x8014f800]),
+            Allocation::literal(0x801d9bfc, 5, &[0x801d9c9c], &[0x8014f800]),
+            Allocation::literal(0x801d9c04, 5, &[0x801d9ca0], &[0x8014f800]),
+            Allocation::literal(0x801d9c0c, 4, &[0x801d9ca4], &[0x8014f800]),
+            Allocation::literal(0x801d9c10, 5, &[0x801d9ca8], &[0x8014f800]),
+            Allocation::literal(0x801d9c18, 5, &[0x801d9cac], &[0x8014f800]),
+            Allocation::literal(0x801d9c28, 5, &[0x801d9cb4], &[0x8014f800]),
+            Allocation::literal(0x801d9c50, 5, &[0x801d9cc8], &[0x8014f800]),
+            Allocation::literal(0x801d9c58, 5, &[0x801d9ccc], &[0x8014f800]),
+            Allocation::literal(0x801d9c60, 5, &[0x801d9cd0], &[0x8014f800]),
+            Allocation::literal(0x801d9c70, 5, &[0x801d9cd8], &[0x8014f800]),
+            Allocation::literal(0x801d9c80, 5, &[0x801d9ce0], &[0x8014f800]),
         ],
     },
     Layout {
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "b57c4e56e2f0509284aa79755dbd0ebb2888551e37c9b972b1cfa685f9d39e1a",
+        sha256: "6a27c66ba0e57ac8ff5ce07fd3b370bbd25966b8675ec7f7673742ce3bc7ae02",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
             0x801da47c, 0x801dc6fc, 0x801dd578, 0x801ddcb0, 0x801d826c, 0x801d86d4, 0x801d8c58,
-            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98, 0x801d71f0,
+            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98, 0x801d71f0, 0x801e3f34,
+            0x801e3f5c,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -1719,6 +1736,10 @@ const LAYOUTS: &[Layout] = &[
             Allocation::shift_jis_digit(0x801e542c, &[0x801e5454]),
             Allocation::shift_jis_digit(0x801e5430, &[0x801e5458]),
             Allocation::bounded_format(0x801d0c98, 65, Codec::ShiftJisTitleFormat, &[]),
+            Allocation::literal(0x801e5edc, 5, &[0x801e5efc], &[0x8014f800]),
+            Allocation::literal(0x801e5ee4, 5, &[0x801e5f00], &[0x8014f800]),
+            Allocation::literal(0x801e5eec, 8, &[0x801e5f04], &[0x8014f800]),
+            Allocation::literal(0x801e5ef4, 7, &[0x801e5f08], &[0x8014f800]),
         ],
     },
     Layout {

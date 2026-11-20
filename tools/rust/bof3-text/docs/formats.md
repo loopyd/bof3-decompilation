@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v43`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v44`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3055,6 +3055,26 @@ These `game-literal` fields also retain their original string length plus NUL,
 with capacities of five to seven bytes. Slot padding, pointers and code remain
 protected.
 
+SHISU also exposes fifteen command labels selected by the five original group
+records at `0x801D9CE8`. Their `game-literal` allocations include NUL and permit
+three or four encoded body bytes. Retain the group index range 0..4; the local
+reader does not enforce it. Consumer `0x801D5C7C` selects pointer words from
+`0x801D9C8C`, queries width through GAME `0x801AF20C`, and draws through
+`0x8014F800` with count sixteen. The width reader stops at NUL, and these
+fields produce counts 0..4. The other eight table labels remain unsupported.
+
+SHOP also exposes `SORT`, `LOOK`, `High AP` and `Low AP` with capacities of
+five, five, eight and seven bytes including NUL. Game spaces encode as `0xFF`.
+Wrapper `0x801E3F34` obtains the panel task and calls consumer `0x801E3F5C`.
+The consumer selects the header and three rows through pointer table
+`0x801E5EFC` and count/index bytes `03 01 02 03` at `0x801E5F0C`.
+Each path calls `0x8014F800` with count `0xFF`; NUL bounds each field.
+
+Both additions use `game-literal`. Shorter or empty edits retain NUL and
+zero-fill the field. Packing preserves alignment bytes, pointers and selection
+records. No relocation is supported. Natural entry, producer bounds, visual
+fit, rendering and resource safety remain unverified.
+
 BATE `0x801D0C20` and SHISU `0x801D0C04` each expose `%3d` through
 `ascii-u16-decimal-format`. Each four-byte allocation permits three encoded
 bytes and NUL. Eighteen formatter sites per overlay pass one zero-extended byte
@@ -3184,7 +3204,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v43` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v44` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
