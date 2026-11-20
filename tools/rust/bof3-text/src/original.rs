@@ -9526,6 +9526,8 @@ const BPLU_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLU selector-2 program
 
 const BPLD_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLD selector-0 program and sprite-cell numeric fields; exact archive and entry geometry, mode, load, checkword and payload identities; the family-1 request with flag byte zero, hint/triplet, slot/LBA supplier, successful unskipped load and GAME publisher/reselection bind the same three roots with count 1, work index 0 and clear record masks; original D910/DB98/D978 readers qualify finite fetched pairs, jump operands and selected cell-relative halfwords; original GAME 0x801BDAB8 and SLUS 0x8014D290/0x8014BA54/0x8014BC70 carry the same work into 0x8014C4D4, whose counted part loop and 0x8014CF9C consume control, signed X/Y and unsigned U/V; stable work, work[0]=1, initialized work+0x24=1 and work+0x28=2, retained work+0x2A in 0..1, work+0x48=0, valid visible geometry, queue capacity, readable prefetch slots, ordinary helper returns and nonaliased frames/packets remain conditions; palette mode 2 selects original 0x8014CF10 and the renderer page-adjustment paths; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell union, with previous evidence preserved; program header byte 0, unfetched high-bit predicates, selection mode bytes, other programs/cells and allocation tails excluded; part control bits 0x70 remain opaque; no natural state production, actual invocation, loading, residency, transfer, display, rasterized-text absence or safe-edit claim";
 
+const BPL_FLAG_SPRITE_EVIDENCE: &str = "Original US BPL family-flag program and sprite-cell numeric fields; exact archive, entry geometry, mode, load, checkword and payload identities; GAME 0x80197B98 tests only flag bit 1 for family 1/2 and 0x801BF568 preserves the full flag as a below-128 selector when record mask 0x4000 is clear; byte 0x80146325=1 skips the unrelated coordinate lookup while retaining the request; original successful unskipped load, hint/triplet, slot/LBA supplier and phase-2/3 publisher bind each root separately with count 1 and work index 0; original D6B8/D6DC/DC08 and D910/DB98/D978 consume bounded selection triples, selected program fields, finite fetched pairs, redirect operands and cell-relative halfwords; the reviewed same-actor GAME and SLUS draw route to C4D4/CF9C consumes counted control, signed X/Y and unsigned U/V fields with initialized work+0x24=1, work+0x28=2, work+0x48=0 and retained mirror byte 0 or 1; stable flags, roots, work and code, clear record mask 0x0080, valid visible geometry, queue capacity, readable prefetch slots, ordinary noninterfering helper returns and bounded nonaliased frames/packets remain conditions; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell/family-flag union, with every earlier classification and evidence preserved; header byte zero, unfetched high-bit predicates, invalid triples/walks, other programs/cells, allocation tails and opaque part bits 0x70 remain unqualified; no natural flag or state production, actual request, invocation, loading, cadence, residency, transfer, display, rasterized-text absence or safe-edit claim";
+
 fn bpl_selected_sprite_profile(entry: Entry, data: &[u8]) -> Option<(u8, &'static str)> {
     if entry.transfer_mode != 1 || entry.ram_ptr != 0x8003_b800 || entry.size as usize != data.len()
     {
@@ -9776,11 +9778,24 @@ fn bpl_selected_sprite_profile(entry: Entry, data: &[u8]) -> Option<(u8, &'stati
     }
 }
 
-/// Only finite walks selected by pinned original BPL profiles qualify.
-fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, usize)>> {
+fn bpl_sprite_roots(data: &[u8]) -> Option<[usize; 3]> {
     if data.len() > 1024 * 1024 {
         return None;
     }
+    let word = |at: usize| {
+        Some(u32::from_le_bytes(data.get(at..at.checked_add(4)?)?.try_into().ok()?) as usize)
+    };
+    let roots = [word(0)?, word(4)?, word(8)?];
+    (roots[0] == 12 && roots[0] < roots[1] && roots[1] < roots[2] && roots[2] < data.len())
+        .then_some(roots)
+}
+
+fn bpl_root_sprite_fields(
+    data: &[u8],
+    root: usize,
+    root_end: usize,
+    selector: u8,
+) -> Option<Vec<(usize, usize)>> {
     let word = |at: usize| {
         Some(u32::from_le_bytes(data.get(at..at.checked_add(4)?)?.try_into().ok()?) as usize)
     };
@@ -9789,111 +9804,164 @@ fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, u
             data.get(at..at.checked_add(2)?)?.try_into().ok()?,
         )))
     };
-    let roots = [word(0)?, word(4)?, word(8)?];
-    if roots[0] != 12 || roots[0] >= roots[1] || roots[1] >= roots[2] || roots[2] >= data.len() {
+    let mut fields = Vec::new();
+    let image = root.checked_add(word(root)?)?;
+    let palette = root.checked_add(word(root + 4)?)?;
+    let programs = root.checked_add(word(root + 8)?)?;
+    let selections = root.checked_add(word(root + 12)?)?;
+    if !(root + 16 <= image
+        && image < palette
+        && palette < programs
+        && programs < selections
+        && selections < root_end)
+    {
         return None;
     }
+    let selection = selections.checked_add(3 * usize::from(selector))?;
+    let program_index = usize::from(*data.get(selection + 1)?);
+    let directory_size = half(programs)?;
+    let directory_end = programs.checked_add(directory_size)?;
+    if directory_size == 0
+        || directory_size % 2 != 0
+        || directory_end > selections
+        || program_index >= directory_size / 2
+        || selection + 3 > root_end
+    {
+        return None;
+    }
+    let starts = (0..directory_size / 2)
+        .map(|index| programs.checked_add(half(programs + 2 * index)?))
+        .collect::<Option<Vec<_>>>()?;
+    if starts
+        .iter()
+        .any(|&start| !(directory_end..selections).contains(&start))
+    {
+        return None;
+    }
+    let program = starts[program_index];
+    let end = starts
+        .iter()
+        .copied()
+        .filter(|&start| start > program)
+        .min()
+        .unwrap_or(selections);
+    let cells = usize::from(*data.get(program)?);
+    let steps = usize::from(*data.get(program + 1)?);
+    let pairs = program.checked_add(2)?;
+    let table = pairs.checked_add(steps.checked_mul(2)?)?;
+    let table_end = table.checked_add(cells.checked_mul(2)?)?;
+    if cells == 0 || steps == 0 || table_end > end {
+        return None;
+    }
+    let offsets = (0..cells)
+        .map(|index| table.checked_add(half(table + 2 * index)?))
+        .collect::<Option<Vec<_>>>()?;
+    if offsets[0] != table_end
+        || offsets
+            .iter()
+            .any(|&cell| !(table_end..end).contains(&cell))
+    {
+        return None;
+    }
+    let mut distinct = offsets.clone();
+    distinct.sort_unstable();
+    distinct.dedup();
+    for (index, &cell) in distinct.iter().enumerate() {
+        let allocation_end = distinct.get(index + 1).copied().unwrap_or(end);
+        if cell.checked_add(1 + 5 * usize::from(*data.get(cell)?))? > allocation_end {
+            return None;
+        }
+    }
+    fields.extend([
+        (root + 8, root + 16),
+        (selection, selection + 2),
+        (
+            programs + 2 * program_index,
+            programs + 2 * program_index + 2,
+        ),
+        (program + 1, program + 2),
+    ]);
+    let mut visited = vec![false; steps];
+    let mut index = 0;
+    while !*visited.get(index)? {
+        visited[index] = true;
+        let pair = pairs + 2 * index;
+        let operand = usize::from(*data.get(pair + 1)?);
+        let cell = *offsets.get(operand)?;
+        fields.extend([
+            (pair, pair + 2),
+            (table + 2 * operand, table + 2 * operand + 2),
+            (cell, cell + 1 + 5 * usize::from(*data.get(cell)?)),
+        ]);
+        index += 1;
+        if index == steps {
+            index = 0;
+        } else if *data.get(pairs + 2 * index)? >= 0x80 {
+            let jump = pairs + 2 * index + 1;
+            fields.push((jump, jump + 1));
+            index = usize::from(*data.get(jump)?);
+        }
+    }
+    Some(fields)
+}
+
+/// Only finite walks selected by pinned original BPL profiles qualify.
+fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, usize)>> {
+    let roots = bpl_sprite_roots(data)?;
+    let mut fields = vec![(0, 12)];
+    for (ordinal, &root) in roots.iter().enumerate() {
+        let root_end = roots.get(ordinal + 1).copied().unwrap_or(data.len());
+        fields.extend(bpl_root_sprite_fields(data, root, root_end, selector)?);
+    }
+    Some(merge_bpl_sprite_fields(fields))
+}
+
+/// The loader consumes flag bit 1; below-128 reselection preserves the other bits.
+fn bpl_flag_sprite_fields(data: &[u8], family_flag: u8) -> Option<Vec<(usize, usize)>> {
+    let roots = bpl_sprite_roots(data)?;
+    let word = |at: usize| {
+        Some(u32::from_le_bytes(data.get(at..at.checked_add(4)?)?.try_into().ok()?) as usize)
+    };
     let mut fields = vec![(0, 12)];
     for (ordinal, &root) in roots.iter().enumerate() {
         let root_end = roots.get(ordinal + 1).copied().unwrap_or(data.len());
         let image = root.checked_add(word(root)?)?;
         let palette = root.checked_add(word(root + 4)?)?;
-        let programs = root.checked_add(word(root + 8)?)?;
         let selections = root.checked_add(word(root + 12)?)?;
-        if !(root + 16 <= image
-            && image < palette
-            && palette < programs
-            && programs < selections
-            && selections < root_end)
+        let image_directory_size = word(image)?;
+        if image_directory_size == 0
+            || image_directory_size % 4 != 0
+            || image.checked_add(image_directory_size)? > palette
         {
             return None;
         }
-        let selection = selections.checked_add(3 * usize::from(selector))?;
-        let program_index = usize::from(*data.get(selection + 1)?);
-        let directory_size = half(programs)?;
-        let directory_end = programs.checked_add(directory_size)?;
-        if directory_size == 0
-            || directory_size % 2 != 0
-            || directory_end > selections
-            || program_index >= directory_size / 2
-            || selection + 3 > root_end
-        {
-            return None;
-        }
-        let starts = (0..directory_size / 2)
-            .map(|index| programs.checked_add(half(programs + 2 * index)?))
-            .collect::<Option<Vec<_>>>()?;
-        if starts
-            .iter()
-            .any(|&start| !(directory_end..selections).contains(&start))
-        {
-            return None;
-        }
-        let program = starts[program_index];
-        let end = starts
-            .iter()
-            .copied()
-            .filter(|&start| start > program)
-            .min()
-            .unwrap_or(selections);
-        let cells = usize::from(*data.get(program)?);
-        let steps = usize::from(*data.get(program + 1)?);
-        let pairs = program.checked_add(2)?;
-        let table = pairs.checked_add(steps.checked_mul(2)?)?;
-        let table_end = table.checked_add(cells.checked_mul(2)?)?;
-        if cells == 0 || steps == 0 || table_end > end {
-            return None;
-        }
-        let offsets = (0..cells)
-            .map(|index| table.checked_add(half(table + 2 * index)?))
-            .collect::<Option<Vec<_>>>()?;
-        if offsets[0] != table_end
-            || offsets
-                .iter()
-                .any(|&cell| !(table_end..end).contains(&cell))
-        {
-            return None;
-        }
-        let mut distinct = offsets.clone();
-        distinct.sort_unstable();
-        distinct.dedup();
-        for (index, &cell) in distinct.iter().enumerate() {
-            let allocation_end = distinct.get(index + 1).copied().unwrap_or(end);
-            if cell.checked_add(1 + 5 * usize::from(*data.get(cell)?))? > allocation_end {
-                return None;
+        let before = fields.len();
+        for selector in 0_u8..128 {
+            if selector & 2 != family_flag {
+                continue;
+            }
+            let selection = selections.checked_add(3 * usize::from(selector))?;
+            let end = selection.checked_add(3)?;
+            if end > root_end {
+                continue;
+            }
+            let triple = data.get(selection..end)?;
+            if usize::from(triple[0]) >= image_directory_size / 4 || triple[2] > 1 {
+                continue;
+            }
+            if let Some(selected) = bpl_root_sprite_fields(data, root, root_end, selector) {
+                fields.extend(selected);
+                fields.push((selection + 2, end));
             }
         }
-        fields.extend([
-            (root + 8, root + 16),
-            (selection, selection + 2),
-            (
-                programs + 2 * program_index,
-                programs + 2 * program_index + 2,
-            ),
-            (program + 1, program + 2),
-        ]);
-        let mut visited = vec![false; steps];
-        let mut index = 0;
-        while !*visited.get(index)? {
-            visited[index] = true;
-            let pair = pairs + 2 * index;
-            let operand = usize::from(*data.get(pair + 1)?);
-            let cell = *offsets.get(operand)?;
-            fields.extend([
-                (pair, pair + 2),
-                (table + 2 * operand, table + 2 * operand + 2),
-                (cell, cell + 1 + 5 * usize::from(*data.get(cell)?)),
-            ]);
-            index += 1;
-            if index == steps {
-                index = 0;
-            } else if *data.get(pairs + 2 * index)? >= 0x80 {
-                let jump = pairs + 2 * index + 1;
-                fields.push((jump, jump + 1));
-                index = usize::from(*data.get(jump)?);
-            }
+        if fields.len() == before {
+            return None;
         }
     }
+    Some(merge_bpl_sprite_fields(fields))
+}
+
+fn merge_bpl_sprite_fields(mut fields: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
     fields.sort_unstable();
     let mut merged: Vec<(usize, usize)> = Vec::new();
     for (start, end) in fields {
@@ -9905,7 +9973,7 @@ fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, u
         }
         merged.push((start, end));
     }
-    Some(merged)
+    merged
 }
 
 fn compression_metadata_ranges(
@@ -9939,16 +10007,16 @@ fn compression_metadata_ranges(
     // Each bit identifies a reviewed field union. Intersect all decoded aliases
     // before qualifying a physical literal, preserving earlier evidence first.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(31);
+        typed.get_mut(start..end)?.fill(63);
     }
     for &(start, end) in additional_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 30;
+            *role |= 62;
         }
     }
     for &(start, end) in program_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 28;
+            *role |= 60;
         }
     }
     let mut origins = Vec::new();
@@ -10023,20 +10091,27 @@ fn compression_metadata_ranges(
     }
     for (start, end) in model_palette_zero_fields(&decoded_bytes, &typed) {
         for role in typed.get_mut(start..end)? {
-            *role |= 24;
+            *role |= 56;
         }
     }
     if let Some((selector, _)) = selected_profile {
         for (start, end) in bpl_selected_sprite_fields(&decoded_bytes, selector)? {
             for role in typed.get_mut(start..end)? {
-                *role |= 16;
+                *role |= 48;
+            }
+        }
+        if let Some(fields) = bpl_flag_sprite_fields(&decoded_bytes, selector & 2) {
+            for (start, end) in fields {
+                for role in typed.get_mut(start..end)? {
+                    *role |= 32;
+                }
             }
         }
     }
     let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
     for (&origin, &known) in origins.iter().zip(&typed) {
         let role = literal_roles.get_mut(origin)?;
-        *role = Some(role.unwrap_or(31) & known);
+        *role = Some(role.unwrap_or(63) & known);
     }
     let mut at = 0;
     while at < literal_roles.len() {
@@ -10053,8 +10128,10 @@ fn compression_metadata_ranges(
             program_evidence
         } else if role & 8 != 0 {
             "original US source-bound compressed sprite palette-zero relative words and 32-halfword record; existing reviewed image-root and source bindings, GAME 0x801C1254/0x801C1308/0x801C13DC and SLUS 0x80166C48..0x80166CAC; complete checked decode and every decoded alias confined to the reviewed image/program/palette field union; previous records retain their evidence; no actual loading, active CLUT, transfer, display, rasterized-text absence or safe-edit claim"
-        } else {
+        } else if role & 16 != 0 {
             selected_profile?.1
+        } else {
+            BPL_FLAG_SPRITE_EVIDENCE
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {
@@ -13380,7 +13457,7 @@ pub fn payload_nontext_ranges(
             if sha256_hex(data)
                 == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e" =>
         {
-            Some(BPLU349_GRAPHICS_RANGES
+            let mut ranges: Vec<_> = BPLU349_GRAPHICS_RANGES
             .iter()
             .map(|&(offset, length)| NontextRange {
                 offset,
@@ -13392,7 +13469,33 @@ pub fn payload_nontext_ranges(
                 length: end - start,
                 evidence: BPLU_SELECTED_SPRITE_EVIDENCE,
             }))
-            .collect())
+            .collect();
+            let mut additional = vec![false; data.len()];
+            for (start, end) in bpl_flag_sprite_fields(data, 2).unwrap_or_default() {
+                additional.get_mut(start..end)?.fill(true);
+            }
+            for range in &ranges {
+                additional
+                    .get_mut(range.offset..range.offset.checked_add(range.length)?)?
+                    .fill(false);
+            }
+            let mut offset = 0;
+            while offset < additional.len() {
+                if !additional[offset] {
+                    offset += 1;
+                    continue;
+                }
+                let start = offset;
+                while offset < additional.len() && additional[offset] {
+                    offset += 1;
+                }
+                ranges.push(NontextRange {
+                    offset: start,
+                    length: offset - start,
+                    evidence: BPL_FLAG_SPRITE_EVIDENCE,
+                });
+            }
+            Some(ranges)
         }
         (13, 733_184, 0, 0x801f_2c00, 2_548)
             if entry.check_word == 0x3b

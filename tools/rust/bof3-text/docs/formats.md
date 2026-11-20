@@ -1271,6 +1271,45 @@ These conditional source paths do not establish natural state progression,
 actual requests or invocation, frame cadence, residency, transfer, upload,
 display, absence of rasterized text or safe editing.
 
+## BPL family-flag program and cell fields
+
+Coverage also qualifies finite below-128 flag cases in the original US BPLD
+and BPLU banks under their exact archive and payload gates above. At GAME
+`0x80197B98`, only flag byte `0x801462EC` bit 1 chooses family 1 or 2.
+Byte `0x80146325 = 1` skips the unrelated coordinate-table lookup and keeps
+the request enabled. Successful unskipped loading and the reviewed phase-2/3
+path retain the flag, hint and root. With record masks `0x0080/0x4000` clear,
+`0x801BF568` passes the whole flag byte to `0x8014D6B8`.
+
+Each root is a separate count-1, work-index-0 case. A selector below 128 avoids
+the alternate-root branch at `0x8014D6F4`. Its bit 1 must be clear for BPLD
+or set for BPLU. The three-byte selection must fit inside that root, select an
+image within its directory, and have mirror value 0 or 1. The program index,
+complete declared cell allocations and finite fetch walk must also fit. An
+invalid case qualifies no fields; other independently valid cases remain
+eligible. These checks do not declare the whole selection tail a valid array.
+
+`0x8014DC08` reads all three selection bytes. The third byte reaches work
+`+0x2A` through `0x8014DD00/0x8014DD08` and controls the reviewed renderer's
+mirror paths. This profile therefore qualifies that numeric byte as well as
+the image/program indices, selected program fields, fetched pairs, redirect
+operands, cell-relative halfwords, part counts and counted parts. Program
+header byte zero, unfetched high-bit predicates and allocation tails remain
+unresolved. Part control bits `0x70` remain opaque.
+
+The initialized palette mode 2 and the same-actor draw path have the conditions
+[described for BPLD](#selected-bpld-program-and-cell-fields). Flags, roots,
+code and work must remain stable. Visible geometry, queue and packet capacity,
+readable prefetch slots, valid nonaliased memory and ordinary noninterfering
+helper returns remain required. A compressed literal qualifies only when every
+decoded alias belongs to the reviewed image, program, palette, selected-cell
+or family-flag union. Every earlier classification retains its evidence.
+
+These finite source cases establish neither natural flag production nor actual
+requests, execution, cadence, loading, residency, transfer, display, absence of
+rasterized text or safe editing. Selectors with bit 7 set use a different root
+path and remain outside this profile.
+
 ## Area surface field coverage
 
 Coverage recognizes numeric fields in original US raw entries loaded at
