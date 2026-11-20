@@ -13,7 +13,7 @@ from harness.analysis.index import SCHEMA_VERSION, connect_status
 from harness.domain.functions import parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
-from harness.domain.psx import binary_offset_for, validate_psx_header
+from harness.domain.psx import binary_offset_for, payload_for, validate_psx_header
 from harness.naming.debt import classify_raw_symbol
 from harness.pages.assets import AssetCatalogs
 from harness.pages.binary_map import CATEGORIES, IndexedFunction, Span, partition
@@ -26,13 +26,18 @@ STATUSES = {
 }
 
 
-def collect_targets(connection) -> list[dict]:
+def collect_targets(root: Path, connection) -> list[dict]:
     targets = {}
-    for row in connection.execute("SELECT id FROM targets ORDER BY id"):
-        target = row[0]
+    payloads = {}
+    for target, binary, load_address in connection.execute(
+        "SELECT id, binary, load_address FROM targets ORDER BY id"
+    ):
         parts = target.split("/")
         if parts[0] not in {"exe", "emi"}:
             raise ValueError(f"unsupported dashboard target: {target}")
+        payloads[target] = payload_for(
+            (root / binary).read_bytes(), load_address, binary_name=binary
+        )
         targets[target] = {
             "id": target,
             "kind": parts[0],
@@ -55,7 +60,12 @@ def collect_targets(connection) -> list[dict]:
         targets[target]["total"] += count
         if status == "invalid":
             targets[target]["invalid"] += count
-    for target, name in connection.execute("SELECT target_id, name FROM symbols"):
+    for target, address, name in connection.execute(
+        "SELECT target_id, address, name FROM symbols"
+    ):
+        payload = payloads[target]
+        if not payload.load_address <= address < payload.payload_end:
+            continue
         symbols = targets[target]["symbols"]
         symbols["raw" if classify_raw_symbol(name) else "named"] += 1
         symbols["total"] += 1
@@ -136,7 +146,7 @@ def write_snapshot(
     catalogs = AssetCatalogs(root, media_root or root)
     manifests = load_target_manifests(root)
     with closing(connect_status(root)) as connection:
-        targets = collect_targets(connection)
+        targets = collect_targets(root, connection)
         for target in targets:
             target["binary"] = target_binary(
                 root, manifests[target["id"]], connection, catalogs
