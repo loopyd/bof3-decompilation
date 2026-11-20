@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "9ad8ba8d71feb86d90ff5c881d1efb65a79b72f8",
-  "published_at": "2026-11-20T19:36:34.014447+00:00",
+  "revision": "294e74379f87187c045fed1b2642ffc65eb5b2be",
+  "published_at": "2026-11-20T19:50:31.334855+00:00",
   "counts": {
     "completed": 6556,
     "partial": 349,
@@ -69802,7 +69802,7 @@
               {
                 "address": 2149182264,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_8019EB38.c#L19"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_8019EB38.c#L18"
               }
             ]
           },
