@@ -2373,6 +2373,13 @@ without preserving the copy. CSE can replace every copied use with the
 equivalent source, leaving an unused SET in `.cse2` that flow deletes before
 combine. Trace the consumers and `.flow` before assigning the removal to combine.
 
+Preserving a handoff can require two real value changes. An operand overwrite
+between producer and capture can block moving the producer. Overwriting the
+producer's result between capture and consumer can block forwarding that result.
+Use only consumed value phases and verify both overwrites survive CSE. Inspect
+deaths, register classes and emitted lowword extraction. A surviving wide carrier
+does not establish correct narrowing.
+
 After CSE preserves the copy, recheck deaths and allocation. Several real
 phases can exclude local allocation and change global priority, conflicts and
 preferences. Inspect the complete register web before a native probe.
