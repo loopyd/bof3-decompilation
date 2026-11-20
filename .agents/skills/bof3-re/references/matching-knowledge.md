@@ -1972,6 +1972,11 @@ later masks can remain distinct without an added conversion instruction. Prove
 that every later consumer observes only the retained bits for every input value;
 require the complete native gate.
 
+A source range proof does not itself supply an RTL known-bit fact. A 32-bit left
+shift by 15 retains only the low 17 input bits. Zero-extending a 16-bit value
+clears a bit that still affects output bit 31, so require compiler range or
+known-bit evidence before predicting removal of that conversion.
+
 A clamp can need a raw word and two narrow quantities: the saved input and the
 selected result. Compute and classify the raw word while preserving the saved
 byte for the keep arm. A separate narrow result can retain the byte copy where
