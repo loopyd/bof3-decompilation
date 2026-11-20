@@ -441,6 +441,14 @@ distinct locals and share a saved register on exclusive arms. A single-definitio
 offset may then receive the scheduling boost before reload. Inspect the actual
 boundary receivers, both schedules and the complete native body.
 
+For a load after a store, capture its complete address before a scope around
+that store when the original computes the index shift first. Combine can fold
+the pointer definition into the later load while leaving the shift before
+`LOOP_BEG`; a raw index capture can fold into the later calculation.
+Inspect both note receivers and schedules, including neighboring stores.
+Use only real later dereferences, preserve memory order, and reject added
+address operations, copies, accesses or NOPs before native comparison.
+
 For a scoped multiply, inspect its output after reload. Reload can insert `mflo`
 before the loop end, which makes a following load depend on that copy in the
 second schedule. The original multiply can precede a load while its result copy
