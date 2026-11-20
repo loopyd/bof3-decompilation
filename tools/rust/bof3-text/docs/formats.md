@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v46`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v47`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -2965,7 +2965,32 @@ the reader forms these addresses in instructions. Preserve alignment and the
 following tables. These captions have source proof only; the settings-field
 observations above do not establish their edited rendering or visual fit.
 
-Retain all 139 allocations and edit only `text`. Re-extract older inline
+Nine sort captions use the same literal codec. Capacities include NUL. Each
+retains its original reference at `0x801ED534 + 4*index`.
+
+| Index | Address | Caption | Capacity |
+| --- | --- | --- | --- |
+| 0 | `0x801ED4C8` | SORT | 5 |
+| 1 | `0x801ED4D0` | ManualSort | 11 |
+| 2 | `0x801ED4DC` | NormalItem | 11 |
+| 3 | `0x801ED4E8` | CombatItem | 11 |
+| 4 | `0x801ED4F4` | Power | 6 |
+| 5 | `0x801ED4FC` | Defence | 8 |
+| 6 | `0x801ED504` | Kind | 5 |
+| 7 | `0x801ED50C` | High AP | 8 |
+| 8 | `0x801ED514` | Low AP | 7 |
+
+Reader `0x801EA1F0` draws the heading and selected rows through `0x8014F800` with
+count `0xFF`. Publisher `0x801D8390` selects groups 5 or 6 for ManualSort, High AP
+and Low AP. The five item-sort captions have a separate fresh menu-to-Sort route
+through initializer `0x801D177C` and publisher `0x801D3884`. Its group 0..3 bound
+requires the task-pool reset when byte `0x80148660` differs from 1. That bound
+does not cover the reset-bypass route or other menu modes. Preserve pointer and
+group tables, alignment, task priority and overlay residency. NormalAbil and
+CombatAbil remain unsupported. Natural activation, edited rendering and visual
+fit remain unverified.
+
+Retain all 148 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -3231,7 +3256,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v46` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v47` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
