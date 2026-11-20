@@ -923,7 +923,8 @@ changing the root, selector or bank. Call `0x801E8414` supplies
 index 0 to `0x80166C48`. The image path uses the shared readers
 `0x8014DC08`, `0x8014E6D0`, `0x8014E7F8` and `0x8014E8FC`.
 
-D variants admit selectors 4 and 5. Selector 4 reaches one image in each root.
+The initial D request admits selectors 4 and 5. Selector 4 reaches one image
+in each root.
 U variants admit below-128 selectors whose pre-add actor byte is at least 2,
 including wrapped selectors 0..3. The following finite selectors have valid
 image and program records. Each list follows admitted image-slot order;
@@ -962,9 +963,10 @@ word 0, and its 32-halfword record. A physical literal qualifies only when
 every decoded alias belongs to that union. Complete independent decoding
 reproduces the native texture index's decoded hash and every queried record.
 Mode-2 prefixes remain opaque. Root-array words are excluded because this
-path restores a saved root rather than reading the BRT array. Programs,
-selection triples, cells, allocation tails and aliases with unresolved uses
-also remain unresolved.
+path restores a saved root rather than reading the BRT array. These image and
+palette profiles alone do not qualify programs, selection triples or cells;
+the sections below describe their separate readers. Allocation tails and aliases
+with unresolved uses remain unresolved.
 
 These are conditional source uses. Natural state and selector production,
 actual requests, invocation, residency, transfer, upload, display,
@@ -1011,6 +1013,47 @@ Program header byte zero, unfetched predicates, allocation tails and opaque
 part bits `0x70` also remain unqualified. These conditional source uses establish
 no natural state or selector production, actual invocation, loading, cadence,
 residency, display, absence of rasterized text or safe editing.
+
+## BRTD post-completion selections
+
+The same exact BRTD profiles also qualify four later presentation offsets.
+Original BATTLE entry 3 function `0x801DEFE4..0x801DF34C` passes request
+byte 8 plus an offset to `0x8014D8D4`. With byte 8 equal to 0 or 1, the
+following finite cases select additional images and programs.
+
+| Offset | Record flags `+0x80` | Global `0x801462E8` bit `0x10` | Record `+0x124` bit 2 | Selectors |
+| ---: | ---: | --- | --- | --- |
+| `0x08` | 0 | Set | Clear | 8, 9 |
+| `0x14` | 0 | Clear | Set | 20, 21 |
+| `0x18` | `0x40` | Set | Clear | 24, 25 |
+| `0x30` | `0x800` | Clear | Clear | 48, 49 |
+
+These cases require current kind byte `+0x79` equal to 0 or 7 before the
+post-load handler, record byte `+0x119 = 0`, record `+0x124` bit
+`0x1000` clear, and globals `0x801462E0`, `0x801462EF` and
+`0x801463CE` zero. The post-load handler saves the current flags before
+restoring the actor, retains the selected flag bits, and clears only bit
+`0x8000` of the global halfword. Completion and the waiting-state handler
+preserve the listed selector predicates. The positional-effect helper returns
+without a request because record flag `0x80` is clear. Palette updates and
+pending-bit clearing do not change these predicates.
+
+State 2 reselects through `0x8014D8D4`, `0x8014D6B8` and `0x8014DC08`.
+The stable state-3 loop then advances that program on the same actor. Only
+valid selection triples, complete image and cell allocations, and finite
+program walks qualify. The original image readers consume the selected image
+headers, directory words and raw or compressed encodings. Independent decoding
+reproduces their native texture records, including final-token overshoot.
+Mode-2 opaque prefixes remain unresolved.
+
+The earlier saved-root, draw, memory, helper and visibility conditions still
+apply. Every physical literal alias must belong to the earlier reviewed fields
+or these selected image, program and cell fields. Earlier classifications and
+evidence remain unchanged. Other presentation offsets, root-array words,
+program header byte zero, unfetched predicates, opaque part bits and allocation
+tails remain unresolved. This conditional source use establishes no natural
+predicate production, invocation, loading, residency, transfer, display,
+absence of rasterized text or safe editing.
 
 ## Compressed BPLU27A image fields
 

@@ -3188,9 +3188,12 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
     Some(ranges)
 }
 
+const BRT_IMAGE_EVIDENCE: &str = "Original US BRTD/U247/457/467/478 entry-7 image and palette-zero fields. Exact archive, slot 513..520, physical LBA, entry geometry, mode, destination, checkword and payload identities. Conditional GAME family-1/2 publisher roots are copied from actor 0 to saved record 0 by original BATTLE entry-15 0x800A7C14, entered through JAL 0x800A69D4. Original 0x801E12DC queues mode 0/selector 12 and publishes the actor pointer; 0x801E5824/0x801E5AF4/0x801E7818 dispatch request 0x801E7948 and post-load 0x801E7BA0. Stable plain hint 7/13/14/15, flag 0x8000, saved active/status bits, finite byte-8 selectors, count one, actor index zero, valid nonaliased work and stats, unskipped successful loading, retained saved root/byte24 and ordinary noninterfering helpers are conditions. The post-load full-record copy restores the root and preserves request byte 8; JALs 0x801E8414/0x801E8438 reach SLUS image selection and palette index zero. Complete checked decompression requires every literal alias in the reviewed image-directory/header/encoding or palette relative-word/32-halfword union. Root-array words, unselected images, program/cell/selection fields, opaque prefixes and tails excluded. No natural state production, actual invocation, residency, upload, display, rasterized-text absence or safe-edit claim.";
+
 struct BrtSpriteProfile {
     family: u8,
     fields: &'static [(usize, usize)],
+    reselected_image_fields: &'static [(usize, usize)],
     evidence: &'static str,
 }
 
@@ -3202,7 +3205,7 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
     {
         return None;
     }
-    let (family, fields): (u8, &'static [(usize, usize)]) = match (
+    let profile = match (
         entry.offset,
         entry.check_word,
         data.len(),
@@ -3214,9 +3217,9 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
             368_652,
             171_442,
             "3ccf09c57d2675a5938c5a5350cc936d238388039dc1b040c126db70ab7880c8",
-        ) => (
-            1,
-            &[
+        ) => BrtSpriteProfile {
+            family: 1,
+            fields: &[
                 (12, 20),
                 (52, 56),
                 (31_436, 39_636),
@@ -3231,16 +3234,42 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (258_140, 260_880),
                 (310_688, 310_756),
             ],
-        ),
+            reselected_image_fields: &[
+                (32, 36),
+                (44, 48),
+                (84, 88),
+                (9_660, 9_668),
+                (9_672, 16_763),
+                (26_552, 26_560),
+                (26_564, 29_288),
+                (95_360, 96_736),
+                (147_496, 147_500),
+                (161_128, 161_136),
+                (161_140, 168_283),
+                (258_084, 258_088),
+                (258_112, 258_116),
+                (258_124, 258_128),
+                (258_136, 258_140),
+                (263_620, 263_628),
+                (263_632, 265_687),
+                (287_192, 287_200),
+                (287_204, 288_829),
+                (296_504, 296_512),
+                (296_516, 298_954),
+                (310_176, 310_184),
+                (310_188, 310_687),
+            ],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTD457, slot 514.
         (
             81_920,
             331_788,
             172_879,
             "457cf5138ff71487486d0f48fa423d587b11a49d7ebaa70fa05ac1c02d3d62b0",
-        ) => (
-            1,
-            &[
+        ) => BrtSpriteProfile {
+            family: 1,
+            fields: &[
                 (12, 20),
                 (28, 32),
                 (52, 5_524),
@@ -3256,16 +3285,45 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (221_276, 224_016),
                 (273_824, 273_892),
             ],
-        ),
+            reselected_image_fields: &[
+                (40, 44),
+                (13_672, 13_680),
+                (13_684, 20_827),
+                (110_632, 110_636),
+                (110_644, 110_648),
+                (110_664, 110_668),
+                (110_672, 110_676),
+                (122_788, 122_796),
+                (122_800, 126_008),
+                (135_580, 135_588),
+                (135_592, 143_404),
+                (172_448, 172_456),
+                (172_460, 172_855),
+                (180_848, 194_512),
+                (221_220, 221_224),
+                (221_248, 221_252),
+                (221_260, 221_264),
+                (221_272, 221_276),
+                (226_756, 226_764),
+                (226_768, 228_823),
+                (250_328, 250_336),
+                (250_340, 251_965),
+                (259_640, 259_648),
+                (259_652, 262_090),
+                (273_312, 273_320),
+                (273_324, 273_823),
+            ],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTD467, slot 515.
         (
             83_968,
             331_788,
             131_534,
             "7478852c3c488a95220d88e748296f04e44f0001cd741b19ba7405592f56e22b",
-        ) => (
-            1,
-            &[
+        ) => BrtSpriteProfile {
+            family: 1,
+            fields: &[
                 (12, 20),
                 (28, 32),
                 (52, 5_524),
@@ -3280,16 +3338,46 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (221_276, 224_016),
                 (273_824, 273_892),
             ],
-        ),
+            reselected_image_fields: &[
+                (40, 44),
+                (13_672, 13_680),
+                (13_684, 20_827),
+                (110_632, 110_636),
+                (110_644, 110_648),
+                (110_652, 110_656),
+                (110_672, 110_676),
+                (121_636, 121_644),
+                (121_648, 122_958),
+                (127_820, 127_828),
+                (127_832, 128_663),
+                (138_232, 138_240),
+                (138_244, 141_146),
+                (156_824, 156_832),
+                (156_836, 157_500),
+                (221_220, 221_224),
+                (221_248, 221_252),
+                (221_260, 221_264),
+                (221_272, 221_276),
+                (226_756, 226_764),
+                (226_768, 228_823),
+                (250_328, 250_336),
+                (250_340, 251_965),
+                (259_640, 259_648),
+                (259_652, 262_090),
+                (273_312, 273_320),
+                (273_324, 273_823),
+            ],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTD478, slot 516.
         (
             81_920,
             331_788,
             169_202,
             "e483530c86f92c5773f595aa0efd2048f9550bab209652826fdf645c8919cde2",
-        ) => (
-            1,
-            &[
+        ) => BrtSpriteProfile {
+            family: 1,
+            fields: &[
                 (12, 20),
                 (28, 32),
                 (52, 5_524),
@@ -3305,16 +3393,46 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (224_020, 225_445),
                 (298_152, 298_220),
             ],
-        ),
+            reselected_image_fields: &[
+                (40, 44),
+                (13_672, 13_680),
+                (13_684, 20_827),
+                (110_628, 110_632),
+                (110_656, 110_660),
+                (110_668, 110_672),
+                (110_680, 110_684),
+                (116_164, 116_172),
+                (116_176, 118_231),
+                (139_736, 139_744),
+                (139_748, 141_373),
+                (149_048, 149_056),
+                (149_060, 151_498),
+                (162_720, 162_728),
+                (162_732, 163_231),
+                (221_220, 221_224),
+                (221_236, 221_240),
+                (221_252, 221_256),
+                (221_264, 221_268),
+                (225_448, 225_456),
+                (225_460, 226_326),
+                (236_032, 236_040),
+                (236_044, 241_324),
+                (276_840, 276_848),
+                (276_852, 282_746),
+                (297_292, 297_300),
+                (297_304, 298_150),
+            ],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTU247, slot 517.
         (
             83_968,
             368_652,
             163_748,
             "baa3b5279e41b88d1c2a6ff0ce8a0186201517232e4d5e25164f179e1ed72d08",
-        ) => (
-            2,
-            &[
+        ) => BrtSpriteProfile {
+            family: 2,
+            fields: &[
                 (12, 20),
                 (28, 56),
                 (60, 23_324),
@@ -3367,16 +3485,18 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (306_452, 306_951),
                 (306_952, 307_020),
             ],
-        ),
+            reselected_image_fields: &[],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTU457, slot 518.
         (
             81_920,
             331_788,
             170_862,
             "45f75644733e12bde6badf26a49398e68f4699466e5ff41a0cea6b2662e952b6",
-        ) => (
-            2,
-            &[
+        ) => BrtSpriteProfile {
+            family: 2,
+            fields: &[
                 (12, 20),
                 (28, 11_004),
                 (11_008, 13_726),
@@ -3434,16 +3554,18 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (269_588, 270_087),
                 (270_088, 270_156),
             ],
-        ),
+            reselected_image_fields: &[],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTU467, slot 519.
         (
             83_968,
             331_788,
             123_828,
             "a99542bf45778bf7f6ccd47334ef7e0808d4cd7b99e46a1133b59dd201a4868d",
-        ) => (
-            2,
-            &[
+        ) => BrtSpriteProfile {
+            family: 2,
+            fields: &[
                 (12, 20),
                 (28, 11_004),
                 (11_008, 13_726),
@@ -3498,16 +3620,18 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (269_588, 270_087),
                 (270_088, 270_156),
             ],
-        ),
+            reselected_image_fields: &[],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         // BRTU478, slot 520.
         (
             81_920,
             331_788,
             166_017,
             "e42ef5798590f2dd63a854eab7f7875be0daa3fe900a75f96315f74bcff9200e",
-        ) => (
-            2,
-            &[
+        ) => BrtSpriteProfile {
+            family: 2,
+            fields: &[
                 (12, 20),
                 (28, 11_004),
                 (11_008, 13_726),
@@ -3555,14 +3679,12 @@ fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProf
                 (309_096, 309_942),
                 (309_944, 310_012),
             ],
-        ),
+            reselected_image_fields: &[],
+            evidence: BRT_IMAGE_EVIDENCE,
+        },
         _ => return None,
     };
-    Some(BrtSpriteProfile {
-        family,
-        fields,
-        evidence: "Original US BRTD/U247/457/467/478 entry-7 image and palette-zero fields. Exact archive, slot 513..520, physical LBA, entry geometry, mode, destination, checkword and payload identities. Conditional GAME family-1/2 publisher roots are copied from actor 0 to saved record 0 by original BATTLE entry-15 0x800A7C14, entered through JAL 0x800A69D4. Original 0x801E12DC queues mode 0/selector 12 and publishes the actor pointer; 0x801E5824/0x801E5AF4/0x801E7818 dispatch request 0x801E7948 and post-load 0x801E7BA0. Stable plain hint 7/13/14/15, flag 0x8000, saved active/status bits, finite byte-8 selectors, count one, actor index zero, valid nonaliased work and stats, unskipped successful loading, retained saved root/byte24 and ordinary noninterfering helpers are conditions. The post-load full-record copy restores the root and preserves request byte 8; JALs 0x801E8414/0x801E8438 reach SLUS image selection and palette index zero. Complete checked decompression requires every literal alias in the reviewed image-directory/header/encoding or palette relative-word/32-halfword union. Root-array words, unselected images, program/cell/selection fields, opaque prefixes and tails excluded. No natural state production, actual invocation, residency, upload, display, rasterized-text absence or safe-edit claim.",
-    })
+    Some(profile)
 }
 
 fn model_decoded_nontext_fields(
@@ -9557,6 +9679,8 @@ const BPL_FLAG_SPRITE_EVIDENCE: &str = "Original US BPL family-flag program and 
 
 const BRT_SPRITE_EVIDENCE: &str = "Original US BRT finite program and sprite-cell numeric fields; exact archive, entry geometry, mode, load, checkword and payload identities under the reviewed BRT slot/LBA and saved-root bindings; original post-load 0x801E7BA0 restores the actor, preserves request byte 8 and selects (byte8+4)&255 through 0x8014D6B8; only bounded below-128 selections, family-D request bytes below 2 or family-U bytes at least 2, and mirror bytes 0/1 qualify; original queued completion 0x801E8558 raises actor+0x40 from zero to 0x10000, then clears actor+0x48 and record+0x124 bit 0x2000; original actor dispatcher 0x801DECE0 and finite table cells carry state 6/4/4/1 through 0x801E13B8 to states 2 then 3; with flags+0x80=0, record+0x119=0, record+0x124 bits 2/0x1000 clear, globals 0x801462E0/0x801462EF/0x801463CE zero and 0x801462E8 bit 0x10 clear, 0x801DEFE4 requests the unchanged selector and the stable state-3 loop reaches 0x801DEDE4 and D978 on the same actor; original D910/DB98/D978 qualify finite fetched pairs, redirect operands and cell-relative halfwords; the reviewed same-actor GAME and SLUS draw route to C4D4/CF9C consumes counted control, signed X/Y and unsigned U/V with active work, work+0x24=1, work+0x28=2, work+0x48=0 and retained mirror 0/1; stable code, bank, roots and work, other actors inactive, ordinary noninterfering helpers, valid visible geometry, readable prefetch slots and bounded nonaliased frames, queues and packets remain conditions; compressed literals require every decoded alias in the previous reviewed image/palette or finite selected-field union and preserve previous evidence; unread BRT root-array words, program header byte zero, unfetched predicates, invalid triples/walks, other programs/cells, tails and opaque control bits 0x70 remain unqualified; no natural state or selector production, actual invocation, loading, cadence, residency, transfer, display, rasterized-text absence or safe-edit claim";
 
+const BRT_RESELECTED_SPRITE_EVIDENCE: &str = "Original US BRTD post-completion reselected image, program and sprite-cell fields; exact archive and entry identities, original slot/LBA supplier and retained saved-root bindings; original 0x801DEFE4 requests byte8 plus 8 with flags80=0 and global62E8 bit10 set, plus 0x14 with flags80=0/global bit10 clear/record124 bit2 set, plus 0x18 with flags80=0x40/global bit10 set, or plus 0x30 with flags80=0x800; D request byte8 is 0/1, record119=0, globals62E0/62EF/63CE zero and record124 bit1000 clear; original 0x801E7BA0 saves and restores the current flags for kind0/7, preserves those flag80 bits and record124 bit2, and clears only global62E8 bit8000; original 0x801E8558 and 0x801E13B8 preserve these selector predicates while reaching actor states2/3; 0x8014D8D4 reselects once through D6B8/D6DC/DC08, then the stable state3 loop calls D978 on the same actor; complete original image readers E6D0/E7F8/E8FC, checked image allocations and independent native record reconciliation qualify selected directory words, image headers and consumed encodings; D910/DB98/D978 qualify finite program walks and the reviewed same-actor GAME/SLUS draw route consumes counted control, signed X/Y and unsigned U/V fields with active work, work24=1/work28=2/work48=0 and mirror0/1; stable code, roots, bank, flags and work, other actors inactive, noninterfering helpers, bounded nonaliased memory and queues, valid visible geometry and readable prefetch remain conditions; every compressed literal alias must belong to the prior reviewed fields or this image/program/cell union, preserving all prior evidence; root-array words, opaque mode2 prefixes and part bits70, program header byte0, unfetched predicates, other selections and tails remain unqualified; no natural predicate production, invocation, loading, cadence, residency, transfer, display, rasterized-text absence or safe-edit claim";
+
 fn bpl_selected_sprite_profile(entry: Entry, data: &[u8]) -> Option<(u8, &'static str)> {
     if entry.transfer_mode != 1 || entry.ram_ptr != 0x8003_b800 || entry.size as usize != data.len()
     {
@@ -10047,16 +10171,16 @@ fn compression_metadata_ranges(
     // Each bit identifies a reviewed field union. Intersect all decoded aliases
     // before qualifying a physical literal, preserving earlier evidence first.
     for &(start, end) in literal_fields {
-        typed.get_mut(start..end)?.fill(63);
+        typed.get_mut(start..end)?.fill(127);
     }
     for &(start, end) in additional_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 62;
+            *role |= 126;
         }
     }
     for &(start, end) in program_fields {
         for role in typed.get_mut(start..end)? {
-            *role |= 60;
+            *role |= 124;
         }
     }
     let mut origins = Vec::new();
@@ -10131,19 +10255,19 @@ fn compression_metadata_ranges(
     }
     for (start, end) in model_palette_zero_fields(&decoded_bytes, &typed) {
         for role in typed.get_mut(start..end)? {
-            *role |= 56;
+            *role |= 120;
         }
     }
     if let Some((selector, _)) = selected_profile {
         for (start, end) in bpl_selected_sprite_fields(&decoded_bytes, selector)? {
             for role in typed.get_mut(start..end)? {
-                *role |= 48;
+                *role |= 112;
             }
         }
         if let Some(fields) = bpl_flag_sprite_fields(&decoded_bytes, selector & 2) {
             for (start, end) in fields {
                 for role in typed.get_mut(start..end)? {
-                    *role |= 32;
+                    *role |= 96;
                 }
             }
         }
@@ -10154,7 +10278,21 @@ fn compression_metadata_ranges(
         }) {
             for (start, end) in fields {
                 for role in typed.get_mut(start..end)? {
-                    *role |= 32;
+                    *role |= 96;
+                }
+            }
+        }
+        if profile.family == 1 {
+            let selected = sprite_selector_fields(&decoded_bytes, |selector| {
+                matches!(selector, 8 | 9 | 20 | 21 | 24 | 25 | 48 | 49)
+            })?;
+            for &(start, end) in profile
+                .reselected_image_fields
+                .iter()
+                .chain(selected.iter())
+            {
+                for role in typed.get_mut(start..end)? {
+                    *role |= 64;
                 }
             }
         }
@@ -10165,7 +10303,7 @@ fn compression_metadata_ranges(
     let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
     for (&origin, &known) in origins.iter().zip(&typed) {
         let role = literal_roles.get_mut(origin)?;
-        *role = Some(role.unwrap_or(63) & known);
+        *role = Some(role.unwrap_or(127) & known);
     }
     let mut at = 0;
     while at < literal_roles.len() {
@@ -10184,8 +10322,10 @@ fn compression_metadata_ranges(
             "original US source-bound compressed sprite palette-zero relative words and 32-halfword record; existing reviewed image-root and source bindings, GAME 0x801C1254/0x801C1308/0x801C13DC and SLUS 0x80166C48..0x80166CAC; complete checked decode and every decoded alias confined to the reviewed image/program/palette field union; previous records retain their evidence; no actual loading, active CLUT, transfer, display, rasterized-text absence or safe-edit claim"
         } else if role & 16 != 0 {
             selected_profile?.1
-        } else {
+        } else if role & 32 != 0 {
             expanded_sprite_evidence
+        } else {
+            BRT_RESELECTED_SPRITE_EVIDENCE
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {
