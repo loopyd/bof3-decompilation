@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "71b6295a98cb78d8bf7bc7020219367465808fed",
-  "published_at": "2026-11-20T01:17:31.956195+00:00",
+  "revision": "e9ce810971a71c7a013bbe60b061e5369b011dcf",
+  "published_at": "2026-11-20T01:34:01.727749+00:00",
   "counts": {
     "completed": 6361,
     "partial": 358,
@@ -73158,7 +73158,7 @@
               {
                 "address": 2149309784,
                 "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BDD58_game00.c#L18"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/func_801BDD58_game00.c#L17"
               }
             ]
           },
