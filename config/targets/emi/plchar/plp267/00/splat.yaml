@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801CE514
   - - 528
-    - asm
-    - func_801CE610
+    - c
+    - dispatchWorkByte2Table0994PlcharPlp26700_801CE610
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0994PlcharPlp26700_801CE610.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D0994, which is entry 3 of the thirty-word code-pointer run placed by this target at 0x801D0988.'
   - - 596
     - asm
     - func_801CE654
