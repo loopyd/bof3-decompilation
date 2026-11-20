@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v33`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v34`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3138,6 +3138,17 @@ three clock bytes and calls formatter `0x8017E3F4` at `0x801D597C`, then copies
 the result to a stack buffer. A rendered consumer is unverified, so `renderers`
 remains empty. The filename and Shift-JIS header formats are unsupported.
 
+SHOP's ten Shift-JIS digit strings at `0x801E540C + 4*i`, for `i` from 0 to 9,
+use `shift-jis-digit`. Each three-byte allocation holds one full-width digit
+`０` through `９`, encoded as `82 4F` through `82 58`, then NUL. The fourth
+alignment byte stays protected. Pointer words at `0x801E5434 + 4*i` retain their
+original addresses. The save-title formatter at `0x801D7080` selects seven
+strings and calls `sprintf` at `0x801D71F0`. It substitutes the slot, hour,
+minute and level digits into the Shift-JIS title. Replacements must retain one
+full-width digit and cannot change the formatted byte count. Keep `renderers: []`.
+Edited title rendering and the scratch buffer's complete extent remain unverified.
+The title format at `0x801D0C98` stays protected.
+
 SHOP's `%d` at `0x801D0C1C` uses `ascii-u16-decimal-format` in a three-byte
 allocation including NUL. Its encoded limit permits only `%d`; the codec's
 conservative output bound is five bytes. Consumer `0x801D3B98` multiplies an
@@ -3158,7 +3169,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v33` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v34` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

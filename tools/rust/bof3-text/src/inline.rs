@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v33";
+pub const SCHEMA: &str = "bof3.inline-text/v34";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -19,6 +19,7 @@ pub(crate) enum Codec {
     GameKeyboardCharacter,
     GameCountedLiteral,
     GameGlyphs,
+    ShiftJisDigit,
     AsciiLiteral,
     AsciiFormatLiteral,
     AsciiDigitGlyphLiteral,
@@ -42,6 +43,18 @@ pub(crate) enum Codec {
 
 impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
+        if self == Self::ShiftJisDigit {
+            let mut characters = text.chars();
+            let digit = match (characters.next(), characters.next()) {
+                (Some(digit @ '０'..='９'), None) if capacity == 2 => {
+                    (digit as u32 - '０' as u32) as u8
+                }
+                _ => {
+                    return invalid("Shift-JIS digit requires exactly one full-width digit ０..９");
+                }
+            };
+            return Ok(vec![0x82, 0x4f + digit]);
+        }
         if self == Self::GameKeyboardCharacter {
             let bytes = encode_name(text, capacity)?;
             if capacity != 1 || bytes.len() != 1 || !keyboard_character(bytes[0]) {
@@ -137,6 +150,18 @@ impl Codec {
     }
 
     fn decode(self, bytes: &[u8], file_offset: usize) -> Result<String> {
+        if self == Self::ShiftJisDigit {
+            if bytes.len() != 3
+                || bytes[0] != 0x82
+                || !(0x4f..=0x58).contains(&bytes[1])
+                || bytes[2] != 0
+            {
+                return invalid(format!("invalid Shift-JIS digit at {file_offset:#x}"));
+            }
+            return Ok(char::from_u32('０' as u32 + u32::from(bytes[1] - 0x4f))
+                .unwrap()
+                .to_string());
+        }
         if self == Self::GameKeyboardCharacter {
             let text = decode_name(bytes, file_offset)?;
             self.encode(&text, bytes.len())?;
@@ -180,6 +205,7 @@ impl Codec {
             Self::GameKeyboardCharacter => "game-keyboard-character",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
+            Self::ShiftJisDigit => "shift-jis-digit",
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
@@ -372,6 +398,16 @@ struct Allocation {
 }
 
 impl Allocation {
+    const fn shift_jis_digit(address: u32, reference: u32) -> Self {
+        Self {
+            address,
+            capacity: 3,
+            reference: Some(reference),
+            renderers: &[],
+            codec: Codec::ShiftJisDigit,
+        }
+    }
+
     const fn keyboard_character(address: u32) -> Self {
         Self {
             address,
@@ -1114,12 +1150,12 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "1e06300f0ac335b72bb07b039937cfa8b7ec143b0f0ea74707ef50630eb75758",
+        sha256: "37a051bea1fd61fa1c4bf0d5232af413a18bd92bf7a677894f45368a2bc23d44",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
             0x801da47c, 0x801dc6fc, 0x801dd578, 0x801ddcb0, 0x801d826c, 0x801d86d4, 0x801d8c58,
-            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98,
+            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98, 0x801d71f0,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -1231,6 +1267,16 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0d0c, 8, Codec::AsciiDashGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[]),
+            Allocation::shift_jis_digit(0x801e540c, 0x801e5434),
+            Allocation::shift_jis_digit(0x801e5410, 0x801e5438),
+            Allocation::shift_jis_digit(0x801e5414, 0x801e543c),
+            Allocation::shift_jis_digit(0x801e5418, 0x801e5440),
+            Allocation::shift_jis_digit(0x801e541c, 0x801e5444),
+            Allocation::shift_jis_digit(0x801e5420, 0x801e5448),
+            Allocation::shift_jis_digit(0x801e5424, 0x801e544c),
+            Allocation::shift_jis_digit(0x801e5428, 0x801e5450),
+            Allocation::shift_jis_digit(0x801e542c, 0x801e5454),
+            Allocation::shift_jis_digit(0x801e5430, 0x801e5458),
         ],
     },
     Layout {

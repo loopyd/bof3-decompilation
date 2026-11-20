@@ -121,7 +121,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v33`. Select that entry without class or latch selectors.
+`bof3.inline-text/v34`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 All fifteen edited Config fields render in a controlled fixture and through
 ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
@@ -177,7 +177,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v33`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v34`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -269,6 +269,11 @@ SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
 byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
 Preserve its `renderers: []`; only formatting and a stack-buffer copy are traced.
 The filename and Shift-JIS header formats remain unsupported.
+The ten Shift-JIS save-title digit strings accept exactly one full-width digit
+`０` through `９`. Each three-byte allocation reserves NUL; its fourth alignment
+byte and pointer word stay unchanged. Keep `renderers: []`. This supports the
+source strings only. Edited title rendering and the full title scratch-buffer
+extent remain unverified.
 SHOP's `%d` at `0x801D0C1C` retains exactly `%d` within two encoded bytes and
 uses the five-byte unsigned 16-bit output bound. Preserve `renderers: []`;
 formatting and the eight-byte text-slot copy are qualified, while the active
