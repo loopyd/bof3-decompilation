@@ -27,8 +27,10 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchStateByte1Table1aacBossBoss01716_800C1804
+    - '@source: src/bof3/boss/dispatchStateByte1Table1aacBossBoss01716_800C1804.c'
+    - '@behavior: Overlay state dispatch: reads work-record byte 1 through the scratchpad pointer cell 0x1F800044 and calls the handler at that index of the overlay handler run based at 0x800C1AAC with no arguments.'
   - - 72
     - asm
     - func_800C1848

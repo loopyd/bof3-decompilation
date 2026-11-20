@@ -1,5 +1,5 @@
 clearOwnerRecordHead = 0x800AC934;
-func_800C1804 = 0x800C1804;
+dispatchStateByte1Table1adcBossBoss03016_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848 = 0x800C1848;
 dispatchIndexedHandlerBossBoss03016_800C18A0 = 0x800C18A0;
 noopHandlerBossBoss03016_800C18D8 = 0x800C18D8;

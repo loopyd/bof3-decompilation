@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894.c'
     - '@behavior: Entry setup of this overlay work state machine, entry 0 of the 0x800C319C state run. Publishes the data row pointer 0x800C3174 into work record +0xEC, the indexed dispatcher 0x800C1A68 into +0xE4 and the in-row pointer 0x800C318C into +0xE8, stores 2 into the work record state byte at +1 and calls the shared helper 0x8014D978; when the battle mode byte 0x801462EA holds 0x1A it also applies the class template of the class record keyed 0x59 to battler 0, stores 1 at work byte +0x7F and 0x1E at +0xF0, and copies the shared halfword run 0x80144E00, 0x80144E04 and 0x80144E06 into the record +0x94 and the +0xA0/+0xC0 runs.'
   - - 380
-    - asm
-    - func_800C197C
+    - c
+    - dispatchStateByte2Table31ccBossBoss02513_800C197C
+    - '@source: src/bof3/boss/dispatchStateByte2Table31ccBossBoss02513_800C197C.c'
+    - '@behavior: Second-level overlay dispatch on the work record byte at offset 2. Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the handler run from its word 12 at 0x800C31CC with no arguments; the original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the indirect call, and the slots after the index byte and after the table load stay nops. The only in-image reference is the pointer word at 0x800C31B4, this address as word 6 of the same 0x800C319C run, and the payload holds no jal naming it, so the overlay stepper that walks the run is its caller. Same body as the exact sibling dispatcher at 0x800C1EC8 of this overlay; their 0x44-byte spans are equal apart from the table word of the scaled load at 0x800C19A0.'
   - - 448
     - asm
     - func_800C19C0

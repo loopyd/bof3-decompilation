@@ -1,6 +1,6 @@
 func_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1860 = 0x800C1860;
-func_800C18B8 = 0x800C18B8;
+dispatchStateByte2Table1d08BossBoss02116_800C18B8 = 0x800C18B8;
 func_800C18FC = 0x800C18FC;
 dispatchIndexedHandlerBossBoss02116_800C198C = 0x800C198C;
 clearBossStateByteBossBoss02116_800C19C4 = 0x800C19C4;

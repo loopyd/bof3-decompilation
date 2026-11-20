@@ -27,8 +27,10 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchStateByte1Table1adcBossBoss03016_800C1804
+    - '@source: src/bof3/boss/dispatchStateByte1Table1adcBossBoss03016_800C1804.c'
+    - '@behavior: First code span of the overlay and the state dispatch on work-record byte 1: it loads the work-record pointer from the scratchpad cell 0x1F800044 before creating its 0x18-byte frame, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code-pointer run based at 0x800C1ADC, whose entry 0 is the installer 0x800C1848 and whose entries 1 through 11 are shared main-executable handlers. The original does not bound the index before the scaled load, writes no state and leaves the handler return register untouched; no word and no jal of this payload names 0x800C1804, so the overlay entry is its caller.'
   - - 72
     - c
     - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03016_800C1848

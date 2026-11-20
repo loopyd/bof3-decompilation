@@ -38,8 +38,10 @@ segments:
     - dispatchStateByte2Table2690BossBoss00816_800C18A0
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 228
-    - asm
-    - func_800C18E4
+    - c
+    - dispatchStateByte3Table26a8BossBoss00816_800C18E4
+    - '@source: src/bof3/boss/dispatchStateByte3Table26a8BossBoss00816_800C18E4.c'
+    - '@behavior: Overlay step dispatcher and the handler this overlay work state machine reaches at index 4 of the fifteen-word byte-2 run based at 0x800C2690: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 3, scales it by four and calls the matching entry of this payload handler run based at 0x800C26A8 with no arguments, discarding any result, and does not bound the index before the scaled table load.'
   - - 296
     - asm
     - func_800C1928

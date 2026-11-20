@@ -39,8 +39,10 @@ segments:
     - asm
     - func_800C18A4
   - - 252
-    - asm
-    - func_800C18FC
+    - c
+    - dispatchStateByte2Table2770BossBoss00413_800C18FC
+    - '@source: src/bof3/boss/dispatchStateByte2Table2770BossBoss00413_800C18FC.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: indexes this overlay''s handler run from the interior word 0x800C2770 with byte 2 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the selected entry, so the body is a bare indirect call into that run.'
   - - 320
     - asm
     - func_800C1940

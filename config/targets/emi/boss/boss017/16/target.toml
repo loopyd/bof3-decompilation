@@ -7,7 +7,9 @@ binary = "out/binaries/emi/boss/boss017/16.bin"
 splat = "config/targets/emi/boss/boss017/16/splat.yaml"
 load_address = 0x800C1800
 
-sources = []
+sources = [
+    "src/bof3/boss/dispatchStateByte1Table1aacBossBoss01716_800C1804.c",
+]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01716_800C1964.c",
     "src/bof3/boss/invokeZeroArgBossBoss01716_800C1A50.c",

@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 D_800C1804 = 0x800C1804;
 publishWorkStepHandlerAndDataThenSetStateTo2AndSeedMode1aBattlerAndSharedFieldsBossBoss02513_800C1894 = 0x800C1894;
-func_800C197C = 0x800C197C;
+dispatchStateByte2Table31ccBossBoss02513_800C197C = 0x800C197C;
 func_800C19C0 = 0x800C19C0;
 dispatchIndexedHandlerBossBoss02513_800C1A68 = 0x800C1A68;
 func_800C1AA0 = 0x800C1AA0;

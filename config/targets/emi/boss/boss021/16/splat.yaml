@@ -33,8 +33,10 @@ segments:
     - c
     - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1860
   - - 184
-    - asm
-    - func_800C18B8
+    - c
+    - dispatchStateByte2Table1d08BossBoss02116_800C18B8
+    - '@source: src/bof3/boss/dispatchStateByte2Table1d08BossBoss02116_800C18B8.c'
+    - '@behavior: Second-level overlay dispatch on the work record byte at offset 2: reads the record pointer from the scratchpad cell 0x1F800044, scales that byte by four and calls the handler selected from word 12, 0x800C1D08, of the handler run that starts at 0x800C1CD8, whose entries there are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C18FC and 0x801E4928.'
   - - 252
     - asm
     - func_800C18FC
