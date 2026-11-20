@@ -10523,7 +10523,9 @@ pub fn payload_nontext_ranges(
     if let Some(copies) = stored_sprite_record_copy_ranges(entry, data) {
         ranges.get_or_insert_with(Vec::new).extend(copies);
     }
-    if let Some(fields) = drg_sprite_ranges(entry, data) {
+    if let Some(fields) =
+        raw_sprite_program_ranges(entry, data, ranges.as_deref().unwrap_or_default())
+    {
         ranges.get_or_insert_with(Vec::new).extend(fields);
     }
     ranges
@@ -10532,7 +10534,14 @@ pub fn payload_nontext_ranges(
 const US_DRG_SPRITE_FIELD_EVIDENCE: &str = "Original US DRG selected program and cell fields. Exact original DRG01..08 raw entry-3 profiles retain their documented source/root bindings and finite selectors. Original selection, initialization, forward and draw readers preserve the same actor, program and relative cell table. Complete native directory, allocation and finite forward/direct-fetch checks qualify only consumed numeric fields and counted five-byte cell records. Retained mode 2 and mirror 0/1 use the reviewed renderer paths. Successful unskipped loading, stable original bytes and actor/root/program, no overriding request, repeated same-actor calls, bounded geometry/lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unfetched predicates, other programs/cells and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.";
 const US_DRG_MIRROR_EVIDENCE: &str = "Original US DRG selected mirror bytes. Exact original DRG00..08 raw entry-3 source/root profiles and finite selectors bind selection byte 2 to the load at 0x8014DD00, same-actor store at 0x8014DD08 and renderer read/dispatch at 0x8014C720..0x8014C730. Native selected values 0/1 select the reviewed counted-cell paths with retained mode 2. Successful loading, unchanged source, retained same-actor root/program/control, bounded draw state/storage and ordinary noninterfering helpers remain conditions. Other selectors and control values retain prior status. No natural selection, scheduling, invocation, live CLUT, display, rasterized-text absence or safe-edit claim.";
 
-fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+const US_RAW_SPRITE_FIELD_EVIDENCE: &str = "Original US CRYU, PAPY, RYU and RT selected program and cell fields. Exact original raw entry-3 profiles retain documented source/root bindings and finite selectors. Original initialization, forward/direct-fetch and same-actor draw readers bind consumed numeric fields and counted five-byte cell records. Complete native directory, allocation and finite-walk checks preserve opaque headers, unfetched predicates, other records and tails. Retained palette mode 2 and mirror 0/1 use reviewed renderer paths. RT requires an active actor and changed selector, no matching effect pointer, actor halfword +0x80 bit 0x80 clear and bounded nonaliased palette staging. Successful unskipped loading, stable source/code/root/program/control, no overriding request, repeated same-actor calls, visible bounded geometry, lists/packets and ordinary noninterfering helpers remain conditions. No natural producer, schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.";
+const US_RAW_SPRITE_MIRROR_EVIDENCE: &str = "Original US CRYU, PAPY, RYU and RT selected mirror bytes. Exact original raw entry-3 source/root profiles and finite selectors bind selection byte 2 to load 0x8014DD00, same-actor store 0x8014DD08 and renderer read/dispatch 0x8014C720..0x8014C730. Native values 0/1 select reviewed counted-cell paths with retained palette mode 2. The documented source, initialization, post-reader helper and bounded same-actor draw conditions remain required. Other selectors/control values retain prior status. No natural selection, scheduling, invocation, live CLUT, display, rasterized-text absence or safe-edit claim.";
+
+fn raw_sprite_program_ranges(
+    entry: Entry,
+    data: &[u8],
+    previous: &[NontextRange],
+) -> Option<Vec<NontextRange>> {
     if entry.index != 3
         || entry.transfer_mode != 0
         || entry.check_word != 0x10
@@ -10540,7 +10549,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
     {
         return None;
     }
-    let (selectors, evidence): (&[u8], &str) = match (
+    let (selectors, evidence, mirror_evidence): (&[u8], &str, &str) = match (
         entry.offset,
         entry.ram_ptr,
         data.len(),
@@ -10554,6 +10563,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[6, 4],
             "Original US DRG00 selected program and cell fields. Five exact raw entry-3 originals bind selectors 6 and 4 to programs at payload offsets 31254 and 21080. The original retained-root selector, initialization and forward readers preserve the same actor and cell-relative table; each finite eight-pair walk selects eight bounded cell records. The original GAME actor-array and draw route reaches the counted five-byte reader with publisher-retained mode 2. Stable original bytes, successful unskipped loading, retained actor/root/program, no overriding request, repeated same-actor forward calls, bounded visible geometry, lists/packets and ordinary noninterfering helper returns remain conditions. Header byte zero, unselected programs/cells, mirror bytes and tails retain prior status. No natural producer or schedule, observed invocation, cadence, live CLUT, transfer, display, rasterized-text absence or safe-edit claim.",
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             40_960,
@@ -10563,6 +10573,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 12, 14, 44, 46, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             20_480,
@@ -10572,6 +10583,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 44, 12, 46, 14, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             40_960,
@@ -10581,6 +10593,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 12, 14, 44, 46, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             26_624,
@@ -10590,6 +10603,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 12, 14, 44, 46, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             38_912,
@@ -10599,13 +10613,18 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 12, 14, 44, 46, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             34_816,
             0x8003_b80c,
             233_124,
             "ccc2b49c546625cb6fbdf3d51996d3eba0ec25bb2b3c71fdf8e5b753a9d872a6",
-        ) => (&[4, 16, 6, 44, 46, 12, 14], US_DRG_SPRITE_FIELD_EVIDENCE),
+        ) => (
+            &[4, 16, 6, 44, 46, 12, 14],
+            US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
+        ),
         (
             38_912,
             0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
@@ -10614,6 +10633,7 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 6, 12, 14, 44, 46, 16, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
         ),
         (
             20_480,
@@ -10623,6 +10643,127 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
         ) => (
             &[4, 12, 44, 16, 6, 14, 46, 18],
             US_DRG_SPRITE_FIELD_EVIDENCE,
+            US_DRG_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8003_b80c,
+            110_592,
+            "0cb3bd788cbdf439572efa1e6f33c544d0ce1ee9cef6c0aa3ca55d605d9c7db9",
+        ) => (
+            &[16, 40, 0, 4, 8, 36, 20, 12, 32, 24, 56, 6, 44, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            43_008,
+            0x8003_b80c,
+            110_592,
+            "8e109d9442d43c46aab8f73e6dbaddbe3e9dc4daddee891a960ea9dd94bbdbcd",
+        ) => (
+            &[16, 40, 0, 4, 8, 36, 20, 12, 32, 24, 56, 6, 44, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8003_b80c,
+            110_592,
+            "440f35b120293916a9d19a7c60a6589dfe47800b9e8dbab95de24d25a4d4f58e",
+        ) => (
+            &[6, 8, 12, 20, 16, 24, 32, 36, 4, 40, 44, 56, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            43_008,
+            0x8003_b80c,
+            110_592,
+            "bcf1849fd598d529fd441f4d09561ccc7c143c03babbf3142d24d051ce8b81fe",
+        ) => (
+            &[6, 8, 12, 20, 16, 24, 32, 36, 4, 40, 44, 56, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            32_768,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            11_796,
+            "feea0916b287895af705b3598c55581a2fdaa3657ce7e0b3efff68a47f1c0338",
+        ) => (
+            &[4, 16, 28, 6],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            32_768,
+            0x8003_b80c | 0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            17_400,
+            "f9d984db05b512d943860a31776800a6678c772bf322f265f4339f0f3704b864",
+        ) => (
+            &[4, 6, 12, 16, 28],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            26_624,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "436640506a37ffea2605d20e1b1f63983d8cd019399279ed3f62e5fb17be9e18",
+        ) => (
+            &[0],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            26_624,
+            0x8003_b80c | 0x8005_f80c,
+            110_592,
+            "834705a61dc821f942d47bc68d3a9a08c5c924f1266527aec14173ac9aa532e1",
+        ) => (
+            &[4, 6, 16, 48, 56, 58],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            110_592,
+            "c5b66a9d3aa3aa53f0a01ffdd83227ff46656c424318444f26e5a9080920bcf5",
+        ) => (
+            &[4, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            61_260,
+            "79ab35585a155a4d67210af5b64140f4dfb971e4cd8f97517ac75c51b758b048",
+        ) => (
+            &[4, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            110_592,
+            "fdfe8bd3a62f759adba71e370483e2b6d3c70a0419ed152c3518ad10fd68b8c1",
+        ) => (
+            &[4, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 60, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
+        ),
+        (
+            40_960,
+            0x8005_680c | 0x8005_f80c | 0x8007_180c | 0x8007_a80c,
+            57_480,
+            "10dafbb38ae2aa7d798a2b6d02f35b88d89aa833f61015415ad8185a1c0f2f4d",
+        ) => (
+            &[4, 6, 8, 40, 0, 12, 44, 36, 16, 24, 28, 32, 20, 56, 48],
+            US_RAW_SPRITE_FIELD_EVIDENCE,
+            US_RAW_SPRITE_MIRROR_EVIDENCE,
         ),
         _ => return None,
     };
@@ -10648,9 +10789,36 @@ fn drg_sprite_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
     ranges.extend(mirrors.into_iter().map(|offset| NontextRange {
         offset,
         length: 1,
-        evidence: US_DRG_MIRROR_EVIDENCE,
+        evidence: mirror_evidence,
     }));
-    Some(ranges)
+    let mut covered = vec![false; data.len()];
+    for range in previous {
+        covered
+            .get_mut(range.offset..range.offset.checked_add(range.length)?)?
+            .fill(true);
+    }
+    let mut additions = Vec::new();
+    for range in ranges {
+        let end = range.offset.checked_add(range.length)?;
+        let known = covered.get(range.offset..end)?;
+        let mut at = 0;
+        while at < known.len() {
+            if known[at] {
+                at += 1;
+                continue;
+            }
+            let start = at;
+            while at < known.len() && !known[at] {
+                at += 1;
+            }
+            additions.push(NontextRange {
+                offset: range.offset + start,
+                length: at - start,
+                evidence: range.evidence,
+            });
+        }
+    }
+    Some(additions)
 }
 
 fn stored_image_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {

@@ -453,6 +453,44 @@ source/root/selector and retained same-actor draw conditions apply. This rule
 adds no meaning for other selectors or control values and changes no shared
 BPL field mask.
 
+## CRYU, PAPY, RYU and RT selected fields
+
+The same finite program and counted-cell readers qualify original
+`CRYUD/U00..01`, `PAPYD/U00..04`, `RYUD/U00..03`, `RYUD/U10..13` and
+`RTD/U00..01` banks. Each requires its original archive, exact raw entry-3
+geometry, destination, checkword `0x10`, complete payload hash and the finite
+selectors in [standalone sprite coverage](#standalone-sprite-coverage),
+[MAGIC131 raw replacements](#magic131-raw-replacements) or
+[RT raw replacements](#rei-and-rt-raw-replacements). The retained root,
+initialization, forward/direct-fetch and same-actor draw conditions above apply.
+MAGIC131's overwrite masks and helper-result conditions remain required.
+
+RT also requires an active actor, a changed selector through `0x8014D8D4`,
+and no effect-table pointer equal to that actor when `0x80196718` scans its
+32 slots. Actor halfword `+0x80` bit `0x80` must be clear so `0x801DDAB4`
+skips effect allocation. The complete `0x80196B9C..0x80196C8C` palette helper
+writes bounded staging storage and `0x80145988` without changing the selected
+actor/program or scratchpad pointer. Mode-two table entries and nonaliased
+palette storage must remain valid. MAGIC064 clears actor byte-zero bit `0x40`
+while preserving its active bit. Retained `+0x48 = 0`, root/program/table,
+mirror zero or one and ordinary noninterfering palette/sound helpers remain
+conditions for continued same-actor reads and drawing.
+
+Native directory, allocation and finite-fetch checks qualify only consumed
+program fields, selected cell words and counted five-byte records. Separate
+mirror records qualify each selected third byte through the original
+`0x8014DD00/0x8014DD08` load/store and `0x8014C720..0x8014C730` dispatch.
+Only bytes outside earlier qualified fields are added, preserving their evidence.
+Header byte zero, unfetched predicates, other records and allocation tails retain
+their prior status. These rules
+establish no natural production, scheduling, invocation, cadence, live CLUTs,
+transfer, display or safe editing.
+
+REI remains outside this extension. Its mandatory post-reader rebuild at
+`0x801E0B64` calls `0x80164A44` at `0x801E0B9C`; program/control retention
+across that call is unresolved. The rebuild's own stores do not establish
+its callees' effects.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
