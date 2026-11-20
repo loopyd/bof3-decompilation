@@ -446,7 +446,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 } else if entry.ram_ptr == 0x8009_6800 {
                                     "payload bytes outside reviewed instruction bodies"
                                 } else {
-                                    "sprite-bank bytes outside reviewed graphics storage"
+                                    "payload bytes outside reviewed storage"
                                 };
                                 let gap = if !has_text {
                                     nontext_gap

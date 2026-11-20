@@ -11343,6 +11343,98 @@ fn stored_sprite_record_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<Non
 }
 
 fn reviewed_payload_nontext_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    if entry.index == 0
+        && entry.offset == 2_048
+        && entry.transfer_mode == 0
+        && entry.ram_ptr == 0x801f_6c00
+        && usize::try_from(entry.size).ok() == Some(data.len())
+    {
+        let instructions: &[(usize, usize)] =
+            match (entry.check_word, data.len(), sha256_hex(data).as_str()) {
+                (
+                    0x107,
+                    30_588,
+                    "e58e751dc92ba3cc9bbc788bb7d93ae1f4b036968c4bc95e4bf29945dd97a8aa",
+                ) => &[
+                    (1_436, 96),
+                    (3_680, 60),
+                    (4_144, 8),
+                    (5_224, 652),
+                    (6_456, 520),
+                    (8_312, 4_652),
+                    (16_468, 1_816),
+                    (19_140, 420),
+                    (20_588, 1_864),
+                    (22_808, 368),
+                    (23_348, 1_192),
+                    (24_852, 1_704),
+                    (26_636, 884),
+                    (30_072, 244),
+                ],
+                (
+                    0x10b,
+                    30_964,
+                    "a3f118a0a9a17aefb50b4cd588c9a152a943591462fc9424ddfe9f5c9e9e705b",
+                ) => &[
+                    (1_688, 6_328),
+                    (8_984, 3_804),
+                    (14_288, 6_328),
+                    (20_872, 4_016),
+                    (25_040, 1_516),
+                    (27_464, 1_588),
+                    (29_228, 1_424),
+                ],
+                (
+                    0x10e,
+                    31_064,
+                    "3292290e08fdfeee3c46383fc4bfa1ae0666dc5d5724335c1395fb1ab3a5614f",
+                ) => &[(1_884, 28_712)],
+                (
+                    0x110,
+                    17_304,
+                    "c4463f21512ac74adf7002b7a5654450c2049513bef7c817473a9d5108532239",
+                ) => &[(1_204, 332), (1_672, 15_416)],
+                _ => &[],
+            };
+        if !instructions.is_empty() {
+            let jump_tables: &[(usize, usize)] = match entry.check_word {
+                0x10b => &[(4, 28), (36, 20)],
+                0x110 => &[(52, 44)],
+                _ => &[],
+            };
+            return Some(
+                instructions
+                    .iter()
+                    .map(|&(offset, length)| NontextRange {
+                        offset,
+                        length,
+                        evidence: concat!(
+                            "Original US SCENA02/SCENA06/SCENA09/SCENA11 entry-0 instruction bodies. ",
+                            "Complete freshly compiled and relocated ELF function symbols match ",
+                            "the original raw payload; compiler assembly contains no embedded data. ",
+                            "Exact original archive and descriptor/payload identities gate classification. ",
+                            "Initialized data, gaps and retained functions are excluded. Stored ",
+                            "instruction representation only; no observed execution, callee semantics, ",
+                            "resource safety, rendering or safe-edit claim."
+                        ),
+                    })
+                    .chain(jump_tables.iter().map(|&(offset, length)| NontextRange {
+                        offset,
+                        length,
+                        evidence: concat!(
+                            "Original US SCENA06/SCENA11 entry-0 guarded absolute jump-table words. ",
+                            "Reviewed readonly sections match complete native linked bytes. Original ",
+                            "dispatches have leading index-load-delay NOPs, unsigned bounds, settled ",
+                            "table loads and targets within their complete owning functions. Exact ",
+                            "original archive and descriptor/payload identities gate classification. ",
+                            "Stored numeric representation only; other tables and gaps, general caller ",
+                            "bounds, observed execution, semantic acceptance and safe editing are excluded."
+                        ),
+                    }))
+                    .collect(),
+            );
+        }
+    }
     if entry.index == 4
         && entry.offset == 180_224
         && entry.transfer_mode == 0

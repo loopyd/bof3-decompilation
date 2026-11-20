@@ -2017,6 +2017,56 @@ selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
 
+## Scenario instruction and dispatch-table coverage
+
+Coverage recognizes complete instruction bodies in entry 0 of original US
+`BIN/SCENARIO/SCENA02.EMI`, `SCENA06.EMI`, `SCENA09.EMI` and `SCENA11.EMI`.
+Each entry uses archive offset 2048, raw mode 0 and load address `0x801F6C00`.
+The complete archive must match its original US disc identity.
+
+| Archive | Checkword | Payload bytes | Payload SHA-256 | Complete functions |
+| --- | --- | ---: | --- | ---: |
+| SCENA02 | `0x107` | 30588 | `e58e751dc92ba3cc9bbc788bb7d93ae1f4b036968c4bc95e4bf29945dd97a8aa` | 69 |
+| SCENA06 | `0x10B` | 30964 | `a3f118a0a9a17aefb50b4cd588c9a152a943591462fc9424ddfe9f5c9e9e705b` | 63 |
+| SCENA09 | `0x10E` | 31064 | `3292290e08fdfeee3c46383fc4bfa1ae0666dc5d5724335c1395fb1ab3a5614f` | 87 |
+| SCENA11 | `0x110` | 17304 | `c4463f21512ac74adf7002b7a5654450c2049513bef7c817473a9d5108532239` | 51 |
+
+The following payload intervals contain instructions. Adjacent complete functions
+are coalesced only for coverage accounting.
+
+| Archive | Payload intervals | Bytes |
+| --- | --- | ---: |
+| SCENA02 | `[1436,1532)`, `[3680,3740)`, `[4144,4152)`, `[5224,5876)`, `[6456,6976)`, `[8312,12964)`, `[16468,18284)`, `[19140,19560)`, `[20588,22452)`, `[22808,23176)`, `[23348,24540)`, `[24852,26556)`, `[26636,27520)`, `[30072,30316)` | 14480 |
+| SCENA06 | `[1688,8016)`, `[8984,12788)`, `[14288,20616)`, `[20872,24888)`, `[25040,26556)`, `[27464,29052)`, `[29228,30652)` | 25004 |
+| SCENA09 | `[1884,30596)` | 28712 |
+| SCENA11 | `[1204,1536)`, `[1672,17088)` | 15748 |
+
+Fresh native compilation and relocation reproduce every complete sized ELF
+function symbol. Compiler assembly separates instructions from initialized data.
+Retained functions and gaps between these intervals receive no instruction claim.
+
+Three separate readonly jump tables qualify as numeric storage. Their original
+dispatches have index-load-delay NOPs, unsigned bounds, settled table loads and
+targets within the complete owning function.
+
+| Archive | Payload interval | Entries | Owning function |
+| --- | --- | ---: | --- |
+| SCENA06 | `[4,32)` | 7 | `[0x801F7300,0x801F7A00)` |
+| SCENA06 | `[36,56)` | 5 | `[0x801F7300,0x801F7A00)` |
+| SCENA11 | `[52,96)` | 11 | `[0x801F72E4,0x801F7748)` |
+
+For the first SCENA06 table, `LBU` at `0x801F7594` is followed by a NOP
+at `0x801F7598`, an index mask at `0x801F759C` and the unsigned bound
+at `0x801F75A0`. The other two leading NOPs are at `0x801F780C` and
+`0x801F7628`. Every table load has its own NOP before the indirect jump.
+The four-byte gap `[32,36)` in SCENA06 is outside both tables.
+
+These ranges establish stored instruction or numeric representation. Other
+initialized sections and tables, headers, padding, referenced storage and retained
+bytes keep their prior classifications. Grouped-comparison capability, semantic
+acceptance, general caller bounds, observed execution, resource safety, rendering
+and safe editing remain separate checks.
+
 ## AREA030 instruction coverage
 
 Coverage recognizes 229 complete instruction bodies in entry 4 of original US
