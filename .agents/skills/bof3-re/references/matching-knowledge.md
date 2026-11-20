@@ -1780,6 +1780,14 @@ semantic review and the complete owning native gate.
 
 ## Compiler evidence
 
+Keep assembler mode directives when comparing compiler output. Identical opcode
+order can encode different delay slots: `.dbr` can put a branch and its following
+copy in an explicit `SEQUENCE`, which the compiler wraps in `.set noreorder`.
+Without that wrapper the assembler can insert a NOP. Compare `.dbr`, directives
+and linked words before treating the body as unchanged. Move only a genuine
+capture whose semantics permit both paths; verify accesses, allocation and the
+complete native result.
+
 Before attributing an invariant-address hoist to allocation, reconstruct its
 lifetime from the pre-loop instruction IDs. GCC 2.7.2 counts non-line notes,
 including markers left when declaration-free compound blocks are discarded.

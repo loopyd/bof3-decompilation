@@ -13,11 +13,11 @@
  *           the leading byte when style bit 0x80 of +2 is set) equal the
  *           candidate is returned; a completed scan returns 0.
  * @status partial
- * @match 74.42
- * @residual Native comparison: 96/129 instructions, 516 original bytes versus
- * 504 current. Register choices and branch placement still differ. The guarded
- * record capture and halfword candidate arithmetic preserve every scan result;
- * coordinate comparisons observe only the low byte. */
+ * @match 80.62
+ * @residual Native comparison: 104/129 instructions, 516 original bytes versus
+ * 500 current. The record capture fills the length guard delay slot. Register
+ * choices, shared branches and body size still differ. Halfword candidate
+ * arithmetic preserves every scan result; comparisons observe only the low byte. */
 u8 *func_801B5C54(void) {
   u8  *world;
   u8  *rec;
@@ -43,8 +43,8 @@ u8 *func_801B5C54(void) {
     cursor_address = (u32)i * 8 + (u32)rec;
     do {
       j = ((u8 *)cursor_address)[3] - 1;
+      rec = (u8 *)cursor_address;
       if (j >= 0) {
-        rec = (u8 *)cursor_address;
         do {
           limit = 1;
           if (g_game_work->speed_70 == 0) {
