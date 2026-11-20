@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 /* @source 0x801F3158 */
-extern u8 *func_801F3158(void);
+extern u8 *findFreeWorkRecordByte15At800E4800World01Area05213_801F3158(void);
 /* @source 0x801782FC */
 extern s32 func_801782FC(u16 phase);
 /* @source 0x801783C8 */
@@ -17,10 +17,12 @@ extern s32 *D_1F800044; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F3084
  * @behavior Claims four work records, one per phase step of 0x100 from 0x80.
- *           Each pass asks func_801F3158 for the first record of the
- *           0x800E4800 work table whose occupancy byte reads zero and skips the
- *           rest of the pass when it returns none. For a claimed record it sets
- *           occupancy byte 0x15 to 1 and byte 0x16 to 8, then seeds the three
+ *           Each pass asks the free-record scan
+ *           findFreeWorkRecordByte15At800E4800World01Area05213_801F3158 for the
+ *           first record of the 0x800E4800 work table whose occupancy byte reads
+ *           zero and skips the rest of the pass when it returns none. For a
+ *           claimed record it sets occupancy byte 0x15 to 1 and byte 0x16 to 8,
+ *           then seeds the three
  *           position words from the scratch work object published at cell
  *           0x1F800044: word 0x00 takes that object's word 0x34 plus the table
  *           offset func_801783C8 yields for the phase, word 0x04 takes its word
@@ -43,7 +45,7 @@ void claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3
   i = 0u;
 
   do {
-    record = func_801F3158();
+    record = findFreeWorkRecordByte15At800E4800World01Area05213_801F3158();
     if (record != 0) {
       record[0x15] = 1;
       record[0x16] = 8;

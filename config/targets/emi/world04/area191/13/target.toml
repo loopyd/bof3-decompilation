@@ -25,6 +25,7 @@ support_sources = [
     "src/bof3/world/clearFrontStateSetScenarioBit0AndResetWorkAreaWhenFlag77SetWorld04Area19113_801F3BE0.c",
     "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19113_801F37AC.c",
     "src/bof3/world/dispatchSharedModeByteTable2C04World04Area19113_801F33C8.c",
+    "src/bof3/world/clearWorkColorTripletArmCountdown3CAndAdvanceWorkByte1World04Area19113_801F2CC4.c",
 ]
 psyq_source = "src/bof3/support/area191_13_psyq.c"
 

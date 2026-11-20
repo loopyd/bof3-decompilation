@@ -34,8 +34,10 @@ segments:
     - dispatchState04World03Area12114_801F2C3C
     - '@source: src/bof3/world/dispatchState04World03Area12114_801F2C3C.c'
   - - 128
-    - asm
-    - func_801F2C80
+    - c
+    - setHalfword932cMinus424SetWorkByte4ThenLowerRecordHalfword0aWorld03Area12114_801F2C80
+    - '@source: src/bof3/world/setHalfword932cMinus424SetWorkByte4ThenLowerRecordHalfword0aWorld03Area12114_801F2C80.c'
+    - '@behavior: stores the signed halfword -0x424 into the shared halfword at 0x8014932C, writes 1 into byte 4 of the scratch work record published through the 0x1F800044 pointer cell, then subtracts 2 from the halfword at offset 0x0A of the record published through the pointer cell at 0x80148210. Takes no arguments and returns nothing.'
   - - 188
     - c
     - advanceHalfword932cTo1500World03Area12114_801F2CBC

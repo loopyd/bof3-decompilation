@@ -42,6 +42,7 @@ support_sources = [
     "src/bof3/world/stepSharedModeStartOrRequestSelectorAtCounter14World04Area17213_801F4BC0.c",
     "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c",
     "src/bof3/world/drawTranslucentRadialFanOfThirtyTwoGouraudTrianglesTintedByCenterAndArcShadeWorld04Area17213_801F4138.c",
-    "src/bof3/world/drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC.c"
+    "src/bof3/world/drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC.c",
+    "src/bof3/world/clearScratchWorkLevelTripleSeedWorkByte9At5aThenAdvanceStateWorld04Area17213_801F2C48.c"
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

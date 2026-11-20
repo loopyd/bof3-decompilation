@@ -8,7 +8,8 @@
  *           bottom-tested loop. It takes no arguments, returns nothing and
  *           reads no state; the counter is left in $v0/$v1 only because the
  *           loop test (masked to 0xFF, compared below 0x10) needs it. Byte
- *           0x15 is the record's occupancy flag in this payload: func_801F3158
+ *           0x15 is the record's occupancy flag in this payload: the free-record
+ *           scan findFreeWorkRecordByte15At800E4800World01Area05213_801F3158
  *           returns the first record of the same 0x10-entry/0x18-byte-stride
  *           block whose byte 0x15 is zero (`lbu $v0, 0x15($v1)` at 0x801F3164,
  *           `beqz $v0` at 0x801F316C), and func_801F31C0 walks the same block

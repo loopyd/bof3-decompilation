@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EF080
   - - 1228
-    - asm
-    - func_801EF0CC
+    - c
+    - replaceBattleKind136With53WhenBattleStateIsNotFourBmagicMagic08303_801EF0CC
+    - '@source: src/bof3/bmagic/replaceBattleKind136With53WhenBattleStateIsNotFourBmagicMagic08303_801EF0CC.c'
+    - '@behavior: Overwrites the shared battle kind halfword 0x136 with 0x53 while the shared battle state byte is not four, then returns zero.'
   - - 1288
     - c
     - dispatchStateByte1Table0eecBmagicMagic08303_801EF108

@@ -65,8 +65,10 @@ segments:
     - c
     - noopHandlerBossBoss04916_800C19EC
   - - 500
-    - asm
-    - func_800C19F4
+    - c
+    - publishBattleHooksBossBoss04916_800C19F4
+    - '@source: src/bof3/boss/publishBattleHooksBossBoss04916_800C19F4.c'
+    - '@behavior: Publishes this overlay''s early battle handler trio into the shared hook slots: func_800C1A34 (bit 0x2 of D_80146328 selects storing 5 into D_80146875 and calling func_801DDED8, else func_801DDF00) into 0x801463A4, noopHandlerBossBoss04916_800C1A80 into 0x801463A8 and zeroResultBossBoss04916_800C1A2C into 0x801463AC. The later installer at 0x800C1A88 overwrites the same trio. Its 0x38 bytes compare equal to the exact lift at 0x800C19F4 of BIN/BOSS/BOSS040.EMI#16, whose payload carries the same 0x800C1800 load address'
   - - 556
     - c
     - zeroResultBossBoss04916_800C1A2C

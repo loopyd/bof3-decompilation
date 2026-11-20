@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table507cWorld04Area17213_801F2C04
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - clearScratchWorkLevelTripleSeedWorkByte9At5aThenAdvanceStateWorld04Area17213_801F2C48
+    - '@source: src/bof3/world/clearScratchWorkLevelTripleSeedWorkByte9At5aThenAdvanceStateWorld04Area17213_801F2C48.c'
+    - '@behavior: Entry 0 of the state byte 1 handler run at 0x801F507C. It clears the signed level bytes 0x5F, 0x5E and 0x5D of the scratch work record published at the scratchpad pointer cell 0x1F800044 through one reload of that cell, then reloads the cell to seed the record countdown byte 0x09 with 0x5A and reloads it once more to write 1 into the work state byte 0x01.'
   - - 132
     - asm
     - func_801F2C84
