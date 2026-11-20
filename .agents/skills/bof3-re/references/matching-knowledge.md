@@ -2196,6 +2196,14 @@ register size and lifetime, with suggested-register allocation first. `flow.c`
 weights references by loop depth; even single-execution loop notes can matter.
 Individual pseudo counts or declaration order alone do not explain allocation.
 
+Splitting a shift by a constant into in-place stages can survive CSE's
+self-source guard and merge in combine. The deleted stage's reference weight
+can still reach local allocation, changing priority without another native
+instruction. Compare complete quantities and intervals: a plain accumulator may
+already tie into the same quantity. Use only actual scaling or narrowing phases,
+prove shift and conversion equivalence, reject extra operations and require the
+complete native gate.
+
 For global priorities, use the reference counts and live lengths that reach
 `allocno_compare`. Local allocation can change them through copy optimization
 and discounts for recorded equivalences, including doubled live lengths.
