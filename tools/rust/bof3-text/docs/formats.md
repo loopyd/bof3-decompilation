@@ -68,6 +68,36 @@ those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
+## Standalone dragon sprite coverage
+
+Coverage recognizes the image and palette section words, their directory words,
+eight image records and eight 32-halfword palettes in original US `DRG04_00.EMI`
+entry 3. Qualification requires the original archive, entry offset 26624, raw
+mode, destination `0x8003B80C`, checkword `0x10`, size 313320 and payload SHA-256
+`6669621720080f29b7a431d150ade295210ecef49d1dec3085b4e828c962f538`.
+Only consumed packed or raw image words qualify. Allocation gaps, animation
+programs and selection storage stay unresolved.
+
+The original `MAGIC151.EMI` entry 3 handler at `0x801EF388` selects slot 545
+for form code 11 through the tables in `BATTLE.EMI` entry 15. The original LBA
+table and complete disc user bytes bind that slot to `DRG04_00.EMI`. After the
+loader reports ready, the handler at `0x801EF484` calls GAME `0x801C1254` with
+the first identifier of the current hint row. For an original hint in `0..18`
+and a retained root-array word of 12 at `0x8003B800`, this installs root ordinal
+0 at `0x8003B80C`. Successful loading and stable original code, tables and source
+bytes remain conditions.
+
+The installed root supplies the palette reader at `0x80166C48` and the image
+selector at `0x8014DC08`, followed by the queued image reader at `0x8014E6D0`.
+Palette indices must be in `0..7`. The finite image cases use selectors
+`4, 6, 12, 14, 44, 46, 16, 18` for image slots `0..7`, respectively, through
+the original request argument `(actor[8] + 4) & 255`. They require a changed
+request selector, a clear image-skip bit, queue capacity, valid animation
+records, bounded destinations, nonaliased memory and ordinary helper returns.
+These cases establish conditional source use. They do not establish natural
+selector production, general caller bounds, actual invocation, residency,
+hardware transfer, live CLUTs, displayed pixels or safe editing.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header

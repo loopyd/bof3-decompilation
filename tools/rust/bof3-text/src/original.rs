@@ -9352,6 +9352,38 @@ pub fn payload_nontext_ranges(
         return None;
     }
     if entry.transfer_mode == 0
+        && entry.index == 3
+        && entry.offset == 26_624
+        && entry.ram_ptr == 0x8003_b80c
+        && entry.check_word == 0x10
+        && entry.size == 313_320
+        && data.len() == 313_320
+        && sha256_hex(data) == "6669621720080f29b7a431d150ade295210ecef49d1dec3085b4e828c962f538"
+    {
+        return Some(
+            [
+                (0, 8),
+                (16, 32),
+                (48, 38_240),
+                (38_288, 61_448),
+                (99_736, 35_508),
+                (135_244, 36_872),
+                (172_120, 38_240),
+                (210_360, 61_448),
+                (271_808, 9_568),
+                (281_376, 9_568),
+                (290_944, 544),
+            ]
+            .into_iter()
+            .map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US DRG04_00 entry 3 image/palette section and directory words, eight image headers with consumed packed/raw words, and eight 32-halfword palettes; original MAGIC151 entry 3 state table 0x801EEC24 selects 0x801EF388/0x801EF484, form code 11 selects slot 545 through original BATTLE entry 15 cells 0x800B49F4/0x800B49F8 and u16 0x800B4B5C; original SLUS LBA table and complete disc user bytes bind that slot to this archive; after successful unskipped loading, MAGIC151 call 0x801EF87C supplies the first hint-row identifier and A1=0 to GAME 0x801C1254, which selects ordinal 0 and publishes root 0x8003B80C at 0x801C1308 if the original root-array word 12 survives; palette calls 0x801C13DC/0x801EF8A4 reach SLUS 0x80166C48, and finite valid image selectors reach 0x8014DC08 through 0x801EF8F8/0x8014D8D4/0x8014D6B8/0x8014D6DC before queued consumption at 0x8014E6D0 and 0x8014E7F8 or 0x8017B690; exact original archive, entry geometry, mode, load, checkword, size and payload identities; stable original hint 0..18, retained array header, valid separate palette indices 0..7 and image-selector cases, clear image-skip bit, changed request selector, queue capacity, bounded destinations, nonaliasing and ordinary returning helpers remain conditions; program/selection storage and allocation gaps excluded; no natural selector production, global caller bounds, actual request, residency, hardware transfer, live CLUT, display, rasterized-text absence or safe-edit claim",
+            })
+            .collect(),
+        );
+    }
+    if entry.transfer_mode == 0
         && entry.ram_ptr == 0x801e_ec00
         && entry.check_word == 0x141
         && entry.size == 5_268
