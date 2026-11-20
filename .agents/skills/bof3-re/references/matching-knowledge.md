@@ -2513,6 +2513,17 @@ artificial definition.
    not recovered source spelling or a universal CSE/allocation rule. Add no pins,
    dummy work or accesses.
 
+Where guards share a rejecting outcome, literal zero/one returns can let GCC
+2.7.2 hoist the default zero SET before the guard chain. A computed comparison
+arm can fail the required single-SET shape. Trace the resulting hard-return-register
+interference through allocation.
+
+For promoted byte operands, XOR order can first reverse during combine's
+complex-before-primitive substitution, even when initial RTL and both CSE passes
+retain source order. Swapping the operands of `==` or `!=` between already
+evaluated scalar locals can change this order. Preserve memory-read order and
+require the complete native gate.
+
 For a narrow boolean return, keep a word local whose only definitions are zero
 and the final comparison. Reusing it for arithmetic can preserve a narrowing mask
 or add a return copy. A separate arithmetic local can still share the return
