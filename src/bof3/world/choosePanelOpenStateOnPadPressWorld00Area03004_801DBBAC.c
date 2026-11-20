@@ -3,10 +3,10 @@
 /* @source 0x801DBBAC
  * @behavior AREA030 panel step, entry 9 of the local work-record step table
  * 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80
- * with CLUT 91 and byte 6 of the active 0x98-byte work record
+ * at y 91 with the packed selector from byte 6 of the active 0x98-byte work record
  * D_80146888[D_801E3208], draws that record byte together with the record byte
- * at +0x90 through func_801E1004, draws the icon row at (176, 156) through
- * func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad
+ * at +0x90 through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, draws the icon row at (176, 156) through
+ * drawSlotValueSummaryAndThresholdIconsWorld00Area03004 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad
  * mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and
  * scratch byte 0xB, then picks the panel open state: record byte 6 equal to
  * 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing

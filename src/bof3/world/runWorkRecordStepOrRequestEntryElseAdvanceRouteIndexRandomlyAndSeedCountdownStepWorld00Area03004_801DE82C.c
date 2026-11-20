@@ -5,7 +5,7 @@
  * record step countdown byte 0x09 is non-zero it only integrates that step
  * through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the same pair closes every
  * other path except the entry request below. Otherwise it first consults the
- * shared entry gate func_801E0680 and, when that reports a match, sets the
+ * shared entry gate checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 and, when that reports a match, sets the
  * work-record handler byte 0x01 to 3 and leaves through that pair. With the gate
  * clear it rolls rand() once and reuses the single roll. While the entry latch
  * D_801E3200 is clear, the record signed timer 0x3E is zero, the roll low two
@@ -17,7 +17,7 @@
  * 0x01 and returns without the integration pair. Otherwise it steps the route
  * index byte 0x08 to the neighbouring route by one modulo 8 (down when roll bit
  * 8 is clear, up when it is set) whenever roll bit 4 is set, re-derives the step
- * words through func_801E03F8, mirrors the step-mode row trailing byte into
+ * words through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004, mirrors the step-mode row trailing byte into
  * record byte 0x2A and selects that row leading byte through func_8014D8D4. It
  * then sets the countdown step word 0x14 from the func_8015477C distance of the
  * record x at 0x34 and y at 0x38 advanced by the step words 0x0C/0x10 shifted 4:
@@ -54,7 +54,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
 
   timer = D_1F800044;
   if (timer[9] == 0) {
-    if (func_801E0680()) {
+    if (checkWorkEntryGateOrSelectHandlerOneWorld00Area03004()) {
       u8 nextHandler;
       do {
         nextHandler = 3;
@@ -95,7 +95,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
           route[8] = (u8)((route[8] - 1u) & 7u);
         }
       }
-      func_801E03F8();
+      deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004();
       marker = D_1F800044;
       marker[0x2A] = D_801E2330[marker[8]].byte_01;
       row = D_1F800044;

@@ -1,6 +1,6 @@
 #include "bof3/world/area03004_internal.h"
 
-void func_801D7B64(void);
+void drawEntryPanelCounterRowWorld00Area03004(void);
 
 /* @source 0x801D4C84
  * @behavior increments work byte 9 and slides the selected entry sprite left
@@ -28,9 +28,9 @@ void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
   index = FIELD_REF(s16, entry, 0x3E);
   amount = D_80144FE4[index];
   if (amount != 0) {
-    func_801E1004((u8)index, amount, 0);
+    drawSlidingEntryLabelAndAmountSummaryWorld00Area03004((u8)index, amount, 0);
   } else {
-    func_801E1004(255, 0, 0);
+    drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(255, 0, 0);
   }
   sprite = D_1F800044;
   if (sprite[8] == 0) {
@@ -50,9 +50,9 @@ void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
       configureSpriteClut((s16)(128 + sprite[9] * 48), 91, 255);
     }
   }
-  func_801E1320(176, 156);
-  func_801E162C(8, 148, 0xFFFF);
-  func_801D7B64();
+  drawSlotValueSummaryAndThresholdIconsWorld00Area03004(176, 156);
+  drawSpriteAndOptionalIndexedRunWorld00Area03004(8, 148, 0xFFFF);
+  drawEntryPanelCounterRowWorld00Area03004();
   WORLD00_AREA030_DRAW_HEADER_AND_STATUS(mode, mask);
   state = D_1F800044;
   if (state[9] == 4) {

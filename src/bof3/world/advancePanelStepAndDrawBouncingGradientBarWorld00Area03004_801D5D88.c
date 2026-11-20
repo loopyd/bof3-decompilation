@@ -20,7 +20,7 @@ extern Area030BounceStepRecord bounceStepRecordTableWorld00Area03004_801E2008[];
 /* The AREA030 scratch work record viewed at the three offsets this handler
  * re-seeds, proven by its own stores: the work byte 6 readout counter, the work
  * word 0x0C the gradient bar takes as its width, and the work word 0x18 that
- * carries the width delta the sibling initializer area03004_801D5C8C seeds with
+ * carries the width delta the sibling initializer initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004 seeds with
  * 4. */
 typedef struct Area030BounceStepState {
   u8 pad_00[0x06];
@@ -38,13 +38,13 @@ typedef struct Area030BounceStepState {
  * func_8014D978 helper; otherwise it reads work byte 0xA as an index into the
  * three-byte record table 0x801E2008 and, when the record carries the 0xFF end
  * marker, re-seeds work byte 0xA from the record countdown byte and restarts the
- * bar animation the sibling initializer area03004_801D5C8C set up - width 0 in
+ * bar animation the sibling initializer initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004 set up - width 0 in
  * work word 0x0C, delta 4 in work word 0x18 and work byte 6 cleared. It then
  * requests the record resource through func_8014D6B8, reloads work byte 9 from
  * the record countdown and advances work byte 0xA. Every call then runs
  * func_8014D4E0, submits texture-page draw mode 0/1 and appends the sprites
  * (0x15, 1, 0x32, 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80)
- * through func_801E0DCC. The stepped-from record's mode byte then drives the
+ * through appendIndexedSpriteWorld00Area03004. The stepped-from record's mode byte then drives the
  * animation: mode 0 moves the width by the sign-carrying delta and reflects it
  * at 0 and 0x60 (the delta is negated at either end, so the bar bounces), while
  * mode 1 advances work byte 6 once every other frame. Finally it draws the
@@ -109,9 +109,9 @@ void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
 
   func_8014D4E0();
   submitTpageDrawMode(0, 1);
-  func_801E0DCC(0x15, 1, 0x32, 0x7A);
-  func_801E0DCC(0x16, 1, 0xBC, 0x7A);
-  func_801E0DCC(0x10, 1, 0x36, 0x80);
+  appendIndexedSpriteWorld00Area03004(0x15, 1, 0x32, 0x7A);
+  appendIndexedSpriteWorld00Area03004(0x16, 1, 0xBC, 0x7A);
+  appendIndexedSpriteWorld00Area03004(0x10, 1, 0x36, 0x80);
 
   stepped = D_1F800044;
   mode = bounceStepRecordTableWorld00Area03004_801E2008[stepped[0xA] - 1].mode;

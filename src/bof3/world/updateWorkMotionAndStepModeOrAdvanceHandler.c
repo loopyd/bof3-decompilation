@@ -3,7 +3,7 @@
 extern u8 firstFrontEndEntryFlags; /* @source 0x80143FC8 @kind bss */
 
 extern s16 workOffsetReferenceState; /* @source 0x8014423C @kind unknown */
-extern s32 func_801E02D4(u32 arg0, u32 arg1);
+extern s32 testWorkByteDistanceChanceWorld00Area03004(u32 arg0, u32 arg1);
 
 /* @source 0x801DF334
  * @behavior updates the AREA030 work record's signed offset, motion words,
@@ -215,7 +215,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
         if (D_8014421C < 0) {
           upperMotionWork = D_1F800044;
           if (FIELD_REF(s32, upperMotionWork, 0x10) > 0) {
-            if ((u8)func_801E02D4((u8)upper, 1) != 0) {
+            if ((u8)testWorkByteDistanceChanceWorld00Area03004((u8)upper, 1) != 0) {
               s32 transitionStatus;
               u8 transitionMode;
               do {
@@ -244,7 +244,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       threshold = lowerMode[9];
       if (count >= threshold) {
         ((u8*)(u32)reference)[0x0B] = 0;
-        if ((u8)func_801E02D4((u32)lower, 2) != 0) {
+        if ((u8)testWorkByteDistanceChanceWorld00Area03004((u32)lower, 2) != 0) {
           u8 transitionMode;
           do {
             transitionMode = 7;

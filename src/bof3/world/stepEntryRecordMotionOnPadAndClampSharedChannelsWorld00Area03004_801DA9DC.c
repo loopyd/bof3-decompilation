@@ -14,7 +14,7 @@
  * D_8014930C to D_80144000 when that word trails it, stores 0x10 in D_8014932E,
  * sets scratch record byte 2 to 5 and clears byte 3; a failed random gate
  * instead republishes the record pair distance into record halfword 0x3E. It
- * then runs the hold-marker step func_801DDEEC, the message step func_801DE018
+ * then runs the hold-marker step updateScratchMarkerAndCountdownFromPadFlagsWorld00Area03004, the message step updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004
  * and publishes the selected value D_801E31F8 into D_801E31FC; while entry record
  * byte 0x0B is clear it applies the pad direction to the record motion triple
  * 0x0C/0x10/0x14 and the selected value D_801E31F8 - Square (0x8000) with the
@@ -87,8 +87,8 @@ void stepEntryRecordMotionOnPadAndClampSharedChannelsWorld00Area03004_801DA9DC(v
     }
     *(s16*)(row + 0x3E) = func_8015477C(*(s32*)(row + 0x34), *(s32*)(row + 0x38));
   }
-  func_801DDEEC();
-  func_801DE018();
+  updateScratchMarkerAndCountdownFromPadFlagsWorld00Area03004();
+  updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004();
   D_801E31FC = D_801E31F8;
   if (row[0x0B] == 0) {
     if ((D_80145AA4 & 0x8000) != 0) {

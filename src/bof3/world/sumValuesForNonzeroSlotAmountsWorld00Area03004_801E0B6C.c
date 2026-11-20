@@ -2,7 +2,7 @@
 
 /**
  * @source 0x801E0B6C
- * @behavior Sums the values reported by func_801E0ABC for the nonzero amounts
+ * @behavior Sums the values reported by calculateScaledSlotValueForAmountWorld00Area03004 for the nonzero amounts
  * among the 32 shared slot amount bytes at 0x80144FE4, and returns the
  * total masked to 16 bits.
  * @status exact
@@ -17,7 +17,7 @@ u32 sumValuesForNonzeroSlotAmountsWorld00Area03004(void) {
     u8 amount = D_80144FE4[slotIndex];
 
     if (amount != 0) {
-      totalValue += func_801E0ABC(slotIndex & 0xff, amount);
+      totalValue += calculateScaledSlotValueForAmountWorld00Area03004(slotIndex & 0xff, amount);
     }
   }
   return totalValue & 0xffff;

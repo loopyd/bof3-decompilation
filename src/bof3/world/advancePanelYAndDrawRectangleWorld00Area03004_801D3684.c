@@ -22,5 +22,5 @@ void advancePanelYAndDrawRectangleWorld00Area03004(void) {
     *panelY = 18;
   }
   drawWork = (u8*)D_1F800044;
-  func_801D9534(20, *(s16*)(drawWork + 0x30u), 280, 19, 0);
+  drawFilledPanelWithInsetBorderWorld00Area03004(20, *(s16*)(drawWork + 0x30u), 280, 19, 0);
 }

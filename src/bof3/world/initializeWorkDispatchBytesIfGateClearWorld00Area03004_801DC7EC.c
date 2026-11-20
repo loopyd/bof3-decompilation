@@ -4,7 +4,7 @@
  * named D_1F800044 symbol: only that form puts the stored constant in the bnez
  * delay slot (li v0,1 ahead of the folded cursor load), the lever recorded by
  * siblings publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0 and
- * func_801DBEDC in this target. */
+ * drawEntryPanelRowAndSelectStepFourteenOnPadMaskWorld00Area03004 in this target. */
 
 /* @source 0x801DC7EC
  * @behavior Initializes three scratch work-record bytes when the shared mode is zero.

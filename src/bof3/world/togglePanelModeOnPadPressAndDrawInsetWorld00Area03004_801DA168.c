@@ -10,7 +10,7 @@
  * both cases. It then submits the row marker at (0x70, 0x82 - 0x10 * mode)
  * through func_801647C4, appends the dim tile through appendDimTile, and draws
  * the inset panel rectangle (0x14, 0x12, 0x118, 0x13) and the texture row
- * (0x1D, 0x15) through func_801D9534 and func_8014F800 using the halfword
+ * (0x1D, 0x15) through drawFilledPanelWithInsetBorderWorld00Area03004 and func_8014F800 using the halfword
  * offset-table entry 0x40 on the 0x80010000 main-RAM base.
  * @source 0x801DA168
  * @status exact
@@ -39,7 +39,7 @@ void togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168(void) {
     }
     func_801647C4(0x70, (u16)((0x82 - D_1F800044[6] * 0x10) & 0xFFFE), 0);
     appendDimTile();
-    func_801D9534(0x14, 0x12, 0x118, 0x13, 0);
+    drawFilledPanelWithInsetBorderWorld00Area03004(0x14, 0x12, 0x118, 0x13, 0);
     func_8014F800(0x1D, 0x15, 0, 0xFF,
                   0x80010000u + PSX_PTR(u16, 0x80010000u)[0x40]);
 }

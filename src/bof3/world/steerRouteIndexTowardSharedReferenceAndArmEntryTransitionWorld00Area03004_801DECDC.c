@@ -2,7 +2,7 @@
 
 /* @source 0x801DECDC
  * @behavior AREA030 handler 3 of the work-record table at 0x801E2314.
- * While countdown byte 9 is clear, asks func_801E0680 for the entry gate.
+ * While countdown byte 9 is clear, asks checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 for the entry gate.
  * A clear answer sets work byte 1 to 1. Otherwise, samples rand() and maps
  * the shared reference position minus work coordinates 0x34/0x38 onto the
  * eight route octants in byte 8; zero deltas leave that byte unchanged.
@@ -16,10 +16,10 @@
  * zero. Class 3 nudges by 1 under the class 2 gate. Classes 1..3 choose up
  * with roll bit 3 and down otherwise. Class 4 leaves the route unchanged.
  * Each nudge wraps to eight routes.
- * Recomputes steps through func_801E03F8 and derives work word 0x14 from
+ * Recomputes steps through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004 and derives work word 0x14 from
  * the advanced coordinates' distance and timer 0x3E. Mirrors the route's
  * step-mode byte into work byte 0x2A and requests its leading byte through
- * func_8014D8D4. After func_801E0770 succeeds, a fresh random nibble below
+ * func_8014D8D4. After checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004 succeeds, a fresh random nibble below
  * scale byte 0x1C or mode flag bit 7 permits entry when the direction byte
  * is not 9. That path saves work byte 5 to D_801E3208, arms phase bytes
  * D_80145E92/D_80145E93/D_80143FC9 as 4/0/5, clears shared motion words
@@ -72,7 +72,7 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
   u32 roll;
 
   if (D_1F800044[9] == 0) {
-    if (func_801E0680() == 0) {
+    if (checkWorkEntryGateOrSelectHandlerOneWorld00Area03004() == 0) {
       SPAD_PTR_SLOT(u8, 0x44u)[1] = 1;
     } else {
       roll = rand();
@@ -192,7 +192,7 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       case 4:
         break;
       }
-      func_801E03F8();
+      deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004();
       point = D_1F800044;
       dist = func_8015477C(*(s32*)(point + 0x34) + (*(s32*)(point + 0x0C) << 4),
                            *(s32*)(point + 0x38) + (*(s32*)(point + 0x10) << 4));
@@ -212,7 +212,7 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       marker[0x2A] = D_801E2330[marker[8]].byte_01;
       arm = D_1F800044;
       func_8014D8D4(D_801E2330[arm[8]].request_00);
-      if (func_801E0770() != 0) {
+      if (checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004() != 0) {
         gate = D_801E2AB8[D_1F800044[6]].unk_1C[0];
         if ((rand() & 0xF) < gate || (D_801E3210[0x0E] & 0x80) != 0) {
           do {

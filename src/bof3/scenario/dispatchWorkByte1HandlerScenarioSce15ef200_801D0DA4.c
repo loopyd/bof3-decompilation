@@ -27,7 +27,7 @@ extern void (*D_801D1B2C[])(void); /* @source 0x801D1B2C @kind data */
  * load's delay slot and the table load's delay slot both stay nops. No `jal` and
  * no word of this payload addresses 0x801D0DA4, so the overlay loader outside
  * the payload enters it. Its 68 bytes are the 17-instruction dispatcher shape
- * that the exact lift func_801D1B10 (0x801D1B10 in emi/world00/area030/04) and
+ * that the exact lift dispatchStateByte1Table1d10World00Area03004 (0x801D1B10 in emi/world00/area030/04) and
  * dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38 (0x801D0D38 in
  * emi/scenario/sce15ef3/00) record; they differ from it only in the
  * table-address immediate.

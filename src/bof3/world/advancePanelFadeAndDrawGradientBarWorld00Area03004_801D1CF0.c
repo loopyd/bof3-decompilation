@@ -16,7 +16,7 @@
  * mode 2 moves the second accumulator (work word 0x10) one step off its -1
  * floor and adds it to the fade level, clamping and reversing at the same
  * 0x00/0xFF limits. It then selects tpage draw mode 0/2, draws the message
- * panel box func_801E0DCC(0x10, 2, 0x87, 0xB4) and the green gradient bar at
+ * panel box appendIndexedSpriteWorld00Area03004(0x10, 2, 0x87, 0xB4) and the green gradient bar at
  * (0x88, 0xCB) whose width is the fade level scaled to the 0x60 ramp maximum.
  * Once the shared phase byte 0x80145E92 reads 3 it arms the box halfwords
  * 0x2E/0x30 with 0xB8/0xD1 and advances the work state byte 1.
@@ -89,7 +89,7 @@ void advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0(void) {
   }
 
   submitTpageDrawMode(0, 2);
-  func_801E0DCC(0x10, 2, 0x87, 0xB4);
+  appendIndexedSpriteWorld00Area03004(0x10, 2, 0x87, 0xB4);
   bar = AREA030_SCRATCH;
   width = (s16)(*(s32*)(bar + 0x0C) * 0x60 / 0xFF);
   drawGreenGradientBar(0x88, 0xCB, width, 2);

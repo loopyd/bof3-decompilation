@@ -12,7 +12,7 @@ void drawFixedPanelAndSelectedMessageWorld00Area03004(void) {
   u8* cursor;
   u8 messageIndex;
 
-  func_801D9534(20, 18, 280, 19, 0);
+  drawFilledPanelWithInsetBorderWorld00Area03004(20, 18, 280, 19, 0);
   cursor = (u8*)D_1F800044;
   messageIndex = cursor[0x4Bu];
   func_8014f800(29, 20, 0, D_801E1E78[messageIndex].byte_00, D_801E1E78[messageIndex].word_04);

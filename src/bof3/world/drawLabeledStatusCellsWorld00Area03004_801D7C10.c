@@ -3,7 +3,7 @@
 /* @source 0x801D7C10
  * @behavior draws the three AREA030 status-panel cells of one row at the
  * requested origin: bit i of the mask byte is the panel flag of cell i, the
- * 0x28 by 0x10 cell is drawn at (x + 0x30 * i, y) through func_801D7D68, and
+ * 0x28 by 0x10 cell is drawn at (x + 0x30 * i, y) through drawGroupedCellSpritesWorld00Area03004, and
  * the stored flag becomes a label shade that counts up by one when the whole
  * mask is zero; the function then submits the 4-character label runs of the
  * shared "GearDataRule" rodata string 0x801E21C0 at (x + 6, y + 4),
@@ -25,7 +25,7 @@ void drawLabeledStatusCellsWorld00Area03004_801D7C10(u16 x, u16 y, u8 mask) {
     cell = flags;
     cell[i] = (mask >> i) & 1;
     cell += i;
-    func_801D7D68((s16)(x + i * 0x30), (s16)y, *cell);
+    drawGroupedCellSpritesWorld00Area03004((s16)(x + i * 0x30), (s16)y, *cell);
     shade = *cell;
     if (mask == 0) {
       shade++;

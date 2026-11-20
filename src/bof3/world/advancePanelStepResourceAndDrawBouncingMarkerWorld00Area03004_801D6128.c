@@ -108,12 +108,12 @@ void advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128(void
     bounce[6] = level;
   }
 
-  func_801D1744(0xEC, 0x70, 1u);
-  func_801D1818(0xEC, 0x80, 1u);
+  drawBlueGradientQuad16x32World00Area03004(0xEC, 0x70, 1u);
+  drawCounterIndexedSprite16x16World00Area03004(0xEC, 0x80, 1u);
   submitTpageDrawMode(0, 1);
-  func_801E0DCC(0x14, 1, 0xE4, 0x68);
+  appendIndexedSpriteWorld00Area03004(0x14, 1, 0xE4, 0x68);
   marker = D_1F800044;
   if (panelStepModeTableWorld00Area03004_801E2024[marker[0xA] - 1].mode != 0) {
-    func_801D18CC(0xFC, marker[6] + 0x70, 1u);
+    drawFixedCellSprite8x8World00Area03004(0xFC, marker[6] + 0x70, 1u);
   }
 }

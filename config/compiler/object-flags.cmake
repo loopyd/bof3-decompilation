@@ -57,11 +57,11 @@ set(BOF3_OBJFLAGS_bof3_battle_pickRandomUnblockedId_battle15_800AB760_c -O2 -Wa,
 # those exact checks. /* @source 0x801DB058 */
 set(BOF3_OBJFLAGS_bof3_battle_markBattlersMeetingOpposingThresholds_c -O2 -Wa,--expand-div)
 
-# func_801E0ABC scales a slot amount with a signed division whose original
+# calculateScaledSlotValueForAmountWorld00Area03004 scales a slot amount with a signed division whose original
 # expansion keeps the full MIPS division-trap sequence (break 7 / break 6).
 # The canonical maspsx pass omits those traps; --expand-div restores them.
 # /* @source 0x801E0ABC */
-set(BOF3_OBJFLAGS_bof3_world_func_801E0ABC_c -O2 -Wa,--expand-div)
+set(BOF3_OBJFLAGS_bof3_world_calculateScaledSlotValueForAmountWorld00Area03004_801E0ABC_c -O2 -Wa,--expand-div)
 
 # These AREA030 objects retain the original signed-division checks (break 7 / break 6).
 set(BOF3_OBJFLAGS_bof3_world_initializeWorkRecordsFromSelectedColumnCountsWorld00Area03004_801DE1C0_c -O2 -Wa,--expand-div)

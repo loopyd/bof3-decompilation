@@ -25,7 +25,7 @@ void publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0(void) {
      * only representation that reproduces the original's constant-in-delay-slot
      * store schedule (li v0,3 ahead of the folded cursor load), because a single
      * use folds to lui/lw %lo instead of CSE-ing a shared cursor base
-     * (sibling func_801DBEDC records the same lever). */
+     * (sibling drawEntryPanelRowAndSelectStepFourteenOnPadMaskWorld00Area03004 records the same lever). */
     WORLD00_AREA030_SCRATCH_PTR[2] = 3;
   }
   D_1F800044[0x2A] = D_80145EBA;

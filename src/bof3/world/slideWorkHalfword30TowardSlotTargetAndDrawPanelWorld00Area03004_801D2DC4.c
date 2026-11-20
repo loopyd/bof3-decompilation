@@ -19,7 +19,7 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
 
 /* @source 0x801D2DC4
  * @behavior entry 2 of the local handler table at 0x801E1D80, which the
- * dispatcher func_801D2BF0 indexes with the work record's unsigned step byte at
+ * dispatcher dispatchStateByte1Table1d80World00Area03004 indexes with the work record's unsigned step byte at
  * +0x1: it first selects draw mode (0, 2) and submits panel sprite 0x11 at
  * (0x87, 0xB4), then advances the work record's halfword at +0x30 towards the
  * signed byte that the slot index D_801E3208 selects from D_80146892 (stride
@@ -30,7 +30,7 @@ extern u8  D_80146916[];   /* @source 0x80146916 @kind table */
  * +0x9. Every pass adds the direction word to the halfword, clamps the sum into
  * [4 * D_801E320C[3] - 0x24, 0x24 - 4 * D_801E320C[3]] and stores it back.
  * It then emits a grey 0x10-byte line at x 0xB9 from y 0xC9 to y 0xD5, draws
- * the panel row through func_801D3244 (origin halfword 0xAD below the row, 0xCB,
+ * the panel row through drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004 (origin halfword 0xAD below the row, 0xCB,
  * (8 * D_801E320C[3] + 0x18) & 0xF8, work byte 0xA low three bits doubled, 2,
  * and a flag that is 1 when the row start falls outside the 8 * D_801E320C[3] +
  * 0x18 span above it), and draws the panel cell through
@@ -76,7 +76,7 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
   u32      rowIndex;
 
   submitTpageDrawMode(0, 2);
-  func_801E0DCC(0x11, 2, 0x87, 0xB4);
+  appendIndexedSpriteWorld00Area03004(0x11, 2, 0x87, 0xB4);
 
   approachWork = D_1F800044;
   if (*(s32*)(approachWork + 0x10) == 0) {
@@ -177,9 +177,9 @@ void slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4(vo
     comparedCell = (s16)clamped;
   } while (0);
   if (((s16)rowUpper < comparedCell) || (comparedCell < (s16)rowScale)) {
-    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 1);
+    drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 1);
   } else {
-    func_801D3244((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 0);
+    drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004((s16)rowScale, 0xCB, cur & 0xF8, (rowWork[0xA] & 7) * 2, 2, 0);
   }
 
   if (D_80146889[D_801E3208 * 0x98] == 4) {

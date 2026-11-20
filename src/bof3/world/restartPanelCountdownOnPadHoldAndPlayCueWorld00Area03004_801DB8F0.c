@@ -8,8 +8,8 @@
  *           halfword at +0x90 of the active 0x98-byte work record
  *           D_80146888[D_801E3208], otherwise it advances that byte by one;
  *           it then submits the panel pair at y 78, configures the sprite at
- *           0x80 with CLUT 91 and byte 6 of the active record, draws that
- *           record byte together with the countdown through func_801E1004,
+ *           0x80 at y 91 with the packed selector from byte 6 of the active record, draws that
+ *           record byte together with the countdown through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004,
  *           and once the countdown equals the record halfword at +0x90 it
  *           plays cue 0x20D while the D_801E3214 flag byte is set, plays cue
  *           0x102, restarts the countdown at 4 and advances scratch byte 3;
@@ -36,7 +36,7 @@ void restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0(void) {
   }
   submitPanelPair(0, 78);
   configureSpriteClut(0x80, 91, D_80146888[D_801E3208].unk_02[4]);
-  func_801E1004(D_80146888[D_801E3208].unk_02[4], D_1F800044[9], 0);
+  drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(D_80146888[D_801E3208].unk_02[4], D_1F800044[9], 0);
   if (D_1F800044[9] == *(u16*)&D_80146888[D_801E3208].unk_90[0]) {
     if (D_801E3214) {
       func_8015DF18(0x20D);

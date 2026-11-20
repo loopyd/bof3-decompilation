@@ -21,7 +21,7 @@ extern int sprintf(char* buffer, const char* format, ...);
  * drawn two pixels up; the work halfword +0x3A is stamped with that row's slot
  * index. A slot count of two or more is formatted through "*%2d" into the
  * shared 0x80145AD4 buffer and drawn through func_80150098. The column closes
- * with func_801D90FC at the origin, the stretched panel column at x + 0x80
+ * with drawListColumnFrameWorld00Area03004 at the origin, the stretched panel column at x + 0x80
  * whose height loses six pixels per row beyond the ninth and whose origin
  * follows the work-record scroll byte, and the four-character "LURE" title of
  * the panel at (x + 0x37, y + 7).
@@ -160,7 +160,7 @@ row_drawn:
     }
   }
 
-  func_801D90FC((s16)x, (s16)y);
+  drawListColumnFrameWorld00Area03004((s16)x, (s16)y);
 
   i = 0;
   drawn = 0;

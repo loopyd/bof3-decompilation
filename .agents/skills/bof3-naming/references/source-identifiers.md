@@ -9,6 +9,9 @@ Prove an argument or local's role from its definition, all uses and original
 instructions. Check shadowing, macro expansion, labels, member names and declaration
 scope before replacing a token. Rename one evidenced identity consistently; preserve
 types, declaration order, body structure, ABI and all other tokens.
+A local rename must preserve identifiers after `.` or `->` unless the field is
+separately selected. Token comparisons must exclude these member selectors from
+the local substitution map.
 
 Follow [direct editing](direct-editing.md) and shared PRE/recovery rules. Check the
 complete owning translation unit and every affected consumer. Keep partial bodies

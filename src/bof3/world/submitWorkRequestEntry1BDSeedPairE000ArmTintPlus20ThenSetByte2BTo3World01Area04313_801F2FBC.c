@@ -38,7 +38,7 @@ extern s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4); /*
  * 0x80146884+0x93, writes 0x5C = 1 and then the three channels in the same
  * 0x5F/0x5E/0x5D order through one record local; func_801F4B58
  * (world02/area108/14) and initializeWorkModeWithTintMinus64 write 0x5C = 1
- * before the same descending channel triplet; func_801D6414 (world00/area030/04)
+ * before the same descending channel triplet; initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004 (world00/area030/04)
  * writes the 0x40/0x44 pair as two word stores off one base. This function's own
  * literals differ from all of them (0xE000 in the pair, +0x14 in the channels,
  * 3 in byte 0x2B), so those are written from the original bytes.

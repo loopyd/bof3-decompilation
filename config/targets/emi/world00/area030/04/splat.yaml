@@ -50,8 +50,8 @@ segments:
     - '@behavior: AREA030 color-row builder: copies 30 halfwords (row elements 0x61..0x7E) of the 32-halfword color row at 0x800396C0 from the 0x40-byte row of the 0x80037800 color block selected by the shared row byte 0x80145EB7, setting the high bit of each copied halfword, clears the row end elements 0x800396C0/0x800396FE, then publishes that row byte into scratch work byte 0xB, sets bit 5 of work byte 0, writes 0x7B into work byte 0x27, seeds work bytes 0x5C..0x5F with 1/0xC0/0xC0/0xC0, publishes 1 into the palette-stage serial 0x80145988, advances the work-record stage byte at work offset 3 and calls func_8014D4E0 without arguments.'
   - - 2100
     - c
-    - func_801D1434
-    - '@source: src/bof3/world/func_801D1434.c'
+    - decrementWorkLevelsAndAdvanceStageAtMinus128World00Area03004
+    - '@source: src/bof3/world/decrementWorkLevelsAndAdvanceStageAtMinus128World00Area03004_801D1434.c'
   - - 2360
     - c
     - initializeWorkDispatchFromPhaseAndSignedGateWorld00Area03004
@@ -59,30 +59,30 @@ segments:
     - '@behavior: When shared phase byte 0x80145E92 is one, selects work mode zero. Otherwise, when signed halfword 0x8014930E is below 56, selects work mode one. Either selected path clears work step byte 3.'
   - - 2460
     - c
-    - func_801D159C
-    - '@source: src/bof3/world/func_801D159C.c'
+    - drawStatusHeaderCounterAndMarkerFrameWorld00Area03004
+    - '@source: src/bof3/world/drawStatusHeaderCounterAndMarkerFrameWorld00Area03004_801D159C.c'
   - - 2884
     - c
-    - func_801D1744
-    - '@source: src/bof3/world/func_801D1744_area03004.c'
+    - drawBlueGradientQuad16x32World00Area03004
+    - '@source: src/bof3/world/drawBlueGradientQuad16x32World00Area03004_801D1744.c'
     - '@behavior: Builds the AREA030 16x32 Gouraud quad in place at the shared primitive cursor g_PrimCursor: SetPolyG4 stamps the tag, the upper vertex row becomes (arg0, arg1) and (arg0 + 0x10, arg1) with the bright 0x64/0x64/0x80 colour pair, the lower vertex row repeats those x positions one 0x20 row down with the dim 0/0/0x50 pair, and GpuAppendPrim then appends the 0x24-byte quad under the caller graphics-mode byte arg2.'
   - - 3096
     - c
-    - func_801D1818
-    - '@source: src/bof3/world/func_801D1818_area03004.c'
+    - drawCounterIndexedSprite16x16World00Area03004
+    - '@source: src/bof3/world/drawCounterIndexedSprite16x16World00Area03004_801D1818.c'
     - '@behavior: Submits the AREA030 graphics-mode byte arg2 through submitTpageDrawMode(0, arg2) and then builds the 16x16 sprite primitive in place at the shared primitive cursor g_PrimCursor: SetSprt16 stamps the tag, the colour bytes r0/g0/b0 become the gray 0x80, the CLUT halfword 0x7A40, the position the caller halfwords (arg0, arg1) and the texture cell (u0, v0) = (D_801E1D0C[(0x80143E6C >> 3) & 3], 0x48); GpuAppendPrim then appends the 0x10-byte primitive under arg2.'
   - - 3276
     - c
-    - func_801D18CC
-    - '@source: src/bof3/world/func_801D18CC_area03004.c'
+    - drawFixedCellSprite8x8World00Area03004
+    - '@source: src/bof3/world/drawFixedCellSprite8x8World00Area03004_801D18CC.c'
     - '@behavior: Builds the AREA030 8x8 sprite primitive in place at the shared primitive cursor g_PrimCursor: SetSprt8 stamps the tag, the colour bytes r0/g0/b0 are set to the gray 0x80, the CLUT halfword to 0x7A40, the texture cell to (u0,v0) = (0xB8,0x48) and the position to the caller halfwords (arg0,arg1); then GpuAppendPrim appends the 0x10-byte primitive under the caller graphics-mode byte arg2.'
   - - 3420
     - c
-    - func_801D195C
-    - '@source: src/bof3/world/func_801D195C.c'
+    - drawStatusMarkerFrameWorld00Area03004
+    - '@source: src/bof3/world/drawStatusMarkerFrameWorld00Area03004_801D195C.c'
   - - 3856
     - c
-    - func_801D1B10
+    - dispatchStateByte1Table1d10World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 3924
     - c
@@ -98,7 +98,7 @@ segments:
     - c
     - advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0
     - '@source: src/bof3/world/advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0.c'
-    - '@behavior: AREA030 message-panel fade step: advances the work fade-level word 0x0C by the work velocity word 0x18 under byte 1 of the active entry record 0x801E320C (mode 0 bounces the level at 0x00/0xFF and reverses the velocity, mode 1 wraps it to 0x00 at 0xFF, mode 2 moves the -1-floored accumulator word 0x10 and adds it to the fade level with the same bounce), then submits tpage draw mode 0/2, draws the message box func_801E0DCC(0x10, 2, 0x87, 0xB4) and the green gradient bar at (0x88, 0xCB) with the fade level scaled to the 0x60 ramp width, and finally, once the shared phase byte 0x80145E92 reads 3, arms the box halfwords 0x2E/0x30 with 0xB8/0xD1 and advances the work state byte 1.'
+    - '@behavior: AREA030 message-panel fade step: advances the work fade-level word 0x0C by the work velocity word 0x18 under byte 1 of the active entry record 0x801E320C (mode 0 bounces the level at 0x00/0xFF and reverses the velocity, mode 1 wraps it to 0x00 at 0xFF, mode 2 moves the -1-floored accumulator word 0x10 and adds it to the fade level with the same bounce), then submits tpage draw mode 0/2, draws the message box appendIndexedSpriteWorld00Area03004(0x10, 2, 0x87, 0xB4) and the green gradient bar at (0x88, 0xCB) with the fade level scaled to the 0x60 ramp width, and finally, once the shared phase byte 0x80145E92 reads 3, arms the box halfwords 0x2E/0x30 with 0xB8/0xD1 and advances the work state byte 1.'
   - - 4920
     - c
     - drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38
@@ -110,7 +110,7 @@ segments:
     - '@source: src/bof3/world/queueIconStrip.c'
   - - 5320
     - c
-    - func_801D20C8
+    - dispatchStateByte1Table1d20World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 5388
     - c
@@ -118,36 +118,36 @@ segments:
     - '@source: src/bof3/world/initializeModePanelWorkAndAdvanceStep.c'
   - - 6132
     - c
-    - func_801D23F4
-    - '@source: src/bof3/world/func_801D23F4.c'
+    - publishClampedScrollAndIntegrateMotionOrAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/publishClampedScrollAndIntegrateMotionOrAdvanceHandlerWorld00Area03004_801D23F4.c'
   - - 6640
     - c
     - advanceWorkHandlerWhenQueryByteIsNonzeroWorld00Area03004
     - '@source: src/bof3/world/advanceWorkHandlerWhenQueryByteIsNonzeroWorld00Area03004_801D25F0.c'
   - - 6728
     - c
-    - func_801D2648
-    - '@source: src/bof3/world/func_801D2648.c'
+    - integrateWorkMotionConditionallyArmEntryAndUpdateScrollWorld00Area03004
+    - '@source: src/bof3/world/integrateWorkMotionConditionallyArmEntryAndUpdateScrollWorld00Area03004_801D2648.c'
   - - 7388
     - c
-    - func_801D28DC
-    - '@source: src/bof3/world/func_801D28DC.c'
-    - '@behavior: AREA030 mode-5 handler of the local work-record mode table 0x801E1D20 (dispatched through scratch work-record byte 1): requests the shared selection effect 3 through func_8014D8D4, or effect 2 when the selected record value D_8014421C is negative, then seeds the scratch work record published at the scratchpad cursor 0x1F800044 with the x word at +0x34, the y word at +0x38 and the halfword counter at +0x3E of the active 0x98-byte work record D_80146888[D_801E3208]; it finally releases the shared hold through func_8014D978 and runs the per-record scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.'
+    - copySelectedRecordPositionAndCounterThenStepSequenceAndScrollWorld00Area03004
+    - '@source: src/bof3/world/copySelectedRecordPositionAndCounterThenStepSequenceAndScrollWorld00Area03004_801D28DC.c'
+    - '@behavior: Call func_8014D8D4 with 2 when D_8014421C is negative and with 3 otherwise. Copy the selected record''s x, y and unsigned halfword counter to the current work record, then step the pair sequence and update the work scroll words.'
   - - 7544
     - c
-    - func_801D2978
+    - dispatchStateByte1Table1d78World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 7612
     - c
-    - func_801D29BC
-    - '@source: src/bof3/world/func_801D29BC.c'
+    - initializeWorkParametersAndAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkParametersAndAdvanceHandlerWorld00Area03004_801D29BC.c'
   - - 7904
     - c
-    - func_801D2AE0
-    - '@source: src/bof3/world/func_801D2AE0.c'
+    - copySharedWorkParametersOrClearWorkFlagsWorld00Area03004
+    - '@source: src/bof3/world/copySharedWorkParametersOrClearWorkFlagsWorld00Area03004_801D2AE0.c'
   - - 8176
     - c
-    - func_801D2BF0
+    - dispatchStateByte1Table1d80World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 8244
     - c
@@ -163,19 +163,19 @@ segments:
     - c
     - slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4
     - '@source: src/bof3/world/slideWorkHalfword30TowardSlotTargetAndDrawPanelWorld00Area03004_801D2DC4.c'
-    - '@behavior: entry 2 of the local handler table at 0x801E1D80, indexed by the work record step byte at +0x1: draws panel sprite 0x11 in draw mode (0, 2) at (0x87, 0xB4), then advances the work record halfword at +0x30 towards the signed byte the slot index D_801E3208 selects from D_80146892 (stride 0x98), arming a -1 or 1 direction word at +0x10 once the record byte at +0x9 has counted to 0xF outside the 4 * D_801E320C[3] + 0xC band and clamping the halfword into +-0x24 minus 4 * D_801E320C[3]; it draws a grey 0x10-byte line at x 0xB9 over y 0xC9..0xD5, the panel row through func_801D3244 and the panel cell through drawMirroredPanelCellQuadWorld00Area03004_801D2C34, adds a red 0x10-byte line of length scaled from the D_80146916 halfword when the D_80146889 byte is 4, and requests sound cue 0x207 when D_80145E92 is 4 and the clamped cell origin leaves that row span on a clear frame-counter nibble.'
+    - '@behavior: entry 2 of the local handler table at 0x801E1D80, indexed by the work record step byte at +0x1: draws panel sprite 0x11 in draw mode (0, 2) at (0x87, 0xB4), then advances the work record halfword at +0x30 towards the signed byte the slot index D_801E3208 selects from D_80146892 (stride 0x98), arming a -1 or 1 direction word at +0x10 once the record byte at +0x9 has counted to 0xF outside the 4 * D_801E320C[3] + 0xC band and clamping the halfword into +-0x24 minus 4 * D_801E320C[3]; it draws a grey 0x10-byte line at x 0xB9 over y 0xC9..0xD5, the panel row through drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004 and the panel cell through drawMirroredPanelCellQuadWorld00Area03004_801D2C34, adds a red 0x10-byte line of length scaled from the D_80146916 halfword when the D_80146889 byte is 4, and requests sound cue 0x207 when D_80145E92 is 4 and the clamped cell origin leaves that row span on a clear frame-counter nibble.'
   - - 9796
     - c
-    - func_801D3244
-    - '@source: src/bof3/world/func_801D3244.c'
+    - drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004
+    - '@source: src/bof3/world/drawPanelCellAndOptionalBlinkingHighlightWorld00Area03004_801D3244.c'
   - - 10072
     - c
-    - func_801D3358
+    - dispatchStateByte1Table1d8cWorld00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 10140
     - c
-    - func_801D339C
-    - '@source: src/bof3/world/func_801D339C.c'
+    - initializePanelWorkRequestSelectedCueAndAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializePanelWorkRequestSelectedCueAndAdvanceHandlerWorld00Area03004_801D339C.c'
   - - 10400
     - c
     - decrementWorkHalfword2eAndArmCountdownAtLimitWorld00Area03004
@@ -193,8 +193,8 @@ segments:
     - '@behavior: Decrements work halfword +0x2E by 30. When the narrowed signed result is below -69, resets the halfword to 160 and clears handler byte 1; otherwise calls the bounded work-pointer queue appender.'
   - - 10700
     - c
-    - func_801D35CC
-    - '@source: src/bof3/world/func_801D35CC.c'
+    - dispatchWorkByteOneOrClearFlagsWorld00Area03004
+    - '@source: src/bof3/world/dispatchWorkByteOneOrClearFlagsWorld00Area03004_801D35CC.c'
   - - 10832
     - c
     - seedWorkHalfword30AndAdvanceHandlerWorld00Area03004
@@ -205,8 +205,8 @@ segments:
     - '@source: src/bof3/world/advancePanelYAndDrawRectangleWorld00Area03004_801D3684.c'
   - - 11000
     - c
-    - func_801D36F8
-    - '@source: src/bof3/world/func_801D36F8.c'
+    - initializePickedEntryOrAdvanceWorkHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializePickedEntryOrAdvanceWorkHandlerWorld00Area03004_801D36F8.c'
   - - 11300
     - c
     - drawFixedPanelAndSelectedMessageWorld00Area03004
@@ -244,28 +244,28 @@ segments:
     - '@behavior: AREA030 panel message line step (entry 11 of the state-1 handler table 0x801E1F44): subtracts two from the vertical offset halfword 0x2E of the work record published at the scratchpad cursor 0x1F800044 and, while that offset stays below 0x1D with a nonzero revealed count in byte 0x49, copies the run cursor word 0x50 into word 0x54, steps the cursor past the message control codes 0x12 and 0x15, advances it one further byte while counting one revealed token off that byte 0x49, and rewinds the vertical offset to 0x23 with the reveal timer byte 0x09 rearmed to 4. While the timer runs it counts the timer down and resubmits the saved line through func_801D9740 with the shade span (8 - (4 - timer) * 2) & 0xFE plus 0x80 and the line argument 0x1D. While the revealed count is nonzero it submits the shaded panel through func_8014F800 at (s16)0x2E, (s16)0x80144154 + 2, 0, the revealed count and the run cursor word 0x50, then, unless the entry attribute byte 0x08 of the 12-byte panel entry 0x801E1E78 selected by record byte 0x4B is the 0xFF sentinel, submits the sliding message through the same helper at (s16)(0x2E + 0x49 * 8) with the third byte of the 3-byte row of 0x801E1F14 selected by that attribute. With no revealed token left it submits only that sliding message, or runs func_80196070 when the attribute is the sentinel, and when the attribute is not the sentinel and the vertical offset has reached 0x1D it rearms the timer byte 0x09 with 4 and advances the record state index byte 0x01.'
   - - 13796
     - c
-    - func_801D41E4
-    - '@source: src/bof3/world/func_801D41E4.c'
+    - decrementCountdownAndDrawTokenCellOrClearWorkFlagsWorld00Area03004
+    - '@source: src/bof3/world/decrementCountdownAndDrawTokenCellOrClearWorkFlagsWorld00Area03004_801D41E4.c'
   - - 13984
     - c
-    - func_801D42A0
+    - dispatchStateByte1Table1f78World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 14052
     - c
-    - func_801D42E4
-    - '@source: src/bof3/world/func_801D42E4.c'
+    - initializeWorkMotionAndCountdownThenAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkMotionAndCountdownThenAdvanceHandlerWorld00Area03004_801D42E4.c'
   - - 14200
     - c
-    - func_801D4378
-    - '@source: src/bof3/world/func_801D4378.c'
+    - decrementEquipmentPanelSlideAndSelectHandlerAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementEquipmentPanelSlideAndSelectHandlerAtZeroWorld00Area03004_801D4378.c'
   - - 14704
     - c
-    - func_801D4570
-    - '@source: src/bof3/world/func_801D4570.c'
+    - drawHeaderStatusAndRodListPanelWorld00Area03004
+    - '@source: src/bof3/world/drawHeaderStatusAndRodListPanelWorld00Area03004_801D4570.c'
   - - 14840
     - c
-    - func_801D45F8
-    - '@source: src/bof3/world/func_801D45F8.c'
+    - drawHeaderStatusAndLureListPanelWorld00Area03004
+    - '@source: src/bof3/world/drawHeaderStatusAndLureListPanelWorld00Area03004_801D45F8.c'
   - - 14976
     - c
     - advancePanelSlideAndUpdateStateWorld00Area03004_801D4680
@@ -329,9 +329,9 @@ segments:
     - '@behavior: AREA030 panel-step resource handler (handler index 1 of the work-byte-3 table at 0x801E1FD4): while byte 9 of the work record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and runs the shared func_8014D978 helper; otherwise it reads byte 0xA of the same record as an index into the two-byte record table at 0x801E1FE8, restarts that index from the entry countdown byte when the entry resource byte is the 0xFF end marker, requests the entry resource through func_8014D6B8, reloads work byte 9 from the entry countdown byte and increments work byte 0xA; both paths end in the shared func_8014D4E0 helper.'
   - - 20040
     - c
-    - func_801D5A48
-    - '@source: src/bof3/world/func_801D5A48_area03004.c'
-    - '@behavior: AREA030 panel-step initializer (handler index 2 of the work-byte-3 table at 0x801E1FD4): requests resource 0x21 through the shared func_8014DD3C helper, writes 0x80 to work-record byte 0x24, writes 1 to bytes 0x29 and 0x2A, clears byte 0x48, stores the halfwords 0xA2 at 0x2E and 0xC2 at 0x30, clears bytes 0x5D..0x5F, 9, 0xA and 6 twice, clears the word at 0xC, stores 4 at the word 0x18, requests resource 0 through the shared func_8014D6B8 helper and finally increments dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
+    - initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004
+    - '@source: src/bof3/world/initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004_801D5A48.c'
+    - '@behavior: Call func_8014DD3C(0x21), initialize the panel fields and both byte-6 clears, seed word 0x0C = 0 and word 0x18 = 4, and call func_8014D6B8(0). Advance handler byte 3 to the pair-sequence and queue step.'
   - - 20296
     - c
     - stepWorkPairSequenceAndQueueWorkPointerWorld00Area03004
@@ -339,34 +339,34 @@ segments:
     - '@behavior: AREA030 panel state handler selected by the overlay handler pointer word at 0x801E1FE0: calls the shared helper func_8014D978 and then func_8014D4E0 without arguments and returns.'
   - - 20336
     - c
-    - func_801D5B70
-    - '@source: src/bof3/world/func_801D5B70_area03004.c'
-    - '@behavior: AREA030 panel step-back initializer: requests resource 0x47 through the shared func_8014DD3C helper, stores 0x80 in work-record byte 0x24, 1 in byte 0x29, clears bytes 0x2A/0x48, stores the halfwords 0xE8 at 0x2E and 0xC2 at 0x30, clears bytes 9/0xA/0x5D/0x5E/0x5F, requests resource 0xA through the shared func_8014D6B8 helper and finally decrements the dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
+    - initializePanelWorkAndDecrementHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializePanelWorkAndDecrementHandlerWorld00Area03004_801D5B70.c'
+    - '@behavior: Call func_8014DD3C(0x47), initialize panel work with byte 0x24 = 0x80, byte 0x29 = 1, bytes 0x2A and 0x48 = 0, and halfwords 0x2E = 0xE8 and 0x30 = 0xC2. Clear bytes 9, 0xA and 0x5D through 0x5F, call func_8014D6B8(10), then decrement a fresh handler byte 3 modulo 256.'
   - - 20552
     - c
-    - func_801D5C48
-    - '@source: src/bof3/world/func_801D5C48.c'
+    - dispatchStateByte3Table2000World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2000World00Area03004_801D5C48.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2000.'
   - - 20620
     - c
-    - func_801D5C8C
-    - '@source: src/bof3/world/func_801D5C8C_area03004.c'
-    - '@behavior: initializes the AREA030 scratch work record for the next panel step: calls the shared func_8014DD3C helper with 0x47, writes 0x80 to scratch offset 0x24 and 1 to offset 0x29, clears offsets 0x2A and 0x48, stores the scratch halfwords 0xEC at 0x2E and 0xA2 at 0x30, clears scratch bytes 0x5D..0x5F and 0x09/0x0A/0x06, clears the scratch word at 0x0C, stores 4 at the scratch word 0x18, then increments the scratch state byte at offset 0x03.'
+    - initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004
+    - '@source: src/bof3/world/initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004_801D5C8C.c'
+    - '@behavior: Call func_8014DD3C(0x47), initialize the gradient-bar panel fields, clear its level and countdown bytes, set width word 0x0C to 0 and width-delta word 0x18 to 4, then advance handler byte 3. Preserve both byte-6 clears and the separate pointer captures.'
   - - 20872
     - c
     - advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88
     - '@source: src/bof3/world/advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88.c'
-    - '@behavior: AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table 0x801E2000: while work byte 9 of the record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and runs the shared func_8014D978 helper; otherwise it reads work byte 0xA as an index into the three-byte record table 0x801E2008 and, when the record carries the 0xFF end marker, re-seeds work byte 0xA from the record countdown byte and restarts the bar animation with width 0 in work word 0x0C, delta 4 in work word 0x18 and work byte 6 cleared. It then requests the record resource through func_8014D6B8, reloads work byte 9 from the record countdown and advances work byte 0xA. Every call then runs func_8014D4E0, submits texture-page draw mode 0/1 and appends the sprites (0x15, 1, 0x32, 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80) through func_801E0DCC. The stepped-from record mode byte then drives the animation: mode 0 moves the width by the sign-carrying delta and reflects it at 0 and 0x60 so the bar bounces, while mode 1 advances work byte 6 once every other frame. Finally it draws the gradient bar of that width at (0x39, 0x97) in append mode 1, formats work byte 6 through the "%2d" rodata string 0x801D0C04 into the shared 0x80145AD4 buffer and submits the buffer at (0xAC, 0x94) in mode 0 through func_8014FF0C.'
+    - '@behavior: AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table 0x801E2000: while work byte 9 of the record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and runs the shared func_8014D978 helper; otherwise it reads work byte 0xA as an index into the three-byte record table 0x801E2008 and, when the record carries the 0xFF end marker, re-seeds work byte 0xA from the record countdown byte and restarts the bar animation with width 0 in work word 0x0C, delta 4 in work word 0x18 and work byte 6 cleared. It then requests the record resource through func_8014D6B8, reloads work byte 9 from the record countdown and advances work byte 0xA. Every call then runs func_8014D4E0, submits texture-page draw mode 0/1 and appends the sprites (0x15, 1, 0x32, 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80) through appendIndexedSpriteWorld00Area03004. The stepped-from record mode byte then drives the animation: mode 0 moves the width by the sign-carrying delta and reflects it at 0 and 0x60 so the bar bounces, while mode 1 advances work byte 6 once every other frame. Finally it draws the gradient bar of that width at (0x39, 0x97) in append mode 1, formats work byte 6 through the "%2d" rodata string 0x801D0C04 into the shared 0x80145AD4 buffer and submits the buffer at (0xAC, 0x94) in mode 0 through func_8014FF0C.'
   - - 21504
     - c
-    - func_801D6000
-    - '@source: src/bof3/world/func_801D6000.c'
+    - dispatchStateByte3Table2014World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2014World00Area03004_801D6000.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2014.'
   - - 21572
     - c
-    - func_801D6044
-    - '@source: src/bof3/world/func_801D6044_area03004.c'
-    - '@behavior: initializes the AREA030 scratch work record for the next panel step: calls the shared func_8014DD3C helper with 0x47, writes 0x80 to scratch offset 0x24 and 1 to offset 0x29, clears offsets 0x2A and 0x48, stores the scratch halfwords 0xF0 at 0x2E and 0xC2 at 0x30, clears scratch bytes 0x5D..0x5F and 0x09/0x0A/0x06, then increments the scratch state byte at offset 0x03.'
+    - initializeMarkerPanelWorkAndAdvanceStepWorld00Area03004
+    - '@source: src/bof3/world/initializeMarkerPanelWorkAndAdvanceStepWorld00Area03004_801D6044.c'
+    - '@behavior: Call func_8014DD3C(0x47), initialize the marker panel work fields, clear its countdown and level bytes, and advance handler byte 3. The following marker-panel step consumes byte 6 as its vertical offset.'
   - - 21800
     - c
     - advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128
@@ -374,9 +374,9 @@ segments:
     - '@behavior: AREA030 panel-step resource handler (index 1 of the work-byte-3 dispatch table 0x801E2014): while work byte 9 is nonzero it decrements that byte and runs func_8014D978; otherwise it steps the three-byte record table 0x801E2024 through work byte 0xA (a zero resource byte re-seeds the index from the record countdown byte and clears work byte 6), requests the record resource through func_8014D6B8, reloads work byte 9 from the record countdown, arms the shared entry record 0x80143FC8 picked by func_8019601c when the record mode byte is 0x50, and advances work byte 0xA. It then runs func_8014D4E0, adds the stepped-from record mode byte to work byte 6 every fourth frame inside the 0..0x18 clamp, and draws the quad at (0xEC, 0x70), the sprite at (0xEC, 0x80), draw mode 0/1, the sprite at (0x14, 1, 0xE4, 0x68) and the 8x8 marker at (0xFC, 0x70 + work byte 6).'
   - - 22548
     - c
-    - func_801D6414
-    - '@source: src/bof3/world/func_801D6414_area03004.c'
-    - '@behavior: AREA030 scratch work-record initializer for the 0x2B step: requests resource 0x2B through the shared func_8014DD3C helper, stores 0x80 in work-record byte 0x24, clears bytes 0x29/0x2A, stores 2 in byte 0x48, clears bytes 0x5D..0x5F, stores 0x8000 in the work-record step words at 0x40/0x44, stores 0x40 in byte 9, clears byte 6, requests resource 3 through the shared func_8014D6B8 helper and finally increments the dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
+    - initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004
+    - '@source: src/bof3/world/initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004_801D6414.c'
+    - '@behavior: Call func_8014DD3C(0x2B), set work byte 0x24 to 0x80, clear bytes 0x29 and 0x2A, and store 2 in byte 0x48. Clear bytes 0x5D through 0x5F, store 0x8000 in words 0x40 and 0x44, set countdown 64 and clear byte 6. Call func_8014D6B8(3), then advance a fresh handler byte 3.'
   - - 22760
     - c
     - decrementWorkCountdownThenClearFlagsOrQueuePointerWorld00Area03004
@@ -384,14 +384,14 @@ segments:
     - '@behavior: Decrements work countdown byte 9 and reloads the work pointer. A zero reloaded countdown calls the shared clearWorkFlags helper; otherwise, bit 3 of that reloaded countdown gates a call to the bounded work-pointer queue appender.'
   - - 22868
     - c
-    - func_801D6554
-    - '@source: src/bof3/world/func_801D6554.c'
+    - dispatchStateByte3Table2048World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2048World00Area03004_801D6554.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2048.'
   - - 22936
     - c
-    - func_801D6598
-    - '@source: src/bof3/world/func_801D6598_area03004.c'
-    - '@behavior: AREA030 scratch work-record initializer: requests resource 0x47 through the shared func_8014DD3C helper, stores 0x80 in work-record byte 0x24, stores 1 in byte 0x29, clears bytes 0x2A and 0x48, stores the scratch halfwords 0xCA at 0x2E and 0xBA at 0x30, clears scratch bytes 0x5D..0x5F and 0x09/0x0A/0x0B, increments the dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044 and finally requests resource 3 through the shared func_8014D6B8 helper.'
+    - initializeGridHighlightPanelWorkAndAdvanceStepWorld00Area03004
+    - '@source: src/bof3/world/initializeGridHighlightPanelWorkAndAdvanceStepWorld00Area03004_801D6598.c'
+    - '@behavior: Call func_8014DD3C(0x47), initialize the grid-highlight panel fields and clear its phase, countdown and row bytes. Advance handler byte 3 before calling func_8014D6B8(3).'
   - - 23172
     - c
     - sweepGridHighlightAndDrawCellsWorld00Area03004_801D6684
@@ -399,8 +399,8 @@ segments:
     - '@behavior: AREA030 grid handler, index 1 of the work-byte-3 dispatch table 0x801E2048: while work byte 0xA is zero it advances the phase byte 9 and, once the cell of the four-by-eight row table 0x801E2050 at the work byte 0xB row and the phase divided by twelve is not the 0xFF end marker, arms the 0x32 countdown; while the countdown runs it queues the icon strip at (0xD4, 0x8A) with the row plus one as the second sprite index. With the countdown still zero and that cell holding 1 it runs the shared func_8014D978 helper on the ten frames of each twelve. It then draws every cell of the table, the highlighted cell through the shaded request func_8014F800 three pixels above its row at the shade equal to the cell value and every other cell through the text drawer func_8014FC90 at the shade three times the cell value inside the selected row or 7 minus the cell value elsewhere, each as the one-character run of 0x801E2070 indexed by that value. After the shared func_8014D4E0 update it decrements the countdown and, when that expires, clears the phase and advances the work byte 0xB row, wrapping to zero at four.'
   - - 24040
     - c
-    - func_801D69E8
-    - '@source: src/bof3/world/func_801D69E8.c'
+    - dispatchStateByte3Table2074World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2074World00Area03004_801D69E8.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2074.'
   - - 24108
     - c
@@ -409,18 +409,18 @@ segments:
     - '@behavior: seeds the AREA030 scratch record for the later menu phase and bumps scratch state byte `0x03`.'
   - - 24360
     - c
-    - func_801D6B28
-    - '@source: src/bof3/world/func_801D6B28.c'
-    - '@behavior: AREA030 selection-panel marker refresh: runs the shared panel reset func_8014D4E0, submits the tpage draw mode (0, 1), draws the three panel lines through func_801E0DCC, clamps the work-record x word 0x0C to 0x39..0x79 and its companion word 0x10 to 0x41..0x94 in place, then redraws the selection marker row through func_801D3244 (clamped x word as a signed halfword, 0xB3, 0x20, work byte 6 low three bits doubled, 1, and a mode flag that is 1 when word 0x10 is below word 0x0C or word 0x0C plus 0x20 is below word 0x10) and drawMirroredPanelCellQuadWorld00Area03004_801D2C34 (clamped companion word as a signed halfword, 0xB3, arg0 byte as a flag, 1).'
+    - clampMarkerPositionsAndDrawPanelRowWorld00Area03004
+    - '@source: src/bof3/world/clampMarkerPositionsAndDrawPanelRowWorld00Area03004_801D6B28.c'
+    - '@behavior: Run the bounded work-pointer queue appender and draw sprites 0x15, 0x16 and 0x11. Clamp work words 0x0C and 0x10 to 57..121 and 65..148, then draw the width-32 cell at y 179. Enable its blinking highlight when the companion lies outside the marker''s 32-pixel interval. Draw the trailing cell using cellVariant.'
   - - 24752
     - c
-    - func_801D6CB0
-    - '@source: src/bof3/world/func_801D6CB0_area03004.c'
-    - '@behavior: AREA030 selection-panel step advancer on the work record published at the scratchpad cursor 0x1F800044: a nonzero countdown byte 9 is decremented and, unless bit 7 of the current step record at 0x801E207C is set, runs the shared func_8014D978 helper; an expired countdown looks the step record up through the record step byte 10, re-seeds that byte from the record count byte at the 0xFF end marker, requests the record low 7 bits through func_8014D8D4, arms countdown byte 9 and advances step byte 10. It then integrates the stepped-from record (work words 0x0C/0x10 gain the record signed deltas, work byte 6 loses the second delta), passes the sign of the record fourth byte to func_801D6B28 and redraws the panel row through func_801D3244 (0xCE, 0x5C, 0x20, 0, 1, 0) and drawMirroredPanelCellQuadWorld00Area03004_801D2C34 (0xE3, 0x69, 0, 1).'
+    - stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004
+    - '@source: src/bof3/world/stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004_801D6CB0.c'
+    - '@behavior: When countdown byte 9 is zero on entry, select a four-byte motion step using byte 10, redirect a -1 marker, request its low seven bits, reload byte 9 and advance byte 10. Otherwise decrement byte 9 and conditionally step the pair sequence. Integrate the preceding step''s signed deltas, subtract its byte-2 value from work byte 6 modulo 256, and draw the marker row. Decrementing to zero does not select a new step in the same call.'
   - - 25284
     - c
-    - func_801D6EC4
-    - '@source: src/bof3/world/func_801D6EC4.c'
+    - dispatchStateByte3Table20c4World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table20c4World00Area03004_801D6EC4.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E20C4.'
   - - 25352
     - c
@@ -431,34 +431,34 @@ segments:
     - c
     - advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34
     - '@source: src/bof3/world/advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34.c'
-    - '@behavior: AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table 0x801E20C4, walking the second step-record chain at 0x801E20CC: while work byte 9 of the record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and, unless bit 7 of the stepped-from record first byte is set, runs the shared func_8014D978 helper; once the countdown expires it looks the record up through work byte 0xA, re-seeds work byte 0xA from the record count byte and seeds work byte 0xB with 0x37 and work words 0x0C/0x10 with 0x6A when the record carries the 0xFF end marker, requests the record low 7 bits through func_8014D8D4 and, for request id 9, claims a front-end entry record through the shared allocator func_8019601c and seeds that row with flags 1, handler selector 0x1A, bytes 1..3 0x10/2/2 and halfwords 0xF2/0x9E at 0x2E/0x30 unless the claimed index is 0xFF, then arms work byte 9 from the record count byte and advances work byte 0xA; it integrates the stepped-from record into work words 0x0C/0x10 and byte 6, passes the sign of the record fourth byte to func_801D6B28, and on every sixteenth frame with a positive fourth byte advances work byte 0xB, clamps it to 0x3C and submits it through the %2d format 0x801D0C04 in the shared 0x80145AD4 buffer at (0xAC, 0xB0) through func_8014FF0C with mode 2 while frame-counter bit 2 is set.'
+    - '@behavior: AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table 0x801E20C4, walking the second step-record chain at 0x801E20CC: while work byte 9 of the record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and, unless bit 7 of the stepped-from record first byte is set, runs the shared func_8014D978 helper; once the countdown expires it looks the record up through work byte 0xA, re-seeds work byte 0xA from the record count byte and seeds work byte 0xB with 0x37 and work words 0x0C/0x10 with 0x6A when the record carries the 0xFF end marker, requests the record low 7 bits through func_8014D8D4 and, for request id 9, claims a front-end entry record through the shared allocator func_8019601c and seeds that row with flags 1, handler selector 0x1A, bytes 1..3 0x10/2/2 and halfwords 0xF2/0x9E at 0x2E/0x30 unless the claimed index is 0xFF, then arms work byte 9 from the record count byte and advances work byte 0xA; it integrates the stepped-from record into work words 0x0C/0x10 and byte 6, passes the sign of the record fourth byte to clampMarkerPositionsAndDrawPanelRowWorld00Area03004, and on every sixteenth frame with a positive fourth byte advances work byte 0xB, clamps it to 0x3C and submits it through the %2d format 0x801D0C04 in the shared 0x80145AD4 buffer at (0xAC, 0xB0) through func_8014FF0C with mode 2 while frame-counter bit 2 is set.'
   - - 26340
     - c
     - drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4
     - '@source: src/bof3/world/drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4.c'
-    - '@behavior: AREA030 entry-panel drawer for the selected step at the requested origin: paints the 0xF2 by 0x9F shaded panel through func_801AE3F0 with shade 0xF0 and the CLUT-bank byte D_80144952, then while work byte 8 (the slide direction) is nonzero drives the step strip - when work byte 9 is clear it re-targets the strip by storing nine frames per step (work word 0x20 takes the selected step word 0x3C times 9 and the displayed step word 0x3E takes 0x3C) whenever the two disagree, steps the strip clock word 0x14 down with a 0x35 wrap in the positive direction and advances work byte 9 and then byte 0xA; phase byte 0xA zero settles, claiming a front-end entry record through func_8019601C when the strip clock has reached its target word 0x20 and seeding that 0x74-byte row with flags 1, handler selector 0x1A at +5, byte 1 = 0x10 and byte 2 = the low byte of the displayed step word 0x3E, and otherwise stepping the clock down the same way and advancing the phase, while a nonzero phase only advances and its wrap to 4 restarts it at zero with the strip clock stepped up and wrapped at 0x36 in the negative direction; it then draws the strip as nine sprites from y + 0x19 at phase zero or ten sprites from y + 3*phase + 0xC when the direction is 1 and y - (3*phase - 0x19) otherwise, one per 0xD row, skipping the 0xFFFF sentinel and walking the 54-entry halfword sprite table D_801E2120 from the strip clock with wraparound through the main-executable 0x80010000 VRAM offset table; finally it paints the 0xF2 by 0xE header bar at y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 with shade 0x30, draws the selected step icon sprite D_801E2114[work word 0x3C] at (x + 0x3D, y + 6), draws the status icon row through func_801D7784 and formats the selected step word plus one through the %d/6 format D_801D0C08 into the shared 0x80145AD4 buffer, submitting it at (x + 0xCA, y + 0x92) through func_80150098.'
+    - '@behavior: AREA030 entry-panel drawer for the selected step at the requested origin: paints the 0xF2 by 0x9F shaded panel through func_801AE3F0 with shade 0xF0 and the CLUT-bank byte D_80144952, then while work byte 8 (the slide direction) is nonzero drives the step strip - when work byte 9 is clear it re-targets the strip by storing nine frames per step (work word 0x20 takes the selected step word 0x3C times 9 and the displayed step word 0x3E takes 0x3C) whenever the two disagree, steps the strip clock word 0x14 down with a 0x35 wrap in the positive direction and advances work byte 9 and then byte 0xA; phase byte 0xA zero settles, claiming a front-end entry record through func_8019601C when the strip clock has reached its target word 0x20 and seeding that 0x74-byte row with flags 1, handler selector 0x1A at +5, byte 1 = 0x10 and byte 2 = the low byte of the displayed step word 0x3E, and otherwise stepping the clock down the same way and advancing the phase, while a nonzero phase only advances and its wrap to 4 restarts it at zero with the strip clock stepped up and wrapped at 0x36 in the negative direction; it then draws the strip as nine sprites from y + 0x19 at phase zero or ten sprites from y + 3*phase + 0xC when the direction is 1 and y - (3*phase - 0x19) otherwise, one per 0xD row, skipping the 0xFFFF sentinel and walking the 54-entry halfword sprite table D_801E2120 from the strip clock with wraparound through the main-executable 0x80010000 main-RAM halfword offset table; finally it paints the 0xF2 by 0xE header bar at y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 with shade 0x30, draws the selected step icon sprite D_801E2114[work word 0x3C] at (x + 0x3D, y + 6), draws the status icon row through drawWidePanelFrameWorld00Area03004 and formats the selected step word plus one through the %d/6 format D_801D0C08 into the shared 0x80145AD4 buffer, submitting it at (x + 0xCA, y + 0x92) through func_80150098.'
   - - 27524
     - c
-    - func_801D7784
-    - '@source: src/bof3/world/func_801D7784_area03004.c'
-    - '@behavior: draws the AREA030 status panel icon row and its framed sprite columns at the requested origin through func_801E0DCC and func_801D799C.'
+    - drawWidePanelFrameWorld00Area03004
+    - '@source: src/bof3/world/drawWidePanelFrameWorld00Area03004_801D7784.c'
+    - '@behavior: draws the AREA030 status panel icon row and its framed sprite columns at the requested origin through appendIndexedSpriteWorld00Area03004 and drawIndexedPanelQuadWithHeightWorld00Area03004.'
   - - 28060
     - c
-    - func_801D799C
+    - drawIndexedPanelQuadWithHeightWorld00Area03004
   - - 28516
     - c
-    - func_801D7B64
-    - '@source: src/bof3/world/func_801D7B64_area03004.c'
+    - drawEntryPanelCounterRowWorld00Area03004
+    - '@source: src/bof3/world/drawEntryPanelCounterRowWorld00Area03004_801D7B64.c'
     - '@behavior: draws the AREA030 entry-panel counter row at its fixed coordinates: selects draw mode 0/1 and stamps sprite 0x12 at (0xF0, 0x42), submits the two-character rodata label D_801D0C10 at (0x11C, 0x45) through the shared text drawer func_8014FF0C, then formats the signed halfword at offset 0x3E of the work record published at the scratchpad cursor 0x1F800044 plus one through the "%2d" format into the shared 0x80145AD4 buffer, rewrites a leading space of that buffer to 0xFF and submits the two-token run at (0xFA, 0x45) through func_8014F800.'
   - - 28688
     - c
     - drawLabeledStatusCellsWorld00Area03004_801D7C10
     - '@source: src/bof3/world/drawLabeledStatusCellsWorld00Area03004_801D7C10.c'
-    - '@behavior: draws the three AREA030 status-panel cells of one row at the requested origin: bit i of the mask byte is the panel flag of cell i, the 0x28 by 0x10 cell is drawn at (x + 0x30 * i, y) through func_801D7D68, and the stored flag becomes a label shade that counts up by one when the whole mask is zero; the function then submits the 4-character label runs of the shared "GearDataRule" rodata string 0x801E21C0 at (x + 6, y + 4), (x + 0x36, y + 4) and (x + 0x66, y + 4) through func_8014F800 with the shade 7 - 7 * flag and the 4-token count.'
+    - '@behavior: draws the three AREA030 status-panel cells of one row at the requested origin: bit i of the mask byte is the panel flag of cell i, the 0x28 by 0x10 cell is drawn at (x + 0x30 * i, y) through drawGroupedCellSpritesWorld00Area03004, and the stored flag becomes a label shade that counts up by one when the whole mask is zero; the function then submits the 4-character label runs of the shared "GearDataRule" rodata string 0x801E21C0 at (x + 6, y + 4), (x + 0x36, y + 4) and (x + 0x66, y + 4) through func_8014F800 with the shade 7 - 7 * flag and the 4-token count.'
   - - 29032
     - c
-    - func_801D7D68
-    - '@source: src/bof3/world/func_801D7D68_area03004.c'
+    - drawGroupedCellSpritesWorld00Area03004
+    - '@source: src/bof3/world/drawGroupedCellSpritesWorld00Area03004_801D7D68.c'
     - '@behavior: draws one 0x28 by 0x10 AREA030 status-panel cell at the requested origin: submits the inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte 0x80144952, selects graphics mode 8/1, then draws the flag-selected sprite (flag*4 + 0x1D) at (x, y), the (flag*4 + 0x1E) sprite on the y + 0x10 row, four (flag*4 + 0x1F) sprites spaced eight pixels from x + 8 on that row and finally the (flag*4 + 0x20) sprite at (x + 0x28, y + 0x10).'
   - - 29360
     - c
@@ -474,7 +474,7 @@ segments:
     - c
     - drawLureListColumnWorld00Area03004_801D8364
     - '@source: src/bof3/world/drawLureListColumnWorld00Area03004_801D8364.c'
-    - '@behavior: draws the AREA030 lure column at the requested origin: submits the 0x8B by 0x9E inset panel through func_801AE3F0 with shade 0x80 and the shared CLUT-bank byte D_80144952, walks the 0x80 slot entries of the shared main-executable tables D_801451CC (record index) and D_801453CC (count) and, for every slot whose 20-byte equipment record in D_801C9E7C carries the kind byte 10 at +0x0E, draws that record''s twelve-character name through func_8014F800 at (x + 5, row). Work-record byte +0x0A is a countdown decremented per call: its low byte +0x38 is the first visible row (one less while work byte +0x08 is clear), the drawn row limit is 10 (9 in that case) and the column height reads 0x19 - 4 * count (0x19 - 4 * (3 - count) in that case). The row the work word +0x10 names is drawn highlighted with colour 7 and, while the shared byte 0x80145E94 reads two and bit 0 of work byte +0x07 is set, a second unhighlighted copy of its name is drawn two pixels up; the work halfword +0x3A is stamped with that row''s slot index. A slot count of two or more is formatted through "*%2d" into the shared 0x80145AD4 buffer and drawn through func_80150098. The column closes with func_801D90FC at the origin, the stretched panel column at x + 0x80 whose height loses six pixels per row beyond the ninth and whose origin follows the work-record scroll byte, and the four-character "LURE" title of the panel at (x + 0x37, y + 7).'
+    - '@behavior: draws the AREA030 lure column at the requested origin: submits the 0x8B by 0x9E inset panel through func_801AE3F0 with shade 0x80 and the shared CLUT-bank byte D_80144952, walks the 0x80 slot entries of the shared main-executable tables D_801451CC (record index) and D_801453CC (count) and, for every slot whose 20-byte equipment record in D_801C9E7C carries the kind byte 10 at +0x0E, draws that record''s twelve-character name through func_8014F800 at (x + 5, row). Work-record byte +0x0A is a countdown decremented per call: its low byte +0x38 is the first visible row (one less while work byte +0x08 is clear), the drawn row limit is 10 (9 in that case) and the column height reads 0x19 - 4 * count (0x19 - 4 * (3 - count) in that case). The row the work word +0x10 names is drawn highlighted with colour 7 and, while the shared byte 0x80145E94 reads two and bit 0 of work byte +0x07 is set, a second unhighlighted copy of its name is drawn two pixels up; the work halfword +0x3A is stamped with that row''s slot index. A slot count of two or more is formatted through "*%2d" into the shared 0x80145AD4 buffer and drawn through func_80150098. The column closes with drawListColumnFrameWorld00Area03004 at the origin, the stretched panel column at x + 0x80 whose height loses six pixels per row beyond the ninth and whose origin follows the work-record scroll byte, and the four-character "LURE" title of the panel at (x + 0x37, y + 7).'
   - - 31968
     - c
     - drawEquipmentGuideColumn
@@ -484,12 +484,12 @@ segments:
     - c
     - drawStatusBoxPair
     - '@source: src/bof3/world/drawStatusBoxPair.c'
-    - '@behavior: draws the two stacked AREA030 status boxes at the requested origin: submits the inset panel rectangles 0x8A by 0x3A at y + 2 and 0x8A by 0x5C at y + 0x42 through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, and then repeats one box body at the rows y and y + 0x40, each drawing the 0x25 sprite at x, ten 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x70 and x + 0x88 on the box row, two func_801D799C text rows of width 0x1E (upper box) or 0x40 (lower box) at (x, row + 0x18) and (x + 0x88, row + 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen 0x3D sprites spaced eight pixels from x + 8 on that row and the 0x3E sprite at x + 0x88 on that row.'
+    - '@behavior: draws the two stacked AREA030 status boxes at the requested origin: submits the inset panel rectangles 0x8A by 0x3A at y + 2 and 0x8A by 0x5C at y + 0x42 through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, and then repeats one box body at the rows y and y + 0x40, each drawing the 0x25 sprite at x, ten 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x70 and x + 0x88 on the box row, two drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x1E (upper box) or 0x40 (lower box) at (x, row + 0x18) and (x + 0x88, row + 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen 0x3D sprites spaced eight pixels from x + 8 on that row and the 0x3E sprite at x + 0x88 on that row.'
   - - 34044
     - c
-    - func_801D90FC
-    - '@source: src/bof3/world/func_801D90FC_area03004.c'
-    - '@behavior: draws the AREA030 status panel at the requested origin: submits the 0x8B by 0x14 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as its trailing argument, selects graphics mode 9/1, draws the 0x3F/0x40/0x41 header sprites eight pixels apart on the requested row, eight 0x26 sprites spaced eight pixels from x + 0x28, the 0x42/0x43 sprites at x + 0x68/x + 0x78, the 0x44 sprite at x + 0x80, two func_801D799C text rows of width 0x78 and 0x68 at (x, y + 0x18) and (x + 0x80, y + 0x28) with the 0x46 sprite between them at x + 0x80 on the y + 0x18 row, the 0x2A sprite at x on the y + 0x90 row, fifteen 0x2B sprites spaced eight pixels from x + 8 on that row and finally the 0x45 sprite at x + 0x80 on the y + 0x88 row.'
+    - drawListColumnFrameWorld00Area03004
+    - '@source: src/bof3/world/drawListColumnFrameWorld00Area03004_801D90FC.c'
+    - '@behavior: Draw the 0x8B by 0x14 inset header and fixed sprite frame shared by the rod and lure columns. Draw the two side quads at x, y + 0x18 and x + 0x80, y + 0x28 with heights 0x78 and 0x68, then draw the bottom sprite row.'
   - - 34636
     - c
     - drawSemiTransPaletteRectangleFill
@@ -497,8 +497,8 @@ segments:
     - '@behavior: draws the semi-transparent fill of the requested rectangle in a palette colour: it reads the 15-bit entry zero of sub-palette row 1 of the CLUT bank selected by the shared CLUT-bank byte D_80144952, expands it into the red, green and blue channel bytes and selects texture-page draw mode 6, then emits three semi-transparent packets from the shared primitive cursor, a leading 0x18-byte quad through (x + 2, y), (x + w - 2, y), (x, y + 2) and (x + w, y + 2), a 0x10-byte tile filling (x, y + 2) with width w and height h - 4, and a trailing quad through (x, y + h - 2), (x + w, y + h - 2), (x + 2, y + h) and (x + w - 2, y + h), so the two quads cap the tile with two-pixel bevelled edges; each packet is queued through func_8014E5A0(2, size).'
   - - 35124
     - c
-    - func_801D9534
-    - '@source: src/bof3/world/func_801D9534.c'
+    - drawFilledPanelWithInsetBorderWorld00Area03004
+    - '@source: src/bof3/world/drawFilledPanelWithInsetBorderWorld00Area03004_801D9534.c'
     - '@behavior: submits the AREA030 panel for the requested rectangle, then the inset frame rectangle offset two pixels in and five pixels smaller; the trailing byte selects the frame draw mode.'
   - - 35268
     - c
@@ -512,13 +512,13 @@ segments:
     - '@behavior: draws one panel message token as a single flat textured quad from the shared primitive cursor: stamps a POLY_FT4, selects the texture page from the graphics type (0x8F when the query answers 1 or 2 and 0x2F otherwise, replaced by 0xAF or 0x3F on the table-cell path), derives the atlas cell of the token byte (the ASCII cell of byte - 0x30 on the 31-column 8-pixel table with a 0x48 row offset, the cell of byte + 0x5B for control code 0x15, and for control codes 0x12 and 0x13 the cell of the carried byte, plus 0x100 for 0x13, on the 21-column 12-pixel table), spans the requested x to x + (width byte 0x7F mask) at the rows D_80144154 + 3 and + 0xC, takes the mid grey 0x80, the CLUT row 0x1E0 with the low nibble of the first argument, shifts the horizontal texture coordinate right by 8 - width when bit 0x80 of the width byte is set, and appends the 0x28-byte packet at ordering-table slot 1.'
   - - 36628
     - c
-    - func_801D9B14
+    - dispatchStateByte2Table21e0World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E21E0.'
   - - 36696
     - c
-    - func_801D9B58
-    - '@source: src/bof3/world/func_801D9B58.c'
+    - dispatchStateByte3Table2210World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2210World00Area03004_801D9B58.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2210.'
   - - 36764
     - c
@@ -537,14 +537,14 @@ segments:
     - '@behavior: Advances the shared counters and clears work byte 3 in mode 4.'
   - - 37108
     - c
-    - func_801D9CF4
-    - '@source: src/bof3/world/func_801D9CF4.c'
+    - dispatchStateByte3Table221cWorld00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table221cWorld00Area03004_801D9CF4.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E221C.'
   - - 37176
     - c
-    - func_801D9D38
-    - '@source: src/bof3/world/func_801D9D38_area03004.c'
-    - '@behavior: AREA030 panel-step initializer: runs the target-local record-pointer selector updateRecordCursorsFromNonzeroIndicesWorld00Area03004, clears the six step words at offsets 0x0C..0x20 and the countdown byte 9 of the scratch work record published at the scratchpad cursor 0x1F800044 while storing 0xFF in the shared active-record index D_801E3208, requests mode 6 from the shared state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 while either level flag 0x80145026/0x80145028 is clear (mode 0 when both are set), requests resource 0xA with the second argument 2 through the shared func_8014D6DC while byte 0x79 of the record at D_80146250 is clear and resource 0xB through the shared func_8014D6B8 otherwise, and finally advances dispatch byte 3 of the work record cursor at 0x1F800044.'
+    - resetWorkStepsAndSelectStateWorld00Area03004
+    - '@source: src/bof3/world/resetWorkStepsAndSelectStateWorld00Area03004_801D9D38.c'
+    - '@behavior: Update the record cursors, set D_801E3208 to 0xFF, and clear work words 0x0C through 0x20 and byte 9. Select state 6 if either shared gate byte is zero, otherwise state 0. Call func_8014D6DC(10, 2) or func_8014D6B8(11) according to the pointed byte at 0x79, then advance a fresh work byte 3.'
   - - 37384
     - c
     - advanceStepMode6
@@ -552,8 +552,8 @@ segments:
     - '@behavior: increments scratch byte 0x03 when the shared state byte is 6.'
   - - 37440
     - c
-    - func_801D9E40
-    - '@source: src/bof3/world/func_801D9E40_area03004.c'
+    - selectWorkModeOrStepOnPadWithMatchingSlotLatchWorld00Area03004
+    - '@source: src/bof3/world/selectWorkModeOrStepOnPadWithMatchingSlotLatchWorld00Area03004_801D9E40.c'
     - '@behavior: Dispatches shared pad-state mask D_80145AA8 & 0xD4. The 0x04 and 0x80 arms select work modes 0x0A and 9; the 0x10 arm advances work step 3. The 0x40 arm selects mode 9 when either shared byte D_80145026 or D_80145028 is zero. Otherwise it tests the matching-slot count: a passing test with D_801E3204 zero sets that byte to 1 and selects work step 7. A failed test clears D_801E3204. The other count-test paths select work mode 2 and clear work step 3.'
   - - 37864
     - c
@@ -562,23 +562,23 @@ segments:
     - '@behavior: AREA030 handler: while the shared mode byte at 0x80144125 is still 0 and the shared state byte at 0x8014403D holds 1, it stores 4 in byte 9 of the work record published at the scratchpad cursor 0x1F800044, dispatches sound cue 0x102 through func_8015DF18 and advances the record dispatch byte 3; the dim tile is appended through appendDimTile last and unconditionally.'
   - - 37976
     - c
-    - func_801DA058
-    - '@source: src/bof3/world/func_801DA058_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044 and redraws the panel at the origin 0x50 * count + 0x6C through func_801E1758; once that count reaches zero it arms record byte 6 and advances its dispatch byte 3; then the dim tile is appended through appendDimTile, the inset panel rectangle 0x12 - 8 * count is submitted through func_801D9534 and the texture row 0x15 - 8 * count is drawn through func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - decrementCompactPanelSlideAndAdvanceStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementCompactPanelSlideAndAdvanceStepAtZeroWorld00Area03004_801DA058.c'
+    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044 and redraws the panel at the origin 0x50 * count + 0x6C through func_801E1758; once that count reaches zero it arms record byte 6 and advances its dispatch byte 3; then the dim tile is appended through appendDimTile, the inset panel rectangle 0x12 - 8 * count is submitted through drawFilledPanelWithInsetBorderWorld00Area03004 and the texture row 0x15 - 8 * count is drawn through func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38248
     - c
     - togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168
     - '@source: src/bof3/world/togglePanelModeOnPadPressAndDrawInsetWorld00Area03004_801DA168.c'
-    - '@behavior: AREA030 panel pad handler: draws the compact panel at (0x6C, 0x56) through drawArea030CompactPanel, then reacts to the shared pad mask D_80145AA8. While its 0x5000 bits are set it plays sound cue 0x100 through func_8015DF18 and inverts the mode byte at offset 6 of the work record published at the scratchpad cursor 0x1F800044. While its 0x50 bits are set it plays cue 0x106 and stores 1 in that mode byte when its 0x10 bit is set, otherwise it plays cue 0x103, and then advances the record dispatch byte 3 in both cases. It then submits the row marker at (0x70, 0x82 - 0x10 * mode) through func_801647C4, appends the dim tile through appendDimTile, and draws the inset panel rectangle (0x14, 0x12, 0x118, 0x13) and the texture row (0x1D, 0x15) through func_801D9534 and func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - '@behavior: AREA030 panel pad handler: draws the compact panel at (0x6C, 0x56) through drawArea030CompactPanel, then reacts to the shared pad mask D_80145AA8. While its 0x5000 bits are set it plays sound cue 0x100 through func_8015DF18 and inverts the mode byte at offset 6 of the work record published at the scratchpad cursor 0x1F800044. While its 0x50 bits are set it plays cue 0x106 and stores 1 in that mode byte when its 0x10 bit is set, otherwise it plays cue 0x103, and then advances the record dispatch byte 3 in both cases. It then submits the row marker at (0x70, 0x82 - 0x10 * mode) through func_801647C4, appends the dim tile through appendDimTile, and draws the inset panel rectangle (0x14, 0x12, 0x118, 0x13) and the texture row (0x1D, 0x15) through drawFilledPanelWithInsetBorderWorld00Area03004 and func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38560
     - c
-    - func_801DA2A0
-    - '@source: src/bof3/world/func_801DA2A0_area03004.c'
-    - '@behavior: increments byte 9 of the work record published at the scratchpad cursor 0x1F800044 and redraws the AREA030 panel at the origin 0x6C - 0x50 * that count through func_801E1758; once the count reaches 5 it restarts it at zero and, while the record byte 6 is clear, advances the shared halfword counter D_80143B92, otherwise advances the shared step byte D_8014403D and clears the record dispatch byte 3; then the dim tile is appended through appendDimTile, and while that restarted count is nonzero the inset panel rectangle 0x12 - 8 * count and the texture row 0x15 - 8 * count are submitted through func_801D9534 and func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
+    - incrementCompactPanelSlideAndUpdateCountersAtFiveWorld00Area03004
+    - '@source: src/bof3/world/incrementCompactPanelSlideAndUpdateCountersAtFiveWorld00Area03004_801DA2A0.c'
+    - '@behavior: increments byte 9 of the work record published at the scratchpad cursor 0x1F800044 and redraws the AREA030 panel at the origin 0x6C - 0x50 * that count through func_801E1758; once the count reaches 5 it restarts it at zero and, while the record byte 6 is clear, advances the shared halfword counter D_80143B92, otherwise advances the shared step byte D_8014403D and clears the record dispatch byte 3; then the dim tile is appended through appendDimTile, and while that restarted count is nonzero the inset panel rectangle 0x12 - 8 * count and the texture row 0x15 - 8 * count are submitted through drawFilledPanelWithInsetBorderWorld00Area03004 and func_8014F800 using the halfword offset-table entry 0x40 on the 0x80010000 main-RAM base.'
   - - 38900
     - c
-    - func_801DA3F4
-    - '@source: src/bof3/world/func_801DA3F4_area03004.c'
+    - decrementPanelSlideAndAdvanceWorkStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementPanelSlideAndAdvanceWorkStepAtZeroWorld00Area03004_801DA3F4.c'
     - '@behavior: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 + 0x50 * remaining count through drawArea030Panel, then once that count reaches zero arms byte 6 of the record and advances its dispatch byte 3; the dim tile is appended through appendDimTile last.'
   - - 39064
     - c
@@ -587,13 +587,13 @@ segments:
     - '@behavior: draws the AREA030 panel combination for the shared 0x44/0x4E origin through drawArea030Panel; when the shared pad state word D_80145AA8 shares a bit with the pressed-button masks D_80145AC2 / D_80145AC4 it advances byte 3 of the work record published at the scratchpad cursor 0x1F800044; then appends the dim tile through appendDimTile.'
   - - 39176
     - c
-    - func_801DA508
-    - '@source: src/bof3/world/func_801DA508_area03004.c'
+    - incrementPanelSlideAndSelectWorkStepFourAtCountFourWorld00Area03004
+    - '@source: src/bof3/world/incrementPanelSlideAndSelectWorkStepFourAtCountFourWorld00Area03004_801DA508.c'
     - '@behavior: increments byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 - 0x50 * that count through drawArea030Panel, and once that count reaches 4 dispatches sound cue 0x102 through func_8015DF18, arms byte 6 of the record and stores 4 in its dispatch byte 3; the dim tile is appended through appendDimTile last.'
   - - 39348
     - c
-    - func_801DA5B4
-    - '@source: src/bof3/world/func_801DA5B4.c'
+    - dispatchStateByte3Table2248World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2248World00Area03004_801DA5B4.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2248.'
   - - 39416
     - c
@@ -612,18 +612,18 @@ segments:
     - '@behavior: AREA030 work-record step handler: calls the shared helper func_8014D978; then, when the halfword at offset 0x58 of the work record published at the scratchpad cursor 0x1F800044 equals 6, increments the shared byte counter D_80143FC9, clears record bytes 0x0B and 0x07 and stores 3 in record byte 0x03.'
   - - 39820
     - c
-    - func_801DA78C
-    - '@source: src/bof3/world/func_801DA78C_area03004.c'
+    - latchPadMaskAndControlSharedStepWorld00Area03004
+    - '@source: src/bof3/world/latchPadMaskAndControlSharedStepWorld00Area03004_801DA78C.c'
     - '@behavior: AREA030 front-end state step: stores 3 in byte 2 of the scratch work record at the cursor 0x1F800044 and clears its byte 3 while the shared mode byte 0x80143FC9 holds 3; otherwise, while the shared word 0x80143FDC is clear, the shared pad state 0x80145AA8 carries 0x40 and the shared position 0x80143FD8 sits above 0x110000, it steps that position back by 0x4000; it then, while scratch record byte 0x0B is clear, either latches the shared pad mask 0x80145AA4/0xA000 into the record word at 0xC with a -0x800/0x800 step word at 0x80143FD4 and arms record byte 0x07, or, once that latched mask no longer intersects 0x80145AA4 or the word at 0x80143FFC falls past 0xEFFFE after a -0x60001 adjustment, clears the step word and arms record byte 0x0B; finally it calls the shared helper func_8014D978.'
   - - 40168
     - c
-    - func_801DA8E8
-    - '@source: src/bof3/world/func_801DA8E8.c'
+    - dispatchStateByte3Table2258World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2258World00Area03004_801DA8E8.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2258.'
   - - 40236
     - c
-    - func_801DA92C
-    - '@source: src/bof3/world/func_801DA92C_area03004.c'
+    - advanceSharedCountersClearTextCountsAndAdvanceWorkStepWorld00Area03004
+    - '@source: src/bof3/world/advanceSharedCountersClearTextCountsAndAdvanceWorkStepWorld00Area03004_801DA92C.c'
     - '@behavior: AREA030 mode-entry step: stores 1 in the shared state byte D_8014419E, increments the shared step counter byte D_8014403E, advances the shared selection counter D_80144199_BYTE, stores 1 in byte 6 of the work record published at the scratchpad cursor 0x1F800044, clears the four D_801E31E0 slot character counters, clears record byte 0x07 and (before the func_8014D8D4(3) call) record byte 0x0B, then increments record byte 3.'
   - - 40412
     - c
@@ -642,19 +642,19 @@ segments:
     - '@behavior: clears the scratch work-record action byte after setting its state byte when both area flags are zero.'
   - - 41684
     - c
-    - func_801DAED4
-    - '@source: src/bof3/world/func_801DAED4.c'
+    - dispatchStateByte3Table2268World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2268World00Area03004_801DAED4.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2268.'
   - - 41752
     - c
-    - func_801DAF18
-    - '@source: src/bof3/world/func_801DAF18_area03004.c'
-    - '@behavior: AREA030 selection-step handler: stores 2 in the shared AREA030 state byte 0x8014419E, advances the shared selection counter 0x80144199, clears the level byte 0x801440B1, publishes the y position field y_38 of the active 0x98-byte work record D_80146888[D_801E3208] into 0x8014930C, starts the frontend selection effect at 0x8015D4F8 with (0, 0, 100, 8), then stores 7 in the shared mode byte 0x80144125 and advances byte 3 of the scratch work record published at 0x1F800044.'
+    - publishSelectedRecordYAndAdvanceWorkStepWorld00Area03004
+    - '@source: src/bof3/world/publishSelectedRecordYAndAdvanceWorkStepWorld00Area03004_801DAF18.c'
+    - '@behavior: Advance the shared selection counters, clear D_801440B1 and publish the selected record''s y word to D_8014930C. Call func_8015D4F8(0, 0, 100, 8), select shared mode 7 and advance work byte 3.'
   - - 41916
     - c
-    - func_801DAFBC
-    - '@source: src/bof3/world/func_801DAFBC_area03004.c'
-    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table 0x801E2268 selected by scratch work-record byte 3: while the shared selection gate byte 0x80144199 holds 3 it calls the same-binary frontend effect helper 0x8015D404 with (0, 0), queues the frontend cue 0x80161C20(0x29, 100, 8), requests state 2 through 0x801DDE94, advances the shared selection-step byte 0x8014420D, clears byte 9 of the work record published at 0x1F800044 and advances that record dispatch byte 3; the shared helper 0x8014D978 runs unconditionally afterwards.'
+    - requestStateTwoOnGateThreeThenStepSequenceWorld00Area03004
+    - '@source: src/bof3/world/requestStateTwoOnGateThreeThenStepSequenceWorld00Area03004_801DAFBC.c'
+    - '@behavior: When D_80144199_BYTE is 3, call func_8015D404(0, 0) and func_80161C20(0x29, 100, 8), request state 2, advance D_8014420D, clear work byte 9 and advance work byte 3. Always call the pair-sequence step func_8014D978 afterwards.'
   - - 42060
     - c
     - selectRecordValueAndSlot
@@ -672,59 +672,59 @@ segments:
     - '@behavior: AREA030 work-record dispatch step, handler 2 of the local table 0x801E2268 selected by scratch work-record byte 3: saves the selected-record value byte 0x801E31F8 into 0x801E31FC. While the shared counter 0x80144000 reads at most 0x3E7FFF it walks the two pad halfwords: pad bits 0xC000 of 0x80145AA4 select record value 2 with the fresh countdown 8 in scratch byte 9 and the byte at 0x801E320C + 5 published into 0x8014421C, otherwise the existing countdown is decremented and serviced by func_8014D978 or, once it reads zero, record value 0 with request 7 is restored; pad bits 0x3000 clear the record value and the signed record cell at 0x801468A4 while sliding the byte at 0x801E320C + 6 in with request 0 and stepping 0x80144216 back; pad bit 0x40 selects record value 1 with the byte at 0x801E320C + 4 and request 7. Both 0x40 arms step the signed record cell down by the byte at 0x801E320C + 3 plus 2 and run selectRecordValueAndSlot, the second one through setActiveSlotValueFromFrameMask. Local paths issue zero, one or two increments or one decrement of the progress byte. Above that counter limit it resets the shared selection counter 0x80144199 to 1, the state bytes 0x8014419E and 0x8014403D to 4, the mode byte 0x80144125 to 7, clears 0x80143FC9 and 0x8014420D, sets handler 6 on the active record, plays cue 0x203, restarts the frontend effect, queues cue (0x2A, 100, 8), selects 0xA, advances scratch byte 3 to 3 and returns; every other path ends with playCueForChangedSelectedValueWorld00Area03004.'
   - - 43348
     - c
-    - func_801DB554
-    - '@source: src/bof3/world/func_801DB554_area03004.c'
-    - '@behavior: AREA030 selection-confirm step: when the shared selection counter 0x80144199 reads 4, clamps the byte D_80144FE4[byte 6 of the active 0x98-byte work record D_80146888[D_801E3208]] up to the record halfword at +0x90 and sets the flag byte 0x801E3214 when that byte grew, plays the fixed cue 0x102 through func_8015DF18, stores 8 in byte 9 and advances byte 3 of the scratch work record published at 0x1F800044, then runs func_8014D978.'
+    - updateIndexedByteAndAdvanceWorkStepAtCountFourWorld00Area03004
+    - '@source: src/bof3/world/updateIndexedByteAndAdvanceWorkStepAtCountFourWorld00Area03004_801DB554.c'
+    - '@behavior: When the shared count is 4, compare the indexed byte with the selected record''s unsigned halfword at 0x90. If the byte is smaller, copy the halfword''s low byte and set D_801E3214. Request cue 0x102, seed countdown 8 and advance a fresh work byte 3. Always step the pair sequence.'
   - - 43552
     - c
-    - func_801DB620
-    - '@source: src/bof3/world/func_801DB620_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78 with the negative forty-pixel-per-count offset -40 * byte 9, and once that count reaches zero selects the cue 0x20B when the scale-record byte +0x1D of D_801E2AB8[byte 6 of the active 0x98-byte work record D_80146888[D_801E3208]] reads below 2 and the cue 0x20C otherwise, dispatches it through func_8015DF18, restarts the countdown at 4 and advances scratch byte 3; finally it always runs func_8014D978 and appends the dim tile through appendDimTile.'
+    - decrementPanelSlideAndReloadCountdownAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementPanelSlideAndReloadCountdownAtZeroWorld00Area03004_801DB620.c'
+    - '@behavior: Decrement work byte 9 and draw the panel pair at horizontal offset -40 * count, y 78. At zero, request cue 0x20C or 0x20B according to the selected record''s byte 0x1D, reload countdown 4 and advance byte 3. Always step the pair sequence and append the dim tile.'
   - - 43832
     - c
-    - func_801DB738
-    - '@source: src/bof3/world/func_801DB738_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the scratch work record published at 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 + 0x30 * byte 9 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], restarts the countdown at 4 and advances scratch byte 3 when it expired, then runs func_8014D978 and appends the dim tile.'
+    - decrementEntrySpriteCountdownAndAdvanceStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementEntrySpriteCountdownAndAdvanceStepAtZeroWorld00Area03004_801DB738.c'
+    - '@behavior: Decrement work byte 9 modulo 256 and draw the panel pair at y 78. Configure sprite 2 at x = 128 + 48 * a fresh countdown, y = 91, using selected-record byte 6 as the packed selector. A fresh zero read reloads countdown 4 and advances byte 3. Always step the pair sequence and append the dim tile.'
   - - 44040
     - c
-    - func_801DB808
-    - '@source: src/bof3/world/func_801DB808_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that same record byte with the remaining count through func_801E1004, advances scratch byte 3 when the count expired, then runs func_8014D978 and appends the dim tile.'
+    - decrementEntryPanelSlideAndAdvanceStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementEntryPanelSlideAndAdvanceStepAtZeroWorld00Area03004_801DB808.c'
+    - '@behavior: Decrement work byte 9 modulo 256 and draw the panel pair and configured sprite 2 at 128, 91. Draw the selected entry with amount zero and the fresh countdown as its third, sliding-position argument. A fresh zero read advances byte 3. Always step the pair sequence and append the dim tile.'
   - - 44272
     - c
     - restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0
     - '@source: src/bof3/world/restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0.c'
-    - '@behavior: AREA030 selection-panel step handler, entry 7 of the local work-record step table 0x801E2268: while the shared pad state D_80145AA8 carries the 0x40 bit it reloads byte 9 of the work record published at the scratchpad cursor 0x1F800044 from the halfword at +0x90 of the active 0x98-byte work record D_80146888[D_801E3208], otherwise it advances that byte by one; it then submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active record, draws that record byte together with the countdown through func_801E1004, and once the countdown equals the record halfword at +0x90 it plays cue 0x20D while the D_801E3214 flag byte is set, plays cue 0x102, restarts the countdown at 4 and advances scratch byte 3; finally it runs func_8014D978 and appends the dim tile.'
+    - '@behavior: AREA030 selection-panel step handler, entry 7 of the local work-record step table 0x801E2268: while the shared pad state D_80145AA8 carries the 0x40 bit it reloads byte 9 of the work record published at the scratchpad cursor 0x1F800044 from the halfword at +0x90 of the active 0x98-byte work record D_80146888[D_801E3208], otherwise it advances that byte by one; it then submits the panel pair at y 78, configures the sprite at 0x80 at y 91 with the packed selector from byte 6 of the active record, draws that record byte together with the countdown through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, and once the countdown equals the record halfword at +0x90 it plays cue 0x20D while the D_801E3214 flag byte is set, plays cue 0x102, restarts the countdown at 4 and advances scratch byte 3; finally it runs func_8014D978 and appends the dim tile.'
   - - 44692
     - c
-    - func_801DBA94
-    - '@source: src/bof3/world/func_801DBA94_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156 + 30 * remaining count) through func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004, advances scratch byte 3 when the count expired, then runs func_8014D978 and appends the dim tile.'
+    - decrementIconRowSlideAndAdvanceStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementIconRowSlideAndAdvanceStepAtZeroWorld00Area03004_801DBA94.c'
+    - '@behavior: Decrement work byte 9 and draw the panel row with its icon row at y = 30 * count + 156 and the conditional extra icon. A fresh zero read advances byte 3. The configured sprite uses y = 91. Always step the pair sequence and append the dim tile.'
   - - 44972
     - c
     - choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC
     - '@source: src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c'
-    - '@behavior: AREA030 panel step, entry 9 of the local work-record step table 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) through func_801E1320 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and scratch byte 0xB, then picks the panel open state: record byte 6 equal to 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing func_801650B4(0, byte 6 + 0x38, 1, 0) gate arms byte 9 with 4 and stores 2 in byte 0xB, and a passing gate advances dispatch byte 3 to 0x0E; it then plays cue 0x102 and increments that dispatch byte. Finally it runs func_8014D978 and appends the dim tile.'
+    - '@behavior: AREA030 panel step, entry 9 of the local work-record step table 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80 at y 91 with the packed selector from byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, draws the icon row at (176, 156) through drawSlotValueSummaryAndThresholdIconsWorld00Area03004 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and scratch byte 0xB, then picks the panel open state: record byte 6 equal to 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing func_801650B4(0, byte 6 + 0x38, 1, 0) gate arms byte 9 with 4 and stores 2 in byte 0xB, and a passing gate advances dispatch byte 3 to 0x0E; it then plays cue 0x102 and increments that dispatch byte. Finally it runs func_8014D978 and appends the dim tile.'
   - - 45420
     - c
-    - func_801DBD6C
-    - '@source: src/bof3/world/func_801DBD6C_area03004.c'
-    - '@behavior: AREA030 panel step: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) and, while the dispatch byte 0xB reads 1 or 2, sprite 8 at 148 + 30 * remaining count with image 67 (state 1) or 66 (state 2) through func_801E162C; once the count expired it either clears byte 6 and stores 0x0C into dispatch byte 3 (state 1) or advances dispatch byte 3 (state 2); finally runs func_8014D978 and appends the dim tile.'
+    - decrementRunSlideAndSelectWorkStepAtZeroWorld00Area03004
+    - '@source: src/bof3/world/decrementRunSlideAndSelectWorkStepAtZeroWorld00Area03004_801DBD6C.c'
+    - '@behavior: Decrement work byte 9 and draw the fixed icon row and configured sprite at y 91. For work byte 0xB = 1 or 2, draw sprite 0x0C with run 67 or 66 at x 8, y = 30 * count + 148. At zero, mode 1 clears byte 6 and selects step 12; mode 2 advances byte 3. Always step the pair sequence and append the dim tile.'
   - - 45788
     - c
-    - func_801DBEDC
-    - '@source: src/bof3/world/func_801DBEDC_area03004.c'
-    - '@behavior: AREA030 panel step: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) and sprite 66 at (8, 148), then, while the shared pad mask D_80145AA8/0x50 is set, stores 0x0E into dispatch byte 3 of the scratch work-record cursor at 0x1F800044; finally runs func_8014D978 and appends the dim tile.'
+    - drawEntryPanelRowAndSelectStepFourteenOnPadMaskWorld00Area03004
+    - '@source: src/bof3/world/drawEntryPanelRowAndSelectStepFourteenOnPadMaskWorld00Area03004_801DBEDC.c'
+    - '@behavior: Draw the entry panel row, configured sprite 2 at 128, 91, and sprite 0x0C followed by indexed run 66 at 8, 148. A nonzero 0x50 input mask selects handler byte 3 = 14. Always step the pair sequence and append the dim tile.'
   - - 46024
     - c
-    - func_801DBFC8
-    - '@source: src/bof3/world/func_801DBFC8_area03004.c'
-    - '@behavior: AREA030 panel step: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) and sprite 67 at (8, 148), then, while the shared pad flag D_80145AA8 is set, clears byte 6 of the scratch work-record cursor at 0x1F800044 and advances its dispatch byte 3; finally runs func_8014D978 and appends the dim tile.'
+    - drawFixedIconRowAndRunThenAdvanceStepOnInputWorld00Area03004
+    - '@source: src/bof3/world/drawFixedIconRowAndRunThenAdvanceStepOnInputWorld00Area03004_801DBFC8.c'
+    - '@behavior: Draw the fixed icon row at y 156, configured sprite 2 at 128, 91, and sprite 0x0C followed by indexed run 67 at 8, 148. If D_80145AA8 is nonzero, clear work byte 6 and advance byte 3. Always step the pair sequence and append the dim tile.'
   - - 46284
     - c
     - togglePanelModeOnPadPressAndDrawRowWorld00Area03004_801DC0CC
     - '@source: src/bof3/world/togglePanelModeOnPadPressAndDrawRowWorld00Area03004_801DC0CC.c'
-    - '@behavior: AREA030 panel step: submits the panel pair at y 78, configures the sprite at 0x80 with CLUT 91 and byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through func_801E1004, draws the icon row at (176, 156) and sprite 68 at (8, 148), then reacts to the shared pad word D_80145AA8: while its 0x5000 bits are set it plays cue 0x100 and inverts byte 6 of the scratch work-record cursor at 0x1F800044; otherwise, while its 0x40 bit is set it plays cue 0x103, and while its 0x10 bit is set it stores 1 in that byte and plays cue 0x106; either of those arms then plays cue 0x102 and advances that cursor dispatch byte 3. It then submits the row marker at (0x20, 0xB6 + 12 * byte 6) through func_801647C4, runs func_8014D978 and appends the dim tile.'
+    - '@behavior: AREA030 panel step: submits the panel pair at y 78, configures the sprite at 0x80 at y 91 with the packed selector from byte 6 of the active 0x98-byte work record D_80146888[D_801E3208], draws that record byte together with the record byte at +0x90 through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, draws the icon row at (176, 156) and sprite 0x0C with indexed run 68 at (8, 148), then reacts to the shared pad word D_80145AA8: while its 0x5000 bits are set it plays cue 0x100 and inverts byte 6 of the scratch work-record cursor at 0x1F800044; otherwise, while its 0x40 bit is set it plays cue 0x103, and while its 0x10 bit is set it stores 1 in that byte and plays cue 0x106; either of those arms then plays cue 0x102 and advances that cursor dispatch byte 3. It then submits the row marker at (0x20, 0xB6 + 12 * byte 6) through func_801647C4, runs func_8014D978 and appends the dim tile.'
   - - 46664
     - c
     - advanceEntrySlideAndSelectStateWorld00Area03004_801DC248
@@ -732,8 +732,8 @@ segments:
     - '@behavior: advances slide byte 9 of the scratch work-record cursor (0x1F800044) and draws the sliding entry row, then selects work state 11 or 1 when the slide count reaches 4.'
   - - 47220
     - c
-    - func_801DC474
-    - '@source: src/bof3/world/func_801DC474.c'
+    - dispatchStateByte3Table22a4World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table22a4World00Area03004_801DC474.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22A4.'
   - - 47288
     - c
@@ -752,8 +752,8 @@ segments:
     - '@behavior: AREA030 pad-mask wrapper: calls the target-local gate enterWorkModeEightIfInputMaskSetWorld00Area03004 with the shared pad mask 0x50, discards the gate result, then calls the shared helper func_8014D978 without arguments.'
   - - 47504
     - c
-    - func_801DC590
-    - '@source: src/bof3/world/func_801DC590.c'
+    - dispatchStateByte3Table22b0World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table22b0World00Area03004_801DC590.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22B0.'
   - - 47572
     - c
@@ -762,8 +762,8 @@ segments:
     - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22B0 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3 it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 4 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47692
     - c
-    - func_801DC64C
-    - '@source: src/bof3/world/func_801DC64C.c'
+    - dispatchStateByte3Table22bcWorld00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table22bcWorld00Area03004_801DC64C.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22BC.'
   - - 47760
     - c
@@ -772,14 +772,14 @@ segments:
     - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22BC selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 5 from the target-local state helper storeRequestedStateAndAdvanceSelectedModesWorld00Area03004 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47880
     - c
-    - func_801DC708
-    - '@source: src/bof3/world/func_801DC708.c'
+    - dispatchStateByte3Table22c8World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table22c8World00Area03004_801DC708.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22C8.'
   - - 47948
     - c
     - seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C
     - '@source: src/bof3/world/seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C.c'
-    - '@behavior: AREA030 work-record dispatch step, handler 0 of the local table at 0x801E22C8 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared gate halfword D_80143C40 holds 0, it arms the callback scheduler through func_8014B87C(1), commits the shared fixed-point channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay through func_80153DE8, clears the shared entry table through func_801E0A30, requests front-end mode 3 through func_8014ECAC, asks for resource 0xA with the second argument 2 while byte 0x79 of the record at D_80146250 is clear and resource 0xB otherwise, and stores 1 in that dispatch byte.'
+    - '@behavior: AREA030 work-record dispatch step, handler 0 of the local table at 0x801E22C8 selected by byte 3 of the scratch work record published at 0x1F800044: while the shared gate halfword D_80143C40 holds 0, it arms the callback scheduler through func_8014B87C(1), commits the shared fixed-point channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay through func_80153DE8, clears the shared entry table through clearRecordHeadFieldsAndSetStateTwoWorld00Area03004, requests front-end mode 3 through func_8014ECAC, asks for resource 0xA with the second argument 2 while byte 0x79 of the record at D_80146250 is clear and resource 0xB otherwise, and stores 1 in that dispatch byte.'
   - - 48108
     - c
     - initializeWorkDispatchBytesIfGateClearWorld00Area03004
@@ -792,9 +792,9 @@ segments:
     - '@behavior: Appends the dim tile, then dispatches the scratch work-record mode.'
   - - 48264
     - c
-    - func_801DC888
-    - '@source: src/bof3/world/func_801DC888_area03004.c'
-    - '@behavior: AREA030 mode gate: while the shared mode byte modeByte (0x80144125) holds zero, requests the frontend selection effect through func_8015D4F8 with (0, 0, 0x14, 0x10), dispatches sound cue 0x102 through func_8015DF18, increments the shared state byte 0x80144281, clears byte 6 of the work record published at the scratchpad cursor 0x1F800044 and advances that record dispatch byte 3.'
+    - clearWorkByteSixAndAdvanceStepWhenModeZeroWorld00Area03004
+    - '@source: src/bof3/world/clearWorkByteSixAndAdvanceStepWhenModeZeroWorld00Area03004_801DC888.c'
+    - '@behavior: While modeByte is zero, call func_8015D4F8(0, 0, 0x14, 0x10), request cue 0x102, increment D_80144281, clear work byte 6 and advance work handler byte 3.'
   - - 48388
     - c
     - advanceWorkStepIfStateIsThreeWorld00Area03004
@@ -812,14 +812,14 @@ segments:
     - '@behavior: Calls the handler selected by shared selector byte D_80144286 through the local handler table, with no arguments.'
   - - 49328
     - c
-    - func_801DCCB0
-    - '@source: src/bof3/world/func_801DCCB0.c'
+    - dispatchStateByte4Table22f0World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte4Table22f0World00Area03004_801DCCB0.c'
     - '@behavior: dispatches the byte at offset 4 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22F0.'
   - - 49396
     - c
-    - func_801DCCF4
-    - '@source: src/bof3/world/func_801DCCF4_area03004.c'
-    - '@behavior: AREA030 scratch work-record handler (entry 0 of the 0x801E22F0 handler table dispatched through scratch byte 4): when the shared state byte 0x80144281 is 3 or 4 it masks the shared panel flag byte 0x80144287 to seven bits, publishes the masked value back, submits func_801647C4 with (0x1C, masked value * 16 + 0x58, 0) and advances byte 4 of the work record published at the scratchpad cursor 0x1F800044; then, following bit 0 of the flag byte, it submits func_8014F800 with (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword 0x800100A4 when the bit is set, else 0x800100A2).'
+    - advanceWorkStepOnStateThreeOrFourAndDrawTextWorld00Area03004
+    - '@source: src/bof3/world/advanceWorkStepOnStateThreeOrFourAndDrawTextWorld00Area03004_801DCCF4.c'
+    - '@behavior: When shared state is 3 or 4, clear bit 7 of the panel flags, call func_801647C4(28, maskedFlags * 16 + 88, 0), and advance a fresh work byte 4. Then select the unsigned text offset at 0x800100A2 or 0x800100A4 using a fresh flag-bit-0 read and draw the byte stream at 0x80010000 plus that offset.'
   - - 49592
     - c
     - publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8
@@ -847,8 +847,8 @@ segments:
     - '@behavior: when the area gate is clear, advances its counter and initializes bytes 2 and 3 of the current scratch work record.'
   - - 52572
     - c
-    - func_801DD95C
-    - '@source: src/bof3/world/func_801DD95C.c'
+    - dispatchStateByte3Table22fcWorld00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table22fcWorld00Area03004_801DD95C.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22FC.'
   - - 52640
     - c
@@ -862,8 +862,8 @@ segments:
     - '@behavior: When the guard byte is clear, advances the area state and initializes scratch-record bytes 2 and 3.'
   - - 53192
     - c
-    - func_801DDBC8
-    - '@source: src/bof3/world/func_801DDBC8.c'
+    - dispatchStateByte3Table2304World00Area03004
+    - '@source: src/bof3/world/dispatchStateByte3Table2304World00Area03004_801DDBC8.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2304.'
   - - 53260
     - c
@@ -905,9 +905,9 @@ segments:
     - '@source: src/bof3/world/storeRequestedStateAndAdvanceSelectedModesWorld00Area03004_801DDE94.c'
   - - 53996
     - c
-    - func_801DDEEC
-    - '@source: src/bof3/world/func_801DDEEC.c'
-    - '@behavior: arms the AREA030 hold marker and reloads the work-record timer at +0xA while the shared pad flag 0x4000 at 0x80145AA8 is set; otherwise the 0x80145AA4 flag counts that timer down and an unarmed path clears the marker.'
+    - updateScratchMarkerAndCountdownFromPadFlagsWorld00Area03004
+    - '@source: src/bof3/world/updateScratchMarkerAndCountdownFromPadFlagsWorld00Area03004_801DDEEC.c'
+    - '@behavior: Use the first pad flag to set the scratch marker and reload work byte 0xA to 8. Otherwise, while the second flag and countdown are nonzero, decrement the countdown and set the marker, including the decrement from 1 to 0. Clear the marker on the other paths.'
   - - 54140
     - c
     - enterWorkModeEightIfInputMaskSetWorld00Area03004
@@ -919,8 +919,8 @@ segments:
     - '@source: src/bof3/world/saveAndUpdateTextAdvanceStateWorld00Area03004_801DDFD4.c'
   - - 54296
     - c
-    - func_801DE018
-    - '@source: src/bof3/world/func_801DE018_area03004.c'
+    - updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004
+    - '@source: src/bof3/world/updateFourTextSlotsAndPublishCompletedSlotLimitWorld00Area03004_801DE018.c'
     - '@behavior: walks the four AREA030 text slots: reads each slot text byte through the record pointer table D_801E28F4 at its counter D_801E31E0, classifies the slot from the state byte D_801E31F0 (refreshed by saveAndUpdateTextAdvanceStateWorld00Area03004) and the slot timer D_801E31E4 into an action 0/1/2, then advances the counter with a 12-frame timer reload while the current character lacks the 0x80 terminator bit, or publishes the slot index D_801E28F8[offset] plus the record byte 0x0F into the message state D_80143FCF when the sum reaches its signed limit (also storing the record byte 0x10 at +3), or resets the slot.'
   - - 54720
     - c
@@ -941,7 +941,7 @@ segments:
     - c
     - runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C
     - '@source: src/bof3/world/runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdownStepWorld00Area03004_801DE82C.c'
-    - '@behavior: AREA030 work-record handler 1 of the 0x801E2314 table: while the record step countdown byte 0x09 is non-zero it only integrates the step through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the entry gate func_801E0680 matching sets handler byte 0x01 to 3 before that same pair; with the gate clear it rolls rand once and reuses the single roll, either arming the entry latch D_801E3200 when that latch is clear, the record signed timer 0x3E is zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not 0x16 - loading the scale record entry halfword 0x12 through func_8014DD3C, queueing cue 0x206 unless record flag 0x80 is set, clearing record flag bit 5 and bytes 0x2A/0x48, releasing the entry through func_8014D6B8(0) and advancing handler byte 0x01 - or stepping the route index byte 0x08 to the neighbouring route by one modulo 8 from roll bits 4 and 8, re-deriving the steps through func_801E03F8, mirroring the step-mode row trailing byte into record byte 0x2A and selecting the row leading byte through func_8014D8D4, then setting the countdown step word 0x14 from the func_8015477C distance of the record x/y advanced by the step words shifted 4, forcing it to 2 or -2 from roll bits 0x20 and 0x10 against the scale byte 0x1A, clearing the three step words on roll bit 0x40 and restarting the countdown byte 0x09 at 0x10 before the integration pair.'
+    - '@behavior: AREA030 work-record handler 1 of the 0x801E2314 table: while the record step countdown byte 0x09 is non-zero it only integrates the step through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the entry gate checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 matching sets handler byte 0x01 to 3 before that same pair; with the gate clear it rolls rand once and reuses the single roll, either arming the entry latch D_801E3200 when that latch is clear, the record signed timer 0x3E is zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not 0x16 - loading the scale record entry halfword 0x12 through func_8014DD3C, queueing cue 0x206 unless record flag 0x80 is set, clearing record flag bit 5 and bytes 0x2A/0x48, releasing the entry through func_8014D6B8(0) and advancing handler byte 0x01 - or stepping the route index byte 0x08 to the neighbouring route by one modulo 8 from roll bits 4 and 8, re-deriving the steps through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004, mirroring the step-mode row trailing byte into record byte 0x2A and selecting the row leading byte through func_8014D8D4, then setting the countdown step word 0x14 from the func_8015477C distance of the record x/y advanced by the step words shifted 4, forcing it to 2 or -2 from roll bits 0x20 and 0x10 against the scale byte 0x1A, clearing the three step words on roll bit 0x40 and restarting the countdown byte 0x09 at 0x10 before the integration pair.'
   - - 57284
     - c
     - restoreSlotEntryAndStepModeThenRestartWorkHandlerWorld00Area03004_801DEBC4
@@ -951,7 +951,7 @@ segments:
     - c
     - steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC
     - '@source: src/bof3/world/steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_801DECDC.c'
-    - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through func_801E03F8, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while func_801E0770 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared applyWorkStepTripleWhileCountdownActiveWorld00Area03004/func_8014D978 pair.'
+    - '@behavior: AREA030 work-record handler 3 of the 0x801E2314 table: maps the difference between the shared reference position 0x80143FFC/0x80144000 and the record x 0x34/y 0x38 onto the eight signed octants of the route index byte 0x08, clamps the signed byte difference between the shared 0x80143FCF and the selected direction row of 0x801E2ACC into -1..3 and nudges that route index by the rand roll under the row class, then re-derives the steps through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004, sets the countdown step word 0x14 from the func_8015477C distance against the record timer 0x3E, mirrors the step-mode row into record byte 0x2A and requests its leading byte through func_8014D8D4; while checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004 reports the record staged and the direction row byte is not 9 it arms 0x80145E92 = 4 / 0x80143FC9 = 5, clears record bytes 0x09-0x0B and words 0x0C-0x14, saves record byte 0x05 into 0x801E3208, advances handler byte 0x01 and leaves through func_8014D978, and the remaining paths store 0x10 in record byte 0x09 and double words 0x0C/0x14/0x10 on roll low bits 0-1 clear before the shared applyWorkStepTripleWhileCountdownActiveWorld00Area03004/func_8014D978 pair.'
   - - 59188
     - c
     - updateWorkMotionAndStepModeOrAdvanceHandler
@@ -959,7 +959,7 @@ segments:
     - '@behavior: Update work motion, range and step mode or publish a threshold transition and advance handler byte 1.'
   - - 62376
     - c
-    - func_801DFFA8
+    - dispatchStateByte2Table2340World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2340.'
   - - 62444
@@ -969,12 +969,12 @@ segments:
     - '@behavior: Forms masked-coordinate differences from work words +0x34 and +0x38 using unsigned logical right shifts by three, stores the steps at +0x0C and +0x10, seeds byte 9 with 8 and advances work mode byte 2.'
   - - 62532
     - c
-    - func_801E0044
-    - '@source: src/bof3/world/func_801E0044_area03004.c'
-    - '@behavior: AREA030 work-record movement integrator: adds the step words at offsets 0x0C/0x10 into the 32-bit position words at 0x34/0x38 of the scratch work record published at the scratchpad cursor 0x1F800044 and counts the record byte 0x09 down; when that count reaches zero it collapses both positions to their sign bit, arms record byte 0x01, clears both step words and record byte 0x02, then always runs the shared helper func_8014D978.'
+    - stepWorkPositionPairAndSelectHandlerOneOnCountdownExpiryWorld00Area03004
+    - '@source: src/bof3/world/stepWorkPositionPairAndSelectHandlerOneOnCountdownExpiryWorld00Area03004_801E0044.c'
+    - '@behavior: Add work motion words 0x0C and 0x10 to position words 0x34 and 0x38, then decrement byte 9. At zero, mask only the low halfwords of those positions with 0x8000, set handler byte 1, and clear both motion words and mode byte 2. Always step the pair sequence.'
   - - 62688
     - c
-    - func_801E00E0
+    - dispatchStateByte2Table2348World00Area03004
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2348.'
   - - 62756
@@ -999,9 +999,9 @@ segments:
     - '@behavior: advances the signed position by delta and clamps it to [0, limit].'
   - - 63188
     - c
-    - func_801E02D4
-    - '@source: src/bof3/world/func_801E02D4_area03004.c'
-    - '@behavior: AREA030 distance-gated per-frame chance: builds the span (((byte 3 of the D_801E320C record) * 8) + 0x18) * (arg1 & 0xFF) and the absolute distance between the signed byte 0xA of the scratch work record at 0x1F800044 and the low byte of arg0, then returns whether a 4-bit rand() draw falls below the span quarter/half/full/quadruple ladder 1, 2, 4, 8, 0xE.'
+    - testWorkByteDistanceChanceWorld00Area03004
+    - '@source: src/bof3/world/testWorkByteDistanceChanceWorld00Area03004_801E02D4.c'
+    - '@behavior: Scale record byte 3 by 8, add 0x18 and multiply by the low byte of spanScale. Take the low byte of that product and of abs((s8)work[0xA] - (s32)(referenceByte & 0xFF)). The original unsigned and signed comparisons select thresholds 1, 2, 4, 8 or 14; return whether rand() & 15 is below the selected threshold.'
   - - 63380
     - c
     - applyWorkStepTripleWhileCountdownActiveWorld00Area03004
@@ -1009,19 +1009,19 @@ segments:
     - '@behavior: When captured work countdown byte 9 is nonzero, decrements it and reloads the work pointer to add words +0x0C and +0x10 to words +0x34 and +0x38, and word +0x14 to halfword +0x3E. Applies these steps even when the decrement reaches zero.'
   - - 63480
     - c
-    - func_801E03F8
-    - '@source: src/bof3/world/func_801E03F8.c'
-    - '@behavior: re-derives the movement step of the AREA030 work record at the scratchpad cursor 0x1F800044 from the global route table pair 0x80181AC0 / 0x80181AC4 (doubling the step pair for route indices 2 and 6), flips the record x step at +0x0C toward the band 0x80000..0x13FFFF and the y step at +0x10 toward the staging window [lo, hi] derived from the 0x80146884 byte +0x92 and the scale record D_801E2AB8[record byte +0x06] byte +0x1B, then re-indexes record byte +0x08 with the first route entry (magnitude-doubled below 0x401) whose step pair matches the record step pair.'
+    - deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004
+    - '@source: src/bof3/world/deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004_801E03F8.c'
+    - '@behavior: Load the route pair selected by work byte 8 into step words 0x0C and 0x10, doubling routes 2 and 6. Reverse outward step signs at the x and derived y limits. Scan eight shared pairs with the original small-magnitude doubling and publish the first matching index or 8. This changes step signs, not the position words.'
   - - 64128
     - c
-    - func_801E0680
-    - '@source: src/bof3/world/func_801E0680.c'
-    - '@behavior: AREA030 work-record entry gate: while the shared 0x80143FC9 mode byte is 4, the 0x801E3208 byte is 0xFF and the 0x80145E92 phase byte is 3 it reports a match without arming the work record published at the scratchpad cursor 0x1F800044 - either because that record byte 0x06 is 0x16 while the low nibble of the 0x801E3210 record byte 0x0E equals the mode byte, or because func_801BDD58 reports one for the record x at +0x34, y at +0x38, the signed timer at +0x3E, the byte (0x80143FCF - 0x801E3210[0x0F] + 3) and the entry-table pointer 0x80143FC8; otherwise (and whenever a gate fails it) stores 1 in the record byte 0x01 and reports no match.'
+    - checkWorkEntryGateOrSelectHandlerOneWorld00Area03004
+    - '@source: src/bof3/world/checkWorkEntryGateOrSelectHandlerOneWorld00Area03004_801E0680.c'
+    - '@behavior: Under the three shared gates, return success when work byte 6 is 0x16 and the shared low nibble matches the mode, or when func_801BDD58 accepts the original x, y, signed-counter and byte-range arguments. On every failure path, set work handler byte 1 to 1 and return zero.'
   - - 64368
     - c
-    - func_801E0770
-    - '@source: src/bof3/world/func_801E0770.c'
-    - '@behavior: reports whether the work record published at the scratchpad cursor 0x1F800044 is inside the shared staging window of 0x80143FFC/0x80144000/0x80144006 (0x7FFF for x at +0x34 and y at +0x38, 0x400 for the signed timer at +0x3E), but only while the 0x80143FC9 mode byte is 4, the 0x801E3208 byte is 0xFF, the 0x80144199 gate byte is clear and the 0x80145E92 phase byte is 3.'
+    - checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004
+    - '@source: src/bof3/world/checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004_801E0770.c'
+    - '@behavior: Require shared bytes 0x80143FC9 = 4, 0x801E3208 = 0xFF, 0x80144199 = 0 and 0x80145E92 = 3. Test the computed signed x and y differences against 0x7FFF and the signed-halfword counter difference strictly below 0x400. Preserve the original signed arithmetic and sampled values.'
   - - 64588
     - c
     - updateWorkScrollWordsWorld00Area03004_801E084C
@@ -1029,29 +1029,29 @@ segments:
     - '@behavior: Save and restore work word 0x3C around the helper and derive words 0x40 and 0x44 from the signed scale divisions.'
   - - 64948
     - c
-    - func_801E09B4
-    - '@source: src/bof3/world/func_801E09B4_area03004.c'
+    - updateActiveWorkRecordScrollWordsWorld00Area03004
+    - '@source: src/bof3/world/updateActiveWorkRecordScrollWordsWorld00Area03004_801E09B4.c'
     - '@behavior: walks the 0x1E shared 0x98-byte work records at 0x80146888; for every active record it publishes that record as the scratchpad cursor at 0x1F800044 and runs the per-record scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.'
   - - 65072
     - c
-    - func_801E0A30
-    - '@source: src/bof3/world/func_801E0A30_area03004.c'
+    - clearRecordHeadFieldsAndSetStateTwoWorld00Area03004
+    - '@source: src/bof3/world/clearRecordHeadFieldsAndSetStateTwoWorld00Area03004_801E0A30.c'
     - '@behavior: resets the shared 20-slot 0x74-byte front-end entry table at 0x80143FC8: it zeroes head bytes 1-4 of the leading seven record slots, clears the remaining slots 7-19 through clearRecord and stores 2 in the shared state byte D_8014403D.'
   - - 65212
     - c
-    - func_801E0ABC
-    - '@source: src/bof3/world/func_801E0ABC.c'
-    - '@behavior: rescales a slot amount to its AREA030 summary value using the slot record limit at +0x1F and value at +0x22.'
+    - calculateScaledSlotValueForAmountWorld00Area03004
+    - '@source: src/bof3/world/calculateScaledSlotValueForAmountWorld00Area03004_801E0ABC.c'
+    - '@behavior: Read the slot selected by the low byte of slotIndex and the low halfword of slotAmount. Return the slot value unchanged when the amount reaches its limit. Otherwise quantize amount * 10 / limit before multiplying by the slot value and dividing by 10, then return the low halfword.'
   - - 65388
     - c
     - sumValuesForNonzeroSlotAmountsWorld00Area03004
     - '@source: src/bof3/world/sumValuesForNonzeroSlotAmountsWorld00Area03004_801E0B6C.c'
-    - '@behavior: Sums the values reported by func_801E0ABC for the nonzero amounts among the 32 shared slot amount bytes at 0x80144FE4, and returns the total masked to 16 bits.'
+    - '@behavior: Sums the values reported by calculateScaledSlotValueForAmountWorld00Area03004 for the nonzero amounts among the 32 shared slot amount bytes at 0x80144FE4, and returns the total masked to 16 bits.'
   - - 65488
     - c
     - updateArea030OverlayFrame
     - '@source: src/bof3/world/updateArea030OverlayFrame.c'
-    - '@behavior: AREA030 overlay per-frame entry invoked by the GAME.EMI entry-0 front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004 and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
+    - '@behavior: AREA030 overlay per-frame entry invoked by the GAME.EMI entry-0 front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through dispatchActiveWorkRecordsAndUpdateLevelsWorld00Area03004 and then runs the shared frame-service chain func_801527E4, func_801BDAB8, updateActiveWorkRecordScrollWordsWorld00Area03004, func_8019A0E4 and func_8014BA54 in that order.'
   - - 65568
     - c
     - dispatchCompanion
@@ -1061,7 +1061,7 @@ segments:
     - c
     - runArea030FrameServices
     - '@source: src/bof3/world/runArea030FrameServices.c'
-    - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order; the GAME.EMI entry-0 front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
+    - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, updateActiveWorkRecordScrollWordsWorld00Area03004, func_8019A0E4 and func_8014BA54 in that order; the GAME.EMI entry-0 front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
   - - 65664
     - c
     - submitTpageDrawMode
@@ -1069,9 +1069,9 @@ segments:
     - '@behavior: builds the texture-page word for the selected AREA030 graphic and appends its draw-mode primitive to the current ordering-table stream.'
   - - 65996
     - c
-    - func_801E0DCC
-    - '@source: src/bof3/world/func_801E0DCC.c'
-    - '@behavior: appends a sprite primitive using indexed texture geometry. */ /* @source 0x801E0DCC'
+    - appendIndexedSpriteWorld00Area03004
+    - '@source: src/bof3/world/appendIndexedSpriteWorld00Area03004_801E0DCC.c'
+    - '@behavior: Build a gray sprite at the primitive cursor. The low byte of spriteIndex selects a 16-byte record supplying CLUT coordinates, dimensions and UV coordinates. Store x and y, append 20 bytes under the low byte of drawMode, and return the sprite address.'
   - - 66256
     - c
     - submitPanelPair
@@ -1084,19 +1084,19 @@ segments:
     - '@behavior: configures the requested AREA030 sprite and its CLUT entry after selecting graphics mode 1.'
   - - 66564
     - c
-    - func_801E1004
-    - '@source: src/bof3/world/func_801E1004.c'
-    - '@behavior: draws three panel decorations, a label, and optional numeric values.'
+    - drawSlidingEntryLabelAndAmountSummaryWorld00Area03004
+    - '@source: src/bof3/world/drawSlidingEntryLabelAndAmountSummaryWorld00Area03004_801E1004.c'
+    - '@behavior: Draw three decorations using the low byte of slideCount. Copy 12 bytes for entry 0x16 or 0xFF, otherwise copy at most 12 bytes from the selected 18-byte label row, then terminate and draw the sliding label. Except for entry 0xFF, format the low byte of amount and the low halfword of the scaled slot value, replace the first three spaces with 0xFF and draw the amount summary.'
   - - 67360
     - c
-    - func_801E1320
-    - '@source: src/bof3/world/func_801E1320.c'
-    - '@behavior: draws a value-dependent icon row and formatted numeric label.'
+    - drawSlotValueSummaryAndThresholdIconsWorld00Area03004
+    - '@source: src/bof3/world/drawSlotValueSummaryAndThresholdIconsWorld00Area03004_801E1320.c'
+    - '@behavior: Copy the icon records and threshold halfwords, draw the header sprites, and obtain the slot-value sum. Scan without a bound for the first unsigned threshold above its low halfword, publish the index and draw the selected icon. Draw the first optional sprite 0x48 when its flag is set; the second requires both flags. Format the low halfword, replace the first five spaces with 0xFF and draw five characters.'
   - - 68140
     - c
-    - func_801E162C
-    - '@source: src/bof3/world/func_801E162C.c'
-    - '@behavior: selects graphics mode 3/1, draws sprite 0xC at (x, y), and unless the image argument is the 0xFFFF sentinel draws the D_80010000 offset-table texture at (x + 0xA, y + 8) through func_8014F800.'
+    - drawSpriteAndOptionalIndexedRunWorld00Area03004
+    - '@source: src/bof3/world/drawSpriteAndOptionalIndexedRunWorld00Area03004_801E162C.c'
+    - '@behavior: Select draw mode 3/1 and draw sprite 0x0C at x and y. Unless runIndex is 0xFFFF, read its unsigned halfword offset from the main-RAM table at 0x80010000 and draw the indexed byte stream at x + 10 and y + 8 with colour 0 and flag 0xFF.'
   - - 68316
     - c
     - appendDimTile
@@ -1106,12 +1106,12 @@ segments:
     - c
     - drawArea030CompactPanel
     - '@source: src/bof3/world/drawArea030CompactPanel.c'
-    - '@behavior: draws the compact AREA030 panel at the requested origin: submits the 0x64 by 0x38 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, eight 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x48 and x + 0x60, the two func_801D799C text rows of width 0x20 at (x, y + 0x18) and (x + 0x60, y + 0x18), the 0x30 sprite at x on the y + 0x38 row, eleven 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0x60 on that row, and finally the three main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x23, y + 6), (x + 0xA, y + 0x19) and (x + 0xA, y + 0x29) with colour 0 and flag 0xFF through func_8014F800.'
+    - '@behavior: draws the compact AREA030 panel at the requested origin: submits the 0x64 by 0x38 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, eight 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x48 and x + 0x60, the two drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x20 at (x, y + 0x18) and (x + 0x60, y + 0x18), the 0x30 sprite at x on the y + 0x38 row, eleven 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0x60 on that row, and finally the three main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x23, y + 6), (x + 0xA, y + 0x19) and (x + 0xA, y + 0x29) with colour 0 and flag 0xFF through func_8014F800.'
   - - 69068
     - c
     - drawArea030Panel
     - '@source: src/bof3/world/drawArea030Panel.c'
-    - '@behavior: draws the AREA030 panel combination at the requested origin: submits the 0xB3 by 0x42 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, fifteen 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x98 and x + 0xB0, the two func_801D799C text rows of width 0x28 at (x, y + 0x18) and (x + 0xB0, y + 0x18), the 0x30 sprite at x on the y + 0x40 row, twenty-one 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0xB0 on that row, and finally the two main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x3E, y + 6) and (x + 6, y + 0x19) with colour 0 and flag 0xFF through func_8014F800.'
+    - '@behavior: draws the AREA030 panel combination at the requested origin: submits the 0xB3 by 0x42 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, fifteen 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x98 and x + 0xB0, the two drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x28 at (x, y + 0x18) and (x + 0xB0, y + 0x18), the 0x30 sprite at x on the y + 0x40 row, twenty-one 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0xB0 on that row, and finally the two main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x3E, y + 6) and (x + 6, y + 0x19) with colour 0 and flag 0xFF through func_8014F800.'
   - - 69648
     - c
     - hasAtLeastTwentyTwoMatchingSlotsWorld00Area03004
@@ -1121,7 +1121,7 @@ segments:
     - c
     - drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004
     - '@source: src/bof3/world/drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004_801E1C7C.c'
-    - '@behavior: draws the AREA030 extra icon when the D_801E3214 flag byte is set and the shared frame counter D_80143E6C has bit 3 set: submits texture-page draw mode 3/1 through submitTpageDrawMode and appends sprite 0x47 at (0x1A, 0x5C) through func_801E0DCC.'
+    - '@behavior: draws the AREA030 extra icon when the D_801E3214 flag byte is set and the shared frame counter D_80143E6C has bit 3 set: submits texture-page draw mode 3/1 through submitTpageDrawMode and appends sprite 0x47 at (0x1A, 0x5C) through appendIndexedSpriteWorld00Area03004.'
   - - 69844
     - rodata
     - T_801E1CD4

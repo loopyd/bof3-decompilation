@@ -17,7 +17,7 @@
  * byte 9 from the record count byte and advances work byte 0xA. Every call then
  * integrates the stepped-from record: work words 0x0C/0x10 gain the record
  * signed deltas and work byte 6 loses the second delta, and the sign of the
- * record fourth byte selects the func_801D6B28 marker mode. Once every sixteenth
+ * record fourth byte selects the clampMarkerPositionsAndDrawPanelRowWorld00Area03004 marker mode. Once every sixteenth
  * frame (low nibble of the shared frame counter 0x80143E6C clear) with a
  * positive fourth byte it advances work byte 0xB and clamps it to 0x3C, formats
  * that byte through the "%2d" rodata string 0x801D0C04 into the shared
@@ -31,7 +31,7 @@
  */
 /* The published cursor cell 0x1F800044 is volatile, so every access group
  * re-reads it and keeps its own pointer local, as the record-family sibling
- * func_801D6CB0 does: the entry read, the end-marker re-seed (one read for the
+ * stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004 does: the entry read, the end-marker re-seed (one read for the
  * display byte and one shared by the two word stores), the two post-call step
  * reads, the integration read, the marker read, the frame-gated counter read
  * with its own clamp re-read, and the formatting read. The entry-record seeding
@@ -100,9 +100,9 @@ void advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34(
       (u8)panelStepRecordTableWorld00Area03004_801E20CC[cursor[0xA] - 1].unk_02;
   if ((s8)panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA] - 1].unk_03 <
       0) {
-    func_801D6B28(0);
+    clampMarkerPositionsAndDrawPanelRowWorld00Area03004(0);
   } else {
-    func_801D6B28(1);
+    clampMarkerPositionsAndDrawPanelRowWorld00Area03004(1);
   }
   if ((D_80143E6C & 0xF) == 0) {
     count = D_1F800044;

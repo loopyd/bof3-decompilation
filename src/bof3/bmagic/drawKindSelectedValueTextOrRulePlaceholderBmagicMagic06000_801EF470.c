@@ -6,7 +6,7 @@
  * and each table pads its rows to its own width: this body scales the code byte
  * by 18 for the default table, by 24, 22 and 20 for kinds 1, 2 and 3. The
  * neighbours in this tree prove the string role: the exact area03004 lift
- * func_801E1004 copies the 18-byte row D_801C8964[id + 0x38] up to its zero
+ * drawSlidingEntryLabelAndAmountSummaryWorld00Area03004 copies the 18-byte row D_801C8964[id + 0x38] up to its zero
  * byte into the UI text buffer, and drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38
  * hands the 20-byte row D_801C9E7C[index * 20] to func_8014F800 as a 0xC-cell
  * text run. All four addresses resolve through this target's generated

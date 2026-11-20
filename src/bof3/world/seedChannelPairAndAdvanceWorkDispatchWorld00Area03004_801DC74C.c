@@ -7,7 +7,7 @@
  * callback scheduler through func_8014B87C(1), commits the shared fixed-point
  * channel pair D_80149308 = 0xF0000/D_8014930C = 0x3C0000, resets the overlay
  * through func_80153DE8, clears the shared front-end entry table through
- * func_801E0A30 and requests front-end mode 3 through func_8014ECAC; it then
+ * clearRecordHeadFieldsAndSetStateTwoWorld00Area03004 and requests front-end mode 3 through func_8014ECAC; it then
  * requests resource 0xA with the second argument 2 (func_8014D6DC) while byte
  * 0x79 of the record at D_80146250 is clear and resource 0xB (func_8014D6B8)
  * otherwise, and finally stores 1 in that dispatch byte, the step the sibling
@@ -24,7 +24,7 @@ void seedChannelPairAndAdvanceWorkDispatchWorld00Area03004_801DC74C(void) {
     D_80149308 = 0xF0000;
     D_8014930C = 0x3C0000;
     func_80153DE8();
-    func_801E0A30();
+    clearRecordHeadFieldsAndSetStateTwoWorld00Area03004();
     func_8014ECAC(3);
     if (D_80146250[0x79] == 0) {
       func_8014D6DC(0xA, 2);

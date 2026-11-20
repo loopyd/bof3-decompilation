@@ -7,5 +7,5 @@
  * @residual none
  */
 void drawFixedPanelRectangleWorld00Area03004(void) {
-  func_801D9534(20, 18, 280, 19, 0);
+  drawFilledPanelWithInsetBorderWorld00Area03004(20, 18, 280, 19, 0);
 }

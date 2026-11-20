@@ -20,11 +20,11 @@
  * y + 3*phase + 0xC in the positive direction or y - (3*phase - 0x19) in the
  * negative one, one per 0xD row, skipping the 0xFFFF sentinel and walking the
  * 54-entry halfword sprite table D_801E2120 from the strip clock with
- * wraparound, each sprite resolved through the main-executable VRAM offset
+ * wraparound, each sprite resolved through the main-RAM halfword offset
  * table at the 0x80010000 base. Finally it paints the 0xF2 by 0xE header bar at
  * y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 (shade 0x30), draws the
  * selected step icon - sprite D_801E2114[step word 0x3C] - at (x + 0x3D,
- * y + 6), draws the status icon row through func_801D7784, and formats the
+ * y + 6), draws the status icon row through drawWidePanelFrameWorld00Area03004, and formats the
  * selected step word 0x3C plus one through the "%d/6" rodata string D_801D0C08
  * into the shared 0x80145AD4 buffer, submitting it at (x + 0xCA, y + 0x92)
  * through func_80150098.
@@ -35,14 +35,14 @@
  */
 /* The published cursor cell 0x1F800044 is volatile, so every access group
  * re-reads it and keeps its own pointer local, as the record-family siblings
- * func_801D6CB0 and decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
+ * stepPanelMotionScriptAndDrawMarkerRowWorld00Area03004 and decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
  * do. Three groups are separate variables because the original keeps them in
  * three registers: the entry read, the body that steps the strip clock, and the
  * strip and footer read. The settle read of the displayed step word is its own
  * local, exactly as the donor decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
  * spells it, and that donor also supplies the entry-record seeding statement
  * order, the (u8) allocator result and the (u16) field reference. The
- * VRAM-offset indexing spelling comes from the exact func_801E162C. This span's
+ * main-RAM offset indexing spelling comes from the exact drawSpriteAndOptionalIndexedRunWorld00Area03004. This span's
  * own literals - the 0xF2/0x9F panel, the 0x35 and 0x36 clock wraps, the nine
  * frames per step, the 0xC/0x19/0xD strip geometry, the 0x3D/0xCA/0x92 footer
  * offsets and the "%d/6" format - come from its original bytes.
@@ -167,7 +167,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
                 0x80010000u +
                     PSX_PTR(u16, 0x80010000u)[D_801E2114[FIELD_REF(
                         u16, D_1F800044, 0x3C)]]);
-  func_801D7784(x, y);
+  drawWidePanelFrameWorld00Area03004(x, y);
   sprintf((char*)D_80145AD4, (const char*)D_801D0C08,
           FIELD_REF(u16, D_1F800044, 0x3C) + 1);
   func_80150098((s16)(x + 0xCA), (s16)(y + 0x92), 0, D_80145AD4);

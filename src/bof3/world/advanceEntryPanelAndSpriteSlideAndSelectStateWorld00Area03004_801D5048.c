@@ -25,11 +25,11 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
 
   panel = D_1F800044;
   if (panel[0x0B] == 0) {
-    func_801D9534(20, (18 - panel[9] * 16) & 0xFFFE, 280, 19, 0);
+    drawFilledPanelWithInsetBorderWorld00Area03004(20, (18 - panel[9] * 16) & 0xFFFE, 280, 19, 0);
     sliding = D_1F800044;
     drawLabeledStatusCellsWorld00Area03004_801D7C10(88 + sliding[9] * 45, 40, 0);
   } else {
-    func_801D9534(20, 18, 280, 19, 0);
+    drawFilledPanelWithInsetBorderWorld00Area03004(20, 18, 280, 19, 0);
     if (D_80145E93 >= 3u) {
       mode = D_1F800044;
       mask = (u8)(1u << mode[6]);
@@ -50,17 +50,17 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
     {
       s16 sprite_index = FIELD_REF(s16, sprite, 0x3E);
 
-      func_801E1004((u8)sprite_index, D_80144FE4[sprite_index], sprite[9]);
+      drawSlidingEntryLabelAndAmountSummaryWorld00Area03004((u8)sprite_index, D_80144FE4[sprite_index], sprite[9]);
     }
   } else {
     configureSpriteClut((s16)(128 + entry[9] * 48), 91, 255);
     sprite = D_1F800044;
-    func_801E1004(255, 0, sprite[9]);
+    drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(255, 0, sprite[9]);
   }
   value = D_1F800044;
-  func_801E1320(176, (s16)(156 + value[9] * 30));
+  drawSlotValueSummaryAndThresholdIconsWorld00Area03004(176, (s16)(156 + value[9] * 30));
   image = D_1F800044;
-  func_801E162C(8, 148 + image[9] * 30, 0xFFFF);
+  drawSpriteAndOptionalIndexedRunWorld00Area03004(8, 148 + image[9] * 30, 0xFFFF);
   state = D_1F800044;
   if (state[9] == 4) {
     if (state[0x0B] == 0) {

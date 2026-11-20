@@ -24,7 +24,7 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
   step[9]++;
   header = D_1F800044;
   if (header[0xB] == 0) {
-    func_801D9534(20, (18 - header[9] * 16) & 0xFFFE, 280, 19, 0);
+    drawFilledPanelWithInsetBorderWorld00Area03004(20, (18 - header[9] * 16) & 0xFFFE, 280, 19, 0);
     left = D_1F800044;
     drawLabeledStatusCellsWorld00Area03004_801D7C10((u16)(88 + left[9] * 45), 40, 0);
   } else {

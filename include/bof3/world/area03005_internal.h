@@ -37,10 +37,8 @@ void func_800F606C(s32 arg0);
 void func_800F6730(void);
 void func_800F5E44(void);
 
-/* Companion-overlay call into BIN/WORLD00/AREA030.EMI#4 (0x801D9534, jal at
- * 0x800F5084); signature from the callee prologue (a0-a3 copied to s0-s3, first
- * three masked with 0xFFFF, fifth argument read from 0x40(sp)). A formal
- * companion record needs AREA030/04's target-local map to own 0x801D9534. */
-s32 func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4);
+/* Call into BIN/WORLD00/AREA030.EMI#4 at 0x801D9534 from 0x800F5084.
+ * Preserve this caller-side declaration; the caller ignores the return value. */
+s32 drawFilledPanelWithInsetBorderWorld00Area03004(s16 arg0, u16 arg1, s16 arg2, s16 arg3, s32 arg4); /* @source 0x801D9534 */
 
 #endif

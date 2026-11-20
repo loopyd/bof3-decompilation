@@ -12,7 +12,7 @@
  */
 void func_800F5048(void) {
   handlerTable[3 + handlerPhase]();
-  func_801D9534(0x14, 0x12, 0x118, 0x13, 0);
+  drawFilledPanelWithInsetBorderWorld00Area03004(0x14, 0x12, 0x118, 0x13, 0);
   func_800F606C(0);
   func_800F6730();
   func_800F5E44();
