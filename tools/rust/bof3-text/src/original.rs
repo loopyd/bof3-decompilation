@@ -11343,6 +11343,34 @@ fn stored_sprite_record_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<Non
 }
 
 fn reviewed_payload_nontext_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    if entry.index == 4
+        && entry.offset == 180_224
+        && entry.transfer_mode == 0
+        && entry.ram_ptr == 0x801d_0c00
+        && entry.check_word == 0x16
+        && entry.size == 75_285
+        && data.len() == 75_285
+        && sha256_hex(data) == "d869b1540648c3fb98fe64cb9ec62a95b4f8082a111cfd15331a102b0d7a7dd2"
+    {
+        return Some(
+            [(152, 68), (1_472, 68_372)]
+                .into_iter()
+                .map(|(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: concat!(
+                        "Original US AREA030/AREA089/AREA129 entry-4 instruction bodies. ",
+                        "Complete freshly compiled and relocated ELF function symbols match ",
+                        "the original raw payload; compiler assembly contains no embedded data. ",
+                        "Exact original archive and descriptor/payload identities gate classification. ",
+                        "Initialized sections, padding outside symbols, tables and referenced storage ",
+                        "are excluded. Stored instruction representation only; no observed execution, ",
+                        "callee semantics, resource safety, rendering or safe-edit claim."
+                    ),
+                })
+                .collect(),
+        );
+    }
     if entry.transfer_mode == 0
         && entry.index == 3
         && entry.offset == 26_624

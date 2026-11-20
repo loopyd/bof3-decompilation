@@ -2017,6 +2017,31 @@ selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
 
+## AREA030 instruction coverage
+
+Coverage recognizes 229 complete instruction bodies in entry 4 of original US
+`BIN/WORLD00/AREA030.EMI`, `BIN/WORLD02/AREA089.EMI` and
+`BIN/WORLD03/AREA129.EMI`. Each entry has archive offset 180224, raw mode 0,
+load address `0x801D0C00`, checkword `0x16`, size 75285 and payload SHA-256
+`d869b1540648c3fb98fe64cb9ec62a95b4f8082a111cfd15331a102b0d7a7dd2`.
+The complete archive must also match its original US disc identity.
+
+| Payload interval | Runtime interval | Bytes |
+| --- | --- | ---: |
+| `[152,220)` | `[0x801D0C98,0x801D0CDC)` | 68 |
+| `[1472,69844)` | `[0x801D11C0,0x801E1CD4)` | 68372 |
+
+Adjacent complete functions are coalesced only for coverage accounting. Fresh
+native compilation and relocation produce complete sized ELF function symbols
+whose bytes match the original payload. Compiler assembly separates instructions
+from initialized data. The five-word jump table at `0x801D0C1C` is a separate
+nonexecutable section and remains outside this instruction classification.
+
+These ranges establish stored instruction representation. Headers, tables,
+padding outside symbols, referenced storage and all retained payload bytes keep
+their prior classifications. Execution, callee semantics, resource safety,
+rendering and safe editing remain separate checks.
+
 ## GAME actor and record dispatch instruction coverage
 
 Coverage recognizes these complete instruction bodies under the existing exact
