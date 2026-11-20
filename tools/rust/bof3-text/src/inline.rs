@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v48";
+pub const SCHEMA: &str = "bof3.inline-text/v49";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1642,7 +1642,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "034615c9a90ed5b19ee303b46c15a1a26170ec79faeeac7d2361aea95bce6d46",
+        sha256: "dfc8bca2f38acc7d39a4cfc3218998a26f548f5c8e25ed0b044f1e53c9e3d987",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
@@ -1800,6 +1800,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801e5a10, 4, &[], &[0x8014f800]),
             Allocation::literal(0x801e5a16, 4, &[], &[0x8014f800]),
             Allocation::literal(0x801e5a1c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801e5d38, 4, &[], &[0x8014f800]),
         ],
     },
     Layout {

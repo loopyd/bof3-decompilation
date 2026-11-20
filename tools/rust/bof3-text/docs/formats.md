@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v48`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v49`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3157,6 +3157,13 @@ lists because the reader computes their addresses. Dispatcher `0x801E2C18`
 calls `0x801DB9F0`, whose loop draws exactly three rows through `0x8014F800`
 with count `0xFF`. Preserve valid task, record and returning-helper conditions.
 
+SHOP's `Ink` caption at `0x801E5D38` permits three body bytes and NUL.
+Reader `0x801E1E80` passes its address directly to `0x8014F800` with count
+`0xFF`, so its pointer-reference list is empty. Dispatcher `0x801E44E0`
+calls the reader after its selected state handler returns. Preserve the task
+published by `0x801E0F78`, with type 7, dispatch 18 and a valid state.
+The following pointer word at `0x801E5D3C` remains protected.
+
 These fields use `game-literal`. Shorter or empty edits retain NUL and
 zero-fill the field. Packing preserves alignment bytes, pointers and selection
 records. No relocation is supported. Natural entry, producer bounds, visual
@@ -3291,7 +3298,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v48` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v49` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
