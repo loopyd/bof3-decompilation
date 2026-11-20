@@ -23,8 +23,9 @@ extern void func_801F30A8(s32* position);
  *
  * Name evidence: this span is entry 1 of the overlay step table at 0x801F3824,
  * the same table the sibling dispatcher dispatchStateByte1Table3824World01Area05913_801F2FD0
- * indexes with the record byte at +1. Entry 0 of that table, the unlifted span
- * func_801F3014, hands the record words +0x34 and +0x38 to the shared distance
+ * indexes with the record byte at +1. Entry 0 of that table,
+ * storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014,
+ * hands the record words +0x34 and +0x38 to the shared distance
  * helper func_8015477C and stores that answer shifted left 16 into +0x3C, so the
  * triple the second step forwards is that coordinate pair plus the distance
  * entry 0 computed from it.

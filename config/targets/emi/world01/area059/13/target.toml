@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CA8.c",
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld01Area05913_801F2CEC.c",
     "src/bof3/world/passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060.c",
+    "src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014.c",
     "src/bof3/world/requestFrontSelectorContextWorld01Area05913_801F2D30.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld01Area05913_801F2D5C.c",
 ]

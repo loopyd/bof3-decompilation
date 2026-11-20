@@ -44,8 +44,10 @@ segments:
     - dispatchStateByte1Table3304World00Area03613_801F2D18
     - '@source: src/bof3/world/area03613DispatchTables.c'
   - - 348
-    - asm
-    - func_801F2D5C
+    - c
+    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World00Area03613_801F2D5C
+    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World00Area03613_801F2D5C.c'
+    - '@behavior: computes the projected-cursor distance as entry 0 of the two-entry state-byte-1 handler table at 0x801F3304: it passes the work-object cursor words +0x34 and +0x38 published through the scratchpad cell 0x1F800044 to the shared distance helper func_8015477C, stores the answer shifted left 16 in the same object at +0x3C, and advances the state byte at +1 so entry 1, drawWorkCursorQuadWorld00Area03613_801F2DA8, draws the quad next. Takes no arguments and returns nothing.'
   - - 424
     - c
     - drawWorkCursorQuadWorld00Area03613_801F2DA8

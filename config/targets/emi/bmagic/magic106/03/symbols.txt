@@ -12,6 +12,6 @@ stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClearRec
 projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C = 0x801EF52C;
 drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4 = 0x801EF5F4;
 reserveFirstFreeRecordBmagicMagic10603_801EF914 = 0x801EF914;
-func_801EF970 = 0x801EF970;
+clearWorkRecordBytesZeroThroughFourBmagicMagic10603_801EF970 = 0x801EF970;
 D_801EF9C0 = 0x801EF9C0;
 magic10603RecordFlags = 0x801EF9F8;

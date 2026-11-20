@@ -78,8 +78,10 @@ segments:
     - dispatchStateByte1Table3824World01Area05913_801F2FD0
     - '@source: src/bof3/world/area05913DispatchTables.c'
   - - 1044
-    - asm
-    - func_801F3014
+    - c
+    - storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014
+    - '@source: src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World01Area05913_801F3014.c'
+    - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, passes that object''s two position words at +0x34 and +0x38 to the shared distance helper func_8015477C, stores the answer shifted left 16 into the object''s third triple word at +0x3C, and advances the object''s state byte at +1 by one, which hands the step to entry 1 of the same state-byte-1 handler table at 0x801F3824.'
   - - 1120
     - c
     - passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060

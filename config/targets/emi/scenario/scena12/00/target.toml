@@ -30,6 +30,7 @@ sources = [
     "src/bof3/scenario/stepSubstatesSeedingFieldRecordsRequestingFrontEndContextsThenReleaseFrontEndAndResetStateScenarioScena1200_801FB864.c",
     "src/bof3/scenario/stepSubstatesArmingOneScenarioFlagFromWorkByteThenReleaseFrontEndAndResetStateScenarioScena1200_801FAE04.c",
     "src/bof3/scenario/stepSubstatesRequestingFrontEndContextsGreyingPaletteAndArmingFlagRunFromWorkByteThenReleaseFrontEndAndResetStateScenarioScena1200_801F8A04.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState1ScenarioScena1200_801FC5E4.c",
 ]
 support_sources = [
     "src/bof3/scenario/setScenarioScena1200_801F7F64.c",

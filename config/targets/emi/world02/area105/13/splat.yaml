@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte2Table3320World02Area10513_801F2C04
     - '@source: src/bof3/world/area10513DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48
+    - '@source: src/bof3/world/queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48.c'
+    - '@behavior: entry 0 of the work-byte-2 handler table at 0x801F3320: while the shared primary-state and sub-state byte pair at 0x80146874 reads anything but 0x20C (primary state 0x0C, sub-state 2) it returns without writing, and once the pair matches it queues cue 0x202 through the shared cue dispatcher at 0x8015DF18 and then advances the work record state byte at +2, reached through the scratchpad pointer cell 0x1F800044, so the next dispatch selects the cell-quad draw at 0x801F2C94.'
   - - 148
     - c
     - advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94

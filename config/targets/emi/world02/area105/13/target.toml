@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94.c",
     "src/bof3/world/drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C.c",
     "src/bof3/world/stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180.c",
+    "src/bof3/world/queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48.c",
 ]
 support_sources = [
     "src/bof3/support/area105_13_psyq.c",

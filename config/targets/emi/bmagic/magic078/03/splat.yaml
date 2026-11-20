@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EF08C
   - - 1248
-    - asm
-    - func_801EF0E0
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0.c'
+    - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run based at 0x801F0878: decrements the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write and, only when it reaches zero, re-materializes the pointer cell at 0x1F800044 and increments the object byte at offset 0x2. Takes no arguments, returns nothing and keeps no frame.'
   - - 1324
     - c
     - setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C

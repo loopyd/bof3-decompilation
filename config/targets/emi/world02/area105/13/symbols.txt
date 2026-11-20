@@ -1,5 +1,5 @@
 dispatchStateByte2Table3320World02Area10513_801F2C04 = 0x801F2C04;
-func_801F2C48 = 0x801F2C48;
+queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48 = 0x801F2C48;
 advanceWorkByte2AndDrawThreeCellQuadsWhenSharedByte1World02Area10513_801F2C94 = 0x801F2C94;
 func_801F2CDC = 0x801F2CDC;
 func_801F2D38 = 0x801F2D38;
