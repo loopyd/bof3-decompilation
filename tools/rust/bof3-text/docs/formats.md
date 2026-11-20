@@ -68,7 +68,7 @@ those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
-## Standalone dragon sprite coverage
+## Standalone sprite coverage
 
 Coverage recognizes the image and palette section words, their directory words,
 eight image records and eight 32-halfword palettes in original US `DRG04_00.EMI`
@@ -97,6 +97,32 @@ records, bounded destinations, nonaliased memory and ordinary helper returns.
 These cases establish conditional source use. They do not establish natural
 selector production, general caller bounds, actual invocation, residency,
 hardware transfer, live CLUTs, displayed pixels or safe editing.
+
+The same conditional route qualifies eight more original entry-3 banks. Each
+requires mode 0, destination `0x8003B80C`, checkword `0x10`, its exact archive
+and payload identities, and the entry geometry below. Selectors are listed in
+image-slot order. Each selector reaches a valid image and animation program
+through `(actor[8] + 4) & 255`; separate palette indices `0..7` reach the eight
+palettes. All conditions and evidence limits above still apply.
+
+| Archive | Form codes | Slot | Entry offset | Payload bytes | Image selectors |
+| --- | --- | --- | --- | --- | --- |
+| `DRG00_00.EMI` | 1, 5 | 525 | 40960 | 44404 | 6, 4 |
+| `DRG01_00.EMI` | 14 | 530 | 40960 | 38844 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG03_00.EMI` | 15, 16 | 540 | 40960 | 76072 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG05_00.EMI` | 17, 18 | 546 | 38912 | 70700 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `DRG06_00.EMI` | 3, 13 | 551 | 34816 | 233124 | 4, 16, 6, 44, 46, 12, 14 |
+| `DRG07_00.EMI` | 2, 12 | 552 | 38912 | 42264 | 4, 6, 12, 14, 44, 46, 16, 18 |
+| `PAPYD00.EMI` | 0, 6, 9 | 562 | 32768 | 11796 | 4, 16, 28, 6 |
+| `PAPYU00.EMI` | 0, 6, 9 | 567 | 32768 | 17400 | 4, 6, 12, 16, 28 |
+
+The original form table selects `PAPYD00` when the request work byte 8 is below
+2 and `PAPYU00` otherwise. Both pointer cells select the same slot for each
+other case. Mode-2 image storage includes the consumed flag and token bytes;
+its four-byte opaque prefix stays unresolved. Destination bounds must include
+any final-token overshoot. Programs, cells, selection triples, unconsumed tails
+and allocation gaps stay unresolved. Banks loaded at other root addresses
+require separate binding evidence.
 
 ## Save-icon source coverage
 

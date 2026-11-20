@@ -9383,6 +9383,133 @@ pub fn payload_nontext_ranges(
             .collect(),
         );
     }
+    let form_sprite_ranges: &[(usize, usize)] = if entry.index == 3
+        && entry.transfer_mode == 0
+        && entry.ram_ptr == 0x8003_b80c
+        && entry.check_word == 0x10
+        && usize::try_from(entry.size).ok() == Some(data.len())
+    {
+        match (entry.offset, data.len(), sha256_hex(data).as_str()) {
+            // DRG00_00, slot 525.
+            (
+                40_960,
+                44_404,
+                "1effd0ac6e77259713f70e51130634e848ed75bc66ddb3a5961d9476697d92d1",
+            ) => &[(0, 8), (16, 21_052)],
+            // DRG01_00, slot 530.
+            (
+                40_960,
+                38_844,
+                "2d8dada5f5112fbc1363e54a2b12ed8d31cd12df53f7456d42015d65e1c47c33",
+            ) => &[
+                (0, 8),
+                (16, 10_984),
+                (11_004, 6_035),
+                (17_040, 8),
+                (17_052, 6_199),
+                (23_252, 8),
+                (23_264, 5_244),
+                (28_512, 4_443),
+                (32_956, 3_296),
+            ],
+            // DRG03_00, slot 540.
+            (
+                40_960,
+                76_072,
+                "0d918e6fdd6852c3d184213423c02b2aa46ea0cee36d156153e22b55a546d574",
+            ) => &[
+                (0, 8),
+                (16, 8_232),
+                (8_252, 9_576),
+                (17_832, 5_761),
+                (23_596, 8),
+                (23_608, 5_396),
+                (29_008, 5_090),
+                (34_100, 8),
+                (34_112, 5_607),
+                (39_720, 8_200),
+                (47_924, 8_200),
+                (56_128, 544),
+            ],
+            // DRG05_00, slot 546.
+            (
+                38_912,
+                70_700,
+                "4297311b37aa27df957dbacaca840945875fafab5c4fab1238a34252938e6ac7",
+            ) => &[
+                (0, 8),
+                (16, 23_260),
+                (23_280, 8),
+                (23_292, 8_457),
+                (31_752, 8),
+                (31_764, 8_063),
+                (39_828, 8),
+                (39_840, 8_189),
+                (48_032, 8),
+                (48_044, 8_027),
+                (56_072, 6_024),
+            ],
+            // DRG06_00, slot 551.
+            (
+                34_816,
+                233_124,
+                "ccc2b49c546625cb6fbdf3d51996d3eba0ec25bb2b3c71fdf8e5b753a9d872a6",
+            ) => &[
+                (0, 8),
+                (16, 58_764),
+                (58_784, 122_904),
+                (181_692, 15_087),
+                (196_780, 8),
+                (196_792, 12_378),
+                (209_172, 544),
+            ],
+            // DRG07_00, slot 552.
+            (
+                38_912,
+                42_264,
+                "c8743de97beea25057b3db3bdf89819fc7e43ce89483fe30d8ea54c297a2338f",
+            ) => &[
+                (0, 8),
+                (16, 4_136),
+                (4_156, 5_480),
+                (9_640, 5_646),
+                (15_288, 8),
+                (15_300, 5_253),
+                (20_556, 8),
+                (20_568, 5_175),
+                (25_744, 8),
+                (25_756, 4_815),
+                (30_572, 6_024),
+            ],
+            // PAPYD00, slot 562.
+            (
+                32_768,
+                11_796,
+                "feea0916b287895af705b3598c55581a2fdaa3657ce7e0b3efff68a47f1c0338",
+            ) => &[(0, 8), (16, 6_872), (6_892, 631), (7_524, 1_920)],
+            // PAPYU00, slot 567.
+            (
+                32_768,
+                17_400,
+                "f9d984db05b512d943860a31776800a6678c772bf322f265f4339f0f3704b864",
+            ) => &[(0, 8), (16, 15_636)],
+            _ => &[],
+        }
+    } else {
+        &[]
+    };
+    if !form_sprite_ranges.is_empty() {
+        return Some(
+            form_sprite_ranges
+                .iter()
+                .map(|&(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: "original US standalone form-bank entry-3 image and palette section/directory words, image headers with consumed packed/raw words or mode-2 tokens, and eight 32-halfword palettes; original MAGIC151 state handlers 0x801EF388/0x801EF484, original BATTLE entry-15 form-pointer pairs and their first u16 slots bind the eight documented form/archive cases through the SLUS LBA table and complete matching physical disc user bytes; after successful unskipped loading, call 0x801EF87C supplies the first stable hint-row identifier and A1=0 to GAME 0x801C1254, which selects ordinal 0 and publishes root 0x8003B80C if the original root-array word 12 survives; palette calls reach SLUS 0x80166C48; separately valid documented image selectors reach 0x8014DC08 through 0x801EF8F8/0x8014D8D4/0x8014D6B8/0x8014D6DC before queued consumption at 0x8014E6D0 and its packed/raw/mode-2 helpers; exact original archive and entry/offset/mode/load/checkword/size/payload identities; stable hint 0..18, retained header, separate palette indices 0..7, finite image cases, changed request selector, clear image-skip bit, valid animation records, queue capacity, bounded destinations including final-token overshoot, nonaliasing and ordinary returning helpers remain conditions; opaque mode-2 prefixes, allocation tails, program/selection storage and other archives excluded; no natural selector production, general caller bounds, actual request, invocation, residency, hardware transfer, live CLUT, display, rasterized-text absence or safe-edit claim",
+                })
+                .collect(),
+        );
+    }
     if entry.transfer_mode == 0
         && entry.ram_ptr == 0x801e_ec00
         && entry.check_word == 0x141
