@@ -9510,6 +9510,121 @@ pub fn payload_nontext_ranges(
                 .collect(),
         );
     }
+    let further_form_sprite_ranges: &[(usize, usize)] = if entry.index == 3
+        && entry.transfer_mode == 0
+        && entry.ram_ptr == 0x8003_b80c
+        && entry.check_word == 0x10
+        && usize::try_from(entry.size).ok() == Some(data.len())
+    {
+        match (entry.offset, data.len(), sha256_hex(data).as_str()) {
+            // CRYUD00, slot 521.
+            (
+                40_960,
+                110_592,
+                "0cb3bd788cbdf439572efa1e6f33c544d0ce1ee9cef6c0aa3ca55d605d9c7db9",
+            ) => &[
+                (0, 8),
+                (16, 68),
+                (88, 824),
+                (916, 1_907),
+                (2_824, 9_584),
+                (12_412, 1_464),
+                (13_880, 1_485),
+                (15_368, 8),
+                (15_380, 878),
+                (16_260, 8),
+                (16_272, 6_308),
+                (22_584, 8),
+                (22_596, 1_593),
+                (24_192, 8),
+                (24_204, 1_866),
+                (26_072, 5_480),
+                (31_556, 2_496),
+                (34_056, 4_369),
+                (38_428, 8),
+                (38_440, 321),
+                (38_764, 68),
+            ],
+            // CRYUU00, slot 523.
+            (
+                40_960,
+                110_592,
+                "440f35b120293916a9d19a7c60a6589dfe47800b9e8dbab95de24d25a4d4f58e",
+            ) => &[
+                (0, 8),
+                (16, 32),
+                (52, 5_504),
+                (5_560, 1_382),
+                (6_944, 8),
+                (6_956, 2_241),
+                (9_200, 8),
+                (9_212, 761),
+                (9_976, 8),
+                (9_988, 824),
+                (10_816, 1_599),
+                (12_416, 2_748),
+                (15_168, 1_567),
+                (20_552, 6_844),
+                (27_400, 4_104),
+                (31_508, 8),
+                (31_520, 1_684),
+                (33_208, 4_245),
+                (37_456, 8),
+                (37_468, 321),
+                (37_792, 68),
+            ],
+            // DRG02_00, slot 535.
+            (
+                20_480,
+                72_420,
+                "46af6dbcedb4eab31ae5d2db9195c3dbc968840c316d08d04b1ca95a1762efb3",
+            ) => &[
+                (0, 8),
+                (16, 12_328),
+                (12_348, 13_672),
+                (26_024, 6_850),
+                (32_876, 8),
+                (32_888, 7_098),
+                (39_988, 8),
+                (40_000, 7_408),
+                (47_412, 14_440),
+                (61_856, 544),
+            ],
+            // DRG08_00, slot 557.
+            (
+                20_480,
+                84_732,
+                "ecb3e431738d1e065eb0e90a47c392368be4fa84a08fb90ec928659c40d19b36",
+            ) => &[
+                (0, 8),
+                (16, 12_328),
+                (12_348, 8),
+                (12_360, 5_700),
+                (18_064, 6_533),
+                (24_600, 8_200),
+                (32_804, 12_296),
+                (45_104, 8),
+                (45_116, 5_893),
+                (51_012, 8),
+                (51_024, 14_380),
+            ],
+            _ => &[],
+        }
+    } else {
+        &[]
+    };
+    if !further_form_sprite_ranges.is_empty() {
+        return Some(
+            further_form_sprite_ranges
+                .iter()
+                .map(|&(offset, length)| NontextRange {
+                    offset,
+                    length,
+                    evidence: "Original US DRG02_00/DRG08_00/CRYUD00/CRYUU00 entry 3 image and palette section words, selected image directory words, consumed image headers/packed words/mode-2 tokens, and palette directory words with 32-halfword records. Original MAGIC151 first-u16 request and post-load handlers 0x801EF388/0x801EF484 use BATTLE entry 15 form 21..25 pointer cells 0x800B4A44..0x800B4A68 to select slots 535/557/521/523, bound through the SLUS LBA table and complete matching physical disc user bytes. Successful unskipped loading, a stable hint in 0..18 and retained root-array word 12 let GAME initializer 0x801C1254 publish ordinal 0 at 0x8003B80C. Palette calls reach SLUS 0x80166C48; finite documented image cases reach 0x8014DC08 and queued consumption at 0x8014E6D0 with its original packed/raw/mode-2 readers. Qualification requires exact original archive and entry/offset/mode/load/checkword/size/payload identities. Request work byte 8 selects CRYUD00 below 2 or CRYUU00 otherwise. Separate palette indices 0..7 for DRG and 0 for CRYU, a changed request selector, clear image-skip bit, valid animation records, queue capacity, bounded destinations including final-token overshoot, nonaliasing, stable original code/tables/source and ordinary helper returns remain conditions. CRYUU00 image slot 8 and its directory word, opaque mode-2 prefixes, allocation tails, programs and selection storage are excluded. No natural selector production, general caller bounds, actual invocation/request, residency, transfer, live CLUT, display, rasterized-text absence or safe-edit claim.",
+                })
+                .collect(),
+        );
+    }
     if entry.transfer_mode == 0
         && entry.ram_ptr == 0x801e_ec00
         && entry.check_word == 0x141

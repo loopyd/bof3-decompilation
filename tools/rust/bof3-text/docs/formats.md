@@ -124,6 +124,27 @@ any final-token overshoot. Programs, cells, selection triples, unconsumed tails
 and allocation gaps stay unresolved. Banks loaded at other root addresses
 require separate binding evidence.
 
+Four further first-slot cases use the same loader, ordinal-0 initializer and
+consumers. Their original BATTLE form-pointer cells are `0x800B4A44..0x800B4A68`.
+They retain the same archive, entry, mode, destination, checkword and payload
+qualification. The table lists only image slots with a valid finite selection
+case. Palette indices are separate from image selectors.
+
+| Archive | Form codes | Slot | Entry offset | Payload bytes | Image selectors | Palette indices |
+| --- | --- | --- | --- | --- | --- | --- |
+| `DRG02_00.EMI` | 21, 22 | 535 | 20480 | 72420 | 4, 6, 44, 12, 46, 14, 16, 18 | 0..7 |
+| `DRG08_00.EMI` | 23, 24 | 557 | 20480 | 84732 | 4, 12, 44, 16, 6, 14, 46, 18 | 0..7 |
+| `CRYUD00.EMI` | 25 | 521 | 40960 | 110592 | 16, 40, 0, 4, 8, 36, 20, 12, 32, 24, 56, 6, 44, 60, 48 | 0 |
+| `CRYUU00.EMI` | 25 | 523 | 40960 | 110592 | 6, 8, 12, 20, 16, 24, 32, 36, 4, 40, 44, 56, 60, 48 | 0 |
+
+For form 25, request work byte 8 below 2 selects `CRYUD00`; otherwise it selects
+`CRYUU00`. CRYUD image slot 2 uses selector 0 with actor byte 8 equal to 252,
+through the original low-byte argument. CRYUU selectors cover image slots
+`0..7` and `9..14` in that order. Image slot 8 and its directory word stay
+unresolved because this route has no valid selection case for them. Only the
+listed consumed image storage, selected directory words and palette records
+qualify. The conditions, exclusions and evidence limits above still apply.
+
 ## Save-icon source coverage
 
 Original `SHOP.EMI` entry 8 and `START.EMI` entry 9 contain the same save-header
