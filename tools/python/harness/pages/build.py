@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 from pathlib import Path
 
@@ -48,4 +49,12 @@ def build_site(
     write_snapshot(root, output / "status.json", revision, media_root=cache)
     for name in ASSETS:
         shutil.copyfile(root / "web" / name, output / name)
+    index = output / "index.html"
+    html = index.read_text(encoding="utf-8")
+    for name in ASSETS:
+        if name == "index.html":
+            continue
+        digest = hashlib.sha256((output / name).read_bytes()).hexdigest()[:16]
+        html = html.replace(f'"{name}"', f'"{name}?v={digest}"')
+    index.write_text(html, encoding="utf-8")
     (output / ".nojekyll").touch()
