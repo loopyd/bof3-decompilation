@@ -2075,6 +2075,20 @@ parameter expansion, combine, scheduling, jump optimization and delay-slot filli
 (`reorg.c`), local/global allocation or reload. Debug dumps and assembly-only
 diagnostics are not linked acceptance evidence.
 
+In GCC 2.7.2, an output reload followed by an allocated GPR copy need not
+coalesce. A plain hard-register move with move cost 2 bypasses reload emission.
+Previous-SET retargeting runs for an input reload whose source remains a pseudo.
+Trace the reload trigger and output destination before predicting a direct
+`mflo`. Reload does not generally eliminate redundant arithmetic. Verify the
+complete native output.
+
+Parameter setup can break apparent load/copy adjacency. GCC 2.7.2 appends
+deferred parameter conversions after copying incoming arguments. A narrow formal
+can place a real SET between the final stack-argument load and the first body
+assignment. Inspect initial RTL before relying on adjacent-producer retargeting.
+Changing a formal type still requires ABI and consumption evidence, consistent
+declarations and complete caller preservation.
+
 For an aggregate copy followed by a scratch-word reload, inspect the copy RTL
 before adding a qualifier. An opaque `mem:BLK` copy can survive both CSE passes
 and split after reload, leaving the ordinary word read intact. Check the owning

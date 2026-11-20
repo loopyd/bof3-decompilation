@@ -28,7 +28,7 @@ extern u8 D_80146254;
  * one when the supplied point sits inside the work record's range. The original
  * zero-extends the result byte before testing it, so this overlay sees the
  * unsigned return type. */
-u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range, void* work);
+u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
 
 /* @source 0x801CFB0C
  * @behavior Tests one front-end record's stored position against the work

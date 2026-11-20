@@ -676,7 +676,8 @@ void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
  * record x at +0x34, y at +0x38 and signed timer at +0x3E, a byte range and
  * the entry-table pointer 0x80143FC8 in its fifth stack argument, and reports
  * a byte-valued match. Body not lifted in this target. */
-u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range, void* work);
+/* Consumes reference as a signed 16-bit value. */
+u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
 s16  func_8015477C(s32 arg0, s32 arg1);
 s32  func_801E0ABC(s32 arg0, s32 arg1);
 /* Target-local AREA030 panel combination drawer at 0x801E19CC: the entry-panel

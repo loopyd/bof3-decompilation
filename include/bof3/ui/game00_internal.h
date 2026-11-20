@@ -153,7 +153,8 @@ u8 func_801C539C(void);
  * work-record counter at 0x3E. Returns the result when their difference is
  * less than 0x101, otherwise the counter. */
 s16 func_801BDCF8(s32 coord_x, s32 coord_y);
-u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
+/* Consumes reference as a signed 16-bit value. */
+u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range,
                  struct GameWorkArea* work);
 
 void func_801ACF2C(void);
