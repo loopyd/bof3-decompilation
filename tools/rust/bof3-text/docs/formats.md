@@ -292,8 +292,15 @@ lists follow the listed image-slot order.
 | --- | --- | --- | --- |
 | `REID00..01.EMI` | 572..573 | 1 | 4 |
 | `REIU00..01.EMI` | 574..575 | 0..12 | 6, 0, 16, 20, 32, 28, 12, 8, 36, 40, 44, 56, 48 |
-| `RTD00..01.EMI` | 576..577 | 3 | 0 |
+| `RTD00..01.EMI` | 576..577 | 3 | 0 or 1 |
 | `RTU00..01.EMI` | 578..579 | 0..5 | 4, 6, 16, 48, 56, 58 |
+
+RTD selectors 0 and 1 both select image and program 3. Their control triples
+are `03 03 01` and `03 03 00`; the third byte selects the already reviewed
+mirror cases. Selector 1 qualifies payload bytes `[46167,46170)` in both
+archives. The request and ready handler must retain that same actor and byte 8.
+It adds no bytes in images, program bodies, cells or palettes. Paths through
+selectors 8 and 9 remain outside these source bindings.
 
 The SLUS LBA table and complete original physical user bytes bind these slots.
 Only root words 0 and 4, reachable image-directory words, consumed image storage,
@@ -2016,6 +2023,42 @@ description, and the reader's lookup return at `0x801E9C6C` binds record ID
 selected STATUS reader transfer for this transition. They do not cover the
 complete entry or per-sector CD lifecycle, identify suppliers for earlier
 independent captures, or identify the description-bank supplier.
+
+## Native overlay instruction coverage
+
+Coverage recognizes complete instruction bodies in the following original US
+entries. Each uses raw mode 0. Entry 0 starts at archive offset 2048;
+COMMU01 entry 7 starts at offset 143360. The complete archive must match its
+original US disc identity.
+
+| Archive | Entry | Load address | Checkword | Payload bytes | Payload SHA-256 |
+| --- | ---: | --- | --- | ---: | --- |
+| `SCENA00.EMI` | 0 | `0x801F6C00` | `0x105` | 28528 | `c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e` |
+| `COMMU01.EMI` | 7 | `0x801D0C00` | `0x19` | 16948 | `61e0ed2d90247be2bad9904015ac042ac3a83e638721497a90e298815354e165` |
+| `SCENA13.EMI` | 0 | `0x801F6C00` | `0x112` | 21488 | `31859c1ab5aa4a2c8250f0011569ac3b66a442f023717fb677883417ddeab469` |
+| `SISYOU.EMI` | 0 | `0x801D0C00` | `0x1F` | 13963 | `42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af` |
+| `SCENA04.EMI` | 0 | `0x801F6C00` | `0x109` | 14176 | `cb0ff0c46ea33d5c9eef07493b7b2c2673278dbb97373c3eb8f77b8adfdbcb9f` |
+| `PLP056.EMI` | 0 | `0x801CE400` | `0x27` | 9428 | `98b83aa1d6951af3844ea34058e34fbcc18acb5d5e8f69eb4aa289107564bfa8` |
+
+Offsets below are relative to the selected entry. Runtime addresses are the
+load address plus these offsets. Adjacent complete functions are coalesced
+only for coverage accounting.
+
+| Archive | Payload intervals | Complete functions | Bytes |
+| --- | --- | ---: | ---: |
+| SCENA00 | `[448,19748)`, `[21128,22432)`, `[23504,23936)` | 61 | 21036 |
+| COMMU01 | `[104,8600)`, `[10644,16312)` | 33 | 14164 |
+| SCENA13 | `[676,1016)`, `[1244,1696)`, `[2116,2180)`, `[2408,2620)`, `[3416,4540)`, `[6260,13080)`, `[17592,18532)`, `[20020,21232)` | 44 | 11164 |
+| SISYOU | `[24,2116)`, `[2940,4692)`, `[6048,11812)`, `[12912,13144)` | 43 | 9840 |
+| SCENA04 | `[256,676)`, `[812,2492)`, `[2984,4336)`, `[4800,5172)`, `[5412,6784)`, `[9112,12788)`, `[13264,13696)` | 38 | 9304 |
+| PLP056 | `[4,9304)` | 38 | 9300 |
+
+Fresh native compilation and relocation reproduce all complete sized ELF
+function symbols. Compiler assembly separates instructions from initialized
+data. Headers, initialized sections, retained functions and gaps remain outside
+these ranges. SISYOU's literal allocations retain their text classification.
+This proof establishes stored instruction representation. It does not establish
+execution, callee semantics, resource safety, rendering or safe editing.
 
 ## Scenario instruction and dispatch-table coverage
 

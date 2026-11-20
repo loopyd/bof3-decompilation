@@ -10714,7 +10714,7 @@ fn raw_sprite_program_ranges(
             110_592,
             "436640506a37ffea2605d20e1b1f63983d8cd019399279ed3f62e5fb17be9e18",
         ) => (
-            &[0],
+            &[0, 1],
             US_RAW_SPRITE_FIELD_EVIDENCE,
             US_RAW_SPRITE_MIRROR_EVIDENCE,
         ),
@@ -11343,6 +11343,106 @@ fn stored_sprite_record_copy_ranges(entry: Entry, data: &[u8]) -> Option<Vec<Non
 }
 
 fn reviewed_payload_nontext_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    if entry.transfer_mode == 0
+        && usize::try_from(entry.size).ok() == Some(data.len())
+        && matches!(entry.ram_ptr, 0x801f_6c00 | 0x801d_0c00 | 0x801c_e400)
+    {
+        let instructions: &[(usize, usize)] = match (
+            entry.index,
+            entry.offset,
+            entry.ram_ptr,
+            entry.check_word,
+            data.len(),
+            sha256_hex(data).as_str(),
+        ) {
+            (
+                0,
+                2_048,
+                0x801f_6c00,
+                0x105,
+                28_528,
+                "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+            ) => &[(448, 19_300), (21_128, 1_304), (23_504, 432)],
+            (
+                7,
+                143_360,
+                0x801d_0c00,
+                0x19,
+                16_948,
+                "61e0ed2d90247be2bad9904015ac042ac3a83e638721497a90e298815354e165",
+            ) => &[(104, 8_496), (10_644, 5_668)],
+            (
+                0,
+                2_048,
+                0x801f_6c00,
+                0x112,
+                21_488,
+                "31859c1ab5aa4a2c8250f0011569ac3b66a442f023717fb677883417ddeab469",
+            ) => &[
+                (676, 340),
+                (1_244, 452),
+                (2_116, 64),
+                (2_408, 212),
+                (3_416, 1_124),
+                (6_260, 6_820),
+                (17_592, 940),
+                (20_020, 1_212),
+            ],
+            (
+                0,
+                2_048,
+                0x801d_0c00,
+                0x1f,
+                13_963,
+                "42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af",
+            ) => &[(24, 2_092), (2_940, 1_752), (6_048, 5_764), (12_912, 232)],
+            (
+                0,
+                2_048,
+                0x801f_6c00,
+                0x109,
+                14_176,
+                "cb0ff0c46ea33d5c9eef07493b7b2c2673278dbb97373c3eb8f77b8adfdbcb9f",
+            ) => &[
+                (256, 420),
+                (812, 1_680),
+                (2_984, 1_352),
+                (4_800, 372),
+                (5_412, 1_372),
+                (9_112, 3_676),
+                (13_264, 432),
+            ],
+            (
+                0,
+                2_048,
+                0x801c_e400,
+                0x27,
+                9_428,
+                "98b83aa1d6951af3844ea34058e34fbcc18acb5d5e8f69eb4aa289107564bfa8",
+            ) => &[(4, 9_300)],
+            _ => &[],
+        };
+        if !instructions.is_empty() {
+            return Some(
+                instructions
+                    .iter()
+                    .map(|&(offset, length)| NontextRange {
+                        offset,
+                        length,
+                        evidence: concat!(
+                            "Original US native overlay instruction bodies. ",
+                            "Complete freshly compiled and relocated ELF function symbols match ",
+                            "the original raw payload; compiler assembly contains no embedded data. ",
+                            "Exact original archive and descriptor/payload identities gate classification. ",
+                            "Initialized data, retained functions and gaps outside complete symbols ",
+                            "are excluded. Stored instruction representation only; no observed execution, ",
+                            "callee semantics, resource safety, rendering or safe-edit claim."
+                        ),
+                    })
+                    .collect(),
+            );
+        }
+    }
     if entry.index == 0
         && entry.offset == 2_048
         && entry.transfer_mode == 0
