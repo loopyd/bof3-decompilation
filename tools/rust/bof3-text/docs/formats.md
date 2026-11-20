@@ -2785,7 +2785,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v36`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v37`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3184,7 +3184,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v36` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v37` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3382,6 +3382,46 @@ names are outside this layout's editable allocations.
 | `0x801E21D0` | `LURE` | 4 | `game-fixed-literal` |
 | `0x801E21D4` | `EQUIP` | 5 | `game-fixed-literal` |
 | `0x801E21D9` | `GUIDE` | 5 | `game-fixed-literal` |
+
+The same payload includes twelve fishing help-text fields through
+`game-exact-literal`. Each edit must retain exactly the recorded number of
+encoded literal bytes. Pad shorter wording with spaces, which encode as `0xFF`.
+Empty text, NUL, dialogue commands and shorter or longer fields are refused.
+
+| Address | Original text | Editable bytes |
+| --- | --- | --- |
+| `0x801E1DAC` | `Casting...` | 10 |
+| `0x801E1DB8` | `Set rod & lure...` | 17 |
+| `0x801E1DCC` | `Quit fishing...` | 15 |
+| `0x801E1DDC` | `Wind reel...` | 12 |
+| `0x801E1DE8` | `Move Rod...Directional button` | 29 |
+| `0x801E1E08` | `Reset lure...` | 13 |
+| `0x801E1E18` | `……` | 2 |
+| `0x801E1E1C` | `……` | 2 |
+| `0x801E1E20` | `Line got caught on rocks!` | 25 |
+| `0x801E1E3C` | `Line broke; lure lost!` | 22 |
+| `0x801E1E54` | `Lure fell off; catch got away!` | 30 |
+| `0x801E1E74` | `,` | 1 |
+
+The thirteen twelve-byte records at `0x801E1E78` retain their byte counts and
+pointer words at record offset four. Records 1 and 12 share `0x801E1DB8`; its
+single editable field retains both references. All thirteen pointers remain
+immutable. Readers at `0x801D3824` and `0x801D3898` pass the selected pointer and
+count to `0x8014F800`. Selection setup at `0x801D36F8` chooses the work route.
+Initializer `0x801D39B8` stores the selected pointer at work offset `0x50` and
+clears the revealed count at `0x49`; the declared count remains in the table.
+The reveal reader at `0x801D3A54` advances one source byte per token, bounded
+by that unchanged table count, and calls glyph-quad renderer `0x801D9740`.
+The advance and unreveal paths at `0x801D3C74` and `0x801D3F40` reuse the retained
+source and table count. The reveal loop ignores NUL, so zero padding would alter
+its tokens. Exact-width edits preserve source advancement and the table count.
+
+`Wind reel...` has no NUL before the next field. The line-broke record retains its
+original count of 23, including its following NUL; only its 22 literal bytes are
+editable. Preserve every original terminator, alignment byte, record count,
+attribute and timer. These bindings apply to the thirteen reviewed table rows
+and their initialized retained work. Natural selection of every row and edited
+rendering remain unverified; the direct readers do not check the table index.
 
 The seven menu labels use every byte of their fixed fields without reserving
 NUL. Shorter edits zero-fill the field. The status-cell reader at `0x801D7C10`

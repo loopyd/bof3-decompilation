@@ -9,13 +9,14 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v36";
+pub const SCHEMA: &str = "bof3.inline-text/v37";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     GameLiteral,
     GameFixedLiteral,
+    GameExactLiteral,
     GameKeyboardCharacter,
     GameCountedLiteral,
     GameGlyphs,
@@ -58,6 +59,15 @@ impl Codec {
                 }
             };
             return Ok(vec![0x82, 0x4f + digit]);
+        }
+        if self == Self::GameExactLiteral {
+            let bytes = encode_name(text, capacity)?;
+            if bytes.len() != capacity {
+                return invalid(format!(
+                    "counted text requires exactly {capacity} literal bytes; pad shorter wording with spaces"
+                ));
+            }
+            return Ok(bytes);
         }
         if self == Self::GameKeyboardCharacter {
             let bytes = encode_name(text, capacity)?;
@@ -172,7 +182,7 @@ impl Codec {
                 .unwrap()
                 .to_string());
         }
-        if self == Self::GameKeyboardCharacter {
+        if matches!(self, Self::GameKeyboardCharacter | Self::GameExactLiteral) {
             let text = decode_name(bytes, file_offset)?;
             self.encode(&text, bytes.len())?;
             return Ok(text);
@@ -212,6 +222,7 @@ impl Codec {
         match self {
             Self::GameLiteral => "game-literal",
             Self::GameFixedLiteral => "game-fixed-literal",
+            Self::GameExactLiteral => "game-exact-literal",
             Self::GameKeyboardCharacter => "game-keyboard-character",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
@@ -241,7 +252,10 @@ impl Codec {
 
     pub(crate) const fn terminator_bytes(self) -> usize {
         match self {
-            Self::GameFixedLiteral | Self::GameCountedLiteral | Self::GameKeyboardCharacter => 0,
+            Self::GameFixedLiteral
+            | Self::GameExactLiteral
+            | Self::GameCountedLiteral
+            | Self::GameKeyboardCharacter => 0,
             _ => 1,
         }
     }
@@ -469,17 +483,17 @@ fn decode_glyphs(bytes: &[u8], file_offset: usize) -> Result<String> {
 struct Allocation {
     address: u32,
     capacity: usize,
-    reference: Option<u32>,
+    references: &'static [u32],
     renderers: &'static [u32],
     codec: Codec,
 }
 
 impl Allocation {
-    const fn shift_jis_digit(address: u32, reference: u32) -> Self {
+    const fn shift_jis_digit(address: u32, references: &'static [u32]) -> Self {
         Self {
             address,
             capacity: 3,
-            reference: Some(reference),
+            references,
             renderers: &[],
             codec: Codec::ShiftJisDigit,
         }
@@ -489,7 +503,7 @@ impl Allocation {
         Self {
             address,
             capacity: 1,
-            reference: None,
+            references: &[],
             renderers: &[0x8014f800],
             codec: Codec::GameKeyboardCharacter,
         }
@@ -499,7 +513,7 @@ impl Allocation {
         Self {
             address,
             capacity,
-            reference: None,
+            references: &[],
             renderers: &[0x80150098],
             codec: Codec::AsciiLiteral,
         }
@@ -509,9 +523,24 @@ impl Allocation {
         Self {
             address,
             capacity,
-            reference: None,
+            references: &[],
             renderers,
             codec: Codec::GameFixedLiteral,
+        }
+    }
+
+    const fn exact_literal(
+        address: u32,
+        capacity: usize,
+        references: &'static [u32],
+        renderers: &'static [u32],
+    ) -> Self {
+        Self {
+            address,
+            capacity,
+            references,
+            renderers,
+            codec: Codec::GameExactLiteral,
         }
     }
 
@@ -519,7 +548,7 @@ impl Allocation {
         Self {
             address,
             capacity: 8,
-            reference: None,
+            references: &[],
             renderers: &[0x8014fc90],
             codec: Codec::GameCountedLiteral,
         }
@@ -528,13 +557,13 @@ impl Allocation {
     const fn literal(
         address: u32,
         capacity: usize,
-        reference: Option<u32>,
+        references: &'static [u32],
         renderers: &'static [u32],
     ) -> Self {
         Self {
             address,
             capacity,
-            reference,
+            references,
             renderers,
             codec: Codec::GameLiteral,
         }
@@ -544,7 +573,7 @@ impl Allocation {
         Self {
             address,
             capacity,
-            reference: None,
+            references: &[],
             renderers: &[0x80150098],
             codec: Codec::AsciiDecimalFormat,
         }
@@ -559,7 +588,7 @@ impl Allocation {
         Self {
             address,
             capacity,
-            reference: None,
+            references: &[],
             renderers,
             codec,
         }
@@ -569,7 +598,7 @@ impl Allocation {
         Self {
             address,
             capacity,
-            reference: None,
+            references: &[],
             renderers: &[0x8014f800],
             codec: Codec::GameGlyphs,
         }
@@ -593,11 +622,11 @@ const LAYOUTS: &[Layout] = &[
         sha256: crate::game::PAYLOAD_SHA256,
         consumers: &[0x80199d00],
         allocations: &[
-            Allocation::literal(0x801c7c34, 5, Some(0x801c7c5c), &[0x8014f800]),
-            Allocation::literal(0x801c7c3c, 7, Some(0x801c7c60), &[0x8014f800]),
-            Allocation::literal(0x801c7c44, 6, Some(0x801c7c64), &[0x8014f800]),
-            Allocation::literal(0x801c7c4c, 7, Some(0x801c7c68), &[0x8014f800]),
-            Allocation::literal(0x801c7c54, 6, Some(0x801c7c6c), &[0x8014f800]),
+            Allocation::literal(0x801c7c34, 5, &[0x801c7c5c], &[0x8014f800]),
+            Allocation::literal(0x801c7c3c, 7, &[0x801c7c60], &[0x8014f800]),
+            Allocation::literal(0x801c7c44, 6, &[0x801c7c64], &[0x8014f800]),
+            Allocation::literal(0x801c7c4c, 7, &[0x801c7c68], &[0x8014f800]),
+            Allocation::literal(0x801c7c54, 6, &[0x801c7c6c], &[0x8014f800]),
         ],
     },
     Layout {
@@ -612,27 +641,27 @@ const LAYOUTS: &[Layout] = &[
             Allocation {
                 address: 0x801d0c1c,
                 capacity: 15,
-                reference: Some(0x801d190c),
+                references: &[0x801d190c],
                 renderers: &[0x801d1714],
                 codec: Codec::AsciiLiteral,
             },
             Allocation {
                 address: 0x801d0c2c,
                 capacity: 5,
-                reference: Some(0x801d1908),
+                references: &[0x801d1908],
                 renderers: &[0x801d1714],
                 codec: Codec::AsciiLiteral,
             },
             Allocation {
                 address: 0x801d0c34,
                 capacity: 7,
-                reference: Some(0x801d1904),
+                references: &[0x801d1904],
                 renderers: &[0x801d1714],
                 codec: Codec::AsciiLiteral,
             },
-            Allocation::literal(0x801d18f4, 4, None, &[0x8014fc90]),
-            Allocation::literal(0x801d18f8, 2, None, &[0x8014fc90]),
-            Allocation::literal(0x801d18fc, 2, None, &[0x8014fc90]),
+            Allocation::literal(0x801d18f4, 4, &[], &[0x8014fc90]),
+            Allocation::literal(0x801d18f8, 2, &[], &[0x8014fc90]),
+            Allocation::literal(0x801d18fc, 2, &[], &[0x8014fc90]),
         ],
     },
     Layout {
@@ -653,12 +682,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801dac5c, 3, &[0x8014f800]),
             Allocation::fixed_literal(0x801daca8, 4, &[0x8014f800]),
             Allocation::fixed_literal(0x801dacb0, 3, &[0x8014f800]),
-            Allocation::literal(0x801db010, 3, Some(0x801db038), &[0x8014fc90]),
-            Allocation::literal(0x801db014, 4, Some(0x801db03c), &[0x8014fc90]),
-            Allocation::literal(0x801db018, 5, Some(0x801db040), &[0x8014fc90]),
-            Allocation::literal(0x801db020, 5, Some(0x801db044), &[0x8014fc90]),
-            Allocation::literal(0x801db028, 4, Some(0x801db048), &[0x8014fc90]),
-            Allocation::literal(0x801db034, 2, Some(0x801db054), &[0x8014fc90]),
+            Allocation::literal(0x801db010, 3, &[0x801db038], &[0x8014fc90]),
+            Allocation::literal(0x801db014, 4, &[0x801db03c], &[0x8014fc90]),
+            Allocation::literal(0x801db018, 5, &[0x801db040], &[0x8014fc90]),
+            Allocation::literal(0x801db020, 5, &[0x801db044], &[0x8014fc90]),
+            Allocation::literal(0x801db028, 4, &[0x801db048], &[0x8014fc90]),
+            Allocation::literal(0x801db034, 2, &[0x801db054], &[0x8014fc90]),
             Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0c08, 5, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0c10, 5, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
@@ -666,10 +695,10 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801dad60, 4, Codec::AsciiFormatLiteral, &[0x8014ff0c]),
             Allocation::bounded_format(0x801dad64, 2, Codec::AsciiFormatLiteral, &[0x8014ff0c]),
             Allocation::ascii_literal(0x801d0c2c, 2),
-            Allocation::literal(0x801d0c3c, 5, None, &[0x8014f800]),
-            Allocation::literal(0x801d0c41, 5, None, &[0x8014f800]),
-            Allocation::literal(0x801d0c46, 5, None, &[0x8014f800]),
-            Allocation::literal(0x801d0c4b, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801d0c3c, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x801d0c41, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x801d0c46, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x801d0c4b, 4, &[], &[0x8014f800]),
             Allocation::bounded_format(
                 0x801d0c24,
                 7,
@@ -820,9 +849,10 @@ const LAYOUTS: &[Layout] = &[
         name: "US AREA030 panel text",
         load: 0x801d0c00,
         size: 75285,
-        sha256: "35bd175147e86460c2ceecbf6b74e9c73112910a0cf449691f970f31b582d3ed",
+        sha256: "e14e20ddaf9e850e97a841db08af9d447e4b57bd881bbe7916452f8fb87d33cd",
         consumers: &[
-            0x801d159c, 0x801d5d88, 0x801d6f34, 0x801d72e4, 0x801d7b64, 0x801d7c10, 0x801d7eb0,
+            0x801d159c, 0x801d36f8, 0x801d3824, 0x801d3898, 0x801d39b8, 0x801d3a54, 0x801d3c74,
+            0x801d3f40, 0x801d5d88, 0x801d6f34, 0x801d72e4, 0x801d7b64, 0x801d7c10, 0x801d7eb0,
             0x801d8364, 0x801d88e0, 0x801e1004, 0x801e1320,
         ],
         allocations: &[
@@ -856,6 +886,23 @@ const LAYOUTS: &[Layout] = &[
             Allocation::fixed_literal(0x801e21d0, 4, &[0x8014f800]),
             Allocation::fixed_literal(0x801e21d4, 5, &[0x8014f800]),
             Allocation::fixed_literal(0x801e21d9, 5, &[0x8014f800]),
+            Allocation::exact_literal(0x801e1dac, 10, &[0x801e1e7c], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(
+                0x801e1db8,
+                17,
+                &[0x801e1e88, 0x801e1f0c],
+                &[0x8014f800, 0x801d9740],
+            ),
+            Allocation::exact_literal(0x801e1dcc, 15, &[0x801e1e94], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1ddc, 12, &[0x801e1ea0], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1de8, 29, &[0x801e1eac], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e08, 13, &[0x801e1eb8], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e18, 2, &[0x801e1ec4], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e1c, 2, &[0x801e1ed0], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e20, 25, &[0x801e1edc], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e3c, 22, &[0x801e1ee8], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e54, 30, &[0x801e1ef4], &[0x8014f800, 0x801d9740]),
+            Allocation::exact_literal(0x801e1e74, 1, &[0x801e1f00], &[0x8014f800, 0x801d9740]),
         ],
     },
     Layout {
@@ -977,38 +1024,38 @@ const LAYOUTS: &[Layout] = &[
             Allocation::keyboard_character(0x801ececb),
             Allocation::keyboard_character(0x801ececc),
             Allocation::keyboard_character(0x801ececd),
-            Allocation::literal(0x801ed190, 3, Some(0x801ed1b8), &[0x8014fc90]),
-            Allocation::literal(0x801ed194, 4, Some(0x801ed1bc), &[0x8014fc90]),
-            Allocation::literal(0x801ed198, 5, Some(0x801ed1c0), &[0x8014fc90]),
-            Allocation::literal(0x801ed1a0, 5, Some(0x801ed1c4), &[0x8014fc90]),
-            Allocation::literal(0x801ec940, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec944, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec948, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec94c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec99c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec9a2, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec9a8, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ec9ae, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb0c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb12, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb18, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb1e, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb2c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb32, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801ecb38, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ed190, 3, &[0x801ed1b8], &[0x8014fc90]),
+            Allocation::literal(0x801ed194, 4, &[0x801ed1bc], &[0x8014fc90]),
+            Allocation::literal(0x801ed198, 5, &[0x801ed1c0], &[0x8014fc90]),
+            Allocation::literal(0x801ed1a0, 5, &[0x801ed1c4], &[0x8014fc90]),
+            Allocation::literal(0x801ec940, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec944, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec948, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec94c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec99c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec9a2, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec9a8, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ec9ae, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb0c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb12, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb18, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb1e, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb2c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb32, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801ecb38, 4, &[], &[0x8014f800]),
             Allocation::bounded_format(0x801d0c4c, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
-            Allocation::literal(0x801ecc3c, 5, Some(0x801ecc64), &[0x8014f800]),
-            Allocation::literal(0x801ecc44, 7, Some(0x801ecc68), &[0x8014f800]),
-            Allocation::literal(0x801ecc4c, 6, Some(0x801ecc6c), &[0x8014f800]),
-            Allocation::literal(0x801ecc54, 7, Some(0x801ecc70), &[0x8014f800]),
-            Allocation::literal(0x801ecc5c, 6, Some(0x801ecc74), &[0x8014f800]),
-            Allocation::literal(0x801ecc78, 5, Some(0x801ecc98), &[0x8014f800]),
-            Allocation::literal(0x801ecc80, 7, Some(0x801ecc9c), &[0x8014f800]),
-            Allocation::literal(0x801ecc88, 7, Some(0x801ecca0), &[0x8014f800]),
-            Allocation::literal(0x801ecc90, 6, Some(0x801ecca4), &[0x8014f800]),
-            Allocation::literal(0x801eccb0, 7, Some(0x801eccd4), &[0x8014f800]),
-            Allocation::literal(0x801eccb8, 6, Some(0x801eccd8), &[0x8014f800]),
-            Allocation::literal(0x801eccc0, 7, Some(0x801eccdc), &[0x8014f800]),
+            Allocation::literal(0x801ecc3c, 5, &[0x801ecc64], &[0x8014f800]),
+            Allocation::literal(0x801ecc44, 7, &[0x801ecc68], &[0x8014f800]),
+            Allocation::literal(0x801ecc4c, 6, &[0x801ecc6c], &[0x8014f800]),
+            Allocation::literal(0x801ecc54, 7, &[0x801ecc70], &[0x8014f800]),
+            Allocation::literal(0x801ecc5c, 6, &[0x801ecc74], &[0x8014f800]),
+            Allocation::literal(0x801ecc78, 5, &[0x801ecc98], &[0x8014f800]),
+            Allocation::literal(0x801ecc80, 7, &[0x801ecc9c], &[0x8014f800]),
+            Allocation::literal(0x801ecc88, 7, &[0x801ecca0], &[0x8014f800]),
+            Allocation::literal(0x801ecc90, 6, &[0x801ecca4], &[0x8014f800]),
+            Allocation::literal(0x801eccb0, 7, &[0x801eccd4], &[0x8014f800]),
+            Allocation::literal(0x801eccb8, 6, &[0x801eccd8], &[0x8014f800]),
+            Allocation::literal(0x801eccc0, 7, &[0x801eccdc], &[0x8014f800]),
             Allocation::fixed_literal(0x801ecd26, 4, &[0x8014f800, 0x8014fc90]),
             Allocation::fixed_literal(0x801ecd2e, 4, &[0x8014f800, 0x8014fc90]),
             Allocation::fixed_literal(0x801ecd36, 4, &[0x8014f800, 0x8014fc90]),
@@ -1039,12 +1086,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::decimal(0x801d0c04, 4),
             Allocation::decimal(0x801d0c08, 8),
             Allocation::decimal(0x801d0c10, 8),
-            Allocation::literal(0x801d4038, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d403c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d4040, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d4044, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d4048, 5, None, &[0x8014fc90]),
-            Allocation::literal(0x801d4050, 5, None, &[0x8014fc90]),
+            Allocation::literal(0x801d4038, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d403c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d4040, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d4044, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d4048, 5, &[], &[0x8014fc90]),
+            Allocation::literal(0x801d4050, 5, &[], &[0x8014fc90]),
         ],
     },
     Layout {
@@ -1054,16 +1101,16 @@ const LAYOUTS: &[Layout] = &[
         sha256: "3df942ff3b7822e4582cb809cec769712592d7059f39e06fef1e4e057be02c24",
         consumers: &[0x800b28c8, 0x800b2f70],
         allocations: &[
-            Allocation::literal(0x800b6e60, 5, Some(0x800b6e88), &[0x8014f800]),
-            Allocation::literal(0x800b6e68, 7, Some(0x800b6e8c), &[0x8014f800]),
-            Allocation::literal(0x800b6e70, 6, Some(0x800b6e90), &[0x8014f800]),
-            Allocation::literal(0x800b6e78, 7, Some(0x800b6e94), &[0x8014f800]),
-            Allocation::literal(0x800b6e80, 6, Some(0x800b6e98), &[0x8014f800]),
-            Allocation::literal(0x800b6e9c, 5, Some(0x800b6ec4), &[0x8014f800]),
-            Allocation::literal(0x800b6ea4, 7, Some(0x800b6ec8), &[0x8014f800]),
-            Allocation::literal(0x800b6eac, 7, Some(0x800b6ecc), &[0x8014f800]),
-            Allocation::literal(0x800b6eb4, 6, Some(0x800b6ed0), &[0x8014f800]),
-            Allocation::literal(0x800b6ebc, 7, Some(0x800b6ed4), &[0x8014f800]),
+            Allocation::literal(0x800b6e60, 5, &[0x800b6e88], &[0x8014f800]),
+            Allocation::literal(0x800b6e68, 7, &[0x800b6e8c], &[0x8014f800]),
+            Allocation::literal(0x800b6e70, 6, &[0x800b6e90], &[0x8014f800]),
+            Allocation::literal(0x800b6e78, 7, &[0x800b6e94], &[0x8014f800]),
+            Allocation::literal(0x800b6e80, 6, &[0x800b6e98], &[0x8014f800]),
+            Allocation::literal(0x800b6e9c, 5, &[0x800b6ec4], &[0x8014f800]),
+            Allocation::literal(0x800b6ea4, 7, &[0x800b6ec8], &[0x8014f800]),
+            Allocation::literal(0x800b6eac, 7, &[0x800b6ecc], &[0x8014f800]),
+            Allocation::literal(0x800b6eb4, 6, &[0x800b6ed0], &[0x8014f800]),
+            Allocation::literal(0x800b6ebc, 7, &[0x800b6ed4], &[0x8014f800]),
         ],
     },
     Layout {
@@ -1117,35 +1164,35 @@ const LAYOUTS: &[Layout] = &[
                 &[0x80150098],
             ),
             Allocation::ascii_literal(0x801d0d90, 4),
-            Allocation::literal(0x801d8b28, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b2c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b30, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b34, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b84, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b8a, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b90, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8b96, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8cf4, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8cfa, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8d00, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8d06, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8d14, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8d1a, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8d20, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), &[0x8014f800]),
-            Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), &[0x8014f800]),
-            Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), &[0x8014f800]),
-            Allocation::literal(0x801d8e3c, 7, Some(0x801d8e58), &[0x8014f800]),
-            Allocation::literal(0x801d8e44, 6, Some(0x801d8e5c), &[0x8014f800]),
-            Allocation::literal(0x801d8e60, 5, Some(0x801d8e80), &[0x8014f800]),
-            Allocation::literal(0x801d8e68, 7, Some(0x801d8e84), &[0x8014f800]),
-            Allocation::literal(0x801d8e70, 7, Some(0x801d8e88), &[0x8014f800]),
-            Allocation::literal(0x801d8e78, 6, Some(0x801d8e8c), &[0x8014f800]),
-            Allocation::literal(0x801d8e90, 5, Some(0x801d8eb8), &[0x8014f800]),
-            Allocation::literal(0x801d8e98, 7, Some(0x801d8ebc), &[0x8014f800]),
-            Allocation::literal(0x801d8ea0, 6, Some(0x801d8ec0), &[0x8014f800]),
-            Allocation::literal(0x801d8ea8, 7, Some(0x801d8ec4), &[0x8014f800]),
-            Allocation::literal(0x801d8eb0, 6, Some(0x801d8ec8), &[0x8014f800]),
+            Allocation::literal(0x801d8b28, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b2c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b30, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b34, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b84, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b8a, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b90, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8b96, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8cf4, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8cfa, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8d00, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8d06, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8d14, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8d1a, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8d20, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d8e24, 5, &[0x801d8e4c], &[0x8014f800]),
+            Allocation::literal(0x801d8e2c, 7, &[0x801d8e50], &[0x8014f800]),
+            Allocation::literal(0x801d8e34, 6, &[0x801d8e54], &[0x8014f800]),
+            Allocation::literal(0x801d8e3c, 7, &[0x801d8e58], &[0x8014f800]),
+            Allocation::literal(0x801d8e44, 6, &[0x801d8e5c], &[0x8014f800]),
+            Allocation::literal(0x801d8e60, 5, &[0x801d8e80], &[0x8014f800]),
+            Allocation::literal(0x801d8e68, 7, &[0x801d8e84], &[0x8014f800]),
+            Allocation::literal(0x801d8e70, 7, &[0x801d8e88], &[0x8014f800]),
+            Allocation::literal(0x801d8e78, 6, &[0x801d8e8c], &[0x8014f800]),
+            Allocation::literal(0x801d8e90, 5, &[0x801d8eb8], &[0x8014f800]),
+            Allocation::literal(0x801d8e98, 7, &[0x801d8ebc], &[0x8014f800]),
+            Allocation::literal(0x801d8ea0, 6, &[0x801d8ec0], &[0x8014f800]),
+            Allocation::literal(0x801d8ea8, 7, &[0x801d8ec4], &[0x8014f800]),
+            Allocation::literal(0x801d8eb0, 6, &[0x801d8ec8], &[0x8014f800]),
         ],
     },
     Layout {
@@ -1199,35 +1246,35 @@ const LAYOUTS: &[Layout] = &[
                 &[0x80150098],
             ),
             Allocation::ascii_literal(0x801d0d74, 4),
-            Allocation::literal(0x801d9b4c, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9b50, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9b54, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9b58, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9ba8, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9bae, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9bb4, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9bba, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d18, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d1e, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d24, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d2a, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d38, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d3e, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9d44, 4, None, &[0x8014f800]),
-            Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), &[0x8014f800]),
-            Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), &[0x8014f800]),
-            Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), &[0x8014f800]),
-            Allocation::literal(0x801d9e60, 7, Some(0x801d9e7c), &[0x8014f800]),
-            Allocation::literal(0x801d9e68, 6, Some(0x801d9e80), &[0x8014f800]),
-            Allocation::literal(0x801d9e84, 5, Some(0x801d9ea4), &[0x8014f800]),
-            Allocation::literal(0x801d9e8c, 7, Some(0x801d9ea8), &[0x8014f800]),
-            Allocation::literal(0x801d9e94, 7, Some(0x801d9eac), &[0x8014f800]),
-            Allocation::literal(0x801d9e9c, 6, Some(0x801d9eb0), &[0x8014f800]),
-            Allocation::literal(0x801d9eb4, 5, Some(0x801d9edc), &[0x8014f800]),
-            Allocation::literal(0x801d9ebc, 7, Some(0x801d9ee0), &[0x8014f800]),
-            Allocation::literal(0x801d9ec4, 6, Some(0x801d9ee4), &[0x8014f800]),
-            Allocation::literal(0x801d9ecc, 7, Some(0x801d9ee8), &[0x8014f800]),
-            Allocation::literal(0x801d9ed4, 6, Some(0x801d9eec), &[0x8014f800]),
+            Allocation::literal(0x801d9b4c, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9b50, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9b54, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9b58, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9ba8, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9bae, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9bb4, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9bba, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d18, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d1e, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d24, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d2a, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d38, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d3e, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9d44, 4, &[], &[0x8014f800]),
+            Allocation::literal(0x801d9e48, 5, &[0x801d9e70], &[0x8014f800]),
+            Allocation::literal(0x801d9e50, 7, &[0x801d9e74], &[0x8014f800]),
+            Allocation::literal(0x801d9e58, 6, &[0x801d9e78], &[0x8014f800]),
+            Allocation::literal(0x801d9e60, 7, &[0x801d9e7c], &[0x8014f800]),
+            Allocation::literal(0x801d9e68, 6, &[0x801d9e80], &[0x8014f800]),
+            Allocation::literal(0x801d9e84, 5, &[0x801d9ea4], &[0x8014f800]),
+            Allocation::literal(0x801d9e8c, 7, &[0x801d9ea8], &[0x8014f800]),
+            Allocation::literal(0x801d9e94, 7, &[0x801d9eac], &[0x8014f800]),
+            Allocation::literal(0x801d9e9c, 6, &[0x801d9eb0], &[0x8014f800]),
+            Allocation::literal(0x801d9eb4, 5, &[0x801d9edc], &[0x8014f800]),
+            Allocation::literal(0x801d9ebc, 7, &[0x801d9ee0], &[0x8014f800]),
+            Allocation::literal(0x801d9ec4, 6, &[0x801d9ee4], &[0x8014f800]),
+            Allocation::literal(0x801d9ecc, 7, &[0x801d9ee8], &[0x8014f800]),
+            Allocation::literal(0x801d9ed4, 6, &[0x801d9eec], &[0x8014f800]),
         ],
     },
     Layout {
@@ -1253,20 +1300,20 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0da0),
             Allocation::counted(0x801d0db4),
             Allocation::counted(0x801d0dc8),
-            Allocation::literal(0x801e5b20, 5, Some(0x801e5b48), &[0x8014f800]),
-            Allocation::literal(0x801e5b28, 7, Some(0x801e5b4c), &[0x8014f800]),
-            Allocation::literal(0x801e5b30, 6, Some(0x801e5b50), &[0x8014f800]),
-            Allocation::literal(0x801e5b38, 7, Some(0x801e5b54), &[0x8014f800]),
-            Allocation::literal(0x801e5b40, 6, Some(0x801e5b58), &[0x8014f800]),
-            Allocation::literal(0x801e5b5c, 5, Some(0x801e5b7c), &[0x8014f800]),
-            Allocation::literal(0x801e5b64, 7, Some(0x801e5b80), &[0x8014f800]),
-            Allocation::literal(0x801e5b6c, 7, Some(0x801e5b84), &[0x8014f800]),
-            Allocation::literal(0x801e5b74, 6, Some(0x801e5b88), &[0x8014f800]),
-            Allocation::literal(0x801e5b8c, 5, Some(0x801e5bb4), &[0x8014f800]),
-            Allocation::literal(0x801e5b94, 7, Some(0x801e5bb8), &[0x8014f800]),
-            Allocation::literal(0x801e5b9c, 6, Some(0x801e5bbc), &[0x8014f800]),
-            Allocation::literal(0x801e5ba4, 7, Some(0x801e5bc0), &[0x8014f800]),
-            Allocation::literal(0x801e5bac, 6, Some(0x801e5bc4), &[0x8014f800]),
+            Allocation::literal(0x801e5b20, 5, &[0x801e5b48], &[0x8014f800]),
+            Allocation::literal(0x801e5b28, 7, &[0x801e5b4c], &[0x8014f800]),
+            Allocation::literal(0x801e5b30, 6, &[0x801e5b50], &[0x8014f800]),
+            Allocation::literal(0x801e5b38, 7, &[0x801e5b54], &[0x8014f800]),
+            Allocation::literal(0x801e5b40, 6, &[0x801e5b58], &[0x8014f800]),
+            Allocation::literal(0x801e5b5c, 5, &[0x801e5b7c], &[0x8014f800]),
+            Allocation::literal(0x801e5b64, 7, &[0x801e5b80], &[0x8014f800]),
+            Allocation::literal(0x801e5b6c, 7, &[0x801e5b84], &[0x8014f800]),
+            Allocation::literal(0x801e5b74, 6, &[0x801e5b88], &[0x8014f800]),
+            Allocation::literal(0x801e5b8c, 5, &[0x801e5bb4], &[0x8014f800]),
+            Allocation::literal(0x801e5b94, 7, &[0x801e5bb8], &[0x8014f800]),
+            Allocation::literal(0x801e5b9c, 6, &[0x801e5bbc], &[0x8014f800]),
+            Allocation::literal(0x801e5ba4, 7, &[0x801e5bc0], &[0x8014f800]),
+            Allocation::literal(0x801e5bac, 6, &[0x801e5bc4], &[0x8014f800]),
             Allocation::bounded_format(0x801d0e58, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0e5c, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0e60, 3, Codec::AsciiU8DecimalFormat, &[0x80150098]),
@@ -1351,16 +1398,16 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0d0c, 8, Codec::AsciiDashGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[]),
-            Allocation::shift_jis_digit(0x801e540c, 0x801e5434),
-            Allocation::shift_jis_digit(0x801e5410, 0x801e5438),
-            Allocation::shift_jis_digit(0x801e5414, 0x801e543c),
-            Allocation::shift_jis_digit(0x801e5418, 0x801e5440),
-            Allocation::shift_jis_digit(0x801e541c, 0x801e5444),
-            Allocation::shift_jis_digit(0x801e5420, 0x801e5448),
-            Allocation::shift_jis_digit(0x801e5424, 0x801e544c),
-            Allocation::shift_jis_digit(0x801e5428, 0x801e5450),
-            Allocation::shift_jis_digit(0x801e542c, 0x801e5454),
-            Allocation::shift_jis_digit(0x801e5430, 0x801e5458),
+            Allocation::shift_jis_digit(0x801e540c, &[0x801e5434]),
+            Allocation::shift_jis_digit(0x801e5410, &[0x801e5438]),
+            Allocation::shift_jis_digit(0x801e5414, &[0x801e543c]),
+            Allocation::shift_jis_digit(0x801e5418, &[0x801e5440]),
+            Allocation::shift_jis_digit(0x801e541c, &[0x801e5444]),
+            Allocation::shift_jis_digit(0x801e5420, &[0x801e5448]),
+            Allocation::shift_jis_digit(0x801e5424, &[0x801e544c]),
+            Allocation::shift_jis_digit(0x801e5428, &[0x801e5450]),
+            Allocation::shift_jis_digit(0x801e542c, &[0x801e5454]),
+            Allocation::shift_jis_digit(0x801e5430, &[0x801e5458]),
             Allocation::bounded_format(0x801d0c98, 65, Codec::ShiftJisTitleFormat, &[]),
         ],
     },
@@ -1392,7 +1439,7 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8DecimalFieldFormat,
                 &[0x80150098],
             ),
-            Allocation::literal(0x801f0cd0, 2, None, &[0x8014f800]),
+            Allocation::literal(0x801f0cd0, 2, &[], &[0x8014f800]),
         ],
     },
     Layout {
@@ -1407,17 +1454,17 @@ const LAYOUTS: &[Layout] = &[
         // Indexed records and direct code references, rather than a pointer table.
         // Row 1 appends at most five encoded bytes. Row 3 remains unsupported.
         allocations: &[
-            Allocation::literal(0x801eb000, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb000, 13, &[], &[0x8014f800]),
             Allocation::glyphs(0x801eb00d, 6),
-            Allocation::literal(0x801eb01a, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb034, 13, None, &[]),
-            Allocation::literal(0x801eb041, 13, None, &[]),
-            Allocation::literal(0x801eb04e, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb05b, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb068, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb075, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb082, 13, None, &[0x8014f800]),
-            Allocation::literal(0x801eb08f, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb01a, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb034, 13, &[], &[]),
+            Allocation::literal(0x801eb041, 13, &[], &[]),
+            Allocation::literal(0x801eb04e, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb05b, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb068, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb075, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb082, 13, &[], &[0x8014f800]),
+            Allocation::literal(0x801eb08f, 13, &[], &[0x8014f800]),
             Allocation::bounded_format(0x801d0c70, 2, Codec::AsciiDigitGlyphLiteral, &[0x801d94d4]),
             Allocation::bounded_format(0x801d0c74, 4, Codec::AsciiU16DecimalFormat, &[0x801d94d4]),
             Allocation::bounded_format(0x801d0c78, 4, Codec::AsciiU16DecimalFormat, &[0x801d9684]),
@@ -1497,7 +1544,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
             let Allocation {
                 address,
                 capacity,
-                reference,
+                references,
                 renderers,
                 codec,
             } = *allocation;
@@ -1514,7 +1561,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
                 capacity,
                 renderers: renderers.to_vec(),
                 codec,
-                references: reference.into_iter().collect(),
+                references: references.to_vec(),
                 text: codec.decode(bytes, entry.offset + payload_offset)?,
             })
         })
@@ -1558,7 +1605,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         let Allocation {
             address,
             capacity,
-            reference,
+            references,
             renderers,
             codec,
         } = *allocation;
@@ -1570,7 +1617,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || row.capacity != capacity
             || row.renderers != renderers
             || row.codec != codec
-            || row.references != reference.into_iter().collect::<Vec<_>>()
+            || row.references != references
         {
             return invalid("unknown, duplicate or changed inline string allocation");
         }

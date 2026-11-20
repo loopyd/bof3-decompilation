@@ -121,7 +121,7 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels and fifteen fixed-width settings fields through
-`bof3.inline-text/v36`. Select that entry without class or latch selectors.
+`bof3.inline-text/v37`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 All fifteen edited Config fields render in a controlled fixture and through
 ordinary menus after a fresh BIOS boot with STATUS-only edits and an unchanged
@@ -177,7 +177,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v36`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v37`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -229,6 +229,15 @@ Format arguments include signed and unsigned halfwords plus one; `%d/6` can rece
 encoded and formatted bound. The formats at `0x801D0C38` and `0x801D0C8C` retain
 three- and five-character draw limits. Fixed labels use literal game characters
 in all twelve bytes. Runtime rendering remains unverified.
+
+The same payloads include twelve fishing help-text fields. Their
+`game-exact-literal` codec requires the recorded encoded byte length. Pad
+shorter wording with game spaces; the reveal loop ignores NUL. Preserve both
+references for the shared rod-and-lure field, all thirteen table pointers,
+counts and original terminators. `Wind reel...` has no terminator before its
+next field. The line-broke field keeps its count of 23 and following NUL while
+allowing edits only to its 22 literal bytes. Valid table-row and initialized-work
+conditions, addresses and rendering limits are in the same format reference.
 
 BATE and SHISU entry 0 each expose `%3d` through `ascii-u16-decimal-format`.
 Retain one decimal argument, at most three encoded bytes plus NUL, and at most
