@@ -1,24 +1,24 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801D2648
- * @behavior AREA030 work-record step handler, entry 4 of the local work-record
- * step table 0x801E1D20 dispatched through scratch byte 1: while the record
- * timer byte 0x0A is nonzero it counts that byte down and, once it reaches zero
- * on the same pass, reloads it from byte 0x10 of the shared limit record
+ * @behavior AREA030 work-record step handler, entry 4 of the local work-record step
+ * table 0x801E1D20 dispatched through scratch byte 1: while the record timer
+ * byte 0x0A is nonzero it counts that byte down and, once it reaches zero on
+ * the same pass, reloads it from byte 0x10 of the shared limit record
  * D_801E3210 when that record's signed byte 0x0F sits below the record byte
  * 0x07, which it then steps back by one. It then integrates the step words
  * 0x0C/0x10 into the record positions 0x34/0x38, adds the accumulator pair
- * 0x14/0x20 and accumulates that sum into verticalStep 0x3C; while that total stays
- * positive with an empty 0x20 accumulator it either restarts the climb
+ * 0x14/0x20 and accumulates that sum into verticalStep 0x3C; while that total
+ * stays positive with an empty 0x20 accumulator it either restarts the climb
  * (0x14 = 0x40000, 0x20 = -0x8000) and arms the shared 0x80143FC8 entry record
- * picked by func_8019601c with flags 1 and byte 0x05 10 when the record flag
+ * picked by findFreeRecord with flags 1 and byte 0x05 10 when the record flag
  * byte 0x0B is set, or clears the 0x3C total otherwise. On the exhausted path
  * it drops the 0x20 accumulator once the total has gone negative and publishes
  * whether the total is still positive into record byte 0x0B. It then clears
  * record byte 0x5C, gates bit 5 of record byte 0 from the signed counter 0x3E
  * (clearing byte 0x5D on the live counter), mirrors byte 0x5D into 0x5E and
- * 0x5F, requests the frontend state selected by the sign of verticalStep 0x10 (2 when
- * positive, 3 at zero, 0 when negative) through func_8014D8D4, runs
+ * 0x5F, requests the frontend state selected by the sign of verticalStep 0x10
+ * (2 when positive, 3 at zero, 0 when negative) through func_8014D8D4, runs
  * func_8014D978, stores 2 in record byte 0x48 and finishes with the per-record
  * scroll updater updateWorkScrollWordsWorld00Area03004_801E084C.
  * @status exact
@@ -69,7 +69,7 @@ void integrateWorkMotionConditionallyArmEntryAndUpdateScrollWorld00Area03004(voi
     } else {
       *(s32*)(rec + 0x14u) = 0x40000;
       *(s32*)(rec + 0x20u) = -0x8000;
-      entrySlot = (u8)func_8019601c();
+      entrySlot = (u8)findFreeRecord();
       if (entrySlot != 0xFFu) {
         D_80143FC8[entrySlot].flags_00 = 1u;
         D_80143FC8[entrySlot].byte_05 = 10u;

@@ -1,9 +1,10 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801D5A48
- * @behavior Call func_8014DD3C(0x21), initialize the panel fields and both byte-6
- * clears, seed word 0x0C = 0 and word 0x18 = 4, and call func_8014D6B8(0).
- * Advance handler byte 3 to the pair-sequence and queue step.
+ * @behavior Call applyMainLookupRecord(0x21), initialize the panel fields and both
+ * byte-6 clears, seed word 0x0C = 0 and word 0x18 = 4, and call
+ * selectActiveWorkSequence(0). Advance handler byte 3 to the pair-sequence and
+ * queue step.
  * @status exact
  * @match 100.00
  * @residual none
@@ -13,7 +14,7 @@ void initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004(void) {
   u8* levelWork;
   u8* seedWork;
 
-  func_8014DD3C(0x21);
+  applyMainLookupRecord(0x21);
   D_1F800044[0x24] = 0x80;
   D_1F800044[0x29] = 1;
   D_1F800044[0x2a] = 1;
@@ -28,7 +29,7 @@ void initializePairSequencePanelWorkAndAdvanceStepWorld00Area03004(void) {
   *(u32*)(seedWork + 0xc) = 0;
   *(u32*)(seedWork + 0x18) = 4;
   seedWork[6] = 0;
-  func_8014D6B8(0);
+  selectActiveWorkSequence(0);
   {
     u8* dispatchWork = D_1F800044;
     u8 workStep = dispatchWork[3];

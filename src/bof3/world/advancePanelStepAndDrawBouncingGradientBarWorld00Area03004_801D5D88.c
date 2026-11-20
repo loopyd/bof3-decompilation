@@ -1,8 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
 /* Three-byte AREA030 bounce-step records at 0x801E2008, the same record layout
- * as the sibling panel-step table 0x801E2024: `resource` is requested through
- * the shared func_8014D6B8 helper and carries the 0xFF end marker of the run,
+ * as the sibling panel-step table 0x801E2024: `resource` supplies the active-work sequence selector passed to selectActiveWorkSequence and carries the 0xFF end marker of the run,
  * `countdown` is reloaded into work byte 9 and doubles as the restart index when
  * the record is the end marker, and `mode` selects the work byte 6 behaviour -
  * 0 integrates the bar-width delta in work word 0x18 into the width in work word
@@ -32,32 +31,35 @@ typedef struct Area030BounceStepState {
 } Area030BounceStepState;
 
 /* @source 0x801D5D88
- * @behavior AREA030 panel-step handler, index 1 of the work-byte-3 dispatch
- * table 0x801E2000: while work byte 9 of the record published at the scratchpad
+ * @behavior AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table
+ * 0x801E2000: while work byte 9 of the record published at the scratchpad
  * cursor 0x1F800044 is nonzero it decrements that byte and runs the shared
  * func_8014D978 helper; otherwise it reads work byte 0xA as an index into the
  * three-byte record table 0x801E2008 and, when the record carries the 0xFF end
- * marker, re-seeds work byte 0xA from the record countdown byte and restarts the
- * bar animation the sibling initializer initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004 set up - width 0 in
- * work word 0x0C, delta 4 in work word 0x18 and work byte 6 cleared. It then
- * requests the record resource through func_8014D6B8, reloads work byte 9 from
- * the record countdown and advances work byte 0xA. Every call then runs
- * func_8014D4E0, submits texture-page draw mode 0/1 and appends the sprites
- * (0x15, 1, 0x32, 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80)
- * through appendIndexedSpriteWorld00Area03004. The stepped-from record's mode byte then drives the
- * animation: mode 0 moves the width by the sign-carrying delta and reflects it
- * at 0 and 0x60 (the delta is negated at either end, so the bar bounces), while
- * mode 1 advances work byte 6 once every other frame. Finally it draws the
- * gradient bar of that width at (0x39, 0x97) in append mode 1, formats work byte
- * 6 through the "%2d" rodata string 0x801D0C04 into the shared 0x80145AD4 buffer
- * and submits the buffer at (0xAC, 0x94) in mode 0 through func_8014FF0C.
+ * marker, re-seeds work byte 0xA from the record countdown byte and restarts
+ * the bar animation the sibling initializer
+ * initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004 set up - width
+ * 0 in work word 0x0C, delta 4 in work word 0x18 and work byte 6 cleared. It
+ * then selects the sequence identified by the record through
+ * selectActiveWorkSequence, reloads work byte 9 from the record countdown and
+ * advances work byte 0xA. Every call then runs queueUnprojectedActiveWork,
+ * submits texture-page draw mode 0/1 and appends the sprites (0x15, 1, 0x32,
+ * 0x7A), (0x16, 1, 0xBC, 0x7A) and (0x10, 1, 0x36, 0x80) through
+ * appendIndexedSpriteWorld00Area03004. The stepped-from record's mode byte
+ * then drives the animation: mode 0 moves the width by the sign-carrying delta
+ * and reflects it at 0 and 0x60 (the delta is negated at either end, so the
+ * bar bounces), while mode 1 advances work byte 6 once every other frame.
+ * Finally it draws the gradient bar of that width at (0x39, 0x97) in append
+ * mode 1, formats work byte 6 through the "%2d" rodata string 0x801D0C04 into
+ * the shared 0x80145AD4 buffer and submits the buffer at (0xAC, 0x94) in mode
+ * 0 through func_8014FF0C.
  * @status exact
  * @match 100.00
  * @residual none
  */
 /* The published cursor cell 0x1F800044 is volatile, so every access group
  * re-reads it and keeps its own pointer local, as the exact siblings
- * advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128 and
+ * advancePanelStepSequenceAndDrawBouncingMarkerWorld00Area03004_801D6128 and
  * advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34 do: the
  * entry read, the end-marker re-seed, the post-call resource read, the countdown
  * reload, the index advance, the stepped-from mode read, the mode 0 width
@@ -95,7 +97,7 @@ void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
       state->count_06 = 0;
     }
     cursor = D_1F800044;
-    func_8014D6B8(
+    selectActiveWorkSequence(
         bounceStepRecordTableWorld00Area03004_801E2008[cursor[0xA]].resource);
     reload = D_1F800044;
     reload[9] =
@@ -107,7 +109,7 @@ void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
     func_8014D978();
   }
 
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
   submitTpageDrawMode(0, 1);
   appendIndexedSpriteWorld00Area03004(0x15, 1, 0x32, 0x7A);
   appendIndexedSpriteWorld00Area03004(0x16, 1, 0xBC, 0x7A);
@@ -135,5 +137,5 @@ void advancePanelStepAndDrawBouncingGradientBarWorld00Area03004_801D5D88(void) {
   buf = D_80145AD4;
   sprintf((char*)buf, (const char*)D_801D0C04, D_1F800044[6]);
   func_8014FF0C(0xAC, 0x94, 0, buf);
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
 }

@@ -1,33 +1,33 @@
 #include "bof3/world/area03004_internal.h"
 
-/* @behavior AREA030 entry-panel drawer for the selected step, painted at the
- * requested origin: it shades the 0xF2 by 0x9F panel at (x, y) through
- * func_801AE3F0 with shade 0xF0 and the CLUT-bank byte D_80144952, then, while
- * work byte 8 (the slide direction) is nonzero, drives the step strip. When
- * work byte 9 is clear it re-targets the strip by storing nine frames per step
- * (word 0x20 takes the selected step word 0x3C times 9 and the displayed step
- * word 0x3E takes 0x3C) whenever the two disagree, steps the strip clock word
- * 0x14 down with a 0x35 wrap while the direction is positive, advances work
- * byte 9 and then byte 0xA. Phase byte 0xA zero is the settle branch: when the
- * strip clock has reached its target word 0x20 it clears bytes 8 and 9 and
- * claims a front-end entry record through func_8019601C, seeding that 0x74-byte
- * row with flags 1, handler selector 0x1A at +5, byte 1 = 0x10 and byte 2 = the
- * low byte of the displayed step word 0x3E; otherwise it steps the strip clock
- * down the same way and advances the phase. A nonzero phase only advances, and
- * the advance to 4 restarts it at zero while stepping the strip clock up with a
- * 0x36 wrap in the negative direction. It then draws the animated strip: nine
- * sprites from y + 0x19 at phase zero, otherwise ten sprites from
- * y + 3*phase + 0xC in the positive direction or y - (3*phase - 0x19) in the
- * negative one, one per 0xD row, skipping the 0xFFFF sentinel and walking the
- * 54-entry halfword sprite table D_801E2120 from the strip clock with
- * wraparound, each sprite resolved through the main-RAM halfword offset
- * table at the 0x80010000 base. Finally it paints the 0xF2 by 0xE header bar at
- * y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 (shade 0x30), draws the
- * selected step icon - sprite D_801E2114[step word 0x3C] - at (x + 0x3D,
- * y + 6), draws the status icon row through drawWidePanelFrameWorld00Area03004, and formats the
- * selected step word 0x3C plus one through the "%d/6" rodata string D_801D0C08
- * into the shared 0x80145AD4 buffer, submitting it at (x + 0xCA, y + 0x92)
- * through func_80150098.
+/* @behavior AREA030 entry-panel drawer for the selected step, painted at the requested
+ * origin: it shades the 0xF2 by 0x9F panel at (x, y) through
+ * drawFramedTexturedPanel with shade 0xF0 and the CLUT-bank byte D_80144952,
+ * then, while work byte 8 (the slide direction) is nonzero, drives the step
+ * strip. When work byte 9 is clear it re-targets the strip by storing nine
+ * frames per step (word 0x20 takes the selected step word 0x3C times 9 and the
+ * displayed step word 0x3E takes 0x3C) whenever the two disagree, steps the
+ * strip clock word 0x14 down with a 0x35 wrap while the direction is positive,
+ * advances work byte 9 and then byte 0xA. Phase byte 0xA zero is the settle
+ * branch: when the strip clock has reached its target word 0x20 it clears
+ * bytes 8 and 9 and claims a front-end entry record through findFreeRecord,
+ * seeding that 0x74-byte row with flags 1, handler selector 0x1A at +5, byte 1
+ * = 0x10 and byte 2 = the low byte of the displayed step word 0x3E; otherwise
+ * it steps the strip clock down the same way and advances the phase. A nonzero
+ * phase only advances, and the advance to 4 restarts it at zero while stepping
+ * the strip clock up with a 0x36 wrap in the negative direction. It then draws
+ * the animated strip: nine sprites from y + 0x19 at phase zero, otherwise ten
+ * sprites from y + 3*phase + 0xC in the positive direction or y - (3*phase -
+ * 0x19) in the negative one, one per 0xD row, skipping the 0xFFFF sentinel and
+ * walking the 54-entry halfword sprite table D_801E2120 from the strip clock
+ * with wraparound, each sprite resolved through the main-RAM halfword offset
+ * table at the 0x80010000 base. Finally it paints the 0xF2 by 0xE header bar
+ * at y + 6 and the 0xF2 by 0xB footer bar at y + 0x94 (shade 0x30), draws the
+ * selected step icon - sprite D_801E2114[step word 0x3C] - at (x + 0x3D, y +
+ * 6), draws the status icon row through drawWidePanelFrameWorld00Area03004,
+ * and formats the selected step word 0x3C plus one through the "%d/6" rodata
+ * string D_801D0C08 into the shared 0x80145AD4 buffer, submitting it at (x +
+ * 0xCA, y + 0x92) through func_80150098.
  * @source 0x801D72E4
  * @status exact
  * @match 100.00
@@ -70,7 +70,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
   u16 sprite;
   u32 index;
 
-  func_801AE3F0((u16)x, (u16)y, 0xF2, 0x9F, 0xF0, D_80144952);
+  drawFramedTexturedPanel((u16)x, (u16)y, 0xF2, 0x9F, 0xF0, D_80144952);
 
   work = D_1F800044;
   if (work[8] != 0) {
@@ -99,7 +99,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
       if (limit == FIELD_REF(s32, phase, 0x20)) {
         phase[9] = 0;
         D_1F800044[8] = 0;
-        index = (u8)func_8019601c();
+        index = (u8)findFreeRecord();
         WORLD00_AREA030_ARM_PANEL_ENTRY(index);
         values = D_1F800044;
         D_80143FC8[index].unk_02 = FIELD_REF(u16, values, 0x3E);
@@ -151,7 +151,7 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
   for (row = 0; row < count; row++) {
     sprite = D_801E2120[frame];
     if (sprite != 0xFFFF) {
-      func_8014f800((s16)(x + 6), (s16)(top + row * 0xD), 0, 0xFF,
+      drawEncodedTextAt((s16)(x + 6), (s16)(top + row * 0xD), 0, 0xFF,
                     0x80010000u + PSX_PTR(u16, 0x80010000u)[sprite]);
     }
     frame++;
@@ -161,9 +161,9 @@ void drawEntryPanelStepStripAndClaimEntryWorld00Area03004_801D72E4(s32 x,
   }
 
   clut = &D_80144952;
-  func_801AE3F0((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, *clut);
-  func_801AE3F0((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, *clut);
-  func_8014f800((s16)(x + 0x3D), (s16)(y + 6), 0, 0xFF,
+  drawFramedTexturedPanel((u16)x, (u16)(y + 6), 0xF2, 0xE, 0, *clut);
+  drawFramedTexturedPanel((u16)x, (u16)(y + 0x94), 0xF2, 0xB, 0x30, *clut);
+  drawEncodedTextAt((s16)(x + 0x3D), (s16)(y + 6), 0, 0xFF,
                 0x80010000u +
                     PSX_PTR(u16, 0x80010000u)[D_801E2114[FIELD_REF(
                         u16, D_1F800044, 0x3C)]]);

@@ -28,7 +28,7 @@ void drawStatusMarkerFrameWorld00Area03004(s16 originX, s16 originY) {
     top = y;
   } else {
     s32 scrollOffset;
-    scrollOffset = func_8015477C(D_80143FFC, D_80144000);
+    scrollOffset = (s16)sampleMapHeight(D_80143FFC, D_80144000);
     if (scrollOffset < 0) {
       scrollOffset += 31;
     }
@@ -43,7 +43,7 @@ void drawStatusMarkerFrameWorld00Area03004(s16 originX, s16 originY) {
   drawCounterIndexedSprite16x16World00Area03004((s16)leftX, (s16)top, 4);
 
   linePair = (Area030LinePair*)g_PrimCursor;
-  func_8017A9A4(linePair);
+  initFlatQuadPrimitive(linePair);
   linePair->x0 = (s16)leftX;
   leftStamp = ((volatile Area030LinePair*)linePair)->x0;
   linePair->x1 = (s16)(x + 105);

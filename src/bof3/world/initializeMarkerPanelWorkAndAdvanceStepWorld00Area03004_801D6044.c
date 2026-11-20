@@ -5,9 +5,9 @@ struct scratchpad_state {
   volatile u8* scratch;
 };
 
-/* @behavior Call func_8014DD3C(0x47), initialize the marker panel work fields, clear its
- * countdown and level bytes, and advance handler byte 3. The following
- * marker-panel step consumes byte 6 as its vertical offset.
+/* @behavior Call applyMainLookupRecord(0x47), initialize the marker panel work fields,
+ * clear its countdown and level bytes, and advance handler byte 3. The
+ * following marker-panel step consumes byte 6 as its vertical offset.
  * @source 0x801D6044
  * @status exact
  * @match 100.00

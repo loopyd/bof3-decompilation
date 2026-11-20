@@ -30,7 +30,7 @@ void decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801
       39, (s16)(64 + panel[9] * 60));
   state = D_1F800044;
   if (state[9] == 0) {
-    index = (u8)func_8019601c();
+    index = (u8)findFreeRecord();
     WORLD00_AREA030_ARM_PANEL_ENTRY(index);
     values = D_1F800044;
     D_80143FC8[index].unk_02 = FIELD_REF(u16, values, 0x3E);

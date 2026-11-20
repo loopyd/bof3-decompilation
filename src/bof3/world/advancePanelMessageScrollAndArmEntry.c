@@ -1,30 +1,31 @@
 #include "bof3/world/area03004_internal.h"
 
-/* Shared panel origin halfword: the AREA030 panel steps submit D_80144154 + 2
- * as the second argument of the shaded-panel request func_8014F800. */
+/* Shared text y-argument halfword: the AREA030 panel steps submit D_80144154 + 2
+ * as the second argument of drawEncodedTextAt. */
 extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
 
 /* @source 0x801D3C74
- * @behavior AREA030 panel message advance step (entry 10 of the state-1 handler
- * table 0x801E1F44): subtracts two from the vertical offset halfword 0x2E of the
+ * @behavior AREA030 panel message advance step (entry 10 of the state-1 handler table
+ * 0x801E1F44): subtracts two from the vertical offset halfword 0x2E of the
  * work record published at the scratchpad cursor 0x1F800044. While the record
  * pause byte 0x0A is set it counts that byte down and resubmits the current
  * message run through drawMessageTokenCellQuad with the 3-byte row of
  * 0x801E1F14 selected by the attribute byte 0x08 of the 12-byte panel entry
  * 0x801E1E78 indexed by record byte 0x4B, the shade span 8 - 0x0A * 2 and the
- * pen column 0x125 - (4 - 0x0A) * 2. Once the pause byte is clear it counts the reveal
- * timer byte 0x09 down, and when that reaches zero it advances the token slot
- * byte 0x4A through the four-byte row of 0x801E1F20 selected by record byte 0x06,
- * wrapping the slot to zero at the third position or on the 0xFF sentinel;
- * unless the shared mode byte 0x80144125 reads 7 it then arms the shared entry
- * record 0x80143FC8 selected by the front-end pick of func_8019601c with flags
- * 1, byte 0x05 0x0F, byte 0x01 8, byte 0x06 equal to the record selector, byte
- * 0x0B zero and byte 0x4A equal to the token slot, and advances the record state
- * index byte 0x01. Finally, while the entry attribute is not the 0xFF sentinel
- * it submits the sliding message through func_8014F800 at (s16)(0x2E + 0x49 * 8),
- * (s16)0x80144154 + 2, the span row's third byte, 1 and the span row address,
- * then submits the shaded panel through the same helper at (s16)0x2E,
- * (s16)0x80144154 + 2, 0, the revealed count 0x49 and the run cursor word 0x50.
+ * pen column 0x125 - (4 - 0x0A) * 2. Once the pause byte is clear it counts
+ * the reveal timer byte 0x09 down, and when that reaches zero it advances the
+ * token slot byte 0x4A through the four-byte row of 0x801E1F20 selected by
+ * record byte 0x06, wrapping the slot to zero at the third position or on the
+ * 0xFF sentinel; unless the shared mode byte 0x80144125 reads 7 it then arms
+ * the shared entry record 0x80143FC8 selected by the front-end pick of
+ * findFreeRecord with flags 1, byte 0x05 0x0F, byte 0x01 8, byte 0x06 equal to
+ * the record selector, byte 0x0B zero and byte 0x4A equal to the token slot,
+ * and advances the record state index byte 0x01. Finally, while the entry
+ * attribute is not the 0xFF sentinel it submits the sliding message through
+ * drawEncodedTextAt at (s16)(0x2E + 0x49 * 8), (s16)0x80144154 + 2, the span
+ * row's third byte, 1 and the span row address, then draws the revealed
+ * encoded-text run through the same helper at (s16)0x2E, (s16)0x80144154 + 2,
+ * 0, the revealed count 0x49 and the run cursor word 0x50.
  * @status exact
  * @match 100.00
  * @residual none
@@ -74,7 +75,7 @@ void advancePanelMessageScrollAndArmEntry(void) {
         row[0x4Au] = 0u;
       }
       if (modeByte != 7u) {
-        pick = (s8)func_8019601c();
+        pick = (s8)findFreeRecord();
         if (pick != -1) {
           D_80143FC8[pick].flags_00 = 1u;
           D_80143FC8[pick].byte_05 = 15u;
@@ -92,13 +93,13 @@ void advancePanelMessageScrollAndArmEntry(void) {
     span = D_801E1E78[panel[0x4Bu]].byte_08;
     if (span != 0xFFu) {
       panelOffset = span * 3;
-      func_8014F800((s16)(*(u16*)(panel + 0x2Eu) + panel[0x49u] * 8),
+      drawEncodedTextAt((s16)(*(u16*)(panel + 0x2Eu) + panel[0x49u] * 8),
                     (s16)(D_80144154 + 2u), D_801E1F14[panelOffset + 2], 1u,
                     (u32)&D_801E1F14[panelOffset]);
     }
   }
 
   cursor = D_1F800044;
-  func_8014F800(*(s16*)(cursor + 0x2Eu), (s16)(D_80144154 + 2u), 0,
+  drawEncodedTextAt(*(s16*)(cursor + 0x2Eu), (s16)(D_80144154 + 2u), 0,
                 cursor[0x49u], *(u32*)(cursor + 0x50u));
 }

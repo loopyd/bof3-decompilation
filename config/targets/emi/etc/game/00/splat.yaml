@@ -1726,8 +1726,8 @@ segments:
     - func_801BDCF8
   - - 165208
     - c
-    - func_801BDD58
-    - '@source: src/bof3/ui/func_801BDD58_game00.c'
+    - matchesProjectedWorkBounds
+    - '@source: src/bof3/ui/matchesProjectedWorkBounds.c'
     - '@behavior: returns 1 when the supplied (x, y) lies within the work record range: the absolute difference between the signed 16-bit record counter at 0x3E and the signed reference must be at most (range + record speed byte 0x70) * 128 + 256, the absolute difference between x and the record projected X (coord_x_34 + field_0C * pad_09[0]) must be below (range + speed + 2) * 32768, and the result reports whether the absolute difference between y and the projected Y (coord_y_38 + field_10 * pad_09[0]) is below that same limit; any failed gate returns 0.'
   - - 165396
     - c

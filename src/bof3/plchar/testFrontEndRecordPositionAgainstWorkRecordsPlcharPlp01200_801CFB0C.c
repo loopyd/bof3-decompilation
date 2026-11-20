@@ -24,11 +24,11 @@ extern u8 D_80145E90[];
 /* @source 0x80146254 @kind unknown */
 extern u8 D_80146254;
 
-/* Shared position gate of the main executable, outside this payload: it reports
- * one when the supplied point sits inside the work record's range. The original
- * zero-extends the result byte before testing it, so this overlay sees the
- * unsigned return type. */
-u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
+/* Position gate owned by Game00 at 0x801BDD58. It checks the supplied point
+ * and signed reference against the work record's bounds. The caller
+ * zero-extends V0's low byte before testing it. The maintained declaration
+ * uses u8; the original declared return width remains unproved. */
+u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range, void* work); /* @source 0x801BDD58 */
 
 /* @source 0x801CFB0C
  * @behavior Tests one front-end record's stored position against the work
@@ -39,7 +39,7 @@ u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
  *           sixteen-bit value biased by 0x200. Starting at work record 1 and
  *           while the counter stays below the record count byte D_80146254, it
  *           passes that position triple, the range 1 and the 0x140-byte work
- *           record to the shared gate func_801BDD58 and returns 1 as soon as
+ *           record to the shared gate matchesProjectedWorkBounds and returns 1 as soon as
  *           that gate reports a match. Otherwise, and whenever the count byte is
  *           not above 1, it returns 0. Work record 0 is never tested. The
  *           original computes the row offset once outside the loop and keeps it
@@ -64,7 +64,7 @@ u8 testFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFB0C(u8 slot) 
   for (i = 1; i < D_80146254; i++) {
     row = (u32)slot * 0x74u;
     work = &D_80145E90[i * 0x140];
-    if (func_801BDD58(*(s32*)(D_80143FFC + row), *(s32*)(D_80144000 + row),
+    if (matchesProjectedWorkBounds(*(s32*)(D_80143FFC + row), *(s32*)(D_80144000 + row),
                       (s16)(*(u16*)(D_80144006 + row) + 0x200), 1, work) != 0) {
       return 1;
     }

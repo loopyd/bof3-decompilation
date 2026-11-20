@@ -40,7 +40,7 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
   baseY = arg1;
   options = &D_80144952;
   panelY = baseY + 1;
-  func_801AE3F0(x, (u16)panelY, 0x8B, 0x9E, 0xF0, *options);
+  drawFramedTexturedPanel(x, (u16)panelY, 0x8B, 0x9E, 0xF0, *options);
   slotIndex = 0;
   rows = 0;
   buffer = D_80145AD4;
@@ -68,9 +68,9 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
     if (FIELD_REF(s32, work, 0x0C) != rows) {
       goto unselected;
     }
-    func_8014F800((s16)nameX, (s16)rowY, 7, 0x0C,
+    drawEncodedTextAt((s16)nameX, (s16)rowY, 7, 0x0C,
                  *slot * 20 + (u32)nameRecords);
-    func_8014F800((s16)nameX, (s16)(baseY + 0x17 + rowOffset),
+    drawEncodedTextAt((s16)nameX, (s16)(baseY + 0x17 + rowOffset),
                  0, 0x0C, *slot * 20 + (u32)nameRecords);
     count = D_801453CC[slotIndex];
     if (count >= 2) {
@@ -83,7 +83,7 @@ void drawRodListColumnWorld00Area03004_801D7EB0(s16 arg0, s32 arg1) {
     goto row_drawn;
 
 unselected:
-    func_8014F800((s16)nameX, (s16)rowY, 0, 0x0C,
+    drawEncodedTextAt((s16)nameX, (s16)rowY, 0, 0x0C,
                  *slot * 20 + (u32)nameRecords);
     count = D_801453CC[slotIndex];
     if (count >= 2) {
@@ -112,6 +112,6 @@ row_drawn:
   drawListColumnFrameWorld00Area03004((s16)x, (s16)baseY);
   drawStretchedPanelColumnWorld00Area03004_801D8248(
       (s16)(x + 0x80), (s16)(baseY + 0x1C), 0x72);
-  func_8014F800((s16)(x + 0x3A), (s16)(baseY + 7),
+  drawEncodedTextAt((s16)(x + 0x3A), (s16)(baseY + 7),
                0, 3, (u32)D_801E21CC);
 }

@@ -1,27 +1,26 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801DCDB8
- * @behavior AREA030 scratch work-record handler (entry 1 of the 0x801E22F0
- * handler table dispatched through scratch byte 4): it first decodes the shared
- * pad state D_80145AA8 masked by 0x5000 through func_8014E640 and submits the
- * fixed func_8014F800 panel texture row (0x1D, 0x14, 0, 0xFF, 0x80010000 + the
- * main-executable halfword D_800100A4 while bit 0 of the shared panel flag byte
- * D_80144287 is set, else D_800100A2).
- * While the pad state shares a bit with the cancel mask D_80145AC4 it plays cue
- * 0x106, publishes 0xFFFF into the main-executable halfword D_801442AC, sets bit
- * 0x80 of the panel flag byte, decrements byte 3 of the work record published at
- * the scratchpad cursor 0x1F800044 and clears that record's dispatch byte 4,
- * then returns.
+ * @behavior AREA030 scratch work-record handler (entry 1 of the 0x801E22F0 handler table
+ * dispatched through scratch byte 4): it first decodes the shared pad state
+ * D_80145AA8 masked by 0x5000 through func_8014E640 and submits the fixed
+ * drawEncodedTextAt call (0x1D, 0x14, 0, 0xFF, 0x80010000 + the
+ * main-executable halfword D_800100A4 while bit 0 of the shared panel flag
+ * byte D_80144287 is set, else D_800100A2). While the pad state shares a bit
+ * with the cancel mask D_80145AC4 it plays cue 0x106, publishes 0xFFFF into
+ * the main-executable halfword D_801442AC, sets bit 0x80 of the panel flag
+ * byte, decrements byte 3 of the work record published at the scratchpad
+ * cursor 0x1F800044 and clears that record's dispatch byte 4, then returns.
  * While it shares a bit with the confirm mask D_80145AC2 it plays cue 0x103,
- * sets bit 2 of the panel flag byte and advances dispatch byte 4, which selects
- * entry 2 of the same table. While the decoded direction carries the 0x5000 bits
- * it plays cue 0x100, toggles bit 0 of the panel flag byte, toggles the shared
- * state byte D_80144281 against 7 and steps dispatch byte 4 back to entry 0.
- * Unless bit 0x80 of the panel flag byte is set, it then publishes into
- * D_801442AC the selected record index byte D_80145026 (flag bit 0 set) or
- * D_80145028 (flag bit 0 clear) plus four, or 0xFFFF while that index byte is
- * zero, and finally submits func_801647C4 with (0x1C, flag bit 0 scaled by 16
- * plus 0x58, 0).
+ * sets bit 2 of the panel flag byte and advances dispatch byte 4, which
+ * selects entry 2 of the same table. While the decoded direction carries the
+ * 0x5000 bits it plays cue 0x100, toggles bit 0 of the panel flag byte,
+ * toggles the shared state byte D_80144281 against 7 and steps dispatch byte 4
+ * back to entry 0. Unless bit 0x80 of the panel flag byte is set, it then
+ * publishes into D_801442AC the selected record index byte D_80145026 (flag
+ * bit 0 set) or D_80145028 (flag bit 0 clear) plus four, or 0xFFFF while that
+ * index byte is zero, and finally submits func_801647C4 with (0x1C, flag bit 0
+ * scaled by 16 plus 0x58, 0).
  * @status exact
  * @match 100.00
  * @residual none
@@ -63,9 +62,9 @@ void publishSelectedRecordValueAndStepWorkHandlerOnPadWorld00Area03004_801DCDB8(
     D_1F800044[4]--;
   }
   if ((D_80144287 & 1u) == 0u) {
-    func_8014F800(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A2);
+    drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A2);
   } else {
-    func_8014F800(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A4);
+    drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A4);
   }
   if ((D_80144287 & 0x80) == 0) {
     if ((D_80144287 & 1u) == 0u) {

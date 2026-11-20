@@ -8,21 +8,21 @@
 
 /* Main-executable halfword text offset pair selected by bit 0 of the shared AREA030
  * panel flag byte 0x80144287: the flagged handler at 0x801DCCF4 submits the
- * chosen halfword offset by +0x80010000 to func_8014F800. */
+ * chosen halfword offset by +0x80010000 to drawEncodedTextAt. */
 extern u16 D_800100A2;    /* @source 0x800100A2 @kind unknown */
 extern u16 D_800100A4;    /* @source 0x800100A4 @kind unknown */
 /* Main-executable halfword text offset read per call by the AREA030 handler at
- * 0x801DD7CC and submitted to func_8014F800 offset by the same +0x80010000
+ * 0x801DD7CC and submitted to drawEncodedTextAt offset by the same +0x80010000
  * base: (0x1D, 0x14, 0, 0xFF, base + halfword). */
 extern u16 D_800100E0;    /* @source 0x800100E0 @kind unknown */
 /* Main-executable halfword text offset read per call by the AREA030 pad handler at
- * 0x801DD664 and submitted to func_8014F800 offset by the same +0x80010000
+ * 0x801DD664 and submitted to drawEncodedTextAt offset by the same +0x80010000
  * base: (0x1D, 0x14, 0, 0xFF, base + halfword). */
 extern u16 D_800100C2;    /* @source 0x800100C2 @kind unknown */
 /* Unsigned halfword text offsets used when work byte 3 is 2. Masked handler
  * selectors 0, 1 and 2 choose 0x800100A0, 0x800100C0 or 0x800100DE.
  * The step at 0x801DC93C adds 0x80010000 and submits the selected byte stream
- * to func_8014F800. Live contents and resource ownership remain unresolved. */
+ * to drawEncodedTextAt. Live contents and resource ownership remain unresolved. */
 extern u16 handlerSelectorZeroTextOffsetState;    /* @source 0x800100A0 @kind unknown */
 extern u16 handlerSelectorOneTextOffsetState;    /* @source 0x800100C0 @kind unknown */
 extern u16 handlerSelectorTwoTextOffsetState;    /* @source 0x800100DE @kind unknown */
@@ -72,7 +72,7 @@ typedef struct Area030EntryRecord {
 ASSERT_SIZE(Area030EntryRecord, 0x74);
 extern Area030EntryRecord D_80143FC8[]; /* @source 0x80143FC8 @kind bss */
 /* Shared CLUT-bank byte read as the trailing argument of the GAME00
- * shaded-panel helper func_801AE3F0 by the AREA030 cell drawers. */
+ * shaded-panel helper drawFramedTexturedPanel by the AREA030 cell drawers. */
 extern u8  D_80144952;    /* @source 0x80144952 @kind unknown */
 /* Local AREA030 scratch-mode handler table indexed by scratch cursor byte 1. */
 extern void (*D_801E1D80[])(void);
@@ -116,19 +116,14 @@ extern u32 D_801440C8;    /* @source 0x801440C8 @kind unknown */
 /* Per-mode pair of words copied into the AREA030 scratch record at +0x14 and +0x20. */
 typedef struct Area030ModePair { u32 first; u32 second; } Area030ModePair;
 extern Area030ModePair D_801E1D38[]; /* @source 0x801E1D38 @kind data */
-s32 func_8015477c(s32 arg0, s32 arg1);
-void func_8014dd3c(s32 arg0);
-void func_8014d6b8(s32 arg0);
-s32 func_8014daec(void);
-void func_8014d290(void);
-void func_8014d4e0(void);
+s32 stepActiveWorkSequence(void);
 void advancePanelScroll(void);
-void func_8014f800(s32 arg0, s16 arg1, s32 arg2, u8 arg3, u32 arg4);
+void drawEncodedTextAt(s32 arg0, s32 arg1, s32 arg2, u32 arg3, u32 arg4);
 /* SLUS 8x8 glyph-string drawer at 0x80150098: signed screen coordinates,
  * the low six CLUT bits and a read-only string. Handles newline and space
  * bytes; callers perform formatting. */
 void func_80150098(s16 x, s16 y, u16 clut, const u8* input);
-/* Per-index byte and word pair consumed by the shaded panel request at 0x8014F800.
+/* Per-index byte and word pair consumed by the encoded-text draw at 0x8014F800.
  * byte_00 is the message-run token limit, word_04 the run cursor the AREA030 panel
  * message step 0x801D3A54 repoints to, byte_08 the attribute compared against the
  * 0xFF sentinel and byte_09 the reveal-timer reload. */
@@ -136,7 +131,7 @@ typedef struct Area030PanelEntry { u8 byte_00; u8 pad_01[3]; u32 word_04; u8 byt
 extern Area030PanelEntry D_801E1E78[]; /* @source 0x801E1E78 @kind data */
 extern u8 D_801E1F20[][4]; /* @source 0x801E1F20 @kind data */
 extern u8 D_801E1F14[]; /* @source 0x801E1F14 @kind data */
-u32 func_8019601c(void);
+u32 findFreeRecord(void);
 /* Shared palette-stage serial byte published as 1 by the AREA030 color-row
  * builder buildColorRowAndStartTintFadeWorld00Area03004_801D130C after it
  * rewrites the 0x800396C0 color row. */
@@ -153,8 +148,7 @@ extern s32 D_80143FDC;    /* @source 0x80143FDC @kind unknown */
  * Motion view of the leading 0x74-byte front-end entry record at 0x80143FC8,
  * the row the AREA030 overlay drives as its own panel state: byte +0x0B is the
  * latch that gates the pad group, words +0x0C/+0x10/+0x14 the step triple the
- * pad arms rewrite, words +0x34/+0x38 the position pair the shared distance
- * helper measures and halfword +0x3E that distance. The three cells the pad
+ * pad arms rewrite, words +0x34/+0x38 supply the coordinates to sampleMapHeight; signed halfword +0x3E stores the sampled map height as a counter. The three cells the pad
  * group clears have separate scalar views here at their recorded addresses.
  */
 extern s32 D_80143FD4;    /* @source 0x80143FD4 @kind unknown */
@@ -364,12 +358,12 @@ extern const char D_801D0C10[]; /* @source 0x801D0C10 @kind rodata */
 extern const char D_801D0C14[]; /* @source 0x801D0C14 @kind rodata */
 /* Twelve-byte rodata run "GearDataRule" that the AREA030 status-cell row
  * drawLabeledStatusCellsWorld00Area03004_801D7C10 submits as three separate
- * 4-character label runs through the shared text drawer func_8014F800. */
+ * 4-character label runs through the shared text drawer drawEncodedTextAt. */
 extern const char D_801E21C0[]; /* @source 0x801E21C0 @kind rodata */
 /* Four-character rodata label "LURE" (bytes 0x4C 0x55 0x52 0x45), the second
  * word of the LUREEQUIPGUIDE run, that the AREA030 lure column
  * drawLureListColumnWorld00Area03004_801D8364 submits as the column title of
- * the shared text drawer func_8014F800. */
+ * the shared text drawer drawEncodedTextAt. */
 extern const char D_801E21D0[]; /* @source 0x801E21D0 @kind rodata */
 /* Five-character rodata label "EQUIP" (bytes 0x45 0x51 0x55 0x49 0x50), the
  * third word of that LUREEQUIPGUIDE run, that drawEquipmentGuideColumn submits
@@ -497,7 +491,7 @@ extern void (*D_801E2314[])(void); /* @source 0x801E2314 @kind table */
 /* Eight two-byte AREA030 step-mode rows at 0x801E2330, selected by the route
  * index byte 0x08 of the scratch work record: the leading byte is the id the
  * step at 0x801DE82C hands to the shared selector func_8014D8D4 and the
- * release step at 0x801DEBC4 requests through func_8014D6B8, the trailing byte
+ * step at 0x801DEBC4 selects an active-work sequence through selectActiveWorkSequence, the trailing byte
  * the value the step at 0x801DE82C mirrors into work byte 0x2A. */
 typedef struct Area030StepModeRow {
   u8 request_00;
@@ -524,11 +518,11 @@ extern SpriteGeometry D_801E2424[]; /* @source 0x801E2424 @kind table */
  * with a proven consumer are named here. */
 typedef struct Area030ScaleRecord {
   u8 unk_00[0x10];
-  /* +0x10: entry loaded through func_8014DD3C by the entry step at
+  /* +0x10: entry loaded through applyMainLookupRecord by the entry step at
    * 0x801DE5EC, and by the slot handlers at 0x801DEBC4 and 0x801DF334, for the
    * record selected by work byte 0x06. */
   u16 entry_10;
-  /* +0x12: entry loaded through func_8014DD3C by the work-record entry-phase
+  /* +0x12: entry loaded through applyMainLookupRecord by the work-record entry-phase
    * start at 0x801E0124 for the record selected by work byte 0x06. */
   u16 entry_12;
   u8 unk_14[6];
@@ -550,7 +544,7 @@ extern u8* volatile D_1F800044; /* @source 0x1F800044 @kind bss */
 
 /* Scoped companion-call ABI for func_801E0C20; not a callback contract. */
 void dispatchArea030CompanionHandler(void); /* @source 0x800F500C */
-void func_8014D290(void);
+void projectAndQueueActiveWork(void);
 u8   func_8014D978(void);
 /* Executable matching-entry amount consumer at 0x801665A0. AREA030 sites
  * pass (group 3, entry ID, 1, 0) and discard the result or test its low byte.
@@ -562,17 +556,17 @@ u8   func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * path (a local-mode-2 request plus scratch bytes 2/3). Only the argument matters to
  * the AREA030 call site, which discards the gate result. */
 u32  enterWorkModeEightIfInputMaskSetWorld00Area03004(u16 mask);
-void func_8014D4E0(void);
+void queueUnprojectedActiveWork(void);
 /* Target-local AREA030 selection helpers at 0x801DB04C and 0x801DB0AC: the
  * pad-mode dispatch step 0x801DB140 calls each with no arguments and discards
  * the result. */
 extern void selectRecordValueAndSlot(void); /* @source 0x801DB04C */
 extern void setActiveSlotValueFromFrameMask(void); /* @source 0x801DB0AC */
 u32  func_8014D8D4(u8 arg0);
-void func_8014DD3C(s32 arg0);
-/* Shared resource-request helper at 0x8014D6B8: the AREA030 record initializer
- * initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004 calls it with the single flag 3 (direct jal at 0x801D64B8). */
-void func_8014D6B8(s32 arg0);
+void applyMainLookupRecord(s32 arg0);
+/* Shared active-work sequence selector at 0x8014D6B8: the AREA030 record initializer
+ * initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004 calls it with the sequence selector 3 (direct jal at 0x801D64B8). */
+void selectActiveWorkSequence(s32 arg0);
 /* Shared resource-request helper at 0x8014D6DC: the AREA030 step initializer
  * resetWorkStepsAndSelectStateWorld00Area03004 calls it with (0xA, 2) when the flag byte at D_80146250 + 0x79
  * is clear. The shipped executable body reads the scratchpad cursor at
@@ -587,7 +581,7 @@ void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 int  func_8017E3F4(char* buffer, char* fmt, ...);
 void drawStatusMarkerFrameWorld00Area03004(s16 originX, s16 originY);
 void drawFixedCellSprite8x8World00Area03004(s16 arg0, s16 arg1, u8 arg2);
-void func_8017A9A4(void* arg0);
+void initFlatQuadPrimitive(void* arg0);
 /* Target-local icon-row/numeric-label drawer at 0x801E1320: the AREA030 panel
  * step calls it with the constant top-left corner (176, 156). */
 void drawSlotValueSummaryAndThresholdIconsWorld00Area03004(s16 x, s16 y);
@@ -669,16 +663,16 @@ s32 func_8014E640(u32 arg0);
  * the AREA030 cell drawer submits its 0x28 by 0x10 panel rectangle at the
  * two-pixel inset corner of the requested origin, with the shared CLUT-bank
  * byte D_80144952 as the trailing argument. Body not lifted in this target. */
-void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
+void drawFramedTexturedPanel(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
                    u32 arg5);
 /* Target-local prototype for the co-resident front-end entry probe at
  * 0x801BDD58 (direct `jal` at 0x801E0738 in checkWorkEntryGateOrSelectHandlerOneWorld00Area03004): it takes the
- * record x at +0x34, y at +0x38 and signed timer at +0x3E, a byte range and
+ * record x at +0x34, y at +0x38 and signed counter at +0x3E, a byte range and
  * the entry-table pointer 0x80143FC8 in its fifth stack argument, and reports
  * a byte-valued match. Body not lifted in this target. */
 /* Consumes reference as a signed 16-bit value. */
-u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
-s16  func_8015477C(s32 arg0, s32 arg1);
+u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range, void* work);
+s32 sampleMapHeight(s32 arg0, s32 arg1);
 s32  calculateScaledSlotValueForAmountWorld00Area03004(s32 slotIndex, s32 slotAmount);
 /* Target-local AREA030 panel combination drawer at 0x801E19CC: the entry-panel
  * slide steps call it with the sliding 0x44 +/- 0x50 * count origin on the
@@ -726,10 +720,9 @@ void dispatchStateByte3Table2048World00Area03004(void);
 void drawStatusHeaderCounterAndMarkerFrameWorld00Area03004(s16 x, s16 y);
 void drawBlueGradientQuad16x32World00Area03004(s16 x, s16 y, u8 drawMode);
 void drawCounterIndexedSprite16x16World00Area03004(s16 x, s16 y, u8 drawMode);
-/* @source 0x8017AA08 — shared libgpu 16x16 sprite setter (three-word packet,
- * code 0x7C) verified in the shipped executable; absent from the SDK map, so it
+/* @source 0x8017AA08 — shared 16x16 sprite helper that sets packet length 3 and command 0x7C verified in the shipped executable; absent from the SDK map, so it
  * stays target-local. */
-void func_8017AA08(SPRT_16* arg0);
+void initSprite16Primitive(SPRT_16* arg0);
 void drawGreenGradientBar(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void copySharedWorkParametersOrClearWorkFlagsWorld00Area03004(void);
@@ -752,10 +745,10 @@ void dispatchStateByte2Table2340World00Area03004(void);
 void dispatchHandlerBySelectorByteWorld00Area03004(void);
 void dispatchStateByte4Table22f0World00Area03004(void);
 void advanceWorkStepOnStateThreeOrFourAndDrawTextWorld00Area03004(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */
-/* Same-binary availability gate at 0x801650B4 (executable space): the AREA030
+/* Same-binary grouped-entry quantity updater at 0x801650B4 (executable space): the AREA030
  * panel step passes (0, active record byte 6 + 0x38, 1, 0) and branches on the
  * byte-valued result. Body not lifted in this target. */
-u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
+u8 addGroupedEntryQuantity(u8 arg0, u8 arg1, u8 arg2, u8 arg3); /* @source 0x801650B4 */
 /* Same-binary panel position submitter at 0x801647C4 (executable space): the
  * AREA030 flagged handler passes the panel id 0x1C and the masked flag byte
  * scaled by 16 plus 0x58 as an unsigned halfword pair, and discards the result. */
@@ -837,7 +830,7 @@ void appendDimTile(void);
 #define WORLD00_AREA030_INIT_PANEL_WORK(work_cell, halfword_cursor,           \
                                       next_cursor, halfword_2e, halfword_30)  \
   do {                                                                        \
-    func_8014DD3C(0x47);                                                      \
+    applyMainLookupRecord(0x47);                                                      \
     (work_cell)[0x24] = 0x80;                                                 \
     (work_cell)[0x29] = 1;                                                    \
     (work_cell)[0x2a] = 0;                                                    \

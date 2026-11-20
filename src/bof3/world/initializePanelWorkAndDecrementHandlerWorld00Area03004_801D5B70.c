@@ -6,10 +6,11 @@ struct scratchpad_state {
 };
 
 /* @source 0x801D5B70
- * @behavior Call func_8014DD3C(0x47), initialize panel work with byte 0x24 = 0x80, byte
- * 0x29 = 1, bytes 0x2A and 0x48 = 0, and halfwords 0x2E = 0xE8 and 0x30 =
- * 0xC2. Clear bytes 9, 0xA and 0x5D through 0x5F, call func_8014D6B8(10), then
- * decrement a fresh handler byte 3 modulo 256.
+ * @behavior Call applyMainLookupRecord(0x47), initialize panel work with byte 0x24 =
+ * 0x80, byte 0x29 = 1, bytes 0x2A and 0x48 = 0, and halfwords 0x2E = 0xE8 and
+ * 0x30 = 0xC2. Clear bytes 9, 0xA and 0x5D through 0x5F, call
+ * selectActiveWorkSequence(10), then decrement a fresh handler byte 3 modulo
+ * 256.
  * @status exact
  * @match 100.00
  * @residual none
@@ -29,7 +30,7 @@ void initializePanelWorkAndDecrementHandlerWorld00Area03004(void) {
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x5e] = 0;
   tailClearWork = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   *(u8*)(tailClearWork + 0x5f) = 0;
-  func_8014D6B8(0xa);
+  selectActiveWorkSequence(0xa);
   dispatchWork = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   {
     u8 handlerIndex = dispatchWork[3];

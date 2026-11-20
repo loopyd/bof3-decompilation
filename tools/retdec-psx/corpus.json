@@ -2689,13 +2689,13 @@
     },
     "case-067": {
       "manifest": "config/targets/emi/world00/area030/04/target.toml",
-      "manifest_sha256": "aa46e9007dc757b7028dbfb93a525a1e34c8e3db0fc1783b16df1ee0b19552f3",
+      "manifest_sha256": "cabe391afd146f8b59e1e92cf0d6781a07b9b41473f11ccf2290a46200a3e1e7",
       "name": "drawListColumnFrameWorld00Area03004",
       "signature": "void drawListColumnFrameWorld00Area03004(s16 x, s16 y)",
       "source": "src/bof3/world/drawListColumnFrameWorld00Area03004_801D90FC.c",
-      "source_sha256": "c8744e38ba39ff18a476a45138aa6e249633201c63eb6078e285ab51a08ccfe7",
+      "source_sha256": "4b34fb6dfc4611399feaa002b1ea9aa779dd8c1860f2a279d1f78aa8aa537af7",
       "splat": "config/targets/emi/world00/area030/04/splat.yaml",
-      "splat_sha256": "2fa596d0fb3b1b908f4c84d59b538dd296802c275851c690149a952d1dc18ec7"
+      "splat_sha256": "444f0f7f99f5f4759f9595edfadee5213d3c002a5130955baa1c2dc5803ae89d"
     },
     "case-068": {
       "manifest": "config/targets/emi/battle/battle/03/target.toml",
@@ -2819,13 +2819,13 @@
     },
     "case-081": {
       "manifest": "config/targets/emi/world00/area030/04/target.toml",
-      "manifest_sha256": "aa46e9007dc757b7028dbfb93a525a1e34c8e3db0fc1783b16df1ee0b19552f3",
+      "manifest_sha256": "cabe391afd146f8b59e1e92cf0d6781a07b9b41473f11ccf2290a46200a3e1e7",
       "name": "drawWidePanelFrameWorld00Area03004",
       "signature": "void drawWidePanelFrameWorld00Area03004(s16 x, s16 y)",
       "source": "src/bof3/world/drawWidePanelFrameWorld00Area03004_801D7784.c",
       "source_sha256": "4d128d8f2dbc0d982071650845a643aa08b9c93ea11dbc147353bd118444c732",
       "splat": "config/targets/emi/world00/area030/04/splat.yaml",
-      "splat_sha256": "2fa596d0fb3b1b908f4c84d59b538dd296802c275851c690149a952d1dc18ec7"
+      "splat_sha256": "444f0f7f99f5f4759f9595edfadee5213d3c002a5130955baa1c2dc5803ae89d"
     },
     "case-082": {
       "manifest": "config/targets/emi/battle/battle/03/target.toml",
@@ -3089,13 +3089,13 @@
     },
     "case-109": {
       "manifest": "config/targets/emi/world00/area030/04/target.toml",
-      "manifest_sha256": "aa46e9007dc757b7028dbfb93a525a1e34c8e3db0fc1783b16df1ee0b19552f3",
+      "manifest_sha256": "cabe391afd146f8b59e1e92cf0d6781a07b9b41473f11ccf2290a46200a3e1e7",
       "name": "initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004",
       "signature": "void initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004(void)",
       "source": "src/bof3/world/initializeGradientBarPanelWorkAndAdvanceStepWorld00Area03004_801D5C8C.c",
-      "source_sha256": "83708ac5ef84bd3392cb57584d04a5424c69d5c92bbda4490843e9a2b1201120",
+      "source_sha256": "964e8de0c610dedf1d6f57963a8946d4d1352b43e28e1b1edfe245a7c8edf8f5",
       "splat": "config/targets/emi/world00/area030/04/splat.yaml",
-      "splat_sha256": "2fa596d0fb3b1b908f4c84d59b538dd296802c275851c690149a952d1dc18ec7"
+      "splat_sha256": "444f0f7f99f5f4759f9595edfadee5213d3c002a5130955baa1c2dc5803ae89d"
     },
     "case-110": {
       "manifest": "config/targets/emi/scenario/scena15/00/target.toml",

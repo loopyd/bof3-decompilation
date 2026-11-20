@@ -154,7 +154,7 @@ u8 func_801C539C(void);
  * less than 0x101, otherwise the counter. */
 s16 func_801BDCF8(s32 coord_x, s32 coord_y);
 /* Consumes reference as a signed 16-bit value. */
-u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range,
+u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range,
                  struct GameWorkArea* work);
 
 void func_801ACF2C(void);
@@ -219,7 +219,7 @@ u8 func_801C3B78(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
  * result word. */
 s32 func_801C364C(s32 arg0, s32 arg1, s32 arg2);
 /* Reference-scaled position checks of the same active-record range test as
- * func_801BDD58; the third argument is taken as a signed 16-bit reference. */
+ * matchesProjectedWorkBounds; the third argument is taken as a signed 16-bit reference. */
 /* @source 0x801C4040 */
 u8 isPositionRejectedForZeroSelector(s32 x, s32 y, s16 reference);
 /* @source 0x801C41D0 */

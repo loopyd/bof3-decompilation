@@ -1,35 +1,38 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801DE82C
- * @behavior AREA030 work-record handler 1 of the 0x801E2314 table. While the
- * record step countdown byte 0x09 is non-zero it only integrates that step
- * through applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs func_8014D978, and the same pair closes every
- * other path except the entry request below. Otherwise it first consults the
- * shared entry gate checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 and, when that reports a match, sets the
- * work-record handler byte 0x01 to 3 and leaves through that pair. With the gate
- * clear it rolls rand() once and reuses the single roll. While the entry latch
- * D_801E3200 is clear, the record signed timer 0x3E is zero, the roll low two
- * bits are clear, the phase byte D_80145E92 is not 4 and record byte 0x06 is not
- * 0x16, it arms the latch, loads the entry halfword 0x12 of the D_801E2AB8 scale
- * record selected by record byte 0x06 through func_8014DD3C, queues cue 0x206
- * unless record flag 0x80 is set, clears record flag bit 5 and record bytes
- * 0x2A/0x48, releases the entry through func_8014D6B8(0), advances handler byte
- * 0x01 and returns without the integration pair. Otherwise it steps the route
- * index byte 0x08 to the neighbouring route by one modulo 8 (down when roll bit
- * 8 is clear, up when it is set) whenever roll bit 4 is set, re-derives the step
- * words through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004, mirrors the step-mode row trailing byte into
- * record byte 0x2A and selects that row leading byte through func_8014D8D4. It
- * then sets the countdown step word 0x14 from the func_8015477C distance of the
- * record x at 0x34 and y at 0x38 advanced by the step words 0x0C/0x10 shifted 4:
- * the distance less the timer divided by 16 while the timer sits below that
- * distance, else zero, and then, while roll bit 0x10 is set, 2 when roll bit
- * 0x20 is also set and the timer plus 0x20 has reached the negated scale byte
- * 0x1A times 256, or -2 when roll bit 0x20 is clear and the timer less 0x20
- * holds at or above both the distance and the negated scale byte plus one times
- * 256. Roll bit 0x40 clears the step words 0x0C, 0x10 and 0x14, and the
- * countdown byte 0x09 restarts at 0x10 before the integrating pair. The
- * scratchpad cursor at 0x1F800044 is reloaded for every group of record
- * accesses.
+ * @behavior AREA030 work-record handler 1 of the 0x801E2314 table. While the record step
+ * countdown byte 0x09 is non-zero it only integrates that step through
+ * applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and runs
+ * func_8014D978, and the same pair closes every other path except the entry
+ * request below. Otherwise it first consults the shared entry gate
+ * checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 and, when that reports
+ * a match, sets the work-record handler byte 0x01 to 3 and leaves through that
+ * pair. With the gate clear it rolls rand() once and reuses the single roll.
+ * While the entry latch D_801E3200 is clear, the record signed counter 0x3E is
+ * zero, the roll low two bits are clear, the phase byte D_80145E92 is not 4
+ * and record byte 0x06 is not 0x16, it arms the latch, loads the entry
+ * halfword 0x12 of the D_801E2AB8 scale record selected by record byte 0x06
+ * through applyMainLookupRecord, queues cue 0x206 unless record flag 0x80 is
+ * set, clears record flag bit 5 and record bytes 0x2A/0x48, selects
+ * active-work sequence 0 through selectActiveWorkSequence(0), advances handler
+ * byte 0x01 and returns without the integration pair. Otherwise it steps the
+ * route index byte 0x08 to the neighbouring route by one modulo 8 (down when
+ * roll bit 8 is clear, up when it is set) whenever roll bit 4 is set,
+ * re-derives the step words through
+ * deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004, mirrors the
+ * step-mode row trailing byte into record byte 0x2A and selects that row
+ * leading byte through func_8014D8D4. It then sets the countdown step word
+ * 0x14 from the sampled map height of the record x at 0x34 and y at 0x38
+ * advanced by the step words 0x0C/0x10 shifted 4: the sampled height less the
+ * counter divided by 16 while the counter sits below that sampled height, else
+ * zero, and then, while roll bit 0x10 is set, 2 when roll bit 0x20 is also set
+ * and the counter plus 0x20 has reached the negated scale byte 0x1A times 256,
+ * or -2 when roll bit 0x20 is clear and the counter less 0x20 holds at or
+ * above both the sampled height and the negated scale byte plus one times 256.
+ * Roll bit 0x40 clears the step words 0x0C, 0x10 and 0x14, and the countdown
+ * byte 0x09 restarts at 0x10 before the integrating pair. The scratchpad
+ * cursor at 0x1F800044 is reloaded for every group of record accesses.
  * @status exact
  * @match 100.00
  * @residual none
@@ -70,7 +73,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
         if (*(s16*)(gateWork + 0x3E) == 0 && (initialRoll & 3) == 0 &&
             D_80145E92 != 4 && gateWork[6] != 0x16) {
           D_801E3200 = 1;
-          func_8014DD3C(D_801E2AB8[gateWork[6]].entry_12);
+          applyMainLookupRecord(D_801E2AB8[gateWork[6]].entry_12);
           if ((D_1F800044[0] & 0x80) == 0) {
             func_8015DF18(0x206);
           }
@@ -80,7 +83,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
           entryMarker[0x2A] = 0;
           entry = D_1F800044;
           entry[0x48] = 0;
-          func_8014D6B8(0);
+          selectActiveWorkSequence(0);
           phase = D_1F800044;
           phase[1] = (u8)(phase[1] + 1u);
           return;
@@ -101,7 +104,7 @@ void runWorkRecordStepOrRequestEntryElseAdvanceRouteIndexRandomlyAndSeedCountdow
       row = D_1F800044;
       func_8014D8D4(D_801E2330[row[8]].request_00);
       point = D_1F800044;
-      distance = func_8015477C(
+      distance = sampleMapHeight(
           *(s32*)(point + 0x34) + (*(s32*)(point + 0x0C) << 4),
           *(s32*)(point + 0x38) + (*(s32*)(point + 0x10) << 4));
       rateWork = D_1F800044;

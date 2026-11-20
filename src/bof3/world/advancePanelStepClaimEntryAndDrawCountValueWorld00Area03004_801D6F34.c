@@ -1,26 +1,27 @@
 #include "bof3/world/area03004_internal.h"
 
-/* @behavior AREA030 panel-step handler, index 1 of the work-byte-3 dispatch
- * table 0x801E20C4, walking the second step-record chain at
+/* @behavior AREA030 panel-step handler, index 1 of the work-byte-3 dispatch table
+ * 0x801E20C4, walking the second step-record chain at
  * panelStepRecordTableWorld00Area03004_801E20CC. While work byte 9 of the
- * record published at the scratchpad cursor 0x1F800044 is nonzero it decrements
- * that byte and, unless bit 7 of the stepped-from record's first byte is set,
- * runs the shared func_8014D978 helper. Once the countdown expires it looks the
- * step record up through work byte 0xA; when the record carries the 0xFF end
- * marker it re-seeds work byte 0xA from the record count byte and seeds the
- * display record (work byte 0xB takes 0x37 and work words 0x0C/0x10 take 0x6A).
- * It then requests the record's low 7 bits through func_8014D8D4 and, for the
- * record whose low 7 bits are 9, claims a front-end entry record through the
- * shared allocator func_8019601c and - unless the claimed index is 0xFF - seeds
- * that 0x74-byte row with flags 1, handler selector 0x1A at +5, bytes 1..3
- * 0x10/2/2 and the halfwords 0xF2/0x9E at +0x2E/+0x30; it finally arms work
- * byte 9 from the record count byte and advances work byte 0xA. Every call then
- * integrates the stepped-from record: work words 0x0C/0x10 gain the record
- * signed deltas and work byte 6 loses the second delta, and the sign of the
- * record fourth byte selects the clampMarkerPositionsAndDrawPanelRowWorld00Area03004 marker mode. Once every sixteenth
- * frame (low nibble of the shared frame counter 0x80143E6C clear) with a
- * positive fourth byte it advances work byte 0xB and clamps it to 0x3C, formats
- * that byte through the "%2d" rodata string 0x801D0C04 into the shared
+ * record published at the scratchpad cursor 0x1F800044 is nonzero it
+ * decrements that byte and, unless bit 7 of the stepped-from record's first
+ * byte is set, runs the shared func_8014D978 helper. Once the countdown
+ * expires it looks the step record up through work byte 0xA; when the record
+ * carries the 0xFF end marker it re-seeds work byte 0xA from the record count
+ * byte and seeds the display record (work byte 0xB takes 0x37 and work words
+ * 0x0C/0x10 take 0x6A). It then requests the record's low 7 bits through
+ * func_8014D8D4 and, for the record whose low 7 bits are 9, claims a front-end
+ * entry record through the shared allocator findFreeRecord and - unless the
+ * claimed index is 0xFF - seeds that 0x74-byte row with flags 1, handler
+ * selector 0x1A at +5, bytes 1..3 0x10/2/2 and the halfwords 0xF2/0x9E at
+ * +0x2E/+0x30; it finally arms work byte 9 from the record count byte and
+ * advances work byte 0xA. Every call then integrates the stepped-from record:
+ * work words 0x0C/0x10 gain the record signed deltas and work byte 6 loses the
+ * second delta, and the sign of the record fourth byte selects the
+ * clampMarkerPositionsAndDrawPanelRowWorld00Area03004 marker mode. Once every
+ * sixteenth frame (low nibble of the shared frame counter 0x80143E6C clear)
+ * with a positive fourth byte it advances work byte 0xB and clamps it to 0x3C,
+ * formats that byte through the "%2d" rodata string 0x801D0C04 into the shared
  * 0x80145AD4 buffer, and submits the buffer at (0xAC, 0xB0) through the shared
  * text drawer func_8014FF0C with mode 2 while frame-counter bit 2 is set and
  * mode 0 otherwise.
@@ -36,7 +37,7 @@
  * reads, the integration read, the marker read, the frame-gated counter read
  * with its own clamp re-read, and the formatting read. The entry-record seeding
  * statement order, the (u8) allocator result and the typed row stores come from
- * the exact sibling advancePanelStepResourceAndDrawBouncingMarkerWorld00Area03004_801D6128,
+ * the exact sibling advancePanelStepSequenceAndDrawBouncingMarkerWorld00Area03004_801D6128,
  * which seeds the same 0x80143FC8 row for its own step; this span's own trigger
  * (record request id 9), 0xFF index skip, halfwords 0xF2/0x9E and display tail
  * come from the original bytes.
@@ -65,7 +66,7 @@ void advancePanelStepClaimEntryAndDrawCountValueWorld00Area03004_801D6F34(
     func_8014D8D4(
         panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA]].unk_00 & 0x7F);
     if ((panelStepRecordTableWorld00Area03004_801E20CC[D_1F800044[0xA]].unk_00 & 0x7F) == 9) {
-      slot = (u8)func_8019601c();
+      slot = (u8)findFreeRecord();
       if (slot != 0xFF) {
         WORLD00_AREA030_ARM_PANEL_ENTRY(slot);
         D_80143FC8[slot].unk_02 = 2u;

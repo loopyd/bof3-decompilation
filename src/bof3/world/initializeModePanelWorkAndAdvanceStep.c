@@ -40,7 +40,7 @@ void initializeModePanelWorkAndAdvanceStep(void) {
     budget = D_80145EC8;
     *(u32*)(seedWork + 0x38u) = budget - 0x8000u;
     value = *(volatile u32*)(seedWork + 0x34u);
-    level = func_8015477c((s32)value, (s32)(budget - 0x8000u));
+    level = sampleMapHeight((s32)value, (s32)(budget - 0x8000u));
   } while (0);
 
   levelWork = AREA030_SCRATCH;
@@ -98,9 +98,9 @@ void initializeModePanelWorkAndAdvanceStep(void) {
   *(volatile u32*)(clearWork + 0x6Cu) = 0u;
   stepWork[0x48u] = 1u;
 
-  func_8014dd3c((s32)(*(volatile u16*)(D_801E3210 + 0x0Cu)));
-  func_8014d6b8(1);
-  index = (u8)func_8019601c();
+  applyMainLookupRecord((s32)(*(volatile u16*)(D_801E3210 + 0x0Cu)));
+  selectActiveWorkSequence(1);
+  index = (u8)findFreeRecord();
   if (index != 0xFFu) {
     D_80143FC8[index].flags_00 = 1u;
     D_80143FC8[index].byte_05 = 10u;

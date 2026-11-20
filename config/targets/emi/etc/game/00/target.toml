@@ -151,7 +151,7 @@ sources = [
     "src/bof3/ui/func_801BB7B0_game00.c",
     "src/bof3/ui/func_801BB81C.c",
     "src/bof3/ui/func_801BDBC4_game00.c",
-    "src/bof3/ui/func_801BDD58_game00.c",
+    "src/bof3/ui/matchesProjectedWorkBounds.c",
     "src/bof3/ui/func_801BDE14.c",
     "src/bof3/ui/func_801BE920.c",
     "src/bof3/ui/func_801C090C_game00.c",

@@ -34,7 +34,7 @@ void drawSemiTransPaletteRectangleFill(u16 x, u16 y, u16 w, u16 h) {
   submitTpageDrawMode(6, 2);
 
   poly = (POLY_F4*)g_PrimCursor;
-  func_8017A9A4(poly);
+  initFlatQuadPrimitive(poly);
   poly->x0 = x + 2;
   poly->x1 = x + w - 2;
   poly->x2 = x;
@@ -62,7 +62,7 @@ void drawSemiTransPaletteRectangleFill(u16 x, u16 y, u16 w, u16 h) {
   func_8014E5A0(2, 0x10);
 
   poly = (POLY_F4*)g_PrimCursor;
-  func_8017A9A4(poly);
+  initFlatQuadPrimitive(poly);
   poly->x0 = x;
   poly->x1 = x + w;
   poly->x2 = x + 2;

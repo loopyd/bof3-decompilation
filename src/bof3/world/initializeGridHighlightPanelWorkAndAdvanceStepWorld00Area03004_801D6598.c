@@ -5,9 +5,9 @@ struct scratchpad_state {
   volatile u8* scratch;
 };
 
-/* @behavior Call func_8014DD3C(0x47), initialize the grid-highlight panel fields and
- * clear its phase, countdown and row bytes. Advance handler byte 3 before
- * calling func_8014D6B8(3).
+/* @behavior Call applyMainLookupRecord(0x47), initialize the grid-highlight panel fields
+ * and clear its phase, countdown and row bytes. Advance handler byte 3 before
+ * calling selectActiveWorkSequence(3).
  * @source 0x801D6598
  * @status exact
  * @match 100.00
@@ -29,5 +29,5 @@ void initializeGridHighlightPanelWorkAndAdvanceStepWorld00Area03004(void) {
     u8 workStep = dispatchWork[3];
     *(u8*)(dispatchWork + 3) = workStep + 1;
   }
-  func_8014D6B8(3);
+  selectActiveWorkSequence(3);
 }

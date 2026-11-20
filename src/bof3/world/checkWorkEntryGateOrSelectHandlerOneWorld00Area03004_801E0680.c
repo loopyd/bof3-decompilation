@@ -2,9 +2,9 @@
 
 /* @source 0x801E0680
  * @behavior Under the three shared gates, return success when work byte 6 is 0x16 and
- * the shared low nibble matches the mode, or when func_801BDD58 accepts the
- * original x, y, signed-counter and byte-range arguments. On every failure
- * path, set work handler byte 1 to 1 and return zero.
+ * the shared low nibble matches the mode, or when matchesProjectedWorkBounds
+ * accepts the original x, y, signed-counter and byte-range arguments. On every
+ * failure path, set work handler byte 1 to 1 and return zero.
  * @status exact
  * @match 100.00
  * @residual none
@@ -28,7 +28,7 @@ u8 checkWorkEntryGateOrSelectHandlerOneWorld00Area03004(void) {
     referenceByte = sharedBytes[0x0F];
     sharedEntryBase = sharedByteAddress - 7;
     workRecord = (Area030WorkRecord*)D_1F800044;
-    if (func_801BDD58(workRecord->x_34, workRecord->y_38, workRecord->counter_3E,
+    if (matchesProjectedWorkBounds(workRecord->x_34, workRecord->y_38, workRecord->counter_3E,
                       (u8)(sharedByteValue - referenceByte + 3),
                       sharedEntryBase) != 0) {
       return 1;

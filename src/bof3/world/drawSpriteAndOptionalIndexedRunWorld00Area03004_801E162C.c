@@ -14,7 +14,7 @@ void drawSpriteAndOptionalIndexedRunWorld00Area03004(s32 x, s32 y, u16 runIndex)
   appendIndexedSpriteWorld00Area03004(0xC, 1, (s16)x, (s16)y);
 
   if (runIndex != 0xFFFF) {
-    func_8014F800((s16)(x + 0xA), (s16)(y + 8), 0, 0xFF,
+    drawEncodedTextAt((s16)(x + 0xA), (s16)(y + 8), 0, 0xFF,
                   0x80010000u + PSX_PTR(u16, 0x80010000u)[runIndex]);
   }
 }

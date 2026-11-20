@@ -5,7 +5,7 @@
  * accumulators, position and target, then step the pair sequence. On equality
  * request cue 513, clear the countdown and accumulators, and conditionally
  * clear the scroll and advance handler byte 1. The equality path calls
- * func_8014D6B8(4); every path calls func_8014D290.
+ * selectActiveWorkSequence(4); every path calls projectAndQueueActiveWork.
  * @source 0x801D23F4
  * @status exact
  * @match 100.00
@@ -51,7 +51,7 @@ void publishClampedScrollAndIntegrateMotionOrAdvanceHandlerWorld00Area03004(void
       *(volatile s32*)(serial + 0x10u) = 0;
       serial[1u] = (u8)(serial[1u] + 1u);
     }
-    func_8014D6B8(4);
+    selectActiveWorkSequence(4);
   } else {
     if (targetWord == scrollWord + D_801E1D58[next[6u]].first) {
       *(volatile s32*)(next + 0x20u) = D_801E1D58[next[6u]].second;
@@ -76,5 +76,5 @@ void publishClampedScrollAndIntegrateMotionOrAdvanceHandlerWorld00Area03004(void
     }
     func_8014D978();
   }
-  func_8014D290();
+  projectAndQueueActiveWork();
 }

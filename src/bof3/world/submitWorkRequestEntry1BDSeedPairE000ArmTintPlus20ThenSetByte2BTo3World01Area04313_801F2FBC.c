@@ -64,10 +64,11 @@ extern s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4); /*
  * distinct per-group locals (42/45).
  *
  * Name evidence: submission through func_80196718 ("submits the record it is
- * handed"), entry requests through func_8014DD3C ("requests resource N through
- * the shared func_8014DD3C helper") and func_8014D6B8 ("requests resource N
- * through func_8014D6B8") are the wording of the exact siblings named above and
- * of resetWorkRecordAndRequestEntryWorld00Area03004_801E0124. The roles of work
+ * handed") follows the exact siblings named above. The AREA030 sibling
+ * resetWorkRecordAndSelectSequenceZeroWorld00Area03004_801E0124 applies a main
+ * lookup record and selects active-work sequence 0; those helper roles are not
+ * established for this overlay.
+ * The roles of work
  * byte 0x2A, of the 0x40/0x44 pair (bmagic names the same pair the motion pair,
  * world00/area030/04 calls them the step words), of byte 0x5C and of byte 0x2B
  * are not established for this overlay, so the name states their offsets and

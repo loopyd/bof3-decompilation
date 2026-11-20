@@ -53,7 +53,7 @@ void updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0(
     }
 
     if ((D_80144287 & 1) == 0) {
-        func_8014F800(
+        drawEncodedTextAt(
             0x1D, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A6);
 
         if (*pad & D_80145AC2) {
@@ -64,7 +64,7 @@ void updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0(
                 selected = &D_80145028;
                 previous = *selected;
                 if (previous != 0) {
-                    func_801650B4(3, previous, 1, 0);
+                    addGroupedEntryQuantity(3, previous, 1, 0);
                 }
                 *selected = record;
             }
@@ -93,7 +93,7 @@ void updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0(
         return;
     }
 
-    func_8014F800(
+    drawEncodedTextAt(
         0x1D, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A8);
 
     if (D_8014428A == 0) {
@@ -113,7 +113,7 @@ void updateSelectedRecordAndListPositionOnPadWorld00Area03004_801DCFD0(
             func_801665A0(3, (u8)sampled_record, 1, 0);
             previous = *selected;
             if (previous != 0) {
-                func_801650B4(3, previous, 1, 0);
+                addGroupedEntryQuantity(3, previous, 1, 0);
             }
             *selected = record;
             D_80145027 = 1;

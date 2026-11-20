@@ -25,8 +25,8 @@ void advanceWorkStepOnStateThreeOrFourAndDrawTextWorld00Area03004(void) {
     D_1F800044[4]++;
   }
   if ((D_80144287 & 1u) == 0u) {
-    func_8014F800(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A2);
+    drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A2);
   } else {
-    func_8014F800(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A4);
+    drawEncodedTextAt(0x1Du, 0x14, 0, 0xFFu, 0x80010000u + (u32)D_800100A4);
   }
 }

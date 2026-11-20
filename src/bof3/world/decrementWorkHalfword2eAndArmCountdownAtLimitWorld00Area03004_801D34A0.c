@@ -23,5 +23,5 @@ void decrementWorkHalfword2eAndArmCountdownAtLimitWorld00Area03004(void) {
     *(volatile s16*)(cursor + 0x2Eu) = 160;
     handlerWork[1u] = (u8)(handlerWork[1u] + 1u);
   }
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
 }

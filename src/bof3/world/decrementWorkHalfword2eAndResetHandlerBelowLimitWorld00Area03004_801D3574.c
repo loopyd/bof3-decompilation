@@ -19,6 +19,6 @@ void decrementWorkHalfword2eAndResetHandlerBelowLimitWorld00Area03004(void) {
     *half = 160;
     cursor[1u] = 0u;
   } else {
-    func_8014d4e0();
+    queueUnprojectedActiveWork();
   }
 }

@@ -1,7 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
-/* Shared panel origin halfword: the AREA030 panel steps submit D_80144154 + 2
- * as the second argument of the shaded-panel request func_8014F800. */
+/* Shared text y-argument halfword: the AREA030 panel steps submit D_80144154 + 2
+ * as the second argument of drawEncodedTextAt. */
 extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
 
 /* @source 0x801D3A54
@@ -11,17 +11,17 @@ extern u16 D_80144154; /* @source 0x80144154 @kind unknown */
  * 0x1F800044 down by one and by two. While the timer runs it submits the
  * partially revealed message run at record word 0x50 through
  * drawMessageTokenCellQuad with the shade span (8 - 0x09 * 2) & 0xFE and the
- * pen column 0x09 * 2 + 0x11D. Once the timer reaches zero it steps the run cursor past
- * the message control codes 0x12 and 0x15 (one payload byte each, as in
- * countMessageTokens), counts one revealed token in byte 0x49, rearms the timer
- * with 4 and, once that count reaches the limit byte 0x00 of the 12-byte panel
- * entry table 0x801E1E78, clamps the count to the limit, loads the pause byte
- * 0x0A (4, or 0 when the entry attribute byte 0x08 is the 0xFF sentinel),
- * reloads the timer from the entry countdown byte 0x09, advances the record
- * state index byte 0x01 and repoints the run cursor at the entry word 0x04.
- * Finally, while the record has revealed tokens, it submits the shaded panel
- * through func_8014F800 at (s16)record 0x2E, (s16)D_80144154 + 2, the revealed
- * count and the entry word 0x04.
+ * pen column 0x09 * 2 + 0x11D. Once the timer reaches zero it steps the run
+ * cursor past the message control codes 0x12 and 0x15 (one payload byte each,
+ * as in countMessageTokens), counts one revealed token in byte 0x49, rearms
+ * the timer with 4 and, once that count reaches the limit byte 0x00 of the
+ * 12-byte panel entry table 0x801E1E78, clamps the count to the limit, loads
+ * the pause byte 0x0A (4, or 0 when the entry attribute byte 0x08 is the 0xFF
+ * sentinel), reloads the timer from the entry countdown byte 0x09, advances
+ * the record state index byte 0x01 and repoints the run cursor at the entry
+ * word 0x04. Finally, while the record has revealed tokens, it draws the
+ * revealed encoded-text run through drawEncodedTextAt at (s16)record 0x2E,
+ * (s16)D_80144154 + 2, the revealed count and the entry word 0x04.
  * @status exact
  * @match 100.00
  * @residual none
@@ -96,7 +96,7 @@ void advancePanelTextCursor(void) {
 
   panel = D_1F800044;
   if (panel[0x49u] != 0u) {
-    func_8014F800(*(s16*)(panel + 0x2Eu), (s16)(D_80144154 + 2u), 0,
+    drawEncodedTextAt(*(s16*)(panel + 0x2Eu), (s16)(D_80144154 + 2u), 0,
                   panel[0x49u], D_801E1E78[panel[0x4Bu]].word_04);
   }
 }

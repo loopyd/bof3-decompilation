@@ -18,5 +18,5 @@ void decrementCountdownAdvanceHandlerOnExpiryAndQueueWorkPointerWorld00Area03004
   if (dispatchWork[9u] == 0u) {
     dispatchWork[1u] = (u8)(dispatchWork[1u] + 1u);
   }
-  func_8014d4e0();
+  queueUnprojectedActiveWork();
 }

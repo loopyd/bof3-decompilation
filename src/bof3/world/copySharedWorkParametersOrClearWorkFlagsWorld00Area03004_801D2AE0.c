@@ -7,7 +7,7 @@
 /* @behavior Clear the work flags and return when shared signed halfword 0x80144006 is
  * nonpositive or byte 0x80143FC9 is zero. Otherwise copy the shared
  * coordinates, byte 0x2A, sequence fields, word pair and halfword pair to the
- * work record, then call func_8014D290.
+ * work record, then call projectAndQueueActiveWork.
  * @source 0x801D2AE0
  * @status exact
  * @match 100.00
@@ -40,5 +40,5 @@ void copySharedWorkParametersOrClearWorkFlagsWorld00Area03004(void) {
   *(volatile u32*)(work + 0x54u) = *(volatile u32*)(sharedFields + 0x401cu);
   *(volatile u16*)(work + 0x58u) = *(volatile u16*)(sharedFields + 0x4020u);
   *(u16*)(work + 0x5au) = *(volatile u16*)(sharedFields + 0x4022u);
-  func_8014D290();
+  projectAndQueueActiveWork();
 }

@@ -1,14 +1,14 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801D7B64
- * @behavior draws the AREA030 entry-panel counter row at its fixed coordinates:
- * selects draw mode 0/1 and stamps sprite 0x12 at (0xF0, 0x42), submits the
+ * @behavior draws the AREA030 entry-panel counter row at its fixed coordinates: selects
+ * draw mode 0/1 and stamps sprite 0x12 at (0xF0, 0x42), submits the
  * two-character rodata label D_801D0C10 at (0x11C, 0x45) through the shared
- * text drawer func_8014FF0C, then formats the signed halfword at offset 0x3E of
- * the work counterWork published at the scratchpad cursor 0x1F800044 plus one
- * through the "%2d" format into the shared 0x80145AD4 buffer, rewrites a
- * leading space of that buffer to 0xFF and submits the two-token run at
- * (0xFA, 0x45) through func_8014F800.
+ * text drawer func_8014FF0C, then formats the signed halfword at offset 0x3E
+ * of the work counterWork published at the scratchpad cursor 0x1F800044 plus
+ * one through the "%2d" format into the shared 0x80145AD4 buffer, rewrites a
+ * leading space of that buffer to 0xFF and submits the two-token run at (0xFA,
+ * 0x45) through drawEncodedTextAt.
  * @status exact
  * @match 100.00
  * @residual none
@@ -27,5 +27,5 @@ void drawEntryPanelCounterRowWorld00Area03004(void) {
   if (textBuffer[0] == 0x20) {
     textBuffer[0] = 0xFF;
   }
-  func_8014F800(0xFA, 0x45, 0, 2, (u32)textBuffer);
+  drawEncodedTextAt(0xFA, 0x45, 0, 2, (u32)textBuffer);
 }

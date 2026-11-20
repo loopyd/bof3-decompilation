@@ -2325,6 +2325,11 @@ call can fold into the hard argument, while a real argument calculation before
 an existing guard can keep its pseudo and preference. Preserve the actual value
 phases and inspect conflicts, reserved registers and the complete native output.
 
+A full-word capture can keep a signed halfword comparison and a halfword store
+on one pseudo. A cast at the call assignment can leave the narrow snapshot and
+CSE's raw-word substitution intact. Check initial RTL and both CSE passes; preserve
+the callee's return width and each consumer's retained bits.
+
 `expand_preferences` also propagates preferences through a non-copy SET
 when its destination and dying source are nonconflicting global pseudos.
 This includes a load from a dying pointer. Trace those links before

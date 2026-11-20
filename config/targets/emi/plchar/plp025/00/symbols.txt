@@ -1,3 +1,4 @@
+matchesProjectedWorkBounds = 0x801BDD58;
 dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404 = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE628 = 0x801CE628;

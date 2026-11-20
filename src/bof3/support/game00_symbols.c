@@ -261,3 +261,6 @@ WEAK_SYMBOL_AT(D_801C81B0, 0x801c81b0);
 WEAK_SYMBOL_AT(D_801C81C0, 0x801c81c0);
 WEAK_SYMBOL_AT(D_801C81CC, 0x801c81cc);
 WEAK_SYMBOL_AT(D_801C81DC, 0x801c81dc);
+
+/* Original Game00 ASM entry; no C prototype or emitted body. */
+WEAK_SYMBOL_AT(drawFramedTexturedPanel, 0x801AE3F0);

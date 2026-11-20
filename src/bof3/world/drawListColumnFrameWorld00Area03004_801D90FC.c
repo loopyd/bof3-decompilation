@@ -12,7 +12,7 @@ void drawListColumnFrameWorld00Area03004(s16 x, s16 y) {
   s16 headerY;
   s32 spriteIndex;
 
-  func_801AE3F0((u16)x, (u16)(y + 2), 0x8B, 0x14, 0, D_80144952);
+  drawFramedTexturedPanel((u16)x, (u16)(y + 2), 0x8B, 0x14, 0, D_80144952);
   submitTpageDrawMode(9, 1);
 
   headerY = y;

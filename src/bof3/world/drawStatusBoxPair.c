@@ -1,17 +1,18 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801D8D70
- * @behavior draws the two stacked AREA030 status boxes at the requested origin:
- * submits the inset panel rectangles 0x8A by 0x3A at y + 2 and 0x8A by 0x5C at
- * y + 0x42 through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as
- * the trailing argument, selects graphics mode 9/1, and then repeats one box
- * body at the rows y and y + 0x40. Each box body draws the 0x25 sprite at x,
- * ten 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites
- * at x + 0x70 and x + 0x88 on the box row, the two drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of
- * width 0x1E (upper box) or 0x40 (lower box) at (x, row + 0x18) and
- * (x + 0x88, row + 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen
- * 0x3D sprites spaced eight pixels from x + 8 on that row and the 0x3E sprite
- * at x + 0x88 on that row.
+ * @behavior draws the two stacked AREA030 status boxes at the requested origin: submits
+ * the inset panel rectangles 0x8A by 0x3A at y + 2 and 0x8A by 0x5C at y +
+ * 0x42 through drawFramedTexturedPanel with the shared CLUT-bank byte
+ * D_80144952 as the trailing argument, selects graphics mode 9/1, and then
+ * repeats one box body at the rows y and y + 0x40. Each box body draws the
+ * 0x25 sprite at x, ten 0x26 sprites spaced eight pixels from x + 0x20, the
+ * 0x27 and 0x28 sprites at x + 0x70 and x + 0x88 on the box row, the two
+ * drawIndexedPanelQuadWithHeightWorld00Area03004 text rows of width 0x1E
+ * (upper box) or 0x40 (lower box) at (x, row + 0x18) and (x + 0x88, row +
+ * 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen 0x3D sprites
+ * spaced eight pixels from x + 8 on that row and the 0x3E sprite at x + 0x88
+ * on that row.
  * @status exact
  * @match 100.00
  * @residual none
@@ -26,8 +27,8 @@ void drawStatusBoxPair(s16 x, s16 y) {
   s32 i;
 
   clutBank = &D_80144952;
-  func_801AE3F0((u16)x, (u16)(y + 2), 0x8A, 0x3A, 0x80, *clutBank);
-  func_801AE3F0((u16)x, (u16)(y + 0x42), 0x8A, 0x5C, 0x80, *clutBank);
+  drawFramedTexturedPanel((u16)x, (u16)(y + 2), 0x8A, 0x3A, 0x80, *clutBank);
+  drawFramedTexturedPanel((u16)x, (u16)(y + 0x42), 0x8A, 0x5C, 0x80, *clutBank);
   submitTpageDrawMode(9, 1);
 
   appendIndexedSpriteWorld00Area03004(0x25, 1, x, y);

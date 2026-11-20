@@ -26,7 +26,7 @@ void clampMarkerPositionsAndDrawPanelRowWorld00Area03004(u8 cellVariant) {
   s32 markerX;
   s32 companionX;
 
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
   submitTpageDrawMode(0, 1);
   appendIndexedSpriteWorld00Area03004(0x15, 1, 0x32, 0x96);
   appendIndexedSpriteWorld00Area03004(0x16, 1, 0xBC, 0x96);

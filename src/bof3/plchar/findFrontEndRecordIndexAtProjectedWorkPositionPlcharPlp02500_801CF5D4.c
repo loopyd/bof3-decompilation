@@ -46,11 +46,11 @@ extern u8* D_80146250;
  */
 extern u8* D_1F800044;
 
-/* Shared position gate of the main executable, outside this payload: it reports
- * one when the supplied point sits inside the supplied record's range. The
- * original zero-extends the result byte before testing it, so this overlay sees
- * the unsigned return type. */
-u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
+/* Position gate owned by Game00 at 0x801BDD58. It checks the supplied point
+ * and signed reference against the work record's bounds. The caller
+ * zero-extends V0's low byte before testing it. The maintained declaration
+ * uses u8; the original declared return width remains unproved. */
+u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range, void* work); /* @source 0x801BDD58 */
 
 /* @source 0x801CF5D4
  * @behavior Finds the index of the first front-end record whose stored position
@@ -70,7 +70,7 @@ u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range, void* work);
  *           whose byte 5 equals 0x30; for those it passes the projected pair,
  *           the work area's halfword at 0x3E as a signed reference with no
  *           bias, the range 1 and the row's own address to the shared gate
- *           func_801BDD58, and once that gate reports a nonzero byte it
+ *           matchesProjectedWorkBounds, and once that gate reports a nonzero byte it
  *           re-reads the work area through the scratchpad cell, reloads the row
  *           word x at 0x80143FFC and the row word y at 0x80144000 beside the
  *           work area's words at 0x34 and 0x38, and returns the row index as a
@@ -119,7 +119,7 @@ s8 findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp02500_801CF5D4(void) {
   y = *(s32*)(D_1F800044 + 0x38) + D_80181B98[route * 2];
   do {
     if (D_80143FC8[row] != 0 && D_80143FCD[row] == 0x30) {
-      if (func_801BDD58(x, y, *(s16*)(D_1F800044 + 0x3E), 1,
+      if (matchesProjectedWorkBounds(x, y, *(s16*)(D_1F800044 + 0x3E), 1,
                         D_80143FC8 + row) != 0) {
         work = D_1F800044;
         if (*(s32*)(D_80143FFC + row) == *(s32*)(work + 0x34) ||

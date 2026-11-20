@@ -1,25 +1,26 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801D6684
- * @behavior AREA030 grid handler, index 1 of the work-byte-3 dispatch table
- * 0x801E2048: work byte 0xA of the record published at the scratchpad cursor
- * 0x1F800044 is a countdown and work byte 9 a phase counter whose twelfth part
- * is the grid column and whose remainder of 12 gates a ten-frame highlight.
- * While the countdown runs it queues the icon strip at (0xD4, 0x8A) with the
- * work byte 0xB row plus one as the second sprite index; while the countdown is
- * zero it advances the phase by one and, once the cell of the four-by-eight row
- * table 0x801E2050 at that row and column is the 0xFF end marker, arms the
- * countdown with 0x32. With the countdown still zero and that cell holding 1 it
- * runs the shared func_8014D978 helper on the highlight frames. It then draws
- * every cell of the table: the highlighted cell through the shaded text request
- * func_8014F800 three pixels above its row at the shade equal to the cell value,
- * and every other cell through the text drawer func_8014FC90 at the shade three
- * times the cell value inside the selected row or 7 minus the cell value
- * elsewhere, each as the one-character run of the two-entry run table 0x801E2070
- * indexed by that value. Columns step 0x0C0000 and rows 0x0D0000 of the fixed
- * origin 0x840000 at 0x9E, the highlighted row at 0x9B. After the shared
- * func_8014D4E0 update it decrements the countdown and, when that expires, clears
- * the phase and advances the work byte 0xB row, wrapping to zero at four.
+ * @behavior AREA030 grid handler, index 1 of the work-byte-3 dispatch table 0x801E2048:
+ * work byte 0xA of the record published at the scratchpad cursor 0x1F800044 is
+ * a countdown and work byte 9 a phase counter whose twelfth part is the grid
+ * column and whose remainder of 12 gates a ten-frame highlight. While the
+ * countdown runs it queues the icon strip at (0xD4, 0x8A) with the work byte
+ * 0xB row plus one as the second sprite index; while the countdown is zero it
+ * advances the phase by one and, once the cell of the four-by-eight row table
+ * 0x801E2050 at that row and column is the 0xFF end marker, arms the countdown
+ * with 0x32. With the countdown still zero and that cell holding 1 it runs the
+ * shared func_8014D978 helper on the highlight frames. It then draws every
+ * cell of the table: the highlighted cell through the shaded text request
+ * drawEncodedTextAt three pixels above its row at the shade equal to the cell
+ * value, and every other cell through the text drawer func_8014FC90 at the
+ * shade three times the cell value inside the selected row or 7 minus the cell
+ * value elsewhere, each as the one-character run of the two-entry run table
+ * 0x801E2070 indexed by that value. Columns step 0x0C0000 and rows 0x0D0000 of
+ * the fixed origin 0x840000 at 0x9E, the highlighted row at 0x9B. After the
+ * shared queueUnprojectedActiveWork update it decrements the countdown and,
+ * when that expires, clears the phase and advances the work byte 0xB row,
+ * wrapping to zero at four.
  * @status exact
  * @match 100.00
  * @residual none
@@ -80,7 +81,7 @@ phase_ready:
       work = D_1F800044;
       if (row == work[0xB]) {
         if (((u8)(work[9] % 12) < 10) && (column == col)) {
-          func_8014F800(xpos >> 16, highlightYpos >> 16, value, 1,
+          drawEncodedTextAt(xpos >> 16, highlightYpos >> 16, value, 1,
                         (u32)(u8*)((value * 2) + (u32)runs));
         } else {
           func_8014FC90(xpos >> 16, ypos >> 16, (u8)(*cell * 3), 1,
@@ -98,7 +99,7 @@ phase_ready:
     rowStart = rowStart + 8;
   }
 
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
   work = D_1F800044;
   if (work[0xA] != 0) {
     work[0xA] = work[0xA] - 1;

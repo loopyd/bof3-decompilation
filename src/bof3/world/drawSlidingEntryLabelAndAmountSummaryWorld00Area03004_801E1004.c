@@ -61,20 +61,20 @@ void drawSlidingEntryLabelAndAmountSummaryWorld00Area03004(s32 entryId, s32 amou
     }
   }
   *textCursor = 0;
-  func_8014F800(0x70, (s16)(0x45 - ((u8)slideCount * 20)), 0, 0xf, (u32)D_80145AD4);
+  drawEncodedTextAt(0x70, (s16)(0x45 - ((u8)slideCount * 20)), 0, 0xf, (u32)D_80145AD4);
 
   if ((entryId & 0xff) != 0xff) {
     sprintf((char*)D_80145AD4, (const char*)D_801D0C38, amount & 0xff);
     for (index = 0; index < 3; index++) {
       if (D_80145AD4[index] == 0x20) D_80145AD4[index] = 0xff;
     }
-    func_8014F800((s16)(0x2f - ((u8)slideCount * 25)), 0x73, 0, 3, (u32)D_80145AD4);
+    drawEncodedTextAt((s16)(0x2f - ((u8)slideCount * 25)), 0x73, 0, 3, (u32)D_80145AD4);
     sprintf((char*)D_80145AD4, (const char*)D_801D0C38,
             calculateScaledSlotValueForAmountWorld00Area03004(entryId & 0xff, amount & 0xff) & 0xffff);
     for (index = 0; index < 3; index++) {
       if (D_80145AD4[index] == 0x20) D_80145AD4[index] = 0xff;
     }
-    func_8014F800((s16)(((u8)slideCount * 25) + 0xef), 0x73, 0, 3,
+    drawEncodedTextAt((s16)(((u8)slideCount * 25) + 0xef), 0x73, 0, 3,
                   (u32)D_80145AD4);
   }
 }

@@ -19,6 +19,6 @@ void decrementWorkCountdownThenClearFlagsOrQueuePointerWorld00Area03004(void) {
     if (reload[9] == 0) {
         func_80196070();
     } else if (reload[9] & 8) {
-        func_8014D4E0();
+        queueUnprojectedActiveWork();
     }
 }

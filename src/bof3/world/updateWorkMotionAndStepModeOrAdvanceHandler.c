@@ -155,7 +155,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
   if (work[4] == 3) {
     if (func_8014D978() != 0) {
       soundWork = D_1F800044;
-      func_8014DD3C(D_801E2AB8[soundWork[6]].entry_10);
+      applyMainLookupRecord(D_801E2AB8[soundWork[6]].entry_10);
 
       flagWork = D_1F800044;
       flagWork[0] = (u8)(flagWork[0] | 0x20);
@@ -164,7 +164,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
       stepWork[0x2A] = D_801E2330[stepWork[8]].byte_01;
 
       requestWork = D_1F800044;
-      func_8014D6B8(D_801E2330[requestWork[8]].request_00);
+      selectActiveWorkSequence(D_801E2330[requestWork[8]].request_00);
 
       timerWork = D_1F800044;
       FIELD_REF(s16, timerWork, 0x3E) = -0x20;
@@ -290,7 +290,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
         func_8015DF18(0x206);
 
         chanceSoundWork = D_1F800044;
-        func_8014DD3C(D_801E2AB8[chanceSoundWork[6]].entry_12);
+        applyMainLookupRecord(D_801E2AB8[chanceSoundWork[6]].entry_12);
 
         chanceFlagWork = D_1F800044;
         chanceFlagWork[0] = (u8)(chanceFlagWork[0] & 0xDF);
@@ -303,7 +303,7 @@ void updateWorkMotionAndStepModeOrAdvanceHandler(void) {
 
         chanceTimerWork = D_1F800044;
         FIELD_REF(s16, chanceTimerWork, 0x3E) = 0;
-        func_8014D6B8(0);
+        selectActiveWorkSequence(0);
 
         chanceMotionWork = D_1F800044;
         FIELD_REF(s32, chanceMotionWork, 0x10) = -3;

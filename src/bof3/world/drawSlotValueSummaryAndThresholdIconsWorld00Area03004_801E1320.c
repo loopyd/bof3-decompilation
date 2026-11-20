@@ -49,5 +49,5 @@ void drawSlotValueSummaryAndThresholdIconsWorld00Area03004(s16 x, s16 y)
             D_80145AD4[characterIndex] = 0xFF;
         }
     }
-    func_8014F800((s16)(x + 0x45), (s16)(y + 9), 0, 5, (u32)D_80145AD4);
+    drawEncodedTextAt((s16)(x + 0x45), (s16)(y + 9), 0, 5, (u32)D_80145AD4);
 }

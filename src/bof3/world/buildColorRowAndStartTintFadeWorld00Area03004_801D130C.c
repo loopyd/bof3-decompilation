@@ -1,15 +1,15 @@
 #include "bof3/world/area03004_internal.h"
 
-/* @behavior Stage handler 0 of the AREA030 work-record stage table at
- * 0x801E1D00: rebuilds 30 halfwords (row elements 0x61..0x7E) of the
- * 32-halfword color row at 0x800396C0 from the 0x40-byte row of the 0x80037800
- * color block selected by the shared AREA030 row byte 0x80145EB7, setting the
- * high bit of every copied halfword; afterwards it clears the row's end
- * elements 0x800396C0 and 0x800396FE, copies the scratch work-record byte 0x27
- * into work byte 0xB, sets bit 5 of work byte 0, publishes 0x7B into work byte
- * 0x27, seeds work bytes 0x5C/0x5D/0x5E/0x5F with 1/0xC0/0xC0/0xC0, publishes 1
- * into the palette-stage serial 0x80145988, advances the work-record stage byte
- * at work offset 3 and calls func_8014D4E0 without arguments.
+/* @behavior Stage handler 0 of the AREA030 work-record stage table at 0x801E1D00:
+ * rebuilds 30 halfwords (row elements 0x61..0x7E) of the 32-halfword color row
+ * at 0x800396C0 from the 0x40-byte row of the 0x80037800 color block selected
+ * by the shared AREA030 row byte 0x80145EB7, setting the high bit of every
+ * copied halfword; afterwards it clears the row's end elements 0x800396C0 and
+ * 0x800396FE, copies the scratch work-record byte 0x27 into work byte 0xB,
+ * sets bit 5 of work byte 0, publishes 0x7B into work byte 0x27, seeds work
+ * bytes 0x5C/0x5D/0x5E/0x5F with 1/0xC0/0xC0/0xC0, publishes 1 into the
+ * palette-stage serial 0x80145988, advances the work-record stage byte at work
+ * offset 3 and calls queueUnprojectedActiveWork without arguments.
  * @source 0x801D130C
  * @status exact
  * @match 100.00
@@ -72,5 +72,5 @@ void buildColorRowAndStartTintFadeWorld00Area03004_801D130C(void) {
   D_80145988 = 1;
   cur = D_1F800044;
   cur[3] = cur[3] + 1u;
-  func_8014D4E0();
+  queueUnprojectedActiveWork();
 }

@@ -1,19 +1,21 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801DBBAC
- * @behavior AREA030 panel step, entry 9 of the local work-record step table
- * 0x801E2268: submits the panel pair at y 78, configures the sprite at 0x80
- * at y 91 with the packed selector from byte 6 of the active 0x98-byte work record
+ * @behavior AREA030 panel step, entry 9 of the local work-record step table 0x801E2268:
+ * submits the panel pair at y 78, configures the sprite at 0x80 at y 91 with
+ * the packed selector from byte 6 of the active 0x98-byte work record
  * D_80146888[D_801E3208], draws that record byte together with the record byte
- * at +0x90 through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004, draws the icon row at (176, 156) through
- * drawSlotValueSummaryAndThresholdIconsWorld00Area03004 and the extra icon through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While the shared pad
- * mask D_80145AA8/0x50 is set it clears the extra-icon flag D_801E3214 and
- * scratch byte 0xB, then picks the panel open state: record byte 6 equal to
- * 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a failing
- * func_801650B4(0, byte 6 + 0x38, 1, 0) gate arms byte 9 with 4 and stores 2 in
- * byte 0xB, and a passing gate advances dispatch byte 3 to 0x0E; it then plays
- * cue 0x102 and increments that dispatch byte. Finally it runs func_8014D978
- * and appends the dim tile.
+ * at +0x90 through drawSlidingEntryLabelAndAmountSummaryWorld00Area03004,
+ * draws the icon row at (176, 156) through
+ * drawSlotValueSummaryAndThresholdIconsWorld00Area03004 and the extra icon
+ * through drawExtraIconWhenEnabledAndFrameBitThreeSetWorld00Area03004. While
+ * the shared pad mask D_80145AA8/0x50 is set it clears the extra-icon flag
+ * D_801E3214 and scratch byte 0xB, then picks the panel open state: record
+ * byte 6 equal to 0x16 arms byte 9 with 4 and stores 1 in byte 0xB, a zero
+ * result from addGroupedEntryQuantity(0, byte 6 + 0x38, 1, 0) arms byte 9 with
+ * 4 and stores 2 in byte 0xB, and a nonzero result advances dispatch byte 3 to
+ * 0x0E; it then plays cue 0x102 and increments that dispatch byte. Finally it
+ * runs func_8014D978 and appends the dim tile.
  * @status exact
  * @match 100.00
  * @residual none
@@ -44,7 +46,7 @@ void choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC(void) {
       work[9] = 4;
       work = D_1F800044;
       work[0xB] = 1;
-    } else if (func_801650B4(0, recordId + 0x38, 1, 0) == 0) {
+    } else if (addGroupedEntryQuantity(0, recordId + 0x38, 1, 0) == 0) {
       work = D_1F800044;
       work[9] = 4;
       work = D_1F800044;

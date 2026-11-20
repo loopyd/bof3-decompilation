@@ -2,11 +2,10 @@
 
 /*
  * @source 0x801E084C
- * @behavior Saves work word 0x3C and clears it around func_8014D290,
- * reloads the scratchpad work cursor and restores the saved word,
- * then writes words 0x40/0x44 from signed divisions using word 0x60
- * and, on its negative path, signed halfword 0x3E. A zero word 0x60
- * clears both output words.
+ * @behavior Saves work word 0x3C and clears it around projectAndQueueActiveWork, reloads
+ * the scratchpad work cursor and restores the saved word, then writes words
+ * 0x40/0x44 from signed divisions using word 0x60 and, on its negative path,
+ * signed halfword 0x3E. A zero word 0x60 clears both output words.
  * @status exact
  * @match 100.00
  * @residual none
@@ -20,7 +19,7 @@ void updateWorkScrollWordsWorld00Area03004_801E084C(void) {
   initialWork = D_1F800044;
   savedWord = *(u32*)(initialWork + 0x3Cu);
   *(u32*)(initialWork + 0x3Cu) = 0;
-  func_8014D290();
+  projectAndQueueActiveWork();
 
   work = D_1F800044;
   word = *(s32*)(work + 0x60u);

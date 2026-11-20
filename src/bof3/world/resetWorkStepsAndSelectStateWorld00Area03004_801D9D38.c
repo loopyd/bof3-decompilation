@@ -2,8 +2,8 @@
 
 /* @behavior Update the record cursors, set D_801E3208 to 0xFF, and clear work words 0x0C
  * through 0x20 and byte 9. Select state 6 if either shared gate byte is zero,
- * otherwise state 0. Call func_8014D6DC(10, 2) or func_8014D6B8(11) according
- * to the pointed byte at 0x79, then advance a fresh work byte 3.
+ * otherwise state 0. Call func_8014D6DC(10, 2) or selectActiveWorkSequence(11)
+ * according to the pointed byte at 0x79, then advance a fresh work byte 3.
  * @source 0x801D9D38
  * @status exact
  * @match 100.00
@@ -31,7 +31,7 @@ void resetWorkStepsAndSelectStateWorld00Area03004(void) {
   if (D_80146250[0x79] == 0) {
     func_8014D6DC(0xA, 2);
   } else {
-    func_8014D6B8(0xB);
+    selectActiveWorkSequence(0xB);
   }
   dispatchWork = WORLD00_AREA030_SCRATCH_PTR;
   dispatchWork[3] = (u8)(dispatchWork[3] + 1u);

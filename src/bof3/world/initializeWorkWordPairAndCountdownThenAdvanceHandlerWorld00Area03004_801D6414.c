@@ -6,10 +6,10 @@ struct scratchpad_state {
 };
 
 /* @source 0x801D6414
- * @behavior Call func_8014DD3C(0x2B), set work byte 0x24 to 0x80, clear bytes 0x29 and
- * 0x2A, and store 2 in byte 0x48. Clear bytes 0x5D through 0x5F, store 0x8000
- * in words 0x40 and 0x44, set countdown 64 and clear byte 6. Call
- * func_8014D6B8(3), then advance a fresh handler byte 3.
+ * @behavior Call applyMainLookupRecord(0x2B), set work byte 0x24 to 0x80, clear bytes
+ * 0x29 and 0x2A, and store 2 in byte 0x48. Clear bytes 0x5D through 0x5F,
+ * store 0x8000 in words 0x40 and 0x44, set countdown 64 and clear byte 6. Call
+ * selectActiveWorkSequence(3), then advance a fresh handler byte 3.
  * @status exact
  * @match 100.00
  * @residual none
@@ -21,7 +21,7 @@ void initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004(void) 
   volatile u8* setupWork;
   volatile u8* byteSixWork;
 
-  func_8014DD3C(0x2b);
+  applyMainLookupRecord(0x2b);
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x24] = 0x80;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x29] = 0;
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[0x2a] = 0;
@@ -37,7 +37,7 @@ void initializeWorkWordPairAndCountdownThenAdvanceHandlerWorld00Area03004(void) 
   ((volatile struct scratchpad_state*)0x1f800000u)->scratch[9] = 0x40;
   byteSixWork = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   *(u8*)(byteSixWork + 6) = 0;
-  func_8014D6B8(3);
+  selectActiveWorkSequence(3);
   dispatchWork = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   {
     u8 handlerIndex = dispatchWork[3];

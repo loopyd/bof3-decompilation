@@ -1,34 +1,35 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801DECDC
- * @behavior AREA030 handler 3 of the work-record table at 0x801E2314.
- * While countdown byte 9 is clear, asks checkWorkEntryGateOrSelectHandlerOneWorld00Area03004 for the entry gate.
- * A clear answer sets work byte 1 to 1. Otherwise, samples rand() and maps
- * the shared reference position minus work coordinates 0x34/0x38 onto the
- * eight route octants in byte 8; zero deltas leave that byte unchanged.
- * Selects a direction byte from scale row D_801E2AB8[work[6]] at +0x14,
- * indexed by D_801E3210[0x0E] & 15. Subtracts that direction byte from the
- * unsigned shared byte D_80143FCF, classifies the signed low byte and clamps
- * that class to -1..3, keeping the full raw difference on the in-range arm.
- * For switch class 0, flips route bit 2 and nudges by 1 when roll bit 0 is
- * set, with bit 1 choosing up or down. Class 1 nudges by roll & 3 when
- * roll & 0xE0 is nonzero; class 2 uses the same nudge when roll & 0xC0 is
- * zero. Class 3 nudges by 1 under the class 2 gate. Classes 1..3 choose up
- * with roll bit 3 and down otherwise. Class 4 leaves the route unchanged.
- * Each nudge wraps to eight routes.
- * Recomputes steps through deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004 and derives work word 0x14 from
- * the advanced coordinates' distance and timer 0x3E. Mirrors the route's
- * step-mode byte into work byte 0x2A and requests its leading byte through
- * func_8014D8D4. After checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004 succeeds, a fresh random nibble below
- * scale byte 0x1C or mode flag bit 7 permits entry when the direction byte
- * is not 9. That path saves work byte 5 to D_801E3208, arms phase bytes
- * D_80145E92/D_80145E93/D_80143FC9 as 4/0/5, clears shared motion words
- * D_80143FD4/D_80143FD8/D_80143FDC and work byte 9, words 0x0C/0x10/0x14
- * and bytes 0x0A/0x0B, increments work byte 1, selects route 1, requests
- * that route and returns through func_8014D978. Other active paths set
- * countdown byte 9 to 0x10; signed class 3 doubles the motion words and
- * sets countdown 8 when a fresh rand() & 3 is zero. All paths except the
- * accepted entry run applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and func_8014D978.
+ * @behavior AREA030 handler 3 of the work-record table at 0x801E2314. While countdown
+ * byte 9 is clear, asks checkWorkEntryGateOrSelectHandlerOneWorld00Area03004
+ * for the entry gate. A clear answer sets work byte 1 to 1. Otherwise, samples
+ * rand() and maps the shared reference position minus work coordinates
+ * 0x34/0x38 onto the eight route octants in byte 8; zero deltas leave that
+ * byte unchanged. Selects a direction byte from scale row D_801E2AB8[work[6]]
+ * at +0x14, indexed by D_801E3210[0x0E] & 15. Subtracts that direction byte
+ * from the unsigned shared byte D_80143FCF, classifies the signed low byte and
+ * clamps that class to -1..3, keeping the full raw difference on the in-range
+ * arm. For switch class 0, flips route bit 2 and nudges by 1 when roll bit 0
+ * is set, with bit 1 choosing up or down. Class 1 nudges by roll & 3 when roll
+ * & 0xE0 is nonzero; class 2 uses the same nudge when roll & 0xC0 is zero.
+ * Class 3 nudges by 1 under the class 2 gate. Classes 1..3 choose up with roll
+ * bit 3 and down otherwise. Class 4 leaves the route unchanged. Each nudge
+ * wraps to eight routes. Recomputes steps through
+ * deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004 and derives work
+ * word 0x14 from the map height sampled at the advanced coordinates and the
+ * signed counter at 0x3E. Mirrors the route's step-mode byte into work byte
+ * 0x2A and requests its leading byte through func_8014D8D4. After
+ * checkWorkReferenceBoundsUnderSharedGatesWorld00Area03004 succeeds, a fresh
+ * random nibble below scale byte 0x1C or mode flag bit 7 permits entry when
+ * the direction byte is not 9. That path saves work byte 5 to D_801E3208, arms
+ * phase bytes D_80145E92/D_80145E93/D_80143FC9 as 4/0/5, clears shared motion
+ * words D_80143FD4/D_80143FD8/D_80143FDC and work byte 9, words 0x0C/0x10/0x14
+ * and bytes 0x0A/0x0B, increments work byte 1, selects route 1, requests that
+ * route and returns through func_8014D978. Other active paths set countdown
+ * byte 9 to 0x10; signed class 3 doubles the motion words and sets countdown 8
+ * when a fresh rand() & 3 is zero. All paths except the accepted entry run
+ * applyWorkStepTripleWhileCountdownActiveWorld00Area03004 and func_8014D978.
  * @status exact
  * @match 100.00
  * @residual none
@@ -194,7 +195,7 @@ void steerRouteIndexTowardSharedReferenceAndArmEntryTransitionWorld00Area03004_8
       }
       deriveAndReflectWorkRouteStepsThenReindexWorld00Area03004();
       point = D_1F800044;
-      dist = func_8015477C(*(s32*)(point + 0x34) + (*(s32*)(point + 0x0C) << 4),
+      dist = sampleMapHeight(*(s32*)(point + 0x34) + (*(s32*)(point + 0x0C) << 4),
                            *(s32*)(point + 0x38) + (*(s32*)(point + 0x10) << 4));
       rateWork = D_1F800044;
       counter = *(s16*)(rateWork + 0x3E);

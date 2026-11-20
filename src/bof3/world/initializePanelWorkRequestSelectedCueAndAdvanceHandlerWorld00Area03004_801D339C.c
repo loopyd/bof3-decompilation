@@ -1,8 +1,8 @@
 #include "bof3/world/area03004_internal.h"
 
-/* @behavior Call func_8014DD3C(0x2B), initialize the panel fields and call func_8014D6B8
- * with work byte 6. Request the selected halfword cue unless it is 0xFFFF,
- * then advance handler byte 1.
+/* @behavior Call applyMainLookupRecord(0x2B), initialize the panel fields and call
+ * selectActiveWorkSequence with work byte 6. Request the selected halfword cue
+ * unless it is 0xFFFF, then advance handler byte 1.
  * @source 0x801D339C
  * @status exact
  * @match 100.00
@@ -16,7 +16,7 @@ void initializePanelWorkRequestSelectedCueAndAdvanceHandlerWorld00Area03004(void
   u8* selectorWork;
   u16 cue;
 
-  func_8014DD3C(43);
+  applyMainLookupRecord(43);
 
   geometryWork = (u8*)D_1F800044;
   *(volatile s16*)(geometryWork + 0x2Eu) = 390;
@@ -32,7 +32,7 @@ void initializePanelWorkRequestSelectedCueAndAdvanceHandlerWorld00Area03004(void
   ((u8*)D_1F800044)[0x2Au] = 0u;
 
   selectorWork = (u8*)D_1F800044;
-  func_8014D6B8(selectorWork[6u]);
+  selectActiveWorkSequence(selectorWork[6u]);
 
   cue = D_801E1DA0[((u8*)D_1F800044)[6u]];
   if (cue != 0xFFFFu) {

@@ -5,10 +5,10 @@ struct scratchpad_state {
   volatile u8* scratch;
 };
 
-/* @behavior Call func_8014DD3C(0x47), initialize the gradient-bar panel fields, clear
- * its level and countdown bytes, set width word 0x0C to 0 and width-delta word
- * 0x18 to 4, then advance handler byte 3. Preserve both byte-6 clears and the
- * separate pointer captures.
+/* @behavior Call applyMainLookupRecord(0x47), initialize the gradient-bar panel fields,
+ * clear its level and countdown bytes, set width word 0x0C to 0 and
+ * width-delta word 0x18 to 4, then advance handler byte 3. Preserve both
+ * byte-6 clears and the separate pointer captures.
  * @source 0x801D5C8C
  * @status exact
  * @match 100.00

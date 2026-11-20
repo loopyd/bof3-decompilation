@@ -24,7 +24,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range)
         ((struct GameWorkArea*)((u8*)D_80146888 + offset))->flags_00 != 0 &&
         (((struct GameWorkArea*)((u8*)D_80146888 + offset))->unk_07 & 0x80) ==
             0 &&
-        func_801BDD58(x, y, reference, range, work)) {
+        matchesProjectedWorkBounds(x, y, reference, range, work)) {
       return (s8)i;
     }
     i++;

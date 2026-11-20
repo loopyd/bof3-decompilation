@@ -18,7 +18,7 @@ void initializePickedEntryOrAdvanceWorkHandlerWorld00Area03004(void) {
 
   rowWork = (u8*)D_1F800044;
   if (D_801E1F20[rowWork[6u]][3u] != 0u) {
-    entryIndex = (s8)func_8019601c();
+    entryIndex = (s8)findFreeRecord();
     if (entryIndex != -1) {
       D_80143FC8[entryIndex].flags_00 = 1u;
       D_80143FC8[entryIndex].byte_05 = 15u;

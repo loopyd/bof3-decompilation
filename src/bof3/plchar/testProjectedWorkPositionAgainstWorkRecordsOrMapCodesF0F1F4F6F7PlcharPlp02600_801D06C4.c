@@ -32,7 +32,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * arguments, projects the same active work area with the undoubled offsets of
  * 0x80181B94/0x80181B98 and walks the twenty 0x74-byte front-end records at
  * 0x80143FC8 whose byte 0 reads nonzero and whose byte 5 reads 0x17, passing each
- * one to the shared gate func_801BDD58 with the signed reference halfword at work
+ * one to the shared gate matchesProjectedWorkBounds with the signed reference halfword at work
  * offset 0x3E and range 0. It answers the signed slot of the first record the
  * gate accepts, or -1 when none does. This body passes no arguments either and
  * folds the answer into the same flag against -1.

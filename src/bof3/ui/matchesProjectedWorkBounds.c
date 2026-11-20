@@ -13,7 +13,7 @@
  * @match 100.00
  * @residual none
  */
-u8 func_801BDD58(s32 x, s32 y, s32 reference, s32 range,
+u8 matchesProjectedWorkBounds(s32 x, s32 y, s32 reference, s32 range,
                  struct GameWorkArea* work) {
   s32 projected_y;
   s32 y_product;
