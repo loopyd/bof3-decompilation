@@ -168,18 +168,23 @@ of rasterized text or safe editing.
 
 ## Staged palette coverage
 
-Coverage recognizes the complete 5120-byte palette allocation in original US
-`AREA024.EMI` entry 8. It requires the original archive identity, entry offset
-737280, raw transfer mode, load address `0x80033E00` and exact payload hash.
-The allocation contains 2560 little-endian image words, without a header.
+Coverage recognizes type-0 palette-word allocations in exact original US
+archives. The TOC destination and entire allocation must lie within
+`0x80033800..0x80037000`. Both destination and nonzero size must be multiples
+of 32 bytes, and the first payload word must match the TOC check word.
+This includes the 5120-byte AREA024 entry-8 allocation at `0x80033E00`.
 
-The staging routine at `0x8014E284` copies this span into the image buffer
-described by `0x8014E22C`. The original SDK profile at `0x8017CE9C` interprets
-the descriptor as image dimensions and consumes words through CPU and DMA paths.
-This qualifies the stored representation. Mutable limits, dispatch bindings,
-debug callbacks and queue paths remain separate execution questions. The rule
-does not establish a full palette upload, sampling, display, unique ownership or
-the absence of rasterized text. Other entries and archive gaps stay unchanged.
+Original SLUS readers at `0x80162B08` and `0x80162C14` copy entry bytes to
+their declared destination. Staging at `0x8014E284` copies those rows into
+`0x80037800`, after clearing the four excluded rows at `0x80037000..0x80037800`.
+The pending-upload consumer at `0x8014E22C` describes 256-by-32 image words
+and conditionally calls `LoadImage` at `0x8017B690`.
+The [texture catalog](../../bof3-textures/docs/source-paths.md#raw-uploads-and-shared-palettes)
+exposes the same source-bound allocations as `palette-bank` resources.
+This classification establishes stored image words. Completed loading,
+intervening writes, active CLUT selection, sampling, display and safe edits
+remain separate requirements. Changed archives, other destinations and container
+gaps do not qualify.
 
 ## PL026 compressed image field coverage
 

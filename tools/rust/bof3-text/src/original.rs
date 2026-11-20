@@ -9252,6 +9252,24 @@ pub fn payload_nontext_ranges(
     if !original_us {
         return None;
     }
+    if entry.transfer_mode == 0
+        && entry.ram_ptr >= 0x8003_3800
+        && entry.ram_ptr % 32 == 0
+        && !data.is_empty()
+        && data.len() % 32 == 0
+        && entry.size as usize == data.len()
+        && entry
+            .ram_ptr
+            .checked_add(entry.size)
+            .is_some_and(|end| end <= 0x8003_7000)
+        && data[..4] == entry.check_word.to_le_bytes()
+    {
+        return Some(vec![NontextRange {
+            offset: 0,
+            length: data.len(),
+            evidence: "original US type-0 palette words; exact whole-archive identity, TOC size/destination/checkword and 32-byte-aligned span within 0x80033800..0x80037000; original SLUS 0x80162B08 and 0x80162C14 load the declared span, 0x8014E284 stages its rows, and 0x8014E22C conditionally uploads 256-by-32 image words through LoadImage; no completed loading, active CLUT, sampling, display or safe-edit claim",
+        }]);
+    }
     if entry.transfer_mode == 1 {
         return compression_metadata_ranges(
             data,
@@ -11740,16 +11758,6 @@ pub fn payload_nontext_ranges(
                 evidence: "original US BPLU349 image headers, packed words, mode-2 tokens and 32-halfword palette records; consumers 0x8014E6D0, 0x8014E7F8, 0x8014E8FC and 0x80166C48; opaque prefixes excluded; exact source identity; no rasterized-text absence or runtime claim",
             })
             .collect())
-        }
-        (8, 737_280, 0, 0x8003_3e00, 5120)
-            if sha256_hex(data)
-                == "e9fcb1395884aff7dc732517fd685e9fb26fe87ccf78f757055e410cda8e9e18" =>
-        {
-            Some(vec![NontextRange {
-                offset: 0,
-                length: data.len(),
-                evidence: "original US AREA024 entry 8 serialized palette/image words; staging 0x8014E284, descriptor 0x8014E22C and original SDK image-word profile 0x8017CE9C; exact source identity; no actual full-palette upload, sampling, display or text-absence claim",
-            }])
         }
         (13, 733_184, 0, 0x801f_2c00, 2_548)
             if entry.check_word == 0x3b
