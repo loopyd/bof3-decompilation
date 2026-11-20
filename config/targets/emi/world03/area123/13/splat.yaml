@@ -27,8 +27,8 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - initArea12313State
   - - 68
     - textbin
     - D_801F2C44

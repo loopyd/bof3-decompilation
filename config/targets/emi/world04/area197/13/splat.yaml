@@ -127,8 +127,10 @@ segments:
     - '@source: src/bof3/world/claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050.c'
     - '@behavior: Front-end record seeder: it claims one row through the shared allocator func_8019601C and, for a free index other than 0xFF, seeds the 0x74-byte row at 0x80143FC8 with occupancy 1, handler selector 0x92, the halfword -0x1E at row 0x30, 6 at row byte 0x29, zero at row halfword 0x2E and the slot index of the work record published at 0x80146884 in row byte 0x0B, then returns.'
   - - 5412
-    - asm
-    - func_801F4124
+    - c
+    - advanceHalfword0aBy3WhenWorkByte79Is7World04Area19713_801F4124
+    - '@source: src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World04Area19713_801F4124.c'
+    - '@behavior: Overlay handler published in the local handler pointer run at 0x801F49BC. It reads the +0x79 byte of the work record published through the shared pointer cell 0x80146250 and, when that byte equals 7, advances the halfword at offset 0x0A of the record published through the shared pointer cell 0x80148210 by 3; every other value returns before that halfword is touched. Takes no arguments, returns nothing, calls nothing and reserves no frame.'
   - - 5476
     - c
     - stepSharedModeStartThenSetFlag55AndRequestSelectorAtCounter24World04Area19713_801F4164

@@ -30,8 +30,10 @@ segments:
   vram: 2149526632
   subsegments:
   - - 104
-    - asm
-    - func_801F2C68
+    - c
+    - initArea11413State
+    - '@source: src/bof3/world/initArea11413State.c'
+    - '@behavior: Runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 0xD to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED, returning 0. The first byte is the front-end state selector the callback table is indexed by, so this is the overlay state-entry tuple write.'
   - - 168
     - asm
     - func_801F2CA8

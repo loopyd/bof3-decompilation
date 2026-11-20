@@ -45,8 +45,10 @@ segments:
     - '@source: src/bof3/world/seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030.c'
     - '@behavior: Seeds the scratch work record published at pointer cell 0x1F800044: word +0x34 takes 0x4E8000, word +0x3C is cleared, word +0x38 takes 0x88000 when byte +0x79 of the record published through 0x80146250 equals 2 and 0x80000 otherwise, and the reloaded cell receives 1 at byte +0x08.'
   - - 1148
-    - asm
-    - func_801F307C
+    - c
+    - advanceHalfword0aBy1WhenWorkByte79Is2World03Area12813_801F307C
+    - '@source: src/bof3/world/advanceHalfword0aBy1WhenWorkByte79Is2World03Area12813_801F307C.c'
+    - '@behavior: Reads mode byte 0x79 of the work record published through pointer cell 0x80146250 and, only when that byte is 2, adds 1 to the halfword at offset 0x0A of the record published through pointer cell 0x80148210. Every other mode returns before the second cell is touched.'
   - - 1212
     - c
     - releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC

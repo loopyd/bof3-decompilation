@@ -130,8 +130,10 @@ segments:
     - asm
     - func_801F3C74
   - - 4408
-    - asm
-    - func_801F3D38
+    - c
+    - advanceHalfword0aBy3WhenWorkByte79Is7World03Area14313_801F3D38
+    - '@source: src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World03Area14313_801F3D38.c'
+    - '@behavior: Reads the +0x79 byte of the work record published through 0x80146250 and, when that byte equals 7, advances the halfword at offset 0x0A of the record published through 0x80148210 by 3.'
   - - 4472
     - asm
     - func_801F3D78
