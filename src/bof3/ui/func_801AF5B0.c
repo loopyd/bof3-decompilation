@@ -17,26 +17,12 @@ extern s32 func_80166A10(u8 character_index, u8 ability_kind, u8 mode);
  * @source 0x801AF5B0
  * @see docs/specs/data/equipment.md
  * @status partial
- * @match 58.78
- * @residual 87 of 148 instructions at 572 bytes against the original 592. The
- * dispatch chain, both level queries, the ability-record fields and the three
- * fixed-address story gates match: D_80145558, D_80145554 and D_801462EA are
- * read through non-volatile constant-address macros, which folds each access to
- * the original's `lui` + offset form. Remaining classes are allocation and
- * return-tail if conversion: the prologue saves the ability kind into s1 where
- * the original saves the character index into s1 and the ability kind into s2
- * (first mismatch at instruction 2; the ability pointer then takes s2 here
- * against s3 there), the kind-140 gate compiles as an inverted `beqz` plus `j`
- * where the original branches `bnez` to the shared return, and the kind-151
- * gate folds to `xori`/`sltu` where the original keeps a `bne` pair. Measured
- * and rejected on this allocation: repeated `(u8)` masks of the parameter
- * instead of the character local, a 32-bit character local, the ability
- * pointer built before the zero-kind test, nested `if` forms of the kind-140
- * and kind-151 gates, a switch on the masked category with and without the
- * guard-return tail, the unmasked category compare (drops the original's
- * `andi`), and the earlier if/else, offset-reuse and single-expression level
- * variants, all of which measure below this candidate's 87 matched
- * instructions; the wave-13 lane report carries the full ledger.
+ * @match 85.81
+ * @residual 127 of 148 instructions at the original 592-byte size. Saved
+ * register allocation places the character index in s3, ability kind in s1
+ * and ability pointer in s2, against s1, s2 and s3 in the original. Prologue
+ * order and argument setup around the battle-level query also differ.
+ * Complete byte comparison still differs.
  */
 s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
   const volatile AbilityObject* ability;
@@ -53,31 +39,47 @@ s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
 
   ability = &abilityObjects[(u8)ability_kind];
 
-  if ((u8)item_category == 1u) {
-    mapped_character =
-        D_80181B10[D_80144F5A[character]];
-    character_offset = (u32)mapped_character * 0xa4u;
-    required_level =
-        func_80166A10(mapped_character, (u8)ability_kind, 0u) & 0xffu;
-    learned_level = *(const u16*)&D_8014497E[character_offset];
-    if (learned_level < required_level) {
-      return 0;
-    }
-    if ((ability->targeting_flags & 1u) != 0u) {
-      return 1;
-    }
-    return 0;
-  } else if ((u8)item_category < 2) {
-    return 1;
-  } else if ((u8)item_category != 2) {
-    return 1;
+  do {
+    item_category = (u8)item_category;
+  } while (0);
+  if (item_category == 1) {
+    goto party_category;
   }
+  if (item_category < 2) {
+    goto selectable;
+  }
+  if (item_category == 2) {
+    goto battle_category;
+  }
+  goto selectable;
 
+party_category:
+  mapped_character =
+      D_80181B10[D_80144F5A[character]];
+  character_offset = (u32)mapped_character << 2;
+  character_offset += mapped_character;
+  character_offset <<= 3;
+  character_offset += mapped_character;
+  character_offset <<= 2;
+  required_level =
+      func_80166A10(mapped_character, (u8)ability_kind, 0u) & 0xffu;
+  learned_level = *(const u16*)&D_8014497E[character_offset];
+  learned_level = learned_level < required_level;
+  if (learned_level != 0u) {
+    return 0;
+  }
+  if ((ability->targeting_flags & 1u) != 0u) {
+    goto selectable;
+  }
+  goto unselectable;
+
+battle_category:
   character_offset = (u32)character * 0x140u;
   required_level =
       func_80166A10(character, (u8)ability_kind, 1u) & 0xffu;
   learned_level = *(const u16*)&D_80145F1A[character_offset];
-  if (learned_level < required_level) {
+  learned_level = learned_level < required_level;
+  if (learned_level != 0u) {
     return 0;
   }
 
@@ -104,11 +106,14 @@ s32 func_801AF5B0(s32 item_category, s32 character_index, s32 ability_kind) {
     return 0;
   }
   if ((u8)ability_kind != 151u) {
-    return 1;
+    goto selectable;
   }
-  if (GAME_UNK_801462EA == 0x25u) {
-    return 0;
+  if (GAME_UNK_801462EA != 0x25u) {
+    goto selectable;
   }
+unselectable:
+  return 0;
 
+selectable:
   return 1;
 }

@@ -2518,6 +2518,14 @@ and complete live comparisons for every affected function.
 
 ### Boolean return expansion
 
+Trace both jump passes when literal return arms become Boolean arithmetic. In
+GCC 2.7.2, a real shared success exit can prevent the first pass from hoisting a
+literal out of a local diamond. The later pass can still merge a final zero
+assignment with an earlier zero followed by a jump. A label with multiple
+predecessors does not prevent that merge. Share only real outcome exits; check
+whether the duplicate disappears, both guard polarities survive and delay-slot
+reorganization preserves the complete result.
+
 For join-spanning booleans or extra return copies, inspect initial RTL before
 blaming CSE or allocation.
 
