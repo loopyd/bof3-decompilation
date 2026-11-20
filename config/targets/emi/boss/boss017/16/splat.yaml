@@ -35,8 +35,10 @@ segments:
     - asm
     - func_800C1848
   - - 160
-    - asm
-    - func_800C18A0
+    - c
+    - dispatchStateByte2Table1adcBossBoss01716_800C18A0
+    - '@source: src/bof3/boss/dispatchStateByte2Table1adcBossBoss01716_800C18A0.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: reads work-record byte 0x02 through the scratchpad pointer cell 0x1F800044 and calls the entry at that index of the overlay handler run based at 0x800C1ADC with no arguments.'
   - - 228
     - asm
     - func_800C18E4

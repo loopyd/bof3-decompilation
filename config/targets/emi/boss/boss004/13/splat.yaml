@@ -47,8 +47,10 @@ segments:
     - asm
     - func_800C1940
   - - 448
-    - asm
-    - func_800C19C0
+    - c
+    - dispatchStateByte2Table2788BossBoss00413_800C19C0
+    - '@source: src/bof3/boss/dispatchStateByte2Table2788BossBoss00413_800C19C0.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes its unsigned byte at offset 2, scales it by four and calls the matching entry of the handler run based at the interior word 0x800C2788 with no arguments, so the body is a bare indirect call into that run and returns whatever the selected entry returns.'
   - - 516
     - asm
     - func_800C1A04

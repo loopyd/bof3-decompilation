@@ -64,8 +64,10 @@ segments:
     - asm
     - func_800C1BB0
   - - 1132
-    - asm
-    - func_800C1C6C
+    - c
+    - dispatchStateByte2Table3220BossBoss02513_800C1C6C
+    - '@source: src/bof3/boss/dispatchStateByte2Table3220BossBoss02513_800C1C6C.c'
+    - '@behavior: Overlay state dispatch on work-record byte 2. Loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the six-word handler table at 0x800C3220 with no arguments, so no argument register is loaded and the callee value in $v0 is what this function returns. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the indirect call, and the slots after the index byte and after the table load stay nops. The table lies in the reviewed trailing textbin row D_800C3174 and its entries are 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, this payload 0x800C1CB0 and the main-executable 0x801E4928, ending where the next run starts at 0x800C3238. The only in-image reference to this span is the pointer word at 0x800C3208, word 6 of the twelve-word run based at 0x800C31F0 that the sibling byte-1 dispatcher 0x800C1B6C indexes, and the payload holds no jal naming it, so the overlay stepper that walks that run reaches it as entry 6 of the byte-1 dispatch. Same body as the exact sibling dispatchers 0x800C197C, 0x800C1EC8 and 0x800C2030 of this overlay, which read the same record byte: their 0x44-byte spans are word-identical apart from the table address in the scaled load word, which occupies the single percent-lo slot those spans share.'
   - - 1200
     - asm
     - func_800C1CB0

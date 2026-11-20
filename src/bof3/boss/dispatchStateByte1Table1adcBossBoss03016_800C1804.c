@@ -33,10 +33,10 @@ extern void (*D_800C1ADC[])(void); /* @source 0x800C1ADC @kind data */
  * 0x44-byte body, shown by a payload cmp whose only two differing bytes are the
  * low half of the scaled table load's offset word (0x1ADC here, 0x1B18 there),
  * so the statement order, operand forms and declaration style come from that
- * disassembly while the table literal is written from these bytes. That row is
- * still `asm`, so it carries no source to clone and supplies shape only; the
- * family spelling of this body is EMI_DEFINE_DISPATCHER, whose expansion is the
- * 17-instruction span measured here.
+ * disassembly while the table literal is written from these bytes. That row was
+ * still `asm` when this seed was written, so it carried no source to clone and
+ * supplied shape only; the family spelling of this body is EMI_DEFINE_DISPATCHER,
+ * whose expansion is the 17-instruction span measured here.
  * @status exact
  * @match 100.00
  * @residual none

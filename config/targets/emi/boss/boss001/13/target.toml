@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = [
     "src/bof3/boss/dispatchStateByte2Table2204BossBoss00113_800C1980.c",
+    "src/bof3/boss/dispatchStateByte1Table221cBossBoss00113_800C1B40.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchStateByte2Table2264BossBoss00113_800C1CA0.c",

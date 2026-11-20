@@ -35,7 +35,8 @@ void func_8014D978(void);
  * stores 2 into the state byte at +1 of the work record the main program
  * publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.
  * The state byte is the value dispatchStateByte1Table1adcBossBoss03016_800C1804
- * and func_800C18F0 index their 0x800C1ADC and 0x800C1B18 tables by, so writing 2
+ * and dispatchStateByte1Table1b18BossBoss03016_800C18F0 index their 0x800C1ADC
+ * and 0x800C1B18 tables by, so writing 2
  * selects the next handler instead of re-entering this one: the word
  * 0x800C1848 at 0x800C1ADC is entry 0 of that state table and this function's
  * only in-image reference, so no jal reaches it and the overlay entry does. The

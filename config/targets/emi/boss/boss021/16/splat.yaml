@@ -55,8 +55,10 @@ segments:
     - c
     - noopHandlerBossBoss02116_800C19DC
   - - 484
-    - asm
-    - func_800C19E4
+    - c
+    - dispatchStateByte1Table1d2cBossBoss02116_800C19E4
+    - '@source: src/bof3/boss/dispatchStateByte1Table1d2cBossBoss02116_800C19E4.c'
+    - '@behavior: Second-level overlay dispatch on the work record byte at offset 1: reads the record pointer from the scratchpad cell 0x1F800044, scales that unsigned byte by four and calls the handler selected from word 31, 0x800C1D2C, of the handler run that starts at 0x800C1CD8, whose entries there are this overlay''s 0x800C1A28 and the main-executable handlers 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and 0x801E5288.'
   - - 552
     - c
     - publishNoopStepHandlerAndDataThenSetStateTo2BossBoss02116_800C1A28

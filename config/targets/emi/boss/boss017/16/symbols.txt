@@ -1,6 +1,6 @@
 dispatchStateByte1Table1aacBossBoss01716_800C1804 = 0x800C1804;
 func_800C1848 = 0x800C1848;
-func_800C18A0 = 0x800C18A0;
+dispatchStateByte2Table1adcBossBoss01716_800C18A0 = 0x800C18A0;
 func_800C18E4 = 0x800C18E4;
 dispatchIndexedHandlerBossBoss01716_800C1964 = 0x800C1964;
 noopHandlerBossBoss01716_800C199C = 0x800C199C;
