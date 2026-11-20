@@ -10,16 +10,16 @@
  * add field_0C * pad_09[0] to coord_x_34 and field_10 * pad_09[0] to coord_y_38.
  * Returns 0 when a gate fails.
  * @status partial
- * @match 89.36
- * @residual 42/47 instructions at the original 188 bytes; first difference
- * +0x74. Y-product retrieval and coordinate addition precede the X-distance
- * test. The product and bound-add registers still differ.
+ * @match 91.49
+ * @residual 43/47 instructions at the original 188 bytes; first difference
+ * +0x84. The Y-product retrieval and bound-add registers differ.
  */
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
                  struct GameWorkArea* work) {
   s32 projected_x;
   s32 projected_y;
   s32 y_product;
+  s32 origin_y;
   s32 step;
   s32 distance;
   s32 bound;
@@ -38,12 +38,16 @@ u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
     do {
       y_product = work->field_10;
       y_product *= step;
+      y_product = (s32)((u32)y_product - 1U);
+      y_product = (s32)~(u32)y_product;
       projected_x = work->coord_x_34 + projected_y;
-      projected_y = work->coord_y_38 + y_product;
+      origin_y = work->coord_y_38;
+      origin_y = (s32)((u32)origin_y - (u32)y_product);
+      distance = x - projected_x;
+      distance = abs(distance);
+      projected_y = origin_y;
     } while (0);
     bound = (range + work->speed_70 + 2) * 32768;
-    distance = x - projected_x;
-    distance = abs(distance);
     distance = distance < bound;
   } while (0);
   matches = 0;

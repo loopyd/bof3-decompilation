@@ -2221,6 +2221,12 @@ both CSE passes and the actual combine route. Derive ready priorities and
 quantity weights from the dumps; counting surviving definitions is insufficient.
 Require the complete register web and native gate.
 
+Check simplifier entry conditions before predicting an algebraic fold. Equivalent
+consumed arithmetic phases can reach different rules in a different order. A later
+substitution may also cross an operand overwrite. Require the removed operations,
+surviving counts, actual intervals and complete native output. Do not add
+disposable arithmetic to alter allocation.
+
 When packing disappears during combine, inspect surviving `USE` instructions.
 GCC 2.7.2 can preserve death notes this way. Register-class analysis skips their
 costs, but reload can still allocate stack homes. A `USE(MEM)` may emit nothing
