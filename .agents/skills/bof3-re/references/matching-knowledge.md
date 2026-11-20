@@ -2568,10 +2568,14 @@ equivalent source, leaving an unused SET in `.cse2` that flow deletes before
 combine. Trace the consumers and `.flow` before assigning the removal to combine.
 
 A consumed source can take a real helper answer or later sample before its
-snapshot is used. Early dead-CSE counts uses across the whole pseudo; later cleanup may
-remove the later phase after it has preserved the copy. Check actual consumers
-and global conflicts. A shorter CSE scan can make the snapshot canonical,
-forward earlier consumers and remove interference while the copy SET survives.
+snapshot is used. Early dead-CSE counts uses across the whole pseudo; later
+cleanup can remove the phase after it has preserved the copy. Canonical
+selection also compares last references against the scan boundary. A shorter
+scan can promote the snapshot, forward earlier consumers and remove interference
+while the copy SET survives. Later real result or Boolean phases can keep the
+original carrier live beyond snapshot consumers and prevent that promotion.
+Verify actual consumers in both CSE passes, global conflicts and the pass that
+removes each phase; require no extra operations.
 
 Preserving a handoff can require two real value changes. An operand overwrite
 between producer and capture can block moving the producer. Overwriting the

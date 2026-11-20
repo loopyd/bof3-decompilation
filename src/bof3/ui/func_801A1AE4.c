@@ -7,10 +7,9 @@ extern s32 func_801BE0C0(s32 arg0, s32 arg1, u8 arg2);
 /* @behavior checks movement to a position determined by the route index,
  *        using two offset tables.
  * @source 0x801A1AE4
- * @status partial
- * @match 92.73
- * @residual 51/55 instructions at the original 220-byte size. Guard and
- * return layout still differ; complete byte comparison remains different.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 func_801A1AE4(struct GameWorkArea* arg) {
   s32 s0;
@@ -28,14 +27,20 @@ s32 func_801A1AE4(struct GameWorkArea* arg) {
   result = func_801A1BC0(arg);
   second_x = s0;
   second_y = s1;
-  if (!(result & 0xFF)) {
-    work = g_game_work;
-    s0 = func_801BDE14(s0, s1, work->speed_70);
-    if ((s8)s0 == -1) {
-      work = g_game_work;
-      s1 = work->speed_70;
-      return (s8)func_801BE0C0(second_x, second_y, (u8)s1) != -1;
-    }
+  if (result & 0xFF) {
+    goto success;
   }
+  work = g_game_work;
+  s0 = func_801BDE14(s0, s1, work->speed_70);
+  if ((s8)s0 == -1) {
+    goto final_move;
+  }
+success:
   return 1;
+final_move:
+  work = g_game_work;
+  s1 = work->speed_70;
+  s0 = func_801BE0C0(second_x, second_y, (u8)s1);
+  s1 = (s8)s0 != -1;
+  return s1;
 }
