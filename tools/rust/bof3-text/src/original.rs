@@ -3188,18 +3188,21 @@ fn area_surface_field_ranges(data: &[u8], check_word: u32) -> Option<Vec<Nontext
     Some(ranges)
 }
 
-fn brt_decoded_nontext_fields(
-    entry: Entry,
-    data: &[u8],
-) -> (&'static [(usize, usize)], &'static str) {
+struct BrtSpriteProfile {
+    family: u8,
+    fields: &'static [(usize, usize)],
+    evidence: &'static str,
+}
+
+fn brt_decoded_nontext_fields(entry: Entry, data: &[u8]) -> Option<BrtSpriteProfile> {
     if entry.index != 7
         || entry.transfer_mode != 1
         || entry.ram_ptr != 0x8003_b800
         || usize::try_from(entry.size).ok() != Some(data.len())
     {
-        return (&[], "");
+        return None;
     }
-    let fields: &[(usize, usize)] = match (
+    let (family, fields): (u8, &'static [(usize, usize)]) = match (
         entry.offset,
         entry.check_word,
         data.len(),
@@ -3211,339 +3214,363 @@ fn brt_decoded_nontext_fields(
             368_652,
             171_442,
             "3ccf09c57d2675a5938c5a5350cc936d238388039dc1b040c126db70ab7880c8",
-        ) => &[
-            (12, 20),
-            (52, 56),
-            (31_436, 39_636),
-            (98_112, 98_180),
-            (147_468, 147_476),
-            (147_484, 147_488),
-            (147_508, 152_980),
-            (185_452, 185_456),
-            (185_460, 185_524),
-            (258_060, 258_068),
-            (258_076, 258_080),
-            (258_140, 260_880),
-            (310_688, 310_756),
-        ],
+        ) => (
+            1,
+            &[
+                (12, 20),
+                (52, 56),
+                (31_436, 39_636),
+                (98_112, 98_180),
+                (147_468, 147_476),
+                (147_484, 147_488),
+                (147_508, 152_980),
+                (185_452, 185_456),
+                (185_460, 185_524),
+                (258_060, 258_068),
+                (258_076, 258_080),
+                (258_140, 260_880),
+                (310_688, 310_756),
+            ],
+        ),
         // BRTD457, slot 514.
         (
             81_920,
             331_788,
             172_879,
             "457cf5138ff71487486d0f48fa423d587b11a49d7ebaa70fa05ac1c02d3d62b0",
-        ) => &[
-            (12, 20),
-            (28, 32),
-            (52, 5_524),
-            (37_996, 38_000),
-            (38_004, 38_068),
-            (110_604, 110_612),
-            (110_628, 110_632),
-            (120_468, 120_476),
-            (120_480, 122_786),
-            (194_512, 194_580),
-            (221_196, 221_204),
-            (221_212, 221_216),
-            (221_276, 224_016),
-            (273_824, 273_892),
-        ],
+        ) => (
+            1,
+            &[
+                (12, 20),
+                (28, 32),
+                (52, 5_524),
+                (37_996, 38_000),
+                (38_004, 38_068),
+                (110_604, 110_612),
+                (110_628, 110_632),
+                (120_468, 120_476),
+                (120_480, 122_786),
+                (194_512, 194_580),
+                (221_196, 221_204),
+                (221_212, 221_216),
+                (221_276, 224_016),
+                (273_824, 273_892),
+            ],
+        ),
         // BRTD467, slot 515.
         (
             83_968,
             331_788,
             131_534,
             "7478852c3c488a95220d88e748296f04e44f0001cd741b19ba7405592f56e22b",
-        ) => &[
-            (12, 20),
-            (28, 32),
-            (52, 5_524),
-            (37_996, 38_000),
-            (38_004, 38_068),
-            (110_604, 110_612),
-            (110_620, 110_624),
-            (110_680, 116_152),
-            (158_100, 158_168),
-            (221_196, 221_204),
-            (221_212, 221_216),
-            (221_276, 224_016),
-            (273_824, 273_892),
-        ],
+        ) => (
+            1,
+            &[
+                (12, 20),
+                (28, 32),
+                (52, 5_524),
+                (37_996, 38_000),
+                (38_004, 38_068),
+                (110_604, 110_612),
+                (110_620, 110_624),
+                (110_680, 116_152),
+                (158_100, 158_168),
+                (221_196, 221_204),
+                (221_212, 221_216),
+                (221_276, 224_016),
+                (273_824, 273_892),
+            ],
+        ),
         // BRTD478, slot 516.
         (
             81_920,
             331_788,
             169_202,
             "e483530c86f92c5773f595aa0efd2048f9550bab209652826fdf645c8919cde2",
-        ) => &[
-            (12, 20),
-            (28, 32),
-            (52, 5_524),
-            (37_996, 38_000),
-            (38_004, 38_068),
-            (110_604, 110_612),
-            (110_620, 110_624),
-            (110_684, 113_424),
-            (163_232, 163_300),
-            (221_196, 221_204),
-            (221_216, 221_220),
-            (224_008, 224_016),
-            (224_020, 225_445),
-            (298_152, 298_220),
-        ],
+        ) => (
+            1,
+            &[
+                (12, 20),
+                (28, 32),
+                (52, 5_524),
+                (37_996, 38_000),
+                (38_004, 38_068),
+                (110_604, 110_612),
+                (110_620, 110_624),
+                (110_684, 113_424),
+                (163_232, 163_300),
+                (221_196, 221_204),
+                (221_216, 221_220),
+                (224_008, 224_016),
+                (224_020, 225_445),
+                (298_152, 298_220),
+            ],
+        ),
         // BRTU247, slot 517.
         (
             83_968,
             368_652,
             163_748,
             "baa3b5279e41b88d1c2a6ff0ce8a0186201517232e4d5e25164f179e1ed72d08",
-        ) => &[
-            (12, 20),
-            (28, 56),
-            (60, 23_324),
-            (23_328, 29_858),
-            (29_860, 29_868),
-            (29_872, 36_801),
-            (36_804, 36_812),
-            (36_816, 40_156),
-            (40_160, 43_028),
-            (43_032, 45_585),
-            (53_792, 66_088),
-            (66_092, 66_100),
-            (66_104, 74_051),
-            (74_052, 74_060),
-            (74_064, 80_545),
-            (80_548, 80_556),
-            (80_560, 84_594),
-            (84_596, 87_416),
-            (147_468, 147_476),
-            (147_484, 158_460),
-            (158_464, 161_182),
-            (161_184, 161_192),
-            (161_196, 167_863),
-            (167_864, 167_872),
-            (167_876, 176_485),
-            (176_488, 176_496),
-            (176_500, 185_036),
-            (185_040, 185_104),
-            (258_060, 258_068),
-            (258_076, 263_628),
-            (263_632, 265_695),
-            (265_696, 265_704),
-            (265_708, 269_496),
-            (269_500, 276_103),
-            (276_104, 276_112),
-            (276_116, 282_626),
-            (282_628, 282_636),
-            (282_640, 285_040),
-            (285_044, 286_415),
-            (286_416, 286_424),
-            (286_428, 287_258),
-            (287_260, 287_268),
-            (287_272, 288_660),
-            (288_664, 294_936),
-            (294_940, 296_960),
-            (296_964, 301_882),
-            (301_884, 301_892),
-            (301_896, 306_438),
-            (306_440, 306_448),
-            (306_452, 306_951),
-            (306_952, 307_020),
-        ],
+        ) => (
+            2,
+            &[
+                (12, 20),
+                (28, 56),
+                (60, 23_324),
+                (23_328, 29_858),
+                (29_860, 29_868),
+                (29_872, 36_801),
+                (36_804, 36_812),
+                (36_816, 40_156),
+                (40_160, 43_028),
+                (43_032, 45_585),
+                (53_792, 66_088),
+                (66_092, 66_100),
+                (66_104, 74_051),
+                (74_052, 74_060),
+                (74_064, 80_545),
+                (80_548, 80_556),
+                (80_560, 84_594),
+                (84_596, 87_416),
+                (147_468, 147_476),
+                (147_484, 158_460),
+                (158_464, 161_182),
+                (161_184, 161_192),
+                (161_196, 167_863),
+                (167_864, 167_872),
+                (167_876, 176_485),
+                (176_488, 176_496),
+                (176_500, 185_036),
+                (185_040, 185_104),
+                (258_060, 258_068),
+                (258_076, 263_628),
+                (263_632, 265_695),
+                (265_696, 265_704),
+                (265_708, 269_496),
+                (269_500, 276_103),
+                (276_104, 276_112),
+                (276_116, 282_626),
+                (282_628, 282_636),
+                (282_640, 285_040),
+                (285_044, 286_415),
+                (286_416, 286_424),
+                (286_428, 287_258),
+                (287_260, 287_268),
+                (287_272, 288_660),
+                (288_664, 294_936),
+                (294_940, 296_960),
+                (296_964, 301_882),
+                (301_884, 301_892),
+                (301_896, 306_438),
+                (306_440, 306_448),
+                (306_452, 306_951),
+                (306_952, 307_020),
+            ],
+        ),
         // BRTU457, slot 518.
         (
             81_920,
             331_788,
             170_862,
             "45f75644733e12bde6badf26a49398e68f4699466e5ff41a0cea6b2662e952b6",
-        ) => &[
-            (12, 20),
-            (28, 11_004),
-            (11_008, 13_726),
-            (13_728, 13_736),
-            (13_740, 20_407),
-            (20_408, 20_416),
-            (20_420, 29_029),
-            (29_032, 29_040),
-            (29_044, 37_580),
-            (37_584, 37_648),
-            (110_604, 110_612),
-            (110_620, 110_628),
-            (110_632, 110_684),
-            (110_688, 118_606),
-            (118_608, 118_616),
-            (118_620, 120_927),
-            (123_248, 123_256),
-            (123_260, 125_909),
-            (125_912, 125_920),
-            (125_924, 128_136),
-            (128_140, 133_983),
-            (133_984, 133_992),
-            (133_996, 141_927),
-            (141_928, 141_936),
-            (141_940, 143_029),
-            (143_032, 143_040),
-            (143_044, 151_248),
-            (151_252, 157_851),
-            (157_852, 171_524),
-            (171_528, 171_923),
-            (171_924, 171_932),
-            (171_936, 180_650),
-            (180_652, 194_384),
-            (221_196, 221_204),
-            (221_212, 226_764),
-            (226_768, 228_831),
-            (228_832, 228_840),
-            (228_844, 232_632),
-            (232_636, 239_239),
-            (239_240, 239_248),
-            (239_252, 245_762),
-            (245_764, 245_772),
-            (245_776, 248_176),
-            (248_180, 249_551),
-            (249_552, 249_560),
-            (249_564, 250_394),
-            (250_396, 250_404),
-            (250_408, 251_796),
-            (251_800, 258_072),
-            (258_076, 260_096),
-            (260_100, 265_018),
-            (265_020, 265_028),
-            (265_032, 269_574),
-            (269_576, 269_584),
-            (269_588, 270_087),
-            (270_088, 270_156),
-        ],
+        ) => (
+            2,
+            &[
+                (12, 20),
+                (28, 11_004),
+                (11_008, 13_726),
+                (13_728, 13_736),
+                (13_740, 20_407),
+                (20_408, 20_416),
+                (20_420, 29_029),
+                (29_032, 29_040),
+                (29_044, 37_580),
+                (37_584, 37_648),
+                (110_604, 110_612),
+                (110_620, 110_628),
+                (110_632, 110_684),
+                (110_688, 118_606),
+                (118_608, 118_616),
+                (118_620, 120_927),
+                (123_248, 123_256),
+                (123_260, 125_909),
+                (125_912, 125_920),
+                (125_924, 128_136),
+                (128_140, 133_983),
+                (133_984, 133_992),
+                (133_996, 141_927),
+                (141_928, 141_936),
+                (141_940, 143_029),
+                (143_032, 143_040),
+                (143_044, 151_248),
+                (151_252, 157_851),
+                (157_852, 171_524),
+                (171_528, 171_923),
+                (171_924, 171_932),
+                (171_936, 180_650),
+                (180_652, 194_384),
+                (221_196, 221_204),
+                (221_212, 226_764),
+                (226_768, 228_831),
+                (228_832, 228_840),
+                (228_844, 232_632),
+                (232_636, 239_239),
+                (239_240, 239_248),
+                (239_252, 245_762),
+                (245_764, 245_772),
+                (245_776, 248_176),
+                (248_180, 249_551),
+                (249_552, 249_560),
+                (249_564, 250_394),
+                (250_396, 250_404),
+                (250_408, 251_796),
+                (251_800, 258_072),
+                (258_076, 260_096),
+                (260_100, 265_018),
+                (265_020, 265_028),
+                (265_032, 269_574),
+                (269_576, 269_584),
+                (269_588, 270_087),
+                (270_088, 270_156),
+            ],
+        ),
         // BRTU467, slot 519.
         (
             83_968,
             331_788,
             123_828,
             "a99542bf45778bf7f6ccd47334ef7e0808d4cd7b99e46a1133b59dd201a4868d",
-        ) => &[
-            (12, 20),
-            (28, 11_004),
-            (11_008, 13_726),
-            (13_728, 13_736),
-            (13_740, 20_407),
-            (20_408, 20_416),
-            (20_420, 29_029),
-            (29_032, 29_040),
-            (29_044, 37_580),
-            (37_584, 37_648),
-            (110_604, 110_612),
-            (110_620, 120_256),
-            (120_260, 121_644),
-            (121_648, 122_584),
-            (122_588, 123_327),
-            (123_328, 127_432),
-            (127_436, 127_444),
-            (127_448, 128_270),
-            (128_272, 137_848),
-            (137_852, 140_069),
-            (140_072, 140_080),
-            (140_084, 147_195),
-            (147_196, 147_204),
-            (147_208, 147_808),
-            (147_812, 152_376),
-            (152_380, 153_659),
-            (153_660, 153_668),
-            (153_672, 154_344),
-            (154_348, 154_933),
-            (154_936, 155_004),
-            (221_196, 221_204),
-            (221_212, 226_764),
-            (226_768, 228_831),
-            (228_832, 228_840),
-            (228_844, 232_632),
-            (232_636, 239_239),
-            (239_240, 239_248),
-            (239_252, 245_762),
-            (245_764, 245_772),
-            (245_776, 248_176),
-            (248_180, 249_551),
-            (249_552, 249_560),
-            (249_564, 250_394),
-            (250_396, 250_404),
-            (250_408, 251_796),
-            (251_800, 258_072),
-            (258_076, 260_096),
-            (260_100, 265_018),
-            (265_020, 265_028),
-            (265_032, 269_574),
-            (269_576, 269_584),
-            (269_588, 270_087),
-            (270_088, 270_156),
-        ],
+        ) => (
+            2,
+            &[
+                (12, 20),
+                (28, 11_004),
+                (11_008, 13_726),
+                (13_728, 13_736),
+                (13_740, 20_407),
+                (20_408, 20_416),
+                (20_420, 29_029),
+                (29_032, 29_040),
+                (29_044, 37_580),
+                (37_584, 37_648),
+                (110_604, 110_612),
+                (110_620, 120_256),
+                (120_260, 121_644),
+                (121_648, 122_584),
+                (122_588, 123_327),
+                (123_328, 127_432),
+                (127_436, 127_444),
+                (127_448, 128_270),
+                (128_272, 137_848),
+                (137_852, 140_069),
+                (140_072, 140_080),
+                (140_084, 147_195),
+                (147_196, 147_204),
+                (147_208, 147_808),
+                (147_812, 152_376),
+                (152_380, 153_659),
+                (153_660, 153_668),
+                (153_672, 154_344),
+                (154_348, 154_933),
+                (154_936, 155_004),
+                (221_196, 221_204),
+                (221_212, 226_764),
+                (226_768, 228_831),
+                (228_832, 228_840),
+                (228_844, 232_632),
+                (232_636, 239_239),
+                (239_240, 239_248),
+                (239_252, 245_762),
+                (245_764, 245_772),
+                (245_776, 248_176),
+                (248_180, 249_551),
+                (249_552, 249_560),
+                (249_564, 250_394),
+                (250_396, 250_404),
+                (250_408, 251_796),
+                (251_800, 258_072),
+                (258_076, 260_096),
+                (260_100, 265_018),
+                (265_020, 265_028),
+                (265_032, 269_574),
+                (269_576, 269_584),
+                (269_588, 270_087),
+                (270_088, 270_156),
+            ],
+        ),
         // BRTU478, slot 520.
         (
             81_920,
             331_788,
             166_017,
             "e42ef5798590f2dd63a854eab7f7875be0daa3fe900a75f96315f74bcff9200e",
-        ) => &[
-            (12, 20),
-            (28, 11_004),
-            (11_008, 13_726),
-            (13_728, 13_736),
-            (13_740, 20_407),
-            (20_408, 20_416),
-            (20_420, 29_029),
-            (29_032, 29_040),
-            (29_044, 37_580),
-            (37_584, 37_648),
-            (110_604, 110_612),
-            (110_620, 116_172),
-            (116_176, 118_239),
-            (118_240, 118_248),
-            (118_252, 122_040),
-            (122_044, 128_647),
-            (128_648, 128_656),
-            (128_660, 135_170),
-            (135_172, 135_180),
-            (135_184, 137_584),
-            (137_588, 138_959),
-            (138_960, 138_968),
-            (138_972, 139_802),
-            (139_804, 139_812),
-            (139_816, 141_204),
-            (141_208, 147_480),
-            (147_484, 149_504),
-            (149_508, 154_426),
-            (154_428, 154_436),
-            (154_440, 158_982),
-            (158_984, 158_992),
-            (158_996, 159_495),
-            (159_496, 159_564),
-            (221_196, 221_204),
-            (221_212, 221_240),
-            (221_244, 256_800),
-            (256_804, 260_928),
-            (260_932, 265_801),
-            (267_244, 267_252),
-            (267_256, 277_357),
-            (277_360, 277_368),
-            (277_372, 287_590),
-            (287_592, 287_600),
-            (287_604, 309_092),
-            (309_096, 309_942),
-            (309_944, 310_012),
-        ],
-        _ => &[],
+        ) => (
+            2,
+            &[
+                (12, 20),
+                (28, 11_004),
+                (11_008, 13_726),
+                (13_728, 13_736),
+                (13_740, 20_407),
+                (20_408, 20_416),
+                (20_420, 29_029),
+                (29_032, 29_040),
+                (29_044, 37_580),
+                (37_584, 37_648),
+                (110_604, 110_612),
+                (110_620, 116_172),
+                (116_176, 118_239),
+                (118_240, 118_248),
+                (118_252, 122_040),
+                (122_044, 128_647),
+                (128_648, 128_656),
+                (128_660, 135_170),
+                (135_172, 135_180),
+                (135_184, 137_584),
+                (137_588, 138_959),
+                (138_960, 138_968),
+                (138_972, 139_802),
+                (139_804, 139_812),
+                (139_816, 141_204),
+                (141_208, 147_480),
+                (147_484, 149_504),
+                (149_508, 154_426),
+                (154_428, 154_436),
+                (154_440, 158_982),
+                (158_984, 158_992),
+                (158_996, 159_495),
+                (159_496, 159_564),
+                (221_196, 221_204),
+                (221_212, 221_240),
+                (221_244, 256_800),
+                (256_804, 260_928),
+                (260_932, 265_801),
+                (267_244, 267_252),
+                (267_256, 277_357),
+                (277_360, 277_368),
+                (277_372, 287_590),
+                (287_592, 287_600),
+                (287_604, 309_092),
+                (309_096, 309_942),
+                (309_944, 310_012),
+            ],
+        ),
+        _ => return None,
     };
-    (
+    Some(BrtSpriteProfile {
+        family,
         fields,
-        "Original US BRTD/U247/457/467/478 entry-7 image and palette-zero fields. Exact archive, slot 513..520, physical LBA, entry geometry, mode, destination, checkword and payload identities. Conditional GAME family-1/2 publisher roots are copied from actor 0 to saved record 0 by original BATTLE entry-15 0x800A7C14, entered through JAL 0x800A69D4. Original 0x801E12DC queues mode 0/selector 12 and publishes the actor pointer; 0x801E5824/0x801E5AF4/0x801E7818 dispatch request 0x801E7948 and post-load 0x801E7BA0. Stable plain hint 7/13/14/15, flag 0x8000, saved active/status bits, finite byte-8 selectors, count one, actor index zero, valid nonaliased work and stats, unskipped successful loading, retained saved root/byte24 and ordinary noninterfering helpers are conditions. The post-load full-record copy restores the root and preserves request byte 8; JALs 0x801E8414/0x801E8438 reach SLUS image selection and palette index zero. Complete checked decompression requires every literal alias in the reviewed image-directory/header/encoding or palette relative-word/32-halfword union. Root-array words, unselected images, program/cell/selection fields, opaque prefixes and tails excluded. No natural state production, actual invocation, residency, upload, display, rasterized-text absence or safe-edit claim.",
-    )
+        evidence: "Original US BRTD/U247/457/467/478 entry-7 image and palette-zero fields. Exact archive, slot 513..520, physical LBA, entry geometry, mode, destination, checkword and payload identities. Conditional GAME family-1/2 publisher roots are copied from actor 0 to saved record 0 by original BATTLE entry-15 0x800A7C14, entered through JAL 0x800A69D4. Original 0x801E12DC queues mode 0/selector 12 and publishes the actor pointer; 0x801E5824/0x801E5AF4/0x801E7818 dispatch request 0x801E7948 and post-load 0x801E7BA0. Stable plain hint 7/13/14/15, flag 0x8000, saved active/status bits, finite byte-8 selectors, count one, actor index zero, valid nonaliased work and stats, unskipped successful loading, retained saved root/byte24 and ordinary noninterfering helpers are conditions. The post-load full-record copy restores the root and preserves request byte 8; JALs 0x801E8414/0x801E8438 reach SLUS image selection and palette index zero. Complete checked decompression requires every literal alias in the reviewed image-directory/header/encoding or palette relative-word/32-halfword union. Root-array words, unselected images, program/cell/selection fields, opaque prefixes and tails excluded. No natural state production, actual invocation, residency, upload, display, rasterized-text absence or safe-edit claim.",
+    })
 }
 
 fn model_decoded_nontext_fields(
     entry: Entry,
     data: &[u8],
 ) -> (&'static [(usize, usize)], &'static str) {
-    let brt = brt_decoded_nontext_fields(entry, data);
-    if !brt.0.is_empty() {
-        return brt;
+    if let Some(profile) = brt_decoded_nontext_fields(entry, data) {
+        return (profile.fields, profile.evidence);
     }
     if entry.index == 7
         && entry.offset == 174_080
@@ -9528,6 +9555,8 @@ const BPLD_SELECTED_SPRITE_EVIDENCE: &str = "Original US BPLD selector-0 program
 
 const BPL_FLAG_SPRITE_EVIDENCE: &str = "Original US BPL family-flag program and sprite-cell numeric fields; exact archive, entry geometry, mode, load, checkword and payload identities; GAME 0x80197B98 tests only flag bit 1 for family 1/2 and 0x801BF568 preserves the full flag as a below-128 selector when record mask 0x4000 is clear; byte 0x80146325=1 skips the unrelated coordinate lookup while retaining the request; original successful unskipped load, hint/triplet, slot/LBA supplier and phase-2/3 publisher bind each root separately with count 1 and work index 0; original D6B8/D6DC/DC08 and D910/DB98/D978 consume bounded selection triples, selected program fields, finite fetched pairs, redirect operands and cell-relative halfwords; the reviewed same-actor GAME and SLUS draw route to C4D4/CF9C consumes counted control, signed X/Y and unsigned U/V fields with initialized work+0x24=1, work+0x28=2, work+0x48=0 and retained mirror byte 0 or 1; stable flags, roots, work and code, clear record mask 0x0080, valid visible geometry, queue capacity, readable prefetch slots, ordinary noninterfering helper returns and bounded nonaliased frames/packets remain conditions; compressed literals require every decoded alias in the reviewed image/program/palette/selected-cell/family-flag union, with every earlier classification and evidence preserved; header byte zero, unfetched high-bit predicates, invalid triples/walks, other programs/cells, allocation tails and opaque part bits 0x70 remain unqualified; no natural flag or state production, actual request, invocation, loading, cadence, residency, transfer, display, rasterized-text absence or safe-edit claim";
 
+const BRT_SPRITE_EVIDENCE: &str = "Original US BRT finite program and sprite-cell numeric fields; exact archive, entry geometry, mode, load, checkword and payload identities under the reviewed BRT slot/LBA and saved-root bindings; original post-load 0x801E7BA0 restores the actor, preserves request byte 8 and selects (byte8+4)&255 through 0x8014D6B8; only bounded below-128 selections, family-D request bytes below 2 or family-U bytes at least 2, and mirror bytes 0/1 qualify; original queued completion 0x801E8558 raises actor+0x40 from zero to 0x10000, then clears actor+0x48 and record+0x124 bit 0x2000; original actor dispatcher 0x801DECE0 and finite table cells carry state 6/4/4/1 through 0x801E13B8 to states 2 then 3; with flags+0x80=0, record+0x119=0, record+0x124 bits 2/0x1000 clear, globals 0x801462E0/0x801462EF/0x801463CE zero and 0x801462E8 bit 0x10 clear, 0x801DEFE4 requests the unchanged selector and the stable state-3 loop reaches 0x801DEDE4 and D978 on the same actor; original D910/DB98/D978 qualify finite fetched pairs, redirect operands and cell-relative halfwords; the reviewed same-actor GAME and SLUS draw route to C4D4/CF9C consumes counted control, signed X/Y and unsigned U/V with active work, work+0x24=1, work+0x28=2, work+0x48=0 and retained mirror 0/1; stable code, bank, roots and work, other actors inactive, ordinary noninterfering helpers, valid visible geometry, readable prefetch slots and bounded nonaliased frames, queues and packets remain conditions; compressed literals require every decoded alias in the previous reviewed image/palette or finite selected-field union and preserve previous evidence; unread BRT root-array words, program header byte zero, unfetched predicates, invalid triples/walks, other programs/cells, tails and opaque control bits 0x70 remain unqualified; no natural state or selector production, actual invocation, loading, cadence, residency, transfer, display, rasterized-text absence or safe-edit claim";
+
 fn bpl_selected_sprite_profile(entry: Entry, data: &[u8]) -> Option<(u8, &'static str)> {
     if entry.transfer_mode != 1 || entry.ram_ptr != 0x8003_b800 || entry.size as usize != data.len()
     {
@@ -9918,11 +9947,20 @@ fn bpl_selected_sprite_fields(data: &[u8], selector: u8) -> Option<Vec<(usize, u
 
 /// The loader consumes flag bit 1; below-128 reselection preserves the other bits.
 fn bpl_flag_sprite_fields(data: &[u8], family_flag: u8) -> Option<Vec<(usize, usize)>> {
+    let mut fields = sprite_selector_fields(data, |selector| selector & 2 == family_flag)?;
+    fields.push((0, 12));
+    Some(merge_bpl_sprite_fields(fields))
+}
+
+fn sprite_selector_fields(
+    data: &[u8],
+    accepts_selector: impl Fn(u8) -> bool,
+) -> Option<Vec<(usize, usize)>> {
     let roots = bpl_sprite_roots(data)?;
     let word = |at: usize| {
         Some(u32::from_le_bytes(data.get(at..at.checked_add(4)?)?.try_into().ok()?) as usize)
     };
-    let mut fields = vec![(0, 12)];
+    let mut fields = Vec::new();
     for (ordinal, &root) in roots.iter().enumerate() {
         let root_end = roots.get(ordinal + 1).copied().unwrap_or(data.len());
         let image = root.checked_add(word(root)?)?;
@@ -9937,7 +9975,7 @@ fn bpl_flag_sprite_fields(data: &[u8], family_flag: u8) -> Option<Vec<(usize, us
         }
         let before = fields.len();
         for selector in 0_u8..128 {
-            if selector & 2 != family_flag {
+            if !accepts_selector(selector) {
                 continue;
             }
             let selection = selections.checked_add(3 * usize::from(selector))?;
@@ -9999,7 +10037,9 @@ fn compression_metadata_ranges(
         evidence,
     }];
     let selected_profile = bpl_selected_sprite_profile(entry, data);
+    let brt_profile = brt_decoded_nontext_fields(entry, data);
     let track_literals = selected_profile.is_some()
+        || brt_profile.is_some()
         || !literal_fields.is_empty()
         || !additional_fields.is_empty()
         || !program_fields.is_empty();
@@ -10108,6 +10148,20 @@ fn compression_metadata_ranges(
             }
         }
     }
+    let expanded_sprite_evidence = if let Some(profile) = brt_profile {
+        if let Some(fields) = sprite_selector_fields(&decoded_bytes, |selector| {
+            (selector.wrapping_sub(4) < 2) == (profile.family == 1)
+        }) {
+            for (start, end) in fields {
+                for role in typed.get_mut(start..end)? {
+                    *role |= 32;
+                }
+            }
+        }
+        BRT_SPRITE_EVIDENCE
+    } else {
+        BPL_FLAG_SPRITE_EVIDENCE
+    };
     let mut literal_roles = vec![None; if track_literals { data.len() } else { 0 }];
     for (&origin, &known) in origins.iter().zip(&typed) {
         let role = literal_roles.get_mut(origin)?;
@@ -10131,7 +10185,7 @@ fn compression_metadata_ranges(
         } else if role & 16 != 0 {
             selected_profile?.1
         } else {
-            BPL_FLAG_SPRITE_EVIDENCE
+            expanded_sprite_evidence
         };
         let start = at;
         while at < literal_roles.len() && literal_roles[at] == Some(role) {

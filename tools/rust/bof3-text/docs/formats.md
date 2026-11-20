@@ -970,6 +970,48 @@ These are conditional source uses. Natural state and selector production,
 actual requests, invocation, residency, transfer, upload, display,
 rasterized-text absence and safe editing remain unverified.
 
+## BRT program and cell fields
+
+The exact BRT profiles above also qualify finite program and counted-cell
+fields. The original post-load handler preserves request byte 8 and selects
+`(byte8 + 4) & 255`. D requests require byte 8 below 2; U requests require
+it at least 2. Only selectors below 128 with an in-root selection triple,
+valid image and program indices, mirror byte 0 or 1, complete cell allocations
+and a bounded fetch walk qualify. Other cases remain unresolved.
+
+The post-load actor initially has state bytes `6,4,4,1`, horizontal scale zero
+and work byte `+0x48 = 2`. Queued handler `0x801E8558` adds `0x2000` to
+scale `+0x40` until it reaches `0x10000`. Its next call clears `+0x48`
+and record `+0x124` bit `0x2000`. Root and program pointers remain intact.
+Actor dispatcher `0x801DECE0` publishes that actor as the scratch work and
+global local work. Original table cells at `0x801EB138`, `0x801EB1CC`,
+`0x801EB204` and `0x801EB214` carry the waiting state to `0x801E13B8`,
+which then sets state `2,0,0,0`.
+
+The finite continuing case requires record flags `+0x80 = 0`, byte
+`+0x119 = 0`, record `+0x124` bits `2/0x1000` clear, globals
+`0x801462E0`, `0x801462EF` and `0x801463CE` zero, and global halfword
+`0x801462E8` bit `0x10` clear. State 2 calls `0x801DEFE4`, whose request
+matches the retained selector. Original `0x8014D8D4` therefore leaves the
+program unchanged. State 3's byte-2 handler does nothing with the selection
+gate clear. The state remains stable and calls `0x801DEDE4`, which reaches
+`0x8014D978` on the same actor. Its finite walk uses the shared program readers.
+
+After the completion handler clears scaling mode, counted parts use the
+[reviewed BPL draw route](#selected-bpld-program-and-cell-fields), with active
+work, retained `+0x24 = 1`, palette mode `+0x28 = 2` and mirror byte 0 or 1.
+Other actors must be inactive. Code, bank, roots and work must remain stable;
+helpers must return without changing them. Visible geometry, readable list
+prefetch slots and bounded nonaliased frames, queues and packets remain required.
+
+Every compressed literal alias must belong to the earlier image/palette fields
+or the finite selected-field union. Earlier evidence stays unchanged. The BRT
+root-array words remain unresolved because this route restores saved pointers.
+Program header byte zero, unfetched predicates, allocation tails and opaque
+part bits `0x70` also remain unqualified. These conditional source uses establish
+no natural state or selector production, actual invocation, loading, cadence,
+residency, display, absence of rasterized text or safe editing.
+
 ## Compressed BPLU27A image fields
 
 Coverage recognizes image fields in original US `BIN/BPLCHAR/BPLU27A.EMI`
