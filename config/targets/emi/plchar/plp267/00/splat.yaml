@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801CEAE0
   - - 2044
-    - asm
-    - func_801CEBFC
+    - c
+    - dispatchWorkByte2Table099cPlcharPlp26700_801CEBFC
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table099cPlcharPlp26700_801CEBFC.c'
+    - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801D099C.'
   - - 2112
     - asm
     - func_801CEC40

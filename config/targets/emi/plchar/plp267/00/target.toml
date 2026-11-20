@@ -31,6 +31,7 @@ sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp26700_801CFF1C.c",
     "src/bof3/plchar/claimFrontEndRecordForMapCodesF0F1F4F6F7WithRandomStateElseStageItemNameStream29CueThenSetWorkByteBPlcharPlp26700_801CF420.c",
     "src/bof3/plchar/dispatchWorkByte2Table0994PlcharPlp26700_801CE610.c",
+    "src/bof3/plchar/dispatchWorkByte2Table099cPlcharPlp26700_801CEBFC.c",
 ]
 support_sources = [
     "src/bof3/plchar/dispatchWorkByte2HandlerPlcharPlp26700_801CEE28.c",

@@ -73,8 +73,10 @@ segments:
     - '@source: src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp01200_801CEFF8.c'
     - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01200_801CE770 in this payload: it projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1, then probes the map code of the projected cell through func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2, and returns that answer as an unsigned byte without taking arguments.'
   - - 3372
-    - asm
-    - func_801CF12C
+    - c
+    - dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefd98PlcharPlp01200_801CF12C.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x801CFD98 with no arguments, discarding any result. That base is entry 6 of the sixteen-word handler run at 0x801CFD80, so index 0 reaches 0x801CF170 and the entries it can reach are 0x801CF170, 0x801CF23C, the shared main-executable handler 0x801B2D54, 0x801CF37C, 0x801CF494, 0x801CF500, 0x801CF610, 0x801B2D54, 0x801CF750 and 0x801CF938. The original does not bound the index before the scaled table load. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. No jal in this payload names it: the loader enters it through the word 0x801CF12C at 0x801CFDC4, entry 1 of the six-word pointer run at 0x801CFDC0, which the sibling halfword-0x2C dispatcher at 0x801CFCF8 indexes from that run base, so it takes no arguments.'
   - - 3440
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01200_801CF170

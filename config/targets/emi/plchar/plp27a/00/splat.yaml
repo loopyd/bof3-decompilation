@@ -27,8 +27,10 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchWorkByte2Tablef900PlcharPlp27a00_801CE404
+    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef900PlcharPlp27a00_801CE404.c'
+    - '@behavior: Overlay step dispatch on the work-record byte 0x02 read through the scratchpad pointer cell 0x1F800044: the body loads that record pointer once, scales its unsigned byte 2 by four and calls the matching entry of this payload handler run based at 0x801CF900 with no arguments, discarding any result; the index is not bounded before the scaled table load and the run base 0x801CF900 is entry 0, 0x801CE448. It reads no other state and writes none, the pointer-cell load precedes frame creation, and the 0x18-byte frame keeps only $ra at 0x10 across the indirect call.'
   - - 72
     - c
     - pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27a00_801CE448

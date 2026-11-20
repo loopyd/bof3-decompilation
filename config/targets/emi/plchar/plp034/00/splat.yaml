@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801CF23C
   - - 3896
-    - asm
-    - func_801CF338
+    - c
+    - dispatchWorkByte2Table0318PlcharPlp03400_801CF338
+    - '@source: src/bof3/plchar/dispatchWorkByte2Table0318PlcharPlp03400_801CF338.c'
+    - '@behavior: Overlay step dispatch on the work record unsigned byte at offset 0x02 from the interior base 0x801D0318, entry 9 of the twenty-eight-word handler run at 0x801D02F4. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of the run based at 0x801D0318 with no arguments, discarding any result, and it does not bound the index before the scaled table load. The entry at that base is this payload byte-3 dispatcher dispatchWorkByte3Table0320PlcharPlp03400_801CF37C. It reads no other state and writes none. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps the return address at 0x10 across the indirect call, and the slot after the index byte and the slot after the table load stay nops. No jal in this payload names the body; its address appears once, as the word 0x801CF338 at 0x801D035C, entry 26 of the run and index 17 of the run based at 0x801D0318, so the overlays enter the body itself from outside the payload. It takes no arguments and returns no value.'
   - - 3964
     - c
     - dispatchWorkByte3Table0320PlcharPlp03400_801CF37C

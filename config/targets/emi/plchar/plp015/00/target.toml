@@ -11,6 +11,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablefb84PlcharPlp01500_801CE404.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefb90PlcharPlp01500_801CE72C.c",
     "src/bof3/plchar/dispatchWorkByte2Tablefb9cPlcharPlp01500_801CF12C.c",
+    "src/bof3/plchar/dispatchWorkByte2Tablefba8PlcharPlp01500_801CF338.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp01500_801CE770.c",
