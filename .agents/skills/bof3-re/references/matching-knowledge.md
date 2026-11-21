@@ -2340,7 +2340,9 @@ preferences; inspect the entry and complete register web before the native gate.
 Distinguish initially ready instructions from newly released predecessors in the
 backward scheduler. A single-definition destination does not alone prove a birth
 boost. At equal priority and dependence class, GCC 2.7.2 uses stable instruction
-order. Moving an existing pure binding across tied initializations can change
+order. GCC 2.7.2 then checks potential hazards and can override that order.
+Follow the ready list through hazard selection before predicting a changed
+lifetime. Moving an existing pure binding across tied initializations can change
 which predecessor is released first. The second schedule rebuilds that order from
 the first schedule's output. Verify both ready queues, the complete register web
 and the native gate before retaining an order change.
