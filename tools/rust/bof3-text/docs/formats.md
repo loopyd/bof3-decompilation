@@ -792,6 +792,42 @@ and an exact SDK data-object match remain unproved. Neighboring storage retains
 its prior classification; audio behavior and mathematical output correctness
 are not established.
 
+## Text-command instruction coverage
+
+The exact original SLUS identity also qualifies these complete bodies. Each
+entry has an original JAL. Review includes every raw word, structural branch
+and control-transfer delay. Ends are exclusive.
+
+| Runtime interval | Original JAL |
+| --- | --- |
+| `[0x8014F800,0x8014F84C)` | `0x80150738` |
+| `[0x80150470,0x801507BC)` | `0x80150448` |
+| `[0x80151E24,0x801522F8)` | `0x801506C8` |
+| `[0x8017C1E4,0x8017C268)` | `0x8014C680` |
+
+The dispatcher at `0x80150470` qualifies the 23 address words at
+`[0x80149A00,0x80149A5C)`, whole-file `[0xB3A00,0xB3A5C)`.
+LBU at `0x80150510`, SLTIU at `0x80150518` and BEQZ at `0x8015051C`
+guard the scaled load at `0x8015052C` and JR at `0x80150534`.
+All 23 words select one of 13 aligned targets inside the dispatcher.
+The loop backedge at `0x80150784` advances its source in the delay word;
+termination, operand bounds and active-bank identity remain unproved.
+
+The wrapper at `0x8014F800` forwards its source argument without reading text
+bytes. Reader `0x80151E24` preserves the incoming pointer in `S1` and repeatedly
+loads its byte without advancing that pointer. A byte of `0xFF` skips emission
+but still advances the 16-bit coordinate by the stored width. This body has no
+NUL-termination check. These instructions do not establish glyph identity, an
+editable alphabet or the extent of the selector-indexed byte table.
+
+The two calls from the dispatcher require that parent body. Ordinary external
+returns, valid nonaliasing memory, intact frames and stable code and tables
+remain conditions. The 112 bytes after `0x8017C268`, other neighboring storage,
+referenced data and callee effects retain their prior status. These rules
+establish stored instructions and numeric jump targets. They do not establish
+observed invocation, pointer lifetimes, feasible paths, resource safety, display
+or safe editing.
+
 ## Further direct-call instruction coverage
 
 The following bodies use the exact GAME and shared battle identities under
