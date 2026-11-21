@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v51";
+pub const SCHEMA: &str = "bof3.inline-text/v52";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -631,12 +631,12 @@ impl Allocation {
         }
     }
 
-    const fn glyphs(address: u32, capacity: usize) -> Self {
+    const fn glyphs(address: u32, capacity: usize, renderers: &'static [u32]) -> Self {
         Self {
             address,
             capacity,
             references: &[],
-            renderers: &[0x8014f800],
+            renderers,
             codec: Codec::GameGlyphs,
         }
     }
@@ -1838,16 +1838,16 @@ const LAYOUTS: &[Layout] = &[
         name: "US battle messages",
         load: 0x801d0c00,
         size: 118224,
-        sha256: "af7fa06e57f9d420f3486607e7e82e23faaba5e39391d150c43ef3ac3f1d0b29",
+        sha256: "439fb60afb8960f097edade76c6186b530c652f5e489a89b2d47dcfbacd96ec9",
         consumers: &[
             0x801de94c, 0x801de560, 0x801deaa4, 0x801deac4, 0x801e9538, 0x801d9524, 0x801d9544,
             0x801d96cc,
         ],
         // Indexed records and direct code references, rather than a pointer table.
-        // Row 1 appends at most five encoded bytes. Row 3 remains unsupported.
+        // Glyph rows reserve one NUL byte and preserve seven record-padding bytes.
         allocations: &[
             Allocation::literal(0x801eb000, 13, &[], &[0x8014f800]),
-            Allocation::glyphs(0x801eb00d, 6),
+            Allocation::glyphs(0x801eb00d, 6, &[0x8014f800]),
             Allocation::literal(0x801eb01a, 13, &[], &[0x8014f800]),
             Allocation::literal(0x801eb034, 13, &[], &[]),
             Allocation::literal(0x801eb041, 13, &[], &[]),
@@ -1860,6 +1860,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0c70, 2, Codec::AsciiDigitGlyphLiteral, &[0x801d94d4]),
             Allocation::bounded_format(0x801d0c74, 4, Codec::AsciiU16DecimalFormat, &[0x801d94d4]),
             Allocation::bounded_format(0x801d0c78, 4, Codec::AsciiU16DecimalFormat, &[0x801d9684]),
+            Allocation::glyphs(0x801eb027, 6, &[]),
         ],
     },
 ];

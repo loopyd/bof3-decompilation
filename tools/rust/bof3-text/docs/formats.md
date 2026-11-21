@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v51`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v52`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3306,7 +3306,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v51` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v52` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3792,6 +3792,12 @@ Row 4, `Defend` at `0x801EB034`, and row 5, `Charge` at `0x801EB041`, use
 is qualified. Preserve their `renderers: []`. Natural selectors, message
 publication and rendering remain unverified for these two rows.
 
+Row 3 at `0x801EB027` uses `game-glyphs` within six bytes, including NUL.
+Its original text is ` {glyph(0x1F)}{glyph(0x20)}`. The indexed consumer can
+copy this row within its twelve-byte bound. Edits permit at most five encoded
+bytes and preserve the seven remaining record bytes. Keep `renderers: []`;
+the actual selector, publication, rendering and icon identities remain unverified.
+
 Row 1 at `0x801EB00D` uses `game-glyphs` and a six-byte allocation, including NUL.
 It accepts at most five encoded bytes and preserves the remaining seven record
 bytes. A nonzero latch selects this append at `0x801DEAA4`, after a five-byte
@@ -3806,7 +3812,7 @@ These records use the same schema and source-binding rules. Their `references` a
 empty because their consumers use indexed records or code references rather
 than a pointer table. Recognition pins those instructions outside the editable
 fields. Document `index` identifies the supported allocation, not its original
-table row. Command-bearing row 3 remains outside this layout's editable allocations.
+table row.
 
 The same BATTLE layout exposes three ASCII allocations for its digit-sprite
 renderers. Identical payload copies in other US archives use local entry indices.

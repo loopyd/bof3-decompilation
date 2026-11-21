@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v51`.
+`bof3.inline-text/v52`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +196,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v51`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v52`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -373,12 +373,13 @@ price suffix; Sell quantity previews verify the edited price and total suffixes.
 Other quantity paths, larger quantities, purchase effects and sale effects remain
 unverified.
 Corpus export includes these documents alongside bank documents.
-Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
-five encoded bytes. BATTLE rows 4 and 5, `Defend` and `Charge`, use `game-literal`
+Battle rows 1 and 3 accept `{glyph(0xNN)}`, with a nonzero operand and at most
+five encoded bytes plus NUL. Preserve each record's other seven bytes.
+BATTLE rows 4 and 5, `Defend` and `Charge`, use `game-literal`
 with thirteen-byte allocations, including NUL. Preserve their `renderers: []`;
 only the indexed bounded copy is qualified. Natural selectors, message
-publication and rendering remain unverified for these rows. Command-bearing
-row 3 remains unsupported.
+publication and rendering remain unverified for rows 3, 4 and 5. Row 3 also
+retains `renderers: []`; its icon identities remain unverified.
 BATTLE entry 3 also exposes two digit-sprite decimal formats and their fallback.
 Decimal rows retain one unsigned sixteen-bit argument, at most three encoded
 bytes and five formatted bytes. The one-byte `ascii-digit-glyph-literal` fallback

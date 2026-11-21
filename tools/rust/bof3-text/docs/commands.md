@@ -195,7 +195,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v51`. An omitted layout selector fails before
+labels through `bof3.inline-text/v52`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -209,7 +209,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v51` document with ten counted labels, eight default names,
+`bof3.inline-text/v52` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels, fifteen fixed-width settings fields,
@@ -263,19 +263,20 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v51`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v52`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
 The latter hold three, one and one glyphs plus NUL. Retain each row's renderer,
 codec and references; see [inline formats](formats.md#inline-overlay-text).
 The original BATTLE archive also has supported message records in entry 3.
-Use `--entry 3` to extract its fourteen allocations. Re-extract older documents.
-Its appended row 1 permits literals and `{glyph(0xNN)}` within five encoded bytes.
+Use `--entry 3` to extract its fifteen allocations. Re-extract older documents.
+Rows 1 and 3 permit literals and `{glyph(0xNN)}` within five encoded bytes,
+followed by NUL. The other seven bytes of each record stay protected.
 Rows 4 and 5, `Defend` and `Charge`, accept twelve literal bytes plus NUL.
-Preserve their `renderers: []`; only the indexed bounded copy is qualified.
+Preserve `renderers: []` for rows 3, 4 and 5; only the indexed bounded copy is qualified.
 Natural selectors, message publication and rendering remain unverified for
-these rows. Command-bearing row 3 remains unsupported.
+these rows. Row 3's icon identities also remain unverified.
 SISYOU entry 0 supports four master-menu stat labels,
 the status labels `Pois` and `Conf`, and three ASCII numeric formats; select it
 with `--entry 0`. See [formats.md](formats.md#inline-overlay-text).
@@ -486,7 +487,7 @@ Retain renderer `0x8014F800` through system-bank row 162's slot-zero expansion.
 Active-bank publication and observed output remain unverified. Empty
 `ascii-format-literal` replacements are refused to prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v51`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v52`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.
