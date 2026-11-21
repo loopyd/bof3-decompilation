@@ -9,6 +9,7 @@ load_address = 0x800C1800
 
 sources = [
     "src/bof3/boss/drawWorkHalfword20FrameThenAdvanceWord20ByTwoAndSetStateByte3To3WhenWord20Reaches56BossBoss01216_800C1A24.c",
+    "src/bof3/boss/setStateByte3To1WhenHelperReturnsNonzeroBossBoss01216_800C193C.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01216_800C1B18.c",

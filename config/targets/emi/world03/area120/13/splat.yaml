@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2C5C
   - - 180
-    - asm
-    - func_801F2CB4
+    - c
+    - step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4
+    - '@source: src/bof3/world/step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4.c'
+    - '@behavior: Step 1 of the run dispatched through the handler table at 0x801F43C0, whose second pointer word names this body. It runs four consecutive claims through the target-local claim pass at 0x801F3630 and then the target-local effect sweep at 0x801F36B0, ignoring every result, then decrements the unsigned halfword at +0x32 of the work record published through the scratchpad pointer cell 0x1F800044 and stores the decremented value back: while that halfword reads non-zero the handler returns. On the frame it reaches zero the handler stores 1 into work record byte +0x06, the byte the sweep reads as its state step, reads the pointer cell again, refills the halfword at +0x32 with 0x3C and advances work record byte 0x01 by one, which sends the next frame to entry 2 of the same table, the handler at 0x801F2D40. Takes no arguments and returns nothing.'
   - - 320
     - c
     - step2Cue203And202SetWorkByte6To2AndAdvanceWorkByte1WhenScenarioProgress11World03Area12013_801F2D40
@@ -78,7 +80,7 @@ segments:
     - c
     - claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630
     - '@source: src/bof3/world/claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630.c'
-    - '@behavior: Effect-record claim pass of the 0x100 entries of the 0x1C-byte-stride effect table at 0x800E4800, the work area this overlay shares with the world and scenario overlays. It takes the first entry whose lead byte at offset 0 reads zero by writing 1 into that byte, clearing the state byte at +0x02, copying this overlay''s alternating direction byte at 0x801F43E4 into the entry byte +0x03 and then flipping that byte, so consecutive claims alternate. The countdown byte at +0x01 and every word of the entry keep their values. It calls nothing, takes no arguments and returns nothing; the four consecutive calls at 0x801F2CBC, 0x801F2CC4, 0x801F2CCC and 0x801F2CD4 inside func_801F2CB4 read no result. A 0x100 bound on an unsigned 16-bit counter is the loop back edge, and the 0x80-byte body carries no frame and no saved register.'
+    - '@behavior: Effect-record claim pass of the 0x100 entries of the 0x1C-byte-stride effect table at 0x800E4800, the work area this overlay shares with the world and scenario overlays. It takes the first entry whose lead byte at offset 0 reads zero by writing 1 into that byte, clearing the state byte at +0x02, copying this overlay''s alternating direction byte at 0x801F43E4 into the entry byte +0x03 and then flipping that byte, so consecutive claims alternate. The countdown byte at +0x01 and every word of the entry keep their values. It calls nothing, takes no arguments and returns nothing; the four consecutive calls at 0x801F2CBC, 0x801F2CC4, 0x801F2CCC and 0x801F2CD4 inside step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4 read no result. A 0x100 bound on an unsigned 16-bit counter is the loop back edge, and the 0x80-byte body carries no frame and no saved register.'
   - - 2736
     - c
     - advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0

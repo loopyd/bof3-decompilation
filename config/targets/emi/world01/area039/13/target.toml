@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C.c",
     "src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c",
     "src/bof3/world/queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C.c",
+    "src/bof3/world/queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54.c",
 ]
 support_sources = [
     "src/bof3/world/setSharedByteZeroIfByte80144F5AFourElseOneWorld01Area03913_801F2F94.c",

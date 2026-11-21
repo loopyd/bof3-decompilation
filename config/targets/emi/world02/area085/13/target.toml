@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c",
     "src/bof3/world/advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C.c",
     "src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c",
+    "src/bof3/world/decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkByte6ClearWorkByte92World02Area08513_801F38D0.c",

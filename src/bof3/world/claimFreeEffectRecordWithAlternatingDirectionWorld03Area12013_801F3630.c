@@ -42,7 +42,9 @@ typedef struct Area12013EffectRecord {
  *           path to the bare return. The claim path leaves the flipped byte in
  *           $v0; the payload's only call sites, the four consecutive jal
  *           instructions at 0x801F2CBC, 0x801F2CC4, 0x801F2CCC and 0x801F2CD4
- *           inside func_801F2CB4, read no result, so the body returns nothing.
+ *           inside
+ *           step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4,
+ *           read no result, so the body returns nothing.
  * @status exact
  * @match 100.00
  * @residual none

@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F3524
   - - 2396
-    - asm
-    - func_801F355C
+    - c
+    - findWorkPositionBoundsIndexWorld04Area16913_801F355C
+    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area16913_801F355C.c'
+    - '@behavior: Overlay query: reads the two position words (+0x34 and +0x38) of the 0x140-byte-stride local work record selected by the byte argument, then walks the two five-byte bounds records of the table at 0x801F3B9C and returns the index of the first record whose byte bounds contain both words, or 0xFF when none does. Takes one byte argument, uses no stack frame and makes no calls.'
   - - 2600
     - asm
     - func_801F3628

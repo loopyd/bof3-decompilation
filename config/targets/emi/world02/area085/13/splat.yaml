@@ -41,8 +41,10 @@ segments:
     - '@source: src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c'
     - '@behavior: Entry 1 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero raises the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 368
-    - asm
-    - func_801F2D70
+    - c
+    - decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70
+    - '@source: src/bof3/world/decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70.c'
+    - '@behavior: Entry 2 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero lowers the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 556
     - c
     - advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C

@@ -23,6 +23,7 @@ sources = [
     "src/bof3/scenario/startActionZeroLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F92EC.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F74EC.c",
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState0CScenarioScena0500_801FCB80.c",
+    "src/bof3/scenario/startAction26LatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801F8C1C.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0500_801F73F8.c",
