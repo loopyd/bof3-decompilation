@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7ce633ee125883a732f53165c7183ce3b2ae833c",
-  "published_at": "2026-11-21T14:47:01.653940+00:00",
+  "revision": "86aee5f9aaa23e0ae2bc6ba64bd2eaba806d2329",
+  "published_at": "2026-11-21T15:19:39.673780+00:00",
   "counts": {
-    "completed": 6674,
+    "completed": 6684,
     "partial": 348,
-    "unlifted": 3415,
+    "unlifted": 3405,
     "invalid": 0,
     "total": 10437,
     "symbols": {
-      "named": 6906,
-      "raw": 4659,
+      "named": 6916,
+      "raw": 4649,
       "total": 11565
     }
   },
@@ -16931,14 +16931,14 @@
       "family": "bmagic",
       "archive": "magic017",
       "entry": "03",
-      "completed": 10,
+      "completed": 11,
       "partial": 2,
-      "unlifted": 4,
+      "unlifted": 3,
       "invalid": 0,
       "total": 16,
       "symbols": {
-        "named": 13,
-        "raw": 4,
+        "named": 14,
+        "raw": 3,
         "total": 17
       },
       "binary": {
@@ -17057,13 +17057,13 @@
           {
             "start": 1608,
             "end": 1792,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149511752,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38AndSubtract4FromTintTripletThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF248.c#L47"
               }
             ]
           },
@@ -38771,14 +38771,14 @@
       "family": "bmagic",
       "archive": "magic120",
       "entry": "03",
-      "completed": 10,
+      "completed": 11,
       "partial": 1,
-      "unlifted": 16,
+      "unlifted": 15,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 11,
-        "raw": 17,
+        "named": 12,
+        "raw": 16,
         "total": 28
       },
       "binary": {
@@ -39053,13 +39053,13 @@
           {
             "start": 5568,
             "end": 5668,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149515712,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/invokeHelper08ACThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic12003_801F01C0.c#L30"
               }
             ]
           },
@@ -52920,14 +52920,14 @@
       "family": "boss",
       "archive": "boss012",
       "entry": "16",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 7,
+      "unlifted": 6,
       "invalid": 0,
       "total": 18,
       "symbols": {
-        "named": 11,
-        "raw": 8,
+        "named": 12,
+        "raw": 7,
         "total": 19
       },
       "binary": {
@@ -53027,13 +53027,13 @@
           {
             "start": 548,
             "end": 656,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148276772,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/drawWorkHalfword20FrameThenAdvanceWord20ByTwoAndSetStateByte3To3WhenWord20Reaches56BossBoss01216_800C1A24.c#L54"
               }
             ]
           },
@@ -59034,14 +59034,14 @@
       "family": "boss",
       "archive": "boss036",
       "entry": "16",
-      "completed": 22,
+      "completed": 23,
       "partial": 0,
-      "unlifted": 6,
+      "unlifted": 5,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 22,
-        "raw": 8,
+        "named": 23,
+        "raw": 7,
         "total": 30
       },
       "binary": {
@@ -59238,13 +59238,13 @@
           {
             "start": 1244,
             "end": 1344,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2148277468,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1CDC.c#L64"
               }
             ]
           },
@@ -127524,14 +127524,14 @@
       "family": "world01",
       "archive": "area039",
       "entry": "13",
-      "completed": 15,
+      "completed": 16,
       "partial": 0,
-      "unlifted": 2,
+      "unlifted": 1,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 16,
-        "raw": 3,
+        "named": 17,
+        "raw": 2,
         "total": 19
       },
       "binary": {
@@ -127644,13 +127644,13 @@
           {
             "start": 540,
             "end": 596,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149527068,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C.c#L29"
               }
             ]
           },
@@ -131144,14 +131144,14 @@
       "family": "world01",
       "archive": "area052",
       "entry": "13",
-      "completed": 12,
+      "completed": 13,
       "partial": 1,
-      "unlifted": 13,
+      "unlifted": 12,
       "invalid": 0,
       "total": 26,
       "symbols": {
-        "named": 13,
-        "raw": 14,
+        "named": 14,
+        "raw": 13,
         "total": 27
       },
       "binary": {
@@ -131205,13 +131205,13 @@
           {
             "start": 460,
             "end": 660,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149526988,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC.c#L38"
               }
             ]
           },
@@ -137677,14 +137677,14 @@
       "family": "world02",
       "archive": "area085",
       "entry": "13",
-      "completed": 15,
+      "completed": 16,
       "partial": 1,
-      "unlifted": 8,
+      "unlifted": 7,
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 16,
-        "raw": 9,
+        "named": 17,
+        "raw": 8,
         "total": 25
       },
       "binary": {
@@ -137732,13 +137732,13 @@
           {
             "start": 180,
             "end": 368,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149526708,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c#L40"
               }
             ]
           },
@@ -147630,14 +147630,14 @@
       "family": "world03",
       "archive": "area120",
       "entry": "13",
-      "completed": 14,
+      "completed": 15,
       "partial": 1,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 16,
-        "raw": 13,
+        "named": 17,
+        "raw": 12,
         "total": 29
       },
       "binary": {
@@ -147925,13 +147925,13 @@
           {
             "start": 4500,
             "end": 4592,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149531028,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/returnWorkByte2ToStep2UnlessMaskedSceneStateIs20800ThenDrawQuadWorld03Area12013_801F3D94.c#L37"
               }
             ]
           },
@@ -149526,14 +149526,14 @@
       "family": "world03",
       "archive": "area130",
       "entry": "13",
-      "completed": 16,
+      "completed": 17,
       "partial": 0,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 31,
       "symbols": {
-        "named": 16,
-        "raw": 16,
+        "named": 17,
+        "raw": 15,
         "total": 32
       },
       "binary": {
@@ -149665,13 +149665,13 @@
           {
             "start": 1668,
             "end": 1852,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149528196,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284.c#L28"
               }
             ]
           },
@@ -150231,14 +150231,14 @@
       "family": "world03",
       "archive": "area132",
       "entry": "13",
-      "completed": 18,
+      "completed": 19,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 18,
-        "raw": 11,
+        "named": 19,
+        "raw": 10,
         "total": 29
       },
       "binary": {
@@ -150403,13 +150403,13 @@
           {
             "start": 1096,
             "end": 1148,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149527624,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/world/clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048.c#L35"
               }
             ]
           },
