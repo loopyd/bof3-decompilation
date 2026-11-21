@@ -719,6 +719,79 @@ returns. They establish stored instruction and numeric-data roles. They do not
 establish observed invocation, feasible paths, mathematical correctness, transitive
 effects, resource safety, display or safe editing.
 
+## Additional original SLUS instructions
+
+The exact original executable identity under
+[SLUS instruction coverage](#slus-instruction-coverage) also qualifies these
+complete bodies. Each has an original JAL entry. Review covers every raw word,
+structural branch, terminal and control-transfer delay. Ends are exclusive.
+
+| Runtime interval | Original JAL |
+| --- | --- |
+| `[0x8014CE48,0x8014CE78)` | `0x8014C8F4` |
+| `[0x8014FC00,0x8014FC90)` | `0x801500CC` |
+| `[0x8016E400,0x8016E794)` | `0x8015E1F4` |
+| `[0x8016FA7C,0x8016FC90)` | `0x8016E710` |
+| `[0x80171C1C,0x801720E8)` | `0x8016E72C` |
+| `[0x801721FC,0x801726E0)` | `0x8016E748` |
+| `[0x801736F0,0x801737B4)` | `0x8016E48C` |
+| `[0x8017EE2C,0x8017EE38)` | `0x8014BA6C` |
+
+The five entries called from `0x8016E400` depend on including that parent body.
+All five are call-free. Their boundaries follow original returns and delay words,
+not the next SDK symbol. The neighboring ranges
+`[0x8016E794,0x8016E80C)`, `[0x801720E8,0x8017212C)`,
+`[0x801726E0,0x801729D0)` and `[0x801737B4,0x80173818)` retain their prior
+status.
+
+The parent at `0x8016E400` contains four division-check BREAK words at
+`0x8016E504`, `0x8016E51C`, `0x8016E544` and `0x8016E55C`.
+They are valid instruction terminals. No exception-handler return or proof that
+these traps cannot occur is asserted. Normal return paths restore the frame.
+
+The three-word helper at `0x8017EE2C` returns the old stack pointer in `V0`
+and assigns `A0` to `SP` in its return delay at `0x8017EE34`. It deliberately
+changes the stack pointer. Its trailing NOP at `0x8017EE38` remains unresolved;
+new-stack validity and caller stack-pointer preservation are not established.
+
+The original JAL at `0x8016E73C` also qualifies a sparse entry at `0x80171B20`.
+Only `[0x80171B20,0x80171B5C)` and `[0x80171B60,0x80171C1C)` qualify.
+The LBU at `0x80171B48` produces `0..255`; ANDI at `0x80171B4C` produces
+`0..65535`. Their sum at `0x80171B50` is therefore `0..65790`, so BGEZ at
+`0x80171B54` always takes after its delay. The skipped ADDIU at `0x80171B5C`
+remains unresolved. All 62 reached words and six control delays reconcile.
+
+The helper at `0x8014FC00` sets flags and primitive arguments; it does not read
+text bytes or establish an encoding. Its referenced pointer and callee effects
+retain their prior status. These classifications establish stored instructions,
+without audio semantics or observed execution. Ordinary external returns, valid
+nonaliasing memory, preserved return state and stable code remain conditions.
+Other referenced data, actual caller input bounds, feasible paths, transitive effects,
+resource safety, display and safe editing remain unqualified.
+
+### Conditional numeric lookup footprint
+
+The sparse entry at `0x80171B20` also qualifies numeric reads over
+`[0x8018445C,0x801845DC)`, whole-file `[0xEE45C,0xEE5DC)`, under explicit
+input conditions. These 192 little-endian halfwords have SHA-256
+`ec8b6f74419c647d94e99240f0ec6aa6f66ee45689b548eb26d1f779de2674b9`.
+
+Let `s = (A1 & 0xFFFF) + record[5]`. If `s <= 255`, the original branch
+produces `a3` in `0..15` and a carry of zero or one. The reader then forms
+`n = signed16(A0 + 60 - record[4] + carry)`. For `n >= 0`, its signed
+multiply-high sequence divides by twelve toward zero, leaving a remainder in
+`0..11`. The shifts and addition form `index = 16 * remainder + a3`, in
+`0..191`. LHU at `0x80171BEC` therefore reads byte offsets `0..382` from
+`0x8018445C`. The loaded values feed integer shifts and a 16-bit return.
+
+The bound covers the stated symbolic input conditions. It does not establish
+that every fixed record value or actual caller reaches every index. Negative
+`n` or sums above 255 can read outside the footprint. Readable records, stable
+code and data, and noninterference remain conditions. The full allocation extent
+and an exact SDK data-object match remain unproved. Neighboring storage retains
+its prior classification; audio behavior and mathematical output correctness
+are not established.
+
 ## Further direct-call instruction coverage
 
 The following bodies use the exact GAME and shared battle identities under
