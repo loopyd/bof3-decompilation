@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v52";
+pub const SCHEMA: &str = "bof3.inline-text/v53";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -23,6 +23,7 @@ pub(crate) enum Codec {
     ShiftJisDigit,
     ShiftJisTitleFormat,
     AsciiLiteral,
+    AsciiUppercaseLiteral,
     AsciiCreditsLiteral,
     AsciiFormatLiteral,
     AsciiDigitGlyphLiteral,
@@ -37,6 +38,7 @@ pub(crate) enum Codec {
     AsciiU8DecimalFormat,
     AsciiU8PlusOneDecimalFormat,
     AsciiU8DecimalFieldFormat,
+    AsciiU8LabeledDecimalFormat,
     AsciiU8DecimalPairFormat,
     AsciiU8DecimalTripleFormat,
     AsciiU7DecimalFormat,
@@ -99,6 +101,14 @@ impl Codec {
         }
         if self == Self::GameGlyphs {
             return encode_glyphs(text, capacity);
+        }
+        if self == Self::AsciiUppercaseLiteral {
+            if text.len() > capacity || !text.bytes().all(|byte| byte.is_ascii_uppercase()) {
+                return invalid(
+                    "uppercase literal must fit its allocation and contain only ASCII A-Z",
+                );
+            }
+            return Ok(text.as_bytes().to_vec());
         }
         if self == Self::AsciiLiteral {
             if text.len() > capacity || !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte)) {
@@ -168,6 +178,7 @@ impl Codec {
             | Self::AsciiU8PlusOneDecimalFormat
             | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
             Self::AsciiU8DecimalFieldFormat => (&[3], 4, 4),
+            Self::AsciiU8LabeledDecimalFormat => (&[3], 5, 4),
             Self::AsciiU16DecimalFormat => (&[5], 5, 4),
             Self::AsciiU16DecimalFieldFormat => (&[5], 9, 4),
             Self::AsciiPriceDecimalFormat => (&[7], 8, 7),
@@ -252,6 +263,7 @@ impl Codec {
             Self::ShiftJisDigit => "shift-jis-digit",
             Self::ShiftJisTitleFormat => "shift-jis-title-format",
             Self::AsciiLiteral => "ascii-literal",
+            Self::AsciiUppercaseLiteral => "ascii-uppercase-literal",
             Self::AsciiCreditsLiteral => "ascii-credits-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
@@ -266,6 +278,7 @@ impl Codec {
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
             Self::AsciiU8PlusOneDecimalFormat => "ascii-u8-plus-one-decimal-format",
             Self::AsciiU8DecimalFieldFormat => "ascii-u8-decimal-field-format",
+            Self::AsciiU8LabeledDecimalFormat => "ascii-u8-labeled-decimal-format",
             Self::AsciiU8DecimalPairFormat => "ascii-u8-decimal-pair-format",
             Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
@@ -556,6 +569,16 @@ impl Allocation {
         }
     }
 
+    const fn uppercase_literal(address: u32, capacity: usize, renderers: &'static [u32]) -> Self {
+        Self {
+            address,
+            capacity,
+            references: &[],
+            renderers,
+            codec: Codec::AsciiUppercaseLiteral,
+        }
+    }
+
     const fn fixed_literal(address: u32, capacity: usize, renderers: &'static [u32]) -> Self {
         Self {
             address,
@@ -742,7 +765,12 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8DecimalTripleFormat,
                 &[0x8014ff0c],
             ),
-            Allocation::bounded_format(0x801d0c20, 3, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801d0c20,
+                3,
+                Codec::AsciiI32DecimalFormat,
+                &[0x8014ff0c, 0x8014f800],
+            ),
             Allocation::keyboard_character(0x801dab6c),
             Allocation::keyboard_character(0x801dab6d),
             Allocation::keyboard_character(0x801dab6e),
@@ -1440,11 +1468,23 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
+        name: "US MAGIC060 captions",
+        load: 0x801eec00,
+        size: 8168,
+        sha256: "bb9433000a69160ceb70c02bc38173532ee9fcd92eaafe9f62b88be085ffbdf5",
+        consumers: &[0x801eee84, 0x801ef174],
+        allocations: &[
+            Allocation::uppercase_literal(0x801f0b64, 5, &[0x801ef76c]),
+            Allocation::uppercase_literal(0x801f0b74, 5, &[0x801ef76c]),
+            Allocation::uppercase_literal(0x801f0b7c, 6, &[0x801ef76c]),
+        ],
+    },
+    Layout {
         name: "US battle categories",
         load: 0x80096800,
         size: 133316,
-        sha256: "3df942ff3b7822e4582cb809cec769712592d7059f39e06fef1e4e057be02c24",
-        consumers: &[0x800b28c8, 0x800b2f70],
+        sha256: "ad97918f439fc11d526f20b790c5892b486ec36a99fefaeead544978613d66c8",
+        consumers: &[0x800b28c8, 0x800b2f70, 0x800b126c, 0x800b199c],
         allocations: &[
             Allocation::literal(0x800b6e60, 5, &[0x800b6e88], &[0x8014f800]),
             Allocation::literal(0x800b6e68, 7, &[0x800b6e8c], &[0x8014f800]),
@@ -1456,6 +1496,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x800b6eac, 7, &[0x800b6ecc], &[0x8014f800]),
             Allocation::literal(0x800b6eb4, 6, &[0x800b6ed0], &[0x8014f800]),
             Allocation::literal(0x800b6ebc, 7, &[0x800b6ed4], &[0x8014f800]),
+            Allocation::bounded_format(
+                0x80096a2c,
+                6,
+                Codec::AsciiU8LabeledDecimalFormat,
+                &[0x80150098],
+            ),
         ],
     },
     Layout {

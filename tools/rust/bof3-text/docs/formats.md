@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v52`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v53`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3106,6 +3106,27 @@ five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
 and NUL termination. The layout occurs in BATTLE entry 15 and matching payloads
 in other archives; use `analyze` to discover the actual entry.
 
+The same layout includes `AP%2d` at `0x80096A2C`, with six bytes including NUL.
+Its `ascii-u8-labeled-decimal-format` codec requires one decimal argument and
+allows at most five encoded bytes and five formatted bytes before NUL. Optional
+widths from 1 to 4 and zero padding must fit both limits. Original consumers
+`0x800B0F9C` and `0x800B1728` mask the argument to a byte, format into
+`0x80145AD4`, then pass that buffer to ASCII renderer `0x80150098`.
+Edits preserve the original six-byte maximum output footprint and the two
+alignment bytes at `[0x80096A32,0x80096A34)`. The ten category fields retain
+their indices. Natural selection, visual fit and edited rendering remain unverified.
+
+Original US `BIN/BMAGIC/MAGIC060.EMI` entry 0 exposes three captions through
+`ascii-uppercase-literal`: `WEAK` at `0x801F0B64`, `ITEM` at `0x801F0B74`
+and `POINT` at `0x801F0B7C`. Their capacities are five, five and six bytes,
+including NUL. Edits accept only ASCII A-Z within the original letter count;
+shorter or empty edits zero-fill the allocation. Local reader `0x801EF76C`
+handles the initial NUL and advances eight pixels per letter. Its blank uses
+byte `0xFF`, so ASCII spaces and dialogue commands are refused. The original
+step selects the caption panel when its unsigned selector is below three.
+Padding, code and other payload bytes remain protected. Overlay activation,
+graphics state and edited glyph appearance remain unverified.
+
 US `BATE.EMI` entry 0 loads at `0x801D0C00`. Its pointer tables at `0x801D8E4C`,
 `0x801D8E80` and `0x801D8EB8` contain five, four and five supported category
 labels. Calls at `0x801D6F84`, `0x801D7600` and `0x801D7E8C` pass selected
@@ -3306,7 +3327,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v52` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v53` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -3396,6 +3417,14 @@ write `0x801490D8` or `0x801490F8` before dispatch through `0x80150224`.
 Those arguments are byte-masked values or a signed byte plus one. They need at
 most four output bytes before NUL, within the codec's conservative eleven-byte
 bound. Packing preserves the original format and alignment byte at `0x801D0C23`.
+
+With the original AREA175 entry 11 bank resident, dispatch selectors `0x81`
+and `0x82` select bank 0 rows 130 and 131. Their `0x07` controls insert slots
+zero and one. The shared dialogue engine draws the inserted bytes through
+`0x8014F800`, which this field records alongside `0x8014FF0C`. Intervening
+helpers preserve those slots under valid record/prize inputs, initialized packet
+and ordering-table state, resident modules and ordinary returning SDK calls.
+Active-bank publication, natural activation and observed output remain unverified.
 
 The active US keyboard page at `0x801DAB6C` has eight rows of twelve bytes.
 Its 68 ordinary cells use `game-keyboard-character`, with capacity one and no

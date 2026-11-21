@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v52`.
+`bof3.inline-text/v53`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +196,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v52`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v53`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
