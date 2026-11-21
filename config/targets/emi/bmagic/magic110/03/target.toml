@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/advanceWorkWord14RadiusBy40AndAdvanceWorkByte2WhenItReachesC00BmagicMagic11003_801EF8C0.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C.c",
+    "src/bof3/bmagic/invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC.c",
 ]
 support_sources = [
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c",

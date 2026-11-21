@@ -14,6 +14,7 @@ sources = [
     "src/bof3/bmagic/drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790.c",
     "src/bof3/bmagic/drawTranslucentRedRingOfSixteenFlatQuadsAroundEffectOriginWhenSideNegativeBmagicMagic15003_801EF040.c",
     "src/bof3/bmagic/startBurstInIdleEffectSlotsThenStepEffectSlotsAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EED60.c",
+    "src/bof3/bmagic/shrinkRingAndBurstRadiiThenDrawAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEF80.c",
 ]
 support_sources = [
     "src/bof3/support/magic150_03_psyq.c",

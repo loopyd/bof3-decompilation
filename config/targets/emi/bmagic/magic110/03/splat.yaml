@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801EEE68
   - - 732
-    - asm
-    - func_801EEEDC
+    - c
+    - invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC
+    - '@source: src/bof3/bmagic/invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC.c'
+    - '@behavior: Entry 2 of the six-word work-byte-1 handler run at 0x801EEC04, selected by dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C with work byte 1. Calls the draw helper at 0x801EF148, then on the per-frame phases where bit 0 of 0x80143E6C is set adds two to work byte 0xA while it is below 0x10, increments work byte 9 and increments work byte 1 when that count reaches 0x10, re-reading the scratchpad pointer cell at 0x1F800044 before each group.'
   - - 896
     - asm
     - func_801EEF80

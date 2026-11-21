@@ -50,8 +50,10 @@ segments:
     - dispatchStateByte2Table3decWorldWorld03Area13213_801F2DF4
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 568
-    - asm
-    - func_801F2E38
+    - c
+    - resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38
+    - '@source: src/bof3/world/resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38.c'
+    - '@behavior: Entry 0 of the byte-2 handler pointer run based at 0x801F3DEC: clears every claim byte of the 0x20-record work table through the helper at 0x801F385C, arms the published work record byte at +0x09 with 0x40, reloads the scratchpad pointer cell 0x1F800044 and increments the record state byte at +0x02 so the next dispatch reaches entry 1 at 0x801F2E88, then queues cue 0x20C through 0x8015DF18.'
   - - 648
     - c
     - claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88

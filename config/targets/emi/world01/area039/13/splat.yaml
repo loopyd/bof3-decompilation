@@ -83,8 +83,10 @@ segments:
     - '@source: src/bof3/world/raiseWorldFlag8World01Area03913_801F2EEC.c'
     - '@behavior: raises bit 0x8 of the shared world-flags halfword D_80146258 with one halfword read-modify-write through a folded lui/lhu load, an empty load delay slot, ori 0x8 and a halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 780
-    - asm
-    - func_801F2F0C
+    - c
+    - claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C
+    - '@source: src/bof3/world/claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C.c'
+    - '@behavior: Overlay slot claim on the shared 32-slot byte table at 0x8014544C. The body takes the table base once, walks it with a pointer that advances one byte per pass while a byte counter runs 0 through 0x1F alongside, and overwrites the first slot holding 0x0E with 4 in the delay slot of a jump to the epilogue; when no slot holds 0x0E it falls out of the loop and sets shared selector id 4 through the main-EXE setter func_80166180. Takes no arguments and builds a 0x18-byte frame only to keep the return address across the setter call.'
   - - 872
     - c
     - startScriptedMotionZeroZeroFour1eWorld01Area03913_801F2F68

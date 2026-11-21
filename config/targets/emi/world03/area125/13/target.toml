@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld03Area12513_801F2E10.c",
     "src/bof3/world/runRecordSweepDecrementCountdownByte9ThenAdvanceStateByte1WhenZeroWorld03Area12513_801F2CD8.c",
+    "src/bof3/world/spawnTwoRingRecordsEveryFifteenthFrameOfCountdownByte9ThenSweepRecordsAndAdvanceStateByte1WhenZeroWorld03Area12513_801F2D6C.c",
 ]
 support_sources = [
     "src/bof3/world/clearWorkTableAt800E4800ThenAdvanceStateByte1World03Area12513_801F2C48.c",

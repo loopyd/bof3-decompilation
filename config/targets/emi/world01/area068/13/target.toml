@@ -33,6 +33,7 @@ sources = [
     "src/bof3/world/armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764.c",
     "src/bof3/world/publishModeStatusFromTable4d68AndProgress0OrFFWorld01Area06813_801F386C.c",
     "src/bof3/world/stepWorkAccumulatorsByPhaseTable4dd4ConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3B9C.c",
+    "src/bof3/world/stepPadCountersAndArmState4Or22WhenAttemptByteReaches28World01Area06813_801F2F24.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

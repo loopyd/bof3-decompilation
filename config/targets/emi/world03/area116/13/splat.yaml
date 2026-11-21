@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F2DB4
   - - 616
-    - asm
-    - func_801F2E68
+    - c
+    - initFrontendStateSelector4AndSecondStateByte8World03Area11613_801F2E68
+    - '@source: src/bof3/world/initFrontendStateSelector4AndSecondStateByte8World03Area11613_801F2E68.c'
+    - '@behavior: Runs the shared front-end startup helper at 0x8015C088 and then stores 4 into the shared front-end state selector D_801448EB and 8 into the shared byte D_801448ED, leaving the middle byte 0x801448EC untouched, and returns 0. No jal and no pointer word in this payload names 0x801F2E68, so the overlay reaches the handler from outside its payload.'
   - - 672
     - c
     - dispatchStateByte1Table34e8World03Area11613_801F2EA0

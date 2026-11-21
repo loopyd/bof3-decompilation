@@ -56,8 +56,10 @@ segments:
     - '@source: src/bof3/bmagic/setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4.c'
     - '@behavior: Magic-150 effect handler, one of the words of the overlay handler table at 0x801EEC04 that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It publishes the ring radius at 0x801EFAAC as 0x100, or 0x110 when bit 0 of the shared frame counter 0x80143E6C is set, subtracts 0x200 from the fan angle at 0x801EFAB0, and calls the overlay draw setup 0x801EF254 with no arguments. It then decrements work byte 9 and returns untouched while that byte is nonzero; when the countdown reaches zero it stores 4 into work byte 9, increments work byte 1 to move the dispatcher to the next handler entry, calls 0x800A9820 with the shared battle byte 0x80146384 and submits cue 0x102 through 0x8015DF18. It takes no arguments and returns nothing.'
   - - 896
-    - asm
-    - func_801EEF80
+    - c
+    - shrinkRingAndBurstRadiiThenDrawAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEF80
+    - '@source: src/bof3/bmagic/shrinkRingAndBurstRadiiThenDrawAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEF80.c'
+    - '@behavior: Magic-150 effect handler, the entry at 0x801EEC18 of the overlay handler table 0x801EEC04 and index 5 of its seven words that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It shrinks the two radii of the effect transform in fixed steps with an unsigned halfword load, one addiu and a halfword store each: 0x40 off the ring radius at 0x801EFAAC and 0x60 off the burst radius at 0x801EFAAE, so the ring and its burst particles contract together. It then calls the overlay draw setup 0x801EF254 with no arguments, so the frame is drawn once from the state it just wrote. After the draw it decrements work byte 9 through the pointer read from scratchpad cell 0x1F800044, stores it back, masks the stored byte to 0xFF for the test, and returns untouched while that countdown is nonzero. When the countdown reaches zero it re-reads the same cell and increments work byte 1, which moves the dispatcher on to the next handler entry; it neither re-arms the countdown nor submits a cue. Those are its only stores, it reads no other cell, has no loop, keeps $ra at $sp+0x10 in a 0x18-byte frame, and takes no arguments and returns nothing.'
   - - 1036
     - asm
     - func_801EF00C
