@@ -1398,28 +1398,29 @@ pub fn executable_nontext_ranges<'a>(
     ranges
 }
 
-// Original LOGO fresh-input frames 1..=221: return frontiers minus eight bytes.
-// The excluded lookahead and remaining tails stay unresolved.
-const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 221] = [
-    7640, 7690, 7752, 7776, 7810, 7826, 7766, 7668, 7610, 7526, 7484, 7426, 7404, 7440, 7490, 7536,
-    7564, 7534, 7622, 7688, 7700, 6704, 7122, 6880, 7080, 6718, 6758, 7266, 6816, 7500, 7442, 7328,
-    7322, 7810, 8032, 7804, 7678, 7630, 7874, 6578, 6476, 6468, 6558, 6720, 6744, 6732, 6648, 6814,
-    7118, 7036, 7278, 6894, 7190, 7194, 7276, 7704, 7406, 7292, 7786, 7226, 7132, 7182, 7030, 6928,
-    6954, 6810, 7098, 6550, 6846, 7328, 7260, 7406, 6818, 7000, 7164, 7076, 7110, 6844, 6596, 6850,
-    6642, 7602, 7980, 7348, 7264, 7178, 6746, 6796, 6710, 7072, 6526, 6952, 7090, 6660, 7948, 7054,
-    7038, 7076, 6832, 7284, 6984, 7442, 7354, 7068, 7158, 7268, 7634, 7734, 7754, 7754, 7754, 7754,
-    7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7744, 7730, 7720, 7706, 7684,
-    7660, 7628, 7608, 7590, 7602, 7642, 7692, 7744, 7814, 7862, 7928, 7964, 8014, 6842, 6884, 6916,
-    6950, 6986, 7034, 7070, 7100, 7144, 7170, 7202, 7232, 7260, 7284, 7302, 7326, 7348, 7364, 7378,
-    7388, 7400, 7404, 7410, 7410, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040,
-    8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 7998,
-    7948, 7888, 7816, 7720, 7586, 7448, 7292, 7130, 6944, 6766, 6574, 6808, 6572, 7706, 7336, 6954,
-    6584, 7240, 6720, 6190, 7372, 6546, 5688, 4922, 3942, 3096, 2704, 2704, 2704,
+// Retained LOGO fresh-input return-zero frontiers for frames 1..=221.
+// The original decoder retains at most four fetched bytes in its bit cache.
+const CAPCOM_LOOKAHEAD_BYTES: usize = 4;
+const CAPCOM_RETURN_FRONTIERS: [usize; 221] = [
+    7648, 7698, 7760, 7784, 7818, 7834, 7774, 7676, 7618, 7534, 7492, 7434, 7412, 7448, 7498, 7544,
+    7572, 7542, 7630, 7696, 7708, 6712, 7130, 6888, 7088, 6726, 6766, 7274, 6824, 7508, 7450, 7336,
+    7330, 7818, 8040, 7812, 7686, 7638, 7882, 6586, 6484, 6476, 6566, 6728, 6752, 6740, 6656, 6822,
+    7126, 7044, 7286, 6902, 7198, 7202, 7284, 7712, 7414, 7300, 7794, 7234, 7140, 7190, 7038, 6936,
+    6962, 6818, 7106, 6558, 6854, 7336, 7268, 7414, 6826, 7008, 7172, 7084, 7118, 6852, 6604, 6858,
+    6650, 7610, 7988, 7356, 7272, 7186, 6754, 6804, 6718, 7080, 6534, 6960, 7098, 6668, 7956, 7062,
+    7046, 7084, 6840, 7292, 6992, 7450, 7362, 7076, 7166, 7276, 7642, 7742, 7762, 7762, 7762, 7762,
+    7762, 7762, 7762, 7762, 7762, 7762, 7762, 7762, 7762, 7762, 7762, 7752, 7738, 7728, 7714, 7692,
+    7668, 7636, 7616, 7598, 7610, 7650, 7700, 7752, 7822, 7870, 7936, 7972, 8022, 6850, 6892, 6924,
+    6958, 6994, 7042, 7078, 7108, 7152, 7178, 7210, 7240, 7268, 7292, 7310, 7334, 7356, 7372, 7386,
+    7396, 7408, 7412, 7418, 7418, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048,
+    8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8048, 8006,
+    7956, 7896, 7824, 7728, 7594, 7456, 7300, 7138, 6952, 6774, 6582, 6816, 6580, 7714, 7344, 6962,
+    6592, 7248, 6728, 6198, 7380, 6554, 5696, 4930, 3950, 3104, 2712, 2712, 2712,
 ];
 
 // Frames 222..=231 contain packet-bound copies of frame 221's qualified prefix.
 // This identifies stored format only; later decoder invocations remain unverified.
-const CAPCOM_COPIED_PREFIX_BYTES: usize = 2704;
+const CAPCOM_COPIED_PREFIX_BYTES: usize = 2708;
 
 fn capcom_coded_prefix(sector: &[u8], start: usize) -> Result<Option<NontextRange<'static>>> {
     let index = usize::from(u16::from_le_bytes([sector[12], sector[13]]));
@@ -1430,15 +1431,15 @@ fn capcom_coded_prefix(sector: &[u8], start: usize) -> Result<Option<NontextRang
             "original US CAPCOM packet disagrees with reviewed frame structure".into(),
         ));
     }
-    let (prefix, evidence) = if frame <= CAPCOM_CONSUMED_PREFIX_BYTES.len() {
+    let (prefix, evidence) = if frame <= CAPCOM_RETURN_FRONTIERS.len() {
         (
-            CAPCOM_CONSUMED_PREFIX_BYTES[frame - 1],
-            "original US CAPCOM coded prefix, frames 1..221; LOGO 0x801D7578 fresh-input return-zero frontier minus eight bytes for lookahead; exact source identity",
+            CAPCOM_RETURN_FRONTIERS[frame - 1] - CAPCOM_LOOKAHEAD_BYTES,
+            "original US CAPCOM coded prefix, frames 1..221; retained LOGO 0x801D7578 fresh-input return-zero frontier minus four bytes; original 32-bit cache bounds unread lookahead; per-frame observations not independently re-established by cache analysis; exact source identity",
         )
     } else {
         (
             CAPCOM_COPIED_PREFIX_BYTES,
-            "original US CAPCOM stored coded prefix, frames 222..231; exact packet-bound copies of qualified frame 221 prefix, excluding eight lookahead bytes; no later decoder invocation claim; exact source identity",
+            "original US CAPCOM stored coded prefix, frames 222..231; exact packet-bound copies of qualified frame 221 prefix, excluding four lookahead bytes; no later decoder invocation claim; exact source identity",
         )
     };
     if prefix > count * 2016 {
@@ -1582,7 +1583,10 @@ impl XaSource {
         } else {
             (
                 892,
-                CAPCOM_CONSUMED_PREFIX_BYTES.iter().sum::<usize>()
+                CAPCOM_RETURN_FRONTIERS
+                    .iter()
+                    .map(|frontier| frontier - CAPCOM_LOOKAHEAD_BYTES)
+                    .sum::<usize>()
                     + 10 * CAPCOM_COPIED_PREFIX_BYTES,
             )
         };

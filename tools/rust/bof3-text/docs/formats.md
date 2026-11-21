@@ -2439,18 +2439,34 @@ separate READY callback storage. A retained EMI callback therefore does not
 establish consumption while its progress gate stays disabled.
 
 This guard does not close other transfer paths. The SDK read callback at
-`0x80177D08` can read sectors using destination and count storage at
-`0x80185AA0` and `0x80185AA8`. Its lifetime during XA, other READY callbacks
-and intervening progress writers remain unresolved. Submode bits and a single
-callback observation do not prove that nonzero Form 1 payloads are unused.
+`0x80177D08` uses destination `0x80185AA0`, word-transfer amount `0x80185AA8`
+and remaining-sector count `0x80185AAC`. Each completed transfer advances the
+destination by four times the word-transfer amount.
 
-The original SDK poll at `0x80178218` can take its timeout branch at
-`0x80178258` and return without restoring READY. With no intervening READY
-writer, its final `CdReady` call can return without dispatching an event or
-changing the pointer.
-This establishes a retained-callback path in the SDK read machinery. It does
-not establish that this path occurs before XA or that a subsequent sector
-transfer occurs.
+Request entry `0x80178138` saves the displaced READY callback at `0x80185AC0`.
+Installer `0x80177F1C` restarts the saved destination and count on retry.
+Completion and explicit retirement at `0x801780E8` restore the saved callback.
+Poll `0x80178218` can return through timeout branch `0x80178258` without that
+restoration. With no intervening READY writer, its final `CdReady` call can
+return without dispatching an event or changing the pointer.
+
+The reviewed mode-`0x80` callers read metadata and executable content. They do
+not bind this transfer path to XA source positions. Its lifetime during XA,
+other READY callbacks and intervening progress writers remain unresolved.
+Submode bits and a retained callback do not prove that nonzero Form 1 payloads
+are unused or that a subsequent transfer occurs.
+
+A separate XA path has a cue-0 caller at SHOP entry 0 address `0x801D43A4`,
+selected by dispatch slot 2 at `0x801E52F8`. Given valid SHOP residency and state,
+selector `0x80163744` maps file slot 681 to S_XA00 disc LBA 65798 and selects
+channel zero. Conversion `0x80175ADC` produces BCD position `14 39 23`.
+Successful state progression reaches `CdControl` commands `0x16` and `0x1B`.
+Each first issues Setloc command `0x02` with that position.
+
+S_XA00 file-relative sector 463 is therefore disc LBA 66261, BCD `14 45 36`,
+with user payload at file offsets `[1081576,1083624)`. This position binding
+does not establish an available SHOP session, successful CD commands, sector
+acquisition, callback transfer or the payload's stored meaning.
 
 Coverage separately identifies the complete SDK read callback instruction body
 at `[0x80177D08,0x80177F1C)`, executable file offsets `[0xE1D08,0xE1F1C)`.
@@ -2491,22 +2507,24 @@ The other packets in each frame carry exact copies of that ID. Existing
 index, count and frame checks remain required. Header bytes `[20,40)` within
 each sector stay unresolved; their values do not establish coded length.
 
-Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 221.
-Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
-with its next unread halfword in `a0`. Each reviewed prefix excludes the final
-eight fetched bytes to cover unread lookahead. The original packet index, count
-and frame ID bind each prefix to ordered 2016-byte bodies at sector offset 40.
-Coverage admits 1,607,660 bytes from those observed frontiers.
+Coverage identifies coded prefixes in CAPCOM frames 1 through 221 using retained
+fresh-input return-zero frontiers from original LOGO consumer `0x801D7578`.
+At return, `a0` points to the next unread halfword. The decoder initially fetches
+eight header bytes and four coded-cache bytes, then refills the cache one
+halfword at a time. Its shifts and refill paths leave at most 32 unread cached
+bits. Each prefix therefore excludes the final four fetched bytes. This static
+cache bound does not independently establish the retained per-frame returns.
 
-For frames 222 through 231, coverage identifies 2704 bytes per frame as exact
-packet-bound copies of the qualified frame 221 prefix. Their first 2712 assembled
-bytes match, including eight lookahead bytes that remain excluded. This is a
-stored-format classification; later acquisition and decoder entry or return
-remain unverified. The initial twelve bytes contain eight header bytes and four
-initially cached coded bytes.
+The original packet index, count and frame ID bind each prefix to ordered
+2016-byte bodies at sector offset 40. Coverage admits 1,608,544 bytes from the
+retained frontiers. For frames 222 through 231, it identifies 2708 bytes per
+frame as exact packet-bound copies of the qualified frame 221 prefix. Their
+first 2712 assembled bytes match, including the four excluded lookahead bytes.
+Later acquisition and decoder entry or return remain unverified for these copies.
 
-Across both evidence bases, 403,476 video-body bytes remain unresolved, including
-excluded lookahead and tails. These bounds establish neither each frame's logical
+Across both evidence bases, 402,552 video-body bytes remain unresolved, including
+excluded lookahead and tails. All 20,220 packet-header bytes at sector offsets
+`[20,40)` remain unresolved. These bounds establish neither each frame's logical
 end nor whole-movie playback.
 
 Static format identification does not establish original sector selection,
