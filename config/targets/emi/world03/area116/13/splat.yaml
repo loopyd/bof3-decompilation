@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F2EE4
   - - 816
-    - asm
-    - func_801F2F30
+    - c
+    - drawWorkCursorQuadWorld03Area11613_801F2F30
+    - '@source: src/bof3/world/drawWorkCursorQuadWorld03Area11613_801F2F30.c'
+    - '@behavior: Entry 1 of the two-entry step dispatch table based at 0x801F34E8, whose word 0 names 0x801F2EE4 and whose word 1 names this span and which dispatchStateByte1Table34e8World03Area11613_801F2EA0 indexes with byte +1 of the work record published at the scratchpad pointer cell 0x1F800044: it loads that work-record pointer and copies the record''s three cursor words at +0x34, +0x38 and +0x3C into a local twelve-byte point, then passes the address of that point to the overlay quad renderer at 0x801F2F78. It takes no arguments, returns nothing and reads no other state.'
   - - 888
     - asm
     - func_801F2F78

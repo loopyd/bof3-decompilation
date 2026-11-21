@@ -47,8 +47,10 @@ segments:
     - c
     - seedWorkTripletAndOverlayStateBytesWorld04Area19913_801F2D7C
   - - 488
-    - asm
-    - func_801F2DE8
+    - c
+    - startTwoLayerTrailAndSetOverlayStateByteWorld04Area19913_801F2DE8
+    - '@source: src/bof3/world/startTwoLayerTrailAndSetOverlayStateByteWorld04Area19913_801F2DE8.c'
+    - '@behavior: Overlay entry hook that starts the two-layer sample trail: it calls the trail reset at 0x801F2E14, then stores 1 into the shared overlay state byte at 0x8014933B. Takes no arguments, returns no value and allocates only the 0x18-byte frame the call requires.'
   - - 532
     - c
     - initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14

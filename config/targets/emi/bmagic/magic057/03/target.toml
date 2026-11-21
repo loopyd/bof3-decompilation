@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerTableec38BmagicMagic05703_801EF55C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerTableec10BmagicMagic05703_801EED2C.c",
+    "src/bof3/bmagic/incrementWorkWord10WhenNegativeOtherwiseDecrementWorkByte3BmagicMagic05703_801EF7E0.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic05703_801EFABC.c",

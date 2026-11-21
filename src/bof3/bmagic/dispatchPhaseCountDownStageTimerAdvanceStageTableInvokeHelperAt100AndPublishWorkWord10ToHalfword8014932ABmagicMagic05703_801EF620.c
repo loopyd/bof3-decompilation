@@ -45,11 +45,14 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 /* The two phase handlers this body seeds into its local table, both following
  * spans of this overlay: 0x801EF7A0 is lifted as
  * decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0
- * and 0x801EF7E0 is still generated assembly. Each address reaches the frame
- * through its own lui %hi / addiu %lo pair, so both need a declaration here. */
+ * and 0x801EF7E0 as
+ * incrementWorkWord10WhenNegativeOtherwiseDecrementWorkByte3BmagicMagic05703_801EF7E0.
+ * Each address reaches the frame through its own lui %hi / addiu %lo pair, so
+ * both need a declaration here. */
 void decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0(
     void);
-void func_801EF7E0(void);
+void incrementWorkWord10WhenNegativeOtherwiseDecrementWorkByte3BmagicMagic05703_801EF7E0(
+    void);
 
 /* @source 0x801EF620
  * @behavior Per-frame phase dispatcher and publisher of this overlay's work
@@ -100,7 +103,7 @@ void dispatchPhaseCountDownStageTimerAdvanceStageTableInvokeHelperAt100AndPublis
   s32 ramp;
   BmagicMagic05703PhaseHandler handlers[2] = {
       decrementWorkWord10AndAdvanceWorkByte3WhenBelowMinus2BmagicMagic05703_801EF7A0,
-      func_801EF7E0};
+      incrementWorkWord10WhenNegativeOtherwiseDecrementWorkByte3BmagicMagic05703_801EF7E0};
 
   handlers[g_battle_work[3]]();
   if (g_battle_work[0x0A] != 0xFF && --g_battle_work[0x0A] == 0) {

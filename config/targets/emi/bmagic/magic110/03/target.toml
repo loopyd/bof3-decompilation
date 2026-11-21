@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic110/03.bin"
 splat = "config/targets/emi/bmagic/magic110/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11003_801EEC1C.c",
+]
 support_sources = [
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c",
     "src/bof3/bmagic/dispatchStateByte2Table0478BmagicMagic11003_801EF43C.c",

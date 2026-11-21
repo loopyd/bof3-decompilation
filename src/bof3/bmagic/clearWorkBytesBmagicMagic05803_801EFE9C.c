@@ -1,7 +1,9 @@
 #include "bof3/bof3.h"
 
 /* Scratchpad work-object pointer cell shared by the battle and bmagic
- * overlays. This overlay's work-record updater func_801EF61C reads the same
+ * overlays. This overlay's work-record updater
+ * accumulateWorkWordCByWord18StepDecrementByteAAndWord18OnGlobalBit0ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenByteAReachesZeroBmagicMagic05803_801EF61C
+ * reads the same
  * cell (lui $a1,0x1F80 / lw $a1,68($a1)) before it accumulates the record's
  * words at offsets 0x0C and 0x18 and counts down its byte at 0x0A. The cell is
  * read once per access, so the original re-materializes its address
@@ -16,7 +18,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * store; the fifth load's delay slot holds the jr $ra and the fifth sb fills
  * the return delay slot. Leaf with no frame, no arguments and no return value;
  * it reads and writes no other state. Its only in-image reference is the jal
- * at 0x801EF684 in func_801EF61C, which reaches it after the work record's
+ * at 0x801EF684 in
+ * accumulateWorkWordCByWord18StepDecrementByteAAndWord18OnGlobalBit0ThenDecrementGlobalWorkByteBAndClearWorkBytesWhenByteAReachesZeroBmagicMagic05803_801EF61C,
+ * which reaches it after the work record's
  * byte at 0x0A counts down to zero.
  * @status exact
  * @match 100.00

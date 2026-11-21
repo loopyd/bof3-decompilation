@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14.c",
+    "src/bof3/world/startTwoLayerTrailAndSetOverlayStateByteWorld04Area19913_801F2DE8.c",
 ]
 support_sources = [
     "src/bof3/world/drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80.c",
