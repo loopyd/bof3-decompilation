@@ -11,6 +11,7 @@ sources = [
     "src/bof3/boss/dispatchIndexedHandlerBossBoss05116_800C19C4.c",
     "src/bof3/boss/publishBattleHooksBossBoss05116_800C1A14.c",
     "src/bof3/boss/dispatchStateByte1Table1dc4BossBoss05116_800C1814.c",
+    "src/bof3/boss/armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchStateByte1Table1804BossBoss05116_800C1AA8.c",

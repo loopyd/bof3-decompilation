@@ -14,5 +14,5 @@ dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8 = 0x801EF5F8;
 func_801EF690 = 0x801EF690;
 func_801EF7A4 = 0x801EF7A4;
 decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4 = 0x801EF7F4;
-func_801EF888 = 0x801EF888;
+decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888 = 0x801EF888;
 T_801EF8BC = 0x801EF8BC;

@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801F35B8
   - - 2608
-    - asm
-    - func_801F3630
+    - c
+    - claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630
+    - '@source: src/bof3/world/claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630.c'
+    - '@behavior: Effect-record claim pass of the 0x100 entries of the 0x1C-byte-stride effect table at 0x800E4800, the work area this overlay shares with the world and scenario overlays. It takes the first entry whose lead byte at offset 0 reads zero by writing 1 into that byte, clearing the state byte at +0x02, copying this overlay''s alternating direction byte at 0x801F43E4 into the entry byte +0x03 and then flipping that byte, so consecutive claims alternate. The countdown byte at +0x01 and every word of the entry keep their values. It calls nothing, takes no arguments and returns nothing; the four consecutive calls at 0x801F2CBC, 0x801F2CC4, 0x801F2CCC and 0x801F2CD4 inside func_801F2CB4 read no result. A 0x100 bound on an unsigned 16-bit counter is the loop back edge, and the 0x80-byte body carries no frame and no saved register.'
   - - 2736
     - c
     - advanceWorkRecordStatesAndRenderActiveWorld03Area12013_801F36B0

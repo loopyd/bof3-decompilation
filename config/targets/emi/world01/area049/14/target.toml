@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world01/area049/14.bin"
 splat = "config/targets/emi/world01/area049/14/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454.c",
+]
 support_sources = [
     "src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c",
     "src/bof3/world/setTwoWorld01Area04914_801F3750.c",

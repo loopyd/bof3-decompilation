@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D70
   - - 556
-    - asm
-    - func_801F2E2C
+    - c
+    - advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C
+    - '@source: src/bof3/world/advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C.c'
+    - '@behavior: Entry 3 of the byte-1 handler run of this overlay based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: increments that record sub-state byte +0x02 and reads it back, so when the incremented byte reads 5 it increments the scenario progress byte at 0x80146864 and sets the dispatch byte +0x01 to 4, and for every other value it sets that dispatch byte to (value & 1) + 1, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 688
     - c
     - invokeTwoHelpersWorld02Area08513_801F2EB0

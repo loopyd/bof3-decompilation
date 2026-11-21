@@ -87,8 +87,10 @@ segments:
     - decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4
     - '@source: src/bof3/bmagic/decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4.c'
   - - 3208
-    - asm
-    - func_801EF888
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888.c'
+    - '@behavior: Work-byte-2 handler, entry 7 and last of the eight-entry code pointer run based at 0x801EF8C4, reached through dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098, which scales work object byte 2 by four and calls the selected word with no arguments. It reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record byte 0xB by one at byte width, and then invokes the shared main-executable helper func_801E5988 with the store filling the call delay slot. The pointer load precedes frame creation because the decrement needs no stack; the 0x18-byte frame only keeps $ra across the call. It takes no arguments, returns nothing and touches no other state.'
   - - 3260
     - textbin
     - T_801EF8BC

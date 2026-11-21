@@ -45,8 +45,10 @@ segments:
     - dispatchStateByte2Table1df4BossBoss05116_800C18BC
     - '@source: src/bof3/boss/dispatchStateByte2Table1df4BossBoss05116_800C18BC.c'
   - - 256
-    - asm
-    - func_800C1900
+    - c
+    - armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900
+    - '@source: src/bof3/boss/armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900.c'
+    - '@behavior: Entry 0 of this overlay byte-2 step run, the code pointer run the payload places at 0x800C1DF4 that the dispatcher dispatchStateByte2Table1df4BossBoss05116_800C18BC indexes with work byte +2 of the scratch work record at 0x1F800044: loads the current enemy work record pointer from 0x801EB4E8, takes its unsigned byte +0xE0, scales it by the 0x88-byte class-row stride and stores the class-row byte at 0x800E40CE into scratch work byte +0x09, claims an action slot of the 0x78-byte pool through func_801E590C(3, 7), truncates the returned index to a byte, scales it by that stride and publishes the work record pointer it re-reads from the scratchpad cell into the claimed slot word at 0x801EC3A4, then advances scratch work byte +0x02 by one, which moves the dispatcher to run word 1, the inert handler 0x800C1984. The body has no branch and never distinguishes the 0xFF pool-full answer; the record pointer load precedes frame creation, the class-row store fills the call delay slot, and the 0x18-byte frame only keeps $ra at 0x10 across that single call. No jal names 0x800C1900: its only in-image reference is the run word at 0x800C1DF4.'
   - - 388
     - c
     - noopHandlerBossBoss05116_800C1984

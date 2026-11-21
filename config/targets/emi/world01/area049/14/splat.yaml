@@ -86,8 +86,10 @@ segments:
     - c
     - setTwoWorld01Area04914_801F3438
   - - 2132
-    - asm
-    - func_801F3454
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454
+    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454.c'
+    - '@behavior: Publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte D_80144F5A of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2260
     - asm
     - func_801F34D4

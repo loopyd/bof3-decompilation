@@ -80,8 +80,10 @@ segments:
     - asm
     - func_801EF3C4
   - - 2344
-    - asm
-    - func_801EF528
+    - c
+    - incrementGlobalWorkByteAAndInvokeHelperBmagicMagic05703_801EF528
+    - '@source: src/bof3/bmagic/incrementGlobalWorkByteAAndInvokeHelperBmagicMagic05703_801EF528.c'
+    - '@behavior: Third word of the three-word code pointer run at 0x801EEC2C (0x801EF134, 0x801EF3C4, 0x801EF528), the trailing three words of this overlay leading data block, so the only in-image reference to this span is the payload word at 0x801EEC34 and no jal names it. It reads the shared battle record pointer cell at 0x801EB4E0 once, before it reserves its frame, increments that record byte 0x0A by one at byte width (lbu 0x0A, addiu 1, sb 0x0A) through the pointer it already holds, the store filling the delay slot of its only call, and then invokes the shared helper func_801E5988 with no arguments. Byte 0x0A is the global work byte A of that record, the byte the state-2 handler at 0x801EF83C tests. It reads no other state, writes none, takes no arguments and returns nothing through the jr $ra at 0x801EF554 inside the 0x18-byte frame that keeps $ra at 0x10.'
   - - 2396
     - c
     - dispatchWorkByte2HandlerTableec38BmagicMagic05703_801EF55C
