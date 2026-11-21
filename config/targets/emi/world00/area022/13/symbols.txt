@@ -1,4 +1,4 @@
 setStatusFFFFAndScenarioProgress1EOr32ByGateWorld00Area02213_801F2C04 = 0x801F2C04;
 setStatusFFFFAndScenarioProgress3COr46ByGateWorld00Area02213_801F2C44 = 0x801F2C44;
 setStatusFFFFAndScenarioProgress0BOr14ByGateWorld00Area02213_801F2C84 = 0x801F2C84;
-func_801F2CC4 = 0x801F2CC4;
+queueSharedUiElementBlock3To4x7To8Size0World00Area02213_801F2CC4 = 0x801F2CC4;

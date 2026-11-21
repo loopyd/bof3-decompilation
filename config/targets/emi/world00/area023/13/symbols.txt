@@ -1,7 +1,7 @@
 D_8014932A = 0x8014932A;
 setStatusFFFFAndStateEntryProgress5WhenGateClearWorld00Area02313_801F2C04 = 0x801F2C04;
 setStatusFFFFAndStateEntryWhenGateClearWorld00Area02313_801F2C48 = 0x801F2C48;
-func_801F2C88 = 0x801F2C88;
+queueSharedUiElementBlock48To49xBToCSize0World00Area02313_801F2C88 = 0x801F2C88;
 func_801F2CE0 = 0x801F2CE0;
 retreatCounter2By18World00Area02313_801F2D38 = 0x801F2D38;
 advanceCounter2By18World00Area02313_801F2D60 = 0x801F2D60;

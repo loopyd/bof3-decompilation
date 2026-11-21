@@ -30,7 +30,8 @@ extern void func_801E52F0(u16 effect_id);
  *           non-zero, so the countdown store happens on both paths. When the
  *           countdown reaches zero it reads the current enemy work record
  *           published at 0x801EB4E8 and the word at that record offset 0xE8, the
- *           effect table func_800C1848 publishes there from this overlay word
+ *           effect table publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848
+ *           publishes there from this overlay word
  *           0x800C2750, and submits that table halfword 0 and the same halfword
  *           plus four through the shared main-executable submitter
  *           func_801E52F0. It then re-reads the scratch cell and advances object

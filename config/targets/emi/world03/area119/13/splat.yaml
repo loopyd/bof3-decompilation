@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table45ccWorldWorld03Area11913_801F2C04
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - clearCountdownByte9AndSeedStateByte1FromRandomModeTable45c4World03Area11913_801F2C48
+    - '@source: src/bof3/world/clearCountdownByte9AndSeedStateByte1FromRandomModeTable45c4World03Area11913_801F2C48.c'
+    - '@behavior: Entry handler at index 0 of the byte-1 dispatch table based at 0x801F45CC: clears the countdown byte at offset 0x09 of the work record published at the scratchpad pointer cell 0x1F800044, then masks rand() to the low three bits, indexes the 8-entry mode table at 0x801F45C4 with that value and stores the selected byte into the work record state byte at offset 0x01 so the dispatcher at 0x801F2C04 runs the handler that table cell names next; the table bytes 01 04 04 01 01 04 04 01 select state 1 at 0x801F2C88 or state 4 at 0x801F2D6C.'
   - - 136
     - c
     - advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88

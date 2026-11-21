@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4.c",
+    "src/bof3/world/seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448.c",
 ]
 support_sources = [
     "src/bof3/support/area047_13_psyq.c",

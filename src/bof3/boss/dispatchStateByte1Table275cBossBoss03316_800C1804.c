@@ -2,7 +2,9 @@
 
 /* Interior base of this overlay's handler run. The reviewed 0x800C2744
  * `textbin` row covers 0x800C2744 through 0x800C27D7: its first 24 bytes hold
- * the two byte tables func_800C1848 hands to its callees, and the code-pointer
+ * the two byte tables the installer
+ * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848 hands to
+ * its callees, and the code-pointer
  * run that starts at 0x800C275C runs from there to the payload end, mixing this
  * payload's own functions with the shared main-executable handlers from
  * 0x801E35D8 up. This dispatcher indexes the run from its first word, whose
@@ -23,7 +25,9 @@ extern void (*D_800C275C[])(void); /* @source 0x800C275C @kind data */
  * at 0x10 across the indirect call. No word and no jal in this payload holds
  * 0x800C1804, so the caller that reaches this shim sits outside the payload: it
  * is the first code span of this overlay, directly behind the four header bytes
- * and ahead of the installer func_800C1848. Seeded from the exact sibling
+ * and ahead of the installer
+ * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848. Seeded
+ * from the exact sibling
  * dispatchStateByte1Table2660BossBoss00816_800C1804 of boss008/16, whose
  * 0x44-byte span compares equal word for word except the scaled table load's
  * low immediate, 0x800C275C here against 0x800C2660 there, so only this

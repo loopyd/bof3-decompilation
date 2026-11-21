@@ -23,7 +23,7 @@ extern u8 paletteStageSerial;
  *           in that branch's delay slot. After the row it stores 1 into the
  *           shared palette-stage byte at 0x80145988, the byte the sibling lifts
  *           name paletteStageSerial. Leaf: no frame, `jr $ra` plus `nop`. Both
- *           callers inside this payload fade one row: func_80117A74 passes the
+ *           callers inside this payload scale one row: scalePaletteRedAndBlueToHalfWhenFlag3ESetThenResetWorkAreaAndAdvanceWorkByte2World01Area04913_80117A74 passes the
  *           constant 0x40, and func_80117ACC passes 0x80 minus half of the work
  *           byte at +9, so the row fades from unity towards black as that byte
  *           climbs to 0x80. Takes the factor as its only argument and returns

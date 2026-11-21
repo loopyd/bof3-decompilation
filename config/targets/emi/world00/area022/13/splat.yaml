@@ -42,8 +42,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress0BOr14ByGateWorld00Area02213_801F2C84.c'
     - '@behavior: Reads the signed shared gate byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x0B into g_ScenarioProgress when that byte reads 0 and 0x14 when it reads 1, leaving the progress byte untouched for any other gate value.'
   - - 196
-    - asm
-    - func_801F2CC4
+    - c
+    - queueSharedUiElementBlock3To4x7To8Size0World00Area02213_801F2CC4
+    - '@source: src/bof3/world/queueSharedUiElementBlock3To4x7To8Size0World00Area02213_801F2CC4.c'
+    - '@behavior: Queues the four shared UI elements of the two-by-two block x = 0x03..0x04, y = 0x07..0x08 through the shared world-marker queue 0x801A4BC0, every one with size 0, visiting x = 0x03 at y = 0x07 and 0x08 and then x = 0x04 at y = 0x07 and 0x08; takes no arguments and returns nothing, and its 0x18-byte frame only keeps the return address across the four calls.'
 - - 284
   - bin
   - tail

@@ -2,7 +2,9 @@
 
 /* Interior base of this overlay's handler run. The reviewed 0x800C2744 `textbin`
  * row covers 0x800C2744 through the payload end at 0x800C27D8: its first 24
- * bytes hold the two byte tables func_800C1848 hands to its callees, and the
+ * bytes hold the two byte tables the installer
+ * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848 hands to
+ * its callees, and the
  * code-pointer run starts at 0x800C275C and runs from there to that end. This
  * dispatcher indexes the run from its word 15, 0x800C2798, so that base word is
  * named here on its own while the reviewed row stays whole. The sixteen entries

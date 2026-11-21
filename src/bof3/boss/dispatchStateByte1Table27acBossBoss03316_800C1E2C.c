@@ -3,7 +3,8 @@
 /* This overlay's handler run: the words from 0x800C275C through 0x800C27D4 are
  * in-image code pointers, this payload's functions interleaved with the shared
  * main-executable handlers at 0x801E.... The run sits inside the 0x800C2744
- * `textbin` row, whose first 24 bytes hold the two byte tables func_800C1848
+ * `textbin` row, whose first 24 bytes hold the two byte tables the installer
+ * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848
  * hands to its callees; the reviewed Splat layout places that whole row, so it
  * is only referenced here. This dispatcher indexes the run from its word at
  * 0x800C27AC, so its base entry is 0x800C1E70 and the eleven reachable entries

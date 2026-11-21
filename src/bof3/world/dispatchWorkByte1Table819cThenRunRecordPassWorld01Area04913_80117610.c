@@ -7,7 +7,7 @@
  * raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C,
  * followed by claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8, lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768,
  * clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818,
- * func_80117A74, func_80117ACC, func_80117C38, func_80117C58 and
+ * scalePaletteRedAndBlueToHalfWhenFlag3ESetThenResetWorkAreaAndAdvanceWorkByte2World01Area04913_80117A74, func_80117ACC, func_80117C38, func_80117C58 and
  * advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated
  * undefined_syms_auto.txt row and owes no target-map row. */

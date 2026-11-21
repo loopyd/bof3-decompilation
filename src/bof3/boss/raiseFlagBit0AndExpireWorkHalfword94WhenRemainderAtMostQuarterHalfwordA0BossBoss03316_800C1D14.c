@@ -12,7 +12,8 @@ extern u8 D_801462ED; /* @source 0x801462ED @kind unknown */
  * entry 0 is the already-exact sibling at 0x800C1CDC and whose entry 2 is the
  * inert noopHandlerBossBoss03316_800C1D68: the indexed dispatcher
  * dispatchIndexedHandlerBossBoss03316_800C1CA4 masks its argument with 0xFF,
- * scales it by four and calls that run, and the installer func_800C1848
+ * scales it by four and calls that run, and the installer
+ * publishWorkStepHandlerAndDataThenSetStateTo2BossBoss03316_800C1848
  * publishes that dispatcher into byte offset 0xE4 of the work record. It takes no arguments and returns nothing. It
  * loads the current enemy work record pointer published at 0x801EB4E8, forms
  * the record halfword at 0x94 minus its signed halfword at 0xF8, and compares

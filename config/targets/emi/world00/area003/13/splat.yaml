@@ -52,8 +52,10 @@ segments:
     - '@source: src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CEC.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x44 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 304
-    - asm
-    - func_801F2D30
+    - c
+    - queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30
+    - '@source: src/bof3/world/queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30.c'
+    - '@behavior: Queues four shared UI elements through func_801A4BC0: the element at (0x55, 0x1C) with size 0, the element at (0x55, 0x1D) with size 0, the element at (0x54, 0x1C) with size 0 and the element at (0x54, 0x1D) with size 0.'
   - - 392
     - asm
     - func_801F2D88
