@@ -38,7 +38,7 @@ pub fn literal(
     report["schema"] = json!("bof3.literal-query/v1");
     report["rows"] = json!(rows.len());
     let mut matches = Vec::new();
-    let mut glyph_count = 0;
+    let mut usage = BTreeMap::new();
     for mut row in rows {
         let text = row["text"]
             .as_str()
@@ -49,28 +49,35 @@ pub fn literal(
         let capacity = row["capacity"]
             .as_u64()
             .ok_or_else(|| crate::models::Error::Invalid("literal query has no capacity".into()))?;
-        let glyphs = row["codec"] == json!(crate::inline::Codec::GameGlyphs);
+        let glyph_codec = [
+            crate::inline::Codec::GameGlyphs,
+            crate::inline::Codec::UppercaseGlyphs,
+        ]
+        .into_iter()
+        .find(|codec| row["codec"] == json!(codec));
         let maximum = capacity.checked_sub(1).ok_or_else(|| {
             crate::models::Error::Invalid("literal allocation has no terminator capacity".into())
         })?;
         let maximum = usize::try_from(maximum)
             .map_err(|error| crate::models::Error::Invalid(error.to_string()))?;
         if commands {
-            if glyphs {
-                glyph_count += crate::inline::Codec::GameGlyphs
-                    .commands(text, maximum)?
-                    .len();
+            if let Some(codec) = glyph_codec {
+                for command in codec.commands(text, maximum)? {
+                    *usage.entry(command.name()).or_insert(0usize) += 1;
+                }
             }
             continue;
         }
         let hit = match needle {
             Some(needle) => {
-                let hit = if glyphs {
-                    crate::search::find_glyphs(
-                        &crate::inline::Codec::GameGlyphs.encode(text, maximum)?,
-                        needle,
-                        ignore_case,
-                    )
+                let hit = if let Some(codec) = glyph_codec {
+                    let encoded = codec.encode(text, maximum)?;
+                    let find = if codec == crate::inline::Codec::GameGlyphs {
+                        crate::search::find_glyphs
+                    } else {
+                        crate::search::find_uppercase_glyphs
+                    };
+                    find(&encoded, needle, ignore_case)
                 } else {
                     crate::search::find_literal(text, needle, ignore_case)
                 };
@@ -106,11 +113,12 @@ pub fn literal(
         matches.push(row);
     }
     if commands {
-        report["usage"] = if glyph_count == 0 {
-            json!([])
-        } else {
-            json!([{"command": "glyph", "count": glyph_count}])
-        };
+        report["usage"] = json!(
+            usage
+                .into_iter()
+                .map(|(command, count)| json!({"command": command, "count": count}))
+                .collect::<Vec<_>>()
+        );
         return Ok(report);
     }
     report["matched"] = json!(matches.len());

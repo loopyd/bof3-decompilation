@@ -432,6 +432,24 @@ pub fn find_glyphs(encoded: &[u8], needle: &str, ignore_case: bool) -> Option<Hi
     find_pair(spaced, bare, needle, ignore_case)
 }
 
+pub fn find_uppercase_glyphs(encoded: &[u8], needle: &str, ignore_case: bool) -> Option<Hit> {
+    let mut spaced = Reading::default();
+    let mut bare = Reading::default();
+    for (offset, &byte) in encoded.iter().enumerate() {
+        let character = match crate::inline::uppercase_glyph_char(byte) {
+            Some(character) => character,
+            None => {
+                spaced.separator();
+                bare.separator();
+                continue;
+            }
+        };
+        spaced.literal(character, offset);
+        bare.literal(character, offset);
+    }
+    find_pair(spaced, bare, needle, ignore_case)
+}
+
 fn find_pair(spaced: Reading, bare: Reading, needle: &str, ignore_case: bool) -> Option<Hit> {
     let (start, end) = find_in_reading_pair(&spaced.text, &bare.text, needle, ignore_case)?;
     let window = spaced.marks.get(start..end)?;

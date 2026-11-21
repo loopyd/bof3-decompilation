@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v54`.
+`bof3.inline-text/v55`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,12 +196,16 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v54`. MAGIC003 entry 3 exposes one uppercase `READY` field;
-its centering byte and following nonzero record bytes remain immutable. The
-shared battle layout includes six five-byte Data, Pick, Best, DATA, BEST and Eqip
-fields, plus a four-byte Use field. Keep their row tails intact. Re-extract older
-inline documents. Edit only `text`,
-retain all strings, per-string renderers, codecs and references. Reserve one byte
+uses `bof3.inline-text/v55`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
+rows. Write A-Z, `!` and spaces literally; `{byte(0xNN)}` stores one raw glyph
+byte. Spaces encode as `0xFF`. End each caption with `{nul}` for the reserved
+`0x00`; `{nul}` alone is empty. Preserve the recorded byte and nonblank-glyph
+limits, centering and tails.
+Use `analyze` for glyph indices and UVs; token names are excluded from text search.
+The shared battle layout includes six five-byte fields for Data, Pick, Best, DATA,
+BEST and Eqip, plus a four-byte Use field. Keep their row tails intact. Re-extract older
+inline documents. Edit only `text`. Retain all strings, per-string renderers,
+codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
 `game-fixed-literal` and accept all five bytes without reserving NUL. Packing

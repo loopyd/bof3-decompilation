@@ -104,7 +104,13 @@ pub fn matches(document: &Document, selection: &Selection<'_>) -> Result<Vec<Val
         let text = row["text"]
             .as_str()
             .ok_or_else(|| Error::Invalid("literal query returned no text".into()))?;
-        let (scripts, language) = if row["codec"] == json!(crate::inline::Codec::GameGlyphs) {
+        let glyphs = [
+            crate::inline::Codec::GameGlyphs,
+            crate::inline::Codec::UppercaseGlyphs,
+        ]
+        .into_iter()
+        .any(|codec| row["codec"] == json!(codec));
+        let (scripts, language) = if glyphs {
             crate::lexagraph::script_profile(text)
         } else {
             crate::lexagraph::literal_script_profile(text)

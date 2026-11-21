@@ -99,6 +99,9 @@ fn literal_report(
                 .collect::<String>()
         );
         row["commands"] = commands;
+        if let Some(limit) = inline_codec.and_then(|codec| codec.max_nonblank_glyphs(maximum)) {
+            row["max_nonblank_glyphs"] = json!(limit);
+        }
         if let Some(size) = max_formatted_size {
             row["max_formatted_size"] = json!(size);
         }

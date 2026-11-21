@@ -9,7 +9,9 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v54";
+pub const SCHEMA: &str = "bof3.inline-text/v55";
+
+const UPPERCASE_GLYPH_LIMIT: usize = 10;
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -20,6 +22,7 @@ pub(crate) enum Codec {
     GameKeyboardCharacter,
     GameCountedLiteral,
     GameGlyphs,
+    UppercaseGlyphs,
     ShiftJisDigit,
     ShiftJisTitleFormat,
     AsciiLiteral,
@@ -101,6 +104,9 @@ impl Codec {
         }
         if self == Self::GameGlyphs {
             return encode_glyphs(text, capacity);
+        }
+        if self == Self::UppercaseGlyphs {
+            return encode_uppercase_glyphs(text, capacity);
         }
         if self == Self::AsciiUppercaseLiteral {
             if text.len() > capacity || !text.bytes().all(|byte| byte.is_ascii_uppercase()) {
@@ -240,6 +246,9 @@ impl Codec {
         if self == Self::GameGlyphs {
             return decode_glyphs(bytes, file_offset);
         }
+        if self == Self::UppercaseGlyphs {
+            return decode_uppercase_glyphs(bytes, file_offset);
+        }
         let end = bytes.iter().position(|byte| *byte == 0).ok_or_else(|| {
             Error::Invalid(format!("unterminated ASCII text at {file_offset:#x}"))
         })?;
@@ -260,6 +269,7 @@ impl Codec {
             Self::GameKeyboardCharacter => "game-keyboard-character",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
+            Self::UppercaseGlyphs => "uppercase-glyphs",
             Self::ShiftJisDigit => "shift-jis-digit",
             Self::ShiftJisTitleFormat => "shift-jis-title-format",
             Self::AsciiLiteral => "ascii-literal",
@@ -314,6 +324,35 @@ impl Codec {
     }
 
     pub(crate) fn commands(self, text: &str, capacity: usize) -> Result<Vec<GlyphCommand>> {
+        if self == Self::UppercaseGlyphs {
+            let bytes = self.encode(text, capacity)?;
+            let terminator_offset = bytes.len();
+            let mut commands: Vec<_> = bytes
+                .into_iter()
+                .enumerate()
+                .filter(|(_, byte)| !byte.is_ascii_uppercase() && *byte != 0xff)
+                .map(|(offset, code)| {
+                    let glyph_index = code.wrapping_sub(0x3f);
+                    GlyphCommand::Atlas {
+                        offset,
+                        code,
+                        name: if code == 0x40 {
+                            "exclamation-mark"
+                        } else {
+                            "byte"
+                        },
+                        glyph_index,
+                        uv: [(glyph_index % 21) * 12, 36 + (glyph_index / 21) * 12],
+                    }
+                })
+                .collect();
+            commands.push(GlyphCommand::Terminator {
+                offset: terminator_offset,
+                code: 0,
+                name: "nul",
+            });
+            return Ok(commands);
+        }
         if self != Self::GameGlyphs {
             return Ok(Vec::new());
         }
@@ -322,7 +361,7 @@ impl Codec {
         let mut offset = 0;
         while offset < bytes.len() {
             if bytes[offset] == 0x15 {
-                commands.push(GlyphCommand {
+                commands.push(GlyphCommand::Game {
                     offset,
                     code: 0x15,
                     name: "glyph",
@@ -334,6 +373,10 @@ impl Codec {
             }
         }
         Ok(commands)
+    }
+
+    pub(crate) fn max_nonblank_glyphs(self, capacity: usize) -> Option<usize> {
+        (self == Self::UppercaseGlyphs).then_some(capacity.min(UPPERCASE_GLYPH_LIMIT))
     }
 }
 
@@ -449,11 +492,126 @@ fn decimal_format_size(text: &str, arguments: &[usize], max_width: usize) -> Res
 }
 
 #[derive(Serialize)]
-pub(crate) struct GlyphCommand {
-    offset: usize,
-    code: u8,
-    name: &'static str,
-    operands: [u8; 1],
+#[serde(untagged)]
+pub(crate) enum GlyphCommand {
+    Game {
+        offset: usize,
+        code: u8,
+        name: &'static str,
+        operands: [u8; 1],
+    },
+    Atlas {
+        offset: usize,
+        code: u8,
+        name: &'static str,
+        glyph_index: u8,
+        uv: [u8; 2],
+    },
+    Terminator {
+        offset: usize,
+        code: u8,
+        name: &'static str,
+    },
+}
+
+impl GlyphCommand {
+    pub(crate) fn name(&self) -> &'static str {
+        match self {
+            Self::Game { name, .. } | Self::Atlas { name, .. } | Self::Terminator { name, .. } => {
+                name
+            }
+        }
+    }
+
+    fn is_glyph(&self) -> bool {
+        !matches!(self, Self::Terminator { .. })
+    }
+}
+
+pub(crate) fn uppercase_glyph_char(byte: u8) -> Option<char> {
+    match byte {
+        b'A'..=b'Z' => Some(char::from(byte)),
+        0x40 => Some('!'),
+        0xff => Some(' '),
+        _ => None,
+    }
+}
+
+fn uppercase_glyph_byte(character: char) -> Option<u8> {
+    match character {
+        'A'..='Z' => Some(character as u8),
+        '!' => Some(0x40),
+        ' ' => Some(0xff),
+        _ => None,
+    }
+}
+
+fn encode_uppercase_glyphs(text: &str, capacity: usize) -> Result<Vec<u8>> {
+    let mut text = text
+        .strip_suffix("{nul}")
+        .ok_or_else(|| Error::Invalid("uppercase glyph text must end with {nul}".into()))?;
+    let mut bytes = Vec::new();
+    let mut nonblank = 0;
+    while !text.is_empty() {
+        let byte = if let Some(tail) = text.strip_prefix("{byte(0x") {
+            let (operand, remaining) = tail
+                .split_once(")}")
+                .ok_or_else(|| Error::Invalid("glyph byte must use {byte(0xNN)}".into()))?;
+            if operand.len() != 2 || !operand.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+                return invalid("glyph byte requires exactly two hexadecimal digits");
+            }
+            let byte = u8::from_str_radix(operand, 16)
+                .map_err(|error| Error::Invalid(error.to_string()))?;
+            if byte == 0 || uppercase_glyph_char(byte).is_some() {
+                return invalid(
+                    "use trailing {nul} for NUL; write known letters, ! and spaces literally",
+                );
+            }
+            text = remaining;
+            byte
+        } else {
+            let character = text.chars().next().unwrap();
+            let byte = uppercase_glyph_byte(character).ok_or_else(|| {
+                Error::Invalid("uppercase glyph text requires A-Z, !, spaces or byte tokens".into())
+            })?;
+            text = &text[character.len_utf8()..];
+            byte
+        };
+        bytes.push(byte);
+        nonblank += usize::from(byte != 0xff);
+        if bytes.len() > capacity {
+            return invalid(format!(
+                "uppercase glyph text exceeds its {capacity}-byte field"
+            ));
+        }
+        if nonblank > UPPERCASE_GLYPH_LIMIT {
+            return invalid(format!(
+                "uppercase glyph text exceeds its {UPPERCASE_GLYPH_LIMIT} nonblank glyph limit"
+            ));
+        }
+    }
+    Ok(bytes)
+}
+
+fn decode_uppercase_glyphs(bytes: &[u8], file_offset: usize) -> Result<String> {
+    let end = bytes.iter().position(|byte| *byte == 0).ok_or_else(|| {
+        Error::Invalid(format!(
+            "unterminated uppercase glyph text at {file_offset:#x}"
+        ))
+    })?;
+    if bytes[end..].iter().any(|byte| *byte != 0) {
+        return invalid("nonzero bytes after uppercase glyph terminator");
+    }
+    let mut text = String::new();
+    for &byte in &bytes[..end] {
+        match uppercase_glyph_char(byte) {
+            Some(character) => text.push(character),
+            None => text.push_str(&format!("{{byte(0x{byte:02X})}}")),
+        }
+    }
+    text.push_str("{nul}");
+    encode_uppercase_glyphs(&text, bytes.len() - 1)?;
+    Ok(text)
 }
 
 fn encode_glyphs(mut text: &str, capacity: usize) -> Result<Vec<u8>> {
@@ -576,6 +734,16 @@ impl Allocation {
             references: &[],
             renderers,
             codec: Codec::AsciiUppercaseLiteral,
+        }
+    }
+
+    const fn uppercase_glyphs(address: u32, capacity: usize, renderers: &'static [u32]) -> Self {
+        Self {
+            address,
+            capacity,
+            references: &[],
+            renderers,
+            codec: Codec::UppercaseGlyphs,
         }
     }
 
@@ -1468,12 +1636,16 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US MAGIC003 ready caption",
+        name: "US MAGIC003 glyph captions",
         load: 0x801eec00,
         size: 11832,
-        sha256: "04d156744965b6fc8308dcebb4fcc6dffedd26e74c559d4fb85b5c81bf8f8574",
-        consumers: &[0x801eedac],
-        allocations: &[Allocation::uppercase_literal(0x801f0aad, 6, &[0x801f0164])],
+        sha256: "18b17792b678b691046641d075751fb19905b447fbfc0bbef3acd489c4c7782b",
+        consumers: &[0x801eedac, 0x801ef0a8, 0x801eee28],
+        allocations: &[
+            Allocation::uppercase_glyphs(0x801f0aad, 6, &[0x801f0164]),
+            Allocation::uppercase_glyphs(0x801f0aa0, 13, &[0x801f0164]),
+            Allocation::uppercase_glyphs(0x801f0aba, 5, &[0x801f0164]),
+        ],
     },
     Layout {
         name: "US MAGIC060 captions",
@@ -1948,7 +2120,13 @@ impl Document {
     pub(crate) fn glyph_count(&self) -> Result<usize> {
         self.strings.iter().try_fold(0, |count, row| {
             let maximum = row.codec.max_encoded_size(row.capacity)?;
-            Ok(count + row.codec.commands(&row.text, maximum)?.len())
+            Ok(count
+                + row
+                    .codec
+                    .commands(&row.text, maximum)?
+                    .iter()
+                    .filter(|command| command.is_glyph())
+                    .count())
         })
     }
 }

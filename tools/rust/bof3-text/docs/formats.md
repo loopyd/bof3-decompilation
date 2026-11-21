@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v54`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v55`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3129,14 +3129,41 @@ alignment and nonzero neighboring bytes remain protected. The first eleven
 fields retain their indices. Natural selection and edited appearance remain
 unverified.
 
-Original US `BIN/BMAGIC/MAGIC003.EMI` entry 3 exposes `READY` at `0x801F0AAD`
-through `ascii-uppercase-literal`, with six bytes including NUL. Consumer
-`0x801EEDAC` selects row one in local reader `0x801F0164`. That reader stops at
-NUL and accepts an initially empty row. Edits allow up to five ASCII A-Z letters;
-shorter or empty edits zero-fill the field. The centering byte at `0x801F0A9D`
-stays five, so shorter text keeps the original centering. The following seven
-nonzero record bytes and all other payload bytes remain protected. Overlay
-activation, graphics state and edited glyph appearance remain unverified.
+Original US `BIN/BMAGIC/MAGIC003.EMI` entry 3 exposes three complete captions
+through `uppercase-glyphs`. READY keeps index zero; the other rows follow it.
+
+| Caption | Address | Bytes including NUL | Maximum nonblank glyphs |
+| --- | --- | ---: | ---: |
+| `READY{nul}` | `0x801F0AAD` | 6 | 5 |
+| ` HIT COMBO!!{nul}` | `0x801F0AA0` | 13 | 10 |
+| `GO!!{nul}` | `0x801F0ABA` | 5 | 4 |
+
+Write uppercase A-Z and `!` literally. The exclamation mark encodes as `0x40`;
+ordinary spaces encode as `0xFF`. End each caption with `{nul}` for its reserved
+`0x00` terminator. Embedded, repeated or missing terminators are refused. Each
+`{byte(0xNN)}` encodes one nonblank byte. Use literal letters, `!` and spaces for their canonical bytes.
+Other bytes `0x01..0xFE` are accepted through tokens. These are distinct from
+`game-glyphs` commands, which encode a prefix and an operand. The original
+atlas identifies byte `0x40` as an exclamation mark, at index 1 and UV `(12,36)`.
+
+Local reader `0x801F0164` maps a nonblank byte to atlas index
+`(byte - 0x3F) & 0xFF`, then UV `(12 * (index % 21), 36 + 12 * (index / 21))`.
+Each nonblank glyph draws one 12x12 quad and advances twelve pixels; blanks
+advance six pixels without a quad. All cells fit the 256x256 atlas. The original
+FIRST entry 3 atlas and entry 8 palette are conditional suppliers. Residency,
+upload order and graphics state remain unverified.
+
+Edits may be shorter; `{nul}` alone produces an empty caption. The byte limits and nonblank limits preserve
+maximum advances of 60, 132 and 48 pixels for the rows above. Capacity alone
+would allow too many quads in the second row. `analyze` reports
+`max_nonblank_glyphs` and each raw glyph's byte offset, code, atlas index and UV.
+Literal search skips glyph tokens and cannot match their names or hex operands;
+unknown glyphs separate readable runs. `query --commands` reports
+`exclamation-mark`, fallback `byte` and terminator `nul` usage. The terminator
+occupies the reserved byte and has no atlas cell. Centering bytes stay 5, 9 and 4
+respectively, so shorter edits keep the original centering. Following record
+bytes, code and tables remain protected.
+Natural activation and edited glyph appearance remain unverified.
 
 Original US `BIN/BMAGIC/MAGIC060.EMI` entry 0 exposes four captions through
 `ascii-uppercase-literal`: `WEAK` at `0x801F0B64`, `ITEM` at `0x801F0B74`
@@ -3356,7 +3383,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v54` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v55` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
