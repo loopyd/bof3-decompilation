@@ -48,11 +48,11 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "7c58f5f00fe91040fe667dfb98ea73230272e84a",
-  "published_at": "2026-11-21T03:25:16.274656+00:00",
+  "revision": "518ba0443f2097ade4550ab9b206cc3aa31c6f86",
+  "published_at": "2026-11-21T03:29:00.316402+00:00",
   "counts": {
-    "completed": 6582,
-    "partial": 349,
+    "completed": 6583,
+    "partial": 348,
     "unlifted": 3505,
     "invalid": 0,
     "total": 10436,
@@ -68108,8 +68108,8 @@
       "family": "etc",
       "archive": "game",
       "entry": "00",
-      "completed": 235,
-      "partial": 12,
+      "completed": 236,
+      "partial": 11,
       "unlifted": 299,
       "invalid": 0,
       "total": 546,
@@ -71936,8 +71936,8 @@
             "functions": [
               {
                 "address": 2149249936,
-                "status": "partial",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawSpriteRecordTable.c#L19"
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/ui/drawSpriteRecordTable.c#L17"
               }
             ]
           },
