@@ -35,6 +35,11 @@ Inspect starting dirty work and preserve unrelated changes. Run applicable exist
 checks and report failures or unresolved blockers without claiming completion.
 Domain-specific evidence and rollback obligations remain intact.
 
+Do not change file permissions or ownership. Only toolchain setup may set executable
+bits needed to run toolchain binaries. Use OS-default permissions for new files;
+do not capture, check or restore permission bits in task or rollback workflows.
+Preserve file-type, symlink, inode and hardlink safety checks.
+
 ## Delivery focus
 
 Use current supported interfaces and formats. When replacing behavior, migrate its
