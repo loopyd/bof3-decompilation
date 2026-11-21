@@ -48,8 +48,8 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "864042c4869998e07c4836a3a3b718155ac4446d",
-  "published_at": "2026-11-21T00:44:05.821010+00:00",
+  "revision": "a9070648c82cc682124e83f11998bbd09dee724c",
+  "published_at": "2026-11-21T01:06:27.917251+00:00",
   "counts": {
     "completed": 6565,
     "partial": 349,
@@ -99,7 +99,7 @@
             "start": 4,
             "end": 7,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x804",
+            "detail": "text query: bof3.inline-text/v53 at 0x804",
             "preview": "%d"
           },
           {
@@ -112,7 +112,7 @@
             "start": 64,
             "end": 67,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x840",
+            "detail": "text query: bof3.inline-text/v53 at 0x840",
             "preview": "%d"
           },
           {
@@ -125,28 +125,28 @@
             "start": 68,
             "end": 72,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x844",
+            "detail": "text query: bof3.inline-text/v53 at 0x844",
             "preview": "%6d"
           },
           {
             "start": 72,
             "end": 76,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x848",
+            "detail": "text query: bof3.inline-text/v53 at 0x848",
             "preview": "%2d"
           },
           {
             "start": 76,
             "end": 80,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x84C",
+            "detail": "text query: bof3.inline-text/v53 at 0x84C",
             "preview": "%7d"
           },
           {
             "start": 80,
             "end": 85,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x850",
+            "detail": "text query: bof3.inline-text/v53 at 0x850",
             "preview": "*%2d"
           },
           {
@@ -568,7 +568,7 @@
             "start": 8400,
             "end": 8402,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x28D0",
+            "detail": "text query: bof3.inline-text/v53 at 0x28D0",
             "preview": "\u01b5"
           },
           {
@@ -839,7 +839,7 @@
             "start": 112,
             "end": 114,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43070",
+            "detail": "text query: bof3.inline-text/v53 at 0x43070",
             "preview": ":"
           },
           {
@@ -852,14 +852,14 @@
             "start": 116,
             "end": 120,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43074",
+            "detail": "text query: bof3.inline-text/v53 at 0x43074",
             "preview": "%4d"
           },
           {
             "start": 120,
             "end": 124,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43078",
+            "detail": "text query: bof3.inline-text/v53 at 0x43078",
             "preview": "%3d"
           },
           {
@@ -5764,14 +5764,14 @@
             "start": 107520,
             "end": 107533,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D400",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D400",
             "preview": "Attack"
           },
           {
             "start": 107533,
             "end": 107539,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D40D",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D40D",
             "preview": " {glyph(0x1B)}{glyph(0x1C)}"
           },
           {
@@ -5784,14 +5784,14 @@
             "start": 107546,
             "end": 107559,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D41A",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D41A",
             "preview": "Examine"
           },
           {
             "start": 107559,
             "end": 107565,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D427",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D427",
             "preview": " {glyph(0x1F)}{glyph(0x20)}"
           },
           {
@@ -5804,56 +5804,56 @@
             "start": 107572,
             "end": 107585,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D434",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D434",
             "preview": "Defend"
           },
           {
             "start": 107585,
             "end": 107598,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D441",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D441",
             "preview": "Charge"
           },
           {
             "start": 107598,
             "end": 107611,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D44E",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D44E",
             "preview": "Reprisal"
           },
           {
             "start": 107611,
             "end": 107624,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D45B",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D45B",
             "preview": "Critical"
           },
           {
             "start": 107624,
             "end": 107637,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D468",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D468",
             "preview": "Lucky Strike"
           },
           {
             "start": 107637,
             "end": 107650,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D475",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D475",
             "preview": "Instant Kill"
           },
           {
             "start": 107650,
             "end": 107663,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D482",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D482",
             "preview": "Escape"
           },
           {
             "start": 107663,
             "end": 107676,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x5D48F",
+            "detail": "text query: bof3.inline-text/v53 at 0x5D48F",
             "preview": "Counter"
           },
           {
@@ -5898,6 +5898,19 @@
         "spans": [
           {
             "start": 0,
+            "end": 556,
+            "category": "unknown",
+            "detail": "No verified classification"
+          },
+          {
+            "start": 556,
+            "end": 562,
+            "category": "text",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A22C",
+            "preview": "AP%2d"
+          },
+          {
+            "start": 562,
             "end": 688,
             "category": "unknown",
             "detail": "No verified classification"
@@ -12525,7 +12538,7 @@
             "start": 132704,
             "end": 132709,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA660",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA660",
             "preview": "ITEM"
           },
           {
@@ -12538,7 +12551,7 @@
             "start": 132712,
             "end": 132719,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA668",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA668",
             "preview": "WEAPON"
           },
           {
@@ -12551,7 +12564,7 @@
             "start": 132720,
             "end": 132726,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA670",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA670",
             "preview": "ARMOR"
           },
           {
@@ -12564,7 +12577,7 @@
             "start": 132728,
             "end": 132735,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA678",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA678",
             "preview": "OPTION"
           },
           {
@@ -12577,7 +12590,7 @@
             "start": 132736,
             "end": 132742,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA680",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA680",
             "preview": "VITAL"
           },
           {
@@ -12590,7 +12603,7 @@
             "start": 132764,
             "end": 132769,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA69C",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA69C",
             "preview": "HEAL"
           },
           {
@@ -12603,7 +12616,7 @@
             "start": 132772,
             "end": 132779,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA6A4",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA6A4",
             "preview": "ASSIST"
           },
           {
@@ -12616,7 +12629,7 @@
             "start": 132780,
             "end": 132787,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA6AC",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA6AC",
             "preview": "ATTACK"
           },
           {
@@ -12629,7 +12642,7 @@
             "start": 132788,
             "end": 132794,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA6B4",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA6B4",
             "preview": "SKILL"
           },
           {
@@ -12642,7 +12655,7 @@
             "start": 132796,
             "end": 132803,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAA6BC",
+            "detail": "text query: bof3.inline-text/v53 at 0xAA6BC",
             "preview": "DRAGON"
           },
           {
@@ -23201,6 +23214,39 @@
           },
           {
             "start": 8036,
+            "end": 8041,
+            "category": "text",
+            "detail": "text query: bof3.inline-text/v53 at 0x2764",
+            "preview": "WEAK"
+          },
+          {
+            "start": 8041,
+            "end": 8052,
+            "category": "unknown",
+            "detail": "No verified classification"
+          },
+          {
+            "start": 8052,
+            "end": 8057,
+            "category": "text",
+            "detail": "text query: bof3.inline-text/v53 at 0x2774",
+            "preview": "ITEM"
+          },
+          {
+            "start": 8057,
+            "end": 8060,
+            "category": "unknown",
+            "detail": "No verified classification"
+          },
+          {
+            "start": 8060,
+            "end": 8066,
+            "category": "text",
+            "detail": "text query: bof3.inline-text/v53 at 0x277C",
+            "preview": "POINT"
+          },
+          {
+            "start": 8066,
             "end": 8168,
             "category": "unknown",
             "detail": "No verified classification"
@@ -55808,7 +55854,7 @@
             "start": 76,
             "end": 80,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x6884C",
+            "detail": "text query: bof3.inline-text/v53 at 0x6884C",
             "preview": "%2d"
           },
           {
@@ -56373,7 +56419,7 @@
             "start": 6824,
             "end": 6835,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x6A2A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x6A2A8",
             "preview": "turns left"
           },
           {
@@ -62293,7 +62339,7 @@
             "start": 32,
             "end": 36,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x820",
+            "detail": "text query: bof3.inline-text/v53 at 0x820",
             "preview": "%3d"
           },
           {
@@ -62306,21 +62352,21 @@
             "start": 68,
             "end": 72,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x844",
+            "detail": "text query: bof3.inline-text/v53 at 0x844",
             "preview": "%7d"
           },
           {
             "start": 72,
             "end": 80,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x848",
+            "detail": "text query: bof3.inline-text/v53 at 0x848",
             "preview": "-------"
           },
           {
             "start": 80,
             "end": 88,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x850",
+            "detail": "text query: bof3.inline-text/v53 at 0x850",
             "preview": "Normal"
           },
           {
@@ -62333,7 +62379,7 @@
             "start": 100,
             "end": 108,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x864",
+            "detail": "text query: bof3.inline-text/v53 at 0x864",
             "preview": "Normal"
           },
           {
@@ -62346,7 +62392,7 @@
             "start": 120,
             "end": 128,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x878",
+            "detail": "text query: bof3.inline-text/v53 at 0x878",
             "preview": "Attack"
           },
           {
@@ -62359,7 +62405,7 @@
             "start": 140,
             "end": 148,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x88C",
+            "detail": "text query: bof3.inline-text/v53 at 0x88C",
             "preview": "Defense"
           },
           {
@@ -62372,7 +62418,7 @@
             "start": 160,
             "end": 168,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A0",
             "preview": "Normal"
           },
           {
@@ -62385,7 +62431,7 @@
             "start": 180,
             "end": 188,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x8B4",
             "preview": "Attack"
           },
           {
@@ -62398,7 +62444,7 @@
             "start": 200,
             "end": 208,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8C8",
+            "detail": "text query: bof3.inline-text/v53 at 0x8C8",
             "preview": "Defense"
           },
           {
@@ -62411,7 +62457,7 @@
             "start": 220,
             "end": 228,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8DC",
+            "detail": "text query: bof3.inline-text/v53 at 0x8DC",
             "preview": "Chain"
           },
           {
@@ -62424,7 +62470,7 @@
             "start": 240,
             "end": 248,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8F0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8F0",
             "preview": "Magic"
           },
           {
@@ -62437,7 +62483,7 @@
             "start": 260,
             "end": 268,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x904",
+            "detail": "text query: bof3.inline-text/v53 at 0x904",
             "preview": "Refuge"
           },
           {
@@ -62450,7 +62496,7 @@
             "start": 284,
             "end": 289,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x91C",
+            "detail": "text query: bof3.inline-text/v53 at 0x91C",
             "preview": "%02d"
           },
           {
@@ -62463,7 +62509,7 @@
             "start": 348,
             "end": 356,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x95C",
+            "detail": "text query: bof3.inline-text/v53 at 0x95C",
             "preview": "%3d/%3d"
           },
           {
@@ -62476,14 +62522,14 @@
             "start": 384,
             "end": 388,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x980",
+            "detail": "text query: bof3.inline-text/v53 at 0x980",
             "preview": "%2d"
           },
           {
             "start": 388,
             "end": 398,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x984",
+            "detail": "text query: bof3.inline-text/v53 at 0x984",
             "preview": "%02d %02d"
           },
           {
@@ -62496,7 +62542,7 @@
             "start": 400,
             "end": 404,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x990",
+            "detail": "text query: bof3.inline-text/v53 at 0x990",
             "preview": "  :"
           },
           {
@@ -62970,28 +63016,28 @@
             "start": 32552,
             "end": 32556,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8728",
+            "detail": "text query: bof3.inline-text/v53 at 0x8728",
             "preview": "Pwr"
           },
           {
             "start": 32556,
             "end": 32560,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x872C",
+            "detail": "text query: bof3.inline-text/v53 at 0x872C",
             "preview": "Def"
           },
           {
             "start": 32560,
             "end": 32564,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8730",
+            "detail": "text query: bof3.inline-text/v53 at 0x8730",
             "preview": "Int"
           },
           {
             "start": 32564,
             "end": 32568,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8734",
+            "detail": "text query: bof3.inline-text/v53 at 0x8734",
             "preview": "Agl"
           },
           {
@@ -63004,7 +63050,7 @@
             "start": 32644,
             "end": 32648,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8784",
+            "detail": "text query: bof3.inline-text/v53 at 0x8784",
             "preview": "Pwr"
           },
           {
@@ -63017,7 +63063,7 @@
             "start": 32650,
             "end": 32654,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x878A",
+            "detail": "text query: bof3.inline-text/v53 at 0x878A",
             "preview": "Def"
           },
           {
@@ -63030,7 +63076,7 @@
             "start": 32656,
             "end": 32660,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8790",
+            "detail": "text query: bof3.inline-text/v53 at 0x8790",
             "preview": "Int"
           },
           {
@@ -63043,7 +63089,7 @@
             "start": 32662,
             "end": 32666,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8796",
+            "detail": "text query: bof3.inline-text/v53 at 0x8796",
             "preview": "Agl"
           },
           {
@@ -63056,7 +63102,7 @@
             "start": 33012,
             "end": 33016,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x88F4",
+            "detail": "text query: bof3.inline-text/v53 at 0x88F4",
             "preview": "Pwr"
           },
           {
@@ -63069,7 +63115,7 @@
             "start": 33018,
             "end": 33022,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x88FA",
+            "detail": "text query: bof3.inline-text/v53 at 0x88FA",
             "preview": "Def"
           },
           {
@@ -63082,7 +63128,7 @@
             "start": 33024,
             "end": 33028,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8900",
+            "detail": "text query: bof3.inline-text/v53 at 0x8900",
             "preview": "Int"
           },
           {
@@ -63095,7 +63141,7 @@
             "start": 33030,
             "end": 33034,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8906",
+            "detail": "text query: bof3.inline-text/v53 at 0x8906",
             "preview": "Agl"
           },
           {
@@ -63108,7 +63154,7 @@
             "start": 33044,
             "end": 33048,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8914",
+            "detail": "text query: bof3.inline-text/v53 at 0x8914",
             "preview": "Pwr"
           },
           {
@@ -63121,7 +63167,7 @@
             "start": 33050,
             "end": 33054,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x891A",
+            "detail": "text query: bof3.inline-text/v53 at 0x891A",
             "preview": "Def"
           },
           {
@@ -63134,7 +63180,7 @@
             "start": 33056,
             "end": 33060,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8920",
+            "detail": "text query: bof3.inline-text/v53 at 0x8920",
             "preview": "Agl"
           },
           {
@@ -63147,7 +63193,7 @@
             "start": 33316,
             "end": 33321,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A24",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A24",
             "preview": "ITEM"
           },
           {
@@ -63160,7 +63206,7 @@
             "start": 33324,
             "end": 33331,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A2C",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A2C",
             "preview": "WEAPON"
           },
           {
@@ -63173,7 +63219,7 @@
             "start": 33332,
             "end": 33338,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A34",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A34",
             "preview": "ARMOR"
           },
           {
@@ -63186,7 +63232,7 @@
             "start": 33340,
             "end": 33347,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A3C",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A3C",
             "preview": "OPTION"
           },
           {
@@ -63199,7 +63245,7 @@
             "start": 33348,
             "end": 33354,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A44",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A44",
             "preview": "VITAL"
           },
           {
@@ -63212,7 +63258,7 @@
             "start": 33376,
             "end": 33381,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A60",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A60",
             "preview": "HEAL"
           },
           {
@@ -63225,7 +63271,7 @@
             "start": 33384,
             "end": 33391,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A68",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A68",
             "preview": "ASSIST"
           },
           {
@@ -63238,7 +63284,7 @@
             "start": 33392,
             "end": 33399,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A70",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A70",
             "preview": "ATTACK"
           },
           {
@@ -63251,7 +63297,7 @@
             "start": 33400,
             "end": 33406,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A78",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A78",
             "preview": "SKILL"
           },
           {
@@ -63264,7 +63310,7 @@
             "start": 33424,
             "end": 33429,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A90",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A90",
             "preview": "ITEM"
           },
           {
@@ -63277,7 +63323,7 @@
             "start": 33432,
             "end": 33439,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8A98",
+            "detail": "text query: bof3.inline-text/v53 at 0x8A98",
             "preview": "WEAPON"
           },
           {
@@ -63290,7 +63336,7 @@
             "start": 33440,
             "end": 33446,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8AA0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8AA0",
             "preview": "ARMOR"
           },
           {
@@ -63303,7 +63349,7 @@
             "start": 33448,
             "end": 33455,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8AA8",
+            "detail": "text query: bof3.inline-text/v53 at 0x8AA8",
             "preview": "OPTION"
           },
           {
@@ -63316,7 +63362,7 @@
             "start": 33456,
             "end": 33462,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8AB0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8AB0",
             "preview": "VITAL"
           },
           {
@@ -63410,7 +63456,7 @@
             "start": 68,
             "end": 71,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x844",
+            "detail": "text query: bof3.inline-text/v53 at 0x844",
             "preview": "%d"
           },
           {
@@ -64293,7 +64339,7 @@
             "start": 15104,
             "end": 15109,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4300",
+            "detail": "text query: bof3.inline-text/v53 at 0x4300",
             "preview": "Palce"
           },
           {
@@ -64306,7 +64352,7 @@
             "start": 15113,
             "end": 15118,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4309",
+            "detail": "text query: bof3.inline-text/v53 at 0x4309",
             "preview": "Serow"
           },
           {
@@ -64319,7 +64365,7 @@
             "start": 15122,
             "end": 15127,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4312",
+            "detail": "text query: bof3.inline-text/v53 at 0x4312",
             "preview": "Candy"
           },
           {
@@ -64332,7 +64378,7 @@
             "start": 15131,
             "end": 15136,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x431B",
+            "detail": "text query: bof3.inline-text/v53 at 0x431B",
             "preview": "Jill "
           },
           {
@@ -64345,7 +64391,7 @@
             "start": 15140,
             "end": 15145,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4324",
+            "detail": "text query: bof3.inline-text/v53 at 0x4324",
             "preview": "Chao "
           },
           {
@@ -64358,7 +64404,7 @@
             "start": 15149,
             "end": 15154,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x432D",
+            "detail": "text query: bof3.inline-text/v53 at 0x432D",
             "preview": "Pao  "
           },
           {
@@ -64371,7 +64417,7 @@
             "start": 15158,
             "end": 15163,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4336",
+            "detail": "text query: bof3.inline-text/v53 at 0x4336",
             "preview": "Jaluc"
           },
           {
@@ -64384,7 +64430,7 @@
             "start": 15167,
             "end": 15172,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x433F",
+            "detail": "text query: bof3.inline-text/v53 at 0x433F",
             "preview": "Dolia"
           },
           {
@@ -64397,7 +64443,7 @@
             "start": 15176,
             "end": 15181,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4348",
+            "detail": "text query: bof3.inline-text/v53 at 0x4348",
             "preview": "Verne"
           },
           {
@@ -64410,7 +64456,7 @@
             "start": 15185,
             "end": 15190,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4351",
+            "detail": "text query: bof3.inline-text/v53 at 0x4351",
             "preview": "Pooch"
           },
           {
@@ -64423,7 +64469,7 @@
             "start": 15194,
             "end": 15199,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x435A",
+            "detail": "text query: bof3.inline-text/v53 at 0x435A",
             "preview": "Quin "
           },
           {
@@ -64436,7 +64482,7 @@
             "start": 15203,
             "end": 15208,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4363",
+            "detail": "text query: bof3.inline-text/v53 at 0x4363",
             "preview": "Coo  "
           },
           {
@@ -64449,7 +64495,7 @@
             "start": 15212,
             "end": 15217,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x436C",
+            "detail": "text query: bof3.inline-text/v53 at 0x436C",
             "preview": "Alto "
           },
           {
@@ -64462,7 +64508,7 @@
             "start": 15221,
             "end": 15226,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4375",
+            "detail": "text query: bof3.inline-text/v53 at 0x4375",
             "preview": "Soap "
           },
           {
@@ -64475,7 +64521,7 @@
             "start": 15230,
             "end": 15235,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x437E",
+            "detail": "text query: bof3.inline-text/v53 at 0x437E",
             "preview": "Tenor"
           },
           {
@@ -64488,7 +64534,7 @@
             "start": 15239,
             "end": 15244,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4387",
+            "detail": "text query: bof3.inline-text/v53 at 0x4387",
             "preview": "Bass "
           },
           {
@@ -64501,7 +64547,7 @@
             "start": 15248,
             "end": 15253,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4390",
+            "detail": "text query: bof3.inline-text/v53 at 0x4390",
             "preview": "Pasta"
           },
           {
@@ -64514,7 +64560,7 @@
             "start": 15257,
             "end": 15262,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4399",
+            "detail": "text query: bof3.inline-text/v53 at 0x4399",
             "preview": "Chip "
           },
           {
@@ -64527,7 +64573,7 @@
             "start": 15266,
             "end": 15271,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43A2",
+            "detail": "text query: bof3.inline-text/v53 at 0x43A2",
             "preview": "Pan  "
           },
           {
@@ -64540,7 +64586,7 @@
             "start": 15275,
             "end": 15280,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43AB",
+            "detail": "text query: bof3.inline-text/v53 at 0x43AB",
             "preview": "Kalen"
           },
           {
@@ -64553,7 +64599,7 @@
             "start": 15284,
             "end": 15289,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x43B4",
             "preview": "Delta"
           },
           {
@@ -64566,7 +64612,7 @@
             "start": 15293,
             "end": 15298,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43BD",
+            "detail": "text query: bof3.inline-text/v53 at 0x43BD",
             "preview": "Popo "
           },
           {
@@ -64579,7 +64625,7 @@
             "start": 15302,
             "end": 15307,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43C6",
+            "detail": "text query: bof3.inline-text/v53 at 0x43C6",
             "preview": "Green"
           },
           {
@@ -64592,7 +64638,7 @@
             "start": 15311,
             "end": 15316,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43CF",
+            "detail": "text query: bof3.inline-text/v53 at 0x43CF",
             "preview": "Pinky"
           },
           {
@@ -64605,7 +64651,7 @@
             "start": 15320,
             "end": 15325,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43D8",
+            "detail": "text query: bof3.inline-text/v53 at 0x43D8",
             "preview": "Silvy"
           },
           {
@@ -64618,7 +64664,7 @@
             "start": 15329,
             "end": 15334,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43E1",
+            "detail": "text query: bof3.inline-text/v53 at 0x43E1",
             "preview": "Spice"
           },
           {
@@ -64631,7 +64677,7 @@
             "start": 15338,
             "end": 15343,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43EA",
+            "detail": "text query: bof3.inline-text/v53 at 0x43EA",
             "preview": "Marin"
           },
           {
@@ -64644,7 +64690,7 @@
             "start": 15347,
             "end": 15352,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43F3",
+            "detail": "text query: bof3.inline-text/v53 at 0x43F3",
             "preview": "Alpha"
           },
           {
@@ -64657,7 +64703,7 @@
             "start": 15356,
             "end": 15361,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x43FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x43FC",
             "preview": "Wink "
           },
           {
@@ -64670,7 +64716,7 @@
             "start": 15365,
             "end": 15370,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4405",
+            "detail": "text query: bof3.inline-text/v53 at 0x4405",
             "preview": "Comet"
           },
           {
@@ -64683,7 +64729,7 @@
             "start": 15374,
             "end": 15379,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x440E",
+            "detail": "text query: bof3.inline-text/v53 at 0x440E",
             "preview": "Lily "
           },
           {
@@ -64696,7 +64742,7 @@
             "start": 15383,
             "end": 15388,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4417",
+            "detail": "text query: bof3.inline-text/v53 at 0x4417",
             "preview": "Lemon"
           },
           {
@@ -64709,7 +64755,7 @@
             "start": 15392,
             "end": 15397,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4420",
+            "detail": "text query: bof3.inline-text/v53 at 0x4420",
             "preview": "Moon "
           },
           {
@@ -64722,7 +64768,7 @@
             "start": 15401,
             "end": 15406,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4429",
+            "detail": "text query: bof3.inline-text/v53 at 0x4429",
             "preview": "Chirp"
           },
           {
@@ -64735,7 +64781,7 @@
             "start": 15410,
             "end": 15415,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4432",
+            "detail": "text query: bof3.inline-text/v53 at 0x4432",
             "preview": "Apple"
           },
           {
@@ -64748,7 +64794,7 @@
             "start": 15419,
             "end": 15424,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x443B",
+            "detail": "text query: bof3.inline-text/v53 at 0x443B",
             "preview": "Tulip"
           },
           {
@@ -64761,7 +64807,7 @@
             "start": 15428,
             "end": 15433,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4444",
+            "detail": "text query: bof3.inline-text/v53 at 0x4444",
             "preview": "Rose "
           },
           {
@@ -64774,7 +64820,7 @@
             "start": 15437,
             "end": 15442,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x444D",
+            "detail": "text query: bof3.inline-text/v53 at 0x444D",
             "preview": "Mint "
           },
           {
@@ -64787,7 +64833,7 @@
             "start": 15446,
             "end": 15451,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4456",
+            "detail": "text query: bof3.inline-text/v53 at 0x4456",
             "preview": "Olive"
           },
           {
@@ -64800,7 +64846,7 @@
             "start": 15455,
             "end": 15460,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x445F",
+            "detail": "text query: bof3.inline-text/v53 at 0x445F",
             "preview": "Pear "
           },
           {
@@ -64813,7 +64859,7 @@
             "start": 15464,
             "end": 15469,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4468",
+            "detail": "text query: bof3.inline-text/v53 at 0x4468",
             "preview": "Sloth"
           },
           {
@@ -64826,7 +64872,7 @@
             "start": 15473,
             "end": 15478,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4471",
+            "detail": "text query: bof3.inline-text/v53 at 0x4471",
             "preview": "Grape"
           },
           {
@@ -64839,7 +64885,7 @@
             "start": 15482,
             "end": 15487,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x447A",
+            "detail": "text query: bof3.inline-text/v53 at 0x447A",
             "preview": "Melon"
           },
           {
@@ -64852,7 +64898,7 @@
             "start": 15491,
             "end": 15496,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4483",
+            "detail": "text query: bof3.inline-text/v53 at 0x4483",
             "preview": "Spitz"
           },
           {
@@ -64865,7 +64911,7 @@
             "start": 15500,
             "end": 15505,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x448C",
+            "detail": "text query: bof3.inline-text/v53 at 0x448C",
             "preview": "Berry"
           },
           {
@@ -64878,7 +64924,7 @@
             "start": 15509,
             "end": 15514,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4495",
+            "detail": "text query: bof3.inline-text/v53 at 0x4495",
             "preview": "Wolke"
           },
           {
@@ -64891,7 +64937,7 @@
             "start": 15518,
             "end": 15523,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x449E",
+            "detail": "text query: bof3.inline-text/v53 at 0x449E",
             "preview": "Frau "
           },
           {
@@ -64904,7 +64950,7 @@
             "start": 15527,
             "end": 15532,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44A7",
+            "detail": "text query: bof3.inline-text/v53 at 0x44A7",
             "preview": "Vogel"
           },
           {
@@ -64917,7 +64963,7 @@
             "start": 15536,
             "end": 15541,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44B0",
+            "detail": "text query: bof3.inline-text/v53 at 0x44B0",
             "preview": "Sonia"
           },
           {
@@ -64930,7 +64976,7 @@
             "start": 15545,
             "end": 15550,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44B9",
+            "detail": "text query: bof3.inline-text/v53 at 0x44B9",
             "preview": "Wald "
           },
           {
@@ -64943,7 +64989,7 @@
             "start": 15554,
             "end": 15559,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44C2",
+            "detail": "text query: bof3.inline-text/v53 at 0x44C2",
             "preview": "Rebe "
           },
           {
@@ -64956,7 +65002,7 @@
             "start": 15563,
             "end": 15568,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44CB",
+            "detail": "text query: bof3.inline-text/v53 at 0x44CB",
             "preview": "Yip  "
           },
           {
@@ -64969,7 +65015,7 @@
             "start": 15572,
             "end": 15577,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44D4",
+            "detail": "text query: bof3.inline-text/v53 at 0x44D4",
             "preview": "Scat "
           },
           {
@@ -64982,7 +65028,7 @@
             "start": 15581,
             "end": 15586,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44DD",
+            "detail": "text query: bof3.inline-text/v53 at 0x44DD",
             "preview": "Pfau "
           },
           {
@@ -64995,7 +65041,7 @@
             "start": 15590,
             "end": 15595,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44E6",
+            "detail": "text query: bof3.inline-text/v53 at 0x44E6",
             "preview": "Dr.K "
           },
           {
@@ -65008,7 +65054,7 @@
             "start": 15599,
             "end": 15604,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44EF",
+            "detail": "text query: bof3.inline-text/v53 at 0x44EF",
             "preview": "Apfel"
           },
           {
@@ -65021,7 +65067,7 @@
             "start": 15608,
             "end": 15613,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x44F8",
+            "detail": "text query: bof3.inline-text/v53 at 0x44F8",
             "preview": "Mr.Q "
           },
           {
@@ -65034,7 +65080,7 @@
             "start": 15617,
             "end": 15622,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4501",
+            "detail": "text query: bof3.inline-text/v53 at 0x4501",
             "preview": "Ein  "
           },
           {
@@ -65047,7 +65093,7 @@
             "start": 15626,
             "end": 15631,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x450A",
+            "detail": "text query: bof3.inline-text/v53 at 0x450A",
             "preview": "Zwei "
           },
           {
@@ -65060,7 +65106,7 @@
             "start": 15635,
             "end": 15640,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x4513",
+            "detail": "text query: bof3.inline-text/v53 at 0x4513",
             "preview": "Drei "
           },
           {
@@ -65120,14 +65166,14 @@
             "start": 16,
             "end": 20,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23010",
+            "detail": "text query: bof3.inline-text/v53 at 0x23010",
             "preview": "%2d"
           },
           {
             "start": 20,
             "end": 23,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23014",
+            "detail": "text query: bof3.inline-text/v53 at 0x23014",
             "preview": "%d"
           },
           {
@@ -65601,7 +65647,7 @@
             "start": 16432,
             "end": 16440,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27030",
+            "detail": "text query: bof3.inline-text/v53 at 0x27030",
             "preview": "Culture"
           },
           {
@@ -65614,140 +65660,140 @@
             "start": 16692,
             "end": 16700,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27134",
+            "detail": "text query: bof3.inline-text/v53 at 0x27134",
             "preview": "Scholar"
           },
           {
             "start": 16700,
             "end": 16708,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2713C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2713C",
             "preview": "Merchant"
           },
           {
             "start": 16708,
             "end": 16716,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27144",
+            "detail": "text query: bof3.inline-text/v53 at 0x27144",
             "preview": "Inn"
           },
           {
             "start": 16716,
             "end": 16724,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2714C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2714C",
             "preview": "Gift"
           },
           {
             "start": 16724,
             "end": 16732,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27154",
+            "detail": "text query: bof3.inline-text/v53 at 0x27154",
             "preview": "Fortune"
           },
           {
             "start": 16732,
             "end": 16740,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2715C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2715C",
             "preview": "Explorer"
           },
           {
             "start": 16740,
             "end": 16748,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27164",
+            "detail": "text query: bof3.inline-text/v53 at 0x27164",
             "preview": "Antiques"
           },
           {
             "start": 16748,
             "end": 16756,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2716C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2716C",
             "preview": "Music"
           },
           {
             "start": 16756,
             "end": 16764,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27174",
+            "detail": "text query: bof3.inline-text/v53 at 0x27174",
             "preview": "Casino"
           },
           {
             "start": 16764,
             "end": 16772,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2717C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2717C",
             "preview": "Copy"
           },
           {
             "start": 16772,
             "end": 16780,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27184",
+            "detail": "text query: bof3.inline-text/v53 at 0x27184",
             "preview": "Weapons"
           },
           {
             "start": 16780,
             "end": 16788,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2718C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2718C",
             "preview": "Items"
           },
           {
             "start": 16788,
             "end": 16796,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x27194",
+            "detail": "text query: bof3.inline-text/v53 at 0x27194",
             "preview": "Handyman"
           },
           {
             "start": 16796,
             "end": 16804,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2719C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2719C",
             "preview": "Speed"
           },
           {
             "start": 16804,
             "end": 16812,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271A4",
+            "detail": "text query: bof3.inline-text/v53 at 0x271A4",
             "preview": "Ability"
           },
           {
             "start": 16812,
             "end": 16820,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271AC",
+            "detail": "text query: bof3.inline-text/v53 at 0x271AC",
             "preview": "Job"
           },
           {
             "start": 16820,
             "end": 16828,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x271B4",
             "preview": "Culture"
           },
           {
             "start": 16828,
             "end": 16836,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x271BC",
             "preview": "Daytrip"
           },
           {
             "start": 16836,
             "end": 16844,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271C4",
+            "detail": "text query: bof3.inline-text/v53 at 0x271C4",
             "preview": "Nearby"
           },
           {
             "start": 16844,
             "end": 16852,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x271CC",
+            "detail": "text query: bof3.inline-text/v53 at 0x271CC",
             "preview": "Distant"
           },
           {
@@ -65801,14 +65847,14 @@
             "start": 4,
             "end": 8,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23804",
+            "detail": "text query: bof3.inline-text/v53 at 0x23804",
             "preview": "%7d"
           },
           {
             "start": 8,
             "end": 13,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23808",
+            "detail": "text query: bof3.inline-text/v53 at 0x23808",
             "preview": "%02d"
           },
           {
@@ -65821,7 +65867,7 @@
             "start": 16,
             "end": 21,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23810",
+            "detail": "text query: bof3.inline-text/v53 at 0x23810",
             "preview": "%03d"
           },
           {
@@ -65834,7 +65880,7 @@
             "start": 24,
             "end": 29,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23818",
+            "detail": "text query: bof3.inline-text/v53 at 0x23818",
             "preview": "%04d"
           },
           {
@@ -65847,7 +65893,7 @@
             "start": 32,
             "end": 35,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23820",
+            "detail": "text query: bof3.inline-text/v53 at 0x23820",
             "preview": "%d"
           },
           {
@@ -65860,7 +65906,7 @@
             "start": 36,
             "end": 43,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23824",
+            "detail": "text query: bof3.inline-text/v53 at 0x23824",
             "preview": "%d%d%d"
           },
           {
@@ -65873,7 +65919,7 @@
             "start": 44,
             "end": 46,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2382C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2382C",
             "preview": "-"
           },
           {
@@ -65886,28 +65932,28 @@
             "start": 60,
             "end": 65,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2383C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2383C",
             "preview": "Next"
           },
           {
             "start": 65,
             "end": 70,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23841",
+            "detail": "text query: bof3.inline-text/v53 at 0x23841",
             "preview": "Back"
           },
           {
             "start": 70,
             "end": 75,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23846",
+            "detail": "text query: bof3.inline-text/v53 at 0x23846",
             "preview": "Quit"
           },
           {
             "start": 75,
             "end": 79,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2384B",
+            "detail": "text query: bof3.inline-text/v53 at 0x2384B",
             "preview": "End"
           },
           {
@@ -66576,210 +66622,210 @@
             "start": 40812,
             "end": 40813,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D76C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D76C",
             "preview": "A"
           },
           {
             "start": 40813,
             "end": 40814,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D76D",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D76D",
             "preview": "B"
           },
           {
             "start": 40814,
             "end": 40815,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D76E",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D76E",
             "preview": "C"
           },
           {
             "start": 40815,
             "end": 40816,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D76F",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D76F",
             "preview": "D"
           },
           {
             "start": 40816,
             "end": 40817,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D770",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D770",
             "preview": "E"
           },
           {
             "start": 40817,
             "end": 40818,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D771",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D771",
             "preview": "F"
           },
           {
             "start": 40818,
             "end": 40819,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D772",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D772",
             "preview": "G"
           },
           {
             "start": 40819,
             "end": 40820,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D773",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D773",
             "preview": "H"
           },
           {
             "start": 40820,
             "end": 40821,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D774",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D774",
             "preview": "I"
           },
           {
             "start": 40821,
             "end": 40822,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D775",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D775",
             "preview": "J"
           },
           {
             "start": 40822,
             "end": 40823,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D776",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D776",
             "preview": "!"
           },
           {
             "start": 40823,
             "end": 40824,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D777",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D777",
             "preview": "?"
           },
           {
             "start": 40824,
             "end": 40825,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D778",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D778",
             "preview": "K"
           },
           {
             "start": 40825,
             "end": 40826,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D779",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D779",
             "preview": "L"
           },
           {
             "start": 40826,
             "end": 40827,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77A",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77A",
             "preview": "M"
           },
           {
             "start": 40827,
             "end": 40828,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77B",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77B",
             "preview": "N"
           },
           {
             "start": 40828,
             "end": 40829,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77C",
             "preview": "O"
           },
           {
             "start": 40829,
             "end": 40830,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77D",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77D",
             "preview": "P"
           },
           {
             "start": 40830,
             "end": 40831,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77E",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77E",
             "preview": "Q"
           },
           {
             "start": 40831,
             "end": 40832,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D77F",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D77F",
             "preview": "R"
           },
           {
             "start": 40832,
             "end": 40833,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D780",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D780",
             "preview": "S"
           },
           {
             "start": 40833,
             "end": 40834,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D781",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D781",
             "preview": "T"
           },
           {
             "start": 40834,
             "end": 40835,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D782",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D782",
             "preview": "-"
           },
           {
             "start": 40835,
             "end": 40836,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D783",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D783",
             "preview": ","
           },
           {
             "start": 40836,
             "end": 40837,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D784",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D784",
             "preview": "U"
           },
           {
             "start": 40837,
             "end": 40838,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D785",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D785",
             "preview": "V"
           },
           {
             "start": 40838,
             "end": 40839,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D786",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D786",
             "preview": "W"
           },
           {
             "start": 40839,
             "end": 40840,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D787",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D787",
             "preview": "X"
           },
           {
             "start": 40840,
             "end": 40841,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D788",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D788",
             "preview": "Y"
           },
           {
             "start": 40841,
             "end": 40842,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D789",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D789",
             "preview": "Z"
           },
           {
@@ -66792,84 +66838,84 @@
             "start": 40846,
             "end": 40847,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D78E",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D78E",
             "preview": "."
           },
           {
             "start": 40847,
             "end": 40848,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D78F",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D78F",
             "preview": " "
           },
           {
             "start": 40848,
             "end": 40849,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D790",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D790",
             "preview": "a"
           },
           {
             "start": 40849,
             "end": 40850,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D791",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D791",
             "preview": "b"
           },
           {
             "start": 40850,
             "end": 40851,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D792",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D792",
             "preview": "c"
           },
           {
             "start": 40851,
             "end": 40852,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D793",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D793",
             "preview": "d"
           },
           {
             "start": 40852,
             "end": 40853,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D794",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D794",
             "preview": "e"
           },
           {
             "start": 40853,
             "end": 40854,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D795",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D795",
             "preview": "f"
           },
           {
             "start": 40854,
             "end": 40855,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D796",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D796",
             "preview": "g"
           },
           {
             "start": 40855,
             "end": 40856,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D797",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D797",
             "preview": "h"
           },
           {
             "start": 40856,
             "end": 40857,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D798",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D798",
             "preview": "i"
           },
           {
             "start": 40857,
             "end": 40858,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D799",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D799",
             "preview": "j"
           },
           {
@@ -66882,70 +66928,70 @@
             "start": 40860,
             "end": 40861,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D79C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D79C",
             "preview": "k"
           },
           {
             "start": 40861,
             "end": 40862,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D79D",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D79D",
             "preview": "l"
           },
           {
             "start": 40862,
             "end": 40863,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D79E",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D79E",
             "preview": "m"
           },
           {
             "start": 40863,
             "end": 40864,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D79F",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D79F",
             "preview": "n"
           },
           {
             "start": 40864,
             "end": 40865,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A0",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A0",
             "preview": "o"
           },
           {
             "start": 40865,
             "end": 40866,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A1",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A1",
             "preview": "p"
           },
           {
             "start": 40866,
             "end": 40867,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A2",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A2",
             "preview": "q"
           },
           {
             "start": 40867,
             "end": 40868,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A3",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A3",
             "preview": "r"
           },
           {
             "start": 40868,
             "end": 40869,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A4",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A4",
             "preview": "s"
           },
           {
             "start": 40869,
             "end": 40870,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A5",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A5",
             "preview": "t"
           },
           {
@@ -66958,42 +67004,42 @@
             "start": 40872,
             "end": 40873,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A8",
             "preview": "u"
           },
           {
             "start": 40873,
             "end": 40874,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7A9",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7A9",
             "preview": "v"
           },
           {
             "start": 40874,
             "end": 40875,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7AA",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7AA",
             "preview": "w"
           },
           {
             "start": 40875,
             "end": 40876,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7AB",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7AB",
             "preview": "x"
           },
           {
             "start": 40876,
             "end": 40877,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7AC",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7AC",
             "preview": "y"
           },
           {
             "start": 40877,
             "end": 40878,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7AD",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7AD",
             "preview": "z"
           },
           {
@@ -67006,70 +67052,70 @@
             "start": 40884,
             "end": 40885,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B4",
             "preview": "0"
           },
           {
             "start": 40885,
             "end": 40886,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B5",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B5",
             "preview": "1"
           },
           {
             "start": 40886,
             "end": 40887,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B6",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B6",
             "preview": "2"
           },
           {
             "start": 40887,
             "end": 40888,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B7",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B7",
             "preview": "3"
           },
           {
             "start": 40888,
             "end": 40889,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B8",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B8",
             "preview": "4"
           },
           {
             "start": 40889,
             "end": 40890,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7B9",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7B9",
             "preview": "5"
           },
           {
             "start": 40890,
             "end": 40891,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7BA",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7BA",
             "preview": "6"
           },
           {
             "start": 40891,
             "end": 40892,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7BB",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7BB",
             "preview": "7"
           },
           {
             "start": 40892,
             "end": 40893,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7BC",
             "preview": "8"
           },
           {
             "start": 40893,
             "end": 40894,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D7BD",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D7BD",
             "preview": "9"
           },
           {
@@ -67082,14 +67128,14 @@
             "start": 41044,
             "end": 41048,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D854",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D854",
             "preview": "HIGH"
           },
           {
             "start": 41048,
             "end": 41051,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D858",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D858",
             "preview": "LOW"
           },
           {
@@ -67102,7 +67148,7 @@
             "start": 41052,
             "end": 41055,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D85C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D85C",
             "preview": "SET"
           },
           {
@@ -67115,7 +67161,7 @@
             "start": 41128,
             "end": 41132,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D8A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D8A8",
             "preview": "Cash"
           },
           {
@@ -67128,7 +67174,7 @@
             "start": 41136,
             "end": 41139,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D8B0",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D8B0",
             "preview": "Pot"
           },
           {
@@ -67141,14 +67187,14 @@
             "start": 41312,
             "end": 41316,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D960",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D960",
             "preview": "\\\\\\"
           },
           {
             "start": 41316,
             "end": 41318,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2D964",
+            "detail": "text query: bof3.inline-text/v53 at 0x2D964",
             "preview": "\\"
           },
           {
@@ -67161,7 +67207,7 @@
             "start": 42000,
             "end": 42003,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC10",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC10",
             "preview": "OK"
           },
           {
@@ -67174,14 +67220,14 @@
             "start": 42004,
             "end": 42008,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC14",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC14",
             "preview": "Del"
           },
           {
             "start": 42008,
             "end": 42013,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC18",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC18",
             "preview": "Next"
           },
           {
@@ -67194,7 +67240,7 @@
             "start": 42016,
             "end": 42021,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC20",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC20",
             "preview": "Back"
           },
           {
@@ -67207,7 +67253,7 @@
             "start": 42024,
             "end": 42028,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC28",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC28",
             "preview": "End"
           },
           {
@@ -67220,7 +67266,7 @@
             "start": 42036,
             "end": 42038,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2DC34",
+            "detail": "text query: bof3.inline-text/v53 at 0x2DC34",
             "preview": "."
           },
           {
@@ -67280,7 +67326,7 @@
             "start": 28,
             "end": 43,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1B01C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1B01C",
             "preview": "PLAY      EXIT"
           },
           {
@@ -67293,7 +67339,7 @@
             "start": 44,
             "end": 49,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1B02C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1B02C",
             "preview": "MONO"
           },
           {
@@ -67306,7 +67352,7 @@
             "start": 52,
             "end": 59,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1B034",
+            "detail": "text query: bof3.inline-text/v53 at 0x1B034",
             "preview": "STEREO"
           },
           {
@@ -67351,14 +67397,14 @@
             "start": 3316,
             "end": 3320,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1BCF4",
+            "detail": "text query: bof3.inline-text/v53 at 0x1BCF4",
             "preview": "..."
           },
           {
             "start": 3320,
             "end": 3322,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1BCF8",
+            "detail": "text query: bof3.inline-text/v53 at 0x1BCF8",
             "preview": "\u25b3"
           },
           {
@@ -67371,7 +67417,7 @@
             "start": 3324,
             "end": 3326,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1BCFC",
+            "detail": "text query: bof3.inline-text/v53 at 0x1BCFC",
             "preview": "\u00d7"
           },
           {
@@ -67603,7 +67649,7 @@
             "start": 4,
             "end": 10,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23004",
+            "detail": "text query: bof3.inline-text/v53 at 0x23004",
             "preview": "%d/%d"
           },
           {
@@ -67616,7 +67662,7 @@
             "start": 12,
             "end": 16,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2300C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2300C",
             "preview": "%2d"
           },
           {
@@ -67752,14 +67798,14 @@
             "start": 3420,
             "end": 3428,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23D5C",
+            "detail": "text query: bof3.inline-text/v53 at 0x23D5C",
             "preview": "faeries"
           },
           {
             "start": 3428,
             "end": 3434,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23D64",
+            "detail": "text query: bof3.inline-text/v53 at 0x23D64",
             "preview": "faery"
           },
           {
@@ -67772,14 +67818,14 @@
             "start": 3436,
             "end": 3444,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23D6C",
+            "detail": "text query: bof3.inline-text/v53 at 0x23D6C",
             "preview": "faeries"
           },
           {
             "start": 3444,
             "end": 3450,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x23D74",
+            "detail": "text query: bof3.inline-text/v53 at 0x23D74",
             "preview": "faery"
           },
           {
@@ -74990,7 +75036,7 @@
             "start": 205876,
             "end": 205881,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x32C34",
+            "detail": "text query: bof3.inline-text/v53 at 0x32C34",
             "preview": "ITEM"
           },
           {
@@ -75003,7 +75049,7 @@
             "start": 205884,
             "end": 205891,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x32C3C",
+            "detail": "text query: bof3.inline-text/v53 at 0x32C3C",
             "preview": "WEAPON"
           },
           {
@@ -75016,7 +75062,7 @@
             "start": 205892,
             "end": 205898,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x32C44",
+            "detail": "text query: bof3.inline-text/v53 at 0x32C44",
             "preview": "ARMOR"
           },
           {
@@ -75029,7 +75075,7 @@
             "start": 205900,
             "end": 205907,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x32C4C",
+            "detail": "text query: bof3.inline-text/v53 at 0x32C4C",
             "preview": "OPTION"
           },
           {
@@ -75042,7 +75088,7 @@
             "start": 205908,
             "end": 205914,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x32C54",
+            "detail": "text query: bof3.inline-text/v53 at 0x32C54",
             "preview": "VITAL"
           },
           {
@@ -82451,7 +82497,7 @@
             "start": 4,
             "end": 8,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x804",
+            "detail": "text query: bof3.inline-text/v53 at 0x804",
             "preview": "%3d"
           },
           {
@@ -82464,21 +82510,21 @@
             "start": 40,
             "end": 44,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x828",
+            "detail": "text query: bof3.inline-text/v53 at 0x828",
             "preview": "%7d"
           },
           {
             "start": 44,
             "end": 52,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x82C",
+            "detail": "text query: bof3.inline-text/v53 at 0x82C",
             "preview": "-------"
           },
           {
             "start": 52,
             "end": 60,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x834",
+            "detail": "text query: bof3.inline-text/v53 at 0x834",
             "preview": "Normal"
           },
           {
@@ -82491,7 +82537,7 @@
             "start": 72,
             "end": 80,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x848",
+            "detail": "text query: bof3.inline-text/v53 at 0x848",
             "preview": "Normal"
           },
           {
@@ -82504,7 +82550,7 @@
             "start": 92,
             "end": 100,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x85C",
+            "detail": "text query: bof3.inline-text/v53 at 0x85C",
             "preview": "Attack"
           },
           {
@@ -82517,7 +82563,7 @@
             "start": 112,
             "end": 120,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x870",
+            "detail": "text query: bof3.inline-text/v53 at 0x870",
             "preview": "Defense"
           },
           {
@@ -82530,7 +82576,7 @@
             "start": 132,
             "end": 140,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x884",
+            "detail": "text query: bof3.inline-text/v53 at 0x884",
             "preview": "Normal"
           },
           {
@@ -82543,7 +82589,7 @@
             "start": 152,
             "end": 160,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x898",
+            "detail": "text query: bof3.inline-text/v53 at 0x898",
             "preview": "Attack"
           },
           {
@@ -82556,7 +82602,7 @@
             "start": 172,
             "end": 180,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8AC",
+            "detail": "text query: bof3.inline-text/v53 at 0x8AC",
             "preview": "Defense"
           },
           {
@@ -82569,7 +82615,7 @@
             "start": 192,
             "end": 200,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8C0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8C0",
             "preview": "Chain"
           },
           {
@@ -82582,7 +82628,7 @@
             "start": 212,
             "end": 220,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8D4",
+            "detail": "text query: bof3.inline-text/v53 at 0x8D4",
             "preview": "Magic"
           },
           {
@@ -82595,7 +82641,7 @@
             "start": 232,
             "end": 240,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8E8",
+            "detail": "text query: bof3.inline-text/v53 at 0x8E8",
             "preview": "Refuge"
           },
           {
@@ -82608,7 +82654,7 @@
             "start": 256,
             "end": 261,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x900",
+            "detail": "text query: bof3.inline-text/v53 at 0x900",
             "preview": "%02d"
           },
           {
@@ -82621,7 +82667,7 @@
             "start": 320,
             "end": 328,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x940",
+            "detail": "text query: bof3.inline-text/v53 at 0x940",
             "preview": "%3d/%3d"
           },
           {
@@ -82634,14 +82680,14 @@
             "start": 356,
             "end": 360,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x964",
+            "detail": "text query: bof3.inline-text/v53 at 0x964",
             "preview": "%2d"
           },
           {
             "start": 360,
             "end": 370,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x968",
+            "detail": "text query: bof3.inline-text/v53 at 0x968",
             "preview": "%02d %02d"
           },
           {
@@ -82654,7 +82700,7 @@
             "start": 372,
             "end": 376,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x974",
+            "detail": "text query: bof3.inline-text/v53 at 0x974",
             "preview": "  :"
           },
           {
@@ -83284,28 +83330,28 @@
             "start": 36684,
             "end": 36688,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x974C",
+            "detail": "text query: bof3.inline-text/v53 at 0x974C",
             "preview": "Pwr"
           },
           {
             "start": 36688,
             "end": 36692,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9750",
+            "detail": "text query: bof3.inline-text/v53 at 0x9750",
             "preview": "Def"
           },
           {
             "start": 36692,
             "end": 36696,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9754",
+            "detail": "text query: bof3.inline-text/v53 at 0x9754",
             "preview": "Int"
           },
           {
             "start": 36696,
             "end": 36700,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9758",
+            "detail": "text query: bof3.inline-text/v53 at 0x9758",
             "preview": "Agl"
           },
           {
@@ -83318,7 +83364,7 @@
             "start": 36776,
             "end": 36780,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x97A8",
             "preview": "Pwr"
           },
           {
@@ -83331,7 +83377,7 @@
             "start": 36782,
             "end": 36786,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97AE",
+            "detail": "text query: bof3.inline-text/v53 at 0x97AE",
             "preview": "Def"
           },
           {
@@ -83344,7 +83390,7 @@
             "start": 36788,
             "end": 36792,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x97B4",
             "preview": "Int"
           },
           {
@@ -83357,7 +83403,7 @@
             "start": 36794,
             "end": 36798,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97BA",
+            "detail": "text query: bof3.inline-text/v53 at 0x97BA",
             "preview": "Agl"
           },
           {
@@ -83370,14 +83416,14 @@
             "start": 36832,
             "end": 36836,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97E0",
+            "detail": "text query: bof3.inline-text/v53 at 0x97E0",
             "preview": "Use"
           },
           {
             "start": 36836,
             "end": 36841,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97E4",
+            "detail": "text query: bof3.inline-text/v53 at 0x97E4",
             "preview": "Sort"
           },
           {
@@ -83390,7 +83436,7 @@
             "start": 36844,
             "end": 36849,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97EC",
+            "detail": "text query: bof3.inline-text/v53 at 0x97EC",
             "preview": "Drop"
           },
           {
@@ -83403,7 +83449,7 @@
             "start": 36852,
             "end": 36857,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97F4",
+            "detail": "text query: bof3.inline-text/v53 at 0x97F4",
             "preview": "Eqip"
           },
           {
@@ -83416,7 +83462,7 @@
             "start": 36860,
             "end": 36865,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x97FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x97FC",
             "preview": "Opti"
           },
           {
@@ -83429,7 +83475,7 @@
             "start": 36868,
             "end": 36873,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9804",
+            "detail": "text query: bof3.inline-text/v53 at 0x9804",
             "preview": "Abil"
           },
           {
@@ -83442,14 +83488,14 @@
             "start": 36876,
             "end": 36880,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x980C",
+            "detail": "text query: bof3.inline-text/v53 at 0x980C",
             "preview": "Buy"
           },
           {
             "start": 36880,
             "end": 36885,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9810",
+            "detail": "text query: bof3.inline-text/v53 at 0x9810",
             "preview": "Sell"
           },
           {
@@ -83462,7 +83508,7 @@
             "start": 36888,
             "end": 36893,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9818",
+            "detail": "text query: bof3.inline-text/v53 at 0x9818",
             "preview": "Chng"
           },
           {
@@ -83475,7 +83521,7 @@
             "start": 36904,
             "end": 36909,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9828",
+            "detail": "text query: bof3.inline-text/v53 at 0x9828",
             "preview": "Vtal"
           },
           {
@@ -83488,7 +83534,7 @@
             "start": 36944,
             "end": 36949,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9850",
+            "detail": "text query: bof3.inline-text/v53 at 0x9850",
             "preview": "Note"
           },
           {
@@ -83501,7 +83547,7 @@
             "start": 36952,
             "end": 36957,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9858",
+            "detail": "text query: bof3.inline-text/v53 at 0x9858",
             "preview": "Fast"
           },
           {
@@ -83514,7 +83560,7 @@
             "start": 36960,
             "end": 36965,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9860",
+            "detail": "text query: bof3.inline-text/v53 at 0x9860",
             "preview": "Pool"
           },
           {
@@ -83527,7 +83573,7 @@
             "start": 36976,
             "end": 36981,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9870",
+            "detail": "text query: bof3.inline-text/v53 at 0x9870",
             "preview": "Gene"
           },
           {
@@ -83540,7 +83586,7 @@
             "start": 36992,
             "end": 36997,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9880",
+            "detail": "text query: bof3.inline-text/v53 at 0x9880",
             "preview": "Look"
           },
           {
@@ -83553,7 +83599,7 @@
             "start": 37144,
             "end": 37148,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9918",
+            "detail": "text query: bof3.inline-text/v53 at 0x9918",
             "preview": "Pwr"
           },
           {
@@ -83566,7 +83612,7 @@
             "start": 37150,
             "end": 37154,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x991E",
+            "detail": "text query: bof3.inline-text/v53 at 0x991E",
             "preview": "Def"
           },
           {
@@ -83579,7 +83625,7 @@
             "start": 37156,
             "end": 37160,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9924",
+            "detail": "text query: bof3.inline-text/v53 at 0x9924",
             "preview": "Int"
           },
           {
@@ -83592,7 +83638,7 @@
             "start": 37162,
             "end": 37166,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x992A",
+            "detail": "text query: bof3.inline-text/v53 at 0x992A",
             "preview": "Agl"
           },
           {
@@ -83605,7 +83651,7 @@
             "start": 37176,
             "end": 37180,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9938",
+            "detail": "text query: bof3.inline-text/v53 at 0x9938",
             "preview": "Pwr"
           },
           {
@@ -83618,7 +83664,7 @@
             "start": 37182,
             "end": 37186,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x993E",
+            "detail": "text query: bof3.inline-text/v53 at 0x993E",
             "preview": "Def"
           },
           {
@@ -83631,7 +83677,7 @@
             "start": 37188,
             "end": 37192,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9944",
+            "detail": "text query: bof3.inline-text/v53 at 0x9944",
             "preview": "Agl"
           },
           {
@@ -83644,7 +83690,7 @@
             "start": 37448,
             "end": 37453,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A48",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A48",
             "preview": "ITEM"
           },
           {
@@ -83657,7 +83703,7 @@
             "start": 37456,
             "end": 37463,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A50",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A50",
             "preview": "WEAPON"
           },
           {
@@ -83670,7 +83716,7 @@
             "start": 37464,
             "end": 37470,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A58",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A58",
             "preview": "ARMOR"
           },
           {
@@ -83683,7 +83729,7 @@
             "start": 37472,
             "end": 37479,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A60",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A60",
             "preview": "OPTION"
           },
           {
@@ -83696,7 +83742,7 @@
             "start": 37480,
             "end": 37486,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A68",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A68",
             "preview": "VITAL"
           },
           {
@@ -83709,7 +83755,7 @@
             "start": 37508,
             "end": 37513,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A84",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A84",
             "preview": "HEAL"
           },
           {
@@ -83722,7 +83768,7 @@
             "start": 37516,
             "end": 37523,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A8C",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A8C",
             "preview": "ASSIST"
           },
           {
@@ -83735,7 +83781,7 @@
             "start": 37524,
             "end": 37531,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A94",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A94",
             "preview": "ATTACK"
           },
           {
@@ -83748,7 +83794,7 @@
             "start": 37532,
             "end": 37538,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A9C",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A9C",
             "preview": "SKILL"
           },
           {
@@ -83761,7 +83807,7 @@
             "start": 37556,
             "end": 37561,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9AB4",
+            "detail": "text query: bof3.inline-text/v53 at 0x9AB4",
             "preview": "ITEM"
           },
           {
@@ -83774,7 +83820,7 @@
             "start": 37564,
             "end": 37571,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9ABC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9ABC",
             "preview": "WEAPON"
           },
           {
@@ -83787,7 +83833,7 @@
             "start": 37572,
             "end": 37578,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9AC4",
+            "detail": "text query: bof3.inline-text/v53 at 0x9AC4",
             "preview": "ARMOR"
           },
           {
@@ -83800,7 +83846,7 @@
             "start": 37580,
             "end": 37587,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9ACC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9ACC",
             "preview": "OPTION"
           },
           {
@@ -83813,7 +83859,7 @@
             "start": 37588,
             "end": 37594,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9AD4",
+            "detail": "text query: bof3.inline-text/v53 at 0x9AD4",
             "preview": "VITAL"
           },
           {
@@ -83873,7 +83919,7 @@
             "start": 28,
             "end": 31,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x81C",
+            "detail": "text query: bof3.inline-text/v53 at 0x81C",
             "preview": "%d"
           },
           {
@@ -83886,7 +83932,7 @@
             "start": 104,
             "end": 124,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x868",
+            "detail": "text query: bof3.inline-text/v53 at 0x868",
             "preview": "BOF3-%02d/%02d/%02d"
           },
           {
@@ -83899,7 +83945,7 @@
             "start": 152,
             "end": 217,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x898",
+            "detail": "text query: bof3.inline-text/v53 at 0x898",
             "preview": "\uff22\uff52\uff45\uff41\uff54\uff48\u3000\uff4f\uff46\u3000\uff26\uff49\uff52\uff45\u3000\uff13\uff08%s\uff09\u3000%s%s\uff48%s%s\uff4d\u3000\uff2c\uff56\uff0e%s%s"
           },
           {
@@ -83912,35 +83958,35 @@
             "start": 228,
             "end": 232,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8E4",
+            "detail": "text query: bof3.inline-text/v53 at 0x8E4",
             "preview": "%3d"
           },
           {
             "start": 232,
             "end": 240,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8E8",
+            "detail": "text query: bof3.inline-text/v53 at 0x8E8",
             "preview": "%3d/   "
           },
           {
             "start": 240,
             "end": 248,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8F0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8F0",
             "preview": "   /%3d"
           },
           {
             "start": 248,
             "end": 252,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8F8",
+            "detail": "text query: bof3.inline-text/v53 at 0x8F8",
             "preview": "%8d"
           },
           {
             "start": 252,
             "end": 261,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x8FC",
             "preview": "--------"
           },
           {
@@ -83953,21 +83999,21 @@
             "start": 264,
             "end": 268,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x908",
+            "detail": "text query: bof3.inline-text/v53 at 0x908",
             "preview": "%7d"
           },
           {
             "start": 268,
             "end": 276,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x90C",
+            "detail": "text query: bof3.inline-text/v53 at 0x90C",
             "preview": "-------"
           },
           {
             "start": 276,
             "end": 284,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x914",
+            "detail": "text query: bof3.inline-text/v53 at 0x914",
             "preview": "Normal"
           },
           {
@@ -83980,7 +84026,7 @@
             "start": 296,
             "end": 304,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x928",
+            "detail": "text query: bof3.inline-text/v53 at 0x928",
             "preview": "Normal"
           },
           {
@@ -83993,7 +84039,7 @@
             "start": 316,
             "end": 324,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x93C",
+            "detail": "text query: bof3.inline-text/v53 at 0x93C",
             "preview": "Attack"
           },
           {
@@ -84006,7 +84052,7 @@
             "start": 336,
             "end": 344,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x950",
+            "detail": "text query: bof3.inline-text/v53 at 0x950",
             "preview": "Defense"
           },
           {
@@ -84019,7 +84065,7 @@
             "start": 356,
             "end": 364,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x964",
+            "detail": "text query: bof3.inline-text/v53 at 0x964",
             "preview": "Normal"
           },
           {
@@ -84032,7 +84078,7 @@
             "start": 376,
             "end": 384,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x978",
+            "detail": "text query: bof3.inline-text/v53 at 0x978",
             "preview": "Attack"
           },
           {
@@ -84045,7 +84091,7 @@
             "start": 396,
             "end": 404,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x98C",
+            "detail": "text query: bof3.inline-text/v53 at 0x98C",
             "preview": "Defense"
           },
           {
@@ -84058,7 +84104,7 @@
             "start": 416,
             "end": 424,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A0",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A0",
             "preview": "Chain"
           },
           {
@@ -84071,7 +84117,7 @@
             "start": 436,
             "end": 444,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9B4",
+            "detail": "text query: bof3.inline-text/v53 at 0x9B4",
             "preview": "Magic"
           },
           {
@@ -84084,7 +84130,7 @@
             "start": 456,
             "end": 464,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9C8",
+            "detail": "text query: bof3.inline-text/v53 at 0x9C8",
             "preview": "Refuge"
           },
           {
@@ -84097,7 +84143,7 @@
             "start": 480,
             "end": 485,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9E0",
+            "detail": "text query: bof3.inline-text/v53 at 0x9E0",
             "preview": "%02d"
           },
           {
@@ -84110,7 +84156,7 @@
             "start": 544,
             "end": 552,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA20",
+            "detail": "text query: bof3.inline-text/v53 at 0xA20",
             "preview": "%3d/%3d"
           },
           {
@@ -84123,14 +84169,14 @@
             "start": 580,
             "end": 584,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA44",
+            "detail": "text query: bof3.inline-text/v53 at 0xA44",
             "preview": "%2d"
           },
           {
             "start": 584,
             "end": 594,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA48",
+            "detail": "text query: bof3.inline-text/v53 at 0xA48",
             "preview": "%02d %02d"
           },
           {
@@ -84143,14 +84189,14 @@
             "start": 596,
             "end": 600,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA54",
+            "detail": "text query: bof3.inline-text/v53 at 0xA54",
             "preview": "  :"
           },
           {
             "start": 600,
             "end": 602,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA58",
+            "detail": "text query: bof3.inline-text/v53 at 0xA58",
             "preview": "1"
           },
           {
@@ -84163,7 +84209,7 @@
             "start": 604,
             "end": 606,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA5C",
+            "detail": "text query: bof3.inline-text/v53 at 0xA5C",
             "preview": "2"
           },
           {
@@ -84176,7 +84222,7 @@
             "start": 608,
             "end": 611,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA60",
+            "detail": "text query: bof3.inline-text/v53 at 0xA60",
             "preview": "%d"
           },
           {
@@ -84189,21 +84235,21 @@
             "start": 612,
             "end": 616,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA64",
+            "detail": "text query: bof3.inline-text/v53 at 0xA64",
             "preview": "%3d"
           },
           {
             "start": 616,
             "end": 624,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA68",
+            "detail": "text query: bof3.inline-text/v53 at 0xA68",
             "preview": "%3d/   "
           },
           {
             "start": 624,
             "end": 632,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA70",
+            "detail": "text query: bof3.inline-text/v53 at 0xA70",
             "preview": "   /%3d"
           },
           {
@@ -84216,21 +84262,21 @@
             "start": 636,
             "end": 644,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA7C",
+            "detail": "text query: bof3.inline-text/v53 at 0xA7C",
             "preview": "%3d/%3d"
           },
           {
             "start": 644,
             "end": 648,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA84",
+            "detail": "text query: bof3.inline-text/v53 at 0xA84",
             "preview": "%2d"
           },
           {
             "start": 648,
             "end": 653,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA88",
+            "detail": "text query: bof3.inline-text/v53 at 0xA88",
             "preview": "%6dZ"
           },
           {
@@ -84243,7 +84289,7 @@
             "start": 656,
             "end": 661,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA90",
+            "detail": "text query: bof3.inline-text/v53 at 0xA90",
             "preview": "%7dZ"
           },
           {
@@ -84256,7 +84302,7 @@
             "start": 664,
             "end": 669,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA98",
+            "detail": "text query: bof3.inline-text/v53 at 0xA98",
             "preview": "*%2d"
           },
           {
@@ -87290,7 +87336,7 @@
             "start": 83980,
             "end": 83983,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1500C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1500C",
             "preview": "\uff10"
           },
           {
@@ -87303,7 +87349,7 @@
             "start": 83984,
             "end": 83987,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15010",
+            "detail": "text query: bof3.inline-text/v53 at 0x15010",
             "preview": "\uff11"
           },
           {
@@ -87316,7 +87362,7 @@
             "start": 83988,
             "end": 83991,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15014",
+            "detail": "text query: bof3.inline-text/v53 at 0x15014",
             "preview": "\uff12"
           },
           {
@@ -87329,7 +87375,7 @@
             "start": 83992,
             "end": 83995,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15018",
+            "detail": "text query: bof3.inline-text/v53 at 0x15018",
             "preview": "\uff13"
           },
           {
@@ -87342,7 +87388,7 @@
             "start": 83996,
             "end": 83999,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1501C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1501C",
             "preview": "\uff14"
           },
           {
@@ -87355,7 +87401,7 @@
             "start": 84000,
             "end": 84003,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15020",
+            "detail": "text query: bof3.inline-text/v53 at 0x15020",
             "preview": "\uff15"
           },
           {
@@ -87368,7 +87414,7 @@
             "start": 84004,
             "end": 84007,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15024",
+            "detail": "text query: bof3.inline-text/v53 at 0x15024",
             "preview": "\uff16"
           },
           {
@@ -87381,7 +87427,7 @@
             "start": 84008,
             "end": 84011,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15028",
+            "detail": "text query: bof3.inline-text/v53 at 0x15028",
             "preview": "\uff17"
           },
           {
@@ -87394,7 +87440,7 @@
             "start": 84012,
             "end": 84015,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1502C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1502C",
             "preview": "\uff18"
           },
           {
@@ -87407,7 +87453,7 @@
             "start": 84016,
             "end": 84019,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15030",
+            "detail": "text query: bof3.inline-text/v53 at 0x15030",
             "preview": "\uff19"
           },
           {
@@ -87420,14 +87466,14 @@
             "start": 85176,
             "end": 85180,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154B8",
+            "detail": "text query: bof3.inline-text/v53 at 0x154B8",
             "preview": "Use"
           },
           {
             "start": 85180,
             "end": 85185,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x154BC",
             "preview": "Sort"
           },
           {
@@ -87440,7 +87486,7 @@
             "start": 85188,
             "end": 85193,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154C4",
+            "detail": "text query: bof3.inline-text/v53 at 0x154C4",
             "preview": "Drop"
           },
           {
@@ -87453,7 +87499,7 @@
             "start": 85196,
             "end": 85201,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154CC",
+            "detail": "text query: bof3.inline-text/v53 at 0x154CC",
             "preview": "Eqip"
           },
           {
@@ -87466,7 +87512,7 @@
             "start": 85204,
             "end": 85209,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154D4",
+            "detail": "text query: bof3.inline-text/v53 at 0x154D4",
             "preview": "Opti"
           },
           {
@@ -87479,7 +87525,7 @@
             "start": 85212,
             "end": 85217,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154DC",
+            "detail": "text query: bof3.inline-text/v53 at 0x154DC",
             "preview": "Abil"
           },
           {
@@ -87492,14 +87538,14 @@
             "start": 85220,
             "end": 85224,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154E4",
+            "detail": "text query: bof3.inline-text/v53 at 0x154E4",
             "preview": "Buy"
           },
           {
             "start": 85224,
             "end": 85229,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154E8",
+            "detail": "text query: bof3.inline-text/v53 at 0x154E8",
             "preview": "Sell"
           },
           {
@@ -87512,7 +87558,7 @@
             "start": 85232,
             "end": 85237,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154F0",
+            "detail": "text query: bof3.inline-text/v53 at 0x154F0",
             "preview": "Chng"
           },
           {
@@ -87525,7 +87571,7 @@
             "start": 85240,
             "end": 85245,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x154F8",
+            "detail": "text query: bof3.inline-text/v53 at 0x154F8",
             "preview": "Read"
           },
           {
@@ -87538,7 +87584,7 @@
             "start": 85248,
             "end": 85253,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15500",
+            "detail": "text query: bof3.inline-text/v53 at 0x15500",
             "preview": "Vtal"
           },
           {
@@ -87551,7 +87597,7 @@
             "start": 85256,
             "end": 85261,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15508",
+            "detail": "text query: bof3.inline-text/v53 at 0x15508",
             "preview": "Quit"
           },
           {
@@ -87564,7 +87610,7 @@
             "start": 85264,
             "end": 85269,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15510",
+            "detail": "text query: bof3.inline-text/v53 at 0x15510",
             "preview": "Form"
           },
           {
@@ -87577,7 +87623,7 @@
             "start": 85280,
             "end": 85285,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15520",
+            "detail": "text query: bof3.inline-text/v53 at 0x15520",
             "preview": "Init"
           },
           {
@@ -87590,7 +87636,7 @@
             "start": 85288,
             "end": 85293,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15528",
+            "detail": "text query: bof3.inline-text/v53 at 0x15528",
             "preview": "Note"
           },
           {
@@ -87603,7 +87649,7 @@
             "start": 85296,
             "end": 85301,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15530",
+            "detail": "text query: bof3.inline-text/v53 at 0x15530",
             "preview": "Fast"
           },
           {
@@ -87616,7 +87662,7 @@
             "start": 85304,
             "end": 85309,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15538",
+            "detail": "text query: bof3.inline-text/v53 at 0x15538",
             "preview": "Pool"
           },
           {
@@ -87629,7 +87675,7 @@
             "start": 85312,
             "end": 85317,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15540",
+            "detail": "text query: bof3.inline-text/v53 at 0x15540",
             "preview": "Ally"
           },
           {
@@ -87642,7 +87688,7 @@
             "start": 85320,
             "end": 85325,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15548",
+            "detail": "text query: bof3.inline-text/v53 at 0x15548",
             "preview": "Gene"
           },
           {
@@ -87655,7 +87701,7 @@
             "start": 85328,
             "end": 85332,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15550",
+            "detail": "text query: bof3.inline-text/v53 at 0x15550",
             "preview": "Knd"
           },
           {
@@ -87668,7 +87714,7 @@
             "start": 85336,
             "end": 85341,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15558",
+            "detail": "text query: bof3.inline-text/v53 at 0x15558",
             "preview": "Look"
           },
           {
@@ -87681,7 +87727,7 @@
             "start": 85344,
             "end": 85348,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15560",
+            "detail": "text query: bof3.inline-text/v53 at 0x15560",
             "preview": "End"
           },
           {
@@ -87694,7 +87740,7 @@
             "start": 85520,
             "end": 85524,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15610",
+            "detail": "text query: bof3.inline-text/v53 at 0x15610",
             "preview": "Pwr"
           },
           {
@@ -87707,7 +87753,7 @@
             "start": 85526,
             "end": 85530,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15616",
+            "detail": "text query: bof3.inline-text/v53 at 0x15616",
             "preview": "Def"
           },
           {
@@ -87720,7 +87766,7 @@
             "start": 85532,
             "end": 85536,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1561C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1561C",
             "preview": "Agl"
           },
           {
@@ -87733,7 +87779,7 @@
             "start": 85792,
             "end": 85797,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15720",
+            "detail": "text query: bof3.inline-text/v53 at 0x15720",
             "preview": "ITEM"
           },
           {
@@ -87746,7 +87792,7 @@
             "start": 85800,
             "end": 85807,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15728",
+            "detail": "text query: bof3.inline-text/v53 at 0x15728",
             "preview": "WEAPON"
           },
           {
@@ -87759,7 +87805,7 @@
             "start": 85808,
             "end": 85814,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15730",
+            "detail": "text query: bof3.inline-text/v53 at 0x15730",
             "preview": "ARMOR"
           },
           {
@@ -87772,7 +87818,7 @@
             "start": 85816,
             "end": 85823,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15738",
+            "detail": "text query: bof3.inline-text/v53 at 0x15738",
             "preview": "OPTION"
           },
           {
@@ -87785,7 +87831,7 @@
             "start": 85824,
             "end": 85830,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15740",
+            "detail": "text query: bof3.inline-text/v53 at 0x15740",
             "preview": "VITAL"
           },
           {
@@ -87798,7 +87844,7 @@
             "start": 85852,
             "end": 85857,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1575C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1575C",
             "preview": "HEAL"
           },
           {
@@ -87811,7 +87857,7 @@
             "start": 85860,
             "end": 85867,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15764",
+            "detail": "text query: bof3.inline-text/v53 at 0x15764",
             "preview": "ASSIST"
           },
           {
@@ -87824,7 +87870,7 @@
             "start": 85868,
             "end": 85875,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1576C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1576C",
             "preview": "ATTACK"
           },
           {
@@ -87837,7 +87883,7 @@
             "start": 85876,
             "end": 85882,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15774",
+            "detail": "text query: bof3.inline-text/v53 at 0x15774",
             "preview": "SKILL"
           },
           {
@@ -87850,7 +87896,7 @@
             "start": 85900,
             "end": 85905,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1578C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1578C",
             "preview": "ITEM"
           },
           {
@@ -87863,7 +87909,7 @@
             "start": 85908,
             "end": 85915,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15794",
+            "detail": "text query: bof3.inline-text/v53 at 0x15794",
             "preview": "WEAPON"
           },
           {
@@ -87876,7 +87922,7 @@
             "start": 85916,
             "end": 85922,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1579C",
+            "detail": "text query: bof3.inline-text/v53 at 0x1579C",
             "preview": "ARMOR"
           },
           {
@@ -87889,7 +87935,7 @@
             "start": 85924,
             "end": 85931,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x157A4",
+            "detail": "text query: bof3.inline-text/v53 at 0x157A4",
             "preview": "OPTION"
           },
           {
@@ -87902,7 +87948,7 @@
             "start": 85932,
             "end": 85938,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x157AC",
+            "detail": "text query: bof3.inline-text/v53 at 0x157AC",
             "preview": "VITAL"
           },
           {
@@ -87915,7 +87961,7 @@
             "start": 86328,
             "end": 86332,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15938",
+            "detail": "text query: bof3.inline-text/v53 at 0x15938",
             "preview": "Ink"
           },
           {
@@ -87928,7 +87974,7 @@
             "start": 86748,
             "end": 86753,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15ADC",
+            "detail": "text query: bof3.inline-text/v53 at 0x15ADC",
             "preview": "SORT"
           },
           {
@@ -87941,7 +87987,7 @@
             "start": 86756,
             "end": 86761,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15AE4",
+            "detail": "text query: bof3.inline-text/v53 at 0x15AE4",
             "preview": "LOOK"
           },
           {
@@ -87954,14 +88000,14 @@
             "start": 86764,
             "end": 86772,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15AEC",
+            "detail": "text query: bof3.inline-text/v53 at 0x15AEC",
             "preview": "High AP"
           },
           {
             "start": 86772,
             "end": 86779,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x15AF4",
+            "detail": "text query: bof3.inline-text/v53 at 0x15AF4",
             "preview": "Low AP"
           },
           {
@@ -88014,21 +88060,21 @@
             "start": 4,
             "end": 8,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x804",
+            "detail": "text query: bof3.inline-text/v53 at 0x804",
             "preview": "%3d"
           },
           {
             "start": 8,
             "end": 16,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x808",
+            "detail": "text query: bof3.inline-text/v53 at 0x808",
             "preview": "%3d/   "
           },
           {
             "start": 16,
             "end": 24,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x810",
+            "detail": "text query: bof3.inline-text/v53 at 0x810",
             "preview": "   /%3d"
           },
           {
@@ -88639,35 +88685,35 @@
             "start": 13368,
             "end": 13372,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C38",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C38",
             "preview": "Pwr"
           },
           {
             "start": 13372,
             "end": 13376,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C3C",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C3C",
             "preview": "Def"
           },
           {
             "start": 13376,
             "end": 13380,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C40",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C40",
             "preview": "Int"
           },
           {
             "start": 13380,
             "end": 13384,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C44",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C44",
             "preview": "Agl"
           },
           {
             "start": 13384,
             "end": 13389,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C48",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C48",
             "preview": "Pois"
           },
           {
@@ -88680,7 +88726,7 @@
             "start": 13392,
             "end": 13397,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3C50",
+            "detail": "text query: bof3.inline-text/v53 at 0x3C50",
             "preview": "Conf"
           },
           {
@@ -110049,7 +110095,7 @@
             "start": 8,
             "end": 13,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x808",
+            "detail": "text query: bof3.inline-text/v53 at 0x808",
             "preview": "%02d"
           },
           {
@@ -110062,7 +110108,7 @@
             "start": 16,
             "end": 21,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x810",
+            "detail": "text query: bof3.inline-text/v53 at 0x810",
             "preview": "*%2d"
           },
           {
@@ -110833,7 +110879,7 @@
             "start": 4,
             "end": 9,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x804",
+            "detail": "text query: bof3.inline-text/v53 at 0x804",
             "preview": "%03d"
           },
           {
@@ -114584,7 +114630,7 @@
             "start": 4,
             "end": 20,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x804",
+            "detail": "text query: bof3.inline-text/v53 at 0x804",
             "preview": "   Presented by "
           },
           {
@@ -114597,7 +114643,7 @@
             "start": 24,
             "end": 34,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x818",
+            "detail": "text query: bof3.inline-text/v53 at 0x818",
             "preview": "    PETCHA"
           },
           {
@@ -114610,7 +114656,7 @@
             "start": 36,
             "end": 46,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x824",
+            "detail": "text query: bof3.inline-text/v53 at 0x824",
             "preview": "    BAMBOO"
           },
           {
@@ -114623,7 +114669,7 @@
             "start": 50,
             "end": 58,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x832",
+            "detail": "text query: bof3.inline-text/v53 at 0x832",
             "preview": "Producer"
           },
           {
@@ -114636,7 +114682,7 @@
             "start": 60,
             "end": 79,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x83C",
+            "detail": "text query: bof3.inline-text/v53 at 0x83C",
             "preview": "    YOSHIKI OKAMOTO"
           },
           {
@@ -114649,7 +114695,7 @@
             "start": 82,
             "end": 100,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x852",
+            "detail": "text query: bof3.inline-text/v53 at 0x852",
             "preview": "Executive Producer"
           },
           {
@@ -114662,7 +114708,7 @@
             "start": 104,
             "end": 125,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x868",
+            "detail": "text query: bof3.inline-text/v53 at 0x868",
             "preview": "    NORITAKA FUNAMIZU"
           },
           {
@@ -114675,7 +114721,7 @@
             "start": 130,
             "end": 146,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x882",
+            "detail": "text query: bof3.inline-text/v53 at 0x882",
             "preview": "General Producer"
           },
           {
@@ -114688,7 +114734,7 @@
             "start": 148,
             "end": 168,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x894",
+            "detail": "text query: bof3.inline-text/v53 at 0x894",
             "preview": "    YOSHINORI KAWANO"
           },
           {
@@ -114701,7 +114747,7 @@
             "start": 174,
             "end": 195,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8AE",
+            "detail": "text query: bof3.inline-text/v53 at 0x8AE",
             "preview": "Breath Of Fire Series"
           },
           {
@@ -114714,7 +114760,7 @@
             "start": 196,
             "end": 207,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8C4",
+            "detail": "text query: bof3.inline-text/v53 at 0x8C4",
             "preview": "    MEMBERS"
           },
           {
@@ -114727,7 +114773,7 @@
             "start": 208,
             "end": 232,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8D0",
+            "detail": "text query: bof3.inline-text/v53 at 0x8D0",
             "preview": "    AND ALL CAPCOM STAFF"
           },
           {
@@ -114740,7 +114786,7 @@
             "start": 236,
             "end": 241,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8EC",
+            "detail": "text query: bof3.inline-text/v53 at 0x8EC",
             "preview": "    T"
           },
           {
@@ -114753,7 +114799,7 @@
             "start": 243,
             "end": 251,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8F3",
+            "detail": "text query: bof3.inline-text/v53 at 0x8F3",
             "preview": "FUJIKAWA"
           },
           {
@@ -114766,7 +114812,7 @@
             "start": 252,
             "end": 257,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x8FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x8FC",
             "preview": "    C"
           },
           {
@@ -114779,7 +114825,7 @@
             "start": 259,
             "end": 267,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x903",
+            "detail": "text query: bof3.inline-text/v53 at 0x903",
             "preview": "KAJIHARA"
           },
           {
@@ -114792,7 +114838,7 @@
             "start": 268,
             "end": 273,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x90C",
+            "detail": "text query: bof3.inline-text/v53 at 0x90C",
             "preview": "    M"
           },
           {
@@ -114805,7 +114851,7 @@
             "start": 275,
             "end": 281,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x913",
+            "detail": "text query: bof3.inline-text/v53 at 0x913",
             "preview": "SUZUKI"
           },
           {
@@ -114818,7 +114864,7 @@
             "start": 284,
             "end": 289,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x91C",
+            "detail": "text query: bof3.inline-text/v53 at 0x91C",
             "preview": "    S"
           },
           {
@@ -114831,7 +114877,7 @@
             "start": 291,
             "end": 297,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x923",
+            "detail": "text query: bof3.inline-text/v53 at 0x923",
             "preview": "MURATA"
           },
           {
@@ -114844,7 +114890,7 @@
             "start": 300,
             "end": 305,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x92C",
+            "detail": "text query: bof3.inline-text/v53 at 0x92C",
             "preview": "    K"
           },
           {
@@ -114857,7 +114903,7 @@
             "start": 307,
             "end": 311,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x933",
+            "detail": "text query: bof3.inline-text/v53 at 0x933",
             "preview": "IWAO"
           },
           {
@@ -114870,7 +114916,7 @@
             "start": 312,
             "end": 322,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x938",
+            "detail": "text query: bof3.inline-text/v53 at 0x938",
             "preview": "Assistants"
           },
           {
@@ -114883,7 +114929,7 @@
             "start": 324,
             "end": 343,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x944",
+            "detail": "text query: bof3.inline-text/v53 at 0x944",
             "preview": "    MASAYUKI HARADA"
           },
           {
@@ -114896,7 +114942,7 @@
             "start": 344,
             "end": 366,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x958",
+            "detail": "text query: bof3.inline-text/v53 at 0x958",
             "preview": "    MASAKAZU MOCHIZUKI"
           },
           {
@@ -114909,7 +114955,7 @@
             "start": 368,
             "end": 386,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x970",
+            "detail": "text query: bof3.inline-text/v53 at 0x970",
             "preview": "    TATSUJI YATAKA"
           },
           {
@@ -114922,7 +114968,7 @@
             "start": 388,
             "end": 395,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x984",
+            "detail": "text query: bof3.inline-text/v53 at 0x984",
             "preview": "Testing"
           },
           {
@@ -114935,7 +114981,7 @@
             "start": 396,
             "end": 407,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x98C",
+            "detail": "text query: bof3.inline-text/v53 at 0x98C",
             "preview": "   GEKIDAN "
           },
           {
@@ -114948,7 +114994,7 @@
             "start": 411,
             "end": 420,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x99B",
+            "detail": "text query: bof3.inline-text/v53 at 0x99B",
             "preview": "SEIKI FOX"
           },
           {
@@ -114961,7 +115007,7 @@
             "start": 424,
             "end": 443,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x9A8",
             "preview": "   EZAKI PRODUCTION"
           },
           {
@@ -114974,7 +115020,7 @@
             "start": 444,
             "end": 461,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9BC",
             "preview": "   CHARACTER LAND"
           },
           {
@@ -114987,7 +115033,7 @@
             "start": 464,
             "end": 475,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9D0",
+            "detail": "text query: bof3.inline-text/v53 at 0x9D0",
             "preview": "Cooperation"
           },
           {
@@ -115000,7 +115046,7 @@
             "start": 476,
             "end": 488,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9DC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9DC",
             "preview": "    KUWANYAN"
           },
           {
@@ -115013,7 +115059,7 @@
             "start": 492,
             "end": 507,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9EC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9EC",
             "preview": "    TERIMOTIPEI"
           },
           {
@@ -115026,7 +115072,7 @@
             "start": 508,
             "end": 519,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x9FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x9FC",
             "preview": "    KOBABOO"
           },
           {
@@ -115039,7 +115085,7 @@
             "start": 520,
             "end": 540,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA08",
+            "detail": "text query: bof3.inline-text/v53 at 0xA08",
             "preview": "    TOSHIAKI MATSUDA"
           },
           {
@@ -115052,7 +115098,7 @@
             "start": 544,
             "end": 561,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA20",
+            "detail": "text query: bof3.inline-text/v53 at 0xA20",
             "preview": "    SHINICHI SATO"
           },
           {
@@ -115065,7 +115111,7 @@
             "start": 564,
             "end": 573,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA34",
+            "detail": "text query: bof3.inline-text/v53 at 0xA34",
             "preview": "Marketing"
           },
           {
@@ -115078,7 +115124,7 @@
             "start": 576,
             "end": 597,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA40",
+            "detail": "text query: bof3.inline-text/v53 at 0xA40",
             "preview": "    TATSUROU NAKAMURA"
           },
           {
@@ -115091,7 +115137,7 @@
             "start": 600,
             "end": 617,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA58",
+            "detail": "text query: bof3.inline-text/v53 at 0xA58",
             "preview": "    KOUHEI KUBOTA"
           },
           {
@@ -115104,7 +115150,7 @@
             "start": 620,
             "end": 638,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA6C",
+            "detail": "text query: bof3.inline-text/v53 at 0xA6C",
             "preview": "    KUNIO FUNAHARA"
           },
           {
@@ -115117,7 +115163,7 @@
             "start": 640,
             "end": 645,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA80",
+            "detail": "text query: bof3.inline-text/v53 at 0xA80",
             "preview": "Sales"
           },
           {
@@ -115130,7 +115176,7 @@
             "start": 648,
             "end": 656,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA88",
+            "detail": "text query: bof3.inline-text/v53 at 0xA88",
             "preview": "    DEVY"
           },
           {
@@ -115143,7 +115189,7 @@
             "start": 658,
             "end": 661,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA92",
+            "detail": "text query: bof3.inline-text/v53 at 0xA92",
             "preview": "CHU"
           },
           {
@@ -115156,7 +115202,7 @@
             "start": 664,
             "end": 682,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xA98",
+            "detail": "text query: bof3.inline-text/v53 at 0xA98",
             "preview": "    YOSHIHIRO SUDO"
           },
           {
@@ -115169,7 +115215,7 @@
             "start": 684,
             "end": 701,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAAC",
+            "detail": "text query: bof3.inline-text/v53 at 0xAAC",
             "preview": "    YOKOHAMA CARP"
           },
           {
@@ -115182,7 +115228,7 @@
             "start": 704,
             "end": 713,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAC0",
+            "detail": "text query: bof3.inline-text/v53 at 0xAC0",
             "preview": "Publicity"
           },
           {
@@ -115195,7 +115241,7 @@
             "start": 716,
             "end": 737,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xACC",
+            "detail": "text query: bof3.inline-text/v53 at 0xACC",
             "preview": "    TAKASHI HASHIMOTO"
           },
           {
@@ -115208,7 +115254,7 @@
             "start": 740,
             "end": 757,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAE4",
+            "detail": "text query: bof3.inline-text/v53 at 0xAE4",
             "preview": "    HIROYASU ANDO"
           },
           {
@@ -115221,7 +115267,7 @@
             "start": 760,
             "end": 779,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xAF8",
+            "detail": "text query: bof3.inline-text/v53 at 0xAF8",
             "preview": "    KEISUKE OKAMOTO"
           },
           {
@@ -115234,7 +115280,7 @@
             "start": 780,
             "end": 797,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB0C",
+            "detail": "text query: bof3.inline-text/v53 at 0xB0C",
             "preview": "    JUN MATSUMOTO"
           },
           {
@@ -115247,7 +115293,7 @@
             "start": 800,
             "end": 817,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB20",
+            "detail": "text query: bof3.inline-text/v53 at 0xB20",
             "preview": "    AKIRA KAZAOKA"
           },
           {
@@ -115260,7 +115306,7 @@
             "start": 820,
             "end": 837,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB34",
+            "detail": "text query: bof3.inline-text/v53 at 0xB34",
             "preview": "Technical Support"
           },
           {
@@ -115273,7 +115319,7 @@
             "start": 840,
             "end": 845,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB48",
+            "detail": "text query: bof3.inline-text/v53 at 0xB48",
             "preview": "     "
           },
           {
@@ -115286,7 +115332,7 @@
             "start": 849,
             "end": 863,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB51",
+            "detail": "text query: bof3.inline-text/v53 at 0xB51",
             "preview": "SPECIAL THANKS"
           },
           {
@@ -115299,7 +115345,7 @@
             "start": 868,
             "end": 881,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB64",
+            "detail": "text query: bof3.inline-text/v53 at 0xB64",
             "preview": "    DAVID LOW"
           },
           {
@@ -115312,7 +115358,7 @@
             "start": 884,
             "end": 902,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB74",
+            "detail": "text query: bof3.inline-text/v53 at 0xB74",
             "preview": "    KIYOMI ITAKURA"
           },
           {
@@ -115325,7 +115371,7 @@
             "start": 904,
             "end": 920,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB88",
+            "detail": "text query: bof3.inline-text/v53 at 0xB88",
             "preview": "    BRIAN WATSON"
           },
           {
@@ -115338,7 +115384,7 @@
             "start": 924,
             "end": 942,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xB9C",
+            "detail": "text query: bof3.inline-text/v53 at 0xB9C",
             "preview": "    MARTIN HERLIHY"
           },
           {
@@ -115351,7 +115397,7 @@
             "start": 944,
             "end": 958,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBB0",
+            "detail": "text query: bof3.inline-text/v53 at 0xBB0",
             "preview": "    RON FOSTER"
           },
           {
@@ -115364,7 +115410,7 @@
             "start": 960,
             "end": 977,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBC0",
+            "detail": "text query: bof3.inline-text/v53 at 0xBC0",
             "preview": "    PATRICK RILEY"
           },
           {
@@ -115377,7 +115423,7 @@
             "start": 980,
             "end": 1003,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBD4",
+            "detail": "text query: bof3.inline-text/v53 at 0xBD4",
             "preview": " BOWNE GLOBAL SOLUTIONS"
           },
           {
@@ -115390,7 +115436,7 @@
             "start": 1004,
             "end": 1008,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBEC",
+            "detail": "text query: bof3.inline-text/v53 at 0xBEC",
             "preview": "    "
           },
           {
@@ -115403,7 +115449,7 @@
             "start": 1012,
             "end": 1030,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBF4",
+            "detail": "text query: bof3.inline-text/v53 at 0xBF4",
             "preview": "Localization Staff"
           },
           {
@@ -115416,7 +115462,7 @@
             "start": 1036,
             "end": 1057,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC0C",
+            "detail": "text query: bof3.inline-text/v53 at 0xC0C",
             "preview": "    YUKIHIRO FUJIMOTO"
           },
           {
@@ -115429,7 +115475,7 @@
             "start": 1060,
             "end": 1075,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC24",
+            "detail": "text query: bof3.inline-text/v53 at 0xC24",
             "preview": "    AI KAMIMURA"
           },
           {
@@ -115442,7 +115488,7 @@
             "start": 1076,
             "end": 1091,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC34",
+            "detail": "text query: bof3.inline-text/v53 at 0xC34",
             "preview": "    KAORI SAITO"
           },
           {
@@ -115455,7 +115501,7 @@
             "start": 1092,
             "end": 1108,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC44",
+            "detail": "text query: bof3.inline-text/v53 at 0xC44",
             "preview": "    SYUSUKE SADA"
           },
           {
@@ -115468,7 +115514,7 @@
             "start": 1112,
             "end": 1127,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC58",
+            "detail": "text query: bof3.inline-text/v53 at 0xC58",
             "preview": "    YOKO MATSUI"
           },
           {
@@ -115481,7 +115527,7 @@
             "start": 1128,
             "end": 1144,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC68",
+            "detail": "text query: bof3.inline-text/v53 at 0xC68",
             "preview": "    KYOKO HIKAMI"
           },
           {
@@ -115494,7 +115540,7 @@
             "start": 1148,
             "end": 1168,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC7C",
+            "detail": "text query: bof3.inline-text/v53 at 0xC7C",
             "preview": "    KAPPEI YAMAGUCHI"
           },
           {
@@ -115507,7 +115553,7 @@
             "start": 1172,
             "end": 1188,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xC94",
+            "detail": "text query: bof3.inline-text/v53 at 0xC94",
             "preview": "    TOMOKO TAKAI"
           },
           {
@@ -115520,7 +115566,7 @@
             "start": 1192,
             "end": 1197,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCA8",
+            "detail": "text query: bof3.inline-text/v53 at 0xCA8",
             "preview": "     "
           },
           {
@@ -115533,7 +115579,7 @@
             "start": 1201,
             "end": 1213,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCB1",
+            "detail": "text query: bof3.inline-text/v53 at 0xCB1",
             "preview": "Voice Acting"
           },
           {
@@ -115546,7 +115592,7 @@
             "start": 1216,
             "end": 1237,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCC0",
+            "detail": "text query: bof3.inline-text/v53 at 0xCC0",
             "preview": "    KEIICHI TAKAHASHI"
           },
           {
@@ -115559,7 +115605,7 @@
             "start": 1240,
             "end": 1257,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCD8",
+            "detail": "text query: bof3.inline-text/v53 at 0xCD8",
             "preview": "Additional Guitar"
           },
           {
@@ -115572,7 +115618,7 @@
             "start": 1260,
             "end": 1262,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCEC",
+            "detail": "text query: bof3.inline-text/v53 at 0xCEC",
             "preview": "Vo"
           },
           {
@@ -115585,7 +115631,7 @@
             "start": 1264,
             "end": 1265,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCF0",
+            "detail": "text query: bof3.inline-text/v53 at 0xCF0",
             "preview": " "
           },
           {
@@ -115598,7 +115644,7 @@
             "start": 1267,
             "end": 1285,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xCF3",
+            "detail": "text query: bof3.inline-text/v53 at 0xCF3",
             "preview": " Background Vocals"
           },
           {
@@ -115611,7 +115657,7 @@
             "start": 1288,
             "end": 1304,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD08",
+            "detail": "text query: bof3.inline-text/v53 at 0xD08",
             "preview": "All Instruments "
           },
           {
@@ -115624,7 +115670,7 @@
             "start": 1306,
             "end": 1312,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD1A",
+            "detail": "text query: bof3.inline-text/v53 at 0xD1A",
             "preview": " Words"
           },
           {
@@ -115637,7 +115683,7 @@
             "start": 1316,
             "end": 1323,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD24",
+            "detail": "text query: bof3.inline-text/v53 at 0xD24",
             "preview": "       "
           },
           {
@@ -115650,7 +115696,7 @@
             "start": 1327,
             "end": 1337,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD2F",
+            "detail": "text query: bof3.inline-text/v53 at 0xD2F",
             "preview": "Pure Again"
           },
           {
@@ -115663,7 +115709,7 @@
             "start": 1340,
             "end": 1345,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD3C",
+            "detail": "text query: bof3.inline-text/v53 at 0xD3C",
             "preview": "     "
           },
           {
@@ -115676,7 +115722,7 @@
             "start": 1349,
             "end": 1361,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD45",
+            "detail": "text query: bof3.inline-text/v53 at 0xD45",
             "preview": "ENDING THEME"
           },
           {
@@ -115689,7 +115735,7 @@
             "start": 1364,
             "end": 1385,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD54",
+            "detail": "text query: bof3.inline-text/v53 at 0xD54",
             "preview": "    NARIYUKI NOBUYAMA"
           },
           {
@@ -115702,7 +115748,7 @@
             "start": 1388,
             "end": 1400,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD6C",
+            "detail": "text query: bof3.inline-text/v53 at 0xD6C",
             "preview": "Sound Design"
           },
           {
@@ -115715,7 +115761,7 @@
             "start": 1404,
             "end": 1420,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD7C",
+            "detail": "text query: bof3.inline-text/v53 at 0xD7C",
             "preview": "    YOSHINO AOKI"
           },
           {
@@ -115728,7 +115774,7 @@
             "start": 1424,
             "end": 1439,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xD90",
+            "detail": "text query: bof3.inline-text/v53 at 0xD90",
             "preview": "    AKARI KAIDA"
           },
           {
@@ -115741,7 +115787,7 @@
             "start": 1440,
             "end": 1457,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDA0",
+            "detail": "text query: bof3.inline-text/v53 at 0xDA0",
             "preview": "Music Composition"
           },
           {
@@ -115754,7 +115800,7 @@
             "start": 1460,
             "end": 1476,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDB4",
+            "detail": "text query: bof3.inline-text/v53 at 0xDB4",
             "preview": "    SATOSHI UKAI"
           },
           {
@@ -115767,7 +115813,7 @@
             "start": 1480,
             "end": 1499,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDC8",
+            "detail": "text query: bof3.inline-text/v53 at 0xDC8",
             "preview": "Splashscreen Design"
           },
           {
@@ -115780,7 +115826,7 @@
             "start": 1500,
             "end": 1508,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDDC",
+            "detail": "text query: bof3.inline-text/v53 at 0xDDC",
             "preview": "    JIWA"
           },
           {
@@ -115793,7 +115839,7 @@
             "start": 1512,
             "end": 1522,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDE8",
+            "detail": "text query: bof3.inline-text/v53 at 0xDE8",
             "preview": "    MIZUHO"
           },
           {
@@ -115806,7 +115852,7 @@
             "start": 1524,
             "end": 1540,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xDF4",
+            "detail": "text query: bof3.inline-text/v53 at 0xDF4",
             "preview": "    MASAKO HONMA"
           },
           {
@@ -115819,7 +115865,7 @@
             "start": 1544,
             "end": 1554,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE08",
+            "detail": "text query: bof3.inline-text/v53 at 0xE08",
             "preview": "Packaging "
           },
           {
@@ -115832,7 +115878,7 @@
             "start": 1556,
             "end": 1564,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE14",
+            "detail": "text query: bof3.inline-text/v53 at 0xE14",
             "preview": " Manuals"
           },
           {
@@ -115845,7 +115891,7 @@
             "start": 1568,
             "end": 1584,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE20",
+            "detail": "text query: bof3.inline-text/v53 at 0xE20",
             "preview": "World Map Design"
           },
           {
@@ -115858,7 +115904,7 @@
             "start": 1588,
             "end": 1608,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE34",
+            "detail": "text query: bof3.inline-text/v53 at 0xE34",
             "preview": "    MITSURU KUWAHATA"
           },
           {
@@ -115871,7 +115917,7 @@
             "start": 1612,
             "end": 1629,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE4C",
+            "detail": "text query: bof3.inline-text/v53 at 0xE4C",
             "preview": "    TAKANORI ARAI"
           },
           {
@@ -115884,7 +115930,7 @@
             "start": 1632,
             "end": 1650,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE60",
+            "detail": "text query: bof3.inline-text/v53 at 0xE60",
             "preview": "    YOSHIMI MURATA"
           },
           {
@@ -115897,7 +115943,7 @@
             "start": 1652,
             "end": 1666,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE74",
+            "detail": "text query: bof3.inline-text/v53 at 0xE74",
             "preview": "    NAOMI GOTO"
           },
           {
@@ -115910,7 +115956,7 @@
             "start": 1668,
             "end": 1687,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE84",
+            "detail": "text query: bof3.inline-text/v53 at 0xE84",
             "preview": "    YUKIKO NORITAKE"
           },
           {
@@ -115923,7 +115969,7 @@
             "start": 1688,
             "end": 1704,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xE98",
+            "detail": "text query: bof3.inline-text/v53 at 0xE98",
             "preview": "    YUKO NAKADAI"
           },
           {
@@ -115936,7 +115982,7 @@
             "start": 1708,
             "end": 1726,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xEAC",
+            "detail": "text query: bof3.inline-text/v53 at 0xEAC",
             "preview": "Map Texture Design"
           },
           {
@@ -115949,7 +115995,7 @@
             "start": 1728,
             "end": 1745,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xEC0",
+            "detail": "text query: bof3.inline-text/v53 at 0xEC0",
             "preview": "    SCROLL SPIRIT"
           },
           {
@@ -115962,7 +116008,7 @@
             "start": 1748,
             "end": 1752,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xED4",
+            "detail": "text query: bof3.inline-text/v53 at 0xED4",
             "preview": "Map "
           },
           {
@@ -115975,7 +116021,7 @@
             "start": 1754,
             "end": 1768,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xEDA",
+            "detail": "text query: bof3.inline-text/v53 at 0xEDA",
             "preview": " Model Creator"
           },
           {
@@ -115988,7 +116034,7 @@
             "start": 1772,
             "end": 1786,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xEEC",
+            "detail": "text query: bof3.inline-text/v53 at 0xEEC",
             "preview": "    KEIJI UEDA"
           },
           {
@@ -116001,7 +116047,7 @@
             "start": 1788,
             "end": 1806,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xEFC",
+            "detail": "text query: bof3.inline-text/v53 at 0xEFC",
             "preview": "    HIROSHI TERADA"
           },
           {
@@ -116014,7 +116060,7 @@
             "start": 1808,
             "end": 1825,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF10",
+            "detail": "text query: bof3.inline-text/v53 at 0xF10",
             "preview": "    HIDETOSHI KAI"
           },
           {
@@ -116027,7 +116073,7 @@
             "start": 1828,
             "end": 1844,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF24",
+            "detail": "text query: bof3.inline-text/v53 at 0xF24",
             "preview": "    MAKOTO FUKUI"
           },
           {
@@ -116040,7 +116086,7 @@
             "start": 1848,
             "end": 1867,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF38",
+            "detail": "text query: bof3.inline-text/v53 at 0xF38",
             "preview": "    TETSUYA ENOMOTO"
           },
           {
@@ -116053,7 +116099,7 @@
             "start": 1868,
             "end": 1884,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF4C",
+            "detail": "text query: bof3.inline-text/v53 at 0xF4C",
             "preview": "Monster Graphics"
           },
           {
@@ -116066,7 +116112,7 @@
             "start": 1888,
             "end": 1903,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF60",
+            "detail": "text query: bof3.inline-text/v53 at 0xF60",
             "preview": "    RIKA YAMADA"
           },
           {
@@ -116079,7 +116125,7 @@
             "start": 1904,
             "end": 1919,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF70",
+            "detail": "text query: bof3.inline-text/v53 at 0xF70",
             "preview": "    AKIRA HIRAI"
           },
           {
@@ -116092,7 +116138,7 @@
             "start": 1920,
             "end": 1928,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF80",
+            "detail": "text query: bof3.inline-text/v53 at 0xF80",
             "preview": "Graphics"
           },
           {
@@ -116105,7 +116151,7 @@
             "start": 1932,
             "end": 1955,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xF8C",
+            "detail": "text query: bof3.inline-text/v53 at 0xF8C",
             "preview": "Special Event Character"
           },
           {
@@ -116118,7 +116164,7 @@
             "start": 1956,
             "end": 1974,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xFA4",
+            "detail": "text query: bof3.inline-text/v53 at 0xFA4",
             "preview": "    MIEKO KUWAYAMA"
           },
           {
@@ -116131,7 +116177,7 @@
             "start": 1976,
             "end": 1993,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xFB8",
+            "detail": "text query: bof3.inline-text/v53 at 0xFB8",
             "preview": "    MASAYA SUZUKI"
           },
           {
@@ -116144,7 +116190,7 @@
             "start": 1996,
             "end": 2012,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xFCC",
+            "detail": "text query: bof3.inline-text/v53 at 0xFCC",
             "preview": "    YASUYO KONDO"
           },
           {
@@ -116157,7 +116203,7 @@
             "start": 2016,
             "end": 2035,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xFE0",
+            "detail": "text query: bof3.inline-text/v53 at 0xFE0",
             "preview": "    HIROKAZU HIKITA"
           },
           {
@@ -116170,7 +116216,7 @@
             "start": 2036,
             "end": 2051,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xFF4",
+            "detail": "text query: bof3.inline-text/v53 at 0xFF4",
             "preview": "Player Graphics"
           },
           {
@@ -116183,7 +116229,7 @@
             "start": 2052,
             "end": 2056,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1004",
+            "detail": "text query: bof3.inline-text/v53 at 0x1004",
             "preview": "Mini"
           },
           {
@@ -116196,7 +116242,7 @@
             "start": 2058,
             "end": 2074,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x100A",
+            "detail": "text query: bof3.inline-text/v53 at 0x100A",
             "preview": "Game Programming"
           },
           {
@@ -116209,7 +116255,7 @@
             "start": 2076,
             "end": 2095,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x101C",
+            "detail": "text query: bof3.inline-text/v53 at 0x101C",
             "preview": "Fishing Game Design"
           },
           {
@@ -116222,7 +116268,7 @@
             "start": 2096,
             "end": 2100,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1030",
+            "detail": "text query: bof3.inline-text/v53 at 0x1030",
             "preview": "Mini"
           },
           {
@@ -116235,7 +116281,7 @@
             "start": 2102,
             "end": 2113,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1036",
+            "detail": "text query: bof3.inline-text/v53 at 0x1036",
             "preview": "Game Design"
           },
           {
@@ -116248,7 +116294,7 @@
             "start": 2116,
             "end": 2137,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1044",
+            "detail": "text query: bof3.inline-text/v53 at 0x1044",
             "preview": "Special Event Effects"
           },
           {
@@ -116261,7 +116307,7 @@
             "start": 2140,
             "end": 2165,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x105C",
+            "detail": "text query: bof3.inline-text/v53 at 0x105C",
             "preview": "Special Event Programming"
           },
           {
@@ -116274,7 +116320,7 @@
             "start": 2168,
             "end": 2177,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1078",
+            "detail": "text query: bof3.inline-text/v53 at 0x1078",
             "preview": "Scenario "
           },
           {
@@ -116287,7 +116333,7 @@
             "start": 2179,
             "end": 2192,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1083",
+            "detail": "text query: bof3.inline-text/v53 at 0x1083",
             "preview": " Event Design"
           },
           {
@@ -116300,7 +116346,7 @@
             "start": 2196,
             "end": 2215,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1094",
+            "detail": "text query: bof3.inline-text/v53 at 0x1094",
             "preview": "    TOSHIMITSU AOKI"
           },
           {
@@ -116313,7 +116359,7 @@
             "start": 2216,
             "end": 2233,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x10A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x10A8",
             "preview": "Model Programming"
           },
           {
@@ -116326,7 +116372,7 @@
             "start": 2236,
             "end": 2261,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x10BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x10BC",
             "preview": "Map Scrolling Programming"
           },
           {
@@ -116339,7 +116385,7 @@
             "start": 2264,
             "end": 2281,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x10D8",
+            "detail": "text query: bof3.inline-text/v53 at 0x10D8",
             "preview": "    ICHIRO TANAKA"
           },
           {
@@ -116352,7 +116398,7 @@
             "start": 2284,
             "end": 2294,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x10EC",
+            "detail": "text query: bof3.inline-text/v53 at 0x10EC",
             "preview": "Map Design"
           },
           {
@@ -116365,7 +116411,7 @@
             "start": 2296,
             "end": 2316,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x10F8",
+            "detail": "text query: bof3.inline-text/v53 at 0x10F8",
             "preview": "    HISANORI OHTSUKI"
           },
           {
@@ -116378,7 +116424,7 @@
             "start": 2320,
             "end": 2338,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1110",
+            "detail": "text query: bof3.inline-text/v53 at 0x1110",
             "preview": "    TADASHI SANZEN"
           },
           {
@@ -116391,7 +116437,7 @@
             "start": 2340,
             "end": 2353,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1124",
+            "detail": "text query: bof3.inline-text/v53 at 0x1124",
             "preview": "Magic Effects"
           },
           {
@@ -116404,7 +116450,7 @@
             "start": 2356,
             "end": 2374,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1134",
+            "detail": "text query: bof3.inline-text/v53 at 0x1134",
             "preview": "Battle Programming"
           },
           {
@@ -116417,7 +116463,7 @@
             "start": 2376,
             "end": 2389,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1148",
+            "detail": "text query: bof3.inline-text/v53 at 0x1148",
             "preview": "Battle Design"
           },
           {
@@ -116430,7 +116476,7 @@
             "start": 2392,
             "end": 2402,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1158",
+            "detail": "text query: bof3.inline-text/v53 at 0x1158",
             "preview": "    MOYOKO"
           },
           {
@@ -116443,7 +116489,7 @@
             "start": 2404,
             "end": 2409,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1164",
+            "detail": "text query: bof3.inline-text/v53 at 0x1164",
             "preview": "Shop "
           },
           {
@@ -116456,7 +116502,7 @@
             "start": 2411,
             "end": 2428,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x116B",
+            "detail": "text query: bof3.inline-text/v53 at 0x116B",
             "preview": " Menu Programming"
           },
           {
@@ -116469,7 +116515,7 @@
             "start": 2432,
             "end": 2450,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1180",
+            "detail": "text query: bof3.inline-text/v53 at 0x1180",
             "preview": "    ATSUSHI MANOBE"
           },
           {
@@ -116482,7 +116528,7 @@
             "start": 2452,
             "end": 2469,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1194",
+            "detail": "text query: bof3.inline-text/v53 at 0x1194",
             "preview": "Sound Programming"
           },
           {
@@ -116495,7 +116541,7 @@
             "start": 2472,
             "end": 2491,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x11A8",
+            "detail": "text query: bof3.inline-text/v53 at 0x11A8",
             "preview": "    YOSHIHARU NAKAO"
           },
           {
@@ -116508,7 +116554,7 @@
             "start": 2492,
             "end": 2510,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x11BC",
+            "detail": "text query: bof3.inline-text/v53 at 0x11BC",
             "preview": "Engine Programming"
           },
           {
@@ -116521,7 +116567,7 @@
             "start": 2512,
             "end": 2527,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x11D0",
+            "detail": "text query: bof3.inline-text/v53 at 0x11D0",
             "preview": "    JUNKO NONDA"
           },
           {
@@ -116534,7 +116580,7 @@
             "start": 2528,
             "end": 2546,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x11E0",
+            "detail": "text query: bof3.inline-text/v53 at 0x11E0",
             "preview": "Assistant Director"
           },
           {
@@ -116547,7 +116593,7 @@
             "start": 2548,
             "end": 2563,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x11F4",
+            "detail": "text query: bof3.inline-text/v53 at 0x11F4",
             "preview": "    YUGO TOGAWA"
           },
           {
@@ -116560,7 +116606,7 @@
             "start": 2564,
             "end": 2578,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1204",
+            "detail": "text query: bof3.inline-text/v53 at 0x1204",
             "preview": "    YUKIO ANDO"
           },
           {
@@ -116573,7 +116619,7 @@
             "start": 2580,
             "end": 2593,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1214",
+            "detail": "text query: bof3.inline-text/v53 at 0x1214",
             "preview": "Engine Design"
           },
           {
@@ -116586,7 +116632,7 @@
             "start": 2596,
             "end": 2617,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1224",
+            "detail": "text query: bof3.inline-text/v53 at 0x1224",
             "preview": "    TATSUYA YOSHIKAWA"
           },
           {
@@ -116599,7 +116645,7 @@
             "start": 2622,
             "end": 2638,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x123E",
+            "detail": "text query: bof3.inline-text/v53 at 0x123E",
             "preview": "Character Design"
           },
           {
@@ -116612,7 +116658,7 @@
             "start": 2640,
             "end": 2655,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1250",
+            "detail": "text query: bof3.inline-text/v53 at 0x1250",
             "preview": "    ERIKO BANDO"
           },
           {
@@ -116625,7 +116671,7 @@
             "start": 2658,
             "end": 2674,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1262",
+            "detail": "text query: bof3.inline-text/v53 at 0x1262",
             "preview": "Main BG Graphics"
           },
           {
@@ -116638,7 +116684,7 @@
             "start": 2676,
             "end": 2694,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1274",
+            "detail": "text query: bof3.inline-text/v53 at 0x1274",
             "preview": "    TORU YAMASHITA"
           },
           {
@@ -116651,7 +116697,7 @@
             "start": 2698,
             "end": 2711,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x128A",
+            "detail": "text query: bof3.inline-text/v53 at 0x128A",
             "preview": "Main Graphics"
           },
           {
@@ -116664,7 +116710,7 @@
             "start": 2712,
             "end": 2735,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x1298",
+            "detail": "text query: bof3.inline-text/v53 at 0x1298",
             "preview": "    TATSUYA KITABAYASHI"
           },
           {
@@ -116677,7 +116723,7 @@
             "start": 2738,
             "end": 2753,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12B2",
+            "detail": "text query: bof3.inline-text/v53 at 0x12B2",
             "preview": "Main Programmer"
           },
           {
@@ -116690,7 +116736,7 @@
             "start": 2756,
             "end": 2774,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12C4",
+            "detail": "text query: bof3.inline-text/v53 at 0x12C4",
             "preview": "    MAKOTO IKEHARA"
           },
           {
@@ -116703,7 +116749,7 @@
             "start": 2778,
             "end": 2786,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12DA",
+            "detail": "text query: bof3.inline-text/v53 at 0x12DA",
             "preview": "Director"
           },
           {
@@ -116716,7 +116762,7 @@
             "start": 2788,
             "end": 2797,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12E4",
+            "detail": "text query: bof3.inline-text/v53 at 0x12E4",
             "preview": "         "
           },
           {
@@ -116729,7 +116775,7 @@
             "start": 2801,
             "end": 2806,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12F1",
+            "detail": "text query: bof3.inline-text/v53 at 0x12F1",
             "preview": "STAFF"
           },
           {
@@ -116742,7 +116788,7 @@
             "start": 2812,
             "end": 2832,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x12FC",
+            "detail": "text query: bof3.inline-text/v53 at 0x12FC",
             "preview": "     Breath of Fire "
           },
           {
@@ -118030,7 +118076,7 @@
             "start": 4,
             "end": 14,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBD804",
+            "detail": "text query: bof3.inline-text/v53 at 0xBD804",
             "preview": "%02d %02d"
           },
           {
@@ -118043,14 +118089,14 @@
             "start": 16,
             "end": 20,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBD810",
+            "detail": "text query: bof3.inline-text/v53 at 0xBD810",
             "preview": "%2d"
           },
           {
             "start": 20,
             "end": 23,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0xBD814",
+            "detail": "text query: bof3.inline-text/v53 at 0xBD814",
             "preview": "%d"
           },
           {
@@ -121817,14 +121863,14 @@
             "start": 4,
             "end": 8,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C004",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C004",
             "preview": "%2d"
           },
           {
             "start": 8,
             "end": 13,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C008",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C008",
             "preview": "%d/6"
           },
           {
@@ -121837,7 +121883,7 @@
             "start": 16,
             "end": 19,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C010",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C010",
             "preview": "23"
           },
           {
@@ -121850,7 +121896,7 @@
             "start": 20,
             "end": 25,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C014",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C014",
             "preview": "*%2d"
           },
           {
@@ -121863,7 +121909,7 @@
             "start": 56,
             "end": 60,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C038",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C038",
             "preview": "%3d"
           },
           {
@@ -121876,7 +121922,7 @@
             "start": 140,
             "end": 144,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x2C08C",
+            "detail": "text query: bof3.inline-text/v53 at 0x2C08C",
             "preview": "%4d"
           },
           {
@@ -124890,7 +124936,7 @@
             "start": 70060,
             "end": 70070,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D1AC",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D1AC",
             "preview": "Casting..."
           },
           {
@@ -124903,7 +124949,7 @@
             "start": 70072,
             "end": 70089,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D1B8",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D1B8",
             "preview": "Set rod & lure..."
           },
           {
@@ -124916,7 +124962,7 @@
             "start": 70092,
             "end": 70107,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D1CC",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D1CC",
             "preview": "Quit fishing..."
           },
           {
@@ -124929,14 +124975,14 @@
             "start": 70108,
             "end": 70120,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D1DC",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D1DC",
             "preview": "Wind reel..."
           },
           {
             "start": 70120,
             "end": 70149,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D1E8",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D1E8",
             "preview": "Move Rod...Directional button"
           },
           {
@@ -124949,7 +124995,7 @@
             "start": 70152,
             "end": 70165,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D208",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D208",
             "preview": "Reset lure..."
           },
           {
@@ -124962,7 +125008,7 @@
             "start": 70168,
             "end": 70170,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D218",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D218",
             "preview": "\u2026\u2026"
           },
           {
@@ -124975,7 +125021,7 @@
             "start": 70172,
             "end": 70174,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D21C",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D21C",
             "preview": "\u2026\u2026"
           },
           {
@@ -124988,7 +125034,7 @@
             "start": 70176,
             "end": 70201,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D220",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D220",
             "preview": "Line got caught on rocks!"
           },
           {
@@ -125001,7 +125047,7 @@
             "start": 70204,
             "end": 70226,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D23C",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D23C",
             "preview": "Line broke; lure lost!"
           },
           {
@@ -125014,7 +125060,7 @@
             "start": 70228,
             "end": 70258,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D254",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D254",
             "preview": "Lure fell off; catch got away!"
           },
           {
@@ -125027,7 +125073,7 @@
             "start": 70260,
             "end": 70261,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D274",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D274",
             "preview": ","
           },
           {
@@ -125040,28 +125086,28 @@
             "start": 71104,
             "end": 71108,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5C0",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5C0",
             "preview": "Gear"
           },
           {
             "start": 71108,
             "end": 71112,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5C4",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5C4",
             "preview": "Data"
           },
           {
             "start": 71112,
             "end": 71116,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5C8",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5C8",
             "preview": "Rule"
           },
           {
             "start": 71116,
             "end": 71119,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5CC",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5CC",
             "preview": "ROD"
           },
           {
@@ -125074,21 +125120,21 @@
             "start": 71120,
             "end": 71124,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5D0",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5D0",
             "preview": "LURE"
           },
           {
             "start": 71124,
             "end": 71129,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5D4",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5D4",
             "preview": "EQUIP"
           },
           {
             "start": 71129,
             "end": 71134,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3D5D9",
+            "detail": "text query: bof3.inline-text/v53 at 0x3D5D9",
             "preview": "GUIDE"
           },
           {
@@ -125101,14 +125147,14 @@
             "start": 72900,
             "end": 72912,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3DCC4",
+            "detail": "text query: bof3.inline-text/v53 at 0x3DCC4",
             "preview": "Manillo"
           },
           {
             "start": 72912,
             "end": 72924,
             "category": "text",
-            "detail": "text query: bof3.inline-text/v52 at 0x3DCD0",
+            "detail": "text query: bof3.inline-text/v53 at 0x3DCD0",
             "preview": "????????????"
           },
           {
