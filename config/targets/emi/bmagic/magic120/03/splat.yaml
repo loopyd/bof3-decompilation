@@ -95,8 +95,10 @@ segments:
     - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndAdvanceWorkByte2At60BmagicMagic12003_801F009C.c'
     - '@behavior: Runs the local slot-grid draw routine, increments work byte 9, and advances work byte 2 at 0x60.'
   - - 5380
-    - asm
-    - func_801F0104
+    - c
+    - runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104
+    - '@source: src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104.c'
+    - '@behavior: Runs the local slot-grid draw routine, increments work byte 9, and invokes the shared helper at 0x801E5988 when that stored byte reaches 0x70.'
   - - 5464
     - c
     - invokeHelper08ACThenIncrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic12003_801F0158

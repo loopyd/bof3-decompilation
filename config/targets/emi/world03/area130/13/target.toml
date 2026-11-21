@@ -13,6 +13,7 @@ sources = [
     "src/bof3/world/seedEffectEntriesFromWorkPositionThenClearWorkByte9AndAdvanceWorkByte1World03Area13013_801F2C60.c",
     "src/bof3/world/advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284.c",
     "src/bof3/world/invokeScriptedMotionStarterWorld03Area13013_801F378C.c",
+    "src/bof3/world/invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8.c",
     "src/bof3/world/initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C.c",
 ]
 support_sources = [

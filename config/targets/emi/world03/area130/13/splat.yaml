@@ -106,8 +106,10 @@ segments:
     - '@source: src/bof3/world/invokeScriptedMotionStarterWorld03Area13013_801F378C.c'
     - '@behavior: Calls the shared executable front-end scripted-motion starter at 0x8015D554 with arguments 0, 1, 4 and 0x1E, then returns.'
   - - 3000
-    - asm
-    - func_801F37B8
+    - c
+    - invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8
+    - '@source: src/bof3/world/invokeFrontEndTimingStarterKindZeroAndStoreSelectionId83World03Area13013_801F37B8.c'
+    - '@behavior: Entry 5 of the overlay handler pointer run at 0x801F4FD0, which the loader reaches from outside this payload: it runs the shared front-end timing starter func_8015D300 with arguments 0, 0, 100 and 100, then stores the selection identifier 0x83 into the shared selection byte D_80145029 and returns. It takes no arguments and returns nothing; its 0x18-byte frame keeps only $ra.'
   - - 3056
     - asm
     - func_801F37F0

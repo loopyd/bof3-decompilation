@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88.c",
     "src/bof3/world/playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceHalfword0aBy1World04Area17413_801F49C8.c",
     "src/bof3/world/claimWorkRecordAndSeedPositionStepSizeAndHeadingFromWorkObjectWorld04Area17413_801F3378.c",
+    "src/bof3/world/clearWorkTableByte3WhenWorkByte6SetThenClearWorkByte9AndAdvanceWorkByte1World04Area17413_801F2C48.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4.c",

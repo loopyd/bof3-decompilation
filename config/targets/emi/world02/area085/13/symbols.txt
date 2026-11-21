@@ -21,7 +21,7 @@ applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndB
 func_801F3B5C = 0x801F3B5C;
 invokeHelperWithWorkWorld02Area08513_801F3BA4 = 0x801F3BA4;
 advanceWorkHalfwordWorld02Area08513_801F3BCC = 0x801F3BCC;
-func_801F3BEC = 0x801F3BEC;
+queueCue201WhenFrontEndModeNot5World02Area08513_801F3BEC = 0x801F3BEC;
 invokeHelperArgWorld02Area08513_801F3C1C = 0x801F3C1C;
 offsetPaletteChannelsWorld02Area08513_801F3C3C = 0x801F3C3C;
 D_801F3D2C = 0x801F3D2C;

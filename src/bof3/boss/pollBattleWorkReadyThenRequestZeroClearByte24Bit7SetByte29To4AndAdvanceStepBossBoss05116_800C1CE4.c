@@ -4,8 +4,8 @@
  * overlays read back; the bmagic lifts read it as the shared battle work
  * record pointer and the battle03 lifts read the same cell as the local work
  * record pointer. Splat binds the address through this target's generated
- * undefined_syms_auto.txt row D_801EB4E0 = 0x801EB4E0, which the still-asm
- * neighbours func_800C1B14 and func_800C1BF0 keep alive, so no target-map row
+ * undefined_syms_auto.txt row D_801EB4E0 = 0x801EB4E0, which this overlay's
+ * step handlers at 0x800C1B14 and 0x800C1BF0 reference, so no target-map row
  * is needed. Only the pointer value moves here, so the byte view is enough. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind unknown */
 

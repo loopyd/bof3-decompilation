@@ -26,7 +26,7 @@ addWorkWord20ToWord14AccumulateWord14IntoHalfword3EAndDecrementByteAThenWhenWord
 integrateWorkWord14GrowByteATo8ThenOnByte9ZeroSeedMotionSetHeadingToward801EB4E0ForwardBattleByteAndAdvanceWorkByte2BmagicMagic00100_801EFD28 = 0x801EFD28;
 func_801EFE38 = 0x801EFE38;
 func_801EFF28 = 0x801EFF28;
-func_801EFFCC = 0x801EFFCC;
+subtractWorkColorTripletBy16AndDecrementByteABy2ThenCopyRecordTripletAndAdvanceWorkByte2WhenChannelIs80BmagicMagic00100_801EFFCC = 0x801EFFCC;
 func_801F00A8 = 0x801F00A8;
 func_801F014C = 0x801F014C;
 func_801F0238 = 0x801F0238;

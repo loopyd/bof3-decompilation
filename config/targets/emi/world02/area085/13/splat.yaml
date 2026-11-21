@@ -112,8 +112,10 @@ segments:
     - c
     - advanceWorkHalfwordWorld02Area08513_801F3BCC
   - - 4076
-    - asm
-    - func_801F3BEC
+    - c
+    - queueCue201WhenFrontEndModeNot5World02Area08513_801F3BEC
+    - '@source: src/bof3/world/queueCue201WhenFrontEndModeNot5World02Area08513_801F3BEC.c'
+    - '@behavior: Overlay front-end cue gate: reads the shared front-end mode byte D_80143BB0 and, unless that byte reads exactly 5, queues sound cue 0x201 through the main-executable dispatcher 0x8015DF18; the compared constant 5 is materialised before the test and the return-address save fills that branch delay slot, so the 0x18-byte frame holds only that save; takes no arguments and returns nothing.'
   - - 4124
     - c
     - invokeHelperArgWorld02Area08513_801F3C1C

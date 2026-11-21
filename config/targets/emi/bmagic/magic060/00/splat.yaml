@@ -154,8 +154,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBTo2AndAdvanceWorkByte2At1EBmagicMagic06000_801F031C.c'
     - '@behavior: Advances the scratchpad work-object byte at offset 0x9 by one modulo 256, then tests the truncated byte it just stored (andi 0xFF of the stored register, no second load) against 0x1E. Only when that byte equals 0x1E does it read the shared battle work pointer at 0x801EB4E0, store 2 into that record''s byte at offset 0xB - the constant is materialised in the delay slot of the equality test - re-read the work-object pointer cell at 0x1F800044 and increment that object''s byte at offset 0x2, advancing the overlay work byte 2 handler sequence. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 6012
-    - asm
-    - func_801F037C
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F037C
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F037C.c'
+    - '@behavior: Handler of the overlay work byte 2 step run based at 0x801F0BBC, reached as index 6 through the pointer word at 0x801F0BD4 that the dispatcher at 0x801EFF88 indexes with the work object byte at offset 0x2, so nothing calls it directly. It loads the shared battle work pointer at 0x801EB4E0, compares that record byte at offset 0xB with the immediate 0x83, and returns from the branch delay slot when the byte differs. Only on that equality does it read the scratchpad work-object pointer cell at 0x1F800044 once and increment the object byte at offset 0x2 with a byte-width add (lbu, addiu 1, sb). Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state. Its 64 bytes are byte-identical to the same overlay function at 0x801F0090.'
   - - 6076
     - asm
     - func_801F03BC
