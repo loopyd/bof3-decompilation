@@ -195,7 +195,7 @@ See [formats.md](formats.md#executable-ascii) for supported allocations and limi
 US `GAME.EMI` entry 0 contains two supported layouts. Select
 `--layout record-names` to extract equipment and ability names through
 `bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
-labels through `bof3.inline-text/v55`. An omitted layout selector fails before
+labels through `bof3.inline-text/v56`. An omitted layout selector fails before
 creating output. Omit `--class` and `--latch` for either layout. Record names
 also accept `--entry all`. Other unambiguous inline entries need no layout selector.
 See [record names](formats.md#record-names) and
@@ -209,7 +209,7 @@ other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v55` document with ten counted labels, eight default names,
+`bof3.inline-text/v56` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
 one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
 labels, three equipment-category labels, fifteen fixed-width settings fields,
@@ -263,7 +263,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v55`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v56`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 COMMU03 entry 6 exposes three ASCII labels and three `game-literal` fields.
@@ -460,6 +460,17 @@ bytes, using `0x20` for spaces. It does not interpret format conversions or comm
 markup. Each allocation reserves a NUL byte. Controlled BATE checks cover
 `%3d/%3d`. Other fields and SHISU rendering remain unverified.
 
+BATE and SHISU entry 0 also expose `%3d/   ` and `   /%3d` through
+`ascii-u16-decimal-field-format`. Each field permits seven encoded bytes plus
+NUL, one unsigned-halfword decimal argument and nine formatted characters.
+Keep separator positions consistent across the separately colored pair.
+BATE adds `%7d` and `%4d` signed decimal fields; both overlays add `%8d` through
+`ascii-i32-wide-decimal-format`. These reserve NUL within four bytes and permit
+eleven formatted characters for a signed 32-bit argument. Their eight-dash
+fallbacks use `ascii-dash-glyph-literal`: one to eight ASCII spaces or dashes
+plus NUL, with empty text and percent sequences refused. Other fields, alignment,
+code and tables remain protected. Edited rendering is unverified.
+
 BATE and SHISU also expose `%02d` with one unsigned byte argument, at most four
 encoded bytes and three formatted bytes. Their `%7d` rows accept one signed
 32-bit argument, at most three encoded bytes and eleven formatted bytes. Only
@@ -497,7 +508,7 @@ Spaces encode as `0xFF`. Embedded or repeated terminators are refused.
 matches readable characters with exact source offsets and excludes token notation.
 Packing enforces both the encoded-byte capacity and the nonblank-glyph limit.
 
-Inline documents use `bof3.inline-text/v55`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v56`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

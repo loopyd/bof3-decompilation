@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v55";
+pub const SCHEMA: &str = "bof3.inline-text/v56";
 
 const UPPERCASE_GLYPH_LIMIT: usize = 10;
 
@@ -1699,7 +1699,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US BATE labels and numeric formats",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "04de0ab074178f161111a03fe1ea1d257919d9a6e33feafcac378d578795474b",
+        sha256: "19df493a9bf50ccb905680637b34229ea72b7f9e76dbdf337e8ff6be8ba73517",
         consumers: &[
             0x801d28e0, 0x801d2908, 0x801d2ce8, 0x801d2d04, 0x801d2d30, 0x801d2d5c, 0x801d2d78,
             0x801d2d98, 0x801d2dc4, 0x801d2de0, 0x801d2e00, 0x801d2e20, 0x801d2e3c, 0x801d2e54,
@@ -1710,7 +1710,8 @@ const LAYOUTS: &[Layout] = &[
             0x801d57d4, 0x801d57e4, 0x801d5800, 0x801d5810, 0x801d582c, 0x801d5940, 0x801d5964,
             0x801d60b0, 0x801d60dc, 0x801d6118, 0x801d6140, 0x801d6150, 0x801d616c, 0x801d617c,
             0x801d6198, 0x801d620c, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac,
-            0x801d8394, 0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438,
+            0x801d8394, 0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438, 0x801d2a60,
+            0x801d2ac4, 0x801d2b48, 0x801d2b98, 0x801d2460, 0x801d24ac, 0x801d32ec, 0x801d330c,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c20, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
@@ -1775,13 +1776,34 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d8ea0, 6, &[0x801d8ec0], &[0x8014f800]),
             Allocation::literal(0x801d8ea8, 7, &[0x801d8ec4], &[0x8014f800]),
             Allocation::literal(0x801d8eb0, 6, &[0x801d8ec8], &[0x8014f800]),
+            Allocation::bounded_format(
+                0x801d0c24,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0c2c,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0c18, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0c1c, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801d0c34,
+                4,
+                Codec::AsciiI32WideDecimalFormat,
+                &[0x8014ff0c],
+            ),
+            Allocation::bounded_format(0x801d0c38, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
         ],
     },
     Layout {
         name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "b0689ef5f8584801cf4040036b35b75f9410bf6edfeed4ae09a4577144095a51",
+        sha256: "ee083bd40f51b48f07d17a1555f10815d3571137b967a5049160c589caad4e14",
         consumers: &[
             0x801d3888, 0x801d38b0, 0x801d3c90, 0x801d3cac, 0x801d3cd8, 0x801d3d04, 0x801d3d20,
             0x801d3d40, 0x801d3d6c, 0x801d3d88, 0x801d3da8, 0x801d3dc8, 0x801d3de4, 0x801d3dfc,
@@ -1793,7 +1815,7 @@ const LAYOUTS: &[Layout] = &[
             0x801d7058, 0x801d7084, 0x801d70c0, 0x801d70e8, 0x801d70f8, 0x801d7114, 0x801d7124,
             0x801d7140, 0x801d71b4, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
             0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0, 0x801d5c7c,
-            0x801af20c,
+            0x801af20c, 0x801d3a08, 0x801d3af0, 0x801d3a6c, 0x801d3b40, 0x801d4294, 0x801d42b4,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
@@ -1873,6 +1895,25 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801d9c60, 5, &[0x801d9cd0], &[0x8014f800]),
             Allocation::literal(0x801d9c70, 5, &[0x801d9cd8], &[0x8014f800]),
             Allocation::literal(0x801d9c80, 5, &[0x801d9ce0], &[0x8014f800]),
+            Allocation::bounded_format(
+                0x801d0c08,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0c10,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0c18,
+                4,
+                Codec::AsciiI32WideDecimalFormat,
+                &[0x8014ff0c],
+            ),
+            Allocation::bounded_format(0x801d0c1c, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
         ],
     },
     Layout {

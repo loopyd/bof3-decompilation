@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v55`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v56`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3255,9 +3255,42 @@ BATE `0x801D0C20` and SHISU `0x801D0C04` each expose `%3d` through
 bytes and NUL. Eighteen formatter sites per overlay pass one zero-extended byte
 or halfword, then draw scratch `0x80145AD4` through `0x80150098`. Preserve one
 decimal argument and the five-character output bound. Fixed address calculations
-keep pointer-reference lists empty; the following format remains protected.
+keep pointer-reference lists empty; other allocations retain their bounds.
 Controlled BATE observations verify a narrower minimum width on one stat
 panel. Other BATE paths and SHISU rendering remain unverified.
+
+BATE also exposes `%3d/   ` at `0x801D0C24` and `   /%3d` at `0x801D0C2C`.
+SHISU exposes the same formats at `0x801D0C08` and `0x801D0C10`. All four use
+`ascii-u16-decimal-field-format`. Each eight-byte allocation reserves
+one NUL and allows seven encoded bytes, one decimal argument and nine formatted
+characters. Widths use 1..4 with optional zero padding. Four formatter sites per
+overlay read unsigned halfwords, write to `0x80145AD4` and
+draw through `0x80150098`. Keep the separator positions consistent across each
+pair: the two fields draw at the same coordinates in separate colors. Pointer
+references remain empty. SHISU `0x801D0C14` is a suffix within its right-hand
+field, with no known fixed interior reader in the retained owner evidence;
+it is not a separate allocation.
+
+BATE also exposes `%7d` at `0x801D0C18` and `%4d` at `0x801D0C1C` through
+`ascii-i32-decimal-format`. Their caller reads three full words from each
+table at `0x801D8F00` and `0x801D8F0C`. Each four-byte allocation reserves NUL,
+retains one signed 32-bit decimal argument and permits eleven formatted bytes.
+The `%8d` fields at BATE `0x801D0C34` and SHISU `0x801D0C18` use
+`ascii-i32-wide-decimal-format` with the same byte and output bounds, allowing
+widths through eight. Full-word loads and helper returns retain the complete
+signed 32-bit domain; no narrower value range is assumed.
+
+The nine-byte fields at BATE `0x801D0C38` and SHISU `0x801D0C1C` contain
+`--------`. They use `ascii-dash-glyph-literal` and accept one to eight ASCII
+spaces or dashes plus NUL. Empty text and percent sequences are refused.
+Numeric values other than -1 select `%8d`; -1 selects the argumentless fallback.
+Both branches format into `0x80145AD4` and draw through `0x8014FF0C`.
+The scratch footprints remain at most twelve bytes for signed decimal fields,
+ten for split halfword fields and nine for dashes, including NUL. Valid record
+inputs, returning helpers and renderer resources remain conditions. Existing
+indices, tables, code and alignment at BATE `0x801D0C41..0x801D0C44` and
+SHISU `0x801D0C25..0x801D0C28` remain protected. Natural activation and edited
+rendering remain unverified.
 
 BATE and SHISU also expose fifteen stat-label allocations each through
 `game-literal`. Each accepts at most three encoded bytes and one NUL.
@@ -3383,7 +3416,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v55` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v56` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

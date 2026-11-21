@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v55`.
+`bof3.inline-text/v56`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +196,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v55`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
+uses `bof3.inline-text/v56`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
 rows. Write A-Z, `!` and spaces literally; `{byte(0xNN)}` stores one raw glyph
 byte. Spaces encode as `0xFF`. End each caption with `{nul}` for the reserved
 `0x00`; `{nul}` alone is empty. Preserve the recorded byte and nonblank-glyph
@@ -323,6 +323,16 @@ five formatted characters. Its eighteen formatter sites per overlay use unsigned
 byte or halfword arguments, then draw through `0x80150098`. Controlled BATE checks
 verify width-two decimal rendering on one stat panel. Other paths and SHISU
 rendering remain unverified.
+
+BATE and SHISU also expose `%3d/   ` and `   /%3d` through
+`ascii-u16-decimal-field-format`. Keep one unsigned-halfword decimal argument,
+seven encoded bytes plus NUL, and at most nine formatted characters per field.
+Keep separator positions consistent across the separately colored pair. BATE's
+`%7d` and `%4d`, and both overlays' `%8d`, retain one signed 32-bit argument,
+three encoded bytes plus NUL and at most eleven formatted characters. Their
+eight-dash fallbacks accept one to eight ASCII spaces or dashes plus NUL;
+empty text and percent sequences are refused. Preserve earlier indices,
+alignment, code and tables. Edited rendering is unverified.
 
 BATE and SHISU entry 0 each expose fifteen stat labels through `game-literal`.
 Each four-byte allocation permits three encoded bytes and NUL; the two trailing
