@@ -150,7 +150,6 @@ def install_hook(root: Path) -> None:
         raise RuntimeError("cannot read core.hooksPath")
     hooks_path = configured.stdout.strip()
     if hooks_path == ".githooks":
-        (root / ".githooks" / "pre-push").chmod(0o755)
         print("pages: hook is already installed")
         return
     if hooks_path:
@@ -160,6 +159,5 @@ def install_hook(root: Path) -> None:
         hook = root / hook
     if hook.exists():
         raise ValueError("existing pre-push hook must be integrated explicitly")
-    (root / ".githooks" / "pre-push").chmod(0o755)
     git(root, "config", "--local", "core.hooksPath", ".githooks")
     print("pages: installed .githooks/pre-push")
