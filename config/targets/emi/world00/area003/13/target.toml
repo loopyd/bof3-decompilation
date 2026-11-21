@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/setStatus44AndModeIndex6IfGateElse42World00Area00313_801F2C04.c",
     "src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CEC.c",
     "src/bof3/world/queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30.c",
+    "src/bof3/world/queueSharedUiElementBlock55x1CTo1DSizeC0And54x1CTo1DSizeA1World00Area00313_801F2D88.c",
 ]
 support_sources = [
     "src/bof3/support/area003_13_psyq.c",

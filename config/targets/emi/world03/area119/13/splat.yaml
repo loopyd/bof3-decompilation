@@ -63,8 +63,10 @@ segments:
     - retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC
     - '@source: src/bof3/world/retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC.c'
   - - 592
-    - asm
-    - func_801F2E50
+    - c
+    - resetWorkAreaAtScenarioProgress28ElseRestartStateByte1CycleWorld03Area11913_801F2E50
+    - '@source: src/bof3/world/resetWorkAreaAtScenarioProgress28ElseRestartStateByte1CycleWorld03Area11913_801F2E50.c'
+    - '@behavior: Entry 7 of the byte-1 handler table based at 0x801F45CC: compares the shared scenario progress byte at 0x80146864 with 0x28 and, at that value, calls the shared main-executable work-area reset at 0x80196070; otherwise stores 0 into byte 0x01 of the work record published at the scratchpad pointer cell 0x1F800044 so the next dispatch takes entry 0 at 0x801F2C48 and reseeds that byte from the mode table at 0x801F45C4.'
   - - 664
     - c
     - dispatchStateByte2Table45ecWorldWorld03Area11913_801F2E98

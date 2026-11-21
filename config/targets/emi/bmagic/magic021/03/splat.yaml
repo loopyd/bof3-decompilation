@@ -95,8 +95,10 @@ segments:
     - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750
     - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic02103_801EF750.c'
   - - 2976
-    - asm
-    - func_801EF7A0
+    - c
+    - decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkBytesAtZeroBmagicMagic02103_801EF7A0
+    - '@source: src/bof3/bmagic/decrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkBytesAtZeroBmagicMagic02103_801EF7A0.c'
+    - '@behavior: Subtracts two from the scratchpad work object byte at offset 0xA and returns while the stored value, truncated to a byte, stays nonzero; at zero it decrements byte 0xB of the shared battle work record reached through 0x801EB4E0 and calls this overlay clear routine at 0x801EFDB0, with the 0x18-byte frame holding only $ra across that call.'
   - - 3068
     - asm
     - func_801EF7FC

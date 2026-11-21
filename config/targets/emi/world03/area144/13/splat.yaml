@@ -36,8 +36,10 @@ segments:
     - '@source: src/bof3/world/latchShared832EIntoWorkByte6SetShared832ETo1BBuildWorkTableResetCueIndexAndAdvanceWorkByte1World03Area14413_801F2C48.c'
     - '@behavior: Overlay step-0 handler, entry 0 of the per-frame handler table at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: latches the shared main-RAM byte 0x8014832E into record byte +0x06, stores 0x1B into that shared byte, calls the work-table bootstrap 0x801F2E18, then re-materialises the record pointer from the scratchpad cell 0x1F800044, zeroes the cue index at 0x801F4960 and advances record byte +0x01 by one. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 164
-    - asm
-    - func_801F2CA4
+    - c
+    - seedWorkRecordsPlayCue203AndAdvanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CA4
+    - '@source: src/bof3/world/seedWorkRecordsPlayCue203AndAdvanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CA4.c'
+    - '@behavior: Overlay step handler, entry 1 of the per-frame handler pointer run at 0x801F3E68 that the dispatcher 0x801F2C04 indexes with byte +0x01 of the work record: runs the record-walk helper 0x801F34FC, and only when the low byte of its result is zero runs the step-0 bootstrap 0x801F30CC, hands cue 0x203 to the shared EXE-side cue dispatcher 0x8015DF18, then re-materialises the record pointer from the scratchpad cell 0x1F800044 and advances record byte +0x01 by one. It takes no arguments, returns nothing and reserves 0x18 bytes of frame with $ra at 0x10.'
   - - 252
     - c
     - advanceWorkByte1WhenNoCallbackRanWorld03Area14413_801F2CFC

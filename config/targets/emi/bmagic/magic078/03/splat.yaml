@@ -59,8 +59,10 @@ segments:
     - '@source: src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenHeadingBucketMatchesRecordToward8014638CBmagicMagic07803_801EF12C.c'
     - '@behavior: Computes helper 0x8017A138 of record-minus-work words 0x38 and 0x34 using record pointer 0x8014638C; compares signed work word 0xC divided by 64 with the masked helper heading divided by 64, then writes 15 to byte 0xA and reloads the pointer cell to increment byte 2 on equality. Takes no arguments and returns nothing.'
   - - 1484
-    - asm
-    - func_801EF1CC
+    - c
+    - decrementWorkByteAThenSetGlobalWorkByteBTo1AndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF1CC
+    - '@source: src/bof3/bmagic/decrementWorkByteAThenSetGlobalWorkByteBTo1AndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF1CC.c'
+    - '@behavior: Entry 6 of this overlay nine-word work-byte-1 handler pointer run based at 0x801F0878: decrements the scratchpad work-object byte at offset 0xA as a byte-width read-modify-write through the pointer cell at 0x1F800044 and, only when the stored value reaches zero, stores one into byte 0xB of the shared battle work record read through 0x801EB4E0 and then re-materializes the cell to increment the work-object byte at offset 0x2. Takes no arguments, returns nothing and keeps no frame.'
   - - 1576
     - c
     - clearWorkByteAAndIncrementWorkByte2WhenGlobalWorkByteBIs2BmagicMagic07803_801EF228
