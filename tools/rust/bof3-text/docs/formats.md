@@ -828,6 +828,39 @@ establish stored instructions and numeric jump targets. They do not establish
 observed invocation, pointer lifetimes, feasible paths, resource safety, display
 or safe editing.
 
+## Counted byte-stream instruction coverage
+
+Original JAL `0x8014F834` in the qualified wrapper binds entry `0x8014F84C`.
+The exact original SLUS identity qualifies only
+`[0x8014F84C,0x8014F904)` and `[0x8014F90C,0x8014FB80)`.
+All 203 reached words and 24 control delays reconcile. The 56-byte frame and
+saved registers restore before JR at `0x8014FB78` and its NOP delay.
+
+Earlier unsigned-byte comparisons establish that the value tested at
+`0x8014F8FC` is below two and unequal to one. It is zero, so that BEQZ always
+takes. The skipped jump and NOP at `[0x8014F904,0x8014F90C)` remain unresolved.
+No reviewed edge enters that eight-byte hole.
+
+The reader preserves the incoming `A2` stream pointer in `S1` and advances it.
+FF skips emission and advances the 16-bit coordinate at `0x80145ACA` by eight.
+Initial zero does not cause an immediate entry return. LBU at `0x8014FB28`
+reads the following byte before its zero test and the count update. Readable
+lookahead remains a condition. Command 07 consumes an operand and recursively
+processes `0x801490D8 + 32 * operand` with count 32. Slot validity, allocation
+extent, residency and recursive termination remain unproved.
+
+The same reader qualifies the numeric byte pairs at
+`[0x8017F580,0x8017F5A0)`, whole-file `[0xE9580,0xE95A0)`.
+`(original A0 & 0xF0) >> 3` produces even offsets `0..30`.
+LBU at `0x8014F8C0` reads the odd byte and LBU at `0x8014F8CC` reads the even
+byte. Their subtraction, coordinate arithmetic and byte stores establish
+numeric roles without glyph identity or texture meaning.
+
+Ordinary external and recursive returns, valid nonaliasing storage, intact saved
+state and stable code and data remain conditions. Callees and neighboring bytes
+retain their prior status. These rules do not establish observed invocation,
+feasible paths, resource safety, display, an editable alphabet or safe editing.
+
 ## Further direct-call instruction coverage
 
 The following bodies use the exact GAME and shared battle identities under
