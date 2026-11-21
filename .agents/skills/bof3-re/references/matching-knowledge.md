@@ -2565,12 +2565,23 @@ and restoring the older representative. Compare the `Processing block` ranges
 and first/last UIDs in both dumps. Block skipping can cross a branch around NEG
 without invalidating an unchanged pointer equivalence.
 
+Use the reference bounds scanned before each CSE pass. CSE can introduce later
+consumers without refreshing those bounds. A reused pseudo may then become
+canonical and acquire a later call argument, extending its lifetime across a
+call. Check later call arguments before assuming the phase ends at its first call.
+
 For a promoted narrow read, track its `QI` or `HI` memory value separately
 from the `SI` result. With `flag_force_mem`, overwriting the promoted index
 can leave the narrow memory equivalence available. Moving a later read before
 the intervening store can then merge the samples. Verify invalidation of the
 memory representative in both CSE passes; a later combine fold cannot undo
 earlier sharing.
+
+An intervening word or halfword store need not invalidate a fixed scalar read.
+GCC 2.7.2 CSE classifies a varying `PLUS` address like a struct access when
+deciding which memory values to invalidate. Clearing `MEM_IN_STRUCT` alone
+does not change that rule. Preserve known members; hiding their address or
+adding volatility is not a repair.
 
 Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
