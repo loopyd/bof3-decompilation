@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/setStatusFFFFAndStateEntry13WhenGateClearWorld03Area13613_801F2C3C.c",
+    "src/bof3/world/setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94.c",
 ]
 support_sources = [
     "src/bof3/world/publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0.c",

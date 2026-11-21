@@ -74,8 +74,10 @@ segments:
     - asm
     - func_801EF37C
   - - 2056
-    - asm
-    - func_801EF408
+    - c
+    - addWorkWord20ToWord14AccumulateIntoHalfword3EAndDecrementByteAThenAdvanceWorkByte2AtZeroBmagicMagic00100_801EF408
+    - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateIntoHalfword3EAndDecrementByteAThenAdvanceWorkByte2AtZeroBmagicMagic00100_801EF408.c'
+    - '@behavior: Handler registered as word 9 of the code pointer run at 0x801EEC04. Decrements work-object byte 0xA, adds work word 0x20 into word 0x14 and accumulates the new word into halfword 0x3E, then re-reads the scratchpad cell and advances work byte 2 when the decremented byte has reached zero. Leaf with no frame, no arguments and no return value.'
   - - 2152
     - c
     - invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468

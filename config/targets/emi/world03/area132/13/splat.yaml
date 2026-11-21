@@ -97,8 +97,10 @@ segments:
     - seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4
     - '@source: src/bof3/world/seedWorkRecordDefaultsAndWorkPositionWorld03Area13213_801F37A4.c'
   - - 3072
-    - asm
-    - func_801F3800
+    - c
+    - findFreeWorkRecordWorld03Area13213_801F3800
+    - '@source: src/bof3/world/findFreeWorkRecordWorld03Area13213_801F3800.c'
+    - '@behavior: Work-record free-entry scan: publishes the base 0x800E4800 of the 0x18-byte-stride work table in main RAM into this overlay cursor cell 0x801F4A88, then walks at most 0x20 records, reloading the published cursor and reading the claim byte at offset 0 of the record it names; the first record whose claim byte reads zero is returned with the cursor left pointing at it, and each claimed record advances the published cursor by 0x18 under an unsigned byte counter, so an exhausted walk returns zero with the cursor one stride past the last record; it takes no arguments, makes no call and reads no state beyond the table it publishes.'
   - - 3164
     - c
     - clearWorkTableClaimBytesWorld03Area13213_801F385C

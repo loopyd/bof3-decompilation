@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2EA0
   - - 992
-    - asm
-    - func_801F2FE0
+    - c
+    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0.c'
+    - '@behavior: Word 2 of all three state-byte-2 handler runs this payload carries. Reads the scratchpad work record through the pointer cell 0x1F800044 once, adds 0x10 to record halfword +0x30, advances dispatch byte +0x02 when the updated signed halfword is at least 0x80, and calls the payload render helper 0x801F31BC on every path.'
   - - 1084
     - c
     - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16713_801F303C

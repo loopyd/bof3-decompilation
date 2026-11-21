@@ -1,3 +1,4 @@
+setStatus4Or3AndModeIndex6IfGateOrByte801454ECBelow6Else2World02Area11313_801F2C04 = 0x801F2C04;
 setStatusFFFFAndHandlerIndex3WhenGateWorld02Area11313_801F2C60 = 0x801F2C60;
 setStatusFFFFAndHandlerIndex5WhenGateWorld02Area11313_801F2C90 = 0x801F2C90;
 setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0 = 0x801F2CC0;

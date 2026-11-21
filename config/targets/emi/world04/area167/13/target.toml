@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/setHalfword932c980StateEntry20Progress1EWhenFrontSideByte0AndFlag8FSet90ClearWorld04Area16713_801F49F0.c",
     "src/bof3/world/advanceHalfword0aBy8WhenWorkHalfword3eIs3c0ElseClearWorkFlag40AndMirrorFrontSideByteIntoFlagPair48And49World04Area16713_801F42C4.c",
     "src/bof3/world/setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58.c",
+    "src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0.c",
 ]
 support_sources = [
     "src/bof3/world/advanceHalfword0aBy3InFrontByte1OrUngated2World04Area16713_801F43B8.c",

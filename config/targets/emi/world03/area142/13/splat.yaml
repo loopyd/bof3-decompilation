@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchWorkByte2Table3554ThenRunStepConsumerWorld03Area14213_801F2C04
+    - '@source: src/bof3/world/dispatchWorkByte2Table3554ThenRunStepConsumerWorld03Area14213_801F2C04.c'
+    - '@behavior: Overlay entry of the world03 area142 step handler. The leading two instructions read the work record pointer published at the scratchpad pointer cell 0x1F800044 before the 0x18-byte frame is reserved, then the body takes that record''s unsigned byte 2, scales it by four and calls the selected entry of the handler run based at 0x801F3554 through jalr v0 with a nop delay slot; byte 2 is the state byte the run''s own handlers move, so it selects the handler for the record''s current step. Once that handler returns the body re-reads the same scratchpad cell and passes the record''s unsigned byte 9 to the overlay''s step consumer at 0x801F2CB0. The frame only keeps ra at 0x10 across the two calls, and no call or pointer word in the payload names this function, so it is the overlay''s loader entry. Takes no arguments and returns nothing.'
   - - 96
     - c
     - clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60

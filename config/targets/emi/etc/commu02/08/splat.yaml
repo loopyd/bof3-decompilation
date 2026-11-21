@@ -123,8 +123,13 @@ segments:
     - '@source: src/bof3/ui/startActionEELatchFrontendMode2AndAdvanceStepByte0UnlessAlreadyBusy.c'
     - '@behavior: returns while the shared frontend mode byte at 0x80143BB0 reads 2, and otherwise starts action 0xEE through the main-executable action starter func_80150224, latches that mode byte to 2 and advances byte 0 of the step group at 0x801F294C by one so the byte-0 dispatcher runs the next handler of the five-entry run at 0x801DADEC; the step cell is read once, after the call and before the mode store, and no other cell is read or written'
   - - 20980
+    - c
+    - dispatchStepByte1TableE00
+    - '@source: src/bof3/ui/dispatchStepByte1TableE00.c'
+    - '@behavior: reads the unsigned byte at 0x801F294D, scales it by four and calls the handler the run at 0x801DAE00 selects, discarding any result, without bounding the index and without reading or writing any other state'
+  - - 21040
     - asm
-    - func_801D5DF4
+    - func_801D5E30
   - - 29284
     - c
     - countActiveRecords_commu02_08

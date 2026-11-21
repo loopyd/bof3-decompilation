@@ -39,7 +39,8 @@ void func_8015C088(void);
  * this one in the single word carrying the entry constant (0x2B there, 0x13
  * here) with every other word equal, so that body is shape evidence rather than
  * a clone and this body writes its own literal. The nearest in-target sibling,
- * func_801F2C94 at 0x801F2C94, writes the same 0x801448EB = 0x13 and
+ * setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94
+ * at 0x801F2C94, writes the same 0x801448EB = 0x13 and
  * 0x801448EC = 0 but sets 0x801448ED = 1 through an extra `addiu`, which is why
  * the two zero stores here spell `$zero` directly.
  * @status exact

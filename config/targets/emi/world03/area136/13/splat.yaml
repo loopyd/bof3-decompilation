@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndStateEntry13WhenGateClearWorld03Area13613_801F2C3C.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 is zero (signed lb), runs the shared front-end startup helper func_8015C088 and writes the shared state-entry tuple 0x801448EB = 0x13, 0x801448EC = 0 and 0x801448ED = 0; bnez leaves for the epilogue so the gate-clear path falls through its three byte stores into the frame restore, and both delay slots stay nops. No arguments, no return value.'
   - - 148
-    - asm
-    - func_801F2C94
+    - c
+    - setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 is zero (signed lb), runs the shared front-end startup helper func_8015C088 and writes the shared state-entry tuple 0x801448EB = 0x13, 0x801448EC = 0 and 0x801448ED = 1; bnez leaves for the epilogue so the gate-clear path falls through its three byte stores into the frame restore, and both delay slots stay nops. No arguments, no return value.'
   - - 240
     - c
     - publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0
