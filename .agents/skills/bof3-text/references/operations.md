@@ -11,7 +11,9 @@ Then run `bin/harness text coverage --root out/extracted --strict`. Keep its JSO
 and exit status together. The report accounts for every file and EMI payload,
 pins content hashes, distinguishes verified derivatives, and retains unresolved
 ranges. Strict failure is expected while full coverage remains open. The source
-root includes the executable and non-EMI files, not only `BIN`.
+root includes the executable and non-EMI files, not only `BIN`. Completion requires
+source, encoding and reference evidence, safe packing and byte preservation.
+Rendering observations are optional and do not close unresolved source ranges.
 The original US track-2 PCM WAV export has a pinned whole-file nontext identity;
 changed or arbitrary WAV files stay unresolved.
 
@@ -103,8 +105,8 @@ SPU wait labels are `%s` data; the VSync timeout message uses BIOS puts.
 Interrupt formats retain exact `%04x` conversions.
 Two LOGO MDEC formats use `ascii-bios-printf-tab-format` and allow ASCII tabs;
 other executable codecs refuse them. MDEC sync names pass as `%s` data through
-helper `0x801D7414`. Other executable ranges remain unresolved. Each output path requires separate
-runtime evidence.
+helper `0x801D7414`. Other executable ranges remain unresolved. A rendering claim
+requires an observation of that output path.
 See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
 `extract out/extracted/BIN/ETC/GAME.EMI --layout record-names -o out/equipment-names.json` exports
@@ -495,10 +497,10 @@ complete reference ownership.
 
 Re-extract the edited output and confirm intended text. Compare changed byte
 ranges against the original allocations and hash the original again. Keep byte
-results separate from runtime results. For game-visible acceptance, use disposable
-images and bounded emulator missions to observe the edited consumer, including
-choices and substitutions when affected. A launch or successful pack is not a
-rendering result.
+results separate from optional rendering observations. To establish a rendering
+claim, use disposable images and bounded emulator missions to observe the edited
+consumer, including choices and substitutions when affected. A launch or
+successful pack is not a rendering result.
 
 Checked states from the current software GPU preserve VRAM and GP1 controls but
 omit the GP0 drawing area and offset. After restoring, let the original game

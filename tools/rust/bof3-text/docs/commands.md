@@ -65,7 +65,8 @@ so duplicate files do not count as independent sources.
 `--strict` prints the report and exits 1 while coverage is incomplete. Executable
 and remaining consumer evidence remain open, so the current report always marks
 full US completion false. Successful bank parsing, matching physical membership
-or an empty heuristic search cannot close those gaps. Runtime acceptance is separate.
+or an empty heuristic search cannot close those gaps. Rendering observations are
+optional and do not close source gaps or gate completion.
 The command requires the payload inventory named by `--payloads`; run `prepare`
 first to create the default inventory, or name the crate's policy explicitly.
 

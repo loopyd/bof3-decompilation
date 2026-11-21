@@ -43,9 +43,11 @@ the user's explicit request under this repository's rules.
 
 Retain run evidence in ignored `out/` and task state in the owning OpenSpec change.
 Keep maintained documentation about supported behavior and lasting limits.
-Review completed, hash-checked captures. If edited bytes reach RAM but the display
-does not change, trace the draw call and its source before accepting that consumer.
+Acceptance requires the full US source inventory, original consumer evidence,
+encoding, references, safe packing and byte verification. Record regional support
+separately. Rendering observations are optional and do not close source gaps.
+
+For rendering claims, review completed, hash-checked captures. If edited bytes
+reach RAM but the display does not change, trace the draw call and its source.
 Another bank or a graphical label remains a possibility, not an established cause.
-Acceptance must reconcile the full US source inventory with byte verification and
-observed consumers. Record regional support separately. Leave unresolved source,
-reference, encoding and runtime gates open until their evidence exists.
+Byte checks alone do not prove rendering.

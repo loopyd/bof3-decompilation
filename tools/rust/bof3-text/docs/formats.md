@@ -2998,8 +2998,8 @@ Original spelling, including `sarching`, is preserved on unchanged round trips.
 An edited `CD_init:` prefix at `0x8014A3D0` prints through BIOS puts during
 ordinary boot. Execution reaches `0x80176E2C` after the puts call at
 `0x80176E0C` and separate printf suffix at `0x80176E24`. This verifies the
-startup prefix only. Conditional CD diagnostics, the LOGO copy and GPU callback
-output retain their own runtime requirements.
+startup prefix only. Claims about conditional CD diagnostics, the LOGO copy or
+GPU callback output need observations of those paths.
 
 The labels `CD_sync`, `CD_ready`, `CD_cw` and `CD_datasync` also use
 `ascii-literal`. Their address pairs store pointers in shared word `0x8018B5F0`;
@@ -3025,7 +3025,7 @@ Analysis omits `max_formatted_size`; it does not bound the rendered output.
 In particular, `%02x` specifies a minimum width, not a two-digit limit.
 The format at `0x8014A318` receives word loads for both hex arguments. The
 reference pairs for `0x8014A410` and `0x8014A470` converge on call `0x801775E4`.
-Other BIOS output paths require their own runtime observations.
+Claims about other BIOS output paths need observations of those paths.
 
 GPU diagnostic formats use the same exact-directive codec. Most use
 `bios-printf-callback`, recording callback word `0x8018B158`, initially
@@ -3066,8 +3066,8 @@ Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while
 refusing changes to code, pointers, headers or unrelated data. Each document
 additionally binds the complete current source SHA-256 and canonical path.
-Source tracing establishes this layout; runtime acceptance and other executable
-consumers remain separate coverage requirements.
+Source tracing establishes this layout. Other executable consumers remain
+coverage requirements; rendering observations are optional.
 
 ## Record names
 
@@ -3101,8 +3101,8 @@ Build recognition pins every archive byte outside these name fields and the five
 supported category allocations. Extract names with `--layout record-names`.
 Packing a name document changes only name fields and also checks the complete current source SHA-256, canonical source path and all
 record identities. Stats, flags, prices, offsets and other entries remain
-unchanged. Other record families require their own consumer evidence. Runtime
-acceptance remains a separate gate.
+unchanged. Other record families require their own consumer evidence. Rendering
+observations are optional.
 
 ## Default character names
 
@@ -3372,8 +3372,8 @@ Recognition pins the selected payload outside its supported allocations.
 Packing binds the complete archive SHA-256 and canonical path and checks every
 allocation. Stats, the other twelve bytes in each label record and all other
 archive bytes remain unchanged. The copies remain separate sources. Changing
-START does not update STATUS or an existing save's live names. Save propagation,
-other initializers and edited rendering remain separate requirements.
+START does not update STATUS or an existing save's live names. Save propagation
+and other initializers remain outside this layout; edited rendering is unverified.
 
 ## Monster names
 
@@ -4257,8 +4257,8 @@ rendering remain unverified.
 Recognition pins the complete selected payload outside these allocations.
 Packing additionally binds the complete archive hash, canonical source path,
 entry and entry offset. It preserves all other payloads. Each archive replica
-remains a separate source. Other embedded strings, different code
-layouts and observed rendering remain separate coverage requirements.
+remains a separate source. Other embedded strings and different code layouts
+remain coverage requirements. Rendering observations are optional.
 
 The `US battle messages` layout supports ten thirteen-byte literal records
 in BATTLE entry 3, loaded at `0x801D0C00`. The table starts at `0x801EB000` with

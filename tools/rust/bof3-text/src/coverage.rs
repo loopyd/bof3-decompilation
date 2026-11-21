@@ -394,7 +394,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     allocations.push(RangeRecord {
                                         offset: text.file_offset, length: text.capacity,
                                         entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; rendering not assessed by coverage", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
                                     });
                                 }
                             }
@@ -415,7 +415,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         entry: Some(entry.index),
                                         status: "known-text",
                                         evidence: format!(
-                                            "{} record {}; {consumer}; runtime acceptance pending",
+                                            "{} record {}; {consumer}; rendering not assessed by coverage",
                                             row.family, row.index
                                         ),
                                     });
@@ -562,7 +562,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                 Ok(document) => {
                     let textures = inventory.archive_context(&bytes)?;
                     let mut spans: Vec<_> = document.strings.into_iter().map(|text| {
-                        range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output))
+                        range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; rendering not assessed by coverage", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output))
                     }).collect();
                     spans.extend(
                         crate::original::executable_nontext_ranges(
@@ -645,7 +645,9 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
     if !disc_membership.original_files_match {
         blockers.push("original US disc files are missing or changed");
     }
-    blockers.push("US executable and remaining consumers require source and runtime evidence");
+    blockers.push(
+        "US executable and remaining consumers require source, encoding and reference evidence",
+    );
     Ok(Report {
         schema: "bof3.text-coverage/v1",
         build,

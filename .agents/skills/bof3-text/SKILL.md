@@ -17,4 +17,5 @@ Select the source build and requested scope before acting. Retain input hashes a
 write edits to new outputs. Report which sources and consumers were verified, the
 checks performed, and the gaps that remain. A known-bank round trip proves byte
 preservation for that bank; full completion also requires the complete source
-inventory and observed game consumers.
+inventory, original consumer evidence and byte verification. Rendering observations
+are optional; report their limits separately.
