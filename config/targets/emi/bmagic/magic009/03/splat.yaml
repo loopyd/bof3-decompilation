@@ -30,8 +30,10 @@ segments:
   vram: 2149510184
   subsegments:
   - - 40
-    - asm
-    - func_801EEC28
+    - c
+    - dispatchWorkByte1HandlerTableec04BmagicMagic00903_801EEC28
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic00903_801EEC28.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its unsigned work byte at offset 1 selects an entry of the five-entry code pointer run at 0x801EEC04 (0x801EEC98, 0x801EEF08, 0x801EF01C, 0x801EF068, 0x801EF09C), and that entry is invoked with no arguments. The five table words are copied into this dispatcher frame first, so the call target is read back from the copy and the index is not bounds-checked. It reads no other state and writes none.'
   - - 152
     - asm
     - func_801EEC98

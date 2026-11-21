@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/findWorkPositionBoundsIndexWorld04Area16913_801F355C.c",
+    "src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C.c",
 ]
 support_sources = [
     "src/bof3/support/area169_13_psyq.c",

@@ -31,6 +31,6 @@ func_801F3AFC = 0x801F3AFC;
 func_801F3B7C = 0x801F3B7C;
 func_801F3BFC = 0x801F3BFC;
 invokeHelperArgWorld03Area13013_801F3C7C = 0x801F3C7C;
-func_801F3C9C = 0x801F3C9C;
+initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C = 0x801F3C9C;
 seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0 = 0x801F3CD0;
 D_801F3ED8 = 0x801F3ED8;

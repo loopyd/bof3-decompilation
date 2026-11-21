@@ -153,8 +153,10 @@ segments:
     - asm
     - func_801FC6A8
   - - 23416
-    - asm
-    - func_801FC778
+    - c
+    - startAction4CLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801FC778
+    - '@source: src/bof3/scenario/startAction4CLatchPhaseByteTwoThenReleaseFrontEndAndRequestPrimaryState0ScenarioScena0500_801FC778.c'
+    - '@behavior: Primary state 22 handler of this overlay, reached through word 22 (0x801FD640) of the thirty-two-word primary handler table at 0x801FD5E8 that dispatchPrimaryStateHandlerScenarioScena0500_801F83EC (0x801F83EC) indexes with the shared primary state byte D_80146874, so no in-image jal targets it and that table word is its only image reference. It drives the shared sub-state byte D_80146875 through two steps and returns without touching anything for any other sub-state value: sub-state 0 starts action 0x4C through the shared action helper func_80150224 (0x80150224), latches the shared phase byte D_80143BB0 to 2 and advances the sub-state byte to 1, while sub-state 1 waits while that phase byte reads 2 and, once it changes, runs the shared front-end release helper func_8015C058 (0x8015C058), clears the sub-state byte and requests primary scene state 0 in D_80146874. It takes no arguments and returns nothing, its 0x18-byte frame keeps $ra across the two calls and $s0 for the sub-state pointer, the sub-state byte is read once into $v1 for the two-case test, the constants 1 and 2 are materialised into $v0 in the delay slots of that test, and the phase byte stores through $at while the sub-state byte stores through $s0.'
   - - 23560
     - c
     - scanSelectionSlotsSettingSharedStateOneForFiveTwoForSixScenarioScena0500_801FC808

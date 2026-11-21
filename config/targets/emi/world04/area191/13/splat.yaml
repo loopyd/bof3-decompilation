@@ -89,8 +89,10 @@ segments:
     - dispatchWorkByte4Table41dcWorld04Area19113_801F31A0
     - '@source: src/bof3/world/dispatchWorkByte4Table41dcWorld04Area19113_801F31A0.c'
   - - 1508
-    - asm
-    - func_801F31E4
+    - c
+    - armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4
+    - '@source: src/bof3/world/armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4.c'
+    - '@behavior: Arming entry of the four-word work-byte-4 handler table at 0x801F41DC, selected by work byte 4 value 0: re-reads the scratchpad pointer cell 0x1F800044 for each of six store groups and stores 2 into the record byte at 0x48, 0x10000 into the words at 0x40 and 0x44, 0xFF into the countdown byte at 0x0A, 1 into the word at 0x70, 0x50/0x3C/0 into the colour bytes at 0x5D/0x5E/0x5F, and 1 into the record byte at 0x04 to hand the record to the raise step 0x801F3278; it then subtracts two from the halfword at 0x0A of the shared record 0x80148210.'
   - - 1656
     - c
     - advanceWorkStepAndRaiseWordPair40And44By2000ThenHandOffEveryFourthTickWorld04Area19113_801F3278

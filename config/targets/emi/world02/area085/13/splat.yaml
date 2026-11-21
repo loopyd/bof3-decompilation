@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F36B4
   - - 2876
-    - asm
-    - func_801F373C
+    - c
+    - publishScaledWorkXByte7SetViewMode7ClearFacingAndWorkWord14SetFlag40ThenStoreSharedYAndWorkWord38World02Area08513_801F373C
+    - '@source: src/bof3/world/publishScaledWorkXByte7SetViewMode7ClearFacingAndWorkWord14SetFlag40ThenStoreSharedYAndWorkWord38World02Area08513_801F373C.c'
+    - '@behavior: Overlay step: reads the work record published at the scratchpad pointer cell 0x1F800044, forms its signed word 0x34 minus 0x160000 shifted right by 15 and stores the low byte of that result into byte 0x07 of the record published at 0x80148210, calls the shared view routine 0x801C5DFC with the mode literal 7, clears the shared facing halfword 0x80149330, clears the work record word 0x14 and sets bit 0x40 of the published byte 0, then stores 0x3E0000 into the shared packet Y word 0x8014930C and into the work record word 0x38; takes no arguments and returns nothing.'
   - - 3008
     - c
     - clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0

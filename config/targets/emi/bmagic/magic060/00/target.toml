@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06000_801EEC34.c",
 ]
 support_sources = [
     "src/bof3/support/magic060_00_psyq.c",

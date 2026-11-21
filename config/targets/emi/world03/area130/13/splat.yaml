@@ -145,8 +145,10 @@ segments:
     - c
     - invokeHelperArgWorld03Area13013_801F3C7C
   - - 4252
-    - asm
-    - func_801F3C9C
+    - c
+    - initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C
+    - '@source: src/bof3/world/initFrontendStateSelector3FAndClearSecondStateByteWorld03Area13013_801F3C9C.c'
+    - '@behavior: Overlay step handler the loader reaches from outside this payload: it runs the shared front-end startup helper func_8015C088 with no arguments, writes 0x3F into the shared front-end state selector D_801448EB that dispatchIndexedStateHandler indexes the handler table D_801C84BC with, and clears the shared byte D_801448ED, leaving 0x801448EC untouched. It returns nothing; the 0x18-byte frame keeps only $ra.'
   - - 4304
     - c
     - seedEquipmentObjectNameFromSelectorStartAction49ThenQueueCue106OnFrontEndModeReleaseWorld03Area13013_801F3CD0

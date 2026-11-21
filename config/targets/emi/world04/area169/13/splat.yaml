@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2DCC
   - - 780
-    - asm
-    - func_801F2F0C
+    - c
+    - advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C.c'
+    - '@behavior: Advance the work record halfword at 0x30 by 0x10 and advance the state byte at 0x02 once that stored signed halfword reaches 0xC0, then draw the record''s mirrored quad pair.'
   - - 872
     - c
     - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68

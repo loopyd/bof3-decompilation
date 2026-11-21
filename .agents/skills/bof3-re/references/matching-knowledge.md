@@ -646,6 +646,11 @@ original size.
 
 ## Delay slots and entry copies
 
+- If a pointer reload separates a computed value from a call, hold the value in
+  a local and store it after the reload when the original uses that call's delay
+  slot for the store. In one 212-byte body this kept the original store; inline
+  forms produced both larger and smaller bodies. Preserve volatile ordering; this
+  observation does not authorize moving a volatile store across a call.
 - Converted argument value: a value the original builds inside one argument's own
   chain stays in that expression. A heading converted at a single argument site,
   hoisted into its own local, was scheduled ahead of the later argument loads and

@@ -1,5 +1,5 @@
 dispatchWorkByte4Table37f8World01Area04313_801F2C04 = 0x801F2C04;
-func_801F2C48 = 0x801F2C48;
+initializeWorkModeWithTintMinus64SetByte48To2AdvanceHandlerTo1Consume2CountdownWorld01Area04313_801F2C48 = 0x801F2C48;
 func_801F2D0C = 0x801F2D0C;
 seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28 = 0x801F2E28;
 submitWorkRequestEntry1BDSeedPairE000ArmTintPlus20ThenSetByte2BTo3World01Area04313_801F2FBC = 0x801F2FBC;

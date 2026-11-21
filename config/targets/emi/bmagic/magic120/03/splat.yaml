@@ -48,8 +48,10 @@ segments:
     - dispatchStateByte1Table0ca8BmagicMagic12003_801EF010
     - '@source: src/bof3/bmagic/magic12003DispatchTables.c'
   - - 1108
-    - asm
-    - func_801EF054
+    - c
+    - dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054.c'
+    - '@behavior: Dispatches the work-byte-2 step handler chosen by the scratchpad record byte 2 from the local table at 0x801F0CB0 and, when shared battle work byte B is not 0xFF and the record byte 2 is nonzero after the call, invokes the target-local block at 0x801EF44C.'
   - - 1240
     - asm
     - func_801EF0D8
