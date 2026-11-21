@@ -126,8 +126,9 @@ US START entry 8 and STATUS entry 0 each expose ten counted labels, eight defaul
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
-configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v57`.
+configuration captions, nine sort captions, fifteen command captions and five
+panel captions through
+`bof3.inline-text/v58`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +197,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v57`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
+uses `bof3.inline-text/v58`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
 rows. Write A-Z, `!` and spaces literally; `{byte(0xNN)}` stores one raw glyph
 byte. Spaces encode as `0xFF`. End each caption with `{nul}` for the reserved
 `0x00`; `{nul}` alone is empty. Preserve the recorded byte and nonblank-glyph
@@ -337,6 +338,14 @@ alignment, code and tables. Edited rendering is unverified.
 Their two-row `1` and `2` labels use `ascii-digit-glyph-literal`: one digit,
 ASCII space or `:` plus NUL within two bytes. Empty text is refused; following
 bytes remain protected. Edited display is unverified.
+
+BATE, SHISU and SHOP entry 0, START entry 8 and STATUS entry 0 also expose
+`Pois`, `Conf`, `EQUIP`, `EXP` and `NEXT` through `game-literal`. Their capacities
+including NUL are 5, 5, 6, 4 and 5 bytes. Shorter or empty edits zero-fill the
+field; spaces encode as `0xFF` and commands are refused. Retain empty pointer
+references and preserve all alignment and the EXP/NEXT boundary. Valid records,
+returning helpers and renderer resources remain required. Natural activation
+and edited display remain unverified.
 
 BATE and SHISU entry 0 each expose fifteen stat labels through `game-literal`.
 Each four-byte allocation permits three encoded bytes and NUL; the two trailing

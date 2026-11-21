@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v57`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v58`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3029,7 +3029,10 @@ Quit and Init. The reader calls the renderer with count 16. Other command groups
 and reset bypass remain unqualified.
 Natural activation, edited rendering and visual fit remain unverified.
 
-Retain all 163 allocations and edit only `text`. Re-extract older inline
+The layout also exposes `Pois`, `Conf`, `EQUIP`, `EXP` and `NEXT` through
+`game-literal`, with the panel-caption bounds below.
+
+Retain all 168 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -3245,6 +3248,27 @@ calls the reader after its selected state handler returns. Preserve the task
 published by `0x801E0F78`, with type 7, dispatch 18 and a valid state.
 The following pointer word at `0x801E5D3C` remains protected.
 
+The same five panel captions appear in BATE, SHISU and SHOP entry 0, START
+entry 8 and STATUS entry 0. Capacities including NUL are five bytes for `Pois`
+and `Conf`, six for `EQUIP`, four for `EXP` and five for `NEXT`.
+
+| Source | Pois | Conf | EQUIP | EXP | NEXT |
+| --- | --- | --- | --- | --- | --- |
+| BATE | `0x801D8B18` | `0x801D8B20` | `0x801D8B40` | `0x801D8B48` | `0x801D8B4C` |
+| SHISU | `0x801D9B3C` | `0x801D9B44` | `0x801D9B64` | `0x801D9B6C` | `0x801D9B70` |
+| SHOP | `0x801E5814` | `0x801E581C` | `0x801E583C` | `0x801E5844` | `0x801E5848` |
+| START and STATUS | `0x801EC930` | `0x801EC938` | `0x801EC958` | `0x801EC960` | `0x801EC964` |
+
+Status bits `0x80` and `0x20`, with the shared blink bit, select `Pois` or
+`Conf`. Their callers pass count 16 to `0x8014FC90`. `EQUIP`, `EXP` and `NEXT`
+use `0x8014F800` with count `0xFF`; the mode's low byte selects `EXP` or `NEXT`.
+These readers stop at NUL. Empty edits zero-fill the field, including the
+following byte read by `0x8014F800` after an initial NUL. All five captions use
+`game-literal` and retain empty pointer-reference lists. Preserve their exact
+capacities, including the adjacent EXP/NEXT boundary. Valid records, returning
+helpers and initialized renderer resources remain required. Natural activation,
+visual fit and edited display remain unverified.
+
 These fields use `game-literal`. Shorter or empty edits retain NUL and
 zero-fill the field. Packing preserves alignment bytes, pointers and selection
 records. No relocation is supported. Natural entry, producer bounds, visual
@@ -3423,7 +3447,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v57` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v58` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
