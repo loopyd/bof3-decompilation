@@ -554,9 +554,12 @@ archives. Runtime ends are exclusive. Each row lists one qualifying original cal
 
 | Body source | Runtime interval | Original call source | JAL address |
 | --- | --- | --- | --- |
+| SLUS | `[0x8014BAB8,0x8014BAEC)` | SLUS | `0x8014BD58` |
+| SLUS | `[0x8014BAEC,0x8014BB20)` | SLUS | `0x8014BBBC` |
 | SLUS | `[0x8014D4E0,0x8014D54C)` | SLUS | `0x8014D2B4` |
 | SLUS | `[0x8014ECAC,0x8014ECEC)` | BATTLE#3 | `0x801E57F4` |
 | SLUS | `[0x80150098,0x801501E4)` | BATTLE#3 | `0x801D911C` |
+| SLUS | `[0x8015AD00,0x8015B2AC)` | SLUS | `0x8014C178` |
 | SLUS | `[0x80161454,0x80161808)` | SLUS | `0x8014D4C8` |
 | SLUS | `[0x8016728C,0x80167344)` | GAME#0 | `0x80197BC0` |
 | SLUS | `[0x8017212C,0x801721FC)` | SLUS | `0x8016DFB0` |
@@ -606,6 +609,12 @@ and register jump at `0x801AF4CC` select only `0x801AF598`, `0x801AF4D4`,
 `0x801AF544`, `0x801AF558` or `0x801AF578`. All targets stay inside the complete
 consumer. Guard, load, jump and delay words reconcile with the original table.
 
+The SLUS body at `0x8015AD00` includes four `RTPS` words, encoded as
+`0x4A180001`, at `0x8015B008`, `0x8015B048`, `0x8015B098` and
+`0x8015B0E8`. Each follows the two NOPs in the PsyQ `gte_rtps` definition.
+These are GTE instructions even when an analyzer reports them as invalid.
+Their stored encoding does not establish enabled or configured runtime COP2 state.
+
 The two SLUS bodies at `0x8017EE0C` and `0x8017EE1C` contain SYSCALL at
 `0x8017EE10` and `0x8017EE20`. Their structural continuations assume exception
 return to the following instruction; they do not establish the handler or its
@@ -652,6 +661,37 @@ frames and stable code and tables. Referenced storage, external callees and
 neighboring bytes retain their prior status. These ranges establish stored
 instructions and numeric targets, without matching ELF, observed invocation,
 feasible-path, transitive-effect, resource-safety, display or safe-edit acceptance.
+
+## Task callback table coverage
+
+The exact original US SLUS identity qualifies the nine function-address words
+at `[0x80149B0C,0x80149B30)`, file bytes `[0xB3B0C,0xB3B30)`.
+Qualified dispatcher `0x80158C80..0x80158DB8` copies two groups of four words
+and the ninth word into its stack table. It then selects a copied word by task
+type and uses it as an indirect-call target. The type byte has no general bounds
+check. Indices 0 through 8 are a condition of this table interpretation.
+
+Two qualified shared-battle initializers establish finite selector cases for
+task record `0x80148570`. Initializer `0x8009AF84` sets active 1, type 8,
+outer selector 1 and state 2. Initializer `0x80097EC0` sets active 1, type 8,
+outer selector 2 and state 2. Resident callback slot 8 points to `0x800B2088`.
+That dispatcher selects a state wrapper by the outer selector; the wrapper
+selects its callback by state. Their original loads qualify only these four
+numeric words in the exact original shared-battle payload:
+
+| Cell | Payload offset | Address value | Loading instruction |
+| --- | --- | --- | --- |
+| `0x800B6E0C` | `0x2060C` | `0x800B2104` | `0x800B20AC` |
+| `0x800B6E10` | `0x20610` | `0x800B2258` | `0x800B20AC` |
+| `0x800B6E28` | `0x20628` | `0x800B2198` | `0x800B2128` |
+| `0x800B6E3C` | `0x2063C` | `0x800B22EC` | `0x800B227C` |
+
+Each original archive and raw payload must pass the existing shared-battle
+identity and load-address checks. Dispatch assumes matching task priority,
+stable selectors and tables, loaded shared code, valid nonaliasing memory and
+intact frames. These records establish stored function addresses, without
+observed invocation, general selector bounds or callee safety. Neighboring
+cells and instruction bodies retain their prior classification.
 
 ## Shared battle instruction coverage
 

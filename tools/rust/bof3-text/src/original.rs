@@ -64,6 +64,8 @@ const BATTLE_CALLEE_TABLE_EVIDENCE: &str = "Original US shared battle numeric ju
 const BATTLE_RESIDENT_TABLE_EVIDENCE: &str = "Original US battle resident animation numeric tables. Dispatcher 0x801E6C84 copies all five address words at 0x801D0F44..0x801D0F58 before its guarded indirect call. Initializer 0x801E6E54 and continuing handler 0x801E6FB0 read request-table indices 0/3/4/6 at 0x801EB494 under the reviewed mask-0x58 selector and initialized state. Exact original archive and raw-payload identities bind the consumer. Stable tables, valid work and nonaliasing memory remain conditions. Other request bytes retain their prior status. No general selector bound, actual invocation, indirect-call safety, display or safe-edit claim.";
 
 const US_DIRECT_CALL_INSTRUCTION_EVIDENCE: &str = "Original US direct-call instruction bodies; original JAL entries from previously qualified instruction records, complete raw-word and structural control-flow review, and every control-transfer delay word including returns. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. GAME 0x801AF494 uses the separately qualified five-case numeric table. SYSCALL continuations at 0x8017EE10/0x8017EE20 assume exception return to the next instruction. The five-word 0x8017F3D0 body ends in an opaque pointer-loaded tail transfer; pointer storage, target and effects are excluded. tools/rust/bof3-text/docs/formats.md records body boundaries and entry sites. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
+const US_TASK_CALLBACK_TABLE_EVIDENCE: &str = "Original US resident task callback table 0x80149B0C..0x80149B30; qualified dispatcher 0x80158C80 copies all nine address words to its stack and conditionally calls the indexed pointer. Exact original whole executable identity gates classification. Type indices 0..8, stable selectors and tables, matching task priority, valid nonaliasing memory and intact frames remain conditions; the type byte has no general bounds check. Neighboring storage and targets retain prior status. No observed invocation, general selector bound, callee safety, display or safe-edit claim.";
+const BATTLE_TASK_CALLBACK_TABLE_EVIDENCE: &str = "Original US shared battle task callback words at 0x800B6E0C, 0x800B6E10, 0x800B6E28 and 0x800B6E3C. Qualified initializers 0x8009AF84 and 0x80097EC0 publish active type-eight tasks with outer selectors one or two and state two. Qualified dispatchers 0x800B2088, 0x800B2104 and 0x800B2258 load these four words as indirect-call targets. Exact original archive, raw-payload and load identities gate classification. Matching task priority, stable selectors and tables, loaded shared code, valid nonaliasing memory and intact frames remain conditions. Neighboring cells and targets retain prior status. No observed invocation, general selector bound, callee safety, display or safe-edit claim.";
 const US_DIRECT_CALL_TABLE_EVIDENCE: &str = "Original US direct-call numeric jump table at 0x80195F7C..0x80195F90; five little-endian targets. Complete original GAME body 0x801AF494..0x801AF5B0 masks the selector to eight bits and applies unsigned < 5 before the scaled table load and register jump. Every original target stays inside the consumer; complete guard, table, load/jump and delay words reconcile. Exact original archive/raw-payload identities and load address gate classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring bytes retain prior status. No actual dispatch, general selector bound, resource safety, display or safe-edit claim.";
 
 const US_FOLLOWUP_INSTRUCTION_EVIDENCE: &str = "Original US further direct-call instructions; complete original GAME and shared battle bodies with original JAL entries in previously qualified instruction records. All raw words, structural control flow and control-transfer delay words reconcile. GAME 0x80196784 uses the separately qualified five-case table at 0x80195804. Exact original archive/raw-payload identities and load addresses gate classification. tools/rust/bof3-text/docs/formats.md records boundaries and entries. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced storage, external callees and neighboring bytes retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
@@ -156,6 +158,21 @@ pub fn executable_nontext_ranges<'a>(
     }
     let mut ranges = vec![
         NontextRange {
+            offset: 0xb3b0c,
+            length: 36,
+            evidence: US_TASK_CALLBACK_TABLE_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xb5ab8,
+            length: 52,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xb5aec,
+            length: 52,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
             offset: 0xb74e0,
             length: 108,
             evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
@@ -168,6 +185,11 @@ pub fn executable_nontext_ranges<'a>(
         NontextRange {
             offset: 0xba098,
             length: 332,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xc4d00,
+            length: 1_452,
             evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
         },
         NontextRange {
@@ -4879,6 +4901,11 @@ fn reviewed_payload_nontext_ranges(
                 offset,
                 length,
                 evidence: BATTLE_CALLEE_TABLE_EVIDENCE,
+            }))
+            .chain([(0x2060c, 8), (0x20628, 4), (0x2063c, 4)].into_iter().map(|(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: BATTLE_TASK_CALLBACK_TABLE_EVIDENCE,
             }))
             .chain([(0x110b8, 648), (0x137c4, 932), (0x19ef4, 728)].into_iter().map(|(offset, length)| NontextRange {
                 offset,
