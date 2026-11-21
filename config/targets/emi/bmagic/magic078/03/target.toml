@@ -22,6 +22,7 @@ sources = [
     "src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C.c",
     "src/bof3/bmagic/decrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic07803_801EF2CC.c",
     "src/bof3/bmagic/decrementWorkByteAThenInvokeHelperAt102AndAdvanceWorkByte2OnZeroBmagicMagic07803_801F01D0.c",
+    "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84.c",
 ]
 support_sources = [
     "src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c",

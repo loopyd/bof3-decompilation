@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/bmagic/queueTwoLinkedSlotsCopyRecordTripletsThenInvokeHelperAt100AndAdvanceWorkByte1BmagicMagic07803_801EECFC.c'
     - '@behavior: Claims two linked queued slots, copies record word triplets with distinct last-word biases, invokes helper 0x8015D71C(0x100), clears work byte B and advances work byte 1.'
   - - 644
-    - asm
-    - func_801EEE84
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic07803_801EEE84.c'
+    - '@behavior: Entry index 1 of the two-entry work-byte-1 handler run that the per-frame driver at 0x801EEC04 builds on its stack and stores this span into at 0x1C, so there is no jal immediate. It loads the scratchpad work-object pointer cell at 0x1F800044 once before its 0x18-byte frame exists, compares the work object unsigned byte 0xB against 0xFF, and only on that equality forwards the shared battle byte at 0x80146384 to helper 0x800A9820, raises bit 4 of the shared halfword at 0x801462E8 and invokes helper 0x801E5988.'
   - - 740
     - c
     - dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4

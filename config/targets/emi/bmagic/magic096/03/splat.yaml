@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801EF2CC
   - - 1864
-    - asm
-    - func_801EF348
+    - c
+    - decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348
+    - '@source: src/bof3/bmagic/decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348.c'
+    - '@behavior: Decrements the unsigned byte 11 of the scratchpad work object reached through the pointer cell at 0x1F800044 with a byte-width read-modify-write, and only when that byte reaches zero re-reads the cell and increments the object''s byte 2 to advance the dispatcher step. A leaf with no frame, no arguments and no return value.'
   - - 1940
     - c
     - decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF394

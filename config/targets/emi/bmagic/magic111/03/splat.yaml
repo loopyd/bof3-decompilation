@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF1D4
   - - 1592
-    - asm
-    - func_801EF238
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF238
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF238.c'
+    - '@behavior: Adds one modulo 256 to work byte 9 of the work object reached through the scratchpad pointer cell at 0x1F800044 and, only when that byte equals 0x10, re-reads the cell and increments work byte 2; takes no arguments, returns nothing and keeps no frame.'
   - - 1672
     - c
     - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288
