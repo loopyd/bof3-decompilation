@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8.c'
     - '@behavior: Dispatches the work byte 2 handler at table 0x801EFAB8, reloads the scratchpad work pointer and calls local draw routine 0x801EF970 when work bytes 0 and 2 are both nonzero.'
   - - 3184
-    - asm
-    - func_801EF870
+    - c
+    - clearWorkByte9AndAdvanceWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11103_801EF870
+    - '@source: src/bof3/bmagic/clearWorkByte9AndAdvanceWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11103_801EF870.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 once, compares that record''s byte 0xB against three with an unsigned bound and, only when it is below three, clears the scratchpad work object''s byte 9, re-reads the work pointer cell at 0x1F800044 and advances work byte 2 modulo 256.'
   - - 3268
     - c
     - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4

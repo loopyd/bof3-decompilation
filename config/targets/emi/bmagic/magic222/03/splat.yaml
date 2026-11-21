@@ -90,8 +90,10 @@ segments:
     - incrementWorkByte9AdvanceWorkWord14By6AndAdvanceWorkByte2At10BmagicMagic22203_801EF6C8
     - '@source: src/bof3/bmagic/incrementWorkByte9AdvanceWorkWord14By6AndAdvanceWorkByte2At10BmagicMagic22203_801EF6C8.c'
   - - 2852
-    - asm
-    - func_801EF724
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801EF724
+    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801EF724.c'
+    - '@behavior: Work-object handler step, entry 12 of the sixteen-word handler-pointer run at 0x801F0D54 whose word at 0x801F0D84 holds this function address, so the byte-1 dispatcher dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 reaches it while work object byte 1 is 12 and no jal in this payload targets the span. It reads the scratchpad work object through the pointer cell at 0x1F800044 and decrements its unsigned byte 0xA with a byte-width read-modify-write (lbu / addiu -1 / sb), comparing the stored byte with zero (andi 0xFF / bnez). Only when that byte reaches zero it re-reads the cell and increments the object byte 2 with a byte-width add, which moves the byte-2 dispatcher to its next sub-step. The second read of the cell is required because the store through the loaded work pointer may alias the cell. The 0x4C-byte body is byte-identical to the exact sibling decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288. Takes no arguments, returns nothing, keeps no frame and reads or writes no other state.'
   - - 2928
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic22203_801EF770

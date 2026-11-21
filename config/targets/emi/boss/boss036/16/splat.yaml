@@ -120,8 +120,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table20bcBossBoss03616_800C1EA0.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at its last word 0x800C20BC, the entry that holds 0x800C1EE4, with no arguments. The original does not bound the index before the scaled table load, writes no state, and leaves the selected handler result in $v0. The payload holds neither a jal nor a pointer word naming 0x800C1EA0, so the overlay loader is its caller.'
   - - 1764
-    - asm
-    - func_800C1EE4
+    - c
+    - dispatchStateByte2Table1804BossBoss03616_800C1EE4
+    - '@source: src/bof3/boss/dispatchStateByte2Table1804BossBoss03616_800C1EE4.c'
+    - '@behavior: Overlay step dispatch on work-record byte 2: copies the three handler pointers of the in-image run at 0x800C1804 into a local frame table, then calls the entry selected by unsigned byte 2 of the record published at the scratchpad pointer cell 0x1F800044 with no arguments. The index is not bounded before the scaled load, the 0x28-byte frame keeps $ra at 0x20 and the three copied words at 0x10 through 0x18, and the epilogue leaves the selected handler result in $v0. The payload holds no jal naming 0x800C1EE4; the only in-image pointer word that names it is 0x800C20BC, the last word of the reviewed run D_800C2020, which the byte-1 dispatcher at 0x800C1EA0 indexes as its base.'
   - - 1860
     - c
     - clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44

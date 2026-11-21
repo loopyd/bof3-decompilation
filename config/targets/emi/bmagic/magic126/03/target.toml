@@ -24,6 +24,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte2WhenAIs10BmagicMagic12603_801EFC28.c",
     "src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperCopyRecordTripletClearByteBRearmByte9ClearByteAAndAdvanceWorkByte2BmagicMagic12603_801EFB74.c",
     "src/bof3/bmagic/copyWorkWordTripletClearBytes9AThenAdvanceWorkByte2BmagicMagic12603_801EEFAC.c",
+    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic12603_801EF078.c",
 ]
 support_sources = [
     "src/bof3/support/magic126_03_psyq.c",

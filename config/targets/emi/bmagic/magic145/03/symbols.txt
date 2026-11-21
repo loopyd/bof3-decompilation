@@ -1,6 +1,6 @@
 dispatchWorkByte1HandlerBmagicMagic14503_801EEC10 = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-func_801EEDB0 = 0x801EEDB0;
+incrementWorkByte1WhenWorkByteBZeroBmagicMagic14503_801EEDB0 = 0x801EEDB0;
 func_801EEDE4 = 0x801EEDE4;
 dispatchStateByte1Tablef414BmagicMagic14503_801EEE2C = 0x801EEE2C;
 func_801EEE70 = 0x801EEE70;

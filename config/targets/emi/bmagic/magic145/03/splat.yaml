@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC70
   - - 432
-    - asm
-    - func_801EEDB0
+    - c
+    - incrementWorkByte1WhenWorkByteBZeroBmagicMagic14503_801EEDB0
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic14503_801EEDB0.c'
+    - '@behavior: Advances the overlay work state: reads the scratchpad work-object pointer cell 0x1F800044 once and, only when the work object''s unsigned byte 0x0B is zero, increments its byte 0x1 by one at byte width through the same base. Second entry of the leading pointer run at 0x801EEC04, selected by the dispatcher 0x801EEC10 from work byte 1; takes no arguments, returns nothing and keeps no frame.'
   - - 484
     - asm
     - func_801EEDE4

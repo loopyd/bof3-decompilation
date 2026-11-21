@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84.c",
     "src/bof3/bmagic/incrementWorkByte9ThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEEE4.c",
+    "src/bof3/bmagic/decrementWorkByte9Subtract5FromWord20Add2ToWord14ThenCall801E5988OnZeroBmagicMagic11403_801EFFB0.c",
 ]
 support_sources = [
     "src/bof3/bmagic/drawTranslucentGouraudQuadFromWorkByte9OffsetsBmagicMagic11403_801EFA80.c",

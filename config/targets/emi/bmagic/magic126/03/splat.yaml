@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801EF00C
   - - 1144
-    - asm
-    - func_801EF078
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic12603_801EF078
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic12603_801EF078.c'
+    - '@behavior: Increments byte 2 of the scratchpad work object at 0x1F800044 when byte 0xB of the shared record reached through 0x801EB4E0 is below two.'
   - - 1212
     - c
     - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic12603_801EF0BC
