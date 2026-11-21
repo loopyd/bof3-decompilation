@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v53";
+pub const SCHEMA: &str = "bof3.inline-text/v54";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1468,23 +1468,35 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
+        name: "US MAGIC003 ready caption",
+        load: 0x801eec00,
+        size: 11832,
+        sha256: "04d156744965b6fc8308dcebb4fcc6dffedd26e74c559d4fb85b5c81bf8f8574",
+        consumers: &[0x801eedac],
+        allocations: &[Allocation::uppercase_literal(0x801f0aad, 6, &[0x801f0164])],
+    },
+    Layout {
         name: "US MAGIC060 captions",
         load: 0x801eec00,
         size: 8168,
-        sha256: "bb9433000a69160ceb70c02bc38173532ee9fcd92eaafe9f62b88be085ffbdf5",
-        consumers: &[0x801eee84, 0x801ef174],
+        sha256: "e9b7dbb0be758718ee3717847138af90219d20b22cebeb0af641b736505ba966",
+        consumers: &[0x801eee84, 0x801ef174, 0x801ef2dc],
         allocations: &[
             Allocation::uppercase_literal(0x801f0b64, 5, &[0x801ef76c]),
             Allocation::uppercase_literal(0x801f0b74, 5, &[0x801ef76c]),
             Allocation::uppercase_literal(0x801f0b7c, 6, &[0x801ef76c]),
+            Allocation::uppercase_literal(0x801f0b6c, 4, &[0x801ef590]),
         ],
     },
     Layout {
         name: "US battle categories",
         load: 0x80096800,
         size: 133316,
-        sha256: "ad97918f439fc11d526f20b790c5892b486ec36a99fefaeead544978613d66c8",
-        consumers: &[0x800b28c8, 0x800b2f70, 0x800b126c, 0x800b199c],
+        sha256: "fde011f7b741d3a9c551b36ba65b027d6e9e9ab3261637eb1fd2cf23516a4f7a",
+        consumers: &[
+            0x800b28c8, 0x800b2f70, 0x800b126c, 0x800b199c, 0x800b0bd0, 0x800b0c38, 0x800b1b84,
+            0x800b4354, 0x800b42c4,
+        ],
         allocations: &[
             Allocation::literal(0x800b6e60, 5, &[0x800b6e88], &[0x8014f800]),
             Allocation::literal(0x800b6e68, 7, &[0x800b6e8c], &[0x8014f800]),
@@ -1502,6 +1514,13 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8LabeledDecimalFormat,
                 &[0x80150098],
             ),
+            Allocation::literal(0x800b6d30, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6d36, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6d3c, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6d5c, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6d61, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6f40, 5, &[], &[0x8014f800]),
+            Allocation::literal(0x800b6f3c, 4, &[], &[0x8014f800]),
         ],
     },
     Layout {

@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v53`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v54`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3116,7 +3116,29 @@ Edits preserve the original six-byte maximum output footprint and the two
 alignment bytes at `[0x80096A32,0x80096A34)`. The ten category fields retain
 their indices. Natural selection, visual fit and edited rendering remain unverified.
 
-Original US `BIN/BMAGIC/MAGIC060.EMI` entry 0 exposes three captions through
+Seven more battle labels use `game-literal`. Six have five bytes each, including NUL.
+`Data`, `Pick` and `Best` begin at `0x800B6D30`, `0x800B6D36` and `0x800B6D3C`.
+Consumer `0x800B0B0C` draws exactly three rows at a six-byte stride through
+`0x8014F800`. `DATA` and `BEST` begin at `0x800B6D5C` and `0x800B6D61`.
+Calls from `0x800B0F9C` and `0x800B1728` supply selectors zero and one to
+`0x800B1A74`, which measures and draws the selected label. `Eqip` at
+`0x800B6F40` and `Use` at `0x800B6F3C` pass directly through consumer
+`0x800B4220`. `Use` has four bytes including NUL. Each draw uses
+a sixteen-glyph limit. Shorter and empty edits zero-fill the field. Row tails,
+alignment and nonzero neighboring bytes remain protected. The first eleven
+fields retain their indices. Natural selection and edited appearance remain
+unverified.
+
+Original US `BIN/BMAGIC/MAGIC003.EMI` entry 3 exposes `READY` at `0x801F0AAD`
+through `ascii-uppercase-literal`, with six bytes including NUL. Consumer
+`0x801EEDAC` selects row one in local reader `0x801F0164`. That reader stops at
+NUL and accepts an initially empty row. Edits allow up to five ASCII A-Z letters;
+shorter or empty edits zero-fill the field. The centering byte at `0x801F0A9D`
+stays five, so shorter text keeps the original centering. The following seven
+nonzero record bytes and all other payload bytes remain protected. Overlay
+activation, graphics state and edited glyph appearance remain unverified.
+
+Original US `BIN/BMAGIC/MAGIC060.EMI` entry 0 exposes four captions through
 `ascii-uppercase-literal`: `WEAK` at `0x801F0B64`, `ITEM` at `0x801F0B74`
 and `POINT` at `0x801F0B7C`. Their capacities are five, five and six bytes,
 including NUL. Edits accept only ASCII A-Z within the original letter count;
@@ -3126,6 +3148,13 @@ byte `0xFF`, so ASCII spaces and dialogue commands are refused. The original
 step selects the caption panel when its unsigned selector is below three.
 Padding, code and other payload bytes remain protected. Overlay activation,
 graphics state and edited glyph appearance remain unverified.
+
+The fourth caption is `EXP` at `0x801F0B6C`, with four bytes including NUL.
+It uses the same uppercase codec and keeps the preceding three fields' indices.
+Consumers `0x801EF174` and `0x801EF2DC` pass its fixed address to local reader
+`0x801EF590`. That reader accepts an initially empty string and otherwise stops
+at NUL or twelve cells. The three-letter edit limit preserves the original
+footprint. The following nonzero word at `0x801F0B70` remains protected.
 
 US `BATE.EMI` entry 0 loads at `0x801D0C00`. Its pointer tables at `0x801D8E4C`,
 `0x801D8E80` and `0x801D8EB8` contain five, four and five supported category
@@ -3327,7 +3356,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v53` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v54` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
