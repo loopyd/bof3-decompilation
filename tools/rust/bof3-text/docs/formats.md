@@ -2984,8 +2984,15 @@ The reader at `0x801E2898` copies each field to its own stack buffer and draws i
 through `0x8014F800` or `0x8014FC90` with count `0xFF`. Its caller at
 `0x801E26A8` supplies exactly six row selectors. References remain empty because
 the reader forms these addresses in instructions. Preserve alignment and the
-following tables. These captions have source proof only; the settings-field
-observations above do not establish their edited rendering or visual fit.
+following tables.
+
+All six edited captions render in Config opened with START from New Game name
+entry. This route calls the parent at `0x801E1C98`. All six stack-copy pointers
+enter `0x8014FC90` with return address `0x801E2B80`. Selecting the message-speed
+row also sends its edited caption to `0x8014F800` with return address
+`0x801E2B08`. Control comparisons confine pixel changes to the six edited
+first-character regions and preserve the settings display. Other selected
+captions and the unique START or STATUS supplier remain unverified.
 
 Nine sort captions use the same literal codec. Capacities include NUL. Each
 retains its original reference at `0x801ED534 + 4*index`.
