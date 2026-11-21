@@ -37,8 +37,10 @@ segments:
     - '@source: src/bof3/world/publishModeStatusFromTable5cd8World01Area04914_801F2C54.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F5CD8 and publishes it into the shared status halfword at 0x801490A8.'
   - - 128
-    - asm
-    - func_801F2C80
+    - c
+    - clearSharedFlag2SetFlag3World01Area04914_801F2C80
+    - '@source: src/bof3/world/clearSharedFlag2SetFlag3World01Area04914_801F2C80.c'
+    - '@behavior: Overlay flag transition: clears bit 2 and then sets bit 3 of the shared flag bank at 0x80144F28 through the shared block bit-clear service 0x8015B5A8 and the shared block bit-set service 0x8015B580. Takes no arguments, uses its 0x18-byte frame to keep $s0 and $ra across the two calls, and returns nothing.'
   - - 192
     - c
     - clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0

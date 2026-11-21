@@ -72,8 +72,10 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic00903_801EF2D4.c'
     - '@behavior: Entry 3 of the five-entry work-byte-2 handler pointer run at 0x801EF89C. Reads the scratchpad work-object pointer cell at 0x1F800044, adds two modulo 256 to the work object unsigned byte at offset 0x9 and then, after re-reading the cell, adds two modulo 256 to its byte at offset 0xA; re-reads the cell once more and, only when that object byte 0x9 equals 0x10, increments the byte at offset 0x2 through the pointer the test already loaded, advancing to the next handler step. Leaf with no frame, no arguments, no return value and no other state touched.'
   - - 1856
-    - asm
-    - func_801EF340
+    - c
+    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00903_801EF340
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00903_801EF340.c'
+    - '@behavior: Step handler of the shared overlay handler run at 0x801EF89C. The word at 0x801EF8AC, entry 4 of that code-pointer run and entry 2 of the dispatch base at 0x801EF8A4, holds this address and no jal in this payload reaches it, so the table is its only incoming path: it runs with work byte 1 equal to 4 through the dispatcher at 0x801EF0DC and with work byte 2 equal to 2 through the dispatcher at 0x801EF120. It reads the scratchpad work-object pointer cell at 0x1F800044 once ahead of frame creation, adds one to that object unsigned byte 0x9 at byte width, re-reads the cell and subtracts one from unsigned byte 0xA the same way, then tests the stored value truncated to eight bits (andi 0xFF) so the truncated register supplies the compared value. Only when byte 0xA reaches zero does it read the shared battle work record pointer at 0x801EB4E0, decrement that record byte 0xB by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. Takes no arguments, returns nothing, reads or writes no other state, and the 0x18-byte frame only keeps the return address across the call.'
   - - 1976
     - c
     - drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes10And9BmagicMagic00903_801EF3B8

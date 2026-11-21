@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/seedChannelModeFlagsWorkTripleAndCountdownByte9ThenAdvanceWorkByte1World03Area14913_801F2C48.c",
     "src/bof3/world/invokeHelperAndDecrementRecordHalfword0aWorld03Area14913_801F3108.c",
     "src/bof3/world/stepCountdownByte9LowerChannel932cBy2AAndLevelTripleElseAdvanceWorkByte1To3ThenSetMode2AndInvokeDrawHelperWorld03Area14913_801F2CD4.c",
+    "src/bof3/world/advanceSharedSceneStateByteAndClearWorkFlagsWorld03Area14913_801F2DAC.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld03Area14913_801F2CB4.c",

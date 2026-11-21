@@ -14,6 +14,7 @@ sources = [
     "src/bof3/world/resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38.c",
     "src/bof3/world/clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20.c",
     "src/bof3/world/clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048.c",
+    "src/bof3/world/requestResource40Or41PerWorkByte8Bit2World03Area13213_801F3A24.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld03Area13213_801F2DA8.c",

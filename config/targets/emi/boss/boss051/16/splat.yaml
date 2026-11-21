@@ -53,8 +53,10 @@ segments:
     - c
     - noopHandlerBossBoss05116_800C1984
   - - 396
-    - asm
-    - func_800C198C
+    - c
+    - invokeSlotAllocatorAndResetScratchStateWhenFlag4SetBossBoss05116_800C198C
+    - '@source: src/bof3/boss/invokeSlotAllocatorAndResetScratchStateWhenFlag4SetBossBoss05116_800C198C.c'
+    - '@behavior: Guarded shared-helper pair of this overlay and record word 10 of the payload-final textbin row D_800C1DB0: it reads the shared battle flag halfword 0x801462E8 at halfword width, tests bit 0x4, and while that bit is set calls the shared main-executable flag-and-slot helper 0x801E5704 with no arguments and then the shared enemy-scratch reset 0x801E567C. While the bit is clear it returns without touching anything. The body writes no state itself, the 0x18-byte frame only keeps $ra at 0x10, and neither call keeps a result, so the one epilogue discards the last $v0. No jal names this address; the word 0x800C198C it stores at 0x800C1DD8 is its only in-image reference and the consumer of that word is outside this payload.'
   - - 452
     - c
     - dispatchIndexedHandlerBossBoss05116_800C19C4

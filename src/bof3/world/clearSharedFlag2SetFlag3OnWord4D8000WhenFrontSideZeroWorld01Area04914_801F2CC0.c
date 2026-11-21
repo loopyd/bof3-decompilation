@@ -2,12 +2,12 @@
 
 extern u8 D_80143F03; /* @source 0x80143F03 @kind unknown */
 
-/* Target-local flag transition at 0x801F2C80, still an asm row of this target's
+/* Target-local flag transition at 0x801F2C80, an asm row of this target's
  * splat when this lift was written: its own bytes pass bit 2 to the shared
  * bit-clear service 0x8015B5A8 and bit 3 to the shared bit-set service
  * 0x8015B580, both on the shared flag bank 0x80144F28. This declaration binds
  * the call target by that map row. */
-void func_801F2C80(void);
+void clearSharedFlag2SetFlag3World01Area04914_801F2C80(void);
 
 /* @source 0x801F2CC0
  * @behavior Overlay dispatch handler. When the argument word is exactly
@@ -37,7 +37,7 @@ void func_801F2C80(void);
 s32 clearSharedFlag2SetFlag3OnWord4D8000WhenFrontSideZeroWorld01Area04914_801F2CC0(u32 arg0) {
   if (arg0 == 0x4D8000) {
     if (D_80143F03 == 0) {
-      func_801F2C80();
+      clearSharedFlag2SetFlag3World01Area04914_801F2C80();
     }
   }
   return 0;

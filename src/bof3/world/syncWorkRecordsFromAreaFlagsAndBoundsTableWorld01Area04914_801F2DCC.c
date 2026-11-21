@@ -19,14 +19,17 @@ u8 func_8014D978(void);
 void func_801C2538(void);
 void func_801C2710(void);
 void func_801B0DFC(void);
-void func_801F2C80(void);
+void clearSharedFlag2SetFlag3World01Area04914_801F2C80(void);
 u8 findWorkPositionBoundsIndexWorld01Area04914_801F2D00(u8 index);
 
 /* @source 0x801F2DCC
  * @behavior Per-frame work-record sync for this area. When D_80143BB0 holds 5
  *           and the context seeds D_80143F00 and D_80143F10 differ, it only
- *           runs the area reset func_801F2C80 and returns. Otherwise it clears
- *           bit 0x2000 of the shared world flags D_80146258, keeps the incoming
+ *           runs the target-local flag transition
+ *           clearSharedFlag2SetFlag3World01Area04914_801F2C80, which clears
+ *           bit 2 and sets bit 3 of the shared flag bank 0x80144F28, and
+ *           returns. Otherwise it clears bit 0x2000 of the shared world flags
+ *           D_80146258, keeps the incoming
  *           scratchpad work cursor 0x1F800044 in a register and walks the
  *           D_80146254 live records of the 0x140-byte array at D_80145E90.
  *           Each iteration publishes that record as D_80146250 and as the
@@ -70,7 +73,7 @@ void syncWorkRecordsFromAreaFlagsAndBoundsTableWorld01Area04914_801F2DCC(void) {
   u8 kind;
 
   if (D_80143BB0 == 5 && D_80143F00 != D_80143F10) {
-    func_801F2C80();
+    clearSharedFlag2SetFlag3World01Area04914_801F2C80();
     return;
   }
   D_80146258 &= 0xDFFF;

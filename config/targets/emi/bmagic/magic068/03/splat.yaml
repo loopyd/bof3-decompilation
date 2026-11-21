@@ -30,8 +30,10 @@ segments:
   vram: 2149510168
   subsegments:
   - - 24
-    - asm
-    - func_801EEC18
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic06803_801EEC18
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06803_801EEC18.c'
+    - '@behavior: Dispatches one frame of the overlay work handler: reads the work object pointer at scratchpad cell 0x1F800044, copies the five code pointers at 0x801EEC04 into a local array, and invokes the entry selected by the work record byte at offset 1. Takes no arguments and returns nothing.'
   - - 136
     - asm
     - func_801EEC88

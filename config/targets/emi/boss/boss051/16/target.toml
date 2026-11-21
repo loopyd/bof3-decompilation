@@ -13,6 +13,7 @@ sources = [
     "src/bof3/boss/dispatchStateByte1Table1dc4BossBoss05116_800C1814.c",
     "src/bof3/boss/armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900.c",
     "src/bof3/boss/advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14.c",
+    "src/bof3/boss/invokeSlotAllocatorAndResetScratchStateWhenFlag4SetBossBoss05116_800C198C.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchStateByte1Table1804BossBoss05116_800C1AA8.c",

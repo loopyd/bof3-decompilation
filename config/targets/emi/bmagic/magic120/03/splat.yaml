@@ -68,8 +68,10 @@ segments:
     - incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374
     - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374.c'
   - - 1988
-    - asm
-    - func_801EF3C4
+    - c
+    - incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4
+    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4.c'
+    - '@behavior: Increments work-object byte B, decrements work-object byte 4 and increments work-object byte 9 through the scratchpad pointer cell at 0x1F800044 and, when that stored byte reaches 0x88, stores 0xFF into byte B of the shared record at 0x801EB4E0 and invokes the shared helper at 0x801E5988.'
   - - 2124
     - asm
     - func_801EF44C
