@@ -2693,6 +2693,12 @@ literals beginning with `CdSearchFile: disc error`, `CD_newmedia:` or
 `CD_cachefile:` use `ascii-printf-literal` and refuse every percent character.
 Original spelling, including `sarching`, is preserved on unchanged round trips.
 
+An edited `CD_init:` prefix at `0x8014A3D0` prints through BIOS puts during
+ordinary boot. Execution reaches `0x80176E2C` after the puts call at
+`0x80176E0C` and separate printf suffix at `0x80176E24`. This verifies the
+startup prefix only. Conditional CD diagnostics, the LOGO copy and GPU callback
+output retain their own runtime requirements.
+
 The labels `CD_sync`, `CD_ready`, `CD_cw` and `CD_datasync` also use
 `ascii-literal`. Their address pairs store pointers in shared word `0x8018B5F0`;
 their reference `calls` arrays are empty because intervening calls leave the
