@@ -10,11 +10,9 @@ extern void func_8014E5A0(u8 arg0, u8 arg1);
  * x-offset, y-offset, sprite_id, terminated by sprite_id == 0xff), applies
  * signed offsets shifted by 3 to the base coordinates, and draws each sprite
  * via drawSprite.
- * @status partial
- * @match 95.38
- * @residual 62/65 instructions at the original 260-byte size. Cursor/end
- * setup, coordinate-load order and page-mask scheduling still differ.
- * Complete byte comparison remains different.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u32 flags) {
   u8   sprite_flags;
@@ -23,7 +21,6 @@ void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u32 f
   u8   sprite_id;
   u8   x_offset;
   u8   y_offset;
-  const u8* cursor;
   s16  x;
   s16  y;
 
@@ -38,21 +35,17 @@ void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u32 f
   func_8014E5A0(1, 12);
 
   do {
-    sprite_id = record_table[2];
-    if (sprite_id == 0xff) {
-      return;
-    }
-
-    cursor = record_table + 2;
-    do {
+    for (;;) {
+      sprite_id = record_table[2];
+      if (sprite_id == 0xff) {
+        break;
+      }
       x_offset = record_table[0];
-      y_offset = cursor[-1];
-      cursor += 3;
+      y_offset = record_table[1];
       x = (s16)(base_x + ((s32)((u32)x_offset << 24) >> 21));
       y = (s16)(base_y + ((s32)((u32)y_offset << 24) >> 21));
       drawSprite(x, y, sprite_id, sprite_flags);
-      sprite_id = cursor[0];
       record_table += 3;
-    } while (sprite_id != 0xff);
+    }
   } while (0);
 }

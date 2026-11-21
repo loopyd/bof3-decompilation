@@ -2499,6 +2499,15 @@ temporary and no load from that home survives. Inspect preferred and alternate
 classes, the hard-LO assignment and reload spills before attributing a larger
 frame to address-taking. Preserve arithmetic and require the complete native gate.
 
+In a sentinel loop, distinguish a loop-owned `break` from `return` before tracing
+rotation. GCC 2.7.2 can rotate an exit to the loop's own end label; a return targets
+the function epilogue. Duplicating the entry test can preserve a named address
+calculation that CSE2 then forwards into a reduced loop cursor. The two quantities
+need not coalesce, leaving an extra copy. When that pointer has no independent
+consumer, direct record-relative dereferences can remove the duplicate quantity.
+Check the chosen displacements, empty-table exit, allocation and both schedules,
+then require the complete native gate.
+
 For affine record addresses, inspect GIV replaceability before induction merging.
 A reused parameter can fail the first-definition check and lose address derivation
 across a loop branch. A fresh local for the real per-record tail can pass that
