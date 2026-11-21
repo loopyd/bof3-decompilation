@@ -48,17 +48,17 @@
     }
   ],
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "3b2e18d0922a7de7ba5c96faec16ee0b535391dc",
-  "published_at": "2026-11-21T06:43:34.489817+00:00",
+  "revision": "242ebe51e1309ce29eb79c4fb5f7652f3201dae4",
+  "published_at": "2026-11-21T07:28:47.286589+00:00",
   "counts": {
-    "completed": 6592,
+    "completed": 6602,
     "partial": 348,
-    "unlifted": 3497,
+    "unlifted": 3487,
     "invalid": 0,
     "total": 10437,
     "symbols": {
-      "named": 6824,
-      "raw": 4741,
+      "named": 6834,
+      "raw": 4731,
       "total": 11565
     }
   },
@@ -16931,14 +16931,14 @@
       "family": "bmagic",
       "archive": "magic017",
       "entry": "03",
-      "completed": 9,
+      "completed": 10,
       "partial": 2,
-      "unlifted": 5,
+      "unlifted": 4,
       "invalid": 0,
       "total": 16,
       "symbols": {
-        "named": 12,
-        "raw": 5,
+        "named": 13,
+        "raw": 4,
         "total": 17
       },
       "binary": {
@@ -16966,13 +16966,13 @@
           {
             "start": 56,
             "end": 152,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510200,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic01703_801EEC38.c#L39"
               }
             ]
           },
@@ -18446,14 +18446,14 @@
       "family": "bmagic",
       "archive": "magic040",
       "entry": "03",
-      "completed": 4,
+      "completed": 5,
       "partial": 1,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 5,
-        "raw": 13,
+        "named": 6,
+        "raw": 12,
         "total": 18
       },
       "binary": {
@@ -18481,13 +18481,13 @@
           {
             "start": 32,
             "end": 128,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510176,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEC20.c#L40"
               }
             ]
           },
@@ -21871,14 +21871,14 @@
       "family": "bmagic",
       "archive": "magic057",
       "entry": "03",
-      "completed": 13,
+      "completed": 14,
       "partial": 0,
-      "unlifted": 10,
+      "unlifted": 9,
       "invalid": 0,
       "total": 23,
       "symbols": {
-        "named": 13,
-        "raw": 10,
+        "named": 14,
+        "raw": 9,
         "total": 23
       },
       "binary": {
@@ -21906,13 +21906,13 @@
           {
             "start": 80,
             "end": 176,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510224,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50.c#L34"
               }
             ]
           },
@@ -21925,7 +21925,7 @@
               {
                 "address": 2149510320,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0.c#L61"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/copyWorkWordTripletFromRecordInvokeHelperAt1AIncrementGlobalByte80145988AndAdvanceWorkByte1BmagicMagic05703_801EECB0.c#L62"
               }
             ]
           },
@@ -22003,7 +22003,7 @@
               {
                 "address": 2149511148,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/raiseFlag4ThenForwardBattleByteAndInvokeHelperBmagicMagic05703_801EEFEC.c#L47"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/raiseFlag4ThenForwardBattleByteAndInvokeHelperBmagicMagic05703_801EEFEC.c#L48"
               }
             ]
           },
@@ -22850,14 +22850,14 @@
       "family": "bmagic",
       "archive": "magic060",
       "entry": "00",
-      "completed": 24,
+      "completed": 25,
       "partial": 1,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 34,
       "symbols": {
-        "named": 25,
-        "raw": 10,
+        "named": 26,
+        "raw": 9,
         "total": 35
       },
       "binary": {
@@ -22969,20 +22969,20 @@
               {
                 "address": 2149510992,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/raiseBattleTargetKindFlagFromRecordDeltaRollThenStoreWorkByte4BmagicMagic06000_801EEF50.c#L101"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/raiseBattleTargetKindFlagFromRecordDeltaRollThenStoreWorkByte4BmagicMagic06000_801EEF50.c#L102"
               }
             ]
           },
           {
             "start": 1208,
             "end": 1304,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149511352,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8.c#L51"
               }
             ]
           },
@@ -22995,7 +22995,7 @@
               {
                 "address": 2149511448,
                 "status": "exact",
-                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/testBattleTargetKindFlagBmagicMagic06000_801EF118.c#L45"
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/testBattleTargetKindFlagBmagicMagic06000_801EF118.c#L46"
               }
             ]
           },
@@ -28372,14 +28372,14 @@
       "family": "bmagic",
       "archive": "magic078",
       "entry": "03",
-      "completed": 15,
+      "completed": 16,
       "partial": 0,
-      "unlifted": 9,
+      "unlifted": 8,
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 20,
-        "raw": 10,
+        "named": 21,
+        "raw": 9,
         "total": 30
       },
       "binary": {
@@ -28654,13 +28654,13 @@
           {
             "start": 5584,
             "end": 5680,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149515728,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/decrementWorkByteAThenInvokeHelperAt102AndAdvanceWorkByte2OnZeroBmagicMagic07803_801F01D0.c#L55"
               }
             ]
           },
@@ -32798,14 +32798,14 @@
       "family": "bmagic",
       "archive": "magic096",
       "entry": "03",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 13,
+      "unlifted": 12,
       "invalid": 0,
       "total": 17,
       "symbols": {
-        "named": 6,
-        "raw": 14,
+        "named": 7,
+        "raw": 13,
         "total": 20
       },
       "binary": {
@@ -32833,13 +32833,13 @@
           {
             "start": 36,
             "end": 132,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510180,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09603_801EEC24.c#L46"
               }
             ]
           },
@@ -34576,14 +34576,14 @@
       "family": "bmagic",
       "archive": "magic103",
       "entry": "03",
-      "completed": 11,
+      "completed": 12,
       "partial": 2,
-      "unlifted": 11,
+      "unlifted": 10,
       "invalid": 0,
       "total": 24,
       "symbols": {
-        "named": 13,
-        "raw": 12,
+        "named": 14,
+        "raw": 11,
         "total": 25
       },
       "binary": {
@@ -34611,13 +34611,13 @@
           {
             "start": 16,
             "end": 112,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510160,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10.c#L43"
               }
             ]
           },
@@ -36751,14 +36751,14 @@
       "family": "bmagic",
       "archive": "magic111",
       "entry": "03",
-      "completed": 8,
+      "completed": 9,
       "partial": 0,
-      "unlifted": 12,
+      "unlifted": 11,
       "invalid": 0,
       "total": 20,
       "symbols": {
-        "named": 9,
-        "raw": 12,
+        "named": 10,
+        "raw": 11,
         "total": 21
       },
       "binary": {
@@ -36786,13 +36786,13 @@
           {
             "start": 28,
             "end": 124,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510172,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11103_801EEC1C.c#L40"
               }
             ]
           },
@@ -37508,14 +37508,14 @@
       "family": "bmagic",
       "archive": "magic114",
       "entry": "03",
-      "completed": 11,
+      "completed": 12,
       "partial": 2,
-      "unlifted": 15,
+      "unlifted": 14,
       "invalid": 0,
       "total": 28,
       "symbols": {
-        "named": 14,
-        "raw": 15,
+        "named": 15,
+        "raw": 14,
         "total": 29
       },
       "binary": {
@@ -37569,13 +37569,13 @@
           {
             "start": 644,
             "end": 740,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510788,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84.c#L50"
               }
             ]
           },
@@ -38771,14 +38771,14 @@
       "family": "bmagic",
       "archive": "magic120",
       "entry": "03",
-      "completed": 8,
+      "completed": 9,
       "partial": 1,
-      "unlifted": 18,
+      "unlifted": 17,
       "invalid": 0,
       "total": 27,
       "symbols": {
-        "named": 9,
-        "raw": 19,
+        "named": 10,
+        "raw": 18,
         "total": 28
       },
       "binary": {
@@ -38806,13 +38806,13 @@
           {
             "start": 16,
             "end": 112,
-            "category": "code-unlifted",
+            "category": "code-lifted",
             "detail": "Indexed function",
             "functions": [
               {
                 "address": 2149510160,
-                "status": "unlifted",
-                "source": null
+                "status": "exact",
+                "source": "https://github.com/loopyd/bof3-decompilation/blob/main/src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic12003_801EEC10.c#L30"
               }
             ]
           },
