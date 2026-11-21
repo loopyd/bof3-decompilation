@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 124
-    - asm
-    - func_801F2C7C
+    - c
+    - copyWorkAreaMinus5f0PositionToWorkAndStoreDistanceMinus40World01Area05113_801F2C7C
+    - '@source: src/bof3/world/copyWorkAreaMinus5f0PositionToWorkAndStoreDistanceMinus40World01Area05113_801F2C7C.c'
+    - '@behavior: Copies the position pair of the work-area record 0x5F0 bytes before the record published through the pointer cell 0x80146884 into the work record reached through the scratchpad pointer cell 0x1F800044, then hands the copied pair to the shared distance helper func_8015477C and stores that distance minus 0x40 in the work record halfword 0x3E.'
   - - 216
     - c
     - setStatus1IfGateElse14World01Area05113_801F2CD8

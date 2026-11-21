@@ -14,7 +14,8 @@
  *           `beqz $v0` at 0x801F3358) and clears that same byte when the
  *           record's sub-phase countdown at +0x16 expires (0x801F33F8), so this
  *           function releases the whole block. Its only in-payload caller is
- *           func_801F2C6C (`jal` at 0x801F2C94): that step handler decrements
+ *           tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C
+ *           (`jal` at 0x801F2C94): that step handler decrements
  *           work word 0xC, and when the count reaches zero it reloads the word
  *           with 0x230, calls this function and then advances the work object's
  *           byte at +0x01. The callee loads its own base and the caller ignores

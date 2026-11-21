@@ -22,6 +22,7 @@ setFrontLocalMode0AndAdvanceStepByte1 = 0x801D50AC;
 func_801D5AD0 = 0x801D5AD0;
 drawComposedNameAndLabelRows = 0x801D5B2C;
 dispatchStepByte0TableDec = 0x801D5D5C;
+startActionEELatchFrontendMode2AndAdvanceStepByte0UnlessAlreadyBusy = 0x801D5D98;
 countActiveRecords_commu02_08 = 0x801D7E64;
 findActiveRecordSlot = 0x801D7EA0;
 drawWindowFrame = 0x801D7EF0;

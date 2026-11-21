@@ -24,7 +24,8 @@ extern u8* area04713WorkCursor_1F800044;
  * 0xC($v0)` at 0x801F2C5C) and writes the incremented byte in the `jr $ra`
  * delay slot, so the source reads the byte into a local first and assigns the
  * bumped value after the store. The countdown word is the one the next handler
- * func_801F2C6C decrements and reloads with 0x230 when it reaches zero, and the
+ * tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C
+ * decrements and reloads with 0x230 when it reaches zero, and the
  * state byte is the one the dispatcher scales by four into its handler table, so
  * this body arms the first 0x3C-step countdown of the run and advances the run
  * to that next handler. No other extracted payload holds this body: a payload

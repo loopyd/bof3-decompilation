@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatus84Or83AndModeIndex6IfGateOrFahlBattleCountElse82World01Area05013_801F2C04
+    - '@source: src/bof3/world/setStatus84Or83AndModeIndex6IfGateOrFahlBattleCountElse82World01Area05013_801F2C04.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x84 into the shared status halfword D_801490A8 while that byte is nonzero; when the gate byte is zero it stores 0x83 into D_801490A8 while the Fahl battle counter D_801454F3 is below 30, and 0x82 when that counter is 30 or more and leaves every other cell alone. The 0x84 and 0x83 paths join and then store 6 into the shared mode index byte D_801D4285.'
   - - 96
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area05013_801F2C60

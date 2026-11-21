@@ -137,8 +137,10 @@ segments:
     - '@source: src/bof3/world/publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C.c'
     - '@behavior: Selects the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F4D64 and publishes it into the shared status halfword 0x801490A8, then stores 0x14 into the shared scenario progress byte 0x80146864 when the mode reads 0 and 3 when it reads 1, leaving that byte untouched for any other mode. Leaf, no frame.'
   - - 3180
-    - asm
-    - func_801F386C
+    - c
+    - publishModeStatusFromTable4d68AndProgress0OrFFWorld01Area06813_801F386C
+    - '@source: src/bof3/world/publishModeStatusFromTable4d68AndProgress0OrFFWorld01Area06813_801F386C.c'
+    - '@behavior: Selects the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F4D68 and publishes it into the shared status halfword 0x801490A8, then stores 0 into the shared scenario progress byte 0x80146864 when the mode reads 0 and 0xFF when it reads 1, leaving that byte untouched for any other mode. Takes no arguments and returns nothing. Leaf, no frame; each arm stores the progress byte at its own site, the 0xFF constant materialised in $v0 in the second compare delay slot.'
   - - 3272
     - c
     - setStatus82Or83Or84AndModeIndex6ByGateOrLookupIndex1World01Area06813_801F38C8

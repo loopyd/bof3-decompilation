@@ -33,6 +33,7 @@ sources = [
     "src/bof3/ui/buildRandomTwoPartTextRun.c",
     "src/bof3/ui/drawComposedNameAndLabelRows.c",
     "src/bof3/ui/dispatchStepByte0TableDec.c",
+    "src/bof3/ui/startActionEELatchFrontendMode2AndAdvanceStepByte0UnlessAlreadyBusy.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

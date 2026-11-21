@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EEF4C
   - - 1100
-    - asm
-    - func_801EF04C
+    - c
+    - decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C
+    - '@source: src/bof3/bmagic/decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C.c'
+    - '@behavior: Decrements unsigned work byte 9 through the scratchpad pointer cell at 0x1F800044; when the decremented byte is zero it rearms byte 9 to 30 and then advances work byte 1.'
   - - 1192
     - asm
     - func_801EF0A8

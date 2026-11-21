@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801F2D78
   - - 540
-    - asm
-    - func_801F2E1C
+    - c
+    - claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C
+    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandler44World02Area07813_801F2E1C.c'
+    - '@behavior: slot 9 of the overlay dispatch table based at 0x801F411C; asks the shared free-record selector func_8019601C for a record index, masks it to a byte and, unless that byte is 0xFF, marks the record selected from the 0x74-byte front-end table at 0x80143FC8 occupied and writes handler selector 0x44 into its byte +5; no arguments, no in-image caller, no pointer word names it'
   - - 632
     - textbin
     - D_801F2E78

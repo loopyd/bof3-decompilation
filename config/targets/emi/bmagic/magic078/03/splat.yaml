@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801EEF28
   - - 1164
-    - asm
-    - func_801EF08C
+    - c
+    - setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C
+    - '@source: src/bof3/bmagic/setWorkByteATo15AndAdvanceWorkByte2WhenWorkByte9Is12ElseIncrementWorkByte9BmagicMagic07803_801EF08C.c'
+    - '@behavior: Entry 3 of the nine-word work-byte-1 handler pointer run this overlay keeps at 0x801F0878: loads the scratchpad work object once through the cell at 0x1F800044 and reads its unsigned byte 9; on the value 12 it writes 15 to byte 0xA, re-materializes the cell and increments byte 2, otherwise it stores byte 9 plus one back to byte 9. Takes no arguments, returns nothing and keeps no frame.'
   - - 1248
     - c
     - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic07803_801EF0E0

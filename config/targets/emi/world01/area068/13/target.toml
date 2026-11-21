@@ -31,6 +31,7 @@ sources = [
     "src/bof3/world/dispatchStateByte4Table4de4World01Area06813_801F3C2C.c",
     "src/bof3/world/armState11WhenRecordedPadMatchCountElse22World01Area06813_801F3074.c",
     "src/bof3/world/armState21WhenLivePadCountWithinOneOfRecordedElse22World01Area06813_801F3764.c",
+    "src/bof3/world/publishModeStatusFromTable4d68AndProgress0OrFFWorld01Area06813_801F386C.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

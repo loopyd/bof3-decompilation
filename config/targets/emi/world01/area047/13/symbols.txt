@@ -1,7 +1,7 @@
 area04713WorkCursor_1F800044 = 0x1F800044;
 dispatchStateByte1Table39c8World01Area04713_801F2C04 = 0x801F2C04;
 armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48 = 0x801F2C48;
-func_801F2C6C = 0x801F2C6C;
+tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C = 0x801F2C6C;
 func_801F2CC8 = 0x801F2CC8;
 func_801F2D44 = 0x801F2D44;
 func_801F2DB4 = 0x801F2DB4;
