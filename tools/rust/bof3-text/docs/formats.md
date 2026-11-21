@@ -630,6 +630,95 @@ bounded numeric table. They do not establish matching ELF output, observed
 invocation, feasible paths, transitive effects, resource safety, display or safe
 editing.
 
+## GTE instruction and lookup coverage
+
+The exact original SLUS identity under
+[SLUS instruction coverage](#slus-instruction-coverage) qualifies the following
+complete bodies. Every row has an original JAL entry in qualified instructions.
+Review covers every original word, structural branch and control-transfer delay
+word. Ends are exclusive.
+
+| Runtime interval | Original JAL |
+| --- | --- |
+| `[0x8015B2AC,0x8015B410)` | `0x8015AE2C` |
+| `[0x8015B410,0x8015B4B0)` | `0x8015AD88` |
+| `[0x8015B4B0,0x8015B4F4)` | `0x8015AE34` |
+| `[0x80178874,0x80178930)` | `0x80178858` |
+| `[0x80178B78,0x80178C18)` | `0x8015AD5C` |
+| `[0x80178C18,0x80178CB8)` | `0x8015B260` |
+| `[0x80178CB8,0x80178DC4)` | `0x8015B4C8` |
+| `[0x80178E78,0x80178E9C)` | `0x8015B348` |
+| `[0x80178EA8,0x80178FCC)` | `0x8015ADD0` |
+| `[0x80178FD8,0x80179008)` | `0x8015AD90` |
+| `[0x80179008,0x80179038)` | `0x8015AE3C` |
+| `[0x80179068,0x80179088)` | `0x8015AD98` |
+| `[0x801791DC,0x801791FC)` | `0x8015B1DC` |
+| `[0x80179558,0x80179580)` | `0x8015B380` |
+| `[0x801796E8,0x80179738)` | `0x8015B3B4` |
+| `[0x80179738,0x801799C4)` | `0x8015B338` |
+| `[0x8017A6F0,0x8017A708)` | `0x8015B208` |
+| `[0x8017A9B8,0x8017A9CC)` | `0x8015AF08` |
+
+Two entries qualify sparse instruction intervals. The original JAL at
+`0x8015B19C` enters `0x80178804`. Its unconditional branch and delay word lead
+to `0x80178858`, which calls the complete helper at `0x80178874`. The helper
+preserves `A3`, allowing the caller to restore its saved return address.
+Only `[0x80178804,0x80178818)` and `[0x80178858,0x80178874)` qualify for
+this entry. The 64 bytes between them remain unresolved.
+
+The JAL at `0x8015B3C4` enters `0x80178A18`. Its unconditional branches skip
+three SRA words at `0x80178A6C`, `0x80178A94` and `0x80178ABC`. They remain
+unresolved. The reached intervals are `[0x80178A18,0x80178A6C)`,
+`[0x80178A70,0x80178A94)`, `[0x80178A98,0x80178ABC)` and
+`[0x80178AC0,0x80178B78)`. Every reached branch and return includes its delay
+word. Neighboring alignment bytes retain their prior status.
+
+GTE transfers and commands remain instructions when an analyzer labels them
+invalid. The local PsyQ `inline_n.h` definitions corroborate `0x4A480012`,
+`0x4A486012`, `0x4A41E012`, `0x4A49E012` and `0x4B08041B`, plus matrix
+control transfers and the `CFC2` read of control register 31. The helper's
+`0x4AA00428` and `0x4B90003D` words match offsets `0x110` and `0x19C` in
+the `.text` section of the primary PsyQ 4.7 `lib/libgte/msc02.o`, whose SHA-256
+is `82c7d56ee24569cb710d8f07a8731608bfdfcdb17f07b325349588e296d81e5c`.
+The original helper differs from that SDK code; these comparisons establish
+instruction encodings. They do not establish an exact SDK code version or enabled
+runtime COP2 state. Matrix-stack error strings already use the executable ASCII
+layout and retain their text classification.
+
+The original readers also qualify two numeric tables. Whole-file offsets include
+the executable's `0x800`-byte header.
+
+| Runtime interval | Whole-file interval | Numeric storage | SHA-256 |
+| --- | --- | --- | --- |
+| `[0x80186908,0x8018A908)` | `[0xF0908,0xF4908)` | 4096 words | `b106234165685d79392c926192d1b2f9e30125307abde6040747e401a35d0e87` |
+| `[0x8018646C,0x801865EC)` | `[0xF046C,0xF05EC)` | 192 signed halfwords | `98417c6f4c8ee55f2586ead71b0c67586f64ba0b3018fd8ee69e5861ac8c07ca` |
+
+The body at `0x80179738` constructs `0x80186908 + 4 * index` at all six LW
+sites, `0x80179760`, `0x80179788`, `0x801797C4`, `0x801797EC`,
+`0x80179850` and `0x80179884`. Both sign paths mask the index with `0xFFF`
+in executed branch delays. Positive signed-halfword inputs `0..4095` address
+every record. Both signed halves of each loaded word feed integer arithmetic and
+matrix halfword stores. This establishes numeric use and the extent without
+asserting that the game supplies every angle or that the table is mathematically
+correct.
+
+The helper at `0x80178874` forms a squared-component sum `q` and uses its even
+leading-zero count to normalize it. For `1 <= q <= 0x7FFFFFFF`, normal GTE
+operation and no intervening GTE-state interference, both original shift paths
+produce `64 <= u <= 255`. The LH at `0x801788EC` therefore reads
+`0x8018646C + 2 * (u - 64)`, with a byte offset in `0..382`. The positive sum
+condition also excludes signed overflow in the component additions. Zero input
+instead reads before the table. Actual caller input validity and unconditional
+safety remain unproved. The 192 values match SDK numeric data and decrease from
+4096 to 2052. The SDK lookup symbol has size zero, so the original reader supplies
+the extent. The preceding 20 zero bytes and following 12 zero bytes remain outside
+this table classification.
+
+These rules require stable code and tables, valid nonaliasing memory and ordinary
+returns. They establish stored instruction and numeric-data roles. They do not
+establish observed invocation, feasible paths, mathematical correctness, transitive
+effects, resource safety, display or safe editing.
+
 ## Further direct-call instruction coverage
 
 The following bodies use the exact GAME and shared battle identities under

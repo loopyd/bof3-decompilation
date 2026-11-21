@@ -64,6 +64,9 @@ const BATTLE_CALLEE_TABLE_EVIDENCE: &str = "Original US shared battle numeric ju
 const BATTLE_RESIDENT_TABLE_EVIDENCE: &str = "Original US battle resident animation numeric tables. Dispatcher 0x801E6C84 copies all five address words at 0x801D0F44..0x801D0F58 before its guarded indirect call. Initializer 0x801E6E54 and continuing handler 0x801E6FB0 read request-table indices 0/3/4/6 at 0x801EB494 under the reviewed mask-0x58 selector and initialized state. Exact original archive and raw-payload identities bind the consumer. Stable tables, valid work and nonaliasing memory remain conditions. Other request bytes retain their prior status. No general selector bound, actual invocation, indirect-call safety, display or safe-edit claim.";
 
 const US_DIRECT_CALL_INSTRUCTION_EVIDENCE: &str = "Original US direct-call instruction bodies; original JAL entries from previously qualified instruction records, complete raw-word and structural control-flow review, and every control-transfer delay word including returns. Exact original whole executable or archive/raw-payload identities and load addresses gate classification. GAME 0x801AF494 uses the separately qualified five-case numeric table. SYSCALL continuations at 0x8017EE10/0x8017EE20 assume exception return to the next instruction. The five-word 0x8017F3D0 body ends in an opaque pointer-loaded tail transfer; pointer storage, target and effects are excluded. tools/rust/bof3-text/docs/formats.md records body boundaries and entry sites. Ordinary returns, valid nonaliasing memory, intact frames and stable code/tables remain conditions. Referenced data, external callees and neighbors retain prior status. No ELF match, observed invocation, all-path feasibility, transitive effects, resource safety, display or safe-edit claim.";
+const US_GTE_ENTRY_FLOW_EVIDENCE: &str = "Original US GTE entry-flow instructions; original JALs at 0x8015B19C and 0x8015B3C4 qualify entries 0x80178804 and 0x80178A18. Complete original raw-word and structural control-flow review includes every reached control-transfer delay word. Unconditional branches exclude the 64-byte sibling interval 0x80178818..0x80178858 and three SRA words at 0x80178A6C, 0x80178A94 and 0x80178ABC. Only the exact reached intervals listed in tools/rust/bof3-text/docs/formats.md qualify. Exact original whole executable identity gates classification. Ordinary returns, normal COP2 operation, valid nonaliasing memory, preserved saved return state and stable code remain conditions. Neighbors and referenced storage retain prior status. No matching ELF, observed invocation, input validity, all-path feasibility, resource-safety, display or safe-edit claim.";
+const US_GTE_WORD_TABLE_EVIDENCE: &str = "Original US numeric word lookup at 0x80186908..0x8018A908; 4096 little-endian records, each used as two signed halfwords. Six original LW sites in complete body 0x80179738..0x801799C4 use base 0x80186908 plus four times an index masked with 0xFFF on both sign paths. Positive signed-halfword inputs 0..4095 address every record; loaded halves feed integer arithmetic and matrix halfword stores. Exact original whole executable identity gates classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring storage retains prior status. No actual input domain, mathematical correctness, observed invocation, resource-safety, display or safe-edit claim.";
+const US_GTE_HALFWORD_TABLE_EVIDENCE: &str = "Original US numeric halfword lookup at 0x8018646C..0x801865EC; 192 signed little-endian values. Complete original helper 0x80178874..0x80178930 reads base plus twice u-64. For an actual GTE squared-component sum q in 1..0x7FFFFFFF, normal COP2 operation and no interference, even leading-zero normalization bounds u to 64..255 and the LH byte offset to 0..382. Both original shift paths reconcile. Zero input reads before this table and is not asserted valid. The exact original bytes also match the corresponding numeric SDK data. Exact whole executable identity gates classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring storage retains prior status. No actual caller input validity, unconditional safety, SDK code match, observed invocation, mathematical correctness, display or safe-edit claim.";
 const US_TASK_CALLBACK_TABLE_EVIDENCE: &str = "Original US resident task callback table 0x80149B0C..0x80149B30; qualified dispatcher 0x80158C80 copies all nine address words to its stack and conditionally calls the indexed pointer. Exact original whole executable identity gates classification. Type indices 0..8, stable selectors and tables, matching task priority, valid nonaliasing memory and intact frames remain conditions; the type byte has no general bounds check. Neighboring storage and targets retain prior status. No observed invocation, general selector bound, callee safety, display or safe-edit claim.";
 const BATTLE_TASK_CALLBACK_TABLE_EVIDENCE: &str = "Original US shared battle task callback words at 0x800B6E0C, 0x800B6E10, 0x800B6E28 and 0x800B6E3C. Qualified initializers 0x8009AF84 and 0x80097EC0 publish active type-eight tasks with outer selectors one or two and state two. Qualified dispatchers 0x800B2088, 0x800B2104 and 0x800B2258 load these four words as indirect-call targets. Exact original archive, raw-payload and load identities gate classification. Matching task priority, stable selectors and tables, loaded shared code, valid nonaliasing memory and intact frames remain conditions. Neighboring cells and targets retain prior status. No observed invocation, general selector bound, callee safety, display or safe-edit claim.";
 const US_DIRECT_CALL_TABLE_EVIDENCE: &str = "Original US direct-call numeric jump table at 0x80195F7C..0x80195F90; five little-endian targets. Complete original GAME body 0x801AF494..0x801AF5B0 masks the selector to eight bits and applies unsigned < 5 before the scaled table load and register jump. Every original target stays inside the consumer; complete guard, table, load/jump and delay words reconcile. Exact original archive/raw-payload identities and load address gate classification. Stable code/table and valid nonaliasing memory remain conditions. Neighboring bytes retain prior status. No actual dispatch, general selector bound, resource safety, display or safe-edit claim.";
@@ -1443,6 +1446,62 @@ pub fn executable_nontext_ranges<'a>(
             evidence: "original US SLUS startup-zero-initialization storage 0x8018B2B8..0x80190C60; original PS-X entry loop 0x8014AA0C..0x8014AA30 overwrites exactly these 5738 aligned words with zero before any call under normal loader entry, mapped RAM, stable code and noninterference assumptions; original stored bytes are all zero but the original loop establishes the extent and role; exact whole executable identity; header b_addr and b_size are zero, no header-BSS, heap, neighboring-storage, later-content or observed execution claim",
         },
     ];
+    ranges.extend(
+        [
+            (0xC52AC, 356),
+            (0xC5410, 160),
+            (0xC54B0, 68),
+            (0xE2874, 188),
+            (0xE2B78, 160),
+            (0xE2C18, 160),
+            (0xE2CB8, 268),
+            (0xE2E78, 36),
+            (0xE2EA8, 292),
+            (0xE2FD8, 48),
+            (0xE3008, 48),
+            (0xE3068, 32),
+            (0xE31DC, 32),
+            (0xE3558, 40),
+            (0xE36E8, 80),
+            (0xE3738, 652),
+            (0xE46F0, 24),
+            (0xE49B8, 20),
+        ]
+        .into_iter()
+        .map(|(offset, length)| NontextRange {
+            offset,
+            length,
+            evidence: US_DIRECT_CALL_INSTRUCTION_EVIDENCE,
+        }),
+    );
+    ranges.extend(
+        [
+            (0xE2804, 20),
+            (0xE2858, 28),
+            (0xE2A18, 84),
+            (0xE2A70, 36),
+            (0xE2A98, 36),
+            (0xE2AC0, 184),
+        ]
+        .into_iter()
+        .map(|(offset, length)| NontextRange {
+            offset,
+            length,
+            evidence: US_GTE_ENTRY_FLOW_EVIDENCE,
+        }),
+    );
+    ranges.extend([
+        NontextRange {
+            offset: 0xF0908,
+            length: 16384,
+            evidence: US_GTE_WORD_TABLE_EVIDENCE,
+        },
+        NontextRange {
+            offset: 0xF046C,
+            length: 384,
+            evidence: US_GTE_HALFWORD_TABLE_EVIDENCE,
+        },
+    ]);
     ranges.extend(textures.iter().map(|range| NontextRange {
         offset: range.offset,
         length: range.length,
