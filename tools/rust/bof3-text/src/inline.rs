@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v56";
+pub const SCHEMA: &str = "bof3.inline-text/v57";
 
 const UPPERCASE_GLYPH_LIMIT: usize = 10;
 
@@ -1699,7 +1699,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US BATE labels and numeric formats",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "19df493a9bf50ccb905680637b34229ea72b7f9e76dbdf337e8ff6be8ba73517",
+        sha256: "5b125d8363cde3750418402e977ae4ec1be097cb284afd8470a8ca6237309c92",
         consumers: &[
             0x801d28e0, 0x801d2908, 0x801d2ce8, 0x801d2d04, 0x801d2d30, 0x801d2d5c, 0x801d2d78,
             0x801d2d98, 0x801d2dc4, 0x801d2de0, 0x801d2e00, 0x801d2e20, 0x801d2e3c, 0x801d2e54,
@@ -1712,6 +1712,7 @@ const LAYOUTS: &[Layout] = &[
             0x801d6198, 0x801d620c, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac,
             0x801d8394, 0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438, 0x801d2a60,
             0x801d2ac4, 0x801d2b48, 0x801d2b98, 0x801d2460, 0x801d24ac, 0x801d32ec, 0x801d330c,
+            0x801d862c, 0x801d8684,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c20, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
@@ -1797,13 +1798,15 @@ const LAYOUTS: &[Layout] = &[
                 &[0x8014ff0c],
             ),
             Allocation::bounded_format(0x801d0c38, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0d94, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0d98, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
         ],
     },
     Layout {
         name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "ee083bd40f51b48f07d17a1555f10815d3571137b967a5049160c589caad4e14",
+        sha256: "54398b48cb41b3864664383604a43dfcffb3965411888dde4412e09e329369e5",
         consumers: &[
             0x801d3888, 0x801d38b0, 0x801d3c90, 0x801d3cac, 0x801d3cd8, 0x801d3d04, 0x801d3d20,
             0x801d3d40, 0x801d3d6c, 0x801d3d88, 0x801d3da8, 0x801d3dc8, 0x801d3de4, 0x801d3dfc,
@@ -1816,6 +1819,7 @@ const LAYOUTS: &[Layout] = &[
             0x801d7140, 0x801d71b4, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
             0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0, 0x801d5c7c,
             0x801af20c, 0x801d3a08, 0x801d3af0, 0x801d3a6c, 0x801d3b40, 0x801d4294, 0x801d42b4,
+            0x801d95d4, 0x801d962c,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
@@ -1914,6 +1918,8 @@ const LAYOUTS: &[Layout] = &[
                 &[0x8014ff0c],
             ),
             Allocation::bounded_format(0x801d0c1c, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0d78, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0d7c, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
         ],
     },
     Layout {

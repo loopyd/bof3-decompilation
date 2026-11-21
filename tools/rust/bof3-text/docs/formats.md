@@ -2789,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v56`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v57`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3292,6 +3292,13 @@ indices, tables, code and alignment at BATE `0x801D0C41..0x801D0C44` and
 SHISU `0x801D0C25..0x801D0C28` remain protected. Natural activation and edited
 rendering remain unverified.
 
+BATE's row labels at `0x801D0D94` and `0x801D0D98`, and SHISU's at
+`0x801D0D78` and `0x801D0D7C`, contain `1` and `2`. Each uses
+`ascii-digit-glyph-literal` and permits one digit, ASCII space or `:` plus NUL.
+Their two-row panel callers pass each address directly to `0x8014FF0C`;
+pointer references remain empty. Following bytes remain protected. Initialized
+renderer resources remain required; edited display remains unverified.
+
 BATE and SHISU also expose fifteen stat-label allocations each through
 `game-literal`. Each accepts at most three encoded bytes and one NUL.
 The first three groups contain `Pwr`, `Def`, `Int` and `Agl`; the last contains
@@ -3416,7 +3423,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v56` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v57` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

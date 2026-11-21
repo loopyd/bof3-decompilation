@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v56`.
+`bof3.inline-text/v57`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +196,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v56`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
+uses `bof3.inline-text/v57`. MAGIC003 entry 3 exposes three `uppercase-glyphs`
 rows. Write A-Z, `!` and spaces literally; `{byte(0xNN)}` stores one raw glyph
 byte. Spaces encode as `0xFF`. End each caption with `{nul}` for the reserved
 `0x00`; `{nul}` alone is empty. Preserve the recorded byte and nonblank-glyph
@@ -333,6 +333,10 @@ three encoded bytes plus NUL and at most eleven formatted characters. Their
 eight-dash fallbacks accept one to eight ASCII spaces or dashes plus NUL;
 empty text and percent sequences are refused. Preserve earlier indices,
 alignment, code and tables. Edited rendering is unverified.
+
+Their two-row `1` and `2` labels use `ascii-digit-glyph-literal`: one digit,
+ASCII space or `:` plus NUL within two bytes. Empty text is refused; following
+bytes remain protected. Edited display is unverified.
 
 BATE and SHISU entry 0 each expose fifteen stat labels through `game-literal`.
 Each four-byte allocation permits three encoded bytes and NUL; the two trailing
