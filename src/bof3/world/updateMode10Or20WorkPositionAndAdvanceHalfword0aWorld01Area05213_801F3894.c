@@ -5,7 +5,7 @@ extern u8 *D_80148210; /* @source 0x80148210 @kind data */
 extern s8 D_801448EC; /* @source 0x801448EC @kind data */
 
 /* @source 0x801F3980 */
-extern u8 func_801F3980(s32 *x, s32 *y);
+extern u8 projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980(s32 *x, s32 *y);
 /* @source 0x801F3BA0 */
 extern void func_801F3BA0(s32 x, s32 y);
 /* @source 0x801F3A14 */
@@ -26,7 +26,7 @@ void updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894(v
   s32 x;
   s32 y;
 
-  if (func_801F3980(&x, &y)) {
+  if (projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980(&x, &y)) {
     if (D_80146867 == 10) {
       if (SPAD_PTR_SLOT(s32, 0x44u)[0xD] != 0x668000) {
         func_801F3BA0(x, y);

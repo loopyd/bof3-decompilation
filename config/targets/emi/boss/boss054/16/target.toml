@@ -11,6 +11,7 @@ sources = [
     "src/bof3/boss/addWorkWord20ToWord14AccumulatePreviousWord14IntoHalfword3EThenAdvanceWorkByte2WhileBelowDistancePlus180BossBoss05416_800C1FA8.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress32BossBoss05416_800C1970.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss05416_800C18E0.c",
+    "src/bof3/boss/dispatchStateByte1Table1804BossBoss05416_800C19C4.c",
 ]
 support_sources = [
     "src/bof3/boss/dispatchStateByte1LocalHandlerBossBoss05416_800C1D30.c",

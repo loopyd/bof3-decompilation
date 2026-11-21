@@ -3,7 +3,7 @@
 extern u16 D_80143F00;
 
 s32 requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC(s32 arg0, s32 arg1);
-s32 func_801FC8AC(s32 arg0, s32 arg1);
+s32 requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC(s32 arg0, s32 arg1);
 s32 requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944(s32 arg0, s32 arg1);
 s32 requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC(s32 arg0, s32 arg1);
 s32 requestPrimaryState6Substate5Or0DOr0FAndQueueFrontEndMode0COr11ScenarioScena0300_801FCB4C(s32 arg0, s32 arg1);
@@ -14,7 +14,7 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
  * route word D_80143F00 and, for the six route values 0x25, 0x29, 0x32, 0x33,
  * 0x45 and 0x63, runs the matching overlay route handler — 0x25 runs
  * requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944, 0x29 runs
- * func_801FC8AC, 0x32 runs
+ * requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC, 0x32 runs
  * requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8,
  * 0x33 runs
  * requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC, 0x45 runs
@@ -23,12 +23,12 @@ s32 requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCA
  * returns that handler's result sign-extended from its low byte (sll/sra 24).
  * Every other route value returns 0. Both incoming packed record words are
  * forwarded unchanged: the body never writes $a0 or $a1, and all six callees
- * save them into $s0/$s1 and split them the same way (the first word's high
- * half and the second word compared against 0x40000/0x60000), which is the
- * pair the sibling dispatchers forward too. The handlers write the shared
- * state byte D_80146874 and sub-state byte D_80146875 before returning the
- * front-end mode id that queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C
- * consumes. The route word is compared as a signed int after its zero-extended
+ * save them into $s0/$s1 before testing that pair against their own literals.
+ * Routes 0x25, 0x32, 0x45 and 0x63 write the shared state byte D_80146874 and
+ * sub-state byte D_80146875 and return the front-end mode id that
+ * queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C consumes; 0x29 writes the
+ * same two bytes as state 3 / sub-state 0xA and returns 1, and 0x33 writes
+ * only the state byte and returns 0. The route word is compared as a signed int after its zero-extended
  * halfword load, so the dispatch tree is the compiler's balanced equality
  * chain over 0x25..0x63 rather than a table. The 0x18-byte frame only keeps
  * $ra across the selected call; no jal in the image targets this address, its
@@ -44,7 +44,7 @@ s32 dispatchRouteHandlerScenarioScena0300_801FC704(s32 arg0, s32 arg1) {
     return (s8)requestPrimaryState4Substate5AndQueueFrontEndMode33ScenarioScena0300_801FC944(arg0, arg1);
 
   case 0x29:
-    return (s8)func_801FC8AC(arg0, arg1);
+    return (s8)requestPrimaryState3Substate0AOnPackedRecordMatchScenarioScena0300_801FC8AC(arg0, arg1);
 
   case 0x32:
     return (s8)requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8(arg0, arg1);

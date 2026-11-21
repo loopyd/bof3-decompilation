@@ -182,8 +182,10 @@ segments:
     - '@source: src/bof3/world/armPhase16AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06813_801F3B5C.c'
     - '@behavior: Entry handler of the byte-4 dispatch table at 0x801F4DCC, which lists this routine at index 0 and 0x801F3B9C at index 1: writes 0x10 into the phase byte 0x0A of the work record published at the scratchpad pointer cell 0x1F800044, then 1 into the record byte 0x04 that the local dispatcher dispatchStateByte4Table4dccWorld01Area06813 indexes that table with, re-reading the pointer cell for the second store, and finally subtracts two units from the halfword 0x122 of the shared work record published at 0x80146250. Takes no arguments and returns nothing.'
   - - 3996
-    - asm
-    - func_801F3B9C
+    - c
+    - stepWorkAccumulatorsByPhaseTable4dd4ConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3B9C
+    - '@source: src/bof3/world/stepWorkAccumulatorsByPhaseTable4dd4ConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3B9C.c'
+    - '@behavior: Phase mover at index 1 of the byte-4 dispatch table at 0x801F4DCC, whose index 0 names the armer at 0x801F3B5C: it reads the work record published through the scratchpad pointer cell 0x1F800044 and tests its phase byte at 0x0A, and if that byte is nonzero adds the signed entry that byte low nibble selects from the local phase table at 0x801F4DD4, whose sixteen bytes repeat -1, 0, 1, 0, scaled by 0x800, to the record word at 0x34, subtracts the same scaled entry from the word at 0x38, stores the phase byte minus one and consumes two units of the halfword at 0x122 of the shared work record published at 0x80146250; if the phase byte reads zero it instead clears the handler byte at 0x04 so the next dispatch of the same table reaches the armer at index 0 again. Leaf, no call, takes no arguments and returns nothing.'
   - - 4140
     - c
     - dispatchStateByte4Table4de4World01Area06813_801F3C2C

@@ -68,8 +68,10 @@ segments:
     - c
     - noopHandlerBossBoss05416_800C19BC
   - - 452
-    - asm
-    - func_800C19C4
+    - c
+    - dispatchStateByte1Table1804BossBoss05416_800C19C4
+    - '@source: src/bof3/boss/dispatchStateByte1Table1804BossBoss05416_800C19C4.c'
+    - '@behavior: Overlay step dispatch on work-record byte 1 from a frame copy of the thirteen-word handler run at 0x800C1804: copies the ten leading words of that run into a 0x28-byte local frame table, four words per iteration over the leading 0x20 bytes plus a two-word tail, then reads the work-record pointer at scratchpad cell 0x1F800044 once, scales unsigned byte 1 of that record by four, loads the matching frame word and calls it with no arguments; the 0x40-byte frame keeps the return address at 0x38 and the epilogue leaves the selected handler result in $v0 untouched, so no jal and no stored word in the payload names this dispatcher.'
   - - 596
     - asm
     - func_800C1A54

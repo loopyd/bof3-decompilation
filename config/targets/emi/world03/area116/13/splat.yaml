@@ -57,8 +57,10 @@ segments:
     - '@source: src/bof3/world/requestFrontSelectorContextWorld03Area11613_801F2D54.c'
     - '@behavior: Requests the shared front selector context through func_8019FA28 with the fixed tuple 0x64, 0x460000, 0x340000 and 0x81. Nothing in the payload jumps here - no jal encodes the address and the word 0x801F2D54 occurs only as data at 0x801F3478, the ninth entry of the code-pointer run beginning at 0x801F3458 inside the tail blob - so the entry takes no arguments and returns nothing.'
   - - 384
-    - asm
-    - func_801F2D80
+    - c
+    - clearWorkByte48ThenSubmitRecordWorld03Area11613_801F2D80
+    - '@source: src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area11613_801F2D80.c'
+    - '@behavior: Clears byte 0x48 of the work record published through the scratchpad pointer cell 0x1F800044, reloads that cell and passes the record to the shared main-executable submitter func_80196718. No jal encodes this address and the word 0x801F2D80 occurs only as data at 0x801F347C, the tenth entry of the code-pointer run beginning at 0x801F3458 in the tail blob, so the entry takes no arguments and returns nothing. The role of record byte 0x48 is unknown.'
   - - 436
     - asm
     - func_801F2DB4

@@ -82,8 +82,10 @@ segments:
     - '@source: src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894.c'
     - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3456
-    - asm
-    - func_801F3980
+    - c
+    - projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980
+    - '@source: src/bof3/world/projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980.c'
+    - '@behavior: Projects the work object word pair at +0x34/+0x38 minus 0x8000 through the two output pointers, hands the pair to the cell-cue helper 0x801F3C4C while the shared byte 0x80143BB0 reads 5, and steps the shared record halfword at +0x0A back by 2 while the progress byte 0x80146867 reads zero, answering whether it is nonzero.'
   - - 3604
     - asm
     - func_801F3A14

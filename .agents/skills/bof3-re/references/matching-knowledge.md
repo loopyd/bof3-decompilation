@@ -1392,7 +1392,10 @@ load's `lui` is that spelling, not allocation work. Reuse fails at the other end
 local read in two separate statements is a single allocno, so both cell loads take the
 register that local owns (34 of 43, first difference at the entry `lui`, where the
 original loads `$a1` then `$a0`), while two distinct locals matched as well as the
-inline form. A post-call reload
+inline form. Reusing one local across three published-cell reads measured 35 of 38
+instructions at unchanged size, with the first difference on the `lui` destination.
+Separate locals for the reads matched 38 of 38. Distinguish that reuse from a local
+whose lifetime spans a call. A post-call reload
 whose only difference is the register that receives its base (`$v1` where the original
 builds `$v0`) is that local's lifetime, not allocation: keep the local for the accesses
 ahead of the call and write the post-call test on the named cell, which cleared the

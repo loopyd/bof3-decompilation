@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801F2E38
   - - 648
-    - asm
-    - func_801F2E88
+    - c
+    - claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88
+    - '@source: src/bof3/world/claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88.c'
+    - '@behavior: Entry 1 of the byte-2 handler pointer run based at 0x801F3DEC: on the frames whose published work object byte at +0x09 holds zero in its low two bits it claims the first free record of the 0x18-byte-stride table at 0x800E4800 through 0x801F3800 and seeds it through 0x801F37A4, then runs the record pass at 0x801F38B0, counts the byte at +0x09 down and, when that byte reaches zero, increments the work byte at +0x02 so the next step dispatches entry 2 at 0x801F2F20.'
   - - 800
     - asm
     - func_801F2F20

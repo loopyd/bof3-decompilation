@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EECA4
   - - 352
-    - asm
-    - func_801EED60
+    - c
+    - startBurstInIdleEffectSlotsThenStepEffectSlotsAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EED60
+    - '@source: src/bof3/bmagic/startBurstInIdleEffectSlotsThenStepEffectSlotsAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EED60.c'
+    - '@behavior: Magic-150 effect handler, the entry at 0x801EEC08 of the overlay handler table 0x801EEC04, index 1 of its seven words, which the dispatcher 0x801EEC20 indexes by work-object byte 1. It makes a 0x18-byte frame with $ra at +0x10, calls 0x801EF6F8 to start an eight-step burst in every idle slot of the effect-slot run 0x801EFAB4, then calls 0x801EF8EC to step and draw the active slots of that run; both answers are discarded. It then decrements work-object byte 9 through the pointer read from scratchpad cell 0x1F800044, stores it back, masks the stored byte to 0xFF for the test, and returns untouched while it is nonzero. When the countdown reaches zero it re-reads the same cell and increments work-object byte 1, which advances the dispatcher to the next handler entry, and it does not re-arm the countdown. Those are its only two stores; it reads no other cell, has no loop, and takes no arguments and returns nothing.'
   - - 460
     - c
     - stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC

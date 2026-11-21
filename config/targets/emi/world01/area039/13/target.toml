@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88.c",
     "src/bof3/world/queueFrontendCueA3World01Area03913_801F2EC4.c",
     "src/bof3/world/startScriptedMotionZeroZeroFour1eWorld01Area03913_801F2F68.c",
+    "src/bof3/world/claimFrontEndRecordHandler36ClearRowByte9ElseLowerSharedHalfword7eBy2World01Area03913_801F2D54.c",
 ]
 support_sources = [
     "src/bof3/world/setSharedByteZeroIfByte80144F5AFourElseOneWorld01Area03913_801F2F94.c",
