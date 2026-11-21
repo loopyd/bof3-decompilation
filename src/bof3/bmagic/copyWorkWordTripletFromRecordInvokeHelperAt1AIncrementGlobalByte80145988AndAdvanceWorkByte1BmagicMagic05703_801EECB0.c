@@ -32,9 +32,10 @@ extern u8 D_80145988; /* @source 0x80145988 @kind data */
 /* @source 0x801EECB0
  * @behavior First handler of this overlay's three-word handler table at
  *           0x801EEC04 (0x801EECB0, 0x801EED2C, 0x801EEFEC), whose dispatcher
- *           func_801EEC50 copies those three words into its own 0x28-byte
- *           frame and indexes them with the scratchpad work object's byte
- *           0x01; no jal in the image names this span.
+ *           dispatchWorkByte1HandlerTableec04BmagicMagic05703_801EEC50 copies
+ *           those three words into its own 0x28-byte frame and indexes them
+ *           with the scratchpad work object's byte 0x01; no jal in the image
+ *           names this span.
  *           It reads the shared record pointer at 0x801EB4E0 and the scratchpad
  *           work-object pointer cell at 0x1F800044 once each, then copies the
  *           record words 0x34, 0x38 and 0x3C to the same three word offsets of

@@ -2,7 +2,7 @@
 
 extern int rand(void);
 u32 testBattleTargetKindFlagBmagicMagic06000_801EF118(void);
-void func_801EF0B8(void);
+void raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8(void);
 
 /* 0x118-byte local panel record selected by the battle target selector byte
  * less three. The kind byte at +0x00 is the same first field
@@ -79,7 +79,8 @@ extern u8 D_80146384; /* @source 0x80146384 @kind unknown */
  *           offset 0x4 takes 1. Otherwise the kept roll decides together with
  *           the panel record byte at row offset 0x03 of the same selector row,
  *           and only when both are nonzero does it raise that flag bit through
- *           func_801EF0B8 and then store 1; a failing roll or a zero record byte
+ *           raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8 and then store
+ *           1; a failing roll or a zero record byte
  *           stores 0. Each store re-reads the pointer cell 0x1F800044 at its own
  *           site, so the constant 1 and the constant 0 are materialised
  *           separately instead of through one merged result. One signed local
@@ -131,7 +132,7 @@ void raiseBattleTargetKindFlagFromRecordDeltaRollThenStoreWorkByte4BmagicMagic06
   if (flag != 0) {
     SPAD_PTR_SLOT(u8, 0x44u)[4] = 1;
   } else if (value && (D_801EB6AC[D_80146384 - 3].unk_03 != 0)) {
-    func_801EF0B8();
+    raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8();
     SPAD_PTR_SLOT(u8, 0x44u)[4] = 1;
   } else {
     SPAD_PTR_SLOT(u8, 0x44u)[4] = 0;

@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEDA0
   - - 644
-    - asm
-    - func_801EEE84
+    - c
+    - incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenAdvanceWorkByte1AndClearWorkByte9WhenAtLeast21BmagicMagic11403_801EEE84.c'
+    - '@behavior: Increment work byte A at byte width, and once it reaches 0x21 advance state byte 1 and clear the byte-9 countdown.'
   - - 740
     - asm
     - func_801EEEE4

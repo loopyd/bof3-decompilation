@@ -30,8 +30,10 @@ segments:
   vram: 2149510160
   subsegments:
   - - 16
-    - asm
-    - func_801EEC10
+    - c
+    - dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10.c'
+    - '@behavior: Overlay step dispatcher and the first body of this payload. Reads the scratchpad work-object pointer cell at 0x1F800044 once, copies the three-entry code pointer table at 0x801EEC04 (0x801EEC70, 0x801EEE38, 0x801EEE94) into a three-word local handler array in its own 0x28-byte frame, and invokes the entry selected by the work object''s unsigned byte 0x01 with no arguments. The table words are read back from the copy and the index is not bounds-checked; nothing is returned and nothing outside the frame is written.'
   - - 112
     - asm
     - func_801EEC70

@@ -30,8 +30,10 @@ segments:
   vram: 2149510176
   subsegments:
   - - 32
-    - asm
-    - func_801EEC20
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic04003_801EEC20
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic04003_801EEC20.c'
+    - '@behavior: Dispatch work byte 1 through the three-entry code pointer run at 0x801EEC04, copied into a local frame first.'
   - - 128
     - asm
     - func_801EEC80

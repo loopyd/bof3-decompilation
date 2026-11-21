@@ -12,8 +12,9 @@ typedef struct BmagicMagic06000LocalPanelRow {
 } BmagicMagic06000LocalPanelRow;
 
 /* Local panel record array in main RAM, outside this overlay's image. Bound
- * through this target's generated undefined_syms_auto.txt, which the remaining
- * asm sibling func_801EF0B8 still references, so no target-map row is added. */
+ * through this target's generated undefined_syms_auto.txt, which the sibling
+ * raiseBattleTargetKindFlagBmagicMagic06000_801EF0B8 resolves the same way, so
+ * no target-map row is added. */
 extern BmagicMagic06000LocalPanelRow D_801EB6AC[]; /* @source 0x801EB6AC @kind table */
 
 /* Per-kind flag words in main RAM, 256 bits over eight words, indexed by the
