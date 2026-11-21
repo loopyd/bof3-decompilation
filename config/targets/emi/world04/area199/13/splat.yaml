@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801F2DE8
   - - 532
-    - asm
-    - func_801F2E14
+    - c
+    - initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14
+    - '@source: src/bof3/world/initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14.c'
+    - '@behavior: Reset of the two-layer trail of the overlay: it clears both entries of trailLayerPushCursors, walks the thirty-two slots of each layer and writes 0xFF into every slot sample column byte, the slot index marching down from 0xBA by six bytes per step plus the layer three-byte offset, then writes the flip flag of slot 0 as 1 on the first layer and 0 on the second and clears the shared overlay state byte at 0x8014933B. Takes no arguments, returns no value, allocates no frame and calls nothing.'
   - - 640
     - c
     - drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80

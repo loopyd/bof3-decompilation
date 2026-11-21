@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setStatus4AndModeIndex6IfGateElse3AndModeIndex6WhenMoneyBelow10000ElseSubtract10000FromMoneyAndSet2World03Area11613_801F2C04
+    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElse3AndModeIndex6WhenMoneyBelow10000ElseSubtract10000FromMoneyAndSet2World03Area11613_801F2C04.c'
+    - '@behavior: Loads the shared signed gate byte D_801490C7; while that byte is nonzero it stores 4 into the shared status halfword D_801490A8 and then 6 into the shared mode index byte D_801D4285. When the gate byte is zero and the main-RAM money word D_80144F50 is below 0x2710 it stores 3 into D_801490A8 and then 6 into D_801D4285; at or above that bound it subtracts 0x2710 from D_80144F50, stores 2 into D_801490A8 and leaves the mode byte untouched.'
   - - 108
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld03Area11613_801F2C6C

@@ -30,8 +30,10 @@ segments:
   vram: 2149510164
   subsegments:
   - - 20
-    - asm
-    - func_801EEC14
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic11503_801EEC14
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11503_801EEC14.c'
+    - '@behavior: Per-frame step dispatcher of this overlay, the first code span behind the four-word step run of the leading table segment; no jal and no table word inside this payload names it, so the overlay loader is its only caller. It reads the scratchpad work-object pointer cell at 0x1F800044 once and takes that object byte 0x01, the overlay step selector, as an unchecked index: it copies the whole step run at 0x801EEC04 (0x801EEC80, 0x801EEDDC, 0x801EEEB0, 0x801EEFF4) into the 0x10($sp) record of its 0x28-byte frame and calls the entry at the scaled selector with no arguments. The selector is not bounded, and nothing of the selected step result is returned: the epilogue reloads only $ra.'
   - - 128
     - asm
     - func_801EEC80

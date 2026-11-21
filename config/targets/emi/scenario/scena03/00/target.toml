@@ -10,6 +10,7 @@ load_address = 0x801F6C00
 sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F7A9C.c",
     "src/bof3/scenario/startAction19LatchPhaseByteTwoAndRequestPrimaryState7ArmCountdown30ScenarioScena0300_801FCE18.c",
+    "src/bof3/scenario/armEffectGroupInvalidateModeRecordEntriesClearCountAndResetEffectSlot0ScenarioScena0300_801FCE6C.c",
 ]
 support_sources = [
     "src/bof3/scenario/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundScreenPointAtRadiusTintedByCenterAndRimScenarioScena0300_801F8C04.c",

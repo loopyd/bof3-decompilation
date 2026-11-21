@@ -8,6 +8,7 @@ splat = "config/targets/emi/world02/area085/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
+    "src/bof3/world/clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area08513_801F2C48.c",
     "src/bof3/world/setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC.c",
     "src/bof3/world/clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0.c",
     "src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c",

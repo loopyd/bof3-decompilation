@@ -113,8 +113,10 @@ segments:
     - add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0
     - '@source: src/bof3/bmagic/add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0.c'
   - - 5360
-    - asm
-    - func_801F00F0
+    - c
+    - add2ToWorkByte9DecrementWorkByteAThenAdvanceWorkByte2At30BmagicMagic09303_801F00F0
+    - '@source: src/bof3/bmagic/add2ToWorkByte9DecrementWorkByteAThenAdvanceWorkByte2At30BmagicMagic09303_801F00F0.c'
+    - '@behavior: Add 2 to work byte 9, decrement work byte A and advance work byte 2 when the new byte A is 0x30.'
   - - 5468
     - c
     - incrementWorkByte9DecrementBytesAAndBThenClearAtZeroBmagicMagic09303_801F015C

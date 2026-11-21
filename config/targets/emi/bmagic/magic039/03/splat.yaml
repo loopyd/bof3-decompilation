@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC94
   - - 680
-    - asm
-    - func_801EEEA8
+    - c
+    - incrementWorkByte1WhenWorkByteBZeroBmagicMagic03903_801EEEA8
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBZeroBmagicMagic03903_801EEEA8.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, when the work object byte at offset 0xB is zero, increments the byte at offset 0x1 through that same base with no second cell load and no test of the stored sum.'
   - - 732
     - asm
     - func_801EEEDC

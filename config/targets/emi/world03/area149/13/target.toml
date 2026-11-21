@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/dispatchStateByte4Table4580World03Area14913_801F2EFC.c",
+    "src/bof3/world/seedChannelModeFlagsWorkTripleAndCountdownByte9ThenAdvanceWorkByte1World03Area14913_801F2C48.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld03Area14913_801F2CB4.c",
