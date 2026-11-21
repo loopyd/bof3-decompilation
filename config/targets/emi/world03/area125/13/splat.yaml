@@ -69,8 +69,10 @@ segments:
     - '@source: src/bof3/world/stageRingSpawnsByElapsedCounterThenAdvanceStateByte1World03Area12513_801F2E7C.c'
     - '@behavior: Spawn-schedule step of this overlay handler run: entry 7 of the nine-word run at 0x801F36CC reads the frame counter halfword at +0x2E of the work object published at the scratchpad pointer cell 0x1F800044 and stores the spawn stage byte 0 to 4 at 0x801F3834 at the thresholds 0x3C, 0xB4, 0x12C and 0x168; when the countdown halfword at +0x30 is zero it spawns the stage count from the byte table at 0x801F36F0 through 0x801F3268 and arms that countdown with the stage wait from the byte table at 0x801F36F8, otherwise it drops the countdown by one; it then advances the frame counter by one, and from 0x1A4 frames up it advances the work byte at +0x1 to the next handler instead; both paths end in the overlay helper at 0x801F33B0.'
   - - 912
-    - asm
-    - func_801F2F90
+    - c
+    - clearWorkFlagsWhenNoRecordActiveWorld03Area12513_801F2F90
+    - '@source: src/bof3/world/clearWorkFlagsWhenNoRecordActiveWorld03Area12513_801F2F90.c'
+    - '@behavior: Entry 8, the ninth and last word of this overlay nine-word work-state handler run based at 0x801F36CC, selected by the exact dispatcher dispatchStateByte1Table36ccWorld03Area12513_801F2C04 through the unsigned work byte at +0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It runs this overlay per-frame record sweep at 0x801F33B0 and, only when the low byte of that result is zero, calls the resident main-executable helper at 0x80196070, which clears the work-area bytes at +0x00 through +0x04. The sweep leaves 1 once at least one record of the 0x800E4800 table was active and 0 when none was, so this body renders the records while any remain and clears the work area once none is left; entry 7 at 0x801F2E7C advances the work byte at +0x1 to this entry from 0x1A4 elapsed frames up. Takes no arguments, returns nothing, and the 0x18-byte frame only keeps the return address at 0x10 across the call.'
   - - 964
     - c
     - drawWorkRecordSemiTransparentQuadWorld03Area12513_801F2FC4

@@ -101,8 +101,10 @@ segments:
     - '@source: src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3554.c'
     - '@behavior: Publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-id-indexed byte of this payload''s mode table at 0x801F398C and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2516
-    - asm
-    - func_801F35D4
+    - c
+    - queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4
+    - '@source: src/bof3/world/queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4.c'
+    - '@behavior: Queues the two shared UI elements at x = 0xB and x = 0xC of the single row y = 0x55 with size 0 through the shared marker queue 0x801A4BC0. Takes no arguments, uses its 0x18-byte frame only to keep $ra across the two calls, and returns nothing.'
   - - 2572
     - c
     - seedFrontEndRecordKind6CQueueCue209AndClearWorkAnimBit0ThenRequestPrimaryState4Substate30IfPartyByte5World01Area04914_801F360C

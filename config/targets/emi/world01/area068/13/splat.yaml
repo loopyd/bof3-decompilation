@@ -112,8 +112,10 @@ segments:
     - '@source: src/bof3/world/countdownStepArmState14Or11ByPad40ElseAdvanceState10Or16World01Area06813_801F3578.c'
     - '@behavior: Counts gate byte 0x801F4E00 down by one, then selects the state byte +1 of the scratchpad work record at 0x1F800044: 0x14 when the countdown expires; 0x11 after advancing counter 0x801F4E04 by one, clearing 0x801F4E0C and advancing shared byte 0x80146865 when pad halfword 0x80145AA8 reads exactly 0x40; otherwise after advancing 0x801F4E0C by one, 0x10 while that byte is below 0x1C and 0x16 above it. Leaf, no frame.'
   - - 2648
-    - asm
-    - func_801F3658
+    - c
+    - stepPad40CounterAndArmState18Or22WhenAttemptByteReaches28World01Area06813_801F3658
+    - '@source: src/bof3/world/stepPad40CounterAndArmState18Or22WhenAttemptByteReaches28World01Area06813_801F3658.c'
+    - '@behavior: Overlay step handler, entry 0x15 of the local handler table at 0x801F3FF4 and entry 0x11 of the shifted table at 0x801F4004: when the shared pad halfword 0x80145AA8 reads exactly 0x40 it advances this overlay''s own 16-bit counter 0x801F4E04 by one, then always advances the attempt byte 0x801F4E0C by one and branches on the truncated new value. Once that value has reached 0x1C (28) it stores 0x16 (22) into the byte at offset 0x01 of the work record published at the scratchpad pointer cell 0x1F800044, and below 0x1C it stores 0x12 (18). Both arms read that pointer cell through the same base variable, so their byte stores merge into the single store that fills the return delay slot. Leaf, no frame.'
   - - 2764
     - c
     - countdownStepArmState14Or10ByPad40Else11World01Area06813_801F36CC

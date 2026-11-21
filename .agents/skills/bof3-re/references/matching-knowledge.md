@@ -1430,7 +1430,10 @@ reorder variants is the representation, not an ordering residual: give each acce
 field of the record a typed member over its evidenced offset with the unknown gaps
 padded, and keep the separately loaded fixed cell on its own local. A member access does not enter the
 `sched.c` `true_dependence` test against a standalone fixed cell, so the pair orders
-against it where two pointer expressions cannot. Measured
+against it where two pointer expressions cannot. A typed member view also changed address-computation order around a fixed-address
+table read. Cast stores through a byte pointer left the next index's final `addu`
+after the scaled table load. Member stores put it before the load and matched;
+statement-order variants alone did not close the mismatch. Measured
 negatives: reading that cell earlier, binding its value to a local, moving its
 read-modify-write above the record's pointer stores, and one pointer local serving
 both bases each kept the first difference or lost instructions. A single store can

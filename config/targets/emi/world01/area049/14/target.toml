@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F3454.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area04914_801F34D4.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area04914_801F376C.c",
+    "src/bof3/world/queueSharedUiElementBlockBToCx55Size0World01Area04914_801F35D4.c",
 ]
 support_sources = [
     "src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c",

@@ -60,8 +60,10 @@ segments:
     - '@source: src/bof3/bmagic/invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164.c'
     - '@behavior: When the readiness helper succeeds, invoke battle helpers, seed work words 0x14 and 0x20, and advance work byte 2.'
   - - 1484
-    - asm
-    - func_801EF1CC
+    - c
+    - addWorkWord20ToWord14AccumulateWord14IntoHalfword3EThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To1FAndAdvanceWorkByte2BmagicMagic00100_801EF1CC
+    - '@source: src/bof3/bmagic/addWorkWord20ToWord14AccumulateWord14IntoHalfword3EThenWhenWord14IsZeroCopyRecordWordPairAdjustWord3CSetByte9To1FAndAdvanceWorkByte2BmagicMagic00100_801EF1CC.c'
+    - '@behavior: Per-frame field integrator for the scratchpad work object at 0x1F800044. Adds work word 0x20 into word 0x14 and word 0x14 into halfword 0x3E; while the new word 0x14 is nonzero it returns, and when it has reached zero it copies record words 0x34 and 0x38 from 0x8014638C, sets work byte 9 to 0x1F, subtracts the 0x801EB4E0 minus 0x8014638C word 0x3C difference from work word 0x3C, and advances work byte 2.'
   - - 1664
     - c
     - integrateWorkWord14IntoHalfword3EAndDecrementByte9ThenInvokeHelpersAndAdvanceAtZeroBmagicMagic00100_801EF280

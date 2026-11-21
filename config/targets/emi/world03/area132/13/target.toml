@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/findFreeWorkRecordWorld03Area13213_801F3800.c",
     "src/bof3/world/claimSeedWorkRecordEveryFourthFrameRunRecordPassThenAdvanceWorkByte2WhenCountdownExpiresWorld03Area13213_801F2E88.c",
     "src/bof3/world/resetWorkTableArmCountdownAdvanceWorkByte2AndQueueCue20CWorld03Area13213_801F2E38.c",
+    "src/bof3/world/clearWorkFlagsWhenNoRecordDrawnWorld03Area13213_801F2F20.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld03Area13213_801F2DA8.c",

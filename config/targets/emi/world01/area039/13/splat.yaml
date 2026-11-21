@@ -55,8 +55,10 @@ segments:
     - '@source: src/bof3/world/claimFrontEndRecordHandler36ClearRowByte9ElseLowerSharedHalfword7eBy2World01Area03913_801F2D54.c'
     - '@behavior: Overlay record claim: asks the shared allocator at 0x8019601C for a row of the front-end record table at 0x80143FC8 and masks the answer to a byte. When that index is not 0xFF it seeds the row through the 0x74-byte stride with 1 in the occupancy byte, 0x36 in the handler selector byte at 0x80143FCD and 0 in the anchored row byte at 0x80143FD1; when the allocator answers 0xFF it instead lowers the unsigned halfword at 0x7E of the work-entity record published at 0x80146884 by 2. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 484
-    - asm
-    - func_801F2DE4
+    - c
+    - queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4
+    - '@source: src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c'
+    - '@behavior: Queues the two shared UI elements at x = 0x43 and x = 0x44 with y = 0x36, both at size 0, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 540
     - asm
     - func_801F2E1C

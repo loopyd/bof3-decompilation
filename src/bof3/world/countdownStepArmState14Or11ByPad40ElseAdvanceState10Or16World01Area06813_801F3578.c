@@ -32,11 +32,12 @@ extern u32 D_80146865;
  *           Shape evidence: the same-target exact sibling
  *           countdownStepArmState14Or10ByPad40Else11World01Area06813 supplies
  *           the countdown head and the counter/pointer/state order of the
- *           pad-0x40 arm, and the unlifted neighbour func_801F3658 carries the
- *           same 0x1C range test with a 0x12/0x16 pair. No byte-identical
- *           sibling exists for the clone lever: this overlay's own cell
- *           addresses sit in the instruction words, and no other EMI payload
- *           holds these 0xE0 bytes.
+ *           pad-0x40 arm, and the neighbour
+ *           stepPad40CounterAndArmState18Or22WhenAttemptByteReaches28World01Area06813_801F3658
+ *           carries the same 0x1C range test with a 0x12/0x16 pair. No
+ *           byte-identical sibling exists for the clone lever: this overlay's
+ *           own cell addresses sit in the instruction words, and no other EMI
+ *           payload holds these 0xE0 bytes.
  * @status exact
  * @match 100.00
  * @residual none

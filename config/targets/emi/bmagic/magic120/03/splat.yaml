@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF0D8
   - - 1648
-    - asm
-    - func_801EF270
+    - c
+    - add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270
+    - '@source: src/bof3/bmagic/add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270.c'
+    - '@behavior: Adds 3 to work byte A, increments work byte 9 and, when that byte reaches 8, sets global work byte B to one and advances work byte 2.'
   - - 1772
     - asm
     - func_801EF2EC

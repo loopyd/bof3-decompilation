@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630.c",
+    "src/bof3/world/seedQuadPairFromSceneByteTablesAndAdvanceWorkByte2ThenDrawQuadWorld03Area12013_801F3A7C.c",
 ]
 support_sources = [
     "src/bof3/support/area120_13_psyq.c",
