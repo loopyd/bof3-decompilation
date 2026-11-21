@@ -2606,6 +2606,13 @@ After CSE preserves the copy, recheck deaths and allocation. Several real
 phases can exclude local allocation and change global priority, conflicts and
 preferences. Inspect the complete register web before a native probe.
 
+A shared return join can preserve a helper-answer phase that combine would
+fold into a same-block return mask. A surviving snapshot can still become a
+self-copy after allocation. GCC 2.7.2 `expand_preferences` merges preferences
+between nonconflicting quantities when one dies as the other is set. Check
+source deaths, destination births and full conflict sets before expecting
+a separate handoff.
+
 When CSE removes a copy into an increment result, capture the existing predicate
 before that copy. An earlier real sample of the same field can preserve the result
 quantity through CSE2. Keep the predicate and copy after the preceding publication
