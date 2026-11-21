@@ -107,8 +107,10 @@ segments:
     - asm
     - func_801F3D14
   - - 4500
-    - asm
-    - func_801F3D94
+    - c
+    - returnWorkByte2ToStep2UnlessMaskedSceneStateIs20800ThenDrawQuadWorld03Area12013_801F3D94
+    - '@source: src/bof3/world/returnWorkByte2ToStep2UnlessMaskedSceneStateIs20800ThenDrawQuadWorld03Area12013_801F3D94.c'
+    - '@behavior: Step 4 of the work-byte-2 handler run this overlay dispatches through the table at 0x801F43E8, whose fifth pointer word names this body. It follows the work record published through the scratchpad pointer cell 0x1F800044 to the record pointer held at work offset 0x0C, masks the 32-bit word that pointer addresses to 0x00FFFF00 and compares the masked word against the scene state 0x20800. When the masked word reads anything else it writes 2 into work record byte 0x02, the record byte the work-byte-2 dispatcher table indexes, which sends the next frame to step 2, the handler at 0x801F3B84. It then calls the quad drawer at 0x801F3F5C with the fixed arguments (0xE0, 0x70, 2, 0). Takes no arguments, returns nothing, and its 0x18-byte frame holds only the saved return address at 0x10.'
   - - 4592
     - c
     - advanceWorkByte9DrawQuadWithCounterRampThenReturnToHandler2OnExpiryWorld03Area12013_801F3DF0

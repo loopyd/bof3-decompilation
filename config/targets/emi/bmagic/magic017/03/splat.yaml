@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF11C
   - - 1608
-    - asm
-    - func_801EF248
+    - c
+    - addWord0CToWord34AndWord10ToWord38AndSubtract4FromTintTripletThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF248
+    - '@source: src/bof3/bmagic/addWord0CToWord34AndWord10ToWord38AndSubtract4FromTintTripletThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF248.c'
+    - '@behavior: Work byte 2 state 1 of this overlay, index 1 of the ten-word handler table at 0x801EEC10 (0x801EF11C, 0x801EF248, 0x801EF300, 0x801EF460, 0x801EF5FC, 0x801EF694, 0x801EF6EC, 0x801EF7E0, 0x801EF8B4, 0x801EF970) whose word at 0x801EEC14 is the only occurrence of this address in the payload; func_801EF058 copies that table into its frame and indexes it with scratchpad work-object byte 2. It adds work word 0xC into work word 0x34 and work word 0x10 into work word 0x38, subtracts 4 from each tint channel at work bytes 0x5D, 0x5E and 0x5F with a byte-width read-modify-write and a cell re-read per channel, then decrements work countdown byte 9 and tests the truncated stored byte, incrementing work byte 2 on zero to select entry 2 at 0x801EF300. Leaf with no frame and no calls; nothing is returned.'
   - - 1792
     - c
     - incrementWorkByte9To16ThenSeedStepPairFromWorkByteBAddPublishedRecordPositionCopyWord3CSetVerticalStepInvokeHelperAt101RearmByte9AndAdvanceWorkByte2BmagicMagic01703_801EF300

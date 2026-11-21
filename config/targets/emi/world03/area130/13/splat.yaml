@@ -62,8 +62,10 @@ segments:
     - armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C
     - '@source: src/bof3/world/armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C.c'
   - - 1668
-    - asm
-    - func_801F3284
+    - c
+    - advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284
+    - '@source: src/bof3/world/advanceSeedHalfwordF00StepWorkWords0cAnd10Invoke3400TickCountdownThenResetByte9To3cAndAdvanceWorkByte1World03Area13013_801F3284.c'
+    - '@behavior: Overlay step handler, entry 4 of the seven-word handler run D_801F3ED8 that the dispatcher 0x801F2C1C indexes with the unsigned work byte at +0x1. Adds 0xF00 to the shared seed halfword at 0x801469EA, steps the work record words at +0x0C by 0xF and at +0x10 by 0xA, invokes 0x801F3400 with the record halfwords at +0x2E, +0x30, +0x0C and the truncated word at +0x10, then decrements the countdown byte at +0x09, rearming it with 0x3C and advancing the state byte at +0x1 to entry 5 when it reaches zero.'
   - - 1852
     - c
     - advanceSeedHalfwordF00Invoke3400AndTickCountdownWorld03Area13013_801F333C

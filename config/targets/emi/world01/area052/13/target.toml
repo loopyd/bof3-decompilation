@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/dispatchSharedModeByteTable2C04World01Area05213_801F3F34.c",
     "src/bof3/world/findFreeWorkRecordByte15At800E4800World01Area05213_801F3158.c",
     "src/bof3/world/projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980.c",
+    "src/bof3/world/stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC.c",
 ]
 support_sources = [
     "src/bof3/world/claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084.c",

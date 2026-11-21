@@ -1295,6 +1295,11 @@ where the original's load is, which can be above a store that still writes throu
 previous group's base: a fourth cell read whose slot precedes the third group's word
 store leaves the store on the older local and the fresh one for the reads after it, so
 keep the store on the older base and do not pull the assignment down to its first use.
+For a field passed directly to a callee, an inline cell expression can keep the
+pointer base out of the argument register. One reused narrow local, two narrow
+locals and a wide local narrowed at the call each measured 21 of 27 instructions,
+with the first difference at the base's `lui`. The inline expression matched 27 of
+27.
 
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the

@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2D08
   - - 460
-    - asm
-    - func_801F2DCC
+    - c
+    - stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC
+    - '@source: src/bof3/world/stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC.c'
+    - '@behavior: Phase step of the 0x800E4800 work-record machinery driven through the scratchpad work object 0x1F800044: claims the four phase records while the step byte 0x09 reads zero, increments that step byte and wraps it to zero while counting a phase in byte 0x06 at 4, runs the record step func_801F31C0, then increments the work step byte 0x01 when the phase counter reaches the limit in byte 0x0B.'
   - - 660
     - asm
     - func_801F2E94

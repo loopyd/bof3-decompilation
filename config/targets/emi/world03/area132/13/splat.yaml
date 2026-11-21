@@ -72,8 +72,10 @@ segments:
     - asm
     - func_801F2F98
   - - 1096
-    - asm
-    - func_801F3048
+    - c
+    - clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048
+    - '@source: src/bof3/world/clearWorkFlagsWhenNoRecordDrawnTable3df8World03Area13213_801F3048.c'
+    - '@behavior: Entry 1 of the byte-2 handler pointer run based at 0x801F3DF8: runs the record update and draw pass at 0x801F38B0, masks its returned byte with 0xFF and, when that byte reads zero because the overlay work table at 0x800E4800 held no claimed record on this frame, calls the shared work-area reset at 0x80196070, which clears work-object bytes 0x00-0x04 and returns the overlay to work state 0; it takes no argument, returns nothing and keeps only $ra across the two calls in an 0x18-byte frame.'
   - - 1148
     - c
     - dispatchStateByte1Table3e00WorldWorld03Area13213_801F307C

@@ -60,8 +60,10 @@ segments:
     - '@source: src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c'
     - '@behavior: Queues the two shared UI elements at x = 0x43 and x = 0x44 with y = 0x36, both at size 0, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 540
-    - asm
-    - func_801F2E1C
+    - c
+    - queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C
+    - '@source: src/bof3/world/queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C.c'
+    - '@behavior: Queues the two shared UI elements at x = 0x58 and x = 0x59 with y = 0xD, both at size 0x51, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 596
     - asm
     - func_801F2E54
