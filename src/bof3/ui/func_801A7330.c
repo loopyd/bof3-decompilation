@@ -26,9 +26,9 @@ extern void func_8014D6B8(u32 flag);
  * D_1F800000 symbol so the original lui/addiu pair is reproduced. The counter
  * is tested and indexed through its signed halfword view; only the final
  * increment reads it unsigned. */
-#define ENTITY_COUNT_S16 (((s16*)D_1F800000)[0])
-#define ENTITY_COUNT_U16 (((u16*)D_1F800000)[0])
-#define ENTITY_ENTRY_DATA (((u16*)D_1F800000)[1])
+#define ENTITY_COUNT_S16 (counter_state->count)
+#define ENTITY_COUNT_U16 (*(u16*)&(((struct SpawnScratchState*)D_1F800000)->count))
+#define ENTITY_ENTRY_DATA (((struct SpawnScratchState*)D_1F800000)->entry_data)
 
 /* Persistent per-entity spawn field of the 0x98-byte record array at
  * 0x80146888. Each field is addressed through its own canonical symbol so the
@@ -47,13 +47,18 @@ extern void func_8014D6B8(u32 flag);
  * record, applies its saved-state gate, and advances the entity count.
  * @source 0x801A7330
  * @status partial
- * @match 90.20
- * @residual Native comparison: 221/245 instructions at the original 980 bytes.
- * Register choices, instruction order and the late packed-word OR operands
- * still differ. The spawn record remains a volatile view to preserve its
- * repeated byte samples, including spawn[0], spawn[3] and spawn[0xC].
+ * @match 99.59
+ * @residual Native comparison: 244/245 instructions at the original 980 bytes.
+ * The late packed-word OR swaps its two source operands at +0x2C0. The spawn
+ * record remains volatile to preserve repeated byte samples, including spawn[0],
+ * spawn[3] and spawn[0xC].
  */
 void func_801A7330(const volatile u8* spawn) {
+  struct SpawnScratchState {
+    s16 count;
+    u16 entry_data;
+  };
+  struct SpawnScratchState* counter_state;
   struct GameWorkArea* work;
   struct GameWorkArea* field_work;
   s16                  slot;
@@ -64,8 +69,14 @@ void func_801A7330(const volatile u8* spawn) {
   s32                  coord_y;
   s32                  result;
   u32                  packed_entry;
+  u32                  x_offset;
+  u32                  y_offset;
+  u8                   x_fraction;
+  u8                   y_fraction;
   u8                   check;
+  u8                   route_byte;
 
+  counter_state = (struct SpawnScratchState*)D_1F800000;
   slot = ENTITY_COUNT_S16;
   if (slot >= ENTITY_SLOT_COUNT) {
     return;
@@ -86,31 +97,48 @@ void func_801A7330(const volatile u8* spawn) {
 
   g_game_work->flags_00 = 1;
 
-  coord_x = (s32)spawn[5] << 16;
-  if (spawn[4] != 0) {
+  do {
+    coord_x = (s32)spawn[5] << 16;
+    x_offset = (u32)ENTITY_COUNT_S16 * ENTITY_SLOT_SIZE;
+  } while (0);
+  x_fraction = spawn[4];
+  work = g_game_work;
+  if (x_fraction != 0) {
     coord_x |= 0x8000;
   }
-  work = g_game_work;
   work->coord_x_34 = coord_x;
-  ENTITY_SLOT_FIELD(s32, D_80146908) = coord_x;
+  PSX_REF(s32, (u8*)D_80146908 + x_offset) = coord_x;
 
-  coord_y = (s32)spawn[7] << 16;
-  if (spawn[6] != 0) {
+  do {
+    coord_y = (s32)spawn[7] << 16;
+    y_offset = (u32)ENTITY_COUNT_S16 * ENTITY_SLOT_SIZE;
+    y_fraction = spawn[6];
+  } while (0);
+  if (y_fraction != 0) {
     coord_y |= 0x8000;
   }
   work->coord_y_38 = coord_y;
-  ENTITY_SLOT_FIELD(s32, D_8014690C) = coord_y;
+  PSX_REF(s32, (u8*)D_8014690C + y_offset) = coord_y;
 
   ENTITY_SLOT_FIELD(s32, D_80146910) = 0;
 
   state = 6;
   dist = func_8015477C(work->coord_x_34, work->coord_y_38);
 
-  work = g_game_work;
-  work->unk_01 = state;
-  work->counter_3E = dist;
-  g_game_work->flags_02 = 0;
-  g_game_work->route_index_08 = spawn[0] & 0xF;
+  {
+    struct GameWorkArea* initialized_work;
+    struct GameWorkArea* flags_work;
+
+    initialized_work = g_game_work;
+    initialized_work->unk_01 = state;
+    flags_work = g_game_work;
+    initialized_work->counter_3E = dist;
+    do {
+      flags_work->flags_02 = 0;
+    } while (0);
+  }
+  route_byte = spawn[0];
+  g_game_work->route_index_08 = route_byte & 0xF;
   g_game_work->unk_06 = spawn[0] >> 4;
 
   ENTITY_SLOT_FIELD(u8, D_80146900) = 0;
@@ -142,7 +170,8 @@ void func_801A7330(const volatile u8* spawn) {
   g_game_work->field_0B = spawn[0xC];
   g_game_work->unk_2A = (u8)((g_game_work->unk_07 >> 4) & 1);
 
-  check = g_game_work->field_05;
+  work = g_game_work;
+  check = work->field_05;
   if (((SPAWN_GATE_BYTE(check >> 3) >> (check & 7)) & 1) != 0) {
     if ((spawn[0xC] & 1) != 0) {
       g_game_work->flags_00 = 0;

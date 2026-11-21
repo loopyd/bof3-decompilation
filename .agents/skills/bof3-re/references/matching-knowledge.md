@@ -2592,6 +2592,13 @@ deciding which memory values to invalidate. Clearing `MEM_IN_STRUCT` alone
 does not change that rule. Preserve known members; hiding their address or
 adding volatility is not a repair.
 
+Prove a scratch-record view from original accesses for each phase. A member read
+can lose its CSE equivalence after intervening stores where a fixed scalar read
+survives. Do not infer a permanent record from adjacent fields. If a new base copy
+survives, trace whether one pointer serves the real phase while independent
+accesses retain their original address forms. Check both CSE passes, sample order,
+relocation pairs, frame and the complete native body.
+
 Recheck those lifetimes before CSE2. The driver rescans register references
 after loop and jump optimization. A later phase canonicalized away during
 the first CSE no longer extends the pseudo for the second pass. Check
