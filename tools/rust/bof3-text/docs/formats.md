@@ -2723,6 +2723,10 @@ to BIOS printf. They use `ascii-printf-literal`, with empty `format_directives`,
 and refuse percent characters. Their address-pair lower instructions execute in
 the recorded calls' delay slots. No intermediate formatting buffer is present;
 the separate word at `0x801865F8` saves the return address.
+An edited PopMatrix underflow message at `0x801868B9` was observed through
+native BIOS console output in a host-directed call. The call reached BIOS
+printf with the edited literal, then returned. Natural game reachability,
+the other matrix guard and other diagnostic output paths remain unverified.
 
 SPU timeout, sequence, interrupt, DMA and CD-init diagnostics also pass directly
 to BIOS printf. The three SPU wait labels are `ascii-literal` arguments to `%s`;
@@ -2785,7 +2789,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v50`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v51`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -3283,9 +3287,13 @@ allocation including NUL. Its encoded limit permits only `%d`; the codec's
 conservative output bound is five bytes. Consumer `0x801D3B98` multiplies an
 unsigned byte by ten, so actual output uses at most four bytes. After formatting
 into `0x80145AD4`, it copies eight bytes to text slot zero at `0x801490D8` and
-appends NUL at offset eight. Preserve `renderers: []`: the active message-bank
-binding and rendering during SHOP remain unverified. The padding byte at
-`0x801D0C1F` remains protected.
+appends NUL at offset eight. The same consumer selects system-bank index `0xA1`
+through `0x801502D0` and passes its result to `0x8014F800` with count `0xFF`.
+With the original AFLDKWA entry 0 or identical FIRST entry 11 bank resident at
+`0x8001A000`, this selects bank 0 row 162. Its `0x07 0x00` command inserts slot
+zero through the renderer's recursive reader. Retain renderer `0x8014F800`.
+Active-bank publication, natural activation and observed output remain
+unverified. The padding byte at `0x801D0C1F` remains protected.
 
 BATE, SHISU and SHOP each also contain ten 20-byte label records, starting at
 `0x801D0C50`, `0x801D0C34` and `0x801D0D14`, respectively. Each record begins
@@ -3298,7 +3306,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v50` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v51` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

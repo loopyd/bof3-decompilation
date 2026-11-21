@@ -127,7 +127,7 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels, one numeric format, five item-category labels, four skill-category labels,
 three equipment-category labels, fifteen fixed-width settings fields, six
 configuration captions, nine sort captions and fifteen command captions through
-`bof3.inline-text/v50`.
+`bof3.inline-text/v51`.
 Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
 Configuration, sort and command captions use `game-literal`. Reserve one NUL
@@ -196,7 +196,7 @@ publication and observed numeric output remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v50`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v51`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -360,10 +360,11 @@ Pad shorter wording with ideographic spaces. The original formatter and header
 copy establish this fixed width statically. Keep all argument selectors and
 `renderers: []`; this format does not use the game's ordinary text renderers.
 SHOP's `%d` at `0x801D0C1C` retains exactly `%d` within two encoded bytes and
-uses the five-byte unsigned 16-bit output bound. Preserve `renderers: []`;
-formatting and the eight-byte text-slot copy are qualified, while the active
-message-bank binding is unverified. Refuse empty `ascii-format-literal`
-replacements, which can expose stale scratch bytes after the initial NUL.
+uses the five-byte unsigned 16-bit output bound. Retain renderer `0x8014F800`
+through the original system bank's row 162 and its slot-zero command.
+Active-bank publication and observed output remain unverified. Refuse empty
+`ascii-format-literal` replacements, which can expose stale scratch bytes after
+the initial NUL.
 Controlled SHOP party-change checks cover the split HP/AP fields. Edit both
 halves together and keep their separators in the same formatted character
 column, since both draw at the same coordinates. Identical format-pair

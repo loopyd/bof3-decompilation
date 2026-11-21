@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v50";
+pub const SCHEMA: &str = "bof3.inline-text/v51";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -1759,7 +1759,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0cfc, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0d0c, 8, Codec::AsciiDashGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
-            Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[]),
+            Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[0x8014f800]),
             Allocation::shift_jis_digit(0x801e540c, &[0x801e5434]),
             Allocation::shift_jis_digit(0x801e5410, &[0x801e5438]),
             Allocation::shift_jis_digit(0x801e5414, &[0x801e543c]),
