@@ -2400,6 +2400,37 @@ tables and other executable bytes do not inherit the classification. Runtime
 execution, mutable-pointer stability, rendering and complete text coverage remain
 unverified.
 
+## LOGO decoder lookup coverage
+
+Coverage identifies decoder instructions and numeric lookup fields in the original
+US `LOGO/LOGO.EXE`, size 122880 and SHA-256
+`21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c`.
+Its 2048-byte header loads the payload at `0x801CE000`.
+
+The complete decoder at `[0x801D7578,0x801D78B8)` contains 208 instruction words.
+Original calls at `0x801CEA64` and `0x801CEB98` enter it from qualified callers.
+Both call delays are `NOP`. All 35 control transfers and their delay words
+reconcile with the original bytes, including both return paths.
+
+| Runtime interval | Whole-file interval | Numeric fields |
+| --- | --- | --- |
+| `[0x801DA424,0x801DAC24)` | `[0xCC24,0xD424)` | Two tables of 256 pairs of u16 counts |
+| `[0x801DAC24,0x801DAD24)` | `[0xD424,0xD524)` | First u32 of each eight-byte record only |
+| `[0x801DAD24,0x801EAC24)` | `[0xD524,0x1D424)` | Both u32 words of each eight-byte record |
+| `[0x801EAC24,0x801EB424)` | `[0x1D424,0x1DC24)` | 512 u32 records |
+
+DC loads at `0x801D765C` and `0x801D7660` read both counts after an eight-bit
+index extraction. Primary load `0x801D7754` uses a thirteen-bit index. Its zero
+test at `0x801D775C` skips the second-word load for records 0 through 31, so their
+128 second-word bytes remain unresolved. Every later first word is nonzero and
+selects that load at `0x801D77A4`. Secondary load `0x801D7794` uses a nine-bit
+index. Subsequent shifts and halfword operations establish numeric values.
+
+These classifications require stable original code and tables and valid
+nonaliasing memory. They establish stored representation, not valid streams,
+actual decoding or playback. They do not change the separate retained-frontier
+premise used for CAPCOM coded prefixes.
+
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,

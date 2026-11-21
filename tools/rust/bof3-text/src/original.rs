@@ -77,7 +77,7 @@ pub fn executable_nontext_ranges<'a>(
     if data.len() == 122_880
         && sha256_hex(data) == "21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c"
     {
-        return vec![
+        let mut ranges = vec![
             NontextRange {
                 offset: 3928,
                 length: 1828,
@@ -114,11 +114,42 @@ pub fn executable_nontext_ranges<'a>(
                 evidence: "original US LOGO complete 52-byte instruction body 0x801D2FAC..0x801D2FE0; original JAL 0x801D2878 in the qualified caller 0x801D263C conditionally enters with count eight when the word at 0x801ECEA4 is nonzero; all thirteen original words, two conditional branches, sole JR RA and three delay words structurally covered; no calls or disconnected data; exact whole executable identity; ordinary argument/memory/return/nonalias/stable-code assumptions; copied bytes and pointed storage remain unqualified, including CAPCOM H+12; no matching callee ELF, observed execution, guard availability, argument/resource safety, rendering or editing claim",
             },
             NontextRange {
+                offset: 0x9d78,
+                length: 832,
+                evidence: "original US LOGO decoder instructions at 0x801D7578..0x801D78B8; complete 208-word body, 35 control transfers and all delay words; original JAL entries at 0x801CEA64 and 0x801CEB98 in qualified callers; exact executable identity; valid nonaliasing memory and stable code and tables remain conditions; no invocation, stream-validity or playback claim",
+            },
+            NontextRange {
                 offset: 50_568,
                 length: 160,
                 evidence: "original US LOGO 0x801D9D88..0x801D9E28; 32 command and eight interrupt little-endian pointer words target supported literal allocations, including twelve aliases of the shared question mark; original table-loaded diagnostic printf arguments and exact executable identity; stored representation only, no arbitrary-index bound or runtime execution claim",
             },
+            NontextRange {
+                offset: 0xcc24,
+                length: 2048,
+                evidence: "original US LOGO DC lookup fields at 0x801DA424..0x801DAC24; two tables of 256 four-byte records; original decoder 0x801D7650..0x801D7660 bounds the index to eight bits and loads both u16 shift-count fields; exact executable identity; numeric stored representation under stable code and tables, not observed decoding or playback",
+            },
         ];
+        // The first 32 primary records branch away before their second-word load.
+        for index in 0..32 {
+            ranges.push(NontextRange {
+                offset: 0xd424 + index * 8,
+                length: 4,
+                evidence: "original US LOGO primary lookup first words at 0x801DAC24..0x801DAD24; original decoder 0x801D7748..0x801D775C uses a thirteen-bit record index, reads a u32 and branches on zero; the 32 unread second words stay unresolved; exact executable identity; numeric stored representation under stable code and tables, not observed decoding or playback",
+            });
+        }
+        ranges.extend([
+            NontextRange {
+                offset: 0xd524,
+                length: 0xff00,
+                evidence: "original US LOGO primary lookup fields at 0x801DAD24..0x801EAC24; records 32..8191 each have a nonzero first u32, selecting the second-u32 load at 0x801D77A4; decoder uses low-byte shift counts and upper-halfword decoded values; original thirteen-bit index and exact executable identity bound these 8160 records; numeric stored representation under stable code and tables, not observed decoding or playback",
+            },
+            NontextRange {
+                offset: 0x1d424,
+                length: 2048,
+                evidence: "original US LOGO secondary lookup fields at 0x801EAC24..0x801EB424; original decoder 0x801D7788..0x801D7794 uses a nine-bit index and reads one u32 from each of 512 records; low-byte shift counts and upper-halfword decoded values establish numeric stored representation; exact executable identity and stable code and tables, not observed decoding or playback",
+            },
+        ]);
+        return ranges;
     }
     if data.len() != 1_445_888 || sha256_hex(data) != US_EXECUTABLE_SHA256 {
         return Vec::new();
