@@ -38,8 +38,10 @@ segments:
     - armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld02Area07913_801F2E68
     - '@source: src/bof3/world/armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld02Area07913_801F2E68.c'
   - - 680
-    - asm
-    - func_801F2EA8
+    - c
+    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area07913_801F2EA8
+    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area07913_801F2EA8.c'
+    - '@behavior: Entry handler at index 1 of the byte-4 dispatch table at 0x801F4C7C, whose index 0 is the phase armer at 0x801F2E68 and which the local dispatcher at 0x801F2E24 selects from with the work record byte at 0x04: while the record phase byte at 0x0A is nonzero it adds the signed entry of the local 16-entry phase table at 0x801F4C84 selected by that byte''s low nibble, scaled by 0x800, to the record word at 0x34, subtracts the entry selected by a fresh read of the same nibble from the word at 0x38, decrements the phase byte, and consumes two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250. Once the phase byte reads zero it instead clears the handler byte at 0x04, returning the dispatch to the entry-0 armer. Takes no arguments, makes no call, keeps no frame and returns nothing.'
   - - 824
     - textbin
     - D_801F2F38

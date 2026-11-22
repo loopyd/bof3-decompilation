@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801EEFFC
   - - 1180
-    - asm
-    - func_801EF09C
+    - c
+    - incrementWorkByteBAddTwoToWorkByteADecrementWorkByte9ByTwoThenAdvanceWorkByte1At10BmagicMagic09103_801EF09C
+    - '@source: src/bof3/bmagic/incrementWorkByteBAddTwoToWorkByteADecrementWorkByte9ByTwoThenAdvanceWorkByte1At10BmagicMagic09103_801EF09C.c'
+    - '@behavior: Increments scratchpad work byte 0x0B by one, adds two to work byte 0x0A and subtracts two from work byte 0x09, re-reading the work pointer cell at 0x1F800044 before each group, then increments work byte 0x01 only when the eight-bit value the byte 0x09 store just took equals 0x10. Leaf with no frame; nothing is returned.'
   - - 1316
     - asm
     - func_801EF124

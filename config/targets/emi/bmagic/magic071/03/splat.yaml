@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801EEFA4
   - - 1100
-    - asm
-    - func_801EF04C
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07103_801EF04C
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07103_801EF04C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, increments the three counter bytes at offsets 0x0, 0x1 and 0x2 of the 12-byte record selected by the work object''s unsigned byte 0xA, then re-reads the cell and decrements the work byte at 0x9 at byte width and, only when the stored value reaches zero, re-reads the cell and increments the work byte at 0x1, advancing the handler index the dispatcher func_801EEC28 selects entry 2 of the six-word run at 0x801EEC04 with; it reserves a 0x10-byte frame it never touches and writes no other state.'
   - - 1372
     - c
     - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07103_801EF15C

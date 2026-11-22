@@ -47,8 +47,10 @@ segments:
     - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98.c'
     - '@behavior: On work byte 0xB non-zero, store 8 into work byte 9 and advance work byte 1.'
   - - 988
-    - asm
-    - func_801EEFDC
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic09903_801EEFDC
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic09903_801EEFDC.c'
+    - '@behavior: Increment the counter triple of the 12-byte record work byte 0xA selects, count down work byte 9 and advance work byte 1 when it reaches zero.'
   - - 1260
     - asm
     - func_801EF0EC

@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/dispatchWorkByte4Table3df0World01Area06913_801F2C04.c",
+    "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06913_801F2C88.c",
 ]
 support_sources = [
     "src/bof3/world/armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06913_801F2C48.c",

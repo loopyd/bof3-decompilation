@@ -87,8 +87,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkHalfwords2EAnd30FromSelectedBattlerRecordClassDeltaSubmitRecordStoreEffectByteAAdvanceWorkByte2BmagicMagic06903_801EF564.c'
     - '@behavior: Work-byte-2 state 0 handler: selects the 0x140-stride party work record at 0x80145E90 or the 0x118-stride enemy work record at 0x801EB2E8 by the work object byte 0xB, submits it through 0x80196718 and its 0/0/0/1 positional effect through 0x8019651C, stores the returned effect value in work byte 0xA, seeds work halfwords 0x2E and 0x30 from the record halfwords less 0x20 and 0xC, reduces 0x30 by the 0x801EB108/0x801EB109 party byte pair selected by record byte 0x79 when record byte 0x08 is below two or by the 0x800E40CB class row of the 0x801EB710 enemy class byte otherwise, then clears work byte 9 and advances work byte 2.'
   - - 2852
-    - asm
-    - func_801EF724
+    - c
+    - incrementWorkByteARecordCountersThenAdvanceWorkByte2WhenCounterIs10BmagicMagic06903_801EF724
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenAdvanceWorkByte2WhenCounterIs10BmagicMagic06903_801EF724.c'
+    - '@behavior: Per-frame handler: reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group, scales the work object unsigned byte 0xA by the 12-byte stride of the 0x80145BD6 counter table and increments the selected record''s bytes 0x0/0x1/0x2 with byte-width read-modify-writes, then re-reads the cell and that work byte and, when the selected record byte 0 read through the signed view equals 0x10, increments the work object byte 2 to advance the work byte 2 dispatcher. Leaf with no frame, no saved registers and no calls.'
   - - 3124
     - asm
     - func_801EF834

@@ -81,8 +81,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte9ThenAdd2ToWorkByteBRecordCountersAndAdvanceWorkByte2WhenCounterIs10BmagicMagic03903_801EF1F4.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and adds 1 to the work object byte 0x9, then adds 2 to the three counter bytes of the 12-byte counter record selected by the unsigned work byte 0xB, re-reading the cell and that byte for each group, and finally advances the work byte 2 dispatcher by incrementing work object byte 0x2 when the selected record byte 0x0 equals 0x10.'
   - - 1824
-    - asm
-    - func_801EF320
+    - c
+    - incrementWorkByte9ThenDecrementWorkByteBRecordCountersBy2AndAdvanceWorkByte2WhenCounterIsZeroBmagicMagic03903_801EF320
+    - '@source: src/bof3/bmagic/incrementWorkByte9ThenDecrementWorkByteBRecordCountersBy2AndAdvanceWorkByte2WhenCounterIsZeroBmagicMagic03903_801EF320.c'
+    - '@behavior: Per-frame step of this overlay work byte 2 handler, entry 4 of the six-entry code pointer run at 0x801EEC10: reads the scratchpad work-object pointer cell at 0x1F800044, adds 1 to work object byte 9, subtracts 2 from the three countdown bytes of the 12-byte counter record selected by the work object unsigned byte 0xB with a fresh cell read and record-stride index scale per subtraction, and re-reads the cell once more to increment work byte 2 when the first countdown byte, read signed, is zero.'
   - - 2124
     - asm
     - func_801EF44C

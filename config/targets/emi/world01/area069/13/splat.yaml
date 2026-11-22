@@ -35,10 +35,12 @@ segments:
     - c
     - armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06913_801F2C48
     - '@source: src/bof3/world/armPhase64AndHandlerIndex1ThenConsumeSharedCountdownWorld01Area06913_801F2C48.c'
-    - '@behavior: Overlay step handler at index 0 of the local handler table at 0x801F3DF0 that the local dispatcher at 0x801F2C04 selects from with the work record byte at +4: stores 0x40 into the record phase byte at +0A, then arms that byte at +4 with 1, the index of the phase mover func_801F2C88 in the same table. The scratchpad pointer cell 0x1F800044 is read twice, once per store, and the shared halfword store fills the return delay slot. Then it subtracts two units from the halfword at +0x122 of the shared work record published at 0x80146250. Takes no arguments and returns nothing. Leaf, no frame.'
+    - '@behavior: Overlay step handler at index 0 of the local handler table at 0x801F3DF0 that the local dispatcher at 0x801F2C04 selects from with the work record byte at +4: stores 0x40 into the record phase byte at +0A, then arms that byte at +4 with 1, the index of the phase mover at 0x801F2C88 in the same table. The scratchpad pointer cell 0x1F800044 is read twice, once per store, and the shared halfword store fills the return delay slot. Then it subtracts two units from the halfword at +0x122 of the shared work record published at 0x80146250. Takes no arguments and returns nothing. Leaf, no frame.'
   - - 136
-    - asm
-    - func_801F2C88
+    - c
+    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06913_801F2C88
+    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06913_801F2C88.c'
+    - '@behavior: Steps the work record published through the scratchpad pointer cell 0x1F800044 by this payload''s signed 16-entry phase table at 0x801F3DF8, whose values repeat -1, 0, 1, 0: while the record phase byte 0x0A is nonzero it adds the entry selected by that byte''s low nibble, scaled by 0x800, to the record word 0x34, subtracts the entry selected by a fresh read of the same nibble from the record word 0x38, decrements the phase byte, and consumes two units of the halfword 0x122 of the record published through the global pointer cell 0x80146250. Once the phase byte reads zero it instead clears the handler byte 0x04, whose value indexes the two-entry handler table 0x801F3DF0. Leaf, no frame.'
   - - 280
     - asm
     - func_801F2D18

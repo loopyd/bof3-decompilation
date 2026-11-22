@@ -14,11 +14,12 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  *           at 0x1F800044 once, loads the work object's byte 0xB and compares it
  *           against five with an unsigned bound (lbu/sltiu), so the arm is taken
  *           for every value below five. Only on that path it stores 8 into the
- *           work byte at 0x9 - the countdown func_801EF04C loads and decrements
- *           at 0x801EF118 and advances the stage when it reaches zero - and then
- *           re-reads the cell and increments the work byte at 0x1, the stage
- *           index the entry dispatcher copies out of the six-word run at
- *           0x801EEC04 and indexes with a shifted byte, by one at byte width
+ *           work byte at 0x9 - the countdown the entry-2 handler 0x801EF04C loads
+ *           and decrements at 0x801EF118 and advances the stage when it reaches
+ *           zero - and then re-reads the cell and increments the work byte at
+ *           0x1, the stage index the entry dispatcher copies out of the
+ *           six-word run at 0x801EEC04 and indexes with a shifted byte, by one
+ *           at byte width
  *           (lbu/addiu 1/sb). This address is word 3 of that run, so the arm
  *           advances the stage to word 4. Takes no arguments, returns nothing,
  *           keeps no frame and reads or writes no other state. The 0x48-byte
