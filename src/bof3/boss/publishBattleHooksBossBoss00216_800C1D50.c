@@ -3,10 +3,13 @@
 typedef void (*Boss00216Handler)(void);
 
 /* Overlay entry points this installer publishes, taken only by address: no
- * other payload word names them and no jal reaches them. */
+ * other payload word names them and no jal reaches them. The third entry is the
+ * overlay's third battle hook, which takes the hook mode byte and returns the
+ * zero result the slot type drops. */
 void func_800C1DD4(void);
 void noopHandlerBossBoss00216_800C1E34(void);
-void func_800C1D88(void);
+u32 latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88(
+    u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
  * step loads and calls (jalr); 0x801463AC is the third slot of the same trio,
@@ -31,5 +34,7 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooksBossBoss00216_800C1D50(void) {
   D_801463A4 = func_800C1DD4;
   D_801463A8 = noopHandlerBossBoss00216_800C1E34;
-  D_801463AC = func_800C1D88;
+  D_801463AC =
+      (Boss00216Handler)
+          latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88;
 }

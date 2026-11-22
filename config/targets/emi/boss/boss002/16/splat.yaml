@@ -128,8 +128,10 @@ segments:
     - '@source: src/bof3/boss/publishBattleHooksBossBoss00216_800C1D50.c'
     - '@behavior: Hook installer of this overlay battle work state machine: stores the payload entry 0x800C1DD4 into the shared battle hook slot 0x801463A4, the noop handler at 0x800C1E34 into 0x801463A8 and the payload entry 0x800C1D88 into 0x801463AC, in slot order, and returns; the sibling installers at 0x800C1E3C and 0x800C1F08 write the same three slots the same way and differ only in the stored pointers.'
   - - 1416
-    - asm
-    - func_800C1D88
+    - c
+    - latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88
+    - '@source: src/bof3/boss/latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88.c'
+    - '@behavior: Third battle hook of this overlay, the entry the same overlay installer 0x800C1D50 stores into the shared battle hook slot 0x801463AC. The original masks its argument to the low byte and, only when that hook mode is zero and bit 0x2 of the shared battle flag byte 0x80146328 is set, latches the shared byte 0x8014864C to 2 and starts front-end action 0x19 through the shared action helper 0x80150224, returning the zero result the slot expects on every path. No jal immediate and no pointer word of the payload names 0x800C1D88, so the installer slot store is its only reference and the main program enters it through that slot.'
   - - 1492
     - asm
     - func_800C1DD4
