@@ -45,8 +45,10 @@ segments:
     - decrementWorkByteAResetTo3EAndAdvanceWorkByte1OnZeroBmagicMagic06803_801EF44C
     - '@source: src/bof3/bmagic/decrementWorkByteAResetTo3EAndAdvanceWorkByte1OnZeroBmagicMagic06803_801EF44C.c'
   - - 2216
-    - asm
-    - func_801EF4A8
+    - c
+    - drawTilePrimitivesThenSetWorkByte1To4WhenPadStateSetBmagicMagic06803_801EF4A8
+    - '@source: src/bof3/bmagic/drawTilePrimitivesThenSetWorkByte1To4WhenPadStateSetBmagicMagic06803_801EF4A8.c'
+    - '@behavior: Frame step of this overlay''s leading handler run and entry 3 of the five code pointers at 0x801EEC04 that the dispatcher at 0x801EEC18 indexes with work byte 1, so no jal word names it. Calls the overlay drawing helper at 0x801EF55C with no arguments, then reads the shared pad-state halfword at 0x80145AA8 and, only while it is nonzero, stores the literal 4 into work byte 1 through one read of the scratchpad work pointer cell 0x1F800044, selecting entry 4 (0x801EF4EC) of the same run on the next dispatch. Takes no arguments, returns nothing, and its 0x18-byte frame keeps only the return address at 0x10.'
   - - 2284
     - asm
     - func_801EF4EC

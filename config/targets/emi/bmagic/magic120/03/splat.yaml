@@ -61,8 +61,10 @@ segments:
     - '@source: src/bof3/bmagic/add3ToWorkByteAThenIncrementWorkByte9AndSetGlobalWorkByteBToOneAndAdvanceWorkByte2At8BmagicMagic12003_801EF270.c'
     - '@behavior: Adds 3 to work byte A, increments work byte 9 and, when that byte reaches 8, sets global work byte B to one and advances work byte 2.'
   - - 1772
-    - asm
-    - func_801EF2EC
+    - c
+    - decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC
+    - '@source: src/bof3/bmagic/decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC.c'
+    - '@behavior: Decrements work-object byte B, increments work byte 9 and, when that stored byte reaches 0x18, passes the shared battle target byte at 0x80146384 with the constant 0x10 to func_800A9610 and then advances work byte 2.'
   - - 1908
     - c
     - incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374

@@ -30,8 +30,10 @@ segments:
   vram: 2149510172
   subsegments:
   - - 28
-    - asm
-    - func_801EEC1C
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic08203_801EEC1C
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic08203_801EEC1C.c'
+    - '@behavior: Copy the six-entry local handler table at 0x801EEC04 into the frame, then invoke the entry indexed by work byte 1 of the record published at 0x1F800044.'
   - - 148
     - asm
     - func_801EEC94

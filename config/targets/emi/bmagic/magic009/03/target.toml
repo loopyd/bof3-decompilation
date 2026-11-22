@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic00903_801EF2D4.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerTableec04BmagicMagic00903_801EEC28.c",
     "src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic00903_801EF340.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic00903_801EF6B0.c",
 ]
 support_sources = [
     "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordByte8SeedWorkMotionPairAddRecordPositionClearByteAAndAdvanceWorkByte2BmagicMagic00903_801EF198.c",

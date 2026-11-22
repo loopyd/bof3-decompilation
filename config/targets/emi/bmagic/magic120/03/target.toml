@@ -15,6 +15,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenCallF44CWhenGlobalWorkByteBNotFFAndWorkByte2SetBmagicMagic12003_801EF054.c",
     "src/bof3/bmagic/runSlotGridDrawThenAdd1ToWorkByte9AndInvokeHelperAt70BmagicMagic12003_801F0104.c",
     "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte4ThenIncrementWorkByte9AndSetGlobalWorkByteBToFFAndInvokeHelperAt88BmagicMagic12003_801EF3C4.c",
+    "src/bof3/bmagic/decrementWorkByteBIncrementByte9RaiseFlag10At18ThenAdvanceWorkByte2BmagicMagic12003_801EF2EC.c",
 ]
 support_sources = [
     "src/bof3/bmagic/drawUpToSixGreyTexturedQuadsScaledBySlotCounterBytesBmagicMagic12003_801F04B0.c",
