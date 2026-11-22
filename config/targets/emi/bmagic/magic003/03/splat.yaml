@@ -42,8 +42,10 @@ segments:
     - '@source: src/bof3/bmagic/runHelpers1DecrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EEDAC.c'
     - '@behavior: Calls both overlay helpers with 1, decrements work byte 9 and rearms it to 30 while advancing byte 1 on zero.'
   - - 552
-    - asm
-    - func_801EEE28
+    - c
+    - runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28
+    - '@source: src/bof3/bmagic/runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28.c'
+    - '@behavior: Calls both overlay helpers with 2, decrements work byte 9 and rearms it to 10 while advancing byte 1 on zero.'
   - - 676
     - asm
     - func_801EEEA4

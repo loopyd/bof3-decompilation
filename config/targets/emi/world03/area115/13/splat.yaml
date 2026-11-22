@@ -98,8 +98,10 @@ segments:
     - '@source: src/bof3/world/dispatchStateByte3Table4f74World03Area11513_801F3690.c'
     - '@behavior: handler-table step dispatch: reads the state byte at offset 0x03 of the work record published at the scratchpad pointer cell 0x1F800044, scales it by four and calls that entry of the local handler table based at 0x801F4F74.'
   - - 2772
-    - asm
-    - func_801F36D4
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area11513_801F36D4
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area11513_801F36D4.c'
+    - '@behavior: handler of the state-byte-3 table 0x801F4F74 at index 0 and of the state-byte-2 table 0x801F4F64 at index 4: unless the shared mode byte 0x801454F2 and work-record byte 0x0B are both set, the phase byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, writes 0xF0 to work-record halfword 0x30 and increments state byte 0x03 through the record published at scratchpad pointer cell 0x1F800044, read again after the gate tests.'
   - - 2900
     - c
     - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area11513_801F3754

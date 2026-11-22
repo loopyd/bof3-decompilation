@@ -14,6 +14,8 @@ sources = [
     "src/bof3/world/setProgress5OnFlag66AndPackedArgWindowMatchWorld03Area14013_801F42F4.c",
     "src/bof3/world/clearFlagBitFromWorkByteBAndSubmitPair36And3aThenResetWorkWorld03Area14013_801F476C.c",
     "src/bof3/world/projectFacingStepAndDispatchLocalTriggerAtCellElseAdvanceSharedRecordHalfword0aWorld03Area14013_801F3E30.c",
+    "src/bof3/world/findWorkRecordIndexAtPositionWorld03Area14013_801F3C44.c",
+    "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64.c",
 ]
 support_sources = [
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area14013_801F2F7C.c",

@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2D80
   - - 612
-    - asm
-    - func_801F2E64
+    - c
+    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64
+    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area14013_801F2E64.c'
+    - '@behavior: Entry 2 of the state-byte +0x02 handler table at 0x801F47C4 subtracts 0x20 from the work halfword at +0x30 and, once the stored signed halfword falls below -0xFF, advances the state byte at +0x02 before calling the draw routine at 0x801F3050.'
   - - 704
     - asm
     - func_801F2EC0
@@ -86,8 +88,10 @@ segments:
     - asm
     - func_801F3950
   - - 4164
-    - asm
-    - func_801F3C44
+    - c
+    - findWorkRecordIndexAtPositionWorld03Area14013_801F3C44
+    - '@source: src/bof3/world/findWorkRecordIndexAtPositionWorld03Area14013_801F3C44.c'
+    - '@behavior: Returns the index of the first live 0x140-byte work record at D_80145E90 whose scaled position, its +0xC/+0x10 words times the +9 scale byte added to its +0x34/+0x38 words, lies within (byte +0x70 + 3) << 15 of the given point on both axes, and -1 when D_80146254 is zero or no record matches.'
   - - 4428
     - asm
     - func_801F3D4C

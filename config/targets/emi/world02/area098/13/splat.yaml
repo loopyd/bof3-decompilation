@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F3AA8
   - - 3932
-    - asm
-    - func_801F3B5C
+    - c
+    - claimRecordEveryFourthTickRunPassesArmWorkCountdown20AndAdvanceStateWorld02Area09813_801F3B5C
+    - '@source: src/bof3/world/claimRecordEveryFourthTickRunPassesArmWorkCountdown20AndAdvanceStateWorld02Area09813_801F3B5C.c'
+    - '@behavior: Overlay progress step handler, entry 5 of the nine-word handler row based at 0x801F5F88: post-increments the work record byte at +0x06 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F526C; then runs the 0x800E48C0 draw pass 0x801F5940 and the 0x800E4800 record tick pass 0x801F5308, arms the countdown byte at +0x09 with 0x20 and advances the state byte at +0x01, which hands the record to entry 6.'
   - - 4052
     - c
     - claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4

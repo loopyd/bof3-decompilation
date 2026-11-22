@@ -46,8 +46,10 @@ segments:
     - dispatchStateByte1Tablefc2cBmagicMagic22303_801EF00C
     - '@source: src/bof3/bmagic/magic22303DispatchTables.c'
   - - 1104
-    - asm
-    - func_801EF050
+    - c
+    - dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawFullscreenQuadWhenWorkByte0SetBmagicMagic22303_801EF050.c'
+    - '@behavior: Overlay work step reached as entry 0 of the nine-word handler run at 0x801EFC2C: reads the scratchpad work-object pointer cell at 0x1F800044, calls the handler pointer at work byte 2 of the table based at 0x801EFC30, then re-reads the cell and, when work byte 0 is set, calls the fullscreen quad drawer at 0x801EF1E8. Takes no arguments and returns nothing.'
   - - 1208
     - c
     - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic22303_801EF0B8

@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D00
   - - 444
-    - asm
-    - func_801F2DBC
+    - c
+    - advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC
+    - '@source: src/bof3/world/advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC.c'
+    - '@behavior: Entry 2 of the four-word work-byte-1 handler table at 0x801F3C54: while the shared phase byte D_80143BB0 is not 2 it adds one to the shared front-end sub-state byte D_80146875 and moves the work record dispatch byte at 0x01 to 3, and every arm then redraws the fullscreen fade tile through 0x801F2E34.'
   - - 532
     - c
     - invokeHelperWorld04Area19113_801F2E14

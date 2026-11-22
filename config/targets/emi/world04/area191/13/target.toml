@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/setStatusFFFFAndPublishRecordWords18And1CFromGateRowWorld04Area19113_801F2F94.c",
     "src/bof3/world/armWorkRiseStepSeedWordPair40And44CountdownFFAndTintThenSelectRiseHandlerWorld04Area19113_801F31E4.c",
     "src/bof3/world/setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19113_801F3014.c",
+    "src/bof3/world/advanceSubstateAndWorkByte1WhileSharedPhaseNotTwoThenDrawFadeTileWorld04Area19113_801F2DBC.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld04Area19113_801F2E14.c",

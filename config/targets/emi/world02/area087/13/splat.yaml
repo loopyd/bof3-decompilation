@@ -97,8 +97,10 @@ segments:
     - dispatchStateByte3Table5760World02Area08713_801F36C0
     - '@source: src/bof3/world/dispatchStateByte3Table5760World02Area08713_801F36C0.c'
   - - 2820
-    - asm
-    - func_801F3704
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08713_801F3704
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08713_801F3704.c'
+    - '@behavior: Entry 0 of the four-entry work-byte-3 handler run based at 0x801F5760. It returns when the shared mode byte 0x801454F2 is set and byte 0x0B of the work record published at the scratchpad pointer cell 0x1F800044 is nonzero, and also returns when byte 0x80143BB0 is 2 or bit 0x100 of halfword 0x80146258 is set; otherwise it writes 0xF0 to work-record halfword 0x30 and increments work byte 0x03.'
   - - 2948
     - c
     - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784
