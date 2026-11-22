@@ -31,9 +31,10 @@ void func_8014D978(void);
  * 0x800C1CC8 (0x800C1CB0 + 0x18, inside that same row) into +0xE8 -- then
  * stores 2 into the state byte at +1 of the work record the main program
  * publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.
- * The state byte is the value func_800C1804 indexes the 0x800C1CD8 run by, and
- * word 0 of that run is this function's own address, so writing 2 selects
- * 0x801E35D8, a main-program handler, instead of re-entering this function.
+ * The state byte is the value the dispatcher at 0x800C181C indexes the
+ * 0x800C1CD8 run by, and word 0 of that run is this function's own address, so
+ * writing 2 selects 0x801E35D8, a main-program handler, instead of re-entering
+ * this function.
  * That data word is this function's only in-image reference and no jal in the
  * payload reaches it, so the overlay entry does. Instruction for instruction
  * identical to the exact sibling publisher at 0x800C1848 of

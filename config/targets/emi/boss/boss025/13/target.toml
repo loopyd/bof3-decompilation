@@ -45,6 +45,7 @@ support_sources = [
     "src/bof3/boss/completeFrontendModeEntryWhenGateClearBossBoss02513_800C1B00.c",
     "src/bof3/boss/enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680.c",
     "src/bof3/boss/raiseBattleFlagsOrStartBattleWorkByHookModeBossBoss02513_800C2B98.c",
+    "src/bof3/boss/publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184.c",
 ]
 psyq_source = "src/bof3/support/boss025_13_psyq.c"
 

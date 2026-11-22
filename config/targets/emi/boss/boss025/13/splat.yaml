@@ -129,8 +129,10 @@ segments:
     - c
     - noopHandlerBossBoss02513_800C217C
   - - 2436
-    - asm
-    - func_800C2184
+    - c
+    - publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184
+    - '@source: src/bof3/boss/publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184.c'
+    - '@behavior: Overlay installer of this archive family. Publishes the step handler 0x800C2634 into the shared battle hook slot 0x801463A4, the front-end handoff handler 0x800C2680 into 0x801463A8 and the hook-mode dispatcher func_800C2208 into 0x801463AC; then loads the local work record halfword pair 0x80145F18/0x80145F1A and its 0x80145F20/0x80145F22 re-seed pair, saves the low byte of each record halfword into the overlay cells 0x800C32B4 and 0x800C32B8, re-seeds 0x80145F18/0x80145F1A from the re-seed pair, and stores 3 into the global actor-phase byte 0x80146324.'
   - - 2568
     - asm
     - func_800C2208

@@ -1,9 +1,11 @@
 #include "bof3/bof3.h"
 
 /* Overlay-resident bytes the pair of record halfwords is restored from. The
- * installer of this trio, func_800C2184 (0x800C2184, not yet lifted), saves the
- * low byte of each halfword it overwrites into these two cells as it replaces
- * the record's 0x80145F18/0x80145F1A pair with the 0x80145F20/0x80145F22 pair,
+ * installer of this trio, the sibling source
+ * publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184
+ * (0x800C2184), saves the low byte of each halfword it overwrites into these two
+ * cells as it replaces the record's 0x80145F18/0x80145F1A pair with the
+ * 0x80145F20/0x80145F22 pair,
  * so both cells sit in the zero tail of this payload's D_800C3174 table run and
  * start at zero. Nothing else in the payload reads or writes them. */
 extern u8 D_800C32B4; /* @source 0x800C32B4 @kind unknown */
@@ -25,8 +27,9 @@ void initModeTuple530(void); /* @source 0x801DDF28 */
 
 /* @source 0x800C2634
  * @behavior First slot of the handler trio this overlay's installer
- * func_800C2184 publishes into the shared battle hook slots 0x801463A4,
- * 0x801463A8 and 0x801463AC, and so the step handler the battle step calls each
+ * publishBattleHooksSaveRecordHalfwordsAndSetActorPhase3BossBoss02513_800C2184
+ * publishes into the shared battle hook slots 0x801463A4, 0x801463A8 and
+ * 0x801463AC, and so the step handler the battle step calls each
  * frame. It stores 4 into the shared step byte D_80146875, restores the local
  * work record's halfword pair 0x80145F18 and 0x80145F1A from the two
  * overlay-resident bytes 0x800C32B4 and 0x800C32B8, and then runs

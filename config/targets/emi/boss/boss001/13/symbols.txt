@@ -1,4 +1,5 @@
 func_800C1804 = 0x800C1804;
+dispatchStateByte1Table21bcBossBoss00113_800C1820 = 0x800C1820;
 func_800C1864 = 0x800C1864;
 dispatchStateByte2Table21ecBossBoss00113_800C18BC = 0x800C18BC;
 func_800C1900 = 0x800C1900;

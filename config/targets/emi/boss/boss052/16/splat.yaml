@@ -27,8 +27,13 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - textbin
+    - D_800C1804
+  - - 16
+    - c
+    - dispatchStateByte1Table1f50BossBoss05216_800C1810
+    - '@source: src/bof3/boss/dispatchStateByte1Table1f50BossBoss05216_800C1810.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C1F50 with no arguments, without bounding the index before the scaled table load; the 0x18-byte frame only keeps the return address and the epilogue leaves the selected entry result in the return register, so this shim returns whatever that entry returns. The twelve bytes immediately before this row, 0x800C1804 through 0x800C180F, are the reviewed textbin row D_800C1804 holding this overlay three-entry step-handler table 0x800C1DF8, 0x800C1E7C and 0x800C1F1C, which the still unlifted step dispatcher func_800C1D98 copies whole into its frame and indexes by work-record byte 2. No word of the payload holds 0x800C1810 and no jal names it, so the overlay loader is the caller.'
   - - 84
     - asm
     - func_800C1854

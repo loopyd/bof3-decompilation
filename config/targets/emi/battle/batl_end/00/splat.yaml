@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EEE4C
   - - 736
-    - asm
-    - func_801EEEE0
+    - c
+    - advanceSubstateWhenPadActiveBatlEnd00_801EEEE0
+    - '@source: src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EEEE0.c'
+    - '@behavior: Battle substate advance on input: when the shared pad state halfword at 0x80145AA4 reads nonzero, advances the battle substate index byte at 0x801462E4 by one through a pointer to that byte and leaves the battle state byte at 0x801462E5 untouched; takes no arguments, returns nothing and touches no stack.'
   - - 788
     - c
     - applyAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EEF14
@@ -119,8 +121,10 @@ segments:
     - asm
     - func_801EFE5C
   - - 6044
-    - asm
-    - func_801F039C
+    - c
+    - drawPanelFrameBatlEnd00_801F039C
+    - '@source: src/bof3/battle/drawPanelFrameBatlEnd00_801F039C.c'
+    - '@behavior: Battle-end panel frame drawer: opens the panel draw mode for the texture page GetTPage(0, 0, 0x3C0, 0), fills the window rectangle with one tile at the primitive cursor and borders it with a quadrangle and four flat lines in one palette colour. The tile takes the arguments as its x origin, its width, its y origin plus two and its height, and its three colour bytes are the red, green and blue channels of the first colour entry of the 16-colour sub-palette row the shared CLUT bank byte 0x80144952 selects in 0x80033A08, each channel read with its own palette access; the tile is marked semi-transparent and appended at slot 1 as 0x10 bytes. The same colour is expanded once into three bytes and reused: the quadrangle uses template rows 8 and 9 at the origin, the first pair of lines runs from (x + 2, y + 2) and (x + 2, y + 3) to the window edges inset by three and one, and the second pair closes the right and bottom edges. The three calls that reach this body come from the panel handlers 0x801EFE5C, 0x801F0650 and 0x801F07E0, which all pass a panel origin, the window width 0x118 and a byte height.'
   - - 6736
     - c
     - drawCountedListPanelBatlEnd00_801F0650

@@ -179,6 +179,7 @@ sources = [
     "src/bof3/ui/drawShopPriceListPanel.c",
     "src/bof3/ui/drawEquipSlotRowsShop00_801D95F4.c",
     "src/bof3/ui/drawShopParameterPanel.c",
+    "src/bof3/ui/dispatchShopUiState.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

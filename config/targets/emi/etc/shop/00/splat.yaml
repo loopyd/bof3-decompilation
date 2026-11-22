@@ -27,8 +27,9 @@ segments:
   vram: 2149387936
   subsegments:
   - - 672
-    - asm
+    - c
     - dispatchShopUiState
+    - '@source: src/bof3/ui/dispatchShopUiState.c'
     - '@behavior: Dispatches the unsigned state byte at 0x80148650 through the SHOP handler table at 0x801E5144.'
 - - 732
   - bin

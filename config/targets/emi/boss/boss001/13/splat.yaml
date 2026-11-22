@@ -27,8 +27,13 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
+    - textbin
     - func_800C1804
+  - - 32
+    - c
+    - dispatchStateByte1Table21bcBossBoss00113_800C1820
+    - '@source: src/bof3/boss/dispatchStateByte1Table21bcBossBoss00113_800C1820.c'
+    - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler table based at 0x800C21BC with no arguments, so the selected handler result stays in the return register.'
   - - 100
     - asm
     - func_800C1864

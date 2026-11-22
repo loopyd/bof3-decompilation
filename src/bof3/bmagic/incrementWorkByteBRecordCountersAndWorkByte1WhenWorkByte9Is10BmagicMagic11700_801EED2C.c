@@ -17,9 +17,8 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * the three increments as field accesses of the selected record, so the record
  * base carries the byte-9 scale and the +0/+1/+2 field offsets fold into the
  * relocation (which is why the second counter's relocation is the base symbol
- * plus 0x1 and the third's is the distinct reviewed symbol 0x80145BD8). The
- * still-unlifted func_801EEC24 of this overlay reads the same table, so Splat
- * keeps binding both addresses through the generated undefined_syms_auto.txt.
+ * plus 0x1 and the third's is the distinct reviewed symbol 0x80145BD8), and
+ * Splat binds both addresses through the generated undefined_syms_auto.txt.
  */
 typedef struct BmagicMagic11700CounterRecord {
   u8 counter_00;
