@@ -1,10 +1,13 @@
 #include "bof3/bof3.h"
 
-/* Shared drawing step of this overlay, still an `asm` row of its Splat layout,
- * so only its call is bound here and its own role stays unreviewed.
+/* Record ramp and draw step of this overlay: it stores one word of the
+ * fixed-point table based at T_801D9688 into 0x801DA088 at the index that the
+ * signed difference of the work bytes 0x801DA02D and 0x801DA030 clamped to 1
+ * through 0x14 gives, saves and ramps the work bytes 0x801DA0A5 through
+ * 0x801DA0A7 around its drawing call and then writes the saved bytes back.
  * @source 0x801D2978
  */
-extern void func_801D2978(void);
+extern void clampByteDeltaSelectFixedPointWordThenRampChannelsAndDrawShisu00_801D2978(void);
 
 /* The shared distance helper: it takes the two signed coordinates the shared
  * work block holds at 0x80149308 and 0x8014930C and answers with their signed
@@ -47,8 +50,9 @@ extern u8 D_801DA04E; /* @source 0x801DA04E @kind data */
  *           shifted left 16 lies below the incremented word, this handler
  *           replaces the word with that shifted answer and sets the byte
  *           0x801DA04E to one, and otherwise it leaves the word alone and
- *           clears that byte. It then calls the shared drawing step
- *           func_801D2978 with no arguments. Its only in-image reference is the
+ *           clears that byte. It then calls the record ramp and draw step
+ *           clampByteDeltaSelectFixedPointWordThenRampChannelsAndDrawShisu00_801D2978
+ *           with no arguments. Its only in-image reference is the
  *           word 0x801D2CE4 at 0x801D972C, entry 3 of the step handler run
  *           based at 0x801D9720 that the dispatcher at 0x801D2C0C indexes from
  *           the state byte 0x801DA049, and no jal in this payload names it. Its
@@ -70,5 +74,5 @@ void advanceShisuUiDistanceRampClampAndSetByteThenStepUpdateShisu00_801D2CE4(voi
         D_801DA04E = 0;
     }
 
-    func_801D2978();
+    clampByteDeltaSelectFixedPointWordThenRampChannelsAndDrawShisu00_801D2978();
 }

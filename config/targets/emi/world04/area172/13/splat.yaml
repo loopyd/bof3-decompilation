@@ -157,8 +157,10 @@ segments:
     - '@source: src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c'
     - '@behavior: Clears bit 0x4E of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper func_8015B5A8; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 5964
-    - asm
-    - func_801F434C
+    - c
+    - advanceHalfword0aBy3WhenLiveLocalParty4World04Area17213_801F434C
+    - '@source: src/bof3/world/advanceHalfword0aBy3WhenLiveLocalParty4World04Area17213_801F434C.c'
+    - '@behavior: Walks the live 0x140-byte local work records of the run at 0x80145E90 - the shared count byte 0x80146254 bounds the walk and each record''s party byte is the flat +0x79 word 0x80145F09 - and returns at the first record whose party byte reads 4, adding 3 to the halfword at 0x0A of the work record published through the global pointer cell 0x80148210 before it leaves. The published record is loaded once inside the count guard, the walk index is a 32-bit counter masked to a byte for both the scaled row offset and the loop bound, and a walk that finds no party 4 leaves the halfword untouched. Takes no arguments, returns nothing and calls nothing.'
   - - 6088
     - c
     - dispatchWorkByte4Table6770World04Area17213_801F43C8

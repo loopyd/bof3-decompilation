@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC.c",
     "src/bof3/world/claimFreeRecordSeedRandomRotationColorHeadingAndProjectedTrailSlotsWorld02Area08013_801F395C.c",
     "src/bof3/world/advanceCounter2By20World02Area08013_801F3D0C.c",
+    "src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c",
 ]
 support_sources = [
     "src/bof3/world/setTwoWorld02Area08013_801F3D34.c",

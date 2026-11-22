@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table3dacWorld02Area08013_801F2C04
     - '@source: src/bof3/world/area08013DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48
+    - '@source: src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c'
+    - '@behavior: area initializer, entry 0 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; copies the shared saved triplet D_80146954, D_80146958 and D_8014695C into the words at +0x34, +0x38 and +0x3C of that scratch work record, primes the fixed work area at 0x800E4800 from those same three words with the height words at +0x08 and +0x18 biased by 0x08000000, publishes 0x800E4800 as the record base D_801F44A0, writes 0x20 at +0x22 and zero at +0x23, rewinds the 0x800E486C record cursor through 0x801F3834, then arms the countdown byte at +0x09 of the scratch work record with 0x10 and advances its state byte at +0x01; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the call'
   - - 308
     - asm
     - func_801F2D34

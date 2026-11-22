@@ -693,8 +693,23 @@ segments:
     - c
     - dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14
   - - 29052
-    - asm
-    - func_801FDD7C
+    - c
+    - mappedCode47ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0BSubstate5Or0ScenarioScena0600_801FDD7C
+    - '@source: src/bof3/scenario/mappedCode47ThenClearProgressAndSharedStateBytesAndRequestPrimaryState0BSubstate5Or0ScenarioScena0600_801FDD7C.c'
+    - '@behavior: Entry 0 (the word at 0x801FE48C) of the 22-word in-image
+      code-pointer run 0x801FE48C..0x801FE4E4 that
+      dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14 indexes with the
+      answer of func_801A7AD8 and calls with jalr, so it takes no arguments and
+      answers 1. It asks the shared command-code mapper func_8016628C for the
+      mapped code of table 1 at code 0x47 and tests the whole answer against
+      zero. A non-zero answer runs the shared front-end startup helper
+      func_8015C088 and requests primary scene state 0x0B with sub-state 5: it
+      sets the shared sub-state byte D_80146875 and then clears the progress
+      byte and the three shared state bytes. A zero answer runs the same helper,
+      clears the same four bytes in the same order, clears D_80146875 and
+      requests primary state 0x0B as well. Both arms answer the constant 1,
+      whose identical request tails the compiler merges into the single
+      D_80146874 store and epilogue after the arm bodies.'
   - - 29228
     - c
     - noopHandlerScenarioScena0600_801FDE2C

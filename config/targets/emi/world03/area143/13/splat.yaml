@@ -31,8 +31,10 @@ segments:
     - dispatchStateByte1Table4308World03Area14313_801F2C04
     - '@source: src/bof3/world/area14313DispatchTables.c'
   - - 72
-    - asm
-    - func_801F2C48
+    - c
+    - seedWorkCoordsResetWorkTableInitializeRecordsAndAdvanceStateByte1World03Area14313_801F2C48
+    - '@source: src/bof3/world/seedWorkCoordsResetWorkTableInitializeRecordsAndAdvanceStateByte1World03Area14313_801F2C48.c'
+    - '@behavior: Handler entry 0 of the work-byte-1 dispatch table at 0x801F4308: stores the shared word triplet at 0x80145EC4 through 0x80145ECC into work words 0x34, 0x38 and 0x3C, resets the work table at 0x800E4800, initializes the 16 work records, then re-reads the scratchpad pointer cell 0x1F800044 and adds one to dispatch state byte +1 so the next step runs entry 1 at 0x801F2CB4.'
   - - 180
     - asm
     - func_801F2CB4

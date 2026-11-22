@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchSharedOverlayStateByteHandlerThenDrawTwoLayerTrailWorld04Area19913_801F2C04
+    - '@source: src/bof3/world/dispatchSharedOverlayStateByteHandlerThenDrawTwoLayerTrailWorld04Area19913_801F2C04.c'
+    - '@behavior: Per-frame entry hook of this overlay: it reads the shared overlay state byte at 0x8014933B once with an unsigned byte load, scales it by four without bounding it and calls the word at that index of this overlay handler run at 0x801F44B8, whose first seven entries are the overlay step handlers 0x801F2C50, 0x801F2C7C, 0x801F2CC0, 0x801F2CE0, 0x801F2D7C, 0x801F2DE8 and 0x801F2E14 and whose eighth word is zero; it then calls the two-layer trail draw at 0x801F3398 and the textured-quad draw routine at 0x801F400C. It allocates no frame beyond the 0x18 bytes that keep $ra at 0x10 across the three calls, reads no other state, writes none, and has one exit through $ra.'
   - - 80
     - c
     - setWorkState2To4WhenScrollWordIs16ffWorld04Area19913_801F2C50
