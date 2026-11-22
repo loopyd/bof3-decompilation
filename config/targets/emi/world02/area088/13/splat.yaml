@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2CE4
   - - 384
-    - asm
-    - func_801F2D80
+    - c
+    - rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80
+    - '@source: src/bof3/world/rebuildAndDrawTrailThenAdvanceWorkByte1WhenCountdownExpiresWorld02Area08813_801F2D80.c'
+    - '@behavior: Runs entry 2 of the work-byte-1 handler table: rebuilds the 0x800E4800 trail buffer through the overlay walk at 0x801F2F28, renders it through 0x801F3258, then decrements the work record byte 0x09 and, when it reads zero, reloads it with 0x10 and advances work byte 0x01.'
   - - 516
     - asm
     - func_801F2E04

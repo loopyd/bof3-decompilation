@@ -19,6 +19,7 @@ sources = [
     "src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld04Area15213_801F33D0.c",
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld04Area15213_801F3594.c",
+    "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld04Area15213_801F3420.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchStateByte3Table4d84World04Area15213_801F3550.c",

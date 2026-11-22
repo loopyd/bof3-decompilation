@@ -83,8 +83,10 @@ segments:
     - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08713_801F3540
     - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08713_801F3540.c'
   - - 2448
-    - asm
-    - func_801F3590
+    - c
+    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08713_801F3590
+    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld02Area08713_801F3590.c'
+    - '@behavior: Advances the work halfword at offset 0x2E of the record published through the scratchpad pointer slot 0x44 by 0x10 and stores the truncated halfword; when the stored signed value is at least 0x10 it increments work state byte 0x02, then runs the state-2 handler at 0x801F35EC. No arguments, no return value, saves only the return address.'
   - - 2540
     - c
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC

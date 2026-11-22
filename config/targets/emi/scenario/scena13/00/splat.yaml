@@ -60,8 +60,10 @@ segments:
     - c
     - armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248
   - - 1696
-    - asm
-    - func_801F72A0
+    - c
+    - decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3ThenInvokeTwoHelpersScenarioScena1300_801F72A0
+    - '@source: src/bof3/scenario/decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3ThenInvokeTwoHelpersScenarioScena1300_801F72A0.c'
+    - '@behavior: Work-object step handler of this overlay, the word at 0x801FBF04: entry 5 of the twelve-word work-object handler run D_801FBEF0 that the frame dispatcher func_801F6EA4 indexes with byte 1 of the scratchpad work object at pointer slot 0x1F800044, and entry 2 of the run the second byte-1 dispatcher func_801F7198 indexes from the same base run at 0x801FBEFC, so no jal of the payload names it. It reads the work pointer cell, decrements the object countdown byte 0x09, and then branches: while that byte stays non-zero it ramps the object tint triplet at 0x5D, 0x5E and 0x5F up by 2 each, re-reading the pointer cell before the 0x5E and 0x5F channels so each keeps its own load and leaving the 0x5F store in the j delay slot; when the byte reads zero it stores 0x1E back into that same byte and stores 3 into the object dispatch byte 0x01, handing the next frame to entry 3 of D_801FBEF0 at 0x801F71DC. Both arms then call func_801F7484 and setWorkByte29To2OnByte6IndexedRecordAndBaseRecordThenInvokeSharedServiceScenarioScena1300_801F7568, in that order and with no arguments. It takes no arguments, returns nothing and its 0x18-byte frame keeps only $ra.'
   - - 1884
     - asm
     - func_801F735C

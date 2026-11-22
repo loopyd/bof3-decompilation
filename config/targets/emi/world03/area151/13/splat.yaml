@@ -77,8 +77,10 @@ segments:
     - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C
     - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C.c'
   - - 2252
-    - asm
-    - func_801F34CC
+    - c
+    - advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld03Area15113_801F34CC
+    - '@source: src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld03Area15113_801F34CC.c'
+    - '@behavior: Advances work-record halfword 0x2E by 0x10 through the scratchpad pointer cell 0x1F800044 and increments work state byte 0x02 when the stored signed value is at least 0x10, then runs the state-2 handler 0x801F3528.'
   - - 2344
     - c
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area15113_801F3528

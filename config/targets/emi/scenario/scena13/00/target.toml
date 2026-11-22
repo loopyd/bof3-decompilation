@@ -24,6 +24,7 @@ sources = [
     "src/bof3/scenario/copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164.c",
     "src/bof3/scenario/copyPartyListIntoMirrorThenInvokePartyHelperArmEffectGroupAndResetEffectScenarioScena1300_801FBBC4.c",
     "src/bof3/scenario/convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958.c",
+    "src/bof3/scenario/decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3ThenInvokeTwoHelpersScenarioScena1300_801F72A0.c",
     "src/bof3/scenario/decrementWorkCountdownAndRampTintTripletBy7OrAdvanceWorkByte2ThenInvokeTwoHelpersScenarioScena1300_801F6F24.c",
     "src/bof3/scenario/invokePartyHelperForWorkRecordPartyBytesThenArmEffectGroupAndResetEffectScenarioScena1300_801FBDD8.c",
     "src/bof3/scenario/requestPrimaryState8Substate0OnRoute8FPackedRangesOrSetFlagBit10OnRoute91PackedRangeScenarioScena1300_801FBA34.c",

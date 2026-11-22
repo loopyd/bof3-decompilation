@@ -70,8 +70,10 @@ segments:
     - asm
     - func_801F3878
   - - 3344
-    - asm
-    - func_801F3910
+    - c
+    - invokeOffset64BlockDrawHelperThenTickCountdownReload20AndAdvanceStateWorld02Area09813_801F3910
+    - '@source: src/bof3/world/invokeOffset64BlockDrawHelperThenTickCountdownReload20AndAdvanceStateWorld02Area09813_801F3910.c'
+    - '@behavior: Overlay progress step handler, entry 2 of the handler row based at 0x801F5F88 which dispatchStateByte1Table5f88World02Area09813_801F37D0 indexes with the work record state byte at +0x01: calls the draw helper 0x801F46EC with the work record block at +0x64, the signed halfword at +0x2E and the channel mask 6, decrements the countdown byte at +0x09 as an unsigned byte and returns while it is nonzero, and on the frame it reaches zero re-arms that byte with 0x20 and increments the state byte at +0x01, which hands the record to entry 3.'
   - - 3476
     - asm
     - func_801F3994

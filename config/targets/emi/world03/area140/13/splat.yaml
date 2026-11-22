@@ -63,8 +63,10 @@ segments:
     - dispatchStateByte2Table47dcWorld03Area14013_801F32DC
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 1824
-    - asm
-    - func_801F3320
+    - c
+    - applyTable47f4RecordAtWorkHalfword36ThenSetWorkByte2AndHalfword3eAndDrawWorld03Area14013_801F3320
+    - '@source: src/bof3/world/applyTable47f4RecordAtWorkHalfword36ThenSetWorkByte2AndHalfword3eAndDrawWorld03Area14013_801F3320.c'
+    - '@behavior: Entry 0 of the handler run based at 0x801F47DC: reads the four-byte record at 0x801F47F4 indexed by the signed work halfword at +0x36 scaled by four, stores record bytes 0 and 1 into the work halfwords at +0x36 and +0x3A and record bytes 2 and 3 into the work bytes at +0x08 and +0x0B, then sets the work byte at +0x02 with either that +0x08 byte plus one, while storing 0 into the work halfword at +0x3E, or with 4, while storing 0x80 there, re-reads the pointer cell and calls the draw routine at 0x801F3950 with work byte +0x08 and the signed work halfword at +0x3E.'
   - - 2044
     - asm
     - func_801F33FC

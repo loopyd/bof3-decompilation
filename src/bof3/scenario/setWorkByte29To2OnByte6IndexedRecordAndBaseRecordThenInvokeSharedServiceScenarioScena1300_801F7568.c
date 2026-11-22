@@ -36,9 +36,10 @@ extern u8* D_1F800044;
  *           in-payload sites with no argument set and with any result
  *           discarded: 0x801F7288 inside
  *           armWorkCountdownAndAdvanceWorkByte1WhileSharedByteNotTwoThenInvokeTwoHelpersScenarioScena1300_801F7248,
- *           0x801F7344 inside the still-unlifted func_801F72A0, 0x801F742C
- *           inside the still-unlifted func_801F735C, and 0x801F746C inside
- *           resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444,
+ *           0x801F7344 inside
+ *           decrementWorkCountdownAndRampTintTripletBy2OrReload30AndAdvanceWorkByte3ThenInvokeTwoHelpersScenarioScena1300_801F72A0,
+ *           0x801F742C inside the still-unlifted func_801F735C, and 0x801F746C
+ *           inside resetWorkAreaAtProgress35ThenInvokeTwoHelpersScenarioScena1300_801F7444,
  *           which runs it after func_801F7484. It takes no arguments and
  *           returns nothing.
  *
