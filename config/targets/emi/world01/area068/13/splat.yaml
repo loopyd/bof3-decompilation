@@ -96,8 +96,10 @@ segments:
     - c
     - countdownScratchStateToMode13World01Area06813_801F32CC
   - - 1796
-    - asm
-    - func_801F3304
+    - c
+    - stepCachedPadPanUntilEightFramesThenSnapPartyCoordinatePairAndArmState15World01Area06813_801F3304
+    - '@source: src/bof3/world/stepCachedPadPanUntilEightFramesThenSnapPartyCoordinatePairAndArmState15World01Area06813_801F3304.c'
+    - '@behavior: Overlay state handler at index 17 of the local handler table at 0x801F3FF4 and index 13 of the table at 0x801F4004, both selected with the work record byte at +1: it advances this overlay''s own pan-frame byte D_801F4E10 and, while the truncated new value is below 8, repeats the pan direction cached in D_801F4E14 by the entry handler at 0x801F30B0 - republishing D_80145E90 as both D_80146250 and the scratchpad work cursor at 0x1F800044, stepping the party coordinate pair D_80145EC4/D_80145EC8 by 0x800 in that direction with every direction inverted from that handler, restoring the previously published cursor and arming the record byte at +1 with 0xB, index 11 of the 0x801F4004 table, the pan handler itself. Once the frame byte reaches 8 it instead masks the low twelve bits off both party coordinates, clearing their low bits to a 0x1000 boundary, clears the pad-match counter D_801F4E04 and the frame byte D_801F4E10, and arms that record byte with 0xF, index 15 of the 0x801F4004 table, the pad-count step at 0x801F3538, returning without the pan store. Leaf, no frame.'
   - - 2352
     - c
     - noopHandlerWorld01Area06813_801F3530

@@ -81,8 +81,10 @@ segments:
     - asm
     - func_801F387C
   - - 3340
-    - asm
-    - func_801F390C
+    - c
+    - stepWorkPositionAndRaiseTintTripletToMin40ThenResetFlag20AndRearmHandlerZeroAtCeilingElseDecrementHalfword7eWorld03Area14113_801F390C
+    - '@source: src/bof3/world/stepWorkPositionAndRaiseTintTripletToMin40ThenResetFlag20AndRearmHandlerZeroAtCeilingElseDecrementHalfword7eWorld03Area14113_801F390C.c'
+    - '@behavior: Handler index 3 of the state-byte-4 run of this overlay: the payload handler table at 0x801F4DC4 holds this address at word 3, so the body has no jal caller. It loads the work record published through the scratchpad pointer cell 0x1F800044, adds the record word +0x0C to its position word +0x34 and the record word +0x10 to its position word +0x38, then raises the three signed tint channel bytes +0x5D, +0x5E and +0x5F by four, skipping any channel that already reads -0x40 so that ceiling is never crossed. The +0x5E group re-reads the cell after its store and the +0x5F group runs on the pointer that read left. The body then re-reads the cell and tests the flag word at +0x5C with 0xFFFFFF00 against 0xC0C0C000: when all three channels read 0xC0 the tint has reached its ceiling, so it clears bit 0x20 of the record flag byte +0x00, re-reads the cell and stores zero into the record mode byte +0x5C, re-reads it and zeroes the channel bytes +0x5F, +0x5E and +0x5D in that order, then re-reads it once more and stores zero into the record state byte +0x04, returning the record to handler index 0 of the same run; otherwise it reads the shared record published at the pointer cell 0x80146884 and decrements that record''s halfword +0x7E by two. Takes no arguments and returns nothing; its 0x18-byte frame reserves bytes no access of the body touches, and the record pointer load precedes the frame creation.'
   - - 3640
     - asm
     - func_801F3A38

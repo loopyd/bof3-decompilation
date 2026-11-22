@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2CD4
   - - 324
-    - asm
-    - func_801F2D44
+    - c
+    - drawWorkPointPairsFromFourRowTableThenDispatchSubstateByte2World03Area14514_801F2D44
+    - '@source: src/bof3/world/drawWorkPointPairsFromFourRowTableThenDispatchSubstateByte2World03Area14514_801F2D44.c'
+    - '@behavior: Overlay state handler 1 of the local work-byte-1 dispatch table based at 0x801F5434, drawing four stages and then dispatching. It walks the four four-byte rows that follow that table''s two entry words, each row holding the two coordinate pairs (x0, y0, x1, y1) of one stage, and for each row stores both pairs into the work record published at the scratchpad pointer cell 0x1F800044: words +0x0C and +0x10 take the row''s first pair and words +0x18 and +0x1C its second, each coordinate widened to 16.16 and offset by half a unit through the low bit 0x8000. It then calls the payload drawing helper at 0x801F2F30 with the addresses of those two pairs, which projects both and draws between them. After the fourth row it re-reads the pointer cell, takes the record sub-state byte at +0x02 and calls that entry of the local handler table based at 0x801F544C. The loop counter is an unsigned byte, so it is masked by 0xFF both when scaled by four for the row index and when compared with the row count.'
   - - 556
     - c
     - setScratchWorkByte2WhenFrontEndModeNot5World03Area14514_801F2E2C

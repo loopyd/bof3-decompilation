@@ -260,8 +260,10 @@ segments:
     - '@source: src/bof3/world/setWorkWord5World02Area08213_801F55F4.c'
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044 and writes the word 5 to the record +0x70 field.'
   - - 10760
-    - asm
-    - func_801F5608
+    - c
+    - advanceHalfword0aByWorkByte79StepWorld02Area08213_801F5608
+    - '@source: src/bof3/world/advanceHalfword0aByWorkByte79StepWorld02Area08213_801F5608.c'
+    - '@behavior: four independent gates re-read the +0x79 mode byte of the work record published through the global pointer cell 0x80146250 and advance the halfword at offset 0x0A of the record published through 0x80148210 by the step that mode selects - 3 for mode 5, 6 for mode 4 and 9 for mode 6, while mode 8 rewrites the halfword with the value it already holds.'
   - - 10988
     - c
     - startAction8Or3BySharedFlag4SetFrontendMode2World02Area08213_801F56EC
