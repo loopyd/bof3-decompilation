@@ -56,8 +56,10 @@ segments:
     - asm
     - func_801EEEE8
   - - 1076
-    - asm
-    - func_801EF034
+    - c
+    - add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14503_801EF034
+    - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14503_801EF034.c'
+    - '@behavior: Entry 2 of the overlay handler run at 0x801EF414, whose base word 0x801EF41C holds this address and which the dispatcher at 0x801EEE2C selects on unsigned byte 0x1 of the scratchpad work object published at the pointer cell 0x1F800044. It adds two modulo 256 to that object''s unsigned byte 0x09 and then to byte 0x0A at byte width, re-reading the cell before each access so the original shows three separate lui/lw pairs, and only when a third re-read shows byte 0x09 equal to 0x10 increments byte 0x2 by one; it is a leaf with no frame, takes no arguments, returns nothing and reads or writes no other state.'
   - - 1184
     - c
     - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0

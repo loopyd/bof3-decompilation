@@ -85,8 +85,10 @@ segments:
     - copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018
     - '@source: src/bof3/bmagic/copyRecordTripletAddStepWord14ClearWorkByteAThenAdvanceWorkByte2BmagicMagic05903_801F0018.c'
   - - 5232
-    - asm
-    - func_801F0070
+    - c
+    - incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070
+    - '@source: src/bof3/bmagic/incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070.c'
+    - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044 once and advances the object unsigned byte 0x9 by one with a byte-width add, then re-reads the cell and adds one to the object byte 0xA, tests the truncated byte it just stored against 0x20, and only on that equality re-reads the pointer cell and increments the object byte 0x2 to advance to the next handler step.'
   - - 5340
     - c
     - incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801F00DC

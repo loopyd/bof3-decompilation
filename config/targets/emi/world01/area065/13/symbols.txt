@@ -1,5 +1,5 @@
 area06513WorkCursor_1F800044 = 0x1F800044;
-func_801F2C04 = 0x801F2C04;
+setStatusFFFFAndSelectMode2IfGateClearWorld01Area06513_801F2C04 = 0x801F2C04;
 func_801F2C38 = 0x801F2C38;
 func_801F2C6C = 0x801F2C6C;
 func_801F2F24 = 0x801F2F24;
@@ -33,4 +33,4 @@ stepWorkPositionPairAndRunSharedUpdatesWorld01Area06513_801F4560 = 0x801F4560;
 dispatchStateByte1Table5344World01Area06513_801F4604 = 0x801F4604;
 initializeWorkAndStampMapA0UnlessGatedWorld01Area06513_801F4648 = 0x801F4648;
 invokeTwoHelpersWorld01Area06513_801F4778 = 0x801F4778;
-func_801F47A0 = 0x801F47A0;
+drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld01Area06513_801F47A0 = 0x801F47A0;

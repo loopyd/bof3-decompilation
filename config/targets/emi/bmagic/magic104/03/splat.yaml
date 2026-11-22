@@ -30,8 +30,10 @@ segments:
   vram: 2149510164
   subsegments:
   - - 20
-    - asm
-    - func_801EEC14
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic10403_801EEC14
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic10403_801EEC14.c'
+    - '@behavior: Per-frame step dispatcher of the overlay: reads the scratchpad work-object pointer cell at 0x1F800044 once, copies the four-word step run at 0x801EEC04 into the 0x10 record of its 0x28-byte frame and calls the word selected by unchecked work byte 0x1. Takes no arguments and returns nothing.'
   - - 128
     - asm
     - func_801EEC80

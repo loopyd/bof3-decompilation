@@ -147,8 +147,10 @@ segments:
     - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C
     - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C.c'
   - - 6764
-    - asm
-    - func_801F066C
+    - c
+    - decrementWorkByteAThenRearmTo16AndAdvanceWorkByte2OnZeroBmagicMagic22203_801F066C
+    - '@source: src/bof3/bmagic/decrementWorkByteAThenRearmTo16AndAdvanceWorkByte2OnZeroBmagicMagic22203_801F066C.c'
+    - '@behavior: Per-frame work-handler step, entry 5 of the eight-word code pointer run based at 0x801F0D8C whose word at 0x801F0DA0 holds this function address, so the byte-1 dispatcher dispatchWorkByte2HandlerThenDrawTransformedAndPopWhenWorkBytes0And2SetBmagicMagic22203_801EFDEC selects it while work object byte 1 is 2 and work object byte 2 is 5, and no jal in this payload targets this address. It reads the scratchpad work object through the pointer cell at 0x1F800044, decrements its unsigned byte 0xA in place with a byte-width add (lbu / addiu -1 / sb) and tests the stored byte (andi 0xFF / bnez), so the countdown wraps modulo 256. When that byte reaches zero it re-reads the cell to store 0x10 into byte 0xA - a constant the original materialises in the branch delay slot - and re-reads the cell once more to increment byte 0x2 with a byte-width add, which moves the byte-2 dispatcher to the next handler step. The function is a leaf with no frame; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 6856
     - c
     - add4ToWorkByteBThenDecrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic22203_801F06C8

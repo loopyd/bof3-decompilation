@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801EEFB8
   - - 1740
-    - asm
-    - func_801EF2CC
+    - c
+    - add2ToWorkBytes9AndAThenAdvanceWorkByte2WhenByte9MatchesTableEntryForByte4BmagicMagic09603_801EF2CC
+    - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2WhenByte9MatchesTableEntryForByte4BmagicMagic09603_801EF2CC.c'
+    - '@behavior: Entry 4 of the five-word handler run at 0x801EEC10, whose word at 0x801EEC14 holds this address and which the dispatcher at 0x801EEEE4 copies and indexes by the work object byte 2. It reads the scratchpad work-object pointer cell at 0x1F800044 three times, once per store group. The first read adds two modulo 256 to the object unsigned byte 9 with a byte-width read-modify-write; the second adds two to unsigned byte 10 the same way; the third takes the object byte 4 as an index, loads the unsigned byte at that index of the table at 0x801F0488 and compares the object byte 9 read from that same pointer with it. Only on equality it increments the object byte 2, which moves the byte-2 dispatcher to its next step. A frameless leaf that takes no arguments and returns nothing.'
   - - 1864
     - c
     - decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348

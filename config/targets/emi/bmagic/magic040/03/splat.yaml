@@ -58,8 +58,10 @@ segments:
     - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletInvoke801EF430ClearBytes9AndAThenAdvanceWorkByte2BmagicMagic04003_801EF074.c'
     - '@behavior: Copy record byte 8 and word triplet, invoke 0x801EF430, clear work bytes 9 and 0xA, then advance byte 2.'
   - - 1300
-    - asm
-    - func_801EF114
+    - c
+    - incrementWorkBytes9AndAThenAdvanceWorkByte2WhenByteAIs16BmagicMagic04003_801EF114
+    - '@source: src/bof3/bmagic/incrementWorkBytes9AndAThenAdvanceWorkByte2WhenByteAIs16BmagicMagic04003_801EF114.c'
+    - '@behavior: Increment work-object bytes 0x09 and 0x0A through the scratchpad pointer cell, then advance work byte 2 only when the stored byte 0x0A value is 0x10.'
   - - 1408
     - c
     - incrementWorkByte9AndAdvanceWorkByte2At20BmagicMagic04003_801EF180
