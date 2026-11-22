@@ -55,11 +55,15 @@ segments:
     - asm
     - func_801EEF6C
   - - 1012
-    - asm
-    - func_801EEFF4
+    - c
+    - decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4.c'
+    - '@behavior: Decrements work byte 9 and, only when it reaches zero, copies the shared battle record words 0x34, 0x38 and 0x3C into the work object, stores 8 to work word 0x20, 2 to work byte 0xA and 0 to work word 0x14, re-reads the scratchpad cell and stores 0x10 to work byte 0xB and 0x20 to work byte 0x9, then increments work byte 1.'
   - - 1188
-    - asm
-    - func_801EF0A4
+    - c
+    - addWorkByteAIntoWorkWord20ThenAddWorkWord20ToWord14DecrementWorkByte9ByTwoAndAdvanceWorkByte1AtSixteenBmagicMagic11803_801EF0A4
+    - '@source: src/bof3/bmagic/addWorkByteAIntoWorkWord20ThenAddWorkWord20ToWord14DecrementWorkByte9ByTwoAndAdvanceWorkByte1AtSixteenBmagicMagic11803_801EF0A4.c'
+    - '@behavior: Adds work byte 0xA into work word 0x20 and stores the sum to word 0x20, decrements work byte 0x9 by two at byte width and adds the updated word 0x20 onto work word 0x14, then re-reads the scratchpad cell and, only when byte 0x9 equals 16, increments work byte 0x1.'
   - - 1288
     - asm
     - func_801EF108

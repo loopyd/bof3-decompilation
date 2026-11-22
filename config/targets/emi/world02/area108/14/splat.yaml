@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F3034
   - - 1276
-    - asm
-    - func_801F30FC
+    - c
+    - advanceWorkStateWithDoubleVelocityWorld02Area10814_801F30FC
+    - '@source: src/bof3/world/advanceWorkStateWithDoubleVelocityWorld02Area10814_801F30FC.c'
+    - '@behavior: reads the work-record cursor cell at 0x801F63EC and advances the current record position words +0x04, +0x08 and +0x0C by twice its velocity words at +0x14, +0x18 and +0x1C, decrements its +0x02 byte timer and advances its +0x24 halfword phase by 0x80, then when that timer reaches zero reseeds it with 0x40 and advances the record dispatch byte at +0x01, moving the record to the next state.'
   - - 1432
     - c
     - addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198
@@ -141,8 +143,10 @@ segments:
     - '@source: src/bof3/world/clearSharedStateByteThenClearWorkFlagsAtProgress1cWorld02Area10814_801F4128.c'
     - '@behavior: Entry 3 of the four-pointer handler table at 0x801F5718 that the byte-+0x02 dispatcher 0x801F3FF8 indexes: while the shared scenario progress byte at 0x80146864 reads 0x1C it clears the shared overlay state byte at 0x8014933B that the preceding handler 0x801F405C raises, then clears the shared work flags through the 0x80196070 helper (clearWorkFlags in emi/etc/game/00); every other progress value leaves both untouched.'
   - - 5472
-    - asm
-    - func_801F4160
+    - c
+    - drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160
+    - '@source: src/bof3/world/drawSizedTexturedQuadAtFixedCenterWithPageFieldWorld02Area10814_801F4160.c'
+    - '@behavior: draws one textured quad from the shared primitive cursor: seeds it through SetPolyFT4 with its shade texture cleared, fills the four scratchpad vectors at 0x1F800014 with a square centred on (-0x3500, -0x1F00, -0x80) whose half-extent is the first argument shifted left by two, projects them into the packet through RotTransPers4, fills the texture state with 0x25100100 plus the second argument''s 5-bit page field shifted left by sixteen, and links the 0x28-byte packet into output slot 5.'
   - - 5784
     - c
     - setStatusFFFFAndStateEntry3Or2SetFlagBit1EOr1FAndFrontendState5ByGateWorld02Area10814_801F4298

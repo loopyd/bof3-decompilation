@@ -30,8 +30,10 @@ segments:
   vram: 2149510268
   subsegments:
   - - 124
-    - asm
-    - func_801EEC7C
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read before frame creation, its work byte at offset 1 selects an entry of the three-entry code pointer run at 0x801EEC04 (0x801EECDC, 0x801EECFC, 0x801EF69C), and that entry is invoked with no arguments. The three table words are copied into the function''s own 0x28-byte frame first, so the call target is read back from the copy and the selector is not bounds-checked. Reads no other state and writes none.'
   - - 220
     - c
     - incrementWorkByte1BmagicMagic06403_801EECDC
@@ -194,8 +196,10 @@ segments:
     - asm
     - func_801F0EEC
   - - 9276
-    - asm
-    - func_801F103C
+    - c
+    - initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C
+    - '@source: src/bof3/bmagic/initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C.c'
+    - '@behavior: Builds the overlay''s render-cell map from the shared view-origin mirror pair, clears the record block, drains the pending scroll in 0x200 steps and fills the reverse cell index before calling two shared helpers.'
   - [9912, c, writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8] # @source 0x801F12B8 @behavior Converts diagonal offsets to valid nonzero map-cell coordinates or writes zero bytes.
   - - 10124
     - textbin

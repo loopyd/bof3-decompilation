@@ -12,8 +12,10 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  *           at 0x1F800044 once, loads the work object's byte 0xB and compares it
  *           against five with an unsigned bound (lbu/sltiu), so the arm is taken
  *           for every value below five. Only on that path it stores 8 into the
- *           work byte at 0x9 - the countdown func_801EF04C decrements and
- *           re-arms to 8 at 0x801EF118 - and then re-reads the cell and
+ *           work byte at 0x9 - the countdown
+ *           incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWork
+ *           Byte1OnZeroBmagicMagic07003_801EF04C decrements and re-arms to 8
+ *           at 0x801EF118 - and then re-reads the cell and
  *           increments the work byte at 0x1, the stage index the entry
  *           dispatcher indexes the six-word run at 0x801EEC04 with, by one at
  *           byte width (lbu/addiu 1/sb). This address is word 3 of that run, so

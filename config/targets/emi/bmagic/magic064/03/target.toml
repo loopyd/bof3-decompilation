@@ -7,7 +7,10 @@ binary = "out/binaries/emi/bmagic/magic064/03.bin"
 splat = "config/targets/emi/bmagic/magic064/03/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C.c",
+]
 support_sources = [
     "src/bof3/bmagic/clearWorkByteBBit0ThenInvokeHelperWhenNoRecordByte0SetBmagicMagic06403_801F0364.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic06403_801F0C38.c",

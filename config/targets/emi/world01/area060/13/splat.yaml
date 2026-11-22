@@ -37,8 +37,9 @@ segments:
     - asm
     - func_801F2C90
   - - 1672
-    - asm
-    - func_801F3288
+    - c
+    - appendPrimToCurrentBufferChainHeadWorld01Area06013_801F3288
+    - '@source: src/bof3/world/appendPrimToCurrentBufferChainHeadWorld01Area06013_801F3288.c'
   - - 1808
     - c
     - raiseWorldFlag2000World01Area06013_801F3310

@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - setWorldRecordBytes0CAnd14To2WhenFrontStateBit0ElseClearWorld00Area01513_801F2C04
+    - '@source: src/bof3/world/setWorldRecordBytes0CAnd14To2WhenFrontStateBit0ElseClearWorld00Area01513_801F2C04.c'
+    - '@behavior: Reads bit 0 of the shared front-state byte D_80146871; when the bit is set it stores 2 into byte 0x0C and byte 0x14 of the world record selected by the pending world id D_80143F00 through the pointer table D_80181164, and when the bit is clear it stores 0 into those two bytes instead. Each store re-reads the pending world id and re-loads the record pointer, so the body performs four table lookups; the constant 2 is materialised once and reused by its arm pair. Takes no arguments, calls nothing and returns nothing.'
   - - 184
     - c
     - setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area01513_801F2CB8

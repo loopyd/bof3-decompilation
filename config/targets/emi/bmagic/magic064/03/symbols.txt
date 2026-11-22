@@ -1,7 +1,7 @@
 g_battle_work = 0x1F800044;
 func_80196718 = 0x80196718;
 func_801E5988 = 0x801E5988;
-func_801EEC7C = 0x801EEC7C;
+dispatchWorkByte1HandlerBmagicMagic06403_801EEC7C = 0x801EEC7C;
 incrementWorkByte1BmagicMagic06403_801EECDC = 0x801EECDC;
 func_801EECFC = 0x801EECFC;
 func_801EED7C = 0x801EED7C;
@@ -45,6 +45,6 @@ decrementWorkByte9AdvanceWorkByte2WhenMinus6ThenInvokeHelperBmagicMagic06403_801
 incrementWorkByte2WhenGlobalWorkByte2Is10BmagicMagic06403_801F0E50 = 0x801F0E50;
 func_801F0E90 = 0x801F0E90;
 func_801F0EEC = 0x801F0EEC;
-func_801F103C = 0x801F103C;
+initializeRenderCellMapFromViewOriginThenBuildReverseCellIndexBmagicMagic06403_801F103C = 0x801F103C;
 writeDiagonalOffsetMapCellCoordinatesOrZeroBmagicMagic06403_801F12B8 = 0x801F12B8;
 D_801F138C = 0x801F138C;

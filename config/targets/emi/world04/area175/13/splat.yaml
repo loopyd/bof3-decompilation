@@ -239,8 +239,10 @@ segments:
     - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 5132
-    - asm
-    - func_801F400C
+    - c
+    - stepPhaseWorkWordPairWhileSharedPhaseIs2ElseResetPairAndClearHandlerWorld04Area17513_801F400C
+    - '@source: src/bof3/world/stepPhaseWorkWordPairWhileSharedPhaseIs2ElseResetPairAndClearHandlerWorld04Area17513_801F400C.c'
+    - '@behavior: Step handler installed by the pointer word at 0x801F5304 in the overlay handler run at 0x801F52F0. While the shared phase byte D_80143BB0 equals 2 it adds the signed phase-step entry at 0x801F5360 selected by the low nibble of D_80143E6C, scaled by 0x800, to word 0x34 of the work record reached through the pointer slot at 0x1F800044, subtracts the independently read entry from word 0x38 and then consumes two units of countdown halfword 0x7E in the record published through 0x80146884. When the phase byte differs from 2 it seeds word 0x34 with 0x2C0000, word 0x38 with 0x5C0000 and clears work handler byte 0x04.'
   - - 5292
     - asm
     - func_801F40AC

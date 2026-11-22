@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF3B8
   - - 2336
-    - asm
-    - func_801EF520
+    - c
+    - add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14603_801EF520
+    - '@source: src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2At16BmagicMagic14603_801EF520.c'
+    - '@behavior: Entry 2 of this overlay four-entry work-byte-1 handler pointer run based at 0x801EF9C0 (0x801EF340, 0x801EF3B8, 0x801EF520, 0x801EF58C), whose word at 0x801EF9C8 holds this address and which the dispatcher at 0x801EF2FC indexes on unsigned byte 0x1 of the work object published at the scratchpad pointer cell 0x1F800044. It reads that cell, adds two modulo 256 to the object unsigned byte 0x09 with a byte-width read-modify-write, re-reads the cell and adds two modulo 256 to byte 0x0A the same way, then re-reads the cell a third time and tests byte 0x09 against 0x10 for equality with a plain branch on the loaded byte, so the arm runs only at that value and the test re-reads the byte instead of reusing the value stored two statements earlier. In that arm it increments the object byte 0x02 by one from the pointer the third read already holds. The function is a leaf with no frame, takes no arguments, returns nothing through the jr $ra at 0x801EF588 and reads or writes no other state, so the roles of work-object bytes 0x09, 0x0A and 0x02 stay offset-anchored. No jal in this payload reaches it, and its 108 bytes are byte-identical to the already-exact 0x801EF2D4 of emi/bmagic/magic009/03 and 0x801EF034 of emi/bmagic/magic145/03.'
   - - 2444
     - c
     - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndClearWorkBytesWhenZeroBmagicMagic14603_801EF58C
