@@ -90,8 +90,10 @@ segments:
     - dispatchStateByte3Table5364World01Area04513_801F368C
     - '@source: src/bof3/world/dispatchStateByte3Table5364World01Area04513_801F368C.c'
   - - 2768
-    - asm
-    - func_801F36D0
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld01Area04513_801F36D0
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld01Area04513_801F36D0.c'
+    - '@behavior: Returns while the shared mode byte 0x801454F2 is set and work-record byte 0x0B at the scratchpad pointer cell 0x1F800044 is nonzero, and also when byte 0x80143BB0 is 2 or bit 0x100 of halfword 0x80146258 is set; otherwise writes 0xF0 to work-record halfword 0x30 and increments work byte 0x03, the index the overlay dispatcher 0x801F368C reads.'
   - - 2896
     - asm
     - func_801F3750

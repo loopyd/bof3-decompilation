@@ -31,5 +31,6 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte1Table265cBossBoss01316_800C1A34.c",
     "src/bof3/boss/raiseWorkHalfword94BossBoss01316_800C1A04.c",
     "src/bof3/boss/dispatchStateByte1Table2620BossBoss01316_800C181C.c",
+    "src/bof3/boss/storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90.c",
 ]
 psyq_source = "src/bof3/support/boss013_16_psyq.c"

@@ -104,8 +104,10 @@ segments:
     - c
     - dispatchIndexedHandlerBossBoss01316_800C1E58
   - - 1680
-    - asm
-    - func_800C1E90
+    - c
+    - storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90
+    - '@source: src/bof3/boss/storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90.c'
+    - '@behavior: Entry 0 of the payload handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Reads the shared flag byte 0x801462ED once: while its bit 0 is set it stores 3 into the global byte 0x80146375 and returns; otherwise, while the overlay step countdown byte 0x800C26E0 is nonzero it stores one less there and clears 0x80146375 to 0; when that countdown is already zero it stores 1 into 0x80146375, stores 4 into the global byte 0x80146384, writes back the flag byte it read at entry with bit 0 set, and stores the global byte 0x80146322 less one. It calls nothing, takes no arguments, has no frame and returns no value, and only the run word at 0x800C26D4 holds its address, so no jal in the payload names it.'
   - - 1828
     - c
     - initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24
@@ -134,7 +136,7 @@ segments:
     - c
     - publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8
     - '@source: src/bof3/boss/publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8.c'
-    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (0x800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler func_800C1E90 decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
+    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (0x800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90 decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
   - - 2360
     - asm
     - func_800C2138

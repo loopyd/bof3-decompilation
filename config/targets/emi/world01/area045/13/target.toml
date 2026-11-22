@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/dispatchStateByte3Table5364World01Area04513_801F368C.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld01Area04513_801F2C04.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld01Area04513_801F350C.c",
+    "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld01Area04513_801F36D0.c",
 ]
 support_sources = [
     "src/bof3/world/area04513_work_state.c",

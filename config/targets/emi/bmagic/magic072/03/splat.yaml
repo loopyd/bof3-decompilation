@@ -39,13 +39,15 @@ segments:
     - asm
     - func_801EEFA4
   - - 1100
-    - asm
-    - func_801EF04C
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07203_801EF04C
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic07203_801EF04C.c'
+    - '@behavior: Handler at entry 2, zero-based, of the code-pointer run at 0x801EEC04: the word at 0x801EEC0C holds this address, ahead of which the run reads 0x801EED38 and 0x801EEFA4. This overlay''s work-byte-1 dispatcher func_801EEC28 copies the six words of that run into its own frame, scales the work object''s unsigned byte 1 by four and calls the word it selects. The body reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group and, for each of the record''s three counter bytes, re-reads the work object''s unsigned byte 0xA, scales it by the 12-byte record stride into a byte offset and increments the selected record''s bytes 0x0, 0x1 and 0x2 with a byte-width read-modify-write. It then re-reads the cell, loads the work object''s unsigned byte 9 and decrements it in place, testing the stored value truncated to eight bits, so the tail group runs only when that countdown reaches zero; on zero it re-reads the cell and increments the work object''s byte 1 at byte width, advancing the stage index the dispatcher selects to the next entry of the same run. It keeps a 0x10-byte frame whose bytes it never touches, takes no arguments, returns nothing and writes no other state.'
   - - 1372
     - c
     - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07203_801EF15C
     - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic07203_801EF15C.c'
-    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the work object''s unsigned byte at offset 0xB and compares it against five with an unsigned bound, so the arm runs for every value below five. Only on that path it stores 8 into the work byte at 0x9 - the countdown func_801EF04C decrements at 0x801EF118 - then re-reads the cell and increments the work byte at 0x1, the stage index the entry dispatcher func_801EEC28 scales by four into the six-word run at 0x801EEC04, by one at byte width. This address is word 3 of that run. Takes no arguments, returns nothing, keeps no frame and writes no other state.'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, loads the work object''s unsigned byte at offset 0xB and compares it against five with an unsigned bound, so the arm runs for every value below five. Only on that path it stores 8 into the work byte at 0x9 - the countdown the entry-2 handler 0x801EF04C decrements at 0x801EF118 - then re-reads the cell and increments the work byte at 0x1, the stage index the entry dispatcher func_801EEC28 scales by four into the six-word run at 0x801EEC04, by one at byte width. This address is word 3 of that run. Takes no arguments, returns nothing, keeps no frame and writes no other state.'
   - - 1444
     - asm
     - func_801EF1A4

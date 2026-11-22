@@ -155,8 +155,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68.c'
     - '@behavior: Per-frame work-record step: decrements the countdown byte at 0x0A of the record published at the scratchpad pointer cell 0x1F800044, adds the record step word at 0x0C into the accumulator word at 0x34, and when the countdown byte reads zero re-arms it to 8 and stores handler index 3 into the record state byte at 0x04. Both paths then consume two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250.'
   - - 5084
-    - asm
-    - func_801F3FDC
+    - c
+    - advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownAndClearStateOrConsumeSharedCountdownWorld01Area04113_801F3FDC
+    - '@source: src/bof3/world/advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownAndClearStateOrConsumeSharedCountdownWorld01Area04113_801F3FDC.c'
+    - '@behavior: per-frame work-record step that adds the step word at 0x0C of the record published at the scratchpad pointer cell 0x1F800044 into its accumulator word at 0x34, subtracts 2 from each of the three counter bytes 0x0/0x1/0x2 of the 12-byte record selected by byte 0x13D of the record published through the global pointer cell 0x80146250, then decrements the countdown byte at 0x0A and either clears the record state byte at 0x04 to handler index 0 when that countdown reads zero or consumes two units of the halfword at 0x122 of the shared record.'
   - - 5400
     - c
     - advanceWorkAccumulatorAndAdd2ToSharedCounterTripleWorld01Area04113_801F4118

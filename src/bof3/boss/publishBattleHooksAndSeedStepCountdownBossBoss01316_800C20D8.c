@@ -20,8 +20,9 @@ extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* Step countdown byte of this payload's own data run: the last word before the
  * run end at 0x800C26E4, zero in the payload. The dispatched handler
- * func_800C1E90 tests it, stores one less, and takes its fire path when it is
- * zero; the published hook func_800C2138 tests it as a guard before its work
+ * storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90
+ * tests it, stores one less, and takes its fire path when it is zero; the
+ * published hook func_800C2138 tests it as a guard before its work
  * and clears it. */
 extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
 
@@ -40,7 +41,9 @@ extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
  * in having no countdown seed. No in-payload caller: no word of this payload
  * holds 0x800C20D8 and no jal reaches it, so the main program reaches it
  * through its overlay entry point, and the countdown it seeds is the field the
- * dispatched handler func_800C1E90 decrements.
+ * dispatched handler
+ * storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90
+ * decrements.
  * @status exact
  * @match 100.00
  * @residual none

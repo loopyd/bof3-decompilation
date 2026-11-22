@@ -14,9 +14,9 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  *           at 0x1F800044 once, loads the work object's byte 0xB and compares it
  *           against five with an unsigned bound (lbu/sltiu), so the arm runs for
  *           every value below five. Only on that path it stores 8 into the work
- *           byte at 0x9 - the countdown func_801EF04C loads, decrements and
- *           stores back at 0x801EF118 - and then re-reads the cell and
- *           increments the work byte at 0x1 by one at byte width
+ *           byte at 0x9 - the countdown the entry-2 handler 0x801EF04C loads,
+ *           decrements and stores back at 0x801EF118 - and then re-reads the
+ *           cell and increments the work byte at 0x1 by one at byte width
  *           (lbu/addiu 1/sb). That byte is the stage index: the dispatcher
  *           copies the six words at 0x801EEC04 into its frame, scales the byte
  *           by four and calls the entry it selects. This address is word 3 of

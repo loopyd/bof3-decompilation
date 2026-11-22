@@ -12,12 +12,14 @@ sources = [
     "src/bof3/world/countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60.c",
     "src/bof3/world/stepWorkWord8IntoWord10ReleaseRecordOnCountdownZeroAndSetOneShotLatchWorld02Area09813_801F4FEC.c",
     "src/bof3/world/resetWorkTableAt800E4800AndRearmOneShotLatchesWorld02Area09813_801F4D44.c",
+    "src/bof3/world/findFreeWorkRecordWorld02Area09813_801F4D80.c",
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8.c",
     "src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5B0C.c",
     "src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld02Area09813_801F526C.c",
     "src/bof3/world/claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4.c",
     "src/bof3/world/incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0.c",
     "src/bof3/world/resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64.c",
+    "src/bof3/world/resetWorkRecordAndPublishRecordIndexThenState4Substate9World02Area09813_801F5EBC.c",
 ]
 support_sources = [
     "src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c",

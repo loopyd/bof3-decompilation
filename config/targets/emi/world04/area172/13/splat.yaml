@@ -116,8 +116,10 @@ segments:
     - '@source: src/bof3/world/clearWorkTableAt800E4800World04Area17213_801F38BC.c'
     - '@behavior: Clears the lead byte of each of the first 8 entries of the 0x18-byte-stride work table at 0x800E4800.'
   - - 3304
-    - asm
-    - func_801F38E8
+    - c
+    - claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8
+    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8.c'
+    - '@behavior: Overlay work-record spawn: walks the 8 entries of the 0x18-byte-stride record table at 0x800E4800, claims the first entry whose lead byte reads zero by storing 1 there, and seeds the entry with 0 at byte 1, 0x20 at byte 2, the published scratch work object words 0x34/0x38/0x3C at 0x04/0x08/0x0C, 0x180 at the halfword 0x14, the work object byte 0x5D at byte 0x16 and 0 at byte 0x17.'
   - - 3460
     - c
     - stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984

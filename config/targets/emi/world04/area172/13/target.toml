@@ -9,7 +9,8 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/seedScratchWorkByte9At20ClearWord0cAndEffectBankThenAdvanceStateWorld04Area17213_801F33F0.c",
-    "src/bof3/world/dispatchWorkByte4Table6770World04Area17213_801F43C8.c"
+    "src/bof3/world/dispatchWorkByte4Table6770World04Area17213_801F43C8.c",
+    "src/bof3/world/claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8.c"
 ]
 support_sources = [
     "src/bof3/world/startStateEntry23Progress0WhenPackedCommandAndModeByteWorld04Area17213_801F4CC4.c",

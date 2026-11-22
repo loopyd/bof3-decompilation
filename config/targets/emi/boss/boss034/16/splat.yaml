@@ -103,8 +103,10 @@ segments:
     - c
     - noopHandlerBossBoss03416_800C1EA0
   - - 1704
-    - asm
-    - func_800C1EA8
+    - c
+    - storePartySlotMatchingFieldRecordIndexThenPublishBattleHookTrioBossBoss03416_800C1EA8
+    - '@source: src/bof3/boss/storePartySlotMatchingFieldRecordIndexThenPublishBattleHookTrioBossBoss03416_800C1EA8.c'
+    - '@behavior: Overlay installer: it loads the shared byte D_80181B14 once, walks the three 0x140-byte party records of the run 0x80145E90 reading each record''s byte 0x13C through the cell D_80145FCC, and for every slot whose 0x13C byte equals that shared byte it stores the slot number into this overlay''s byte D_800C2778; it then stores 0x800C20A8, 0x800C22D0 and 0x800C1F30 into the shared hook slots 0x801463A4, 0x801463A8 and 0x801463AC. No word of this payload holds this function''s address and no jal reaches it, so the overlay loader is what calls it.'
   - - 1840
     - asm
     - func_800C1F30

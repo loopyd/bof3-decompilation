@@ -21,7 +21,8 @@ extern u8 D_801490D8[]; /* @source 0x801490D8 @kind data */
 
 /* Overlay step countdown byte this payload's step handler decrements and fires
  * on; publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8 seeds it and
- * func_800C1E90, entry 0 of the handler run at 0x800C26D4, decrements it. */
+ * storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90,
+ * entry 0 of the handler run at 0x800C26D4, decrements it. */
 extern u8 D_800C26E0; /* @source 0x800C26E0 @kind data */
 
 /* Interior word of the payload data row D_800C25D8 (its +0x24 word), the row
