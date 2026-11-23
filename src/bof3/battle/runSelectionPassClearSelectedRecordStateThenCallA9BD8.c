@@ -6,8 +6,8 @@
  * because the original materialises it with a `lui %hi`/`addiu %lo` pair into
  * a register and indexes it, as it does for the byte symbols above the same
  * records. */
-extern u8 battlePartyStateBytesAt80145FBC[][0x140]; /* @source 0x80145FBC @kind table */
-extern u8 battleEnemyStateBytesAt801EB738[][0x118]; /* @source 0x801EB738 @kind table */
+extern u8 battlePartyStateBytes[][0x140]; /* @source 0x80145FBC @kind table */
+extern u8 battleEnemyStateBytes[][0x118]; /* @source 0x801EB738 @kind table */
 
 /**
  * @source 0x800A17A4
@@ -44,7 +44,7 @@ void runSelectionPassClearSelectedRecordStateThenCallA9BD8(void)
   if (((u8 *)&D_80146394)[0] < 3) {
     i = 0;
     do {
-      battlePartyStateBytesAt80145FBC[((u8 *)&D_80146394)[0]][i] = 0;
+      battlePartyStateBytes[((u8 *)&D_80146394)[0]][i] = 0;
       i++;
     } while (i < 8);
     sel = &D_80146394;
@@ -56,7 +56,7 @@ void runSelectionPassClearSelectedRecordStateThenCallA9BD8(void)
     i = 0;
     do {
       offset = ((u8 *)&D_80146394)[0] - 3;
-      battleEnemyStateBytesAt801EB738[offset][i] = 0;
+      battleEnemyStateBytes[offset][i] = 0;
       i++;
     } while (i < 8);
     sel = &D_80146394;

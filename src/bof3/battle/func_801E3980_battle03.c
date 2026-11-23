@@ -13,7 +13,7 @@ void func_801E3980(void) {
   u8 index;
 
   func_801E2314(2);
-  index = BATTLE_ENEMY_BYTE_E0(battleCurrentEnemyWorkState);
+  index = BATTLE_ENEMY_BYTE_E0(battleCurrentEnemyWork);
   ((u8*)D_1F800044)[9] = BATTLE_CLASS_BYTE_0C0CE(index);
   ((u8*)D_1F800044)[1]++;
   ((u8*)D_1F800044)[2] = 0;

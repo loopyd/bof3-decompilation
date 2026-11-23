@@ -13,12 +13,12 @@ void func_801E4E10(void) {
   u16* flags;
   u16 index;
 
-  if (battleCurrentEnemyWorkState->unk_f5 == 4u) {
-    FIELD_REF(u16, battleCurrentEnemyWorkState, 0x96) -= BATTLE_GLOBAL_BYTE_63C8;
+  if (battleCurrentEnemyWork->unk_f5 == 4u) {
+    FIELD_REF(u16, battleCurrentEnemyWork, 0x96) -= BATTLE_GLOBAL_BYTE_63C8;
   }
   flags = (u16*)&BATTLE_GLOBAL_HALF_62E8;
   *flags |= 0x800u;
-  battleCurrentEnemyWorkState->unk_f5 = 0u;
+  battleCurrentEnemyWork->unk_f5 = 0u;
   index = BATTLE_GLOBAL_HALF_63C0;
   if ((D_801CA71C[index].mask_00 & 0x800u) == 0u) {
     enemyReadyOrHelper2();

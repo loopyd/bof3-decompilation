@@ -20,8 +20,8 @@ void countdownWorkByteRetreatPairOrQueueEnemySlot(void)
     u32 slot;
 
     if (--D_1F800044->pad_0a[0] == 0) {
-        if (battleCurrentEnemyWorkState->unk_fc & 0x10) {
-            func_800AAC88((s16)battleCurrentEnemyWorkState->unk_f8,
+        if (battleCurrentEnemyWork->unk_fc & 0x10) {
+            func_800AAC88((s16)battleCurrentEnemyWork->unk_f8,
                          D_1F800044->unk_05);
         } else {
             slot = (u8)func_801E590C(0u, 1u);

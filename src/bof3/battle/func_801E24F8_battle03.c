@@ -15,12 +15,12 @@ void func_801E24F8(u8 index, u8 arg1) {
   Battle03EnemyWork* record;
 
   previousWork = battleWork;
-  previousEnemy = battleCurrentEnemyWorkState;
+  previousEnemy = battleCurrentEnemyWork;
   /* D_801EB2E8 holds 0x118-byte records, so index * 0x118 == this shift chain. */
   record = (Battle03EnemyWork*)(D_801EB2E8 + ((index * 36u - index) * 8u));
   battleWork = (u8*)record;
-  battleCurrentEnemyWorkState = record;
+  battleCurrentEnemyWork = record;
   func_801E2314(arg1);
   battleWork = previousWork;
-  battleCurrentEnemyWorkState = previousEnemy;
+  battleCurrentEnemyWork = previousEnemy;
 }

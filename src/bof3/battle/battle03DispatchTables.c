@@ -84,7 +84,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB404, D_801EB4
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB40c, D_801EB40C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callByte2Table40, D_801EB40C);
 
 /* @source 0x801E4AE8
  * @behavior loads the non-volatile scratchpad pointer cell at 0x1F800044,
@@ -113,9 +113,9 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB478, D_801EB4
 EMI_DEFINE_DISPATCHER_THEN_RESET(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2ThenReset, D_801EB258, stateScratchGlobalBit4);
 
 /* @source 0x801E4D8C
- * @behavior Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.
+ * @behavior Dispatches a handler selected by scratchpad work byte +0x02, then calls stateEnemyScratchBit4.
  * @status exact
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER_THEN_RESET(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2ThenReset2, D_801EB46C, resetEnemyScratchWhenBit4);
+EMI_DEFINE_DISPATCHER_THEN_RESET(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2ThenReset2, D_801EB46C, stateEnemyScratchBit4);

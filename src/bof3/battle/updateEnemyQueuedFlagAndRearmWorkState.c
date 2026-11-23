@@ -23,7 +23,7 @@ void updateEnemyQueuedFlagAndRearmWorkState(void) {
   u16* flags;
 
   func_8014DAEC();
-  if ((battleCurrentEnemyWorkState->unk_82 & 0x4000u) != 0u) {
+  if ((battleCurrentEnemyWork->unk_82 & 0x4000u) != 0u) {
     func_80196718(D_1F800044);
     *(u16*)&BATTLE_GLOBAL_HALF_62E8 &= 0xffbfu;
     D_1F800044->unk_01 = 6u;
@@ -50,8 +50,8 @@ void updateEnemyQueuedFlagAndRearmWorkState(void) {
       }
     }
     clearPendingBit(D_1F800044->unk_05);
-    battleCurrentEnemyWorkState->unk_100 &= 0xffffff8fu;
-    battleCurrentEnemyWorkState->unk_100 &= 0xfffffdffu;
+    battleCurrentEnemyWork->unk_100 &= 0xffffff8fu;
+    battleCurrentEnemyWork->unk_100 &= 0xfffffdffu;
     D_1F800044->unk_01 = 2u;
     D_1F800044->unk_02 = 0u;
   }

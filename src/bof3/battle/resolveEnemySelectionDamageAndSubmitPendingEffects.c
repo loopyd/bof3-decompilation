@@ -82,7 +82,7 @@ void resolveEnemySelectionDamageAndSubmitPendingEffects(void) {
   Battle03EnemyWork* record;
 
   work = D_1F800044;
-  record = battleCurrentEnemyWorkState;
+  record = battleCurrentEnemyWork;
   D_801463DA = 0;
   D_801463D8 = 0;
   D_8014639C = (u8*)work;
@@ -93,7 +93,7 @@ void resolveEnemySelectionDamageAndSubmitPendingEffects(void) {
   *(volatile u8*)(D_801463A0 + 4) = 0;
   record->unk_f8 = 0;
   *(Battle03EnemySubjectBlock*)D_801EC2E8 =
-      *(Battle03EnemySubjectBlock*)((u8*)battleCurrentEnemyWorkState + 0xA0);
+      *(Battle03EnemySubjectBlock*)((u8*)battleCurrentEnemyWork + 0xA0);
   switch (D_80146375) {
   case 1u:
     D_801463A0[2] =
@@ -107,14 +107,14 @@ void resolveEnemySelectionDamageAndSubmitPendingEffects(void) {
     break;
   }
   if (BATTLE_GLOBAL_BYTE_62EA != 0u) {
-    battleCurrentEnemyWorkState->unk_e4(1);
+    battleCurrentEnemyWork->unk_e4(1);
   }
-  if (((battleCurrentEnemyWorkState->unk_fc & 1u) != 0u) &&
-      ((s16)battleCurrentEnemyWorkState->unk_f8 == 0)) {
+  if (((battleCurrentEnemyWork->unk_fc & 1u) != 0u) &&
+      ((s16)battleCurrentEnemyWork->unk_f8 == 0)) {
     D_1F800044->unk_02 = 3;
     return;
   }
-  if ((battleCurrentEnemyWorkState->unk_100 & 0x200u) == 0u) {
+  if ((battleCurrentEnemyWork->unk_100 & 0x200u) == 0u) {
     mode = (u8*)&BATTLE_GLOBAL_BYTE_6375;
     if (*mode == 1u) {
       func_801E2314(4);
@@ -131,31 +131,31 @@ void resolveEnemySelectionDamageAndSubmitPendingEffects(void) {
       }
     }
   }
-  if ((battleCurrentEnemyWorkState->unk_fc & 1u) != 0u) {
-    func_800AAC88((s16)battleCurrentEnemyWorkState->unk_f8,
+  if ((battleCurrentEnemyWork->unk_fc & 1u) != 0u) {
+    func_800AAC88((s16)battleCurrentEnemyWork->unk_f8,
                   D_1F800044->unk_05);
   }
-  if ((battleCurrentEnemyWorkState->unk_fc & 2u) != 0u) {
-    func_800AAEBC((s16)battleCurrentEnemyWorkState->unk_fa,
+  if ((battleCurrentEnemyWork->unk_fc & 2u) != 0u) {
+    func_800AAEBC((s16)battleCurrentEnemyWork->unk_fa,
                   D_1F800044->unk_05);
   }
   gate = &D_801463D8;
-  battleCurrentEnemyWorkState->unk_82 |= *gate;
+  battleCurrentEnemyWork->unk_82 |= *gate;
   *gate = 0;
   func_8009BBE8();
-  if ((s16)battleCurrentEnemyWorkState->unk_f8 > 0) {
-    if (battleCurrentEnemyWorkState->unk_94 == 0u) {
+  if ((s16)battleCurrentEnemyWork->unk_f8 > 0) {
+    if (battleCurrentEnemyWork->unk_94 == 0u) {
       D_1F800044->unk_09 = 0;
       if ((BATTLE_GLOBAL_HALF_62E8 & 0x80u) != 0u) {
         func_8019651C(D_1F800044, 0x10, 0x10, 0x10, 0);
       }
-      battleCurrentEnemyWorkState->unk_82 = 0x4000u;
+      battleCurrentEnemyWork->unk_82 = 0x4000u;
     } else if (BATTLE_GLOBAL_BYTE_62EA != 0u) {
-      submitEffectUnlessNeg1(battleCurrentEnemyWorkState->unk_e8[2]);
+      submitEffectUnlessNeg1(battleCurrentEnemyWork->unk_e8[2]);
     }
   }
-  if (((s16)battleCurrentEnemyWorkState->unk_f8 < 0) ||
-      ((s16)battleCurrentEnemyWorkState->unk_fa < 0)) {
+  if (((s16)battleCurrentEnemyWork->unk_f8 < 0) ||
+      ((s16)battleCurrentEnemyWork->unk_fa < 0)) {
     func_8015DF18(0x206u);
   }
   if ((BATTLE_GLOBAL_HALF_62E8 & 0x2000u) == 0u) {

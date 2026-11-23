@@ -10,7 +10,7 @@
  * @residual none
  */
 void func_801E4A50(void) {
-  if ((battleCurrentEnemyWorkState->unk_82 & 0x4000u) != 0u) {
+  if ((battleCurrentEnemyWork->unk_82 & 0x4000u) != 0u) {
     D_1F800044->unk_01 = 6;
     D_1F800044->unk_02 = 4;
   } else {

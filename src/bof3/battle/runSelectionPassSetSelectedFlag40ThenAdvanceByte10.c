@@ -9,7 +9,7 @@ typedef struct BattleSelectionCell {
 
 /* Record byte raised by this pass, one byte below the 0x80145FC9 counter
  * byte that applyPendingBattleDamage consumes. */
-extern u8 battlePartyByteAt80145FC8[]; /* @source 0x80145FC8 @kind unknown */
+extern u8 battlePartyByteAt801453[]; /* @source 0x80145FC8 @kind unknown */
 
 /**
  * @source 0x800A14B4
@@ -37,7 +37,7 @@ void runSelectionPassSetSelectedFlag40ThenAdvanceByte10(void)
     D_80145FB8[index].flags_00 |= 0x40;
     current = selected->index;
     offset = current * 0x140;
-    advance = battlePartyByteAt80145FC8[offset];
+    advance = battlePartyByteAt801453[offset];
     if (advance < 2) {
       ((u8 *)D_80145FB8)[offset + 0x10] = (u8)(advance + 1);
     }

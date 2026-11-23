@@ -19,7 +19,7 @@ void func_801E2284(void) {
     }
     work = &D_801EB630[index];
     BATTLE_ENEMY_SCRATCH_PTR = work;
-    battleCurrentEnemyWorkState = work;
+    battleCurrentEnemyWork = work;
     func_8014D290();
   }
 }

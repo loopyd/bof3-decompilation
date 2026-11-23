@@ -1,11 +1,11 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* Byte +0x0F of each 0x140-stride party record above 0x80145FB8, addressed as
- * its own symbol like battlePartyByteAt80145FC6. The original materialises it
+ * its own symbol like battlePartyByteAt80145. The original materialises it
  * with its own `lui %hi(D_80145FC7)` pair on the scaled index, so the role is
  * unknown here; battle03's copies of the same block read it as the record's
  * countdown byte. */
-extern u8 battlePartyByteAt80145FC7[]; /* @source 0x80145FC7 @kind unknown */
+extern u8 battlePartyByteAt801452[]; /* @source 0x80145FC7 @kind unknown */
 
 /* @source 0x800A02E8
  * @behavior Applies the 0x800 input mask to the battle selection for the
@@ -30,7 +30,7 @@ void clearSelectedPartyByte0FThenApplyInputMask800SetRecordByte8OrRefresh(void)
   index = *(u8 *)&D_80146394;
   if ((D_80145FB8[index].flags_00 & 3) == 0) {
     if (index < 3) {
-      battlePartyByteAt80145FC7[index * 0x140] = 0;
+      battlePartyByteAt801452[index * 0x140] = 0;
     }
     if ((u8)querySelectionApplyInput(0x800) == 0) {
       func_800A3F28();

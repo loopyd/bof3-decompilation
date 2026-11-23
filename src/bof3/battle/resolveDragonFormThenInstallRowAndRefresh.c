@@ -4,7 +4,7 @@
  * battler, indexed by the acting battler byte. The base keeps its own symbol
  * because the original materialises it with a `lui %hi`/`addiu %lo` pair into
  * a register and adds the row offset. */
-extern u8 battlePartyStateBytesAt80145FBC[][0x140]; /* @source 0x80145FBC @kind table */
+extern u8 battlePartyStateBytes[][0x140]; /* @source 0x80145FBC @kind table */
 
 /* Resolved dragon-form outputs: the form code (gene-table row index + 4) and
  * the group byte the gene table holds for that row. */
@@ -14,7 +14,7 @@ extern u8 D_800B6F5C; /* @source 0x800B6F5C @kind data */
 /* Byte cell that takes the group byte of the resolved form. */
 extern u8 D_801463B9; /* @source 0x801463B9 @kind data */
 
-extern u8 resolveDragonFormFromGenes(void); /* @source 0x800A6C2C */
+extern u8 resolveDragonFormGenes(void); /* @source 0x800A6C2C */
 extern u8 func_800A6E14(u8 value); /* @source 0x800A6E14 */
 extern u8 func_800A7C14(u8 value); /* @source 0x800A7C14 */
 
@@ -27,7 +27,7 @@ extern u8 func_800A7C14(u8 value); /* @source 0x800A7C14 */
  *   rows indexed by the acting battler byte D_80146374, which every use
  *   re-reads - and refreshes through func_800A9BD8. It then clears the form
  *   bytes 0x800B6F58 and 0x800B6F5C and raises bit 0x2 of the flag word. The
- *   form comes from resolveDragonFormFromGenes: the 0xFF result runs
+ *   form comes from resolveDragonFormGenes: the 0xFF result runs
  *   func_800A6E14 with 0xFF, otherwise func_800A7C14 runs with the form, the
  *   form code (form + 4) is stored at 0x800B6F58, code 8 raises flag 0x10000
  *   and codes 7 and 4 raise flag 0x20000. Every path then shifts the four-byte
@@ -61,7 +61,7 @@ void resolveDragonFormThenInstallRowAndRefresh(void)
 
   i = 0;
   do {
-    battlePartyStateBytesAt80145FBC[((u8 *)&D_80146374)[0]][i] = 0;
+    battlePartyStateBytes[((u8 *)&D_80146374)[0]][i] = 0;
     i++;
   } while (i < 8);
   sel = &D_80146374;
@@ -73,7 +73,7 @@ void resolveDragonFormThenInstallRowAndRefresh(void)
   D_800B6F58 = 0;
   D_800B6F5C = 0;
   D_80145FB8[sel[0]].flags_00 |= 0x2;
-  form = resolveDragonFormFromGenes();
+  form = resolveDragonFormGenes();
   if (form != 0xFF) {
     func_800A7C14(form);
     D_800B6F58 = form + 4;

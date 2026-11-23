@@ -1,11 +1,11 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A52C4
- * @behavior dispatches the byte-selected battle handler from battleSelectionHandlerTable4D00.
+ * @behavior dispatches the byte-selected battle handler from battleSelectionHandlerTable46.
  * @status exact
  * @match 100.00
  * @residual none
  */
 void dispatchSubstateTable4d00(void) {
-  battleSelectionHandlerTable4D00[D_801462E4]();
+  battleSelectionHandlerTable46[D_801462E4]();
 }

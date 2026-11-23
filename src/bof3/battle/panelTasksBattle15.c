@@ -27,7 +27,7 @@ PANEL_ADVANCE_X(advancePanelXTo320, 320)
  * @residual none
  */
 
-PANEL_ADVANCE_X(advancePanelXTo320B, 320)
+PANEL_ADVANCE_X(statePanelXTo320, 320)
 
 /* @source 0x800B250C
  * @behavior Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.
@@ -36,7 +36,7 @@ PANEL_ADVANCE_X(advancePanelXTo320B, 320)
  * @residual none
  */
 
-PANEL_ADVANCE_X(advancePanelXTo320C, 320)
+PANEL_ADVANCE_X(statePanelXTo3202, 320)
 
 /* @source 0x800B20D4
  * @behavior UNKNOWN: exact behavior is not yet documented.
@@ -63,4 +63,4 @@ PANEL_RETREAT_X_CLAMP(retreatPanelXTo152, 0x98)
  * @residual none
  */
 
-PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)
+PANEL_RETREAT_X(retreatPanelXNeg170, -0xAA)

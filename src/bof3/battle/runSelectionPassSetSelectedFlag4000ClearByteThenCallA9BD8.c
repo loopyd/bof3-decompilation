@@ -1,6 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 
-extern u8 battlePartyByteAt80145FC6[]; /* @source 0x80145FC6 @kind unknown */
+extern u8 battlePartyByteAt80145[]; /* @source 0x80145FC6 @kind unknown */
 
 /**
  * @source 0x800A22CC
@@ -24,7 +24,7 @@ void runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8(void)
   if (index < 3) {
     D_80145FB8[index].flags_00 |= 0x4000;
     index = *selected;
-    battlePartyByteAt80145FC6[index * 0x140] = 0;
+    battlePartyByteAt80145[index * 0x140] = 0;
   } else {
     D_801EB734[index - 3].word_00 |= 0x4000;
     index = *selected;

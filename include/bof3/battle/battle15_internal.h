@@ -27,7 +27,7 @@ typedef struct BattlePanelTaskDispatchTable {
 } BattlePanelTaskDispatchTable;
 
 /* The four battle work-state handlers at 0x800969C4, dispatched by work byte
- * 0x01 in dispatchBattleWorkStateHandler. */
+ * 0x01 in callBattleWorkState. */
 typedef struct BattleWorkStateDispatchTable {
   BattleSelectionHandler handlers[4];
 } BattleWorkStateDispatchTable;
@@ -169,7 +169,7 @@ typedef struct BattleIdentityRecord {
 
 extern BattleIdentityRecord D_800E4050[]; /* @source 0x800E4050 @kind unknown */
 
-u32 testWorkRangeAgainstRecord(BattleRange *range, u32 value);
+u32 checkWorkRangeAgainst(BattleRange *range, u32 value);
 u32 func_800A99AC(void);
 u8 *findOwnerRecord(u8 id);
 void func_800AE9C4(u8 selector);
@@ -200,13 +200,13 @@ extern BattleSelectionHandler D_800B43C0[]; /* @source 0x800B43C0 @kind unknown 
 extern BattleSelectionHandler D_800B4450[]; /* @source 0x800B4450 @kind unknown */
 extern BattleSelectionHandler D_800B5108[]; /* @source 0x800B5108 @kind unknown */
 extern BattleSelectionHandler D_800B43D4[]; /* @source 0x800B43D4 @kind unknown */
-extern BattleSelectionHandler battleSelectionHandlerTable4CAC[]; /* @source 0x800B4CAC @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4CC8[]; /* @source 0x800B4CC8 @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4CD0[]; /* @source 0x800B4CD0 @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4CE4[]; /* @source 0x800B4CE4 @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4D00[]; /* @source 0x800B4D00 @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4D14[]; /* @source 0x800B4D14 @kind table */
-extern BattleSelectionHandler battleSelectionHandlerTable4D30[]; /* @source 0x800B4D30 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable4[]; /* @source 0x800B4CAC @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable42[]; /* @source 0x800B4CC8 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable43[]; /* @source 0x800B4CD0 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable45[]; /* @source 0x800B4CE4 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable46[]; /* @source 0x800B4D00 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable47[]; /* @source 0x800B4D14 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable48[]; /* @source 0x800B4D30 @kind table */
 extern BattleSelectionHandler D_800B43EC[]; /* @source 0x800B43EC @kind unknown */
 extern BattleSelectionHandler D_800B43F4[]; /* @source 0x800B43F4 @kind unknown */
 extern BattleSelectionHandler D_800B4408[]; /* @source 0x800B4408 @kind unknown */
@@ -217,13 +217,13 @@ extern BattleSelectionHandler D_800B4458[]; /* @source 0x800B4458 @kind unknown 
 extern BattleSelectionHandler D_800B446C[]; /* @source 0x800B446C @kind unknown */
 extern BattleSelectionHandler D_800B447C[]; /* @source 0x800B447C @kind unknown */
 extern BattleSelectionHandler D_800B448C[]; /* @source 0x800B448C @kind unknown */
-extern BattleSelectionHandler battleSelectionHandlerTable44C8[]; /* @source 0x800B44C8 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable44[]; /* @source 0x800B44C8 @kind table */
 extern BattleSelectionHandler D_800B44D4[]; /* @source 0x800B44D4 @kind unknown */
-extern BattleSelectionHandler battleSelectionHandlerTable44E4[]; /* @source 0x800B44E4 @kind table */
-extern BattleSelectionHandler battlePanelOuterStateHandlerTable[]; /* @source 0x800B6E08 @kind table */
-extern BattleSelectionHandler battlePanelStateHandlerTable6e20[]; /* @source 0x800B6E20 @kind table */
-extern BattleSelectionHandler battlePanelStateHandlerTable6e34[]; /* @source 0x800B6E34 @kind table */
-extern BattleSelectionHandler battlePanelStateHandlerTable6e50[]; /* @source 0x800B6E50 @kind table */
+extern BattleSelectionHandler battleSelectionHandlerTable442[]; /* @source 0x800B44E4 @kind table */
+extern BattleSelectionHandler battlePanelOuterState[]; /* @source 0x800B6E08 @kind table */
+extern BattleSelectionHandler battlePanelStateHandler[]; /* @source 0x800B6E20 @kind table */
+extern BattleSelectionHandler battlePanelStateHandler2[]; /* @source 0x800B6E34 @kind table */
+extern BattleSelectionHandler battlePanelStateHandler3[]; /* @source 0x800B6E50 @kind table */
 extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
 extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
 /* Eight-byte rodata blocks holding the "1" and "0" cursor-label strings at
@@ -236,7 +236,7 @@ extern u16 D_800B6D30[]; /* @source 0x800B6D30 @kind string */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
 extern u8 D_801462EA; /* @source 0x801462EA @kind unknown */
 extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
-/* Shared active-record count (config/targets/shared/symbols.txt); adjustBattleWorkValuesForMode
+/* Shared active-record count (config/targets/shared/symbols.txt); adjustBattleWorkValues
  * re-reads it in both loop conditions. */
 extern volatile u8   localBattlerCount; /* @source 0x801462F0 @kind unknown */
 extern u8            D_801462F1; /* @source 0x801462F1 @kind unknown */
@@ -262,7 +262,7 @@ extern u8            D_801462E5; /* @source 0x801462E5 @kind unknown */
 extern u8            D_801462E6; /* @source 0x801462E6 @kind unknown */
 extern BattleSelectionAction battleSelectionActionTable[]; /* @source 0x800B65FC @kind table */
 extern volatile u16  D_801462E8; /* @source 0x801462E8 @kind unknown */
-/* Shared pending-battler bitset read by raiseFlag4WhenPendingBitsClear; the
+/* Shared pending-battler bitset read by raiseFlag4PendingBits; the
  * sibling lifts at 0x801DE1B0 and 0x801DE1?? set and clear one bit per
  * battler index. */
 extern u16           D_801463C2; /* @source 0x801463C2 @kind unknown */
@@ -330,9 +330,9 @@ extern u8 battleWorkAdjustmentFields[]; /* @source 0x80145F44 @kind unknown */
 extern u8 D_80145F46[]; /* @source 0x80145F46 @kind unknown */
 extern u8 D_80145F48[]; /* @source 0x80145F48 @kind unknown */
 extern u8 D_80145F4A[]; /* @source 0x80145F4A @kind unknown */
-/* Work-field band read by adjustBattleWorkValuesForMode's case 4 at one base
+/* Work-field band read by adjustBattleWorkValues's case 4 at one base
  * and displacements -0x280/-0x140. The field's gameplay role is unresolved. */
-extern u8 battleCalculationInputAdjustmentState[]; /* @source 0x801461CA @kind unknown */
+extern u8 battleCalculationInputAdjustment[]; /* @source 0x801461CA @kind unknown */
 /* Shared 0x20-byte party-slot template read by func_800A4458. */
 extern u8 D_801EBEF0[]; /* @source 0x801EBEF0 @kind unknown */
 extern u8 D_801EB6E4[]; /* @source 0x801EB6E4 @kind unknown */
@@ -527,10 +527,10 @@ void                           dispatchLocalHandlerPair(void);
 void                           setWorkByte9Advance(void);
 void                           func_800AE09C(void);
 void                           dispatchWorkByte1Pair(void);
-void                           initRecordStateAdvanceWork(void);
-void                           raiseFlag4WhenPendingBitsClear(void);
+void                           setupRecordStateAdvance(void);
+void                           raiseFlag4PendingBits(void);
 void                           pollReadyThenInvokeHelperWhenWorkByte1Is5(void);
-void                           resetStateWhenUnlockedB(void);
+void                           stateUnlockedB(void);
 void __attribute__((noinline)) runPanelTasks16To19(void);
 u8                             func_8009C8AC(u16 required_mask);
 u32                            func_800A7B40(u8 group, u8 slot);
@@ -582,23 +582,23 @@ void func_800A4458(void);
  * initSelectionGridArmRowThenAdvanceSubstate (0x80096FBC): rebuilds the
  * 0x80148570 grid band from the active message-slot work record. */
 void func_80097EC0(void);
-void setupMode104ArmWorkBit2(void);
-void adjustBattleWorkValuesForMode(void);
+void setupMode104ArmWork(void);
+void adjustBattleWorkValues(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
 void func_800B0F9C(void);
 void func_800B1728(void);
 void advancePanelXTo320(void);
-void advancePanelXTo320B(void);
-void retreatPanelXToNeg170(void);
+void statePanelXTo320(void);
+void retreatPanelXNeg170(void);
 void advancePanelXTo17(void);
-void advancePanelXTo320C(void);
+void statePanelXTo3202(void);
 void func_800B25C0(void* panel);
 void func_800B2C90(void* panel);
 void func_800B3AE8(void* panel);
 void func_800B4220(s16 arg0, s16 arg1, u8 arg2);
-void setFlag2000StoreDoubledResult(void);
+void stateFlag2000StoreDoubled(void);
 u8   querySelectionApplyInput(s32 input_mask);
 s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
 /* The cursor helper reads the two coordinates. Its original body overwrites
@@ -742,12 +742,12 @@ extern u8 battleApParamStrings;
 extern u8 battlePanelIndexFormat;
 
 /* @source 0x800969C4 @kind table */
-extern BattleWorkStateDispatchTable battleWorkStateHandlerTable;
+extern BattleWorkStateDispatchTable battleWorkStateHandler;
 
 /* Second four-entry work-state handler table, dispatched by
- * dispatchBattleWorkStateHandlerB; only entry 0 (0x800AE82C) differs. */
+ * callBattleWorkState2; only entry 0 (0x800AE82C) differs. */
 /* @source 0x800969D4 @kind table */
-extern BattleWorkStateDispatchTable battleWorkStateHandlerTableB;
+extern BattleWorkStateDispatchTable battleWorkStateHandler2;
 
 extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
 /* Initialised battler-record counter: func_800ABCE0 raises it once per record
@@ -803,7 +803,7 @@ extern BattlePartyGuardRecord D_80145FB4[]; /* @source 0x80145FB4 @kind unknown 
 extern BattleEnemyGuardRecord D_801EB730[]; /* @source 0x801EB730 @kind unknown */
 
 /* Random damage-band table indexed by the three-bit roll in func_800A2880;
- * eight signed halfwords directly above battleElementResistanceModifierTable. */
+ * eight signed halfwords directly above battleElementResistanceModifier. */
 extern u16 D_800B492C[]; /* @source 0x800B492C @kind table */
 
 /* Action records touched by func_800A36F0: the three words copied from the
@@ -876,7 +876,7 @@ extern u8 D_801EB6E0[]; /* @source 0x801EB6E0 @kind unknown */
 extern u8 D_801EB6E1[]; /* @source 0x801EB6E1 @kind unknown */
 extern u8 D_801EB6E2[]; /* @source 0x801EB6E2 @kind unknown */
 extern u8 D_801EB6E3[]; /* @source 0x801EB6E3 @kind unknown */
-extern s16 battleElementResistanceModifierTable[]; /* @source 0x800B493C @kind table */
+extern s16 battleElementResistanceModifier[]; /* @source 0x800B493C @kind table */
 
 typedef struct BattleScanRecord {
   u8 kind;

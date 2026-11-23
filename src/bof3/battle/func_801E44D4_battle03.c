@@ -12,7 +12,7 @@
 void func_801E44D4(void) {
   Battle03LocalWork* work;
 
-  battleCurrentEnemyWorkState->unk_f8 = 0;
+  battleCurrentEnemyWork->unk_f8 = 0;
   work = D_1F800044;
   work->unk_0c = -0x2000;
   work->unk_10 = 0;

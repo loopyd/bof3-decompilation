@@ -74,7 +74,7 @@ void advanceEnemyTargetModeAndPublishWork(u8 arg0) {
   }
   if (BATTLE_GLOBAL_BYTE_62EA != 0) {
     work = &D_801EB630[arg0];
-    battleCurrentEnemyWorkState = work;
+    battleCurrentEnemyWork = work;
     BATTLE_ENEMY_SCRATCH_PTR = work;
     work->unk_e4(0);
   }

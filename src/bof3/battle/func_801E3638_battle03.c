@@ -21,20 +21,20 @@ void func_801E3638(void) {
   u8                 index;
 
   D_801EB3FC[battleWork[2]]();
-  if ((BATTLE_ENEMY_FLAGS_82(battleCurrentEnemyWorkState) & 0x20u) != 0u) {
-    if ((BATTLE_ENEMY_WORD_100(battleCurrentEnemyWorkState) & 0x800u) != 0u) {
+  if ((BATTLE_ENEMY_FLAGS_82(battleCurrentEnemyWork) & 0x20u) != 0u) {
+    if ((BATTLE_ENEMY_WORD_100(battleCurrentEnemyWork) & 0x800u) != 0u) {
       index = battleWork[5];
       count = D_801EC330[index].flag_09 + 1;
       D_801EC330[index].flag_09 = count;
       if ((s8)count >= 0xc) {
-        BATTLE_ENEMY_WORD_100(battleCurrentEnemyWorkState) ^= 0x800u;
+        BATTLE_ENEMY_WORD_100(battleCurrentEnemyWork) ^= 0x800u;
       }
     } else {
       index = battleWork[5];
       count = D_801EC330[index].flag_09 - 1;
       D_801EC330[index].flag_09 = count;
       if ((s8)count < -0xb) {
-        BATTLE_ENEMY_WORD_100(battleCurrentEnemyWorkState) ^= 0x800u;
+        BATTLE_ENEMY_WORD_100(battleCurrentEnemyWork) ^= 0x800u;
       }
     }
     work = (Battle03LocalWork*)battleWork;
@@ -48,7 +48,7 @@ void func_801E3638(void) {
           D_801EC330[index].unk_38 + (((s8)D_801EC330[index].flag_09) << 9);
     }
   }
-  if ((BATTLE_ENEMY_WORD_100(battleCurrentEnemyWorkState) & 0x1000u) == 0u) {
+  if ((BATTLE_ENEMY_WORD_100(battleCurrentEnemyWork) & 0x1000u) == 0u) {
     enemyReadyOrHelper1();
   }
 }

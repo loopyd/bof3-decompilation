@@ -2,7 +2,7 @@
 
 /* @source 0x801E48D4
  * @behavior Adds local-work fields +0x10 and +0x1C to field +0x44, then calls
- * accumulateEnemyHalfwordsAndResetScratch when field +0x44 is negative.
+ * accumulateEnemyHalfwordsReset when field +0x44 is negative.
  * @status exact
  * @match 100.00
  * @residual none
@@ -15,6 +15,6 @@ void applyGravityOrReset(void)
     work->unk_44 += work->unk_10;
     work->unk_10 += work->unk_1c;
     if (work->unk_44 < 0) {
-        accumulateEnemyHalfwordsAndResetScratch();
+        accumulateEnemyHalfwordsReset();
     }
 }

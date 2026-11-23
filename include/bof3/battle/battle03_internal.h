@@ -187,7 +187,7 @@ typedef struct Battle03EnemyWork {
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
   /* unk_84/unk_86 are the two halfword counters
-   * accumulateEnemyHalfwordsAndResetScratch adds into the 0x8014632C and
+   * accumulateEnemyHalfwordsReset adds into the 0x8014632C and
    * 0x80146330 accumulators; the same step clears unk_84. */
   u16                      unk_84;
   u16                      unk_86;
@@ -344,7 +344,7 @@ extern u8                           D_80146329; /* @source 0x80146329 @kind unkn
 extern u8                           D_80146854;
 /* Shared front-selector primary state byte (0x80146874) and secondary
  * sub-state byte (0x80146875) of the main-RAM front-end state machine; written
- * by this target's battle hook requestFrontSelectorState1Substate19.
+ * by this target's battle hook requestFrontSelectorState1.
  * @source 0x80146874 @kind unknown
  */
 extern u8                           D_80146874;
@@ -628,7 +628,7 @@ extern volatile u8  BATTLE_GLOBAL_BYTE_62F3;
 extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 
 void func_801E679C(void);
-void clearQueuedSlotWhenReady(void);
+void stateQueuedSlotReady(void);
 extern volatile u8  BATTLE_GLOBAL_BYTE_6374; /* @source 0x80146374 @kind unknown */
 /* @source 0x8014932C @kind unknown — shared 16-bit channel the queued-slot
  * fade handlers accumulate by the slot word +0x0C: the fade-out handler at
@@ -719,7 +719,7 @@ void func_800A9BD8(u8 arg0);
 void func_800AAA74(void);
 /* Owned by the SLUS address space (lifted as selectionSetupEnabled in
  * emi/battle/battle/15); the selection setup predicate
- * activatePanelTaskUnlessBattlerInactive asks for once the selected battler
+ * activatePanelTaskUnless asks for once the selected battler
  * reads inactive. Only its low return byte is consumed. Address
  * @source 0x80097EB8 */
 u8   selectionSetupEnabled(void);
@@ -736,7 +736,7 @@ u8   func_800A8F58(void);
  * the first parameter is the zero-extended battle byte D_80146384. */
 void func_800A9820(u8 arg0);
 /* Shared front-end startup helper run by this target's battle hook
- * requestFrontSelectorState1Substate19 (and by the sibling scenario, ui and
+ * requestFrontSelectorState1 (and by the sibling scenario, ui and
  * world targets); the sibling targets declare the same prototype. */
 void func_8015C088(void);
 /* Frontend cue dispatcher reached from startScratchWorkTransform with the
@@ -955,18 +955,18 @@ u8   enemyReadyOrHelper2(void);
 u8   checkEnemyQueuedPredicate(void);
 void func_801E2314(u32 arg0);
 void initEnemyCueCountdownWhenLoaderReady(void);
-void resetEnemyScratchWhenBit4(void);
-void initializeFlippedWorkDecayAndAdvance(void);
+void stateEnemyScratchBit4(void);
+void initializeFlippedWorkDecay(void);
 void collectRandomEnemyEntries_battle03_801E531C(void);
 void submitEffectUnlessNeg1(u16 arg0);
-void countdownWorkByte9SubmitCue(void);
-void decrementWorkByte9SubmitEnemyCue(void);
+void countdownWorkByte9Submit(void);
+void decrementWorkByte9Submit(void);
 void applyGravityOrReset(void);
-void accumulateEnemyHalfwordsAndResetScratch(void);
+void accumulateEnemyHalfwordsReset(void);
 void resetEnemyScratchState(void);
 void raiseBit80AllocSlot(void);
 void clearQueuedSlotBytes(void);
-void requestFrontSelectorState1Substate19(void);
+void requestFrontSelectorState1(void);
 void enterFrontendMode4(void);
 void func_801E5A38(void);
 void func_801E62BC(u8 arg0);
@@ -1002,7 +1002,7 @@ void func_801E5AF4(void);
 void runQueuedSlotHandlers(void);
 void dispatchByte1FiveTable(void);
 void func_801E7818(void);
-void dispatchStateByte2TableF80(void);
+void callStateByte2Table(void);
 void func_801E915C(void);
 void forwardPanelHalfwords(void);
 void callD8450WhenIdle(void);
@@ -1039,7 +1039,7 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_LOCAL_SCRATCH_PTR                                               \
   PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x44u)
-/* @kind: bss (map symbol: battleCurrentEnemyWorkState) — current Battle03EnemyWork pointer cell. */
+/* @kind: bss (map symbol: battleCurrentEnemyWork) — current Battle03EnemyWork pointer cell. */
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
   PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
 #define BATTLE_SLOT_STORE_FLAG(index)                                          \
@@ -1332,6 +1332,6 @@ u8   countMessageTokens(u8* arg0);
 extern u8 battleCommandEntryTable[];
 
 /* @source 0x801EB4E8 @kind unknown */
-extern Battle03EnemyWork* battleCurrentEnemyWorkState;
+extern Battle03EnemyWork* battleCurrentEnemyWork;
 
 #endif

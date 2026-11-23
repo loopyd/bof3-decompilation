@@ -7,5 +7,5 @@
  * @residual none
  */
 void dispatchSubstateTable4cd0(void) {
-  battleSelectionHandlerTable4CD0[D_801462E4]();
+  battleSelectionHandlerTable43[D_801462E4]();
 }

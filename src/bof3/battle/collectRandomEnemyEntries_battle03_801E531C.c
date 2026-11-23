@@ -39,8 +39,8 @@ void collectRandomEnemyEntries_battle03_801E531C(void) {
   ids = D_80146334;
   count = (u8*)ids - 13;
   do {
-    if (((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_00 != 0) {
-      rate = ((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_02;
+    if (((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_00 != 0) {
+      rate = ((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_02;
       if (rate == 0 || thresholds.bytes[rate] < (rand() & 0xff)) {
         goto next_entry;
       }
@@ -48,21 +48,21 @@ void collectRandomEnemyEntries_battle03_801E531C(void) {
       if (D_80146327 != 0) {
         do {
           if (ids[entry] ==
-              ((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_00) {
+              ((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_00) {
             D_80146354[entry] += 1;
-            ((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_00 = 0;
+            ((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_00 = 0;
             goto next_entry;
           }
           entry += 1;
         } while (entry < *((u8*)ids - 13));
       }
       ids[*count] =
-          ((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_00;
+          ((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_00;
       D_80146354[*count] = 1;
       if (*count < 15) {
         *count += 1;
       }
-      ((Battle03RandomEntryView*)battleCurrentEnemyWorkState)->entries[slot].unk_00 = 0;
+      ((Battle03RandomEntryView*)battleCurrentEnemyWork)->entries[slot].unk_00 = 0;
     }
   next_entry:
     slot += 1;

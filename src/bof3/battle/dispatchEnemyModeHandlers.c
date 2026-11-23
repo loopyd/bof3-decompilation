@@ -21,12 +21,12 @@ void func_801E2170(void) {
     }
     work = &D_801EB630[index];
     BATTLE_ENEMY_SCRATCH_PTR = work;
-    battleCurrentEnemyWorkState = work;
+    battleCurrentEnemyWork = work;
     if (BATTLE_GLOBAL_BYTE_62EA != 0) {
       if (work->unk_01 != 0) {
         work->unk_e4(2);
       }
-      BATTLE_ENEMY_DISPATCH_TABLE_B[battleCurrentEnemyWorkState->unk_f0]();
+      BATTLE_ENEMY_DISPATCH_TABLE_B[battleCurrentEnemyWork->unk_f0]();
     } else {
       BATTLE_ENEMY_DISPATCH_TABLE_A[work->unk_f0]();
     }

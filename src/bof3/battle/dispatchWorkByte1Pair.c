@@ -9,8 +9,8 @@
  */
 void NO_SIBLING_CALLS dispatchWorkByte1Pair(void)
 {
-    BattleSelectionHandler handlers[2] = { initRecordStateAdvanceWork,
-                                           raiseFlag4WhenPendingBitsClear };
+    BattleSelectionHandler handlers[2] = { setupRecordStateAdvance,
+                                           raiseFlag4PendingBits };
 
     handlers[SPAD_PTR_SLOT(u8, 0x44)[1]]();
 }

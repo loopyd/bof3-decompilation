@@ -1035,7 +1035,7 @@ segments:
     - c
     - func_801E320C
     - '@source: src/bof3/battle/func_801E320C.c'
-    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1Substate19 and enterFrontendMode4 as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
+    - '@behavior: Publishes D_801EB288 as the current enemy work script pointer at +0xEC, registers requestFrontSelectorState1 and enterFrontendMode4 as the battle hooks at 0x801463A4/0x801463A8, runs the enemy script byte helper func_801E2314 for class argument 0, raises bit 0x40 of scratch work byte +0x00, submits the positional 0x80 effect for the work flags halfword +0x82, then increments scratch work byte +0x01.'
   - - 75436
     - c
     - callByte2Table3
@@ -1056,8 +1056,8 @@ segments:
     - '@behavior: Integrates the scratch work motion pair while signed +0x40 stays at or below 0xFFFF; otherwise clears work byte +0x48 and resets the scratch dispatch state to 3/0/0, then runs enemyReadyOrHelper1.'
   - - 75832
     - c
-    - dispatchByte3TableB3f4
-    - '@source: src/bof3/battle/dispatchByte3TableB3f4.c'
+    - callByte3Table32
+    - '@source: src/bof3/battle/callByte3Table32.c'
   - - 75900
     - c
     - applyModeOffsetPairToWork
@@ -1070,8 +1070,8 @@ segments:
     - '@behavior: Integrates the scratch work delta pair +0x0C/+0x10 into the position pair +0x34/+0x38 and publishes the signed distance of that pair through func_8015477C in work halfword +0x3E; once the position pair equals the mirrored target pair +0x18/+0x1C it reseeds the scratch state bytes +0x01..+0x03 with 3/0/0.'
   - - 76248
     - c
-    - initStateByEnemyFlag2
-    - '@source: src/bof3/battle/initStateByEnemyFlag2.c'
+    - setupStateEnemyFlag2
+    - '@source: src/bof3/battle/setupStateEnemyFlag2.c'
     - '@behavior: Conditionally initializes battle state, then advances scratchpad work byte +1.'
   - - 76344
     - c
@@ -1085,8 +1085,8 @@ segments:
     - '@behavior: Index 0 of the enemy byte-2 handler table D_801EB3FC dispatched by func_801E3638. While the battle selection gate byte 0x801462EF is set and the active selection slot byte D_801EB4D8 either equals scratch work byte +0x05 or carries bit 0x40, submits the positional effect of the scratch work record through func_8019651C (zero offsets, mode 0), stores the returned effect byte at scratch work byte +0x07 (the array index the next handler func_801E38C0 expands into the 12-byte D_80145BD4 records) and advances the scratch state byte +0x02 to 1.'
   - - 76992
     - c
-    - updateEnemySelectionEffectFactor
-    - '@source: src/bof3/battle/updateEnemySelectionEffectFactor.c'
+    - stateEnemySelectionEffect
+    - '@source: src/bof3/battle/stateEnemySelectionEffect.c'
     - '@behavior: Copies the oscillating factor into bytes 4, 3 and 2 of the effect record selected by scratch work byte 7; submits the effect to func_80196670 and resets scratch state byte 2 when the selection gate is clear or the selection neither matches scratch byte 5 nor carries bit 0x40.'
   - - 77184
     - c
@@ -1099,8 +1099,8 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 77380
     - c
-    - decrementWorkByte9SubmitEnemyCue
-    - '@source: src/bof3/battle/decrementWorkByte9SubmitEnemyCue.c'
+    - decrementWorkByte9Submit
+    - '@source: src/bof3/battle/decrementWorkByte9Submit.c'
     - '@behavior: Calls the enemy readiness helper, decrements scratch work byte +9, and on reaching zero submits the enemy first effect or its doubled cue byte combined with 0x600, then advances scratch work byte +2.'
   - - 77572
     - c
@@ -1109,7 +1109,7 @@ segments:
     - '@behavior: When enemyReadyOrHelper1 reports ready, forwards the battle byte D_80146384 to func_800A9820, runs the 0x80 slot allocation, raises bit 0x4 of the battle global halfword BATTLE_GLOBAL_HALF_62E8 and resets the enemy scratch state.'
   - - 77672
     - c
-    - dispatchByte2TableB40c
+    - callByte2Table40
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 77740
     - c
@@ -1173,8 +1173,8 @@ segments:
     - '@behavior: Advances local-work fields +0x40/+0x44 by +0x0C and then +0x0C by +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.'
   - - 80956
     - c
-    - submitWorkAndSeedGravity
-    - '@source: src/bof3/battle/submitWorkAndSeedGravity.c'
+    - submitWorkSeedGravity
+    - '@source: src/bof3/battle/submitWorkSeedGravity.c'
     - '@behavior: Runs the front-end cue 0x204, resubmits the current enemy work effect halfword +0x6 of the +0xE8 record while battle gate byte 0x801462EA is set, then submits the scratch work record and its positional effect with the 0xFF offsets and mode 0, seeds acceleration +0x1C with -0x2000, clears velocity +0x10 and advances scratch work byte +0x03 to 3.'
   - - 81108
     - c
@@ -1188,8 +1188,8 @@ segments:
     - '@behavior: Dispatches the current queued-result substate byte through its table.'
   - - 81260
     - c
-    - applyEnemyCounterDeltaOrDeplete
-    - '@source: src/bof3/battle/applyEnemyCounterDeltaOrDeplete.c'
+    - stateEnemyCounterDelta
+    - '@source: src/bof3/battle/stateEnemyCounterDelta.c'
     - '@behavior: Applies the signed enemy-work halfword +0xF8 delta to the current halfword +0x94: when the delta is not below the current value it stores 0 into +0x94 and 0x4000 into +0x82; otherwise it raises front-end cue 0x206 for a negative delta, subtracts the delta from +0x94 and lowers that result to the +0xA0 ceiling. While enemy byte +0xFC has bit 0 set it then forwards the delta and scratch byte +0x05 to func_800AAC88, runs enemyReadyOrHelper1 and advances scratch byte +0x03.'
   - - 81488
     - c
@@ -1207,8 +1207,8 @@ segments:
     - '@behavior: Initializes enemy cue countdown when the loader is ready and advances the selection-dependent work state.'
   - - 82044
     - c
-    - countdownWorkByte9SubmitCue
-    - '@source: src/bof3/battle/countdownWorkByte9SubmitCue.c'
+    - countdownWorkByte9Submit
+    - '@source: src/bof3/battle/countdownWorkByte9Submit.c'
     - '@behavior: Counts down work byte +9; at zero submits an enemy-selected cue and advances byte +2, then checks enemy readiness.'
   - - 82228
     - c
@@ -1219,7 +1219,7 @@ segments:
     - c
     - dispatchByte2ThenReset2
     - '@source: src/bof3/battle/battle03DispatchTables.c'
-    - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.'
+    - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls stateEnemyScratchBit4.'
   - - 82392
     - c
     - checkReady2AdvanceByte2
@@ -1235,16 +1235,16 @@ segments:
     - func_801E4ECC
   - - 82740
     - c
-    - resetEnemyScratchWhenBit4
-    - '@source: src/bof3/battle/resetEnemyScratchWhenBit4.c'
+    - stateEnemyScratchBit4
+    - '@source: src/bof3/battle/stateEnemyScratchBit4.c'
   - - 82788
     - c
     - dispatchByte2TableB478
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 82856
     - c
-    - initializeFlippedWorkDecayAndAdvance
-    - '@source: src/bof3/battle/initializeFlippedWorkDecayAndAdvance.c'
+    - initializeFlippedWorkDecay
+    - '@source: src/bof3/battle/initializeFlippedWorkDecay.c'
     - '@behavior: Initializes the mode-transformed work pair, toggles mode bit 1, seeds countdowns and the decay triple, submits the positional helper and cue 0x102, runs enemy readiness and advances work byte +0x02.'
   - - 83136
     - c
@@ -1253,8 +1253,8 @@ segments:
     - '@behavior: Counts down scratch work byte +0x09 and returns while it is nonzero; otherwise counts down work byte +0x0A, advancing work byte +0x02 when that expires and otherwise stepping the work triple +0x5D/+0x5E/+0x5F down by 0x10, integrating the motion pair +0x0C/+0x10 into +0x34/+0x38 and running enemyReadyOrHelper1.'
   - - 83420
     - c
-    - clearBattlerFlagsAndDecrement462F3
-    - '@source: src/bof3/battle/clearBattlerFlagsAndDecrement462F3.c'
+    - stateBattlerFlagsDecrement462
+    - '@source: src/bof3/battle/stateBattlerFlagsDecrement462.c'
     - '@behavior: Clears battler action flags, decrements D_801462F3, sets D_80146328 bit 1 on zero, submits work, clears the pending bit and dispatch slots, and calls func_800ACFF4.'
   - - 83592
     - c
@@ -1275,8 +1275,8 @@ segments:
     - '@behavior: Samples two current-enemy entries against byte thresholds and merges accepted IDs into the counted list.'
   - - 84204
     - c
-    - accumulateEnemyHalfwordsAndResetScratch
-    - '@source: src/bof3/battle/accumulateEnemyHalfwordsAndResetScratch.c'
+    - accumulateEnemyHalfwordsReset
+    - '@source: src/bof3/battle/accumulateEnemyHalfwordsReset.c'
     - '@behavior: Raises scratch work flag 0x40, accumulates the current enemy halfwords +0x86/+0x84 into D_8014632C/D_80146330, sets enemy halfword +0x82 bit 0x4000 and clears +0x84, clears the selected battler action flags, runs the random enemy entry collection, decrements the D_801462F3 counter and raises D_80146328 bit 1 on zero, conditionally clears global halfword 62E8 bit 0x4000, runs func_800AD074 on enemy byte +0x7C, submits the scratch work, clears enemy word +0x100 bits 0x70 and the pending bit, then re-arms scratch bytes +1..+3 as 2/0/0.'
   - - 84604
     - c
@@ -1288,8 +1288,8 @@ segments:
     - '@source: src/bof3/battle/raiseBit80AllocSlot.c'
   - - 84840
     - c
-    - requestFrontSelectorState1Substate19
-    - '@source: src/bof3/battle/requestFrontSelectorState1Substate19.c'
+    - requestFrontSelectorState1
+    - '@source: src/bof3/battle/requestFrontSelectorState1.c'
     - '@behavior: When the shared battle state byte 0x80146328 has bit 0 set and the front-end gate halfword 0x80143F04 reads 0xBD, requests front-selector primary state 1 with secondary sub-state 0x19 in the shared bytes 0x80146874/0x80146875, then runs the shared front-end startup helper func_8015C088 and initializes the shared 5/3/0 mode tuple through initModeTuple530; otherwise it does nothing. Takes no arguments and returns nothing.'
   - - 84936
     - c
@@ -1324,13 +1324,13 @@ segments:
     - '@source: src/bof3/battle/func_801E5AF4.c'
   - - 85900
     - c
-    - dispatchSlotByte5TableD1c
-    - '@source: src/bof3/battle/dispatchSlotByte5TableD1c.c'
+    - callSlotByte5Table
+    - '@source: src/bof3/battle/callSlotByte5Table.c'
     - '@behavior: Copies a 110-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86044
     - c
-    - dispatchSlotByte5TableEd4
-    - '@source: src/bof3/battle/dispatchSlotByte5TableEd4.c'
+    - callSlotByte5Table2
+    - '@source: src/bof3/battle/callSlotByte5Table2.c'
     - '@behavior: Copies an eight-handler local table to the stack and dispatches by queued-slot byte +0x05.'
   - - 86180
     - c
@@ -1366,7 +1366,7 @@ segments:
     - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to renderDecimalGlyphRun8.'
   - - 88000
     - c
-    - dispatchSlotByte1TableF20
+    - callSlotByte1Table
   - - 88096
     - c
     - func_801E6420
@@ -1394,12 +1394,12 @@ segments:
     - '@behavior: Initializes the scratch work display bytes +0x24..+0x2C, takes +0x27 from the class-keyed byte table D_801EB4A4 plus 0xB0, sets +0x2A from the class byte +0x07 and half-row byte +0x08, advances work byte +0x01 and requests the D_801EB4B0 byte for that class and half-row before the shared idle helper.'
   - - 89324
     - c
-    - clearQueuedSlotWhenReady
-    - '@source: src/bof3/battle/clearQueuedSlotWhenReady.c'
+    - stateQueuedSlotReady
+    - '@source: src/bof3/battle/stateQueuedSlotReady.c'
     - '@behavior: Clears the current queued-slot bytes when the shared battle readiness predicate reports ready, otherwise runs the shared idle helper.'
   - - 89392
     - c
-    - dispatchSlotByte1TableF2c
+    - callSlotByte1Table2
   - - 89488
     - c
     - clearByte9AdvanceByte1
@@ -1445,21 +1445,21 @@ segments:
     - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and isBattlerInactiveOrFlag4000 accepts that record.'
   - - 90708
     - c
-    - initializeGroupFlagScratchAndRequest
-    - '@source: src/bof3/battle/initializeGroupFlagScratchAndRequest.c'
+    - initializeGroupFlagScratch
+    - '@source: src/bof3/battle/initializeGroupFlagScratch.c'
     - '@behavior: Initializes scratch work for the next enabled group flag and requests its table byte before advancing scratch byte one by two.'
   - - 91040
     - c
     - clearScratchByte1
   - - 91056
     - c
-    - countdownGroupSelectionAndRefreshTarget
-    - '@source: src/bof3/battle/countdownGroupSelectionAndRefreshTarget.c'
+    - countdownGroupSelectionRefresh
+    - '@source: src/bof3/battle/countdownGroupSelectionRefresh.c'
     - '@behavior: Advances the group selection from the 0x801462E8 bit 0x400 gate: it increments scratch byte +1 while the 0x80146374 progress byte matches or the fight stage 0x80146375/0x801463C0 pair reads 0x97/0xE1, and otherwise counts down scratch byte +0x0A, arms the next enabled 0x58 group bit with its D_801EB494 request byte or clears the queued slot bytes, clears scratch byte +1 when the selected record has no group bits or its battler is unavailable, and refreshes the queued work position.'
   - - 91628
     - c
-    - countdownScratchByte1ByGroupFlags
-    - '@source: src/bof3/battle/countdownScratchByte1ByGroupFlags.c'
+    - countdownScratchByte1Group
+    - '@source: src/bof3/battle/countdownScratchByte1Group.c'
     - '@behavior: Looks up the selected record''s masked group flags and resets or decrements scratchpad byte +1 when battle global bit 4 is set.'
   - - 91816
     - c
@@ -1551,12 +1551,12 @@ segments:
     - '@behavior: Chooses the next enabled bit of the current target''s 0x58 group-flag mask, starting just after the scratch byte 0x0B and wrapping modulo 16.'
   - - 99444
     - c
-    - dispatchStateByte2TableF80
-    - '@source: src/bof3/battle/dispatchStateByte2TableF80.c'
+    - callStateByte2Table
+    - '@source: src/bof3/battle/callStateByte2Table.c'
     - '@behavior: Dispatches an eight-entry local handler table by battle state byte +0x02.'
   - - 99580
     - c
-    - dispatchStateByte3TableFa0
+    - callStateByte3Table
   - - 99676
     - c
     - func_801E915C
@@ -1569,14 +1569,14 @@ segments:
     - '@behavior: Reads two signed panel halfwords and calls func_801D750C.'
   - - 99836
     - c
-    - dispatchStateByte3TableFac
+    - callStateByte3Table2
   - - 99932
     - c
     - incrementStateByte3
   - - 99964
     - c
-    - submitCountdownEntriesAndAdvance
-    - '@source: src/bof3/battle/submitCountdownEntriesAndAdvance.c'
+    - submitCountdownEntriesAdvance
+    - '@source: src/bof3/battle/submitCountdownEntriesAdvance.c'
     - '@behavior: Submits five countdown-positioned entries through func_801644D8, then advances panel state byte +3 when countdown zero is zero or decrements all seven countdowns otherwise.'
   - - 100240
     - c
@@ -1585,7 +1585,7 @@ segments:
     - '@behavior: Ages the seven per-actor countdown bytes at 0x801462FC: when the selected-actor byte 0x801462F4 equals the index the countdown is raised by two while below eight, otherwise it is lowered by two while non-zero; then forwards the object halfwords +4/+6 of 0x80148648 to func_801D7A40.'
   - - 100412
     - c
-    - dispatchStateByte3TableFb8
+    - callStateByte3Table3
   - - 100508
     - c
     - callD8450WhenIdle
@@ -1593,7 +1593,7 @@ segments:
     - '@behavior: Calls drawBattleCommandStrip with D_801462F4 when D_80144955 is zero.'
   - - 100560
     - c
-    - dispatchStateByte3TableFc4
+    - callStateByte3Table4
   - - 100656
     - c
     - stubHandler9530
@@ -1632,8 +1632,8 @@ segments:
     - func_801E9CA8
   - - 103192
     - c
-    - activatePanelTaskUnlessBattlerInactive
-    - '@source: src/bof3/battle/activatePanelTaskUnlessBattlerInactive.c'
+    - activatePanelTaskUnless
+    - '@source: src/bof3/battle/activatePanelTaskUnless.c'
     - '@behavior: Returns while the battle selection gate byte 0x801462EF is clear; with the gate set it reads panel byte +0x0A as a battler index and returns only when isBattlerInactiveOrFlag4000 reports that battler inactive while both selection setup predicates report disabled, otherwise it activates the panel task for the queued selection slot whose first byte D_801EB4D8 equals panel byte +0x0A and again when that slot byte carries bit 0x80.'
   - - 103388
     - c
@@ -1689,8 +1689,8 @@ segments:
     - '@behavior: Copies four handlers and dispatches the entry selected by panel-task state byte +3.'
   - - 105544
     - c
-    - advancePanelWhenRingDiffers
-    - '@source: src/bof3/battle/advancePanelWhenRingDiffers.c'
+    - statePanelRingDiffers
+    - '@source: src/bof3/battle/statePanelRingDiffers.c'
     - '@behavior: Advances panel state byte +3 and raises an update flag when two gate bytes differ.'
   - - 105620
     - c
