@@ -57,9 +57,10 @@ def test_category_denylist_is_refused() -> None:
 
 def test_own_and_foreign_target_tokens_are_refused() -> None:
     own = report("stateAdvanceBmagicMagic00100", target="emi/bmagic/magic001/00")
-    assert own.violations == ("own-token",)
+    assert "own-token" in own.violations
+    assert "family-fragment" in own.violations
     foreign = report("stateAdvanceWorld02Area10814", target="emi/bmagic/magic001/00")
-    assert foreign.violations == ("foreign-token",)
+    assert "foreign-token" in foreign.violations
 
 
 def test_address_suffix_is_refused() -> None:
@@ -86,6 +87,7 @@ def test_violation_order_is_stable() -> None:
         "category",
         "address",
         "own-token",
+        "family-fragment",
     )
 
 

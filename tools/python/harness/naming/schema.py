@@ -19,6 +19,19 @@ ADDRESS_SUFFIX_RE = re.compile(r"_[0-9A-F]{8}$")
 TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|$)|[A-Z]?[a-z]+[0-9]*|[0-9]+")
 
 DENIED_CATEGORIES = frozenset({"func", "helper", "sub", "temp", "misc", "unknown"})
+# Camel tokens that only exist because a harvested name was cut off mid-target:
+# the family or index spelling of an overlay, never a word a description needs.
+ARTIFACT_ROOTS = (
+    "Bmagic",
+    "Scena",
+    "Plchar",
+    "Batl",
+    "Commu",
+    "Sisyou",
+    "Shisu",
+    "Plp",
+    "Area",
+)
 DATA_ROLE_WORDS = frozenset({"table", "strings", "state"})
 
 # Recorded order of violation codes; the report keeps it stable.
@@ -30,6 +43,7 @@ VIOLATION_CODES = (
     "address",
     "own-token",
     "foreign-token",
+    "family-fragment",
     "role",
 )
 
@@ -128,6 +142,8 @@ def name_report(
         found.add("category")
     if ADDRESS_SUFFIX_RE.search(name):
         found.add("address")
+    if any(token.startswith(ARTIFACT_ROOTS) for token in tokens):
+        found.add("family-fragment")
     folded = name.casefold()
     for owner, composition in sorted((tokens_by_target or {}).items()):
         if any(token.casefold() in folded for token in composition):
