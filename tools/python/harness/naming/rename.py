@@ -311,15 +311,35 @@ def _name_index(root: Path, manifests):
     return rows
 
 
-def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
-    """Refuse a name another target already uses for a different body."""
-    if plan.address is None:
+def _remember(root: Path, plan: RenamePlan) -> None:
+    """Keep the name index true after this process has renamed a row."""
+    index = _NAMES.get(root)
+    if index is None or plan.address is None:
         return
-    ours = frozenset(
+    for name, rows in list(index.items()):
+        kept = [row for row in rows if row[0] != plan.target or row[1] != plan.address]
+        if kept:
+            index[name] = kept
+        else:
+            del index[name]
+    index.setdefault(plan.new.casefold(), []).append(
+        (plan.target, plan.address, _plan_dirs(root, plan))
+    )
+
+
+def _plan_dirs(root: Path, plan: RenamePlan) -> frozenset[Path]:
+    return frozenset(
         path.parent
         for path in manifest_source_paths(root, plan.manifest)
         if path.suffix == ".c"
     )
+
+
+def _check_cross_target_name(plan: RenamePlan, root: Path, target: str) -> None:
+    """Refuse a name another target already uses for a different body."""
+    if plan.address is None:
+        return
+    ours = _plan_dirs(root, plan)
     for owner, address, directories in _name_index(
         root, load_manifests_for(plan)
     ).get(plan.new.casefold(), ()):
@@ -400,6 +420,7 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
     except RuntimeError as error:
         plan.refuse("lease", str(error))
         return _payload(root, plan, applied=False, proof=(), attempted=True)
+    _remember(root, plan)
     return _payload(root, plan, applied=True, proof=(before, after), attempted=True)
 
 
@@ -502,6 +523,7 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
                         )
                     )
                     continue
+                _remember(root, plan)
                 payloads.append(
                     _payload(root, plan, applied=True, proof=(before, after), attempted=True)
                 )
