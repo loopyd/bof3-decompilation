@@ -10,7 +10,7 @@ load_address = 0x801EEC00
 sources = [
     "src/bof3/bmagic/callStateTableec10Bmagic.c",
     "src/bof3/bmagic/statePoseHalfwordsPointer.c",
-    "src/bof3/bmagic/seedWorkDeltaWordsFromRecordTablesThenSeedHeaderKind84RequestResourceByBattleByteParitySetWorkByte9AndAdvanceWorkByte2BmagicMagic13803_801EF04C.c",
+    "src/bof3/bmagic/stateDeltaTablesHeader.c",
 ]
 support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13803_801EEC28.c",
@@ -20,6 +20,6 @@ support_sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8.c",
     "src/bof3/bmagic/seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0.c",
     "src/bof3/bmagic/publishPointerUpdateForward.c",
-    "src/bof3/bmagic/dispatchStateByte2Tableec1cBmagicMagic13803_801EF52C.c",
+    "src/bof3/bmagic/callStateTableec1Bmagic.c",
 ]
 psyq_source = "src/bof3/support/magic138_03_psyq.c"

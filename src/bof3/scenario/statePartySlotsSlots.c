@@ -8,7 +8,7 @@ void func_801C1630(void);
 extern u8 D_80146254;
 /* @source 0x80144908 @kind unknown — party mirror of the live local work
  * records, written slot by slot by
- * copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234. */
+ * copyPartyBytesHelper. */
 extern u8 D_80144908[];
 
 /* @source 0x801FDF54

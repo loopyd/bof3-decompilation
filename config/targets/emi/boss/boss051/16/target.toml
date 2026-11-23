@@ -12,7 +12,7 @@ sources = [
     "src/bof3/boss/publishBattleHooksBossBoss05116_800C1A14.c",
     "src/bof3/boss/dispatchStateByte1Table1dc4BossBoss05116_800C1814.c",
     "src/bof3/boss/armClassSlotPointer.c",
-    "src/bof3/boss/advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14.c",
+    "src/bof3/boss/stateClassRowOffset.c",
     "src/bof3/boss/callSlotAllocatorReset.c",
 ]
 support_sources = [
@@ -27,6 +27,6 @@ support_sources = [
     "src/bof3/support/boss051_16_psyq.c",
     "src/bof3/boss/raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05116_800C1858.c",
-    "src/bof3/boss/pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4.c",
+    "src/bof3/boss/pollBattleReadyRequest.c",
 ]
 psyq_source = "src/bof3/support/boss051_16_psyq.c"

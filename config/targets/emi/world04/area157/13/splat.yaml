@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table38ccWorld04Area15713_801F2C04
+    - callStateTable38World04
     - '@source: src/bof3/world/area15713DispatchTables.c'
   - - 72
     - asm
@@ -51,7 +51,7 @@ segments:
     - func_801F3108
   - - 2112
     - c
-    - dispatchStateByte2Table3924World04Area15713_801F3440
+    - callStateTable3924World04
     - '@source: src/bof3/world/area15713DispatchTables.c'
   - - 2180
     - asm
@@ -61,8 +61,8 @@ segments:
     - func_801F35E0
   - - 2840
     - c
-    - advanceHalfword30By20AndAdvanceState2At100World04Area15713_801F3718
-    - '@source: src/bof3/world/advanceHalfword30By20AndAdvanceState2At100World04Area15713_801F3718.c'
+    - stateBy20AdvanceAt100
+    - '@source: src/bof3/world/stateBy20AdvanceAt100.c'
     - '@behavior: Byte-2 state handler 2 of the local handler table based at 0x801F3924, the word that table stores at 0x801F392C, for the work record published at the scratchpad pointer cell 0x1F800044: it adds 0x20 to the record halfword at 0x30 and, once that stored signed halfword reaches 0x100, advances the record state byte at 0x02 by one, loading the cell once for both.'
   - - 2912
     - asm

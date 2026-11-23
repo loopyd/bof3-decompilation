@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C(
+void claimFixedStoreDistance(
     void);
 
 /* @source 0x801F3D24
@@ -12,5 +12,5 @@ void claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBW
  * @residual none
  */
 void invokeHelperWorld01Area05213_801F3D24(void) {
-  claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C();
+  claimFixedStoreDistance();
 }

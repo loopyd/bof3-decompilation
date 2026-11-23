@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/drawRandomScaledTranslucentGouraudBandOverWorkByteACountFromWorkByteBPhaseBmagicMagic14303_801EF9A4.c",
     "src/bof3/bmagic/magic14303DispatchTables.c",
     "src/bof3/bmagic/callBandsFanPop.c",
-    "src/bof3/bmagic/seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10.c",
+    "src/bof3/bmagic/stateRandomNibbleClear.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic14303_801EED24.c",
     "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14303_801EF100.c",
 ]

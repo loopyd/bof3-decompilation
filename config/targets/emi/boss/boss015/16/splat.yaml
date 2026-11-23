@@ -27,14 +27,14 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table19b0BossBoss01516_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table19b0BossBoss01516_800C1804.c'
+    - callStateTable19Boss
+    - '@source: src/bof3/boss/callStateTable19Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-word code pointer run based at 0x800C19B0 with no arguments, leaving the handler''s result in the return register. The original does not bound the index before the scaled table load, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the pointer-cell load precedes frame creation. No word of this payload names this function''s address, so it is an overlay entry reached from outside the payload.'
   - - 72
     - c
     - publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss01516_800C1848.c'
-    - '@behavior: Step-0 setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C199C into +0xEC, the step dispatcher dispatchIndexedHandlerBossBoss01516_800C18A0 into +0xE4 and the data pointer 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state byte is the value dispatchStateByte1Table19b0BossBoss01516_800C1804 indexes its twelve-word 0x800C19B0 run by, and this function is that run''s entry 0, so writing 2 selects its third entry, 0x801E35D8. No jal reaches this function and the 0x800C19B0 word is its only in-image reference, so it is an overlay entry reached from outside the payload.'
+    - '@behavior: Step-0 setup of this overlay''s work state machine: publishes three words into the current enemy work record loaded from 0x801EB4E8 -- the data row pointer 0x800C199C into +0xEC, the step dispatcher dispatchIndexedHandlerBossBoss01516_800C18A0 into +0xE4 and the data pointer 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores 2 into the state byte at +1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state byte is the value callStateTable19Boss indexes its twelve-word 0x800C19B0 run by, and this function is that run''s entry 0, so writing 2 selects its third entry, 0x801E35D8. No jal reaches this function and the 0x800C19B0 word is its only in-image reference, so it is an overlay entry reached from outside the payload.'
   - - 160
     - c
     - dispatchIndexedHandlerBossBoss01516_800C18A0

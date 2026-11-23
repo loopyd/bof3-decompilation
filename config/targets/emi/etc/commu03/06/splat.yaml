@@ -30,7 +30,7 @@ segments:
     - D_801D0C04
   - - 1616
     - c
-    - drawSoundTestPanelWithStereoLevelMeter
+    - renderSoundStereoMeter
   - - 2836
     - c
     - drawGlyphStringQuadsCommu03_06

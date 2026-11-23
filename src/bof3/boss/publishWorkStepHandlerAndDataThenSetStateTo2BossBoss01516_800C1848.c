@@ -32,7 +32,7 @@ void func_8014D978(void);
  * 0x800C19A8 (0x800C199C + 0xC, inside that same row) into +0xE8 -- then stores
  * 2 into the state byte at +1 of the work record the main program publishes at
  * the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state
- * byte is the value dispatchStateByte1Table19b0BossBoss01516_800C1804 indexes
+ * byte is the value callStateTable19Boss indexes
  * its twelve-word 0x800C19B0 run by, and this function is that run's entry 0
  * (the word at 0x800C19B0), so writing 2 selects its third entry, 0x801E35D8,
  * instead of re-entering this installer; no jal reaches it and the table word is

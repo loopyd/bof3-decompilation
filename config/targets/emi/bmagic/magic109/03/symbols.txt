@@ -1,6 +1,6 @@
 g_battle_work = 0x1F800044;
 func_801EEC14 = 0x801EEC14;
 func_801EEC80 = 0x801EEC80;
-add2ToWorkByte9AdvanceWorkByte1AndSeedWorkByteACountdownAt54ThenInvokeDrawHelperBmagicMagic10903_801EEEAC = 0x801EEEAC;
+workSeedCountdownDraw = 0x801EEEAC;
 func_801EEF30 = 0x801EEF30;
 func_801EF008 = 0x801EF008;

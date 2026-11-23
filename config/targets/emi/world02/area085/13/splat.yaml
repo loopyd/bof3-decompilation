@@ -93,13 +93,13 @@ segments:
     - func_801F38F0
   - - 3572
     - c
-    - publishFrontEndRecordIndexToWorkByteBThenSeedHandler47RowClearRowByteBAndQueueCue200World02Area08513_801F39F4
-    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandler47RowClearRowByteBAndQueueCue200World02Area08513_801F39F4.c'
+    - publishIndexRowRow
+    - '@source: src/bof3/world/publishIndexRowRow.c'
     - '@behavior: Overlay step: stores the shared free-record selector''s row index into work byte +0x0B of the record behind scratchpad cell 0x1F800044, then, unless that byte reads 0xFF, seeds the selected 0x74-byte front-end row at 0x80143FC8 with occupancy 1, handler selector 0x47 and a cleared row byte 0x0B, and queues cue 0x200; on a full table it subtracts 2 from the halfword at +0x0A of the record published at 0x80148210.'
   - - 3832
     - c
-    - applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8
-    - '@source: src/bof3/world/applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8.c'
+    - stateMainLookupRequest
+    - '@source: src/bof3/world/stateMainLookupRequest.c'
     - '@behavior: Overlay state handler: clears bit 0 of work byte 0x24, applies main lookup record 0x184 through 0x8014DD3C, requests resource 0 through 0x8014D6B8, sets work byte 0x2A to 1 and sets bit 0x10 of work byte 0.'
   - - 3932
     - asm

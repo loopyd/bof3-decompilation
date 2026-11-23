@@ -37,8 +37,8 @@ segments:
     - '@behavior: Overlay gate that starts the shared state entry 0xD at progress 0: it rejects a second argument above 0x3A0000, a first argument whose high half is outside 0x30..0x32, a record-0 mode byte D_80145E98 outside 0..2 and a nonzero shared selector func_80166140(5), and on pass stores 1 into the mode flag D_80146867, 0xD into the shared state entry D_801448EB and 0 into the progress byte D_801448EC before returning 1; every rejected path returns 0.'
   - - 296
     - c
-    - setSharedFlag23WhenSharedSelector5IsSetWorld02Area09713_801F2D28
-    - '@source: src/bof3/world/setSharedFlag23WhenSharedSelector5IsSetWorld02Area09713_801F2D28.c'
+    - stateSharedSharedIs
+    - '@source: src/bof3/world/stateSharedSharedIs.c'
     - '@behavior: Overlay step reached only from the loader table that asks the main-exe byte query func_80166140 for selector 5 and, when that answer is nonzero, sets flag 0x23 of the shared main-RAM flag bank D_80144F28 through the EXE-side flag setter func_8015B580; a zero answer skips the setter and every path returns 0.'
   - - 352
     - textbin

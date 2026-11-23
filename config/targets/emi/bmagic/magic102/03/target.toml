@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/support/magic102_03_psyq.c",
     "src/bof3/bmagic/stateFramesSignedRamp.c",
-    "src/bof3/bmagic/sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC.c",
+    "src/bof3/bmagic/sampleNegatedMirroredAxes.c",
     "src/bof3/bmagic/renderCornerSampledHeights.c",
 ]
 psyq_source = "src/bof3/support/magic102_03_psyq.c"

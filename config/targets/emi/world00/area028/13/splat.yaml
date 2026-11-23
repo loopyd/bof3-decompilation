@@ -28,7 +28,7 @@ segments:
     - T_801F2C00
   - - 4
     - c
-    - dispatchStateByte1Table34a8World00Area02813_801F2C04
+    - callStateTable34World00
     - '@source: src/bof3/world/area02813DispatchTables.c'
   - - 72
     - c

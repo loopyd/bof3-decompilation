@@ -20,7 +20,7 @@ extern void (*T_801D02F4[])(void); /* @source 0x801D02F4 @kind data */
  * slot after the table load stay nops. No jal in this payload targets the body;
  * its address appears once in the payload, as the word 0x801CE404 at 0x801D034C,
  * entry 22 of the run, which is also the base the sibling halfword dispatcher
- * dispatchWorkHalfword2cTable034cPlcharPlp03400_801D026C indexes, so that
+ * callWorkTable034Plchar indexes, so that
  * dispatcher reaches this body as its entry 0 while the overlays enter the body
  * itself from outside the payload. It takes no arguments and returns no value.
  * @status exact

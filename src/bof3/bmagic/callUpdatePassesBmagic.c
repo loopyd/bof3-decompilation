@@ -25,7 +25,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 void func_800AF764(void);
 void func_801EF1B0(void);
 void func_801EF4C4(void);
-void drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898(void);
+void renderPrimitivesSwappingOrder(void);
 
 /* @source 0x801EEF4C
  * @behavior Handler installed as entry 0 of the byte-1 dispatch table at
@@ -35,7 +35,7 @@ void drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBat
  *   then re-reads the work-record pointer after that call and, when the record
  *   byte at offset 2 and the record byte at offset 0 are both nonzero, calls
  *   func_800AF764, func_801EF1B0, func_801EF4C4 and
- *   drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898
+ *   renderPrimitivesSwappingOrder
  *   in that order. It returns nothing and writes no state of its own.
  * @status exact
  * @match 100.00
@@ -47,6 +47,6 @@ void callUpdatePassesBmagic(void) {
     func_800AF764();
     func_801EF1B0();
     func_801EF4C4();
-    drawRadialRingOfSixteenPrimitivesTintedByWorkByte9SwappingChannelOrderAtBattleKind50BmagicMagic05003_801EF898();
+    renderPrimitivesSwappingOrder();
   }
 }

@@ -7,7 +7,7 @@ extern void (*D_8011818C[])(void);
  * record published at the scratchpad pointer cell 0x1F800044 and calls the
  * handler at that index of the overlay's unchecked handler table based at
  * 0x8011818C, a run of thirteen in-image pointers from the boot handler
- * func_80117048 (word 0) through advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0 (word 12); word 1 is the state-1
+ * func_80117048 (word 0) through stateFramesComplementShade (word 12); word 1 is the state-1
  * handler func_801170A4 and the word after the run is not a handler. The record
  * pointer is loaded before the frame is created. Takes no arguments and returns
  * nothing.

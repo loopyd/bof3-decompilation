@@ -87,14 +87,14 @@ segments:
     - noopHandlerBossBoss03416_800C1DA8
   - - 1456
     - c
-    - dispatchStateByte1Table273cBossBoss03416_800C1DB0
-    - '@source: src/bof3/boss/dispatchStateByte1Table273cBossBoss03416_800C1DB0.c'
+    - callStateTable273Boss
+    - '@source: src/bof3/boss/callStateTable273Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row D_800C26B8, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
   - - 1524
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4
     - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4.c'
-    - '@behavior: Step setup of this overlay byte-1 work state machine, entry 0 of the handler run based at 0x800C273C that the byte-1 dispatcher dispatchStateByte1Table273cBossBoss03416_800C1DB0 indexes with the work-record byte at offset 1: publishes three words into the record loaded from 0x801EB4E8 - the data row pointer 0x800C26B8 into +0xEC, the indexed step dispatcher dispatchIndexedHandlerBossBoss03416_800C1E58 into +0xE4 and the in-row record word 0x800C26C4 into +0xE8 - raises bit 0x8 of the +0x104 flag word, stores 2 into the state byte at offset 1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978, so the next byte-1 dispatch reaches that run entry 2, 0x801E35D8. No jal names 0x800C1DF4; its only in-image word is the run entry at 0x800C273C.'
+    - '@behavior: Step setup of this overlay byte-1 work state machine, entry 0 of the handler run based at 0x800C273C that the byte-1 dispatcher callStateTable273Boss indexes with the work-record byte at offset 1: publishes three words into the record loaded from 0x801EB4E8 - the data row pointer 0x800C26B8 into +0xEC, the indexed step dispatcher dispatchIndexedHandlerBossBoss03416_800C1E58 into +0xE4 and the in-row record word 0x800C26C4 into +0xE8 - raises bit 0x8 of the +0x104 flag word, stores 2 into the state byte at offset 1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978, so the next byte-1 dispatch reaches that run entry 2, 0x801E35D8. No jal names 0x800C1DF4; its only in-image word is the run entry at 0x800C273C.'
   - - 1624
     - c
     - dispatchIndexedHandlerBossBoss03416_800C1E58
@@ -111,8 +111,8 @@ segments:
     - noopHandlerBossBoss03416_800C1EA0
   - - 1704
     - c
-    - storePartySlotMatchingFieldRecordIndexThenPublishBattleHookTrioBossBoss03416_800C1EA8
-    - '@source: src/bof3/boss/storePartySlotMatchingFieldRecordIndexThenPublishBattleHookTrioBossBoss03416_800C1EA8.c'
+    - stateMatchingHookTrio
+    - '@source: src/bof3/boss/stateMatchingHookTrio.c'
     - '@behavior: Overlay installer: it loads the shared byte D_80181B14 once, walks the three 0x140-byte party records of the run 0x80145E90 reading each record''s byte 0x13C through the cell D_80145FCC, and for every slot whose 0x13C byte equals that shared byte it stores the slot number into this overlay''s byte D_800C2778; it then stores 0x800C20A8, 0x800C22D0 and 0x800C1F30 into the shared hook slots 0x801463A4, 0x801463A8 and 0x801463AC. No word of this payload holds this function''s address and no jal reaches it, so the overlay loader is what calls it.'
   - - 1840
     - asm
@@ -127,14 +127,14 @@ segments:
     - c
     - publishBattleHooksBossBoss03416_800C2340
     - '@source: src/bof3/boss/publishBattleHooksBossBoss03416_800C2340.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler initModeTupleByBattleFlagBossBoss03416_800C2380 into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into 0x801463A8, and the zero-result accessor zeroResultBossBoss03416_800C2378 into 0x801463AC'
+    - '@behavior: Publishes this overlay''s handler trio into the shared hook slots: the mode-transition handler setupModeTupleFlag into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into 0x801463A8, and the zero-result accessor zeroResultBossBoss03416_800C2378 into 0x801463AC'
   - - 2936
     - c
     - zeroResultBossBoss03416_800C2378
   - - 2944
     - c
-    - initModeTupleByBattleFlagBossBoss03416_800C2380
-    - '@source: src/bof3/boss/initModeTupleByBattleFlagBossBoss03416_800C2380.c'
+    - setupModeTupleFlag
+    - '@source: src/bof3/boss/setupModeTupleFlag.c'
     - '@behavior: Overlay mode-transition handler: while the 0x2 bit of the shared battle flag byte D_80146328 is set it stores 5 into the shared mode byte D_80146875 and runs initModeTuple510, and otherwise it runs initModeTuple520'
   - - 3020
     - c

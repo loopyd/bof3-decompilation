@@ -80,8 +80,8 @@ segments:
     - func_801EF930
   - - 3944
     - c
-    - advanceWorkByteAAccumulateSamplePairIntoPositionWordsSubtract8FromHalfword3EThenDecrementGlobalWorkByteBAndClearWorkAtHelperReadyOrBelowWord14BmagicMagic10503_801EFB68
-    - '@source: src/bof3/bmagic/advanceWorkByteAAccumulateSamplePairIntoPositionWordsSubtract8FromHalfword3EThenDecrementGlobalWorkByteBAndClearWorkAtHelperReadyOrBelowWord14BmagicMagic10503_801EFB68.c'
+    - stateSampleWordsBelow
+    - '@source: src/bof3/bmagic/stateSampleWordsBelow.c'
     - '@behavior: Advances work byte 0xA, accumulates the two rotator samples into position words 0x34 and 0x38, subtracts 8 from halfword 0x3E, then decrements global work byte 0xB and clears work bytes 0, 1 and 2 when the readiness helper reports ready or halfword 0x3E falls below word 0x14.'
   - - 4236
     - c
@@ -90,8 +90,8 @@ segments:
     - '@behavior: Reserves the first free record in the 64-record pool and returns its index or 0xFF.'
   - - 4336
     - c
-    - drawCountedSemiTransSpriteStreamAtWorkHalfwords2EAnd30FromTilePairTableClutFromByte27PageFromByte5CAndTintFrom5DTo5FBmagicMagic10503_801EFCF0
-    - '@source: src/bof3/bmagic/drawCountedSemiTransSpriteStreamAtWorkHalfwords2EAnd30FromTilePairTableClutFromByte27PageFromByte5CAndTintFrom5DTo5FBmagicMagic10503_801EFCF0.c'
+    - renderCountedClutPage
+    - '@source: src/bof3/bmagic/renderCountedClutPage.c'
     - '@behavior: Draws the counted stream of semi-transparent SPRT primitives of one pool record at the work halfwords 2E and 30, sizing each from the tile pair table at 801F0080 by the low nibble of the record flags byte and mirroring it when flag 80 and work byte 2A are set.'
   - - 5192
     - textbin

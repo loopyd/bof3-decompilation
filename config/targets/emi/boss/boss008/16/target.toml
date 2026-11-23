@@ -11,11 +11,11 @@ sources = [
     "src/bof3/boss/callStateTable26Boss.c",
     "src/bof3/boss/dispatchStateByte4Table26b0BossBoss00816_800C1928.c",
     "src/bof3/boss/stateScaleThresholdQueue.c",
-    "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1848.c",
+    "src/bof3/boss/publishStepDataSet.c",
 ]
 support_sources = [
     "src/bof3/boss/publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1E08.c",
-    "src/bof3/boss/dispatchStateByte1Table2744BossBoss00816_800C1EB0.c",
+    "src/bof3/boss/callStateTable2744Boss.c",
     "src/bof3/boss/publishNoopStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1EF4.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00816_800C1C88.c",
     "src/bof3/boss/boss00816DispatchTables.c",

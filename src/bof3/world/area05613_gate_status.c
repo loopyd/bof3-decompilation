@@ -58,7 +58,7 @@ void stateStatusThirteenGate(void) {
  * @match 100.00
  * @residual none
  */
-void setStatusFourteenIfGateElseFFFFWorld01Area05613_801F316C(void) {
+void stateStatusFourteenGate(void) {
   if (D_801490C7 == 1) {
     D_801490A8 = 0xE;
   } else {

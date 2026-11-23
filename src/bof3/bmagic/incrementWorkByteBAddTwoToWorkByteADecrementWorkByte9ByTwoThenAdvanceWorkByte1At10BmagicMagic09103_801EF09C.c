@@ -16,7 +16,7 @@
  *
  * This address is the second word of the four-word code-pointer run at
  * 0x801EFC64 (0x801EEFFC, 0x801EF09C, 0x801EF124, 0x801EF1B8), declared in this
- * target as workByte1HandlerAddressesBmagicMagic09103. No instruction in this
+ * target as workHandlerAddressesBmagic. No instruction in this
  * payload loads that run and no word in the payload spells its base, so the
  * dispatcher that consumes the run lies outside the overlay image; the entry
  * roles stay structural.

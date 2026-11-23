@@ -9,7 +9,7 @@ incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroB
 setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic07403_801EF4D0 = 0x801EF4D0;
 func_801EF518 = 0x801EF518;
 func_801EF6A4 = 0x801EF6A4;
-dispatchStateByte1Table0558BmagicMagic07403_801EF710 = 0x801EF710;
+callStateTable0558Bmagic = 0x801EF710;
 dispatchRecordByte2AndRunFlaggedCallbacksBmagicMagic07403_801EF754 = 0x801EF754;
 func_801EF850 = 0x801EF850;
 func_801EFA50 = 0x801EFA50;

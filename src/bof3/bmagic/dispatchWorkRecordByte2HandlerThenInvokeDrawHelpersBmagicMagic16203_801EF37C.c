@@ -35,7 +35,7 @@ extern u32 D_80143E6C; /* @source 0x80143E6C @kind data */
 /* Draw helpers this dispatcher invokes; each one re-reads the record cell. */
 extern void drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8(
     void); /* @source 0x801EFCD8 @kind function */
-extern void drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic16203_801EF80C(
+extern void renderRotatedSpokesCenter(
     s32 arg0, s32 arg1); /* @source 0x801EF80C @kind function */
 extern void func_801EFA40(s32 arg0, s32 arg1); /* @source 0x801EFA40 @kind function */
 
@@ -69,7 +69,7 @@ void dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37
   if ((D_801F17B0[0] & 1u) && (D_801F17B0[2] != 0u)) {
     drawEightRotatedTrianglesFromPublishedCenterTintedByPaletteRowAtWorkBytes3And4BmagicMagic16203_801EFCD8();
     if (((u16 *)D_801F17B0)[6] & 3u) {
-      drawFourRotatedSpokesFromPublishedCenterTintedByWorkByte5BmagicMagic16203_801EF80C(
+      renderRotatedSpokesCenter(
           (u16)(D_80143E6C >> 1), D_801F17B0[6]);
       func_801EFA40((u16)((D_80143E6C >> 1) + 4),
                     D_801F17B0[6] + (D_801F17B0[6] >> 1));

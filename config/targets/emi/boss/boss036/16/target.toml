@@ -14,7 +14,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss03616_800C1D78.c",
-    "src/bof3/boss/clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44.c",
+    "src/bof3/boss/stateByteRequestBoss.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate5BossBoss03616_800C1E4C.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8.c",
     "src/bof3/boss/callStateTable206Boss.c",

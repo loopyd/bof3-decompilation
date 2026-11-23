@@ -27,8 +27,8 @@ extern void func_8014D6B8(u32 flag);
 
 /* Returns the whole 0x801EF2A8 record pool of this overlay to the free state.
  * Already lifted exact in this target as
- * src/bof3/bmagic/clearAllRecordActiveBytesBmagicMagic11603_801EEFF4.c. */
-void clearAllRecordActiveBytesBmagicMagic11603_801EEFF4(void);
+ * src/bof3/bmagic/stateAllActiveBytes.c. */
+void stateAllActiveBytes(void);
 
 /* @source 0x801EEC80
  * @behavior Entry stage 0 of this overlay: word 0 of the four-word pointer run
@@ -68,7 +68,7 @@ void copySavedPointerAll(void) {
     *(s32 *)(work + 0x34) = *(s32 *)(*(u8 **)(record + 0x74) + 0x34);
     *(s32 *)(work + 0x38) = *(s32 *)(*(u8 **)(record + 0x74) + 0x38);
     *(s32 *)(work + 0x3C) = *(s32 *)(*(u8 **)(record + 0x74) + 0x3C) + 0x1000000;
-    clearAllRecordActiveBytesBmagicMagic11603_801EEFF4();
+    stateAllActiveBytes();
     next = D_801EC2E0;
     saved = g_battle_work;
     g_battle_work = *(u8 **)(next + 0x74);

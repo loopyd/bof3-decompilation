@@ -38,7 +38,7 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and returns immediately when the work object''s unsigned byte at offset 0xB is non-zero; otherwise loads the shared battle byte at 0x80146384 unsigned, passes it to func_800A9820, raises bit 0x4 of the shared halfword at 0x801462E8 and calls func_801E5988.'
   - - 536
     - c
-    - dispatchStateByte1Tablef770BmagicMagic21803_801EEE18
+    - callStateTablef770Bmagic
     - '@source: src/bof3/bmagic/magic21803DispatchTables.c'
   - - 604
     - asm

@@ -11,6 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area018_13_psyq.c",
     "src/bof3/world/advanceHalfword0aBy9WhenWorkByte79Not2World00Area01813_801F2C68.c",
-    "src/bof3/world/setWorldRecordByte04To2UnlessScenarioIs08World00Area01813_801F2C04.c",
+    "src/bof3/world/stateWorldRecordUnless.c",
 ]
 psyq_source = "src/bof3/support/area018_13_psyq.c"

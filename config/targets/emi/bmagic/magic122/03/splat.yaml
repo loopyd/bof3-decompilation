@@ -38,15 +38,15 @@ segments:
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, before the frame exists, and returns immediately when the work-object byte at offset 0xB is not 0xFF. Otherwise it loads the shared battle byte at 0x80146384 unsigned and passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper func_801E5988. It takes no arguments, returns nothing and writes no other state; the 0x18-byte frame only keeps the return address at 0x10 across the two calls.'
   - - 604
     - c
-    - dispatchStateByte1Table02ccBmagicMagic12203_801EEE5C
+    - callStateTable02Bmagic
     - '@source: src/bof3/bmagic/magic12203DispatchTables.c'
   - - 672
     - asm
     - func_801EEEA0
   - - 812
     - c
-    - decrementWorkByte9ThenRefreshAndCopyRecordTripletSetStepPairFromRecordByte8StepPositionPairSetHeadingRearmWorkAndAdvanceWorkByte2BmagicMagic12203_801EEF2C
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenRefreshAndCopyRecordTripletSetStepPairFromRecordByte8StepPositionPairSetHeadingRearmWorkAndAdvanceWorkByte2BmagicMagic12203_801EEF2C.c'
+    - decrementRefreshHeadingRearm
+    - '@source: src/bof3/bmagic/decrementRefreshHeadingRearm.c'
   - - 1368
     - asm
     - func_801EF158

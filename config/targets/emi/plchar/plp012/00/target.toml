@@ -24,7 +24,7 @@ support_sources = [
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp01200_801CEA94.c",
     "src/bof3/plchar/stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp01200_801CEC30.c",
     "src/bof3/plchar/callWorkTablefdc0Plchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C.c",
+    "src/bof3/plchar/callWorkTablefdccPlchar.c",
     "src/bof3/plchar/queryIndexProjectedPosition.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp01200_801CF170.c",
     "src/bof3/plchar/selectArrivalSevenReached.c",

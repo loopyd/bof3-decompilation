@@ -55,8 +55,8 @@ segments:
     - '@behavior: For signed progress 0 or 0xA and phase byte not 2, releases the shared front end and sets block bit 0x88 or 0x89, respectively; progress 0 requests step 6, progress 0xA requests selector context (0x79, 0x2A0000, 0x1A0000, 7), and both handled paths clear the state-entry and progress bytes.'
   - - 1412
     - c
-    - setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184
-    - '@source: src/bof3/world/setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184.c'
+    - stateEntry38AdvanceWork
+    - '@source: src/bof3/world/stateEntry38AdvanceWork.c'
     - '@behavior: Calls the shared front-end startup helper, sets state-entry byte 0x801448EB to 0x38, clears progress byte 0x801448EC, and increments the supplied work record halfword at +0x7E.'
   - - 1488
     - asm

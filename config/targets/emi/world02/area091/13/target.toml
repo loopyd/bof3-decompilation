@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09113_801F2C84.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09113_801F2CB4.c",
-    "src/bof3/world/copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318.c",
+    "src/bof3/world/copyHalvedPaletteRow.c",
     "src/bof3/world/stateFirstKindUnseeded.c",
     "src/bof3/world/renderWedgesFadingBlack.c",
     "src/bof3/world/dispatchWorkByte4Table3b44World02Area09113_801F2D6C.c",

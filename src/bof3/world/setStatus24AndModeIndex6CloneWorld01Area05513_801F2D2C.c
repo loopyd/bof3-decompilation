@@ -17,7 +17,7 @@ extern u8 D_801D4285;
  *           0x801F2CE8 and 0x801F2D2C are entry points of this payload (no `jal`
  *           reaches this address).
  *           Shape: the 68 bytes at 0x801F2D2C differ from the recorded-exact
- *           sibling setStatus24AndModeIndex6IfGateElseFFFFWorld01Area05513_801F2CE8
+ *           sibling stateStatus24ModeGate
  *           in exactly one word, the internal `j` immediate at 0x801F2D54, whose
  *           value moves by 0x44 bytes, the delta between the two spans, so every
  *           relative branch, literal and cell reference is identical and the two

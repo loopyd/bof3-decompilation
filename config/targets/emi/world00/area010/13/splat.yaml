@@ -37,8 +37,8 @@ segments:
     - '@behavior: Reads the signed shared byte D_801490C7, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0xC8 into g_ScenarioProgress when that byte reads 0 and 0xC9 when it reads 1, leaving the progress byte untouched otherwise.'
   - - 132
     - c
-    - publishModeStatusFromTable362cWorld00Area01013_801F2C84
-    - '@source: src/bof3/world/publishModeStatusFromTable362cWorld00Area01013_801F2C84.c'
+    - publishModeStatusTable362
+    - '@source: src/bof3/world/publishModeStatusTable362.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte at 0x801490C7 from the target-local halfword table at 0x801F362C and publishes it into the shared status halfword at 0x801490A8.'
   - - 176
     - c

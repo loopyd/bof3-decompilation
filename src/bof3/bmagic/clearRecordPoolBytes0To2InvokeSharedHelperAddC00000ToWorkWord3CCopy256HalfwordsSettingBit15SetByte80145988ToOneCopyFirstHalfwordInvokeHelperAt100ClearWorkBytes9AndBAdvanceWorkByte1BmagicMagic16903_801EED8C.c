@@ -32,7 +32,7 @@ extern void func_800AFD9C(void); /* @source 0x800AFD9C */
 
 /* Shared main-executable helper at 0x8015D71C, outside this overlay's image.
  * When this seed was written the same target's sibling lift
- * incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC
+ * incrementCountersCountdownZero
  * had already gated exact and declared the helper as a void function taking one
  * u16 selector, so the call site here passes its literal through that same
  * declaration. */

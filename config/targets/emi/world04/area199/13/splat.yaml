@@ -76,8 +76,8 @@ segments:
     - func_801F3AB0
   - - 4768
     - c
-    - drawTranslucentRadialFanOfSixtyFourGouraudTrianglesFromPointFadingToBlackWorld04Area19913_801F3EA0
-    - '@source: src/bof3/world/drawTranslucentRadialFanOfSixtyFourGouraudTrianglesFromPointFadingToBlackWorld04Area19913_801F3EA0.c'
+    - renderRadialSixtyBlack
+    - '@source: src/bof3/world/renderRadialSixtyBlack.c'
     - '@behavior: Radial fade disc drawn from the passed point and radius: sixty-four translucent Gouraud triangles of 0x40 phase steps that all keep the passed point as their first vertex, the centre vertex tinted by the shade argument and both arc vertices cleared, each 0x1C-byte POLY_G3 appended at ordering table index 4.'
   - - 5132
     - asm

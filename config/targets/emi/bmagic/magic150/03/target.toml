@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/publishEffectTransformFromSavedWorkObjectZeroRadiiResetEffectSlotsArmCountdownAdvanceWorkByte1AndSubmitCue100BmagicMagic15003_801EECA4.c",
     "src/bof3/bmagic/stepSlotsNoneActive.c",
     "src/bof3/bmagic/stateParitySpinFan.c",
-    "src/bof3/bmagic/drawTranslucentRedRadialFanOfSixteenGouraudTrianglesTintedByCenterAndArcShadeBmagicMagic15003_801EF790.c",
+    "src/bof3/bmagic/renderRedRadialArc.c",
     "src/bof3/bmagic/renderRedSideNegative.c",
     "src/bof3/bmagic/audioBurstIdleExpires.c",
     "src/bof3/bmagic/shrinkRingBurstRadii.c",

@@ -13,7 +13,7 @@ sources = [
 support_sources = [
     "src/bof3/world/releaseFrontendSetProgress.c",
     "src/bof3/world/stateProgressGateStatus.c",
-    "src/bof3/world/setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184.c",
+    "src/bof3/world/stateEntry38AdvanceWork.c",
     "src/bof3/world/stateSelectingYFacing.c",
     "src/bof3/world/stateStatusProgressGate.c",
     "src/bof3/support/area128_13_psyq.c",

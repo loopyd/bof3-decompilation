@@ -81,8 +81,8 @@ segments:
     - '@behavior: Draws thirty-two translucent Gouraud quads between radii 128 and 192 with the inner edge tinted by work byte 9 times six, linked at slot 5 between draw-mode packets.'
   - - 3612
     - c
-    - drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C
-    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesAtRadius128TintedByWorkByte9TimesFourAndSixBmagicMagic11803_801EFA1C.c'
+    - renderThirtyFanTriangles
+    - '@source: src/bof3/bmagic/renderThirtyFanTriangles.c'
     - '@behavior: Draws thirty-two translucent Gouraud fan triangles at radius 128 with work byte 9 scaled by four and six as tint, linked at slot 5 between draw-mode packets.'
   - - 4308
     - asm

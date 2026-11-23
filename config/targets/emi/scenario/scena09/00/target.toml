@@ -75,7 +75,7 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDF10.c",
     "src/bof3/scenario/waitFlag2CThenRequestPrimaryState9Substate14ScenarioScena0900_801FDC1C.c",
     "src/bof3/scenario/stateActiveSelectedBank.c",
-    "src/bof3/scenario/copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234.c",
+    "src/bof3/scenario/copyPartyBytesHelper.c",
     "src/bof3/scenario/waitProgressRequestPrimary.c",
     "src/bof3/scenario/waitFlagRequestPrimary.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FE014.c",

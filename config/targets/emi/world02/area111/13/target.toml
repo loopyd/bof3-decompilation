@@ -26,7 +26,7 @@ support_sources = [
     "src/bof3/world/stateStampPublishedPacked.c",
     "src/bof3/world/publishCodePublishedIndex.c",
     "src/bof3/world/enterCodeMatchedCell.c",
-    "src/bof3/world/redrawGridCellCodesAndRestorePackedCellMapThenQueueCursorRectsWorld02Area11113_801F46A8.c",
+    "src/bof3/world/redrawCodesRestoreRects.c",
     "src/bof3/world/stateStatus3GateElse2.c",
     "src/bof3/world/statePartsHalvesArm.c",
     "src/bof3/world/stateHandlerByteDraw.c",

@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/renderRecedingRingsAlpha.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/decrementWorkByte9WhenGlobalWorkByte1Is3ThenAdvanceWorkByte1WhenZeroBmagicMagic09503_801F0070.c",
+    "src/bof3/bmagic/decrementGlobalAdvanceZero.c",
     "src/bof3/bmagic/copyFieldsTwelveDescending.c",
     "src/bof3/support/magic095_03_psyq.c",
 ]

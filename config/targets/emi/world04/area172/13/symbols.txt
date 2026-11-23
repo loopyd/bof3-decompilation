@@ -51,5 +51,5 @@ setScratchWorkStateWorld04Area17213_801F4DC4 = 0x801F4DC4;
 stateSetAt191Draw = 0x801F4DE0;
 invokeHelperArgsWorld04Area17213_801F4E68 = 0x801F4E68;
 renderTexturedQuad64Clut1 = 0x801F4E8C;
-drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70 = 0x801F4F70;
+renderSlantedSubtractiveBand = 0x801F4F70;
 D_801F507C = 0x801F507C;

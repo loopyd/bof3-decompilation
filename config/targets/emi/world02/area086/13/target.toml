@@ -12,6 +12,6 @@ support_sources = [
     "src/bof3/support/area086_13_psyq.c",
     "src/bof3/world/area08613DispatchTables.c",
     "src/bof3/world/findWorkRecordIndexAtPositionWorld02Area08613_801F34F8.c",
-    "src/bof3/world/seedWorkHalfword34AndHalfword3eFromTablesAdvanceWorkByte2ThenCall1de8And3070World02Area08613_801F2C48.c",
+    "src/bof3/world/stateWorkTablesAdvance.c",
 ]
 psyq_source = "src/bof3/support/area086_13_psyq.c"

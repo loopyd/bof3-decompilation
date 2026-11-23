@@ -42,7 +42,7 @@ drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_8
 renderExtentReturnNext = 0x801F504C;
 claimEndPointPair = 0x801F5190;
 noopHandlerWorld03Area14514_801F5324 = 0x801F5324;
-drawFullScreenSkyBlueToNavyGradientQuadWhileOverlayStateSetWorld03Area14514_801F532C = 0x801F532C;
+renderFullSkyNavy = 0x801F532C;
 D_801F5434 = 0x801F5434;
 D_801F566C = 0x801F566C;
 D_801F568C = 0x801F568C;

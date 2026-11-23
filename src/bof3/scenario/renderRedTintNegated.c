@@ -4,7 +4,7 @@
  * lui plus an offset load, so the cell is its own fixed-address symbol. */
 extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 
-void drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+void renderFullRedCentered(
     u8 shade);
 
 /* @source 0x801D1118
@@ -14,7 +14,7 @@ void drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D1
  * pointer slot 0x1F800044 and calls with no arguments: it takes that object
  * countdown byte at +0x9, scales it by 16, negates the product and passes the
  * low byte to the in-payload draw helper
- * drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8, which submits two
+ * renderFullRedCentered, which submits two
  * 320-pixel-wide semi-transparent quads covering the screen and writes that
  * byte into the red component of every vertex, so the countdown drives a red
  * tint that deepens as the countdown expires. It then ticks the same countdown
@@ -52,7 +52,7 @@ void drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D1
  * @residual none
  */
 void renderRedTintNegated(void) {
-  drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+  renderFullRedCentered(
       -(D_1F800044[9] << 4));
   if (--D_1F800044[9] == 0) {
     D_1F800044[9] = 0x10;

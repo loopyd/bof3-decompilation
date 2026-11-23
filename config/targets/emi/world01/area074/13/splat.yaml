@@ -33,8 +33,8 @@ segments:
     - func_801F2D48
   - - 628
     - c
-    - clearWorkAnimBit0World01Area07413_801F2E74
-    - '@source: src/bof3/world/clearWorkAnimBit0World01Area07413_801F2E74.c'
+    - stateWorkAnimBit0
+    - '@source: src/bof3/world/stateWorkAnimBit0.c'
     - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884.'
   - - 660
     - c

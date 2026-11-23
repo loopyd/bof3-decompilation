@@ -17,7 +17,7 @@ support_sources = [
     "src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenSetGlobalWorkByteBToFFAndInvokeHelperWhenZeroBmagicMagic10703_801EEF5C.c",
     "src/bof3/support/magic107_03_psyq.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithQuarterTurnWhenWorkByte8Bit0BmagicMagic10703_801EFA18.c",
-    "src/bof3/bmagic/drawTranslucentGouraudQuadAlongSixteenthTurnStepsFadingFromWorkByteATimesTwelveToBlackBmagicMagic10703_801EFEA8.c",
+    "src/bof3/bmagic/renderAlongSixteenthFading.c",
     "src/bof3/bmagic/renderSteppingSixtyFading.c",
     "src/bof3/bmagic/renderHemisphereCentredLeading.c",
 ]

@@ -40,7 +40,7 @@ support_sources = [
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2CD4.c",
     "src/bof3/boss/stateMainLookupTemplate.c",
     "src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C2E74.c",
-    "src/bof3/boss/refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284.c",
+    "src/bof3/boss/refreshPositionModeScale.c",
     "src/bof3/boss/callEnemyReadyFold.c",
     "src/bof3/boss/claimHeadHeadStamp.c",
     "src/bof3/boss/callHelperWhenGlobalWorkByte1Is2ElseCallEnemyReadyBattleUpdateAndRefreshWorkBossBoss05516_800C2FA4.c",

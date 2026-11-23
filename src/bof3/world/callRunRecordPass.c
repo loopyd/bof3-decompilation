@@ -8,7 +8,7 @@
  * followed by claimEveryFourthFrame, lowerMirrorEveryFourth,
  * clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818,
  * mathRedBlueHalf, func_80117ACC, func_80117C38, func_80117C58 and
- * advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0, the last word of the run. The run stays one row, so this
+ * stateFramesComplementShade, the last word of the run. The run stays one row, so this
  * declaration binds the interior word through the generated
  * undefined_syms_auto.txt row and owes no target-map row. */
 extern void (*D_8011819C[])(void); /* @source 0x8011819C @kind data */

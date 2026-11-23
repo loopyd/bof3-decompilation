@@ -42,7 +42,7 @@ applyMainLookupRecord318ClearWorkByte48Byte24AndWord3CCopyTemplate1858ThenReques
 copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordAndAdvanceWorkByte2WhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C3134 = 0x800C3134;
 func_800C31F0 = 0x800C31F0;
 fixedPointUnitsBoss = 0x800C3254;
-refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284 = 0x800C3284;
+refreshPositionModeScale = 0x800C3284;
 func_800C34D4 = 0x800C34D4;
 T_800C3534 = 0x800C3534;
 D_800C35B4 = 0x800C35B4;

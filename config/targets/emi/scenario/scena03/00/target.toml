@@ -68,7 +68,7 @@ support_sources = [
     "src/bof3/scenario/claimFiveEndRecords.c",
     "src/bof3/scenario/armWaitRequestPrimary.c",
     "src/bof3/scenario/requestPrimaryState5Substate10AndQueueFrontEndMode1FScenarioScena0300_801FCAB8.c",
-    "src/bof3/scenario/requestPrimaryState1Or2OnPackedRecordMatchScenarioScena0300_801FC7EC.c",
+    "src/bof3/scenario/requestPrimaryPackedMatch.c",
     "src/bof3/scenario/requestPrimaryQueueEnd.c",
     "src/bof3/scenario/claimFlaggedEndTick.c",
     "src/bof3/scenario/requestPrimaryState5Substate0AndQueueFrontEndMode12ScenarioScena0300_801FC9DC.c",

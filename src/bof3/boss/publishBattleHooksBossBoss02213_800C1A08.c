@@ -9,7 +9,7 @@ typedef void (*Boss02213Handler)(void);
  * scratchpad work-record cursor and requests entry 0xAA and resource 6. The
  * third returns a zero result, which the void slot type drops. */
 void setupBattleEntryBoss(void);
-void setupBattleWorkRecordBossBoss02213_800C1ABC(void);
+void setupBattleRecordBoss(void);
 s32 zeroResultBossBoss02213_800C1A40(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -23,7 +23,7 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @behavior Publishes this overlay handler trio into the shared hook slots in
  * slot order: the battle-entry hook setupBattleEntryBoss
  * into 0x801463A4, the battle setup hook
- * setupBattleWorkRecordBossBoss02213_800C1ABC into 0x801463A8, and the
+ * setupBattleRecordBoss into 0x801463A8, and the
  * zero-result accessor zeroResultBossBoss02213_800C1A40 into 0x801463AC, the
  * last one through the void slot type. No word of this payload names the
  * function and no jal reaches it, so the main program enters it through the
@@ -36,6 +36,6 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss02213_800C1A08(void) {
   D_801463A4 = setupBattleEntryBoss;
-  D_801463A8 = setupBattleWorkRecordBossBoss02213_800C1ABC;
+  D_801463A8 = setupBattleRecordBoss;
   D_801463AC = (Boss02213Handler)zeroResultBossBoss02213_800C1A40;
 }

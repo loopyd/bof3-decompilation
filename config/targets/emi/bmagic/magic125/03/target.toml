@@ -13,7 +13,7 @@ sources = [
 support_sources = [
     "src/bof3/bmagic/subtractSixtyFourRecords.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12503_801EEE60.c",
-    "src/bof3/bmagic/decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0.c",
+    "src/bof3/bmagic/decrementDownOddFrames.c",
     "src/bof3/bmagic/callInvokePopSet.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12503_801F0524.c",
     "src/bof3/bmagic/decrementTripletTintFields.c",

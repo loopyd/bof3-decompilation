@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatus4Or3AndModeIndex6IfGateOrByte801454ECBelow6Else2World02Area11313_801F2C04
-    - '@source: src/bof3/world/setStatus4Or3AndModeIndex6IfGateOrByte801454ECBelow6Else2World02Area11313_801F2C04.c'
+    - stateModeGateByte801454
+    - '@source: src/bof3/world/stateModeGateByte801454.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 4 into the shared status halfword D_801490A8; when the gate byte is zero it reads the shared byte D_801454EC and stores 3 into D_801490A8 while that byte is below 6, or 2 while it is 6 or more. The 4 and 3 paths then store 6 into the shared mode byte at 0x801D4285; the 2 path leaves that byte alone.'
   - - 96
     - c
@@ -47,8 +47,8 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 260
     - c
-    - setStatus4AndModeIndex6CloneWorld02Area11313_801F2D04
-    - '@source: src/bof3/world/setStatus4AndModeIndex6CloneWorld02Area11313_801F2D04.c'
+    - stateStatus4ModeClone
+    - '@source: src/bof3/world/stateStatus4ModeClone.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 4 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 328
     - c

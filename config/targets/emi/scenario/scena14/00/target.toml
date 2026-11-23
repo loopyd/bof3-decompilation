@@ -43,7 +43,7 @@ support_sources = [
     "src/bof3/scenario/requestPrimaryIncrementRecord.c",
     "src/bof3/scenario/requestPrimaryIncrementScenario.c",
     "src/bof3/scenario/audioActionPresentCandidate.c",
-    "src/bof3/scenario/recountLiveWorkRecordsThenCopyPartyBytesAndInvokeHelperScenarioScena1400_801FC328.c",
+    "src/bof3/scenario/recountLiveRecordsParty.c",
     "src/bof3/scenario/stateBitsSelectorContext.c",
     "src/bof3/scenario/audioLookupActionFrontend.c",
     "src/bof3/scenario/startCode2RowLookupActionThenSetFrontendMode2ScenarioScena1400_801FB46C.c",

@@ -12,7 +12,7 @@ void func_8015D71C(s32 arg0);
 
 /* Drawing routine of this overlay at 0x801EF1DC, lifted in its own claimed
  * source under this name. */
-void drawTwoTranslucentGouraudBandsGradedBetweenDarkRedAndWorkByte9TintThenRearmGraphTypeDrawModeBmagicMagic16103_801EF1DC(
+void renderGradedDarkType(
     void);
 
 /* Shared readiness helper of the main executable at 0x8014DAEC. */
@@ -46,6 +46,6 @@ void callHelperDrawRun(void) {
   } else {
     work[9] = byte9 + 4;
   }
-  drawTwoTranslucentGouraudBandsGradedBetweenDarkRedAndWorkByte9TintThenRearmGraphTypeDrawModeBmagicMagic16103_801EF1DC();
+  renderGradedDarkType();
   func_8014DAEC();
 }

@@ -27,15 +27,15 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table4138World04Area19613_801F2C04
+    - callStateTable4138World04
     - '@source: src/bof3/world/area19613DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
   - - 164
     - c
-    - incrementWorkStepIfStateOneThenDrawWorld04Area19613_801F2CA4
-    - '@source: src/bof3/world/incrementWorkStepIfStateOneThenDrawWorld04Area19613_801F2CA4.c'
+    - incrementStepOneDraw
+    - '@source: src/bof3/world/incrementStepOneDraw.c'
     - '@behavior: advances work byte +2 when state byte 0x8014933B reads 1, then always calls the overlay draw routine at 0x801F3030 with mode 0.'
   - - 240
     - asm

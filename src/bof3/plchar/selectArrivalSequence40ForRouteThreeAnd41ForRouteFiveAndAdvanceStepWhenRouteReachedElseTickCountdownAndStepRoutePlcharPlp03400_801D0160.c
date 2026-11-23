@@ -21,7 +21,7 @@ extern u32 func_8014D8D4(u8 arg0);
  *           scratchpad pointer cell 0x1F800044, reached from outside this
  *           payload: the body address appears once in the payload, as word
  *           0x801D0344 at index 1 of the nine-word handler run based at
- *           0x801D0340, which dispatchWorkByte2Table0340PlcharPlp03400_801D0050
+ *           0x801D0340, which callWorkTable0340Plchar
  *           indexes with work byte 2 scaled by four; the overlays enter it
  *           through that run, so no jal in this payload names it. Byte 0x08 is
  *           the current route index of the eight-entry route window, byte 0x03

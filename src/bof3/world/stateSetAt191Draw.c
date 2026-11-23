@@ -4,7 +4,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8 D_80146875;
 
 void renderTexturedQuad64Clut1(s32 arg0, s32 arg1);
-void drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70(s32 arg0,
+void renderSlantedSubtractiveBand(s32 arg0,
     s32 arg1);
 
 /* @source 0x801F4DE0
@@ -39,6 +39,6 @@ void stateSetAt191Draw(
   }
   renderTexturedQuad64Clut1(0xdc, 0xc8);
   next = D_1F800044;
-  drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70(
+  renderSlantedSubtractiveBand(
       *(s16*)(next + 0x2e), 0xc8);
 }

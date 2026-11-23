@@ -44,7 +44,7 @@ segments:
     - func_801F2E28
   - - 704
     - c
-    - drawCountdownLevelThenRearmFromSavedByteAndSelectStep1World02Area10213_801F2EC0
+    - renderLevelRearmSaved
   - - 836
     - asm
     - func_801F2F44

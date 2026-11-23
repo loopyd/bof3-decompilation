@@ -57,8 +57,8 @@ segments:
     - func_801EF158
   - - 1536
     - c
-    - decrementWorkByte9ThenSeedMotionOffsetChannelPairRearmCountdownAndAdvanceWorkByte2BmagicMagic13203_801EF200
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedMotionOffsetChannelPairRearmCountdownAndAdvanceWorkByte2BmagicMagic13203_801EF200.c'
+    - decrementMotionOffsetChannel
+    - '@source: src/bof3/bmagic/decrementMotionOffsetChannel.c'
     - '@behavior: Decrement work byte 9; on zero seed motion and channel words, rearm countdown and advance byte 2.'
   - - 1828
     - asm

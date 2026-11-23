@@ -83,8 +83,8 @@ segments:
     - setWorld03Area13113_801F2F08
   - - 796
     - c
-    - releaseOverlayAndClearSharedStateBytesWorld03Area13113_801F2F1C
-    - '@source: src/bof3/world/releaseOverlayAndClearSharedStateBytesWorld03Area13113_801F2F1C.c'
+    - releaseOverlaySharedBytes
+    - '@source: src/bof3/world/releaseOverlaySharedBytes.c'
     - '@behavior: Calls the shared overlay release helper at 0x8015C058, then writes zero to the three consecutive shared front-end state bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 852
     - asm

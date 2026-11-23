@@ -12,7 +12,7 @@ typedef void (*Boss00716Handler)(void);
  * boundary of this target. */
 void setupBitEffectBank(
     void);
-void invokeHelperArgZeroThenOneBossBoss00716_800C1D50(void);
+void callArgZeroOne(void);
 void func_800C1A44(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -26,7 +26,7 @@ extern Boss00716Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @behavior Publishes this overlay's handler trio into the shared battle hook
  * slots: setupBitEffectBank
  * (the battle-flag state switch) into 0x801463A4,
- * invokeHelperArgZeroThenOneBossBoss00716_800C1D50 (calls func_800AC844 with 0
+ * callArgZeroOne (calls func_800AC844 with 0
  * and then with 1) into 0x801463A8, and func_800C1A44, this payload's 0x270-byte
  * handler entry, into 0x801463AC. All three slots take a void handler; the
  * original materialises each installed address in $v0 and stores it through
@@ -46,6 +46,6 @@ extern Boss00716Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooksBossBoss00716_800C1A0C(void) {
   D_801463A4 =
       setupBitEffectBank;
-  D_801463A8 = invokeHelperArgZeroThenOneBossBoss00716_800C1D50;
+  D_801463A8 = callArgZeroOne;
   D_801463AC = func_800C1A44;
 }

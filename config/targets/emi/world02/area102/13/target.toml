@@ -12,7 +12,7 @@ support_sources = [
     "src/bof3/support/area102_13_psyq.c",
     "src/bof3/world/area10213DispatchTables.c",
     "src/bof3/world/renderLevelMarkerReset.c",
-    "src/bof3/world/drawCountdownLevelThenRearmFromSavedByteAndSelectStep1World02Area10213_801F2EC0.c",
+    "src/bof3/world/renderLevelRearmSaved.c",
     "src/bof3/world/selectCountdownFromPositionHalfwordLsbsStoreDistanceAndOffsetCompareThenAdvanceStateWorld02Area10213_801F32A8.c",
 ]
 psyq_source = "src/bof3/support/area102_13_psyq.c"

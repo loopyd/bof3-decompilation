@@ -89,16 +89,16 @@ segments:
     - callStateTable1804Boss
   - - 788
     - c
-    - advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14
-    - '@source: src/bof3/boss/advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14.c'
+    - stateClassRowOffset
+    - '@source: src/bof3/boss/stateClassRowOffset.c'
     - '@behavior: Entry 0 of this overlay''s step table at 0x800C1804, the four-word run (0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C) that callStateTable1804Boss copies into its frame and indexes with the work record byte 1, so no jal names this entry. It loads the scratch work record pointer published at the scratchpad cell 0x1F800044, advances that record''s byte 1 by one, which moves the next byte-1 dispatch to word 1 (0x800C1BF0), and copies the class-row byte at 0x800E40CE selected by the 0x88-byte class stride off the leading class byte D_801EB710 into work byte 0x09. It then stores 0x2D into work byte 0x0A, the countdown the next entry decrements, saves the cell pointer, publishes the shared battle work pointer D_801EB4E0 in the cell instead, raises bit 0x80 of that record''s byte 0x24, stores 2 into its byte 0x29, offsets its position halfwords 0x2E and 0x30 by +0x30 and -0x10, requests resource 2 through the shared helper func_8014D6B8 and restores the saved cell pointer afterwards. The pointer cell read precedes frame creation, the 0x18-byte frame only keeps $ra at 0x14 and $s0 at 0x10 across that call, and the cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 1008
     - asm
     - func_800C1BF0
   - - 1252
     - c
-    - pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4
-    - '@source: src/bof3/boss/pollBattleWorkReadyThenRequestZeroClearByte24Bit7SetByte29To4AndAdvanceStepBossBoss05116_800C1CE4.c'
+    - pollBattleReadyRequest
+    - '@source: src/bof3/boss/pollBattleReadyRequest.c'
   - - 1404
     - c
     - raiseFlag4AndInvokeHelperBossBoss05116_800C1D7C

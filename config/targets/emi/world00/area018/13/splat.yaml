@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setWorldRecordByte04To2UnlessScenarioIs08World00Area01813_801F2C04
-    - '@source: src/bof3/world/setWorldRecordByte04To2UnlessScenarioIs08World00Area01813_801F2C04.c'
+    - stateWorldRecordUnless
+    - '@source: src/bof3/world/stateWorldRecordUnless.c'
     - '@behavior: reads the shared scenario-state byte 0x80146870 and stores 0 into byte 4 of the world record reached through the pointer table 0x80181164 at the pending world id 0x80143F00 when that byte is 8, and stores 2 there otherwise'
   - - 104
     - c

@@ -11,7 +11,7 @@ sources = [
     "src/bof3/boss/publishDataBattlerFields.c",
     "src/bof3/boss/setupFlaggedOwnersOne.c",
     "src/bof3/boss/forwardRollActionEnemy.c",
-    "src/bof3/boss/drawTurnsLeftPanelAndStepDispatchStateByte1BackWhenGateSetBossBoss02513_800C3088.c",
+    "src/bof3/boss/renderTurnsLeftBack.c",
     "src/bof3/boss/refreshActivePartyRecords.c",
     "src/bof3/boss/refreshActivePartyBits.c",
     "src/bof3/boss/callStateTable31Boss.c",

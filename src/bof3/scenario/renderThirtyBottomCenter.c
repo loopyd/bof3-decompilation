@@ -39,7 +39,7 @@ void func_8017A97C(void* arg0);
  *
  * Evidence: the draw-mode arming is the prologue the exact siblings
  * stepEntriesDecayActive
- * and drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8
+ * and renderFullRedCentered
  * of this target share, and the per-triangle body repeats the exact sibling
  * emitRadialTranslucentQuads (0x801D240C) of the scenario module: cursor reload,
  * func_8017A97C, SetSemiTrans with one, the coordinate stores at +0x8, +0xA,

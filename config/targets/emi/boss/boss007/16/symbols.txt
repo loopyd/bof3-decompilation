@@ -14,6 +14,6 @@ noopHandlerBossBoss00716_800C1A04 = 0x800C1A04;
 publishBattleHooksBossBoss00716_800C1A0C = 0x800C1A0C;
 func_800C1A44 = 0x800C1A44;
 setupBitEffectBank = 0x800C1CB4;
-invokeHelperArgZeroThenOneBossBoss00716_800C1D50 = 0x800C1D50;
+callArgZeroOne = 0x800C1D50;
 D_800C1D78 = 0x800C1D78;
 initModeTuple530 = 0x801DDF28;

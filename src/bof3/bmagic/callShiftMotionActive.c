@@ -23,7 +23,7 @@ void func_800AF764(void);
 /* This overlay's draw routine at 0x801EF08C: the rotated textured quad emitter
  * this target lifted at that address. It takes no arguments here and returns
  * nothing. */
-void drawRotatedTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8AtTopCornersBmagicMagic15903_801EF08C(
+void renderRotatedTopCorners(
     void);
 
 /* @source 0x801EEE28
@@ -67,6 +67,6 @@ void callShiftMotionActive(
     y = *(u16 *)(motionWork + 0x30);
     *(u16 *)(motionWork + 0x2E) = x + 8;
     *(u16 *)(motionWork + 0x30) = y - 0x10;
-    drawRotatedTexturedQuadAtWorkHalfwords2EAnd30ScaledByWorkByte9TintedByWorkByteATimes8AtTopCornersBmagicMagic15903_801EF08C();
+    renderRotatedTopCorners();
   }
 }

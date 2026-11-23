@@ -5,7 +5,7 @@
  * read expands to the split-address form `lui %hi` plus a folded `%lo`
  * displacement; the same cell is declared in
  * armWorkAdvanceState.c and
- * seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c. */
+ * stateChannelPairWorld.c. */
 /* @source 0x1F800044 @kind unknown */
 extern u8* area04713WorkCursor_1F800044;
 
@@ -51,7 +51,7 @@ void stateWorkTableByte14(void);
  * 0x801F2CAC are the load-delay slots of the three loads.
  * The store-then-advance shapes of this target's exact
  * armWorkAdvanceState and
- * seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448
+ * statePositionClearDraw
  * supplied the statement order, operand forms and offset spelling, and the
  * decrement-then-test form `--FIELD_REF(...) == 0` comes from the exact
  * stateRecordsReportActive.

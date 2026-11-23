@@ -158,8 +158,8 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndStateEntry3BProgressAWhenGateClearWorld04Area16813_801F4980.c'
   - - 7636
     - c
-    - setStatus12Or13Or14ByGateWorld04Area16813_801F49D4
-    - '@source: src/bof3/world/setStatus12Or13Or14ByGateWorld04Area16813_801F49D4.c'
+    - stateStatus12Or14Gate
+    - '@source: src/bof3/world/stateStatus12Or14Gate.c'
     - '@behavior: Publishes the shared status halfword 0x801490A8 from the shared gate byte 0x801490C7: stores 0x12 when the gate reads zero, 0x13 when it reads one, and 0x14 for every other gate value, one store per arm; the original cross-jumps the three identical stores into a single halfword store site.'
   - - 7692
     - c

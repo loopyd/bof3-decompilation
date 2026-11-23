@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/world/statePaletteScaleIncrement.c",
     "src/bof3/world/renderRampDownColor.c",
     "src/bof3/world/renderScreenGradientScenario.c",
-    "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress37World02Area08213_801F5068.c",
+    "src/bof3/world/renderScreenGradientAdvance.c",
     "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress3bWorld02Area08213_801F527C.c",
     "src/bof3/world/area08213DispatchTables.c",
     "src/bof3/world/clearWorkTableAt800E4800World02Area08213_801F3910.c",

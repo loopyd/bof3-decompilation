@@ -11,10 +11,10 @@ sources = [
     "src/bof3/world/setStatusFFFFAndRequestPrimaryState1Substate14WhenGateClearWorld04Area19213_801F2CA8.c",
 ]
 support_sources = [
-    "src/bof3/world/activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444.c",
+    "src/bof3/world/activateSixCodeBank.c",
     "src/bof3/world/invokeHelperWorld04Area19213_801F3424.c",
     "src/bof3/world/lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C.c",
-    "src/bof3/world/lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4.c",
+    "src/bof3/world/queryTable3890ByteOffset.c",
     "src/bof3/world/resetFieldRecordPairThenFillWorkRecordsWorld04Area19213_801F3548.c",
     "src/bof3/world/runStartupThenClearWorkAnimBit0AndIncrementWorkHalfword7EWorld04Area19213_801F2E44.c",
     "src/bof3/world/setStatusFFFFAndProgress2Or10Or20ByGateWorld04Area19213_801F2D7C.c",

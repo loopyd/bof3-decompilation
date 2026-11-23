@@ -63,7 +63,7 @@ extern s8 func_80155E7C(s16 arg0, s32 arg1);
 /* Height sampler of this overlay's signed byte grid.
  * @source 0x801F0ADC @kind function
  */
-extern s16 sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC(
+extern s16 sampleNegatedMirroredAxes(
     s32 px,
     s32 py);
 
@@ -123,7 +123,7 @@ void renderCornerSampledHeights(
   }
   x = (x - 0x80) << 7;
   y = (y - 0x80) << 7;
-  sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC(
+  sampleNegatedMirroredAxes(
       x - 0x80, y);
   i = 1;
   while (i != rec->head.unk_02) {
@@ -140,7 +140,7 @@ void renderCornerSampledHeights(
       shape[j].vx = x + (((GridCorner *)&rec->word[i])->grid.x * 2);
       shape[j].vy = y + (((GridCorner *)&rec->word[i])->grid.y * 2);
       shape[j].vz =
-          sampleNegatedHeightFromGridWithMirroredAxesBmagicMagic10203_801F0ADC(
+          sampleNegatedMirroredAxes(
               shape[j].vx, shape[j].vy) +
           ((GridCorner *)&rec->word[i])->depth;
     }

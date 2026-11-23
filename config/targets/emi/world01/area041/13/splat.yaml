@@ -86,8 +86,8 @@ segments:
     - '@behavior: latches 0xFFFF into the shared status halfword D_801490A8, then reads the shared gate byte D_801490C7: while that byte is zero it runs the shared front-end step helper 0x801BE1B0 with 1 and stores 0x0A into the shared area status byte D_80146865, and once the gate byte is set it runs the same helper with 2 and stores 0x14 there instead.'
   - - 3744
     - c
-    - setStatusFFFFAndAreaStatus1EOr28ByGateWithFrontEndStep3Or4ClearRecordByte0World01Area04113_801F3AA0
-    - '@source: src/bof3/world/setStatusFFFFAndAreaStatus1EOr28ByGateWithFrontEndStep3Or4ClearRecordByte0World01Area04113_801F3AA0.c'
+    - stateStatusAreaEnd
+    - '@source: src/bof3/world/stateStatusAreaEnd.c'
     - '@behavior: latches 0xFFFF into the shared status halfword D_801490A8, then reads the shared gate byte D_801490C7: while that byte is zero it runs the shared front-end step helper 0x801BE1B0 with 3 and yields 0x1E, and once the gate byte is set it runs the same helper with 4, clears the byte the work-record pointer cell D_80148208 addresses and yields 0x28; both arms converge on one sb of that value to the shared area status byte D_80146865.'
   - - 3848
     - c
@@ -157,8 +157,8 @@ segments:
     - '@behavior: Per-frame work-record step: decrements the countdown byte at 0x0A of the record published at the scratchpad pointer cell 0x1F800044, adds the record step word at 0x0C into the accumulator word at 0x34, and when the countdown byte reads zero re-arms it to 8 and stores handler index 3 into the record state byte at 0x04. Both paths then consume two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250.'
   - - 5084
     - c
-    - advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownAndClearStateOrConsumeSharedCountdownWorld01Area04113_801F3FDC
-    - '@source: src/bof3/world/advanceWorkAccumulatorAndSubtract2FromSharedCounterTripleThenDecrementCountdownAndClearStateOrConsumeSharedCountdownWorld01Area04113_801F3FDC.c'
+    - stateAccumulatorTripleConsume
+    - '@source: src/bof3/world/stateAccumulatorTripleConsume.c'
     - '@behavior: per-frame work-record step that adds the step word at 0x0C of the record published at the scratchpad pointer cell 0x1F800044 into its accumulator word at 0x34, subtracts 2 from each of the three counter bytes 0x0/0x1/0x2 of the 12-byte record selected by byte 0x13D of the record published through the global pointer cell 0x80146250, then decrements the countdown byte at 0x0A and either clears the record state byte at 0x04 to handler index 0 when that countdown reads zero or consumes two units of the halfword at 0x122 of the shared record.'
   - - 5400
     - c

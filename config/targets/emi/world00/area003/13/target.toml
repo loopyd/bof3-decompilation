@@ -8,14 +8,14 @@ splat = "config/targets/emi/world00/area003/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatus44AndModeIndex6IfGateElse42World00Area00313_801F2C04.c",
+    "src/bof3/world/stateModeGateElse42.c",
     "src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CEC.c",
     "src/bof3/world/queueSharedUiElementBlock55x1CTo1DAnd54x1CTo1DSize0World00Area00313_801F2D30.c",
     "src/bof3/world/queueSharedUiElementBlock55x1CTo1DSizeC0And54x1CTo1DSizeA1World00Area00313_801F2D88.c",
 ]
 support_sources = [
     "src/bof3/support/area003_13_psyq.c",
-    "src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8.c",
+    "src/bof3/world/stateStatus44ModeGate.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld00Area00313_801F2C78.c",
     "src/bof3/world/initFrontendStateSelector4AndClearSecondStateByteWorld00Area00313_801F2DE0.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld00Area00313_801F2C48.c",

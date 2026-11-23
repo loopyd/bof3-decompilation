@@ -25,7 +25,7 @@ support_sources = [
     "src/bof3/boss/publishHooksSeedCountdown.c",
     "src/bof3/boss/stateOwnerOwnerOwner.c",
     "src/bof3/boss/stateMainLookupRequest.c",
-    "src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348.c",
+    "src/bof3/boss/setupHalfwordSumApply.c",
     "src/bof3/boss/setupUiBattlerName.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01316_800C1B14.c",
     "src/bof3/boss/callStateTable265Boss.c",

@@ -25,6 +25,6 @@ queryIndexProjectedPosition = 0x801CF9A8;
 checkPositionAgainstRecords = 0x801CFB0C;
 testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC = 0x801CFBDC;
 callWorkTablefdc0Plchar = 0x801CFCF8;
-dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C = 0x801CFD3C;
+callWorkTablefdccPlchar = 0x801CFD3C;
 T_801CFD80 = 0x801CFD80;
 T_801CFDC0 = 0x801CFDC0;

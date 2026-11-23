@@ -40,6 +40,6 @@ retreatCounter2World01Area06714_801F445C = 0x801F445C;
 audioSelectionEffectOne = 0x801F4478;
 func_801F449C = 0x801F449C;
 stateAnimStartupParty = 0x801F451C;
-queueSharedUiElement25xBSize0World01Area06714_801F45BC = 0x801F45BC;
+queueSharedUiX = 0x801F45BC;
 initArea06714State = 0x801F45E4;
 D_801F4624 = 0x801F4624;

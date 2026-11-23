@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/stepAccumulatorsLevelTriple.c",
-    "src/bof3/world/seedWorkPositionTripleFromByte7RecordApplyLookupRecordAndRequestResourceThenArmState1World04Area19813_801F3A68.c",
+    "src/bof3/world/stateTripleApplyLookup.c",
     "src/bof3/world/stateWorkScenarioProgress0.c",
-    "src/bof3/world/fixedPointToUnitsWorld04Area19813_801F3DCC.c",
+    "src/bof3/world/fixedPointUnitsWorld04.c",
     "src/bof3/world/stateAfterScalePass.c",
     "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",
     "src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c",
-    "src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area19813_801F35A4.c",
+    "src/bof3/world/callFrontPhaseLower.c",
     "src/bof3/world/stateRescaleBlocksUnity.c",
 ]
 support_sources = [

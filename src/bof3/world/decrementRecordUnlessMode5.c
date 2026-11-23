@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0(
+void queueBlockElementsSize(
     u8 arg0);
 
 /* @source 0x80143BB0 @kind unknown */
@@ -25,7 +25,7 @@ extern u16* D_80148210;
  */
 void decrementRecordUnlessMode5(void) {
   if (D_80143BB0 == 5) {
-    queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0(0);
+    queueBlockElementsSize(0);
   } else {
     D_80148210[5] -= 2;
   }

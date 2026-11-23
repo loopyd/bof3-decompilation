@@ -88,7 +88,7 @@ s32 func_801783C8(s32 arg0);
  *           span nor the same span with every jump and branch immediate masked
  *           occurs anywhere in the 395 other captured payload binaries, so
  *           neither clone eligibility nor a byte-identical twin applies. The
- *           exact sibling drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0
+ *           exact sibling renderTriangleAroundTinted
  *           supplies the declaration style, the shade triple idiom and the four
  *           call shapes; it emits eight POLY_G3 triangles from one screen pair
  *           over the same record, so it is shape evidence only.

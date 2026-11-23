@@ -103,8 +103,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 12 of the twenty-three-entry code pointer run at 0x801CFEDC and selected by work byte 2 value 1 through the byte-2 dispatcher that indexes that run from 0x801CFF08. Selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through func_8014D8D4 and advances step byte 0x02 when the route index byte 0x08 equals the chosen index byte 0x03, else ticks countdown byte 0x09 and, at zero, re-arms it to 2, steps byte 0x08 by sign byte 0x0B inside the eight-entry window and selects the new route sequence.'
   - - 4140
     - c
-    - dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C.c'
+    - callWorkTableff14Plchar
+    - '@source: src/bof3/plchar/callWorkTableff14Plchar.c'
   - - 4208
     - c
     - adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp25700_801CF470
@@ -135,7 +135,7 @@ segments:
     - '@behavior: Handler of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached only from func_801CF470 in this payload, which calls it at 0x801CF4A0 with the work route byte 0x08 moved back by one inside the eight-entry window and again at 0x801CF4D0 with that byte moved forward by two. It projects the work position by adding the doubled movement offsets of 0x80181B94 and 0x80181B98 selected by the work route byte 0x08 to the work words 0x34 and 0x38, hands that pair to the shared slot search func_801BDE14 at range 0 and starts its answer at one when the search reports any slot rather than -1. It then probes the map code of the projected cell through the shared map probe func_80166CB0, the cell itself always, the cell one column further whenever the low half of the first projected word is nonzero and the cell one row further whenever the low half of the second projected word is nonzero, each probe raising the answer to one when the code reads 0xF2, and returns that answer as an unsigned byte without taking arguments. The 0x30-byte frame keeps $ra at 0x28 and the six saved registers across the four shared calls, the range constant is materialised before the projection tables are read, and the 0x134-byte span is byte-identical to the exact lifts of this body at 0x801CEFF8 of plp012/00 and 0x801CF724 of plp27a/00.'
   - - 6740
     - c
-    - dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54
+    - callWorkTableff20Plchar
   - - 6808
     - c
     - dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98

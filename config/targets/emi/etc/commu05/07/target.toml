@@ -14,7 +14,7 @@ sources = [
     "src/bof3/ui/drawRowIconSpriteCommu0507.c",
 ]
 support_sources = [
-    "src/bof3/ui/initializeCommu0507RowCountsAndCursor.c",
+    "src/bof3/ui/initializeRowCountsCursor.c",
     "src/bof3/ui/advanceFairyProgressCommu0507_801D0F34.c",
     "src/bof3/support/commu05_07_psyq.c",
 ]

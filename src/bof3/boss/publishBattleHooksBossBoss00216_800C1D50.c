@@ -8,7 +8,7 @@ typedef void (*Boss00216Handler)(void);
  * zero result the slot type drops. */
 void func_800C1DD4(void);
 void noopHandlerBossBoss00216_800C1E34(void);
-u32 latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88(
+u32 latchStartHookBit(
     u8 mode);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -36,5 +36,5 @@ void publishBattleHooksBossBoss00216_800C1D50(void) {
   D_801463A8 = noopHandlerBossBoss00216_800C1E34;
   D_801463AC =
       (Boss00216Handler)
-          latchStateByteTwoAndStartAction19OnHookModeZeroWhenBattleFlagBitTwoBossBoss00216_800C1D88;
+          latchStartHookBit;
 }

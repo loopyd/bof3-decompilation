@@ -12,7 +12,7 @@ sources = [
     "src/bof3/world/setStatusFFFFAndScenarioProgressC8OrC9ByGateWorld00Area00513_801F2C44.c",
 ]
 support_sources = [
-    "src/bof3/world/publishModeStatusFromTable3ad4World00Area00513_801F2C84.c",
+    "src/bof3/world/publishModeStatusTable3.c",
     "src/bof3/world/publishModeStatusFromTable3adcWorld00Area00513_801F2CB0.c",
     "src/bof3/support/area005_13_psyq.c",
 ]

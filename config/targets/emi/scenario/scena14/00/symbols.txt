@@ -42,5 +42,5 @@ copyPartyIntoMirror = 0x801FC130;
 armGroupRecordsSlot = 0x801FC1E8;
 armEffectGroupThenClearWorkRecordsAndResetEffectSlotsThenInvokeHelperScenarioScena1400_801FC22C = 0x801FC22C;
 selectMirrorIdOther = 0x801FC280;
-recountLiveWorkRecordsThenCopyPartyBytesAndInvokeHelperScenarioScena1400_801FC328 = 0x801FC328;
+recountLiveRecordsParty = 0x801FC328;
 D_801FC404 = 0x801FC404;

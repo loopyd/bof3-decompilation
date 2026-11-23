@@ -48,7 +48,7 @@ extern u8 func_801E30F8(void); /* @source 0x801E30F8 */
 extern void func_8014D4E0(void); /* @source 0x8014D4E0 */
 
 /* This overlay's own work-refresh step, defined in its own source file. */
-extern void refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284(void); /* @source 0x800C3284 */
+extern void refreshPositionModeScale(void); /* @source 0x800C3284 */
 
 /* @source 0x800C2AA8
  * @behavior Overlay step body, entry 1 of the two-entry handler pair that
@@ -91,5 +91,5 @@ void copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByt
   }
   func_801E30F8();
   func_8014D4E0();
-  refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284();
+  refreshPositionModeScale();
 }

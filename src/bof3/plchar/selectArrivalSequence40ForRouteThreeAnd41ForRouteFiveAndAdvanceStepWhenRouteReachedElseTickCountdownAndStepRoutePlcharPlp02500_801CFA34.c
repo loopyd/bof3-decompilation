@@ -20,7 +20,7 @@ u32 func_8014D8D4(u8 arg0);
  *           payload: the body address appears once in the payload, as word
  *           0x801CFFD8, entry 1 of the handler run that starts at 0x801CFFD4 and
  *           that the step dispatcher
- *           dispatchWorkByte2Tableffd4PlcharPlp02500_801CF924 enters after
+ *           callWorkTableffd4Plchar enters after
  *           scaling the work byte 0x02 by four. Byte 0x08 is the current route
  *           index of the eight-entry route window, byte 0x03 the chosen candidate
  *           index that the re-arm step stores, byte 0x09 the countdown, byte 0x02

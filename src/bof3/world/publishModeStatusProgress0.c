@@ -14,7 +14,7 @@ extern u8 g_ScenarioProgress;
  *           reads 1, and any other mode leaves that byte untouched. Takes no
  *           arguments and returns nothing; leaf, no frame.
  *           Constant/variance evidence: the exact sibling
- *           publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C
+ *           publishModeStatusOr3
  *           in this target supplied the statement order and operand forms --
  *           the signed mode read, the scaled target-local halfword index, the
  *           status publish and the two-case switch on that mode. That 80-byte

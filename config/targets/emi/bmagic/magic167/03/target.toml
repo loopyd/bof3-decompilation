@@ -12,7 +12,7 @@ support_sources = [
     "src/bof3/bmagic/renderSixteenFanTriangles.c",
     "src/bof3/bmagic/decrementSubmitCellStore.c",
     "src/bof3/bmagic/callInvokePairPop.c",
-    "src/bof3/bmagic/add2ToWorkByteBIncrementByte9IncrementByteAWhenBelow10ThenAdvanceByte2At18BmagicMagic16703_801EFACC.c",
+    "src/bof3/bmagic/workByteIncrementIncrement.c",
     "src/bof3/bmagic/add2ToWorkByteBIncrementByte9DecrementByteAThenAdvanceByte2At28BmagicMagic16703_801EFB5C.c",
     "src/bof3/support/magic167_03_psyq.c",
     "src/bof3/bmagic/magic16703DispatchTables.c",

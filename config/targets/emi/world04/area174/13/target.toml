@@ -26,7 +26,7 @@ sources = [
     "src/bof3/world/audioStoreFirstSecond.c",
     "src/bof3/world/stepAreaNoActive.c",
     "src/bof3/world/callFrontEndPhase.c",
-    "src/bof3/world/decrementHalfword0aBy2WhenEmiLoaderNotReadyWorld04Area17413_801F4F28.c",
+    "src/bof3/world/decrementEmiLoaderNot.c",
     "src/bof3/world/callEndPhaseLower.c",
 ]
 support_sources = [
@@ -36,7 +36,7 @@ support_sources = [
     "src/bof3/world/area17413DispatchTables.c",
     "src/bof3/world/noopHandlerWorld04Area17413_801F4F9C.c",
     "src/bof3/world/clearWorkTableByte3At800E4800World04Area17413_801F2E5C.c",
-    "src/bof3/world/setStatusFFFFSubstate1EIfGateElse0AWorld04Area17413_801F4F6C.c",
+    "src/bof3/world/stateStatusGateElse0.c",
     "src/bof3/world/stateFrontEndRecord.c",
     "src/bof3/support/area174_13_psyq.c",
     "src/bof3/world/stateTripleLevelTriple.c",

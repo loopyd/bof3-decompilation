@@ -12,15 +12,15 @@ sources = [
     "src/bof3/plchar/callWorkTableffb4Plchar.c",
     "src/bof3/plchar/callWorkTableffc0Plchar.c",
     "src/bof3/plchar/callWorkTableffccPlchar.c",
-    "src/bof3/plchar/dispatchWorkByte2Tableffd4PlcharPlp02500_801CF924.c",
-    "src/bof3/plchar/dispatchWorkByte2Tableffe0PlcharPlp02500_801CFB30.c",
+    "src/bof3/plchar/callWorkTableffd4Plchar.c",
+    "src/bof3/plchar/callWorkTableffe0Plchar.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenRouteByteThenAdvanceStepWhenRouteSampleAbove64ElseClaimWorkProbeLayersSelectSequence42PlcharPlp02500_801CE770.c",
     "src/bof3/plchar/claimFrontEndRecordHandler3aAndQueueCue100PlusHalfword2cWhenWorkHalfword58Is0aThenClearByte7AndAdvanceStepPlcharPlp02500_801CFD40.c",
     "src/bof3/plchar/claimRecordForMapCodeF2WithRandomSizeElseStageItemNameCueForMapCodeF8ThenSetWorkByteBAndPublishPositionPlcharPlp02500_801CED1C.c",
     "src/bof3/plchar/stateWorldFlagExpires.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20.c",
+    "src/bof3/plchar/callWorkTableffecPlchar.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTablefff8PlcharPlp02500_801CFF64.c",
     "src/bof3/plchar/findFrontEndRecordIndexAtProjectedWorkPositionPlcharPlp02500_801CF5D4.c",
     "src/bof3/plchar/markWorkAreaAnimationBitAndClaimRecordAtProjectedPositionThenAdvanceStepWhenWorkCountdownByteAExpiresPlcharPlp02500_801CEA94.c",

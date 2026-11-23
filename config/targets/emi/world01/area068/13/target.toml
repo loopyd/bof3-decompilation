@@ -15,7 +15,7 @@ sources = [
     "src/bof3/world/incrementPadMatchCount.c",
     "src/bof3/world/countdownStepArmElse11.c",
     "src/bof3/world/stepWorkAccumulatorsByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3CB0.c",
-    "src/bof3/world/publishModeStatusFromTable4d64AndProgress14Or3World01Area06813_801F381C.c",
+    "src/bof3/world/publishModeStatusOr3.c",
     "src/bof3/world/countdownStepArmAdvance.c",
     "src/bof3/world/stateRecordPublishIndex.c",
     "src/bof3/world/publishSecondBaseSeed.c",

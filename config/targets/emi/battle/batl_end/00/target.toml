@@ -32,7 +32,7 @@ support_sources = [
     "src/bof3/battle/anyAvailableBattlerIdentity.c",
     "src/bof3/battle/drainAccumulatedAmountSubstate.c",
     "src/bof3/battle/drawAmountStripBatlEnd00_801F09F4.c",
-    "src/bof3/battle/drawBattlerExpListPanelBatlEnd00_801F07E0.c",
+    "src/bof3/battle/renderBattlerExpList.c",
     "src/bof3/support/batl_end_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/batl_end_00_psyq.c"

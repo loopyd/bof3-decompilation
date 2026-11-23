@@ -56,7 +56,7 @@ s32 func_8017A138(s32 arg0, s32 arg1);
  * eight-triangle fan samples the screen pair it is handed as its centre, the
  * two-quad emitter the two screen pairs it is handed as the near end of each
  * quad. */
-void drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0(
+void renderTriangleAroundTinted(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void renderQuadsAroundTriple(
     s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5, s32 arg6,
@@ -159,7 +159,7 @@ void renderLineQuadsBetween(
       func_801AFFD8((const void*)arg1, &screen[0], &screen[1]);
       amp1 = screen[1].x + (D_80143E6C & 1);
       ang1 = angle + 0xC00;
-      drawTranslucentEightTriangleGouraudFanAroundScreenPairTintedByWorkByte6TripleWorld03Area14813_801F4DF0(
+      renderTriangleAroundTinted(
           prim->x1, prim->y1, amp1, ang1);
       renderQuadsAroundTriple(
           prim->x0, prim->y0, amp0, (u16)(angle + 0x400), prim->x1, prim->y1,

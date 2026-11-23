@@ -113,8 +113,8 @@ segments:
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044, subtracts two from the object''s countdown byte 0x9 at byte width, then re-reads the cell and loads byte 0x9 again, so the reloaded byte rather than the stored register supplies the tested value. Only when that byte is zero does it call the shared helper at 0x801E5988. The pointer-cell load precedes frame creation and the 0x18-byte frame only keeps the return address across the call; it takes no arguments, returns nothing and reads or writes no other state. Its address is entry 3 of the four-entry handler run at 0x801F005C that ends the reviewed textbin row D_801EFFE0, and no instruction in this payload materialises that run base.'
   - - 3816
     - c
-    - incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8
-    - '@source: src/bof3/bmagic/incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8.c'
+    - incrementEvenWordsOdd
+    - '@source: src/bof3/bmagic/incrementEvenWordsOdd.c'
     - '@behavior: Walks the six words of this payload table at 0x801F003C (words 0x801F003C through 0x801F0050) with one pointer that advances by four bytes, adds one to every even-indexed word and subtracts one from every odd-indexed word, and stores each result back to the cell it came from. The base address is materialised once before the loop and the index bound is the immediate six, so the body is a leaf with no frame, takes no arguments and returns nothing, and reads or writes no other state. No jal in this payload reaches it and no pointer word in the extracted corpus names it, so its caller is the overlay loader or a script-invoked callback.'
   - - 3892
     - c

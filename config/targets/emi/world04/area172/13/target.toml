@@ -45,7 +45,7 @@ support_sources = [
     "src/bof3/world/stateCornerRotationScale.c",
     "src/bof3/world/stateFactorRampLevel.c",
     "src/bof3/world/stepStartRequestSelector.c",
-    "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c",
+    "src/bof3/world/renderSlantedSubtractiveBand.c",
     "src/bof3/world/renderRadialArcShade.c",
     "src/bof3/world/renderTranslucentGouraudTriangle.c",
     "src/bof3/world/stateScratchLevelTriple.c"

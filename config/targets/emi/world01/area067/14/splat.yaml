@@ -203,8 +203,8 @@ segments:
     - '@behavior: clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884 and, when the party byte of local work record 0 at 0x80145F09 holds 6, runs the shared front-end startup helper 0x8015C088, clears the shared scenario progress byte 0x80146864 with the shared state bytes 0x80146865 to 0x80146867 and then requests primary state 4 with substate 0 through 0x80146874 and 0x80146875'
   - - 6588
     - c
-    - queueSharedUiElement25xBSize0World01Area06714_801F45BC
-    - '@source: src/bof3/world/queueSharedUiElement25xBSize0World01Area06714_801F45BC.c'
+    - queueSharedUiX
+    - '@source: src/bof3/world/queueSharedUiX.c'
     - '@behavior: queues the shared UI element at (0x25, 0xB) with size 0 through the shared marker queue func_801A4BC0'
   - - 6628
     - c

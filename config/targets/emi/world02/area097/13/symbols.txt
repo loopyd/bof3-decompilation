@@ -1,5 +1,5 @@
 audioReleaseOverlayProgress = 0x801F2C04;
 audioMapRangeGate = 0x801F2C98;
-setSharedFlag23WhenSharedSelector5IsSetWorld02Area09713_801F2D28 = 0x801F2D28;
+stateSharedSharedIs = 0x801F2D28;
 D_801F2D60 = 0x801F2D60;
 func_801F2DF4 = 0x801F2DF4;

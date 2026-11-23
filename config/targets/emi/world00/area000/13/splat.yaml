@@ -30,13 +30,13 @@ segments:
   subsegments:
   - - 140
     - c
-    - copyWorkByte79ToScratchByte8AndRequestResourceWorld00Area00013_801F2C8C
-    - '@source: src/bof3/world/copyWorkByte79ToScratchByte8AndRequestResourceWorld00Area00013_801F2C8C.c'
+    - copyScratchRequestResource
+    - '@source: src/bof3/world/copyScratchRequestResource.c'
     - '@behavior: Reads the +0x79 byte of the current work-entity record published through the pointer cell 0x80146884, stores it into byte 8 of the scratch work record published at the scratchpad pointer cell 0x1F800044, then re-reads that scratch cell and passes its byte 8 to the resident resource helper func_8015BAC4 as the resource id.'
   - - 216
     - c
-    - armWorkWithScratchByte8AndSetByte7To2World00Area00013_801F2CD8
-    - '@source: src/bof3/world/armWorkWithScratchByte8AndSetByte7To2World00Area00013_801F2CD8.c'
+    - armWorkScratchSet
+    - '@source: src/bof3/world/armWorkScratchSet.c'
     - '@behavior: Loads the scratch work record published at the scratchpad pointer cell 0x1F800044, passes the work-record pointer published through the global pointer cell 0x80148210 and work byte 8 of that record to the shared func_801ABBA8 helper, then reloads the 0x80148210 pointer cell and stores 2 in byte 7 of the record.'
   - - 280
     - asm

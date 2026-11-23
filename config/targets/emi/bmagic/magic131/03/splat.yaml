@@ -87,8 +87,8 @@ segments:
     - func_801EFC74
   - - 4848
     - c
-    - setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0
-    - '@source: src/bof3/bmagic/setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0.c'
+    - stateAdvanceHelperReady
+    - '@source: src/bof3/bmagic/stateAdvanceHelperReady.c'
     - '@behavior: Entry index 9 (the word at 0x801F1BE8) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 0xF into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing dispatch to the next table entry at 0x801EFF48. The 0xF constant is materialized ahead of the guard branch, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 4936
     - c
@@ -178,8 +178,8 @@ segments:
     - '@source: src/bof3/bmagic/dispatchRecordByte1HandlerBmagicMagic13103_801F10F4.c'
   - - 9528
     - c
-    - dispatchRecordByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F1138
-    - '@source: src/bof3/bmagic/dispatchRecordByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F1138.c'
+    - callRecordDrawActive
+    - '@source: src/bof3/bmagic/callRecordDrawActive.c'
   - - 9656
     - c
     - statePairPhaseFields
@@ -192,8 +192,8 @@ segments:
     - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 2 to the record byte at offset 0x6, then re-reads the cell and adds 0x20 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store. It uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38; the selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC. That helper result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword at offset 0xC, shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. A closing guard compares the record halfword at offset 0xC with 0x200 and, only on equality, increments the record byte at offset 0x2. It takes no arguments, returns nothing and keeps its 0x18-byte frame only for the return address and the scratchpad phase register across the two calls. Its address is the second word, index 1, of the three-entry handler table at 0x801F1C48.'
   - - 10148
     - c
-    - advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4
-    - '@source: src/bof3/bmagic/advanceRecordHalfwordCBy16AndAccumulateScaledSampleIntoPositionPairThenDecrementByte5ClearRecordAtZeroBmagicMagic13103_801F13A4.c'
+    - stateScaledSampleInto
+    - '@source: src/bof3/bmagic/stateScaledSampleInto.c'
     - '@behavior: Reads the record pointer cell at 0x801F24E0 and adds 0x10 to the record halfword at offset 0xC with an unsigned load, an immediate add and a store, then uses the record byte at offset 0x7 as an unsigned index into the byte table at 0x801F1C38. The selected byte shifted left seven becomes the phase published to the shared scratchpad halfword at 0x1F800006 and the same shift is passed to the shared angular helper at 0x801782FC; that result times the signed halfword at offset 0xC, shifted right three and added to the word at 0x80149308, forms the record word at offset 0x14. The phase read back from 0x1F800006 as a signed halfword feeds the second shared angular helper at 0x801783C8, whose result times the same signed halfword shifted right three and added to the word at 0x8014930C forms the record word at offset 0x18. It then subtracts 2 from the record byte at offset 0x5 and, only when that countdown reaches zero, decrements byte 0xB of the shared record at 0x801EB4E0 and calls stateRecordThrough4Bmagic. It takes no arguments, returns nothing and its address is the third word (index 2) of the three-entry handler table at 0x801F1C48.'
   - - 10400
     - c

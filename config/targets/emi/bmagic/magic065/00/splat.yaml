@@ -47,7 +47,7 @@ segments:
     - func_801EF1CC
   - - 1548
     - c
-    - dispatchStateByte1Tablef510BmagicMagic06500_801EF20C
+    - callStateTablef510Bmagic
     - '@source: src/bof3/bmagic/magic06500DispatchTables.c'
   - - 1616
     - asm
@@ -68,8 +68,8 @@ segments:
     - invokeHelperBmagicMagic06500_801EF408
   - - 2088
     - c
-    - copyEquipmentObjectNameBmagicMagic06500_801EF428
-    - '@source: src/bof3/bmagic/copyEquipmentObjectNameBmagicMagic06500_801EF428.c'
+    - copyEquipmentObjectName
+    - '@source: src/bof3/bmagic/copyEquipmentObjectName.c'
     - '@behavior: Copies the name of the equipment object selected by the masked category and index pair into the shared twelve-byte name slot at 0x801490D8 with the bounded count 0xC. Categories 1, 2 and 3 select the weapon, armor and accessory object tables with record strides 0x18, 0x16 and 0x14; the default arm, which also takes the serialized empty category 0, selects the item table with stride 0x12. The compare chain runs on the category byte already masked to eight bits, and every arm jumps to one shared copy call. The payload calls this body only from 0x801EF170, inside the state handler at 0x801EF134, with the low byte of the halfword at work offset 0x2C as the index and its high byte as the category.'
   - - 2312
     - asm

@@ -8,7 +8,7 @@ typedef void (*Boss03416Handler)(void);
  * otherwise calls initModeTuple520. The second is an inert handler that returns
  * immediately. The third returns a zero result, which the void slot type
  * drops. */
-void initModeTupleByBattleFlagBossBoss03416_800C2380(void);
+void setupModeTupleFlag(void);
 void noopHandlerBossBoss03416_800C23CC(void);
 s32  zeroResultBossBoss03416_800C2378(void);
 
@@ -21,7 +21,7 @@ extern Boss03416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C2340
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * initModeTupleByBattleFlagBossBoss03416_800C2380 (mode transition: tests the
+ * setupModeTupleFlag (mode transition: tests the
  * 0x2 bit of D_80146328 and, while it is set, stores 5 into the byte at
  * D_80146875 and calls initModeTuple510, and otherwise calls initModeTuple520)
  * into 0x801463A4, the inert handler noopHandlerBossBoss03416_800C23CC into
@@ -37,7 +37,7 @@ extern Boss03416Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss03416_800C2340(void) {
-  D_801463A4 = initModeTupleByBattleFlagBossBoss03416_800C2380;
+  D_801463A4 = setupModeTupleFlag;
   D_801463A8 = noopHandlerBossBoss03416_800C23CC;
   D_801463AC = (Boss03416Handler)zeroResultBossBoss03416_800C2378;
 }

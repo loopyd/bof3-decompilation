@@ -42,8 +42,8 @@ segments:
     - '@behavior: Queues the four shared UI elements of one two-by-two block through the shared marker queue func_801A4BC0: the two cells at y = 0xB of x = 0x48 and 0x49 with size 0, then the two cells at y = 0xC of the same two columns with size 0.'
   - - 224
     - c
-    - queueSharedUiElementBlock48To49xBToCSizeC0AndA1World00Area02313_801F2CE0
-    - '@source: src/bof3/world/queueSharedUiElementBlock48To49xBToCSizeC0AndA1World00Area02313_801F2CE0.c'
+    - queueElementXSize
+    - '@source: src/bof3/world/queueElementXSize.c'
     - '@behavior: Queues the four shared UI elements of one two-by-two block through the shared marker queue func_801A4BC0: the two cells at y = 0xB of x = 0x48 and 0x49 with size 0xC0, then the two cells at y = 0xC of the same two columns with size 0xA1.'
   - - 312
     - c

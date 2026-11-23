@@ -9,7 +9,7 @@ extern u8 D_80145FBB; /* @source 0x80145FBB @kind unknown */
 /* Scratchpad work-record pointer cell. Every access group re-materialises the
  * cell through lui plus the low-half load, which is how the original reads the
  * record again for each byte store. The area091 sibling
- * copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318 binds
+ * copyHalvedPaletteRow binds
  * the same cell the same way. */
 extern u8 *D_1F800044; /* @source 0x1F800044 @kind unknown */
 

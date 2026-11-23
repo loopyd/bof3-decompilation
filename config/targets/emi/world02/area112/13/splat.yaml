@@ -86,8 +86,8 @@ segments:
     - func_801F3BE4
   - - 4336
     - c
-    - testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0
-    - '@source: src/bof3/world/testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0.c'
+    - checkHitsAnyBox
+    - '@source: src/bof3/world/checkHitsAnyBox.c'
   - - 4628
     - c
     - callStateTable493World02

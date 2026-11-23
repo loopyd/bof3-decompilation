@@ -128,8 +128,8 @@ segments:
     - '@behavior: Overlay step dispatch on the work record''s halfword at offset 0x2C: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF93C with no arguments, discarding any result. The original does not bound the index before the scaled table load. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slots after the index halfword and after the table load stay nops. It reads no other state and writes none. Neither this address nor the table base appears in any word of the payload, so the overlay loader that steps the twenty-one-word run at 0x801CF900 enters it: it has no jal caller and takes no arguments.'
   - - 5308
     - c
-    - dispatchWorkHalfword2cTablef948PlcharPlp45700_801CF8BC
-    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTablef948PlcharPlp45700_801CF8BC.c'
+    - callWorkTablef948Plchar
+    - '@source: src/bof3/plchar/callWorkTablef948Plchar.c'
     - '@behavior: Overlay step dispatch on the work record''s halfword at offset 0x2C: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF948 with no arguments, discarding any result. The original does not bound the index before the scaled table load. It reads no other state and writes none. The 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slots after the index halfword and after the table load stay nops. Neither this address nor the table base appears in any word of the payload, so the overlay loader that steps the twenty-one-word run at 0x801CF900 enters it: it has no jal caller and takes no arguments.'
   - - 5376
     - textbin

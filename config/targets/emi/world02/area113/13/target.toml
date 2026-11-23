@@ -9,8 +9,8 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/setStatus4AndModeIndex6IfGateElseFFFFWorld02Area11313_801F2CC0.c",
-    "src/bof3/world/setStatus4AndModeIndex6CloneWorld02Area11313_801F2D04.c",
-    "src/bof3/world/setStatus4Or3AndModeIndex6IfGateOrByte801454ECBelow6Else2World02Area11313_801F2C04.c",
+    "src/bof3/world/stateStatus4ModeClone.c",
+    "src/bof3/world/stateModeGateByte801454.c",
 ]
 support_sources = [
     "src/bof3/support/area113_13_psyq.c",

@@ -119,7 +119,7 @@ segments:
     - getAndClearPlcharPlp27a00_801CF868
   - - 5240
     - c
-    - dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878
+    - callWorkTablef92Plchar
   - - 5308
     - c
     - dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC

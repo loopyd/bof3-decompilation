@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-void activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444(
+void activateSixCodeBank(
     void);
 
 /* @source 0x801F3424
@@ -10,5 +10,5 @@ void activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Are
  * @residual none
  */
 void invokeHelperWorld04Area19213_801F3424(void) {
-  activateSixRecordsOfCodeAndWaitSelectedBankUnlessFlag77OrRandomFFWorld04Area19213_801F3444();
+  activateSixCodeBank();
 }

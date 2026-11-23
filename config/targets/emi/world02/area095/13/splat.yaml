@@ -60,8 +60,8 @@ segments:
     - func_801F3450
   - - 2332
     - c
-    - setWorkByte8To3Or7ByHalfword36When3aThenInvokeHelperElseAdvanceHalfword0aBy2World02Area09513_801F351C
-    - '@source: src/bof3/world/setWorkByte8To3Or7ByHalfword36When3aThenInvokeHelperElseAdvanceHalfword0aBy2World02Area09513_801F351C.c'
+    - stateInvokeHelperAdvance
+    - '@source: src/bof3/world/stateInvokeHelperAdvance.c'
   - - 2468
     - asm
     - func_801F35A4

@@ -34,7 +34,7 @@ support_sources = [
     "src/bof3/scenario/tickSubtractResetFlags.c",
     "src/bof3/scenario/stateIndexedFlagCount.c",
     "src/bof3/scenario/stateProgressEnterScenario.c",
-    "src/bof3/scenario/seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0.c",
+    "src/bof3/scenario/stateWordsAdvanceQueue.c",
     "src/bof3/scenario/tickCountdownBitScenario.c",
     "src/bof3/scenario/randomByteTickScenario.c",
     "src/bof3/scenario/stateWordsAdvanceScenario.c",

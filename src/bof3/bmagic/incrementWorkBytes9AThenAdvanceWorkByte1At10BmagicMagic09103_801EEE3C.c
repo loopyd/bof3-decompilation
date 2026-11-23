@@ -16,7 +16,7 @@ extern u8 * volatile g_battle_work; /* @source 0x1F800044 @kind data */
  * bounds and callback signatures remain unresolved.
  * @source 0x801EFC64 @kind table
  */
-u32 workByte1HandlerAddressesBmagicMagic09103[] = {
+u32 workHandlerAddressesBmagic[] = {
     0x801EEFFCu, 0x801EF09Cu, 0x801EF124u, 0x801EF1B8u
 };
 

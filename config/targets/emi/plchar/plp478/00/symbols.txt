@@ -18,6 +18,6 @@ func_801CF38C = 0x801CF38C;
 callWorkTablef708Plchar = 0x801CF488;
 adjustEvenSequenceCue = 0x801CF4CC;
 clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4 = 0x801CF5E4;
-dispatchWorkHalfword2cTablef710PlcharPlp47800_801CF650 = 0x801CF650;
+callWorkTablef710Plchar = 0x801CF650;
 dispatchWorkHalfword2cTablef71cPlcharPlp47800_801CF694 = 0x801CF694;
 T_801CF6D8 = 0x801CF6D8;

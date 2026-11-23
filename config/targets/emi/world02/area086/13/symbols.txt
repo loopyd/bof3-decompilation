@@ -1,5 +1,5 @@
-dispatchStateByte2Table3658World02Area08613_801F2C04 = 0x801F2C04;
-seedWorkHalfword34AndHalfword3eFromTablesAdvanceWorkByte2ThenCall1de8And3070World02Area08613_801F2C48 = 0x801F2C48;
+callStateTable3658World02 = 0x801F2C04;
+stateWorkTablesAdvance = 0x801F2C48;
 func_801F2CAC = 0x801F2CAC;
 func_801F2D28 = 0x801F2D28;
 func_801F2DE8 = 0x801F2DE8;

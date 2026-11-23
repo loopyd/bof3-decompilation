@@ -11,7 +11,7 @@ sources = [
     "src/bof3/world/initArea10313State.c",
     "src/bof3/world/stateOverlayFourBlocks.c",
     "src/bof3/world/stateWorkResetArea.c",
-    "src/bof3/world/claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834.c",
+    "src/bof3/world/claimEndPositionLower.c",
     "src/bof3/world/renderDescendingVariantLast.c",
     "src/bof3/world/renderVariantFifthFifth.c",
     "src/bof3/world/checkDownFifthTick.c",

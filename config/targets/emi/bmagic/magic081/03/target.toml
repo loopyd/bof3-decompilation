@@ -19,7 +19,7 @@ support_sources = [
     "src/bof3/bmagic/statePoolPoseSetting.c",
     "src/bof3/bmagic/claimPointerSavedPointer.c",
     "src/bof3/bmagic/callHelperMainExecutable.c",
-    "src/bof3/bmagic/invokeRecordHelper3StepAndDrawCountdownWorkByteAAndAdvanceWorkByte2WhenZeroBmagicMagic08103_801EF57C.c",
+    "src/bof3/bmagic/callDrawCountdownZero.c",
     "src/bof3/bmagic/publishSavedPointerReadiness.c",
     "src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30WithRadiusRampingFromWorkByte9Times8Capped64AndTint128BmagicMagic08103_801EF6A0.c",
 ]

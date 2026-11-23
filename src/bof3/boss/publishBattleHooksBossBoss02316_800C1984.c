@@ -8,7 +8,7 @@ typedef void (*Boss02316Handler)(void);
  * second walks owner ids 0, 1 and 2 through the main-program helper at
  * 0x800AC934; the third returns a zero result, which the void slot type drops. */
 void func_800C19C4(void);
-void clearOwnerRecordHeadsBossBoss02316_800C1A10(void);
+void stateOwnerRecordHeads(void);
 s32  zeroResultBossBoss02316_800C19BC(void);
 
 /* Shared hook slots. 0x801463A4 and 0x801463A8 are the battle hooks the battle
@@ -42,6 +42,6 @@ extern Boss02316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss02316_800C1984(void) {
   D_801463A4 = func_800C19C4;
-  D_801463A8 = clearOwnerRecordHeadsBossBoss02316_800C1A10;
+  D_801463A8 = stateOwnerRecordHeads;
   D_801463AC = (Boss02316Handler)zeroResultBossBoss02316_800C19BC;
 }

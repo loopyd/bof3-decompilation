@@ -31,7 +31,7 @@ support_sources = [
     "src/bof3/scenario/tickLowerScreenExpired.c",
     "src/bof3/scenario/renderRedTintExpired.c",
     "src/bof3/scenario/renderRedCenteredHeight.c",
-    "src/bof3/scenario/drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8.c",
+    "src/bof3/scenario/renderFullRedCentered.c",
     "src/bof3/scenario/renderThirtyBottomCenter.c",
     "src/bof3/scenario/subtract16WordTickExpired.c",
     "src/bof3/scenario/renderOpaqueSectorConverted.c",

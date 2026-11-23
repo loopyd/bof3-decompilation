@@ -69,8 +69,8 @@ segments:
     - '@source: src/bof3/world/stateWorkWhen7Else7.c'
   - - 2472
     - c
-    - publishPositionPairDistanceMinus32WhenEqualToWord80149318ThenAdd2ToStatusByte80149333World02Area09613_801F35A8
-    - '@source: src/bof3/world/publishPositionPairDistanceMinus32WhenEqualToWord80149318ThenAdd2ToStatusByte80149333World02Area09613_801F35A8.c'
+    - publishPairDistanceEqual
+    - '@source: src/bof3/world/publishPairDistanceEqual.c'
   - - 2580
     - textbin
     - D_801F3614

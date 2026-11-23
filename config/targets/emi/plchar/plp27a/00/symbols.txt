@@ -21,6 +21,6 @@ claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPl
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp27a00_801CF724 = 0x801CF724;
 queryClearPlchar = 0x801CF858;
 getAndClearPlcharPlp27a00_801CF868 = 0x801CF868;
-dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878 = 0x801CF878;
+callWorkTablef92Plchar = 0x801CF878;
 dispatchWorkHalfword2cTablef938PlcharPlp27a00_801CF8BC = 0x801CF8BC;
 T_801CF900 = 0x801CF900;

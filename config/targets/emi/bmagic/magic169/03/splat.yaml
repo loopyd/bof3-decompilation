@@ -72,8 +72,8 @@ segments:
     - '@behavior: Decrement work byte 9; on zero submit the indexed record, store effect byte A, reset countdown to 8 and advance work byte 2.'
   - - 2300
     - c
-    - incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC.c'
+    - incrementCountersCountdownZero
+    - '@source: src/bof3/bmagic/incrementCountersCountdownZero.c'
     - '@behavior: Increment the stride-12 counters selected by work byte 0xA; on countdown zero invoke helper 0x8015D71C and advance work byte 2.'
   - - 2624
     - c

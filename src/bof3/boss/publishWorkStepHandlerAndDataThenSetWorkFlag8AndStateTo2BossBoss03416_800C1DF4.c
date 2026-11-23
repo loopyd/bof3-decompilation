@@ -51,7 +51,7 @@ void func_8014D978(void);
  * publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.
  * No jal names 0x800C1DF4 and the single word 0x800C1DF4 in this payload is the
  * one at 0x800C273C, entry 0 of the handler run the byte-1 dispatcher
- * dispatchStateByte1Table273cBossBoss03416_800C1DB0 indexes with that very state
+ * callStateTable273Boss indexes with that very state
  * byte, so writing 2 hands the next byte-1 dispatch to that run's entry 2,
  * 0x801E35D8, a main-program handler, instead of re-entering this setup. The
  * same word is entry 16 of the run based at 0x800C26FC that this payload's

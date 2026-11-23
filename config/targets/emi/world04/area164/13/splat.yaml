@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3418World04Area16413_801F2C04
+    - callStateTable3418World04
     - '@source: src/bof3/world/area16413DispatchTables.c'
   - - 72
     - asm

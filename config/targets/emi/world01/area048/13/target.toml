@@ -29,6 +29,6 @@ support_sources = [
     "src/bof3/world/renderMoveBlockThird.c",
     "src/bof3/world/renderMoveBlockWrap.c",
     "src/bof3/world/renderBatchesColumnWrap.c",
-    "src/bof3/world/queueFrontCue20CWhenFrontSideByteIs5World01Area04813_801F4D2C.c",
+    "src/bof3/world/queueFrontFrontSide.c",
 ]
 psyq_source = "src/bof3/support/area048_13_psyq.c"

@@ -10,6 +10,6 @@ func_801EF334 = 0x801EF334;
 incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09803_801EF498 = 0x801EF498;
 func_801EF520 = 0x801EF520;
 func_801EF5D4 = 0x801EF5D4;
-drawRandomScaledTranslucentGouraudLineAtWorkWords34And38CountedByWorkByteAFromWorkByteBPhaseBmagicMagic09803_801EFE24 = 0x801EFE24;
+renderScaledLineCounted = 0x801EFE24;
 func_801F00C4 = 0x801F00C4;
 workByte1HandlerTable = 0x801F0340;

@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/setStatusFFFFAndStateEntryProgress5WhenGateClearWorld00Area02313_801F2C04.c",
     "src/bof3/world/queueSharedUiElementBlock48To49xBToCSize0World00Area02313_801F2C88.c",
-    "src/bof3/world/queueSharedUiElementBlock48To49xBToCSizeC0AndA1World00Area02313_801F2CE0.c",
+    "src/bof3/world/queueElementXSize.c",
 ]
 support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld00Area02313_801F2C48.c",

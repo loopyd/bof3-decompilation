@@ -14,7 +14,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  * whose byte 8 and words 0x34, 0x38 and 0x3C this step copies into the work
  * object. Its role beyond being the copy source stays address-anchored, and the
  * exact bmagic sibling
- * copyRecordByte8AndWordTripletPlus2000000InvokeHelpersSetByte9ToFByteATo3ClearByteBAndAdvanceWorkByte2BmagicMagic06803_801EF7C4
+ * copyWordTripletHelpers
  * reads the same cell with this spelling. */
 extern u8 *D_801EB4E0; /* @source 0x801EB4E0 @kind data */
 
@@ -64,7 +64,7 @@ extern u32 func_801E590C(u32 arg0, u32 arg1); /* @source 0x801E590C */
  *           the same allocator call, slot byte 1 clear and word 0x74 pointer
  *           store through one scaled index, and the same closing byte 0xB store
  *           followed by the byte 1 increment) and
- *           copyRecordByte8AndWordTripletPlus2000000InvokeHelpersSetByte9ToFByteATo3ClearByteBAndAdvanceWorkByte2BmagicMagic06803_801EF7C4
+ *           copyWordTripletHelpers
  *           (the same two-pair local split, the first pair in $v0 and $v1 and the
  *           second in $v1 and $a0). This body's own literals 1 and 0x1C, its
  *           record cell, its band offsets and its slot stride are written from

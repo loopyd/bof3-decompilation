@@ -8,7 +8,7 @@ splat = "config/targets/emi/world02/area108/14/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/queueBlockCellElementsSizeEAndSize11ElseZeroWorld02Area10814_801F55F0.c",
+    "src/bof3/world/queueBlockElementsSize.c",
     "src/bof3/world/renderSizedCenterPage.c",
     "src/bof3/world/stateWorkDoubleVelocity.c",
 ]

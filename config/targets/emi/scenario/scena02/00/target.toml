@@ -79,7 +79,7 @@ support_sources = [
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14.c",
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecord19ScenarioScena0200_801FCECC.c",
     "src/bof3/scenario/stateSkillAfterAbility.c",
-    "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19Substate0AAndQueueCue106ScenarioScena0200_801FD5FC.c",
+    "src/bof3/scenario/stateProgressBytesQueue.c",
     "src/bof3/scenario/runSubstateStepsRelease.c",
     "src/bof3/scenario/runLadderToggleRelease.c",
     "src/bof3/scenario/queueCompletionSubstatesPublishing.c",

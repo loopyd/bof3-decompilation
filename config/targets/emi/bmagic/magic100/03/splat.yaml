@@ -69,13 +69,13 @@ segments:
     - func_801EF358
   - - 2100
     - c
-    - projectWorkRecordPositionAndInstallTransformWithZeroRotationAndHalfNegatedRecordHalfword3EPlus100BmagicMagic10003_801EF434
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithZeroRotationAndHalfNegatedRecordHalfword3EPlus100BmagicMagic10003_801EF434.c'
+    - projectRotationHalfNegated
+    - '@source: src/bof3/bmagic/projectRotationHalfNegated.c'
     - '@behavior: Pushes the GTE matrix stack and reads the scratchpad work-record pointer cell at 0x1F800044 once before any call. Zeroes a translation halfword triplet in ascending element order, then builds a rotation triplet whose first two elements are work record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000, and whose third element is half the negated sum of the record signed halfword 0x3E and 0x100. RotTrans projects that triplet into the translation field of a 0x20-byte scratch matrix and writes a flag word after it, RotMatrix turns the zeroed triplet into that same matrix rotation, MulMatrix2 composes the shared matrix at 0x801492E8 with it, and the result is installed through SetRotMatrix and SetTransMatrix. Takes no arguments and returns nothing; the single in-payload call at 0x801EEEFC pairs the transform with PopMatrix.'
   - - 2280
     - c
-    - drawThirtyOnePulsingTranslucentGouraudQuadBandAtWorkWord1CRadiusFromWorkWord20PhaseTintedByWorkByteATimesTwelveBmagicMagic10003_801EF4E8
-    - '@source: src/bof3/bmagic/drawThirtyOnePulsingTranslucentGouraudQuadBandAtWorkWord1CRadiusFromWorkWord20PhaseTintedByWorkByteATimesTwelveBmagicMagic10003_801EF4E8.c'
+    - renderThirtyPulsingTwelve
+    - '@source: src/bof3/bmagic/renderThirtyPulsingTwelve.c'
     - '@behavior: Draw step of the bmagic/100/03 overlay. Picks the draw-mode texture page, 0xA5 when GetGraphType answers 1 or 2 and 0x35 otherwise, arms SetDrawMode on the primitive cursor g_PrimCursor with dfe 0, dtd 1 and a null RECT, and links a 0xC-byte packet under the work record words 0x34 and 0x38 with kind 2. The preheader publishes the pulsing radius 0x1F800000 as work word 0x1C plus half of that word times a rotator sample of phase zero, the fixed radius 0x1F800002 as work word 0x1C, the phase index 0x1F800008 as work word 0x20 divided by 64 masked to six bits, the near tint 0x1F800004 as twelve times work byte 0x0A and the far tint 0x1F800006 as work byte 0x0A, scales that index left six into the angle 0x1F80000A, then primes the driving vertex pair at 0x1F80001C and the leading pair at 0x1F80002C from the two rotator samples of the angle times the pulsing and fixed radii. The pass loop runs thirty-one times, advancing the phase index one 0x40 step per pass and resampling the pulsing radius from a rotator sample of the step shifted left six, so the band pulses over the sweep; each pass carries the previous outer and inner vertices forward, clears the three vertex z halfwords, recomputes both vertex pairs at the new angle, seeds the cursor packet through SetPolyG4, marks it semi-transparent, gives the near pair the 0x1F800004 byte in every channel and both far vertices the 0x1F800006 byte, projects the quad through RotTransPers4 into the primitive vertex pairs at 0x08, 0x10, 0x18 and 0x20, and links the 0x24-byte packet under the same work words with kind 2. Takes no arguments and returns nothing. The in-payload jal at 0x801EEF04 calls it between calls to 0x801EF434 and 0x80178C18; that caller does not establish gameplay roles for the radius, phase or tint fields.'
   - - 3304
     - c

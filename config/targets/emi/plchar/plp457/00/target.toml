@@ -30,7 +30,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkByte2Tablef90cPlcharPlp45700_801CE620.c",
     "src/bof3/plchar/callWorkTablef918Plchar.c",
     "src/bof3/plchar/callWorkTablef93Plchar.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablef948PlcharPlp45700_801CF8BC.c",
+    "src/bof3/plchar/callWorkTablef948Plchar.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp45700_801CE448.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp45700_801CE514.c",
 ]

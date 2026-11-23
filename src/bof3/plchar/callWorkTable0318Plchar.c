@@ -13,7 +13,7 @@ extern void (*D_801D0318[])(void); /* @source 0x801D0318 @kind data */
 /* Seeded from this payload's 0x801CF12C, 0x801CE72C and 0x801D0050 bodies
  * (callWorkTable030Plchar,
  * callWorkTable0300Plchar and
- * dispatchWorkByte2Table0340PlcharPlp03400_801D0050), whose own lifts measured
+ * callWorkTable0340Plchar), whose own lifts measured
  * exact. A payload comparison of this 68-byte span against each of them found one
  * differing word: the low half of the scaled table load at offset 0x24, 0x0318
  * here against 0x030C, 0x0300 and 0x0340 there, because each dispatcher names the

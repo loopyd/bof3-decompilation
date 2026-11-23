@@ -35,7 +35,7 @@ s32 func_801B2D00(u8 index);
  *           only keeps $ra at 0x10 across the calls. The address of this body is
  *           the word 0x801D0340, entry 19 of this overlay's twenty-eight-word
  *           handler run at 0x801D02F4 and index 0 of the tail that
- *           dispatchWorkByte2Table0340PlcharPlp03400_801D0050 indexes from work
+ *           callWorkTable0340Plchar indexes from work
  *           byte 2, so no jal in this payload names it and the overlays reach it
  *           through that run alone; its prologue and return path place the
  *           boundary.

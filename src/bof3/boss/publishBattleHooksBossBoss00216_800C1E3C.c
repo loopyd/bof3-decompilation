@@ -9,7 +9,7 @@ typedef void (*Boss00216Handler)(void);
  * initModeTuple510, or calls initModeTuple520. The second takes no argument and
  * forwards zero to func_800AC844. The third returns a zero result, which the
  * void slot type drops. */
-void initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C(
+void setupFlagOwnerFields(
     void);
 void invokeZeroArgBossBoss00216_800C1EE8(void);
 s32 zeroResultBossBoss00216_800C1E74(void);
@@ -38,7 +38,7 @@ extern Boss00216Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss00216_800C1E3C(void) {
   D_801463A4 =
-      initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C;
+      setupFlagOwnerFields;
   D_801463A8 = invokeZeroArgBossBoss00216_800C1EE8;
   D_801463AC = (Boss00216Handler)zeroResultBossBoss00216_800C1E74;
 }

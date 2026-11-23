@@ -27,7 +27,7 @@ initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_
 stateOwnerOwnerOwner = 0x800C20B0;
 publishHooksSeedCountdown = 0x800C20D8;
 func_800C2138 = 0x800C2138;
-initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348 = 0x800C2348;
+setupHalfwordSumApply = 0x800C2348;
 func_800C243C = 0x800C243C;
 D_800C25D8 = 0x800C25D8;
 D_80146255 = 0x80146255;

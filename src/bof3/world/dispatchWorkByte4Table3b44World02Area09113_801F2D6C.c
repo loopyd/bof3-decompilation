@@ -21,7 +21,7 @@ extern void (*workByte4HandlersWorld02Area09113[])(void);
  *           itself, seventh in the run.
  *           Role evidence: record byte +4 is the handler index of this
  *           overlay's palette-stage sequence, the byte the area091 sibling
- *           copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318
+ *           copyHalvedPaletteRow
  *           increments when its colour row wraps. The body indexes nothing
  *           else, so the name describes this overlay's own table and claims no
  *           engine-wide role.

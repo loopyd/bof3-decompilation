@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3330World01Area06013_801F2C04
+    - callStateTable3330World01
     - '@source: src/bof3/world/area06013DispatchTables.c'
   - - 72
     - asm
@@ -37,8 +37,8 @@ segments:
     - func_801F2C90
   - - 1672
     - c
-    - appendPrimToCurrentBufferChainHeadWorld01Area06013_801F3288
-    - '@source: src/bof3/world/appendPrimToCurrentBufferChainHeadWorld01Area06013_801F3288.c'
+    - appendCurrentBufferChain
+    - '@source: src/bof3/world/appendCurrentBufferChain.c'
   - - 1808
     - c
     - raiseWorldFlag2000World01Area06013_801F3310

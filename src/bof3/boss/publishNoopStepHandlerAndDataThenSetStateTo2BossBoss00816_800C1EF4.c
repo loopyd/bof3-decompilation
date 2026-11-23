@@ -28,7 +28,7 @@ void func_8014D978(void);
 
 /* @source 0x800C1EF4
  * @behavior Entry 0 of the overlay state run based at 0x800C2744, the table the
- * state dispatcher dispatchStateByte1Table2744BossBoss00816_800C1EB0 indexes
+ * state dispatcher callStateTable2744Boss indexes
  * with the work record's dispatch byte at +1. It publishes three words into the
  * current enemy work record loaded from 0x801EB4E8 -- the data block pointer
  * 0x800C264C into +0xEC, the no-op-run step handler

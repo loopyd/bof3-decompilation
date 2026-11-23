@@ -37,7 +37,7 @@ extern void func_801DA4B4(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4,
  *   quadrangle cover the border of the filled window. The three calls that
  *   reach it come from
  *   the panel handlers func_801EFE5C, drawCountedListPanelBatlEnd00_801F0650
- *   and drawBattlerExpListPanelBatlEnd00_801F07E0, which all pass a panel
+ *   and renderBattlerExpList, which all pass a panel
  *   origin, the window width 0x118 and a byte height. The 0x48-byte frame
  *   keeps $ra, $fp and $s0-$s7 and holds the three stacked colour arguments of
  *   the line calls at 0x10/0x14/0x18($sp); the epilogue returns no value.

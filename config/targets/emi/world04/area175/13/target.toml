@@ -14,7 +14,7 @@ sources = [
     "src/bof3/world/stepPhaseWhilePhase.c",
 ]
 support_sources = [
-    "src/bof3/world/decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C.c",
+    "src/bof3/world/decrementPhaseWordConsume.c",
     "src/bof3/world/stateIncrementGateClear.c",
     "src/bof3/world/stateStatusByte801Gate.c",
     "src/bof3/world/statePtrGateElse7.c",

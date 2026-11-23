@@ -141,7 +141,7 @@ segments:
     - callWorkTablefdc0Plchar
   - - 6460
     - c
-    - dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C
+    - callWorkTablefdccPlchar
   - - 6528
     - textbin
     - T_801CFD80

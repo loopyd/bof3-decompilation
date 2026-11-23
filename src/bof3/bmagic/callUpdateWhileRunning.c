@@ -36,7 +36,7 @@ void projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09
  * picking its draw-mode tpage from GetGraphType and emitting three-vertex
  * primitives through SetDrawMode, SetSemiTrans and RotTransPers3. Lifted exact
  * at 0x801EF14C, and it takes no arguments. */
-void drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C(
+void renderSpiralBandsProfile(
     void);
 
 /* This overlay's second draw step over the same shared helpers, emitting prims
@@ -97,7 +97,7 @@ void callUpdateWhileRunning(
   record = D_801EB4E0;
   if (record[0xB] != 0xFF) {
     projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654();
-    drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C();
+    renderSpiralBandsProfile();
     func_801EF710();
     PopMatrix();
   }

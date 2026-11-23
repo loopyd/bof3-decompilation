@@ -22,6 +22,6 @@ func_801EF990 = 0x801EF990;
 func_801EF9DC = 0x801EF9DC;
 func_801EFA2C = 0x801EFA2C;
 decrementTwoHelperZero = 0x801EFA94;
-incrementEvenWordsAndDecrementOddWordsInTable003CBmagicMagic08803_801EFAE8 = 0x801EFAE8;
+incrementEvenWordsOdd = 0x801EFAE8;
 drawSemiTransFlatQuadBandOfSixRingsSixtyFourStepsOfSixtyFourthTurnAtThirtyTwoUnitRadialStepsTintedByPaletteRowAtWorkByte4ScaledByHalfWorkByte9BmagicMagic08803_801EFB34 = 0x801EFB34;
 D_801EFFE0 = 0x801EFFE0;

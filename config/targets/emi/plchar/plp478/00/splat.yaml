@@ -101,7 +101,7 @@ segments:
     - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4
   - - 4688
     - c
-    - dispatchWorkHalfword2cTablef710PlcharPlp47800_801CF650
+    - callWorkTablef710Plchar
   - - 4756
     - c
     - dispatchWorkHalfword2cTablef71cPlcharPlp47800_801CF694

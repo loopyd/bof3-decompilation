@@ -73,5 +73,5 @@ segments:
     - func_801EF9E4
   - - 4196
     - textbin
-    - workByte1HandlerAddressesBmagicMagic09103
+    - workHandlerAddressesBmagic
 - - 4212

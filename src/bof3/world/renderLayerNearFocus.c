@@ -87,7 +87,7 @@ extern void func_80155560(u32 arg0, void* arg1, s32 arg2);
  * area01613 overlay, whose entry block is recorded exact, and the quad
  * projection and texture-window calls follow the exact siblings
  * emitMeterBarPalette (0x801F595C) and
- * drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390
+ * renderWhiteTopSized
  * (0x801F6390) of this target. This function's own bytes fix the two command
  * words 0xBB28A100 and 0xBB509100, the ordering table slots 5 and 4, the two
  * depth literals 0 and -0x300, the -8 clamp, the 0x1A focus radius and the

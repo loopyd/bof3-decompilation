@@ -14,7 +14,7 @@ sources = [
 ]
 support_sources = [
     "src/bof3/world/seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC.c",
-    "src/bof3/world/publishModeStatusFromTable362cWorld00Area01013_801F2C84.c",
+    "src/bof3/world/publishModeStatusTable362.c",
     "src/bof3/support/area010_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area010_13_psyq.c"

@@ -15,9 +15,9 @@ sources = [
 ]
 support_sources = [
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094.c",
-    "src/bof3/plchar/dispatchWorkByte2Table0340PlcharPlp03400_801D0050.c",
+    "src/bof3/plchar/callWorkTable0340Plchar.c",
     "src/bof3/plchar/getAndClearPlcharPlp03400_801D025C.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTable034cPlcharPlp03400_801D026C.c",
+    "src/bof3/plchar/callWorkTable034Plchar.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0.c",
     "src/bof3/plchar/callWorkTable0320Plchar.c",
     "src/bof3/plchar/callWorkTable0334Plchar.c",

@@ -30,7 +30,7 @@ extern void (*D_800C21EC[])(void); /* @source 0x800C21EC @kind data */
  * after the index byte and after the table load stay nops, and the epilogue
  * leaves the handler's $v0 untouched, so this shim returns whatever that handler
  * returns. Seeded from the sibling dispatcher
- * dispatchStateByte2Table2264BossBoss00113_800C1CA0, which was exact when this
+ * callStateTable2264Boss, which was exact when this
  * body was written: a payload comparison of the two 0x44-byte spans differs in
  * the two bytes of one word, the low half of the table load, so the spans share
  * one body and differ only in the table address and the payload-local entries

@@ -33,7 +33,7 @@ support_sources = [
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions0BTo0EWorld03Area14514_801F41C4.c",
     "src/bof3/world/drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4EDC.c",
     "src/bof3/world/requestMatchedRowSubstate.c",
-    "src/bof3/world/drawFullScreenSkyBlueToNavyGradientQuadWhileOverlayStateSetWorld03Area14514_801F532C.c",
+    "src/bof3/world/renderFullSkyNavy.c",
     "src/bof3/world/renderSixteenQuadsAround.c",
     "src/bof3/world/callStateByte4Table5.c",
     "src/bof3/world/renderPointPairsFour.c",

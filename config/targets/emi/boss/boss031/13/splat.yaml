@@ -61,7 +61,7 @@ segments:
     - c
     - publishBattleHooksBossBoss03113_800C19C8
     - '@source: src/bof3/boss/publishBattleHooksBossBoss03113_800C19C8.c'
-    - '@behavior: Publishes this overlay''s handler trio into the shared battle hook slots 0x801463A4/0x801463A8/0x801463AC: func_800C1A08, the battle setup hook publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C and the zero-result accessor zeroResultBossBoss03113_800C1A00, each materialized as an absolute address and stored through $at in slot order.'
+    - '@behavior: Publishes this overlay''s handler trio into the shared battle hook slots 0x801463A4/0x801463A8/0x801463AC: func_800C1A08, the battle setup hook publishOwnerRequestResource and the zero-result accessor zeroResultBossBoss03113_800C1A00, each materialized as an absolute address and stored through $at in slot order.'
   - - 512
     - c
     - zeroResultBossBoss03113_800C1A00
@@ -70,8 +70,8 @@ segments:
     - func_800C1A08
   - - 620
     - c
-    - publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C
-    - '@source: src/bof3/boss/publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C.c'
+    - publishOwnerRequestResource
+    - '@source: src/bof3/boss/publishOwnerRequestResource.c'
     - '@behavior: Owner-zero battle entry of this overlay: strips the 0x40 flag of the owner-0 work record, publishes that record as the shared battle-record cell 0x80146884 and as the scratchpad work-record cursor, requests resource 1, then stores 1 into the record byte at offset 0x2A.'
   - - 696
     - textbin

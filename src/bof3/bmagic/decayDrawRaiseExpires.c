@@ -10,10 +10,10 @@ void func_800AF764(void);
  * halfwords at 0x2E and 0x30. The zero-mask variant is the six-tile row
  * drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
  * and the non-zero-mask variant is the seven-tile row
- * drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C. */
+ * renderSevenTileTile. */
 void drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94(
     void);
-void drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C(
+void renderSevenTileTile(
     void);
 
 void func_800A9820(u8 arg0);
@@ -44,7 +44,7 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  *   subtracts 0x24 from the unsigned work halfword 0x2E at halfword width, that
  *   store filling the branch delay slot. It then calls the seven-tile draw
  *   variant
- *   drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C
+ *   renderSevenTileTile
  *   when the work object byte 0x0B (the random mask byte state 0
  *   seeds) is non-zero and the lifted six-tile row variant
  *   drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94
@@ -75,7 +75,7 @@ void decayDrawRaiseExpires(
   work = g_battle_work;
   *(u16 *)(work + 0x2E) -= 0x24;
   if (work[0xB] != 0) {
-    drawSevenTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EEF5C();
+    renderSevenTileTile();
   } else {
     drawSixTileTexturedRowAtWorkHalfwords2EAnd30FromTileTableBmagicMagic08000_801EED94();
   }

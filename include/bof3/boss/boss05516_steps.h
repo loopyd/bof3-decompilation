@@ -12,7 +12,7 @@
         func_8014D6B8((copy).bytes[D_801463BE]); \
         (ready)(); \
         func_8014D4E0(); \
-        refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284(); \
+        refreshPositionModeScale(); \
         g_battle_work[2]++; \
     } while (0)
 

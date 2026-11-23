@@ -18,7 +18,7 @@ support_sources = [
     "src/bof3/world/invokeZeroArgWorld04Area19913_801F2CC0.c",
     "src/bof3/world/stateTripletOverlayBytes.c",
     "src/bof3/world/setStatusFFFFSubstate1IfGateElse0World04Area19913_801F4478.c",
-    "src/bof3/world/drawTranslucentRadialFanOfSixtyFourGouraudTrianglesFromPointFadingToBlackWorld04Area19913_801F3EA0.c",
+    "src/bof3/world/renderRadialSixtyBlack.c",
     "src/bof3/world/renderPairsAdvancedClock.c",
     "src/bof3/world/stateWorkScrollWord.c",
     "src/bof3/support/area199_13_psyq.c",

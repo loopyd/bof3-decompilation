@@ -13,7 +13,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * through untouched - the original shows no truncation in the jal delay slot,
  * and declaring a byte here measured 28 of 29 instructions because that
  * truncation appeared - while the helper truncates on its own store. */
-void drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+void renderFullRedCentered(
     s32 shade);
 
 /* Shared work-area reset helper of the game image: it zeroes work-object bytes
@@ -31,7 +31,7 @@ void func_80196070(void);
  * reads its re-arm value 0x10, and otherwise scales the countdown by 16 and
  * masks the product to its high nibble, so the tint dims as the countdown
  * expires. It passes that shade to the in-payload draw helper
- * drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8,
+ * renderFullRedCentered,
  * which writes it into the red component of two full-screen quads, then ticks
  * the same countdown byte down by one and, when the decremented byte reaches
  * zero, resets the shared work area through func_80196070, which zeroes
@@ -76,7 +76,7 @@ void renderRedTintExpired(
     shade <<= 4;
     shade &= 0xF0;
   }
-  drawFullScreenRedGradientBandCenteredOnScreenCenterScenarioSce15ef200_801D19A8(
+  renderFullRedCentered(
       shade);
   if (--D_1F800044[9] == 0) {
     func_80196070();

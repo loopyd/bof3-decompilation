@@ -1,6 +1,6 @@
-dispatchStateByte2Table3330World01Area06013_801F2C04 = 0x801F2C04;
+callStateTable3330World01 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2C90 = 0x801F2C90;
-appendPrimToCurrentBufferChainHeadWorld01Area06013_801F3288 = 0x801F3288;
+appendCurrentBufferChain = 0x801F3288;
 raiseWorldFlag2000World01Area06013_801F3310 = 0x801F3310;
 D_801F3330 = 0x801F3330;

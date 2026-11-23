@@ -48,7 +48,7 @@ segments:
     - '@behavior: Step 2 of this overlay work sequence: the handler the dispatcher at 0x801EEC10 selects through work byte 1, which the three-entry code pointer table at 0x801EEC04 binds at entry 2. It reads the scratchpad work-object pointer cell at 0x1F800044 once, before the frame is created, and returns immediately when the work object byte at offset 0xB is non-zero. Otherwise it loads the shared battle byte at 0x80146384 unsigned, passes it to the shared main-executable helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 with an unsigned halfword load, ori and halfword store that re-materialises the address into $at, then invokes the shared main-executable helper func_801E5988. The 0x18-byte frame only keeps the return address at 0x10 across the two calls. Takes no arguments and returns nothing.'
   - - 624
     - c
-    - dispatchStateByte1Tablef818BmagicMagic04803_801EEE70
+    - callStateTablef818Bmagic
     - '@source: src/bof3/bmagic/magic04803DispatchTables.c'
   - - 692
     - asm
@@ -67,8 +67,8 @@ segments:
     - func_801EF234
   - - 2504
     - c
-    - projectWorkRecordPositionAndInstallTransformWithHeadingFromWorkWord0CPairBmagicMagic04803_801EF5C8
-    - '@source: src/bof3/bmagic/projectWorkRecordPositionAndInstallTransformWithHeadingFromWorkWord0CPairBmagicMagic04803_801EF5C8.c'
+    - projectInstallTransformHeading
+    - '@source: src/bof3/bmagic/projectInstallTransformHeading.c'
     - '@behavior: Projects this overlay work record position and installs the GTE transform. Pushes the matrix stack, reads the scratchpad work-record pointer cell at 0x1F800044, zeroes the first two elements of a translation halfword triplet, and asks the shared main-executable helper func_8017A138 for the 12-bit angle of the record word 0x10 minus word 0x38 and word 0xC minus word 0x34. The cell is re-read after that call and the masked angle becomes the third translation element. A rotation triplet is built from record words 0x34 and 0x38 shifted right by nine and biased by minus 0x4000 plus half the negated signed halfword 0x3E; RotTrans projects it into the translation field of a 0x20-byte scratch matrix storing a flag beside it, RotMatrix turns the translation triplet into that matrix, MulMatrix2 composes the shared matrix at 0x801492E8 under it, and SetRotMatrix and SetTransMatrix publish it. Takes no arguments, returns nothing, keeps $ra and $s0 in a 0x50-byte frame, and is called by the same-payload span at 0x801EEEB4, which pops the matrix afterwards.'
   - - 2720
     - asm

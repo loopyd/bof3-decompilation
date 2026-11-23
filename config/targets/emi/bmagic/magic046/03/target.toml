@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EEFB4.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic04603_801EF1F0.c",
     "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusTenTimesWorkByte9PlusSixTintedByWorkByteATimesSixBmagicMagic04603_801EFC48.c",
-    "src/bof3/bmagic/drawTranslucentTexturedQuadAtWorkHalfwords2EAnd30WithRadiusSixTimesWorkByte9PlusOneOrTwiceWorkByte9Plus32AndTintTwentyTimesWorkByteABmagicMagic04603_801EF7E8.c",
+    "src/bof3/bmagic/renderPlusTwiceTwenty.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic04603_801EF304.c",
     "src/bof3/bmagic/magic04603DispatchTables.c",
     "src/bof3/bmagic/publishDriftSevenSampled.c",

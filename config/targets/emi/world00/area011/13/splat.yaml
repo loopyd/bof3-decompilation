@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - decrementChannel932cByA0AboveMinus1400ThenSetMode2World00Area01113_801F2C04
-    - '@source: src/bof3/world/decrementChannel932cByA0AboveMinus1400ThenSetMode2World00Area01113_801F2C04.c'
+    - decrementAboveMinus1400Set
+    - '@source: src/bof3/world/decrementAboveMinus1400Set.c'
     - '@behavior: Reads the signed channel at 0x8014932C once, subtracts 0xA0 and stores it back while that value is above -0x1400, then publishes mode 2 into the shared mode byte 0x80149333; no frame-local state and no calls.'
   - - 68
     - asm

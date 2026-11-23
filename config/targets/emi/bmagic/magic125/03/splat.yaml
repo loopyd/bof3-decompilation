@@ -79,8 +79,8 @@ segments:
     - '@behavior: Subtract work word 0x20 from 0x14; below 0x30 seed 64 records and advance work byte 2.'
   - - 3760
     - c
-    - decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0
-    - '@source: src/bof3/bmagic/decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0.c'
+    - decrementDownOddFrames
+    - '@source: src/bof3/bmagic/decrementDownOddFrames.c'
     - '@behavior: Decrement signed word 0x14 above 8; on odd frames count down byte 9, then decrement record byte 0xB and invoke 0x801E5988 on zero.'
   - - 3912
     - c

@@ -10,7 +10,7 @@ typedef void (*Boss03113Handler)(void);
  * resource 1 and then sets the work record byte at offset 0x2A. The third is an
  * inert accessor returning a zero result, which the void slot type drops. */
 void func_800C1A08(void); /* @source 0x800C1A08 */
-void publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C(
+void publishOwnerRequestResource(
     void); /* @source 0x800C1A6C */
 s32 zeroResultBossBoss03113_800C1A00(void); /* @source 0x800C1A00 */
 
@@ -24,7 +24,7 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 /* @source 0x800C19C8
  * @behavior Publishes this overlay's handler trio into the shared battle hook
  * slots: func_800C1A08 into 0x801463A4, the battle setup hook
- * publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C
+ * publishOwnerRequestResource
  * into 0x801463A8, and the zero-result accessor
  * zeroResultBossBoss03113_800C1A00 into 0x801463AC; that accessor's s32 result
  * is dropped by the void slot type. Each slot takes a `lui`/`addiu` pair
@@ -45,6 +45,6 @@ extern Boss03113Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss03113_800C19C8(void) {
   D_801463A4 = func_800C1A08;
-  D_801463A8 = publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C;
+  D_801463A8 = publishOwnerRequestResource;
   D_801463AC = (Boss03113Handler)zeroResultBossBoss03113_800C1A00;
 }

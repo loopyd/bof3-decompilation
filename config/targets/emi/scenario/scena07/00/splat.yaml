@@ -422,8 +422,8 @@ segments:
     - callHelperByteArg
   - - 28660
     - c
-    - invokeHelperArgThenClearFourIndexedRecordFlagBitsScenarioScena0700_801FDBF4
-    - '@source: src/bof3/scenario/invokeHelperArgThenClearFourIndexedRecordFlagBitsScenarioScena0700_801FDBF4.c'
+    - callArgFourBits
+    - '@source: src/bof3/scenario/callArgFourBits.c'
     - '@behavior: Word 4, the last word, of the five-slot code-pointer run at 0x801FDFA8 (0x801FDAFC, 0x801FDB34, 0x801FDB80, 0x801FDBCC, this address at 0x801FDFB8), which no in-image jal or j reaches. Calls the shared main-image helper at 0x801C1ABC with the constant 2, then clears bit 0 of the field-record flag byte at D_8014496F for the four records the unsigned bytes at 0x80181B11, 0x80181B15, 0x80181B16 and 0x80181B12 select, in that order, each as index times 0xA4 into the shared 164-byte record table anchored at 0x80144968 where 0x8014496F is a record +7 flag byte. Takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 28948
     - textbin

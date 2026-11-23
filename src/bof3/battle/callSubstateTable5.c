@@ -4,7 +4,7 @@
  * Dispatch run based at 0x801EF5F8, the table this shim selects from. It is
  * this overlay's reviewed `textbin` row D_801EF5F8: its first five words are
  * the code pointers 0x801EEC40, 0x801EEC7C, 0x801EEEB8
- * (initBattleScenePrimsAndAdvanceSubstate), 0x801EEF10 and 0x801EF0A8, and the
+ * (setupScenePrimsSubstate), 0x801EEF10 and 0x801EF0A8, and the
  * words from 0x801EF60C on are scalars (0xa0, 0x84, ...), not code pointers,
  * so only those five entries are claimed here and the row stays whole. Entry 0,
  * func_801EEC40, raises the index byte at 0x801462E3 by one, so the five words

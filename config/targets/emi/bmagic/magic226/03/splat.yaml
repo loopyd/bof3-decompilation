@@ -101,7 +101,7 @@ segments:
     - func_801F04D4
   - - 6492
     - c
-    - decrementWorkByte9ThenCopyRecordFieldsSeedWord14AndRearmBytes9AThenAdvanceWorkByte2BmagicMagic22603_801F055C
+    - decrementCopyFieldsRearm
     # @source 0x801F055C
     # @behavior Counts down work byte 9, copies record fields and rearms the work step.
   - - 6684

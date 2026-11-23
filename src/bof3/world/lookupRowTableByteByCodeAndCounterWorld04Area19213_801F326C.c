@@ -10,7 +10,7 @@ extern u8 D_80144F56;   /* @source 0x80144F56 @kind unknown */
 extern u32 D_8014686C;  /* @source 0x8014686C @kind data */
 
 s32 func_8015B5D4(u32 arg0, s32 arg1);
-u8 lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4(u32 arg0,
+u8 queryTable3890ByteOffset(u32 arg0,
                                                                     u32 arg1,
                                                                     u32 arg2,
                                                                     u32 arg3);
@@ -90,7 +90,7 @@ u16 lookupRowTableByteByCodeAndCounterWorld04Area19213_801F326C(u32 arg0) {
   bank -= 0x5E;
   rec = D_80144982[D_80181B10[code] * 164];
   if (func_8015B5D4((u32)bank, 0x0A) != 0) {
-    return (u16)lookupTable3890ByteByTable38C0OffsetOr8World04Area19213_801F33E4(
+    return (u16)queryTable3890ByteOffset(
         index & 0xFF, code, level, rec);
   }
   if (rec < 8) {

@@ -24,7 +24,7 @@ sources = [
     "src/bof3/scenario/stateDistanceTransitionArm.c",
     "src/bof3/scenario/stateEffectObjectDistance.c",
     "src/bof3/scenario/stateDistanceBlockArm.c",
-    "src/bof3/scenario/invokeHelperArgThenClearFourIndexedRecordFlagBitsScenarioScena0700_801FDBF4.c",
+    "src/bof3/scenario/callArgFourBits.c",
     "src/bof3/scenario/stateTableFlagBytes.c",
     "src/bof3/scenario/tickObjectRampQuad.c",
     "src/bof3/scenario/claimRampBoundSixteenth.c",

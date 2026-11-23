@@ -113,8 +113,8 @@ segments:
     - func_801F01AC
   - - 5632
     - c
-    - incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200.c'
+    - incrementProjectCountDown
+    - '@source: src/bof3/bmagic/incrementProjectCountDown.c'
     - '@behavior: Increment work byte B and word 0x0C, project position words 0x34 and 0x38 at radius 16, then count down byte 9 and advance byte 2 at zero.'
   - - 5908
     - c

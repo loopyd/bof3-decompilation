@@ -13,7 +13,7 @@ typedef void (*Boss02116Handler)(void);
  * the six-word table at 0x800C1804; it returns zero, which the void slot type
  * drops. */
 void setupTupleFlagProgress(void);
-void publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64(
+void publishOwnerRequestOwner(
     void);
 s32  func_800C1B08(s32 arg0);
 
@@ -31,7 +31,7 @@ extern Boss02116Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * the 0x2 bit of D_80146328, and while it is set stores 0xA into the scenario
  * progress byte and calls func_801DDED8, otherwise calls func_801DDF00) into
  * 0x801463A4, the owner-zero battle entry
- * publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64
+ * publishOwnerRequestOwner
  * (publishes the owner-0 work record to the scratchpad work cursor 0x1F800044,
  * clears record byte 0x2A, requests resource 4, then clears the owner-record
  * heads for ids 1 and 2) into 0x801463A8, and the index dispatcher
@@ -54,6 +54,6 @@ void publishBattleHooksBossBoss02116_800C1AD0(void) {
   D_801463A4 =
       setupTupleFlagProgress;
   D_801463A8 =
-      publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64;
+      publishOwnerRequestOwner;
   D_801463AC = (Boss02116Handler)func_800C1B08;
 }

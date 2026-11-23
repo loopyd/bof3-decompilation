@@ -77,16 +77,16 @@ segments:
     - '@behavior: steps each active record of the 0x18-byte-stride work table at 0x800E4800 with sub-phase arming, countdown expiry and a per-record update call, and reports whether any record was active.'
   - - 2120
     - c
-    - seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448
-    - '@source: src/bof3/world/seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448.c'
+    - statePositionClearDraw
+    - '@source: src/bof3/world/statePositionClearDraw.c'
     - '@behavior: reads the work record published by the scratchpad pointer cell 0x1F800044 and, while its unsigned byte at +0x02 reads zero, seeds the record world position words with -0x3900 at +0x34, -0x3880 at +0x38 and -0x7F0 at +0x3C and writes that byte back incremented by one through a second read, then always runs the overlay draw step at 0x801F34A0; takes no arguments and returns nothing.'
   - - 2208
     - asm
     - func_801F34A0
   - - 3316
     - c
-    - seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4
-    - '@source: src/bof3/world/seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c'
+    - stateChannelPairWorld
+    - '@source: src/bof3/world/stateChannelPairWorld.c'
     - '@behavior: Seeds the overlay view through the scratchpad work record at 0x1F800044: stores 0x120000 in the record coordinate word at 0x34 and 0x240000 in the coordinate word at 0x38 and mirrors the same two words into the shared channel pair at 0x80149308 and 0x8014930C, runs the resident helper at 0x80153DE8, then stores 0x1220 in the record halfword at 0x3E and passes that same value to the resident helper at 0x80154FD8 before seeding the shared signed world coordinates at 0x801492D8 with -0x48A and at 0x801492DC with 0xF8. The resident call splits the two groups, so the scratchpad cell is re-read for the second group. Takes no arguments and returns nothing.'
   - - 3436
     - c

@@ -65,8 +65,8 @@ segments:
     - '@behavior: Sets bit 0x1F of the active scenario flag bank with one call to the shared bit setter func_8015B5F4, handing it the pointer published at 0x8014686C and the bit index 0x1F.'
   - - 1232
     - c
-    - queueSharedUiElement23x4FSize50Or51OnFlagPair1C1DWorld02Area09913_801F30D0
-    - '@source: src/bof3/world/queueSharedUiElement23x4FSize50Or51OnFlagPair1C1DWorld02Area09913_801F30D0.c'
+    - queueSharedUiFlag
+    - '@source: src/bof3/world/queueSharedUiFlag.c'
     - '@behavior: While the shared front-side gate byte D_80143F03 reads 1, probes two flags of the main-RAM flag bank at 0x80144EA0 through the shared flag tester func_8015B5D4: flag 0x1C set together with flag 0x1D clear queues the shared UI element at (0x23, 0x4F) with size 0x51, and every other combination of the pair queues the same element with size 0x50.'
   - - 1356
     - textbin

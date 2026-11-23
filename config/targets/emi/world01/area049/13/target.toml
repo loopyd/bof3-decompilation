@@ -12,7 +12,7 @@ sources = [
     "src/bof3/world/claimEveryFourthFrame.c",
     "src/bof3/world/lowerMirrorEveryFourth.c",
     "src/bof3/world/clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818.c",
-    "src/bof3/world/advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0.c",
+    "src/bof3/world/stateFramesComplementShade.c",
 ]
 support_sources = [
     "src/bof3/world/callWorkTable818World01.c",

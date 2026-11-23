@@ -6,7 +6,7 @@
  * displacement; the same cell is declared in
  * armWorkAdvanceState.c,
  * tickCountdownClearTable.c
- * and seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c. */
+ * and stateChannelPairWorld.c. */
 /* @source 0x1F800044 @kind unknown */
 extern u8* area04713WorkCursor_1F800044;
 

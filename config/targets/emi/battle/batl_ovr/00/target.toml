@@ -9,7 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/battle/initBattleScenePrimsAndAdvanceSubstate.c",
+    "src/bof3/battle/setupScenePrimsSubstate.c",
     "src/bof3/battle/emitTintedPanelSprite.c",
     "src/bof3/battle/renderSlidingPanelGradient.c",
     "src/bof3/battle/callSubstateTable5.c",

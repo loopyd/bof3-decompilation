@@ -141,8 +141,8 @@ segments:
     - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay handler run based at 0x801CF62C with no arguments, discarding any result; no index bound, no other state read or written, and the 0x18-byte frame only holds $ra at 0x10 across the indirect call.'
   - - 4520
     - c
-    - dispatchWorkHalfword2cTablef638PlcharPlp34900_801CF5A8
-    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTablef638PlcharPlp34900_801CF5A8.c'
+    - callWorkTablef638Plchar
+    - '@source: src/bof3/plchar/callWorkTablef638Plchar.c'
     - '@behavior: Overlay step dispatch on the work record halfword at offset 0x2C: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay handler run based at 0x801CF638 with no arguments, discarding any result; no index bound, no other state read or written, and the 0x18-byte frame only holds $ra at 0x10 across the indirect call.'
   - - 4588
     - textbin

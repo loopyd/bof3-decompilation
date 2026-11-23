@@ -54,7 +54,7 @@ support_sources = [
     "src/bof3/world/stateResolvedAnimMatches.c",
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld03Area12114_801F430C.c",
     "src/bof3/world/emitSemiTransSpriteFromIndexedEntryTableWorld03Area12114_801F39F0.c",
-    "src/bof3/world/drawBlueToWhiteGradientBandFromScreenTopSizedByOverlayStateWorld03Area12114_801F6390.c",
+    "src/bof3/world/renderWhiteTopSized.c",
     "src/bof3/world/probeReseedBumpTurn.c",
     "src/bof3/world/renderLayerNearFocus.c",
     "src/bof3/world/stateRotatedTexturedDiamond.c",

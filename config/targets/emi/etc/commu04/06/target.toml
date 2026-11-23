@@ -11,7 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/ui/renderCommuBankEntry.c",
     "src/bof3/ui/audioFairyUnlessFrontend.c",
-    "src/bof3/ui/advanceFairyProgressUnlessFrontendMode2.c",
+    "src/bof3/ui/stateFairyUnlessFrontend.c",
     "src/bof3/ui/callByte1Table1758.c",
     "src/bof3/ui/initializeCommuUnlessFrontend.c",
     "src/bof3/ui/initializeCommuUiState.c",
