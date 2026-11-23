@@ -38,7 +38,8 @@ void drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60(u8* record);
  * comparison materialising its own 1 (`addiu $v0, $zero, 0x1` at 0x801F3370)
  * beside the byte store of the same value, which is why the report value is
  * returned as a low byte and why the caller masks it. Its only two callers are
- * func_801F2CC8, which ignores the result, and func_801F2D44, whose
+ * drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8,
+ * which ignores the result, and func_801F2D44, whose
  * `andi $v0, $v0, 0xFF` / `bnez` after the `jal` at 0x801F2D88 proves the
  * reporting call site consumes that low byte and skips func_80196070 when it is
  * zero. The three-word descriptor it copies is the one func_801F31F4 publishes

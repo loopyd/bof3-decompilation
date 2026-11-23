@@ -18,7 +18,9 @@
  *           skips every record whose +0x14 reads zero, arms a record whose
  *           sub-phase byte +0x15 is 0 and increments that byte, so a record
  *           claimed here enters the next step pass unarmed. Its only in-payload
- *           caller is func_801F2CC8 (`jal` at 0x801F2CF8), which reaches it
+ *           caller is
+ *           drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8
+ *           (`jal` at 0x801F2CF8), which reaches it
  *           whenever the shared frame word D_80143E6C is a multiple of 8, i.e.
  *           on a fixed spawn period; that caller ignores $v0, so the call site
  *           agrees with the no-argument void prototype. The prologue-less body

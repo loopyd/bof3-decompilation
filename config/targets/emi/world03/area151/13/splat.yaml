@@ -86,8 +86,10 @@ segments:
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area15113_801F3528
     - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area15113_801F3528.c'
   - - 2424
-    - asm
-    - func_801F3578
+    - c
+    - retreatHalfword2eBy10AndResetState2WhenBelow2fThenSetState2When454f2IsNot2ThenDrawHalfword2eWorld03Area15113_801F3578
+    - '@source: src/bof3/world/retreatHalfword2eBy10AndResetState2WhenBelow2fThenSetState2When454f2IsNot2ThenDrawHalfword2eWorld03Area15113_801F3578.c'
+    - '@behavior: Entry 3 of the four-entry work-byte-2 handler table based at 0x801F5448, reached through the dispatcher at 0x801F3438. Reads the work record through the scratchpad pointer cell 0x1F800044, stores halfword 0x2E less 0x10 and clears work state byte 0x02 when the stored signed value is below -0x2F. It then writes 1 to state byte 0x02 through a second lookup of the pointer cell unless the shared byte 0x801454F2 reads 2, and finally draws the marker sprite layers at x 0x10 and y equal to the signed halfword 0x2E of a third lookup of that cell.'
   - - 2556
     - c
     - dispatchStateByte3Table5458World03Area15113_801F35FC

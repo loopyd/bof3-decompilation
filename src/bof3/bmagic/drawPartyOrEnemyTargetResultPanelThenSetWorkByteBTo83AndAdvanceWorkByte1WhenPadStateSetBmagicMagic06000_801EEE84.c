@@ -26,18 +26,23 @@ extern u16 D_80145AA8; /* @source 0x80145AA8 @kind unknown */
  * ten static panel labels of this overlay, lifted exact in this same target. */
 void drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174(void);
 
-/* Result path of a non-party battle target, still an asm sibling of this
- * target: it scales (selector - 3) by the 0x118-byte enemy work-record stride
- * and, when that row's byte at +0xB is set, draws through func_801EF924 at the
+/* Result panel of a non-party battle target, a source of this same target: it
+ * scales (selector - 3) by the 0x118-byte local panel record stride and, when
+ * that row's byte at +0xB is set, draws the row's two numbers through
+ * func_801EFB00, otherwise the 0x5C placeholder cells; both arms start with the
+ * row name through
+ * drawUpToEightAsciiGlyphBankCellsAtPenPositionBmagicMagic06000_801EF924 at the
  * same (0x70, 0x30) pen position this file's party arm uses. */
-void func_801EF2DC(void);
+void drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC(
+    void);
 
 /* @source 0x801EEE84
  * @behavior Result-panel step of the current battle target: reads the selector
  *           byte D_80146384 and, while it is below 3 (sltiu 3, so an unsigned
  *           compare), draws the party result panel through
  *           drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174;
- *           any larger selector takes the non-party path through func_801EF2DC
+ *           any larger selector takes the non-party path through
+ *           drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC
  *           instead. The two arms are exclusive, and the value 0x83 is
  *           materialized in the compare's branch delay slot only to feed the
  *           next block. When the shared pressed-pad-state halfword D_80145AA8
@@ -57,7 +62,7 @@ void drawPartyOrEnemyTargetResultPanelThenSetWorkByteBTo83AndAdvanceWorkByte1Whe
   if (D_80146384 < 3u) {
     drawWorkRecordNameAndBattleResultPanelLabelsBmagicMagic06000_801EF174();
   } else {
-    func_801EF2DC();
+    drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC();
   }
   if (D_80145AA8 != 0) {
     g_battle_work[0xB] = 0x83;

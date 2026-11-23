@@ -66,8 +66,8 @@ void func_801EF590(u8* text, s32 x, s32 y);
  *           With that byte clear it submits the twelve-glyph 0x5C rule
  *           D_801F0B8C at the same pen position through the local text helper
  *           func_801EF590, which is the panel value slot before a value exists.
- *           The caller func_801EF2DC passes the two bytes of one panel-record
- *           halfword as (low byte, high byte) and the value rows 0x98 and 0xAC.
+ *           The caller drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC
+ *           passes the two bytes of one panel-record halfword as (low byte, high byte) and the value rows 0x98 and 0xAC.
  *           Frame 0x28 holding $ra at 0x20, $s1 at 0x1C and $s0 at 0x18, with
  *           the fifth call argument at 0x10; nothing is returned and no state is
  *           written.

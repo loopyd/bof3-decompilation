@@ -31,7 +31,8 @@ void func_801F2DB4(VECTOR* pos, s16 arg1, u8 arg2, u8 arg3);
  *           passes as a VECTOR rather than as three scalars.
  *
  * Evidence notes: both callers prove the argument is a signed halfword.
- * func_801F2CC8 calls it with the constant 0x80 (`addiu $a0, $zero, 0x80` in
+ * drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8
+ * calls it with the constant 0x80 (`addiu $a0, $zero, 0x80` in
  * the `jal` delay slot at 0x801F2CD4) and func_801F2D44 with the countdown
  * word 0x0C of the record published at the scratchpad cell 0x1F800044 scaled
  * by eight (`sll $a0, $a0, 19` then `sra $a0, $a0, 16` before the `jal` at

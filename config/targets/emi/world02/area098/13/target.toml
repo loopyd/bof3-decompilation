@@ -22,6 +22,7 @@ sources = [
     "src/bof3/world/resetWorkRecordAndPublishRecordIndexThenState4Substate9World02Area09813_801F5EBC.c",
     "src/bof3/world/claimRecordEveryFourthTickRunPassesArmWorkCountdown20AndAdvanceStateWorld02Area09813_801F3B5C.c",
     "src/bof3/world/invokeOffset64BlockDrawHelperThenTickCountdownReload20AndAdvanceStateWorld02Area09813_801F3910.c",
+    "src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World02Area09813_801F3AA8.c",
 ]
 support_sources = [
     "src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c",

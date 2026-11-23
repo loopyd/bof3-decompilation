@@ -92,8 +92,10 @@ segments:
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC
     - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld02Area08713_801F35EC.c'
   - - 2620
-    - asm
-    - func_801F363C
+    - c
+    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08713_801F363C
+    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08713_801F363C.c'
+    - '@behavior: Entry 3 of the byte-2 handler table based at 0x801F5750 in this overlay, published by the pointer word at 0x801F575C. It subtracts 0x10 from the signed halfword at work-record offset 0x2E and stores the truncated halfword, clears state byte 0x02 while the stored value stays below -0x2F, writes 1 to state byte 0x02 unless the shared byte 0x801454F2 is 2, and then calls the local drawer at 0x801F3B34 with 0x10 and the signed halfword at 0x2E. The record comes from the scratchpad pointer cell 0x1F800044, which is re-read at each group. No arguments, no return value.'
   - - 2752
     - c
     - dispatchStateByte3Table5760World02Area08713_801F36C0

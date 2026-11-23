@@ -41,7 +41,8 @@
  *   with signed word locals folded the increment away and measured 114 of 119.
  *   The 0x40-byte frame keeps ra at 0x38, s7 down to s0 at 0x34 down to 0x18,
  *   and the repeated 0x80 colour literal sits in s7 across the loop. The caller
- *   func_801EF2DC passes a name field of the 0x118-byte local panel record
+ *   drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC
+ *   passes a name field of the 0x118-byte local panel record
  *   table at 0x801EB6A4 with the pen position (0x70, 0x30). Nothing is returned
  *   and no state outside the primitive cursor's own storage is written.
  * @status exact
