@@ -114,7 +114,7 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
             "shared", f"{old} is claimed by {shared.relative_to(root).as_posix()}"
         )
 
-    plan.source = _owned_source(root, manifest, old)
+    plan.source = _owned_source(root, manifest, old, row.address)
     if plan.source is not None:
         for owner, other in sorted(manifests.items()):
             if owner == target:
@@ -135,17 +135,42 @@ def _unit_key(root: Path, path: Path) -> str:
     return sanitize_identifier(path.relative_to(root / "src").as_posix())
 
 
-def _owned_source(root: Path, manifest, name: str) -> Path | None:
+_SOURCE_ADDRESS = re.compile(r"@source\s+(0x[0-9A-Fa-f]{8})")
+_ANY_DEFINITION = re.compile(
+    r"^[A-Za-z_][A-Za-z0-9_ \t\*]*\b[A-Za-z_][A-Za-z0-9_]*\s*\([^;{]*\)\s*\{",
+    re.MULTILINE,
+)
+
+
+def _owned_source(root: Path, manifest, name: str, address: int | None = None) -> Path | None:
     """Return the claimed unit that owns this name.
 
     A file whose stem is the name owns it even when the unit carries no function
     definition, which is how a dispatch-table unit is named.
     """
     sources = manifest_source_paths(root, manifest)
-    for path in sources:
-        # A unit may keep an address tail while its map row does not.
-        if path.is_file() and _stem_base(path.stem) == _stem_base(name):
+    live = [path for path in sources if path.is_file()]
+    for path in live:
+        if path.stem == name:
             return path
+    # A unit may keep an address tail while its map row does not, but a base
+    # match is only an owner when exactly one unit carries that base: two
+    # neighbours differing only in their address tail are different units.
+    base = _stem_base(name)
+    matches = []
+    for path in live:
+        if _stem_base(path.stem) != base:
+            continue
+        # The file's own metadata address decides: two symbols of one target can
+        # share a stem base and still be different units.
+        found = _SOURCE_ADDRESS.search(path.read_text(encoding="utf-8"))
+        if address is not None and (
+            found is None or int(found.group(1), 16) != address
+        ):
+            continue
+        matches.append(path)
+    if len(matches) == 1:
+        return matches[0]
     for path in sources:
         if path.is_file() and _definition(name).search(path.read_text(encoding="utf-8")):
             return path
@@ -164,7 +189,13 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
 
     grouped = False
     if plan.source is not None and _stem_base(plan.source.stem) == _stem_base(plan.old):
-        grouped = count_function_metadata(plan.source.read_text(encoding="utf-8")) > 1
+        text = plan.source.read_text(encoding="utf-8")
+        # One metadata block can still carry several definitions: a dispatch
+        # table unit names many handlers. Any such unit keeps its filename.
+        grouped = (
+            count_function_metadata(text) > 1
+            or len(_ANY_DEFINITION.findall(mask_c_text(text))) > 1
+        )
         if not grouped:
             # A grouped unit keeps its filename: the name follows its first
             # function, and one rename must not churn the unit others use.
@@ -344,11 +375,35 @@ def apply_batch(root: Path, requests: list[tuple[str, str, str]], *, jobs: int =
     results: list[tuple[RenamePlan, dict]] = []
     try:
         with acquire_writer(root):
-            for plan in ready:
+            for index, plan in enumerate(ready):
                 try:
                     before = _measure(plan, plan.source)
                     _write(plan, plan.old, plan.new)
-                except (RuntimeError, ValueError, OSError) as error:
+                except (FileNotFoundError, ValueError) as error:
+                    # A batch's plan can lose its unit to an earlier row's rename;
+                    # re-resolve this row against the tree and try it once more.
+                    fresh = _resolve(root, plan.target, plan.old, plan.new)
+                    if fresh.passed and fresh.source != plan.source:
+                        ready[index] = fresh
+                        try:
+                            before = _measure(fresh, fresh.source)
+                            _write(fresh, fresh.old, fresh.new)
+                        except (RuntimeError, ValueError, OSError) as again:
+                            fresh.refuse("write", str(again).strip()[:200])
+                            payloads.append(
+                                _payload(
+                                    root, fresh, applied=False, proof=(), attempted=True
+                                )
+                            )
+                            continue
+                        results.append((fresh, before))
+                        continue
+                    plan.refuse("write", str(error).strip()[:200])
+                    payloads.append(
+                        _payload(root, plan, applied=False, proof=(), attempted=True)
+                    )
+                    continue
+                except (RuntimeError, OSError) as error:
                     plan.refuse("write", str(error).strip()[:200])
                     payloads.append(
                         _payload(root, plan, applied=False, proof=(), attempted=True)
