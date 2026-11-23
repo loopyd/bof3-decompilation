@@ -1,7 +1,7 @@
 ---
 name: psx-emulator
 description: Execute scoped PS1 runtime evidence missions through the harness and PCSX-Redux Agentic
-model: ninerouter/qwen-combo
+model: ninerouter/ds-combo
 thinking: high
 tools: read,grep,find,ls,bash,contact_supervisor
 systemPromptMode: replace
