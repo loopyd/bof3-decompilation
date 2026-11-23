@@ -31,8 +31,9 @@ segments:
     - dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04
     - '@source: src/bof3/bmagic/dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04.c'
   - - 92
-    - asm
-    - func_801EEC5C
+    - c
+    - queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C
+    - '@source: src/bof3/bmagic/queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C.c'
   - - 284
     - asm
     - func_801EED1C

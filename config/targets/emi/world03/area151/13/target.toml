@@ -20,6 +20,7 @@ sources = [
     "src/bof3/world/retreatHalfword2eBy10AndResetState2WhenBelow2fThenSetState2When454f2IsNot2ThenDrawHalfword2eWorld03Area15113_801F3578.c",
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area15113_801F3898.c",
     "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area15113_801F36C0.c",
+    "src/bof3/world/prepareWorkRecordForLookup1D1AndArmState1World03Area15113_801F2FD0.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C.c",

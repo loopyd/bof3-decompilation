@@ -32,8 +32,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: it calls the entry of the handler run labelled T_801D1F88 that the unsigned byte at offset 1 of the scratchpad work object published at 0x1F800044 selects, passing no arguments and touching no other state.'
   - - 72
-    - asm
-    - func_801D0C48
+    - c
+    - seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48
+    - '@source: src/bof3/scenario/seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48.c'
+    - '@behavior: Entry 0 of the overlay step-handler run at 0x801D1F88: it seeds the scratchpad work object position pair at +0x34/+0x38 with 0x308000/0x740000, publishes the func_8015477C distance of that pair scaled by 0x10000 at +0x3C, seeds the triple at +0x0C/+0x10/+0x14 with 0x308000/0x718000/0xFEC00000, clears the angle halfword at +0x2E and the tint byte at +0x5D, arms the countdown byte at +0x9 with 8 and advances the work byte at +0x1.'
   - - 236
     - c
     - raiseAngleBy16TintBy8DrawBandsOriginPrimitivesTickCountdownReload60QueueCue20DAndAdvanceWorkByte1ScenarioSce15ef000_801D0CEC

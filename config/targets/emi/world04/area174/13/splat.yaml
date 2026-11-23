@@ -130,8 +130,10 @@ segments:
     - '@source: src/bof3/world/stepScratchWorkCounterDownBy14RaiseLevelTripleToMin40ThenResetFlag20AtA00World04Area17413_801F3FFC.c'
     - '@behavior: Per-frame step of the scratch work record published through the pointer cell at 0x1F800044: subtracts 0x14 from the record halfword at 0x3E, raises each signed level byte 0x5D, 0x5E and 0x5F by 2 while it reads below -0x40, and then, once the signed halfword at 0x3E reads 0xA00, clears flag bit 0x20 of record byte 0 and stores 0 into work byte 0x5C and the level bytes 0x5F, 0x5E and 0x5D; in the other arm it consumes two units of the halfword at 0x7E of the record published through 0x80146884.'
   - - 5376
-    - asm
-    - func_801F4100
+    - c
+    - requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area17413_801F4100
+    - '@source: src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area17413_801F4100.c'
+    - '@behavior: State handler of this overlay, reached only through the code pointer word 0x801F662C, entry 7 of the dispatch run based at 0x801F6610 inside the payload textbin blob; no jal in the payload names it. It indexes the world record table 0x8017F974 with the shared world/state id 0x80143F00, takes word 0x10 of that record as a table of pointers, picks the entry with byte 0x03 of the front record published through the pointer cell 0x80148210, and adds that record halfword 0x0A as a byte offset, so the result addresses one two-byte command of a per-state byte script. It requests the command first byte at offset 0x02 as a resource through the shared helper func_8014D6DC, passing work halfword 0x58 of the scratch work record published through 0x1F800044 lowered by two and masked to 0xFFFF as the mode, then re-reads that cell and copies the command second byte at offset 0x03 into work byte 0x2A. Finally it re-reads the pointer cell 0x80148210 and advances the front record halfword 0x0A by two. Takes no arguments and returns nothing.'
   - - 5544
     - asm
     - func_801F41A8

@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef000_801D0C04.c",
+    "src/bof3/scenario/seedWorkDistancePairAndOriginTripleClearAngleTintArmCountdown8AdvanceWorkByte1ScenarioSce15ef000_801D0C48.c",
 ]
 support_sources = [
     "src/bof3/scenario/brightenWorkGreenBy64Reload255OnWrapDrawBandsOriginPrimitivesTickCountdownReload4AndAdvanceWorkByte1ScenarioSce15ef000_801D0E5C.c",

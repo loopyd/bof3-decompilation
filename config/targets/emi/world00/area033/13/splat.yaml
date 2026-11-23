@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F2E20
   - - 916
-    - asm
-    - func_801F2F94
+    - c
+    - prepareWorkRecordForLookup15AndArmState1World00Area03313_801F2F94
+    - '@source: src/bof3/world/prepareWorkRecordForLookup15AndArmState1World00Area03313_801F2F94.c'
+    - '@behavior: State-handler word 0 of the handler run at 0x801F4F64 that the overlay update 0x801F2E20 indexes with work byte 0x01. Stores 0x80 in work byte 0x24, applies main lookup entry 0xF through the shared 0x8014DD3C helper, stores 5 in work byte 0x29, clears work bytes 0x2A and 0x5D..0x5F, and arms work byte 0x01 with 1, re-reading the scratchpad cell 0x1F800044 before every store.'
   - - 1056
     - asm
     - func_801F3020
