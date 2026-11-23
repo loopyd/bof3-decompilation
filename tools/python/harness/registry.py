@@ -339,6 +339,11 @@ DOMAINS: Mapping[str, Domain] = {
                 "harness.commands.next_lift",
                 example="bin/harness lift next emi/battle/battle/15",
             ),
+            "batch": Action(
+                "select disjoint lift lanes with the data-head and SDK screens",
+                "harness.commands.lift_batch",
+                example="bin/harness lift batch --limit 10 --json",
+            ),
             "campaign": Action(
                 "delta-based lift campaign bookkeeping",
                 "harness.commands.campaign",
