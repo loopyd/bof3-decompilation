@@ -34,8 +34,10 @@ segments:
     - dispatchStateByte1Table4b38World04Area16813_801F2C38
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 124
-    - asm
-    - func_801F2C7C
+    - c
+    - queueSharedUiElementColumn10x18To11Size89ThenSetWorkByte1To1World04Area16813_801F2C7C
+    - '@source: src/bof3/world/queueSharedUiElementColumn10x18To11Size89ThenSetWorkByte1To1World04Area16813_801F2C7C.c'
+    - '@behavior: Queues one shared world marker per entry of the six-entry byte row table 0x801F4B30 at grid coordinate 0x10 with size 0x89, then stores 1 into work record byte +1 so the state-byte-1 dispatcher 0x801F2C38 takes word 1 of its run.'
   - - 224
     - asm
     - func_801F2CE0

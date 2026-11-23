@@ -27,6 +27,7 @@ sources = [
     "src/bof3/world/stepWorkRecordsAndResetWorkAreaWhenNoRecordActiveWorld04Area17413_801F2E28.c",
     "src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5World04Area17413_801F4D1C.c",
     "src/bof3/world/decrementHalfword0aBy2WhenEmiLoaderNotReadyWorld04Area17413_801F4F28.c",
+    "src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area17413_801F3CE4.c",
 ]
 support_sources = [
     "src/bof3/world/dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4.c",

@@ -28,6 +28,7 @@ sources = [
     "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0BWorld00Area03713_801F3A34.c",
     "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0CWorld00Area03713_801F3A6C.c",
     "src/bof3/world/initFrontendStateSelector4AndSecondStateByte0EWorld00Area03713_801F3AA4.c",
+    "src/bof3/world/setStatusBDAndByte80146867ZeroIfGateElseFFFFAndByte64WithFrontEndStep3World00Area03713_801F37F4.c",
 ]
 support_sources = [
     "src/bof3/support/area037_13_psyq.c",

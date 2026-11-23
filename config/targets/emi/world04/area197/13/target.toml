@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/clearWorkTableAt800E4800Stride28World04Area19713_801F30E4.c",
     "src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World04Area19713_801F4124.c",
     "src/bof3/world/stepWorkTableAt800e5c00IntegrateVelocityBounceTickCountdownsAndDrawEntriesWorld04Area19713_801F3368.c",
+    "src/bof3/world/waitFlag0eThenClearStepByte9AndAdvanceStateByte2DrawingFullWidthWorld04Area19713_801F368C.c",
 ]
 support_sources = [
     "src/bof3/world/clearWorkTableAt800E5C00World04Area19713_801F3474.c",

@@ -108,8 +108,10 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4.c'
     - '@behavior: Adds two modulo 256 to work byte 9 and, when it equals 0x10, re-reads the scratchpad work pointer and increments work byte 2.'
   - - 3348
-    - asm
-    - func_801EF914
+    - c
+    - decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914
+    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914.c'
+    - '@behavior: Third word of the three-word work-byte-2 handler run based at 0x801EFAB8. Reads the scratchpad work object through the pointer cell at 0x1F800044 before frame creation, subtracts two from its byte 9 at byte width, tests the stored byte truncated with andi 0xFF and, only when that countdown reaches zero, decrements the shared battle work record byte 0xB through the pointer at 0x801EB4E0 and invokes the shared helper at 0x801E5988. Takes no arguments, returns nothing and keeps a 0x18-byte frame only to save $ra.'
   - - 3440
     - asm
     - func_801EF970

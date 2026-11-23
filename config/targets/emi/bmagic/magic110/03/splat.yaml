@@ -144,8 +144,10 @@ segments:
     - '@source: src/bof3/bmagic/offsetChannelPairByWorkByteBMotionPairTableCopyRecordWordSetByte9To60SetByteATo40ThenAdvanceWorkByte2BmagicMagic11003_801F0040.c'
     - '@behavior: Entry 4 of the six-word work-byte-2 handler run at 0x801F048C, seeded from the shared channel pair 0x80149308/0x8014930C plus the offset pair in row 0xB of the table at 0x801F04A4, copies the shared battle record word 0x3C, sets work byte 9 to 0x60 and byte 0xA to 0x40, then advances work byte 2.'
   - - 5336
-    - asm
-    - func_801F00D8
+    - c
+    - add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8.c'
+    - '@behavior: Entry 13 of the fourteen-word byte-1 handler table at 0x801F046C and the sixth and last word of the six-word work-byte-2 run at 0x801F048C, reached through the two-word dispatch base 0x801F049C as its index 1; reads the scratchpad work pointer cell 0x1F800044, adds 2 to work byte 9 at byte width, re-reads the cell, subtracts one from work byte 0xA and tests the truncated stored byte, then invokes the shared helper 0x801E5988 with no arguments only when that countdown reaches zero.'
   - - 5432
     - asm
     - func_801F0138

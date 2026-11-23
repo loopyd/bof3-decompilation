@@ -13,6 +13,7 @@ sources = [
     "src/bof3/bmagic/invokeDrawHelperAdd2ToWorkByteAWhenBelow10IncrementWorkByte9AndAdvanceWorkByte1At10BmagicMagic11003_801EEEDC.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic11003_801EF114.c",
     "src/bof3/bmagic/seedWorkHeaderHalfwords2EToA0And30To12CWords40To30000And44ToC000ClearBytes5CTo5FRequestResource0AndAdvanceWorkByte2BmagicMagic11003_801EF528.c",
+    "src/bof3/bmagic/add2ToWorkByte9AndDecrementWorkByteAThenInvokeHelperWhenZeroBmagicMagic11003_801F00D8.c",
 ]
 support_sources = [
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAtWorkWord14RadiusOneTwentyEightWideTintingOuterEdgeByWorkByte9TimesFourBmagicMagic11003_801EFC98.c",

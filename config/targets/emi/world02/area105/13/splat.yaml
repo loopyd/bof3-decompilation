@@ -44,8 +44,10 @@ segments:
     - asm
     - func_801F2CDC
   - - 312
-    - asm
-    - func_801F2D38
+    - c
+    - advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuadsWorld02Area10513_801F2D38
+    - '@source: src/bof3/world/advanceWorkByte9ResetWorkAreaWhenSharedStateByteClearThenDrawThreeCellQuadsWorld02Area10513_801F2D38.c'
+    - '@behavior: state-3 handler of the work-byte-2 dispatch: it advances the work record counter byte at +9, reached through the scratchpad pointer cell 0x1F800044, calls the shared work-area reset helper at 0x80196070 while the shared overlay state byte 0x8014933B reads zero, then re-reads the pointer cell and calls this overlay''s three-cell-quad draw with that counter byte as the displacement.'
   - - 412
     - c
     - drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C

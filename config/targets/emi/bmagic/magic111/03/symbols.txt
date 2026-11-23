@@ -18,6 +18,6 @@ func_801EF330 = 0x801EF330;
 dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8 = 0x801EF7F8;
 clearWorkByte9AndAdvanceWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11103_801EF870 = 0x801EF870;
 add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4 = 0x801EF8C4;
-func_801EF914 = 0x801EF914;
+decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914 = 0x801EF914;
 func_801EF970 = 0x801EF970;
 T_801EFA9C = 0x801EFA9C;

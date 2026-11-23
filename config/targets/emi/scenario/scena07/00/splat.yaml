@@ -401,8 +401,10 @@ segments:
     - '@source: src/bof3/scenario/scanWorkRecordsForPartyByte2ScenarioScena0700_801FDA34.c'
     - '@behavior: Scans the live 0x140-byte-stride local work records based at 0x80145E90 for one whose party byte at +0x79 equals 2, returning 1 at the first match and 0 when the scan exhausts the D_80146254 live rows. It starts at row 0, reads only that one byte per row, writes nothing, takes no arguments and has no stack frame, so both returns share the single jr $ra epilogue at 0x801FDA90.'
   - - 28312
-    - asm
-    - func_801FDA98
+    - c
+    - dispatchCoordinateLookupHandlerScenarioScena0700_801FDA98
+    - '@source: src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0700_801FDA98.c'
+    - '@behavior: Overlay coordinate-record selector, word 3 of the four-word code-pointer run at 0x801FDE00, so no in-image jal and no other image word holds its address. It takes the two unsigned halfword coordinates its caller forwards (the two andi 0xFFFF at 0x801FDAA0 and 0x801FDAA4 move $a0 and $a1 into $a2 and $a3) and passes them with the overlay''s single five-byte lookup record at 0x801FDFA0 and the length 1 to the resident helper func_801A7AD8 (0x801A7AD8), which matches that record against the shared route/world word D_80143F00, the coordinate pair and the shared category byte D_80145E98. A negative sign-extended byte answer returns -1 without touching any other state; otherwise it scales that index by four in the bltz delay slot, loads the word of the five-word handler run at 0x801FDFA8, calls it with no arguments through jalr and answers the constant 1, discarding the handler''s result. With one record the lookup can only answer 0 or -1, so the reachable entry is word 0, requestPrimaryState6Substate10ScenarioScena0700_801FDAFC (0x801FDAFC). It performs no stores of its own and its 0x18-byte frame only keeps $ra at 0x10 across the two calls. Its 0x64 bytes compare equal word for word with the exact dispatchRoute30CoordinateLookupHandlerScenarioScena0400_801FA010 (0x801FA010 of emi/scenario/scena04/00) in every word except the lookup-record base low half, the handler-run base low half and the absolute j word, which shifts by exactly the 0x3A88 span delta.'
   - - 28412
     - c
     - requestPrimaryState6Substate10ScenarioScena0700_801FDAFC

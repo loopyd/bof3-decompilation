@@ -16,6 +16,7 @@ sources = [
     "src/bof3/world/clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558.c",
     "src/bof3/world/clearFlag74UnlessFrontSideByteIs3World04Area17113_801F3764.c",
     "src/bof3/world/setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkByte2EveryEighthFrameWorld04Area17113_801F33D8.c",
+    "src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGateClearThenStartFrontendWorld04Area17113_801F34F8.c",
 ]
 support_sources = [
     "src/bof3/support/area171_13_psyq.c",
