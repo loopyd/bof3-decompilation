@@ -25,6 +25,7 @@ sources = [
     "src/bof3/scenario/seedWorkPositionPairAndDistancePublishBlockAt800E4C24SetHalfword800E5134ArmCountdownAdvanceWorkByte2ScenarioScena0700_801F7BE0.c",
     "src/bof3/scenario/invokeHelperArgThenClearFourIndexedRecordFlagBitsScenarioScena0700_801FDBF4.c",
     "src/bof3/scenario/clearWorkTableAt800E4800ClearFlagBytesAt801FDFC4And801FDFC8ScenarioScena0700_801F8358.c",
+    "src/bof3/scenario/tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

@@ -30,8 +30,10 @@ segments:
   vram: 2149510160
   subsegments:
   - - 16
-    - asm
-    - func_801EEC10
+    - c
+    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic22303_801EEC10.c'
+    - '@behavior: Per-frame entry of this overlay that no jal and no payload word names, so the overlay loader reaches it: copies the three code-pointer words at 0x801EEC04 (0x801EED18, 0x801EEF4C, 0x801EEFB4) into its 0x38-byte frame and calls the entry that unsigned byte 1 of the work object at 0x1F800044 selects, without a bound check, then sweeps the 64 records of stride 0x78 at 0x801EFC60 and, for each record whose flags bit 0 is set, publishes the record as the work object and its word 0x74 into 0x801EB4E0, runs the record step dispatcher at 0x801EF3C0 and restores both cells. Takes no arguments and returns nothing.'
   - - 280
     - asm
     - func_801EED18

@@ -34,6 +34,7 @@ sources = [
     "src/bof3/ui/drawPartyMemberParameterPanelBate00_801D2C2C.c",
     "src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c",
     "src/bof3/ui/drawEquipCategoryListPanelBate00_801D7AD0.c",
+    "src/bof3/ui/seedSixSlotRampLimitsFromWorkCountersBate00_801D259C.c",
 ]
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",

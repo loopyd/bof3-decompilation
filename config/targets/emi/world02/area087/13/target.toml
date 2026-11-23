@@ -20,6 +20,7 @@ sources = [
     "src/bof3/world/clearWorldFlag2000WhenGateIs3cWorld02Area08713_801F2C38.c",
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08713_801F3704.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08713_801F363C.c",
+    "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08713_801F395C.c",
 ]
 support_sources = [
     "src/bof3/world/area08713_work_state.c",

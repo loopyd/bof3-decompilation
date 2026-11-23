@@ -113,8 +113,10 @@ segments:
     - asm
     - func_801F385C
   - - 3420
-    - asm
-    - func_801F395C
+    - c
+    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08713_801F395C
+    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08713_801F395C.c'
+    - '@behavior: Entry 3 of the four-entry work-byte-3 handler run based at 0x801F5760, whose fourth pointer word 0x801F576C names this address and which the byte-3 dispatcher 0x801F36C0 indexes with record byte 0x03 of the work record published at the scratchpad pointer cell 0x1F800044. It adds 0x0A to the halfword at record offset 0x30, stores the truncated halfword and clears work byte 0x03 once that stored signed halfword has reached 0xF0, then writes 1 to work byte 0x03 through a second read of the pointer cell unless the shared mode byte 0x801454F2 is nonzero, the byte at 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, and finally reads the cell once more to pass 0x5C and the signed halfword at 0x30 to the local emitter 0x801F40F8. No arguments, no return value.'
   - - 3596
     - asm
     - func_801F3A0C

@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic01303_801EEE68.c",
+    "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic01303_801EEC14.c",
 ]
 support_sources = [
     "src/bof3/bmagic/drawSixteenTranslucentGouraudQuadsWithWorkSelectedPhaseAndAlternatingZBmagicMagic01303_801EFAA8.c",

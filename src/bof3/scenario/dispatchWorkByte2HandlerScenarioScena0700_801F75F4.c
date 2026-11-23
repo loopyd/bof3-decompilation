@@ -5,7 +5,9 @@ typedef void (*ScenarioScena0700WorkSubStateHandler)(void);
 /* Overlay-local run of four in-image code pointers based at 0x801FDD8C,
  * selected by the work object's byte at offset 0x02: 0x801F7638, 0x801F76D0,
  * 0x801F77AC and 0x801F7810 (all four are code boundaries in this target), with
- * the next data label D_801FDD9C - a byte table that func_801F76D0 reads -
+ * the next data label D_801FDD9C - a byte table that
+ * tickObjectRampByStepTableDrawQuadArmCountdownAndAdvanceHandlerScenarioScena0700_801F76D0
+ * reads -
  * closing the run at 0x801FDD9C. The address sits inside the overlay's final
  * Splat asm block (the code-shaped boundary func_801FDD14), which defines the
  * label; the target map does not own it. */

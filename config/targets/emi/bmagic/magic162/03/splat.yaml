@@ -41,8 +41,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EEFA0.c'
     - '@behavior: Reads the battle record pointer published at 0x8014638C once into a saved register, decrements the scratchpad work object byte at offset 0x9 and returns while the stored value stays non-zero; only on zero it submits that record through func_80196718, stores the low return byte of func_8019651C called with the 0/0/0 offsets and mode 1 in work byte 0xA, sets work byte 0x9 to 8 and advances work byte 0x1, re-reading the work object pointer cell at 0x1F800044 for each of the three stores. Takes no arguments and returns nothing.'
   - - 1096
-    - asm
-    - func_801EF048
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EF048
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EF048.c'
+    - '@behavior: Word 2 of the six-entry code pointer run at 0x801EEC04, which the entry dispatcher func_801EEC28 indexes with the work-object byte at offset 1 scaled by four. Reads the scratchpad work-object pointer cell at 0x1F800044 once per counter group and, for each of three counter bytes, re-reads work byte 0xA, scales it by the 12-byte record stride and increments the selected record byte 0x0, the record byte 0x1 at D_80145BD6 + 1 and the byte at 0x80145BD8 with a byte-width read-modify-write. Then re-reads the cell, decrements the work-object byte at offset 0x9 in the same byte-width form and returns while the stored value stays non-zero; only on zero it re-reads the cell once more and increments work byte 0x1, so the next dispatch selects word 3 of the run, the stage arm at 0x801EF158. Leaf with no saved registers and no calls, in a 0x10-byte frame that it reserves in the bnez delay slot and never touches. Takes no arguments, returns nothing and reads or writes no other state. Its 272-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF048 and to emi/bmagic/magic062/03 0x801EEF68.'
   - - 1368
     - c
     - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158

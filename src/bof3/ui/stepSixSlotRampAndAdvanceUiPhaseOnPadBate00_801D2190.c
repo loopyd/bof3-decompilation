@@ -26,12 +26,14 @@ extern u8 D_80148658; /* @source 0x80148658 @kind unknown */
  * so the generated map already names it. */
 extern u8 D_801D8778[]; /* @source 0x801D8778 @kind data */
 
-/* Six per-slot ramp limits of this overlay, filled at runtime by func_801D259C
- * from the shared counters 0x801FE4E8, 0x801FE4EF and 0x801FE4F0. */
+/* Six per-slot ramp limits of this overlay, filled at runtime by
+ * seedSixSlotRampLimitsFromWorkCountersBate00_801D259C from the shared counters
+ * 0x801FE4E8, 0x801FE4EF and 0x801FE4F0. */
 extern u32 D_801D8EE8[]; /* @source 0x801D8EE8 @kind data */
 
-/* Six per-slot ramp values of this overlay, zeroed by func_801D259C and
- * stepped towards the limits above by this handler. */
+/* Six per-slot ramp values of this overlay, zeroed by
+ * seedSixSlotRampLimitsFromWorkCountersBate00_801D259C and stepped towards the
+ * limits above by this handler. */
 extern u32 D_801D8F00[]; /* @source 0x801D8F00 @kind data */
 
 /* Sprite emitter of this overlay: takes the shared sprite-grid index as its

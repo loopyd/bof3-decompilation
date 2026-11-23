@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F375C
   - - 3164
-    - asm
-    - func_801F385C
+    - c
+    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C
+    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C.c'
+    - '@behavior: Entry 9 of the work-byte-1 handler table based at 0x801F4F78 in this overlay, entry 7 of the work-byte-2 table at 0x801F4F80 and entry 3 of the four-entry work-byte-3 run at 0x801F4F90, for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to record halfword 0x30, stores the truncated halfword, and clears work state byte 0x03 once that stored signed value reaches 0xF0. Unless the shared mode byte 0x801454F2 is set, byte 0x80143BB0 reads 2, or bit 0x100 of halfword 0x80146258 is set, it writes 1 to work byte 0x03 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the overlay emitter 0x801F3FF8. Takes no arguments and returns nothing.'
   - - 3340
     - c
     - emitSemiTransSpriteFromIndexedEntryTableWorld00Area03313_801F390C

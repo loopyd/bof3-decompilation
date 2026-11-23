@@ -43,11 +43,12 @@ extern void func_801D627C(u32 grid);
  * @source 0x801D2304 @kind unknown */
 extern void func_801D2304(s32 x, s32 y);
 
-/* State-table reset of this overlay, called with no arguments once the
+/* Slot-ramp seeding of this overlay, called with no arguments once the
  * effect-busy gate has cleared. Its own span zeroes the six words of the
- * D_801D8F00 table, so nothing is returned or read back here.
+ * D_801D8F00 value table and refills the six D_801D8EE8 limits from the shared
+ * work counters, so nothing is returned or read back here.
  * @source 0x801D259C @kind unknown */
-extern void func_801D259C(void);
+extern void seedSixSlotRampLimitsFromWorkCountersBate00_801D259C(void);
 
 /* @source 0x801D211C
  * @behavior Second handler of the BATE overlay sub-step table D_801D8770,
@@ -60,7 +61,8 @@ extern void func_801D259C(void);
  *           func_801D2304. It then reads the shared front-end effect-busy gate
  *           halfword D_80143C40 once and, while that gate is set, returns with
  *           the redraw as its whole effect. Once the gate is clear it resets
- *           this overlay's state table through func_801D259C, clears the
+ *           this overlay's slot-ramp state through
+ *           seedSixSlotRampLimitsFromWorkCountersBate00_801D259C, clears the
  *           shared cursor-kind byte D_80148658 and the shared UI sub-step byte
  *           D_80148652, and advances the shared UI phase byte D_80148651 by
  *           one, which sends the next dispatch to the following phase. Nothing
@@ -78,7 +80,7 @@ void drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C(void) {
   if (D_80143C40 != 0) {
     return;
   }
-  func_801D259C();
+  seedSixSlotRampLimitsFromWorkCountersBate00_801D259C();
   phase = D_80148651;
   D_80148658 = 0;
   D_80148652 = 0;

@@ -56,7 +56,8 @@ extern void func_8015D71C(s32 arg0); /* @source 0x8015D71C */
 /* @source 0x801EED30
  * @behavior Init stage 0 of this overlay: word 0 of the nine-word code pointer
  *           run the payload header holds at 0x801EEC04, which the frame
- *           dispatcher func_801EEC28 copies to its own frame and calls through
+ *           dispatcher dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic05803_801EEC28
+ *           copies to its own frame and calls through
  *           work byte 0x01 scaled by four, so no jal in the payload names it.
  *           It clears bytes 0x00, 0x01 and 0x02 of all 36 records of the
  *           0x78-byte-stride pool at 0x801EFEF4, computing the stride from the

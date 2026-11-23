@@ -30,8 +30,10 @@ segments:
   vram: 2149510164
   subsegments:
   - - 20
-    - asm
-    - func_801EEC14
+    - c
+    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic01303_801EEC14
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic01303_801EEC14.c'
+    - '@behavior: Per-frame entry of this overlay: copies the four code-pointer words at 0x801EEC04 - the overlay header handler run 0x801EED28, 0x801EEE68, 0x801EEEA0 and 0x801EEF84 - into its 0x38-byte frame and calls the copy entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, then walks the 64 records of the 0x78-stride pool at 0x801F03E4 and, for each record whose flags byte has bit 0 set, saves the scratchpad work cell and 0x801EB4E0, publishes the record as the work object plus its word 0x74 into 0x801EB4E0, runs that record byte-1 step through the dispatcher at 0x801EFDB4 and restores both cells. Takes no arguments, returns nothing and the frame only keeps $ra and $s0 to $s3 across the two calls.'
   - - 296
     - asm
     - func_801EED28

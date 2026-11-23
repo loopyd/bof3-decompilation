@@ -68,7 +68,7 @@ segments:
     - c
     - drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C
     - '@source: src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c'
-    - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay state table through func_801D259C, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
+    - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay slot-ramp state through seedSixSlotRampLimitsFromWorkCountersBate00_801D259C, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
   - - 5520
     - c
     - stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190
@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801D2304
   - - 6556
-    - asm
-    - func_801D259C
+    - c
+    - seedSixSlotRampLimitsFromWorkCountersBate00_801D259C
+    - '@source: src/bof3/ui/seedSixSlotRampLimitsFromWorkCountersBate00_801D259C.c'
+    - '@behavior: seeds the six-slot ramp state of the BATE overlay once a phase handler reaches it: it zeroes the six per-slot ramp values D_801D8F00 and then fills the six per-slot ramp limits D_801D8EE8 from the shared battle work counters - the slot 1 limit from the work-counter word 0x801FE4E8, the slot 2 limit from the work-counter word 0x801FE4F0, the slot 0 and slot 3 limits from the work-counter byte 0x801FE4EF, the slot 4 limit from that word divided by twenty and the slot 5 limit from the class the word 0x801FE4F0 selects, which is 2 below 0x32, 4 from 0x32 to 0x4F and 6 from 0x50 up - and then pushes the slot 3, slot 4 and slot 5 limits into the halfword fields 0x42 and 0x22, 0x3C and 0x1C, and 0x40 and 0x20 of the shared field record D_80144DE4 through the main-exe adjusters func_801654F4 and func_8016546C, discarding every answer, its 0x20-byte frame keeping the return address at 0x18 and two saved registers at 0x10 and 0x14 across those six calls'
   - - 6880
     - c
     - drawSemiTransGreyCrossPrimBate00_801D26E0

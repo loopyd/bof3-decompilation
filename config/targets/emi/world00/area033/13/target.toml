@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld00Area03313_801F422C.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area03313_801F2C04.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld00Area03313_801F3440.c",
+    "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World00Area03313_801F385C.c",
 ]
 support_sources = [
     "src/bof3/world/area03313_work_state.c",
