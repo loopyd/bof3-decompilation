@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C.c",
     "src/bof3/bmagic/runHelpers2DecrementWorkByte9Rearm10AdvanceWorkByte1BmagicMagic00303_801EEE28.c",
     "src/bof3/bmagic/drawWorkByteADecimalPairThenDecrementWorkByte9AdvanceWorkByte1BmagicMagic00303_801EF0A8.c",
+    "src/bof3/bmagic/drawWorkByteBGlyphThenMatchDpadAgainstTableIncrementWorkByteAAdvanceWorkByte1BmagicMagic00303_801EEF4C.c",
 ]
 support_sources = [
   "src/bof3/bmagic/drawGreyDecimalPairLeftOfWorkScreenPairBmagicMagic00303_801F0550.c",

@@ -11,6 +11,7 @@ sources = [
     "src/bof3/world/claimFreeEffectRecordWithAlternatingDirectionWorld03Area12013_801F3630.c",
     "src/bof3/world/seedQuadPairFromSceneByteTablesAndAdvanceWorkByte2ThenDrawQuadWorld03Area12013_801F3A7C.c",
     "src/bof3/world/returnWorkByte2ToStep2UnlessMaskedSceneStateIs20800ThenDrawQuadWorld03Area12013_801F3D94.c",
+    "src/bof3/world/runStep5HandlerOnSceneState30600ElseAdvanceWorkByte9By8AndDrawQuadWorld03Area12013_801F3E7C.c",
     "src/bof3/world/step1ClaimFourEffectRecordsSweepArmWorkByte6To1AndAdvanceWorkByte1OnCountdownExpiryWorld03Area12013_801F2CB4.c",
 ]
 support_sources = [

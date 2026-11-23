@@ -117,8 +117,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area11513_801F382C.c'
     - '@behavior: handler 6 of the state-byte-2 handler table 0x801F4F64 increments work-record byte 0x09 while record byte 0x0B is zero and increments byte 0x0B once that stored counter reaches 0x5A, then increments state byte 0x03 when the shared mode byte 0x801454F2 and record byte 0x0B are both set or the phase byte 0x80143BB0 is 2 or bit 0x100 of halfword 0x80146258 is set, and finally calls the local emitter 0x801F40C8 with 0x5C and the signed halfword 0x30.'
   - - 3372
-    - asm
-    - func_801F392C
+    - c
+    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area11513_801F392C
+    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area11513_801F392C.c'
+    - '@behavior: adds 0xA to the work-record halfword at offset 0x30 published through the scratchpad pointer cell 0x1F800044 and stores the truncated halfword, then clears state byte 0x03 when that stored signed value reaches 0xF0; unless the shared byte 0x801454F2 is set, the phase byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it writes 1 to state byte 0x03 through a second read of the pointer cell, and finally reads the cell once more and calls the local emitter 0x801F40C8 with 0x5C and the signed halfword at 0x30.'
   - - 3548
     - c
     - emitSemiTransSpriteFromIndexedEntryTableWorld03Area11513_801F39DC

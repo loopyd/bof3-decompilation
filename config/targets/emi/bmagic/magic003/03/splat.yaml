@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801EEEA4
   - - 844
-    - asm
-    - func_801EEF4C
+    - c
+    - drawWorkByteBGlyphThenMatchDpadAgainstTableIncrementWorkByteAAdvanceWorkByte1BmagicMagic00303_801EEF4C
+    - '@source: src/bof3/bmagic/drawWorkByteBGlyphThenMatchDpadAgainstTableIncrementWorkByteAAdvanceWorkByte1BmagicMagic00303_801EEF4C.c'
+    - '@behavior: Calls helper 0x801F07B0 with 4 and draws work byte 0xB as a grey glyph, then matches the pressed-pad d-pad nibble against the byte table at 0x801F0A98 indexed by work byte 0xB; on a match it increments work byte 0xA and advances work byte 1 to 3 below 0x20, otherwise rearming work byte 9 to 6 and advancing byte 1 to 5.'
   - - 1100
     - c
     - decrementWorkByte9Rearm30AdvanceWorkByte1BmagicMagic00303_801EF04C

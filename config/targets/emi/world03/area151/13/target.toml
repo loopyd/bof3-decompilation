@@ -18,6 +18,7 @@ sources = [
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area15113_801F3640.c",
     "src/bof3/world/advanceHalfword2eBy10AndAdvanceState2At10ThenDrawHalfword2eWorld03Area15113_801F34CC.c",
     "src/bof3/world/retreatHalfword2eBy10AndResetState2WhenBelow2fThenSetState2When454f2IsNot2ThenDrawHalfword2eWorld03Area15113_801F3578.c",
+    "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area15113_801F3898.c",
 ]
 support_sources = [
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area15113_801F347C.c",

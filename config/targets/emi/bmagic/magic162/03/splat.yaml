@@ -30,8 +30,10 @@ segments:
   vram: 2149510184
   subsegments:
   - - 40
-    - asm
-    - func_801EEC28
+    - c
+    - dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28
+    - '@source: src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28.c'
+    - '@behavior: Per-frame entry of this overlay. Copies the six code pointer words at 0x801EEC04 into its own 0x38-byte frame and calls the copy entry selected by the unsigned byte 0x01 of the work object published at 0x1F800044, with no arguments and no bound on the index; the cell is read before the frame is created and the selected word is read back from the frame copy. It then walks the 128 records of the 0x2C-stride pool at 0x801F01B0 and, for each record whose flags byte has bit 0 set, saves 0x801EB4E0, loads the record word 0x28, publishes the record into the current-record cell at 0x801F17B0, stores that word into 0x801EB4E0, runs the record byte-1 step through the dispatcher at 0x801EF338 and restores 0x801EB4E0. The flags read re-materialises the pool base, while the published record pointer reuses one materialised base held in a saved register. Takes no arguments and returns nothing, and no jal and no payload word names 0x801EEC28, so the overlay loader is its only caller.'
   - - 312
     - asm
     - func_801EED38

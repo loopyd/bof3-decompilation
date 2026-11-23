@@ -107,8 +107,10 @@ segments:
     - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area15113_801F3798
     - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World03Area15113_801F3798.c'
   - - 3224
-    - asm
-    - func_801F3898
+    - c
+    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area15113_801F3898
+    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area15113_801F3898.c'
+    - '@behavior: Entry 3 of the four-entry work-byte-3 handler table based at 0x801F5458, reached through the byte-3 dispatcher at 0x801F35FC. Adds 0x0A to work halfword 0x30 of the record published at the scratchpad pointer cell 0x1F800044, compares the stored signed halfword against 0xF0 and clears state byte 0x03 once that height reaches it. Unless the shared mode byte 0x801454F2 is set, the byte at 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it then arms state byte 0x03 at 1 through a second read of the pointer cell. Finally it passes 0x5C and the signed work halfword 0x30 to the local emitter at 0x801F4034.'
   - - 3400
     - c
     - emitSemiTransSpriteFromIndexedEntryTableWorld03Area15113_801F3948
