@@ -96,6 +96,16 @@ def _resolve(root: Path, target: str, old: str, new: str) -> RenamePlan:
         )
 
     plan.source = _owned_source(root, manifest, old)
+    if plan.source is not None:
+        for owner, other in sorted(manifests.items()):
+            if owner == target:
+                continue
+            if plan.source in manifest_source_paths(root, other):
+                plan.refuse(
+                    "shared-unit",
+                    f"{plan.source.relative_to(root).as_posix()} is also claimed by {owner}",
+                )
+                break
     _collect_files(plan, root, manifest)
     _check_consumers(plan, root, target, old)
     return plan
@@ -278,8 +288,11 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
             path.write_text(rewritten, encoding="utf-8")
     if forward:
         for before, after in plan.renames:
-            if before.is_file():
-                before.rename(after)
+            if not before.is_file():
+                raise ValueError(
+                    f"planned unit is missing: {before.relative_to(plan.root).as_posix()}"
+                )
+            before.rename(after)
 
 
 def _payload(
