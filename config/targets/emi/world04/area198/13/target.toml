@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48.c",
     "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",
     "src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c",
+    "src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area19813_801F35A4.c",
 ]
 support_sources = [
     "src/bof3/support/area198_13_psyq.c",

@@ -1,8 +1,8 @@
 g_battle_work = 0x1F800044;
 dispatchWorkByte1HandlerTableec04BmagicMagic10303_801EEC10 = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-func_801EEE38 = 0x801EEE38;
-func_801EEE94 = 0x801EEE94;
+forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic10303_801EEE38 = 0x801EEE38;
+raiseFlag4AndInvokeHelperBmagicMagic10303_801EEE94 = 0x801EEE94;
 dispatchStateByte1Table0794BmagicMagic10303_801EEEC8 = 0x801EEEC8;
 func_801EEF0C = 0x801EEF0C;
 copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94 = 0x801EEF94;

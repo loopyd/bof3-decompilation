@@ -202,8 +202,10 @@ segments:
     - '@source: src/bof3/world/claimFrontEndRecordHandlerA3SeedByte6Byte7WorkSlotAndWorkPointerElseConsumeHalfword0aBy2World04Area17413_801F4D90.c'
     - '@behavior: Claims one free front-end record through the shared allocator func_8019601C and publishes that answer as work byte 0x0B of the work object the scratchpad cell 0x1F800044 points at, then seeds the row that byte selects at 0x80143FC8 with occupancy 1 at row byte 0x00, handler selector 0xA3 at row byte 0x05, 1 at row byte 0x06, 0 at row byte 0x07, 1 at row byte 0x0B and the work object address at row word 0x4C. A table-full answer of 0xFF leaves the table untouched and instead consumes two units of the halfword at 0x0A of the record published through 0x80148210. Takes no arguments and returns nothing.'
   - - 9000
-    - asm
-    - func_801F4F28
+    - c
+    - decrementHalfword0aBy2WhenEmiLoaderNotReadyWorld04Area17413_801F4F28
+    - '@source: src/bof3/world/decrementHalfword0aBy2WhenEmiLoaderNotReadyWorld04Area17413_801F4F28.c'
+    - '@behavior: Calls the EXE-side EMI loader ready test func_80162D00 with no arguments and, on a zero answer only, lowers the halfword at offset 0x0A of the record published through the global pointer cell 0x80148210 by 2; a ready answer leaves the record untouched. The word 0x801F6660, entry 20 of the dispatch table at 0x801F6610 inside this payload textbin blob, is the only in-image reference. Takes no arguments and returns nothing.'
   - - 9068
     - c
     - setStatusFFFFSubstate1EIfGateElse0AWorld04Area17413_801F4F6C

@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801F3528
   - - 2468
-    - asm
-    - func_801F35A4
+    - c
+    - invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area19813_801F35A4
+    - '@source: src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area19813_801F35A4.c'
+    - '@behavior: Handler entry 8 of the thirteen-word code-pointer run at 0x801F4268 inside the reviewed textbin row D_801F3F10, so no jal in this payload names it. When the shared front-end phase byte at 0x80143BB0 reads 5 it passes the work record held by the scratchpad pointer cell at byte offset 0x44 to the main-executable helper 0x8014E4BC as its only argument and then jumps to the shared epilogue; any other value takes the fall-through arm, which loads the global pointer cell 0x80148210 once and lowers the halfword at its +0x0A offset by 2. Takes no arguments and returns nothing; the 0x18-byte frame keeps only $ra at +0x10 across the call.'
   - - 2560
     - asm
     - func_801F3600

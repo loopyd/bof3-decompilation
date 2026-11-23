@@ -50,8 +50,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte3Table2714BossBoss03416_800C18FC.c'
     - '@behavior: Overlay state dispatch on work-record byte 3: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 3, scales it by four and calls the matching entry of this overlay''s handler run based at the interior word 0x800C2714 of the reviewed row D_800C26B8, with no arguments. The payload holds no jal naming 0x800C18FC; the one pointer word that names it is the run entry at 0x800C270C.'
   - - 320
-    - asm
-    - func_800C1940
+    - c
+    - setWorkByte9To40AndWorkByteATo20AndStateTo1WhenHelperReturnsNonzeroBossBoss03416_800C1940
+    - '@source: src/bof3/boss/setWorkByte9To40AndWorkByteATo20AndStateTo1WhenHelperReturnsNonzeroBossBoss03416_800C1940.c'
+    - '@behavior: Entry 0 of this overlay''s byte-3 handler run, the word 0x800C2714 inside its reviewed textbin row D_800C26B8: dispatchStateByte3Table2714BossBoss03416_800C18FC scales the work record unsigned byte 3 by four and calls that entry with no arguments, and no jal in the payload names 0x800C1940. It calls the shared main-program helper func_8014D978 with no arguments and keeps the low byte of the returned word; while that byte is nonzero it writes 0x40 into work byte 9, 0x20 into work byte 0xA and 1 into work byte 3, the state index the byte-3 dispatcher reads, through the scratchpad pointer cell 0x1F800044, and writes nothing when the masked byte is zero.'
   - - 412
     - asm
     - func_800C199C

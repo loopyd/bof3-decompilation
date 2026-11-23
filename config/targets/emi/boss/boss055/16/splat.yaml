@@ -30,8 +30,10 @@ segments:
     - textbin
     - D_800C1804
   - - 2124
-    - asm
-    - func_800C204C
+    - c
+    - advanceWorkByte1AndClearWorkByte2WhenEnemyReadyBossBoss05516_800C204C
+    - '@source: src/bof3/boss/advanceWorkByte1AndClearWorkByte2WhenEnemyReadyBossBoss05516_800C204C.c'
+    - '@behavior: Overlay body whose address is the leading word of this overlay''s payload pointer table at 0x800C35D4, immediately before the handler run based at 0x800C35D8 that dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4 indexes by the work record''s state byte +2; no instruction in this payload loads that word, so its consumer lies outside the overlay image. It calls the EXE-side enemy-readiness helper 0x801E3160 unconditionally and tests its unsigned byte result: when that byte is nonzero it advances byte +1 of the work record published at scratchpad cell 0x1F800044 and clears that record''s byte +2, each access dereferencing the cell again so the increment and the clear load the record pointer separately, and when the helper reports zero it stores nothing. Both paths join at one epilogue that keeps only $ra in the 0x18-byte frame.'
   - - 2212
     - c
     - dispatchStateByte2ThenAdvanceOnState8BossBoss05516_800C20A4

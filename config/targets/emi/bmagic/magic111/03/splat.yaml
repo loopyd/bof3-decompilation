@@ -85,8 +85,10 @@ segments:
     - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288.c'
     - '@behavior: Step of the work-object handler reached through entry 5 of the ten-pointer handler table based at 0x801EFA9C: decrements the unsigned byte 0xA of the scratchpad work object reached through the pointer cell at 0x1F800044 and, only when that byte reaches zero, re-reads the cell and increments the object byte 2; takes no arguments, returns nothing and keeps no frame.'
   - - 1748
-    - asm
-    - func_801EF2D4
+    - c
+    - decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF2D4
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF2D4.c'
+    - '@behavior: Entry 6 of the ten-pointer handler table based at 0x801EFA9C and the fourth step of the work-byte-2 step table based at 0x801EFAA8. Reads the scratchpad work object through the pointer cell at 0x1F800044 before frame creation, decrements its unsigned byte 9 at byte width, tests the truncated stored value and, only when it reaches zero, decrements the shared battle work record byte 0xB at byte width through the pointer at 0x801EB4E0 and invokes the shared helper at 0x801E5988. Takes no arguments, returns nothing and keeps a 0x18-byte frame only to save $ra.'
   - - 1840
     - asm
     - func_801EF330

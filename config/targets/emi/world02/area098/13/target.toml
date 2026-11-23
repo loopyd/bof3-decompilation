@@ -26,6 +26,7 @@ sources = [
     "src/bof3/world/spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0.c",
     "src/bof3/world/resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540.c",
     "src/bof3/world/queueSharedUiElementBlock4To7x5Size50World02Area09813_801F5DD0.c",
+    "src/bof3/world/setStatusFFFFAndStateEntry2DClearByte801448ECWhenGateClearWorld02Area09813_801F5B50.c",
 ]
 support_sources = [
     "src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c",

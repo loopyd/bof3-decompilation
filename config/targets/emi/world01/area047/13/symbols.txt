@@ -13,5 +13,5 @@ updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C = 0x801F330C;
 seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448 = 0x801F3448;
 func_801F34A0 = 0x801F34A0;
 seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4 = 0x801F38F4;
-func_801F396C = 0x801F396C;
+claimFrontEndRecordAndSetHandler3DWorld01Area04713_801F396C = 0x801F396C;
 D_801F39C8 = 0x801F39C8;
