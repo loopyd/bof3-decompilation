@@ -135,13 +135,13 @@ segments:
     - '@behavior: entry 3 of the work-byte-2 handler table at 0x801F576C; increments work byte +0x09, and at unsigned count 17 clears it, queues cue 0x201 through 0x8015DF18 and advances work byte +0x02; always draws through 0x801F4430.'
   - - 4616
     - c
-    - drawRotatingQuadBandsAndCornersAdvanceWorkByte2QueueCue200At8World02Area08213_801F3E08
-    - '@source: src/bof3/world/drawRotatingQuadBandsAndCornersAdvanceWorkByte2QueueCue200At8World02Area08213_801F3E08.c'
+    - renderRotatingBandsCorners
+    - '@source: src/bof3/world/renderRotatingBandsCorners.c'
     - '@behavior: work-byte-2 handler 4; draws rotating quad bands and, from count three, four corner bands; draws the work record, increments byte +0x09, then advances byte +0x02 and queues cue 0x200 at count eight.'
   - - 5128
     - c
-    - drawFourCornerQuadBandsDrawWorkRecordIncrementWorkByte9At16AdvanceScenarioProgressAdvanceWorkByte2World02Area08213_801F4008
-    - '@source: src/bof3/world/drawFourCornerQuadBandsDrawWorkRecordIncrementWorkByte9At16AdvanceScenarioProgressAdvanceWorkByte2World02Area08213_801F4008.c'
+    - renderCornerQuadBands
+    - '@source: src/bof3/world/renderCornerQuadBands.c'
     - '@behavior: overlay per-frame handler, entry index 5 of the eight-pointer byte-2 handler table at 0x801F576C; seeds the scratch translation halfword 0x1F800018 with 0x3A0 and the leading rotation pair 0x1F80001C/0x1F80001E with 0x400 and 0, then walks the four corners of the layout in a bottom-tested loop, writing each corner translation X/Y from the signed bytes of 0x801F5764/0x801F5765 (corner * 3 << 16 plus a fixed bias, shifted right by nine and rebased by -0x4000), element 2 of the scratch rotation matrix from the shared frame counter 0x80143E6C shifted left by five plus the pass offset, and drawing one quad band through 0x801F46C8 from the work record byte +0x09 less eight shifted left by two up to row 0x1E with the pass offset and the per-row scale 0x10; it then draws through the work-record helper at 0x801F4430, advances the record +0x09 byte and, once that unsigned counter reaches 0x10, advances the shared scenario progress byte at 0x80146864, clears +0x09 and advances the record +0x02 dispatch byte by one; takes no arguments and returns nothing.'
   - - 5520
     - c
@@ -250,8 +250,8 @@ segments:
     - func_801F5428
   - - 10644
     - c
-    - advanceHalfword0aByWorkByte79World02Area08213_801F5594
-    - '@source: src/bof3/world/advanceHalfword0aByWorkByte79World02Area08213_801F5594.c'
+    - stateHalfword0WorkByte79
+    - '@source: src/bof3/world/stateHalfword0WorkByte79.c'
     - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and advances the halfword at offset 0x0A of the record published through 0x80148210 by 0x0A when that byte is 4 and by 0x16 for every other value, leaving the halfword untouched when it is 8; each arm reloads the 0x80148210 cell and the two arms share one trailing halfword store.'
   - - 10740
     - c

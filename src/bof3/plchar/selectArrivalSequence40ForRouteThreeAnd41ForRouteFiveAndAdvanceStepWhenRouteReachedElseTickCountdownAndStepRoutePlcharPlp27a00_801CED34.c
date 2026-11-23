@@ -11,7 +11,7 @@ extern u8* D_1F800044;
 /* Work-sequence selector of the shared EXE image, outside this payload: it takes
  * a zero-extended byte sequence id and answers a word this body ignores. The
  * exact sibling
- * selectArrivalSequenceAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CE514
+ * selectArrivalRouteReached
  * declares the same prototype, and this target's generated
  * undefined_funcs_auto.txt binds the address. */
 u32 func_8014D8D4(u8 arg0);
@@ -41,7 +41,7 @@ u32 func_8014D8D4(u8 arg0);
  *           the epilogue and the constant 2 is materialised in the delay slot of
  *           the branch that skips the expiry path. The bytes are those of the
  *           exact sibling
- *           selectArrivalSequenceAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp27a00_801CE514
+ *           selectArrivalRouteReached
  *           except for the four switch words, where this body pairs route 3 with
  *           0x40 and route 5 with 0x41 and reaches the shared call through the
  *           taken branch instead of a jump over it, plus the two jump words

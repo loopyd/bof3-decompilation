@@ -22,9 +22,9 @@ extern void (*D_800C2744[])(void); /* @source 0x800C2744 @kind data */
  * at 0x10 across the indirect call. The payload contains no word or jal site
  * naming 0x800C1EB0, so its caller is outside this overlay. Takes no arguments
  * and forwards none. Same shape as the already-exact siblings
- * dispatchStateByte1Table2660BossBoss00816_800C1804,
+ * callStateTable2660Boss,
  * dispatchStateByte1Table26ccBossBoss00816_800C1CD8 and
- * dispatchStateByte1Table2708BossBoss00816_800C1DC4, which read the same
+ * callStateTable2708Boss, which read the same
  * dispatch byte through their own tables.
  * @status exact
  * @match 100.00

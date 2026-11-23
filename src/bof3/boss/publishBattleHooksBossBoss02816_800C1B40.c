@@ -6,7 +6,7 @@ typedef void (*Boss02816Handler)(void);
  * state switch at 0x800C1B80; the second is the thin wrapper that calls the
  * main-program helper at 0x800AC934 with argument zero; the third returns a
  * zero result, which the void slot type drops. */
-void initModeTuple510Or520ByFlagBitTwoSetScenarioProgress1EBossBoss02816_800C1B80(
+void setupFlagBitTwo(
     void);
 void invokeZeroArgBossBoss02816_800C1BCC(void);
 s32  zeroResultBossBoss02816_800C1B78(void);
@@ -36,7 +36,7 @@ extern Boss02816Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss02816_800C1B40(void) {
-  D_801463A4 = initModeTuple510Or520ByFlagBitTwoSetScenarioProgress1EBossBoss02816_800C1B80;
+  D_801463A4 = setupFlagBitTwo;
   D_801463A8 = invokeZeroArgBossBoss02816_800C1BCC;
   D_801463AC = (Boss02816Handler)zeroResultBossBoss02816_800C1B78;
 }

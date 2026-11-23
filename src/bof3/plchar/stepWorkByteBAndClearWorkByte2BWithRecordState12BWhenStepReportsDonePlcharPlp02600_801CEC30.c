@@ -44,7 +44,7 @@ extern void func_8014D978(void);
  *           pointer cell 0x1F800044. Its only in-image reference is the word
  *           0x801CEC30 at 0x801D0A68, entry 5 of this payload's thirty-word
  *           code-pointer run based at 0x801D0A54, which the dispatcher
- *           dispatchStateByte2Table0a54PlcharPlp02600_801CE404 indexes with work
+ *           callStateTable0Plchar indexes with work
  *           record byte 2, so the overlay loader that steps that run is what
  *           calls it. The body dispatches on the unsigned byte 0x0B of the work
  *           object and keeps one done flag across the dispatch, which is why the

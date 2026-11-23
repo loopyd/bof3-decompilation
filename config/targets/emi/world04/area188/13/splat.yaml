@@ -39,15 +39,15 @@ segments:
     - func_801F2E10
   - - 748
     - c
-    - dispatchStateByte1Table4df4World04Area18813_801F2EEC
+    - callStateTable4World04
     - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 816
     - c
-    - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30
+    - stateWorkSelectWork
   - - 876
     - c
-    - toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C
-    - '@source: src/bof3/world/toggleShadeSelectorOnWorkByte9ExpiryThenDrawSemiTransScreenShadeQuadWorld04Area18813_801F2F6C.c'
+    - toggleShadeExpiryShade
+    - '@source: src/bof3/world/toggleShadeExpiryShade.c'
     - '@behavior: Overlay shade pass, entry 1 of the two-entry handler run at 0x801F4DF4: post-increments work byte 9 and, once its pre-increment value reaches 0x10, re-seeds the payload shade byte 0x801F68A0 from the byte table 0x801F4DF0 at the selector 0x801F689C, clears work byte 9 and clamps that selector back to 0; then opens the primitive cursor 0x8014598C as a draw-mode packet through SetDrawMode with dfe 0, dtd 1 and GetTPage(2, 2, 0x140, 0x140), reserves 0xC bytes at index 6 through 0x8014E5A0 and stamps a 0x24-byte POLY_G4 spanning (0, 0) to (0x140, 0x140) whose red bytes all carry the shade while green and blue stay clear, closing with SetSemiTrans and 0x8014E5A0(2, 0x24).'
   - - 1224
     - c
@@ -69,15 +69,15 @@ segments:
     - func_801F3304
   - - 1896
     - c
-    - growWorkExtentAndDrawShapeThenOnCountdownExpiryArm80QueueCue214AndAdvanceWorkByte1World04Area18813_801F3368
-    - '@source: src/bof3/world/growWorkExtentAndDrawShapeThenOnCountdownExpiryArm80QueueCue214AndAdvanceWorkByte1World04Area18813_801F3368.c'
+    - growExtentShapeExpiry
+    - '@source: src/bof3/world/growExtentShapeExpiry.c'
   - - 2048
     - asm
     - func_801F3400
   - - 2180
     - c
-    - retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484
-    - '@source: src/bof3/world/retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484.c'
+    - retreatExtentZReseed
+    - '@source: src/bof3/world/retreatExtentZReseed.c'
     - '@behavior: Overlay progress step handler, element 3 of the nine-word handler run D_801F4E04 that the dispatcher 0x801F32C0 indexes with work byte 1: it advances the work record origin word 0x6C by 0xC0000, retreats the extent halfword 0x2E by 6, renders the record through 0x801F38E0 with the origin block 0x64 and channel mask 6, decrements the countdown byte 9 and, on the frame it reaches zero, re-arms it with 0x20, clears the frame byte 6, advances work byte 1, clears the record table at 0x800E4800, copies the origin triple 0x64 0x68 0x6C into the position triple 0x34 0x38 0x3C, re-seeds the first 0x10 entries of the 0x2C-stride effect table at 0x800E48C0 and queues the front-end cue 0x215.'
   - - 2456
     - c
@@ -94,8 +94,8 @@ segments:
     - func_801F36C4
   - - 3020
     - c
-    - spawnRecordEveryFourthTickRunPassesDrawShapeThenOnProgress3CountdownQueueCue216SetByte3To80AndAdvanceWorkByte1World04Area18813_801F37CC
-    - '@source: src/bof3/world/spawnRecordEveryFourthTickRunPassesDrawShapeThenOnProgress3CountdownQueueCue216SetByte3To80AndAdvanceWorkByte1World04Area18813_801F37CC.c'
+    - spawnFourthPassesShape
+    - '@source: src/bof3/world/spawnFourthPassesShape.c'
   - - 3264
     - c
     - invokeHelperWorld04Area18813_801F38C0
@@ -118,13 +118,13 @@ segments:
     - func_801F3E7C
   - - 4912
     - c
-    - drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30
-    - '@source: src/bof3/world/drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30.c'
+    - renderConvertedCentreRim
+    - '@source: src/bof3/world/renderConvertedCentreRim.c'
     - '@behavior: Overlay record render pass that the per-frame record pass 0x801F3E7C calls once per active record of the 8-entry 0x18-byte-stride record table at 0x800E4800. It arms the primitive list with GetTPage(0, 1, 0x3C0, 0) on the packet published at g_PrimCursor through SetDrawMode with dfe 0 and dtd 1, appends the 0xC-byte draw-mode packet under ordering table slot 2, converts the record halfword at 0x14 at the depth of the position triple at 0x04 through 0x801AFFD8, projects that triple through 0x801AFF04, and adds the per-frame counter bit D_80143E6C & 1 to the converted extent. It then emits 32 semi-transparent 0x1C-byte POLY_G3 packets under the same slot, each spanning the projected centre, the centre plus the extent rotated by a phase that advances 0x80 per pass, and the centre plus the extent rotated by the already advanced phase, using 0x801783C8 for x and 0x801782FC for y, so the last pass closes the disc one 0x1000-unit turn after the first. The first colour triplet takes record byte 0x16 in red and green and the second and third take record byte 0x17, with blue clear.'
   - - 5364
     - c
-    - drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4
-    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4.c'
+    - renderRotatedOffsetsBlue
+    - '@source: src/bof3/world/renderRotatedOffsetsBlue.c'
     - '@behavior: Overlay effect entry draw pass that the effect draw pass 0x801F44B4 calls once for each of the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0: it stamps the shared primitive cursor 0x8014598C through 0x8017A97C, flags it semi-transparent, projects the entry position words 0 4 and 8 into the first vertex of a POLY_G3 at cursor offset 8 through 0x801AFF04, rotates the signed-halfword extent pairs at 0x10 and 0x18 by the spin angle at 0x24 into the vertices at cursor offsets 0x10 and 0x18 with the extent words scaled by the halfword at 0x28 and translated by the entry position, then clamps the shade halfword 0x2A into the red and green bytes at cursor offsets 4 and 5, writes half of it into the blue byte at 6, clears the colour bytes of the second and third vertices and appends the 0x1C-byte primitive through 0x8014E5A0 for ordering-table index 2.'
   - - 6036
     - c
@@ -138,8 +138,8 @@ segments:
     - '@behavior: Overlay effect draw pass: arms the shared draw mode for the texture page GetTPage(0, 1, 0x380, 0x100) on the primitive cursor 0x8014598C, appends the 0xC-byte draw-mode primitive through 0x8014E5A0 for ordering-table index 2, fills the 0x20-byte projection scratch at frame offset 0x18 through 0x801AFE18 and then walks the 0x10 entries of the 0x2C-byte-stride effect table at 0x800E48C0, drawing each entry through 0x801F40F4 and adding 0x10 to the unsigned halfword at entry byte 0x24.'
   - - 6504
     - c
-    - drawSemiTransFlatLineBetweenProjectedPointsTintedShadeWorld04Area18813_801F4568
-    - '@source: src/bof3/world/drawSemiTransFlatLineBetweenProjectedPointsTintedShadeWorld04Area18813_801F4568.c'
+    - renderLinePointsShade
+    - '@source: src/bof3/world/renderLinePointsShade.c'
     - '@behavior: Overlay line emitter: reads the shared primitive cursor 0x8014598C once, stamps it through 0x8017AA80 as a line packet and flags it semi-transparent through SetSemiTrans, projects the two points handed as its first two arguments through 0x801AFF04 into one four-byte stack pair and writes them as the packet halfwords at 0x08/0x0A and 0x0C/0x0E, fills the red and green bytes at 0x04 and 0x05 with the shade argument and clears the blue byte at 0x06, then appends 0x10 bytes at ordering-table index 2 through 0x8014E5A0.'
   - - 6680
     - c
@@ -156,7 +156,7 @@ segments:
     - func_801F477C
   - - 7232
     - c
-    - armRecordLevel5AndSetRecordByte7WithinModeLimitThenRetreatHalfword0aWorld04Area18813_801F4840
+    - armWithinLimitRetreat
   - - 7392
     - c
     - advanceCounter2By2World04Area18813_801F48E0
@@ -168,8 +168,8 @@ segments:
     - setTwoWorld04Area18813_801F4930
   - - 7500
     - c
-    - queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C
-    - '@source: src/bof3/world/queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C.c'
+    - queueUiElementBlock
+    - '@source: src/bof3/world/queueUiElementBlock.c'
   - - 7588
     - asm
     - func_801F49A4
@@ -180,16 +180,16 @@ segments:
     - '@behavior: Queues two runs of shared UI elements through the shared marker queue 0x801A4BC0: the two elements at y = 3 of x = 0x1C and 0x1D with size 0, then the two elements at x = 0x1F of y = 0x15 and 0x16 with size 0x50.'
   - - 7764
     - c
-    - queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54
-    - '@source: src/bof3/world/queueSharedUiElementBlock1CTo1Dx3SizeC0And20x15To16SizeA1World04Area18813_801F4A54.c'
+    - queueElementSizeSize
+    - '@source: src/bof3/world/queueElementSizeSize.c'
     - '@behavior: Queues two runs of shared UI elements through the shared marker queue 0x801A4BC0: the two elements at y = 3 of x = 0x1C and 0x1D with size 0xC0, then the two elements at x = 0x20 of y = 0x15 and 0x16 with size 0xA1.'
   - - 7852
     - asm
     - func_801F4AAC
   - - 7972
     - c
-    - claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24
-    - '@source: src/bof3/world/claimFrontEndRecordAndSetHandlerB9World04Area18813_801F4B24.c'
+    - claimFrontEndRecord
+    - '@source: src/bof3/world/claimFrontEndRecord.c'
     - '@behavior: Overlay record seed: asks the shared free-record selector 0x8019601C for an index, masks the answer to a byte and, unless that byte reads 0xFF, marks the selected 0x74-byte front-end record of the shared table 0x80143FC8 occupied with record byte +0 = 1 and stores handler selector 0xB9 in record byte +5.'
   - - 8064
     - c

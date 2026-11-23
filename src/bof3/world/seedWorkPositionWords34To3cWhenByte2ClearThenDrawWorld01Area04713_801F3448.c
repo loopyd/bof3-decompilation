@@ -4,7 +4,7 @@
  * publishes its work record through. Bound through the target symbol table so
  * the read expands to the split-address form `lui %hi` plus a folded `%lo`
  * displacement; the same cell is declared in
- * armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48.c and
+ * armWorkAdvanceState.c and
  * seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c. */
 /* @source 0x1F800044 @kind unknown */
 extern u8* area04713WorkCursor_1F800044;

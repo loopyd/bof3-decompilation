@@ -10,7 +10,7 @@ typedef void (*Boss00716Handler)(void);
  * into 0x80145029. The second calls func_800AC844 with zero and then with one.
  * The third is this payload's other handler entry at 0x800C1A44, still an `asm`
  * boundary of this target. */
-void initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4(
+void setupBitEffectBank(
     void);
 void invokeHelperArgZeroThenOneBossBoss00716_800C1D50(void);
 void func_800C1A44(void);
@@ -24,7 +24,7 @@ extern Boss00716Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C1A0C
  * @behavior Publishes this overlay's handler trio into the shared battle hook
- * slots: initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4
+ * slots: setupBitEffectBank
  * (the battle-flag state switch) into 0x801463A4,
  * invokeHelperArgZeroThenOneBossBoss00716_800C1D50 (calls func_800AC844 with 0
  * and then with 1) into 0x801463A8, and func_800C1A44, this payload's 0x270-byte
@@ -45,7 +45,7 @@ extern Boss00716Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss00716_800C1A0C(void) {
   D_801463A4 =
-      initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4;
+      setupBitEffectBank;
   D_801463A8 = invokeHelperArgZeroThenOneBossBoss00716_800C1D50;
   D_801463AC = func_800C1A44;
 }

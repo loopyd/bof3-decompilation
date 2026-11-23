@@ -35,23 +35,23 @@ segments:
     - '@behavior: Resets the shared status halfword D_801490A8 to 0xFFFF, then branches on the shared gate byte D_801490C7. When the gate byte is zero it stores 0xB into the unsigned halfword at +0x7E of the work record published through the pointer cell D_80148208, stores 0xF into the shared scenario progress byte g_ScenarioProgress, and requests sub-state 3 through D_80146875; when the gate byte is nonzero it requests sub-state 8 instead.'
   - - 984
     - c
-    - setStateEntry38ProgressAAndStatus49WhenGateClearElseStatusFFFFWorld03Area12813_801F2FD8
-    - '@source: src/bof3/world/setStateEntry38ProgressAAndStatus49WhenGateClearElseStatusFFFFWorld03Area12813_801F2FD8.c'
+    - stateProgressGateStatus
+    - '@source: src/bof3/world/stateProgressGateStatus.c'
     - '@behavior: When the signed gate byte 0x801490C7 is zero, calls the shared startup helper at 0x8015C088, writes state-entry 0x38 and progress 0xA to bytes 0x801448EB and 0x801448EC, and writes status 0x49 to halfword 0x801490A8; otherwise writes status 0xFFFF only.'
   - - 1072
     - c
-    - seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030
-    - '@source: src/bof3/world/seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030.c'
+    - stateSelectingYFacing
+    - '@source: src/bof3/world/stateSelectingYFacing.c'
     - '@behavior: Seeds the scratch work record published at pointer cell 0x1F800044: word +0x34 takes 0x4E8000, word +0x3C is cleared, word +0x38 takes 0x88000 when byte +0x79 of the record published through 0x80146250 equals 2 and 0x80000 otherwise, and the reloaded cell receives 1 at byte +0x08.'
   - - 1148
     - c
-    - advanceHalfword0aBy1WhenWorkByte79Is2World03Area12813_801F307C
-    - '@source: src/bof3/world/advanceHalfword0aBy1WhenWorkByte79Is2World03Area12813_801F307C.c'
+    - stateBy1WorkByte79
+    - '@source: src/bof3/world/stateBy1WorkByte79.c'
     - '@behavior: Reads mode byte 0x79 of the work record published through pointer cell 0x80146250 and, only when that byte is 2, adds 1 to the halfword at offset 0x0A of the record published through pointer cell 0x80148210. Every other mode returns before the second cell is touched.'
   - - 1212
     - c
-    - releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC
-    - '@source: src/bof3/world/releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC.c'
+    - releaseFrontendSetProgress
+    - '@source: src/bof3/world/releaseFrontendSetProgress.c'
     - '@behavior: For signed progress 0 or 0xA and phase byte not 2, releases the shared front end and sets block bit 0x88 or 0x89, respectively; progress 0 requests step 6, progress 0xA requests selector context (0x79, 0x2A0000, 0x1A0000, 7), and both handled paths clear the state-entry and progress bytes.'
   - - 1412
     - c

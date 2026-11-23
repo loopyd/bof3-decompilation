@@ -27,25 +27,25 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table4624World01Area06714_801F2C04
+    - callStateTable4624World01
     - '@source: src/bof3/world/area06714DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
   - - 416
     - c
-    - stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0
-    - '@source: src/bof3/world/stepWorkHalfword10By2AtLimit1aGrowHalfword12By40ThenAdvanceWorkByte1World01Area06714_801F2DA0.c'
+    - stepWorkGrowAdvance
+    - '@source: src/bof3/world/stepWorkGrowAdvance.c'
     - '@behavior: steps the work-record halfword at +0x10 by -2 while the countdown byte at +9 reads below 0x1A and by +2 otherwise, grows the halfword at +0x12 by 0x40 and redraws the quad at +0xC, then decrements the byte at +9 and advances the state byte at +1 when it reaches zero'
   - - 584
     - c
-    - armWorkCountdownByte9At5aResetHalves10And12AdvanceWorkByte1AndQueueCue201World01Area06714_801F2E48
-    - '@source: src/bof3/world/armWorkCountdownByte9At5aResetHalves10And12AdvanceWorkByte1AndQueueCue201World01Area06714_801F2E48.c'
+    - armCountdownResetQueue
+    - '@source: src/bof3/world/armCountdownResetQueue.c'
     - '@behavior: reads the scratchpad work record published at pointer cell 0x1F800044, arms that record''s countdown byte at +9 with 0x5A, zeroes the halfwords at +0x10 and +0x12 through the pointer read before the byte store, then advances the state byte at +1 through a second read of the same cell and queues the front-end sound cue 0x201'
   - - 664
     - c
-    - stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98
-    - '@source: src/bof3/world/stepWorkHalfword10By1AtLimit40GrowHalfword12By40ThenClearWorkRecordCountdownsAndAdvanceWorkByte1World01Area06714_801F2E98.c'
+    - stepGrowClearCountdowns
+    - '@source: src/bof3/world/stepGrowClearCountdowns.c'
     - '@behavior: steps the work-record halfword at +0x10 up by 1 and clamps it to 0x40, grows the halfword at +0x12 by 0x40 and redraws the quad at +0xC, then decrements the countdown byte at +9 and, once that byte reaches zero, clears the countdown halfword of every 0xE-stride record at 0x800E4800, zeroes the halfword at +0x14, clears its own +9 byte and advances the state byte at +1'
   - - 860
     - asm
@@ -55,18 +55,18 @@ segments:
     - func_801F3048
   - - 1260
     - c
-    - drawQuadBurstTwiceGrowingPointHalfword6By2AndLoweringPointYThenAdvanceWorkByte1World01Area06714_801F30EC
-    - '@source: src/bof3/world/drawQuadBurstTwiceGrowingPointHalfword6By2AndLoweringPointYThenAdvanceWorkByte1World01Area06714_801F30EC.c'
-    - '@behavior: draws the +0xC point of the scratchpad work record published at pointer cell 0x1F800044 through drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8, grows that point halfword at +0x6 by 2 and lowers the point y halfword at +0x2 by the grown value, draws the same point again, then decrements the countdown byte at +9 and advances the state byte at +1 when it reaches zero'
+    - renderBurstGrowingLowering
+    - '@source: src/bof3/world/renderBurstGrowingLowering.c'
+    - '@behavior: draws the +0xC point of the scratchpad work record published at pointer cell 0x1F800044 through renderRadialBurstPoint, grows that point halfword at +0x6 by 2 and lowers the point y halfword at +0x2 by the grown value, draws the same point again, then decrements the countdown byte at +9 and advances the state byte at +1 when it reaches zero'
   - - 1420
     - c
-    - raiseSharedDecisionFlag2SetScenarioProgress32ThenResetWorkAreaWorld01Area06714_801F318C
-    - '@source: src/bof3/world/raiseSharedDecisionFlag2SetScenarioProgress32ThenResetWorkAreaWorld01Area06714_801F318C.c'
-    - '@behavior: word 7 of the state-byte handler table D_801F4624 (its own word at 0x801F4640 holds this address), reached through the dispatcher dispatchStateByte1Table4624World01Area06714_801F2C04; reads the shared decision halfword D_801490A4, writes 0x32 to the shared scenario progress byte g_ScenarioProgress, ORs bit 0x2 into that halfword and stores it back, then calls the shared work-area reset func_80196070'
+    - raiseDecisionResetArea
+    - '@source: src/bof3/world/raiseDecisionResetArea.c'
+    - '@behavior: word 7 of the state-byte handler table D_801F4624 (its own word at 0x801F4640 holds this address), reached through the dispatcher callStateTable4624World01; reads the shared decision halfword D_801490A4, writes 0x32 to the shared scenario progress byte g_ScenarioProgress, ORs bit 0x2 into that halfword and stores it back, then calls the shared work-area reset func_80196070'
   - - 1480
     - c
-    - drawRadialGouraudLineBurstAroundPointWorld01Area06714_801F31C8
-    - '@source: src/bof3/world/drawRadialGouraudLineBurstAroundPointWorld01Area06714_801F31C8.c'
+    - renderRadialLineBurst
+    - '@source: src/bof3/world/renderRadialLineBurst.c'
     - '@behavior: sets the 0x380/0x100 texture page draw mode at the current primitive cursor and links that 0xC-byte packet through the grid-cell linker func_80155A08 on the target word pair at 0x801F53A0/0x801F53A4, then for eight phase steps 0x200 apart counted from the record halfword at +0x6 emits one 0x14-byte LINE_G2 per step whose start point is the record halfword pair at +0x0/+0x2 and whose end point is that pair plus the +0x4 reach halfword scaled by the fixed-point x helper func_801783C8 and y helper func_801782FC of the phase with each product shifted by (i & 1) + 0xC, taking 0x80 for the base colours and zero for the tip ones, then hands the record to func_801F3394 and restores the same draw mode'
   - - 1940
     - asm
@@ -76,48 +76,48 @@ segments:
     - func_801F358C
   - - 3232
     - c
-    - drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0
-    - '@source: src/bof3/world/drawClampedWorkRecordVerticalBarWorld01Area06714_801F38A0.c'
+    - renderClampedVerticalBar
+    - '@source: src/bof3/world/renderClampedVerticalBar.c'
     - '@behavior: draws one 0xE-stride work record as a flat two-pixel-wide vertical quadrangle at the primitive cursor, spanning the +0x2 halfword minus and plus the +0x4 halfword at x = the +0x0 halfword, clamped to the record halves at +0x8 and +0xA, opaque 0x80 grey, and links the 0x18-byte packet as grid kind 4'
   - - 3500
     - c
-    - clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC
-    - '@source: src/bof3/world/clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC.c'
+    - stateWorkRecordCountdowns
+    - '@source: src/bof3/world/stateWorkRecordCountdowns.c'
     - '@behavior: clears the +0xC countdown halfword of each of the 128 0xE-stride records at 0x800E4800'
   - - 3544
     - c
-    - tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8
-    - '@source: src/bof3/world/tickAndDrawActiveWorkRecordsStepPositionAndRearmExpiredCountdownsWorld01Area06714_801F39D8.c'
+    - tickRearmExpiredCountdowns
+    - '@source: src/bof3/world/tickRearmExpiredCountdowns.c'
     - '@behavior: draws every running record of the 0x80-entry 0xE-byte-stride table at 0x800E4800 as a clamped vertical bar, drops its +0x2 halfword by +0x6, grows +0x6 by the countdown low bit and +0x4 by 1, decrements the +0xC countdown and re-seeds the record position with a 0x20 re-arm countdown once it reaches zero'
   - - 3740
     - c
-    - findFreeWorkRecordByCountdownAt800E4800World01Area06714_801F3A9C
-    - '@source: src/bof3/world/findFreeWorkRecordByCountdownAt800E4800World01Area06714_801F3A9C.c'
+    - queryFreeRecordCountdown
+    - '@source: src/bof3/world/queryFreeRecordCountdown.c'
     - '@behavior: returns the first 0xE-stride record at 0x800E4800 whose +0xC countdown halfword reads zero, or zero when all 0x80 records are busy'
   - - 3800
     - c
-    - drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8
-    - '@source: src/bof3/world/drawRadialGouraudQuadBurstAroundPointWorld01Area06714_801F3AD8.c'
+    - renderRadialBurstPoint
+    - '@source: src/bof3/world/renderRadialBurstPoint.c'
     - '@behavior: sets the 0x380/0x100 texture page draw mode with the dither enable raised at the current primitive cursor and links that 0xC-byte packet through the grid-cell linker func_80155A08 on the target word pair at 0x801F53A0/0x801F53A4, then for eight steps emits two 0x24-byte Gouraud quads per step, one per 0x100 of the turn, each vertex placing its point pair at the record +0x0 halfword plus the +0x4 reach halfword scaled by the fixed-point x helper func_801783C8 shifted right 12 and between y 0 and the record +0x2 halfword plus that reach scaled by the y helper func_801782FC shifted right 13, with all six channel bytes taking the record +0x8 halfword clamped into 0x00..0xFF after walking four units up for the first two steps and down afterwards, each packet linked as grid kind 4, and finally restores the same draw mode with the dither enable cleared'
   - - 4436
     - c
-    - seedRandomWorkRecordPositionAroundWorkObjectAndArmCountdownWorld01Area06714_801F3D54
-    - '@source: src/bof3/world/seedRandomWorkRecordPositionAroundWorkObjectAndArmCountdownWorld01Area06714_801F3D54.c'
+    - stateRandomAroundObject
+    - '@source: src/bof3/world/stateRandomAroundObject.c'
     - '@behavior: seeds one 0xE-byte work record from a random angle (`rand() & 0xFC0`) and reach (`rand() & 0x38`): +0x0 takes scratch work halfword +0xC plus (cosine * reach) >> 12, +0x2 and +0xA take work halfword +0xE plus (sine * reach) >> 13, +0x4/+0x6/+0x8 take zero, and +0xC takes the 0x20 re-arm countdown'
   - - 4612
     - c
-    - publishModeStatusFromTable5384AndProgress6IfMode5World01Area06714_801F3E04
-    - '@source: src/bof3/world/publishModeStatusFromTable5384AndProgress6IfMode5World01Area06714_801F3E04.c'
+    - publishModeStatusTable5384
+    - '@source: src/bof3/world/publishModeStatusTable5384.c'
     - '@behavior: publishes the mode-indexed halfword from the halfword run at 0x801F5384 into the shared status halfword at 0x801490A8 and stores scenario progress 6 when the same mode byte reads 5'
   - - 4688
     - c
-    - publishModeStatusFromTable5390World01Area06714_801F3E50
-    - '@source: src/bof3/world/publishModeStatusFromTable5390World01Area06714_801F3E50.c'
+    - publishModeStatusTable5390
+    - '@source: src/bof3/world/publishModeStatusTable5390.c'
     - '@behavior: publishes the mode-indexed halfword from the table at 0x801F5390 into the shared status halfword at 0x801490A8'
   - - 4732
     - c
-    - publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C
-    - '@source: src/bof3/world/publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C.c'
+    - publishModeStatusTable539
+    - '@source: src/bof3/world/publishModeStatusTable539.c'
     - '@behavior: publishes the mode-indexed halfword from the table at 0x801F539C into the shared status halfword and stores scenario progress 5 while the mode is 0 or 1'
   - - 4804
     - c
@@ -149,8 +149,8 @@ segments:
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through the extended allocator/seeder func_8015CC00 with the party-indexed byte of the payload byte table at 0x801F4644, that base word pair D_8014613E/D_80146140 and the word at +0x3C of the same base, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5412
     - c
-    - publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124
-    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124.c'
+    - publishBaseSeedEnd
+    - '@source: src/bof3/world/publishBaseSeedEnd.c'
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and seeds one kind-3 front-end record through func_8015CB18 with the mode-indexed byte of the payload byte table at 0x801F4644 and the halfwords D_80145EBE/D_80145EC0, storing the returned index in work byte +0xB unless the call reports 0xFF'
   - - 5540
     - c
@@ -190,16 +190,16 @@ segments:
     - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6264
     - c
-    - stopSelectionEffectPairZeroOneWorld01Area06714_801F4478
-    - '@source: src/bof3/world/stopSelectionEffectPairZeroOneWorld01Area06714_801F4478.c'
+    - audioSelectionEffectOne
+    - '@source: src/bof3/world/audioSelectionEffectOne.c'
     - '@behavior: stops the selection-specific frontend effect pair (group 0, id 1) through the executable-side helper at 0x8015D404 and returns'
   - - 6300
     - asm
     - func_801F449C
   - - 6428
     - c
-    - clearWorkAnimBit0ThenRunStartupAndClearProgressAndRequestPrimaryState4Substate0IfPartyByte6World01Area06714_801F451C
-    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndClearProgressAndRequestPrimaryState4Substate0IfPartyByte6World01Area06714_801F451C.c'
+    - stateAnimStartupParty
+    - '@source: src/bof3/world/stateAnimStartupParty.c'
     - '@behavior: clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884 and, when the party byte of local work record 0 at 0x80145F09 holds 6, runs the shared front-end startup helper 0x8015C088, clears the shared scenario progress byte 0x80146864 with the shared state bytes 0x80146865 to 0x80146867 and then requests primary state 4 with substate 0 through 0x80146874 and 0x80146875'
   - - 6588
     - c

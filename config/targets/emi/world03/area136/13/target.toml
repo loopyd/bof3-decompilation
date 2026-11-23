@@ -12,10 +12,10 @@ sources = [
     "src/bof3/world/setStatusFFFFAndStateEntry13Substate1WhenGateClearWorld03Area13613_801F2C94.c",
 ]
 support_sources = [
-    "src/bof3/world/publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0.c",
+    "src/bof3/world/publishModeStatusMode.c",
     "src/bof3/world/publishModeStatusFromTable43fcAndProgress6InModeZeroWorld03Area13613_801F2D2C.c",
     "src/bof3/world/queueSharedUiElementBlock9x59To5BSize51World03Area13613_801F2E08.c",
-    "src/bof3/world/setScenarioProgress0AOr1EByScenarioWordByteRange62To66World03Area13613_801F3018.c",
+    "src/bof3/world/stateScenarioWordByte.c",
     "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
     "src/bof3/world/advanceCounter2By2World03Area13613_801F3170.c",
     "src/bof3/world/selectCrossedFrontSideState2Or4World03Area13613_801F33BC.c",

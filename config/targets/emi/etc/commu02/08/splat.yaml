@@ -35,18 +35,18 @@ segments:
     - '@behavior: stamps the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 6, y - 6) and (x + 6, y - 6) of one opaque flat-shaded marker triangle, tints its green byte from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the 0x14-byte primitive as size class 1'
   - - 6992
     - c
-    - pickRandomValueOneThroughBound
-    - '@source: src/bof3/ui/pickRandomValueOneThroughBound.c'
+    - pickValueThroughBound
+    - '@source: src/bof3/ui/pickValueThroughBound.c'
     - '@behavior: draws a random nibble through rand() and redraws while that nibble is zero or above the exclusive limit bound plus one, returning a value in 1 through bound'
   - - 7060
     - c
-    - drawCardRowWithSlotOffsets
+    - renderCardRowOffsets
   - - 7280
     - c
-    - dealNineUniqueCardIds
+    - dealNineUniqueIds
   - - 7432
     - c
-    - drawThreeCardRowStates
+    - renderThreeCardStates
   - - 7876
     - asm
     - func_801D2AC4
@@ -55,18 +55,18 @@ segments:
     - func_801D2CF8
   - - 8720
     - c
-    - queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0
-    - '@source: src/bof3/ui/queueCue106StartAction72LatchFrontendMode2ResetStepByte1AndAdvanceStepByte0.c'
+    - queueStartLatchFrontend
+    - '@source: src/bof3/ui/queueStartLatchFrontend.c'
     - '@behavior: queues cue 0x106 through func_8015DF18, starts action 0x72 through func_80150224, latches the main-RAM frontend mode byte 0x80143BB0 to 2, clears the byte-1 step index at 0x801F294D and advances the byte-0 step index at 0x801F294C by one'
   - - 8800
     - c
-    - drawGreyHorizontalLinePrim
-    - '@source: src/bof3/ui/drawGreyHorizontalLinePrim.c'
+    - renderGreyHorizontalLine
+    - '@source: src/bof3/ui/renderGreyHorizontalLine.c'
     - '@behavior: seeds the 0x10-byte flat line packet at g_PrimCursor through func_8017AA80, writes 0x80 into its three colour bytes, places its endpoints at (x, y) and (x + 8, y) and appends it as a 0x10-byte primitive at ordering-table slot 1 through func_8014E5A0'
   - - 8924
     - c
-    - drawOpaqueSpriteFromSheetEntryTable
-    - '@source: src/bof3/ui/drawOpaqueSpriteFromSheetEntryTable.c'
+    - renderOpaqueSpriteSheet
+    - '@source: src/bof3/ui/renderOpaqueSpriteSheet.c'
     - '@behavior: draws one sprite of the overlay sheet through SetSprt at the shared primitive cursor and appends it as 0x14 bytes at ordering-table slot 1 through func_8014E5A0, taking the cell u and v, the width and the height from the four-byte entry the sprite index selects in the sheet table at 0x801DAC60, leaving the three colour bytes at the opaque gray 0x80 and the CLUT word at the panel palette 0x7887'
   - - 9124
     - asm
@@ -85,7 +85,7 @@ segments:
     - func_801D4AE0
   - - 17060
     - c
-    - drawThreeCardRowWithRaisedCard
+    - renderCardRaisedCard
   - - 17288
     - c
     - drawThreeCardRow
@@ -97,8 +97,8 @@ segments:
     - dispatchStepByte1TableD74
   - - 17580
     - c
-    - setFrontLocalMode0AndAdvanceStepByte1
-    - '@source: src/bof3/ui/setFrontLocalMode0AndAdvanceStepByte1.c'
+    - stateFrontLocalStep
+    - '@source: src/bof3/ui/stateFrontLocalStep.c'
     - '@behavior: requests frontend-local mode 0 through the main-exe setter func_8014ECAC and advances the byte-1 step index at 0x801F294D by one'
   - - 17636
     - asm
@@ -108,8 +108,8 @@ segments:
     - func_801D5AD0
   - - 20268
     - c
-    - drawComposedNameAndLabelRows
-    - '@source: src/bof3/ui/drawComposedNameAndLabelRows.c'
+    - renderComposedLabelRows
+    - '@source: src/bof3/ui/renderComposedLabelRows.c'
     - '@behavior: writes 0x2A into the first byte of the shared text run at 0x80145AD4 and copies the text that the halfword offset selected by the name id at 0x801DB0AD from the table on the fixed 0x80010200 main-RAM address points at in the 0x80010000 pool, one byte per pass while also copying the byte after a 0x12 or 0x13, repeats that walk for the id at 0x801DB0AE unless it reads 0xFF, writes 0x2B and 0xFF into the run, appends the five bytes of the name table row that byte 5 of the commu task at 0x801F2948 selects, terminates the run and submits it through func_8014F800 at (0x32, 0x1E) with colour 0 and mask 0xFF before submitting the text the signed byte at 0x801DB0B4 selects from the table at 0x800101C6 at (0x32, 0x42)'
   - - 20828
     - c
@@ -118,8 +118,8 @@ segments:
     - '@behavior: reads the unsigned byte at 0x801F294C, scales it by four and calls the handler the five-entry run at 0x801DADEC selects, discarding any result, without bounding the index and without reading or writing any other state'
   - - 20888
     - c
-    - startActionEELatchFrontendMode2AndAdvanceStepByte0UnlessAlreadyBusy
-    - '@source: src/bof3/ui/startActionEELatchFrontendMode2AndAdvanceStepByte0UnlessAlreadyBusy.c'
+    - audioLatchAlreadyBusy
+    - '@source: src/bof3/ui/audioLatchAlreadyBusy.c'
     - '@behavior: returns while the shared frontend mode byte at 0x80143BB0 reads 2, and otherwise starts action 0xEE through the main-executable action starter func_80150224, latches that mode byte to 2 and advances byte 0 of the step group at 0x801F294C by one so the byte-0 dispatcher runs the next handler of the five-entry run at 0x801DADEC; the step cell is read once, after the call and before the mode store, and no other cell is read or written'
   - - 20980
     - c
@@ -140,13 +140,13 @@ segments:
     - drawWindowFrame
   - - 29784
     - c
-    - drawActiveRecordSlotBar
-    - '@source: src/bof3/ui/drawActiveRecordSlotBar.c'
+    - renderActiveSlotBar
+    - '@source: src/bof3/ui/renderActiveSlotBar.c'
     - '@behavior: draws the 0xAC by 0x1A active-record slot bar at (x, y) through func_801AE3F0 with shade 0x80 and the main-RAM clut-bank byte D_80144952, frames it through drawWindowFrame at the same origin, then draws the eight-wide sixteen-high slot tile piece 1 of the six-byte sprite rect table at 0x801DAE88 at (x + 7, y + 9) once per active record countActiveRecords_commu02_08 counts'
   - - 29996
     - c
-    - drawPanelStripThenSubmitWorkImage
-    - '@source: src/bof3/ui/drawPanelStripThenSubmitWorkImage.c'
+    - renderStripSubmitImage
+    - '@source: src/bof3/ui/renderStripSubmitImage.c'
     - '@behavior: draws the 0x118 by 0x13 panel strip at (0x14, 0x10) through func_801D8A40 with the main-RAM CLUT-bank byte D_80144952, then submits the texture named by the 0x801DB0C8 image selector at (0x1B, 0x13) unless that selector holds the 0xFFFF no-image sentinel'
   - - 30116
     - c
@@ -167,8 +167,8 @@ segments:
     - '@behavior: emits one flat-shaded marker triangle at the shared primitive cursor through the POLY_F3 initialiser 0x8017A954, writes the apex (x, y) and the base corners (x - 4, y - 4) and (x + 4, y - 4) of the 0x14-byte packet, takes its green byte as the full 0xFF when the third byte argument is nonzero and otherwise from bits 1 and 2 of the shared frame counter 0x80143E6C scaled by 32 and offset by 0x3F while inverting them whenever bit 3 is clear, and appends the packet as size class 1'
   - - 32104
     - c
-    - buildRandomTwoPartTextRun
-    - '@source: src/bof3/ui/buildRandomTwoPartTextRun.c'
+    - setupRandomPartText
+    - '@source: src/bof3/ui/setupRandomPartText.c'
     - '@behavior: clears the six-byte work run at 0x801DB080 and refills it with at most six bytes of text taken from the fixed 0x80010000 main-RAM base plus a halfword offset that the pass picks from its own 64-entry table (0x800103E0 first, 0x80010460 second) with one rand() value masked to six bits, each walk stopping on the zero terminator'
   - - 32320
     - asm
@@ -181,13 +181,13 @@ segments:
     - func_801D90D8
   - - 34320
     - c
-    - drawFlaggedFieldRecordList
+    - renderFlaggedFieldList
   - - 34480
     - c
     - countFlaggedFieldRecords_commu02_08
   - - 34548
     - c
-    - findFlaggedFieldRecordSlot
+    - queryFlaggedFieldSlot
   - - 34632
     - asm
     - func_801D9348
@@ -208,9 +208,9 @@ segments:
     - func_801DA114
   - - 39844
     - c
-    - commitCardRunIntoFlaggedFieldRecordAndStartActionF5
-    - '@source: src/bof3/ui/commitCardRunIntoFlaggedFieldRecordAndStartActionF5.c'
-    - '@behavior: snapshots the five card bytes of the flagged field record that findFlaggedFieldRecordSlot answers for the ordinal at 0x801DB0B4 into the shared buffer at 0x801490D8 and clears its terminator, copies the six-byte card run at 0x801DB080 into the shared buffer at 0x801490F8, writes that five-byte run back into the record prefix, starts action 0xF5 through func_80150224, latches the frontend mode byte at 0x80143BB0 to 2 and sets the step group at 0x801F294C to 3 with bytes 1 and 2 cleared'
+    - commitCardFlaggedAction
+    - '@source: src/bof3/ui/commitCardFlaggedAction.c'
+    - '@behavior: snapshots the five card bytes of the flagged field record that queryFlaggedFieldSlot answers for the ordinal at 0x801DB0B4 into the shared buffer at 0x801490D8 and clears its terminator, copies the six-byte card run at 0x801DB080 into the shared buffer at 0x801490F8, writes that five-byte run back into the record prefix, starts action 0xF5 through func_80150224, latches the frontend mode byte at 0x80143BB0 to 2 and sets the step group at 0x801F294C to 3 with bytes 1 and 2 cleared'
   - - 40168
     - asm
     - func_801DA8E8

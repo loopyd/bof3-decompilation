@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table5f68World02Area09813_801F2C04
+    - callStateTable5World02
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 72
     - asm
@@ -50,13 +50,13 @@ segments:
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 2368
     - c
-    - resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540
-    - '@source: src/bof3/world/resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540.c'
+    - stateSpawnIntervalSpawn
+    - '@source: src/bof3/world/stateSpawnIntervalSpawn.c'
     - '@behavior: Overlay progress step handler, entry 0 of the twelve-word handler row based at 0x801F5F7C: calls the work-table reset 0x801F40A4, which clears the lead byte of each of the 0x18 records of the 0x38-byte-stride table at 0x800E4800, then reads the work record through the scratchpad pointer cell 0x1F800044 and stores 0xFF into its byte at +0x09, zero into +0x0A and 0x10 into +0x06, each store through its own fresh read of the cell; a fourth read advances the state byte at +0x01, which hands the record to entry 1 of the row, and the body queues cue 0x204 through 0x8015DF18.'
   - - 2480
     - c
-    - spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0
-    - '@source: src/bof3/world/spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0.c'
+    - spawnShrinkingIntervalMatch
+    - '@source: src/bof3/world/spawnShrinkingIntervalMatch.c'
     - '@behavior: Overlay progress step handler, entry 1 of the twelve-word handler row based at 0x801F5F7C: compares the work record byte at +0x0A with its frame interval byte at +0x06 and, while they differ, advances +0x0A and leaves through the tail; on the frame they are equal it calls the record spawn 0x801F40D0, subtracts 2 from the interval at +0x06 and clears +0x0A, so the interval between spawns shrinks by two frames per spawn until it reaches zero. Either path runs the draw pass 0x801F42E8 and, when the shared state byte 0x80143BB0 does not read 2 and the shared status halfword 0x801490A8 reads 0x12 and the shared byte 0x80146875 reads 0xC, clears the countdown byte at +0x09, stores 0xA000 and 0xB000 into the motion words at +0x0C and +0x10, clears the offset words at +0x18 and +0x1C and advances the state byte at +0x01, which hands the record to entry 2 of the row.'
   - - 2720
     - asm
@@ -67,33 +67,33 @@ segments:
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 3092
     - c
-    - seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814
-    - '@source: src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c'
+    - stateWorkWords64Advance
+    - '@source: src/bof3/world/stateWorkWords64Advance.c'
   - - 3192
     - asm
     - func_801F3878
   - - 3344
     - c
-    - invokeOffset64BlockDrawHelperThenTickCountdownReload20AndAdvanceStateWorld02Area09813_801F3910
-    - '@source: src/bof3/world/invokeOffset64BlockDrawHelperThenTickCountdownReload20AndAdvanceStateWorld02Area09813_801F3910.c'
+    - callBlockTickCountdown
+    - '@source: src/bof3/world/callBlockTickCountdown.c'
     - '@behavior: Overlay progress step handler, entry 2 of the handler row based at 0x801F5F88 which dispatchStateByte1Table5f88World02Area09813_801F37D0 indexes with the work record state byte at +0x01: calls the draw helper 0x801F46EC with the work record block at +0x64, the signed halfword at +0x2E and the channel mask 6, decrements the countdown byte at +0x09 as an unsigned byte and returns while it is nonzero, and on the frame it reaches zero re-arms that byte with 0x20 and increments the state byte at +0x01, which hands the record to entry 3.'
   - - 3476
     - asm
     - func_801F3994
   - - 3752
     - c
-    - seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World02Area09813_801F3AA8
-    - '@source: src/bof3/world/seedWorkWords18To20FromOriginAndSetStepWordsWhenCountdownExpiresThenAdvanceWorkByte1World02Area09813_801F3AA8.c'
+    - stateOriginWordsExpires
+    - '@source: src/bof3/world/stateOriginWordsExpires.c'
     - '@behavior: Overlay progress step handler, entry 4 of the nine-word handler row based at 0x801F5F88: post-increments the work record byte at +0x06 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F526C; then runs the 0x800E48C0 draw pass 0x801F5940 and the 0x800E4800 record tick pass 0x801F5308, decrements the countdown byte at +0x09 and returns while it stays non-zero, and on the frame it reaches zero stores -0x1000 and -0x400 into the work words at +0x0C and +0x10, copies the origin triple at +0x64, +0x68 and +0x6C into +0x18, +0x1C and +0x20, and advances the state byte at +0x01, which hands the record to entry 5.'
   - - 3932
     - c
-    - claimRecordEveryFourthTickRunPassesArmWorkCountdown20AndAdvanceStateWorld02Area09813_801F3B5C
-    - '@source: src/bof3/world/claimRecordEveryFourthTickRunPassesArmWorkCountdown20AndAdvanceStateWorld02Area09813_801F3B5C.c'
+    - claimEveryFourthPasses
+    - '@source: src/bof3/world/claimEveryFourthPasses.c'
     - '@behavior: Overlay progress step handler, entry 5 of the nine-word handler row based at 0x801F5F88: post-increments the work record byte at +0x06 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F526C; then runs the 0x800E48C0 draw pass 0x801F5940 and the 0x800E4800 record tick pass 0x801F5308, arms the countdown byte at +0x09 with 0x20 and advances the state byte at +0x01, which hands the record to entry 6.'
   - - 4052
     - c
-    - claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4
-    - '@source: src/bof3/world/claimRecordEveryFourthTickRunPassesDrawQuadsIntegrateMotionReloadCountdownAndAdvanceStateWorld02Area09813_801F3BD4.c'
+    - claimPassesIntegrateReload
+    - '@source: src/bof3/world/claimPassesIntegrateReload.c'
     - '@behavior: Overlay progress step handler, entry 6 of the nine-word handler row at 0x801F5F88: post-increments the work record byte at +0x06 and, whenever the pre-increment low two bits are clear, calls the work-record spawn 0x801F526C; then runs the per-frame passes 0x801F5308 and 0x801F5940, renders the record through 0x801F48E8 with the triple at +0x18, the triple at +0x34 and the channel mask 0x40, subtracts 0x200 from the work word at +0x10 and 0x800 from the word at +0x0C, subtracts 4 from the byte at +0x03, adds the updated +0x0C word into +0x18 and the updated +0x10 word into +0x1C, decrements the countdown byte at +0x09 and, when it reaches zero, reloads it with 0x80 and advances the state byte at +0x01.'
   - - 4316
     - asm
@@ -107,13 +107,13 @@ segments:
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 4708
     - c
-    - resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64
-    - '@source: src/bof3/world/resetWorkTableArmPhaseCountdownClearFrameCounterAdvanceStateAndQueueCue200World02Area09813_801F3E64.c'
+    - statePhaseFrameCounter
+    - '@source: src/bof3/world/statePhaseFrameCounter.c'
     - '@behavior: Overlay progress step handler, entry 0 of the four-word handler row based at 0x801F5FAC: calls the state-entry reset 0x801F4D44, which clears the 0x10 records of the 0x1C-byte-stride work table at 0x800E4800 and zeroes the one-shot latch bytes at 0x801F6510 and 0x801F6514, then reads the work record through the scratchpad pointer cell 0x1F800044, keeps that record byte at +0x01, stores 0x40 into the phase countdown halfword at +0x2E, stores zero into the phase frame counter halfword at +0x30, writes the kept byte plus one back to +0x01, which hands the record to entry 1 of the row, and queues cue 0x200 through 0x8015DF18.'
   - - 4784
     - c
-    - incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0
-    - '@source: src/bof3/world/incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0.c'
+    - incrementSpawnFourthExpiry
+    - '@source: src/bof3/world/incrementSpawnFourthExpiry.c'
     - '@behavior: Overlay progress step handler, entry 1 of the four-word handler row based at 0x801F5FAC: increments the per-phase frame counter halfword at +0x30 of the work record published at 0x1F800044, and whenever the low two bits of that record countdown halfword at +0x2E read clear it claims a free record through 0x801F4D80 and spawns it through 0x801F4DBC when that scan returns a record; then runs the per-frame record pass 0x801F4E7C, re-reads the work record through the cell, decrements the countdown halfword at +0x2E and, on the frame that countdown reaches zero, clears the record byte at +0x09 and advances the state byte at +0x01.'
   - - 4944
     - asm
@@ -147,8 +147,8 @@ segments:
     - func_801F4BC0
   - - 8516
     - c
-    - resetWorkTableAt800E4800AndRearmOneShotLatchesWorld02Area09813_801F4D44
-    - '@source: src/bof3/world/resetWorkTableAt800E4800AndRearmOneShotLatchesWorld02Area09813_801F4D44.c'
+    - stateOneShotLatches
+    - '@source: src/bof3/world/stateOneShotLatches.c'
     - '@behavior: clears the lead byte of each of the 0x10 entries of the 0x1C-byte-stride work table at 0x800E4800 in a bottom-tested loop, then zeroes the two overlay latch bytes at 0x801F6510 and 0x801F6514 that func_801F4F60 and func_801F4FEC set to 1 on their first pass.'
   - - 8576
     - c
@@ -163,17 +163,17 @@ segments:
     - func_801F4E7C
   - - 9056
     - c
-    - countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60
-    - '@source: src/bof3/world/countdownReloadAdvanceHandlerAndSetOneShotLatchWorld02Area09813_801F4F60.c'
+    - countdownReloadShotLatch
+    - '@source: src/bof3/world/countdownReloadShotLatch.c'
     - '@behavior: adds 0x10 to the record byte at +0x03 and decrements the countdown byte at +0x02; while that countdown stays nonzero it returns, and when it reaches zero it reloads the countdown from the record byte at +0x04, increments the handler-index byte at +0x01 to hand the record to the next handler of its row, and sets the one-shot latch byte at 0x801F6510 to 1 if that latch still reads zero.'
   - - 9144
     - c
-    - countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8
-    - '@source: src/bof3/world/countdownReload16ThenAdvanceHandlerWorld02Area09813_801F4FB8.c'
+    - countdownReload16AdvanceHandler
+    - '@source: src/bof3/world/countdownReload16AdvanceHandler.c'
   - - 9196
     - c
-    - stepWorkWord8IntoWord10ReleaseRecordOnCountdownZeroAndSetOneShotLatchWorld02Area09813_801F4FEC
-    - '@source: src/bof3/world/stepWorkWord8IntoWord10ReleaseRecordOnCountdownZeroAndSetOneShotLatchWorld02Area09813_801F4FEC.c'
+    - stepReleaseShotLatch
+    - '@source: src/bof3/world/stepReleaseShotLatch.c'
     - '@behavior: on its first pass sets the one-shot latch byte at 0x801F6514 to 1 when it reads zero, then decrements the record countdown byte at +0x02, adds 0x400 to the record word at +0x08 and adds that word into the record word at +0x10, subtracts 8 from the record byte at +0x03, and clears the record byte at +0x00 when the countdown reaches zero.'
   - - 9296
     - asm
@@ -212,8 +212,8 @@ segments:
     - setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09813_801F5A98
   - - 11976
     - c
-    - setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8
-    - '@source: src/bof3/world/setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8.c'
+    - stateStatus2ModeGate
+    - '@source: src/bof3/world/stateStatus2ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores the status halfword 0x2F into D_801490A8 and the mode index 6 into the shared byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and writes no mode byte.'
   - - 12044
     - c
@@ -222,16 +222,16 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores the status halfword 0x2F into D_801490A8 and the mode index 6 into the shared byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and writes no mode byte.'
   - - 12112
     - c
-    - setStatusFFFFAndStateEntry2DClearByte801448ECWhenGateClearWorld02Area09813_801F5B50
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry2DClearByte801448ECWhenGateClearWorld02Area09813_801F5B50.c'
+    - stateStatusClearGate
+    - '@source: src/bof3/world/stateStatusClearGate.c'
     - '@behavior: Overlay handler, entry 4 of the handler table based at 0x801F64B8: stores 0xFFFF into the shared status halfword D_801490A8 on every path, reads the shared gate byte D_801490C7 as a signed byte and returns while it is nonzero, and on the frame that gate byte reads zero calls the shared helper 0x8015C088, stores 0x2D into the shared state entry byte D_801448EB and zero into the shared byte 0x801448EC whose role is not established. It takes no arguments and returns nothing.'
   - - 12192
     - asm
     - func_801F5BA0
   - - 12752
     - c
-    - queueSharedUiElementBlock4To7x5Size50World02Area09813_801F5DD0
-    - '@source: src/bof3/world/queueSharedUiElementBlock4To7x5Size50World02Area09813_801F5DD0.c'
+    - queueSharedUiElement
+    - '@source: src/bof3/world/queueSharedUiElement.c'
     - '@behavior: Queues the four shared UI elements of the horizontal run x = 4..7 at y = 5 through the shared marker queue func_801A4BC0 with size 0x50, one element per iteration of an unsigned byte counter bounded by 4 whose masked value plus 4 is the x argument; it takes no arguments and returns nothing.'
   - - 12828
     - asm

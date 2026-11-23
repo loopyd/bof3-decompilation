@@ -8,7 +8,7 @@
  *           loop; it takes no arguments, returns nothing and touches no other
  *           state. Its only caller inside this payload is the state-0 progress
  *           handler of the row at 0x801F5F7C,
- *           resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540
+ *           stateSpawnIntervalSpawn
  *           at 0x801F3540, which clears this table before seeding the scratchpad
  *           work object at 0x1F800044 and queuing cue 0x204. The
  *           44 bytes are byte-identical to the already-exact

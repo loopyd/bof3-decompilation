@@ -16,14 +16,14 @@ extern u8 D_801D4285;
  * handler reached only through that table and the blob carries no prototype,
  * which keeps the argument roles structural.
  * Shape: the 68 bytes at 0x801F36E4 were compared with the lifted sibling
- * setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0 by a payload
+ * stateStatus88ModeGate by a payload
  * `cmp` and differed in one word only, the internal `j` immediate, whose
  * displacement of 0x44 bytes is exactly the delta between the two spans, so
  * every relative branch, cell reference, stored literal and store site was
  * identical and the two spans were one body. That sibling, whose own row is a
  * lifted boundary measured exact, supplied the statement order, operand forms
  * and declaration style; this span's own bytes supplied its `j`. The sibling
- * pair setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508 and its
+ * pair stateStatus60ModeGate and its
  * 0x801F354C twin, which relate to each other the same way, supplied the
  * duplicate naming form: one descriptive name per body with the address suffix
  * kept distinct.

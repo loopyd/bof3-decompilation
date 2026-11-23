@@ -10,20 +10,20 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/dispatchSharedModeByteTable2C04World01Area05213_801F3F34.c",
     "src/bof3/world/findFreeWorkRecordByte15At800E4800World01Area05213_801F3158.c",
-    "src/bof3/world/projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980.c",
+    "src/bof3/world/projectCueCellsProgress.c",
     "src/bof3/world/stepWorkRecordPhaseClaimAtStepZeroRunRecordStepAndCountGroupsToByteBWorld01Area05213_801F2DCC.c",
-    "src/bof3/world/stepActiveWorkRecordsThenClearWorkFlagsWhenNoneActiveWorld01Area05213_801F2E94.c",
+    "src/bof3/world/stepActiveFlagsNone.c",
 ]
 support_sources = [
-    "src/bof3/world/claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084.c",
+    "src/bof3/world/claimFourRecordsAround.c",
     "src/bof3/world/claimFrontEndRecordHandler48AtFixedPositionPairStoreDistanceAndSetRowByteBWorld01Area05213_801F431C.c",
     "src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F3894.c",
-    "src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8.c",
+    "src/bof3/world/stateWorkPositionAdvance.c",
     "src/bof3/world/anyWorkPositionInModeBoundsWorld01Area05213_801F3D44.c",
     "src/bof3/world/invokeHelperWorld01Area05213_801F3D24.c",
     "src/bof3/world/area05213DispatchTables.c",
-    "src/bof3/world/clearWorkTableByte15At800E4800World01Area05213_801F3194.c",
-    "src/bof3/world/clearSharedFlagBit25World01Area05213_801F4268.c",
+    "src/bof3/world/stateWorkTableByte15.c",
+    "src/bof3/world/stateSharedFlagBit25.c",
     "src/bof3/support/area052_13_psyq.c",
     "src/bof3/world/probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area05213_801F43B0.c",
 ]

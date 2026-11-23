@@ -12,13 +12,13 @@ sources = [
     "src/bof3/world/drawWorkCursorQuadWorld02Area11213_801F3EA4.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld02Area11213_801F3638.c",
     "src/bof3/world/storeWorkCursorDistanceAt3cAndAdvanceStateByte1World02Area11213_801F3E58.c",
-    "src/bof3/world/drawRecordQuadRunSlicedByWorkHalfword36World02Area11213_801F3274.c",
-    "src/bof3/world/publishStatusFromGateByteAndLatchGateFlagPairWorld02Area11213_801F3730.c",
+    "src/bof3/world/renderQuadRunSliced.c",
+    "src/bof3/world/publishLatchFlagPair.c",
 ]
 support_sources = [
     "src/bof3/support/area112_13_psyq.c",
     "src/bof3/world/area11213DispatchTables.c",
-    "src/bof3/world/setStatus14IfGateElse13World02Area11213_801F3870.c",
+    "src/bof3/world/stateStatus14GateElse13.c",
 ]
 psyq_source = "src/bof3/support/area112_13_psyq.c"
 

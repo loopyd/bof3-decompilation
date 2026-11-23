@@ -33,15 +33,15 @@ segments:
     - func_801EEC14
   - - 284
     - c
-    - clearRecordPoolBytes0To2SeedWorkPoseAndDirectionClaimSevenSlotsCopy16HalfwordsSettingBit15SetByte80145988ToOneInvokeHelperAt100ThenAdvanceWorkByte1BmagicMagic10503_801EED1C
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2SeedWorkPoseAndDirectionClaimSevenSlotsCopy16HalfwordsSettingBit15SetByte80145988ToOneInvokeHelperAt100ThenAdvanceWorkByte1BmagicMagic10503_801EED1C.c'
+    - statePoseDirectionSetting
+    - '@source: src/bof3/bmagic/statePoseDirectionSetting.c'
     - '@behavior: Clears bytes 0 to 2 of all 64 records of the 0x78-byte pool at 0x801F00A0, seeds work words 0x0C and 0x10, projects work words 0x34 and 0x38 from the shared pair at 0x80149308 and 0x8014930C and stores the direction back into word 0x0C, claims seven action slots publishing the work pointer, copies 16 halfwords with bit 15 set, sets byte 0x80145988 to 1, invokes helper 0x8015D71C with 0x100 and advances work byte 1.'
   - - 792
     - asm
     - func_801EEF18
   - - 888
     - c
-    - dispatchStateByte1Table0048BmagicMagic10503_801EEF78
+    - callStateTable0048Bmagic
     - '@source: src/bof3/bmagic/magic10503DispatchTables.c'
   - - 956
     - c
@@ -50,8 +50,8 @@ segments:
     - '@behavior: Copies four handlers, dispatches work byte 2, then invokes helpers and PopMatrix when byte 0 is nonzero and byte 2 is not 3.'
   - - 1132
     - c
-    - copyWorkTripletSeedOffsetPairAndAdvanceWorkByte2BmagicMagic10503_801EF06C
-    - '@source: src/bof3/bmagic/copyWorkTripletSeedOffsetPairAndAdvanceWorkByte2BmagicMagic10503_801EF06C.c'
+    - copyTripletOffsetPair
+    - '@source: src/bof3/bmagic/copyTripletOffsetPair.c'
   - - 1316
     - asm
     - func_801EF124
@@ -70,7 +70,7 @@ segments:
     - func_801EF3A0
   - - 3200
     - c
-    - dispatchStateByte1Table0074BmagicMagic10503_801EF880
+    - callStateTable0074Bmagic
     - '@source: src/bof3/bmagic/magic10503DispatchTables.c'
   - - 3268
     - asm

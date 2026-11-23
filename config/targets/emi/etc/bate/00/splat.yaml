@@ -40,13 +40,13 @@ segments:
     - '@behavior: initializes the shared BATE UI work block (head state bytes, panel origin and extent halfwords, the three panel records at 0x80148354/0x80148378/0x8014839C, the cursor block and the published record pointer D_801D8EE0) and publishes the index of the first of the first three shared party ids 0x80144F5A that is zero or seven into the cell at 0x8014833C'
   - - 4748
     - c
-    - commitBateSlotSnapshotIntoSharedFieldRecord
-    - '@source: src/bof3/ui/commitBateSlotSnapshotIntoSharedFieldRecord.c'
+    - commitBateSnapshotField
+    - '@source: src/bof3/ui/commitBateSnapshotField.c'
     - '@behavior: commits the pending six-slot snapshot of the BATE overlay into the six shared slot bytes 0x80144DF2 through 0x80144DF7 of the field record 0x80144DE4 and then rebuilds that record through func_80164A44; a slot whose snapshot byte is zero or already equal to its shared slot byte is skipped, and a differing slot calls the main-exe slot setter func_801665A0 with its helper group from the six-byte table 0x801D875C, the snapshot byte, 1 and 0, then the main-exe gate func_801650B4 with the same group and the shared byte the store has not replaced yet, and only then stores the snapshot byte into the shared slot byte'
   - - 5024
     - c
-    - publishBateMaskFlagAndSnapshotSharedFields
-    - '@source: src/bof3/ui/publishBateMaskFlagAndSnapshotSharedFields.c'
+    - publishBateMaskSnapshot
+    - '@source: src/bof3/ui/publishBateMaskSnapshot.c'
     - '@behavior: publishes the inverse of bit zero of the func_80165EC0 answer for the two shared mask bytes 0x80148338 and 0x8014833D into the flag byte 0x80148511, copies the six shared field bytes 0x80144DF2 through 0x80144DF7 into the six-byte overlay snapshot table 0x801D8EE0 with its fifth slot written twice so the last of those stores lands on the same byte, and then stores the 0x8014833D mask byte into that snapshot table at the index the cell 0x8014835E holds'
   - - 5232
     - c
@@ -60,18 +60,18 @@ segments:
     - '@behavior: sub-step dispatcher of the BATE overlay that calls the entry of the two-entry sub-step handler pointer table D_801D8770 at the index the shared UI sub-step byte 0x80148652 holds, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 5352
     - c
-    - setFrontLocalMode3AndAdvanceUiSubstep
-    - '@source: src/bof3/ui/setFrontLocalMode3AndAdvanceUiSubstep.c'
+    - stateLocalUiSubstep
+    - '@source: src/bof3/ui/stateLocalUiSubstep.c'
     - '@behavior: first handler of the BATE overlay sub-step handler pointer table D_801D8770 that requests frontend-local mode 3 through the main-exe setter func_8014ECAC and then advances the shared UI sub-step byte 0x80148652 by one, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 5404
     - c
     - drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C
     - '@source: src/bof3/ui/drawBatePanelThenAdvanceUiPhaseWhenEffectIdleBate00_801D211C.c'
-    - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay slot-ramp state through seedSixSlotRampLimitsFromWorkCountersBate00_801D259C, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
+    - '@behavior: second handler of the BATE overlay sub-step handler table D_801D8770 that always redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that once the shared front-end effect-busy gate halfword 0x80143C40 reads zero resets this overlay slot-ramp state through stateSixRampLimits, clears the shared cursor-kind byte 0x80148658 and the shared UI sub-step byte 0x80148652, and advances the shared UI phase byte 0x80148651 by one'
   - - 5520
     - c
-    - stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190
-    - '@source: src/bof3/ui/stepSixSlotRampAndAdvanceUiPhaseOnPadBate00_801D2190.c'
+    - stepSixRampPad
+    - '@source: src/bof3/ui/stepSixRampPad.c'
     - '@behavior: second handler of the BATE overlay phase handler table D_801D8764 that first redraws the shared screen by passing the shared sprite-grid index byte 0x80144953 to this overlay sprite emitter func_801D627C and drawing this overlay panel at the fixed coordinates 0x37, 0x37 through func_801D2304, and that then ramps the six-slot panel values: while the shared cursor-kind byte 0x80148658 is below six, the slot step byte D_801D8778 raises the slot value D_801D8F00 and, once that value reaches its limit D_801D8EE8 or the shared pad low byte 0x80145AA8 is set, the value snaps to the limit and the slot index advances by one; when the slot index has reached six, a set pad low byte requests frontend-local mode 2 through func_8014ECAC and advances the shared UI phase byte 0x80148651 by one'
   - - 5784
     - c
@@ -83,13 +83,13 @@ segments:
     - func_801D2304
   - - 6556
     - c
-    - seedSixSlotRampLimitsFromWorkCountersBate00_801D259C
-    - '@source: src/bof3/ui/seedSixSlotRampLimitsFromWorkCountersBate00_801D259C.c'
+    - stateSixRampLimits
+    - '@source: src/bof3/ui/stateSixRampLimits.c'
     - '@behavior: seeds the six-slot ramp state of the BATE overlay once a phase handler reaches it: it zeroes the six per-slot ramp values D_801D8F00 and then fills the six per-slot ramp limits D_801D8EE8 from the shared battle work counters - the slot 1 limit from the work-counter word 0x801FE4E8, the slot 2 limit from the work-counter word 0x801FE4F0, the slot 0 and slot 3 limits from the work-counter byte 0x801FE4EF, the slot 4 limit from that word divided by twenty and the slot 5 limit from the class the word 0x801FE4F0 selects, which is 2 below 0x32, 4 from 0x32 to 0x4F and 6 from 0x50 up - and then pushes the slot 3, slot 4 and slot 5 limits into the halfword fields 0x42 and 0x22, 0x3C and 0x1C, and 0x40 and 0x20 of the shared field record D_80144DE4 through the main-exe adjusters func_801654F4 and func_8016546C, discarding every answer, its 0x20-byte frame keeping the return address at 0x18 and two saved registers at 0x10 and 0x14 across those six calls'
   - - 6880
     - c
-    - drawSemiTransGreyCrossPrimBate00_801D26E0
-    - '@source: src/bof3/ui/drawSemiTransGreyCrossPrimBate00_801D26E0.c'
+    - renderSemiGreyCross
+    - '@source: src/bof3/ui/renderSemiGreyCross.c'
     - '@behavior: draws a mid-grey semi-transparent cross marker of two 0x10-byte LINE_F2 primitives taken from g_PrimCursor: the first stroke runs from (x + 5, y) to (x + 5, y + 10) and the second, after a fresh cursor read, from (x, y + 5) to (x + 10, y + 5); each packet is initialised, marked semi transparent, coloured 0x80 at bytes 0x04 to 0x06 and appended at ordering-table slot 1 as a 0x10-byte primitive'
   - - 7108
     - c
@@ -118,14 +118,14 @@ segments:
     - '@behavior: border emitter of the BATE overlay that builds the three colour bytes of its two line packets from the low three bits of the mask argument, each set bit taking the flat colour 0x3F | (((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5) when the colour-enable argument is set and 0xFF when it is zero and each clear bit taking black, then draws the open three-point flat line from (x + 4, y) to (x, y + 4) to (x, y + h - 1) with SetLineF3 and the closed four-corner border from (x + 4, y) to (x + w - 1, y) to (x + w - 1, y + h - 1) to (x, y + h - 1) with SetLineF4, both packets taken from g_PrimCursor and each queued through func_8014E5A0(1, size) as 0x18 and 0x1C bytes, its 0x38-byte frame keeping $s0 to $s5 and $ra across those calls'
   - - 10520
     - c
-    - emitIconSpriteFromKindTileBate00_801D3518
-    - '@source: src/bof3/ui/emitIconSpriteFromKindTileBate00_801D3518.c'
+    - emitIconKindTile
+    - '@source: src/bof3/ui/emitIconKindTile.c'
     - '@behavior: icon sprite emitter of the BATE overlay that takes the entry of the four-byte-stride icon tile table D_801D8B54 at payload offset 0x7F54 that the kind byte indexes, then picks the draw-mode texture page from GetGraphType, keeping 0x2E when the first query answers 1 and when a second query answers 2 and falling back to 0x1E otherwise, arms SetDrawMode at g_PrimCursor with dfe 0, dtd 1 and no texture window, appends that 0xC-byte draw-mode packet at ordering-table slot 1, initialises the 0x14-byte SPRT packet at the same cursor through SetSprt, picks the three colour bytes of the sprite from the mode byte (0 makes all three 0x80, 1 makes them 0x30, any other value gives red 0x40, green 0x40 and blue 0x80), stores the two coordinates at 0x8 and 0xA, copies the texture byte pair of the tile entry to 0xC and 0xD, fixes the size at 0x28 by 0x30, assembles the clut word at 0xE as ((clutY + 0x1E0) << 6) | (clutX >> 4) from the last two bytes of that entry and appends the sprite at slot 1 as a 0x14-byte primitive, both appends being func_8014E5A0; its 0x30-byte frame keeps $s0 to $s4 and $ra across those calls and the payload names it only from the jal sites 0x801D36A0 and 0x801D833C'
   - - 10852
     - c
     - drawSpriteWithScenarioKindSubstitutionBate00_801D3664
     - '@source: src/bof3/ui/drawSpriteWithScenarioKindSubstitutionBate00_801D3664.c'
-    - '@behavior: sprite wrapper of the BATE overlay: when the kind byte equals 4 and the shared signed scenario-state byte 0x80146870 is at least 8 it replaces that kind with 0xB, then widens both unsigned 16-bit coordinates and both byte arguments and forwards them to the sprite emitter emitIconSpriteFromKindTileBate00_801D3518, its 0x18-byte frame only keeping the return address at 0x10 across that call'
+    - '@behavior: sprite wrapper of the BATE overlay: when the kind byte equals 4 and the shared signed scenario-state byte 0x80146870 is at least 8 it replaces that kind with 0xB, then widens both unsigned 16-bit coordinates and both byte arguments and forwards them to the sprite emitter emitIconKindTile, its 0x18-byte frame only keeping the return address at 0x10 across that call'
   - - 10936
     - c
     - drawSpritePrimTpageFromAbrBate00_801D36B8
@@ -135,7 +135,7 @@ segments:
     - c
     - drawPartyMemberAttributesAndExpPanelBate00_801D37AC
     - '@source: src/bof3/ui/drawPartyMemberAttributesAndExpPanelBate00_801D37AC.c'
-    - '@behavior: party-member attribute and experience panel of the BATE overlay: it paints the 0x86 by 0x2A inset rectangle at (x+2, y+2) through func_801AED54 with the shade 0xF1 and fills a two-by-two attribute grid of the 164-byte party record the index byte selects out of D_80144984 - the record halfwords +0x04, +0x06, +0x0A and +0x08 formatted with the payload format D_801D0C20 into the shared buffer D_80145AD4 through sprintf and drawn through func_80150098 at (x+0x29, y+5), (x+0x29, y+0x12), (x+0x6F, y+5) and (x+0x6F, y+0x12), with the four six-byte caption rows of the payload blob D_801D8B84 - Pwr, Def, Int and Agl - submitted as four-cell runs through func_8014F800 at (x+5, y+3), (x+5, y+0x10), (x+0x4B, y+3) and (x+0x4B, y+0x10). It then paints the 0x56 by 0x14 inset rectangle at (x+0x33, y+0x2E) with the shade 0xF1 and fills its two value rows: the experience word at record byte 0x08 formatted with D_801D0C44 at (x+0x4E, y+0x30) and the next-level total at (x+0x4E, y+0x39), which sumLevelExpBate00_801D4FD0 forms over the record level byte 0x06 plus one and which the placeholder D_801D0C48 replaces once that level byte reaches 0x63; each value row is preceded by drawSpritePrimTpageFromGraphTypeBate00_801D4564 at (x+0x36, y+0x30) with kind 4 and at (x+0x36, y+0x39) with kind 5. The alignment argument of the text and glyph calls is 7 when the flag byte is nonzero and 0 when it is zero. The payload names this span from the jal at 0x801D5F28 inside func_801D5E90, which passes the task origin halfwords, the leading byte of the 0x140-byte record D_80145FCC[task byte 0xC] and the low byte of its own second argument, right after the equipment-slot block drawEquipSlotRowsBate00_801D3B4C for the same arguments. One payload cmp proved these 0x3A0 bytes equal drawPartyMemberAttributesAndExpPanelShisu00_801D4754 at 0x801D4754 in emi/etc/shisu/00 and func_801D9254 at 0x801D9254 in emi/etc/shop/00 apart from eight words - the low halves of the two payload caption and format addresses, the three jal target words and the forward jump word - while every lui half stayed equal; both copies are still asm rows there.'
+    - '@behavior: party-member attribute and experience panel of the BATE overlay: it paints the 0x86 by 0x2A inset rectangle at (x+2, y+2) through func_801AED54 with the shade 0xF1 and fills a two-by-two attribute grid of the 164-byte party record the index byte selects out of D_80144984 - the record halfwords +0x04, +0x06, +0x0A and +0x08 formatted with the payload format D_801D0C20 into the shared buffer D_80145AD4 through sprintf and drawn through func_80150098 at (x+0x29, y+5), (x+0x29, y+0x12), (x+0x6F, y+5) and (x+0x6F, y+0x12), with the four six-byte caption rows of the payload blob D_801D8B84 - Pwr, Def, Int and Agl - submitted as four-cell runs through func_8014F800 at (x+5, y+3), (x+5, y+0x10), (x+0x4B, y+3) and (x+0x4B, y+0x10). It then paints the 0x56 by 0x14 inset rectangle at (x+0x33, y+0x2E) with the shade 0xF1 and fills its two value rows: the experience word at record byte 0x08 formatted with D_801D0C44 at (x+0x4E, y+0x30) and the next-level total at (x+0x4E, y+0x39), which sumLevelExpBate00_801D4FD0 forms over the record level byte 0x06 plus one and which the placeholder D_801D0C48 replaces once that level byte reaches 0x63; each value row is preceded by renderTpageGraphType at (x+0x36, y+0x30) with kind 4 and at (x+0x36, y+0x39) with kind 5. The alignment argument of the text and glyph calls is 7 when the flag byte is nonzero and 0 when it is zero. The payload names this span from the jal at 0x801D5F28 inside func_801D5E90, which passes the task origin halfwords, the leading byte of the 0x140-byte record D_80145FCC[task byte 0xC] and the low byte of its own second argument, right after the equipment-slot block drawEquipSlotRowsBate00_801D3B4C for the same arguments. One payload cmp proved these 0x3A0 bytes equal drawPartyMemberAttributesAndExpPanelShisu00_801D4754 at 0x801D4754 in emi/etc/shisu/00 and func_801D9254 at 0x801D9254 in emi/etc/shop/00 apart from eight words - the low halves of the two payload caption and format addresses, the three jal target words and the forward jump word - while every lui half stayed equal; both copies are still asm rows there.'
   - - 12108
     - c
     - drawEquipSlotRowsBate00_801D3B4C
@@ -148,8 +148,8 @@ segments:
     - '@behavior: rotating icon-slot panel of the BATE overlay, the same 0x74C-byte body as drawRotatingIconSlotPanelShisu00_801D4DC0 at 0x801D4DC0 in emi/etc/shisu/00 and func_801D98C0 at 0x801D98C0 in emi/etc/shop/00: it copies the ten-entry label table D_801D0C50 into its frame, loads the three icon kinds 0, 1 and 2 from D_801D0D18, paints the 0x45 by 0x30 inset panel through func_801AE3F0 at (x + 3, y + 3) with the shade 0 and the shared CLUT byte D_80144952 and submits the record label at 0x14-byte stride through func_8014FC90 right aligned at (x + 0x27 - labelLen * 4, y + 0x28). The slot count is 1 for the selector 0, 2 for 1 through 3 and 3 otherwise. It rotates the four model offsets D_801D8B9C into the marker vertices D_801D8F18, fills them into one Gouraud triangle at (x + 0x26, y + 0x17) with the red and green bytes of each vertex shifted left by three and biased by -0x61, appends the 0x1C-byte packet at slot 1, colours one byte per slot from the low bits of the mask argument with 0x70 for a clear bit, rotates the record slot offsets into D_801D8F30, sorts the slots by their rotated y, emits one 16x16 icon per slot through emitPanelIconPrimBate00_801D4678 with the clut GetClut(0x10, 0x1E0), and submits the three sprite streams D_801D8898, D_801D88BC six times in eight-pixel steps and D_801D88C8 through func_801AF390. No jal and no word of this payload names the span, so it is an overlay entry called from outside the payload.'
   - - 14692
     - c
-    - drawSpritePrimTpageFromGraphTypeBate00_801D4564
-    - '@source: src/bof3/ui/drawSpritePrimTpageFromGraphTypeBate00_801D4564.c'
+    - renderTpageGraphType
+    - '@source: src/bof3/ui/renderTpageGraphType.c'
     - '@behavior: sprite emitter of the BATE overlay: GetGraphType selects the texture page 0x8F when it answers 1 or 2 and 0x2F otherwise, that page fills a draw-mode packet at g_PrimCursor with dfe 0, dtd 0 and no texture window, and the 0xC-byte packet is appended at ordering-table slot 1. A second read of g_PrimCursor fills a 0x14-byte SPRT: width 0x10, height 8, CLUT 0x7800, colour bytes 0x4 through 0x6 set to 0x10 when the fourth argument is nonzero and to 0x80 when it is zero, texture row 0xD8, texture column the second byte argument shifted left by four, and the two signed coordinates from arguments 0 and 1. SetSprt stamps the packet, SetSemiTrans marks it semi transparent with 1, and the sprite is appended at slot 1 as 0x14 bytes. The two appends are func_8014E5A0. No jal and no pointer word of this payload names this span, so it is an overlay entry called from outside the payload. One payload cmp proved the 0x114 bytes equal drawSpritePrimTpageFromGraphType at 0x801D550C in emi/etc/shisu/00 and func_801DA00C at 0x801DA00C in emi/etc/shop/00, both lifts recorded exact there; the body carries no target-specific literal.'
   - - 14968
     - c
@@ -187,7 +187,7 @@ segments:
     - c
     - drawThreeIconStatusRowPanelBate00_801D8208
     - '@source: src/bof3/ui/drawThreeIconStatusRowPanelBate00_801D8208.c'
-    - '@behavior: three-icon status row panel of the BATE overlay, the same 0x300-byte body as the exact lift at 0x801D91B0 in emi/etc/shisu/00: it insets the 200 by 48 panel through func_801AE3F0 at (x + 8, y) with the shade 0 and the shared CLUT-bank byte D_80144952 and a null record skips the rest of the body, re-reads the graph type when that answer is not 1, installs the draw mode at g_PrimCursor with dfe 0, dtd 0, the texture page 0xF and no texture window, emits the 16 by 16 icon through emitPanelIconPrimBate00_801D4678 at (x + 9, y + 5) with the icon id plus 3, the texture row 0x1E, the clut GetClut(0x10, 0x1E0) and the attribute 0x80, draws the three sprite kinds of the record through emitIconSpriteFromKindTileBate00_801D3518 at (x + 0x56 plus 41 per slot, y + 2) skipping a 0xFF slot, submits the five-glyph name run through func_8014F800 at (x + 0x15, y + 3) with the count 5, formats the record byte +0x08 with the payload string 0x801D0D80 and the bytes +0x0C and +0x0D with 0x801D0D84 through sprintf into the shared buffer 0x80145AD4 and draws them through func_80150098 at (x + 0x1F, y + 0x18) and (x + 0x27, y + 0x25) beside the label row 0x801D0D90 at y + 0x24 and y + 0x27, hands the record byte +0x08 and word +0x10 to func_801D4730 at (x + 0x14, y + 0x12), and outside that guard submits the sprite-record stream 0x801D8A3C through func_801AF390 at the row origin with the flag 2 when the record and its byte +0x14 are both set and appends the sprite 0x3D through func_801AF2A0 at (x + 0x32, y + 0x16)'
+    - '@behavior: three-icon status row panel of the BATE overlay, the same 0x300-byte body as the exact lift at 0x801D91B0 in emi/etc/shisu/00: it insets the 200 by 48 panel through func_801AE3F0 at (x + 8, y) with the shade 0 and the shared CLUT-bank byte D_80144952 and a null record skips the rest of the body, re-reads the graph type when that answer is not 1, installs the draw mode at g_PrimCursor with dfe 0, dtd 0, the texture page 0xF and no texture window, emits the 16 by 16 icon through emitPanelIconPrimBate00_801D4678 at (x + 9, y + 5) with the icon id plus 3, the texture row 0x1E, the clut GetClut(0x10, 0x1E0) and the attribute 0x80, draws the three sprite kinds of the record through emitIconKindTile at (x + 0x56 plus 41 per slot, y + 2) skipping a 0xFF slot, submits the five-glyph name run through func_8014F800 at (x + 0x15, y + 3) with the count 5, formats the record byte +0x08 with the payload string 0x801D0D80 and the bytes +0x0C and +0x0D with 0x801D0D84 through sprintf into the shared buffer 0x80145AD4 and draws them through func_80150098 at (x + 0x1F, y + 0x18) and (x + 0x27, y + 0x25) beside the label row 0x801D0D90 at y + 0x24 and y + 0x27, hands the record byte +0x08 and word +0x10 to func_801D4730 at (x + 0x14, y + 0x12), and outside that guard submits the sprite-record stream 0x801D8A3C through func_801AF390 at the row origin with the flag 2 when the record and its byte +0x14 are both set and appends the sprite 0x3D through func_801AF2A0 at (x + 0x32, y + 0x16)'
   - - 30984
     - c
     - drawTwoRowNumberedPanelBate00_801D8508

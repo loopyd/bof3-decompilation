@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-extern u8 *boss028CurrentWorkRecordState; /* @source 0x1F800044 @kind data */
+extern u8 *boss028CurrentRecordState; /* @source 0x1F800044 @kind data */
 
 /*
  * Code pointer run at 0x800C21AC, the seven-slot work-state table this
@@ -44,8 +44,8 @@ void func_8014D290(void);
  */
 void dispatchWorkByte2Table21acThenInvokeSharedServiceWhenWorkByte0Bit0SetBossBoss02816_800C1C30(
     void) {
-  D_800C21AC[boss028CurrentWorkRecordState[2]]();
-  if (boss028CurrentWorkRecordState[0] & 1) {
+  D_800C21AC[boss028CurrentRecordState[2]]();
+  if (boss028CurrentRecordState[0] & 1) {
     func_8014D290();
   }
 }

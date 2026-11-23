@@ -21,9 +21,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           writes no other state. No jal in this payload reaches it: its only
  *           reference is the single pointer word at 0x801F0688, entry 7 of the
  *           handler table based at 0x801F066C that the byte-1 dispatcher
- *           dispatchStateByte1Table066cBmagicMagic05903_801EF1E0 indexes, and
+ *           callStateTable066Bmagic indexes, and
  *           entry 2 of the same run viewed from 0x801F0680 by
- *           dispatchStateByte1Table0680BmagicMagic05903_801EFE48; both rows sit
+ *           callStateTable0680Bmagic; both rows sit
  *           inside the reviewed textbin row T_801F065C. Bytes
  *           0x801F0070..0x801F00DB differ from the exact same-target sibling
  *           incrementWorkByte9Add2ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801EF504

@@ -33,8 +33,8 @@ segments:
     - func_801EEC18
   - - 212
     - c
-    - copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4
-    - '@source: src/bof3/bmagic/copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4.c'
+    - copyEightSlotsBands
+    - '@source: src/bof3/bmagic/copyEightSlotsBands.c'
     - '@behavior: Copies the record triplet into work, queues eight slots with ordinal times four and the work pointer, copies two fifteen-halfword bands with bit 15 set, invokes the helper at 0x100 and advances work byte 1.'
   - - 544
     - asm
@@ -60,8 +60,8 @@ segments:
     - '@behavior: Decrements work byte 9 and, only when it reaches zero, copies the shared battle record words 0x34, 0x38 and 0x3C into the work object, stores 8 to work word 0x20, 2 to work byte 0xA and 0 to work word 0x14, re-reads the scratchpad cell and stores 0x10 to work byte 0xB and 0x20 to work byte 0x9, then increments work byte 1.'
   - - 1188
     - c
-    - addWorkByteAIntoWorkWord20ThenAddWorkWord20ToWord14DecrementWorkByte9ByTwoAndAdvanceWorkByte1AtSixteenBmagicMagic11803_801EF0A4
-    - '@source: src/bof3/bmagic/addWorkByteAIntoWorkWord20ThenAddWorkWord20ToWord14DecrementWorkByte9ByTwoAndAdvanceWorkByte1AtSixteenBmagicMagic11803_801EF0A4.c'
+    - workIntoTwoSixteen
+    - '@source: src/bof3/bmagic/workIntoTwoSixteen.c'
     - '@behavior: Adds work byte 0xA into work word 0x20 and stores the sum to word 0x20, decrements work byte 0x9 by two at byte width and adds the updated word 0x20 onto work word 0x14, then re-reads the scratchpad cell and, only when byte 0x9 equals 16, increments work byte 0x1.'
   - - 1288
     - asm

@@ -8,7 +8,7 @@ splat = "config/targets/emi/plchar/plp467/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/dispatchWorkByte2Table03acPlcharPlp46700_801CE404.c",
+    "src/bof3/plchar/callWorkTable03Plchar.c",
 ]
 support_sources = [
     "src/bof3/plchar/adjustEvenWorkByte8ToNeighbourWhenStepTestReadsZeroThenRefreshLayersSelectSequenceAndAdvanceWorkByte3PlcharPlp46700_801CE8D4.c",
@@ -22,7 +22,7 @@ support_sources = [
     "src/bof3/plchar/dispatchWorkByte2Table03f8PlcharPlp46700_801CF8FC.c",
     "src/bof3/plchar/dispatchWorkByte3Table03ccPlcharPlp46700_801CE890.c",
     "src/bof3/plchar/dispatchWorkByte3Table03e0PlcharPlp46700_801CF13C.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTable0404PlcharPlp46700_801D0324.c",
+    "src/bof3/plchar/callWorkTable0404Plchar.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable0410PlcharPlp46700_801D0368.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp46700_801CEDB0.c",
     "src/bof3/plchar/getAndClearPlcharPlp46700_801CE610.c",

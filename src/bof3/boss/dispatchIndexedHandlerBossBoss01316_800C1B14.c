@@ -8,7 +8,7 @@ typedef void (*Boss01316Handler)(void);
  * 18 at 0x800C2620, ending with the zero word 0x800C26E0. From this word the
  * entries are 0x800C1B4C, the step handler 0x800C1C4C, the inert handler
  * 0x800C1CBC, 0x800C1D08 (entry 0 of the run at 0x800C2698 that
- * dispatchStateByte1Table2698BossBoss01316_800C1CC4 indexes), the shared
+ * callStateTable2698Boss indexes), the shared
  * main-executable handlers 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980,
  * 0x801E3A00, 0x801E3B68, 0x801E4AE8 and 0x801E4D8C, then this overlay's
  * further steps. The word is interior to that one row, so the row stays one

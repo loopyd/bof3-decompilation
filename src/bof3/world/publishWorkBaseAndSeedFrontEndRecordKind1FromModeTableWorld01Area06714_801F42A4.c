@@ -39,7 +39,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  * which is this payload's own mode table - so its statement order, operand
  * forms, offset spelling and declaration style are taken from that sibling and
  * from the kind-3 family source
- * publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124
+ * publishBaseSeedEnd
  * in this same payload, which shares this function's work base, party-id byte
  * and forwarded halfwords and differs in the record kind 3 against 1 and in
  * reading the first mode table 0x801F4644 against 0x801F464C here. The blob at

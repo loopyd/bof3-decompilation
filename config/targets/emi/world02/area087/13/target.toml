@@ -17,7 +17,7 @@ sources = [
     "src/bof3/world/seedFacingStepPairAndStepPositionThenAdvanceModeAndRequestResourceWorld02Area08713_801F4328.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld02Area08713_801F3B34.c",
     "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld02Area08713_801F2C04.c",
-    "src/bof3/world/clearWorldFlag2000WhenGateIs3cWorld02Area08713_801F2C38.c",
+    "src/bof3/world/stateWorldFlag2000Gate.c",
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08713_801F3704.c",
     "src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld02Area08713_801F363C.c",
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08713_801F395C.c",
@@ -26,7 +26,7 @@ sources = [
 support_sources = [
     "src/bof3/world/area08713_work_state.c",
     "src/bof3/world/area08713DispatchTables.c",
-    "src/bof3/world/dispatchStateByte3Table5760World02Area08713_801F36C0.c",
+    "src/bof3/world/callStateByte3Table5760.c",
     "src/bof3/world/invokeTwoHelpersWorld02Area08713_801F4770.c",
     "src/bof3/world/invokeTwoHelpersWorld02Area08713_801F34D4.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld02Area08713_801F3540.c",

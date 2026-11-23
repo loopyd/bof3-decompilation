@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - seedWorkVectorFromCoordinateRunsThenDrawWhenFocusNearPointWorld00Area03713_801F2C04
-    - '@source: src/bof3/world/seedWorkVectorFromCoordinateRunsThenDrawWhenFocusNearPointWorld00Area03713_801F2C04.c'
+    - stateVectorRunsFocus
+    - '@source: src/bof3/world/stateVectorRunsFocus.c'
     - '@behavior: Loads the work record from the scratchpad pointer cell 0x1F800044. While the work state byte at offset 0x02 is zero it copies the low byte of the work halfword at offset 0x36 into work byte 0x0B, reloads the record, and writes the work vector triple from the three coordinate runs of this payload tail at that index: word 0x34 becomes (run34[index] - 0x80) << 7 plus 0x38, word 0x38 becomes (run38[index] - 0x80) << 7, word 0x3C becomes the signed halfword run3C[index], and work byte 0x02 increments so the seeding step runs once. On later ticks, while bit 2 of the shared gate byte 0x8014832E is set, it reloads the record and calls the record drawer 0x801F2D44 only when both shared focus halfwords 0x8014930A plus 6 and 0x8014930E plus 6 lie within 11 of run34[index] and run38[index].'
   - - 324
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801F31B0
   - - 2148
     - c
-    - setStatus60AndModeIndex6IfGateElse5EWorld00Area03713_801F3464
-    - '@source: src/bof3/world/setStatus60AndModeIndex6IfGateElse5EWorld00Area03713_801F3464.c'
+    - stateModeGateElse5
+    - '@source: src/bof3/world/stateModeGateElse5.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is zero, stores 0x5E into the shared status halfword D_801490A8; while the gate byte is nonzero it stores 0x60 into D_801490A8 and then 6 into the shared mode byte at 0x801D4285.'
   - - 2216
     - c
@@ -53,8 +53,8 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7; while that byte is nonzero the handler index byte at 0x801D4286 is set to 5, and the shared status halfword D_801490A8 is then stored with 0xFFFF on every path.'
   - - 2312
     - c
-    - setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508
-    - '@source: src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508.c'
+    - stateStatus60ModeGate
+    - '@source: src/bof3/world/stateStatus60ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x60 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2380
     - c
@@ -63,28 +63,28 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x60 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2448
     - c
-    - setStatus74AndModeIndex6IfGateElse72World00Area03713_801F3590
-    - '@source: src/bof3/world/setStatus74AndModeIndex6IfGateElse72World00Area03713_801F3590.c'
+    - stateModeGateElse72
+    - '@source: src/bof3/world/stateModeGateElse72.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is zero, stores 0x72 into the shared status halfword D_801490A8; while the gate byte is nonzero it stores 0x74 into D_801490A8 and then 6 into the shared mode byte at 0x801D4285, and both paths return with no other access.'
   - - 2516
     - c
-    - setStatus74AndModeIndex6IfGateElseFFFFWorld00Area03713_801F35D4
-    - '@source: src/bof3/world/setStatus74AndModeIndex6IfGateElseFFFFWorld00Area03713_801F35D4.c'
+    - stateStatus74ModeGate
+    - '@source: src/bof3/world/stateStatus74ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x74 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2584
     - c
-    - setStatus74AndModeIndex6CloneWorld00Area03713_801F3618
-    - '@source: src/bof3/world/setStatus74AndModeIndex6CloneWorld00Area03713_801F3618.c'
+    - stateStatus74ModeClone
+    - '@source: src/bof3/world/stateStatus74ModeClone.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x74 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2652
     - c
-    - setStatus88AndModeIndex6IfGateElse86World00Area03713_801F365C
-    - '@source: src/bof3/world/setStatus88AndModeIndex6IfGateElse86World00Area03713_801F365C.c'
+    - stateModeGateElse86
+    - '@source: src/bof3/world/stateModeGateElse86.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0x86 into D_801490A8 instead and touches nothing else.'
   - - 2720
     - c
-    - setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0
-    - '@source: src/bof3/world/setStatus88AndModeIndex6IfGateElseFFFFWorld00Area03713_801F36A0.c'
+    - stateStatus88ModeGate
+    - '@source: src/bof3/world/stateStatus88ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2788
     - c
@@ -93,23 +93,23 @@ segments:
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x88 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2856
     - c
-    - setStatus9CAndModeIndex6IfGateElse9AWorld00Area03713_801F3728
-    - '@source: src/bof3/world/setStatus9CAndModeIndex6IfGateElse9AWorld00Area03713_801F3728.c'
+    - stateModeGateElse9
+    - '@source: src/bof3/world/stateModeGateElse9.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x9C into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0x9A into D_801490A8 instead and touches nothing else.'
   - - 2924
     - c
-    - setStatus9CAndModeIndex6IfGateElseFFFFWorld00Area03713_801F376C
-    - '@source: src/bof3/world/setStatus9CAndModeIndex6IfGateElseFFFFWorld00Area03713_801F376C.c'
+    - stateStatus9ModeGate
+    - '@source: src/bof3/world/stateStatus9ModeGate.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x9C into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 2992
     - c
-    - setStatus9CAndModeIndex6IfGateElseFFFFCloneWorld00Area03713_801F37B0
-    - '@source: src/bof3/world/setStatus9CAndModeIndex6IfGateElseFFFFCloneWorld00Area03713_801F37B0.c'
+    - stateModeGateClone
+    - '@source: src/bof3/world/stateModeGateClone.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x9C into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3060
     - c
-    - setStatusBDAndByte80146867ZeroIfGateElseFFFFAndByte64WithFrontEndStep3World00Area03713_801F37F4
-    - '@source: src/bof3/world/setStatusBDAndByte80146867ZeroIfGateElseFFFFAndByte64WithFrontEndStep3World00Area03713_801F37F4.c'
+    - stateStatusGateEnd
+    - '@source: src/bof3/world/stateStatusGateEnd.c'
     - '@behavior: Loads the shared gate byte D_801490C7 with lb before it grows a 0x18-byte frame for its one call and branches on that byte. While the gate byte reads zero it stores 0xFFFF into the shared status halfword D_801490A8, then 0x64 into the shared byte at 0x80146867, then runs the shared front-end step helper 0x801BE1B0 with step 3. Once the gate byte is nonzero it stores 0xBD into D_801490A8 and 0 into 0x80146867 and calls nothing. Both arms return through the single epilogue that reloads ra from 0x10(sp) and adds 0x18 back to sp, and both store their load-address high half through $at. Takes no arguments, returns nothing, and is reached only as the script handler word at 0x801F4A4C in the blob D_801F3B34.'
   - - 3156
     - asm
@@ -139,8 +139,8 @@ segments:
     - '@behavior: Runs the shared front-end startup helper at 0x8015C088, then stores 4 into the shared front-end state selector D_801448EB and 0xD into the shared byte D_801448ED while leaving D_801448EC untouched, and returns 0.'
   - - 3860
     - c
-    - toggleModeFlagBit8World00Area03713_801F3B14
-    - '@source: src/bof3/world/toggleModeFlagBit8World00Area03713_801F3B14.c'
+    - toggleModeFlagBit8
+    - '@source: src/bof3/world/toggleModeFlagBit8.c'
     - '@behavior: Flips bit 8 of the shared mode-flag halfword D_80146258 with one lhu/xori/sh read-modify-write and leaves every other bit alone; leaf with no frame, both delay slots stay nop, and the store materialises the 0x8014 page in $at because $v0 holds the xored value.'
   - - 3892
     - textbin

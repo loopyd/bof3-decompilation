@@ -1,5 +1,5 @@
 func_8014D978 = 0x8014D978;
-dispatchWorkByte2Table03acPlcharPlp46700_801CE404 = 0x801CE404;
+callWorkTable03Plchar = 0x801CE404;
 func_801CE448 = 0x801CE448;
 func_801CE514 = 0x801CE514;
 getAndClearPlcharPlp46700_801CE610 = 0x801CE610;
@@ -32,6 +32,6 @@ stepWorkByteBAndClearWorkByte2BWithRecordState12BWhenStepReportsDonePlcharPlp467
 func_801CFF14 = 0x801CFF14;
 claimFrontEndRecordHandler34FromPositionPairStoreStateDistanceAndClearRowByteBPlcharPlp46700_801D010C = 0x801D010C;
 testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp46700_801D01F0 = 0x801D01F0;
-dispatchWorkHalfword2cTable0404PlcharPlp46700_801D0324 = 0x801D0324;
+callWorkTable0404Plchar = 0x801D0324;
 dispatchWorkHalfword2cTable0410PlcharPlp46700_801D0368 = 0x801D0368;
 T_801D03AC = 0x801D03AC;

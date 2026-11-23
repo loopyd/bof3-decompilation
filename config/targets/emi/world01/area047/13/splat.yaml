@@ -27,23 +27,23 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table39c8World01Area04713_801F2C04
+    - callStateTable39World01
     - '@source: src/bof3/world/area04713DispatchTables.c'
   - - 72
     - c
-    - armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48
-    - '@source: src/bof3/world/armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48.c'
+    - armWorkAdvanceState
+    - '@source: src/bof3/world/armWorkAdvanceState.c'
     - '@behavior: reads the state byte at +1 of the work record published by the scratchpad pointer cell 0x1F800044, stores 0x3C into the record 32-bit countdown word at +0xC and writes the state byte back incremented by one, so the next dispatch of the same byte enters the following handler; takes no arguments, returns nothing and uses no frame.'
   - - 108
     - c
-    - tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C
-    - '@source: src/bof3/world/tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C.c'
-    - '@behavior: reads the 32-bit work countdown word at +0xC of the record published by the scratchpad pointer cell 0x1F800044, stores it back decremented by one and tests the decremented value; while that value reads zero it reloads the word with 0x230, calls clearWorkTableByte14At800E4800World01Area04713_801F3298 to release the shared work table at 0x800E4800, then re-reads the scratchpad cell and writes the record state byte at +0x1 back incremented by one, so the dispatcher dispatchStateByte1Table39c8World01Area04713_801F2C04 enters the next step handler of the run. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
+    - tickCountdownClearTable
+    - '@source: src/bof3/world/tickCountdownClearTable.c'
+    - '@behavior: reads the 32-bit work countdown word at +0xC of the record published by the scratchpad pointer cell 0x1F800044, stores it back decremented by one and tests the decremented value; while that value reads zero it reloads the word with 0x230, calls stateWorkTableByte14 to release the shared work table at 0x800E4800, then re-reads the scratchpad cell and writes the record state byte at +0x1 back incremented by one, so the dispatcher callStateTable39World01 enters the next step handler of the run. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
   - - 200
     - c
-    - drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8
-    - '@source: src/bof3/world/drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8.c'
-    - '@behavior: overlay step handler at index 2 of the four-word handler run at 0x801F39C8: draws the soft radial disc at the fixed extent 0x80, runs the per-frame step over the shared work table at 0x800E4800 and discards its report, claims a free record of that table while the shared frame word D_80143E6C reads a multiple of 8, then decrements the record countdown word at +0xC published through the scratchpad pointer cell 0x1F800044 and, once it reads zero, reloads it with 0x10 and increments the record state byte at +0x1 so the dispatcher dispatchStateByte1Table39c8World01Area04713_801F2C04 enters the following handler. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
+    - renderDiscSpawnPeriod
+    - '@source: src/bof3/world/renderDiscSpawnPeriod.c'
+    - '@behavior: overlay step handler at index 2 of the four-word handler run at 0x801F39C8: draws the soft radial disc at the fixed extent 0x80, runs the per-frame step over the shared work table at 0x800E4800 and discards its report, claims a free record of that table while the shared frame word D_80143E6C reads a multiple of 8, then decrements the record countdown word at +0xC published through the scratchpad pointer cell 0x1F800044 and, once it reads zero, reloads it with 0x10 and increments the record state byte at +0x1 so the dispatcher callStateTable39World01 enters the following handler. Takes no arguments, returns nothing and reserves a 0x18-byte frame that holds only the return address.'
   - - 324
     - asm
     - func_801F2D44
@@ -52,28 +52,28 @@ segments:
     - func_801F2DB4
   - - 864
     - c
-    - drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60
-    - '@source: src/bof3/world/drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60.c'
+    - renderFadingGouraudRing
+    - '@source: src/bof3/world/renderFadingGouraudRing.c'
     - '@behavior: projects the record three-word world descriptor through the shared projector func_801AFF04 and then makes two passes over the whole 12-bit turn, each pass handing the extent input pair built from the signed phase halfword at +0x10 plus or minus the amplitude halfword at +0x12 to func_801AFFD8 and emitting 32 translucent Gouraud quads of 0x80 of the turn around the projected point, with black leading vertices and the record countdown byte at +0x17 on the trailing ones, each linked as a 0x24-byte entry at ordering table index 1.'
   - - 1524
     - c
-    - drawSharedPositionGouraudDiscWorld01Area04713_801F31F4
-    - '@source: src/bof3/world/drawSharedPositionGouraudDiscWorld01Area04713_801F31F4.c'
+    - renderPositionGouraudDisc
+    - '@source: src/bof3/world/renderPositionGouraudDisc.c'
     - '@behavior: selects the texture page GetTPage(0, 1, 0x380, 0x100) for the current primitive cursor, appends its 0xC-byte draw-mode primitive, builds the shared three-word world position descriptor from D_80145EC4, D_80145EC8 and D_80145ECC plus 0x800000 on its own frame, and hands it to the fan drawer func_801F2DB4 with its signed halfword argument and the centre colour 0x60 against the rim colour 0, so the disc fades from grey at the projected centre to black at the rim.'
   - - 1688
     - c
-    - clearWorkTableByte14At800E4800World01Area04713_801F3298
-    - '@source: src/bof3/world/clearWorkTableByte14At800E4800World01Area04713_801F3298.c'
+    - stateWorkTableByte14
+    - '@source: src/bof3/world/stateWorkTableByte14.c'
     - '@behavior: zeroes byte 0x14 of each of the 0x10 records of the 0x18-byte-stride work table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop; takes no arguments and returns nothing.'
   - - 1732
     - c
-    - claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4
-    - '@source: src/bof3/world/claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4.c'
+    - claimFreeSubPhase
+    - '@source: src/bof3/world/claimFreeSubPhase.c'
     - '@behavior: scans the 0x18-byte-stride work table at 0x800E4800 with an unsigned byte counter for the first of its 0x10 records whose state byte +0x14 reads zero, marks it active by storing 1 into that byte and clears the record sub-phase byte +0x15, then stops; a table with no free record is left unchanged. Takes no arguments and returns nothing.'
   - - 1804
     - c
-    - updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C
-    - '@source: src/bof3/world/updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C.c'
+    - stateRecordsReportActive
+    - '@source: src/bof3/world/stateRecordsReportActive.c'
     - '@behavior: steps each active record of the 0x18-byte-stride work table at 0x800E4800 with sub-phase arming, countdown expiry and a per-record update call, and reports whether any record was active.'
   - - 2120
     - c

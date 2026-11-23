@@ -97,8 +97,8 @@ segments:
     - '@behavior: Entry 0 of the work state byte 1 handler run at 0x801F50A8. It seeds byte 0x09 of the work record published at the scratchpad pointer cell 0x1F800044 with 0x20, clears the record word at 0x0C, advances the state byte at 0x01 read through a fresh load of that cell and clears the shared effect-bank byte 0x8014832E. Takes no arguments and returns nothing.'
   - - 2092
     - c
-    - advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C
-    - '@source: src/bof3/world/advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C.c'
+    - stateTileUntilSteps
+    - '@source: src/bof3/world/stateTileUntilSteps.c'
     - '@behavior: Advances word 0x0C of the work record at pointer cell 0x1F800044 by 8 and draws it as a signed halfword colour through 0x801F4060, counts the byte at 0x09 down, and when it reaches zero writes 0x140 into the halfword at 0x32, 0x10 into the countdown byte, 0x100 into words 0x0C and 0x10, advances state byte 0x01 and arms the shared effect byte 0x8014832E with 0x1F.'
   - - 2264
     - asm
@@ -116,21 +116,21 @@ segments:
     - '@behavior: Clears the lead byte of each of the first 8 entries of the 0x18-byte-stride work table at 0x800E4800.'
   - - 3304
     - c
-    - claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8
-    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8.c'
+    - claimFreePositionLevel
+    - '@source: src/bof3/world/claimFreePositionLevel.c'
     - '@behavior: Overlay work-record spawn: walks the 8 entries of the 0x18-byte-stride record table at 0x800E4800, claims the first entry whose lead byte reads zero by storing 1 there, and seeds the entry with 0 at byte 1, 0x20 at byte 2, the published scratch work object words 0x34/0x38/0x3C at 0x04/0x08/0x0C, 0x180 at the halfword 0x14, the work object byte 0x5D at byte 0x16 and 0 at byte 0x17.'
   - - 3460
     - c
-    - stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984
-    - '@source: src/bof3/world/stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984.c'
+    - stepActiveActiveRecords
+    - '@source: src/bof3/world/stepActiveActiveRecords.c'
     - '@behavior: Overlay per-frame record pass: fills the 0x20-byte projection scratch through 0x801AFE18, then walks the 8 entries of the 0x18-byte-stride work table at 0x800E4800 and, for every entry whose claim byte at +0x00 reads non-zero, marks the frame active, steps the countdown byte at +0x02 down by one and the halfword at +0x14 down by 0x0C, clears the claim byte on the frame the decremented countdown reaches zero, and calls the per-record projection and draw pass 0x801F3A38 with the entry base in $a0. Returns 1 when at least one entry was claimed this frame and 0 when the whole table is free; both in-image call sites discard the result.'
   - - 3640
     - asm
     - func_801F3A38
   - - 4092
     - c
-    - drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC
-    - '@source: src/bof3/world/drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC.c'
+    - renderTranslucentGouraudTriangle
+    - '@source: src/bof3/world/renderTranslucentGouraudTriangle.c'
     - '@behavior: Effect entry draw pass run by 0x801F3FAC for every one of the 0x20 entries of the 0x2C-byte-stride effect table at 0x800E48C0 with the entry base as its only argument. It stamps the primitive cursor through 0x8017A97C, turns semi-transparency on, projects the entry position words at 0x00/0x04/0x08 into the first vertex of the POLY_G3 at cursor byte 0x08, and builds the vertices at cursor bytes 0x10 and 0x18 from the extent pairs at entry 0x10/0x12/0x14 and 0x18/0x1A/0x1C rotated by the spin angle halfword at 0x24, shifted by 8, scaled by the halfword at 0x28 and translated by the entry position; all three channels of the first vertex take the 0x2A halfword clamped to 0..0xFF, the other two vertices are cleared, and the 0x1C-byte primitive is appended for ordering-table index 1.'
   - - 4752
     - c
@@ -225,8 +225,8 @@ segments:
     - '@behavior: Rejects a nonzero front-side byte D_80143F03, a first argument other than 0x248000, a packed second argument whose high half lies outside 0x35..0x37, and a game-mode byte D_80145E98 outside {0,6,7}; on pass it runs func_8015C088 and stores state entry 0x23 with progress 0, returning 1 from that arm and 0 from every reject.'
   - - 8536
     - c
-    - queueSharedUiElement9x3Size50World04Area17213_801F4D58
-    - '@source: src/bof3/world/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c'
+    - queueSharedUiElement9
+    - '@source: src/bof3/world/queueSharedUiElement9.c'
     - '@behavior: Queues the shared world-marker element at (0x9, 0x3) with size 0x50 through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 8576
     - c

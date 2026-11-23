@@ -42,7 +42,7 @@ segments:
     - func_801EEFA4
   - - 1028
     - c
-    - dispatchStateByte1Table0c40BmagicMagic22603_801EF004
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 1096
     - asm
@@ -63,8 +63,8 @@ segments:
     - '@behavior: Decrement work byte 9; on zero set flag 0x20 and mode 1, clear the tint triplet, and advance work byte 2.'
   - - 2712
     - c
-    - decrementWorkByteABy2WhenNonzeroSubtractTintTripletBy8ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIs80BmagicMagic22603_801EF698
-    - '@source: src/bof3/bmagic/decrementWorkByteABy2WhenNonzeroSubtractTintTripletBy8ThenDecrementGlobalWorkByteBAndInvokeHelperWhenChannelIs80BmagicMagic22603_801EF698.c'
+    - decrementNonzeroSubtractChannel
+    - '@source: src/bof3/bmagic/decrementNonzeroSubtractChannel.c'
     - '@behavior: Decrement nonzero work byte A by 2, subtract 8 from the tint triplet, and on channel 0x80 decrement global work byte B and invoke the helper.'
   - - 2908
     - asm
@@ -81,8 +81,8 @@ segments:
     - '@source: src/bof3/bmagic/magic22603DispatchTables.c'
   - - 4552
     - c
-    - dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic22603_801EFDC8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersWhenWorkBytes0And2SetBmagicMagic22603_801EFDC8.c'
+    - callInvokeHelpersSet
+    - '@source: src/bof3/bmagic/callInvokeHelpersSet.c'
     - '@behavior: Dispatch work byte 2, then invoke helpers when work bytes 0 and 2 are nonzero.'
   - - 4680
     - asm

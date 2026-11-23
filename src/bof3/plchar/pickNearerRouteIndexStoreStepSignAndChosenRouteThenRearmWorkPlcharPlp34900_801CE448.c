@@ -38,7 +38,7 @@ s32 func_801B2D00(u8 index);
  *           only keeps $ra at 0x10 across the calls. The word 0x801CE448
  *           appears once in the payload bytes, at 0x801CF5EC, word 0 of the
  *           sixteen-word handler run that the byte-2 dispatcher
- *           dispatchWorkByte2Tablef5ecPlcharPlp34900_801CE404 indexes with work
+ *           callWorkTablef5Plchar indexes with work
  *           record byte 2 scaled by four, so the body runs as that dispatcher's
  *           step 0, no jal in this payload names it, and its prologue and
  *           return path alone place the boundary.

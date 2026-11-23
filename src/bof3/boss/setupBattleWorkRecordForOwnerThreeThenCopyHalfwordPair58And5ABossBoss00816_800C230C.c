@@ -50,7 +50,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
  * @residual none
  *
  * Byte evidence: this 0x60-byte body differs from the exact sibling
- * setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028
+ * setupOwnerCopyHalfword
  * in exactly two words, the `addu $a0, $zero, $zero` argument materializations
  * at +0x0C and +0x14 that become `addiu $a0, $zero, 0x3` here; the same pair of
  * argument words also separates owner 1 (0x800C2114) and owner 2 (0x800C2210),

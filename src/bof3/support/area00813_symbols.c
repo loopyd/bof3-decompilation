@@ -25,5 +25,5 @@ WEAK_SYMBOL_AT(D_801F2C14, 0x801f2c14);
 /* Local handler table: extern-array binding so `as` expands the indexed
  * relocation with the original `addu $at,$at,$idx` operand order. */
 WEAK_SYMBOL_AT(modeHandlerTable, 0x801f4688);
-WEAK_SYMBOL_AT(areaStateModeHandlerTable, 0x801f46b0);
+WEAK_SYMBOL_AT(areaModeHandlerTable, 0x801f46b0);
 WEAK_SYMBOL_AT(D_801F46EC, 0x801f46ec);

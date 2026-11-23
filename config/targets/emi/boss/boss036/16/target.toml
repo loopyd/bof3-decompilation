@@ -8,7 +8,7 @@ splat = "config/targets/emi/boss/boss036/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table2034BossBoss03616_800C1810.c",
+    "src/bof3/boss/callStateTable2034Boss.c",
     "src/bof3/boss/dispatchStateByte2Table1804BossBoss03616_800C1EE4.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1CDC.c",
 ]
@@ -17,7 +17,7 @@ support_sources = [
     "src/bof3/boss/clearWorkByteBAndByte9ThenRequestResource1AndAdvanceWorkByte2BossBoss03616_800C1F44.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate5BossBoss03616_800C1E4C.c",
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoAndSetSubstate8BossBoss03616_800C1DB8.c",
-    "src/bof3/boss/dispatchStateByte2Table206cBossBoss03616_800C1A54.c",
+    "src/bof3/boss/callStateTable206Boss.c",
     "src/bof3/boss/publishBattleHooksBossBoss03616_800C1E0C.c",
     "src/bof3/boss/invokeHelperBossBoss03616_800C2000.c",
     "src/bof3/boss/noopHandlerBossBoss03616_800C1E98.c",
@@ -28,11 +28,11 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss03616_800C1B5C.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1B24.c",
     "src/bof3/support/boss036_16_psyq.c",
-    "src/bof3/boss/dispatchStateByte1Table2080BossBoss03616_800C1C98.c",
+    "src/bof3/boss/callStateTable2080Boss.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03616_800C1854.c",
-    "src/bof3/boss/stepWorkWord34ByWordCThenAdvanceWorkByte2AtWord18AndCallEnemyReadyBossBoss03616_800C1A98.c",
+    "src/bof3/boss/stepWordEnemyReady.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1D40.c",
-    "src/bof3/boss/dispatchStateByte2Table2064BossBoss03616_800C18B8.c",
-    "src/bof3/boss/dispatchStateByte1Table20bcBossBoss03616_800C1EA0.c",
+    "src/bof3/boss/callStateTable2064Boss.c",
+    "src/bof3/boss/callStateTable20Boss.c",
 ]
 psyq_source = "src/bof3/support/boss036_16_psyq.c"

@@ -10,11 +10,11 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/bmagic/drawThirtyOnePulsingGouraudQuadBandBmagicMagic10103_801EF88C.c",
-    "src/bof3/bmagic/drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C.c",
-    "src/bof3/bmagic/seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC.c",
+    "src/bof3/bmagic/renderTrianglePulsingRadius.c",
+    "src/bof3/bmagic/stateQueueSixteenSlots.c",
     "src/bof3/bmagic/accumulateHalfByteAIntoByteBAndStepWordsThenDecrementGlobalByteBAndInvokeHelperAtZeroBmagicMagic10103_801EF700.c",
     "src/bof3/support/magic101_03_psyq.c",
     "src/bof3/bmagic/magic10103DispatchTables.c",
-    "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte1OnZeroBmagicMagic10103_801EEF20.c",
+    "src/bof3/bmagic/decrementByteAdvanceZero.c",
 ]
 psyq_source = "src/bof3/support/magic101_03_psyq.c"

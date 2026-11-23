@@ -15,5 +15,5 @@ void func_801F1F4C(void) {
 
   D_8014625A &= 0xFFF8u;
   clearUiSelectionState();
-  dispatchCurrentTaskVariantResource();
+  callCurrentTaskVariant();
 }

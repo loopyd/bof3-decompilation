@@ -26,7 +26,7 @@ extern void (*D_800C26C8[])(void); /* @source 0x800C26C8 @kind data */
  * after the index byte and after the table load stay nops, and the epilogue
  * leaves the handler's $v0 untouched, so this shim returns whatever that handler
  * returns. The 68-byte body is instruction-for-instruction identical to the
- * already-exact sibling dispatchStateByte1Table2698BossBoss01316_800C1CC4 and to
+ * already-exact sibling callStateTable2698Boss and to
  * dispatchStateByte2Table1ea4BossBoss01216_800C18B4, differing only in the
  * work-record byte that indexes the table and the %lo table displacement of the
  * scaled-index load.

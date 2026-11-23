@@ -30,36 +30,36 @@ segments:
     - func_801D0C04
   - - 92
     - c
-    - dispatchByte1f294dTable1758Commu0406_801D0C5C
+    - callByte1Table1758
   - - 152
     - asm
     - func_801D0C98
   - - 244
     - c
-    - initializeCommuUiAndArmStateByteUnlessFrontendMode2
-    - '@source: src/bof3/ui/initializeCommuUiAndArmStateByteUnlessFrontendMode2.c'
+    - initializeCommuUnlessFrontend
+    - '@source: src/bof3/ui/initializeCommuUnlessFrontend.c'
     - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise begins one shared front-end frame/update slice through func_80158E50, initialises the commu UI work block through initializeCommuUiState, stores 4 into the state byte at 0x801D1774 and advances the overlay step byte at 0x801F294D by one without returning a value. Word 1 of this overlay''s handler run based at 0x801D1758.'
   - - 332
     - c
-    - drawCommuPanelAndSelectBankEntry
-    - '@source: src/bof3/ui/drawCommuPanelAndSelectBankEntry.c'
+    - renderCommuBankEntry
+    - '@source: src/bof3/ui/renderCommuBankEntry.c'
     - '@behavior: Draws the commu panel, steps the four-bank paged cursor, and publishes a nonzero selected entry and bank to the current eight-byte slot.'
   - - 1500
     - c
-    - drawSlidingPanelAndStartAction5FUnlessUiModeSet
-    - '@source: src/bof3/ui/drawSlidingPanelAndStartAction5FUnlessUiModeSet.c'
+    - renderSlidingStartUnless
+    - '@source: src/bof3/ui/renderSlidingStartUnless.c'
     - '@behavior: Advances the panel step byte at 0x801D1774 while it is below 4, then paints one framed panel at that step through func_801AE3F0 (0x118 by 0x13 at x 0x14) and func_801AED54 (0x113 by 0xF at x 0x16), both at y 0x12 minus twelve times the step, and, while the shared UI work block head byte at 0x80148333 reads zero, begins one shared front-end frame/update slice through func_80158E50, starts action 0x5F, latches the shared frontend mode byte at 0x80143BB0 to 2 and advances the overlay step byte at 0x801F294C by one without returning a value. Word 5 of this overlay''s handler run based at 0x801D1758.'
   - - 1736
     - asm
     - func_801D12C8
   - - 2408
     - c
-    - startFairySlotBattleRecordUnlessFrontendMode2
-    - '@source: src/bof3/ui/startFairySlotBattleRecordUnlessFrontendMode2.c'
+    - audioFairyUnlessFrontend
+    - '@source: src/bof3/ui/audioFairyUnlessFrontend.c'
   - - 2600
     - c
-    - startAction63AndSetFrontendMode2
-    - '@source: src/bof3/ui/startAction63AndSetFrontendMode2.c'
+    - audioAction63SetFrontend
+    - '@source: src/bof3/ui/audioAction63SetFrontend.c'
     - '@behavior: Reads the shared frontend mode byte at 0x80143BB0 and returns while it equals 2; otherwise starts action 0x63 through func_80150224 and latches that mode byte to 2 without returning a value. Last word of this overlay''s handler run at 0x801D1750.'
   - - 2672
     - c

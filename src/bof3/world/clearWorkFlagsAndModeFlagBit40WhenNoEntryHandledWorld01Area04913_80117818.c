@@ -21,9 +21,9 @@ extern u16 D_80146258;
 /* @source 0x80117818
  * @behavior State-7 handler of the thirteen in-image pointers the Splat textbin
  * row D_8011818C places: word 7 at 0x801181A8, the base
- * dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610 indexes
+ * callRunRecordPass indexes
  * from the work object byte at offset 1 once that byte reads 7, the state the
- * state-6 handler lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768 advances to. It runs the overlay
+ * state-6 handler lowerMirrorEveryFourth advances to. It runs the overlay
  * record pass func_80117900, which walks the sixteen records of 0x28-byte stride
  * in the 0x800E4800 work table, advancing and rendering each claimed one, and
  * leaves 1 in its return register once it advanced at least one claimed record
@@ -32,7 +32,7 @@ extern u16 D_80146258;
  * emi/etc/game/00), which zeroes work-object bytes 0x00-0x04 and so returns the
  * overlay to work state 0, and then clears bit 0x40 of the shared world/mode
  * flag halfword 0x80146258, the bit the state-4 handler
- * raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C
+ * raiseFlagReseedRecords
  * raised. Takes no arguments and returns nothing; the 0x18-byte frame only keeps
  * $ra at 0x10 across the two calls, the reset and the flag clear are reached
  * only on the zero path, and the slots after both calls stay nops.

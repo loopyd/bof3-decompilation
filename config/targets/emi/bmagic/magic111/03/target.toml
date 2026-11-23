@@ -8,20 +8,20 @@ splat = "config/targets/emi/bmagic/magic111/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenIncrementWorkWordsCAnd10AndDrawWhenWorkByte0SetBmagicMagic11103_801EF158.c",
+    "src/bof3/bmagic/callIncrementWordsDraw.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11103_801EEC1C.c",
     "src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF238.c",
     "src/bof3/bmagic/clearWorkByte9AndAdvanceWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic11103_801EF870.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic11103_801EEFC4.c",
-    "src/bof3/bmagic/seedWorkWordsCAnd10FromRandClearWorkByte9SetWorkByteATo3CAndAdvanceWorkByte2BmagicMagic11103_801EF1D4.c",
+    "src/bof3/bmagic/stateWordsRandClear.c",
     "src/bof3/bmagic/decrementWorkByte9ThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF2D4.c",
     "src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic11103_801EF914.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperThenClearRecordFlag40ForwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic11103_801EEF44.c",
+    "src/bof3/bmagic/callForwardBattleZero.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenWorkBytes0And2SetBmagicMagic11103_801EF7F8.c",
     "src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic11103_801EF8C4.c",
-    "src/bof3/bmagic/decrementGlobalWorkByteBThenIncrementWorkByte2WhenBelow2BmagicMagic11103_801EF0F0.c",
+    "src/bof3/bmagic/decrementGlobalByteIncrement.c",
     "src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic11103_801EF288.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic11103_801EF138.c",
     "src/bof3/bmagic/magic11103DispatchTables.c",

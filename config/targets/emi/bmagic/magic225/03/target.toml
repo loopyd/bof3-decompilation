@@ -11,12 +11,12 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/countDownWorkByte9ThenSeedPositionHeadingAndHeaderAndAdvanceWorkByte2BmagicMagic22503_801EFEE8.c",
     "src/bof3/bmagic/stepWorkPositionPairGrowWords40And44CountdownByte9AndClearAtZeroBmagicMagic22503_801F021C.c",
-    "src/bof3/bmagic/setEligibleBattlerByte29ToTwoAndInitializeWorkBmagicMagic22503_801EF404.c",
+    "src/bof3/bmagic/stateEligibleBattlerInitialize.c",
     "src/bof3/bmagic/dispatchStateByte2Table03b0BmagicMagic22503_801EFE50.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic22503_801F02D4.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic22503_801F0338.c",
     "src/bof3/support/magic225_03_psyq.c",
     "src/bof3/bmagic/magic22503DispatchTables.c",
-    "src/bof3/bmagic/setWorkByteBToOneAndAdvanceWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22503_801EF628.c",
+    "src/bof3/bmagic/stateByteOneGlobal.c",
 ]
 psyq_source = "src/bof3/support/magic225_03_psyq.c"

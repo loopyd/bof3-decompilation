@@ -38,7 +38,7 @@ extern void func_801A4BC0(s16 x, s16 y, u32 size);
  *           $ra and $s0, and the cell is read once, after the loop.
  *
  * Name evidence: 0x801F4B38 is the state-byte-1 handler table this payload's
- * exact source dispatchStateByte1Table4b38World04Area16813_801F2C38 installs,
+ * exact source callStateTable4World04 installs,
  * and the body's +0x01 store is the state byte that dispatcher reads, so the
  * storage moves the run on to word 1 rather than completing an overlay step;
  * the record byte therefore stays named after its dispatch role. 0x801A4BC0 is
@@ -47,7 +47,7 @@ extern void func_801A4BC0(s16 x, s16 y, u32 size);
  * block spellings beside it), and they read its three arguments as a marker
  * coordinate pair followed by a size, which is the vocabulary this name uses
  * for the three call arguments. The exact sibling source of this payload,
- * setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4,
+ * stateDistanceUiElement,
  * reads the same textbin tail's byte columns as one row table and calls the
  * same queue, so 0x801F4B30 keeps the row-table wording and stays
  * address-anchored, as does every record field this body touches.

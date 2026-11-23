@@ -41,7 +41,7 @@ u32 func_8014D8D4(u8 arg0);
  *           the branch that skips the expiry path. The word 0x801CE514 appears
  *           once in the payload bytes, at 0x801CF5F0, word 1 of the
  *           sixteen-word code-pointer run based at 0x801CF5EC that the byte-2
- *           dispatcher dispatchWorkByte2Tablef5ecPlcharPlp34900_801CE404
+ *           dispatcher callWorkTablef5Plchar
  *           indexes with work record byte 2 scaled by four, so the body runs as
  *           that dispatcher step 1, no jal in this payload names it, and its
  *           prologue and return path alone place the boundary.

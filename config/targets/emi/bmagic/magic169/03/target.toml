@@ -8,15 +8,15 @@ splat = "config/targets/emi/bmagic/magic169/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/decrementWorkByte9ThenCopyIndexedRecordIntoWorkClearByteBSetByte9To8ClearByteAAdvanceByte2AndQueueTwentyFourPoolRecordsClearingByte1StampingOrdinalByteBAndStepByte9PublishingWorkPointerBmagicMagic16903_801EF2CC.c",
+    "src/bof3/bmagic/decrementClearingStampingPublishing.c",
     "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusEightTintedGreyByWorkByte9TimesTwelveWithRimFromSignedBytes5d5e5fTimesWorkByte9BmagicMagic16903_801EFE3C.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0.c",
+    "src/bof3/bmagic/decrementZeroByteZero.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic16903_801F0368.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic16903_801EF03C.c",
 ]
 support_sources = [
     "src/bof3/bmagic/growWorkWord0CProjectPositionPairDecayWord14AccumulateWord3CAndAdvanceWorkByte2At16BmagicMagic16903_801EFBC4.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444.c",
+    "src/bof3/bmagic/decrementSubmitIndexedStore.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenInvokeHelperOnCountdownZeroAndAdvanceWorkByte2BmagicMagic16903_801EF4FC.c",
     "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte2WhenWorkByteBBelow5BmagicMagic16903_801EF640.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic16903_801F03CC.c",

@@ -33,8 +33,8 @@ segments:
     - func_801EEC18
   - - 204
     - c
-    - seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC
-    - '@source: src/bof3/bmagic/seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC.c'
+    - stateQueueSixteenSlots
+    - '@source: src/bof3/bmagic/stateQueueSixteenSlots.c'
     - '@behavior: Seed work byte 8 from the shared record, initialize work counters and queue sixteen action slots, then advance work byte 1.'
   - - 616
     - asm
@@ -44,8 +44,8 @@ segments:
     - func_801EEED4
   - - 800
     - c
-    - decrementWorkByteAAndAdvanceWorkByte1OnZeroBmagicMagic10103_801EEF20
-    - '@source: src/bof3/bmagic/decrementWorkByteAAndAdvanceWorkByte1OnZeroBmagicMagic10103_801EEF20.c'
+    - decrementByteAdvanceZero
+    - '@source: src/bof3/bmagic/decrementByteAdvanceZero.c'
   - - 876
     - asm
     - func_801EEF6C
@@ -54,12 +54,12 @@ segments:
     - func_801EEFCC
   - - 1148
     - c
-    - drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C
-    - '@source: src/bof3/bmagic/drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C.c'
+    - renderTrianglePulsingRadius
+    - '@source: src/bof3/bmagic/renderTrianglePulsingRadius.c'
     - '@behavior: Draw eight translucent Gouraud fan triangles with a phase-pulsed radius and six times work byte A as centre tint.'
   - - 1808
     - c
-    - dispatchStateByte1TablefcbcBmagicMagic10103_801EF310
+    - callStateTablefcbcBmagic
     - '@source: src/bof3/bmagic/magic10103DispatchTables.c'
   - - 1876
     - asm

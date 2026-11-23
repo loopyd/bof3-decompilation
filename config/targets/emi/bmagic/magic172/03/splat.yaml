@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic17203_801EEDD8.c'
   - - 568
     - c
-    - dispatchStateByte1Table0b74BmagicMagic17203_801EEE38
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic17203DispatchTables.c'
   - - 636
     - asm
@@ -66,26 +66,26 @@ segments:
     - '@behavior: dispatches one step of the overlay work handler from the work record published at the scratchpad pointer cell 0x1F800044, whose byte 2 scaled by four indexes the handler table word at 0x801F0B90, then re-reads the record and calls the shared helper at 0x800AF764 and the overlay draw step at 0x801F0908 only when the AND of its bytes 0 and 2 is non-zero'
   - - 2448
     - c
-    - decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionToward8014638CClearByte9AndAdvanceWorkByte2BmagicMagic17203_801EF590
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletAdd800000ToWord3CSetDirectionToward8014638CClearByte9AndAdvanceWorkByte2BmagicMagic17203_801EF590.c'
+    - decrementCopyTripletDirection
+    - '@source: src/bof3/bmagic/decrementCopyTripletDirection.c'
     - '@behavior: entry index 7 of the handler pointer run beginning at 0x801F0B74, whose word at 0x801F0B90 holds this address; reads the scratchpad work object through the pointer cell at 0x1F800044, decrements its byte 9 and, when that countdown reaches zero, copies words 0x34, 0x38 and 0x3C of the record read through 0x801EB4E0 into the work object with 0x800000 added to the third, stores the angle of the word 0x34 and 0x38 differences against the record read through 0x8014638C into work word 0xC through the helper at 0x8017A138, clears byte 9 and advances dispatch byte 2'
   - - 2640
     - c
-    - raiseWorkByte9ByFourWhenBelow10InvokePointHelperStoreHeadingToward8014638CAndAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic17203_801EF650
-    - '@source: src/bof3/bmagic/raiseWorkByte9ByFourWhenBelow10InvokePointHelperStoreHeadingToward8014638CAndAdvanceWorkByte2WhenSlotByte2IsTwoBmagicMagic17203_801EF650.c'
+    - raisePointHeadingIs
+    - '@source: src/bof3/bmagic/raisePointHeadingIs.c'
     - '@behavior: entry with dispatch byte 2 equal to 8, the value the handler at 0x801EF590 writes one frame earlier, and reached through that byte rather than a jal; raises work byte 9 by four only when it is below 0x10, builds a stack point triple from words 0x34, 0x38 and 0x3C of the record published at 0x8014638C and passes it with an unset fourth word and the size literal 0x40 to the point helper at 0x800AF3A0, copies work word 0xC into work word 0x10, stores the angle of the word 0x34 and 0x38 differences against that record into work word 0xC through the helper at 0x8017A138 and advances dispatch byte 2 when byte 0x801EC332 of the action-slot record selected by work byte 4 scaled by 0x78 equals 2'
   - - 2928
     - asm
     - func_801EF770
   - - 3020
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusSixteenTintedByWorkByte9BmagicMagic17203_801EF7CC
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesAroundWorkHalfwords2EAnd30RadiusSixteenTintedByWorkByte9BmagicMagic17203_801EF7CC.c'
+    - renderFanTrianglesAround
+    - '@source: src/bof3/bmagic/renderFanTrianglesAround.c'
     - '@behavior: overlay draw step called twice by the render body at 0x801EEE7C; picks the draw-mode texture page from GetGraphType, arms SetDrawMode on the primitive cursor g_PrimCursor and links that 0xC-byte packet under ordering-table slot 3, publishes a radius of 0x10 at 0x1F800000, a phase of 0 at 0x1F800004 and four tint cells scaled from work byte 9, then emits sixteen translucent Gouraud triangles into slot 3 at 0x1C bytes each sharing the screen centre at work halfwords 0x2E and 0x30, a grey core colour and two rim vertices sampled at the previous and the advanced phase'
   - - 3628
     - c
-    - drawTranslucentGouraudQuadRingBetweenRadiiSixteenAndTwentyFourAtSixteenPhaseStepsAroundWorkHalfwords2EAnd30TintedByWorkByte9BmagicMagic17203_801EFA2C
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenRadiiSixteenAndTwentyFourAtSixteenPhaseStepsAroundWorkHalfwords2EAnd30TintedByWorkByte9BmagicMagic17203_801EFA2C.c'
+    - renderBetweenRadiiTwenty
+    - '@source: src/bof3/bmagic/renderBetweenRadiiTwenty.c'
   - - 4356
     - asm
     - func_801EFD04
@@ -94,8 +94,8 @@ segments:
     - func_801EFFE8
   - - 5832
     - c
-    - drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWithRadiusJitterBmagicMagic17203_801F02C8
-    - '@source: src/bof3/bmagic/drawTranslucentJitteredGouraudSpokesAroundWorkScreenPairFromPhaseWithRadiusJitterBmagicMagic17203_801F02C8.c'
+    - renderJitteredSpokesJitter
+    - '@source: src/bof3/bmagic/renderJitteredSpokesJitter.c'
     - '@behavior: burst drawing step reached from the gathered call sites of the dispatcher at 0x801EEE7C, which seed its 12-bit start phase from rand and pass the radius jitter mask 3; it arms SetDrawMode and links a 0xC-byte packet under ordering-table slot 3, publishes a radius of 0x10 at 0x1F800000, the start phase at 0x1F800004 and work byte 9 scaled by six at 0x1F800006, then repeats while the radius stays below 0x10: it seeds the shade cell 0x1F800002 with the pass counter low five bits shifted left seven, jitters the radius by the phase-shaped product of the shade-driven sampler and the rand mask, advances the phase by the low seven bits of rand within 0xFFF and draws one translucent Gouraud spoke into slot 3 at 0x14 bytes from the work record screen pair at halfwords 0x2E and 0x30, its near end sampled at the open phase and its far end at the advanced one, with a shade-cell core colour and a tint-cell rim colour each repeated with its third of three in blue, both re-derived from the current radius minus 0xC and 0xD scaled by six when work byte 2 is below 3'
   - - 6632
     - c

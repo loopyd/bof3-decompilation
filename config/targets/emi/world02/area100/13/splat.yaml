@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 48
     - c
-    - dispatchStateByte1Table407cWorld02Area10013_801F2C30
+    - callStateTable407World02
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 116
     - c
@@ -54,21 +54,21 @@ segments:
     - func_801F2D60
   - - 1136
     - c
-    - dispatchStateByte1Table4084World02Area10013_801F3070
+    - callStateTable4084World02
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 1204
     - c
-    - seedWorkWord3CScaledDistanceClearWorkOffsetAndVelocityAndAdvanceStateByte1World02Area10013_801F30B4
-    - '@source: src/bof3/world/seedWorkWord3CScaledDistanceClearWorkOffsetAndVelocityAndAdvanceStateByte1World02Area10013_801F30B4.c'
+    - stateScaledOffsetVelocity
+    - '@source: src/bof3/world/stateScaledOffsetVelocity.c'
   - - 1288
     - c
-    - advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area10013_801F3108
-    - '@source: src/bof3/world/advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area10013_801F3108.c'
+    - stateVelocityPastLimit
+    - '@source: src/bof3/world/stateVelocityPastLimit.c'
   - - 1440
     - c
-    - drawWorkQuadAtFixedOffsetWorld02Area10013_801F31A0
-    - '@source: src/bof3/world/drawWorkQuadAtFixedOffsetWorld02Area10013_801F31A0.c'
-    - '@behavior: overlay step handler, entry 2 of the handler table based at 0x801F4084 that dispatchStateByte1Table4084World02Area10013_801F3070 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array, and calls the overlay draw routine at 0x801F31E8 with that array and the fixed word 0x08000000, which that routine adds to the array third word before projecting it, so this handler draws the record quad at the fixed offset 0x08000000. It advances no state byte and returns nothing.'
+    - renderQuadFixedOffset
+    - '@source: src/bof3/world/renderQuadFixedOffset.c'
+    - '@behavior: overlay step handler, entry 2 of the handler table based at 0x801F4084 that callStateTable4084World02 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array, and calls the overlay draw routine at 0x801F31E8 with that array and the fixed word 0x08000000, which that routine adds to the array third word before projecting it, so this handler draws the record quad at the fixed offset 0x08000000. It advances no state byte and returns nothing.'
   - - 1512
     - asm
     - func_801F31E8
@@ -82,8 +82,8 @@ segments:
     - '@behavior: clears byte 0x48 of the work record published through the shared-scratchpad pointer cell 0x1F800044, reloads that cell and hands the record to the shared record-submit helper func_80196718; takes no arguments and returns nothing.'
   - - 2568
     - c
-    - setSharedFlagBankBit45World02Area10013_801F3608
-    - '@source: src/bof3/world/setSharedFlagBankBit45World02Area10013_801F3608.c'
+    - stateSharedFlagBank
+    - '@source: src/bof3/world/stateSharedFlagBank.c'
     - '@behavior: sets bit 0x45 of the shared main-RAM flag bank 0x80144F28 through the shared set-bit helper func_8015B580; takes no arguments and returns nothing.'
   - - 2608
     - c
@@ -99,24 +99,24 @@ segments:
     - func_801F369C
   - - 2852
     - c
-    - setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724
-    - '@source: src/bof3/world/setSharedStateByteAndRequestPair4a2fThenSeedFrontEndRecordHandlerB7AtFixedPositionWorld02Area10013_801F3724.c'
+    - stateSeedFixedPosition
+    - '@source: src/bof3/world/stateSeedFixedPosition.c'
     - '@behavior: raises the shared overlay state byte 0x8014933B to 1, passes the pair 0x4A and 0x2F to the shared request helper func_8015507C, then seeds the row the front-end allocator func_8019601C returns with handler selector 0xB7, occupancy flag 1 and the fixed position words 0x460000 and 0x340000.'
   - - 2988
     - asm
     - func_801F37AC
   - - 3288
     - c
-    - dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8
-    - '@source: src/bof3/world/dispatchSharedModeByteTable2C1CWorld02Area10013_801F38D8.c'
+    - callSharedModeByte
+    - '@source: src/bof3/world/callSharedModeByte.c'
     - '@behavior: dispatches the shared front-end mode byte 0x801448EC through the five-slot jump table at 0x801F2C1C: mode 0 runs func_801C601C with 0 and advances to 1; mode 1 seeds a front-end row of the table at 0x80143FC8 with occupancy 1, handler selector 0x9B and the position words 0x460000 and 0x340000 once the scenario progress byte reads 1, then arms the countdown 0x801448EE with 0x1E and advances to 2; mode 2 steps that countdown and at zero advances to 3 and increments the progress byte; mode 3 runs func_80150224 with 3, raises the shared phase byte 0x80143BB0 to 2 and advances to 4; mode 4 runs func_8015C058 and clears 0x801448EB and the mode byte once the phase byte leaves 2.'
   - - 3692
     - asm
     - func_801F3A6C
   - - 3872
     - c
-    - setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20
-    - '@source: src/bof3/world/setSharedFlagBankBit45AndRequestPair4a1eThenQueueCue109AndMarkerBlocks49x1eTo1fAnd4dx33To34SizeA1World02Area10013_801F3B20.c'
+    - stateBankMarkerSize
+    - '@source: src/bof3/world/stateBankMarkerSize.c'
     - '@behavior: sets bit 0x45 of the main-RAM flag bank 0x80144F28 through the shared set-bit helper func_8015B580, passes the pair 0x4A and 0x1E to the shared request helper func_8015507C, queues the fixed sound cue 0x109 through the shared cue dispatcher func_8015DF18, and then queues four world markers of size 0xA1 through the shared world-marker queue func_801A4BC0 at the two-cell columns x = 0x49 with y = 0x1E and 0x1F and x = 0x4D with y = 0x33 and 0x34.'
   - - 3996
     - asm
@@ -130,17 +130,17 @@ segments:
     - func_801F3C2C
   - - 4248
     - c
-    - dispatchStateByte1Table4f68World02Area10013_801F3C98
+    - callStateTable4World02
     - '@source: src/bof3/world/area10013DispatchTables.c'
   - - 4316
     - c
-    - seedWorkWord3CScaledDistanceAndAdvanceStateByte1World02Area10013_801F3CDC
-    - '@source: src/bof3/world/seedWorkWord3CScaledDistanceAndAdvanceStateByte1World02Area10013_801F3CDC.c'
+    - stateScaledDistanceAdvance
+    - '@source: src/bof3/world/stateScaledDistanceAdvance.c'
   - - 4392
     - c
     - drawWorkCursorQuadWorld02Area10013_801F3D28
     - '@source: src/bof3/world/drawWorkCursorQuadWorld02Area10013_801F3D28.c'
-    - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that dispatchStateByte1Table4f68World02Area10013_801F3C98 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
+    - '@behavior: overlay step handler, entry 1 of the handler table based at 0x801F4F68 that callStateTable4World02 indexes with the work record byte at +1. It loads the work record published at the scratchpad cell 0x1F800044, copies the record words at +0x34, +0x38 and +0x3C into a three-word local array and calls the overlay draw routine at 0x801F3D70 with that array, which projects it through func_801AFF04 and emits one semi-transparent G4 through SetPolyG4. It advances no state byte and returns nothing.'
   - - 4464
     - asm
     - func_801F3D70

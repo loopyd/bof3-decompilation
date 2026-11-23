@@ -12,11 +12,11 @@ sources = [
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress32BossBoss05416_800C1970.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss05416_800C18E0.c",
     "src/bof3/boss/dispatchStateByte1Table1804BossBoss05416_800C19C4.c",
-    "src/bof3/boss/raiseFlag4AndInvokeHelperBossBoss05416_800C1CFC.c",
-    "src/bof3/boss/publishSavedWorkPointerSelectSequence2RestorePreviousThenSetWorkWordCTo8AndAdvanceStateByte1BossBoss05416_800C1A54.c",
+    "src/bof3/boss/raiseInvokeHelperBoss.c",
+    "src/bof3/boss/publishSavedRestorePrevious.c",
 ]
 support_sources = [
-    "src/bof3/boss/dispatchStateByte1LocalHandlerBossBoss05416_800C1D30.c",
+    "src/bof3/boss/callLocalHandlerBoss.c",
     "src/bof3/boss/publishBattleHooksBossBoss05416_800C1930.c",
     "src/bof3/boss/noopHandlerBossBoss05416_800C19BC.c",
     "src/bof3/boss/zeroResultBossBoss05416_800C1968.c",
@@ -24,7 +24,7 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss05416_800C1928.c",
     "src/bof3/boss/noopHandlerBossBoss05416_800C1920.c",
     "src/bof3/boss/noopHandlerBossBoss05416_800C1918.c",
-    "src/bof3/boss/dispatchStateByte1Table2090BossBoss05416_800C1838.c",
+    "src/bof3/boss/callStateTable2090Boss.c",
     "src/bof3/support/boss054_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss054_16_psyq.c"

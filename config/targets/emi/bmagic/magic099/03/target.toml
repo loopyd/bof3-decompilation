@@ -9,18 +9,18 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
-    "src/bof3/bmagic/seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88.c",
+    "src/bof3/bmagic/statePoseNineSlots.c",
     "src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius24ThenSubtractTwoFromByteAAndAdvanceSourceByteBAndCallE5988WhenZeroBmagicMagic09903_801F0314.c",
-    "src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius40ThenCountDownByteAAndAdvanceSourceByteBAndCallE5988BmagicMagic09903_801EF7D8.c",
+    "src/bof3/bmagic/incrementCountDownSource.c",
     "src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius16ThenCountDownByte9AndAdvanceWorkByte2BmagicMagic09903_801F0200.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F0008.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic09903_801EF264.c",
-    "src/bof3/bmagic/seedRandomWorkByteBClearBytes9AndAThenCopyRecordTripletAndAdvanceWorkByte2BmagicMagic09903_801EF2EC.c",
+    "src/bof3/bmagic/callHandlerPopActive.c",
+    "src/bof3/bmagic/callDrawPopActive.c",
+    "src/bof3/bmagic/stateRandomCopyTriplet.c",
     "src/bof3/support/magic099_03_psyq.c",
     "src/bof3/bmagic/magic09903DispatchTables.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09903_801EEC18.c",
-    "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte9ThenAdvanceWorkByte2WhenZeroBmagicMagic09903_801EF3E4.c",
-    "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98.c",
+    "src/bof3/bmagic/incrementByteDecrementZero.c",
+    "src/bof3/bmagic/stateIncrementByteNonzero.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic09903_801EEFDC.c",
 ]
 psyq_source = "src/bof3/support/magic099_03_psyq.c"

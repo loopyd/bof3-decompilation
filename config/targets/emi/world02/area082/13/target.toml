@@ -17,7 +17,7 @@ support_sources = [
     "src/bof3/world/initializeFieldsQueueDraw.c",
     "src/bof3/world/audioSharedSetFrontend.c",
     "src/bof3/world/renderScreenWhiteQueue.c",
-    "src/bof3/world/drawRotatingQuadBandsAndCornersAdvanceWorkByte2QueueCue200At8World02Area08213_801F3E08.c",
+    "src/bof3/world/renderRotatingBandsCorners.c",
     "src/bof3/world/incrementQueueAdvanceDraw.c",
     "src/bof3/world/renderScreenGradientQueue.c",
     "src/bof3/world/queueResetAdvanceScenario.c",
@@ -34,7 +34,7 @@ support_sources = [
     "src/bof3/world/clearWorkTableAt800E4800World02Area08213_801F3910.c",
     "src/bof3/world/decrementCountdownRearmIncrement.c",
     "src/bof3/world/scalePaletteChannelsWorld02Area08213_801F5388.c",
-    "src/bof3/world/advanceHalfword0aByWorkByte79World02Area08213_801F5594.c",
+    "src/bof3/world/stateHalfword0WorkByte79.c",
     "src/bof3/world/stateCountdownOriginIncrement.c",
     "src/bof3/world/stateWorkHalfwordsIncrement.c",
     "src/bof3/world/setWorkWord5World02Area08213_801F55F4.c",
@@ -48,6 +48,6 @@ support_sources = [
     "src/bof3/world/renderRampDimBias.c",
     "src/bof3/support/area082_13_psyq.c",
     "src/bof3/world/spawnEntryOddFrame.c",
-    "src/bof3/world/drawFourCornerQuadBandsDrawWorkRecordIncrementWorkByte9At16AdvanceScenarioProgressAdvanceWorkByte2World02Area08213_801F4008.c",
+    "src/bof3/world/renderCornerQuadBands.c",
 ]
 psyq_source = "src/bof3/support/area082_13_psyq.c"

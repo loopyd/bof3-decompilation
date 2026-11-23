@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table1FBCBossBoss00216_800C1804
-    - '@source: src/bof3/boss/dispatchStateByte1Table1FBCBossBoss00216_800C1804.c'
+    - callStateTable1Boss
+    - '@source: src/bof3/boss/callStateTable1Boss.c'
     - '@behavior: Overlay state dispatcher of this payload, the first code word after its four-byte entry header: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x01 as the index, scales it by four and calls that entry of the local handler run based at 0x800C1FBC with no arguments, leaving the selected handler result in the return register; the run words from 0x800C1F9C are the neighboring reviewed textbin row, whose base entry 0x800C1848 and entry 0x800C18A0 are this payload''s own functions and whose other entries are the shared main-executable handlers at 0x801E..... No word or jal site in the payload names this entry, so the overlay loader calls it.'
   - - 72
     - c
@@ -42,13 +42,13 @@ segments:
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x02 as the index, scales it by four and calls that entry of this payload''s second handler run based at 0x800C1FEC with no arguments, leaving the selected handler result in the return register; the run words from 0x800C1F9C are the neighboring reviewed textbin row, whose base entry 0x800C18E4 and remaining payload entries 0x800C191C through 0x800C1B44 and shared main-executable handlers at 0x801E..... fill the twelve reachable slots. The only payload word naming this entry is the run word 0x800C1FE0 of the neighboring run at 0x800C1FBC, so the dispatcher at 0x800C1804 calls it with no arguments.'
   - - 228
     - c
-    - requestResource6ThenAdvanceWorkByte2BossBoss00216_800C18E4
-    - '@source: src/bof3/boss/requestResource6ThenAdvanceWorkByte2BossBoss00216_800C18E4.c'
+    - requestAdvanceWorkBoss
+    - '@source: src/bof3/boss/requestAdvanceWorkBoss.c'
     - '@behavior: Entry 0 of this payload''s second handler run, the word 0x800C1FEC of the reviewed textbin row D_800C1F9C: calls the shared main-executable resource request helper 0x8014D6B8 with the resource id 6, then loads the work-object pointer published at the scratchpad pointer cell 0x1F800044 once and increments that record''s unsigned byte at offset 0x02, the very byte the dispatcher at 0x800C18A0 indexes the run with, so the next dispatch reaches entry 1 at 0x800C191C. The pointer-cell load sits after the helper call and imports nothing before it; the 0x18-byte frame only keeps $ra at 0x10 across the call. The only payload word naming this entry is the run word 0x800C1FEC, so the dispatcher at 0x800C18A0 calls it with no arguments and its parameters stay structural.'
   - - 284
     - c
-    - runOwnerZeroRecordThenClearPendingBitAndSetFlagTwoBossBoss00216_800C191C
-    - '@source: src/bof3/boss/runOwnerZeroRecordThenClearPendingBitAndSetFlagTwoBossBoss00216_800C191C.c'
+    - runOwnerPendingBit
+    - '@source: src/bof3/boss/runOwnerPendingBit.c'
     - '@behavior: Handler word of this overlay battle work state machine: runs the shared readiness helper at 0x8014DAEC, resolves the owner-0 record index through the shared battle record scan at 0x800AC7D0, hands that 0x98-byte record of the table at 0x801468FC to the shared record routine at 0x8015C264 with 0, -0xE, 0x40, -0x400, 0xFF and 0, and only when that returns zero clears the pending bit of byte +5 of the work object at the scratchpad cell 0x1F800044, raises bit 0x2 of the shared battle flag byte D_80146328 and calls the shared battle work reset at 0x800ACFF4.'
   - - 456
     - c
@@ -68,8 +68,8 @@ segments:
     - noopHandlerBossBoss00216_800C1AA0
   - - 680
     - c
-    - dispatchStateByte1Table2000BossBoss00216_800C1AA8
-    - '@source: src/bof3/boss/dispatchStateByte1Table2000BossBoss00216_800C1AA8.c'
+    - callStateTable2000Boss
+    - '@source: src/bof3/boss/callStateTable2000Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x01, scales it by four and calls the handler pointer at that index of the local handler table based at 0x800C2000, the +0x64 word of the reviewed textbin row D_800C1F9C, with no arguments; the selected handler''s $v0 is left untouched through the epilogue. The original does not bound the index before the scaled table load, and the slots after the index byte and after that load stay nops. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and no word or jal site in the payload names this function, so its caller is outside this overlay and it takes no arguments.'
   - - 748
     - c
@@ -78,13 +78,13 @@ segments:
     - '@behavior: Step setup of this overlay work state machine: publishes this payload data row pointer 0x800C1F9C into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C1C08 into +0xE4 and the in-row data pointer 0x800C1FAC into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls func_8014D978.'
   - - 836
     - c
-    - dispatchStateByte2Table2030BossBoss00216_800C1B44
-    - '@source: src/bof3/boss/dispatchStateByte2Table2030BossBoss00216_800C1B44.c'
+    - callStateTable2030Boss
+    - '@source: src/bof3/boss/callStateTable2030Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 0x02 as the index, scales it by four and calls that entry of this payload''s handler run window based at 0x800C2030 with no arguments, leaving the selected handler result in the return register. The window sits inside the reviewed textbin row D_800C1F9C, so it adds no separate data row; its twelve entries begin with the shared main-executable handlers 0x801E3BAC and 0x801E3BD0 and include this payload''s own 0x800C1B88, 0x800C1C40, 0x800C1C48, 0x800C1C50 and 0x800C1C9C, and its last two words are also the first two entries of the neighboring window at 0x800C2054. The only payload word naming this entry is the run word 0x800C2018, so the dispatcher at 0x800C18A0 calls it with no arguments.'
   - - 904
     - c
-    - accumulateEnemyThenRearmScratchState3BossBoss00216_800C1B88
-    - '@source: src/bof3/boss/accumulateEnemyThenRearmScratchState3BossBoss00216_800C1B88.c'
+    - accumulateEnemyRearmScratch
+    - '@source: src/bof3/boss/accumulateEnemyRearmScratch.c'
     - '@behavior: Step handler of this overlay work state machine: runs the shared readiness helper at 0x8014DAEC, then the shared enemy accumulation pass at 0x801E54EC, raises bit 0x1000 of word +0x100 of the current enemy work record published at 0x801EB4E8, clears bit 0x40 of byte 0 of the work object held by the scratchpad pointer cell 0x1F800044, and writes 3, 0, 0 into bytes 1, 2 and 3 of that object where the pass leaves 2, 0, 0.'
   - - 1032
     - c
@@ -102,8 +102,8 @@ segments:
     - noopHandlerBossBoss00216_800C1C50
   - - 1112
     - c
-    - dispatchStateByte1Table2054BossBoss00216_800C1C58
-    - '@source: src/bof3/boss/dispatchStateByte1Table2054BossBoss00216_800C1C58.c'
+    - callStateTable2054Boss
+    - '@source: src/bof3/boss/callStateTable2054Boss.c'
   - - 1180
     - c
     - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss00216_800C1C9C

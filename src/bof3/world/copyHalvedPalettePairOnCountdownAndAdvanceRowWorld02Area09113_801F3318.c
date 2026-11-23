@@ -17,7 +17,7 @@ extern u8 paletteStageSerial; /* @source 0x80145988 @kind unknown */
  * stamps thirty-two semi-transparent Gouraud wedges at the passed radius and
  * centre shade through the primitive cursor. It was still an asm subsegment of
  * this target when this caller was seeded, so only a prototype is needed. */
-void drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4(
+void renderWedgesFadingBlack(
     s32 arg0, s32 arg1);
 
 typedef struct {
@@ -111,6 +111,6 @@ void copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318(void
   }
 
   paletteStageSerial = paletteStageSerial + 1;
-  drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4(
+  renderWedgesFadingBlack(
       0x12C, 0xFF);
 }

@@ -33,8 +33,8 @@ segments:
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F33EC.'
   - - 72
     - c
-    - copyWorkareaFieldsAndAdvanceMode
-    - '@source: src/bof3/world/copyWorkareaFieldsAndAdvanceMode.c'
+    - copyWorkareaFieldsMode
+    - '@source: src/bof3/world/copyWorkareaFieldsMode.c'
     - '@behavior: copies three workarea fields and advances mode'
   - - 148
     - c
@@ -93,8 +93,8 @@ segments:
     - '@behavior: clears bit 0x28 in the active scenario flags.'
   - - 1356
     - c
-    - setScenarioFlagBit2B
-    - '@source: src/bof3/world/setScenarioFlagBit2B.c'
+    - stateScenarioFlagBit2
+    - '@source: src/bof3/world/stateScenarioFlagBit2.c'
     - '@behavior: sets bit 0x2B in the active scenario flags.'
   - - 1396
     - c
@@ -113,8 +113,8 @@ segments:
     - '@behavior: clears bit 0x2C in the active scenario flags.'
   - - 1516
     - c
-    - setScenarioFlagBit33AndQueueCue106
-    - '@source: src/bof3/world/setScenarioFlagBit33AndQueueCue106.c'
+    - stateScenarioFlagQueue
+    - '@source: src/bof3/world/stateScenarioFlagQueue.c'
     - '@behavior: runs the scenario reward gate for the (4, 3) ability id, queues frontend cue 0x106 and then sets bit 0x33 in the active scenario flags.'
   - - 1584
     - c

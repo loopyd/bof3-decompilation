@@ -376,23 +376,23 @@ void func_801F0C6C(u8 task_index, u8 record_kind_index);
 void func_801F0D3C(u8 task_index, u8 record_kind_index);
 void func_801F0E1C(u8 task_index, u8 record_kind_index);
 void activateTaskStatusC003(u8 task_index);
-void activateScratchTaskWithBandLabel(u8 source_index, u8 task_index, u8 record_kind_index);
+void activateTaskBandLabel(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F0FBC(u8 source_index, u8 task_index, u8 record_kind_index);
 void func_801F1064(u8 task_index, u8 record_kind_index);
 void func_801F1110(u8 task_index, u8 record_kind_index);
 void setVariantTaskStatus(u8 task_index, u8 record_kind_index);
-void activateTaskStatusC00A(u8 task_index);
+void activateTaskStatus(u8 task_index);
 void func_801F1F9C(void);
 void func_801F2020(void);
 void func_801F228C(void);
 
 void clearUiSelectionState(void);
-void dispatchCurrentTaskVariantResource(void);
+void callCurrentTaskVariant(void);
 
 void func_801F0534(void);
 void func_801F0718(u8 source_index, u8 task_index);
 void func_801F08D8(u8 source_index, u8 task_index);
-void activateTaskWithRandomLabel(u8 task_index);
+void activateTaskRandomLabel(u8 task_index);
 
 #define COMMU00_TASK_SLOTS PSX_PTR(volatile Commu00TaskSlot, 0x80146888u)
 

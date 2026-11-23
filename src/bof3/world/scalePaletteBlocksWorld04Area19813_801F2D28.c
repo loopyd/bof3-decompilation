@@ -23,9 +23,9 @@ extern u8 paletteStageSerial;
  *           both blocks it stores 1 into the shared palette-stage byte at
  *           0x80145988, the byte the exact sibling lifts name
  *           paletteStageSerial, and returns nothing. Its callers inside this
- *           payload are advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48,
+ *           payload are stateAfterScalePass,
  *           which passes the scale 0, and
- *           advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8,
+ *           stateRescaleBlocksUnity,
  *           which passes work-record byte +9 as the scale.
  * @status exact
  * @match 100.00

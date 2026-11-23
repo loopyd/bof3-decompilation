@@ -8,18 +8,18 @@ splat = "config/targets/emi/bmagic/magic075/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/copySharedRecordWordTripletClearWorkByteBAdvanceWorkByte1ClaimSevenActionSlotsThenSubmitRecordCopySixteenHalfwordsSet80145988InvokeHelper100BmagicMagic07503_801EEC70.c",
+    "src/bof3/bmagic/copySevenActionSixteen.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/decrementEffectRecordCounterTripletBy2ThenSubmitEffectIndexForwardBattleByteRaiseFlag4AndInvokeHelperWhenFirstCounterIsZeroBmagicMagic07503_801EEEB0.c",
+    "src/bof3/bmagic/decrementForwardFirstIs.c",
     "src/bof3/bmagic/incrementGlobalWorkByteBAndInvokeHelperWhenHelperReadyBmagicMagic07503_801EF2A8.c",
-    "src/bof3/bmagic/storeDoubleWorkByteBIntoWorkByteARecordTripletAndAdvanceWorkByte1WhenWorkByteBIs7BmagicMagic07503_801EEDE0.c",
+    "src/bof3/bmagic/stateDoubleIntoTriplet.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic07503_801EEC10.c",
     "src/bof3/bmagic/drawSixteenGouraudRingQuadsWithParityJitterBmagicMagic07503_801EF500.c",
     "src/bof3/support/magic075_03_psyq.c",
     "src/bof3/bmagic/magic07503DispatchTables.c",
     "src/bof3/bmagic/drawSixteenTriangleFanWithParityJitterBmagicMagic07503_801EF2F4.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenSeedEffectStateFromAngularSamplesAndAdvanceWorkByte2BmagicMagic07503_801EF0D0.c",
+    "src/bof3/bmagic/decrementEffectAngularSamples.c",
 ]
 psyq_source = "src/bof3/support/magic075_03_psyq.c"

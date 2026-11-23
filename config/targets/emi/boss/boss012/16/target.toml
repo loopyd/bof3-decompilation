@@ -8,7 +8,7 @@ splat = "config/targets/emi/boss/boss012/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/drawWorkHalfword20FrameThenAdvanceWord20ByTwoAndSetStateByte3To3WhenWord20Reaches56BossBoss01216_800C1A24.c",
+    "src/bof3/boss/renderFrameTwoBoss.c",
     "src/bof3/boss/setStateByte3To1WhenHelperReturnsNonzeroBossBoss01216_800C193C.c",
 ]
 support_sources = [
@@ -21,7 +21,7 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss01216_800C1B50.c",
     "src/bof3/boss/publishBattleHooksBossBoss01216_800C1B68.c",
     "src/bof3/support/boss012_16_psyq.c",
-    "src/bof3/boss/initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8.c",
+    "src/bof3/boss/setupModeFlagProgress.c",
     "src/bof3/boss/dispatchStateByte1Table1e74BossBoss01216_800C1804.c",
     "src/bof3/boss/dispatchStateByte3Table1ebcBossBoss01216_800C18F8.c",
 ]

@@ -17,4 +17,4 @@ extern u32 workByte2HandlerTableB[];
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table0994BmagicMagic09903_801EF16C, workByte1HandlerTable);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable0994Bmagic, workByte1HandlerTable);

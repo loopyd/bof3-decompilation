@@ -13,7 +13,7 @@ extern u8 D_801D4285;
  *           Takes no arguments and returns nothing; leaf with no frame, and the
  *           7 is materialised in $v0 to fill the branch delay slot.
  *           Shape: the 68 bytes here are the same body as the recorded exact
- *           sibling setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4,
+ *           sibling stateStatus7ModeGate,
  *           0x44 bytes earlier: a byte comparison of the two payload spans
  *           differs in exactly one word, the internal `j` immediate at
  *           0x801F2D50, whose value moves by 0x44 - the delta between the two

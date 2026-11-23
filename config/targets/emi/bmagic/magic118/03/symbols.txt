@@ -1,13 +1,13 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-copyRecordTripletQueueEightSlotsCopyTwo15HalfwordBandsWithBit15ThenAdvanceWorkByte1BmagicMagic11803_801EECD4 = 0x801EECD4;
+copyEightSlotsBands = 0x801EECD4;
 func_801EEE20 = 0x801EEE20;
 incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C = 0x801EEE8C;
 decrementWorkByte9ThenIncrementWorkByte1WhenZeroBmagicMagic11803_801EEEC0 = 0x801EEEC0;
 func_801EEF0C = 0x801EEF0C;
 func_801EEF6C = 0x801EEF6C;
 decrementWorkByte9ThenWhenZeroCopyWorkWordTripletSetWord20To8ByteATo2Word14To0ByteBTo10Byte9To20AndAdvanceWorkByte1BmagicMagic11803_801EEFF4 = 0x801EEFF4;
-addWorkByteAIntoWorkWord20ThenAddWorkWord20ToWord14DecrementWorkByte9ByTwoAndAdvanceWorkByte1AtSixteenBmagicMagic11803_801EF0A4 = 0x801EF0A4;
+workIntoTwoSixteen = 0x801EF0A4;
 func_801EF108 = 0x801EF108;
 func_801EF194 = 0x801EF194;
 projectWorkRecordPositionAndInstallTransformWithZeroRotationBmagicMagic11803_801EF60C = 0x801EF60C;

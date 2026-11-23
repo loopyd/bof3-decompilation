@@ -41,12 +41,12 @@ s32 claimEndPointPair(
     s32 x0, s32 y0, s32 x1, s32 y1);
 
 /* Stage of this payload at 0x801F504C, lifted in
- * drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C.c: it
+ * renderExtentReturnNext.c: it
  * takes the elapsed step value and its stage code, draws that stage from the
  * advanced work record position and answers 1 until the stage expires. The
  * original narrows that answer with an andi, so it is declared with a word
  * result here. */
-s32 drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C(
+s32 renderExtentReturnNext(
     s32 arg0, s32 arg1);
 
 /* Shared cue request of the main executable: it takes the cue id in the low
@@ -159,6 +159,6 @@ u8 drawRecordAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area1451
   if (t == stage->length) {
     func_8015DF18(0x206);
   }
-  return drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C(
+  return renderExtentReturnNext(
       t, stage->next);
 }

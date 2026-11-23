@@ -1,11 +1,11 @@
-stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40 = 0x801F2C40;
-dispatchWorkByte4Table4988World02Area09913_801F2D68 = 0x801F2D68;
+stepCueSequenceClaim = 0x801F2C40;
+callWorkByte4Table4988 = 0x801F2D68;
 armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC = 0x801F2DAC;
-stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC = 0x801F2DEC;
-dispatchWorkByte4Table49a0World02Area09913_801F2E58 = 0x801F2E58;
+stepAccumulatorPhaseConsume = 0x801F2DEC;
+callWorkByte4Table49 = 0x801F2E58;
 func_801F2E9C = 0x801F2E9C;
 func_801F2FD4 = 0x801F2FD4;
-setScenarioFlagBit1F = 0x801F30A8;
+stateScenarioFlagBit1 = 0x801F30A8;
 queueSharedUiElement23x4FSize50Or51OnFlagPair1C1DWorld02Area09913_801F30D0 = 0x801F30D0;
 D_801F314C = 0x801F314C;
 workByte4HandlersWorld02Area09913 = 0x801F4988;

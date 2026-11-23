@@ -8,20 +8,20 @@ splat = "config/targets/emi/world04/area198/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388.c",
+    "src/bof3/world/stepAccumulatorsLevelTriple.c",
     "src/bof3/world/seedWorkPositionTripleFromByte7RecordApplyLookupRecordAndRequestResourceThenArmState1World04Area19813_801F3A68.c",
-    "src/bof3/world/advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80.c",
+    "src/bof3/world/stateWorkScenarioProgress0.c",
     "src/bof3/world/fixedPointToUnitsWorld04Area19813_801F3DCC.c",
-    "src/bof3/world/advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48.c",
+    "src/bof3/world/stateAfterScalePass.c",
     "src/bof3/world/invokeHelperWithWorkWorld04Area19813_801F2FD4.c",
     "src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C.c",
     "src/bof3/world/invokeHelperWithWorkWhenSharedFrontEndPhaseByte5ElseLowerRecordHalfword0aWorld04Area19813_801F35A4.c",
-    "src/bof3/world/advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8.c",
+    "src/bof3/world/stateRescaleBlocksUnity.c",
 ]
 support_sources = [
     "src/bof3/support/area198_13_psyq.c",
     "src/bof3/world/area19813DispatchTables.c",
     "src/bof3/world/scalePaletteBlocksWorld04Area19813_801F2D28.c",
-    "src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854.c",
+    "src/bof3/world/publishIndexSeedPosition.c",
 ]
 psyq_source = "src/bof3/support/area198_13_psyq.c"

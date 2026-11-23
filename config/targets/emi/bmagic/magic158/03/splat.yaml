@@ -36,7 +36,7 @@ segments:
     - func_801EEE90
   - - 752
     - c
-    - dispatchStateByte1Tablef784BmagicMagic15803_801EEEF0
+    - callStateTablef784Bmagic
     - '@source: src/bof3/bmagic/magic15803DispatchTables.c'
   - - 820
     - asm
@@ -46,8 +46,8 @@ segments:
     - func_801EEFBC
   - - 1344
     - c
-    - decrementWorkDistanceBy60AdvanceWorkBytes9AndAUpTo10ThenAdvanceWorkByte2WhenDistanceMatchesRecordBmagicMagic15803_801EF140
-    - '@source: src/bof3/bmagic/decrementWorkDistanceBy60AdvanceWorkBytes9AndAUpTo10ThenAdvanceWorkByte2WhenDistanceMatchesRecordBmagicMagic15803_801EF140.c'
+    - decrementDistanceUpMatches
+    - '@source: src/bof3/bmagic/decrementDistanceUpMatches.c'
   - - 1480
     - asm
     - func_801EF1C8

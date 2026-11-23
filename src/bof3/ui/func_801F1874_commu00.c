@@ -12,7 +12,7 @@
 void func_801F1874(void) {
   if (func_80162D00() != 0) {
     clearUiSelectionState();
-    dispatchCurrentTaskVariantResource();
+    callCurrentTaskVariant();
     func_801F0320();
     func_801EF52C();
   }

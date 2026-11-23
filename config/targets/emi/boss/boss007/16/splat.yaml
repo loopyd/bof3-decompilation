@@ -58,8 +58,8 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table1ddcBossBoss00716_800C190C.c'
   - - 336
     - c
-    - publishWorkStepHandlerAndDataThenClearWorkByte8AndSetStateTo2BossBoss00716_800C1950
-    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenClearWorkByte8AndSetStateTo2BossBoss00716_800C1950.c'
+    - publishStepDataClear
+    - '@source: src/bof3/boss/publishStepDataClear.c'
     - '@behavior: Step setup, entry 0 of the twelve-word handler run 0x800C1DDC: publishes this payload data row pointer 0x800C1D84 into +0xEC of the current enemy work record from 0x801EB4E8, the next step dispatcher 0x800C19B4 into +0xE4 and the in-row pointer 0x800C1D98 into +0xE8, clears byte +8 of the work record published at the scratchpad pointer cell 0x1F800044, stores 2 into that record byte +1 and calls func_8014D978.'
   - - 436
     - c
@@ -71,7 +71,7 @@ segments:
     - noopHandlerBossBoss00716_800C19EC
   - - 500
     - c
-    - clearRecordHalfwordFourBossBoss00716_800C19F4
+    - stateHalfwordFourBoss
   - - 516
     - c
     - noopHandlerBossBoss00716_800C1A04
@@ -85,8 +85,8 @@ segments:
     - func_800C1A44
   - - 1204
     - c
-    - initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4
-    - '@source: src/bof3/boss/initModeTuple530ByBattleFlagBitZeroAndClearEffectBankBossBoss00716_800C1CB4.c'
+    - setupBitEffectBank
+    - '@source: src/bof3/boss/setupBitEffectBank.c'
     - '@behavior: Battle-flag state switch and first member of this overlay hook trio: loads the shared battle flag byte 0x80146328 once and tests bit 0x1; while the bit is set it stores the mode byte 6 into 0x80146255, 6 into 0x80146874 and 0x32 into the step byte 0x80146875, and otherwise it stores 2 into 0x80146255, writes the loaded value with bit 0x8 raised back to 0x80146328, clears the effect-bank byte 0x8014832E, advances 0x80146875 by one and stores 4 into the selection index 0x80145029; both paths then run initModeTuple530.'
   - - 1360
     - c

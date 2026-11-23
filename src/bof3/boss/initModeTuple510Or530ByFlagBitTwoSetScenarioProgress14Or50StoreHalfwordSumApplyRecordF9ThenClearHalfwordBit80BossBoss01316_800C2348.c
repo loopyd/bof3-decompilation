@@ -37,7 +37,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
 
 /* @source 0x800C2348
  * @behavior Battle-hook installer step of this overlay and first member of the
- * handler trio that publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8
+ * handler trio that publishHooksSeedCountdown
  * (0x800C20D8) materializes into the shared battle hook slot 0x801463A4: that
  * installer stores this address with lui/addiu, so no jal in the payload reaches
  * this body. It loads the shared battle flag byte 0x80146328 once and tests bit

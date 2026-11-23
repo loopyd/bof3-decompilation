@@ -36,7 +36,7 @@ segments:
     - func_801EF118
   - - 1504
     - c
-    - dispatchStateByte1Table066cBmagicMagic05903_801EF1E0
+    - callStateTable066Bmagic
     - '@source: src/bof3/bmagic/magic05903DispatchTables.c'
   - - 1572
     - c
@@ -45,8 +45,8 @@ segments:
     - '@behavior: Step handler for state 0 of the overlay work object published at the scratchpad pointer cell 0x1F800044. It reads that object unsigned byte 0x2, scales it by four and calls the handler pointer at that index of the work byte 2 handler table based at 0x801F0670. When the handler returns it re-reads the cell and, only when the record byte 0x0 and the byte 0x2 are both non-zero, calls the projection helper at 0x801EF638, then the sixteen positional draw calls to 0x801EF70C and finally PopMatrix, restoring the GTE stack the projection helper pushed. The first eight draw calls subtract the record byte 0x9 from the base angles 0x00 through 0x38 and mask to the six bit turn with offset 0x20; the next eight subtract twice that byte from the base angles 0x04 through 0x3C and mask to 0x3E with offset 0x50. Each draw re-reads the cell and the byte instead of holding the record pointer across the calls. The 0x18-byte frame only keeps $ra across the indirect call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 2244
     - c
-    - clearWorkBytes9AThenAdvanceWorkByte2BmagicMagic05903_801EF4C4
-    - '@source: src/bof3/bmagic/clearWorkBytes9AThenAdvanceWorkByte2BmagicMagic05903_801EF4C4.c'
+    - stateWorkAdvanceBmagic
+    - '@source: src/bof3/bmagic/stateWorkAdvanceBmagic.c'
     - '@behavior: Step handler published at index 1 of the work byte 2 handler table based at 0x801F066C. It clears work object bytes 0x9 and 0xA with byte-width zero stores through the scratchpad pointer cell at 0x1F800044, re-materializing the cell before each store, then re-reads the cell and adds one to work byte 0x2 at byte width, advancing the byte 0x2 dispatch to the next handler. Leaf with no frame; the closing store sits in the return delay slot. Takes no arguments, returns nothing and reads or writes no other state.'
   - - 2308
     - c
@@ -64,15 +64,15 @@ segments:
     - '@behavior: Per-frame step of an overlay work-object handler. It reads the scratchpad work-object pointer cell at 0x1F800044 once and advances that object unsigned byte 0x9 by one with a byte-width add, re-reads the cell and subtracts one from unsigned byte 0xA with a byte-width add. It tests the byte it just stored there, truncated to 0xFF in the stored register rather than re-loaded, against zero, and only on that equality loads the shared battle work pointer at 0x801EB4E0, decrements its byte 0xB with a byte-width add and calls the shared helper at 0x801E5988 with the store in the delay slot. The function takes no arguments, returns nothing and reads or writes no other state.'
   - - 2616
     - c
-    - copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638
-    - '@source: src/bof3/bmagic/copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638.c'
+    - copyHalfwordInstallTransform
+    - '@source: src/bof3/bmagic/copyHalfwordInstallTransform.c'
     - '@behavior: Pushes the GTE matrix stack, copies the position word pair 0x34 and 0x38 and the halfword 0x3E of the shared battle record published at the pointer cell 0x801EB4E0 into the same offsets of the work record published at the scratchpad pointer cell 0x1F800044, zeros a three halfword triplet, projects the copied fields as a second halfword triplet through RotTrans into the translation field of a 0x20-byte scratch matrix, turns the zeroed triplet into that matrix through RotMatrix, composes the shared matrix at 0x801492E8 under it through MulMatrix2 and installs the result through SetRotMatrix and SetTransMatrix. The 0x50-byte frame keeps ra and s0 across the matrix calls; takes no arguments, returns nothing and the caller pairs it with a PopMatrix.'
   - - 2828
     - asm
     - func_801EF70C
   - - 4680
     - c
-    - dispatchStateByte1Table0680BmagicMagic05903_801EFE48
+    - callStateTable0680Bmagic
     - '@source: src/bof3/bmagic/magic05903DispatchTables.c'
   - - 4748
     - c

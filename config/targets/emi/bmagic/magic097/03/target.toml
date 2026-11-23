@@ -13,7 +13,7 @@ support_sources = [
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38.c",
     "src/bof3/bmagic/magic09703DispatchTables.c",
     "src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByteAByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic09703_801EF488.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWorkRecordAndPopWhenWorkBytes2And0SetBmagicMagic09703_801EEFC8.c",
+    "src/bof3/bmagic/callDrawRecordPop.c",
     "src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairTintedByWorkByteAWithJitteredRadiusBmagicMagic09703_801F083C.c",
     "src/bof3/bmagic/drawSeventeenSliceJitteredFourLayerGouraudRibbonTintedByWorkByteAAtSixteenPhaseStepsBmagicMagic09703_801EF5C4.c",
 ]

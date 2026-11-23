@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world/stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40.c",
-    "src/bof3/world/dispatchWorkByte4Table4988World02Area09913_801F2D68.c",
-    "src/bof3/world/dispatchWorkByte4Table49a0World02Area09913_801F2E58.c",
+    "src/bof3/world/stepCueSequenceClaim.c",
+    "src/bof3/world/callWorkByte4Table4988.c",
+    "src/bof3/world/callWorkByte4Table49.c",
     "src/bof3/world/armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC.c",
-    "src/bof3/world/stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC.c",
+    "src/bof3/world/stepAccumulatorPhaseConsume.c",
     "src/bof3/world/queueSharedUiElement23x4FSize50Or51OnFlagPair1C1DWorld02Area09913_801F30D0.c",
-    "src/bof3/world/setScenarioFlagBit1F.c",
+    "src/bof3/world/stateScenarioFlagBit1.c",
     "src/bof3/support/area099_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area099_13_psyq.c"

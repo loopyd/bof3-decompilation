@@ -10,7 +10,7 @@ load_address = 0x801D0C00
 sources = [
     "src/bof3/ui/drawMastersCommandPanelShisu00_801D3320.c",
     "src/bof3/ui/renderPartyMemberBox.c",
-    "src/bof3/ui/emitFlatLineRectangleBorderShisu00_801D432C.c",
+    "src/bof3/ui/emitFlatRectangleBorder.c",
     "src/bof3/ui/mapByte80144Code.c",
     "src/bof3/ui/runShisuUiStepUpdateShisu00_801D2D88.c",
     "src/bof3/ui/sumLevelExpShisu00_801D5F78.c",
@@ -39,7 +39,7 @@ sources = [
     "src/bof3/ui/renderPartyMemberParameter.c",
     "src/bof3/ui/drawAbilityListPanelShisu00_801D835C.c",
     "src/bof3/ui/renderEquipCategoryList.c",
-    "src/bof3/ui/drawEquipCategoryAvailabilityListPanelShisu00_801D7BFC.c",
+    "src/bof3/ui/renderEquipCategoryAvailability.c",
     "src/bof3/ui/drawTexturedWindowFrameShisu00_801D76F4.c",
 ]
 support_sources = [

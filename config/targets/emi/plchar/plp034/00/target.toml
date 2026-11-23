@@ -8,10 +8,10 @@ splat = "config/targets/emi/plchar/plp034/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/dispatchWorkByte2Table02f4PlcharPlp03400_801CE404.c",
-    "src/bof3/plchar/dispatchWorkByte2Table0300PlcharPlp03400_801CE72C.c",
-    "src/bof3/plchar/dispatchWorkByte2Table030cPlcharPlp03400_801CF12C.c",
-    "src/bof3/plchar/dispatchWorkByte2Table0318PlcharPlp03400_801CF338.c",
+    "src/bof3/plchar/callWorkTable02Plchar.c",
+    "src/bof3/plchar/callWorkTable0300Plchar.c",
+    "src/bof3/plchar/callWorkTable030Plchar.c",
+    "src/bof3/plchar/callWorkTable0318Plchar.c",
 ]
 support_sources = [
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp03400_801D0094.c",
@@ -19,17 +19,17 @@ support_sources = [
     "src/bof3/plchar/getAndClearPlcharPlp03400_801D025C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable034cPlcharPlp03400_801D026C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTable0358PlcharPlp03400_801D02B0.c",
-    "src/bof3/plchar/dispatchWorkByte3Table0320PlcharPlp03400_801CF37C.c",
-    "src/bof3/plchar/dispatchWorkByte3Table0334PlcharPlp03400_801CFC38.c",
+    "src/bof3/plchar/callWorkTable0320Plchar.c",
+    "src/bof3/plchar/callWorkTable0334Plchar.c",
     "src/bof3/plchar/dropFrontEndRecordSelectionAndStepBackDispatchStatePlcharPlp03400_801CF8AC.c",
     "src/bof3/plchar/clearStateByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp03400_801CFE14.c",
     "src/bof3/plchar/queueCue2CPlus100ThenSelectWorkSequenceFromByte8ArmCountdownAndAdvanceWorkByte3PlcharPlp03400_801CFC7C.c",
     "src/bof3/support/plp034_00_psyq.c",
     "src/bof3/plchar/requestResourceForWorkByte8ThenAdvanceWorkByte3WhenHelperReadyPlcharPlp03400_801CF84C.c",
     "src/bof3/plchar/claimFrontEndRecordHandler34FromPositionPairStoreStateDistancePlus200AndSetRowByteBPlcharPlp03400_801CFB4C.c",
-    "src/bof3/plchar/probeWorkNeighbourIndexThenQueueCueSelectSequenceClearStepSignAndSelectionArmCountdownAndAdvanceWorkStepPlcharPlp03400_801CF3C0.c",
+    "src/bof3/plchar/probeNeighbourCueSign.c",
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp03400_801D0160.c",
-    "src/bof3/plchar/tickWorkCountdownByteAThenSeedFrontEndRowFoundBySlotSearchAndQueueCue10bElseMarkProjectedRecordClaimProjectedCellAndAdvanceWorkByte3PlcharPlp03400_801CF4E0.c",
+    "src/bof3/plchar/tickFoundSearchMark.c",
     "src/bof3/plchar/testProjectedWorkPositionAgainstWorkRecordsHelperOrMapCodesF0F1F4F6F7PlcharPlp03400_801CFEAC.c",
 ]
 psyq_source = "src/bof3/support/plp034_00_psyq.c"

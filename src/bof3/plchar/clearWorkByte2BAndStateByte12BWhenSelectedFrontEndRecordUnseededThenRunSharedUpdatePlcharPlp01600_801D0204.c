@@ -41,7 +41,7 @@ void func_8014D978(void);
  * @behavior Work byte 3 == 2 step of this overlay, the third handler of the
  *           work-byte-3 run based at 0x801D0684: it is the word 0x801D0204 at
  *           0x801D068C inside the thirty-word code-pointer run at 0x801D0630,
- *           which the dispatcher dispatchWorkByte3Table0684PlcharPlp01600_801D001C
+ *           which the dispatcher callWorkTable0684Plchar
  *           indexes from that base, so it takes no arguments and any result is
  *           discarded. It reads the work record published at the scratchpad
  *           pointer cell 0x1F800044, takes that record's unsigned byte 0x0B as

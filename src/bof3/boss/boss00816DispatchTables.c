@@ -18,7 +18,7 @@ extern void (*D_800C2690[])(void); /* @source 0x800C2690 @kind data */
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table2660BossBoss00816_800C1804, D_800C2660);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2660Boss, D_800C2660);
 
 /* @source 0x800C1CD8
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -27,7 +27,7 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table2660BossB
  * local handler table based at 0x800C26CC. The selected handler's $v0 is left
  * untouched by the epilogue, so this shim's result is whatever that handler
  * returns. Same shape as the already-exact sibling
- * dispatchStateByte1Table2660BossBoss00816_800C1804, which reads the same
+ * callStateTable2660Boss, which reads the same
  * dispatch byte through the table based at 0x800C2660. Takes no arguments and
  * forwards none.
  * @status exact
@@ -43,14 +43,14 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table26ccBossB
  * local handler table based at 0x800C2708. The selected handler's $v0 is left
  * untouched by the epilogue, so this shim's result is whatever that handler
  * returns. Same shape as the already-exact sibling
- * dispatchStateByte1Table2660BossBoss00816_800C1804, which reads the same
+ * callStateTable2660Boss, which reads the same
  * dispatch byte through the table based at 0x800C2660. Takes no arguments and
  * forwards none.
  * @status exact
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table2708BossBoss00816_800C1DC4, D_800C2708);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable2708Boss, D_800C2708);
 
 /* @source 0x800C18A0
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -63,4 +63,4 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table2708BossB
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table2690BossBoss00816_800C18A0, D_800C2690);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, callStateTable2690Boss, D_800C2690);

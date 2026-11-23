@@ -5,7 +5,7 @@
  *           0x1C-byte-stride record table at 0x800E4800 - the main-RAM work
  *           area this overlay shares with the world and scenario overlays, whose
  *           0x1C-stride byte-0 boundary this target's exact
- *           resetWorkTableAt800E4800AndRearmOneShotLatchesWorld02Area09813_801F4D44
+ *           stateOneShotLatches
  *           clears right before this span - and returns the address of the first
  *           entry whose lead byte reads zero, or zero once all 0x10 entries are
  *           taken. It reads only each entry's lead byte, writes nothing, makes no
@@ -18,7 +18,7 @@
  *           copy in that branch's delay slot.
  *
  *           The lead byte is the claim flag: the payload's only caller, the exact
- *           incrementPhaseFrameCountSpawnRecordEveryFourthTickRunRecordPassAndAdvanceStateOnExpiryWorld02Area09813_801F3EB0,
+ *           incrementSpawnFourthExpiry,
  *           reaches this address only when the phase countdown's low two bits read
  *           clear, tests the returned pointer for zero and otherwise hands it to
  *           the overlay record spawn 0x801F4DBC, which seeds the record. The

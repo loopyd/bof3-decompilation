@@ -56,7 +56,7 @@ extern void func_80166C48(u8* row, s32 mode);
  *
  * @source 0x801CE9F4
  * @behavior Work byte 3 == 2 step of the byte-3 dispatcher
- *           dispatchWorkByte3Tablef600PlcharPlp34900_801CE654, which indexes the
+ *           callWorkTablef600Plchar, which indexes the
  *           code-pointer run based at 0x801CF600 with work record byte 3 scaled
  *           by four. The body address appears once in the payload bytes, as the
  *           run word 0x801CF608, entry 2 of that dispatcher view and index 7 of

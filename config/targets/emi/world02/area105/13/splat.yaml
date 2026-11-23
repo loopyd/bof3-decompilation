@@ -27,12 +27,12 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3320World02Area10513_801F2C04
+    - callStateTable3320World02
     - '@source: src/bof3/world/area10513DispatchTables.c'
   - - 72
     - c
-    - queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48
-    - '@source: src/bof3/world/queueCue202AndAdvanceWorkByte2WhenPrimaryState0cSubstate2World02Area10513_801F2C48.c'
+    - queueAdvanceWorkPrimary
+    - '@source: src/bof3/world/queueAdvanceWorkPrimary.c'
     - '@behavior: entry 0 of the work-byte-2 handler table at 0x801F3320: while the shared primary-state and sub-state byte pair at 0x80146874 reads anything but 0x20C (primary state 0x0C, sub-state 2) it returns without writing, and once the pair matches it queues cue 0x202 through the shared cue dispatcher at 0x8015DF18 and then advances the work record state byte at +2, reached through the scratchpad pointer cell 0x1F800044, so the next dispatch selects the cell-quad draw at 0x801F2C94.'
   - - 148
     - c
@@ -49,8 +49,8 @@ segments:
     - '@behavior: state-3 handler of the work-byte-2 dispatch: it advances the work record counter byte at +9, reached through the scratchpad pointer cell 0x1F800044, calls the shared work-area reset helper at 0x80196070 while the shared overlay state byte 0x8014933B reads zero, then re-reads the pointer cell and calls this overlay''s three-cell-quad draw with that counter byte as the displacement.'
   - - 412
     - c
-    - drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C
-    - '@source: src/bof3/world/drawThreeCellTexturedQuadsShiftedByArgWorld02Area10513_801F2D9C.c'
+    - renderTexturedQuadsShifted
+    - '@source: src/bof3/world/renderTexturedQuadsShifted.c'
     - '@behavior: brackets three semi-transparent flat 0x80 grey POLY_FT4 cell quads between two draw-mode packets that scope and then reset the texture window, taking the cells from the three four-byte records at 0x801F3330 and shifting their edges and depth by the argument, and projecting the four scratchpad vectors at 0x1F800014 through RotTransPers4.'
   - - 1344
     - c
@@ -59,8 +59,8 @@ segments:
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 9 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 1408
     - c
-    - stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180
-    - '@source: src/bof3/world/stepSharedModeStartAction1ThenReleaseOverlayOnPhaseChangeWorld02Area10513_801F3180.c'
+    - stepReleaseOverlayChange
+    - '@source: src/bof3/world/stepReleaseOverlayChange.c'
     - '@behavior: steps the shared front-end mode byte 0x801448EC through this overlay''s two-mode area-entry sequence; mode 0 requests area action 1 through func_80150224, latches the shared phase byte 0x80143BB0 to 2 and advances the mode byte to 1, and mode 1, once that phase byte differs from 2, releases the overlay through func_8015C058 and clears the shared state-entry byte 0x801448EB together with the mode byte.'
   - - 1552
     - asm

@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2TablefedcPlcharPlp25700_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2TablefedcPlcharPlp25700_801CE404.c'
+    - callWorkTablefedcPlchar
+    - '@source: src/bof3/plchar/callWorkTablefedcPlchar.c'
     - '@behavior: Overlay step entry of the front-end payload, placed in the first code subsegment after the four-byte header. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes that record unsigned byte at offset 0x02, scales it by four without bounding the index and calls the matching entry of this overlay twenty-three-word handler run based at 0x801CFEDC with no arguments, discarding any result. The body reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No jal of the payload targets it; its word appears once, as 0x801CE404 at 0x801CFF20, entry 17 of that same run, which the sibling halfword dispatcher at 0x801CFE54 indexes from that entry, so the overlay loader enters the body from outside the payload.'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE514
   - - 528
     - c
-    - dispatchWorkByte2Tablefee8PlcharPlp25700_801CE610
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefee8PlcharPlp25700_801CE610.c'
+    - callWorkTablefee8Plchar
+    - '@source: src/bof3/plchar/callWorkTablefee8Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes that record unsigned byte at offset 0x02, scales it by four without bounding the index and calls the matching entry of this overlay handler run based at 0x801CFEE8 with no arguments, discarding any result. That base is entry 3 of the twenty-three-word code-pointer run at 0x801CFEDC, which the two textbin rows T_801CFEDC and T_801CFF1C carry, so the entries it can reach run from 0x801CE654 through 0x801CF42C. The body reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No jal of the payload targets it; its word appears once, as 0x801CE610 at 0x801CFF2C, entry 20 of that same run, which the sibling halfword dispatcher at 0x801CFE98 indexes from that entry, so the overlay loader enters the body from outside the payload while this body is also its own index 17.'
   - - 596
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801CEAE0
   - - 2044
     - c
-    - dispatchWorkByte2Tablefef0PlcharPlp25700_801CEBFC
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefef0PlcharPlp25700_801CEBFC.c'
+    - callWorkTablefef0Plchar
+    - '@source: src/bof3/plchar/callWorkTablefef0Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes that record unsigned byte at offset 0x02, scales it by four without bounding the index and calls the matching entry of this overlay handler run based at 0x801CFEF0 with no arguments, discarding any result. That base is entry 5 of the twenty-three-word code-pointer run at 0x801CFEDC, which the two textbin rows T_801CFEDC and T_801CFF1C carry, so the entries it can reach run from 0x801CEC40 through 0x801CF42C. The body reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No jal of the payload targets it; its word appears once, as 0x801CEBFC at 0x801CFF24, entry 18 of that same run, which the sibling byte-2 dispatcher at 0x801CE610 indexes from 0x801CFEE8 and reaches at its index 15, so the overlay loader enters the body from outside the payload.'
   - - 2112
     - asm
@@ -71,8 +71,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 6 of the twenty-three-entry code pointer run at 0x801CFEDC. Selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through func_8014D8D4 and advances step byte 0x02 when the route index byte 0x08 equals the chosen index byte 0x03, else ticks countdown byte 0x09 and, at zero, re-arms it to 2, steps byte 0x08 by sign byte 0x0B inside the eight-entry window and selects the new route sequence.'
   - - 2568
     - c
-    - dispatchWorkByte2TablefefcPlcharPlp25700_801CEE08
-    - '@source: src/bof3/plchar/dispatchWorkByte2TablefefcPlcharPlp25700_801CEE08.c'
+    - callWorkTablefefcPlchar
+    - '@source: src/bof3/plchar/callWorkTablefefcPlchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2. It loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once before the frame is created, takes that record unsigned byte at offset 0x02, scales it by four without bounding the index and calls the matching entry of this overlay handler run based at 0x801CFEFC with no arguments, discarding any result. That base is entry 8 of the twenty-three-word code-pointer run at 0x801CFEDC, which the two textbin rows T_801CFEDC and T_801CFF1C carry, so the entries it can reach run from 0x801CEE4C through 0x801CF42C. The body reads no other state and writes none, and the 0x18-byte frame only keeps the return address at 0x10 across the indirect call. No jal of the payload targets it; its word appears once, as 0x801CEE08 at 0x801CFF30, entry 21 of that same run, and this body is also its own index 13, so the overlay loader enters the body from outside the payload.'
   - - 2636
     - c
@@ -91,8 +91,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as entry 10 of the twenty-three-entry code pointer run based at 0x801CFEDC, whose word 0x801CF124 sits at 0x801CFF04. While work byte 0x07, the pending-request flag that claimFrontEndRecordHandler3a clears after it queues a cue, is nonzero, it runs the shared readiness helper func_8014DAEC, returns while that helper reports not-ready and otherwise hands work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag. While the flag reads zero it runs the same helper, returns while that helper reports not-ready and then, while the front-end row selected by work byte 0x0B at stride 0x74 still has its occupancy byte 0 clear, clears work byte 0x2B and state byte 0x12B of the front-end record published at 0x80146250.'
   - - 3576
     - c
-    - dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8.c'
+    - callWorkTableff08Plchar
+    - '@source: src/bof3/plchar/callWorkTableff08Plchar.c'
   - - 3644
     - asm
     - func_801CF23C

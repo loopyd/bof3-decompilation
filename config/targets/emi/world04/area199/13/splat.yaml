@@ -27,18 +27,18 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchSharedOverlayStateByteHandlerThenDrawTwoLayerTrailWorld04Area19913_801F2C04
-    - '@source: src/bof3/world/dispatchSharedOverlayStateByteHandlerThenDrawTwoLayerTrailWorld04Area19913_801F2C04.c'
+    - callOverlayLayerTrail
+    - '@source: src/bof3/world/callOverlayLayerTrail.c'
     - '@behavior: Per-frame entry hook of this overlay: it reads the shared overlay state byte at 0x8014933B once with an unsigned byte load, scales it by four without bounding it and calls the word at that index of this overlay handler run at 0x801F44B8, whose first seven entries are the overlay step handlers 0x801F2C50, 0x801F2C7C, 0x801F2CC0, 0x801F2CE0, 0x801F2D7C, 0x801F2DE8 and 0x801F2E14 and whose eighth word is zero; it then calls the two-layer trail draw at 0x801F3398 and the textured-quad draw routine at 0x801F400C. It allocates no frame beyond the 0x18 bytes that keep $ra at 0x10 across the three calls, reads no other state, writes none, and has one exit through $ra.'
   - - 80
     - c
-    - setWorkState2To4WhenScrollWordIs16ffWorld04Area19913_801F2C50
-    - '@source: src/bof3/world/setWorkState2To4WhenScrollWordIs16ffWorld04Area19913_801F2C50.c'
+    - stateWorkScrollWord
+    - '@source: src/bof3/world/stateWorkScrollWord.c'
     - '@behavior: Overlay step hook with no arguments and no return value: it reads the shared scroll word at 0x80149310 once and compares it against the single packed position 0x16FF, and only on equality loads the work record pointer published at scratchpad cell 0x1F800044 and stores 4 into that record byte 2, the step the overlay dispatcher indexes its handler run with. It allocates no frame, calls nothing and has one exit through $ra.'
   - - 124
     - c
-    - decrementBackgroundVerticalOffsetEveryFourthFrameAndDrawScrolledScreenBackgroundWorld04Area19913_801F2C7C
-    - '@source: src/bof3/world/decrementBackgroundVerticalOffsetEveryFourthFrameAndDrawScrolledScreenBackgroundWorld04Area19913_801F2C7C.c'
+    - decrementBackgroundVerticalScrolled
+    - '@source: src/bof3/world/decrementBackgroundVerticalScrolled.c'
     - '@behavior: Overlay step hook with no arguments and no return value: it reads the shared frame counter at 0x80143E6C once, masks its low two bits and tests them against zero, loads the overlay work-record pointer published at scratchpad cell 0x1F800044, subtracts that zero test from the record word at 0x34, stores the result back into the same word and passes that value as the vertical offset to the background drawer at 0x801F2E80. It allocates only the 0x18-byte frame the call requires and has one exit through $ra.'
   - - 192
     - c
@@ -48,25 +48,25 @@ segments:
     - func_801F2CE0
   - - 380
     - c
-    - seedWorkTripletAndOverlayStateBytesWorld04Area19913_801F2D7C
+    - stateTripletOverlayBytes
   - - 488
     - c
-    - startTwoLayerTrailAndSetOverlayStateByteWorld04Area19913_801F2DE8
-    - '@source: src/bof3/world/startTwoLayerTrailAndSetOverlayStateByteWorld04Area19913_801F2DE8.c'
+    - audioLayerTrailOverlay
+    - '@source: src/bof3/world/audioLayerTrailOverlay.c'
     - '@behavior: Overlay entry hook that starts the two-layer sample trail: it calls the trail reset at 0x801F2E14, then stores 1 into the shared overlay state byte at 0x8014933B. Takes no arguments, returns no value and allocates only the 0x18-byte frame the call requires.'
   - - 532
     - c
-    - initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14
-    - '@source: src/bof3/world/initTwoLayerTrailSampleColumnsAndPushCursorsWorld04Area19913_801F2E14.c'
+    - setupColumnsPushCursors
+    - '@source: src/bof3/world/setupColumnsPushCursors.c'
     - '@behavior: Reset of the two-layer trail of the overlay: it clears both entries of trailLayerPushCursors, walks the thirty-two slots of each layer and writes 0xFF into every slot sample column byte, the slot index marching down from 0xBA by six bytes per step plus the layer three-byte offset, then writes the flip flag of slot 0 as 1 on the first layer and 0 on the second and clears the shared overlay state byte at 0x8014933B. Takes no arguments, returns no value, allocates no frame and calls nothing.'
   - - 640
     - c
-    - drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80
-    - '@source: src/bof3/world/drawScrolledScreenBackgroundQuadRightColumnAndEightTiledBandsWorld04Area19913_801F2E80.c'
+    - renderScrolledBackgroundTiled
+    - '@source: src/bof3/world/renderScrolledBackgroundTiled.c'
   - - 1944
     - c
-    - drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Area19913_801F3398
-    - '@source: src/bof3/world/drawTwoLayerTrailOfThirtyTwoTexturedQuadPairsAdvancedByLayerClockWorld04Area19913_801F3398.c'
+    - renderPairsAdvancedClock
+    - '@source: src/bof3/world/renderPairsAdvancedClock.c'
     - '@behavior: Two-layer sample trail of textured quads: for each of the two layers it advances the 0x98-byte-stride overlay state record, and when the integer part of that record''s fixed-point clock has moved past the phase byte held in the layer''s current slot it steps the layer''s push cursor through the thirty-two slots of the trail buffer, writing the new phase, the record halfword at +6 as the sample row and the toggled flip flag into the new slot; it then walks all thirty-two slots, stamps the shared primitive cursor with SetPolyFT4 and SetShadeTex(kind 1) for every slot whose cell the shared grid lookup returns a record for, copies the record''s four projected position words from +8, +0x10, +0x18 and +0x20, fills the texture window from the packed state word 0x25808000 plus the slot''s flip flag and the layer''s own byte offset and links the 0x28-byte packet through func_80155A08 with both sample bytes shifted left by 16, then repeats once more one row along the layer''s row step with the layer''s second byte offset.'
   - - 2780
     - asm

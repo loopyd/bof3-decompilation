@@ -27,7 +27,7 @@ void resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834(void);
 /* @source 0x801F2C48
  * @behavior Area initializer, entry 0 of the six-word handler run based at
  *           0x801F3DAC that this target dispatcher
- *           dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with
+ *           callStateTable3World02 indexes with
  *           the state byte at +1 of the work record published at the
  *           scratchpad pointer cell 0x1F800044. Copies the shared saved
  *           triplet D_80146954, D_80146958 and D_8014695C into the words at

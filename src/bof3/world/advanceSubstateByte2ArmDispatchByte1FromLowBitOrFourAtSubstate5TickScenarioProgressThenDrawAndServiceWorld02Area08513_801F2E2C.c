@@ -25,7 +25,7 @@ void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
  *           the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4,
  *           0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and
  *           0x801F36B4 in that order and which the dispatcher
- *           dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with
+ *           callStateTable3World02 indexes with
  *           the work byte at +0x01 of the record published at the scratchpad
  *           pointer cell 0x1F800044. It increments the record sub-state byte
  *           +0x02 and reads the incremented byte back through a second load of

@@ -52,7 +52,7 @@ void func_801E5988(void);
  *           handler run at 0x801EFEE8 (0x801EEDB4, 0x801EEF10, 0x801EEF78,
  *           0x801EF054, 0x801EF100); no jal in the payload reaches it, and the
  *           row is dispatched as table index 4 of work byte 1 by
- *           dispatchStateByte1Tablefee8BmagicMagic14303_801EED70.
+ *           callStateTablefee8Bmagic.
  * @status exact
  * @match 100.00
  * @residual none

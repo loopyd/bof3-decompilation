@@ -11,14 +11,14 @@ sources = [
     "src/bof3/bmagic/drawEightTranslucentGouraudFanTrianglesAroundWorkHalfwords2EAnd30AtRadiusWorkByteATintedBySignedBytes5d5e5fTimesSixteenWithCentre240BmagicMagic12503_801EFFC8.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/subtractWorkWord20From14ThenSeedSixtyFourRecordsAndAdvanceWorkByte2BmagicMagic12503_801EF960.c",
+    "src/bof3/bmagic/subtractSixtyFourRecords.c",
     "src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic12503_801EEE60.c",
     "src/bof3/bmagic/decrementWorkWord14Above8ThenCountDownByte9OnOddFramesAndInvokeHelperBmagicMagic12503_801EFAB0.c",
-    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF1A8AndF508AndPopWhenWorkBytes0And2SetBmagicMagic12503_801EF808.c",
+    "src/bof3/bmagic/callInvokePopSet.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic12503_801F0524.c",
-    "src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890.c",
+    "src/bof3/bmagic/decrementTripletTintFields.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic12503_801F0588.c",
-    "src/bof3/bmagic/decrementWorkByteASubtractWorkWord3CThenAdvanceWorkByte2OnZeroBmagicMagic12503_801EF0F8.c",
+    "src/bof3/bmagic/decrementByteSubtractZero.c",
     "src/bof3/support/magic125_03_psyq.c",
     "src/bof3/bmagic/magic12503DispatchTables.c",
 ]

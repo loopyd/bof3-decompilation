@@ -46,7 +46,7 @@ extern int sprintf(char *buffer, const char *format, ...);
  * kind byte and fills a 0x28 by 0x30 sprite from it. Only its call is bound
  * here, with the widths the call site widens its arguments to.
  * @source 0x801D3518 */
-extern void emitIconSpriteFromKindTileBate00_801D3518(s32 x, s32 y, s32 kind,
+extern void emitIconKindTile(s32 x, s32 y, s32 kind,
                                                       s32 mode);
 
 /* Panel icon emitter of this overlay, a shared panel template wrapper that is
@@ -102,7 +102,7 @@ extern const u8 D_801D8A3C[]; /* @source 0x801D8A3C @kind data */
  *           plus 3 as its kind, the 0x1E texture row, the clut GetClut(0x10,
  *           0x1E0) and the attribute 0x80. It then draws the record three sprite
  *           kinds: for every slot below 3 whose byte is not 0xFF it calls
- *           emitIconSpriteFromKindTileBate00_801D3518 at (x + 0x56 plus 41 per
+ *           emitIconKindTile at (x + 0x56 plus 41 per
  *           slot, y + 2) with that byte as the kind and the mode 0. The five-cell name run of the record is
  *           submitted through func_8014F800 at (x + 0x15, y + 3) with the
  *           alignment 0 and the count 5, then the record byte at +0x08 is
@@ -153,7 +153,7 @@ void drawThreeIconStatusRowPanelBate00_801D8208(u8 icon, s16 x, s16 y,
         (u16)GetClut(0x10, 0x1E0), 0x80);
     for (i = 0; i < 3; i++) {
       if (rec->sprite[i] != 0xFF) {
-        emitIconSpriteFromKindTileBate00_801D3518(
+        emitIconKindTile(
             (u16)(x + 0x56 + i * 41), (u16)(y + 2), rec->sprite[i], 0);
       }
     }

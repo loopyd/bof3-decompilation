@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 196
     - c
-    - dispatchStateByte1Table44b8World01Area05213_801F2CC4
+    - callStateTable44World01
     - '@source: src/bof3/world/area05213DispatchTables.c'
   - - 264
     - asm
@@ -42,16 +42,16 @@ segments:
     - '@behavior: Phase step of the 0x800E4800 work-record machinery driven through the scratchpad work object 0x1F800044: claims the four phase records while the step byte 0x09 reads zero, increments that step byte and wraps it to zero while counting a phase in byte 0x06 at 4, runs the record step func_801F31C0, then increments the work step byte 0x01 when the phase counter reaches the limit in byte 0x0B.'
   - - 660
     - c
-    - stepActiveWorkRecordsThenClearWorkFlagsWhenNoneActiveWorld01Area05213_801F2E94
-    - '@source: src/bof3/world/stepActiveWorkRecordsThenClearWorkFlagsWhenNoneActiveWorld01Area05213_801F2E94.c'
+    - stepActiveFlagsNone
+    - '@source: src/bof3/world/stepActiveFlagsNone.c'
     - '@behavior: Third handler of this overlay''s state-byte-1 dispatch table at 0x801F44B8 (its pointer word is entry 2 at 0x801F44C0): runs the 0x800E4800 work-record step func_801F31C0, which draws each occupied record of the 0x18-byte-stride block and answers whether any record was occupied, and reaches the shared work-flag reset func_80196070 only while that answer reads zero, so the overlay clears the shared flags on a step that finds no active work record.'
   - - 712
     - asm
     - func_801F2EC8
   - - 1156
     - c
-    - claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084
-    - '@source: src/bof3/world/claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084.c'
+    - claimFourRecordsAround
+    - '@source: src/bof3/world/claimFourRecordsAround.c'
     - '@behavior: Claims four work records, one per phase step of 0x100 from 0x80, from the 0x800E4800 work table, marking each occupied and seeding its position words from the scratch work object at cell 0x1F800044 plus the two phase-table offsets.'
   - - 1368
     - c
@@ -60,8 +60,8 @@ segments:
     - '@behavior: Returns the address of the first of the 0x10 records of 0x18-byte stride in the 0x800E4800 work table whose occupancy byte 0x15 reads zero, or zero when every record is occupied.'
   - - 1428
     - c
-    - clearWorkTableByte15At800E4800World01Area05213_801F3194
-    - '@source: src/bof3/world/clearWorkTableByte15At800E4800World01Area05213_801F3194.c'
+    - stateWorkTableByte15
+    - '@source: src/bof3/world/stateWorkTableByte15.c'
   - - 1472
     - asm
     - func_801F31C0
@@ -76,8 +76,8 @@ segments:
     - func_801F35A0
   - - 2984
     - c
-    - updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8
-    - '@source: src/bof3/world/updateMode10Or20WorkPositionAndAdvanceHalfword0aWorld01Area05213_801F37A8.c'
+    - stateWorkPositionAdvance
+    - '@source: src/bof3/world/stateWorkPositionAdvance.c'
     - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3220
     - c
@@ -86,8 +86,8 @@ segments:
     - '@behavior: Updates mode-selected work position and advances the shared record halfword at +0x0A.'
   - - 3456
     - c
-    - projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980
-    - '@source: src/bof3/world/projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980.c'
+    - projectCueCellsProgress
+    - '@source: src/bof3/world/projectCueCellsProgress.c'
     - '@behavior: Projects the work object word pair at +0x34/+0x38 minus 0x8000 through the two output pointers, hands the pair to the cell-cue helper 0x801F3C4C while the shared byte 0x80143BB0 reads 5, and steps the shared record halfword at +0x0A back by 2 while the progress byte 0x80146867 reads zero, answering whether it is nonzero.'
   - - 3604
     - asm
@@ -116,8 +116,8 @@ segments:
     - '@behavior: Steps this overlay shared front-end mode byte 0x801448EC through the 48-slot jump table the payload keeps at 0x801F2C04.'
   - - 5736
     - c
-    - clearSharedFlagBit25World01Area05213_801F4268
-    - '@source: src/bof3/world/clearSharedFlagBit25World01Area05213_801F4268.c'
+    - stateSharedFlagBit25
+    - '@source: src/bof3/world/stateSharedFlagBit25.c'
     - '@behavior: Clears bit 0x25 of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper func_8015B5A8, passing the bank base by address and the flag id as the immediate 0x25.'
   - - 5776
     - asm

@@ -8,14 +8,14 @@ splat = "config/targets/emi/plchar/plp257/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/dispatchWorkByte2TablefedcPlcharPlp25700_801CE404.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefee8PlcharPlp25700_801CE610.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefef0PlcharPlp25700_801CEBFC.c",
-    "src/bof3/plchar/dispatchWorkByte2TablefefcPlcharPlp25700_801CEE08.c",
+    "src/bof3/plchar/callWorkTablefedcPlchar.c",
+    "src/bof3/plchar/callWorkTablefee8Plchar.c",
+    "src/bof3/plchar/callWorkTablefef0Plchar.c",
+    "src/bof3/plchar/callWorkTablefefcPlchar.c",
 ]
 support_sources = [
     "src/bof3/plchar/selectArrivalSequence40ForRouteThreeAnd41ForRouteFiveAndAdvanceStepWhenRouteReachedElseTickCountdownAndStepRoutePlcharPlp25700_801CF330.c",
-    "src/bof3/plchar/dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8.c",
+    "src/bof3/plchar/callWorkTableff08Plchar.c",
     "src/bof3/plchar/dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTableff20PlcharPlp25700_801CFE54.c",
     "src/bof3/plchar/dispatchWorkHalfword2cTableff2cPlcharPlp25700_801CFE98.c",

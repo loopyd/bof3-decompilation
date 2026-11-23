@@ -39,7 +39,7 @@ segments:
     - func_801EEF50
   - - 924
     - c
-    - dispatchStateByte1Table0554BmagicMagic07403_801EEF9C
+    - callStateTable0554Bmagic
     - '@source: src/bof3/bmagic/magic07403DispatchTables.c'
   - - 992
     - c
@@ -53,7 +53,7 @@ segments:
   # @behavior Select record by work byte 4; count down byte 9, submit effect at zero and advance byte 2.
   - - 1736
     - c
-    - decrementWorkByte9ThenSubmitSelectedRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte2BmagicMagic07403_801EF2C8
+    - decrementSubmitSelectedStore
   - - 1984
     - c
     - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic07403_801EF3C0

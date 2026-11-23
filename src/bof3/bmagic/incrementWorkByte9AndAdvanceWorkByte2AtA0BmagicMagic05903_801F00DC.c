@@ -21,7 +21,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           reaches it: its address is entry 3 of the handler table based at
  *           0x801F0680, the word at 0x801F068C inside the reviewed textbin row
  *           T_801F065C that the byte-1 dispatcher
- *           dispatchStateByte1Table0680BmagicMagic05903_801EFE48 indexes.
+ *           callStateTable0680Bmagic indexes.
  *           Bytes 0x801F00DC..0x801F012B are byte-identical (one payload cmp of
  *           both 0x50-byte spans) to the exact same-target sibling
  *           incrementWorkByte9AndAdvanceWorkByte2AtA0BmagicMagic05903_801EF570,

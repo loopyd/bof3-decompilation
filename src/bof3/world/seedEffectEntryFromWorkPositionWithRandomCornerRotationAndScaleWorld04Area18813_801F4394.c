@@ -82,7 +82,7 @@ void func_80179F98(s32 arg0, MATRIX* arg1);
  *
  * Call evidence: the only reference to 0x801F4394 in this payload is the jal at
  * 0x801F355C inside the 0x10-iteration walk of the exact progress handler
- * retreatWorkExtentAndAdvanceOriginZDrawThenOnCountdownExpiryArm20ReseedEffectEntriesQueueCue215AndAdvanceWorkByte1World04Area18813_801F3484,
+ * retreatExtentZReseed,
  * which advances one byte pointer by 0x2C per iteration and passes it in $a0,
  * so the argument is that table entry. The table base is 0x800E48C0, the same
  * 0x2C-byte-stride effect table the exact neighbour

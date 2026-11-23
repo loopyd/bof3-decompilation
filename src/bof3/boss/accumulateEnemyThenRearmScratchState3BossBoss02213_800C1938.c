@@ -16,7 +16,7 @@ void func_8014DAEC(void); /* @source 0x8014DAEC */
 /* Shared main-program enemy accumulation pass: it raises scratch work flag 0x40,
  * folds the current enemy work halfwords into the global accumulators, submits
  * the scratch work and leaves 2/0/0 in scratch work bytes +1..+3. */
-void accumulateEnemyHalfwordsAndResetScratch(void); /* @source 0x801E54EC */
+void accumulateEnemyHalfwordsReset(void); /* @source 0x801E54EC */
 
 /* @source 0x800C1938
  * @behavior Battle-step handler of this overlay, referenced only from the
@@ -42,7 +42,7 @@ void accumulateEnemyThenRearmScratchState3BossBoss02213_800C1938(void) {
   u8 *spad;
 
   func_8014DAEC();
-  accumulateEnemyHalfwordsAndResetScratch();
+  accumulateEnemyHalfwordsReset();
   work = D_801EB4E8;
   spad = D_1F800044;
   FIELD_REF(u32, work, 0x100u) |= 0x1000u;

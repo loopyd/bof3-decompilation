@@ -82,7 +82,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range);
  * are signed sixteen-bit values, so the original converts each retry index to
  * that width before the call.
  */
-u8 claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+u8 claimCodesStageName(
     s16 col, s16 row);
 
 /* @source 0x801CFCD8
@@ -195,15 +195,15 @@ void queueCue2CPlus100ThenSeedFrontEndRowFoundBySlotSearchElseClaimProjectedCell
         }
         cx = x >> 16;
         cy = y >> 16;
-        claimed = claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+        claimed = claimCodesStageName(
             cx, cy);
         if (claimed == 0) {
           if ((x & 0xFFFF) != 0) {
-            claimed = claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+            claimed = claimCodesStageName(
                 cx + 1, cy);
           }
           if (claimed == 0 && (y & 0xFFFF) != 0) {
-            claimFrontEndRowForMapCodesF0F1F4OrRandomRowForF6F7ThenStageNameOrSetWorkByteBPlcharPlp02600_801D0148(
+            claimCodesStageName(
                 cx, cy + 1);
           }
         }

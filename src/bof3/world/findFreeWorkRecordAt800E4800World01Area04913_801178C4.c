@@ -5,7 +5,7 @@
  * 16 records of 0x28-byte stride whose lead byte is the record's claim flag and
  * whose byte 1 selects the record's per-frame handler): it returns the address of
  * the first record whose lead byte reads zero, or zero when all 16 records are
- * claimed. Both callers, claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8 and lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768, store the result in the
+ * claimed. Both callers, claimEveryFourthFrame and lowerMirrorEveryFourth, store the result in the
  * shared record cursor world01Area04913WorkRecordCursor, skip the rest of their frame when it is zero,
  * and otherwise pass it to func_80117864, which initialises that record and sets
  * its lead byte to 1. It reads only each record's lead byte, writes nothing,

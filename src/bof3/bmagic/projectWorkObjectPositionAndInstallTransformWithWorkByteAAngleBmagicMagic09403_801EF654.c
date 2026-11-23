@@ -4,7 +4,7 @@
  * row. The original materializes the cell with one lui/lw pair after PushMatrix
  * and never re-reads it, so the plain named cell suffices. Declaration style
  * follows the exact same-target siblings
- * copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60
+ * copyIntoBattlerForward
  * and incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
@@ -19,7 +19,7 @@ extern MATRIX D_801492E8; /* @source 0x801492E8 @kind unknown */
  *           pointer cell 0x1F800044 once. It fills a halfword triplet whose
  *           first two elements are zero and whose third element is the work
  *           object byte 0xA shifted left by four, the per-frame ramp the exact
- *           sibling incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C
+ *           sibling incrementSubmitSelectedBattler
  *           advances. It then builds a second halfword triplet from the work
  *           object itself: words 0x34 and 0x38 shifted right by nine and biased
  *           by minus 0x4000, and half the negated signed halfword 0x3E.

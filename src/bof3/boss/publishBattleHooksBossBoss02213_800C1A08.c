@@ -8,7 +8,7 @@ typedef void (*Boss02213Handler)(void);
  * one owner record flag, publishes the located owner record through the
  * scratchpad work-record cursor and requests entry 0xAA and resource 6. The
  * third returns a zero result, which the void slot type drops. */
-void initBattleEntryStateBossBoss02213_800C1A48(void);
+void setupBattleEntryBoss(void);
 void setupBattleWorkRecordBossBoss02213_800C1ABC(void);
 s32 zeroResultBossBoss02213_800C1A40(void);
 
@@ -21,7 +21,7 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C1A08
  * @behavior Publishes this overlay handler trio into the shared hook slots in
- * slot order: the battle-entry hook initBattleEntryStateBossBoss02213_800C1A48
+ * slot order: the battle-entry hook setupBattleEntryBoss
  * into 0x801463A4, the battle setup hook
  * setupBattleWorkRecordBossBoss02213_800C1ABC into 0x801463A8, and the
  * zero-result accessor zeroResultBossBoss02213_800C1A40 into 0x801463AC, the
@@ -35,7 +35,7 @@ extern Boss02213Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * @residual none
  */
 void publishBattleHooksBossBoss02213_800C1A08(void) {
-  D_801463A4 = initBattleEntryStateBossBoss02213_800C1A48;
+  D_801463A4 = setupBattleEntryBoss;
   D_801463A8 = setupBattleWorkRecordBossBoss02213_800C1ABC;
   D_801463AC = (Boss02213Handler)zeroResultBossBoss02213_800C1A40;
 }

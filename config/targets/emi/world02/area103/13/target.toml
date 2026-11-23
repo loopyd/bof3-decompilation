@@ -14,10 +14,10 @@ sources = [
     "src/bof3/world/claimFrontEndRecordHandler4dFromWorkPositionElseLowerHalfword0aBy2World02Area10313_801F5834.c",
     "src/bof3/world/renderDescendingVariantLast.c",
     "src/bof3/world/renderVariantFifthFifth.c",
-    "src/bof3/world/countDownHalfword32ElseAdvanceWorkByte2ThenDrawOnFifthTickAndRequestPair42World02Area10313_801F465C.c",
-    "src/bof3/world/requestPair43OnBand4ElseDrawVariant7MinusBandOnFifthTickThenAdvanceWorkByte9World02Area10313_801F478C.c",
+    "src/bof3/world/checkDownFifthTick.c",
+    "src/bof3/world/requestMinusBandFifth.c",
     "src/bof3/world/renderShadedSteppingDepth.c",
-    "src/bof3/world/drawFourBlocksAtWorkXyPositionWorld02Area10313_801F482C.c",
+    "src/bof3/world/renderFourBlocksXy.c",
     "src/bof3/world/renderRadialCellsArgument.c",
 ]
 support_sources = [
@@ -28,7 +28,7 @@ support_sources = [
     "src/bof3/world/area10313DispatchTables.c",
     "src/bof3/world/initializeWorkFieldsAdvance.c",
     "src/bof3/world/signedTableStepWord80149318.c",
-    "src/bof3/world/storeWorkPositionDistanceAt3eWorld02Area10313_801F57FC.c",
+    "src/bof3/world/stateWorkPositionDistance.c",
     "src/bof3/world/stateScenarioProgressClear.c",
     "src/bof3/world/stateBy17WorkNonzero.c",
     "src/bof3/world/queryWorkCandidateIndex.c",
@@ -37,7 +37,7 @@ support_sources = [
     "src/bof3/world/renderWorkAdvanceWork.c",
     "src/bof3/world/renderRampStepAdvance.c",
     "src/bof3/world/renderBandFifthTick.c",
-    "src/bof3/world/drawWorkBandOnFifthTickWrapWorkByte9At0fThenAdvanceWorkByte9World02Area10313_801F457C.c",
+    "src/bof3/world/renderBandFifthWrap.c",
     "src/bof3/world/stateUntilXFifth.c",
     "src/bof3/support/area103_13_psyq.c",
 ]

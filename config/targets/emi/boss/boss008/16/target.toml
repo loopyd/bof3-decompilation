@@ -8,9 +8,9 @@ splat = "config/targets/emi/boss/boss008/16/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte3Table26a8BossBoss00816_800C18E4.c",
+    "src/bof3/boss/callStateTable26Boss.c",
     "src/bof3/boss/dispatchStateByte4Table26b0BossBoss00816_800C1928.c",
-    "src/bof3/boss/seedWorkScaleByte9AndThresholdByteAThenQueueCue601AndAdvanceWorkByte4BossBoss00816_800C196C.c",
+    "src/bof3/boss/stateScaleThresholdQueue.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetStateTo2BossBoss00816_800C1848.c",
 ]
 support_sources = [
@@ -50,7 +50,7 @@ support_sources = [
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetScenarioProgress44BossBoss00816_800C22C0.c",
     "src/bof3/support/boss008_16_psyq.c",
     "src/bof3/boss/shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48.c",
-    "src/bof3/boss/setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028.c",
+    "src/bof3/boss/setupOwnerCopyHalfword.c",
     "src/bof3/boss/setupBattleWorkRecordForOwnerThreeThenCopyHalfwordPair58And5ABossBoss00816_800C230C.c",
     "src/bof3/boss/setupBattleWorkRecordForOwnerTwoThenSetWorkByte2AAndCopyHalfwordPair58And5ABossBoss00816_800C2210.c",
 ]

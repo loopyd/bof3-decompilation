@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - startFrontEndThenReleaseOverlayWhenSharedProgressByte2World02Area09713_801F2C04
-    - '@source: src/bof3/world/startFrontEndThenReleaseOverlayWhenSharedProgressByte2World02Area09713_801F2C04.c'
+    - audioReleaseOverlayProgress
+    - '@source: src/bof3/world/audioReleaseOverlayProgress.c'
     - '@behavior: Overlay front-end step that starts the shared front-end through func_8015C088 and advances the shared progress byte 0x801448EC from 0 to 1, and that waits for the shared progress byte 0x80146867 to read 2 before releasing the overlay through func_8015C058 and clearing 0x80146867, the shared state entry byte 0x801448EB and the progress byte; any other progress value is left untouched.'
   - - 152
     - c
-    - startStateEntry0DProgress0WhenMapRangeAndModeGateWorld02Area09713_801F2C98
-    - '@source: src/bof3/world/startStateEntry0DProgress0WhenMapRangeAndModeGateWorld02Area09713_801F2C98.c'
+    - audioMapRangeGate
+    - '@source: src/bof3/world/audioMapRangeGate.c'
     - '@behavior: Overlay gate that starts the shared state entry 0xD at progress 0: it rejects a second argument above 0x3A0000, a first argument whose high half is outside 0x30..0x32, a record-0 mode byte D_80145E98 outside 0..2 and a nonzero shared selector func_80166140(5), and on pass stores 1 into the mode flag D_80146867, 0xD into the shared state entry D_801448EB and 0 into the progress byte D_801448EC before returning 1; every rejected path returns 0.'
   - - 296
     - c

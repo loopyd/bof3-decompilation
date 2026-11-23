@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBIsFFBmagicMagic12103_801EEE08.c'
   - - 616
     - c
-    - dispatchStateByte1Table0c38BmagicMagic12103_801EEE68
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic12103DispatchTables.c'
   - - 684
     - asm
@@ -57,8 +57,8 @@ segments:
     - '@source: src/bof3/bmagic/add2ToWorkByte4AndAdvanceWorkByte2At10BmagicMagic12103_801EF2D4.c'
   - - 1828
     - c
-    - incrementWorkWordCAndAdvanceWorkByte2At2EBmagicMagic12103_801EF324
-    - '@source: src/bof3/bmagic/incrementWorkWordCAndAdvanceWorkByte2At2EBmagicMagic12103_801EF324.c'
+    - incrementWordAdvanceBmagic
+    - '@source: src/bof3/bmagic/incrementWordAdvanceBmagic.c'
   - - 1884
     - asm
     - func_801EF35C

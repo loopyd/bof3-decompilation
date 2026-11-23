@@ -9,14 +9,14 @@ load_address = 0x801D0C00
 
 sources = []
 support_sources = [
-    "src/bof3/ui/drawCommuPanelAndSelectBankEntry.c",
-    "src/bof3/ui/startFairySlotBattleRecordUnlessFrontendMode2.c",
+    "src/bof3/ui/renderCommuBankEntry.c",
+    "src/bof3/ui/audioFairyUnlessFrontend.c",
     "src/bof3/ui/advanceFairyProgressUnlessFrontendMode2.c",
-    "src/bof3/ui/dispatchByte1f294dTable1758Commu0406_801D0C5C.c",
-    "src/bof3/ui/initializeCommuUiAndArmStateByteUnlessFrontendMode2.c",
+    "src/bof3/ui/callByte1Table1758.c",
+    "src/bof3/ui/initializeCommuUnlessFrontend.c",
     "src/bof3/ui/initializeCommuUiState.c",
-    "src/bof3/ui/startAction63AndSetFrontendMode2.c",
-    "src/bof3/ui/drawSlidingPanelAndStartAction5FUnlessUiModeSet.c",
+    "src/bof3/ui/audioAction63SetFrontend.c",
+    "src/bof3/ui/renderSlidingStartUnless.c",
     "src/bof3/support/commu04_06_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu04_06_psyq.c"

@@ -14,11 +14,11 @@
  *           the exhausted path materialises zero in $v0, and a free record leaves
  *           the loop through the occupancy branch with its copy in that branch's
  *           delay slot. Its only in-image caller,
- *           claimFourWorkRecordsAtPhases80To380AroundWorkPositionWorld01Area05213_801F3084,
+ *           claimFourRecordsAround,
  *           calls it at 0x801F30A4, skips the rest of that pass when the result
  *           is zero and otherwise stores 1 into byte 0x15 of the returned
  *           record, so the byte this scan tests is that caller's occupancy flag.
- *           The adjacent clearWorkTableByte15At800E4800World01Area05213_801F3194
+ *           The adjacent stateWorkTableByte15
  *           zeroes byte 0x15 of the same 0x10 records of the same 0x18-byte
  *           stride, releasing the block this scan fills.
  *

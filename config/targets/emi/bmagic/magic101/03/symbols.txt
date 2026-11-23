@@ -1,13 +1,13 @@
 g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
-seedWorkByte8FromRecordThenQueueSixteenSlotsAndAdvanceWorkByte1BmagicMagic10103_801EECCC = 0x801EECCC;
+stateQueueSixteenSlots = 0x801EECCC;
 func_801EEE68 = 0x801EEE68;
 func_801EEED4 = 0x801EEED4;
-decrementWorkByteAAndAdvanceWorkByte1OnZeroBmagicMagic10103_801EEF20 = 0x801EEF20;
+decrementByteAdvanceZero = 0x801EEF20;
 func_801EEF6C = 0x801EEF6C;
 func_801EEFCC = 0x801EEFCC;
-drawTranslucentEightTriangleFanWithPulsingRadiusAndWorkByteATintBmagicMagic10103_801EF07C = 0x801EF07C;
-dispatchStateByte1TablefcbcBmagicMagic10103_801EF310 = 0x801EF310;
+renderTrianglePulsingRadius = 0x801EF07C;
+callStateTablefcbcBmagic = 0x801EF310;
 func_801EF354 = 0x801EF354;
 func_801EF3DC = 0x801EF3DC;
 func_801EF4DC = 0x801EF4DC;

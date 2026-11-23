@@ -9,13 +9,13 @@ load_address = 0x801EEC00
 
 sources = [
     "src/bof3/bmagic/clearAllRecordActiveBytesBmagicMagic11603_801EEFF4.c",
-    "src/bof3/bmagic/copySavedWorkPointerWords34To3CClearAllRecordActiveBytesRequestResource1AndAdvanceWorkByte1BmagicMagic11603_801EEC80.c",
+    "src/bof3/bmagic/copySavedPointerAll.c",
 ]
 support_sources = [
     "src/bof3/bmagic/activateUpTo8FreeRecordsBmagicMagic11603_801EF258.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic11603_801EEC14.c",
     "src/bof3/bmagic/findFreeRecordBmagicMagic11603_801EEFB8.c",
-    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenNoRecordActiveBmagicMagic11603_801EEE34.c",
+    "src/bof3/bmagic/raiseHelperNoActive.c",
     "src/bof3/support/magic116_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic116_03_psyq.c"

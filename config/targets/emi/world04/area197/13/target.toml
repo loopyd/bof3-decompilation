@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/initWorkTablesSeedRandomPositionsInThreeBandsQueueCue207ResetStateByte2AndAdvanceStateByte1World04Area19713_801F2C48.c",
-    "src/bof3/world/armWorkPhase4SelectHandler1ThenLowerSharedHalfword7eBy2World04Area19713_801F3F80.c",
+    "src/bof3/world/armSelectLowerShared.c",
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions1ETo21World04Area19713_801F3E78.c",
     "src/bof3/world/stepSharedModeStartThenSetFlag55AndRequestSelectorAtCounter24World04Area19713_801F4164.c",
-    "src/bof3/world/clearWorkTableAt800E4800Stride28World04Area19713_801F30E4.c",
+    "src/bof3/world/stateWorkTableStride28.c",
     "src/bof3/world/advanceHalfword0aBy3WhenWorkByte79Is7World04Area19713_801F4124.c",
-    "src/bof3/world/stepWorkTableAt800e5c00IntegrateVelocityBounceTickCountdownsAndDrawEntriesWorld04Area19713_801F3368.c",
-    "src/bof3/world/waitFlag0eThenClearStepByte9AndAdvanceStateByte2DrawingFullWidthWorld04Area19713_801F368C.c",
+    "src/bof3/world/stepVelocityBounceCountdowns.c",
+    "src/bof3/world/waitDrawingFullWidth.c",
 ]
 support_sources = [
     "src/bof3/world/clearWorkTableAt800E5C00World04Area19713_801F3474.c",
@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/world/area19713DispatchTables.c",
     "src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c",
     "src/bof3/world/invokeHelperWorld04Area19713_801F2E54.c",
-    "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0.c",
+    "src/bof3/world/stepWordPhaseConsume.c",
     "src/bof3/world/claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050.c",
     "src/bof3/world/startActionForFirstPresentPartyCandidateActions0ATo0DWorld04Area19713_801F3B68.c",
     "src/bof3/support/area197_13_psyq.c",

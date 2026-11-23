@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Tablef6d8PlcharPlp47800_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef6d8PlcharPlp47800_801CE404.c'
+    - callWorkTablef6Plchar
+    - '@source: src/bof3/plchar/callWorkTablef6Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF6D8 with no arguments, discarding any result. It does not bound the index before the scaled table load, and that load reads the word at the run base, so entry 0 is 0x801CE448. The pointer-cell load precedes the 0x18-byte frame that keeps $ra at 0x10 across the indirect call. The only in-image reference to this body is the word 0x801CE404 at 0x801CF710, entry 14 of the twenty-word run the textbin row T_801CF6D8 declares, so the overlay loader that steps that run enters it: it has no jal caller and takes no arguments.'
   - - 72
     - asm
@@ -90,12 +90,12 @@ segments:
     - func_801CF38C
   - - 4232
     - c
-    - dispatchWorkByte2Tablef708PlcharPlp47800_801CF488
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef708PlcharPlp47800_801CF488.c'
+    - callWorkTablef708Plchar
+    - '@source: src/bof3/plchar/callWorkTablef708Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CF708.'
   - - 4300
     - c
-    - adjustEvenWorkByte8ClaimFrontEndRecordHandler1BSelectSequenceAndQueueCueThenAdvanceWorkByte2PlcharPlp47800_801CF4CC
+    - adjustEvenSequenceCue
   - - 4580
     - c
     - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp47800_801CF5E4

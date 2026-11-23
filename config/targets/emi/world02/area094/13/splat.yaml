@@ -35,13 +35,13 @@ segments:
     - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5354, publishes it into the shared status halfword D_801490A8, and then sets flag bit 0x15 of the shared scenario flag word D_8014686C through the shared bit-set helper 0x8015B580 when that same mode reads 1.'
   - - 180
     - c
-    - publishModeStatusFromTable5358ThenSetFlag16AndRequestPrimaryState7Substate19Or32ByFlag1AWorld02Area09413_801F2CB4
-    - '@source: src/bof3/world/publishModeStatusFromTable5358ThenSetFlag16AndRequestPrimaryState7Substate19Or32ByFlag1AWorld02Area09413_801F2CB4.c'
+    - publishStatusRequestPrimary
+    - '@source: src/bof3/world/publishStatusRequestPrimary.c'
     - '@behavior: selects the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F5358, publishes it into the shared status halfword D_801490A8, and then acts only on mode 1. With flag 0x16 of the shared flag word D_8014686C clear it sets that flag through the shared bit-set helper 0x8015B580, runs the shared front-end startup helper 0x8015C088, clears the shared scenario progress byte 0x80146864, the three shared area state bytes 0x80146865/0x80146866/0x80146867 and the shared sub-state byte 0x80146875, and stores 7 in the shared primary-state byte 0x80146874. With flag 0x16 set it tests flag 0x1A of the same word through the shared flag tester 0x8015B5D4, runs 0x8015C088 and stores 0x19 in the shared sub-state byte 0x80146875 when that flag is clear or 0x32 when it is set, then clears the progress and state bytes and stores 7 in the primary-state byte. Mode 0, a negative mode and every other mode publish the status halfword only.'
   - - 452
     - c
-    - publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4
-    - '@source: src/bof3/world/publishModeStatusFromTable535cThenRequestPrimaryState7Substate32OrPrimaryState9Substate0Or2ByFlag20World02Area09413_801F2DC4.c'
+    - publishStatusPrimaryPrimary
+    - '@source: src/bof3/world/publishStatusPrimaryPrimary.c'
     - '@behavior: publishes the halfword indexed by the signed shared mode byte 0x801490C7 from the target-local halfword table at 0x801F535C into the shared status halfword 0x801490A8 and then acts on that same mode value. Mode 1 runs the shared main-EXE front-end startup helper 0x8015C088, stores 0x32 in the shared step byte 0x80146875, clears the shared scenario progress byte 0x80146864 and the three shared area state bytes 0x80146865/0x80146866/0x80146867, and stores 7 in the shared mode byte 0x80146874. Mode 2 first tests flag 0x20 of the shared flag word 0x8014686C through the shared flag tester 0x8015B5D4 and then runs 0x8015C088 and clears those four bytes on both arms, storing 0 in the step byte and 9 in the mode byte when the flag is clear and 2 in the step byte and 9 in the mode byte when it is set. Mode 0, a negative mode and every other mode publish the status halfword only.'
   - - 720
     - c
@@ -98,8 +98,8 @@ segments:
     - '@behavior: publishes the third shared work base D_80146110 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F350C (indexed by the shared party-id byte D_80144F5C) and halfwords +0x2E/+0x30 from 0x8014613E/0x80146140, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 1968
     - c
-    - markSharedSelector7AndSetFlagBit1EOfSharedFlagWordWorld02Area09413_801F33B0
-    - '@source: src/bof3/world/markSharedSelector7AndSetFlagBit1EOfSharedFlagWordWorld02Area09413_801F33B0.c'
+    - markFlagFlagWord
+    - '@source: src/bof3/world/markFlagFlagWord.c'
     - '@behavior: marks shared selector id 7 through the main-EXE setter 0x80166180 and then sets flag 0x1E of the shared flag-bank word D_8014686C, read with lw, through the EXE-side flag setter 0x8015B580; it takes no arguments and returns nothing, and its only reference is the handler-table word at 0x801F52DC.'
   - - 2016
     - c
@@ -108,8 +108,8 @@ segments:
     - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 4 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the party-indexed byte of the row at 0x801F536C (indexed by the shared party-id byte D_80144F5A) and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 2144
     - c
-    - setFlag42ClearFlag43ThenConsumeMapConditionRecordChainWorld02Area09413_801F3460
-    - '@source: src/bof3/world/setFlag42ClearFlag43ThenConsumeMapConditionRecordChainWorld02Area09413_801F3460.c'
+    - stateConsumeConditionChain
+    - '@source: src/bof3/world/stateConsumeConditionChain.c'
     - '@behavior: acts only when the shared halfword D_80143F04 reads 0x79, sets flag 0x42 and clears flag 0x43 of the shared flag bank at 0x80144F28 through the main-EXE flag services 0x8015B580 and 0x8015B5A8, then walks one record chain of the resident map block whose header halfword at 0x80104028 is a word offset into the block, handing every record with a nonzero leading word to the main-EXE map record consumer 0x801576FC and stepping 4 + 4 * the count in the upper half of that word until a zero leading word ends the walk. Its only reference is the payload word at offset 0x2738 and no jal immediate targets it, so it takes no arguments and returns nothing.'
   - - 2308
     - asm

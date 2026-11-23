@@ -9,7 +9,7 @@ extern u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
  * with a halfword read-modify-write and then invokes the shared helper at
  * 0x801E5988 with no arguments, unconditionally. This entry is the fourth code
  * pointer of the boss step table at 0x800C1804 (0x800C1B14, 0x800C1BF0,
- * 0x800C1CE4, 0x800C1D7C), which dispatchStateByte1Table1804BossBoss05116_800C1AA8
+ * 0x800C1CE4, 0x800C1D7C), which callStateTable1804Boss
  * copies into its frame and indexes by the work record byte 1, so no jal
  * reaches it. The 0x18-byte frame only keeps $ra at 0x10 across the helper
  * call and the halfword address stays in one register across the

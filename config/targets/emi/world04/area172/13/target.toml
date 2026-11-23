@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stateScratchEffectBank.c",
     "src/bof3/world/callWorkByte4Table6770.c",
-    "src/bof3/world/claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8.c",
+    "src/bof3/world/claimFreePositionLevel.c",
     "src/bof3/world/stateLiveLocalParty4.c"
 ]
 support_sources = [
@@ -25,16 +25,16 @@ support_sources = [
     "src/bof3/world/invokeHelperArgsWorld04Area17213_801F4E68.c",
     "src/bof3/world/callHelperArgHelper.c",
     "src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c",
-    "src/bof3/world/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c",
+    "src/bof3/world/queueSharedUiElement9.c",
     "src/bof3/support/area172_13_psyq.c",
-    "src/bof3/world/stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984.c",
+    "src/bof3/world/stepActiveActiveRecords.c",
     "src/bof3/world/armScratchWorkLevelTripleWorld04Area17213_801F4AAC.c",
     "src/bof3/world/disarmScratchLevelTriple.c",
     "src/bof3/world/armScratchLevelTriple.c",
     "src/bof3/world/clearWorkTableAt800E4800World04Area17213_801F38BC.c",
     "src/bof3/world/stepAccumulatorsPhaseSnap.c",
     "src/bof3/world/stateLevelAccumulatorsMarker.c",
-    "src/bof3/world/advanceStepDrawTileUntilCountdownThenSeedStepsAndArmEffectWorld04Area17213_801F342C.c",
+    "src/bof3/world/stateTileUntilSteps.c",
     "src/bof3/world/stateFlagsEffectIdle.c",
     "src/bof3/world/decrementSemiTransTile.c",
     "src/bof3/world/claimEveryFourthIdle.c",
@@ -47,7 +47,7 @@ support_sources = [
     "src/bof3/world/stepStartRequestSelector.c",
     "src/bof3/world/drawSlantedSubtractiveGouraudBandWorld04Area17213_801F4F70.c",
     "src/bof3/world/renderRadialArcShade.c",
-    "src/bof3/world/drawTranslucentGouraudTriangleFromWorkEntryWorld04Area17213_801F3BFC.c",
+    "src/bof3/world/renderTranslucentGouraudTriangle.c",
     "src/bof3/world/stateScratchLevelTriple.c"
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

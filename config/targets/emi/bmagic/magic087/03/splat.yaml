@@ -36,11 +36,11 @@ segments:
     - func_801EF048
   - - 1192
     - c
-    - dispatchStateByte1Table0508BmagicMagic08703_801EF0A8
+    - callStateTable0508Bmagic
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 1260
     - c
-    - dispatchStateByte2Table050cBmagicMagic08703_801EF0EC
+    - callStateTable050Bmagic
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 1328
     - asm
@@ -54,8 +54,8 @@ segments:
     - func_801EF324
   - - 2208
     - c
-    - incrementWorkByte9ThenAdvanceWorkByte2At16ElseIncrementWorkByte4CallAF764AndInvokeF580With0And15BmagicMagic08703_801EF4A0
-    - '@source: src/bof3/bmagic/incrementWorkByte9ThenAdvanceWorkByte2At16ElseIncrementWorkByte4CallAF764AndInvokeF580With0And15BmagicMagic08703_801EF4A0.c'
+    - incrementAdvanceCallInvoke
+    - '@source: src/bof3/bmagic/incrementAdvanceCallInvoke.c'
     - '@behavior: Increment work byte 9; at 16 advance byte 2, otherwise increment byte 4 and call 0x800AF764 then 0x801EF580 with 0 and 15.'
   - - 2352
     - c
@@ -67,7 +67,7 @@ segments:
     - func_801EF580
   - - 3416
     - c
-    - dispatchStateByte1Table0520BmagicMagic08703_801EF958
+    - callStateTable0520Bmagic
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 3484
     - c

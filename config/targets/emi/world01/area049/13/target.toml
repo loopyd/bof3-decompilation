@@ -8,26 +8,26 @@ splat = "config/targets/emi/world01/area049/13/splat.yaml"
 load_address = 0x80117000
 
 sources = [
-    "src/bof3/world/scalePaletteRedAndBlueToHalfWhenFlag3ESetThenResetWorkAreaAndAdvanceWorkByte2World01Area04913_80117A74.c",
-    "src/bof3/world/claimSeedWorkRecordPublishWord1cEveryFourthFrameThenCountdownScratchByte9RearmTo40PublishWord0cAndAdvanceStateWorld01Area04913_801176B8.c",
-    "src/bof3/world/lowerWorkWord0cBy10000MirrorIntoRecordWord1cEveryFourthFrameThenCountdownScratchByte9AndAdvanceStateWorld01Area04913_80117768.c",
+    "src/bof3/world/mathRedBlueHalf.c",
+    "src/bof3/world/claimEveryFourthFrame.c",
+    "src/bof3/world/lowerMirrorEveryFourth.c",
     "src/bof3/world/clearWorkFlagsAndModeFlagBit40WhenNoEntryHandledWorld01Area04913_80117818.c",
     "src/bof3/world/advanceScratchByte9OnEvenFramesResetWorkAreaAt80ThenDrawBandWithComplementShadeWorld01Area04913_80117DF0.c",
 ]
 support_sources = [
-    "src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c",
-    "src/bof3/world/claimWorkRecordSeedWorkPositionWorld01Area04913_80117864.c",
-    "src/bof3/world/clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4.c",
+    "src/bof3/world/callWorkTable818World01.c",
+    "src/bof3/world/claimRecordSeedPosition.c",
+    "src/bof3/world/stateFlagsNoHandled.c",
     "src/bof3/world/findFreeWorkRecordAt800E4800World01Area04913_801178C4.c",
     "src/bof3/world/incrementWorkByte2World01Area04913_80117C38.c",
-    "src/bof3/world/dispatchWorkByte2Table81acWorld01Area04913_80117A30.c",
+    "src/bof3/world/callWorkTable81World01.c",
     "src/bof3/world/dispatchWorkByte2Table81b4World01Area04913_80117BF4.c",
-    "src/bof3/world/scalePaletteRow16KeepGreenUnscaledPublishSerialWorld01Area04913_80117B60.c",
+    "src/bof3/world/mathKeepGreenUnscaled.c",
     "src/bof3/support/area049_13_psyq.c",
-    "src/bof3/world/stepWorkRecordPositionPairByVelocityDecayFadeAndCountDownThenClearRecordAtZeroWorld01Area04913_8011759C.c",
-    "src/bof3/world/stepWorkRecordPositionPairByDoubledVelocityAdvanceHalfword24AndCountDownThenResetAndAdvanceHandlerIndexWorld01Area04913_80117514.c",
-    "src/bof3/world/dispatchWorkByte1Table819cThenRunRecordPassWorld01Area04913_80117610.c",
-    "src/bof3/world/bootHandlerSeedWorkCoordinateTripleResetRecordsThenAdvanceStateWorld01Area04913_80117048.c",
-    "src/bof3/world/raiseModeFlagBit40ReseedWorkRecordsArmCountdownByte9To180ThenAdvanceStateWorld01Area04913_8011765C.c",
+    "src/bof3/world/stepVelocityDecayDown.c",
+    "src/bof3/world/stepDoubledVelocityDown.c",
+    "src/bof3/world/callRunRecordPass.c",
+    "src/bof3/world/bootCoordinateTripleRecords.c",
+    "src/bof3/world/raiseFlagReseedRecords.c",
 ]
 psyq_source = "src/bof3/support/area049_13_psyq.c"

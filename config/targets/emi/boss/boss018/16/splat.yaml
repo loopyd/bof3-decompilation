@@ -33,8 +33,8 @@ segments:
     - D_800C1844
   - - 76
     - c
-    - dispatchStateByte1Table2cacBossBoss01816_800C184C
-    - '@source: src/bof3/boss/dispatchStateByte1Table2cacBossBoss01816_800C184C.c'
+    - callStateTable2Boss
+    - '@source: src/bof3/boss/callStateTable2Boss.c'
   - - 144
     - asm
     - func_800C1890
@@ -48,8 +48,8 @@ segments:
     - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C2CDC handler table of this overlay, so the selected handler''s result stays in the return register.'
   - - 436
     - c
-    - setBossStateFiveWhenStateFourBossBoss01816_800C19B4
-    - '@source: src/bof3/boss/setBossStateFiveWhenStateFourBossBoss01816_800C19B4.c'
+    - stateBossFiveFour
+    - '@source: src/bof3/boss/stateBossFiveFour.c'
     - '@behavior: Overlay handler: when the record state byte at 0x80145FA8 equals 4, publishes 5 into the shared boss state byte at 0x80146384; otherwise it returns without touching any state.'
   - - 472
     - c
@@ -120,7 +120,7 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2Table2dacBossBoss01816_800C1FF8.c'
   - - 2108
     - c
-    - advanceWorkCursorOnFrameParityBossBoss01816_800C203C
+    - stateCursorFrameParity
   - - 2148
     - c
     - noopHandlerBossBoss01816_800C2064
@@ -177,8 +177,8 @@ segments:
     - func_800C292C
   - - 4524
     - c
-    - fillTwoByTwoCellBlockBossBoss01816_800C29AC
-    - '@source: src/bof3/boss/fillTwoByTwoCellBlockBossBoss01816_800C29AC.c'
+    - renderTwoCellBlock
+    - '@source: src/bof3/boss/renderTwoCellBlock.c'
     - '@behavior: Writes the dword fill value selected by the second argument into a two-by-two block of the dword cell array at 0x80104030, addressed with the resident map row stride byte at 0x80104000, at the block column and row held by the two-byte origin record of 0x800C2DC4 selected by the first argument.'
   - - 4672
     - c

@@ -1,11 +1,11 @@
 g_battle_work = 0x1F800044;
 dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04 = 0x801EEC04;
-queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C = 0x801EEC5C;
+queueActionPointerTriplet = 0x801EEC5C;
 func_801EED1C = 0x801EED1C;
-dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C = 0x801EED7C;
+callTwoMatrixPasses = 0x801EED7C;
 func_801EEE0C = 0x801EEE0C;
 func_801EEF48 = 0x801EEF48;
-incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020 = 0x801EF020;
+incrementInvokeHelperFrames = 0x801EF020;
 add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090 = 0x801EF090;
 incrementWorkByteAAndAdvanceWorkByte1At60BmagicMagic10803_801EF0E0 = 0x801EF0E0;
 incrementWorkByteAThenSetGlobalWorkByteBToFFAt80AndInvokeHelperBmagicMagic10803_801EF130 = 0x801EF130;

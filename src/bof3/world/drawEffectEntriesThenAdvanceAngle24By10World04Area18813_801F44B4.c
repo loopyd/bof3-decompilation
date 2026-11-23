@@ -4,7 +4,7 @@
 /* Effect entry draw pass at 0x801F40F4, claimed by the source of that address
  * in this payload. It stamps the shared primitive cursor and draws one
  * 0x2C-byte effect entry handed in $a0. */
-void drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4(
+void renderRotatedOffsetsBlue(
     u8* entry);
 
 /* Shared projection setup at 0x801AFE18: fills the 0x20-byte projection
@@ -76,7 +76,7 @@ void drawEffectEntriesThenAdvanceAngle24By10World04Area18813_801F44B4(void) {
   index = 0u;
 
   do {
-    drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld04Area18813_801F40F4(
+    renderRotatedOffsetsBlue(
         entry);
     FIELD_REF(u16, entry, 0x24u) = (u16)(FIELD_REF(u16, entry, 0x24u) + 0x10);
     entry += 0x2cu;

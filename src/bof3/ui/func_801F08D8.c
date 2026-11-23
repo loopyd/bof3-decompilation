@@ -65,7 +65,7 @@ void func_801F08D8(u8 source_index, u8 task_index) {
 
   switch (record_kind) {
   case 0:
-    activateTaskWithRandomLabel(task_index);
+    activateTaskRandomLabel(task_index);
     break;
   case 4:
     func_801F0C6C(task_index, record_index);
@@ -80,7 +80,7 @@ void func_801F08D8(u8 source_index, u8 task_index) {
     activateTaskStatusC003(task_index);
     break;
   case 8:
-    activateScratchTaskWithBandLabel(source_index, task_index, record_index);
+    activateTaskBandLabel(source_index, task_index, record_index);
     break;
   case 9:
     func_801F0FBC(source_index, task_index, record_index);
@@ -95,7 +95,7 @@ void func_801F08D8(u8 source_index, u8 task_index) {
     setVariantTaskStatus(task_index, record_index);
     break;
   case 13:
-    activateTaskStatusC00A(task_index);
+    activateTaskStatus(task_index);
     break;
   }
 

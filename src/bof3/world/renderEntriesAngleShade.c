@@ -2,7 +2,7 @@
 #include "gpu/prim.h"
 
 /* Resident helpers this overlay calls, declared the way its sibling
- * drawFourStaggeredTranslucentArcFansAroundPointWorld02Area07714_801F4550.c
+ * renderStaggeredArcFans.c
  * declares them: func_8014E5A0 links the current primitive cursor into the cell
  * list and advances it by the passed size, and func_801AFE18 fills the
  * 0x20-byte projection scratch handed as arg0. */
@@ -15,7 +15,7 @@ void func_801AFE18(void* arg0);
  * the signed extent pairs at +0x10/+0x12 and +0x18/+0x1A by the spin angle
  * halfword at +0x24 and the scale halfword at +0x28, which is why the pass
  * below advances that halfword between frames. */
-void drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8(
+void renderTriangleShadeBlue(
     u8* entry);
 
 /* Shared work-area reset at 0x80196070, lifted from the main executable as
@@ -39,7 +39,7 @@ extern u8* workRecordCursor1F800044;
  *           the 0x2C-byte-stride effect table at 0x800E5504, the table the
  *           neighbouring handler entry 0 (0x801F3E48) seeds through
  *           func_801F4A68: each entry is drawn through
- *           drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8,
+ *           renderTriangleShadeBlue,
  *           its unsigned spin angle halfword at +0x24 is advanced by 0x10, and
  *           the unsigned halfword at +0x2A is raised by 0x20 while the work
  *           byte +0x09 is below 4 and lowered by 2 otherwise. After PopMatrix it
@@ -70,7 +70,7 @@ void renderEntriesAngleShade(
   index = 0;
 
   do {
-    drawTranslucentGouraudTriangleFromEffectEntryPositionAndTwoRotatedOffsetsTintedShadeHalfBlueWorld02Area07714_801F47C8(
+    renderTriangleShadeBlue(
         entry);
     work = workRecordCursor1F800044;
     FIELD_REF(u16, entry, 0x24u) = (u16)(FIELD_REF(u16, entry, 0x24u) + 0x10);

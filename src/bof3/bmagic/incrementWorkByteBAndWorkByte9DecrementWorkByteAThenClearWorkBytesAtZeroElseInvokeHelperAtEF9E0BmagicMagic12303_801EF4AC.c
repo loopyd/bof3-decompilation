@@ -3,7 +3,7 @@
 /* Scratchpad work-object pointer cell at 0x1F800044, already bound at that
  * address by this target's map as g_battle_work, the name its exact lifts
  * clearWorkBytesBmagicMagic12303_801EFD04 and
- * decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550 use. The
+ * decrementGlobalClearBytes use. The
  * cell is evaluated once per access group because each byte store goes through
  * the pointer the cell supplied, so the compiler re-materializes
  * `lui $v1,0x1F80` / `lw $v1,0x44($v1)` exactly three times, at 0x801EF4AC,
@@ -22,7 +22,7 @@ extern void func_801EF9E0(void); /* @source 0x801EF9E0 @kind function */
 /* @source 0x801EF4AC
  * @behavior Entry index 2 of the four-word handler run based at 0x801EFD5C that
  *           this target's exact dispatcher
- *           dispatchStateByte2Tablefd5cBmagicMagic12303_801EF108 indexes with
+ *           callStateTablefd5Bmagic indexes with
  *           work byte 2, which is why no jal word in this payload names
  *           0x801EF4AC. It increments the scratchpad work record's unsigned
  *           byte 0xB by one at byte width (lbu / addiu 1 / sb), re-reads the

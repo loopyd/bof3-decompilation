@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 56
     - c
-    - dispatchStateByte1Table4b38World04Area16813_801F2C38
+    - callStateTable4World04
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 124
     - c
@@ -48,8 +48,8 @@ segments:
     - func_801F2E10
   - - 1088
     - c
-    - drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040
-    - '@source: src/bof3/world/drawTranslucentBeamQuadsBetweenScreenPairWithHalfWidthsTintedByWorkByte6TripleWorld04Area16813_801F3040.c'
+    - renderBeamBetweenWidths
+    - '@source: src/bof3/world/renderBeamBetweenWidths.c'
     - '@behavior: Seeds one translucent POLY_G4 at the shared primitive cursor, writes the two screen pairs and lays each far vertex on the 0x801783C8/0x801782FC rotator samples of its own angle scaled by its own signed amplitude, tints the two near vertices from the shade triple at 0x801F4B2C + 3 * work byte 6 with the far shades black, links the 0x24-byte packet through 0x80155A08 over the 0xC/0x10 position pair with kind 1, then copies the packet one size class on, rewrites its two far vertices half a turn round and links it again.'
   - - 2016
     - c
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Advances work byte +2 when the camera is inside the record coordinate window, queues cue 0x200 while the shared front-end phase byte is zero, then calls local helper 0x801F3914.'
   - - 2872
     - c
-    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall3914World04Area16813_801F3738.c'
+    - stateAdvanceWorkCall3914
+    - '@source: src/bof3/world/stateAdvanceWorkCall3914.c'
     - '@behavior: Adds 0x10 to work halfword +0x30, advances byte +2 at signed 0x80, then calls helper 0x801F3914.'
   - - 2964
     - c
@@ -87,26 +87,26 @@ segments:
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 4528
     - c
-    - seedWork20ClearWork303eAndAdvanceStepThenCallPairWorld04Area16813_801F3DB0
-    - '@source: src/bof3/world/seedWork20ClearWork303eAndAdvanceStepThenCallPairWorld04Area16813_801F3DB0.c'
+    - stateStepCallPair
+    - '@source: src/bof3/world/stateStepCallPair.c'
     - '@behavior: Seeds work fields, advances step byte 2, and calls helper 0x801F4158 twice.'
   - - 4632
     - asm
     - func_801F3E18
   - - 4948
     - c
-    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCallPairWorld04Area16813_801F3F54
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCallPairWorld04Area16813_801F3F54.c'
+    - stateAdvanceCallPair
+    - '@source: src/bof3/world/stateAdvanceCallPair.c'
     - '@behavior: Adds 0x10 to work halfword +0x30, advances byte +2 at signed 0x80, then calls helper 0x801F4158 with (0, 0) and (1, 3).'
   - - 5052
     - c
-    - advanceWorkByte2WhenNoWorkRecordInsideCameraWindowThenCallPairWorld04Area16813_801F3FBC
-    - '@source: src/bof3/world/advanceWorkByte2WhenNoWorkRecordInsideCameraWindowThenCallPairWorld04Area16813_801F3FBC.c'
+    - stateNoInsideCamera
+    - '@source: src/bof3/world/stateNoInsideCamera.c'
     - '@behavior: Fourth handler of the state-byte-2 run based at 0x801F4BA0, at word 0x801F4BAC: walks the first three 0x140-byte work records based at 0x80145E90, skips any record whose leading byte reads zero, and accepts a record whose word at +0x38 stays within 0x28000 of the work cursor halfword at +0x3A scaled by 0x10000 and whose word at +0x34 stays within 0x20000 of the cursor halfword at +0x36 scaled by 0x10000, or within 0x20000 of the next cell start. When no record qualified it re-reads the scratchpad cursor at 0x1F800044 and increments byte +2 of that record, then calls the local helper 0x801F4158 with (0, 0) and (1, 3).'
   - - 5336
     - c
-    - decrementHalfword30By10AndQueueCue203WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCallPairWorld04Area16813_801F40D8
-    - '@source: src/bof3/world/decrementHalfword30By10AndQueueCue203WhenFrontendPhaseZeroThenSetWorkByte2To1ThenCallPairWorld04Area16813_801F40D8.c'
+    - decrementFrontendPhasePair
+    - '@source: src/bof3/world/decrementFrontendPhasePair.c'
     - '@behavior: Subtracts 0x10 from work halfword +0x30 and, once that countdown reaches zero, queues cue 0x203 while the shared front-end phase byte is zero and sets work byte +2 to 1, then calls local helper 0x801F4158 with (0, 1) and (1, 2).'
   - - 5464
     - asm
@@ -117,21 +117,21 @@ segments:
     - '@source: src/bof3/world/area16813DispatchTables.c'
   - - 6388
     - c
-    - setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4
-    - '@source: src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceQueueSharedUiElementPairThenAdvanceStepWorld04Area16813_801F44F4.c'
+    - stateDistanceUiElement
+    - '@source: src/bof3/world/stateDistanceUiElement.c'
     - '@behavior: Entry 0 of the state-byte-2 handler run based at 0x801F4BB8: republishes the record halfwords +0x36 and +0x3A from the stride-2 byte row table at 0x801F4B7C and 0x801F4B7D, stores the halved negated distance of the record word pair +0x34 and +0x38 minus 0x801F4B5C into halfword +0x3E, seeds word +0x20 and byte +0x0B from the row tables at 0x801F4B68 and 0x801F4BC8, queues two shared world markers at the republished halfword pair with the row size from 0x801F4BDC, then advances byte +0x02 and calls the step helper 0x801F3914.'
   - - 6708
     - asm
     - func_801F4634
   - - 6904
     - c
-    - setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8
-    - '@source: src/bof3/world/setStatusFFFFWhenGateElseStatus6Or7BySharedSelector0CAndSetOverlayByteBit0World04Area16813_801F46F8.c'
+    - stateStatusGateOverlay
+    - '@source: src/bof3/world/stateStatusGateOverlay.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 0 of the shared overlay byte when the shared selector query for id 0xC answers nonzero, or stores 7 when it answers zero.'
   - - 7012
     - c
-    - setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGate3ThenPublishRecordFromGateRowWorld04Area16813_801F4764.c'
+    - stateEntrySubstateRow
+    - '@source: src/bof3/world/stateEntrySubstateRow.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword, and while the shared gate byte equals 3 runs the shared front-end startup helper and writes state entry 0x0A with progress 5 and companion byte 0xFF, then copies the gated row pair from the payload row table into record words 0x18 and 0x1C.'
   - - 7176
     - c
@@ -149,8 +149,8 @@ segments:
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero stores 6 and sets bit 1 of the shared overlay byte at 0x8014933B when the shared selector query for id 0xD answers nonzero, or stores 7 when it answers zero.'
   - - 7456
     - c
-    - setStatusFFFFAndStateEntry3BProgress0SetSharedFlagBit8FWhenGateClearWorld04Area16813_801F4920
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntry3BProgress0SetSharedFlagBit8FWhenGateClearWorld04Area16813_801F4920.c'
+    - stateStatusFlagGate
+    - '@source: src/bof3/world/stateStatusFlagGate.c'
     - '@behavior: Stores 0xFFFF into the shared status halfword when the shared gate byte is nonzero, and while it is zero sets bit 0x8F of the shared flag bank at 0x80144F28 through the shared bit helper 0x8015B580, runs the shared front-end startup helper 0x8015C088, then requests state entry 0x3B with progress 0 through the shared state and progress bytes at 0x801448EB and 0x801448EC.'
   - - 7552
     - c

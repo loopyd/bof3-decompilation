@@ -16,7 +16,7 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 extern s16 func_800C34D4[]; /* @source 0x800C34D4 @kind data */
 extern s16 D_800C34D6[]; /* @source 0x800C34D6 @kind data */
 
-extern s32 fixedPointToUnitsBossBoss05516_800C3254(s32 value, s32 arg1); /* @source 0x800C3254 */
+extern s32 fixedPointUnitsBoss(s32 value, s32 arg1); /* @source 0x800C3254 */
 
 /* @source 0x800C3284
  * @behavior Overlay step that refreshes the work record at scratchpad cell
@@ -60,16 +60,16 @@ void refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800C3284(v
   ((u8 *)g_battle_work)[0x5F] = ((u8 *)D_801EB4E0)[0x5F];
 
   if (((u8 *)g_battle_work)[0x48] != 0) {
-    FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointToUnitsBossBoss05516_800C3254(
+    FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointUnitsBoss(
         func_800C34D4[((u8 *)g_battle_work)[0x1] * 2] * FIELD_REF(u32, g_battle_work, 0x40),
         FIELD_REF(u32, g_battle_work, 0x40));
-    FIELD_REF(u16, g_battle_work, 0x30) += fixedPointToUnitsBossBoss05516_800C3254(
+    FIELD_REF(u16, g_battle_work, 0x30) += fixedPointUnitsBoss(
         D_800C34D6[((u8 *)g_battle_work)[0x1] * 2] * FIELD_REF(u32, g_battle_work, 0x44),
         FIELD_REF(u32, g_battle_work, 0x44));
   } else {
-    FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointToUnitsBossBoss05516_800C3254(
+    FIELD_REF(u16, g_battle_work, 0x2E) += fixedPointUnitsBoss(
         func_800C34D4[((u8 *)g_battle_work)[0x1] * 2] << 16, 0x10000);
-    FIELD_REF(u16, g_battle_work, 0x30) += fixedPointToUnitsBossBoss05516_800C3254(
+    FIELD_REF(u16, g_battle_work, 0x30) += fixedPointUnitsBoss(
         D_800C34D6[((u8 *)g_battle_work)[0x1] * 2] << 16, 0x10000);
   }
 }

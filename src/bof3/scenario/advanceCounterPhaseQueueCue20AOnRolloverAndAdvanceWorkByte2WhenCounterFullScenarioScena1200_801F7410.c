@@ -26,7 +26,7 @@ void func_80196070(void);
  * dispatchWorkByte2HandlerScenarioScena1200_801F73CC selects with the work
  * object's unsigned byte at offset 0x02 scaled by four, so in that window it
  * runs while that byte reads 0; the neighbours of the same run are entry 1,
- * requestPrimaryState5Substate19SetModeFlagBit8ThenResetWorkAreaUnlessFrontEndMode2OrCue4OrFlag2ESetScenarioScena1200_801F7518,
+ * requestResetAreaUnless,
  * and entry 2, stateFieldQueueScenario.
  * The word at 0x801FD190 is the only little-endian word of the overlay payload
  * that holds 0x801F7410, and it is also index 3 of the preceding run based at

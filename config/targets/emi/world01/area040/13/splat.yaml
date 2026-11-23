@@ -30,8 +30,8 @@ segments:
     - func_801F2C04
   - - 116
     - c
-    - advanceWorkWord34By8000WhenWorkByte79Is2World01Area04013_801F2C74
-    - '@source: src/bof3/world/advanceWorkWord34By8000WhenWorkByte79Is2World01Area04013_801F2C74.c'
+    - stateWorkBy8000Work
+    - '@source: src/bof3/world/stateWorkBy8000Work.c'
     - '@behavior: reads mode byte 0x79 of the work record published through the global pointer cell 0x80146250 and, only when that byte is 2, adds 0x8000 to the word at 0x34 of the record published through the scratchpad pointer cell 0x1F800044, so the 16.16 x position of that record moves by half a unit.'
   - - 180
     - asm
@@ -50,8 +50,8 @@ segments:
     - func_801F2E24
   - - 632
     - c
-    - queueSharedUiBlock41To44x3To9ByModeWorld01Area04013_801F2E78
-    - '@source: src/bof3/world/queueSharedUiBlock41To44x3To9ByModeWorld01Area04013_801F2E78.c'
+    - queueSharedUiMode
+    - '@source: src/bof3/world/queueSharedUiMode.c'
     - '@behavior: queues the shared UI block x = 0x41..0x44, y = 3..9 with size 0 and returns 1 when the low nibble of 0x80144EA9 is 5; otherwise queues it with size 0xA4 and returns 0.'
   - - 896
     - asm
@@ -85,13 +85,13 @@ segments:
     - '@behavior: queues the sixteen shared UI elements at x = 0x94..0x97 and y = 0x20..0x23 through 0x801A4BC0 with size 0, visiting all four x positions for each successive y position.'
   - - 2860
     - c
-    - queueSharedUiElementSize50AtShiftedCellInsideMarkerBlockWorld01Area04013_801F372C
-    - '@source: src/bof3/world/queueSharedUiElementSize50AtShiftedCellInsideMarkerBlockWorld01Area04013_801F372C.c'
+    - queueShiftedInsideBlock
+    - '@source: src/bof3/world/queueShiftedInsideBlock.c'
     - '@behavior: reads the shared route index from the shared mode-record byte 0x80145E98 masked with 7, takes that entry (index times two) of the shared direction-step table 0x80181B00 / 0x80181B01 as two signed byte steps, keeps the low halfword of each of the two packed position arguments while subtracting the step from its cell halfword, and queues the shared UI element at the shifted cell pair through 0x801A4BC0 with size 0x50 when the first shifted cell is 0x94..0x97 and the second is 0x20..0x23.'
   - - 3028
     - c
-    - drawPulsingQuadsForCode50MarkerBlockWorld01Area04013_801F37D4
-    - '@source: src/bof3/world/drawPulsingQuadsForCode50MarkerBlockWorld01Area04013_801F37D4.c'
+    - renderPulsingQuadsBlock
+    - '@source: src/bof3/world/renderPulsingQuadsBlock.c'
     - '@behavior: draws pulsing semitransparent quads for code-0x50 cells in the four-by-four marker block at x=0x94..0x97 and y=0x20..0x23.'
   - - 3584
     - c

@@ -27,7 +27,7 @@ u32 func_8014D8D4(u8 arg0);
  *           scratchpad pointer cell 0x1F800044, dispatched on work-record byte
  *           2: the payload publishes this body address as the word 0x801CF438
  *           at 0x801CF624, which is entry 1 of the handler run based at
- *           0x801CF620 that dispatchWorkByte2Tablef620PlcharPlp34900_801CF328
+ *           0x801CF620 that callWorkTablef620Plchar
  *           indexes with work byte 2 scaled by four, so the body runs when byte
  *           2 reads 1; that word is also entry 14 of the sixteen-word
  *           code-pointer run the Splat textbin row places at 0x801CF5EC, and no

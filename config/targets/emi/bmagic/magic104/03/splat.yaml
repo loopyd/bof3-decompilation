@@ -49,7 +49,7 @@ segments:
     - func_801EF03C
   - - 1180
     - c
-    - dispatchStateByte1Table08e8BmagicMagic10403_801EF09C
+    - callStateTable08Bmagic
     - '@source: src/bof3/bmagic/magic10403DispatchTables.c'
   - - 1248
     - asm
@@ -62,39 +62,39 @@ segments:
     - func_801EF160
   - - 1400
     - c
-    - decrementWorkByteAThenInvokeHelperByByteBParityClearBytes9AndAAndAdvanceByte2BmagicMagic10403_801EF178
-    - '@source: src/bof3/bmagic/decrementWorkByteAThenInvokeHelperByByteBParityClearBytes9AndAAndAdvanceByte2BmagicMagic10403_801EF178.c'
+    - decrementInvokeHelperParity
+    - '@source: src/bof3/bmagic/decrementInvokeHelperParity.c'
     - '@behavior: Decrements work byte 0xA modulo 256; on zero calls helper 0x8015D71C with 0x101 for odd work byte 0xB or 0x100 otherwise, clears bytes 9 and 0xA, and advances byte 2 through separately reloaded work pointers. Takes no arguments and returns nothing.'
   - - 1564
     - c
-    - incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C
-    - '@source: src/bof3/bmagic/incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C.c'
+    - incrementClearByteAdvance
+    - '@source: src/bof3/bmagic/incrementClearByteAdvance.c'
     - '@behavior: Increments work byte 0x9 modulo 256; when the stored value equals 8, reloads the work pointer to clear byte 0xA, then reloads it again to increment dispatch byte 0x2. Takes no arguments and returns nothing.'
   - - 1660
     - asm
     - func_801EF27C
   - - 1784
     - c
-    - incrementWorkBytesAAnd9ThenCopyByteBToGlobalWorkAndInvokeHelperAt18BmagicMagic10403_801EF2F8
-    - '@source: src/bof3/bmagic/incrementWorkBytesAAnd9ThenCopyByteBToGlobalWorkAndInvokeHelperAt18BmagicMagic10403_801EF2F8.c'
+    - incrementBytesCopyGlobal
+    - '@source: src/bof3/bmagic/incrementBytesCopyGlobal.c'
     - '@behavior: Increments work bytes 0xA and 0x9 through separately loaded work pointers; when the stored byte 0x9 equals 0x18, copies work byte 0xB to byte 0xB of the record published at 0x801EB4E0 and invokes the helper at 0x801E5988. Takes no arguments and returns nothing.'
   - - 1904
     - c
-    - drawSixteenQuadBandsWithWorkByte9RadiusAndStateColorsBmagicMagic10403_801EF370
-    - '@source: src/bof3/bmagic/drawSixteenQuadBandsWithWorkByte9RadiusAndStateColorsBmagicMagic10403_801EF370.c'
+    - renderSixteenBandsColors
+    - '@source: src/bof3/bmagic/renderSixteenBandsColors.c'
     - '@behavior: Draw bands of sixteen semi-transparent Gouraud quads with work-byte-9 radius, sampled band angles and state-dependent colors; project scratchpad vectors and append at work words 0x34/0x38.'
   - - 3668
     - asm
     - func_801EFA54
   - - 3884
     - c
-    - drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C
-    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C.c'
+    - renderThirtyTrianglesSampled
+    - '@source: src/bof3/bmagic/renderThirtyTrianglesSampled.c'
     - '@behavior: Draw thirty-two translucent Gouraud fan triangles using a sampled work-byte-9 radius and a work-state-3 origin fade; submit packets at work coordinates plus signed rim offsets.'
   - - 4660
     - c
-    - drawThirtyTwoTranslucentGouraudRingQuadsWithSampledWorkByte9RadiiAndFadeAfter8BmagicMagic10403_801EFE34
-    - '@source: src/bof3/bmagic/drawThirtyTwoTranslucentGouraudRingQuadsWithSampledWorkByte9RadiiAndFadeAfter8BmagicMagic10403_801EFE34.c'
+    - renderThirtySampledRadii
+    - '@source: src/bof3/bmagic/renderThirtySampledRadii.c'
     - '@behavior: Draw thirty-two translucent Gouraud ring quads using sampled work-byte-9 radii, phase steps of 0x100 and first-edge fade after work byte 9 exceeds eight; append at slot 5.'
   - - 5644
     - asm

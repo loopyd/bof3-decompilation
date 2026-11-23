@@ -38,8 +38,8 @@ segments:
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read and, while it is nonzero, stores the constant 5 into the handler index byte at 0x801D4286 with the constant materialised in the branch delay slot; it then stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and returns, taking no arguments and writing nothing else; the payload names this body only as the address-taken word at 0x801F3B38 of the ordered handler run that also holds 0x801F2C04, 0x801F2C84, 0x801F2CE4 and 0x801F2D28, so no call site fixes a prototype.'
   - - 228
     - c
-    - setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4
-    - '@source: src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4.c'
+    - stateStatus7ModeGate
+    - '@source: src/bof3/world/stateStatus7ModeGate.c'
     - '@behavior: loads the shared gate byte at 0x801490C7 with a signed byte read and, while it is nonzero, stores the constant 7 into the shared status halfword at 0x801490A8 and then the constant 6 into the shared mode byte at 0x801D4285, materialising the 7 in the branch delay slot; when the gate byte is zero it stores 0xFFFF into 0x801490A8 instead and writes nothing else, then returns, taking no arguments; the payload names this body only as the address-taken word at 0x801F3B3C of the ordered handler run that also holds 0x801F2C04, 0x801F2C84, 0x801F2CB4 and 0x801F2D28, so no call site fixes a prototype.'
   - - 296
     - c
@@ -56,13 +56,13 @@ segments:
     - func_801F2DB0
   - - 620
     - c
-    - clearWorkCountdownAndRowByteAdvanceWorkByte4WhenFirstRecordKindUnseededWorld02Area09113_801F2E6C
-    - '@source: src/bof3/world/clearWorkCountdownAndRowByteAdvanceWorkByte4WhenFirstRecordKindUnseededWorld02Area09113_801F2E6C.c'
+    - stateFirstKindUnseeded
+    - '@source: src/bof3/world/stateFirstKindUnseeded.c'
     - '@behavior: reads the shared record-kind byte at 0x80145FBB and, while it is zero, dispatches cue 0x200 through 0x8015DF18 then clears the scratchpad work record read through pointer cell 0x1F800044: byte +0xA (the countdown the area091 palette-step sibling decrements) and byte +0xB (the row index that sibling re-arms) go to zero, and byte +4 is incremented; each of the three accesses reloads the cell, and a nonzero kind byte skips the body.'
   - - 724
     - c
-    - drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4
-    - '@source: src/bof3/world/drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4.c'
+    - renderWedgesFadingBlack
+    - '@source: src/bof3/world/renderWedgesFadingBlack.c'
     - '@behavior: pushes the GTE matrix stack, projects the fixed position triplet (-0x3040, -0x3300, 0x80) into the translation field of a 0x20-byte scratch matrix through RotTrans, turns a zeroed rotation triplet into that matrix through RotMatrix, composes the shared screen matrix at 0x801492E8 under it through MulMatrix2 and publishes it through SetRotMatrix and SetTransMatrix; then arms SetDrawMode on g_PrimCursor with texture page 0xAE when GetGraphType returns 1 or 2 and 0x3E otherwise, links a 0xC-byte packet through func_80155A08, and stamps thirty-two semi-transparent POLY_G3 wedges whose first vertex is the zeroed scratchpad triplet 0x1F800014 and whose two arc vertices are the func_801783C8 x and func_801782FC y samples of the phase counter<<7 scaled by the first argument truncated to an unsigned halfword and shifted right twelve, with the counter advancing between the two arc vertices so neighbouring wedges meet at the shared sample around the 0x1000 turn; each packet gets length byte 6, colour-0 code 0x30, the passed shade in the first colour triple with the two later triples black, and is linked as a 0x1C-byte class before the next pass; the matrix stack is popped after the thirty-second pass.'
   - - 1324
     - asm

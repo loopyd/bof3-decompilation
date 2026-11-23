@@ -58,8 +58,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen index byte 0x03 it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 and advances the step byte 0x02, else it ticks the countdown byte 0x09 and, when that expires, re-arms it to 2 and steps the route index byte 0x08 by the sign byte 0x0B masked to the eight-entry window before reselecting.'
   - - 1068
     - c
-    - dispatchWorkByte2Tablef918PlcharPlp45700_801CE82C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef918PlcharPlp45700_801CE82C.c'
+    - callWorkTablef918Plchar
+    - '@source: src/bof3/plchar/callWorkTablef918Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF918 with no arguments, discarding any result. The original does not bound the index before the scaled table load. Its only in-image reference is the word 0x801CE82C at 0x801CF94C, entry 13 of that run and entry 19 of the twenty-one-entry code-pointer run at 0x801CF900, so the overlay loader that steps that run enters it.'
   - - 1136
     - c
@@ -78,8 +78,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as word 0x801CF920, index 8 of the code-pointer run that starts at 0x801CF900 and ends with this payload: while the work pending-request flag byte 0x07 is nonzero it runs the shared readiness helper func_8014DAEC, returns while the helper reports not-ready and, once it reports ready, hands the work route byte 0x08 to the shared arrival-sequence selector func_8014D8D4 and clears the flag; while the flag reads zero it runs the same helper and, once ready, clears work byte 0x2B and the state byte 0x12B of the front-end record published at 0x80146250 only while the 0x74-byte front-end row selected by work byte 0x0B still has its occupancy byte 0 clear'
   - - 2076
     - c
-    - dispatchWorkByte2Tablef924PlcharPlp45700_801CEC1C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef924PlcharPlp45700_801CEC1C.c'
+    - callWorkTablef924Plchar
+    - '@source: src/bof3/plchar/callWorkTablef924Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CF924.'
   - - 2144
     - c
@@ -92,8 +92,8 @@ segments:
     - '@behavior: Overlay step of the front-end work object: when the current route index byte 0x08 equals the chosen index byte 0x03 it selects arrival sequence 0x40 for route 3 and 0x41 for route 5 through the shared selector and advances the step byte 0x02, else it ticks the countdown byte 0x09 and, when that expires, re-arms it to 2 and steps the route index byte 0x08 by the sign byte 0x0B masked to the eight-entry window before reselecting.'
   - - 2640
     - c
-    - dispatchWorkByte2Tablef930PlcharPlp45700_801CEE50
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablef930PlcharPlp45700_801CEE50.c'
+    - callWorkTablef930Plchar
+    - '@source: src/bof3/plchar/callWorkTablef930Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CF930.'
   - - 2708
     - c
@@ -123,8 +123,8 @@ segments:
     - testProjectedWorkPositionAgainstWorkRecordsOrMapCodeF2PlcharPlp45700_801CF744
   - - 5240
     - c
-    - dispatchWorkHalfword2cTablef93cPlcharPlp45700_801CF878
-    - '@source: src/bof3/plchar/dispatchWorkHalfword2cTablef93cPlcharPlp45700_801CF878.c'
+    - callWorkTablef93Plchar
+    - '@source: src/bof3/plchar/callWorkTablef93Plchar.c'
     - '@behavior: Overlay step dispatch on the work record''s halfword at offset 0x2C: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record''s unsigned halfword at offset 0x2C, scales it by four and calls the matching entry of this overlay''s handler run based at 0x801CF93C with no arguments, discarding any result. The original does not bound the index before the scaled table load. The pointer-cell load precedes frame creation, the 0x18-byte frame only keeps $ra at 0x10 across the indirect call, and the slots after the index halfword and after the table load stay nops. It reads no other state and writes none. Neither this address nor the table base appears in any word of the payload, so the overlay loader that steps the twenty-one-word run at 0x801CF900 enters it: it has no jal caller and takes no arguments.'
   - - 5308
     - c

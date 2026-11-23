@@ -8,9 +8,9 @@ splat = "config/targets/emi/boss/boss004/13/splat.yaml"
 load_address = 0x800C1800
 
 sources = [
-    "src/bof3/boss/dispatchStateByte1Table2740BossBoss00413_800C1860.c",
-    "src/bof3/boss/dispatchStateByte2Table2770BossBoss00413_800C18FC.c",
-    "src/bof3/boss/dispatchStateByte2Table2788BossBoss00413_800C19C0.c",
+    "src/bof3/boss/callStateTable2740Boss.c",
+    "src/bof3/boss/callStateTable2770Boss.c",
+    "src/bof3/boss/callStateTable2788Boss.c",
 ]
 support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss00413_800C1C0C.c",

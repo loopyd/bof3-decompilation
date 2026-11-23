@@ -8,11 +8,11 @@ splat = "config/targets/emi/bmagic/magic096/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/add2ToWorkBytes9AndAThenAdvanceWorkByte2WhenByte9MatchesTableEntryForByte4BmagicMagic09603_801EF2CC.c",
+    "src/bof3/bmagic/workMatchesTableEntry.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09603_801EEC24.c",
     "src/bof3/bmagic/decrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF394.c",
     "src/bof3/bmagic/decrementWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic09603_801EF348.c",
-    "src/bof3/bmagic/drawTranslucentFanOfEightGouraudTrianglesFromOriginAtRadiusSixteenTimesWorkByteAPlusSixteenTintedByWorkByteATimesSevenEightAtOriginAndNineAtRimBmagicMagic09603_801EFB3C.c",
+    "src/bof3/bmagic/renderSevenNineRim.c",
     "src/bof3/bmagic/drawTranslucentGouraudQuadRingAroundOriginBetweenRadiiSixteenTimesWorkByteAPlusSixteenAndPlusOneTwentyEightInEightStepsOf512TintingInnerEdgeByWorkByteATimesNineAndSevenBmagicMagic09603_801EFDF4.c",
 ]
 support_sources = [

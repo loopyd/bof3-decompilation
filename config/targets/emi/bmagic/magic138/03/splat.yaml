@@ -35,25 +35,25 @@ segments:
     - '@behavior: Overlay entry: reads the work-object pointer cell at 0x1F800044, copies the three-word code pointer prefix at 0x801EEC04 (0x801EEC88, 0x801EED60, 0x801EEED8) into its own 0x28-byte frame and invokes the entry the work-object state byte 1 selects, with no arguments.'
   - - 136
     - c
-    - seedWorkPoseCopy16HalfwordsSetByte80145988ToOneClearWorkBytesBAnd9PublishWorkPointerInvokeUpdateHelperThenAdvanceWorkByte1BmagicMagic13803_801EEC88
-    - '@source: src/bof3/bmagic/seedWorkPoseCopy16HalfwordsSetByte80145988ToOneClearWorkBytesBAnd9PublishWorkPointerInvokeUpdateHelperThenAdvanceWorkByte1BmagicMagic13803_801EEC88.c'
+    - statePoseHalfwordsPointer
+    - '@source: src/bof3/bmagic/statePoseHalfwordsPointer.c'
     - '@behavior: Entry stage 0 of the overlay, word 0 of the nine-word handler pointer run at 0x801EEC04 (the payload word at 0x801EEC04) and one of the three entries the dispatcher at 0x801EEC28 indexes with work byte 1. It seeds the scratchpad work object halfwords 0x2E and 0x30 with 0xF0 and 0xFA through one load of the pointer cell at 0x1F800044, copies sixteen unsigned halfwords from the table at 0x80036C00 into the table at 0x8003AC00 unchanged, stores 1 into the shared main-RAM byte at 0x80145988, clears work bytes 0xB and 0x9 with one cell re-read each, publishes the shared battle work record pointer at 0x801EB4E0 into the cell, invokes the shared update helper at 0x8014D978, restores the cell and increments work byte 1, the handler index.'
   - - 352
     - asm
     - func_801EED60
   - - 728
     - c
-    - publishBattleWorkRecordPointerInvokeUpdateHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13803_801EEED8
-    - '@source: src/bof3/bmagic/publishBattleWorkRecordPointerInvokeUpdateHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13803_801EEED8.c'
+    - publishPointerUpdateForward
+    - '@source: src/bof3/bmagic/publishPointerUpdateForward.c'
     - '@behavior: Overlay header handler, entry index 2 of the nine-word handler pointer run at 0x801EEC04 (payload word 0x801EEC0C); publishes the shared battle work record pointer held at 0x801EB4E0 into the scratchpad work-object pointer cell at 0x1F800044, invokes the shared update helper at 0x8014D978, restores the cell, and when the restored work object byte 0xB is zero forwards the shared battle byte 0x80146384 through func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes func_801E5988.'
   - - 864
     - c
-    - dispatchStateByte1Tablef72cBmagicMagic13803_801EEF60
+    - callStateTablef72Bmagic
     - '@source: src/bof3/bmagic/magic13803DispatchTables.c'
   - - 932
     - c
-    - dispatchStateByte2Tableec10BmagicMagic13803_801EEFA4
-    - '@source: src/bof3/bmagic/dispatchStateByte2Tableec10BmagicMagic13803_801EEFA4.c'
+    - callStateTableec10Bmagic
+    - '@source: src/bof3/bmagic/callStateTableec10Bmagic.c'
     - '@behavior: Overlay header handler, entries 3, 4 and 5 of the nine-word handler pointer run at 0x801EEC04 (the payload words at 0x801EEC10, 0x801EEC14 and 0x801EEC18); copies those three code pointers (0x801EF04C, 0x801EF3A0, 0x801EF50C) into its own 0x28-byte frame, publishes 0x800C3800 into the shared cell at 0x801459F0, and invokes the copied entry that unsigned work byte 2 of the scratchpad work object at 0x1F800044 selects. It re-reads that cell after the call and, when work byte 0 has bit 0 set, invokes the shared battle update at 0x8014D4E0, then publishes 0x800D3800 into 0x801459F0.'
   - - 1100
     - c

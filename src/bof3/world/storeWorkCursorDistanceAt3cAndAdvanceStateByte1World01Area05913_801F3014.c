@@ -20,7 +20,7 @@ extern s32 func_8015477C(s32 x, s32 y);
  *           stores the answer shifted left 16 into the object's third triple word
  *           at +0x3C, and advances the object's state byte at +1 by one, which
  *           hands the step to entry 1 of the same table,
- *           passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060,
+ *           passDistanceQuadEmitter,
  *           the step that copies +0x34, +0x38 and +0x3C unchanged into a
  *           three-word stack triple and hands that triple to the overlay quad
  *           emitter func_801F30A8. The pointer is loaded before the stack frame

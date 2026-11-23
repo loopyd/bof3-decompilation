@@ -63,12 +63,12 @@ segments:
     - func_801EF4BC
   - - 2412
     - c
-    - dispatchStateByte1Table0d14BmagicMagic08203_801EF56C
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic08203DispatchTables.c'
   - - 2480
     - c
-    - dispatchWorkByte2HandlerThenInvokeHelpersAndPopWhenWorkByte0SetBmagicMagic08203_801EF5B0
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeHelpersAndPopWhenWorkByte0SetBmagicMagic08203_801EF5B0.c'
+    - callInvokeHelpersPop
+    - '@source: src/bof3/bmagic/callInvokeHelpersPop.c'
     - '@behavior: Dispatch work byte 2; when work byte 0 is nonzero invoke helpers 0x801EF4BC, 0x801EFA00, 0x801EF720 and PopMatrix.'
   - - 2608
     - c
@@ -114,12 +114,12 @@ segments:
     - func_801F0260
   - - 6112
     - c
-    - drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0
-    - '@source: src/bof3/bmagic/drawTwoFourTriangleFansAtOppositeDepthsTintedByWorkByte4PaletteBmagicMagic08203_801F03E0.c'
+    - renderFansOppositeDepths
+    - '@source: src/bof3/bmagic/renderFansOppositeDepths.c'
     - '@behavior: Draw two four-triangle fans at opposite depths with work-byte-4 palettes and work-byte-9 phase.'
   - - 7812
     - c
-    - drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairAtRadiusArgumentWithGreyCentreBmagicMagic08203_801F0A84
+    - renderArgumentGreyCentre
     # @source 0x801F0A84
     # @behavior Draw eight translucent Gouraud triangles at the radius argument around the work screen pair.
   - - 8348

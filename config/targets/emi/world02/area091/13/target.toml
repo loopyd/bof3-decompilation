@@ -12,10 +12,10 @@ support_sources = [
     "src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09113_801F2C84.c",
     "src/bof3/world/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09113_801F2CB4.c",
     "src/bof3/world/copyHalvedPalettePairOnCountdownAndAdvanceRowWorld02Area09113_801F3318.c",
-    "src/bof3/world/clearWorkCountdownAndRowByteAdvanceWorkByte4WhenFirstRecordKindUnseededWorld02Area09113_801F2E6C.c",
-    "src/bof3/world/drawTranslucentFanOfThirtyTwoGouraudWedgesFromProjectedOriginFadingToBlackWorld02Area09113_801F2ED4.c",
+    "src/bof3/world/stateFirstKindUnseeded.c",
+    "src/bof3/world/renderWedgesFadingBlack.c",
     "src/bof3/world/dispatchWorkByte4Table3b44World02Area09113_801F2D6C.c",
-    "src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2CE4.c",
+    "src/bof3/world/stateStatus7ModeGate.c",
     "src/bof3/world/setStatus7AndModeIndex6IfGateElseFFFFWorld02Area09113_801F2D28.c",
     "src/bof3/support/area091_13_psyq.c",
 ]

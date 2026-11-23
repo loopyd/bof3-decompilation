@@ -45,7 +45,7 @@ void func_8014D978(void);
  * cell 0x1F800044 and calls func_8014D978. No jal names 0x800C187C: its only
  * in-image reference is the word 0x800C2090, entry 0 of the twelve-word pointer
  * run 0x800C2090 through 0x800C20BC inside the 0x800C2078 data row that this
- * payload's state dispatcher dispatchStateByte1Table2090BossBoss05416_800C1838
+ * payload's state dispatcher callStateTable2090Boss
  * indexes with that same state byte, so writing 2 moves the next dispatch to
  * that run's entry 2, the shared handler 0x801E35D8, instead of re-entering this
  * step. Nothing in this payload reads the +0x104 word back. The 0x64-byte body

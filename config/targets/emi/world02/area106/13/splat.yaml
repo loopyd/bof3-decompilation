@@ -30,12 +30,12 @@ segments:
   subsegments:
   - - 72
     - c
-    - dispatchStateByte2Table3eacWorld02Area10613_801F2C48
+    - callStateTable3World02
     - '@source: src/bof3/world/area10613DispatchTables.c'
   - - 140
     - c
-    - setOverlayStateByte2AndAdvanceDispatchStateByteWorld02Area10613_801F2C8C
-    - '@source: src/bof3/world/setOverlayStateByte2AndAdvanceDispatchStateByteWorld02Area10613_801F2C8C.c'
+    - stateOverlayAdvanceByte
+    - '@source: src/bof3/world/stateOverlayAdvanceByte.c'
   - - 180
     - asm
     - func_801F2CB4

@@ -211,17 +211,17 @@ segments:
     - '@behavior: Byte-1 state handler 3 of the handler table 0x801F6894 and byte-2 state handler 1 of the overlapping table 0x801F689C, so the overlay step dispatches at 0x801F45E0 and 0x801F4B00 both reach it with no arguments. It raises byte 0x12B of the record published at 0x80146250 and then reads work byte 0x09 of the scratchpad pointer cell 0x1F800044: a zero byte runs the map-code reseed probe at 0x801F5380, while any other value stores that byte minus one and runs the shared update at 0x801B0DFC. Takes no arguments and returns nothing.'
   - - 10112
     - c
-    - probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380
-    - '@source: src/bof3/world/probeMapCodeReseedSelectionElseBumpCountdownThenTurnOrClearWorkStateWorld03Area12114_801F5380.c'
+    - probeReseedBumpTurn
+    - '@source: src/bof3/world/probeReseedBumpTurn.c'
   - - 10616
     - c
-    - setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578
-    - '@source: src/bof3/world/setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578.c'
+    - stateMaskOverlapUnless
+    - '@source: src/bof3/world/stateMaskOverlapUnless.c'
     - '@behavior: Returns one when the halfwords at 0x80145AA8 and 0x80145AB8 share a set bit and halfword 0x80146258 has bit 0x40 clear, having dispatched sound cue 0x105, written 1 to mode byte 0x80143BB0 and cleared byte 2 of the work record at scratchpad pointer slot 0x44.'
   - - 10732
     - c
-    - setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC
-    - '@source: src/bof3/world/setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC.c'
+    - stateClearMaskOverlap
+    - '@source: src/bof3/world/stateClearMaskOverlap.c'
   - - 10828
     - c
     - stateMode3WorkWorld03
@@ -286,8 +286,8 @@ segments:
     - '@source: src/bof3/world/copySharedWordsExpires.c'
   - - 13556
     - c
-    - advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4
-    - '@source: src/bof3/world/advanceWorkHalfword3eBy10AndSetState3At0x281ThenDrawRotatedTexturedDiamondWorld03Area12114_801F60F4.c'
+    - stateRotatedTexturedDiamond
+    - '@source: src/bof3/world/stateRotatedTexturedDiamond.c'
     - '@behavior: Byte-1 state handler 4 of the byte-1 handler table 0x801F68A4 for the work record published at the scratchpad pointer cell 0x1F800044. It adds 0x10 to work halfword 0x3E, writes 3 to state byte 0x01 once that signed halfword reaches 0x281, returns unless bits 0x1B of the shared effect bank byte 0x8014832E are set, and otherwise projects a semi-transparent flat grey diamond of halfsize (work halfword 0x3E shifted right seven) times ten plus 0x10 through the shared matrix 0x801492E8 from the work words 0x34 and 0x38, filling the scratchpad vectors at 0x1F800014 and stamping POLY_FT4 with texture page 0xAB for graph type 1 or 2 and 0x3B otherwise, texture columns 0xE0 to 0xFE and rows 0x30 to 0x4E on clut 0x78CA. It links the primitive with kind 1 at 0x28 bytes through 0x80155A08 and pops the matrix.'
   - - 14224
     - c

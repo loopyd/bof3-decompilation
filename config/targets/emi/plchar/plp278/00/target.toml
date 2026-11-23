@@ -8,14 +8,14 @@ splat = "config/targets/emi/plchar/plp278/00/splat.yaml"
 load_address = 0x801CE400
 
 sources = [
-    "src/bof3/plchar/dispatchWorkByte2Tablefcb4PlcharPlp27800_801CE404.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefcc0PlcharPlp27800_801CE610.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefcc8PlcharPlp27800_801CEBFC.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefcd4PlcharPlp27800_801CEE30.c",
-    "src/bof3/plchar/dispatchWorkByte2TablefcecPlcharPlp27800_801CFA64.c",
-    "src/bof3/plchar/dispatchWorkByte2Tablefce0PlcharPlp27800_801CF858.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefcf4PlcharPlp27800_801CFC2C.c",
-    "src/bof3/plchar/dispatchWorkHalfword2cTablefd00PlcharPlp27800_801CFC70.c",
+    "src/bof3/plchar/callWorkTablefcb4Plchar.c",
+    "src/bof3/plchar/callWorkTablefcc0Plchar.c",
+    "src/bof3/plchar/callWorkTablefcc8Plchar.c",
+    "src/bof3/plchar/callWorkTablefcd4Plchar.c",
+    "src/bof3/plchar/callWorkTablefcecPlchar.c",
+    "src/bof3/plchar/callWorkTablefce0Plchar.c",
+    "src/bof3/plchar/callWorkTablefcf4Plchar.c",
+    "src/bof3/plchar/callWorkTablefd00Plchar.c",
     "src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp27800_801CFBC0.c",
     "src/bof3/plchar/pickNearerRouteIndexStoreStepSignAndChosenRouteThenRearmWorkPlcharPlp27800_801CF89C.c",
 ]

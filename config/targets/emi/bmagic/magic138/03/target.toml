@@ -8,8 +8,8 @@ splat = "config/targets/emi/bmagic/magic138/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/dispatchStateByte2Tableec10BmagicMagic13803_801EEFA4.c",
-    "src/bof3/bmagic/seedWorkPoseCopy16HalfwordsSetByte80145988ToOneClearWorkBytesBAnd9PublishWorkPointerInvokeUpdateHelperThenAdvanceWorkByte1BmagicMagic13803_801EEC88.c",
+    "src/bof3/bmagic/callStateTableec10Bmagic.c",
+    "src/bof3/bmagic/statePoseHalfwordsPointer.c",
     "src/bof3/bmagic/seedWorkDeltaWordsFromRecordTablesThenSeedHeaderKind84RequestResourceByBattleByteParitySetWorkByte9AndAdvanceWorkByte2BmagicMagic13803_801EF04C.c",
 ]
 support_sources = [
@@ -19,7 +19,7 @@ support_sources = [
     "src/bof3/support/magic138_03_psyq.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8.c",
     "src/bof3/bmagic/seedWorkHeaderKind84SelectorB4SelectCueByByteAParityRequestResourceAdvanceWorkByte2BmagicMagic13803_801EF5D0.c",
-    "src/bof3/bmagic/publishBattleWorkRecordPointerInvokeUpdateHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13803_801EEED8.c",
+    "src/bof3/bmagic/publishPointerUpdateForward.c",
     "src/bof3/bmagic/dispatchStateByte2Tableec1cBmagicMagic13803_801EF52C.c",
 ]
 psyq_source = "src/bof3/support/magic138_03_psyq.c"

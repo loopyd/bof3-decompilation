@@ -25,7 +25,7 @@ extern u8 g_ScenarioProgress;
  *           0x801F2D2C), so the dispatch index that selects it is unevidenced
  *           and its argument roles stay structural. Shape only: this 0x3C-byte
  *           span differs from the exact
- *           publishModeStatusFromTable43f8AndProgress6InModeZeroWorld03Area13613_801F2CF0
+ *           publishModeStatusMode
  *           span in one byte, the `%lo` of that sibling's table base (0xF8
  *           against 0xFC here), so its statement order and operand forms were
  *           transcribed with this span's own table binding. A scan of the 795

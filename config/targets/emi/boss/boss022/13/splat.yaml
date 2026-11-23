@@ -27,16 +27,16 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1Table1B2CBossBoss02213_800C1804
-    - '@source: src/bof3/boss/dispatchWorkByte1Table1B2CBossBoss02213_800C1804.c'
+    - callWorkTable1Boss
+    - '@source: src/bof3/boss/callWorkTable1Boss.c'
     - '@behavior: Overlay workspace-state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay code pointer run based at 0x800C1B2C, which holds 0x800C1848, 0x800C18B8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x800C18F4, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8, 0x801E5288, 0x801E3BAC, 0x801E3BD0, 0x801E3BAC, 0x801E4490, 0x800C1938 and 0x801E4928 in that order; it bounds no index, writes no state, returns the handler result and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 72
     - asm
     - func_800C1848
   - - 184
     - c
-    - setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8
-    - '@source: src/bof3/boss/setWorkByte1To2WhenHelperReadyBossBoss02213_800C18B8.c'
+    - stateHelperReadyBoss
+    - '@source: src/bof3/boss/stateHelperReadyBoss.c'
     - '@behavior: Overlay step handler on work-record byte 1: calls the shared readiness helper at 0x8014DAEC and, when the unsigned byte it answers is nonzero, stores 2 into byte 1 of the work object held by the scratchpad pointer cell 0x1F800044, the workspace-state byte the dispatcher at 0x800C1804 indexes the handler run at 0x800C1B2C with. It bounds nothing else, writes no other state, loads the pointer cell once, leaves the load and return delay slots as nops and spends its 0x18-byte frame only on $ra at 0x10.'
   - - 244
     - c
@@ -72,8 +72,8 @@ segments:
     - zeroResultBossBoss02213_800C1A40
   - - 584
     - c
-    - initBattleEntryStateBossBoss02213_800C1A48
-    - '@source: src/bof3/boss/initBattleEntryStateBossBoss02213_800C1A48.c'
+    - setupBattleEntryBoss
+    - '@source: src/bof3/boss/setupBattleEntryBoss.c'
     - '@behavior: Battle-entry hook of this overlay, published into the shared battle-hook slot 0x801463A4 by the installer at 0x800C1A08: seeds the shared scenario progress byte with 12, stores the entry mode byte 3 into 0x80146255, stores 0x6A into 0x80145029, stores that same mode byte 3 into 0x80146255 a second time, raises bit 0x8 of the shared battle flag byte 0x80146328 through one address taken into a local pointer, clears bit 0x40 of 0x80146325 and runs initModeTuple530, which seeds the three-byte battle mode tuple.'
   - - 700
     - c

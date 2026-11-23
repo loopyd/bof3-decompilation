@@ -38,7 +38,7 @@ segments:
     - '@behavior: When work byte 0xB is zero, forward the battle byte, raise halfword mask 4 and invoke the helper.'
   - - 704
     - c
-    - dispatchStateByte1Table05d8BmagicMagic12503_801EEEC0
+    - callStateTable05Bmagic
     - '@source: src/bof3/bmagic/magic12503DispatchTables.c'
   - - 772
     - asm
@@ -48,8 +48,8 @@ segments:
     - func_801EEFF8
   - - 1272
     - c
-    - decrementWorkByteASubtractWorkWord3CThenAdvanceWorkByte2OnZeroBmagicMagic12503_801EF0F8
-    - '@source: src/bof3/bmagic/decrementWorkByteASubtractWorkWord3CThenAdvanceWorkByte2OnZeroBmagicMagic12503_801EF0F8.c'
+    - decrementByteSubtractZero
+    - '@source: src/bof3/bmagic/decrementByteSubtractZero.c'
   - - 1352
     - asm
     - func_801EF148
@@ -64,18 +64,18 @@ segments:
     - func_801EF508
   - - 3080
     - c
-    - dispatchWorkByte2HandlerThenInvokeF1A8AndF508AndPopWhenWorkBytes0And2SetBmagicMagic12503_801EF808
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF1A8AndF508AndPopWhenWorkBytes0And2SetBmagicMagic12503_801EF808.c'
+    - callInvokePopSet
+    - '@source: src/bof3/bmagic/callInvokePopSet.c'
     - '@behavior: Dispatch work byte 2, then invoke 0x801EF1A8, 0x801EF508 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 3216
     - c
-    - decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyRecordTripletSetTintAndWorkFieldsAndAdvanceWorkByte2BmagicMagic12503_801EF890.c'
+    - decrementTripletTintFields
+    - '@source: src/bof3/bmagic/decrementTripletTintFields.c'
     - '@behavior: Decrement byte 9; on zero copy the record triplet, seed tint and work fields, and advance byte 2.'
   - - 3424
     - c
-    - subtractWorkWord20From14ThenSeedSixtyFourRecordsAndAdvanceWorkByte2BmagicMagic12503_801EF960
-    - '@source: src/bof3/bmagic/subtractWorkWord20From14ThenSeedSixtyFourRecordsAndAdvanceWorkByte2BmagicMagic12503_801EF960.c'
+    - subtractSixtyFourRecords
+    - '@source: src/bof3/bmagic/subtractSixtyFourRecords.c'
     - '@behavior: Subtract work word 0x20 from 0x14; below 0x30 seed 64 records and advance work byte 2.'
   - - 3760
     - c

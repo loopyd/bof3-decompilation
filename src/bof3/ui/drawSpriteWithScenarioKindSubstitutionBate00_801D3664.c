@@ -19,7 +19,7 @@ extern s8 D_80146870;
  * 0xFFFF/0xFFFF/0xFF/0xFF, not a recovered callee contract.
  * @source 0x801D3518
  */
-extern void emitIconSpriteFromKindTileBate00_801D3518(s32 x, s32 y, s32 kind,
+extern void emitIconKindTile(s32 x, s32 y, s32 kind,
                                                       s32 mode);
 
 /* @source 0x801D3664
@@ -28,7 +28,7 @@ extern void emitIconSpriteFromKindTileBate00_801D3518(s32 x, s32 y, s32 kind,
  *           load, is at least 8, it replaces that kind with 0xB. It then widens
  *           both unsigned 16-bit coordinates and both byte arguments and
  *           forwards them to the icon sprite emitter
- *           emitIconSpriteFromKindTileBate00_801D3518 with no other
+ *           emitIconKindTile with no other
  *           work; its 0x18-byte frame only keeps $ra at 0x10 across that call.
  *           The 0x54 bytes sit equal under cmp to the emi/etc/shop/00 span at
  *           0x801D910C apart from the single jal word at +0x3C, which moves by
@@ -44,5 +44,5 @@ void drawSpriteWithScenarioKindSubstitutionBate00_801D3664(u16 x, u16 y, u8 kind
     {
         kind = 0xB;
     }
-    emitIconSpriteFromKindTileBate00_801D3518(x, y, kind, mode);
+    emitIconKindTile(x, y, kind, mode);
 }

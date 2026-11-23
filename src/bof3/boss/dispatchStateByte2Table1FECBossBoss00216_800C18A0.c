@@ -28,7 +28,7 @@ extern void (*D_800C1FEC[])(void); /* @source 0x800C1FEC @kind data */
  * payload word that names this entry is the run word 0x800C1FE0, so the
  * dispatcher at 0x800C1804 is its caller: it takes no arguments and forwards
  * none. Same shape as the already-exact sibling
- * dispatchStateByte1Table1FBCBossBoss00216_800C1804 of this target, whose bytes
+ * callStateTable1Boss of this target, whose bytes
  * differ in this span's own index byte and table word alone, and which reads the
  * same work record through the run based at 0x800C1FBC.
  * @status exact

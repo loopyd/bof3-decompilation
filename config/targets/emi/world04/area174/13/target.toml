@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/cycleWorkByte8DownThroughPairTableUntilRecordCommandByteElseAdvanceHalfword0aBy2World04Area17413_801F48EC.c",
-    "src/bof3/world/requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area17413_801F4100.c",
+    "src/bof3/world/requestScriptCommandSecond.c",
     "src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area17413_801F37D8.c",
     "src/bof3/world/passPalettePaletteBlock.c",
-    "src/bof3/world/claimFrontEndRecordHandler9DSeedByte6OneHalfword30A5AndWorkRecordSlotWorld04Area17413_801F3E68.c",
+    "src/bof3/world/claimSeedOneSlot.c",
     "src/bof3/world/claimSlotPointerConsume.c",
     "src/bof3/world/allocatePaletteSlotPayload.c",
-    "src/bof3/world/decrementHalfword0aBy2WhenSharedByte5World04Area17413_801F3D40.c",
+    "src/bof3/world/decrementHalfword0SharedByte5.c",
     "src/bof3/world/findFreeWorkRecordByte3At800E4800World04Area17413_801F2E88.c",
     "src/bof3/world/playPairTableStepSelectedByRecordCommandByteUsingSharedByteXor4ThenAdvanceHalfword0aBy1World04Area17413_801F49C8.c",
     "src/bof3/world/claimSizeHeadingObject.c",
@@ -40,9 +40,9 @@ support_sources = [
     "src/bof3/world/stateFrontEndRecord.c",
     "src/bof3/support/area174_13_psyq.c",
     "src/bof3/world/stateTripleLevelTriple.c",
-    "src/bof3/world/stepScratchWorkAccumulatorsByPhaseTableWhileScenarioBehindRequirementElseSnapAndAdvanceSharedWorld04Area17413_801F4594.c",
-    "src/bof3/world/stepScratchWorkCounterDownBy14RaiseLevelTripleToMin40ThenResetFlag20AtA00World04Area17413_801F3FFC.c",
+    "src/bof3/world/stepBehindRequirementSnap.c",
+    "src/bof3/world/stepDownLevelTriple.c",
     "src/bof3/world/stateAdvanceWorkCall3958.c",
-    "src/bof3/world/cycleWorkByte8ThroughPairTableUntilRecordCommandByteElseAdvanceHalfword0aBy2World04Area17413_801F4810.c",
+    "src/bof3/world/cycleThroughUntilCommand.c",
 ]
 psyq_source = "src/bof3/support/area174_13_psyq.c"

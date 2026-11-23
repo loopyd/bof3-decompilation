@@ -50,7 +50,7 @@ u32 func_8014D8D4(u8 arg0);
  *           address at the pointer word 0x801CF600, entry 5 of the sixteen-word
  *           code-pointer run based at 0x801CF5EC, and that word is the base the
  *           work-byte-3 dispatcher
- *           dispatchWorkByte3Tablef600PlcharPlp34900_801CE654 indexes by work
+ *           callWorkTablef600Plchar indexes by work
  *           byte 3 scaled by four, so the dispatcher reaches this body with index
  *           zero; no `jal` in this payload names it, so it is reached through the
  *           run alone. When work byte 8 is even it first rewrites that byte: it

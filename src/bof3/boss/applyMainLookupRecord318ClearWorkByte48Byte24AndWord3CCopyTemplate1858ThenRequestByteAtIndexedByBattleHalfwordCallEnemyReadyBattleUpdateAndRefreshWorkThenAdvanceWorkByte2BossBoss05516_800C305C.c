@@ -58,7 +58,7 @@ extern void refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800
 /** @source 0x800C305C
  * @behavior Alternative step body and entry 0 of the three-word payload table
  *           at 0x800C184C (0x800C305C, 0x800C3134, 0x800C31F0) that
- *           dispatchStateByte2TableCopyBossBoss05516_800C2FFC copies into its
+ *           callTableCopyBoss copies into its
  *           frame and selects with the unsigned state byte +2 of the work record
  *           published at scratchpad pointer cell 0x1F800044. It copies the
  *           10-byte step template at 0x800C1858 into frame slot 0x10, then

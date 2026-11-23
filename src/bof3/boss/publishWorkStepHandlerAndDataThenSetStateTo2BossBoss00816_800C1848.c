@@ -35,7 +35,7 @@ void func_8014D978(void);
  * pointer 0x800C2658 into +0xE8 -- then stores 2 into the state byte at +1 of
  * the work record the main program publishes at the scratchpad pointer cell
  * 0x1F800044 and calls func_8014D978. That state byte is the value the overlay
- * dispatcher dispatchStateByte1Table2660BossBoss00816_800C1804 scales by four
+ * dispatcher callStateTable2660Boss scales by four
  * against the handler run based at 0x800C2660, and this function is that run's
  * entry 0 (the word at 0x800C2660), so writing 2 makes the next dispatch call
  * the main-program handler 0x801E35D8 instead of re-entering this installer. No

@@ -1,14 +1,14 @@
 D_1F800000 = 0x1F800000;
 D_1F800004 = 0x1F800004;
-dispatchWorkByte1LocalHandlersThenRunActiveWorkRecordsBmagicMagic10603_801EEC04 = 0x801EEC04;
+callLocalHandlersActive = 0x801EEC04;
 func_801EECE4 = 0x801EECE4;
 forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic10603_801EEE80 = 0x801EEE80;
 dispatchWorkByte1HandlerBmagicMagic10603_801EEEE0 = 0x801EEEE0;
 dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic10603_801EEF24 = 0x801EEF24;
-countDownWorkByteAThenSeedWorkRadiusAngleRandomTripletAndAdvanceWorkByte2BmagicMagic10603_801EEFAC = 0x801EEFAC;
+checkDownRadiusAngle = 0x801EEFAC;
 func_801EF16C = 0x801EF16C;
 func_801EF29C = 0x801EF29C;
-stepWorkRecordAngleProjectPositionPairAndCountDownByte9OnFrameParityThenClearRecordAtZeroBmagicMagic10603_801EF418 = 0x801EF418;
+stepAngleDownParity = 0x801EF418;
 projectWorkRecordPositionAndInstallTransformBmagicMagic10603_801EF52C = 0x801EF52C;
 drawFourPhasedTrianglesFromOriginTintedByWorkRecordLifetimeBmagicMagic10603_801EF5F4 = 0x801EF5F4;
 reserveFirstFreeRecordBmagicMagic10603_801EF914 = 0x801EF914;

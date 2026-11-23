@@ -27,20 +27,20 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3dfcWorld04Area19813_801F2C04
+    - callStateTable3World04
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 72
     - c
-    - advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48
-    - '@source: src/bof3/world/advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48.c'
+    - stateAfterScalePass
+    - '@source: src/bof3/world/stateAfterScalePass.c'
   - - 128
     - c
-    - advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80
-    - '@source: src/bof3/world/advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80.c'
+    - stateWorkScenarioProgress0
+    - '@source: src/bof3/world/stateWorkScenarioProgress0.c'
   - - 184
     - c
-    - advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8
-    - '@source: src/bof3/world/advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8.c'
+    - stateRescaleBlocksUnity
+    - '@source: src/bof3/world/stateRescaleBlocksUnity.c'
     - '@behavior: Overlay step handler, entry 2 of the handler run that opens the reviewed textbin row D_801F3DFC; its first three words are code pointers and the rest is table data, so no jal names this body. It advances the palette scale in byte 0x09 of the work record published at the scratchpad pointer cell 0x1F800044, republishes both 0x100-entry colour palette blocks through the payload scaler with that new byte as the scale (0x80 is unity), and once the byte reaches 0x80 calls the shared main-executable reset func_80196070, which clears the scratchpad work-area header. Takes no arguments and returns nothing; the 0x18-byte frame keeps only $ra at 0x10 across the two calls.'
   - - 296
     - c
@@ -70,8 +70,8 @@ segments:
     - func_801F319C
   - - 1928
     - c
-    - stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388
-    - '@source: src/bof3/world/stepWorkAccumulatorsByPhaseTableAndStepLevelTripleThenClaimRecordHandlerAcWorld04Area19813_801F3388.c'
+    - stepAccumulatorsLevelTriple
+    - '@source: src/bof3/world/stepAccumulatorsLevelTriple.c'
   - - 2344
     - asm
     - func_801F3528
@@ -88,14 +88,14 @@ segments:
     - func_801F36B4
   - - 3156
     - c
-    - publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854
-    - '@source: src/bof3/world/publishFrontEndRecordIndexToWorkByteBThenSeedHandlerA7RecordFromWorkPositionWorld04Area19813_801F3854.c'
+    - publishIndexSeedPosition
+    - '@source: src/bof3/world/publishIndexSeedPosition.c'
   - - 3508
     - asm
     - func_801F39B4
   - - 3620
     - c
-    - dispatchStateByte1Table43ecWorld04Area19813_801F3A24
+    - callStateTable43World04
     - '@source: src/bof3/world/area19813DispatchTables.c'
   - - 3688
     - c

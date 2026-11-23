@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 24
     - c
-    - dispatchStateByte2Table41f8World02Area11213_801F2C18
+    - callStateTable41World02
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 92
     - asm
@@ -49,8 +49,8 @@ segments:
     - func_801F2EA8
   - - 1652
     - c
-    - drawRecordQuadRunSlicedByWorkHalfword36World02Area11213_801F3274
-    - '@source: src/bof3/world/drawRecordQuadRunSlicedByWorkHalfword36World02Area11213_801F3274.c'
+    - renderQuadRunSliced
+    - '@source: src/bof3/world/renderQuadRunSliced.c'
     - '@behavior: Draws the run of textured quads the work record halfword 0x36 selects through the bound byte tables at 0x801F4250 and 0x801F4251, one POLY_FT4 per 8-byte record of 0x801F4294 with its corners biased by the record corner offset row, projected by RotTransPers4 and linked through func_80155A08 or appended with kind 3 through func_8014E5A0.'
   - - 2392
     - asm
@@ -65,13 +65,13 @@ segments:
     - func_801F366C
   - - 2864
     - c
-    - publishStatusFromGateByteAndLatchGateFlagPairWorld02Area11213_801F3730
-    - '@source: src/bof3/world/publishStatusFromGateByteAndLatchGateFlagPairWorld02Area11213_801F3730.c'
+    - publishLatchFlagPair
+    - '@source: src/bof3/world/publishLatchFlagPair.c'
     - '@behavior: Publishes the shared status halfword 0x801490A8 from the shared gate byte 0x801490C7 plus three, raising bit 0x33 of the shared flag bank 0x80144F28 and mirroring the two low bits of the gate byte into bits 0x34 and 0x35, then republishes status 2 and clears bit 0x33 when bit 0x10 of the shared flag record 0x80144EF0 reads clear.'
   - - 3184
     - c
-    - setStatus14IfGateElse13World02Area11213_801F3870
-    - '@source: src/bof3/world/setStatus14IfGateElse13World02Area11213_801F3870.c'
+    - stateStatus14GateElse13
+    - '@source: src/bof3/world/stateStatus14GateElse13.c'
   - - 3224
     - asm
     - func_801F3898
@@ -90,7 +90,7 @@ segments:
     - '@source: src/bof3/world/testProjectedRecordHitsAnyBoxWorld02Area11213_801F3CF0.c'
   - - 4628
     - c
-    - dispatchStateByte1Table493cWorld02Area11213_801F3E14
+    - callStateTable493World02
     - '@source: src/bof3/world/area11213DispatchTables.c'
   - - 4696
     - c

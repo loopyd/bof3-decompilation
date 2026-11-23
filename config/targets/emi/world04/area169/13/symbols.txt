@@ -1,12 +1,12 @@
-dispatchStateByte2Table3a90World04Area16913_801F2C04 = 0x801F2C04;
+callStateTable3World04 = 0x801F2C04;
 loadWorkCellFromTablesAndSetState2To3InsideCameraWindowThenDrawWorld04Area16913_801F2C48 = 0x801F2C48;
 func_801F2DCC = 0x801F2DCC;
 advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C = 0x801F2F0C;
 advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68 = 0x801F2F68;
 func_801F3078 = 0x801F3078;
-drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8 = 0x801F30E8;
+renderMirroredGraphType = 0x801F30E8;
 func_801F3404 = 0x801F3404;
-clearSharedFlag74WhenFrontSideByteIsNot1World04Area16913_801F3524 = 0x801F3524;
+stateFrontSideIs = 0x801F3524;
 findWorkPositionBoundsIndexWorld04Area16913_801F355C = 0x801F355C;
 func_801F3628 = 0x801F3628;
 func_801F390C = 0x801F390C;

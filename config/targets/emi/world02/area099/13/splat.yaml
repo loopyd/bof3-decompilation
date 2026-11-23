@@ -30,13 +30,13 @@ segments:
   subsegments:
   - - 64
     - c
-    - stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40
-    - '@source: src/bof3/world/stepWorkByte8QueueWorkCueSelectSequenceAndClaimFrontEndRecordHandler1BWorld02Area09913_801F2C40.c'
+    - stepCueSequenceClaim
+    - '@source: src/bof3/world/stepCueSequenceClaim.c'
     - '@behavior: Per-frame step of the AREA099 slot-13 work record published at the scratchpad pointer cell 0x1F800044: while bit 0 of record byte 0x08 is clear it rewinds that byte by one modulo 8, then queues the shared cue formed from the record halfword at 0x2C plus 0x100 and requests the shared work sequence ((byte 0x08 - 1) / 2 + 0x42) truncated to a byte, sets bit 0x40 of byte 0x118 of the work record published through 0x80146250, and publishes the front-end record index from the shared allocator 0x8019601C into record byte 0x0B; unless that index reads 0xFF it seeds the claimed 0x74-byte row at 0x80143FC8 with occupancy byte +0 = 1 and handler selector 0x1B at +0x05.'
   - - 360
     - c
-    - dispatchWorkByte4Table4988World02Area09913_801F2D68
-    - '@source: src/bof3/world/dispatchWorkByte4Table4988World02Area09913_801F2D68.c'
+    - callWorkByte4Table4988
+    - '@source: src/bof3/world/callWorkByte4Table4988.c'
   - - 428
     - c
     - armWorkPhase48SelectHandler1ThenLowerSharedHalfword7eBy2World02Area09913_801F2DAC
@@ -44,13 +44,13 @@ segments:
     - '@behavior: Overlay step handler, entry 0 of the local handler table at 0x801F4988 that the dispatcher at 0x801F2D68 reaches with the work record byte at +0x04: it loads the work record published at the scratchpad pointer cell 0x1F800044 and stores 0x48 in the record phase byte at +0x0A, reads that cell again and stores 1 in the record handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F2DEC, then loads the pointer cell at 0x80146884 and lowers the unsigned halfword at +0x7E of its record by 2.'
   - - 492
     - c
-    - stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC
-    - '@source: src/bof3/world/stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC.c'
+    - stepAccumulatorPhaseConsume
+    - '@source: src/bof3/world/stepAccumulatorPhaseConsume.c'
     - '@behavior: Steps the work record published through the scratchpad pointer cell at 0x1F800044 by one entry of the signed 16-entry phase table at 0x801F4990: it subtracts the entry selected by the low nibble of the record phase byte at 0x0A, scaled by 0x800, from the word at 0x38, decrements that phase byte, and consumes two units of the halfword at 0x7E of the record published through 0x80146884; once the phase byte reads zero it instead clears the handler byte at 0x04.'
   - - 600
     - c
-    - dispatchWorkByte4Table49a0World02Area09913_801F2E58
-    - '@source: src/bof3/world/dispatchWorkByte4Table49a0World02Area09913_801F2E58.c'
+    - callWorkByte4Table49
+    - '@source: src/bof3/world/callWorkByte4Table49.c'
     - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044, indexing the overlay''s second unchecked handler table at 0x801F49A0, whose entries are the routines at 0x801F2E9C and 0x801F2FD4.'
   - - 668
     - asm
@@ -60,8 +60,8 @@ segments:
     - func_801F2FD4
   - - 1192
     - c
-    - setScenarioFlagBit1F
-    - '@source: src/bof3/world/setScenarioFlagBit1F.c'
+    - stateScenarioFlagBit1
+    - '@source: src/bof3/world/stateScenarioFlagBit1.c'
     - '@behavior: Sets bit 0x1F of the active scenario flag bank with one call to the shared bit setter func_8015B5F4, handing it the pointer published at 0x8014686C and the bit index 0x1F.'
   - - 1232
     - c

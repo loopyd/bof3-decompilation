@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 136
     - c
-    - dispatchStateByte2Table4a88World04Area16713_801F2C88
+    - callStateTable4World04
     - '@source: src/bof3/world/area16713DispatchTables.c'
   - - 204
     - asm
@@ -40,8 +40,8 @@ segments:
     - func_801F2EA0
   - - 992
     - c
-    - advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0
-    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceWorkByte2At80ThenCall31bcWorld04Area16713_801F2FE0.c'
+    - stateAdvanceWorkCall31
+    - '@source: src/bof3/world/stateAdvanceWorkCall31.c'
     - '@behavior: Word 2 of all three state-byte-2 handler runs this payload carries. Reads the scratchpad work record through the pointer cell 0x1F800044 once, adds 0x10 to record halfword +0x30, advances dispatch byte +0x02 when the updated signed halfword is at least 0x80, and calls the payload render helper 0x801F31BC on every path.'
   - - 1084
     - c
@@ -60,13 +60,13 @@ segments:
     - '@source: src/bof3/world/area16713DispatchTables.c'
   - - 2596
     - c
-    - setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624
-    - '@source: src/bof3/world/setWork36And3aFromRowTableStorePositionDistanceAndRowWordThenAdvanceWorkByte2World04Area16713_801F3624.c'
+    - stateStoreDistanceWord
+    - '@source: src/bof3/world/stateStoreDistanceWord.c'
     - '@behavior: Entry 0 of the state-byte-2 handler run based at 0x801F4AA0, whose dispatcher is 0x801F35E0. Stores the zero test of record halfword +0x3A into record byte +0x08, republishes record halfwords +0x36 and +0x3A from the stride-2 byte pair table 0x801F4A80/0x801F4A81 at twice the old +0x36 row index, stores minus the halved position distance less the unsigned row term 0x801F4A68[index] into +0x3E, stores the word row term 0x801F4A70[index] into +0x20, clears +0x30, increments record byte +0x02 and calls the payload render helper 0x801F31BC.'
   - - 2812
     - c
-    - advanceWorkByte2AndQueueCue200WhenSharedOverlayStateByteIs10ThenDrawWorld04Area16713_801F36FC
-    - '@source: src/bof3/world/advanceWorkByte2AndQueueCue200WhenSharedOverlayStateByteIs10ThenDrawWorld04Area16713_801F36FC.c'
+    - stateQueueSharedOverlay
+    - '@source: src/bof3/world/stateQueueSharedOverlay.c'
     - '@behavior: Entry 1 of the state-byte-2 handler run based at 0x801F4AA0 of this payload, whose dispatcher is 0x801F35E0 and whose entry 0 is 0x801F3624. When the shared overlay state byte D_8014933B holds 0x10 it queues sound cue 0x200 through the main executable dispatcher 0x8015DF18, but only while the front-end phase byte D_80143BB0 holds zero, and then increments record byte +0x02 through the scratchpad work record pointer cell 0x1F800044 so the next dispatch of the same run takes its entry 2. Calls the payload render helper 0x801F31BC on every path.'
   - - 2916
     - c
@@ -85,8 +85,8 @@ segments:
     - func_801F39BC
   - - 4320
     - c
-    - setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0
-    - '@source: src/bof3/world/setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0.c'
+    - stateStatusGateSeed
+    - '@source: src/bof3/world/stateStatusGateSeed.c'
     - '@behavior: Entry 0 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift 0x801F3F14. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there when the shared gate byte 0x801490C7 reads 2, and otherwise stores 1 in the shared mode byte 0x80146866 when the gate byte is zero and 2 when it is not, runs the shared front-end startup helper 0x8015C088, then seeds the shared counter byte 0x80146867 with 0x40, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x15.'
   - - 4436
     - asm
@@ -95,17 +95,17 @@ segments:
     - c
     - setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4
     - '@source: src/bof3/world/setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4.c'
-    - '@behavior: Entry 2 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there when the shared gate byte 0x801490C7 reads 2, and otherwise stores 0 in the shared mode byte 0x80146866 when the gate byte is zero and 1 when it is not, runs the shared front-end startup helper 0x8015C088, then seeds the shared counter byte 0x80146867 with 0x40, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x14.'
+    - '@behavior: Entry 2 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift stateStatusGateSeed. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there when the shared gate byte 0x801490C7 reads 2, and otherwise stores 0 in the shared mode byte 0x80146866 when the gate byte is zero and 1 when it is not, runs the shared front-end startup helper 0x8015C088, then seeds the shared counter byte 0x80146867 with 0x40, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x14.'
   - - 4692
     - c
-    - setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54
-    - '@source: src/bof3/world/setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54.c'
-    - '@behavior: Entry 3 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0 and whose entry 2 is the exact lift setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its two sibling handlers this span stores no mode value into the shared mode byte 0x80146866.'
+    - stateStatusSeedGate
+    - '@source: src/bof3/world/stateStatusSeedGate.c'
+    - '@behavior: Entry 3 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift stateStatusGateSeed and whose entry 2 is the exact lift setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its two sibling handlers this span stores no mode value into the shared mode byte 0x80146866.'
   - - 4788
     - c
     - setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4
     - '@source: src/bof3/world/setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4.c'
-    - '@behavior: Entry 4 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 3 is the exact lift setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54 and whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0. A `cmp` of this 0x60-byte range with entry 3 reports no differing byte, so the two spans are one body. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its sibling handlers with a gate value test this span stores no mode value into the shared mode byte 0x80146866.'
+    - '@behavior: Entry 4 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 3 is the exact lift stateStatusSeedGate and whose entry 0 is the exact lift stateStatusGateSeed. A `cmp` of this 0x60-byte range with entry 3 reports no differing byte, so the two spans are one body. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its sibling handlers with a gate value test this span stores no mode value into the shared mode byte 0x80146866.'
   - - 4884
     - c
     - setWorld04Area16713_801F3F14
@@ -116,24 +116,24 @@ segments:
     - '@behavior: Entry 6 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 5 is the exact lift setWorld04Area16713_801F3F14 and whose word at 0x801F6848 publishes this span. Clears bit 0x46 of the shared main-RAM flag bank 0x80144F28 through the shared bit clear helper func_8015B5A8 and then stores zero into the shared overlay state byte 0x8014933B. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 4952
     - c
-    - setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58
-    - '@source: src/bof3/world/setFrontEndByte3To5Or4AndHalfword0aToFFFEWhenFlag4CSetElseSeedWorkHalfword3eWorld04Area16713_801F3F58.c'
+    - stateFrontEndSeed
+    - '@source: src/bof3/world/stateFrontEndSeed.c'
     - '@behavior: Handles the front-side byte 0x80143F03 values 2 and 1 as two separate tests that each re-read the byte. On either value, when the shared flag tester func_8015B5D4 reports bit 0x4C of the main-RAM flag bank 0x80144F28 set, it clears that bit through func_8015B5A8 and stores 5 into byte +3 of the front-end record published through 0x80148210 for the front-side value 2 and 4 for the value 1, then stores 0xFFFE into that record halfword +0x0A. When bit 0x4C stays clear it probes bit 0x4B: a clear 0x4B on the front-side value 2 seeds the scratchpad work record halfword +0x3E with 0xFC40, and a set 0x4B on the value 1 seeds it with 0x9C0; both then raise flag 0x40 of the work record byte +0x00 from the value read before the seed. Every other combination, and any other front-side value, seeds the work record halfword +0x3E with 0x3C0 and touches nothing else.'
   - - 5248
     - asm
     - func_801F4080
   - - 5364
     - c
-    - advanceHalfword0aBy3WhenSharedFlag4bClearWorld04Area16713_801F40F4
-    - '@source: src/bof3/world/advanceHalfword0aBy3WhenSharedFlag4bClearWorld04Area16713_801F40F4.c'
+    - stateBy3SharedClear
+    - '@source: src/bof3/world/stateBy3SharedClear.c'
     - '@behavior: Entry 9 of the 25-entry overlay handler table at 0x801F6830 of this payload, published by the word at 0x801F6854. Probes bit 0x4B of the shared main-RAM flag bank 0x80144F28 through the shared flag tester func_8015B5D4 and, only while that bit reads clear, adds 3 to the published halfword +0x0A of the front-end record reached through the pointer cell 0x80148210. A set bit leaves the record untouched and returns at once. Takes no arguments and returns nothing; the 0x18-byte frame holds only the return address, and no jal in this payload reaches the span.'
   - - 5440
     - asm
     - func_801F4140
   - - 5828
     - c
-    - advanceHalfword0aBy8WhenWorkHalfword3eIs3c0ElseClearWorkFlag40AndMirrorFrontSideByteIntoFlagPair48And49World04Area16713_801F42C4
-    - '@source: src/bof3/world/advanceHalfword0aBy8WhenWorkHalfword3eIs3c0ElseClearWorkFlag40AndMirrorFrontSideByteIntoFlagPair48And49World04Area16713_801F42C4.c'
+    - stateMirrorSideInto
+    - '@source: src/bof3/world/stateMirrorSideInto.c'
     - '@behavior: Entry 11 of the 25-entry overlay handler table at 0x801F6830 of this payload. Reads the scratchpad work record once through the pointer cell 0x1F800044 and keeps the pointer for the whole run; when the record halfword +0x3E reads 0x3C0 it only adds 8 to the published halfword +0x0A of the front-end record 0x80148210, and on every other value it clears flag 0x40 of record byte +0x00 and mirrors the front-side byte 0x80143F03 into the shared flag bank 0x80144F28 through the setter 0x8015B580 and the bit clear helper 0x8015B5A8: value 1 raises bit 0x48 and clears 0x49, value 2 clears 0x48 and raises 0x49, value 3 clears both and any other value leaves the pair untouched.'
   - - 6072
     - c

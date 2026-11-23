@@ -37,7 +37,7 @@ extern u8 *D_1F800044; /* @source 0x1F800044 @kind data */
 /* @source 0x800C1CE4
  * @behavior Step 2 handler of this overlay's step table at 0x800C1804 (entries
  *           0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C), which
- *           dispatchStateByte1Table1804BossBoss05116_800C1AA8 copies into its
+ *           callStateTable1804Boss copies into its
  *           frame and indexes with the work record byte 1, so no jal in this
  *           payload reaches this entry. It saves the work pointer published at
  *           the scratchpad pointer cell 0x1F800044, publishes the shared battle

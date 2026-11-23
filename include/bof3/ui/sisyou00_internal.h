@@ -223,7 +223,7 @@ extern u8 D_801D4287;
  * byte, cleared by resetModeState. */
 extern u8 D_801D4288;
 /* @source 0x801D4289 @kind bss */
-/* Phase byte written as 4 by queueCue102AndRestartPanelSlide. */
+/* Phase byte written as 4 by queueRestartPanelSlide. */
 extern u8 D_801D4289;
 /* @source 0x801D428A @kind unknown */
 extern u8 D_801D428A;

@@ -21,7 +21,7 @@ extern void (*D_801F0670[])(void); /* @source 0x801F0670 @kind data */
 /* Pushes the GTE matrix stack, copies the shared battle record position pair
  * and heading into the work record, projects them and installs both GTE
  * matrices. */
-void copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638(
+void copyHalfwordInstallTransform(
     void);
 
 /* Draws one element of the work record's active effect: the angular index in
@@ -51,7 +51,7 @@ void func_801EF70C(int angle, int offset);
  *           jal in this payload reaches it: its address is entry 0 of the
  *           handler table based at 0x801F066C, the word at 0x801F066C inside
  *           the textbin row T_801F065C that the byte-1 dispatcher
- *           dispatchStateByte1Table066cBmagicMagic05903_801EF1E0 indexes.
+ *           callStateTable066Bmagic indexes.
  * @status exact
  * @match 100.00
  * @residual none
@@ -64,7 +64,7 @@ void dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224(v
   D_801F0670[step_record[2]]();
   draw_record = g_battle_work;
   if (draw_record[0] != 0 && draw_record[2] != 0) {
-    copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638();
+    copyHalfwordInstallTransform();
     func_801EF70C((-g_battle_work[9]) & 0x3F, 0x20);
     func_801EF70C((0x08 - g_battle_work[9]) & 0x3F, 0x20);
     func_801EF70C((0x10 - g_battle_work[9]) & 0x3F, 0x20);

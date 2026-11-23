@@ -27,7 +27,7 @@ void func_801E5988(void);
  *           0x801EFF24, 0x801F0018); the word at 0x801F0564 is the only word in
  *           the payload that names this address and no jal or j reaches it, and
  *           that table's only in-payload reader is the dispatcher
- *           dispatchStateByte1Table0550BmagicMagic05303_801EF064, which indexes
+ *           callStateTable0550Bmagic, which indexes
  *           the run with the work record's unsigned byte +1, so this body is
  *           invoked with no arguments. It reads the scratchpad work-object
  *           pointer cell at 0x1F800044 once, before the 0x18-byte frame is

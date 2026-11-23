@@ -27,7 +27,7 @@ extern void (*D_800C2264[])(void); /* @source 0x800C2264 @kind data */
  * leaves the handler's $v0 untouched, so this shim returns whatever that handler
  * returns. No word and no call in this payload names 0x800C1CA0, so its caller
  * stays outside this overlay. Same shape as the exact sibling
- * dispatchStateByte2Table224cBossBoss00113_800C1BDC; only the table address in
+ * callStateTable224Boss; only the table address in
  * the load word and the payload-local entries differ.
  * @status exact
  * @match 100.00

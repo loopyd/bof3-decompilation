@@ -14,7 +14,7 @@
  *           record leaves the loop through the lead-byte branch with its copy in
  *           that branch's delay slot. The lead byte is the claim flag: this
  *           target's single in-image caller,
- *           spawnWorkRecordPairsFromActiveSeedCountdownsWorld03Area14313_801F30A0,
+ *           spawnPairsActiveCountdowns,
  *           reaches it twice per active seed through the single jal at
  *           0x801F3108 inside a two-iteration loop, skips the record when the
  *           result is zero and otherwise stores 1 into that same lead byte in
@@ -28,7 +28,7 @@
  *           bodies differ from this one in the mask immediate, the bound
  *           immediate and the stride immediate alone. The table extent and the
  *           0x18 stride are this target's own: the adjacent exact
- *           clearWorkTableLeadBytesAt800E4800World03Area14313_801F2D3C clears the
+ *           stateTableLeadBytes clears the
  *           three lead bytes of the same 0x100 entries of 0x18-byte stride. The
  *           0x3C bytes of this span equal the span at 0x801D171C of the payload
  *           emi/scenario/sce15ef3/00 (payload cmp of the two 60-byte spans, both

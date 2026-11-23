@@ -4,7 +4,7 @@
 /* Scratchpad work-object pointer cell at 0x1F800044. The original
  * re-materializes the cell with its own lui/lw pair at every use, so the plain
  * named cell suffices; the same-target siblings
- * copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60
+ * copyIntoBattlerForward
  * and incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC
  * bind it the same way. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */

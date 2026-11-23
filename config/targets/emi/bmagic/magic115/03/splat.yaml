@@ -48,7 +48,7 @@ segments:
     - func_801EEFF4
   - - 1108
     - c
-    - dispatchStateByte1Tablef8bcBmagicMagic11503_801EF054
+    - callStateTablef8Bmagic
     - '@source: src/bof3/bmagic/magic11503DispatchTables.c'
   - - 1176
     - c
@@ -57,16 +57,16 @@ segments:
     - '@behavior: Step wrapper around one overlay work handler: publishes 0x800C3800 into the global at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object byte 2 by four and invokes the selected entry of the eight-entry code pointer run based at 0x801EF8C4 (0x801EF130, 0x801EF27C, 0x801EF49C, 0x801EF5C4, 0x801EF690, 0x801EF7A4, 0x801EF7F4, 0x801EF888) with no arguments. After the handler returns it re-reads the pointer cell and, when the work object byte 0 and byte 2 are both non-zero, runs the shared main-executable service func_8014D290. It then publishes 0x800D3800 into 0x801459F0. Each literal reaches the cell through its own lui/ori pair and a lui %hi / sw %lo store, the second literal being re-materialised in both guard delay slots and again after the service call; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 1328
     - c
-    - seedWorkHeaderFromBattleRecordClearTintGroupRequestResource0SetWorkByte9ThenAdvanceWorkByte2BmagicMagic11503_801EF130
-    - '@source: src/bof3/bmagic/seedWorkHeaderFromBattleRecordClearTintGroupRequestResource0SetWorkByte9ThenAdvanceWorkByte2BmagicMagic11503_801EF130.c'
+    - stateHeaderTintGroup
+    - '@source: src/bof3/bmagic/stateHeaderTintGroup.c'
     - '@behavior: Work-byte-2 handler, entry index 0 of the eight-entry code pointer run based at 0x801EF8C4, reached through dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098, which scales work object byte 2 by four and calls the selected word with no arguments. It copies shared battle record words 0x34 and 0x38 into the scratchpad work object at 0x1F800044 and adds 0x2C0 to the record halfword 0x3E into work halfword 0x3E, then seeds the work header: byte 0x25 = 0x1D, byte 0x26 = 0, the motion pair at 0x40 and 0x44 = 0x10000 with byte 0x48 = 1, byte 0x27 = 0xA0, byte 0x28 = 0, byte 0x24 = 4, tint bytes 0x5D, 0x5E and 0x5F = 0, mode byte 0x5C = 0, byte 0x2A = 0, byte 0x29 = 4, halfword 0x2C = 0 and byte 0x2B = 0. It requests resource 0 through func_8014D6B8, sets work byte 9 to 0xFF and advances work byte 2. The record and first work pointer loads precede the 0x18-byte frame, which only keeps $ra.'
   - - 1660
     - asm
     - func_801EF27C
   - - 2204
     - c
-    - decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C
-    - '@source: src/bof3/bmagic/decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C.c'
+    - decrementTintTimesTwelve
+    - '@source: src/bof3/bmagic/decrementTintTimesTwelve.c'
     - '@behavior: Step wrapper around one overlay work handler. It reads the scratchpad work-object pointer cell 0x1F800044, whose first load is issued before the 0x18-byte frame, steps the object tint bytes 0x5D, 0x5E and 0x5F down by four, and runs the shared no-argument update helper func_8014D978. It advances work byte 9 and publishes (byte 9 & 0x3F) << 6 into the scratchpad word 0x1F800000 through an address built once into $s0. Word 0x34 of the work object takes the shared record word 0x34 read through the 0x801EB4E0 cell plus twelve times the func_801782FC sample of that phase, written as the 12-bit fixed-point product sll 1 / addu / sll 14 / sra 12; word 0x38 takes the record word 0x38 plus twelve times the func_801783C8 sample of the same phase re-read from 0x1F800000. Between them it reads the record word 0x38 into a local and stores -0x80 into tint byte 0x5D through the signed byte view; that record load stays ahead of the tint store because a byte store and a record load may alias. After the tint store it re-reads the cell once more, and that pointer advances work byte 2 after the word 0x38 store. The 0x18-byte frame keeps $ra at 0x14 and $s0 at 0x10. Entry index 2 of the eight-word code pointer run based at 0x801EF8C4.'
   - - 2500
     - c

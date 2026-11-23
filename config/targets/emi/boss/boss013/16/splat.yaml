@@ -30,8 +30,8 @@ segments:
     - T_800C1804
   - - 28
     - c
-    - dispatchStateByte1Table2620BossBoss01316_800C181C
-    - '@source: src/bof3/boss/dispatchStateByte1Table2620BossBoss01316_800C181C.c'
+    - callStateTable2620Boss
+    - '@source: src/bof3/boss/callStateTable2620Boss.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C2620, the reviewed textbin row word 18 D_800C2620, with no arguments, so the selected handler result stays in the return register. Entry 0 is this payload next body 0x800C1860, entries 1 through 11 are the shared main-executable handlers 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and 0x801E5288, and the next dispatcher base 0x800C2650 follows that span. The index is bounded only to a byte and never checked against the run length, so the scaled load can leave the base; the slot after the index byte load and the indirect call delay slot both stay nops, and the call passes no argument. The 0x18-byte frame only keeps the return address at 0x10 across that call, and the epilogue leaves the return value untouched. No jal and no word of this payload names 0x800C181C, so the overlay entry is what reaches it.'
   - - 96
     - asm
@@ -54,8 +54,8 @@ segments:
     - noopHandlerBossBoss01316_800C1A2C
   - - 564
     - c
-    - dispatchStateByte1Table265cBossBoss01316_800C1A34
-    - '@source: src/bof3/boss/dispatchStateByte1Table265cBossBoss01316_800C1A34.c'
+    - callStateTable265Boss
+    - '@source: src/bof3/boss/callStateTable265Boss.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C265C, the textbin row D_800C25D8 word 33, so the selected handler result stays in the return register. Entry 0 of that base is this payload next body 0x800C1A78, entries 12 through 15 are the payload steps 0x800C1B4C, 0x800C1C4C, 0x800C1CBC and 0x800C1D08, entry 24 and entries 27 through 32 are the later payload steps, and the zero word 0x800C26E0 at entry 33 ends it. The index is bounded only to a byte and never checked against the run length, so that zero word is reachable; the slot after the scaled table load and the indirect call delay slot both stay nops, and the call passes no argument. The 0x18-byte frame only keeps the return address at 0x10 across that call, and the epilogue leaves the return value untouched. No jal and no word of this payload names 0x800C1A34, so the overlay entry is what reaches it.'
   - - 632
     - asm
@@ -70,16 +70,16 @@ segments:
     - func_800C1B4C
   - - 1100
     - c
-    - raiseWorkHalfwordF8OnBattleMode10AndActingBattler8ThenRaiseWorkHalfword94BossBoss01316_800C1C4C
-    - '@source: src/bof3/boss/raiseWorkHalfwordF8OnBattleMode10AndActingBattler8ThenRaiseWorkHalfword94BossBoss01316_800C1C4C.c'
+    - raiseHalfwordBattleActing
+    - '@source: src/bof3/boss/raiseHalfwordBattleActing.c'
     - '@behavior: Step handler named by the data word at 0x800C2690 of this payload row: when the battle mode byte 0x801462EA is 0x10 and the acting battler byte 0x80146374 is 8 it raises the signed halfword +0xF8 of the current enemy work record published at 0x801EB4E8 from zero to 1, then on every path raises that record unsigned halfword +0x94 from zero to 1; the 0x801EB4E8 cell is re-read for the second store on the paths that stored, and no jal in the payload names this function.'
   - - 1212
     - c
     - noopHandlerBossBoss01316_800C1CBC
   - - 1220
     - c
-    - dispatchStateByte1Table2698BossBoss01316_800C1CC4
-    - '@source: src/bof3/boss/dispatchStateByte1Table2698BossBoss01316_800C1CC4.c'
+    - callStateTable2698Boss
+    - '@source: src/bof3/boss/callStateTable2698Boss.c'
     - '@behavior: Overlay step dispatch on work-record byte 1: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at 0x800C2698 with no arguments.'
   - - 1288
     - c
@@ -93,8 +93,8 @@ segments:
     - '@behavior: Overlay step dispatch on work-record byte 2: loads the work-record pointer published at the non-volatile scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler run based at 0x800C26C8 with no arguments.'
   - - 1436
     - c
-    - applyMainLookupRecordF9ClearWorkByte24Bit0RequestResource2ThenAdvanceWorkByte2BossBoss01316_800C1D9C
-    - '@source: src/bof3/boss/applyMainLookupRecordF9ClearWorkByte24Bit0RequestResource2ThenAdvanceWorkByte2BossBoss01316_800C1D9C.c'
+    - stateMainLookupRequest
+    - '@source: src/bof3/boss/stateMainLookupRequest.c'
     - '@behavior: Step 0 handler of this overlay work state machine: applies main lookup record 0xF9 through the shared main-executable helper 0x8014DD3C, clears bit 0 of the scratch work record byte at offset 0x24 published at the pointer cell 0x1F800044, requests resource 2 through func_8014D6B8, then re-reads the cell and advances that record step byte at offset 2 by one. This address is the word at 0x800C26C8, entry 0 of the byte-2 handler run dispatchStateByte2Table26c8BossBoss01316_800C1D58 indexes, and no jal in the payload names it.'
   - - 1524
     - asm
@@ -104,13 +104,13 @@ segments:
     - dispatchIndexedHandlerBossBoss01316_800C1E58
   - - 1680
     - c
-    - storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90
-    - '@source: src/bof3/boss/storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90.c'
+    - stateOneBitBit
+    - '@source: src/bof3/boss/stateOneBitBit.c'
     - '@behavior: Entry 0 of the payload handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Reads the shared flag byte 0x801462ED once: while its bit 0 is set it stores 3 into the global byte 0x80146375 and returns; otherwise, while the overlay step countdown byte 0x800C26E0 is nonzero it stores one less there and clears 0x80146375 to 0; when that countdown is already zero it stores 1 into 0x80146375, stores 4 into the global byte 0x80146384, writes back the flag byte it read at entry with bit 0 set, and stores the global byte 0x80146322 less one. It calls nothing, takes no arguments, has no frame and returns no value, and only the run word at 0x800C26D4 holds its address, so no jal in the payload names it.'
   - - 1828
     - c
-    - initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24
-    - '@source: src/bof3/boss/initBattleUiCopyBattlerNameQueueEvent2dWithTexture25ClearCountdownSetWorkByte29To4RaiseFlag40BossBoss01316_800C1F24.c'
+    - setupUiBattlerName
+    - '@source: src/bof3/boss/setupUiBattlerName.c'
     - '@behavior: Entry 1 of the handler run at 0x800C26D4 that dispatchIndexedHandlerBossBoss01316_800C1E58 scales a byte index into. Initializes the battle UI bundle slot 0 through 0x801D9484, copies eight bytes of the field record selected by the local-battler byte 0x80181B11 into the shared name slot 0x801490D8 through 0x801501E4, resolves texture 0x25 through 0x801502D0 and queues it through 0x801DE560 as event row kind 2 with halfword 0x2D, clears the overlay step countdown byte 0x800C26E0, runs the shared transition helper 0x801C1254 with 1 and 1, stores 4 into byte 0x29 of the work record published at the scratchpad pointer cell 0x1F800044, republishes the in-row pointer 0x800C25FC into the +0xEC data-row word of the current enemy work record from 0x801EB4E8, requests resource work byte +8 plus 4 through 0x8014D6B8 and raises bit 0x40 of the shared flag byte 0x801462ED. Only the word at 0x800C26D8 holds its address, so no jal in the payload names it.'
   - - 2052
     - c
@@ -128,14 +128,14 @@ segments:
     - '@behavior: First member of this overlay battle hook trio: loads the shared battle flag byte 0x80146328 and tests bit 0x2; while the bit is set it stores 0x32 into the shared scenario progress byte 0x80146864 and runs initModeTuple510 (0x801DDED8), and when the bit is clear it stores the same 0x32 into 0x80146864, runs initModeTuple530 (0x801DDF28) and then stores the mode byte 3 into 0x80146255. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A4, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2224
     - c
-    - clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0
-    - '@source: src/bof3/boss/clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0.c'
+    - stateOwnerOwnerOwner
+    - '@source: src/bof3/boss/stateOwnerOwnerOwner.c'
     - '@behavior: Second member of this overlay battle hook trio: clears the 0x40 flag of the battle record owned by id 0 through clearOwnerRecordFlag40 at 0x800AC844, then the same flag of the record owned by id 1, and returns through a 0x18 byte frame that keeps the return address across both calls. The installer publishBattleHooksBossBoss01316_800C200C stores this address into the shared battle hook slot 0x801463A8, which the battle step loads and calls through jalr; no jal in the payload names this function.'
   - - 2264
     - c
-    - publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8
-    - '@source: src/bof3/boss/publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8.c'
-    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (0x800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler storeThreeZeroOrOneByFlagBitAndCountdownThenSetFlagBitAndDecrementByte6322BossBoss01316_800C1E90 decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
+    - publishHooksSeedCountdown
+    - '@source: src/bof3/boss/publishHooksSeedCountdown.c'
+    - '@behavior: Publishes this overlay handler trio into the shared battle hook slots 0x801463A4, 0x801463A8 and 0x801463AC (0x800C2348, func_800C243C and func_800C2138), then seeds the overlay step countdown byte at 0x800C26E0 with 8 plus the low two bits of rand(), so 8, 9 or 10: the dispatched handler stateOneBitBit decrements that byte and fires when it reaches zero, and the published hook func_800C2138 tests it as a guard and clears it. The 0x18 byte frame keeps the return address across the rand call and no jal in the payload names this function.'
   - - 2360
     - asm
     - func_800C2138
@@ -143,7 +143,7 @@ segments:
     - c
     - initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348
     - '@source: src/bof3/boss/initModeTuple510Or530ByFlagBitTwoSetScenarioProgress14Or50StoreHalfwordSumApplyRecordF9ThenClearHalfwordBit80BossBoss01316_800C2348.c'
-    - '@behavior: First member of the battle handler trio publishBattleHooksAndSeedStepCountdownBossBoss01316_800C20D8 installs into the shared battle hook slot 0x801463A4. Tests bit 0x2 of the shared battle flag byte 0x80146328: while set it stores 0x14 into the shared scenario progress byte 0x80146864, stores the sum of the shared halfwords 0x801EB6B6 and 0x801EB7CE into the shared word 0x8014632C, and runs initModeTuple510 (0x801DDED8); while clear it tests bit 0x40 of the shared flag byte 0x801462ED and, when set, publishes the shared record 0x801EB860 into the scratchpad pointer cell 0x1F800044, applies main lookup record 0xF9 through 0x8014DD3C, clears bit 0 of that record byte 0x24, stores 1 into its byte 0x2A and requests resource 1 through 0x8014D6B8, after which both clear-path outcomes store 0x50 into 0x80146864 and run initModeTuple530 (0x801DDF28). The shared tail stores 0x31 into the shared byte 0x80145029 and clears bit 0x0080 of the shared halfword 0x80146258. No jal in the payload names this function; the installer stores its address with lui and addiu.'
+    - '@behavior: First member of the battle handler trio publishHooksSeedCountdown installs into the shared battle hook slot 0x801463A4. Tests bit 0x2 of the shared battle flag byte 0x80146328: while set it stores 0x14 into the shared scenario progress byte 0x80146864, stores the sum of the shared halfwords 0x801EB6B6 and 0x801EB7CE into the shared word 0x8014632C, and runs initModeTuple510 (0x801DDED8); while clear it tests bit 0x40 of the shared flag byte 0x801462ED and, when set, publishes the shared record 0x801EB860 into the scratchpad pointer cell 0x1F800044, applies main lookup record 0xF9 through 0x8014DD3C, clears bit 0 of that record byte 0x24, stores 1 into its byte 0x2A and requests resource 1 through 0x8014D6B8, after which both clear-path outcomes store 0x50 into 0x80146864 and run initModeTuple530 (0x801DDF28). The shared tail stores 0x31 into the shared byte 0x80145029 and clears bit 0x0080 of the shared halfword 0x80146258. No jal in the payload names this function; the installer stores its address with lui and addiu.'
   - - 3132
     - asm
     - func_800C243C

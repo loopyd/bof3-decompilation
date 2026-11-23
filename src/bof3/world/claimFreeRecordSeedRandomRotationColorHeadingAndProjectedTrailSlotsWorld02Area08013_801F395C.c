@@ -5,7 +5,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
 extern u8* D_801F44A4; /* @source 0x801F44A4 @kind unknown */
 extern u8 D_801F3DC4[]; /* @source 0x801F3DC4 @kind table */
 extern int rand(void);
-u8* findFreeRecordAt800E486CWorld02Area08013_801F3B98(void);
+u8* queryFreeRecordAt800(void);
 
 /* The original copies the colour word and the two projected trail pairs with
  * `lwl`/`lwr` + `swl`/`swr` word pairs, which is the code this compiler emits
@@ -25,7 +25,7 @@ void func_801AFF04(const void* arg0, void* arg1);
  *           caller, the handler at 0x801F2DE0, runs it after the table walk at
  *           0x801F3870 and before it decrements the work countdown byte. It
  *           claims the first free record of the 0x800E486C table through
- *           findFreeRecordAt800E486CWorld02Area08013_801F3B98, publishes that
+ *           queryFreeRecordAt800, publishes that
  *           record as the shared cursor D_801F44A4 and returns without seeding
  *           anything when the shared frame counter D_80143E6C is not on a
  *           multiple of four or when no record was free. Otherwise it copies the
@@ -63,7 +63,7 @@ void claimFreeRecordSeedRandomRotationColorHeadingAndProjectedTrailSlotsWorld02A
   s32 turn;
   u8 i;
 
-  D_801F44A4 = findFreeRecordAt800E486CWorld02Area08013_801F3B98();
+  D_801F44A4 = queryFreeRecordAt800();
   if ((D_80143E6C & 3) != 0) {
     return;
   }

@@ -33,7 +33,7 @@ segments:
     - func_801EEC18
   - - 156
     - c
-    - copyRecordFieldsSeedRandomTableQueueTwelveSlotsWithDescendingByte9ClearByteAAndAdvanceWorkByte1BmagicMagic09503_801EEC9C
+    - copyFieldsTwelveDescending
   - - 608
     - asm
     - func_801EEE60
@@ -54,10 +54,10 @@ segments:
     - func_801EF1FC
   - - 3076
     - c
-    - drawSixRecedingTranslucentGouraudQuadRingsWithStepJitterTableAndWorkByte9AlphaFadeBmagicMagic09503_801EF804
+    - renderRecedingRingsAlpha
   - - 4572
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius448TintedByWorkByteATimesEightAtOriginAndOneAtRimBmagicMagic09503_801EFDDC
+    - renderSixteenEightRim
   - - 5144
     - asm
     - func_801F0018

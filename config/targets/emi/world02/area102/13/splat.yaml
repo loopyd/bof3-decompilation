@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table3930World02Area10213_801F2C04
+    - callStateTable3930World02
     - '@source: src/bof3/world/area10213DispatchTables.c'
   - - 72
     - asm
@@ -37,8 +37,8 @@ segments:
     - func_801F2D04
   - - 388
     - c
-    - drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84
-    - '@source: src/bof3/world/drawCountdownLevelThenQueueMarkerAtWorkHalfwords36And3aSize8aResetCountdownAndAdvanceStepWorld02Area10213_801F2D84.c'
+    - renderLevelMarkerReset
+    - '@source: src/bof3/world/renderLevelMarkerReset.c'
   - - 552
     - asm
     - func_801F2E28
@@ -53,7 +53,7 @@ segments:
     - func_801F3194
   - - 1636
     - c
-    - dispatchStateByte2Table3948World02Area10213_801F3264
+    - callStateTable3948World02
     - '@source: src/bof3/world/area10213DispatchTables.c'
   - - 1704
     - c

@@ -72,11 +72,11 @@ segments:
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 1872
     - c
-    - dispatchStateByte1Table4f78World00Area03313_801F3350
+    - callStateTable4World00
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 1940
     - c
-    - resetAdvanceScratchStateCloneWorld00Area03313_801F3394
+    - stateAdvanceScratchClone
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 2004
     - c
@@ -144,7 +144,7 @@ segments:
     - func_801F3FF8
   - - 5292
     - c
-    - dispatchStateByte1Table5010World00Area03313_801F40AC
+    - callStateTable5010World00
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 5360
     - asm
@@ -159,7 +159,7 @@ segments:
     - func_801F445C
   - - 6400
     - c
-    - dispatchStateByte1Table5034World00Area03313_801F4500
+    - callStateTable5034World00
     - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 6468
     - asm
@@ -169,8 +169,8 @@ segments:
     - invokeTwoHelpersWorld00Area03313_801F4674
   - - 6812
     - c
-    - drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld00Area03313_801F469C
-    - '@source: src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld00Area03313_801F469C.c'
+    - renderScrollingNearFocus
+    - '@source: src/bof3/world/renderScrollingNearFocus.c'
     - '@behavior: Projects a pulsing textured panel and scrolling cell grid near the shared focus.'
 - - 8368
   - bin

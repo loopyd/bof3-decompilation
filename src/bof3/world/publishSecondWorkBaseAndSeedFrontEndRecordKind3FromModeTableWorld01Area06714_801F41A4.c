@@ -29,7 +29,7 @@ u8 func_8015CB18(s32 arg0, s32 arg1, u8 arg2, s16 arg3, s16 arg4);
  *
  * Shape notes from the original bytes: this 0x80-byte body is instruction
  * identical to the exact sibling
- * publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06714_801F4124
+ * publishBaseSeedEnd
  * at 0x801F4124 in this same payload except for the four shipped symbol
  * immediates - the published work base, the shared party-id byte used to index
  * the mode table, and the two halfwords forwarded to the seeder - so its

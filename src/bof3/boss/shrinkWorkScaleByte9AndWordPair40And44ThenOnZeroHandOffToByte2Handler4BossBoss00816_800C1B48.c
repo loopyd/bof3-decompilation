@@ -35,7 +35,7 @@ void accumulateEnemyHalfwordsAndResetScratch(void); /* @source 0x801E54EC */
 /* @source 0x800C1B48
  * @behavior Per-frame handler of this overlay's work state machine, entry 11 of
  *           the fifteen-word run based at 0x800C2690 that
- *           dispatchStateByte2Table2690BossBoss00816_800C18A0 indexes with work
+ *           callStateTable2690Boss indexes with work
  *           byte +2. The word 0x800C26BC is its only in-image reference and no
  *           `jal` reaches it, so that dispatcher is its only caller; the 0x18-byte
  *           frame keeps $ra at 0x10 across the four calls and the plain `jr $ra`

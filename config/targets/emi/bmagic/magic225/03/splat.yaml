@@ -45,15 +45,15 @@ segments:
     - func_801EF278
   - - 1752
     - c
-    - dispatchStateByte1Table0388BmagicMagic22503_801EF2D8
+    - callStateTable0388Bmagic
     - '@source: src/bof3/bmagic/magic22503DispatchTables.c'
   - - 1820
     - asm
     - func_801EF31C
   - - 2052
     - c
-    - setEligibleBattlerByte29ToTwoAndInitializeWorkBmagicMagic22503_801EF404
-    - '@source: src/bof3/bmagic/setEligibleBattlerByte29ToTwoAndInitializeWorkBmagicMagic22503_801EF404.c'
+    - stateEligibleBattlerInitialize
+    - '@source: src/bof3/bmagic/stateEligibleBattlerInitialize.c'
     - '@behavior: Sets byte 0x29 to 2 for available battlers on the selected side, initializes work bytes 0x29, 0xB, 9 and 0xA, and advances work byte 2.'
   - - 2424
     - asm
@@ -63,8 +63,8 @@ segments:
     - func_801EF5D8
   - - 2600
     - c
-    - setWorkByteBToOneAndAdvanceWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22503_801EF628
-    - '@source: src/bof3/bmagic/setWorkByteBToOneAndAdvanceWorkByte2WhenGlobalWorkByteBBelow2BmagicMagic22503_801EF628.c'
+    - stateByteOneGlobal
+    - '@source: src/bof3/bmagic/stateByteOneGlobal.c'
     - '@behavior: Work byte 1 step 7: when byte 0xB of the record published by the shared battle pointer at 0x801EB4E0 reads below two, stores 1 into byte 0xB of the record published by the scratchpad pointer cell at 0x1F800044 and advances that record byte 0x2.'
   - - 2684
     - asm
@@ -77,7 +77,7 @@ segments:
     - func_801EFCA0
   - - 4620
     - c
-    - dispatchStateByte1Table03acBmagicMagic22503_801EFE0C
+    - callStateTable03Bmagic
     - '@source: src/bof3/bmagic/magic22503DispatchTables.c'
   - - 4688
     - c

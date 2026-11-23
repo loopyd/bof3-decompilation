@@ -14,7 +14,7 @@
 extern void (*D_801CFFD4[])(void); /* @source 0x801CFFD4 @kind data */
 
 /* Seeded from the lift of the same body at this payload's 0x801CE404
- * (dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404), whose metadata recorded
+ * (callWorkTableffa8Plchar), whose metadata recorded
  * it exact. The two 68-byte spans agree in sixteen of seventeen words: the only
  * difference is the low half of the scaled table load at 0x801CF948, 0xFFD4 here
  * against 0xFFA8 there, because each dispatcher names the base of its own index

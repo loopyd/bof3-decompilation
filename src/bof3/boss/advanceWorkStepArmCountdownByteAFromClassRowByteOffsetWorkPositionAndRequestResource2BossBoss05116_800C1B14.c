@@ -30,7 +30,7 @@ void func_8014D6B8(u32 flag); /* @source 0x8014D6B8 */
 /* @source 0x800C1B14
  * @behavior Entry 0 of this overlay's step table at 0x800C1804, the four-word
  *           run (0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C) that
- *           dispatchStateByte1Table1804BossBoss05116_800C1AA8 copies into its
+ *           callStateTable1804Boss copies into its
  *           frame and indexes with the work record byte 1, so no jal names this
  *           entry. It loads the scratch work record pointer published at the
  *           scratchpad cell 0x1F800044, advances that record's byte 1 by one,

@@ -19,7 +19,7 @@ extern u8 g_ScenarioProgress;
  *           zero read 0x68 and 0x21), the status cell 0x801490A8, the scenario
  *           progress cell 0x80146864 and the arm constants 1 and 0xA. The
  *           instruction-for-instruction shape is the exact sibling
- *           publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4
+ *           publishModeStatusTable4494
  *           in this target, which indexes its own table 0x801F4494 the same way
  *           and switches on the same mode byte with the same two arm constants;
  *           that sibling differs in the table base word and in the immediate of

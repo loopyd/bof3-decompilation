@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setWorldRecordBytes0CAnd14To2WhenFrontStateBit0ElseClearWorld00Area01513_801F2C04
-    - '@source: src/bof3/world/setWorldRecordBytes0CAnd14To2WhenFrontStateBit0ElseClearWorld00Area01513_801F2C04.c'
+    - stateWorldFrontClear
+    - '@source: src/bof3/world/stateWorldFrontClear.c'
     - '@behavior: Reads bit 0 of the shared front-state byte D_80146871; when the bit is set it stores 2 into byte 0x0C and byte 0x14 of the world record selected by the pending world id D_80143F00 through the pointer table D_80181164, and when the bit is clear it stores 0 into those two bytes instead. Each store re-reads the pending world id and re-loads the record pointer, so the body performs four table lookups; the constant 2 is materialised once and reused by its arm pair. Takes no arguments, calls nothing and returns nothing.'
   - - 184
     - c
@@ -49,8 +49,8 @@ segments:
     - setTwoWorld00Area01513_801F2D5C
   - - 376
     - c
-    - dispatchWorkByte4Table0f0World00Area01513_801F2D78
-    - '@source: src/bof3/world/dispatchWorkByte4Table0f0World00Area01513_801F2D78.c'
+    - callWorkByte4Table0
+    - '@source: src/bof3/world/callWorkByte4Table0.c'
     - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044. The unchecked two-entry handler table at 0x801F40F0 holds the routines at 0x801F2DBC and 0x801F2E60. Takes no arguments and returns nothing.'
   - - 444
     - asm
@@ -65,8 +65,8 @@ segments:
     - '@behavior: Calls the local handler selected by byte +4 of the work record published at scratchpad pointer cell 0x1F800044 through the unchecked two-entry table at 0x801F40FC, whose entries are the sequence-selection handler at 0x801F2F2C and the step handler at 0x801F2E60. Takes no arguments and returns nothing; the payload step run at 0x801F40A0 publishes this function as its second entry.'
   - - 812
     - c
-    - selectSequenceByFrameParitySeedWorkByteARandom7ArmHandler1AndDecrementRecordHalfword0aWorld00Area01513_801F2F2C
-    - '@source: src/bof3/world/selectSequenceByFrameParitySeedWorkByteARandom7ArmHandler1AndDecrementRecordHalfword0aWorld00Area01513_801F2F2C.c'
+    - selectSequenceFrameParity
+    - '@source: src/bof3/world/selectSequenceFrameParity.c'
     - '@behavior: Overlay step handler and handler-table entry 0 of this payload: reads bit 0x2 of the shared frame counter 0x80143E6C, shifts it down to 0 or 1 and doubles it into the byte offset of the two-entry selection run at 0x801F4104 whose records are (1,1) and (0,1), writes rand() & 7 into work byte 0x0A through the scratchpad pointer cell 0x1F800044, passes the selected record first byte to the shared work-sequence selector func_8014D8D4, copies the selected record second byte into work byte 0x2A after a fresh cell load, writes 1 into work byte 0x04 so the next frame dispatches through the local table at 0x801F40FC to func_801F2E60, then reloads the shared record pointer 0x80148210 and subtracts 2 from its +0x0A halfword.'
 - - 976
   - bin

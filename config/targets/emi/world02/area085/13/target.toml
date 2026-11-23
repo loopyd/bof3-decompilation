@@ -9,13 +9,13 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area08513_801F2C48.c",
-    "src/bof3/world/setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC.c",
-    "src/bof3/world/clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0.c",
-    "src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c",
+    "src/bof3/world/stateActiveRecordsBase.c",
+    "src/bof3/world/stateResourceTripletTick.c",
+    "src/bof3/world/claimSlotsKeyedWords.c",
     "src/bof3/world/advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C.c",
     "src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c",
     "src/bof3/world/decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70.c",
-    "src/bof3/world/publishScaledWorkXByte7SetViewMode7ClearFacingAndWorkWord14SetFlag40ThenStoreSharedYAndWorkWord38World02Area08513_801F373C.c",
+    "src/bof3/world/publishViewFacingY.c",
     "src/bof3/world/queueCue201WhenFrontEndModeNot5World02Area08513_801F3BEC.c",
 ]
 support_sources = [
@@ -24,7 +24,7 @@ support_sources = [
     "src/bof3/world/invokeHelperWithWorkWorld02Area08513_801F3BA4.c",
     "src/bof3/world/advanceWorkHalfwordWorld02Area08513_801F3BCC.c",
     "src/bof3/world/invokeTwoHelpersWorld02Area08513_801F2EB0.c",
-    "src/bof3/world/setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0.c",
+    "src/bof3/world/stateUntilExpiresSelected.c",
     "src/bof3/world/invokeHelperArgWorld02Area08513_801F3C1C.c",
     "src/bof3/world/offsetPaletteChannelsWorld02Area08513_801F3C3C.c",
     "src/bof3/world/applyMainLookupRecord184ClearWorkByte24Bit0RequestResource0ThenSetWorkByte2AAndByte0Flag10World02Area08513_801F3AF8.c",

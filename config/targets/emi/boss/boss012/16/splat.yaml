@@ -52,8 +52,8 @@ segments:
     - func_800C1978
   - - 548
     - c
-    - drawWorkHalfword20FrameThenAdvanceWord20ByTwoAndSetStateByte3To3WhenWord20Reaches56BossBoss01216_800C1A24
-    - '@source: src/bof3/boss/drawWorkHalfword20FrameThenAdvanceWord20ByTwoAndSetStateByte3To3WhenWord20Reaches56BossBoss01216_800C1A24.c'
+    - renderFrameTwoBoss
+    - '@source: src/bof3/boss/renderFrameTwoBoss.c'
     - '@behavior: Overlay frame step, entry 2 of the byte-3 handler run based at 0x800C1EBC: reads the work-record pointer published at the scratchpad pointer cell 0x1F800044 and renders that record''s unsigned halfword at 0x20 twice, then advances the record''s word at 0x20 by two and writes 3 into that record''s byte at offset 3 when the advanced word equals 0x56.'
   - - 656
     - asm
@@ -80,7 +80,7 @@ segments:
     - zeroResultBossBoss01216_800C1BA0
   - - 936
     - c
-    - initModeTuple510ByBattleFlagAndSetScenarioProgressBossBoss01216_800C1BA8
+    - setupModeFlagProgress
   - - 1024
     - c
     - noopHandlerBossBoss01216_800C1C00

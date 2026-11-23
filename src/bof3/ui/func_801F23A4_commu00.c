@@ -48,7 +48,7 @@ void func_801F23A4(void) {
       func_80161C20(D_801F2944[1], 100, 8);
       D_8014625A &= 0xFFF8u;
       clearUiSelectionState();
-      dispatchCurrentTaskVariantResource();
+      callCurrentTaskVariant();
     }
     break;
   }

@@ -90,7 +90,7 @@ u8 func_8019601C(void);
  * (x, z); the result is published as a 0x10000-scaled record word. */
 s16 func_8015477C(s32 arg0, s32 arg1);
 
-void copyWorkareaFieldsAndAdvanceMode(void); /* @source 0x801F2C48 */
+void copyWorkareaFieldsMode(void); /* @source 0x801F2C48 */
 /* @source 0x801AFE18 — shared projection setup consuming a 0x20-byte stack
  * scratch area; only a0 is live at the call site. */
 void func_801AFE18(void* arg0);

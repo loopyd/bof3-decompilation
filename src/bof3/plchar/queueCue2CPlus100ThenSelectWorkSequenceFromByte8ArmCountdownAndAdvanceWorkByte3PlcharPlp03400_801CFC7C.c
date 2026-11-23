@@ -28,7 +28,7 @@ u32 func_8014D8D4(u8 arg0);
  * @behavior Overlay step dispatched on work-record byte 3: the task tables of
  *           this payload place its address at the pointer word 0x801D0334, which
  *           is entry 0 of the twenty-eight-word handler run based at 0x801D02F4,
- *           so dispatchWorkByte3Table0334PlcharPlp03400_801CFC38 reaches it when
+ *           so callWorkTable0334Plchar reaches it when
  *           work byte 3 reads zero. It reads the work record published at the
  *           scratchpad pointer cell 0x1F800044 and, in order, queues the cue
  *           taken from the record's unsigned halfword 0x2C plus 0x100 through

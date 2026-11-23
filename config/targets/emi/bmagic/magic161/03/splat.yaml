@@ -50,7 +50,7 @@ segments:
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988. It is entry 2 of the three-entry handler run at 0x801EEC04 that this overlay entry dispatcher copies and selects with the work byte at offset 1. The original materializes the halfword address once in a register, keeps it live across the call, and writes the read-modify-write through that register, the halfword store filling the call delay slot. The 0x18-byte frame only keeps the return address at 0x10. Nothing is returned and no other state is read or written.'
   - - 828
     - c
-    - dispatchStateByte1Tablef3e8BmagicMagic16103_801EEF3C
+    - callStateTablef3Bmagic
     - '@source: src/bof3/bmagic/magic16103DispatchTables.c'
   - - 896
     - c
@@ -69,8 +69,8 @@ segments:
     - '@behavior: Entry 1 (index 1) of the five-entry handler run at 0x801EEC10 (0x801EF024, 0x801EF06C, 0x801EF0E8, 0x801EF158, 0x801EF1BC) that the work byte 2 dispatcher at 0x801EEF80 copies into its own 0x30-byte frame and invokes with the entry that scratchpad work-object byte 2 selects, with no bounds test and no jal naming this body. Per frame it calls the shared readiness helper at 0x8014DAEC and discards the returned byte, then re-materializes the work-object pointer cell at 0x1F800044 and decrements work byte 9 in place at byte width, testing the stored byte truncated to eight bits so the rest of the body runs only when that countdown reaches zero. On zero it invokes the shared helper at 0x800AFC98 with the constant pair (2, 4), the 2 filling that test delay slot, forwards the shared battle byte at 0x80146384 to the helper at 0x800A9820, and finally re-reads the pointer cell and increments work byte 2 at byte width, moving dispatch to run entry 2 at 0x801EF0E8. The 0x18-byte frame only keeps the return address at 0x10; it takes no arguments, returns nothing and reads or writes no other state. The 0x7C-byte body has no byte-identical copy in any extracted payload, and the nearest twin at 0x801F1384 of emi/bmagic/magic008/00 differs in exactly one word, the passed constant 4 here against 0 there (payload byte comparison).'
   - - 1256
     - c
-    - invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8
-    - '@source: src/bof3/bmagic/invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8.c'
+    - callHelperDrawRun
+    - '@source: src/bof3/bmagic/callHelperDrawRun.c'
     - '@behavior: Work-byte-9 handler of this overlay''s step sequence. It reads the scratchpad work-object pointer cell at 0x1F800044 once before the 0x18-byte frame is created and loads the work object byte 0x9 through that pointer, comparing the truncated value against 0x10. When the byte equals 0x10 it invokes the main-executable helper at 0x8015D71C with the selector 0x100, re-reads the pointer cell and increments work byte 0x2, which advances the dispatch state. Otherwise it stores the loaded byte plus four back into work byte 0x9 through the pointer loaded at entry. Both paths then call this overlay''s drawing routine at 0x801EF1DC and the shared helper at 0x8014DAEC, and return. The frame only keeps $ra across those three calls; nothing is returned and no other state is read or written.'
   - - 1368
     - c

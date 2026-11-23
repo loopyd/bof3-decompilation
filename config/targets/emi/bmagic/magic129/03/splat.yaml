@@ -42,7 +42,7 @@ segments:
     - func_801EEF20
   - - 896
     - c
-    - dispatchStateByte1Table05b4BmagicMagic12903_801EEF80
+    - callStateTable05Bmagic
     - '@source: src/bof3/bmagic/magic12903DispatchTables.c'
   - - 964
     - asm
@@ -62,8 +62,8 @@ segments:
     - func_801EF4F0
   - - 2380
     - c
-    - drawFourLayerTranslucentGouraudRibbonAlongWorkVelocityBmagicMagic12903_801EF54C
-    - '@source: src/bof3/bmagic/drawFourLayerTranslucentGouraudRibbonAlongWorkVelocityBmagicMagic12903_801EF54C.c'
+    - renderLayerRibbonAlong
+    - '@source: src/bof3/bmagic/renderLayerRibbonAlong.c'
     - '@behavior: Draws four translucent Gouraud ribbon layers per work-byte-A segment along work velocity with sampled widths and phase offsets.'
   - - 4928
     - c
@@ -76,8 +76,8 @@ segments:
     - '@behavior: Dispatches work byte 2, then draws the fan between graph-type draw modes when work bytes 0 and 2 are nonzero.'
   - - 5332
     - c
-    - decrementWorkByte9ThenSeedRandomizedPositionTintAndAdvanceStateBmagicMagic12903_801F00D4
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSeedRandomizedPositionTintAndAdvanceStateBmagicMagic12903_801F00D4.c'
+    - decrementRandomizedPositionTint
+    - '@source: src/bof3/bmagic/decrementRandomizedPositionTint.c'
     - '@behavior: Decrements work byte 9, then seeds randomized position and tint and advances state on zero.'
   - - 5692
     - asm

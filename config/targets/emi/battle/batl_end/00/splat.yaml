@@ -51,18 +51,18 @@ segments:
     - func_801EEE4C
   - - 736
     - c
-    - advanceSubstateWhenPadActiveBatlEnd00_801EEEE0
-    - '@source: src/bof3/battle/advanceSubstateWhenPadActiveBatlEnd00_801EEEE0.c'
+    - stateSubstatePadActive
+    - '@source: src/bof3/battle/stateSubstatePadActive.c'
     - '@behavior: Battle substate advance on input: when the shared pad state halfword at 0x80145AA4 reads nonzero, advances the battle substate index byte at 0x801462E4 by one through a pointer to that byte and leaves the battle state byte at 0x801462E5 untouched; takes no arguments, returns nothing and touches no stack.'
   - - 788
     - c
-    - applyAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EEF14
-    - '@source: src/bof3/battle/applyAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EEF14.c'
+    - stateAccumulatedAmountSubstate
+    - '@source: src/bof3/battle/stateAccumulatedAmountSubstate.c'
     - '@behavior: Battle-end accumulated-amount drain: the pad state word at 0x80145AA4 reading nonzero together with the EXE-side EMI loader reporting ready at 0x80162D00 finishes the drain at once, passing the whole remaining amount in the accumulator at 0x8014632C to the shared template accumulator at 0x801DD59C, clearing that accumulator and advancing the substate index byte at 0x801462E4 by one; otherwise, while the amount still exceeds the per-call step published at 0x801463B0, only that step is passed to 0x801DD59C and subtracted from the accumulator and the substate index stays put, and once the remainder fits inside one step it is drained whole the same way the skip path does. Both the accumulator word and the step halfword are re-read for the subtraction that follows the call.'
   - - 972
     - c
-    - advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC
-    - '@source: src/bof3/battle/advanceHandlerRunWhenLoaderReadyBatlEnd00_801EEFCC.c'
+    - stateRunLoaderReady
+    - '@source: src/bof3/battle/stateRunLoaderReady.c'
     - '@behavior: Battle handler-run advance: polls the EXE-side EMI loader and, once it reports ready, clears the battle state byte at 0x801462E5 and the run-local substate index at 0x801462E4, then increments the selection byte at 0x801462E3 that dispatches this overlay''s handler runs; the 0x18-byte frame only keeps $ra across the poll.'
   - - 1048
     - c
@@ -85,8 +85,8 @@ segments:
     - func_801EF348
   - - 2752
     - c
-    - anyAvailableLocalBattlerIdentityIs7BatlEnd00_801EF6C0
-    - '@source: src/bof3/battle/anyAvailableLocalBattlerIdentityIs7BatlEnd00_801EF6C0.c'
+    - anyAvailableBattlerIdentity
+    - '@source: src/bof3/battle/anyAvailableBattlerIdentity.c'
     - '@behavior: Local battler identity scan: walks the slots below the volatile count byte at 0x801462F0, skips each slot whose availability test func_801DB524 reports nonzero, and returns 1 as soon as identity byte +0x86 or +0x87 of that slot''s 0x140-byte work record (0x80145F16/0x80145F17 plus slot*0x140) reads 7; returns 0 when the count byte is zero or no walked slot matches, and the 0x20-byte frame keeps $ra and $s0-$s2 across the per-slot call.'
   - - 2940
     - c
@@ -95,13 +95,13 @@ segments:
     - '@behavior: Battle substate advance on input: while the shared pad state word at 0x80145AA4 reads nonzero, clears the battle state byte at 0x801462E5 and increments the substate index byte at 0x801462E4; leaf function, no frame and no arguments.'
   - - 2996
     - c
-    - drainAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EF7B4
-    - '@source: src/bof3/battle/drainAccumulatedAmountStepOrAdvanceSubstateBatlEnd00_801EF7B4.c'
+    - drainAccumulatedAmountSubstate
+    - '@source: src/bof3/battle/drainAccumulatedAmountSubstate.c'
     - '@behavior: Battle-end accumulated-amount drain: the pad state word at 0x80145AA4 reading nonzero together with the EXE-side EMI loader at 0x80162D00 reporting ready passes the whole remaining amount in the accumulator at 0x80146330 to the shared helper at 0x8016666C with a zero second argument, clears that accumulator and advances the substate index byte at 0x801462E4; otherwise, while the amount still exceeds the step halfword at 0x801463B0, only that step is passed and subtracted, and the remainder is drained whole the same way the skip path does; the accumulator and the step are both re-read after the call.'
   - - 3184
     - c
-    - gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870
-    - '@source: src/bof3/battle/gateCountedListEntriesThenEnterPhase4BatlEnd00_801EF870.c'
+    - gateCountedEntriesEnter
+    - '@source: src/bof3/battle/gateCountedEntriesEnter.c'
     - '@behavior: Battle-end counted-list gate and phase change: once the EXE-side EMI loader reports ready at 0x80162D00, walks the counted list (length byte at 0x80146327, halfword ids at 0x80146334, per-id counts at 0x80146354) and passes every entry through the shared record gate 0x801650B4 as the id''s high byte, the id''s low byte and the entry''s count with a zero fourth argument, then sets the battle mode byte at 0x801462E1 to 4 and clears 0x801462E2, 0x801462E3 and 0x801462E4; the length byte is re-read every iteration.'
   - - 3368
     - asm
@@ -113,8 +113,8 @@ segments:
     - '@behavior: Battle-end panel task dispatch through a copy of the overlay''s panel handler run: copies the six handler words at 0x801EEC28 into the frame at 0x10($sp), then reads the object published at 0x80148648, takes its byte +0x02 (the PanelTask task byte), scales it by four and calls the entry at that index of the copy with no arguments; the index is unbounded, so the two zero entries of the run are reachable exactly as in the original, and the 0x30-byte frame only holds the copy and $ra.'
   - - 4624
     - c
-    - dispatchPanelStateLocalTableBatlEnd00_801EFE10
-    - '@source: src/bof3/battle/dispatchPanelStateLocalTableBatlEnd00_801EFE10.c'
+    - callPanelLocalTable
+    - '@source: src/bof3/battle/callPanelLocalTable.c'
     - '@behavior: Battle-end panel state dispatch through a local handler table: reads the object published at 0x80148648, takes its byte +0x03 (the PanelTask state field), scales it by four and calls the entry at that index of the two-word table built on the stack, with no arguments; only entry 0 is seeded with func_801EFE5C and the index is not bounded.'
   - - 4700
     - asm

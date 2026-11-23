@@ -31,15 +31,15 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1LocalHandlersBmagicMagic10803_801EEC04.c'
   - - 92
     - c
-    - queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C
-    - '@source: src/bof3/bmagic/queueActionSlotPublishWorkPointerCopyRecordByte8AndWordTripletClearWorkByteBAndAdvanceWorkByte1BmagicMagic10803_801EEC5C.c'
+    - queueActionPointerTriplet
+    - '@source: src/bof3/bmagic/queueActionPointerTriplet.c'
   - - 284
     - asm
     - func_801EED1C
   - - 380
     - c
-    - dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerThenDrawTwoMatrixPassesWhenWorkByte0SetBmagicMagic10803_801EED7C.c'
+    - callTwoMatrixPasses
+    - '@source: src/bof3/bmagic/callTwoMatrixPasses.c'
   - - 524
     - asm
     - func_801EEE0C
@@ -48,8 +48,8 @@ segments:
     - func_801EEF48
   - - 1056
     - c
-    - incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt101ClearByteAAndAdvanceWorkByte1Every32FramesBmagicMagic10803_801EF020.c'
+    - incrementInvokeHelperFrames
+    - '@source: src/bof3/bmagic/incrementInvokeHelperFrames.c'
   - - 1168
     - c
     - add8ToWorkByte9AndAdvanceWorkByte1At80BmagicMagic10803_801EF090

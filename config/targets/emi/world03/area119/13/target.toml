@@ -8,19 +8,19 @@ splat = "config/targets/emi/world03/area119/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18.c",
+    "src/bof3/world/retreatScratchClearCountdown.c",
     "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode2WithCountdownWorld03Area11913_801F2C88.c",
     "src/bof3/world/advanceWorkWord34AndSetScratchStateToMode5WithCountdownWorld03Area11913_801F2D6C.c",
-    "src/bof3/world/clearCountdownByte9AndSeedStateByte1FromRandomModeTable45c4World03Area11913_801F2C48.c",
-    "src/bof3/world/resetWorkAreaAtScenarioProgress28ElseRestartStateByte1CycleWorld03Area11913_801F2E50.c",
+    "src/bof3/world/stateCountdownSeedRandom.c",
+    "src/bof3/world/stateAreaRestartCycle.c",
 ]
 support_sources = [
-    "src/bof3/world/advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0.c",
-    "src/bof3/world/clearWorkHalfword30AndRouteStateByFlag0FAndCameraThenDrawWorld03Area11913_801F2EDC.c",
+    "src/bof3/world/stateWorkSharedSet.c",
+    "src/bof3/world/stateRouteCameraDraw.c",
     "src/bof3/world/incrementHalfword30By20AndSetWorkByte2To1WhenNonNegativeThenDrawWorld03Area11913_801F3210.c",
-    "src/bof3/world/callWithQuarterWorkByte9ThenDecrementAndResetBelow8World03Area11913_801F3E94.c",
-    "src/bof3/world/clearWorkByte9QueueCue202AndAdvanceWorkByte2World03Area11913_801F3D4C.c",
-    "src/bof3/world/callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90.c",
+    "src/bof3/world/callQuarterDecrementReset.c",
+    "src/bof3/world/stateWorkQueueAdvance.c",
+    "src/bof3/world/callWorkIncrementAdvance.c",
     "src/bof3/world/setTwoWorld03Area11913_801F4208.c",
     "src/bof3/world/area11913DispatchTables.c",
     "src/bof3/world/advanceCounter2By2World03Area11913_801F41B8.c",
@@ -29,11 +29,11 @@ support_sources = [
     "src/bof3/world/clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554.c",
     "src/bof3/world/area11913_countdown.c",
     "src/bof3/support/area119_13_psyq.c",
-    "src/bof3/world/retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC.c",
-    "src/bof3/world/armCountdownByte9To1ClearWorkByteBAndAdvanceWorkByte2WhenSharedStateSetWorld03Area11913_801F3B40.c",
+    "src/bof3/world/retreatWordScratchCountdown.c",
+    "src/bof3/world/armCountdownClearShared.c",
     "src/bof3/world/setStatusFFFFAndScenarioProgress0AOr14ByGateWorld03Area11913_801F4584.c",
-    "src/bof3/world/setWorkState2To4WhenCameraOutsideFixedCoordinateWindowWorld03Area11913_801F3170.c",
+    "src/bof3/world/stateCameraOutsideFixed.c",
     "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11913_801F3114.c",
-    "src/bof3/world/incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18.c",
+    "src/bof3/world/incrementCountdownUpAdvance.c",
 ]
 psyq_source = "src/bof3/support/area119_13_psyq.c"

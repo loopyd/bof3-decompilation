@@ -15,7 +15,7 @@ support_sources = [
     "src/bof3/world/requestFrontSelectorContextWorld03Area14613_801F2C04.c",
     "src/bof3/world/area14613DispatchTables.c",
     "src/bof3/world/initArea14613State.c",
-    "src/bof3/world/clearRecordFlag12cBit0AndPublishSharedByteIntoWorkByte29World03Area14613_801F2C68.c",
+    "src/bof3/world/statePublishSharedInto.c",
     "src/bof3/world/drawWorkCursorQuadWorld03Area14613_801F2E20.c",
     "src/bof3/world/clearWorkByte48ThenSubmitRecordWorld03Area14613_801F2C34.c",
 ]

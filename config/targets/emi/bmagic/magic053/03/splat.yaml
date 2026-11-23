@@ -42,7 +42,7 @@ segments:
     - func_801EF004
   - - 1124
     - c
-    - dispatchStateByte1Table0550BmagicMagic05303_801EF064
+    - callStateTable0550Bmagic
     - '@source: src/bof3/bmagic/magic05303DispatchTables.c'
   - - 1192
     - asm
@@ -52,16 +52,16 @@ segments:
     - func_801EF174
   - - 2080
     - c
-    - stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420
-    - '@source: src/bof3/bmagic/stepWorkPositionPairAndWord3CAddEightToWorkByteBThenSpawnEightFreePoolRecordsOnByte9CountdownInvokeHelper100Or101StepHalfword801492D8By20SetByte9To4AdvanceWorkByte2BmagicMagic05303_801EF420.c'
+    - stepEightSpawnPool
+    - '@source: src/bof3/bmagic/stepEightSpawnPool.c'
     - '@behavior: Step the work position pair and word 0x3C, add 8 to work byte 0xB, then on the work byte 9 countdown expiry invoke the main-executable helper with 0x100 or 0x101, spawn up to eight free records of the 0x801F0578 pool, step the shared halfword at 0x801492D8 by 0x14, set work byte 9 to 4 and advance work byte 2.'
   - - 2496
     - asm
     - func_801EF5C0
   - - 2676
     - c
-    - decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674
-    - '@source: src/bof3/bmagic/decrementWorkByteAByTwoWhenNonZeroThenAdvanceWorkByte2WhenHelperReadyBmagicMagic05303_801EF674.c'
+    - decrementTwoNonReady
+    - '@source: src/bof3/bmagic/decrementTwoNonReady.c'
   - - 2776
     - c
     - decrementGlobalWorkByteBAndInvokeHelperWhenWorkByte4IsZeroBmagicMagic05303_801EF6D8
@@ -79,7 +79,7 @@ segments:
     - '@behavior: Draw sixty-four translucent Gouraud quads that span the ring between work byte 0xB and twice that radius, one sixty-fourth of a turn per pass, choosing page 0x125 for graph types 1 and 2 and 0x55 otherwise, seeding the four quad cells from the shared rotator pair at turn zero, tinting the work-byte-0xB edge with work byte 0xA shifted left two and leaving the doubled edge at 1.'
   - - 4432
     - c
-    - dispatchStateByte1Table0568BmagicMagic05303_801EFD50
+    - callStateTable0568Bmagic
     - '@source: src/bof3/bmagic/magic05303DispatchTables.c'
   - - 4500
     - c
@@ -88,8 +88,8 @@ segments:
     - '@behavior: Dispatch work byte 2, then invoke 0x801F0110, 0x801F01C0 and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 4636
     - c
-    - seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic05303_801EFE1C
-    - '@source: src/bof3/bmagic/seedRandomWordCScaleEightToFifteenAndProjectPositionPairAtByteBAngleCopyRecordWord3CSetByte9ToEightByteATo16AdvanceWorkByte2BmagicMagic05303_801EFE1C.c'
+    - stateScaleEightFifteen
+    - '@source: src/bof3/bmagic/stateScaleEightFifteen.c'
     - '@behavior: Seed work word 0xC with (rand() & 7) + 8 and publish work byte 0xB shifted left nine to the scratchpad halfword at 0x1F800004, then add the two rotator samples 0x801782FC and 0x801783C8 of that halfword, each multiplied by work word 0xC, to the shared record words 0x34 and 0x38 into work words 0x34 and 0x38, copy shared record word 0x3C into work word 0x3C, set work byte 9 to 8 and work byte 0xA to 0x10, and advance work byte 2 by one so the byte 2 dispatcher 0x801EFD94 leaves this handler for the next entry of the run based at 0x801F056C.'
   - - 4900
     - asm

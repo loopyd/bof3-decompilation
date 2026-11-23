@@ -141,16 +141,16 @@ segments:
     - '@source: src/bof3/boss/stateRestoreSavedHalfwords.c'
   - - 3712
     - c
-    - enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680
-    - '@source: src/bof3/boss/enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680.c'
+    - enterRestoreSavedIds
+    - '@source: src/bof3/boss/enterRestoreSavedIds.c'
   - - 3856
     - c
-    - publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710
-    - '@source: src/bof3/boss/publishBattleHooksAndClearWorkCountersBossBoss02513_800C2710.c'
+    - publishBattleHooksCounters
+    - '@source: src/bof3/boss/publishBattleHooksCounters.c'
   - - 3936
     - c
-    - accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760
-    - '@source: src/bof3/boss/accumulateWorkCountersAndRaiseFlagsByHookModeBossBoss02513_800C2760.c'
+    - accumulateCountersFlagsHook
+    - '@source: src/bof3/boss/accumulateCountersFlagsHook.c'
     - '@behavior: Overlay hook-mode dispatcher of this overlay at 0x800C2760, the third member of the handler trio the installer 0x800C2710 publishes into the shared battle hook slot 0x801463AC. Masks the mode byte and switches through the six-entry jump table at 0x800C181C, where modes 4 and 5 fall straight to the one return. Mode 0 adds the signed halfword at +0x11C of the 0x140-stride work record of byte 0x80146384 (0x80145FAC) into the work counter 0x801FE4F0 while the battle phase byte 0x80146374 reads 3 and that byte is below 3, and otherwise, while 0x80146384 is 3 or holds a 0xC0 bit, raises the byte counter 0x801FE4EF while bit 0x2 of 0x801EB730 is set and else adds the signed halfword 0x801EB728 into 0x801FE4E8. Mode 1, gated on the ranked-owner cursor 0x80146322 and the enemy record byte 0x801EB6AE both reading 1, stamps 2 into 0x801EB631 and 0x801EB725, clears 0x801EB632 and raises bit 0x2 of 0x801EB730. Mode 2 raises bit 0x4 of 0x80146328 while 0x801463D0 reads 0x15. Mode 3, gated on bit 0x20 of 0x801462ED clear and 0x801462E0 reading 1, submits effect 8 through the shared action-slot allocator 0x801E590C and raises that bit. Every path returns zero.'
     - '@status: exact'
     - '@match: 100.00'
@@ -189,8 +189,8 @@ segments:
     - '@source: src/bof3/boss/callStateTable32Boss.c'
   - - 6200
     - c
-    - advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038
-    - '@source: src/bof3/boss/advanceDispatchStateByte1WhenBothGatesClearBossBoss02513_800C3038.c'
+    - stateBothGatesClear
+    - '@source: src/bof3/boss/stateBothGatesClear.c'
     - '@behavior: Fourth word of the five-entry handler run at 0x800C3294, entered through the sibling dispatcher 0x800C2FF4 when work-record byte 1 holds zero. Reads the global byte at 0x80148603 and returns when it is non-zero, then reads 0x80146329 and returns when bit 0x2 is set; only with both gates clear does it load the scratchpad work-object pointer cell 0x1F800044 once and increment the work object byte at offset 1, moving the dispatch state byte from zero to one. Takes no arguments and returns nothing.'
   - - 6280
     - c

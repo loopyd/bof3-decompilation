@@ -35,20 +35,20 @@ segments:
     - '@behavior: Dispatches one frame of the overlay work handler: reads the work object pointer at scratchpad cell 0x1F800044, copies the five code pointers at 0x801EEC04 into a local array, and invokes the entry selected by the work record byte at offset 1. Takes no arguments and returns nothing.'
   - - 136
     - c
-    - copyRecordByte8AndWordTripletClaimSlot1CClearSlotByte1StoreWorkPointerSetByteBTo1AndAdvanceByte1BmagicMagic06803_801EEC88
-    - '@source: src/bof3/bmagic/copyRecordByte8AndWordTripletClaimSlot1CClearSlotByte1StoreWorkPointerSetByteBTo1AndAdvanceByte1BmagicMagic06803_801EEC88.c'
+    - copyTripletStorePointer
+    - '@source: src/bof3/bmagic/copyTripletStorePointer.c'
     - '@behavior: Entry 0 of the five code pointers at 0x801EEC04, which the dispatcher at 0x801EEC18 invokes with work byte 1 as the index, so no jal word in this payload names it. Copies record byte 8 and words 0x34, 0x38 and 0x3C of the record published by cell 0x801EB4E0 into the work object, claims one queued action slot through the allocator 0x801E590C with the arguments 1 and 0x1C, clears that slot byte 1 and publishes the scratchpad work pointer 0x1F800044 into the slot word 0x74, then sets work byte 0xB to 1 and increments work byte 1, selecting entry 1 of the same run for the next dispatch. Takes no arguments, returns nothing, and its 0x18-byte frame keeps only the return address at 0x10.'
   - - 336
     - asm
     - func_801EED50
   - - 2124
     - c
-    - decrementWorkByteAResetTo3EAndAdvanceWorkByte1OnZeroBmagicMagic06803_801EF44C
-    - '@source: src/bof3/bmagic/decrementWorkByteAResetTo3EAndAdvanceWorkByte1OnZeroBmagicMagic06803_801EF44C.c'
+    - decrementByteResetZero
+    - '@source: src/bof3/bmagic/decrementByteResetZero.c'
   - - 2216
     - c
-    - drawTilePrimitivesThenSetWorkByte1To4WhenPadStateSetBmagicMagic06803_801EF4A8
-    - '@source: src/bof3/bmagic/drawTilePrimitivesThenSetWorkByte1To4WhenPadStateSetBmagicMagic06803_801EF4A8.c'
+    - renderTilePrimitivesPad
+    - '@source: src/bof3/bmagic/renderTilePrimitivesPad.c'
     - '@behavior: Frame step of this overlay''s leading handler run and entry 3 of the five code pointers at 0x801EEC04 that the dispatcher at 0x801EEC18 indexes with work byte 1, so no jal word names it. Calls the overlay drawing helper at 0x801EF55C with no arguments, then reads the shared pad-state halfword at 0x80145AA8 and, only while it is nonzero, stores the literal 4 into work byte 1 through one read of the scratchpad work pointer cell 0x1F800044, selecting entry 4 (0x801EF4EC) of the same run on the next dispatch. Takes no arguments, returns nothing, and its 0x18-byte frame keeps only the return address at 0x10.'
   - - 2284
     - asm
@@ -58,11 +58,11 @@ segments:
     - func_801EF55C
   - - 2876
     - c
-    - dispatchStateByte1Tablefcc8BmagicMagic06803_801EF73C
+    - callStateTablefcc8Bmagic
     - '@source: src/bof3/bmagic/magic06803DispatchTables.c'
   - - 2944
     - c
-    - dispatchStateByte2TablefcccBmagicMagic06803_801EF780
+    - callStateTablefcccBmagic
     - '@source: src/bof3/bmagic/magic06803DispatchTables.c'
   - - 3012
     - c

@@ -10,7 +10,7 @@ typedef void (*Boss01316Handler)(void);
  * id 0 and id 1. The third returns a zero result, which the void slot type
  * drops. */
 void initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C(void);
-void clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0(void);
+void stateOwnerOwnerOwner(void);
 s32  zeroResultBossBoss01316_800C2044(void);
 
 /* Shared hook slots. 0x801463A4/0x801463A8 are the battle hooks the battle
@@ -27,7 +27,7 @@ extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  * g_ScenarioProgress, then calls func_801DDED8 while the bit is set and
  * otherwise calls func_801DDF28 and writes 0x3 into the byte at 0x80146255)
  * into 0x801463A4, the owner-record flag clearer
- * clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0 into
+ * stateOwnerOwnerOwner into
  * 0x801463A8, and the zero-result accessor
  * zeroResultBossBoss01316_800C2044 into 0x801463AC; the accessor's s32 result is
  * dropped by the void slot type. Same trio shape as the sibling installers of
@@ -42,6 +42,6 @@ extern Boss01316Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 void publishBattleHooksBossBoss01316_800C200C(void) {
   D_801463A4 =
       initModeTuple510Or530ByFlagBitTwoSetScenarioProgress32AndModeByte3BossBoss01316_800C204C;
-  D_801463A8 = clearOwnerRecordFlag40OnOwnerZeroThenOwnerOneBossBoss01316_800C20B0;
+  D_801463A8 = stateOwnerOwnerOwner;
   D_801463AC = (Boss01316Handler)zeroResultBossBoss01316_800C2044;
 }

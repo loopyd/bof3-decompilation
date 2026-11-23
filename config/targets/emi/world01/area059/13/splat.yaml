@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - setStatus4AndModeIndex6IfGateElse2World01Area05913_801F2C04
-    - '@source: src/bof3/world/setStatus4AndModeIndex6IfGateElse2World01Area05913_801F2C04.c'
+    - stateModeGateElse2
+    - '@source: src/bof3/world/stateModeGateElse2.c'
     - '@behavior: loads the shared signed gate byte D_801490C7; while that byte is zero it stores 2 into the shared status halfword D_801490A8, and while it is nonzero it stores 4 into D_801490A8 and then 6 into the shared mode index byte D_801D4285.'
   - - 72
     - c
@@ -74,7 +74,7 @@ segments:
     - func_801F2F34
   - - 976
     - c
-    - dispatchStateByte1Table3824World01Area05913_801F2FD0
+    - callStateTable3824World01
     - '@source: src/bof3/world/area05913DispatchTables.c'
   - - 1044
     - c
@@ -83,8 +83,8 @@ segments:
     - '@behavior: loads the work-object pointer published at the scratchpad cell 0x1F800044, passes that object''s two position words at +0x34 and +0x38 to the shared distance helper func_8015477C, stores the answer shifted left 16 into the object''s third triple word at +0x3C, and advances the object''s state byte at +1 by one, which hands the step to entry 1 of the same state-byte-1 handler table at 0x801F3824.'
   - - 1120
     - c
-    - passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060
-    - '@source: src/bof3/world/passWorkPositionPairAndDistanceToQuadEmitterWorld01Area05913_801F3060.c'
+    - passDistanceQuadEmitter
+    - '@source: src/bof3/world/passDistanceQuadEmitter.c'
     - '@behavior: reads the work record published at the scratchpad pointer cell 0x1F800044 and copies its words at +0x34, +0x38 and +0x3C unchanged into a three-word stack triple, then passes a pointer to that triple to the overlay quad emitter func_801F30A8; takes no arguments and returns nothing.'
   - - 1192
     - asm

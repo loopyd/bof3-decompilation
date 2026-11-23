@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table2660BossBoss00816_800C1804
+    - callStateTable2660Boss
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 72
     - c
@@ -36,22 +36,22 @@ segments:
     - '@behavior: Entry 0 of this overlay work step run based at 0x800C2660, which the byte-1 dispatcher at 0x800C1804 indexes with the work record state byte at +1 and whose word at its base is the only in-image reference that names this function. It publishes this payload data block pointer 0x800C264C into +0xEC of the current enemy work record from 0x801EB4E8, the byte dispatcher 0x800C1C88 into +0xE4 and the in-row data pointer 0x800C2658 into +0xE8, then stores 2 into the state byte at +1 of the work record published at the scratchpad pointer cell 0x1F800044, which hands the record to entry 2 of the same run at 0x801E35D8, and calls func_8014D978.'
   - - 160
     - c
-    - dispatchStateByte2Table2690BossBoss00816_800C18A0
+    - callStateTable2690Boss
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 228
     - c
-    - dispatchStateByte3Table26a8BossBoss00816_800C18E4
-    - '@source: src/bof3/boss/dispatchStateByte3Table26a8BossBoss00816_800C18E4.c'
+    - callStateTable26Boss
+    - '@source: src/bof3/boss/callStateTable26Boss.c'
     - '@behavior: Overlay step dispatcher and the handler this overlay work state machine reaches at index 4 of the fifteen-word byte-2 run based at 0x800C2690: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 3, scales it by four and calls the matching entry of this payload handler run based at 0x800C26A8 with no arguments, discarding any result, and does not bound the index before the scaled table load.'
   - - 296
     - c
     - dispatchStateByte4Table26b0BossBoss00816_800C1928
     - '@source: src/bof3/boss/dispatchStateByte4Table26b0BossBoss00816_800C1928.c'
-    - '@behavior: Step dispatcher of this overlay that indexes the handler run based at 0x800C26B0 with work record byte 4: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 4, scales it by four and calls the matching entry of the run with no arguments, and does not bound the index before the scaled table load. The only in-image word that names it is 0x800C26A8, index 0 of the nine-word run dispatchStateByte3Table26a8BossBoss00816_800C18E4 indexes with work byte 3.'
+    - '@behavior: Step dispatcher of this overlay that indexes the handler run based at 0x800C26B0 with work record byte 4: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 4, scales it by four and calls the matching entry of the run with no arguments, and does not bound the index before the scaled table load. The only in-image word that names it is 0x800C26A8, index 0 of the nine-word run callStateTable26Boss indexes with work byte 3.'
   - - 364
     - c
-    - seedWorkScaleByte9AndThresholdByteAThenQueueCue601AndAdvanceWorkByte4BossBoss00816_800C196C
-    - '@source: src/bof3/boss/seedWorkScaleByte9AndThresholdByteAThenQueueCue601AndAdvanceWorkByte4BossBoss00816_800C196C.c'
+    - stateScaleThresholdQueue
+    - '@source: src/bof3/boss/stateScaleThresholdQueue.c'
     - '@behavior: Entry 0 of the nine-word handler run based at 0x800C26B0, which dispatchStateByte4Table26b0BossBoss00816_800C1928 indexes with work record byte 4, and the only in-image word that names this function. It seeds two bytes of the work record published at the scratchpad pointer cell 0x1F800044: byte 9, which the ring renderer at 0x800C236C takes as its scale, and byte 0x0A, the threshold the next entry of that run compares byte 9 against and halves each time the two meet. Both take 0x40. It then plays sound cue 0x601 through func_8015DF18 and increments work byte 4, which hands the record to entry 1 of the same run at 0x800C19C0. The body re-reads the pointer cell for the second byte store and once more after the call.'
   - - 448
     - asm
@@ -63,7 +63,7 @@ segments:
     - c
     - shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48
     - '@source: src/bof3/boss/shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossBoss00816_800C1B48.c'
-    - '@behavior: Per-frame handler of this overlay work state machine, entry 11 of the fifteen-word run based at 0x800C2690 that dispatchStateByte2Table2690BossBoss00816_800C18A0 indexes with work byte 2: runs the overlay ring renderer at 0x800C236C with work byte 9 as its scale, subtracts 4 from that byte and 0x2000 from each of the words at 0x40 and 0x44, clamping a word that is not positive to 0; once work byte 9 reaches 0 it clears work byte 0x48, applies main lookup record 0x83, requests resource 0, runs the shared accumulation pass at 0x801E54EC, clears bit 0x40 of work byte 0, stores 6 into work byte 1 and 4 into work byte 2, which hand the record to this overlay byte-2 dispatcher 0x800C18A0 and its handler 0x800C18E4, and advances work byte 3 to 1 while clearing work byte 4.'
+    - '@behavior: Per-frame handler of this overlay work state machine, entry 11 of the fifteen-word run based at 0x800C2690 that callStateTable2690Boss indexes with work byte 2: runs the overlay ring renderer at 0x800C236C with work byte 9 as its scale, subtracts 4 from that byte and 0x2000 from each of the words at 0x40 and 0x44, clamping a word that is not positive to 0; once work byte 9 reaches 0 it clears work byte 0x48, applies main lookup record 0x83, requests resource 0, runs the shared accumulation pass at 0x801E54EC, clears bit 0x40 of work byte 0, stores 6 into work byte 1 and 4 into work byte 2, which hand the record to this overlay byte-2 dispatcher 0x800C18A0 and its handler 0x800C18E4, and advances work byte 3 to 1 while clearing work byte 4.'
   - - 1128
     - c
     - invokeHelperBossBoss00816_800C1C68
@@ -102,7 +102,7 @@ segments:
     - noopHandlerBossBoss00816_800C1DBC
   - - 1476
     - c
-    - dispatchStateByte1Table2708BossBoss00816_800C1DC4
+    - callStateTable2708Boss
     - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 1544
     - c
@@ -155,8 +155,8 @@ segments:
     - '@behavior: Battle-flag state switch this overlay publishes into the shared battle-hook slot 0x801463A4: loads the shared battle flag byte 0x80146328 once and tests bit 0x2, and while the bit is set stores 0x11 into the shared scenario progress byte 0x80146864 and calls func_801DDED8, and otherwise calls func_801DDF00.'
   - - 2088
     - c
-    - setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028
-    - '@source: src/bof3/boss/setupBattleWorkRecordForOwnerZeroThenCopyHalfwordPair58And5ABossBoss00816_800C2028.c'
+    - setupOwnerCopyHalfword
+    - '@source: src/bof3/boss/setupOwnerCopyHalfword.c'
     - '@behavior: Battle setup hook this overlay publishes into the shared battle-hook slot 0x801463A8: clears the 0x40 flag of owner record 0, publishes that record base into the scratchpad work-record cursor 0x1F800044, applies main lookup record 0x83 and requests resource 0, then copies the adjacent halfword pair 0x801EB688/0x801EB68A into the published record at +0x58 and +0x5A.'
   - - 2184
     - c

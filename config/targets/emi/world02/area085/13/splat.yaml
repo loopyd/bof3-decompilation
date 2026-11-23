@@ -27,28 +27,28 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table3d2cWorld02Area08513_801F2C04
+    - callStateTable3World02
     - '@source: src/bof3/world/area08513DispatchTables.c'
   - - 72
     - c
     - clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area08513_801F2C48
     - '@source: src/bof3/world/clearWorkTripletAndSubstateArmCountdownByte9To12AdvanceWorkByte1World02Area08513_801F2C48.c'
-    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: arms that record countdown byte +0x09 with 0x0C, stores 1 into the dispatch byte +0x01 to hand the record to entry 1 (0x801F2CB4), clears the sub-state byte +0x02 and the tile colour triplet at +0x5F, +0x5E and +0x5D, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
+    - '@behavior: Entry 0 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher callStateTable3World02 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: arms that record countdown byte +0x09 with 0x0C, stores 1 into the dispatch byte +0x01 to hand the record to entry 1 (0x801F2CB4), clears the sub-state byte +0x02 and the tile colour triplet at +0x5F, +0x5E and +0x5D, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 180
     - c
     - decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4
     - '@source: src/bof3/world/decrementCountdownByte9RaiseWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2CB4.c'
-    - '@behavior: Entry 1 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero raises the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
+    - '@behavior: Entry 1 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher callStateTable3World02 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero raises the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 368
     - c
     - decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70
     - '@source: src/bof3/world/decrementCountdownByte9LowerWorkTripletBy4OrRearmByte9To12AndArmDispatchByte1To3World02Area08513_801F2D70.c'
-    - '@behavior: Entry 2 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero lowers the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
+    - '@behavior: Entry 2 of this overlay byte-1 handler run based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher callStateTable3World02 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: decrements that record countdown byte +0x09, and while the decremented byte is nonzero lowers the tile colour triplet at +0x5D, +0x5E and +0x5F by 4, while at zero it re-arms the countdown with 0x0C and stores 3 into the dispatch byte +0x01 to hand the record to entry 3 (0x801F2E2C); either way it then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 556
     - c
     - advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C
     - '@source: src/bof3/world/advanceSubstateByte2ArmDispatchByte1FromLowBitOrFourAtSubstate5TickScenarioProgressThenDrawAndServiceWorld02Area08513_801F2E2C.c'
-    - '@behavior: Entry 3 of the byte-1 handler run of this overlay based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher dispatchStateByte1Table3d2cWorld02Area08513_801F2C04 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: increments that record sub-state byte +0x02 and reads it back, so when the incremented byte reads 5 it increments the scenario progress byte at 0x80146864 and sets the dispatch byte +0x01 to 4, and for every other value it sets that dispatch byte to (value & 1) + 1, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
+    - '@behavior: Entry 3 of the byte-1 handler run of this overlay based at 0x801F3D2C, the eight-word pointer table whose words are 0x801F2C48, 0x801F2CB4, 0x801F2D70, 0x801F2E2C, 0x801F2EB0, 0x801F30E0, 0x801F35A0 and 0x801F36B4 in that order and which the exact dispatcher callStateTable3World02 indexes with the work byte at +0x01 of the record published at the scratchpad pointer cell 0x1F800044: increments that record sub-state byte +0x02 and reads it back, so when the incremented byte reads 5 it increments the scenario progress byte at 0x80146864 and sets the dispatch byte +0x01 to 4, and for every other value it sets that dispatch byte to (value & 1) + 1, then calls the full-screen tile draw at 0x801F2ED8 and the work-record service at 0x801F2FCC in that order; takes no arguments and returns nothing.'
   - - 688
     - c
     - invokeTwoHelpersWorld02Area08513_801F2EB0
@@ -57,8 +57,8 @@ segments:
     - func_801F2ED8
   - - 972
     - c
-    - setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC
-    - '@source: src/bof3/world/setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC.c'
+    - stateActiveRecordsBase
+    - '@source: src/bof3/world/stateActiveRecordsBase.c'
     - '@behavior: Overlay work-record teardown: walks the 30 shared 0x98-byte work records based at 0x80146888, publishes each record through the scratchpad pointer cell 0x1F800044 and, for a record whose byte 0 has bit 0 set, stores 5 in its state byte 0x29 and runs the shared service at 0x8014D290; it then publishes the base record at 0x80145E90 unconditionally, stores 5 in that base byte 0x29, runs the shared service once more and restores the pointer cell incoming value.'
   - - 1180
     - c
@@ -66,24 +66,24 @@ segments:
     - '@source: src/bof3/world/area08513DispatchTables.c'
   - - 1248
     - c
-    - claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0
-    - '@source: src/bof3/world/claimTwoWorkSlotsIntoBytes3And4RequestKeyedResourcePairOffset0034And0038WordsSetFlag20AndArmByte9World02Area08513_801F30E0.c'
+    - claimSlotsKeyedWords
+    - '@source: src/bof3/world/claimSlotsKeyedWords.c'
     - '@behavior: Overlay work-byte-1 step handler, entry 0 of the local handler table at 0x801F3D40: asks the shared slot allocator 0x8015CA48 for two slot identifiers, stores them into work bytes 3 and 4 of the work record published at the scratchpad pointer cell 0x1F800044, sets the flag byte of each selected 0x98-byte record at 0x80146888 to 1 and returns at once on an 0xFF answer (clearing the first record flag byte in the second case). With both slots it searches the five-row key table at 0x801F3D70 for byte 0x4B of the record work byte 0xB selects (0x80145EDB when that byte is nonzero, 0x80146A03 when it is zero), publishes each slot as the halfword at 0x1F800000, hands the 0x11-byte row at 0x801F3D4C that work byte 0xB indexes to 0x801A4D54 and requests the resource and mode of the searched table row through 0x8014D6DC once per slot, then restores the published record pointer. It offsets the record words at 0x34 and 0x38 by 0x1000 in opposite directions for the two slots, copies the shared word at 0x80145ECC into offset 0x3C of both records, sets bit 0x20 of both flag bytes, clears byte 0x5C of both, runs 0x8019651C on both with the stack argument 1 and the 0xF split between the second and fourth arguments, and finally arms work byte 9 to 4 and sets work byte 1 to 1.'
   - - 2464
     - c
-    - setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0
+    - stateUntilExpiresSelected
   - - 2740
     - asm
     - func_801F36B4
   - - 2876
     - c
-    - publishScaledWorkXByte7SetViewMode7ClearFacingAndWorkWord14SetFlag40ThenStoreSharedYAndWorkWord38World02Area08513_801F373C
-    - '@source: src/bof3/world/publishScaledWorkXByte7SetViewMode7ClearFacingAndWorkWord14SetFlag40ThenStoreSharedYAndWorkWord38World02Area08513_801F373C.c'
+    - publishViewFacingY
+    - '@source: src/bof3/world/publishViewFacingY.c'
     - '@behavior: Overlay step: reads the work record published at the scratchpad pointer cell 0x1F800044, forms its signed word 0x34 minus 0x160000 shifted right by 15 and stores the low byte of that result into byte 0x07 of the record published at 0x80148210, calls the shared view routine 0x801C5DFC with the mode literal 7, clears the shared facing halfword 0x80149330, clears the work record word 0x14 and sets bit 0x40 of the published byte 0, then stores 0x3E0000 into the shared packet Y word 0x8014930C and into the work record word 0x38; takes no arguments and returns nothing.'
   - - 3008
     - c
-    - clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0
-    - '@source: src/bof3/world/clearFlag40AndRequestResourceOnMode6Substate12ElseCopyStatus2WorkRecordTripletAndTickHalfword0aWorld02Area08513_801F37C0.c'
+    - stateResourceTripletTick
+    - '@source: src/bof3/world/stateResourceTripletTick.c'
     - '@behavior: Overlay step: reads the shared primary-state and sub-state byte pair at 0x80146874 as one halfword and, when it is 0x0C06, clears bit 0x40 of work byte 0 of the record behind scratchpad cell 0x1F800044, runs the transition helper 0x801C1254 with 2 and 2 and requests resource 1 through 0x8014D6B8; otherwise it walks the 0x140-byte work records counted by 0x80146254 and copies the word triplet 0x34, 0x38, 0x3C of every record whose state byte 0x79 reads 2 into the scratch work record, then lowers halfword 0x0A of the record at 0x80148210 by 2.'
   - - 3280
     - c

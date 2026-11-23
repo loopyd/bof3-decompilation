@@ -8,20 +8,20 @@ splat = "config/targets/emi/world01/area047/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/claimFreeWorkRecordAt800E4800ThenClearSubPhaseWorld01Area04713_801F32C4.c",
-    "src/bof3/world/drawDiscStepWorkTableClaimRecordOnSpawnPeriodThenReload10AdvanceStateByte1World01Area04713_801F2CC8.c",
+    "src/bof3/world/claimFreeSubPhase.c",
+    "src/bof3/world/renderDiscSpawnPeriod.c",
     "src/bof3/world/seedWorkPositionWords34To3cWhenByte2ClearThenDrawWorld01Area04713_801F3448.c",
-    "src/bof3/world/tickWorkCountdownReload230ClearWorkTableThenAdvanceStateByte1World01Area04713_801F2C6C.c",
+    "src/bof3/world/tickCountdownClearTable.c",
     "src/bof3/world/claimFrontEndRecordAndSetHandler3DWorld01Area04713_801F396C.c",
 ]
 support_sources = [
     "src/bof3/support/area047_13_psyq.c",
-    "src/bof3/world/drawSharedPositionGouraudDiscWorld01Area04713_801F31F4.c",
+    "src/bof3/world/renderPositionGouraudDisc.c",
     "src/bof3/world/area04713DispatchTables.c",
-    "src/bof3/world/clearWorkTableByte14At800E4800World01Area04713_801F3298.c",
-    "src/bof3/world/updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C.c",
+    "src/bof3/world/stateWorkTableByte14.c",
+    "src/bof3/world/stateRecordsReportActive.c",
     "src/bof3/world/seedWork34383eAndSharedChannelPairThenSeedWorldPositionWorld01Area04713_801F38F4.c",
-    "src/bof3/world/armWorkCountdown3cThenAdvanceStateByte1World01Area04713_801F2C48.c",
-    "src/bof3/world/drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60.c",
+    "src/bof3/world/armWorkAdvanceState.c",
+    "src/bof3/world/renderFadingGouraudRing.c",
 ]
 psyq_source = "src/bof3/support/area047_13_psyq.c"

@@ -38,8 +38,8 @@ segments:
     - func_801EEC7C
   - - 836
     - c
-    - invokeHelperThenClearRecordFlag40ForwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic11103_801EEF44
-    - '@source: src/bof3/bmagic/invokeHelperThenClearRecordFlag40ForwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic11103_801EEF44.c'
+    - callForwardBattleZero
+    - '@source: src/bof3/bmagic/callForwardBattleZero.c'
     - '@behavior: When work byte 0xB is zero, calls helper 0x800AEF98 with 4 and 0, clears record flag 0x40, forwards battle byte 0x80146384 to helper 0x800A9820 and advances work byte 1.'
   - - 964
     - c
@@ -48,7 +48,7 @@ segments:
     - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper 0x801E5988, unconditionally.'
   - - 1016
     - c
-    - dispatchStateByte1Tablefa9cBmagicMagic11103_801EEFF8
+    - callStateTablefa9Bmagic
     - '@source: src/bof3/bmagic/magic11103DispatchTables.c'
   - - 1084
     - asm
@@ -58,20 +58,20 @@ segments:
     - setWorkByte29AndIncrementWorkByte2BmagicMagic11103_801EF0C0
   - - 1264
     - c
-    - decrementGlobalWorkByteBThenIncrementWorkByte2WhenBelow2BmagicMagic11103_801EF0F0
-    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBThenIncrementWorkByte2WhenBelow2BmagicMagic11103_801EF0F0.c'
+    - decrementGlobalByteIncrement
+    - '@source: src/bof3/bmagic/decrementGlobalByteIncrement.c'
   - - 1336
     - c
     - invokeHelperBmagicMagic11103_801EF138
   - - 1368
     - c
-    - dispatchWorkByte2HandlerThenIncrementWorkWordsCAnd10AndDrawWhenWorkByte0SetBmagicMagic11103_801EF158
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenIncrementWorkWordsCAnd10AndDrawWhenWorkByte0SetBmagicMagic11103_801EF158.c'
+    - callIncrementWordsDraw
+    - '@source: src/bof3/bmagic/callIncrementWordsDraw.c'
     - '@behavior: Entry 1 of the ten-pointer handler table at 0x801EFA9C reads the scratchpad work object pointer cell at 0x1F800044 before frame creation, calls the step its unsigned work byte 2 selects from the table based at 0x801EFAA8 without a bounds test, re-reads the cell, and when work byte 0 is nonzero increments the object''s words 0xC and 0x10 and calls the draw routine at 0x801EF330.'
   - - 1492
     - c
-    - seedWorkWordsCAnd10FromRandClearWorkByte9SetWorkByteATo3CAndAdvanceWorkByte2BmagicMagic11103_801EF1D4
-    - '@source: src/bof3/bmagic/seedWorkWordsCAnd10FromRandClearWorkByte9SetWorkByteATo3CAndAdvanceWorkByte2BmagicMagic11103_801EF1D4.c'
+    - stateWordsRandClear
+    - '@source: src/bof3/bmagic/stateWordsRandClear.c'
     - '@behavior: Step 0 of the work-byte-2 step table based at 0x801EFAA8. Seeds the work object reached through the scratchpad pointer cell at 0x1F800044 from one rand call: work word 0xC takes the low six bits of the result and work word 0x10 takes that value plus 0x1F, both through one cached object base. Then re-reads the pointer cell to clear work byte 9, re-reads it again to set work byte 0xA to 0x3C and increments work byte 2 modulo 256.'
   - - 1592
     - c

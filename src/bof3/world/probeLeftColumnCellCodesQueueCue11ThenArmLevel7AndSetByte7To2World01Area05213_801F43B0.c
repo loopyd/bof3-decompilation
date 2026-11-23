@@ -18,7 +18,7 @@ typedef s32 ProjectedWord;
 /* Position projector of this overlay: it answers one byte and writes the two
  * projected position words through the pointers it is given. */
 /* @source 0x801F3980 */
-extern u8 projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980(s32* x, s32* y);
+extern u8 projectCueCellsProgress(s32* x, s32* y);
 
 /* Shared three-argument helper of the main executable. */
 /* @source 0x80155038 */
@@ -73,7 +73,7 @@ void probeLeftColumnCellCodesQueueCue11ThenArmLevel7AndSetByte7To2World01Area052
   ProjectedWord proj_x;
   ProjectedWord proj_y;
 
-  projectWorkPositionPairCueCellsOnState5ThenStepRecordHalfword0aDown2WhenProgressZeroWorld01Area05213_801F3980(&proj_x, &proj_y);
+  projectCueCellsProgress(&proj_x, &proj_y);
   ((u16*)&proj_x)[1] -= 1;
   func_80155038(((u16*)&proj_x)[1], ((u16*)&proj_y)[1], 0x10);
   FIELD_REF(u32, D_1F800044, 0x18) |=

@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte4Table4c10World01Area03913_801F2C04
-    - '@source: src/bof3/world/dispatchWorkByte4Table4c10World01Area03913_801F2C04.c'
+    - callWorkByte4Table4
+    - '@source: src/bof3/world/callWorkByte4Table4.c'
     - '@behavior: Overlay step dispatch: reads the handler byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044, scales it by four and calls that entry of the local handler table at 0x801F4C10, whose two entries are the routines at 0x801F2C48 and 0x801F2C88. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 72
     - c
@@ -50,8 +50,8 @@ segments:
     - setTwoWorld01Area03913_801F2D38
   - - 340
     - c
-    - claimFrontEndRecordHandler36ClearRowByte9ElseLowerSharedHalfword7eBy2World01Area03913_801F2D54
-    - '@source: src/bof3/world/claimFrontEndRecordHandler36ClearRowByte9ElseLowerSharedHalfword7eBy2World01Area03913_801F2D54.c'
+    - claimEndRowLower
+    - '@source: src/bof3/world/claimEndRowLower.c'
     - '@behavior: Overlay record claim: asks the shared allocator at 0x8019601C for a row of the front-end record table at 0x80143FC8 and masks the answer to a byte. When that index is not 0xFF it seeds the row through the 0x74-byte stride with 1 in the occupancy byte, 0x36 in the handler selector byte at 0x80143FCD and 0 in the anchored row byte at 0x80143FD1; when the allocator answers 0xFF it instead lowers the unsigned halfword at 0x7E of the work-entity record published at 0x80146884 by 2. Takes no arguments, returns nothing and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 484
     - c
@@ -60,8 +60,8 @@ segments:
     - '@behavior: Queues the two shared UI elements at x = 0x43 and x = 0x44 with y = 0x36, both at size 0, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 540
     - c
-    - queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C
-    - '@source: src/bof3/world/queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C.c'
+    - queueUiElementX
+    - '@source: src/bof3/world/queueUiElementX.c'
     - '@behavior: Queues the two shared UI elements at x = 0x58 and x = 0x59 with y = 0xD, both at size 0x51, through the shared marker queue func_801A4BC0; takes no arguments, returns nothing and its 0x18-byte frame only keeps the return address across the two calls.'
   - - 596
     - c
@@ -89,13 +89,13 @@ segments:
     - '@behavior: raises bit 0x8 of the shared world-flags halfword D_80146258 with one halfword read-modify-write through a folded lui/lhu load, an empty load delay slot, ori 0x8 and a halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 780
     - c
-    - claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C
-    - '@source: src/bof3/world/claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C.c'
+    - claimFirstSlotFour
+    - '@source: src/bof3/world/claimFirstSlotFour.c'
     - '@behavior: Overlay slot claim on the shared 32-slot byte table at 0x8014544C. The body takes the table base once, walks it with a pointer that advances one byte per pass while a byte counter runs 0 through 0x1F alongside, and overwrites the first slot holding 0x0E with 4 in the delay slot of a jump to the epilogue; when no slot holds 0x0E it falls out of the loop and sets shared selector id 4 through the main-EXE setter func_80166180. Takes no arguments and builds a 0x18-byte frame only to keep the return address across the setter call.'
   - - 872
     - c
-    - startScriptedMotionZeroZeroFour1eWorld01Area03913_801F2F68
-    - '@source: src/bof3/world/startScriptedMotionZeroZeroFour1eWorld01Area03913_801F2F68.c'
+    - audioScriptedMotionZero
+    - '@source: src/bof3/world/audioScriptedMotionZero.c'
     - '@behavior: Overlay export-table entry that runs the shared four-argument scripted-motion starter func_8015D554 at 0x8015D554 in the main executable with (0, 0, 4, 0x1E): the body folds $a0 and $a1 to zero with addu, materialises 4 into $a2 ahead of the jal and puts 0x1E into $a3 in the branch delay slot. Takes no arguments, reads no state and builds a 0x18-byte frame only to keep the return address across the call.'
   - - 916
     - c

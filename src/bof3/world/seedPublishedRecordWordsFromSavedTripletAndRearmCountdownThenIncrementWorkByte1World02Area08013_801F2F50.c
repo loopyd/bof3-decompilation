@@ -31,7 +31,7 @@ extern u8* D_801F44A0;
 /* @source 0x801F2F50
  * @behavior Overlay step handler, entry 4 of the six-word handler run based at
  *           0x801F3DAC, which this target dispatcher
- *           dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with
+ *           callStateTable3World02 indexes with
  *           the state byte at +1 of the work record published at the
  *           scratchpad pointer cell 0x1F800044. Loads the record base the
  *           payload publishes in D_801F44A0 and copies the three shared saved
@@ -51,7 +51,7 @@ extern u8* D_801F44A0;
  * the handler run at 0x801F3DAC, so there is no jal caller and the dispatch
  * shape is the naming route, not missing evidence. That run is indexed with the
  * work record state byte at +1 by this target exact dispatcher
- * dispatchStateByte1Table3dacWorld02Area08013_801F2C04. The seed role comes
+ * callStateTable3World02. The seed role comes
  * from the three stored words and from entry 0 of the same run, which loads the
  * same triplet from the shared state and both caches it in the scratch work
  * record and publishes the D_801F44A0 base the later entries seed; the countdown

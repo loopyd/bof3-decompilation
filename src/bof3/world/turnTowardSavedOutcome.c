@@ -56,10 +56,10 @@ extern Area12114SlotFlagView D_80144974[];
 s32 workTowardResolvedSlot(
     void);
 s32 func_801B6674(void);
-s32 setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578(
+s32 stateMaskOverlapUnless(
     void);
 s32 func_801B6258(void);
-s32 setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC(void);
+s32 stateClearMaskOverlap(void);
 s32 stateWorkByte8Mask(void);
 void stateMode3WorkWorld03(void);
 s32 func_801B0E44(void);
@@ -146,14 +146,14 @@ void turnTowardSavedOutcome(
   if ((func_801B6674() & 0xFF) != 0) {
     return;
   }
-  if ((setMode1AndClearWorkByte2IfMaskOverlapUnlessGate40ThenQueueCue105World03Area12114_801F5578() &
+  if ((stateMaskOverlapUnless() &
        0xFF) != 0) {
     return;
   }
   if ((func_801B6258() & 0xFF) != 0) {
     return;
   }
-  if ((setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC() &
+  if ((stateClearMaskOverlap() &
        0xFF) != 0) {
     return;
   }

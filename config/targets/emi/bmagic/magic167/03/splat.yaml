@@ -36,8 +36,8 @@ segments:
     - func_801EEC94
   - - 648
     - c
-    - decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitRecordCellStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic16703_801EEE88.c'
+    - decrementSubmitCellStore
+    - '@source: src/bof3/bmagic/decrementSubmitCellStore.c'
     - '@behavior: Decrements work byte 9; at zero submits the record cell through both helpers, stores the effect in byte A, sets byte 9 to 8 and advances byte 1.'
   - - 824
     - asm
@@ -57,7 +57,7 @@ segments:
     - func_801EF228
   - - 1752
     - c
-    - dispatchStateByte1Table08b0BmagicMagic16703_801EF2D8
+    - callStateTable08Bmagic
     - '@source: src/bof3/bmagic/magic16703DispatchTables.c'
   - - 1820
     - asm
@@ -74,16 +74,16 @@ segments:
     - func_801EF454
   - - 2224
     - c
-    - drawSixteenTranslucentGouraudFanTrianglesWithScratchWord004TintBmagicMagic16703_801EF4B0
-    - '@source: src/bof3/bmagic/drawSixteenTranslucentGouraudFanTrianglesWithScratchWord004TintBmagicMagic16703_801EF4B0.c'
+    - renderSixteenFanTriangles
+    - '@source: src/bof3/bmagic/renderSixteenFanTriangles.c'
     - '@behavior: Draws sixteen translucent Gouraud fan triangles with unsigned phase samples scaled by three over 64 and colors from signed scratch word 0x1F800004.'
   - - 2824
     - asm
     - func_801EF708
   - - 3512
     - c
-    - dispatchWorkByte2HandlerThenInvokeF228FC44And05C8PairAndPopWhenWorkBytes0And2SetBmagicMagic16703_801EF9B8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeF228FC44And05C8PairAndPopWhenWorkBytes0And2SetBmagicMagic16703_801EF9B8.c'
+    - callInvokePairPop
+    - '@source: src/bof3/bmagic/callInvokePairPop.c'
     - '@behavior: Dispatches work byte 2, then invokes the guarded F228 and FC44 helpers, the 05C8 pair, and PopMatrix when work bytes 0 and 2 are nonzero.'
   - - 3696
     - asm

@@ -45,16 +45,16 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2Table1df4BossBoss05116_800C18BC.c'
   - - 256
     - c
-    - armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900
-    - '@source: src/bof3/boss/armWorkByte9FromClassRowClaimKind3Mode7SlotPublishWorkPointerAndAdvanceWorkByte2BossBoss05116_800C1900.c'
+    - armClassSlotPointer
+    - '@source: src/bof3/boss/armClassSlotPointer.c'
     - '@behavior: Entry 0 of this overlay byte-2 step run, the code pointer run the payload places at 0x800C1DF4 that the dispatcher dispatchStateByte2Table1df4BossBoss05116_800C18BC indexes with work byte +2 of the scratch work record at 0x1F800044: loads the current enemy work record pointer from 0x801EB4E8, takes its unsigned byte +0xE0, scales it by the 0x88-byte class-row stride and stores the class-row byte at 0x800E40CE into scratch work byte +0x09, claims an action slot of the 0x78-byte pool through func_801E590C(3, 7), truncates the returned index to a byte, scales it by that stride and publishes the work record pointer it re-reads from the scratchpad cell into the claimed slot word at 0x801EC3A4, then advances scratch work byte +0x02 by one, which moves the dispatcher to run word 1, the inert handler 0x800C1984. The body has no branch and never distinguishes the 0xFF pool-full answer; the record pointer load precedes frame creation, the class-row store fills the call delay slot, and the 0x18-byte frame only keeps $ra at 0x10 across that single call. No jal names 0x800C1900: its only in-image reference is the run word at 0x800C1DF4.'
   - - 388
     - c
     - noopHandlerBossBoss05116_800C1984
   - - 396
     - c
-    - invokeSlotAllocatorAndResetScratchStateWhenFlag4SetBossBoss05116_800C198C
-    - '@source: src/bof3/boss/invokeSlotAllocatorAndResetScratchStateWhenFlag4SetBossBoss05116_800C198C.c'
+    - callSlotAllocatorReset
+    - '@source: src/bof3/boss/callSlotAllocatorReset.c'
     - '@behavior: Guarded shared-helper pair of this overlay and record word 10 of the payload-final textbin row D_800C1DB0: it reads the shared battle flag halfword 0x801462E8 at halfword width, tests bit 0x4, and while that bit is set calls the shared main-executable flag-and-slot helper 0x801E5704 with no arguments and then the shared enemy-scratch reset 0x801E567C. While the bit is clear it returns without touching anything. The body writes no state itself, the 0x18-byte frame only keeps $ra at 0x10, and neither call keeps a result, so the one epilogue discards the last $v0. No jal names this address; the word 0x800C198C it stores at 0x800C1DD8 is its only in-image reference and the consumer of that word is outside this payload.'
   - - 452
     - c
@@ -86,12 +86,12 @@ segments:
     - noopHandlerBossBoss05116_800C1AA0
   - - 680
     - c
-    - dispatchStateByte1Table1804BossBoss05116_800C1AA8
+    - callStateTable1804Boss
   - - 788
     - c
     - advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14
     - '@source: src/bof3/boss/advanceWorkStepArmCountdownByteAFromClassRowByteOffsetWorkPositionAndRequestResource2BossBoss05116_800C1B14.c'
-    - '@behavior: Entry 0 of this overlay''s step table at 0x800C1804, the four-word run (0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C) that dispatchStateByte1Table1804BossBoss05116_800C1AA8 copies into its frame and indexes with the work record byte 1, so no jal names this entry. It loads the scratch work record pointer published at the scratchpad cell 0x1F800044, advances that record''s byte 1 by one, which moves the next byte-1 dispatch to word 1 (0x800C1BF0), and copies the class-row byte at 0x800E40CE selected by the 0x88-byte class stride off the leading class byte D_801EB710 into work byte 0x09. It then stores 0x2D into work byte 0x0A, the countdown the next entry decrements, saves the cell pointer, publishes the shared battle work pointer D_801EB4E0 in the cell instead, raises bit 0x80 of that record''s byte 0x24, stores 2 into its byte 0x29, offsets its position halfwords 0x2E and 0x30 by +0x30 and -0x10, requests resource 2 through the shared helper func_8014D6B8 and restores the saved cell pointer afterwards. The pointer cell read precedes frame creation, the 0x18-byte frame only keeps $ra at 0x14 and $s0 at 0x10 across that call, and the cell is re-read before each store group because a store through the loaded pointer may alias it.'
+    - '@behavior: Entry 0 of this overlay''s step table at 0x800C1804, the four-word run (0x800C1B14, 0x800C1BF0, 0x800C1CE4, 0x800C1D7C) that callStateTable1804Boss copies into its frame and indexes with the work record byte 1, so no jal names this entry. It loads the scratch work record pointer published at the scratchpad cell 0x1F800044, advances that record''s byte 1 by one, which moves the next byte-1 dispatch to word 1 (0x800C1BF0), and copies the class-row byte at 0x800E40CE selected by the 0x88-byte class stride off the leading class byte D_801EB710 into work byte 0x09. It then stores 0x2D into work byte 0x0A, the countdown the next entry decrements, saves the cell pointer, publishes the shared battle work pointer D_801EB4E0 in the cell instead, raises bit 0x80 of that record''s byte 0x24, stores 2 into its byte 0x29, offsets its position halfwords 0x2E and 0x30 by +0x30 and -0x10, requests resource 2 through the shared helper func_8014D6B8 and restores the saved cell pointer afterwards. The pointer cell read precedes frame creation, the 0x18-byte frame only keeps $ra at 0x14 and $s0 at 0x10 across that call, and the cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 1008
     - asm
     - func_800C1BF0

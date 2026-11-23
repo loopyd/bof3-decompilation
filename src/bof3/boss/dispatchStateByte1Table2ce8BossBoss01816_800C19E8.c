@@ -10,7 +10,7 @@
  * 0x801E3980, 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64,
  * 0x801E52E8 and 0x801E5288, and this payload's pointer run continues after them
  * from 0x800C1B50. The pointer data ends at 0x800C2DC4, where the two-byte origin
- * record that fillTwoByTwoCellBlockBossBoss01816_800C29AC reads begins.
+ * record that renderTwoCellBlock reads begins.
  */
 extern void (*D_800C2CE8[])(void); /* @source 0x800C2CE8 @kind data */
 

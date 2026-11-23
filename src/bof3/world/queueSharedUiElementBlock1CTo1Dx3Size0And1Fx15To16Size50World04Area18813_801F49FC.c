@@ -18,7 +18,7 @@ void func_801A4BC0(s16 x, s16 y, u32 size);
  * instruction words - a0 = 0x1C, 0x1D, 0x1F, 0x1F with a1 = 3, 3, 0x15, 0x16
  * and a2 = 0, 0, 0x50, 0x50. That is a single row of two cells followed by a
  * single column of two cells, so the name follows the block grammar of
- * queueSharedUiElementBlockFTo10x3BTo3CSize0And51World04Area18813_801F494C and
+ * queueUiElementBlock and
  * queueSharedUiElementBlock4DTo4Ex22To25Size0World01Area04914_801F37EC with the
  * sizes in body order. The body has its own prologue, its four calls and its own
  * jr $ra, so it is code rather than data, and a scan of the 396 payload binaries

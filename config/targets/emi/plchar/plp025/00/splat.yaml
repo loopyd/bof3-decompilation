@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tableffa8PlcharPlp02500_801CE404.c'
+    - callWorkTableffa8Plchar
+    - '@source: src/bof3/plchar/callWorkTableffa8Plchar.c'
     - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls the matching entry of this overlay sixteen-word handler run based at 0x801CFFA8 with no arguments, discarding any result; the payload publishes this function as the word at 0x801CFFEC, entry 1 of the seven-word code-pointer run at 0x801CFFE8, so the 0x801CFFEC interior base of this target two work-halfword 0x2C dispatchers is what reaches it'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE628
   - - 812
     - c
-    - dispatchWorkByte2Tableffb4PlcharPlp02500_801CE72C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tableffb4PlcharPlp02500_801CE72C.c'
+    - callWorkTableffb4Plchar
+    - '@source: src/bof3/plchar/callWorkTableffb4Plchar.c'
     - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls that entry of the handler run from its interior base 0x801CFFB4, entry 3 of the sixteen-word run based at 0x801CFFA8, with no arguments and discarding any result; the original does not bound the index before the scaled table load, so the reachable entries are 0x801CE770 through 0x801CF12C, and the payload publishes this function as the word at 0x801CFFF8, entry 4 of the seven-word code-pointer run at 0x801CFFE8, the interior base the sibling work-halfword 0x2C dispatcher at 0x801CFF64 indexes at index zero'
   - - 880
     - c
@@ -69,8 +69,8 @@ segments:
     - func_801CEFF8
   - - 3372
     - c
-    - dispatchWorkByte2Tableffc0PlcharPlp02500_801CF12C
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tableffc0PlcharPlp02500_801CF12C.c'
+    - callWorkTableffc0Plchar
+    - '@source: src/bof3/plchar/callWorkTableffc0Plchar.c'
     - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls that entry of the handler run from its interior base 0x801CFFC0, entry 6 of the sixteen-word run based at 0x801CFFA8, with no arguments and discarding any result; the original does not bound the index before the scaled table load, so the sixteen addresses it can reach are 0x801CF170 through 0x801CF338, of which the last six sit in the seven-word run based at 0x801CFFE8, and the payload publishes this function as the word at 0x801CFFF0, entry 2 of that second run and index 1 of the interior base 0x801CFFEC the other work-halfword 0x2C dispatcher at 0x801CFF20 indexes'
   - - 3440
     - asm
@@ -80,16 +80,16 @@ segments:
     - func_801CF23C
   - - 3896
     - c
-    - dispatchWorkByte2TableffccPlcharPlp02500_801CF338
-    - '@source: src/bof3/plchar/dispatchWorkByte2TableffccPlcharPlp02500_801CF338.c'
+    - callWorkTableffccPlchar
+    - '@source: src/bof3/plchar/callWorkTableffccPlchar.c'
     - '@behavior: Overlay step dispatch on the work record unsigned byte 0x02: loads the record pointer from the scratchpad pointer cell 0x1F800044, scales that byte by four and calls that entry of this overlay handler run from its interior base 0x801CFFCC, entry 9 of the sixteen-word run based at 0x801CFFA8, with no arguments and discarding any result; the original does not bound the index before the scaled table load, so its index values 0 through 13 reach 0x801CF37C through 0x801CFB30, of which 0x801B2D54 is the shared main-executable handler at index 4 and the last seven of those words sit in the seven-word run based at 0x801CFFE8, while index values 14 and 15 scale past the payload end at 0x801D0004, and the payload publishes this function as the word at 0x801CFFFC, entry 6 of that seven-word run'
   - - 3964
     - asm
     - func_801CF37C
   - - 4452
     - c
-    - clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp02500_801CF564
-    - '@source: src/bof3/plchar/clearStateByte12BAndWorldFlagBit1000WhenWorkCountdownExpiresElseDecrementByte9AndAdvanceWorkPlcharPlp02500_801CF564.c'
+    - stateWorldFlagExpires
+    - '@source: src/bof3/plchar/stateWorldFlagExpires.c'
     - '@behavior: Reads the unsigned countdown byte 0x09 of the active work object through the scratchpad pointer cell 0x1F800044: while that byte is nonzero it stores the value one lower and runs the work advance step func_801B0DFC, and when it reads zero it clears state byte 0x12B of the front-end record published at 0x80146250 and clears bit 0x1000 of the world-flag halfword 0x80146258, after which both paths run the shared no-argument update helper func_8014D978'
   - - 4564
     - c

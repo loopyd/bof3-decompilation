@@ -19,10 +19,10 @@ extern u8 D_8014832E; /* @source 0x8014832E @kind unknown */
  * reloading the work record. 0x801F3FAC is the tile draw pass: it asks for a
  * 0x380 tpage, sets the draw mode and builds quads through g_PrimCursor.
  * 0x801F3984 is the record pass over the same 0x800E4800 table. */
-void claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8(
+void claimFreePositionLevel(
     void);
 void renderEffectEntriesAdvance(void);
-void stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984(
+void stepActiveActiveRecords(
     void);
 
 /* @source 0x801F32E8
@@ -72,10 +72,10 @@ void claimEveryFourthIdle(
 
   tick = D_1F800044[6]++;
   if ((tick & 3) == 0) {
-    claimFreeWorkRecordSeedPositionCountdownAndLevelByteWorld04Area17213_801F38E8();
+    claimFreePositionLevel();
   }
   renderEffectEntriesAdvance();
-  stepActiveWorkRecordCountdownAndHalfword14ThenDrawActiveRecordsWorld04Area17213_801F3984();
+  stepActiveActiveRecords();
   if (D_80143C40 == 0) {
     func_8014ECAC(9);
     D_8014832E = 0;

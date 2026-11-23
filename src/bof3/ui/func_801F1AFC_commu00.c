@@ -10,6 +10,6 @@
 void func_801F1AFC(void) {
   if (D_80143BB0 == 0) {
     clearUiSelectionState();
-    dispatchCurrentTaskVariantResource();
+    callCurrentTaskVariant();
   }
 }

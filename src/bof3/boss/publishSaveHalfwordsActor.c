@@ -9,7 +9,7 @@ typedef void (*Boss02513Handler)(void);
  * through the void slot type and keeps its raw name until it is lifted. */
 void stateRestoreSavedHalfwords(
     void);
-void enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680(
+void enterRestoreSavedIds(
     void);
 void func_800C2208(u8 mode);
 
@@ -51,7 +51,7 @@ extern u8 D_80146324; /* @source 0x80146324 @kind unknown */
  * step handler
  * stateRestoreSavedHalfwords
  * into 0x801463A4, the front-end handoff handler
- * enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680
+ * enterRestoreSavedIds
  * into 0x801463A8 and the hook-mode dispatcher func_800C2208 into 0x801463AC.
  * It then backs up the local work record's halfword pair: it loads the record
  * halfwords 0x80145F18/0x80145F1A and their 0x80145F20/0x80145F22
@@ -94,7 +94,7 @@ void publishSaveHalfwordsActor(
   D_801463A4 =
       stateRestoreSavedHalfwords;
   D_801463A8 =
-      enterFrontendMode4RestoreSavedSlotIdsAndSetRecordCount3BossBoss02513_800C2680;
+      enterRestoreSavedIds;
   D_801463AC = (Boss02513Handler)func_800C2208;
   cell = &D_80145F18;
   record0 = *cell;

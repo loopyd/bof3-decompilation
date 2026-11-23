@@ -161,7 +161,7 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360.c'
   - - 6052
     - c
-    - clearSharedByteBitPair0World02Area10814_801F43A4
+    - stateSharedByteBit
   - - 6080
     - c
     - clearSharedByteBitPair1World02Area10814_801F43C0
@@ -177,13 +177,13 @@ segments:
     - func_801F4414
   - - 7448
     - c
-    - loadWorkHalfwordsFromTable637cWorld02Area10814_801F4918
-    - '@source: src/bof3/world/loadWorkHalfwordsFromTable637cWorld02Area10814_801F4918.c'
+    - queryWorkHalfwordsTable637
+    - '@source: src/bof3/world/queryWorkHalfwordsTable637.c'
     - '@behavior: reads the 1-based selector byte at 0x80147B67, indexes the four-byte row table at 0x801F637C with it and writes the row into the scratch work record published at scratchpad pointer cell 0x1F800044: byte 0 to halfword +0x36, byte 2 to halfword +0x3A and bytes 1 and 3 as a 0-or-0x8000 flag in halfwords +0x34 and +0x38.'
   - - 7576
     - c
-    - loadWorkHalfwordsFromTable63a0World02Area10814_801F4998
-    - '@source: src/bof3/world/loadWorkHalfwordsFromTable63a0World02Area10814_801F4998.c'
+    - queryWorkHalfwordsTable63
+    - '@source: src/bof3/world/queryWorkHalfwordsTable63.c'
     - '@behavior: reads the 1-based selector byte at 0x80147B67, indexes the four-byte row table at 0x801F63A0 with it and writes the row into the scratch work record published at scratchpad pointer cell 0x1F800044: byte 0 to halfword +0x36, byte 2 to halfword +0x3A and bytes 1 and 3 as a 0-or-0x8000 flag in halfwords +0x34 and +0x38.'
   - - 7704
     - asm

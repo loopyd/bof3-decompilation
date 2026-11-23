@@ -16,7 +16,7 @@ sources = [
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World04Area15213_801F37EC.c",
     "src/bof3/world/stepWorkPositionPairAndRunSharedUpdatesWorld04Area15213_801F43E8.c",
     "src/bof3/world/initializeWorkAndStampMapA0UnlessGatedWorld04Area15213_801F44D0.c",
-    "src/bof3/world/spawnRandomRowsWithRandomNibbleAndAngleWorld04Area15213_801F407C.c",
+    "src/bof3/world/spawnRowsNibbleAngle.c",
     "src/bof3/world/drawMarkerSpriteLayersSelectedByMapCodeThenAppendPanelWorld04Area15213_801F39C4.c",
     "src/bof3/world/drawPulsingTexturedPanelAndScrollingCellGridNearFocusWorld04Area15213_801F4628.c",
     "src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld04Area15213_801F33D0.c",

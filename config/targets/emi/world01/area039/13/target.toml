@@ -10,11 +10,11 @@ load_address = 0x801F2C00
 sources = [
     "src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area03913_801F2C88.c",
     "src/bof3/world/queueFrontendCueA3World01Area03913_801F2EC4.c",
-    "src/bof3/world/startScriptedMotionZeroZeroFour1eWorld01Area03913_801F2F68.c",
-    "src/bof3/world/claimFrontEndRecordHandler36ClearRowByte9ElseLowerSharedHalfword7eBy2World01Area03913_801F2D54.c",
-    "src/bof3/world/claimFirstFree0eSlotInTable8014544cAsFourElseSetSharedSelector4World01Area03913_801F2F0C.c",
+    "src/bof3/world/audioScriptedMotionZero.c",
+    "src/bof3/world/claimEndRowLower.c",
+    "src/bof3/world/claimFirstSlotFour.c",
     "src/bof3/world/queueSharedUiElementBlock43To44x36Size0World01Area03913_801F2DE4.c",
-    "src/bof3/world/queueSharedUiElementBlock58To59xDSize51World01Area03913_801F2E1C.c",
+    "src/bof3/world/queueUiElementX.c",
     "src/bof3/world/queueSharedUiElementBlock58To59xDSize50World01Area03913_801F2E54.c",
 ]
 support_sources = [
@@ -26,7 +26,7 @@ support_sources = [
     "src/bof3/world/invokeHelperByteArgWorld01Area03913_801F2E9C.c",
     "src/bof3/world/raiseWorldFlag8World01Area03913_801F2EEC.c",
     "src/bof3/world/armWorkPhase40SelectHandler1ThenLowerSharedHalfword7eBy2World01Area03913_801F2C48.c",
-    "src/bof3/world/dispatchWorkByte4Table4c10World01Area03913_801F2C04.c",
+    "src/bof3/world/callWorkByte4Table4.c",
     "src/bof3/support/area039_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area039_13_psyq.c"

@@ -24,7 +24,7 @@ extern u8* D_1F800044; /* @source 0x1F800044 @kind data */
  * same pass subtracts 1 from byte 2 and 0x10 from the halfword at 0x14 on every
  * active record, so the 0x10 and the 0x100 written here expire together after
  * 0x10 frames; the halfword is the extent the render pass
- * drawTranslucentGouraudFanOfThirtyTwoTrianglesAroundProjectedWorkRecordPositionAtConvertedExtentTintedByCentreAndRimBytesWorld04Area18813_801F3F30
+ * renderConvertedCentreRim
  * converts at the depth of the position triple at 0x04 and uses as the radius
  * of the translucent fan it draws around that projected point. Bytes 0x16 and
  * 0x17 are that pass's two tints: the 0x40 written here lights the shared

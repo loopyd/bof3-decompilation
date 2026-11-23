@@ -100,7 +100,7 @@ segments:
     - '@behavior: Configures the indexed commu00 task slot as a variant-6 task and dispatches it: publishes the slot as the scratchpad task cursor, records the source index, derives the stride-8 active-record index from the source-indexed record byte, seeds the slot coordinate pair and resource id from the variant-rotation record selected by that record index and the rotation byte, seeds the slot table entry selected by the source index modulo six, selects the slot label through func_8015477C, runs the record-kind handler selected by the stride-8 kind byte, and advances that record rotation byte.'
   - - 8180
     - c
-    - activateTaskWithRandomLabel
+    - activateTaskRandomLabel
   - - 8300
     - c
     - func_801F0C6C
@@ -120,7 +120,7 @@ segments:
     - '@source: src/bof3/ui/activateTaskStatusC003.c'
   - - 8968
     - c
-    - activateScratchTaskWithBandLabel
+    - activateTaskBandLabel
   - - 9148
     - c
     - func_801F0FBC
@@ -142,8 +142,8 @@ segments:
     - '@source: src/bof3/ui/setVariantTaskStatus.c'
   - - 9812
     - c
-    - activateTaskStatusC00A
-    - '@source: src/bof3/ui/activateTaskStatusC00A.c'
+    - activateTaskStatus
+    - '@source: src/bof3/ui/activateTaskStatus.c'
   - - 9876
     - c
     - selectUiMode14
@@ -151,8 +151,8 @@ segments:
     - '@behavior: Selects active UI data, requests mode 14, and refreshes it.'
   - - 9928
     - c
-    - copySelectedRecordKindToTaskRecord
-    - '@source: src/bof3/ui/copySelectedRecordKindToTaskRecord.c'
+    - copySelectedKindTask
+    - '@source: src/bof3/ui/copySelectedKindTask.c'
     - '@behavior: Copies the selected record-kind byte into the task-indexed UI record.'
   - - 10008
     - c
@@ -206,8 +206,8 @@ segments:
     - '@behavior: Stores the incoming task as the current commu00 task, requests UI mode 0x19, mirrors the task source index into the fairy slot index, and refreshes the active UI.'
   - - 10808
     - c
-    - dispatchCurrentTaskVariantResource
-    - '@source: src/bof3/ui/dispatchCurrentTaskVariantResource.c'
+    - callCurrentTaskVariant
+    - '@source: src/bof3/ui/callCurrentTaskVariant.c'
     - '@behavior: Copies the current task into scratch, copies its variant state to resource ID, and dispatches it.'
   - - 10884
     - c

@@ -12,4 +12,4 @@ extern void (*D_801F3DAC[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table3dacWorld02Area08013_801F2C04, D_801F3DAC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTable3World02, D_801F3DAC);

@@ -34,7 +34,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
 /* @source 0x801F3EB4
  * @behavior Entry 4 of the 25-entry overlay handler table at 0x801F6830 of
  *           this payload, whose entry 0 is the exact lift
- *           setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0
+ *           stateStatusGateSeed
  *           and whose entry 2 is the exact lift
  *           setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4.
  *           Stores 0xFFFF into the shared status halfword at 0x801490A8 on
@@ -72,7 +72,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  * Shape evidence: `cmp` of this payload range [4788, 4884) with the range
  * [4692, 4788) of word 3 of the same table reported no differing byte, so the
  * two spans are one body; the seed is that word's exact lift
- * setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54,
+ * stateStatusSeedGate,
  * whose statement order, operand forms, declaration style and literals are
  * transcribed unchanged. Every absolute word of both spans resolves to the
  * same main-executable symbol, so the equality is exact rather than a

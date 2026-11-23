@@ -137,7 +137,7 @@ s32 func_801782FC(s32 arg0);
 s32 func_801783C8(s32 arg0);
 
 /* @source 0x8015DF18 @kind unknown — shared frontend cue dispatcher called by
- * drawMaxRadiusAndCountDownWorkByte9QueueCue203ThenAdvanceWorld00Area03213_801F2DAC
+ * renderMaxRadiusDown
  * with cue id 0x203 while scratch work byte 9 reads 0xD7. */
 void func_8015DF18(u16 arg0);
 

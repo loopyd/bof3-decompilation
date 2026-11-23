@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 92
     - c
-    - dispatchStateByte2Table3f5cWorld04Area17113_801F2C5C
+    - callStateTable3World04
     - '@source: src/bof3/world/area17113DispatchTables.c'
   - - 160
     - asm
@@ -58,26 +58,26 @@ segments:
     - func_801F3070
   - - 2008
     - c
-    - setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkByte2EveryEighthFrameWorld04Area17113_801F33D8
-    - '@source: src/bof3/world/setDrawModeThenDrawSemiTransFullScreenQuadWithTableIndexedBlueSteppingWorkByte2EveryEighthFrameWorld04Area17113_801F33D8.c'
+    - stateFullSteppingEighth
+    - '@source: src/bof3/world/stateFullSteppingEighth.c'
     - '@behavior: Full-screen overlay tint emitter. Selects the draw-mode texture page 0x2A5 for graphics types 1 or 2 and 0xB5 otherwise through two successive GetGraphType calls, seeds that draw mode at the shared primitive cursor 0x8014598C with dfe 0, dtd 0 and no texture window, and appends its 0xC bytes under ordering class 3. It then stamps the same cursor through the shared POLY_F4 initialiser 0x8017A9A4, sets that packet semi-transparency bit, writes the four screen corners (0,0), (0x140,0), (0,0xF0) and (0x140,0xF0) as the eight halfwords at offsets 0x08 to 0x16, fixes the red byte at 0 and the green byte at 0x30, and takes the blue byte from the four-byte table at 0x801F3F88 indexed by the work record byte at offset 0x02 of the scratchpad pointer cell 0x1F800044 and scaled left by three, then appends that 0x18-byte packet under the same ordering class 3. On every eighth frame, where the shared frame counter 0x80143E6C reads zero in its low three bits, it re-reads that work pointer and rewrites the same byte as (byte + 1) AND 3, the dispatch byte the overlay dispatcher at 0x801F2C5C indexes its handler run with. The payload names no caller for it: no jal and no table word of this overlay holds 0x801F33D8, so the overlay loader is the only entry that reaches it. Takes no arguments and returns nothing; the 0x20-byte frame keeps ra at 0x1C and s0 at 0x18.'
   - - 2296
     - c
-    - setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGateClearThenStartFrontendWorld04Area17113_801F34F8
-    - '@source: src/bof3/world/setStatusFFFFAndStateEntryAProgress5SubstateFFWhenGateClearThenStartFrontendWorld04Area17113_801F34F8.c'
+    - stateSubstateStartFrontend
+    - '@source: src/bof3/world/stateSubstateStartFrontend.c'
     - '@behavior: Overlay handler named only by data: the payload word at 0x801F4138 holds 0x801F34F8, entry 0 of the code-pointer run that continues at 0x801F413C with 0x801F3558 and at 0x801F4140 with 0x801F3650, and no jal of this payload targets it, so the overlay loader or that run dispatcher enters it and its argument roles stay structural. It stores 0xFFFF into the shared status halfword D_801490A8 on every path and, while the shared gate byte D_801490C7 reads zero, runs the shared front-end startup helper 0x8015C088 and then writes the shared front-end tuple: state entry 0xA at 0x801448EB, progress 5 at 0x801448EC and 0xFF at 0x801448ED. The gate byte is read with lb and that load is hoisted above the status store; bnez jumps to the epilogue, so the gate-clear arm falls through its three byte stores into the frame restore. Each byte store materialises the 0x8014 page in at on its own and each constant needs its own addiu, because none of the three stores writes zero. Takes no arguments and returns nothing; the 0x18-byte frame only keeps ra across that one call and both delay slots stay nops, the branch slot because the call follows and the call slot because the helper takes no arguments.'
   - - 2392
     - c
-    - clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558
-    - '@source: src/bof3/world/clearWorkByte74Bit0ThenWhenParty5Status4BSetFlagBank73QueueUiBlock2x21To22SizeC0And3x21To22Size0BumpCountdown7EAndWhenParty7StartFrontend30ProgressAWorld04Area17113_801F3558.c'
+    - stateSizeBumpStart
+    - '@source: src/bof3/world/stateSizeBumpStart.c'
     - '@behavior: Clears bit 0 of the byte at +0x74 of the work record published by the pointer cell 0x80146884; when the shared work record party byte 0x80145F09 reads 5 and character record 5 status byte 0x80144CAA reads 0x4B, sets flag 0x73 of the main-RAM flag bank 0x80144F28, queues the shared UI markers (2,0x21,0xC0), (2,0x22,0xC0), (3,0x21,0), (3,0x22,0) and adds one to the work record countdown halfword at +0x7E; when the party byte reads 7, runs the shared front-end startup helper func_8015C088 and requests front-end state entry 0x30 with progress 0xA. Takes no arguments and returns nothing.'
   - - 2640
     - asm
     - func_801F3650
   - - 2916
     - c
-    - clearFlag74UnlessFrontSideByteIs3World04Area17113_801F3764
-    - '@source: src/bof3/world/clearFlag74UnlessFrontSideByteIs3World04Area17113_801F3764.c'
+    - stateUnlessFrontSide
+    - '@source: src/bof3/world/stateUnlessFrontSide.c'
     - '@behavior: Handler of this payload handler table at 0x801F3F5C, registered by the pointer word 0x801F3764 at 0x801F4184 (entry 138), so no jal of the payload reaches it and the overlay dispatcher 0x801F2C5C indexes the table by the state byte at +0x02 of the work record published at the scratchpad pointer cell 0x1F800044. It reads the shared front-side byte D_80143F03 of the main executable and, on every value other than 3, clears flag 0x74 of the main-RAM flag bank D_80144F28 through the shared flag-bit clear helper func_8015B5A8; on the value 3 it clears nothing. Takes no arguments and returns nothing.'
   - - 2972
     - c
@@ -85,8 +85,8 @@ segments:
     - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area17113_801F379C.c'
   - - 3176
     - c
-    - syncWorkRecordsAgainstBoundsTableAndMirrorKindChangeWorld04Area17113_801F3868
-    - '@source: src/bof3/world/syncWorkRecordsAgainstBoundsTableAndMirrorKindChangeWorld04Area17113_801F3868.c'
+    - syncBoundsMirrorChange
+    - '@source: src/bof3/world/syncBoundsMirrorChange.c'
     - '@behavior: Per-frame work-record sync of this area. Clears bit 0x2000 of the shared world flags D_80146258, keeps the incoming scratchpad work cursor 0x1F800044 in a register and walks the D_80146254 live records of the 0x140-byte array at D_80145E90. Each iteration publishes that record as D_80146250 and as the scratch cursor and asks the payload query 0x801F379C for the five-byte bounds record holding it; a 0xFF answer makes the record absent, which only costs it its bit in the saved cursor bitmask byte 0x0B and in D_8014625A. A record whose bit is clear in both masks is activated by raising both bits, setting shared work mode D_80146250[0x11C] to 2, clearing countdown byte 9, copying kind byte D_801F418C of its bounds record into byte 8 and handing that byte to func_8014D8D4. An already active record runs the shared step func_801C2538 and, for index 0 only, func_801C2710 while its countdown reads zero; otherwise it re-derives byte 8 the same way and, when the kind changed, mirrors the motion words +0x0C, +0x10 and +0x14 and reflects the countdown as 8 minus itself. Every active path then runs func_801B0DFC, steps the countdown down by one, releases the shared hold through func_8014D978 and raises bit 0x2000 of D_80146258. The saved cursor is restored last, and the trailing guard clears bit 0x2000 again when D_80143BB0 holds 5. Takes no arguments and returns nothing.'
   - - 3916
     - asm
@@ -99,8 +99,8 @@ segments:
     - func_801F3EBC
   - - 4900
     - c
-    - setSharedStateByteAndRequestPair1c4aThenQueueCue109World04Area17113_801F3F24
-    - '@source: src/bof3/world/setSharedStateByteAndRequestPair1c4aThenQueueCue109World04Area17113_801F3F24.c'
+    - stateSharedRequestQueue
+    - '@source: src/bof3/world/stateSharedRequestQueue.c'
     - '@behavior: Overlay handler entered by the overlay loader, since no jal and no table word of this payload names 0x801F3F24; sets the shared overlay state byte D_8014933B to 1, passes the pair 0x1C and 0x4A to the shared request helper func_8015507C, then queues the fixed sound cue 0x109 through the shared cue dispatcher func_8015DF18. Takes no arguments and returns nothing.'
   - - 4956
     - textbin

@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte1LocalPairThenStepEachReservedRecordBmagicMagic08303_801EEC04
-    - '@source: src/bof3/bmagic/dispatchWorkByte1LocalPairThenStepEachReservedRecordBmagicMagic08303_801EEC04.c'
+    - callLocalEachReserved
+    - '@source: src/bof3/bmagic/callLocalEachReserved.c'
     - '@behavior: Dispatches on byte 0x01 of the published work object through a two-entry local handler pair, then publishes each reserved record of the 24-entry pool in turn, swaps the shared battle record cell to the record word 0x74, runs the work-byte-1 dispatcher and restores both cells.'
   - - 260
     - asm
@@ -38,12 +38,12 @@ segments:
     - func_801EF080
   - - 1228
     - c
-    - replaceBattleKind136With53WhenBattleStateIsNotFourBmagicMagic08303_801EF0CC
-    - '@source: src/bof3/bmagic/replaceBattleKind136With53WhenBattleStateIsNotFourBmagicMagic08303_801EF0CC.c'
+    - replaceIsNotFour
+    - '@source: src/bof3/bmagic/replaceIsNotFour.c'
     - '@behavior: Overwrites the shared battle kind halfword 0x136 with 0x53 while the shared battle state byte is not four, then returns zero.'
   - - 1288
     - c
-    - dispatchStateByte1Table0eecBmagicMagic08303_801EF108
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic08303DispatchTables.c'
   - - 1356
     - asm
@@ -80,8 +80,8 @@ segments:
     - func_801EF844
   - - 3876
     - c
-    - drawTranslucentGouraudQuadRingOfSixteenQuadsSteppingSixteenthTurnBetweenRadius128And256TintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic08303_801EFB24
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingOfSixteenQuadsSteppingSixteenthTurnBetweenRadius128And256TintedByPaletteRowAtWorkByte4ScaledByWorkByte9BmagicMagic08303_801EFB24.c'
+    - renderSteppingSixteenthTurn
+    - '@source: src/bof3/bmagic/renderSteppingSixteenthTurn.c'
     - '@behavior: Draws a translucent gouraud ring of sixteen quads that steps a 12-bit turn in sixteenths between radius 128 and 256, tinting the inner vertices by the palette row selected by work byte 4 and scaled by work byte 9 and the outer vertices with the constant one.'
   - - 4692
     - c
@@ -96,16 +96,16 @@ segments:
     - func_801EFEDC
   - - 5136
     - c
-    - drawRandomizedEffectIntegrateWorkMotionAndResetCountdownBmagicMagic08303_801F0010
-    - '@source: src/bof3/bmagic/drawRandomizedEffectIntegrateWorkMotionAndResetCountdownBmagicMagic08303_801F0010.c'
+    - renderRandomizedIntegrateMotion
+    - '@source: src/bof3/bmagic/renderRandomizedIntegrateMotion.c'
     - '@behavior: Draws with randomized scale, integrates work motion, and resets the expired countdown before advancing work byte 2.'
   - - 5380
     - asm
     - func_801F0104
   - - 5624
     - c
-    - drawRandomizedEffectAdvanceWorkRateAndFinishCountdownBmagicMagic08303_801F01F8
-    - '@source: src/bof3/bmagic/drawRandomizedEffectAdvanceWorkRateAndFinishCountdownBmagicMagic08303_801F01F8.c'
+    - renderRandomizedRateFinish
+    - '@source: src/bof3/bmagic/renderRandomizedRateFinish.c'
     - '@behavior: Draws with randomized scale, advances the work rate every eighth tick and finishes the countdown before advancing byte 2.'
   - - 6028
     - asm

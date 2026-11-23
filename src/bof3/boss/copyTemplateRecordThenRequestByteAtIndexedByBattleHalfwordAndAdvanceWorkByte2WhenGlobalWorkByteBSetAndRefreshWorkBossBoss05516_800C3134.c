@@ -58,7 +58,7 @@ extern void refreshWorkFromRecordThenAdvancePositionByModeScaleBossBoss05516_800
 /* @source 0x800C3134
  * @behavior Overlay step body and middle entry of the three alternative step
  * bodies that the payload table at 0x800C184C holds (0x800C305C, this function
- * and 0x800C31F0) and that dispatchStateByte2TableCopyBossBoss05516_800C2FFC
+ * and 0x800C31F0) and that callTableCopyBoss
  * selects with the work record's state byte +2. It reads the shared battle work
  * record pointer at 0x801EB4E0 before it adjusts the stack, copies the 10-byte
  * step template at 0x800C1858 into frame slot 0x10, and then tests that

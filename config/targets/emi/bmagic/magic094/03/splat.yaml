@@ -33,23 +33,23 @@ segments:
     - func_801EEC5C
   - - 352
     - c
-    - copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60
-    - '@source: src/bof3/bmagic/copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60.c'
+    - copyIntoBattlerForward
+    - '@source: src/bof3/bmagic/copyIntoBattlerForward.c'
     - '@behavior: Copies the unsigned halfword pair 0x2E and 0x30 of the battle record pointer at 0x8014638C into the scratchpad work object read through 0x1F800044, subtracting 0x10 from the second halfword, and returns while work byte 0xB differs from 0xFF. Only on that equality does it select the battler record of the shared target byte at 0x80146384 (0x140-byte party entries at 0x80145E90 below three, 0x118-byte enemy entries at 0x801EB2E8 otherwise), submit it through func_80196718, forward the target byte to func_800AF814 and func_800A9820, raise bit 4 of the shared halfword at 0x801462E8 and invoke the shared helper func_801E5988. The 0x18-byte frame keeps the return address and the base of 0x80146384, and it takes no arguments and returns nothing.'
   - - 588
     - c
-    - dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic09403_801EEE4C
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic09403_801EEE4C.c'
+    - callUpdateWhileRunning
+    - '@source: src/bof3/bmagic/callUpdateWhileRunning.c'
     - '@behavior: Per-frame work-step entry of this overlay: it reads the scratchpad work-object pointer cell at 0x1F800044 before creating its 0x20-byte frame, calls that entry of the four-entry code-pointer run at 0x801EF988 selected by the work object''s byte 1 scaled by four (index unbounded), and while the shared battle work record at 0x801EB4E0 has byte 0xB different from 0xFF it calls this overlay''s transform step at 0x801EF654, its draw steps at 0x801EF14C and 0x801EF710 and PopMatrix in that order; it then picks the draw-mode tpage from GetGraphType (0x25 for graph types 1 and 2, 0x15 otherwise), seeds SetDrawMode on the primitive cursor at 0x8014598C with dfe 0, dtd 1 and a null tw, and appends a 0xC-byte primitive for output list 3 through func_8014E5A0. Takes no arguments and returns nothing.'
   - - 796
     - c
-    - raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C
-    - '@source: src/bof3/bmagic/raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C.c'
+    - raiseBattleTargetClear
+    - '@source: src/bof3/bmagic/raiseBattleTargetClear.c'
     - '@behavior: Raises battler status flag 0x20 by passing the shared battle target byte at 0x80146384 and the flag word 0x20 to func_800A9610, then clears scratchpad work-object byte 9 and byte 0xA and advances work byte 1 by one; the work-object pointer cell at 0x1F800044 is re-read before each store group, the 0x18-byte frame only keeps $ra across the call, and it takes no arguments and returns nothing.'
   - - 892
     - c
-    - incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C
-    - '@source: src/bof3/bmagic/incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C.c'
+    - incrementSubmitSelectedBattler
+    - '@source: src/bof3/bmagic/incrementSubmitSelectedBattler.c'
     - '@behavior: Ramps the scratchpad work object byte 0xA and then byte 9 and, only when the truncated byte 9 reaches 0x10, selects the battler record of the shared target byte at 0x80146384 (0x140-byte party entries at 0x80145E90 below three, 0x118-byte enemy entries at 0x801EB2E8 otherwise), submits it through func_80196718 and its positional effect through func_8019651C with the offsets 6, 4, 8 and 0, then clears work byte 9 and advances work byte 1, re-reading the work pointer cell at 0x1F800044 for each store group; takes no arguments and returns nothing.'
   - - 1144
     - asm

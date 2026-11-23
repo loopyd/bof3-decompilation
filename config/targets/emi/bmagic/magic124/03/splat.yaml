@@ -47,25 +47,25 @@ segments:
     - '@behavior: When work byte 0xB is zero, forwards battle byte 0x80146384, sets mask 0x4 in battle halfword 0x801462E8, and invokes helper 0x801E5988.'
   - - 1200
     - c
-    - drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithJitteredRadiusTintedByWorkByteATimesFifteenBmagicMagic12403_801EF0B0
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudFanOfEightTrianglesAroundWorkScreenPairWithJitteredRadiusTintedByWorkByteATimesFifteenBmagicMagic12403_801EF0B0.c'
+    - renderAroundJitteredFifteen
+    - '@source: src/bof3/bmagic/renderAroundJitteredFifteen.c'
     - '@behavior: Emits eight translucent Gouraud triangles around the work screen pair, with jittered radius and centre tint from work byte 0xA times fifteen.'
   - - 1640
     - c
     - noopHandlerBmagicMagic12403_801EF268
   - - 1648
     - c
-    - dispatchStateByte1Table08dcBmagicMagic12403_801EF270
+    - callStateTable08Bmagic
     - '@source: src/bof3/bmagic/magic12403DispatchTables.c'
   - - 1716
     - c
-    - dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4
-    - '@source: src/bof3/bmagic/dispatchWorkByte2ThenUpdateAndQueueRecordEveryFourthWorkByteBTickBmagicMagic12403_801EF2B4.c'
+    - callUpdateEveryFourth
+    - '@source: src/bof3/bmagic/callUpdateEveryFourth.c'
     - '@behavior: Dispatches work byte 2, updates active work through the local helper, and queues a record every fourth work-byte-0xB tick while work byte 2 is 1 and byte 0xA is nonzero.'
   - - 2044
     - c
-    - countDownWorkByte9ThenCopyRecordPairSetJitteredHeadingAndRearmWorkBmagicMagic12403_801EF3FC
-    - '@source: src/bof3/bmagic/countDownWorkByte9ThenCopyRecordPairSetJitteredHeadingAndRearmWorkBmagicMagic12403_801EF3FC.c'
+    - checkDownJitteredHeading
+    - '@source: src/bof3/bmagic/checkDownJitteredHeading.c'
     - '@behavior: Counts down work byte 9, copies the record halfword pair, sets a jittered heading, rearms work and advances byte 2.'
   - - 2440
     - c
@@ -86,8 +86,8 @@ segments:
     - func_801F020C
   - - 5772
     - c
-    - seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C
-    - '@source: src/bof3/bmagic/seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C.c'
+    - stateTintTripletCountdown
+    - '@source: src/bof3/bmagic/stateTintTripletCountdown.c'
   - - 5884
     - c
     - add2ToWorkByteAThenAdd4ToWorkByte9AndAdvanceWorkByte2At16BmagicMagic12403_801F02FC
@@ -103,7 +103,7 @@ segments:
     - func_801F03E0
   - - 6580
     - c
-    - drawTranslucentGouraudRingOfEightQuadsWithWorkScaledRadiiAndTintBmagicMagic12403_801F05B4
+    - renderQuadsScaledRadii
     # @source 0x801F05B4
     # @behavior Emits eight translucent Gouraud ring quads with work-scaled radii and tint.
   - - 7208

@@ -8,17 +8,17 @@ splat = "config/targets/emi/world01/area056/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/setStatusTwelveIfGateTwoElseFFFFWorld01Area05613_801F311C.c",
-    "src/bof3/world/clearGateStatusAndArmFrontEndRequestGate2Type7AtScrollPairWhenGateOneWorld01Area05613_801F3194.c",
+    "src/bof3/world/stateStatusTwelveTwo.c",
+    "src/bof3/world/stateStatusScrollOne.c",
 ]
 support_sources = [
-    "src/bof3/world/armFrontEndRequestWhenGateClearSetFlagBankEWhenGateOneQueueCue208UnlessGateTwoWorld01Area05613_801F2FFC.c",
-    "src/bof3/world/clearGateStatusQueueCue208AndArmFrontEndRequestGate2Type7AtScrollPairWhenGateClearAndFlagByte7fWorld01Area05613_801F3200.c",
+    "src/bof3/world/armBankOneUnless.c",
+    "src/bof3/world/stateStatusScrollFlag.c",
     "src/bof3/world/seedWork34383eFromPositionPlus7d0SetHandlerOneResetMotionAndConsumeSharedCountdownWorld01Area05613_801F32C8.c",
     "src/bof3/world/noopHandlerWorld01Area05613_801F3464.c",
     "src/bof3/world/clearWorldFlagAndWorkByte4World01Area05613_801F3440.c",
     "src/bof3/world/area05613_gate_status.c",
-    "src/bof3/world/dispatchWorkByte4Table3898World01Area05613_801F3284.c",
+    "src/bof3/world/callWorkByte4Table3898.c",
     "src/bof3/world/advanceWorkMotionAndSelectHandler2PastWork3eThenHandHalfword3eToSharedUnlessByte5OrFlag8SetAndConsumeSharedCountdownWorld01Area05613_801F3354.c",
     "src/bof3/world/setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C.c",
     "src/bof3/support/area056_13_psyq.c",

@@ -5,7 +5,7 @@
  * remaining asm span func_801EF130 still references it, so this lift needs no
  * target-map row. The offsets read here (words 0x34, 0x38 and 0x3C) are the ones
  * the exact sibling
- * copyRecordTripletMinus4000Plus4000000SetBytes9BTo10AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EEE64
+ * copyRecordTripletSet
  * adjusts from the adjacent record cell 0x8014638C; the layout is shared, the
  * address is this target's own. */
 extern u8 *D_8014637C; /* @source 0x8014637C @kind unknown */
@@ -35,9 +35,9 @@ extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
  *           reload, advancing the work-byte-2 dispatcher to the next handler
  *           step. Leaf with no frame; takes no arguments, returns nothing and
  *           reads or writes no other state. The bodies of the exact siblings
- *           decrementWorkByte9Subtract40FromWorkDistanceThenResetByte9To20AndAdvanceWorkByte2OnZeroBmagicMagic07903_801EF1DC
+ *           decrementDistanceResetZero
  *           (countdown prefix) and
- *           copyWorkWordTripletSetBytes9To4AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EFC74
+ *           copyWordTripletSet
  *           (record-triplet copy arm) supply both halves of this shape; the
  *           uninstantiated asm span func_801EF130 carries the same prefix and the
  *           0x8014637C triplet with the subtract-0x4000 arm of 0x801EEE64, so

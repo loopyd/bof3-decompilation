@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic220/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40.c",
+    "src/bof3/bmagic/renderTintingInnerEdge.c",
 ]
 support_sources = [
     "src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesThreeCountdownByte9AndAdvanceWorkByte2AtZeroBmagicMagic22003_801F010C.c",
@@ -18,7 +18,7 @@ support_sources = [
     "src/bof3/bmagic/magic22003DispatchTables.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic22003_801F068C.c",
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888.c",
-    "src/bof3/bmagic/copyWorkCursorPairWithFrameParityDeltaThenCountdownWorkByte9ResetTo8AndDecrementWorkByte2BmagicMagic22003_801EF40C.c",
+    "src/bof3/bmagic/copyFrameParityDelta.c",
     "src/bof3/bmagic/stepWorkPositionPairByWorkByteBAngleTimesTwoCountdownByteAByTwoThenDecrementGlobalWorkByteBAndClearWorkAtZeroBmagicMagic22003_801F01C8.c",
 ]
 psyq_source = "src/bof3/support/magic220_03_psyq.c"

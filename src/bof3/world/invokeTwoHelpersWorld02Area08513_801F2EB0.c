@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F2ED8(void);
-void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
+void stateActiveRecordsBase(void);
 
 /* @source 0x801F2EB0
  * @behavior Thin overlay wrapper: calls the helpers at 0x801F2ED8 and 0x801F2FCC
@@ -12,5 +12,5 @@ void setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC(void);
  */
 void invokeTwoHelpersWorld02Area08513_801F2EB0(void) {
   func_801F2ED8();
-  setWorkByte29To5OnActiveWorkRecordsAndBaseWorld02Area08513_801F2FCC();
+  stateActiveRecordsBase();
 }

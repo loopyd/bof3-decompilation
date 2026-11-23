@@ -18,7 +18,7 @@ sources = [
     "src/bof3/bmagic/drawTwoTranslucentGouraudBandsGradedBetweenDarkRedAndWorkByte9TintThenRearmGraphTypeDrawModeBmagicMagic16103_801EF1DC.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8.c",
+    "src/bof3/bmagic/callHelperDrawRun.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic16103_801EF1BC.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic16103_801EEC24.c",
     "src/bof3/bmagic/magic16103DispatchTables.c",

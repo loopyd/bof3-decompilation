@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table431cWorld04Area19713_801F2C04
+    - callStateTable431World04
     - '@source: src/bof3/world/area19713DispatchTables.c'
   - - 72
     - c
@@ -49,8 +49,8 @@ segments:
     - func_801F2FC4
   - - 1252
     - c
-    - clearWorkTableAt800E4800Stride28World04Area19713_801F30E4
-    - '@source: src/bof3/world/clearWorkTableAt800E4800Stride28World04Area19713_801F30E4.c'
+    - stateWorkTableStride28
+    - '@source: src/bof3/world/stateWorkTableStride28.c'
     - '@behavior: Overlay init helper that clears the lead byte of each of the 0x80 entries of the 0x28-byte-stride record table at 0x800E4800, walking it with an unsigned halfword counter in a bottom-tested loop and reading no state; the scan at 0x801F2FC4 treats that lead byte as the entry live flag, and the init handler at 0x801F2C48 calls this span before the 0x800E5C00 clear at 0x801F3474.'
   - - 1296
     - asm
@@ -60,8 +60,8 @@ segments:
     - func_801F32A4
   - - 1896
     - c
-    - stepWorkTableAt800e5c00IntegrateVelocityBounceTickCountdownsAndDrawEntriesWorld04Area19713_801F3368
-    - '@source: src/bof3/world/stepWorkTableAt800e5c00IntegrateVelocityBounceTickCountdownsAndDrawEntriesWorld04Area19713_801F3368.c'
+    - stepVelocityBounceCountdowns
+    - '@source: src/bof3/world/stepVelocityBounceCountdowns.c'
     - '@behavior: Per-frame sweep of the 0x80 entries of the 0x24-byte-stride effect table at 0x800E5C00. It skips an entry whose lead byte is zero; for a live entry it adds the step words at record +0x04, +0x08 and +0x0C to the position words at +0x14, +0x18 and +0x1C, lowers the third step word by 0x40000, clamps the third position word to -0x2000000 and negates that step word once the position word reads below it, decrements the counter at +0x02 and clears the in-use flag when that counter reaches zero, lowers the counter at +0x03 by 2, draws the entry through func_801F32A4 with the record base pointer and returns 1 when at least one entry was live. Its only in-payload caller is the step handler at 0x801F2DA4, which tests the low byte of that result before advancing the state byte at 0x1F800044+1.'
   - - 2164
     - c
@@ -72,15 +72,15 @@ segments:
     - func_801F34A0
   - - 2600
     - c
-    - dispatchStateByte2Table4368World04Area19713_801F3628
+    - callStateTable4368World04
     - '@source: src/bof3/world/area19713DispatchTables.c'
   - - 2668
     - c
     - incrementWorkByte2World04Area19713_801F366C
   - - 2700
     - c
-    - waitFlag0eThenClearStepByte9AndAdvanceStateByte2DrawingFullWidthWorld04Area19713_801F368C
-    - '@source: src/bof3/world/waitFlag0eThenClearStepByte9AndAdvanceStateByte2DrawingFullWidthWorld04Area19713_801F368C.c'
+    - waitDrawingFullWidth
+    - '@source: src/bof3/world/waitDrawingFullWidth.c'
     - '@behavior: State-byte-2 handler of this overlay: word 1 of the payload handler table 0x801F4368 holds this address, so no jal immediate names it. Every frame it calls the overlay-local routine 0x801F3768 with the full first argument 0x80 and the second argument 0. When bit 0x0E of the main-RAM flag-bank word 0x80144EF8 is clear through the shared flag tester 0x8015B5D4 the body returns after that call and the record stays on this handler; when the tester reports the bit set the body also clears the work-record byte at +9 and increments the dispatch byte at +2, so the byte-2 dispatch run moves to word 2 of the same table, the handler 0x801F36F0, which advances byte +9 toward 0x10 and shrinks the first argument by 8 per step.'
   - - 2800
     - asm
@@ -119,13 +119,13 @@ segments:
     - '@source: src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c'
   - - 4992
     - c
-    - armWorkPhase4SelectHandler1ThenLowerSharedHalfword7eBy2World04Area19713_801F3F80
-    - '@source: src/bof3/world/armWorkPhase4SelectHandler1ThenLowerSharedHalfword7eBy2World04Area19713_801F3F80.c'
+    - armSelectLowerShared
+    - '@source: src/bof3/world/armSelectLowerShared.c'
     - '@behavior: Overlay step handler that the dispatcher at 0x801F3F3C reaches as entry 0 of the local handler table at 0x801F4A80 through the work record byte at +0x04. It stores 4 in the record phase byte at +0x0A, re-reads the scratchpad pointer cell 0x1F800044 and stores 1 in the handler byte at +0x04 so the next dispatch reaches entry 1 at 0x801F3FC0, then lowers the unsigned halfword at +0x7E of the work-entity cursor at 0x80146884 by 2 and returns.'
   - - 5056
     - c
-    - stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0
-    - '@source: src/bof3/world/stepWorkWordPairByPhaseTableConsumeCountdownThenClearHandlerByteWorld04Area19713_801F3FC0.c'
+    - stepWordPhaseConsume
+    - '@source: src/bof3/world/stepWordPhaseConsume.c'
   - - 5200
     - c
     - claimFrontEndRecordHandler92SeedFixedHalfwordsAndWorkRecordIndexWorld04Area19713_801F4050

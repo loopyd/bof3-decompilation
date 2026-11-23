@@ -27,12 +27,12 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table45ccWorldWorld03Area11913_801F2C04
+    - callStateTable45World
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 72
     - c
-    - clearCountdownByte9AndSeedStateByte1FromRandomModeTable45c4World03Area11913_801F2C48
-    - '@source: src/bof3/world/clearCountdownByte9AndSeedStateByte1FromRandomModeTable45c4World03Area11913_801F2C48.c'
+    - stateCountdownSeedRandom
+    - '@source: src/bof3/world/stateCountdownSeedRandom.c'
     - '@behavior: Entry handler at index 0 of the byte-1 dispatch table based at 0x801F45CC: clears the countdown byte at offset 0x09 of the work record published at the scratchpad pointer cell 0x1F800044, then masks rand() to the low three bits, indexes the 8-entry mode table at 0x801F45C4 with that value and stores the selected byte into the work record state byte at offset 0x01 so the dispatcher at 0x801F2C04 runs the handler that table cell names next; the table bytes 01 04 04 01 01 04 04 01 select state 1 at 0x801F2C88 or state 4 at 0x801F2D6C.'
   - - 136
     - c
@@ -41,12 +41,12 @@ segments:
     - '@behavior: Second handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, adds 0x400 to that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 2, restores the saved scratchpad pointer and sets the saved record countdown byte 9 to 4.'
   - - 224
     - c
-    - countdownScratchStateToMode3World03Area11913_801F2CE0
+    - countdownScratchStateMode3
     - '@source: src/bof3/world/area11913_countdown.c'
   - - 280
     - c
-    - retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18
-    - '@source: src/bof3/world/retreatWorkWord38AndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2D18.c'
+    - retreatScratchClearCountdown
+    - '@source: src/bof3/world/retreatScratchClearCountdown.c'
     - '@behavior: Third handler of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, subtracts 0x400 from that record word 0x38 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 7, restores the saved scratchpad pointer and clears the saved record countdown byte 9 to 0.'
   - - 364
     - c
@@ -55,16 +55,16 @@ segments:
     - '@behavior: Handler at index 4 of the byte-1 dispatch table based at 0x801F45CC: saves the work pointer at scratchpad cell 0x1F800044, publishes the record at 0x80146920, adds 0x400 to that record word 0x34 four times with a bottom-tested unsigned-byte counter, then arms the saved record state byte 1 with mode 5, restores the saved scratchpad pointer and sets the saved record countdown byte 9 to 4.'
   - - 452
     - c
-    - countdownScratchStateToMode6World03Area11913_801F2DC4
+    - countdownScratchStateMode6
     - '@source: src/bof3/world/area11913_countdown.c'
   - - 508
     - c
-    - retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC
-    - '@source: src/bof3/world/retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC.c'
+    - retreatWordScratchCountdown
+    - '@source: src/bof3/world/retreatWordScratchCountdown.c'
   - - 592
     - c
-    - resetWorkAreaAtScenarioProgress28ElseRestartStateByte1CycleWorld03Area11913_801F2E50
-    - '@source: src/bof3/world/resetWorkAreaAtScenarioProgress28ElseRestartStateByte1CycleWorld03Area11913_801F2E50.c'
+    - stateAreaRestartCycle
+    - '@source: src/bof3/world/stateAreaRestartCycle.c'
     - '@behavior: Entry 7 of the byte-1 handler table based at 0x801F45CC: compares the shared scenario progress byte at 0x80146864 with 0x28 and, at that value, calls the shared main-executable work-area reset at 0x80196070; otherwise stores 0 into byte 0x01 of the work record published at the scratchpad pointer cell 0x1F800044 so the next dispatch takes entry 0 at 0x801F2C48 and reseeds that byte from the mode table at 0x801F45C4.'
   - - 664
     - c
@@ -72,8 +72,8 @@ segments:
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 732
     - c
-    - clearWorkHalfword30AndRouteStateByFlag0FAndCameraThenDrawWorld03Area11913_801F2EDC
-    - '@source: src/bof3/world/clearWorkHalfword30AndRouteStateByFlag0FAndCameraThenDrawWorld03Area11913_801F2EDC.c'
+    - stateRouteCameraDraw
+    - '@source: src/bof3/world/stateRouteCameraDraw.c'
     - '@behavior: Clears work halfword 0x30, probes flag 0x0F, stamps map cells and sets state 5 when clear; otherwise advances state and selects state 3 with halfword -0x100 inside the camera window, then calls 0x801F3324.'
   - - 1052
     - asm
@@ -85,8 +85,8 @@ segments:
     - '@behavior: Byte-2 state handler entry 2 of the six-entry handler table based at 0x801F45EC, the table the overlay dispatcher at 0x801F2E98 indexes by the state byte of the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x20 from the record unsigned halfword at offset 0x30, stores the truncated halfword, and, once that stored value read as a signed halfword falls below -0xFF, increments the record state byte at offset 0x02 so the next dispatch takes entry 3 at 0x801F3170; it then calls the payload routine at 0x801F3324, which reads the same halfword as a sprite screen offset.'
   - - 1392
     - c
-    - setWorkState2To4WhenCameraOutsideFixedCoordinateWindowWorld03Area11913_801F3170
-    - '@source: src/bof3/world/setWorkState2To4WhenCameraOutsideFixedCoordinateWindowWorld03Area11913_801F3170.c'
+    - stateCameraOutsideFixed
+    - '@source: src/bof3/world/stateCameraOutsideFixed.c'
     - '@behavior: When the shared overlay state byte at 0x8014933B reads zero, compares the shared camera coordinate words D_80145EC4 and D_80145EC8 with the fixed coordinate window (0x428000 on the first word, 0x3E0000 and 0x3F0000 on the second) at a 0x18000 threshold and stores 4 into byte 0x02 of the work record published at the scratchpad pointer cell 0x1F800044 when the camera lies outside that window. Takes no arguments, calls nothing and returns nothing.'
   - - 1552
     - c
@@ -101,12 +101,12 @@ segments:
     - func_801F3324
   - - 2444
     - c
-    - dispatchStateByte2Table4604WorldWorld03Area11913_801F358C
+    - callStateTable4604World
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 2512
     - c
-    - advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0
-    - '@source: src/bof3/world/advanceWorkByte2WhenSharedStateSetWorld03Area11913_801F35D0.c'
+    - stateWorkSharedSet
+    - '@source: src/bof3/world/stateWorkSharedSet.c'
     - '@behavior: Overlay step handler and first entry of the two-entry handler table at 0x801F4604: when the shared overlay state byte at 0x8014933B is nonzero it increments the work record state byte at offset 0x02, advancing the byte-2 dispatch to 0x801F3608.'
   - - 2568
     - asm
@@ -116,38 +116,38 @@ segments:
     - func_801F369C
   - - 3836
     - c
-    - dispatchStateByte2Table460cWorldWorld03Area11913_801F3AFC
+    - callStateTable460World
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 3904
     - c
-    - armCountdownByte9To1ClearWorkByteBAndAdvanceWorkByte2WhenSharedStateSetWorld03Area11913_801F3B40
-    - '@source: src/bof3/world/armCountdownByte9To1ClearWorkByteBAndAdvanceWorkByte2WhenSharedStateSetWorld03Area11913_801F3B40.c'
+    - armCountdownClearShared
+    - '@source: src/bof3/world/armCountdownClearShared.c'
   - - 3992
     - asm
     - func_801F3B98
   - - 4360
     - c
-    - dispatchStateByte2Table4634WorldWorld03Area11913_801F3D08
+    - callStateTable4634World
     - '@source: src/bof3/world/area11913DispatchTables.c'
   - - 4428
     - c
-    - clearWorkByte9QueueCue202AndAdvanceWorkByte2World03Area11913_801F3D4C
-    - '@source: src/bof3/world/clearWorkByte9QueueCue202AndAdvanceWorkByte2World03Area11913_801F3D4C.c'
+    - stateWorkQueueAdvance
+    - '@source: src/bof3/world/stateWorkQueueAdvance.c'
     - '@behavior: Clears work byte 9, queues cue 0x202, then reloads the work-record pointer and increments work byte 2.'
   - - 4496
     - c
-    - callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90
-    - '@source: src/bof3/world/callWithWorkByte9ThenIncrementAndAdvanceAt8World03Area11913_801F3D90.c'
+    - callWorkIncrementAdvance
+    - '@source: src/bof3/world/callWorkIncrementAdvance.c'
     - '@behavior: Calls 0x801F3F04 with work byte 9, increments it, and at 8 clears it and advances work byte 2.'
   - - 4632
     - c
-    - incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18
-    - '@source: src/bof3/world/incrementCountdownByte9UpTo1FThenAdvanceWorkByte2World03Area11913_801F3E18.c'
-    - '@behavior: Third entry of the handler table based at 0x801F4634, which the byte-2 dispatcher dispatchStateByte2Table4634WorldWorld03Area11913_801F3D08 indexes with the work record state byte at offset 0x02; calls 0x801F3F04 with 7, then increments the record countdown byte at offset 0x09 and, once it reaches 0x1F, saturates it there and advances the record state byte at offset 0x02 to reach the 0x801F3E94 entry. Takes no arguments and returns nothing.'
+    - incrementCountdownUpAdvance
+    - '@source: src/bof3/world/incrementCountdownUpAdvance.c'
+    - '@behavior: Third entry of the handler table based at 0x801F4634, which the byte-2 dispatcher callStateTable4634World indexes with the work record state byte at offset 0x02; calls 0x801F3F04 with 7, then increments the record countdown byte at offset 0x09 and, once it reaches 0x1F, saturates it there and advances the record state byte at offset 0x02 to reach the 0x801F3E94 entry. Takes no arguments and returns nothing.'
   - - 4756
     - c
-    - callWithQuarterWorkByte9ThenDecrementAndResetBelow8World03Area11913_801F3E94
-    - '@source: src/bof3/world/callWithQuarterWorkByte9ThenDecrementAndResetBelow8World03Area11913_801F3E94.c'
+    - callQuarterDecrementReset
+    - '@source: src/bof3/world/callQuarterDecrementReset.c'
     - '@behavior: Calls 0x801F3F04 with work byte 9 shifted right by two, decrements the byte, and calls 0x80196070 when the stored byte is below 8.'
   - - 4868
     - asm

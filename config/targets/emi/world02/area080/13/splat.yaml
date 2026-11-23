@@ -27,13 +27,13 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte1Table3dacWorld02Area08013_801F2C04
+    - callStateTable3World02
     - '@source: src/bof3/world/area08013DispatchTables.c'
   - - 72
     - c
     - publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48
     - '@source: src/bof3/world/publishAreaWorkRecordAt800E4800FromSavedTripletArmCountdownThenAdvanceWorkByte1World02Area08013_801F2C48.c'
-    - '@behavior: area initializer, entry 0 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; copies the shared saved triplet D_80146954, D_80146958 and D_8014695C into the words at +0x34, +0x38 and +0x3C of that scratch work record, primes the fixed work area at 0x800E4800 from those same three words with the height words at +0x08 and +0x18 biased by 0x08000000, publishes 0x800E4800 as the record base D_801F44A0, writes 0x20 at +0x22 and zero at +0x23, rewinds the 0x800E486C record cursor through 0x801F3834, then arms the countdown byte at +0x09 of the scratch work record with 0x10 and advances its state byte at +0x01; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the call'
+    - '@behavior: area initializer, entry 0 of the six-word handler run based at 0x801F3DAC that this target dispatcher callStateTable3World02 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; copies the shared saved triplet D_80146954, D_80146958 and D_8014695C into the words at +0x34, +0x38 and +0x3C of that scratch work record, primes the fixed work area at 0x800E4800 from those same three words with the height words at +0x08 and +0x18 biased by 0x08000000, publishes 0x800E4800 as the record base D_801F44A0, writes 0x20 at +0x22 and zero at +0x23, rewinds the 0x800E486C record cursor through 0x801F3834, then arms the countdown byte at +0x09 of the scratch work record with 0x10 and advances its state byte at +0x01; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the call'
   - - 308
     - asm
     - func_801F2D34
@@ -47,7 +47,7 @@ segments:
     - c
     - seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50
     - '@source: src/bof3/world/seedPublishedRecordWordsFromSavedTripletAndRearmCountdownThenIncrementWorkByte1World02Area08013_801F2F50.c'
-    - '@behavior: overlay step handler, entry 4 of the six-word handler run based at 0x801F3DAC that this target dispatcher dispatchStateByte1Table3dacWorld02Area08013_801F2C04 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; loads the record base published in D_801F44A0, copies the three shared saved words D_80146954, D_80146958 and D_8014695C into the words at +0x10, +0x14 and +0x18 of that record, calls the overlay record helpers at 0x801F30B0, 0x801F31A0 and 0x801F33DC with the reloaded record base and then the eight-record table step loop at 0x801F3870 with no arguments, decrements the countdown byte at +0x09 of the scratch work record, and re-arms that byte with 0x10 and increments the state byte at +0x01 when the countdown reads zero; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the calls'
+    - '@behavior: overlay step handler, entry 4 of the six-word handler run based at 0x801F3DAC that this target dispatcher callStateTable3World02 indexes with the state byte at +1 of the work record published at scratchpad cell 0x1F800044; loads the record base published in D_801F44A0, copies the three shared saved words D_80146954, D_80146958 and D_8014695C into the words at +0x10, +0x14 and +0x18 of that record, calls the overlay record helpers at 0x801F30B0, 0x801F31A0 and 0x801F33DC with the reloaded record base and then the eight-record table step loop at 0x801F3870 with no arguments, decrements the countdown byte at +0x09 of the scratch work record, and re-arms that byte with 0x10 and increments the state byte at +0x01 when the countdown reads zero; no arguments, no return value, 0x18-byte frame holding $ra at 0x10 across the calls'
   - - 1048
     - asm
     - func_801F3018
@@ -59,16 +59,16 @@ segments:
     - func_801F31A0
   - - 2012
     - c
-    - drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC
-    - '@source: src/bof3/world/drawFrontFacingRingTrianglesAroundRecordPointWorld02Area08013_801F33DC.c'
+    - renderFacingAroundPoint
+    - '@source: src/bof3/world/renderFacingAroundPoint.c'
     - '@behavior: overlay record render step, called with the work record base published in D_801F44A0 by the exact step handler at 0x801F2F50; opens the drawing environment with the texture page from GetTPage(0, 1, 0x3C0, 0) through SetDrawMode and appends a twelve-byte primitive, then for each of sixteen ring points stored at +0x2C of that record passes the record point at +0x24 and the ring points at index i and index (i + 1) masked with 0xF to the shared cross-product test at 0x801AFF90 and, while that test reads positive, fills a semi-transparent POLY_F3 from the shared primitive cursor through the setter at 0x8017A954 with the record point as its first vertex, the two ring points as its second and third vertices and the record byte at +0x22 as its three colour bytes, appending it as a twenty-byte primitive; one argument, no return value, 0x30-byte frame holding $ra at 0x2C'
   - - 2348
     - asm
     - func_801F352C
   - - 3124
     - c
-    - resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834
-    - '@source: src/bof3/world/resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834.c'
+    - stateClearCursorByte
+    - '@source: src/bof3/world/stateClearCursorByte.c'
   - - 3184
     - asm
     - func_801F3870
@@ -79,13 +79,13 @@ segments:
     - '@behavior: spawn step of the six-word handler run based at 0x801F3DAC, called with no arguments by the handler at 0x801F2DE0 after the eight-record table walk at 0x801F3870 and before that handler decrements the work countdown byte; claims the first free record of the 0x800E486C table through 0x801F3B98, publishes it as D_801F44A4 and returns without seeding when the shared frame counter D_80143E6C is not a multiple of four or when no record was free, otherwise seeds record words +0x18/+0x1C/+0x20 from the scratchpad work record at 0x1F800044 (position +0x34/+0x38/+0x3C, the last biased by 0x06000000), rotates that position by a random twelve-bit angle through the shared rotation pair 0x801783C8/0x801782FC scaled by 256 into +0x28/+0x2C, stores their heading 0x8015477C scaled by 0x10000 into +0x30, derives the velocity words +0x8/+0xC from the first angle plus a random spread of -0x100..0xFF plus 0x800 scaled by 16, clears +0x10, copies one word of the eight-entry word table at 0x801F3DC4 picked by a random low three-bit index into the colour word at +4, marks the record claimed with byte +0 = 1 and typed with byte +1 = 0x20, fills a 0x20-byte projection scratch through 0x801AFE18, projects the position (+0x18) into +0x40 and the rotated point (+0x28) into +0x50 through 0x801AFF04 and copies each projected pair into the next three words of its slot group; no arguments, no return value, 0x50-byte frame holding $ra at 0x48, $s1 at 0x44, $s0 at 0x40 and the scratch at 0x10'
   - - 3992
     - c
-    - findFreeRecordAt800E486CWorld02Area08013_801F3B98
-    - '@source: src/bof3/world/findFreeRecordAt800E486CWorld02Area08013_801F3B98.c'
+    - queryFreeRecordAt800
+    - '@source: src/bof3/world/queryFreeRecordAt800.c'
     - '@behavior: publishes the 0x800E486C base of the eight-entry, 0x60-byte-stride record table as the shared cursor D_801F44A4, then walks that cursor one record per iteration and returns the first record whose lead byte reads zero while leaving the cursor on it, returning zero after all eight records read as in use; no arguments, no call, no other write'
   - - 4084
     - c
-    - publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4
-    - '@source: src/bof3/world/publishModeStatusFromTable4494AndProgress1Or0AWorld02Area08013_801F3BF4.c'
+    - publishModeStatusTable4494
+    - '@source: src/bof3/world/publishModeStatusTable4494.c'
     - '@behavior: publishes the halfword indexed by the signed shared mode byte D_801490C7 from the target-local halfword table at 0x801F4494 into the shared status halfword D_801490A8, then stores 1 into the shared scenario progress byte g_ScenarioProgress while that mode reads 0 and 0xA while it reads 1, leaving it untouched for any other mode; no arguments, no call, no frame'
   - - 4164
     - c

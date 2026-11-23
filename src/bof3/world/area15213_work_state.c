@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-WORLD_DEFINE_RESET_ADVANCE_STATE(resetAdvanceScratchStateCloneWorld04Area15213_801F3324)
+WORLD_DEFINE_RESET_ADVANCE_STATE(stateAdvanceScratchClone)
 
 /* @source 0x801F32C4
  * @behavior Writes 0xA0 to the scratchpad halfword at pointer-slot 0x44 + 0x2E and 0x50 to the halfword at + 0x30.

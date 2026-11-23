@@ -27,7 +27,7 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchStateByte2Table42dcWorld01Area04113_801F2C04
+    - callStateTable42World01
     - '@source: src/bof3/world/area04113DispatchTables.c'
   - - 72
     - asm
@@ -53,12 +53,12 @@ segments:
     - func_801F31F0
   - - 1680
     - c
-    - clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290
-    - '@source: src/bof3/world/clearWorkTickAndStepStateWhenFlag5SetThenDrawPolygonsWorld01Area04113_801F3290.c'
+    - stateTickStepPolygons
+    - '@source: src/bof3/world/stateTickStepPolygons.c'
   - - 1788
     - c
-    - advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC
-    - '@source: src/bof3/world/advanceWorkTickAlternatePositionWordByTickParityThenStepStateAndDrawPolygonsWorld01Area04113_801F32FC.c'
+    - stateAlternateParityPolygons
+    - '@source: src/bof3/world/stateAlternateParityPolygons.c'
     - '@behavior: increments the work record''s tick byte at 0x09, stores 0xFFFFD480 plus eight times that byte''s low bit into the position word at 0x34, and on the tick that reaches 8 also clears the tick byte, restores 0xFFFFD480 and bumps the state byte at 0x02; then calls the local polygon helpers at 0x801F2EFC and 0x801F3064.'
   - - 1932
     - asm
@@ -68,21 +68,21 @@ segments:
     - func_801F3400
   - - 2220
     - c
-    - drawSevenTickSizedTexturedQuadsFromByteColumnTablesAfterTickTableHelperOrGridThenAdvanceTickAndStepStateWorld01Area04113_801F34AC
-    - '@source: src/bof3/world/drawSevenTickSizedTexturedQuadsFromByteColumnTablesAfterTickTableHelperOrGridThenAdvanceTickAndStepStateWorld01Area04113_801F34AC.c'
+    - renderSevenSizedAfter
+    - '@source: src/bof3/world/renderSevenSizedAfter.c'
     - '@behavior: indexes the local byte table 0x801F4334 with the work record''s tick byte at 0x09 and calls the local rotated quad helper 0x801F387C with that byte shifted left four when the entry is nonzero, otherwise the local three-by-two grid drawer 0x801F3704; then draws seven textured quads whose corners are the projected record position at 0x34/0x38 plus the 0x801F4344/0x801F4345 cell bytes times 128 plus the 0x801F4354/0x801F4355 signed spread bytes times the tick byte times eight, each quad sized by the tick byte and queued through 0x80155560 and 0x80155A08; afterwards increments the tick byte and bumps the state byte at 0x02 once the tick reaches 0x0E.'
   - - 2820
     - c
-    - drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704
-    - '@source: src/bof3/world/drawThreeByTwoTexturedQuadGridFromByteColumnsWithCellCommandTableWorld01Area04113_801F3704.c'
+    - renderGridColumnsCommand
+    - '@source: src/bof3/world/renderGridColumnsCommand.c'
     - '@behavior: draws the overlay three-by-two grid of six textured quads: each loop step stamps a POLY_FT4 at the shared primitive cursor with SetPolyFT4 and SetShadeTex off, fills the four scratchpad vectors at 0x1F800014 with the current cell corners taken from the cell byte pair (first column byte times 128 minus 0x3FC0 or 0x4040 for the last two vectors, second column byte the same way for the y lanes) and depth -0x88, projects them into the primitive x0 to x3 words through RotTransPers4, hands the primitive to 0x80155560 with the word 0xBD500000 carrying the step byte out of the six-byte table at 0x801F4370 and mode 1, and queues it through 0x80155A08 with both column bytes shifted up sixteen bits, selector 0 and size 0x28; both column pointers advance by two per step.'
   - - 3196
     - asm
     - func_801F387C
   - - 3656
     - c
-    - setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48
-    - '@source: src/bof3/world/setStatusFFFFAndAreaStatus0AOr14ByGateWithFrontEndStep1Or2World01Area04113_801F3A48.c'
+    - stateStatusAreaGate
+    - '@source: src/bof3/world/stateStatusAreaGate.c'
     - '@behavior: latches 0xFFFF into the shared status halfword D_801490A8, then reads the shared gate byte D_801490C7: while that byte is zero it runs the shared front-end step helper 0x801BE1B0 with 1 and stores 0x0A into the shared area status byte D_80146865, and once the gate byte is set it runs the same helper with 2 and stores 0x14 there instead.'
   - - 3744
     - c
@@ -96,8 +96,8 @@ segments:
     - '@behavior: stores 0xFFFF into the shared status halfword D_801490A8 on every path; when the shared gate byte D_801490C7 is zero it writes the state-entry tuple D_801448EB = 0x0A, D_801448EC = 0 and D_801448ED = 0xFF.'
   - - 3912
     - c
-    - setStatus54OrFFFFFromGateTableThenWaitFlag6Cue106ClaimAndSetFlagWorld01Area04113_801F3B48
-    - '@source: src/bof3/world/setStatus54OrFFFFFromGateTableThenWaitFlag6Cue106ClaimAndSetFlagWorld01Area04113_801F3B48.c'
+    - stateWaitClaimFlag
+    - '@source: src/bof3/world/stateWaitClaimFlag.c'
     - '@behavior: indexes the two-entry halfword status table 0x801F5678 with the shared gate byte D_801490C7 and stores the result (0x54 when the gate is clear, 0xFFFF when it is set) into the shared status halfword D_801490A8; on the clear-gate arm it waits on shared scenario flag 6 of the flag word D_8014686C and, once that flag reads clear, sends sound cue 0x106, runs the availability gate func_801650B4(0, 0x28, 1, 0) with a discarded result and sets flag 6 again.'
   - - 4044
     - asm
@@ -114,8 +114,8 @@ segments:
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 5, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 4404
     - c
-    - setStatus64AndModeIndex6IfGateElseFFFFWorld01Area04113_801F3D34
-    - '@source: src/bof3/world/setStatus64AndModeIndex6IfGateElseFFFFWorld01Area04113_801F3D34.c'
+    - stateStatus64ModeGate
+    - '@source: src/bof3/world/stateStatus64ModeGate.c'
     - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it stores 0x64 into the shared status halfword D_801490A8 and 6 into the shared mode index byte at 0x801D4285, and when the gate byte is zero it stores 0xFFFF into D_801490A8 instead.'
   - - 4472
     - c
@@ -129,21 +129,21 @@ segments:
     - '@behavior: stores 0xFFFF into the shared status halfword 0x801490A8 on every path and, while the shared gate byte 0x801490C7 is zero, writes 0x0A, 5 and 0xFF into the shared state-entry bytes 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 4608
     - c
-    - setHalfwordFF00AndTwoWorld01Area04113_801F3E00
-    - '@source: src/bof3/world/setHalfwordFF00AndTwoWorld01Area04113_801F3E00.c'
+    - stateHalfwordTwoWorld01
+    - '@source: src/bof3/world/stateHalfwordTwoWorld01.c'
     - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 4640
     - c
     - setTwoWorld01Area04113_801F3E20
   - - 4668
     - c
-    - dispatchStateByte4Table567cWorld01Area04113_801F3E3C
-    - '@source: src/bof3/world/dispatchStateByte4Table567cWorld01Area04113_801F3E3C.c'
+    - callStateByte4Table567
+    - '@source: src/bof3/world/callStateByte4Table567.c'
     - '@behavior: reads the state byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that index of the local handler table based at 0x801F567C.'
   - - 4736
     - c
-    - setWorkStepWord4000RunAccumulatorArmCountdown7EnterHandlerOneAndConsumeSharedCountdownWorld01Area04113_801F3E80
-    - '@source: src/bof3/world/setWorkStepWord4000RunAccumulatorArmCountdown7EnterHandlerOneAndConsumeSharedCountdownWorld01Area04113_801F3E80.c'
+    - stateAccumulatorEnterConsume
+    - '@source: src/bof3/world/stateAccumulatorEnterConsume.c'
     - '@behavior: stores 0x4000 into the work-record step word at 0x0C of the record published at the scratchpad pointer cell 0x1F800044, runs the shared accumulator step at 0x801F4118, arms the countdown byte at 0x0A with 7 and the state byte at 0x04 with 1, then consumes two units of the halfword at 0x122 of the record published through 0x80146250.'
   - - 4836
     - c
@@ -152,8 +152,8 @@ segments:
     - '@behavior: Overlay work-record handler, entry 1 of the state-byte-4 handler table based at 0x801F567C: runs the shared accumulator step at 0x801F4118 so that the record step word at 0x0C lands in the accumulator word at 0x34 and the shared counter triple advances by 2, then decrements the countdown byte at 0x0A of the record published at the scratchpad pointer cell 0x1F800044; when that countdown byte reads zero it re-arms it with 8 and stores 2, the index of the next handler in that table, into the record state byte at 0x04. Both paths then consume two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250.'
   - - 4968
     - c
-    - advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68
-    - '@source: src/bof3/world/advanceWorkAccumulatorAndRearmCountdownThenConsumeSharedCountdownWorld01Area04113_801F3F68.c'
+    - stateAccumulatorRearmConsume
+    - '@source: src/bof3/world/stateAccumulatorRearmConsume.c'
     - '@behavior: Per-frame work-record step: decrements the countdown byte at 0x0A of the record published at the scratchpad pointer cell 0x1F800044, adds the record step word at 0x0C into the accumulator word at 0x34, and when the countdown byte reads zero re-arms it to 8 and stores handler index 3 into the record state byte at 0x04. Both paths then consume two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250.'
   - - 5084
     - c

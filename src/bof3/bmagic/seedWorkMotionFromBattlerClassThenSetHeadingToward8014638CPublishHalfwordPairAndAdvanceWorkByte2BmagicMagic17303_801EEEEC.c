@@ -80,7 +80,7 @@ extern void func_800AF764(void); /* @source 0x800AF764 */
 /* @source 0x801EEEEC
  * @behavior Entry 2 of the ten-entry code-pointer run based at 0x801F0988,
  *           which this overlay's step dispatcher
- *           dispatchStateByte1Table0988BmagicMagic17303_801EEDF0 indexes with the
+ *           callStateTable0988Bmagic indexes with the
  *           scratchpad work-object byte 0x1. It takes no arguments and returns
  *           nothing, and its final increment of work byte 0x2 hands the next
  *           frame to the byte-2 handler run based at 0x801F09A0.

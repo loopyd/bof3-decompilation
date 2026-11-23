@@ -27,7 +27,7 @@ extern u8 D_801F0081[]; /* @source 0x801F0081 @kind unknown */
 /* @source 0x801EFCF0
  * @behavior Sprite pass of the record walker func_801EEC14: the body it calls
  *   through the jal at 0x801EECD0 after the record state handler
- *   dispatchStateByte1Table0074BmagicMagic10503_801EF880, with the scratchpad
+ *   callStateTable0074Bmagic, with the scratchpad
  *   work-object cell 0x1F800044 repointed at the record under test, so the work
  *   object it draws is one record of the 0x78-byte pool at 0x801F00A0.
  *   It takes no argument and returns nothing. Three culling tests guard the

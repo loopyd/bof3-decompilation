@@ -138,7 +138,7 @@ segments:
     - testProjectedFrontEndRecordPositionAgainstWorkRecordsPlcharPlp01200_801CFBDC
   - - 6392
     - c
-    - dispatchWorkHalfword2cTablefdc0PlcharPlp01200_801CFCF8
+    - callWorkTablefdc0Plchar
   - - 6460
     - c
     - dispatchWorkHalfword2cTablefdccPlcharPlp01200_801CFD3C

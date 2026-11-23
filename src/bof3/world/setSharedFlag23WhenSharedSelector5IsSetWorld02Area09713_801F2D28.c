@@ -30,7 +30,7 @@ void func_8015B580(void* arg0, s32 arg1);
  *
  * Shape evidence: statement order, operand forms and declaration style are
  * taken from the same target's sibling
- * startStateEntry0DProgress0WhenMapRangeAndModeGateWorld02Area09713_801F2C98
+ * audioMapRangeGate
  * (0x801F2C98) for the func_80166140(5) query and the zero return after it, and
  * from the in-tree setter callers setSharedFlagBit4World02Area07714_801F5BD8
  * and setFlag6eThenSetFlag71WhenFlags6dTo70SetWorld01Area05613_801F346C for the

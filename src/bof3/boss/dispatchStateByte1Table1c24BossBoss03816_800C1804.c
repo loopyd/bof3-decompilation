@@ -26,7 +26,7 @@ extern void (*D_800C1C24[])(void); /* @source 0x800C1C24 @kind data */
  * payload; it is the first code span of this overlay, directly behind the four
  * header bytes and ahead of the installer func_800C1848, whose address is
  * entry 0 of the run it indexes. Seeded from the exact sibling
- * dispatchStateByte1Table0c60BossBoss03816_800C193C of this same payload: one
+ * callStateTable0Boss of this same payload: one
  * payload cmp over the two 0x44-byte spans leaves a single differing byte, the
  * low byte of the scaled table load's offset, 0x24 here against 0x60 there, so
  * only this target's own table literal is written from these bytes. The

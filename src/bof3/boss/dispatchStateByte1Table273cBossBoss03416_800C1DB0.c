@@ -29,7 +29,7 @@ extern void (*D_800C273C[])(void); /* @source 0x800C273C @kind data */
  * holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay;
  * the first entry of its own run, 0x800C1DF4, writes 2 into that same record
  * byte. Same C shape as dispatchStateByte2Table26fcBossBoss03416_800C18B8 and
- * dispatchStateByte3Table2714BossBoss03416_800C18FC of this target, both of
+ * callStateTable2714Boss of this target, both of
  * which measured 100 percent in their own lifts; the three bodies differ in the
  * record byte and the table word of the scaled load alone.
  * @status exact

@@ -4,7 +4,7 @@ typedef void (*Boss00216Handler)(void);
 
 /* Overlay entrypoints this installer publishes. The first is the progress hook
  * at 0x800C1E7C, which tests the 0x6 mask of D_80146328 and either calls
- * copyOwnerRecordFieldsByMode(0, D_801EB630, 0), stores 0x6D into
+ * copyOwnerFieldsMode(0, D_801EB630, 0), stores 0x6D into
  * g_ScenarioProgress and 0x18 into D_80145029 and then calls
  * initModeTuple510, or calls initModeTuple520. The second takes no argument and
  * forwards zero to func_800AC844. The third returns a zero result, which the

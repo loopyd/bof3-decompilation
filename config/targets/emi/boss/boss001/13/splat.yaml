@@ -30,8 +30,8 @@ segments:
     - func_800C1804
   - - 32
     - c
-    - dispatchStateByte1Table21bcBossBoss00113_800C1820
-    - '@source: src/bof3/boss/dispatchStateByte1Table21bcBossBoss00113_800C1820.c'
+    - callStateTable21Boss
+    - '@source: src/bof3/boss/callStateTable21Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler table based at 0x800C21BC with no arguments, so the selected handler result stays in the return register.'
   - - 100
     - asm
@@ -46,8 +46,8 @@ segments:
     - func_800C1900
   - - 384
     - c
-    - dispatchStateByte2Table2204BossBoss00113_800C1980
-    - '@source: src/bof3/boss/dispatchStateByte2Table2204BossBoss00113_800C1980.c'
+    - callStateTable2204Boss
+    - '@source: src/bof3/boss/callStateTable2204Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 2: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 2, scales it by four and calls the matching entry of this overlay handler table based at 0x800C2204 with no arguments, so the selected handler result stays in the return register.'
   - - 452
     - asm
@@ -74,16 +74,16 @@ segments:
     - noopHandlerBossBoss00113_800C1B38
   - - 832
     - c
-    - dispatchStateByte1Table221cBossBoss00113_800C1B40
-    - '@source: src/bof3/boss/dispatchStateByte1Table221cBossBoss00113_800C1B40.c'
+    - callStateTable221Boss
+    - '@source: src/bof3/boss/callStateTable221Boss.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record''s unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler table based at 0x800C221C with no arguments, so the selected handler result stays in the return register.'
   - - 900
     - asm
     - func_800C1B84
   - - 988
     - c
-    - dispatchStateByte2Table224cBossBoss00113_800C1BDC
-    - '@source: src/bof3/boss/dispatchStateByte2Table224cBossBoss00113_800C1BDC.c'
+    - callStateTable224Boss
+    - '@source: src/bof3/boss/callStateTable224Boss.c'
   - - 1056
     - asm
     - func_800C1C20

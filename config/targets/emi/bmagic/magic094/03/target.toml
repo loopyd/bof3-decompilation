@@ -10,11 +10,11 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic094_03_psyq.c",
-    "src/bof3/bmagic/incrementWorkByteAThenIncrementWorkByte9AndSubmitSelectedBattlerRecordEffectWhenByte9Is10ClearByte9AndAdvanceWorkByte1BmagicMagic09403_801EEF7C.c",
-    "src/bof3/bmagic/raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C.c",
+    "src/bof3/bmagic/incrementSubmitSelectedBattler.c",
+    "src/bof3/bmagic/raiseBattleTargetClear.c",
     "src/bof3/bmagic/incrementWorkByte9ThenSetGlobalWorkByteBToFFAndInvokeHelperWhenWorkByte9Is20BmagicMagic09403_801EF0FC.c",
-    "src/bof3/bmagic/copyRecordHalfwordPairIntoWorkThenOnWorkByteBFFSubmitBattlerRecordForwardBattleByteRaiseFlag4AndInvokeHelperBmagicMagic09403_801EED60.c",
-    "src/bof3/bmagic/dispatchWorkByte1HandlerThenUpdateAndDrawWhileWorkStepRunningBmagicMagic09403_801EEE4C.c",
+    "src/bof3/bmagic/copyIntoBattlerForward.c",
+    "src/bof3/bmagic/callUpdateWhileRunning.c",
     "src/bof3/bmagic/projectWorkObjectPositionAndInstallTransformWithWorkByteAAngleBmagicMagic09403_801EF654.c",
     "src/bof3/bmagic/drawSixSpiralBandsOfEightTrianglesTintedByWorkByte9WithWorkByte1RadiusProfileBmagicMagic09403_801EF14C.c",
 ]

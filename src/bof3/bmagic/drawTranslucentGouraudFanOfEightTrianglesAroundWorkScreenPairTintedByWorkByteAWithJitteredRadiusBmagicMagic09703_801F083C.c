@@ -8,7 +8,7 @@ extern int rand(void);
  * constant-address accessor's folded address would stay live across a call in
  * a saved register and grow the frame; the cell is read through this named row
  * instead, as in the exact bmagic sibling
- * dispatchWorkByte2HandlerThenDrawWorkRecordAndPopWhenWorkBytes2And0SetBmagicMagic09703_801EEFC8. */
+ * callDrawRecordPop. */
 extern u8 *g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* Scratchpad halfword at 0x1F800000, the signed radius this body scales every

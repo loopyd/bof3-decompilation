@@ -36,7 +36,7 @@ segments:
     - func_801EEF38
   - - 900
     - c
-    - dispatchStateByte1Table0340BmagicMagic09803_801EEF84
+    - callStateTable0340Bmagic
     - '@source: src/bof3/bmagic/magic09803DispatchTables.c'
   - - 968
     - asm
@@ -46,8 +46,8 @@ segments:
     - func_801EF124
   - - 1460
     - c
-    - add4ToWorkByteAAndIncrementWorkByteBThenWhenByteAIs10SubmitSelectedRecordRaiseFlag10SetByte9To8AndAdvanceWorkByte2BmagicMagic09803_801EF1B4
-    - '@source: src/bof3/bmagic/add4ToWorkByteAAndIncrementWorkByteBThenWhenByteAIs10SubmitSelectedRecordRaiseFlag10SetByte9To8AndAdvanceWorkByte2BmagicMagic09803_801EF1B4.c'
+    - workSubmitSelectedRaise
+    - '@source: src/bof3/bmagic/workSubmitSelectedRaise.c'
   - - 1844
     - asm
     - func_801EF334

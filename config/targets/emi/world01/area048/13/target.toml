@@ -8,27 +8,27 @@ splat = "config/targets/emi/world01/area048/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/clearWorkByte74Bit0ThenSetSharedFlagBankBitDWhenMappedStateIs1World01Area04813_801F4804.c",
-    "src/bof3/world/clearWorkByte74Bit0ThenIncrementModeByteBelow8AndQueueCue20DWhenMappedStateIs1World01Area04813_801F4864.c",
-    "src/bof3/world/clearWorkByte9DrawMoveBlockByWorkHalfword36OrRow0Column3WhenFlagDSetThenSetState2To1Or3World01Area04813_801F3DA4.c",
-    "src/bof3/world/setStatusFFFFThenProgressBAndQueueCue205WhenGateBit0ClearElseProgress1ReleaseOverlayAndClearSharedStateBytesWorld01Area04813_801F4790.c",
-    "src/bof3/world/queueCue20DThenClearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDSetOrNonzeroWithModeByteSetWorld01Area04813_801F3E38.c",
-    "src/bof3/world/clearWorkByte9AndIncrementState2WhenWorkHalfword36IsZeroWithFlagDClearOrNonzeroWithModeClearThenAdvanceWorkByte9WrapAt41ToRandomState5AndDrawRowWorld01Area04813_801F3F98.c",
-    "src/bof3/world/setWorkByte8Level5PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F48DC.c",
+    "src/bof3/world/stateBankBitMapped.c",
+    "src/bof3/world/stateModeQueueMapped.c",
+    "src/bof3/world/stateMoveBlockFlag.c",
+    "src/bof3/world/stateProgressReleaseOverlay.c",
+    "src/bof3/world/queueIsFlagNonzero.c",
+    "src/bof3/world/stateIsNonzeroWrap.c",
+    "src/bof3/world/stateScaledViewFacing.c",
     "src/bof3/world/setWorkByte8Level1PublishModeScaledByte7ThenWhenStatusIs2SetViewClearFacingAndFlag40ElseArmAndFlag80ThenClearWorkWord14AndStore480World01Area04813_801F49C8.c",
-    "src/bof3/world/queueCueBySharedSelectorAndModeByteThenReleaseOverlayAndClearSharedSelectorsWorld01Area04813_801F4B60.c",
-    "src/bof3/world/drawTintedLineBetweenPointsWithRotatedEndSquaresAndGouraudConnectorWorld01Area04813_801F302C.c",
+    "src/bof3/world/queueSelectorReleaseSelectors.c",
+    "src/bof3/world/renderPointsSquaresConnector.c",
 ]
 support_sources = [
     "src/bof3/world/invokeHelperWorld01Area04813_801F2EA0.c",
     "src/bof3/world/area04813DispatchTables.c",
     "src/bof3/support/area048_13_psyq.c",
-    "src/bof3/world/setFlagBit0AndClearModeWorld01Area04813_801F4B40.c",
+    "src/bof3/world/stateFlagClearMode.c",
     "src/bof3/world/drawTwoTexturedTileBatchesWorld01Area04813_801F3AA4.c",
-    "src/bof3/world/drawTwoTexturedTileBatchesThenAdvanceState2WhenSharedStateSetWorld01Area04813_801F37F4.c",
-    "src/bof3/world/drawMoveBlockByWorkByte9ThirdThenIncrementWorkByte9AndSetState2To1At4World01Area04813_801F40B4.c",
-    "src/bof3/world/drawMoveBlockByWorkByte9HalfThenIncrementWorkByte9WrapAt7ToState2Is3AndDrawRowWorld01Area04813_801F4148.c",
-    "src/bof3/world/drawTwoTexturedTileBatchesAtWorkByte9ScrollColumnThenIncrementWorkByte9WrapAt41ToState2World01Area04813_801F3874.c",
+    "src/bof3/world/renderTexturedTileBatches.c",
+    "src/bof3/world/renderMoveBlockThird.c",
+    "src/bof3/world/renderMoveBlockWrap.c",
+    "src/bof3/world/renderBatchesColumnWrap.c",
     "src/bof3/world/queueFrontCue20CWhenFrontSideByteIs5World01Area04813_801F4D2C.c",
 ]
 psyq_source = "src/bof3/support/area048_13_psyq.c"

@@ -125,13 +125,13 @@ segments:
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3480
     - c
-    - setStatus5FAndIncrementByte801F294CIfGateElseFFFFAndClearByte801F294DWorld04Area17513_801F3998
-    - '@source: src/bof3/world/setStatus5FAndIncrementByte801F294CIfGateElseFFFFAndClearByte801F294DWorld04Area17513_801F3998.c'
+    - stateIncrementGateClear
+    - '@source: src/bof3/world/stateIncrementGateClear.c'
     - '@behavior: When D_801490C7 is zero, stores 0xFFFF into D_801490A8 and clears D_801F294D; otherwise stores 0x5F into D_801490A8 and increments D_801F294C modulo 256.'
   - - 3564
     - c
-    - setStatus6EAndPtrByte7AFFIfGateElse7AWorld04Area17513_801F39EC
-    - '@source: src/bof3/world/setStatus6EAndPtrByte7AFFIfGateElse7AWorld04Area17513_801F39EC.c'
+    - statePtrGateElse7
+    - '@source: src/bof3/world/statePtrGateElse7.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x7A into the shared status halfword D_801490A8. Otherwise stores 0x6E into that halfword and 0xFF into byte 0x7A of the pointer held at D_80148208.'
   - - 3636
     - c
@@ -143,13 +143,13 @@ segments:
     - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3716
     - c
-    - setStatus77AndByte801F294D0AIfGateElseFFFFWorld04Area17513_801F3A84
-    - '@source: src/bof3/world/setStatus77AndByte801F294D0AIfGateElseFFFFWorld04Area17513_801F3A84.c'
+    - stateStatus77Byte801Gate
+    - '@source: src/bof3/world/stateStatus77Byte801Gate.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0xFFFF into the shared status halfword D_801490A8. Otherwise stores 0x77 into that halfword and 0x0A into the byte at 0x801F294D.'
   - - 3784
     - c
-    - setStatus6FIfGateElse7C7DByWord80144F50World04Area17513_801F3AC8
-    - '@source: src/bof3/world/setStatus6FIfGateElse7C7DByWord80144F50World04Area17513_801F3AC8.c'
+    - stateStatus6GateWord80144
+    - '@source: src/bof3/world/stateStatus6GateWord80144.c'
     - '@behavior: Reads the shared gate byte D_801490C7. When it is zero, stores 0x6F into the shared status halfword D_801490A8 and clears the shared byte D_801448ED. Otherwise it compares the shared word D_80144F50 with an unsigned bound of 0x1F4: below the bound it stores 0x7C into D_801490A8 and 0xFF into byte 0x7A of the pointer held at D_80148208, and at or above the bound it stores 0x7D into D_801490A8 and 1 into D_801448ED.'
   - - 3916
     - c
@@ -239,20 +239,20 @@ segments:
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 5132
     - c
-    - stepPhaseWorkWordPairWhileSharedPhaseIs2ElseResetPairAndClearHandlerWorld04Area17513_801F400C
-    - '@source: src/bof3/world/stepPhaseWorkWordPairWhileSharedPhaseIs2ElseResetPairAndClearHandlerWorld04Area17513_801F400C.c'
+    - stepPhaseWhilePhase
+    - '@source: src/bof3/world/stepPhaseWhilePhase.c'
     - '@behavior: Step handler installed by the pointer word at 0x801F5304 in the overlay handler run at 0x801F52F0. While the shared phase byte D_80143BB0 equals 2 it adds the signed phase-step entry at 0x801F5360 selected by the low nibble of D_80143E6C, scaled by 0x800, to word 0x34 of the work record reached through the pointer slot at 0x1F800044, subtracts the independently read entry from word 0x38 and then consumes two units of countdown halfword 0x7E in the record published through 0x80146884. When the phase byte differs from 2 it seeds word 0x34 with 0x2C0000, word 0x38 with 0x5C0000 and clears work handler byte 0x04.'
   - - 5292
     - asm
     - func_801F40AC
   - - 5636
     - c
-    - dispatchWorkByte4Table5370World04Area17513_801F4204
-    - '@source: src/bof3/world/dispatchWorkByte4Table5370World04Area17513_801F4204.c'
+    - callWorkByte4Table5370
+    - '@source: src/bof3/world/callWorkByte4Table5370.c'
     - '@behavior: Overlay step dispatch: reads the work byte at offset 0x04 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that unchecked byte index of the local handler table based at 0x801F5370; takes no arguments, returns nothing and touches no other work byte.'
   - - 5704
     - c
-    - startWorkCountdownMode1World04Area17513_801F4248
+    - audioWorkCountdownMode1
   - - 5740
     - c
     - decrementPhaseStepWorkWordPairConsumeCountdownOrClearHandlerWorld04Area17513_801F426C

@@ -36,8 +36,8 @@ segments:
     - func_801EECA4
   - - 756
     - c
-    - decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic08803_801EEEF4
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetRecordByte5CToOneSubmitRecordStoreEffectByteASetByte9To8AndAdvanceWorkByte1OnZeroBmagicMagic08803_801EEEF4.c'
+    - decrementOneSubmitStore
+    - '@source: src/bof3/bmagic/decrementOneSubmitStore.c'
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the battle record pointer cell at 0x8014638C into a saved register, then pre-decrements the scratchpad work object countdown byte at offset 0x9 at byte width and returns while the truncated value stays nonzero. Only when the countdown reaches zero does it set the record byte 0x5C to one, submit that record through the shared helper at 0x80196718, submit its positional effect through the shared helper at 0x8019651C with the 0/0/0 offsets and mode 1 and store the returned effect byte in the work object byte 0xA, set the work object byte 0x9 to 8, and advance its state byte 0x1 at byte width. The work-object cell is re-read for each of the three tail stores, so the original keeps three separate cell loads after the countdown group. The 0x20-byte frame holds $ra, $s0 and the stack slot of the fifth helper argument. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 928
     - asm
@@ -51,23 +51,23 @@ segments:
     - func_801EF0A8
   - - 1452
     - c
-    - queueActionSlotSetByte4Byte9AndByteAAndPublishWorkPointerThenCountWorkByteBAndIncrementWorkByte1BmagicMagic08803_801EF1AC
-    - '@source: src/bof3/bmagic/queueActionSlotSetByte4Byte9AndByteAAndPublishWorkPointerThenCountWorkByteBAndIncrementWorkByte1BmagicMagic08803_801EF1AC.c'
+    - queueActionPointerCount
+    - '@source: src/bof3/bmagic/queueActionPointerCount.c'
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044 and returns while the object byte 0xB is nonzero. Otherwise it calls the selection helper at 0x800AED5C with the byte table entry at 0x800B6BF0 selected by the object byte 0x4 and the shared battle target byte at 0x80146384, truncating the answer to a byte. Both arms claim an action slot through the allocator at 0x801E590C with the arguments 1 and 0x48, truncate the returned index and scale it by the 0x78-byte slot stride: the nonzero-selection arm publishes the re-read work-object pointer into the slot word 0x74 first and then writes the slot kind byte 0x04 with the object byte 0x4 plus 4, the slot byte 0x09 with one and the slot byte 0x0A with zero, while the zero-selection arm writes kind byte 8, byte 0x09 one, byte 0x0A zero and then the single pre-read work-object pointer. The tail re-reads the pointer cell for each of its two byte-width increments, work byte 0xB and work byte 0x1. The 0x18-byte frame holds $ra. It takes no arguments, returns nothing and reads or writes no other state.'
   - - 1792
     - asm
     - func_801EF300
   - - 1868
     - c
-    - resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C
-    - '@source: src/bof3/bmagic/resolveKindResultCodeWhenBattleStateIsFourBmagicMagic08803_801EF34C.c'
+    - resolveKindCodeIs
+    - '@source: src/bof3/bmagic/resolveKindCodeIs.c'
     - '@behavior: Reads the battle state byte at 0x80146375 once. While it is not four it reads the battle kind halfword at 0x801463C0 and returns three, except for the kind 0x112, which it overwrites with 0x5A before returning zero. While the state byte is four it reads the kind halfword once and maps it through a sparse switch of eight cases: kinds 0x1E, 0x58 and 0xBE return one, kinds 0x1F, 0x59 and 0xBF return two, kinds 0x5A and 0xC0 return zero, and every other kind returns three.'
   - - 2096
     - asm
     - func_801EF430
   - - 2272
     - c
-    - dispatchStateByte1Table0028BmagicMagic08803_801EF4E0
+    - callStateTable0028Bmagic
     - '@source: src/bof3/bmagic/magic08803DispatchTables.c'
   - - 2340
     - asm
@@ -86,8 +86,8 @@ segments:
     - func_801EF630
   - - 2700
     - c
-    - drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius240TintedByWorkByte9TimesTwelveAtOriginAndOneAtRimBmagicMagic08803_801EF68C
-    - '@source: src/bof3/bmagic/drawTranslucentFanOfSixteenGouraudTrianglesFromOriginAtRadius240TintedByWorkByte9TimesTwelveAtOriginAndOneAtRimBmagicMagic08803_801EF68C.c'
+    - renderTrianglesTwelveRim
+    - '@source: src/bof3/bmagic/renderTrianglesTwelveRim.c'
   - - 3328
     - asm
     - func_801EF900
@@ -108,8 +108,8 @@ segments:
     - func_801EFA2C
   - - 3732
     - c
-    - decrementWorkByte9ByTwoAndInvokeHelperWhenZeroBmagicMagic08803_801EFA94
-    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoAndInvokeHelperWhenZeroBmagicMagic08803_801EFA94.c'
+    - decrementTwoHelperZero
+    - '@source: src/bof3/bmagic/decrementTwoHelperZero.c'
     - '@behavior: Per-frame step of an overlay work-object handler. Reads the scratchpad work-object pointer cell at 0x1F800044, subtracts two from the object''s countdown byte 0x9 at byte width, then re-reads the cell and loads byte 0x9 again, so the reloaded byte rather than the stored register supplies the tested value. Only when that byte is zero does it call the shared helper at 0x801E5988. The pointer-cell load precedes frame creation and the 0x18-byte frame only keeps the return address across the call; it takes no arguments, returns nothing and reads or writes no other state. Its address is entry 3 of the four-entry handler run at 0x801F005C that ends the reviewed textbin row D_801EFFE0, and no instruction in this payload materialises that run base.'
   - - 3816
     - c

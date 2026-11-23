@@ -27,8 +27,8 @@ segments:
   subsegments:
   - - 4
     - c
-    - dispatchWorkByte2TablefafcPlcharPlp24700_801CE404
-    - '@source: src/bof3/plchar/dispatchWorkByte2TablefafcPlcharPlp24700_801CE404.c'
+    - callWorkTablefafcPlchar
+    - '@source: src/bof3/plchar/callWorkTablefafcPlchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFAFC.'
   - - 72
     - asm
@@ -38,8 +38,8 @@ segments:
     - func_801CE514
   - - 528
     - c
-    - dispatchWorkByte2Tablefb08PlcharPlp24700_801CE610
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb08PlcharPlp24700_801CE610.c'
+    - callWorkTablefb08Plchar
+    - '@source: src/bof3/plchar/callWorkTablefb08Plchar.c'
     - '@behavior: Overlay step dispatch on work-record byte 2 read through the scratchpad pointer cell 0x1F800044, reached from outside this payload as the word at 0x801CFB40, the seventeenth word of the twenty-word handler run based at 0x801CFAFC: it calls the entry indexed by the unsigned work byte 0x02 of the run based at 0x801CFB08, the fourth word of that same run, which its own base reaches at byte-2 index 14; it bounds nothing, passes no arguments and discards any result.'
   - - 596
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801CEAE0
   - - 2044
     - c
-    - dispatchWorkByte2Tablefb10PlcharPlp24700_801CEBFC
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb10PlcharPlp24700_801CEBFC.c'
+    - callWorkTablefb10Plchar
+    - '@source: src/bof3/plchar/callWorkTablefb10Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB10.'
   - - 2112
     - asm
@@ -72,8 +72,8 @@ segments:
     - getAndClearPlcharPlp24700_801CEE08
   - - 2584
     - c
-    - dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18
-    - '@source: src/bof3/plchar/dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18.c'
+    - callWorkTablefb1Plchar
+    - '@source: src/bof3/plchar/callWorkTablefb1Plchar.c'
     - '@behavior: Calls the handler indexed by work byte 2 from the table at 0x801CFB1C.'
   - - 2652
     - c

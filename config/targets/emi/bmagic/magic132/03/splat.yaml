@@ -36,8 +36,8 @@ segments:
     - func_801EEC88
   - - 464
     - c
-    - incrementWorkByteARecordCountersThenSetGlobalWorkByte29To2AndAdvanceWorkByte1WhenWorkByte9Is10BmagicMagic13203_801EEDD0
-    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenSetGlobalWorkByte29To2AndAdvanceWorkByte1WhenWorkByte9Is10BmagicMagic13203_801EEDD0.c'
+    - incrementByteCountersGlobal
+    - '@source: src/bof3/bmagic/incrementByteCountersGlobal.c'
     - '@behavior: Increments work-byte-A-selected record counters and work byte 9; at 0x10 sets global work byte 0x29 to 2 and advances work byte 1.'
   - - 756
     - asm
@@ -50,7 +50,7 @@ segments:
     - func_801EF0A4
   - - 1300
     - c
-    - dispatchStateByte1Tablefd58BmagicMagic13203_801EF114
+    - callStateTablefd58Bmagic
     - '@source: src/bof3/bmagic/magic13203DispatchTables.c'
   - - 1368
     - asm

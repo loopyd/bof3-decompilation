@@ -41,8 +41,8 @@ segments:
     - func_801EEEB0
   - - 992
     - c
-    - decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenAdvanceWorkByte1OnZeroWhenWorkByteBZeroBmagicMagic16903_801EEFE0.c'
+    - decrementZeroByteZero
+    - '@source: src/bof3/bmagic/decrementZeroByteZero.c'
     - '@behavior: Step index 2 of this overlay: returns immediately when work byte 0xB is non-zero, otherwise decrements work byte 9 and, when the stored byte reaches zero, reloads the scratchpad work pointer at 0x1F800044 and advances work byte 1.'
   - - 1084
     - c
@@ -54,7 +54,7 @@ segments:
     - func_801EF070
   - - 1552
     - c
-    - dispatchStateByte1Table041cBmagicMagic16903_801EF210
+    - callStateTable041Bmagic
     - '@source: src/bof3/bmagic/magic16903DispatchTables.c'
   - - 1620
     - c
@@ -62,13 +62,13 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic16903_801EF254.c'
   - - 1740
     - c
-    - decrementWorkByte9ThenCopyIndexedRecordIntoWorkClearByteBSetByte9To8ClearByteAAdvanceByte2AndQueueTwentyFourPoolRecordsClearingByte1StampingOrdinalByteBAndStepByte9PublishingWorkPointerBmagicMagic16903_801EF2CC
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenCopyIndexedRecordIntoWorkClearByteBSetByte9To8ClearByteAAdvanceByte2AndQueueTwentyFourPoolRecordsClearingByte1StampingOrdinalByteBAndStepByte9PublishingWorkPointerBmagicMagic16903_801EF2CC.c'
+    - decrementClearingStampingPublishing
+    - '@source: src/bof3/bmagic/decrementClearingStampingPublishing.c'
     - '@behavior: Decrement work byte 9; on zero copy the record at 0x80145E90 selected by work byte 4 into work byte 8 and words 0x34, 0x38 and 0x3C, clear work byte B, set work byte 9 to 8, clear work byte A, advance work byte 2 and queue 0x18 pool records clearing byte 1 and stamping the ordinal, its quarter plus 0x10 and the work pointer.'
   - - 2116
     - c
-    - decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444
-    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSubmitIndexedRecordStoreEffectByteAResetCountdownAndAdvanceWorkByte2BmagicMagic16903_801EF444.c'
+    - decrementSubmitIndexedStore
+    - '@source: src/bof3/bmagic/decrementSubmitIndexedStore.c'
     - '@behavior: Decrement work byte 9; on zero submit the indexed record, store effect byte A, reset countdown to 8 and advance work byte 2.'
   - - 2300
     - c
@@ -88,7 +88,7 @@ segments:
     - func_801EF7D0
   - - 3168
     - c
-    - dispatchStateByte1Table0420BmagicMagic16903_801EF860
+    - callStateTable0420Bmagic
     - '@source: src/bof3/bmagic/magic16903DispatchTables.c'
   - - 3236
     - asm

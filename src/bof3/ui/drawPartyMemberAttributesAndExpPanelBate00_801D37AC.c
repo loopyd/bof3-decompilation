@@ -57,11 +57,11 @@ extern void func_80150098(s16 arg0, s16 arg1, u32 arg2, const u8* arg3);
 extern void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 
 /* Sprite emitter of this overlay, defined by
- * drawSpritePrimTpageFromGraphTypeBate00_801D4564.c: the icon kind at the two
+ * renderTpageGraphType.c: the icon kind at the two
  * zero-extended coordinates with the flag byte. The original zero-extends both
  * coordinates before these calls, so this translation unit declares the
  * call-site widths. */
-void drawSpritePrimTpageFromGraphTypeBate00_801D4564(u16 arg0, u16 arg1,
+void renderTpageGraphType(u16 arg0, u16 arg1,
                                                      u8 arg2, u8 arg3);
 
 /* Experience-table sum of this overlay, defined by sumLevelExpBate00_801D4FD0.c:
@@ -100,7 +100,7 @@ typedef struct BateAttributeBlock {
  *   (x+0x4E, y+0x39), which sumLevelExpBate00_801D4FD0 forms over the
  *   record level byte 0x06 plus one and which the placeholder "-------"
  *   replaces once that level byte reaches 0x63. Each value row is preceded by
- *   drawSpritePrimTpageFromGraphTypeBate00_801D4564 at (x+0x36, y+0x30) with
+ *   renderTpageGraphType at (x+0x36, y+0x30) with
  *   kind 4 and at (x+0x36, y+0x39) with kind 5. The alignment argument of the
  *   text and glyph calls is 7 when the flag byte is nonzero and 0 when it is
  *   zero. Nothing is returned and the 0x58-byte frame keeps $s0 through $s7
@@ -160,11 +160,11 @@ void drawPartyMemberAttributesAndExpPanelBate00_801D37AC(s16 x, s16 y,
   func_8014F800((s16)(x + 0x4B), (s16)(y + 0x10), align, 4,
                 (u32)(D_801D8B84 + 0x12));
   func_801AED54((s16)(x + 0x33), (s16)(y + 0x2E), 0x56, 0x14, 0xF1);
-  drawSpritePrimTpageFromGraphTypeBate00_801D4564((u16)(x + 0x36),
+  renderTpageGraphType((u16)(x + 0x36),
                                                   (u16)(y + 0x30), 4, flag);
   sprintf((char*)D_80145AD4, D_801D0C44, *(s32*)&D_80144970[index * 164]);
   func_80150098((s16)(x + 0x4E), (s16)(y + 0x30), align, D_80145AD4);
-  drawSpritePrimTpageFromGraphTypeBate00_801D4564((u16)(x + 0x36),
+  renderTpageGraphType((u16)(x + 0x36),
                                                   (u16)(y + 0x39), 5, flag);
   level = D_8014496E[index * 164];
   if (level < 0x63) {

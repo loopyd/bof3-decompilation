@@ -30,17 +30,17 @@ segments:
   subsegments:
   - - 100
     - c
-    - dispatchStateByte1Table4890World02Area11113_801F2C64
+    - callStateTable4890World02
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 168
     - c
-    - resetPartsHalvesAndArmCountdownByte9ThenQueueCue206AdvanceStateByte1World02Area11113_801F2CA8
-    - '@source: src/bof3/world/resetPartsHalvesAndArmCountdownByte9ThenQueueCue206AdvanceStateByte1World02Area11113_801F2CA8.c'
+    - statePartsHalvesArm
+    - '@source: src/bof3/world/statePartsHalvesArm.c'
     - '@behavior: Entry handler 0 of the byte-1 dispatch table based at 0x801F4890 for the work record published at the scratchpad pointer cell 0x1F800044. It stores 0x28 into the countdown byte at offset 0x09, zero into the halfword at offset 0x2E and 0x100 into the halfword at offset 0x30 through one read of that cell, then re-reads the cell, increments the dispatch byte at offset 0x01 and queues cue 0x206 through the shared cue dispatcher at 0x8015DF18.'
   - - 252
     - c
-    - drawPartsStepHalves2eAnd30By40AndAdvanceStateOnCountdownByte9ExpiryWorld02Area11113_801F2CFC
-    - '@source: src/bof3/world/drawPartsStepHalves2eAnd30By40AndAdvanceStateOnCountdownByte9ExpiryWorld02Area11113_801F2CFC.c'
+    - renderPartsCountdownExpiry
+    - '@source: src/bof3/world/renderPartsCountdownExpiry.c'
     - '@behavior: State handler 1 of the byte-1 dispatch table based at 0x801F4890 for the work record published at the scratchpad pointer cell 0x1F800044. It draws the record parts block at offset 0x34 through the overlay renderer at 0x801F2DA0 at the signed halfword pair 0x2E and 0x30, advances both of those unsigned halfwords by 0x40, decrements the countdown byte at offset 0x09 and, once that byte reaches zero, increments the state byte at offset 0x01.'
   - - 384
     - c
@@ -51,30 +51,30 @@ segments:
     - func_801F2DA0
   - - 1260
     - c
-    - dispatchStateByte2Table489cWorld02Area11113_801F30EC
+    - callStateTable489World02
     - '@source: src/bof3/world/area11113DispatchTables.c'
   - - 1328
     - c
-    - zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130
-    - '@source: src/bof3/world/zeroWorkStepHalfword30ThenClearWorkFlagsOnFlag28ElseAdvanceHandlerByteWorld02Area11113_801F3130.c'
+    - zeroStepClearFlags
+    - '@source: src/bof3/world/zeroStepClearFlags.c'
     - '@behavior: Clears the step halfword at offset 0x30 of the work record published at scratchpad pointer cell 0x1F800044 and then probes flag 0x28 of the main-RAM bank at 0x80144F28 through the shared flag tester at 0x8015B5D4: when that flag reads set it resets the shared work area through the exe-resident helper at 0x80196070, and when it reads clear it advances the dispatch byte at offset 0x02 of that record and calls the overlay draw routine at 0x801F3244.'
   - - 1436
     - c
-    - advanceHandlerByteOnFlag28ThenDrawWorld02Area11113_801F319C
-    - '@source: src/bof3/world/advanceHandlerByteOnFlag28ThenDrawWorld02Area11113_801F319C.c'
+    - stateHandlerByteDraw
+    - '@source: src/bof3/world/stateHandlerByteDraw.c'
     - '@behavior: State handler 1 of the byte-2 dispatch table based at 0x801F489C for the work record published at the scratchpad pointer cell 0x1F800044. It probes flag 0x28 of the main-RAM bank at 0x80144F28 through the shared flag tester at 0x8015B5D4: when that flag reads set it advances the dispatch byte at offset 0x02 of that record and then, in either case, calls the overlay draw routine at 0x801F3244.'
   - - 1520
     - c
-    - advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0
-    - '@source: src/bof3/world/advanceHalfword30By4AndClearWorkFlagsAt100ThenDrawWorld02Area11113_801F31F0.c'
+    - stateClearFlagsDraw
+    - '@source: src/bof3/world/stateClearFlagsDraw.c'
     - '@behavior: Adds 4 to the halfword at offset 0x30 of the work record published at scratchpad pointer cell 0x1F800044, clears the shared work flags through the exe-resident helper when that stored halfword reads at least 0x100 as a signed value, and then calls the overlay draw routine at 0x801F3244.'
   - - 1604
     - asm
     - func_801F3244
   - - 2000
     - c
-    - setStatus3IfGateElse2World02Area11113_801F33D0
-    - '@source: src/bof3/world/setStatus3IfGateElse2World02Area11113_801F33D0.c'
+    - stateStatus3GateElse2
+    - '@source: src/bof3/world/stateStatus3GateElse2.c'
     - '@behavior: Loads the shared gate byte at 0x801490C7 with a signed byte read and stores 3 into the shared status halfword at 0x801490A8 while that byte reads nonzero, and 2 when it reads zero. Takes no arguments, calls nothing and returns nothing.'
   - - 2040
     - c
@@ -83,39 +83,39 @@ segments:
     - '@behavior: Stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is clear, runs the shared front-end startup helper and requests primary scene state 5 with secondary state 0.'
   - - 2120
     - c
-    - copySharedWord7b5cTo7ac4World02Area11113_801F3448
-    - '@source: src/bof3/world/copySharedWord7b5cTo7ac4World02Area11113_801F3448.c'
+    - copySharedWord7To7
+    - '@source: src/bof3/world/copySharedWord7To7.c'
   - - 2144
     - asm
     - func_801F3460
   - - 2548
     - c
-    - publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4
-    - '@source: src/bof3/world/publishSelectedWorkRecordCodeFromScrollCellAndRequestFrontEndOrdinalWorld02Area11113_801F35F4.c'
+    - publishCodeScrollOrdinal
+    - '@source: src/bof3/world/publishCodeScrollOrdinal.c'
   - - 2920
     - c
-    - publishWorkRecordSlotCodeFromPublishedIndexByteWorld02Area11113_801F3768
-    - '@source: src/bof3/world/publishWorkRecordSlotCodeFromPublishedIndexByteWorld02Area11113_801F3768.c'
+    - publishCodePublishedIndex
+    - '@source: src/bof3/world/publishCodePublishedIndex.c'
     - '@behavior: Seeds the shared overlay step-state byte at 0x80146867 with 0x10 shifted left by the signed word at offset 0x18 of the work record published through the scratchpad pointer cell 0x1F800044. Takes no arguments, calls nothing and returns nothing.'
   - - 2960
     - c
-    - decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790
-    - '@source: src/bof3/world/decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790.c'
+    - decrementUnlessPublishedSlot
+    - '@source: src/bof3/world/decrementUnlessPublishedSlot.c'
     - '@behavior: Decrement published record halfword 0x0A by two unless the state byte matches its work-record slot code.'
   - - 3080
     - c
-    - clearAndStampPublishedWorkRecordCodeInPackedCellMapThenQueueCue204World02Area11113_801F3808
-    - '@source: src/bof3/world/clearAndStampPublishedWorkRecordCodeInPackedCellMapThenQueueCue204World02Area11113_801F3808.c'
+    - stateStampPublishedPacked
+    - '@source: src/bof3/world/stateStampPublishedPacked.c'
     - '@behavior: Clears the one-based cell code of the published 0x98-byte work record from every nibble of the packed 7x7 cell map at 0x801F5C18, stamps that code into the map cell the work object published at scratchpad cell 0x1F800044 now occupies and draws that cell through 0x801F4604 before it queues cue 0x204.'
   - - 3552
     - c
-    - requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0
-    - '@source: src/bof3/world/requestFrontEndForRouteOffsetCellAndTake6FromHalfword0aWorld02Area11113_801F39E0.c'
+    - requestRouteOffsetCell
+    - '@source: src/bof3/world/requestRouteOffsetCell.c'
     - '@behavior: Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its index byte at +0x18 to pick the 0x98-byte work-record cell at 0x80147A58 and its route byte at +8 masked with 0x7 to pick the shared route-step entry at 0x80181B00 and 0x80181B01, halves the cell coordinate at byte 0x3A minus 0xB1 and the coordinate at byte 0x36 minus 0xB, and while both stay below 7 reads the packed nibble at 0x801F5C18 as column times four plus row over two with the low nibble on an odd row and the high nibble on an even one. A nibble minus one below 4 selects a cell slot, so it requests work mode 7 through the shared helper at 0x801AC768 with that slot, the one-based ordinal of the front-end record published at 0x80146250 inside the 0x140-byte table at 0x80145E90 and sub-command 0xC, saves and writes back the published record halfword at +0x0A around the call, publishes the route byte to byte 8 of the selected cell at 0x80147A60 and takes six units off that halfword.'
   - - 4032
     - c
-    - walkRouteUntilBlockedCellAndPublishStepCountWorld02Area11113_801F3BC0
-    - '@source: src/bof3/world/walkRouteUntilBlockedCellAndPublishStepCountWorld02Area11113_801F3BC0.c'
+    - walkUntilBlockedCount
+    - '@source: src/bof3/world/walkUntilBlockedCount.c'
     - '@behavior: Walks the shared route-step table out of the grid cell of the published work record, stopping at the first out-of-range or 0xF cell code, and publishes the walked step count: stores the counter plus one into byte 7 of the record published at 0x80148210, calls the shared helper at 0x801C5DFC with the record route byte, sets bit 0x40 in that record, clears the shared facing halfword at 0x80149330 and the work record word at +0x14, and stores -0x500 into the work record halfword at +0x3E.'
   - - 4412
     - asm
@@ -127,13 +127,13 @@ segments:
     - '@behavior: Steps this overlay''s shared front-end mode byte 0x801448EC through its 24-entry jump table at 0x801F2C04. Modes 1, 3, 5 and 7 queue the shared cue func_801BE1B0 with 0, arm the shared halfword countdown 0x801448EE with 0x0A and advance the mode to 0x0A; mode 0x0A consumes that countdown and, at zero, clears the shared selectors 0x801448EB/0x801448EC/0x801448ED and runs the shared release helper func_8015C058. Mode 0x14 runs func_8015507C with 0x11 and 0xB7, arms the countdown with 0x1E and advances to 0x15. Mode 0x15 consumes the countdown and, at zero, publishes the fade pair 0x118000/0xAF0000 at 0x80149308/0x8014930C, clears the shared facing halfword 0x80149330, advances to 0x16 and stores the shared frame-selector byte 0x80181BD8 scaled by eight at 0x8014932E. Mode 0x16, while the shared readiness byte 0x80149332 reads clear, runs func_8015507C with 0x11 and 0xAD, the four cursor-rect calls func_801A4BC0 with 0x11 and 0x12 against 0xAD and 0xAE, the cue func_8015DF18 with 0x205 and the flag-bit call func_8015B580 against the shared block 0x80144F28 with bit 0x28, arms the countdown with 0x1E and advances to 0x17. Mode 0x17 consumes the countdown and, at zero, commits the shared pair 0x80145EC4/0x80145EC8 into 0x80149308/0x8014930C, clears 0x80149330, advances to 0x18 and stores the same scaled frame-selector byte at 0x8014932E. Mode 0x18, while 0x80149332 reads clear, arms the countdown with 1 and advances to 0x0A. Every other table slot returns without touching the shared state.'
   - - 5440
     - c
-    - enterState11WithCodeForMatchedWorkCellAndRouteStepWorld02Area11113_801F4140
-    - '@source: src/bof3/world/enterState11WithCodeForMatchedWorkCellAndRouteStepWorld02Area11113_801F4140.c'
+    - enterCodeMatchedCell
+    - '@source: src/bof3/world/enterCodeMatchedCell.c'
     - '@behavior: One-shot position trigger gated by the shared byte 0x80143F03: it clears flag 0x28 of the bank at 0x80144F28 through 0x8015B5A8 while that byte is clear, returns 0 unless it then reads 1, and otherwise matches the doubled cell coordinates of its two arguments against the edges of two nested rectangles together with the sign of the published work record route step at 0x80181B00 or 0x80181B01, entering state 11 through 0x801F4510 with code 3, 7, 5 or 1 on a match, and finally publishes state selector 0x11 with code 0x14 when the cell index pair falls inside 0x11..0x12 and 0xB7..0xB8 and flag 0x28 reads clear.'
   - - 6416
     - c
-    - selectWorkRecordSlotFromScrollCellAndEnterState11World02Area11113_801F4510
-    - '@source: src/bof3/world/selectWorkRecordSlotFromScrollCellAndEnterState11World02Area11113_801F4510.c'
+    - selectScrollCellEnter
+    - '@source: src/bof3/world/selectScrollCellEnter.c'
     - '@behavior: Halves the shared scroll pair at 0x80145EC6 minus 0xB and 0x80145ECA minus 0xB1, reads the packed nibble at 0x801F5C18 indexed by column times four plus row over two (low nibble on an odd row, high nibble on an even row), publishes that nibble minus one to 0x801448ED and 0x11 to 0x801448EB, stores the argument to 0x801448EC and to byte 8 of the 0x98-byte work record at that slot of the shared table 0x80147A58, and calls the shared startup helper at 0x8015C088.'
   - - 6660
     - asm

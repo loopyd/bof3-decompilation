@@ -19,7 +19,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
  * before every one of the three loads, including the one that follows the byte
  * +0x2A store with no call in between, so each access names the cell instead of
  * keeping a pointer in a local. The exact siblings
- * setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0
+ * stateUntilExpiresSelected
  * and invokeHelperWithWorkWorld02Area08513_801F3BA4 of this target use the same
  * spelling. */
 extern u8* D_1F800044;

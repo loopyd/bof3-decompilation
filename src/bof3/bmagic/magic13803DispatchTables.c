@@ -12,4 +12,4 @@ extern void (*D_801EF72C[])(void);
  * @match 100.00
  * @residual none
  */
-EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Tablef72cBmagicMagic13803_801EEF60, D_801EF72C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, callStateTablef72Bmagic, D_801EF72C);

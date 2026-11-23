@@ -34,7 +34,7 @@ void clearWorkBytesBmagicMagic05903_801F04F4(void);
  *           reaches it: its address is entry 4 of the handler table based at
  *           0x801F0680, the word at 0x801F0690 inside the textbin row T_801F065C
  *           that the byte-1 dispatcher
- *           dispatchStateByte1Table0680BmagicMagic05903_801EFE48 indexes.
+ *           callStateTable0680Bmagic indexes.
  *           Bytes 0x801F012C..0x801F01A3 are identical to the exact sibling
  *           incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteB
  *           AndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0 at every word

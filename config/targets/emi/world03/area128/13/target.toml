@@ -8,13 +8,13 @@ splat = "config/targets/emi/world03/area128/13/splat.yaml"
 load_address = 0x801F2C00
 
 sources = [
-    "src/bof3/world/advanceHalfword0aBy1WhenWorkByte79Is2World03Area12813_801F307C.c",
+    "src/bof3/world/stateBy1WorkByte79.c",
 ]
 support_sources = [
-    "src/bof3/world/releaseFrontendAndSetFlag88Or89ByProgressWorld03Area12813_801F30BC.c",
-    "src/bof3/world/setStateEntry38ProgressAAndStatus49WhenGateClearElseStatusFFFFWorld03Area12813_801F2FD8.c",
+    "src/bof3/world/releaseFrontendSetProgress.c",
+    "src/bof3/world/stateProgressGateStatus.c",
     "src/bof3/world/setStateEntry38Progress0AndAdvanceWorkHalfword7EWorld03Area12813_801F3184.c",
-    "src/bof3/world/seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030.c",
+    "src/bof3/world/stateSelectingYFacing.c",
     "src/bof3/world/stateStatusProgressGate.c",
     "src/bof3/support/area128_13_psyq.c",
 ]

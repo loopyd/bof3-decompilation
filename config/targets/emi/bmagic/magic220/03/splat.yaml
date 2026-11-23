@@ -42,7 +42,7 @@ segments:
     - func_801EEF18
   - - 888
     - c
-    - dispatchStateByte1Table06dcBmagicMagic22003_801EEF78
+    - callStateTable06Bmagic
     - '@source: src/bof3/bmagic/magic22003DispatchTables.c'
   - - 956
     - asm
@@ -58,8 +58,8 @@ segments:
     - func_801EF294
   - - 2060
     - c
-    - copyWorkCursorPairWithFrameParityDeltaThenCountdownWorkByte9ResetTo8AndDecrementWorkByte2BmagicMagic22003_801EF40C
-    - '@source: src/bof3/bmagic/copyWorkCursorPairWithFrameParityDeltaThenCountdownWorkByte9ResetTo8AndDecrementWorkByte2BmagicMagic22003_801EF40C.c'
+    - copyFrameParityDelta
+    - '@source: src/bof3/bmagic/copyFrameParityDelta.c'
     - '@behavior: Handler 4 of the work-object byte 0x1 table at 0x801F06DC: reads bit 0 of the shared frame counter at 0x80143E6C to pick the sign and sets the scratchpad work object words 0x34 and 0x38 to the shared battle record words 0x34 and 0x38 plus and minus the work object word 0xC, then decrements work byte 0x9 and, when it reaches zero, stores 0x8 back into it and decrements work byte 0x2.'
   - - 2284
     - asm
@@ -83,12 +83,12 @@ segments:
     - func_801EF9F0
   - - 4160
     - c
-    - drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40
-    - '@source: src/bof3/bmagic/drawTranslucentGouraudQuadRingBetweenWorkByteBAndTwiceWorkByteBInSixtyFourStepsTintingInnerEdgeByWorkByte5dTimesFourBmagicMagic22003_801EFC40.c'
+    - renderTintingInnerEdge
+    - '@source: src/bof3/bmagic/renderTintingInnerEdge.c'
     - '@behavior: Last draw helper of this overlay work-byte-2 handler group: sets the draw mode from GetGraphType, reads the scratchpad work record byte 0xB as the inner radius and byte 0x5D times four as the grey tint, then draws sixty-four translucent Gouraud quads stepping one sixty-fourth of a turn each between that radius and its double, grading white at the outer edge to the tint at the inner edge and linking one 0x24-byte packet per pass at output slot 5.'
   - - 4960
     - c
-    - dispatchStateByte1Table0700BmagicMagic22003_801EFF60
+    - callStateTable0700Bmagic
     - '@source: src/bof3/bmagic/magic22003DispatchTables.c'
   - - 5028
     - c

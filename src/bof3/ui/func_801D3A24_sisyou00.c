@@ -71,7 +71,7 @@ void func_801D3A24(void) {
         goto done;
       }
       D_80144F59 = D_80144F59 | 8;
-      copySelectedRecordPrefixToWorkBuffer(D_80145FCC[offset]);
+      copySelectedPrefixBuffer(D_80145FCC[offset]);
       flag = 1;
       break;
     case 0xC:
@@ -85,7 +85,7 @@ void func_801D3A24(void) {
         goto done;
       }
       func_8015B580(master + 0x63B, 0x6C);
-      copySelectedRecordPrefixToWorkBuffer(D_80145FCC[D_801D428A * 0x140]);
+      copySelectedPrefixBuffer(D_80145FCC[D_801D428A * 0x140]);
       flag = 1;
       break;
     case 0xD:
@@ -96,7 +96,7 @@ void func_801D3A24(void) {
         goto done;
       }
       D_80144F59 = D_80144F59 | 0x10;
-      copySelectedRecordPrefixToWorkBuffer(D_80145FCC[offset]);
+      copySelectedPrefixBuffer(D_80145FCC[offset]);
       flag = 1;
       break;
     case 0xE:
@@ -107,7 +107,7 @@ void func_801D3A24(void) {
         goto done;
       }
       D_80144F59 = D_80144F59 | 0x20;
-      copySelectedRecordPrefixToWorkBuffer(D_80145FCC[offset]);
+      copySelectedPrefixBuffer(D_80145FCC[offset]);
       flag = 1;
       break;
     default:
@@ -127,7 +127,7 @@ void func_801D3A24(void) {
           continue;
         }
         offset = D_801D428A * 0x140;
-        copySelectedRecordPrefixToWorkBuffer(D_80145FCC[offset]);
+        copySelectedPrefixBuffer(D_80145FCC[offset]);
         for (i = 0; i < 0xC; i++) {
           D_801490F8[i] = D_801CA70C[D_801D4089[cell + *state * 0xC] * 20 + i];
         }

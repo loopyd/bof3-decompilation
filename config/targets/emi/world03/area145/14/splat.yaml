@@ -161,21 +161,21 @@ segments:
     - func_801F43DC
   - - 6404
     - c
-    - requestPrimaryState14WithMatchedRowSubstateWhenFlag9SetWorld03Area14514_801F4504
-    - '@source: src/bof3/world/requestPrimaryState14WithMatchedRowSubstateWhenFlag9SetWorld03Area14514_801F4504.c'
+    - requestMatchedRowSubstate
+    - '@source: src/bof3/world/requestMatchedRowSubstate.c'
     - '@behavior: Overlay entry gate of the 0x14 state family: it walks the seven four-byte rows of the payload table at 0x801F5CC0 with both byte arguments zero-extended and takes the first row whose first two bytes equal those arguments and whose third byte low nibble equals the leading byte of the main-RAM game-mode record 0x80145E98. When no row matches it answers 0; on a match it waits through the shared flag helper func_8015B5D4(D_80144EF0, 9) and answers 0 while that flag is clear, otherwise it runs the shared front-end startup helper func_8015C088, publishes primary state 0x14 in D_801448EB with the matched row fourth byte as the sub-state in D_801448EC and answers 1.'
   - - 6636
     - asm
     - func_801F45EC
   - - 8432
     - c
-    - stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0
-    - '@source: src/bof3/world/stepFrontEndPairSpanClampedToFiveThenDelegateStageWalkUntilStep56World03Area14514_801F4CF0.c'
+    - stepSpanDelegateWalk
+    - '@source: src/bof3/world/stepSpanDelegateWalk.c'
     - '@behavior: One step of the chained front-end effect driven by the shared step halfword at 0x801448EE. It queues the record pair spanning the fixed 16.16 point 0x428000/0x638000 and a second point on the same row whose x is 0x428000 minus the step times 0x10000 while the step stays under five and 0x3D8000 once it does not, so the pair grows one unit per step up to a fixed span of five units, and at step five it also queues cue 0x206. It answers 1 while the step stays under five and, from step five on, the answer of the payload stage drawer func_801F4DA4 for steps under 0x38 and the constant 2 once the step reaches 0x38.'
   - - 8612
     - c
-    - drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4
-    - '@source: src/bof3/world/drawFixedAnchorStageExtentCue206AtRowEndThenDelegateStageWalkWorld03Area14514_801F4DA4.c'
+    - renderAnchorDelegateWalk
+    - '@source: src/bof3/world/renderAnchorDelegateWalk.c'
     - '@behavior: Second stage of the chained front-end effect, reached from the front-end step at 0x801F4CF0 for step values from five on. It takes the step value, subtracts five, and uses bits 9 and 10 of the first shared work record status word as a four-byte offset into the payload stage-entry table at 0x801F5CDC. Entry byte 0 indexes the shared route-step pair D_80181B00 and D_80181B01, whose signed steps the original shifts left by sixteen to 16.16; entry byte 1 is the stage length and entry byte 2 the next stage code. The body clamps the elapsed value to that length and queues the draw request 0x801F5190 for the pair from the fixed 16.16 point 0x3D8000/0x638000 to the shared record position advanced by each step times the clamped value. It answers 1 while the elapsed value stays under the length and 1 again when the entry carries no next stage code, queues cue 0x206 at the step where the length is reached, and otherwise hands that pair to the stage walk at 0x801F4EDC and answers its narrowed result.'
   - - 8924
     - c
@@ -184,8 +184,8 @@ segments:
     - '@behavior: Third stage of the chained front-end effect, reached from the fixed-anchor stage drawer at 0x801F4DA4 with the stage code that drawer selects. It takes the elapsed step value and the stage code, subtracts five from the elapsed value, and indexes the shared 0x98-byte work records with the code to read that record packed status word. Bits 9 and 10 of the word pick one of the four four-byte entries of the payload stage-entry table, which the code selects as D_801F5CEC when it reads exactly one and D_801F5CFC otherwise. Entry byte 0 indexes the shared route-step pair D_80181B00 and D_80181B01, whose signed steps the original shifts left by sixteen to 16.16; entry byte 1 is the stage length and entry byte 2 the next stage code. The body clamps the elapsed value to that length and queues the draw request 0x801F5190 for the pair from the record position to that position advanced by each step times the clamped value. It answers 1 while the elapsed value stays under the length and 1 again when the entry carries no next stage code, queues cue 0x206 at the step that reaches the length, and otherwise hands the elapsed value and the next stage code to the stage at 0x801F504C and answers its narrowed result. The 0x20-byte frame keeps $ra, $s0 and $s1.'
   - - 9292
     - c
-    - drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C
-    - '@source: src/bof3/world/drawStageExtentAndReturnNextStageCodeOnExpiryWorld03Area14514_801F504C.c'
+    - renderExtentReturnNext
+    - '@source: src/bof3/world/renderExtentReturnNext.c'
     - '@behavior: Chained overlay effect stage drawing the shared work record position advanced by the route step times the elapsed value clamped to the stage length, then answering 1 until that length is reached and the next stage code afterwards.'
   - - 9616
     - c

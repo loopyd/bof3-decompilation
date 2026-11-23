@@ -8,7 +8,7 @@ typedef void (*Boss05016Handler)(void);
  * D_80145029, and otherwise calls func_801DDF00. The second is an inert
  * handler; the third returns a zero result, which the void slot type drops. */
 void
-    initModeTuple510Or520ByFlagBitTwoSetSubstate10ThenSetSelectedRecordIndex8CBossBoss05016_800C1948(
+    setupFlagBitSelected(
         void);
 void noopHandlerBossBoss05016_800C19A0(void);
 s32  zeroResultBossBoss05016_800C1940(void);
@@ -22,7 +22,7 @@ extern Boss05016Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 
 /* @source 0x800C1908
  * @behavior Publishes this overlay's handler trio into the shared hook slots:
- * initModeTuple510Or520ByFlagBitTwoSetSubstate10ThenSetSelectedRecordIndex8CBossBoss05016_800C1948
+ * setupFlagBitSelected
  * (state switch: tests the 0x2 bit of D_80146328 and, while it is set, stores
  * 0x10 into D_80146875, calls func_801DDED8 and then stores 0x8C into
  * D_80145029, and otherwise calls func_801DDF00) into 0x801463A4, the
@@ -43,7 +43,7 @@ extern Boss05016Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss05016_800C1908(void) {
   D_801463A4 =
-      initModeTuple510Or520ByFlagBitTwoSetSubstate10ThenSetSelectedRecordIndex8CBossBoss05016_800C1948;
+      setupFlagBitSelected;
   D_801463A8 = noopHandlerBossBoss05016_800C19A0;
   D_801463AC = (Boss05016Handler)zeroResultBossBoss05016_800C1940;
 }

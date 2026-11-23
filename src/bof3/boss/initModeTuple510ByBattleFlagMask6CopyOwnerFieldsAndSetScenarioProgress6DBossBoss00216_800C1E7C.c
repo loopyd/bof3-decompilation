@@ -17,7 +17,7 @@ extern u8 D_801EB630[]; /* @source 0x801EB630 @kind unknown */
 
 /* Shared main-program copy of one field group of a caller-supplied record into
  * the battle record the owner id selects, choosing the group by mode. */
-void copyOwnerRecordFieldsByMode(u8 id, u8 *source, u8 mode); /* @source 0x800AC870 */
+void copyOwnerFieldsMode(u8 id, u8 *source, u8 mode); /* @source 0x800AC870 */
 
 /* Main-program service that seeds the three battle-global bytes with 5, 1, 0. */
 void initModeTuple510(void); /* @source 0x801DDED8 */
@@ -33,7 +33,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
  * reaches it. It reads the shared battle flag word D_80146328 and tests the
  * 0x6 mask of its low byte: while the mask is set it copies the owner-0 field
  * group of the shared battle record base D_801EB630 with
- * copyOwnerRecordFieldsByMode(0, D_801EB630, 0), stores 0x6D into the shared
+ * copyOwnerFieldsMode(0, D_801EB630, 0), stores 0x6D into the shared
  * scenario progress byte g_ScenarioProgress, stores 0x18 into the shared
  * selected-record index byte D_80145029 and runs initModeTuple510 at
  * 0x801DDED8, which seeds the three battle-global bytes with 5, 1 and 0; when
@@ -53,7 +53,7 @@ void initModeTuple520(void); /* @source 0x801DDF00 */
 void initModeTuple510ByBattleFlagMask6CopyOwnerFieldsAndSetScenarioProgress6DBossBoss00216_800C1E7C(
     void) {
   if (D_80146328 & 0x6) {
-    copyOwnerRecordFieldsByMode(0, D_801EB630, 0);
+    copyOwnerFieldsMode(0, D_801EB630, 0);
     g_ScenarioProgress = 0x6D;
     D_80145029 = 0x18;
     initModeTuple510();

@@ -8,7 +8,7 @@ typedef void (*Boss02816StepHandler)(u8 index);
  * 0x800C2140 is that row's own label; 0x800C214C is its +0xC word, inside the
  * row and not a row boundary, so it is referenced as its own data symbol rather
  * than as a row start. */
-extern u8 boss028WorkDataAndStateHandlerTable; /* @source 0x800C2140 @kind data */
+extern u8 boss028DataHandlerTable; /* @source 0x800C2140 @kind data */
 extern u8 D_800C214C; /* @source 0x800C214C @kind data */
 
 /* Current enemy work record pointer the main program publishes at 0x801EB4E8
@@ -33,7 +33,7 @@ void func_8014D978(void);
  * 0x800C214C (0x800C2140 + 0xC, inside that same row) into +0xE8 -- then stores
  * 2 into the state byte at +1 of the work record the main program publishes at
  * the scratchpad pointer cell 0x1F800044 and calls func_8014D978. That state
- * byte is the value dispatchStateByte1Table2154BossBoss02816_800C1804 indexes
+ * byte is the value callStateTable2154Boss indexes
  * its eleven-word 0x800C2154 run by, and this function is that run's entry 0
  * (the word at 0x800C2154), so writing 2 selects its third entry, 0x801E35D8,
  * instead of re-entering this installer; no jal reaches it and the table word is
@@ -51,7 +51,7 @@ void func_8014D978(void);
 void publishWorkStepHandlerAndDataThenSetStateTo2BossBoss02816_800C1848(void) {
   u8 *work = D_801EB4E8;
 
-  FIELD_REF(void *, work, 0xECu) = &boss028WorkDataAndStateHandlerTable;
+  FIELD_REF(void *, work, 0xECu) = &boss028DataHandlerTable;
   FIELD_REF(Boss02816StepHandler, work, 0xE4u) = dispatchIndexedHandlerBossBoss02816_800C1AF0;
   FIELD_REF(void *, work, 0xE8u) = &D_800C214C;
   SPAD_PTR_SLOT(u8, 0x44u)[1] = 2;

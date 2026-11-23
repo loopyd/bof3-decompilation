@@ -33,27 +33,27 @@ segments:
     - func_801EEC30
   - - 324
     - c
-    - clearRecordPoolBytes0To2PublishRecordPoseSetGlobalByte80145988ToOneCopy16HalfwordsSettingBit15RequestResource1ThenAdvanceHandlerIndexBmagicMagic08103_801EED44
-    - '@source: src/bof3/bmagic/clearRecordPoolBytes0To2PublishRecordPoseSetGlobalByte80145988ToOneCopy16HalfwordsSettingBit15RequestResource1ThenAdvanceHandlerIndexBmagicMagic08103_801EED44.c'
+    - statePoolPoseSetting
+    - '@source: src/bof3/bmagic/statePoolPoseSetting.c'
     - '@behavior: Entry stage 0 of this overlay, word 0 of the four-word pointer run at 0x801EEC04 that the frame dispatcher func_801EEC30 calls through the work-object byte 0x1 scaled by four, so no jal in the payload names it. It clears bytes 0x00, 0x01 and 0x02 of all 48 records of the 0x78-byte-stride pool at 0x801EFA8C, then publishes the shared battle record pose through the scratchpad work-object pointer cell 0x1F800044: work word 0x34 takes the record word 0x34, work word 0x38 the record word 0x38 and work halfword 0x3E the record unsigned halfword 0x3E. It publishes 1 into the shared main-RAM byte 0x80145988, copies the sixteen unsigned halfwords of the table at 0x80036C00 into the table at 0x8003AC00 with bit 15 set on every entry and restores entry 0 to the source value, then takes the saved work-object pointer from word 0x74 of the record reached through the pointer cell 0x801EC2E0 and publishes it through the scratchpad cell while keeping the cell previous value in a callee-saved register. After requesting resource 1 from the shared helper func_8014D6B8 it restores the cell and increments byte 0x1 of the work object it published earlier, the handler index this overlay dispatches on. Takes no arguments and returns nothing.'
   - - 628
     - c
-    - publishSavedWorkPointerAdvancePreviousHandlerIndexWhenHelperReadyBmagicMagic08103_801EEE74
-    - '@source: src/bof3/bmagic/publishSavedWorkPointerAdvancePreviousHandlerIndexWhenHelperReadyBmagicMagic08103_801EEE74.c'
+    - publishSavedPointerPrevious
+    - '@source: src/bof3/bmagic/publishSavedPointerPrevious.c'
     - '@behavior: Republishes the shared battle record word 0x74, its saved work-object pointer, through the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper at 0x8014DAEC, and when that helper returns a non-zero byte increments byte 0x1 of the previously published work object, the handler index this overlay dispatches on, before restoring the cell.'
   - - 732
     - c
-    - claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC
-    - '@source: src/bof3/bmagic/claimRecordClearByte1StoreWorkPointerPublishSavedPointerSetWorkByteBToOneAndAdvanceHandlerIndexBmagicMagic08103_801EEEDC.c'
+    - claimPointerSavedPointer
+    - '@source: src/bof3/bmagic/claimPointerSavedPointer.c'
     - '@behavior: Word 2 of the four-word handler pointer run at 0x801EEC04 that the frame dispatcher func_801EEC30 calls through work-object byte 1 scaled by four, so no jal in the payload names it. It claims one entry of the action-slot store through the shared allocator func_801E590C called with selector 1 and 0x42, scales the zero-extended low byte of the answer by the 0x78-byte record stride, clears record byte 1 and stores the scratchpad work-object pointer read from the cell 0x1F800044 into record word 0x74. It then republishes the shared battle record word 0x74 reached through the pointer cell 0x801EC2E0 through the scratchpad cell while keeping the cell previous value in a callee-saved register, calls the readiness helper func_8014DAEC, restores the cell, sets work byte 0xB to 1 and increments work byte 1, the handler index this overlay dispatches on. Takes no arguments and returns nothing.'
   - - 904
     - c
-    - publishSavedWorkPointerInvokeReadinessHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic08103_801EEF88
-    - '@source: src/bof3/bmagic/publishSavedWorkPointerInvokeReadinessHelperThenForwardBattleByteRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic08103_801EEF88.c'
+    - publishSavedPointerReadiness
+    - '@source: src/bof3/bmagic/publishSavedPointerReadiness.c'
     - '@behavior: Republishes the shared battle record saved work-object pointer through the scratchpad work-object pointer cell 0x1F800044, calls the shared readiness helper func_8014DAEC and restores the cell, then, only when byte 0xB of the published work object is zero, forwards the shared battle byte at 0x80146384 to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword 0x801462E8 and invokes the shared helper func_801E5988. Takes no arguments and returns nothing.'
   - - 1044
     - c
-    - dispatchStateByte1Tablefa84BmagicMagic08103_801EF014
+    - callStateTablefa84Bmagic
     - '@source: src/bof3/bmagic/magic08103DispatchTables.c'
   - - 1112
     - asm
@@ -63,24 +63,24 @@ segments:
     - func_801EF0B8
   - - 1420
     - c
-    - reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStepThenAdvanceWorkByteBAndByte9AndByte2AtLeast81BmagicMagic08103_801EF18C
-    - '@source: src/bof3/bmagic/reserveRecordEveryFourthTickPublishWorkPointerCopyWorkByte9SeedByteAStepThenAdvanceWorkByteBAndByte9AndByte2AtLeast81BmagicMagic08103_801EF18C.c'
+    - reserveEveryFourthPointer
+    - '@source: src/bof3/bmagic/reserveEveryFourthPointer.c'
     - '@behavior: On the frames where the low two bits of the shared counter at 0x80143E6C are both set, claims the first free record of the 0x78-byte-stride pool at 0x801EFA8C through reserveFirstFreeRecordBmagicMagic08103_801EFA20 and fills its pointer word at +0x74 with the work-object pointer read from the scratchpad cell 0x1F800044, its byte +0xB with the work-object byte 0x9 and its byte +0xA with a ramp step of 8 below 100 that falls by one per four counts past 100. It then increments the work-object byte 0xB, and every frame increments work byte 0x9 and, once that truncated byte reaches 0x81, the work-object state byte 0x2, advancing the overlay work byte 2 handler sequence.'
   - - 1696
     - asm
     - func_801EF2A0
   - - 1776
     - c
-    - invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0
-    - '@source: src/bof3/bmagic/invokeHelperWhenFlag4SetElseInvokeMainExecutableHelperBmagicMagic08103_801EF2F0.c'
-    - '@behavior: Overlay step handler at word 1 of the two-word code pointer run based at 0x801EFA84, whose word 0 is 0x801EF058. The step dispatcher dispatchStateByte1Tablefa84BmagicMagic08103_801EF014 indexes that run with work-object byte 0x1, so no jal in this payload names the body. It reads the shared battle global halfword at 0x801462E8 once and tests bit 0x0004, calling the shared helper func_801E5988 with no arguments when the bit is set and the shared main-executable helper func_800AFD9C with no arguments when it is clear, then returns. The 0x18-byte frame keeps ra at 0x10 across the one call and no other state is read or written. Takes no arguments and returns nothing.'
+    - callHelperMainExecutable
+    - '@source: src/bof3/bmagic/callHelperMainExecutable.c'
+    - '@behavior: Overlay step handler at word 1 of the two-word code pointer run based at 0x801EFA84, whose word 0 is 0x801EF058. The step dispatcher callStateTablefa84Bmagic indexes that run with work-object byte 0x1, so no jal in this payload names the body. It reads the shared battle global halfword at 0x801462E8 once and tests bit 0x0004, calling the shared helper func_801E5988 with no arguments when the bit is set and the shared main-executable helper func_800AFD9C with no arguments when it is clear, then returns. The 0x18-byte frame keeps ra at 0x10 across the one call and no other state is read or written. Takes no arguments and returns nothing.'
   - - 1840
     - asm
     - func_801EF330
   - - 1948
     - c
-    - copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C
-    - '@source: src/bof3/bmagic/copyRecordWordPairAdd2000ToWord34Add100ToHalfword3EThenSetDirectionTowardSlotRecordFromByteAStoreWord14ClearByte9AndAdvanceWorkByte2BmagicMagic08103_801EF39C.c'
+    - copyDirectionTowardStore
+    - '@source: src/bof3/bmagic/copyDirectionTowardStore.c'
     - '@behavior: Work byte 2 handler of this overlay, word 8 of the pointer run at 0x801EEC04, so it is reached through the table and has no jal caller. It reads the shared battle record through the pointer cell at 0x801EB4E0 and the scratchpad work object through the cell at 0x1F800044, then publishes the record pose in the work object: work word 0x34 receives the record word 0x34 plus 0x2000, work word 0x38 receives the record word 0x38, and work halfword 0x3E receives the record unsigned halfword 0x3E plus 0x100. The record byte 0xA then selects the 0x78-byte-stride queued action-slot store record, and func_8017A138 takes the word differences between that record fields 0x801EC364 and 0x801EC368 and the work words 0x34 and 0x38 re-read through the work pointer, its answer being stored in work word 0x14. Last it clears work byte 9 and advances work byte 2 through a second cell read, both taken after the heading call because a store through the loaded pointer may alias the cell. Takes no arguments and returns nothing through the jr $ra.'
   - - 2124
     - asm

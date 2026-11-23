@@ -37,12 +37,12 @@ segments:
     - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38.c'
   - - 900
     - c
-    - dispatchStateByte1Table0ac0BmagicMagic09703_801EEF84
+    - callStateTable0Bmagic
     - '@source: src/bof3/bmagic/magic09703DispatchTables.c'
   - - 968
     - c
-    - dispatchWorkByte2HandlerThenDrawWorkRecordAndPopWhenWorkBytes2And0SetBmagicMagic09703_801EEFC8
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWorkRecordAndPopWhenWorkBytes2And0SetBmagicMagic09703_801EEFC8.c'
+    - callDrawRecordPop
+    - '@source: src/bof3/bmagic/callDrawRecordPop.c'
   - - 1300
     - asm
     - func_801EF114

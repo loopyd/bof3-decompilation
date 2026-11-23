@@ -23,7 +23,7 @@ extern void (*D_800C26B0[])(void); /* @source 0x800C26B0 @kind data */
  * pointer without touching $v0, so a caller that reads the result sees whatever
  * the selected handler left there. The only in-image word that names it is
  * 0x800C26A8, index 0 of the nine-word run the already-exact sibling
- * dispatchStateByte3Table26a8BossBoss00816_800C18E4 indexes with work byte 3,
+ * callStateTable26Boss indexes with work byte 3,
  * so the byte-3 dispatcher enters it when work byte 3 is 0: it has no jal
  * caller and takes no arguments. The body differs from that sibling in two
  * words only, the index byte offset, 3 there and 4 here, and the table's %lo

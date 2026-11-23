@@ -12,7 +12,7 @@ sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF5C4.c",
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic11503_801EF888.c",
     "src/bof3/bmagic/seedWorkHeaderAndUnitMotionPairClearTintGroupRequestResource1ThenAdvanceWorkByte2BmagicMagic11503_801EF690.c",
-    "src/bof3/bmagic/seedWorkHeaderFromBattleRecordClearTintGroupRequestResource0SetWorkByte9ThenAdvanceWorkByte2BmagicMagic11503_801EF130.c",
+    "src/bof3/bmagic/stateHeaderTintGroup.c",
 ]
 support_sources = [
     "src/bof3/support/magic115_03_psyq.c",
@@ -21,6 +21,6 @@ support_sources = [
     "src/bof3/bmagic/decrementWorkTintTripletByFourThenInvokeSharedHelperSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF7F4.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef8c4BmagicMagic11503_801EF098.c",
     "src/bof3/bmagic/dispatchStateByte2Tablef8d4BmagicMagic11503_801EF5F8.c",
-    "src/bof3/bmagic/decrementWorkTintTripletStepPositionPairTimesTwelveSetChannel5DToMinus80AndAdvanceWorkByte2BmagicMagic11503_801EF49C.c",
+    "src/bof3/bmagic/decrementTintTimesTwelve.c",
 ]
 psyq_source = "src/bof3/support/magic115_03_psyq.c"

@@ -72,7 +72,7 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  * leaves the meaning to the gate.
  *
  * Shape evidence: the body is transcribed from the exact lift
- * setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0
+ * stateStatusGateSeed
  * of word 0 of the same handler table, whose statement order, operand forms and
  * declaration style are followed here. The two spans agree from the frame
  * creation through the state entry store; they differ in the mode literals

@@ -98,7 +98,7 @@ extern u8           D_801F4680[];
 extern World00Area008Handler modeHandlerTable[];
 /* @source 0x801F46B0
  * @kind: table — 15 area-state mode handler pointers. */
-extern World00Area008Handler areaStateModeHandlerTable[];
+extern World00Area008Handler areaModeHandlerTable[];
 /* @source 0x801F46EC @kind unknown */
 extern World00Area008Handler D_801F46EC[];
 
@@ -150,7 +150,7 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
 
 void drawScratchStatus(void);
 void drawFlagStatus(void);
-void advanceWhenSecondaryStateByteIs3SelectMode5(void);
+void stateSecondaryByteSelect(void);
 void func_801F317C(void);
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 void func_801F3244(void);

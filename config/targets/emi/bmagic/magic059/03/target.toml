@@ -8,7 +8,7 @@ splat = "config/targets/emi/bmagic/magic059/03/splat.yaml"
 load_address = 0x801EEC00
 
 sources = [
-    "src/bof3/bmagic/clearWorkBytes9AThenAdvanceWorkByte2BmagicMagic05903_801EF4C4.c",
+    "src/bof3/bmagic/stateWorkAdvanceBmagic.c",
     "src/bof3/bmagic/incrementWorkByte9Add1ToWorkByteAThenAdvanceWorkByte2At20BmagicMagic05903_801F0070.c",
 ]
 support_sources = [
@@ -24,6 +24,6 @@ support_sources = [
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05903_801F0490.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic05903_801EF224.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenProjectRecordPositionPairAndDrawWhenActiveBmagicMagic05903_801EFE8C.c",
-    "src/bof3/bmagic/copyBattleRecordPositionPairAndHalfwordThenProjectWorkRecordAndInstallTransformBmagicMagic05903_801EF638.c",
+    "src/bof3/bmagic/copyHalfwordInstallTransform.c",
 ]
 psyq_source = "src/bof3/support/magic059_03_psyq.c"

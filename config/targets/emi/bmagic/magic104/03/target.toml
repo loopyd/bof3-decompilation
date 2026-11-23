@@ -11,15 +11,15 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic10403_801EEC14.c",
 ]
 support_sources = [
-    "src/bof3/bmagic/drawSixteenQuadBandsWithWorkByte9RadiusAndStateColorsBmagicMagic10403_801EF370.c",
-    "src/bof3/bmagic/drawThirtyTwoTranslucentGouraudRingQuadsWithSampledWorkByte9RadiiAndFadeAfter8BmagicMagic10403_801EFE34.c",
-    "src/bof3/bmagic/drawThirtyTwoTranslucentGouraudFanTrianglesWithSampledWorkByte9RadiusAndState3FadeBmagicMagic10403_801EFB2C.c",
+    "src/bof3/bmagic/renderSixteenBandsColors.c",
+    "src/bof3/bmagic/renderThirtySampledRadii.c",
+    "src/bof3/bmagic/renderThirtyTrianglesSampled.c",
     "src/bof3/bmagic/decrementWorkByte9AndHalfword3EAfterHelpersAndPublishByteBOnZeroBmagicMagic10403_801F034C.c",
-    "src/bof3/bmagic/decrementWorkByteAThenInvokeHelperByByteBParityClearBytes9AndAAndAdvanceByte2BmagicMagic10403_801EF178.c",
+    "src/bof3/bmagic/decrementInvokeHelperParity.c",
     "src/bof3/support/magic104_03_psyq.c",
-    "src/bof3/bmagic/incrementWorkBytesAAnd9ThenCopyByteBToGlobalWorkAndInvokeHelperAt18BmagicMagic10403_801EF2F8.c",
+    "src/bof3/bmagic/incrementBytesCopyGlobal.c",
     "src/bof3/bmagic/magic10403DispatchTables.c",
-    "src/bof3/bmagic/incrementWorkByte9ClearWorkByteAAndAdvanceWorkByte2At8BmagicMagic10403_801EF21C.c",
+    "src/bof3/bmagic/incrementClearByteAdvance.c",
     "src/bof3/bmagic/setWorkByte9To8Add200ToHalfword3EAndAdvanceByte2WhenByteAZeroElseDecrementByteABmagicMagic10403_801F02F4.c",
     "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBIs7BmagicMagic10403_801EEE7C.c",
 ]

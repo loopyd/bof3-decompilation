@@ -40,26 +40,26 @@ segments:
     - '@behavior: Step handler 0 of this overlay, word 0 of the seven-word handler table at 0x801EEC04 (0x801EECA4, 0x801EED60, 0x801EEDCC, 0x801EEE24, 0x801EEEC4, 0x801EEF80, 0x801EF00C), which the dispatcher 0x801EEC20 copies into its 0x38-byte frame and indexes by unsigned work byte 1, so the table word is the only reference to this span in the payload. It reads the shared record through the pointer cell 0x801EC2E0 first, ahead of the frame adjustment, follows that record''s word 0x74 to the saved work-object pointer, and publishes that object''s words 0x34, 0x38 and 0x3C as the effect origin at 0x801EFA9C, 0x801EFAA0 and 0x801EFAA4, biasing the first by 0x14000 and the third by 0x2C00000. Each of the three stores re-reads the record word 0x74, so the walk is one pointer load per store. It then zeroes the ring radius 0x801EFAAC, the burst radius 0x801EFAAE and the fan angle 0x801EFAB0 as halfwords, calls the slot reset 0x801EF6B0 with no arguments so the eight effect slots at 0x801EFAB4 start idle, stores 0x3C into work byte 9 through the scratchpad cell 0x1F800044, re-reads that cell and increments work byte 1, which moves the dispatcher on to the next handler entry, and submits cue 0x100 through 0x8015DF18. Those are its only stores, it reads no other cell, it has no loop, and its 0x18-byte frame keeps $ra at $sp+0x10 across the two calls. It takes no arguments and returns nothing.'
   - - 352
     - c
-    - startBurstInIdleEffectSlotsThenStepEffectSlotsAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EED60
-    - '@source: src/bof3/bmagic/startBurstInIdleEffectSlotsThenStepEffectSlotsAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EED60.c'
+    - audioBurstIdleExpires
+    - '@source: src/bof3/bmagic/audioBurstIdleExpires.c'
     - '@behavior: Magic-150 effect handler, the entry at 0x801EEC08 of the overlay handler table 0x801EEC04, index 1 of its seven words, which the dispatcher 0x801EEC20 indexes by work-object byte 1. It makes a 0x18-byte frame with $ra at +0x10, calls 0x801EF6F8 to start an eight-step burst in every idle slot of the effect-slot run 0x801EFAB4, then calls 0x801EF8EC to step and draw the active slots of that run; both answers are discarded. It then decrements work-object byte 9 through the pointer read from scratchpad cell 0x1F800044, stores it back, masks the stored byte to 0xFF for the test, and returns untouched while it is nonzero. When the countdown reaches zero it re-reads the same cell and increments work-object byte 1, which advances the dispatcher to the next handler entry, and it does not re-arm the countdown. Those are its only two stores; it reads no other cell, has no loop, and takes no arguments and returns nothing.'
   - - 460
     - c
-    - stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC
-    - '@source: src/bof3/bmagic/stepEffectSlotsThenSetWorkByte9To4AndAdvanceWorkByte1WhenNoneActiveBmagicMagic15003_801EEDCC.c'
+    - stepSlotsNoneActive
+    - '@source: src/bof3/bmagic/stepSlotsNoneActive.c'
     - '@behavior: Magic-150 effect handler at the entry 0x801EEC0C of the overlay handler table 0x801EEC04, index 2 of its seven words. It creates a 0x18-byte frame with ra at +0x10 and calls the slot update 0x801EF8EC with no arguments; while the low byte of that answer is nonzero it returns untouched. When that byte reads zero it re-reads the work-object pointer from scratchpad cell 0x1F800044, stores 4 into work-object byte 9 through it, re-reads the same cell and increments work-object byte 1, moving the overlay handler step to the next table entry. Those are its only two stores, it has no loop and it returns nothing.'
   - - 548
     - asm
     - func_801EEE24
   - - 708
     - c
-    - setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4
-    - '@source: src/bof3/bmagic/setRingRadiusFromFrameParityAndSpinFanAngleThenDrawAndSetWorkByte9To4AndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEEC4.c'
+    - stateParitySpinFan
+    - '@source: src/bof3/bmagic/stateParitySpinFan.c'
     - '@behavior: Magic-150 effect handler, one of the words of the overlay handler table at 0x801EEC04 that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It publishes the ring radius at 0x801EFAAC as 0x100, or 0x110 when bit 0 of the shared frame counter 0x80143E6C is set, subtracts 0x200 from the fan angle at 0x801EFAB0, and calls the overlay draw setup 0x801EF254 with no arguments. It then decrements work byte 9 and returns untouched while that byte is nonzero; when the countdown reaches zero it stores 4 into work byte 9, increments work byte 1 to move the dispatcher to the next handler entry, calls 0x800A9820 with the shared battle byte 0x80146384 and submits cue 0x102 through 0x8015DF18. It takes no arguments and returns nothing.'
   - - 896
     - c
-    - shrinkRingAndBurstRadiiThenDrawAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEF80
-    - '@source: src/bof3/bmagic/shrinkRingAndBurstRadiiThenDrawAndAdvanceWorkByte1WhenCountdownExpiresBmagicMagic15003_801EEF80.c'
+    - shrinkRingBurstRadii
+    - '@source: src/bof3/bmagic/shrinkRingBurstRadii.c'
     - '@behavior: Magic-150 effect handler, the entry at 0x801EEC18 of the overlay handler table 0x801EEC04 and index 5 of its seven words that the dispatcher 0x801EEC20 copies into its frame and indexes by unsigned work byte 1. It shrinks the two radii of the effect transform in fixed steps with an unsigned halfword load, one addiu and a halfword store each: 0x40 off the ring radius at 0x801EFAAC and 0x60 off the burst radius at 0x801EFAAE, so the ring and its burst particles contract together. It then calls the overlay draw setup 0x801EF254 with no arguments, so the frame is drawn once from the state it just wrote. After the draw it decrements work byte 9 through the pointer read from scratchpad cell 0x1F800044, stores it back, masks the stored byte to 0xFF for the test, and returns untouched while that countdown is nonzero. When the countdown reaches zero it re-reads the same cell and increments work byte 1, which moves the dispatcher on to the next handler entry; it neither re-arms the countdown nor submits a cue. Those are its only stores, it reads no other cell, has no loop, keeps $ra at $sp+0x10 in a 0x18-byte frame, and takes no arguments and returns nothing.'
   - - 1036
     - c
@@ -68,8 +68,8 @@ segments:
     - '@behavior: Magic-150 effect handler, the entry at 0x801EEC1C of the overlay handler table 0x801EEC04 and index 6 of its seven words, which the dispatcher 0x801EEC20 copies into its 0x38-byte frame and indexes by unsigned work byte 1. It raises bit 0x4 of the shared battle global halfword at 0x801462E8 with a halfword read-modify-write: the address is materialized once, the halfword is loaded unsigned into $v0, ori sets 0x4 and the halfword store fills the call delay slot while that address register stays live. It then calls the main-executable helper 0x801E5988 with no arguments and returns nothing; it neither advances work byte 1 nor touches work byte 9, so it runs once per dispatching frame and leaves the handler index where it was. Its 52 bytes are identical to the exact sibling 0x801EFCFC of emi/bmagic/magic008/00, and the only reference to this address in the payload is its word in the handler table.'
   - - 1088
     - c
-    - drawTranslucentRedRingOfSixteenFlatQuadsAroundEffectOriginWhenSideNegativeBmagicMagic15003_801EF040
-    - '@source: src/bof3/bmagic/drawTranslucentRedRingOfSixteenFlatQuadsAroundEffectOriginWhenSideNegativeBmagicMagic15003_801EF040.c'
+    - renderRedSideNegative
+    - '@source: src/bof3/bmagic/renderRedSideNegative.c'
     - '@behavior: The overlay ring pass of the draw setup 0x801EF254. It walks sixteen phases of the 0x1000 circle in 0x100 steps around the effect transform at 0x801EFA9C: each station is the phase truncated to a halfword and handed to the phase samplers 0x801783C8 and 0x801782FC, whose answers times the signed radius halfword at +0x10 shift right four on the transform y word and left four on its z word, and the same point with 0x100000 added to its x word gives the band far edge. Every step takes the shared primitive cursor anew, seeds it through the flat-quad setter 0x8017A9A4, turns semi-transparency on, projects the near and far edges of the current phase and then of the phase one 0x100 step further through 0x801AFF04 into one screen entry and copies the four pairs into the quad vertices, storing 0x80 in the red channel and clearing green and blue. It passes the first three vertex pairs to the shared cross-product test 0x801AFF90 and appends the 0x18-byte packet at ordering table index 1 only while that answer reads negative, so a step whose answer is zero or positive leaves the cursor untouched and its quad is dropped. It takes no arguments and returns nothing.'
   - - 1620
     - asm
@@ -85,8 +85,8 @@ segments:
     - func_801EF4E0
   - - 2736
     - c
-    - resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0
-    - '@source: src/bof3/bmagic/resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0.c'
+    - stateSlotCursorStates
+    - '@source: src/bof3/bmagic/stateSlotCursorStates.c'
     - '@behavior: Publishes the eight-slot table base 0x801EFAB4 into the cursor cell 0x801EFAF4, then walks the eight 8-byte slots with an unsigned byte counter in a bottom-tested loop, clearing each slot leading state halfword and publishing the advanced cursor back into the cell after every slot; no arguments, no frame, no call, returns nothing.'
   - - 2808
     - asm

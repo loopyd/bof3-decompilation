@@ -16,7 +16,7 @@ extern u8 D_801D4285;
  *           no mode byte. No arguments, no return value, leaf with no frame.
  *           Constant/variance evidence: the 68 bytes 0x801F5B0C..0x801F5B50
  *           differ from the exact sibling
- *           setStatus2FAndModeIndex6IfGateElseFFFFWorld02Area09813_801F5AC8 in
+ *           stateStatus2ModeGate in
  *           exactly one word, the `j` target at 0x801F5B34, whose immediate
  *           moves from 0x0807D6C1 to 0x0807D6D2 - 0x11 words, the 0x44-byte
  *           delta between the two spans - so every relative branch, literal and

@@ -15,7 +15,7 @@ typedef struct BmagicMagic05403WorkByte2Table {
  * binds it, and the target's generated undefined-symbol table already covered
  * the address as D_801EEC14 before this lift.
  */
-extern BmagicMagic05403WorkByte2Table dispatchWorkByte2HandlerTable801EEC14; /* @source 0x801EEC14 @kind data */
+extern BmagicMagic05403WorkByte2Table callWorkHandlerTable801; /* @source 0x801EEC14 @kind data */
 
 /*
  * Scratchpad work-object pointer cell, outside this overlay's image and read
@@ -54,7 +54,7 @@ void dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_
     void) {
   BmagicMagic05403WorkByte2Table handlers;
 
-  handlers = dispatchWorkByte2HandlerTable801EEC14;
+  handlers = callWorkHandlerTable801;
   handlers.handlers[D_1F800044[2]]();
   if (D_1F800044[0] != 0) {
     func_8014D290();

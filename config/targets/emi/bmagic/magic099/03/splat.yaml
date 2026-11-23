@@ -34,16 +34,16 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic09903_801EEC18.c'
   - - 136
     - c
-    - seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88
-    - '@source: src/bof3/bmagic/seedWorkPoseSubmitRecordQueueNineSlotsAndAdvanceWorkByte1BmagicMagic09903_801EEC88.c'
+    - statePoseNineSlots
+    - '@source: src/bof3/bmagic/statePoseNineSlots.c'
     - '@behavior: Seed work pose, submit record, queue nine action slots and advance work byte 1.'
   - - 624
     - asm
     - func_801EEE70
   - - 920
     - c
-    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98
-    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBNonzeroBmagicMagic09903_801EEF98.c'
+    - stateIncrementByteNonzero
+    - '@source: src/bof3/bmagic/stateIncrementByteNonzero.c'
     - '@behavior: On work byte 0xB non-zero, store 8 into work byte 9 and advance work byte 1.'
   - - 988
     - c
@@ -55,28 +55,28 @@ segments:
     - func_801EF0EC
   - - 1388
     - c
-    - dispatchStateByte1Table0994BmagicMagic09903_801EF16C
+    - callStateTable0994Bmagic
     - '@source: src/bof3/bmagic/magic09903DispatchTables.c'
   - - 1456
     - asm
     - func_801EF1B0
   - - 1636
     - c
-    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic09903_801EF264
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic09903_801EF264.c'
+    - callDrawPopActive
+    - '@source: src/bof3/bmagic/callDrawPopActive.c'
     - '@behavior: Dispatch work byte 2, call the shared helper, then draw and pop the matrix when active.'
   - - 1772
     - c
-    - seedRandomWorkByteBClearBytes9AndAThenCopyRecordTripletAndAdvanceWorkByte2BmagicMagic09903_801EF2EC
-    - '@source: src/bof3/bmagic/seedRandomWorkByteBClearBytes9AndAThenCopyRecordTripletAndAdvanceWorkByte2BmagicMagic09903_801EF2EC.c'
+    - stateRandomCopyTriplet
+    - '@source: src/bof3/bmagic/stateRandomCopyTriplet.c'
     - '@behavior: Seed random work byte B, clear bytes 9 and A, copy record triplet, and advance work byte 2.'
   - - 1908
     - asm
     - func_801EF374
   - - 2020
     - c
-    - incrementWorkByteBAndDecrementWorkByte9ThenAdvanceWorkByte2WhenZeroBmagicMagic09903_801EF3E4
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndDecrementWorkByte9ThenAdvanceWorkByte2WhenZeroBmagicMagic09903_801EF3E4.c'
+    - incrementByteDecrementZero
+    - '@source: src/bof3/bmagic/incrementByteDecrementZero.c'
   - - 2124
     - asm
     - func_801EF44C
@@ -94,16 +94,16 @@ segments:
     - func_801EF6C4
   - - 3032
     - c
-    - incrementWorkByteBAndWord0CProjectPositionPairAtRadius40ThenCountDownByteAAndAdvanceSourceByteBAndCallE5988BmagicMagic09903_801EF7D8
-    - '@source: src/bof3/bmagic/incrementWorkByteBAndWord0CProjectPositionPairAtRadius40ThenCountDownByteAAndAdvanceSourceByteBAndCallE5988BmagicMagic09903_801EF7D8.c'
+    - incrementCountDownSource
+    - '@source: src/bof3/bmagic/incrementCountDownSource.c'
     - '@behavior: Project the work position pair at radius 40, count down byte A, then advance source byte B and call 0x801E5988 when zero.'
   - - 3312
     - asm
     - func_801EF8F0
   - - 5128
     - c
-    - dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F0008
-    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenCall043CAnd070CAndPopWhenActiveBmagicMagic09903_801F0008.c'
+    - callHandlerPopActive
+    - '@source: src/bof3/bmagic/callHandlerPopActive.c'
     - '@behavior: Dispatch work byte 2, call the shared helper, then call 0x801EF1B0, 0x801F043C, 0x801F070C and PopMatrix when active.'
   - - 5264
     - asm
@@ -132,7 +132,7 @@ segments:
     - workByte1HandlerTable
   - - 7584
     - textbin
-    - workByte2HandlerTableA
+    - workByte2HandlerTable
   - - 7600
     - textbin
     - workByte2HandlerTableB

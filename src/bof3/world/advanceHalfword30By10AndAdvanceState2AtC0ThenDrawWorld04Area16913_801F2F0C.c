@@ -2,7 +2,7 @@
 
 /* Local drawing routine of this overlay, re-declared here because this file
  * is the only one that reaches it from this handler. */
-void drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8(void);
+void renderMirroredGraphType(void);
 
 /* @source 0x801F2F0C
  * @behavior Per-frame byte-2 handler of the overlay work record published at
@@ -38,5 +38,5 @@ void advanceHalfword30By10AndAdvanceState2AtC0ThenDrawWorld04Area16913_801F2F0C(
   if (*half >= 0xC0) {
     record[2]++;
   }
-  drawMirroredWorkRecordQuadPairForGraphTypeWorld04Area16913_801F30E8();
+  renderMirroredGraphType();
 }

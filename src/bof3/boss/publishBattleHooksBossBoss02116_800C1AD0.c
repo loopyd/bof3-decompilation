@@ -12,7 +12,7 @@ typedef void (*Boss02116Handler)(void);
  * masks its argument with 0xFF and, while the index is below 6, jumps through
  * the six-word table at 0x800C1804; it returns zero, which the void slot type
  * drops. */
-void initModeTupleByBattleFlagAndSetScenarioProgressBossBoss02116_800C1C18(void);
+void setupTupleFlagProgress(void);
 void publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64(
     void);
 s32  func_800C1B08(s32 arg0);
@@ -27,7 +27,7 @@ extern Boss02116Handler D_801463AC; /* @source 0x801463AC @kind unknown */
 /* @source 0x800C1AD0
  * @behavior Publishes this overlay handler trio into the shared hook slots: the
  * mode-transition handler
- * initModeTupleByBattleFlagAndSetScenarioProgressBossBoss02116_800C1C18 (tests
+ * setupTupleFlagProgress (tests
  * the 0x2 bit of D_80146328, and while it is set stores 0xA into the scenario
  * progress byte and calls func_801DDED8, otherwise calls func_801DDF00) into
  * 0x801463A4, the owner-zero battle entry
@@ -52,7 +52,7 @@ extern Boss02116Handler D_801463AC; /* @source 0x801463AC @kind unknown */
  */
 void publishBattleHooksBossBoss02116_800C1AD0(void) {
   D_801463A4 =
-      initModeTupleByBattleFlagAndSetScenarioProgressBossBoss02116_800C1C18;
+      setupTupleFlagProgress;
   D_801463A8 =
       publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64;
   D_801463AC = (Boss02116Handler)func_800C1B08;
