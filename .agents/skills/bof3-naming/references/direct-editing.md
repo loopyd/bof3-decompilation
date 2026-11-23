@@ -59,3 +59,8 @@ target. Fan-out is a parent decision, not a rename.
 before and after: an exact body stays exact, a partial keeps its own score. A
 refused proof restores the previous spelling and names the selector. A rejected
 rename is undone by running the same transaction with the two spellings swapped.
+
+A rename wave changes a target's config, so its Rizin snapshot goes stale.
+Refresh the index (`bin/harness analysis index`) before another readiness or
+analysis query reads that target; the stale recipe is reported, never refreshed
+silently.
