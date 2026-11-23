@@ -387,8 +387,10 @@ segments:
     - asm
     - func_801FD5A0
   - - 27152
-    - asm
-    - func_801FD610
+    - c
+    - claimFrontEndRecordHandler49SeedEntryStateAndReturnRowScenarioScena0700_801FD610
+    - '@source: src/bof3/scenario/claimFrontEndRecordHandler49SeedEntryStateAndReturnRowScenarioScena0700_801FD610.c'
+    - '@behavior: Claims one free front-end record for handler selector 0x49 and hands back its row pointer: asks the shared main-executable allocator func_8019601C for a row index, zero-extends that answer to a byte, forms the row address at 0x80143FC8 plus the index scaled by the 0x74-byte row stride before it tests anything, and unless the index is 0xFF writes row byte 0 with 1, row byte 5 with the handler selector 0x49 of the table at 0x801C7C70 and row byte 1 with the caller''s byte state code; the pointer is returned on both paths, so a full table leaves every row untouched and still answers the base plus 0xFF scaled by the stride. Twelve jal call sites inside func_801FC2D0 of this payload pass 0, 1, 0, 2, 9, 9, 3, 4, 5, 8, 6 and 7 as the only argument and never test the 0xFF answer; no word of this payload holds 0x801FD610.'
   - - 27260
     - asm
     - func_801FD67C

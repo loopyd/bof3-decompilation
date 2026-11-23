@@ -17,6 +17,7 @@ support_sources = [
     "src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic05403_801EF624.c",
     "src/bof3/bmagic/forwardBattleByteAndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic05403_801EF05C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeD290WhenWorkByte0NonzeroBmagicMagic05403_801EF19C.c",
+    "src/bof3/bmagic/runSharedUpdateThenDecrementWorkByte9AndSetAccelerationPairWhenZeroBmagicMagic05403_801EF43C.c",
 ]
 headers = ["include/bof3/bmagic/magic05403_internal.h"]
 psyq_source = "src/bof3/support/magic054_03_psyq.c"

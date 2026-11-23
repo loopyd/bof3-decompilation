@@ -163,8 +163,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F037C.c'
     - '@behavior: Handler of the overlay work byte 2 step run based at 0x801F0BBC, reached as index 6 through the pointer word at 0x801F0BD4 that the dispatcher at 0x801EFF88 indexes with the work object byte at offset 0x2, so nothing calls it directly. It loads the shared battle work pointer at 0x801EB4E0, compares that record byte at offset 0xB with the immediate 0x83, and returns from the branch delay slot when the byte differs. Only on that equality does it read the scratchpad work-object pointer cell at 0x1F800044 once and increment the object byte at offset 0x2 with a byte-width add (lbu, addiu 1, sb). Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state. Its 64 bytes are byte-identical to the same overlay function at 0x801F0090.'
   - - 6076
-    - asm
-    - func_801F03BC
+    - c
+    - decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F03BC
+    - '@source: src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F03BC.c'
+    - '@behavior: Last word (index 10) of the work-object byte-1 handler table based at 0x801F0BB0, reached through the pointer word at 0x801F0BD8 that the dispatcher at 0x801EFF44 loads with the work-object byte at offset 0x1 scaled left 2, so nothing calls it directly. It reads the scratchpad work-object pointer cell at 0x1F800044 once before the frame is created, subtracts two from that object''s byte 0x09 at byte width (lbu, addiu -0x2, sb), then reads the cell a second time and tests the reloaded byte for zero. Only when that countdown reaches zero does it read the shared battle work pointer at 0x801EB4E0, decrement that record''s byte 0x0B by one and invoke the shared helper at 0x801E5988, the store filling the call delay slot. The 0x18-byte frame keeps only the return address at 0x10. Takes no arguments and returns nothing.'
   - - 6184
     - c
     - drawTranslucentRotatedQuadAtScreenCenterScaledAndTintedByWorkByte9BmagicMagic06000_801F0428

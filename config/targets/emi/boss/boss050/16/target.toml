@@ -10,6 +10,7 @@ load_address = 0x800C1800
 sources = [
     "src/bof3/boss/dispatchStateByte1Table1b4cBossBoss05016_800C1810.c",
     "src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05016_800C1854.c",
+    "src/bof3/boss/publishSavedWorkPointerAdvancePreviousStateByte1WhenHelperReadyBossBoss05016_800C1A84.c",
 ]
 support_sources = [
     "src/bof3/boss/initModeTuple510Or520ByFlagBitTwoSetSubstate10ThenSetSelectedRecordIndex8CBossBoss05016_800C1948.c",

@@ -14,6 +14,7 @@ sources = [
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EEFA4.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00100_801EFA84.c",
     "src/bof3/bmagic/invokeActingEnemyScriptThenCopyRecordByte27ClearByte9AndByteAThenAdvanceWorkByte2BmagicMagic00100_801EF0E8.c",
+    "src/bof3/bmagic/callAFC54ClearRecordFlag40AndAdvanceWorkByte1WhenWorkByteBZeroBmagicMagic00100_801EEF34.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelpersThenDecrementWorkByte9AndRetreatOrAdvanceWorkByte2WhenReadyBmagicMagic00100_801EF468.c",

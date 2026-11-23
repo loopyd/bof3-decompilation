@@ -30,6 +30,7 @@ sources = [
     "src/bof3/scenario/claimStepCountWorkRecordsRampDrawBoundEverySixteenthCountdownStepTickWorkTableAndAdvanceWorkByte2ScenarioScena0700_801F7480.c",
     "src/bof3/scenario/drawSemiTransparentQuadsTickWorkCountdownAndResetWorkStateOnZeroScenarioScena0700_801F7DDC.c",
     "src/bof3/scenario/expandObjectDistanceDrawQuadAndResetWorkAreaPastMaxDistanceScenarioScena0700_801F7810.c",
+    "src/bof3/scenario/claimFrontEndRecordHandler49SeedEntryStateAndReturnRowScenarioScena0700_801FD610.c",
 ]
 support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",

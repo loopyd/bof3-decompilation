@@ -12,6 +12,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic02103_801EEC28.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic02103_801EEFA8.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic02103_801EF0BC.c",
+    "src/bof3/bmagic/invokeHelperThenClearRecordFlag40WhenWorkByteBZeroThenAdvanceWorkByte1BmagicMagic02103_801EEF38.c",
 ]
 support_sources = [
     "src/bof3/bmagic/invokeHelperThenCountDownWorkByte9AndQueueTwelveRecordsWithPairedStepAndWorkPointerBmagicMagic02103_801EF104.c",

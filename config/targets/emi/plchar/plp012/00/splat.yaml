@@ -96,8 +96,10 @@ segments:
     - asm
     - func_801CF37C
   - - 4244
-    - asm
-    - func_801CF494
+    - c
+    - clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01200_801CF494
+    - '@source: src/bof3/plchar/clearByte12BWhenSelectedFrontEndRecordUnseededThenRunSharedUpdatePlcharPlp01200_801CF494.c'
+    - '@behavior: Overlay step of the front-end work object read through the scratchpad pointer cell 0x1F800044: it reads the record index from work byte 0x0B and looks that row up in the shared 0x74-byte front-end record table at 0x80143FC8, scaling the index by the row size. When the selected row byte 0 reads 0 -- the record is still free, since every seeder of this table stores 1 there -- it clears the state byte at 0x12B of the record published at 0x80146250. Both paths then run the shared no-argument update helper func_8014D978, and the body writes no other state; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the call. No jal in this payload names it: its only reference is the word 0x801CF494 at 0x801CFDA8, entry 10 of the sixteen-word handler run at 0x801CFD80, which the work-byte-2 dispatchers based at 0x801CFD98 and 0x801CFDA4 reach at index 4 and index 1, so it takes no arguments.'
   - - 4352
     - c
     - dispatchWorkByte2TablefdacPlcharPlp01200_801CF500

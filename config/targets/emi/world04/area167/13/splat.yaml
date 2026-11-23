@@ -103,8 +103,10 @@ segments:
     - '@source: src/bof3/world/setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54.c'
     - '@behavior: Entry 3 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0 and whose entry 2 is the exact lift setStatusFFFFAndModeByte0Or1ByGateThenSeedCounter40AndStateEntry20Progress14World04Area16713_801F3DD4. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its two sibling handlers this span stores no mode value into the shared mode byte 0x80146866.'
   - - 4788
-    - asm
-    - func_801F3EB4
+    - c
+    - setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4
+    - '@source: src/bof3/world/setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4.c'
+    - '@behavior: Entry 4 of the 25-entry overlay handler table at 0x801F6830 of this payload, whose entry 3 is the exact lift setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3E54 and whose entry 0 is the exact lift setStatusFFFFAndModeByte1Or2ByGateThenSeedCounter40AndStateEntry20Progress15World04Area16713_801F3CE0. A `cmp` of this 0x60-byte range with entry 3 reports no differing byte, so the two spans are one body. Stores 0xFFFF into the shared status halfword 0x801490A8 on every path; returns there whenever the shared gate byte 0x801490C7 reads nonzero, and otherwise, on the zero value, runs the shared front-end startup helper 0x8015C088 and then seeds the shared counter byte 0x80146867 with 0x60, the shared state entry byte 0x801448EB with 0x20 and the shared progress byte 0x801448EC with 0x0A. Unlike its sibling handlers with a gate value test this span stores no mode value into the shared mode byte 0x80146866.'
   - - 4884
     - c
     - setWorld04Area16713_801F3F14

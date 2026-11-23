@@ -78,14 +78,17 @@ extern void func_8015C088(void); /* @source 0x8015C088 */
  * gate value 2 and its branch, and writes its own literals (counter 0x60 and
  * progress 0x0A there 0x40 and 0x14), which is why the status store's `$ra`
  * spill lands one instruction earlier here, in the slot the sibling spends on
- * the 0x2 comparison. The next span 0x801F3EB4, still an asm row, was compared
- * with this one over its full 0x60 bytes: `cmp` of the two payload ranges
- * reported no differing byte, so the two are one body.
+ * the 0x2 comparison. The next span 0x801F3EB4, word 4 of the same table, was
+ * compared with this one over its full 0x60 bytes: `cmp` of the two payload
+ * ranges reported no differing byte, so the two are one body, and that span
+ * takes this body as its own exact lift
+ * setStatusFFFFAndSeedCounter60AndStateEntry20Progress0AWhenGateByteZeroWorld04Area16713_801F3EB4.
  *
- * Clone declined: the byte-identical twin 0x801F3EB4 sits in this same target
- * on an `asm` row, so it carries no source to clone, and a payload scan of all
- * 398 shipped binaries found no other copy of this span. The body was seeded
- * from the exact sibling 0x801F3DD4 instead of cloned.
+ * Clone declined: the byte-identical twin 0x801F3EB4 sits in this same target,
+ * where `bin/harness lift clone` refuses with "clone target is the
+ * representative's own target", and a payload scan of all 398 shipped
+ * binaries found no other copy of this span. The body was seeded from the
+ * exact sibling 0x801F3DD4 instead of cloned.
  * @status exact
  * @match 100.00
  * @residual none

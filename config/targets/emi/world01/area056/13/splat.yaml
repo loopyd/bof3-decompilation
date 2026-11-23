@@ -75,8 +75,10 @@ segments:
     - setStatusFourteenIfGateElseFFFFWorld01Area05613_801F316C
     - '@source: src/bof3/world/area05613_gate_status.c'
   - - 1428
-    - asm
-    - func_801F3194
+    - c
+    - clearGateStatusAndArmFrontEndRequestGate2Type7AtScrollPairWhenGateOneWorld01Area05613_801F3194
+    - '@source: src/bof3/world/clearGateStatusAndArmFrontEndRequestGate2Type7AtScrollPairWhenGateOneWorld01Area05613_801F3194.c'
+    - '@behavior: entry 13 of the area056/13 overlay step table at 0x801F3804: stores the no-gate sentinel 0xFFFF into the shared status halfword D_801490A8 and, while the shared gate byte D_801490C7 equals 1, arms the shared front-end request record (gate byte D_80145E91 to 2, type byte D_80145E92 to 7, selector byte D_80145E93 to 0) and calls func_8015507C over the shared scroll pair D_80145EC6/D_80145ECA.'
   - - 1536
     - c
     - clearGateStatusQueueCue208AndArmFrontEndRequestGate2Type7AtScrollPairWhenGateClearAndFlagByte7fWorld01Area05613_801F3200

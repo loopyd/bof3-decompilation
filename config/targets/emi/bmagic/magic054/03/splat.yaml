@@ -68,8 +68,10 @@ segments:
     - asm
     - func_801EF3A4
   - - 2108
-    - asm
-    - func_801EF43C
+    - c
+    - runSharedUpdateThenDecrementWorkByte9AndSetAccelerationPairWhenZeroBmagicMagic05403_801EF43C
+    - '@source: src/bof3/bmagic/runSharedUpdateThenDecrementWorkByte9AndSetAccelerationPairWhenZeroBmagicMagic05403_801EF43C.c'
+    - '@behavior: Work-byte-2 handler, entry 3 of the six-entry handler-pointer run at 0x801EEC14 that the overlay dispatcher at 0x801EF19C copies into its frame and indexes with byte 2 of the scratchpad work object at 0x1F800044. Runs the shared no-argument update helper 0x8014D978, decrements work byte 9 at byte width and stores it before testing it; when the result is zero it writes the acceleration pair at work words 0x18 and 0x1C as 0x60 and -0x80 and advances work byte 2. Re-reads the pointer cell after the byte-9 store because that store may alias the cell. The 0x18-byte frame only keeps $ra at 0x10 across the call; it takes no arguments, returns nothing and writes no other state.'
   - - 2216
     - asm
     - func_801EF4A8

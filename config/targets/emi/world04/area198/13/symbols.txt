@@ -1,8 +1,9 @@
+D_1F800044 = 0x1F800044;
 paletteStageSerial = 0x80145988;
 dispatchStateByte2Table3dfcWorld04Area19813_801F2C04 = 0x801F2C04;
 advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48 = 0x801F2C48;
 advanceWorkByte2AtScenarioProgress0dWorld04Area19813_801F2C80 = 0x801F2C80;
-func_801F2CB8 = 0x801F2CB8;
+advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8 = 0x801F2CB8;
 scalePaletteBlocksWorld04Area19813_801F2D28 = 0x801F2D28;
 func_801F2E04 = 0x801F2E04;
 requestResourceFromScriptCommandStoreSecondByteAtWorkByte2aAndAdvanceHalfword0aBy2World04Area19813_801F2E5C = 0x801F2E5C;

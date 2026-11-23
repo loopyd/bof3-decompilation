@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 D_800C1804 = 0x800C1804;
 dispatchStateByte1Table1b4cBossBoss05016_800C1810 = 0x800C1810;
 publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss05016_800C1854 = 0x800C1854;
@@ -11,7 +12,7 @@ initModeTuple510Or520ByFlagBitTwoSetSubstate10ThenSetSelectedRecordIndex8CBossBo
 noopHandlerBossBoss05016_800C19A0 = 0x800C19A0;
 dispatchStateByte1Table1804BossBoss05016_800C19A8 = 0x800C19A8;
 func_800C1A08 = 0x800C1A08;
-func_800C1A84 = 0x800C1A84;
+publishSavedWorkPointerAdvancePreviousStateByte1WhenHelperReadyBossBoss05016_800C1A84 = 0x800C1A84;
 func_800C1AEC = 0x800C1AEC;
 D_800C1B34 = 0x800C1B34;
 initModeTuple510 = 0x801DDED8;

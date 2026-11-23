@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/setStatusTwelveIfGateTwoElseFFFFWorld01Area05613_801F311C.c",
+    "src/bof3/world/clearGateStatusAndArmFrontEndRequestGate2Type7AtScrollPairWhenGateOneWorld01Area05613_801F3194.c",
 ]
 support_sources = [
     "src/bof3/world/armFrontEndRequestWhenGateClearSetFlagBankEWhenGateOneQueueCue208UnlessGateTwoWorld01Area05613_801F2FFC.c",

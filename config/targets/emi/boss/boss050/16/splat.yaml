@@ -72,8 +72,10 @@ segments:
     - asm
     - func_800C1A08
   - - 644
-    - asm
-    - func_800C1A84
+    - c
+    - publishSavedWorkPointerAdvancePreviousStateByte1WhenHelperReadyBossBoss05016_800C1A84
+    - '@source: src/bof3/boss/publishSavedWorkPointerAdvancePreviousStateByte1WhenHelperReadyBossBoss05016_800C1A84.c'
+    - '@behavior: Step handler of this overlay work state machine: publishes word 0x74 of the shared battle record 0x801EC2E0 into the scratchpad work-object pointer cell 0x1F800044 while keeping the cell previous value in a callee-saved register, calls the shared readiness helper func_8014DAEC and tests only the zero-extended low byte of its answer, increments byte 1 of the work object published before the call when that byte is non-zero and writes nothing more when it is zero, then restores the cell to the saved pointer. Byte 1 of the record at that cell is the dispatch state byte dispatchStateByte1Table1b4cBossBoss05016_800C1810 indexes the 0x800C1B4C handler run with. The payload names this span only through word 1 of the three-word pointer run at 0x800C1804, so the overlay loader that steps that run is its caller.'
   - - 748
     - asm
     - func_800C1AEC

@@ -25,7 +25,8 @@ extern u8 paletteStageSerial;
  *           paletteStageSerial, and returns nothing. Its callers inside this
  *           payload are advanceWorkByte2AfterZeroScalePalettePassWorld04Area19813_801F2C48,
  *           which passes the scale 0, and
- *           func_801F2CB8, which passes work-record byte +9 as the scale.
+ *           advancePaletteScaleRescaleBlocksThenResetWorkAreaAtUnityWorld04Area19813_801F2CB8,
+ *           which passes work-record byte +9 as the scale.
  * @status exact
  * @match 100.00
  * @residual none

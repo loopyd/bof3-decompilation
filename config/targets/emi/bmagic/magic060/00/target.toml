@@ -13,6 +13,7 @@ sources = [
     "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBIs83BmagicMagic06000_801F037C.c",
     "src/bof3/bmagic/drawEnemyTargetResultPanelNameNumbersAndValueRowsBmagicMagic06000_801EF2DC.c",
     "src/bof3/bmagic/drawPartyOrEnemyTargetResultPanelThenDecrementWorkByte9AndAdvanceWorkByte1WhenZeroBmagicMagic06000_801EEE00.c",
+    "src/bof3/bmagic/decrementWorkByte9ByTwoThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic06000_801F03BC.c",
 ]
 support_sources = [
     "src/bof3/support/magic060_00_psyq.c",
