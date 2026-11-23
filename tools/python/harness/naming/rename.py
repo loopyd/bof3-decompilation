@@ -211,13 +211,22 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
             wrote = False
             try:
                 before = _measure(plan, plan.source)
-                _write(plan, old, new)
                 wrote = True
+                _write(plan, old, new)
                 after = _measure(plan, _source_after(plan))
             except (RuntimeError, ValueError, OSError) as error:
                 if wrote:
-                    _write(plan, new, old)
+                    try:
+                        _write(plan, new, old)
+                    except (RuntimeError, ValueError, OSError):
+                        pass
                 plan.refuse("measure", str(error).strip()[:200])
+                return _payload(root, plan, applied=False, proof=(), attempted=True)
+            try:
+                load_target_manifests(root)
+            except (ValueError, OSError) as error:
+                _write(plan, new, old)
+                plan.refuse("manifests", str(error).strip()[:200])
                 return _payload(root, plan, applied=False, proof=(), attempted=True)
             if before != after:
                 _write(plan, new, old)
@@ -265,6 +274,18 @@ def _measure(plan: RenamePlan, source: Path | None) -> dict:
 def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
     """Rewrite the owned surface, then move the source file (undo reverses)."""
     forward = source_name == plan.old
+    if forward:
+        # Check every planned unit before touching a file, so a stale plan cannot
+        # leave rewritten claims behind a rename that never happened.
+        for before, after in plan.renames:
+            if not before.is_file():
+                raise ValueError(
+                    f"planned unit is missing: {before.relative_to(plan.root).as_posix()}"
+                )
+            if after.exists():
+                raise ValueError(
+                    f"rename destination already exists: {after.relative_to(plan.root).as_posix()}"
+                )
     if not forward:
         # Undo: restore the file name first so its old path carries the content.
         for before, after in plan.renames:
@@ -288,10 +309,6 @@ def _write(plan: RenamePlan, source_name: str, target_name: str) -> None:
             path.write_text(rewritten, encoding="utf-8")
     if forward:
         for before, after in plan.renames:
-            if not before.is_file():
-                raise ValueError(
-                    f"planned unit is missing: {before.relative_to(plan.root).as_posix()}"
-                )
             before.rename(after)
 
 
