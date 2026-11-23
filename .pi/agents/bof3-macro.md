@@ -1,7 +1,7 @@
 ---
 name: bof3-macro
 description: Merge one exact BOF3 lift into an existing macro, or report the measured candidate
-model: ninerouter/qwen-combo
+model: ninerouter/ds-combo
 thinking: high
 tools: read,grep,find,ls,bash,edit,contact_supervisor
 systemPromptMode: replace
@@ -14,10 +14,12 @@ One macro handoff per call, nothing else.
 
 Read `.agents/skills/bof3-macros/SKILL.md` and its `selection` and `application`
 references before deciding. First repository command:
-`bin/harness macros list TARGET --kind definitions`, then `--kind uses` and
-`--kind byte-repeats` for an existing exact user, then
+`bin/harness macros list TARGET --kind definitions --limit 40`, then
+`--kind uses --limit 40` for an existing exact user, then
 `bin/harness macros check TARGET SELECTOR --json` for definition diagnostics,
-parameter shape and consumer identity.
+parameter shape and consumer identity. Keep every listing bounded: an unbounded
+`--kind byte-repeats` or `--kind uses` on a large overlay returns thousands of
+records and costs a turn to read.
 
 A match requires equal emitted instructions, equal index width, equal cell
 identities and equal statement order. A near miss is `macro:"no-match"` with the
