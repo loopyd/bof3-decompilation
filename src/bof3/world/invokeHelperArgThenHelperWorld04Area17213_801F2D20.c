@@ -12,7 +12,7 @@ void publishRecordsOtRun(
  * @match 100.00
  * @residual none
  */
-void callHelperArgHelper(void) {
+void invokeHelperArgThenHelperWorld04Area17213_801F2D20(void) {
   func_801F2DF4(2);
   publishRecordsOtRun();
 }

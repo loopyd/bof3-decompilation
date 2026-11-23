@@ -22,7 +22,7 @@ extern void func_801E5988(void); /* @source 0x801E5988 @kind function */
 /* @source 0x801EF490
  * @behavior Overlay step handler selected by table, not by call: the pointer
  *           word at 0x801EF8B0 is an entry of the handler run based at
- *           0x801EF8A0, which callStateTablef8Bmagic
+ *           0x801EF8A0, which dispatchStateByte1Tablef8a0BmagicMagic21303_801EEFC0
  *           indexes with work byte 0x01 (index 4) and which
  *           dispatchStateByte2Tablef8a4BmagicMagic21303_801EF004 indexes with
  *           work byte 0x02 from the run's second word 0x801EF8A4 (index 3); no

@@ -1,7 +1,7 @@
 D_1F800044 = 0x1F800044;
 D_801490A8 = 0x801490A8;
 D_801490C7 = 0x801490C7;
-callStateTable4World04 = 0x801F2C04;
+dispatchStateByte1Table4facWorld04Area17413_801F2C04 = 0x801F2C04;
 stateTableSetClear = 0x801F2C48;
 spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals3c8000World04Area17413_801F2CA8 = 0x801F2CA8;
 spawnWorkRecordEveryEighthTickOfByte9StepWorkRecordsWhileByte6SetThenAdvanceWorkByte1WhenPositionEquals408000World04Area17413_801F2D68 = 0x801F2D68;

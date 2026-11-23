@@ -58,7 +58,7 @@ segments:
     - '@behavior: When work byte 0xB is zero, raises mask 0x4 in the halfword at 0x801462E8 and invokes 0x801E5988.'
   - - 1744
     - c
-    - callStateTable04Bmagic
+    - dispatchStateByte1Table04b8BmagicMagic06703_801EF2D0
     - '@source: src/bof3/bmagic/magic06703DispatchTables.c'
   - - 1812
     - c

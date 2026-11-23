@@ -23,7 +23,7 @@ extern s32 D_80147A8C;
 /* @source 0x801F2D68
  * @behavior Entry 2 of this overlay's work-byte-1 state machine: entry 2 of the
  *           eight-word handler run based at 0x801F4FAC, which this target's
- *           exact dispatcher callStateTable4World04
+ *           exact dispatcher dispatchStateByte1Table4facWorld04Area17413_801F2C04
  *           indexes with the work record's state byte at +1. That base sits
  *           inside the payload textbin blob, so the word at 0x801F4FB4 names
  *           this span and no jal in the payload reaches it. Entry 1 at

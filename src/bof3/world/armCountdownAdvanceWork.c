@@ -3,7 +3,7 @@
 /* @source 0x801F46E4
  * @behavior Overlay step handler: entry 0 of the three-word handler run based
  * at 0x801F4AC4, the table this target's exact dispatcher
- * callStateTable4World03 indexes with the work
+ * dispatchStateByte1Table4ac4World03Area14013_801F46A0 indexes with the work
  * record's state byte at +0x01. Stores 210 (0xD2) into the scratchpad work
  * object's countdown byte at +0x09 published through the pointer cell at
  * 0x1F800044, then advances that object's state byte at +0x01 to 1, re-reading

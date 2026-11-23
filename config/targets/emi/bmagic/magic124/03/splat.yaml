@@ -55,7 +55,7 @@ segments:
     - noopHandlerBmagicMagic12403_801EF268
   - - 1648
     - c
-    - callStateTable08Bmagic
+    - dispatchStateByte1Table08dcBmagicMagic12403_801EF270
     - '@source: src/bof3/bmagic/magic12403DispatchTables.c'
   - - 1716
     - c

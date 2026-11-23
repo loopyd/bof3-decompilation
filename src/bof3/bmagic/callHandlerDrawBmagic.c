@@ -29,7 +29,7 @@ void renderAlongQuarterTwelve(
 
 /* @source 0x801EEE44
  * @behavior Entry 0 of the six-word handler run at 0x801F0A14 that this
- * overlay's byte 1 dispatcher callStateTable0Bmagic
+ * overlay's byte 1 dispatcher dispatchStateByte1Table0a14BmagicMagic04403_801EEE00
  * indexes, so it is entered with no arguments and no jal in this payload
  * targets it. It reads the scratchpad work-object pointer cell at 0x1F800044
  * before it creates its frame, takes the work object's unsigned byte 2, scales

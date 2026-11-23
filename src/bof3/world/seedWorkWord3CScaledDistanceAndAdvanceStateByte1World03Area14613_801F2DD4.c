@@ -12,7 +12,7 @@ extern s32 func_8015477C(s32 x, s32 z); /* @source 0x8015477C */
 /* @source 0x801F2DD4
  * @behavior Step handler: entry 0 of the two-entry step dispatch table based at
  *           0x801F3B00 that this target's dispatcher
- *           callStateTable3World03 indexes with
+ *           dispatchStateByte1Table3b00World03Area14613_801F2D90 indexes with
  *           the work record's state byte at +1. Seeds the record word at
  *           +0x3C with the shared helper 0x8015477C applied to the record word
  *           pair at +0x34/+0x38 and shifted left 16 as an unsigned word, then

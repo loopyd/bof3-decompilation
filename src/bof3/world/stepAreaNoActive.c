@@ -6,7 +6,7 @@ void func_80196070(void);
 /* @source 0x801F2E28
  * @behavior Entry 3 of this overlay's work-byte-1 state machine: entry 3 of the
  *           eight-word handler run based at 0x801F4FAC, which this target's
- *           exact dispatcher callStateTable4World04
+ *           exact dispatcher dispatchStateByte1Table4facWorld04Area17413_801F2C04
  *           indexes with the work record's state byte at +1. That base sits
  *           inside the payload textbin blob, so the third word of the run
  *           (0x801F4FAC + 3*4) names this span and no jal in the payload

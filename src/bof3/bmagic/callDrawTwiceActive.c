@@ -25,7 +25,7 @@ void renderMirroredRibbonInner(void);
  * @behavior Per-frame work-handler step, entry 3 of the sixteen-word code
  *           pointer run at 0x801F0D54 whose word at 0x801F0D60 holds this
  *           function's address, so the byte-1 dispatcher
- *           callStateTable0Bmagic selects it
+ *           dispatchStateByte1Table0d54BmagicMagic22203_801EEEE0 selects it
  *           while the work object's byte 1 is 3 and no jal in this payload
  *           targets this address. It reads the scratchpad work object through
  *           the pointer cell at 0x1F800044 before it creates its frame, takes

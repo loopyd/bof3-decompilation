@@ -38,7 +38,7 @@ extern void func_801A4BC0(s16 x, s16 y, u32 size);
  *           $ra and $s0, and the cell is read once, after the loop.
  *
  * Name evidence: 0x801F4B38 is the state-byte-1 handler table this payload's
- * exact source callStateTable4World04 installs,
+ * exact source dispatchStateByte1Table4b38World04Area16813_801F2C38 installs,
  * and the body's +0x01 store is the state byte that dispatcher reads, so the
  * storage moves the run on to word 1 rather than completing an overlay step;
  * the record byte therefore stays named after its dispatch role. 0x801A4BC0 is

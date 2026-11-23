@@ -2,7 +2,7 @@
 
 /* @source 0x801F2CC4
  * @behavior Entry 0 of the four-word work-byte-1 handler table at 0x801F3C54,
- * the entry the neighbouring callStateTable3World04
+ * the entry the neighbouring dispatchStateByte1Table3c54World04Area19113_801F2C80
  * dispatcher selects with byte 0x01 of the scratch work record published at the
  * scratchpad pointer cell 0x1F800044. It re-reads that cell and zeroes the
  * record's three colour-channel bytes at 0x5F, 0x5E and 0x5D in that store

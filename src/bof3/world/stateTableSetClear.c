@@ -16,7 +16,7 @@ extern u8* D_1F800044;
 /* @source 0x801F2C48
  * @behavior Run initialiser of this overlay's work-byte-1 state machine: entry 0
  *           of the handler table based at 0x801F4FAC, which this target's exact
- *           dispatcher callStateTable4World04
+ *           dispatcher dispatchStateByte1Table4facWorld04Area17413_801F2C04
  *           indexes with the work record's state byte at +1. That base is a
  *           pointer run inside the payload textbin blob, so this span is reached
  *           by the word at 0x801F4FAC alone and no jal in the payload names it.

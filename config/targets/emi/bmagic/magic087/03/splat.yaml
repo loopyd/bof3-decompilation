@@ -67,7 +67,7 @@ segments:
     - func_801EF580
   - - 3416
     - c
-    - callStateTable0520Bmagic
+    - dispatchStateByte1Table0520BmagicMagic08703_801EF958
     - '@source: src/bof3/bmagic/magic08703DispatchTables.c'
   - - 3484
     - c

@@ -131,7 +131,7 @@ segments:
     - '@behavior: Runs the shared front-end startup helper 0x8015C088 and then stores progress 5 into the shared progress byte 0x801448EC, unconditionally.'
   - - 6816
     - c
-    - callStateTable4World03
+    - dispatchStateByte1Table4ac4World03Area14013_801F46A0
     - '@source: src/bof3/world/area14013DispatchTables.c'
   - - 6884
     - c

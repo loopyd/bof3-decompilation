@@ -30,7 +30,7 @@ void func_8014D6B8(u32 resource); /* @source 0x8014D6B8 */
  * 0x40, folds the current enemy work halfwords into the global accumulators,
  * submits the scratch work and re-arms scratch work bytes +1..+3 as 2, 0 and 0.
  * This handler clears the flag it raises and replaces that re-arm. */
-void accumulateEnemyHalfwordsAndResetScratch(void); /* @source 0x801E54EC */
+void accumulateEnemyHalfwordsScratch(void); /* @source 0x801E54EC */
 
 /* @source 0x800C1B48
  * @behavior Per-frame handler of this overlay's work state machine, entry 11 of
@@ -67,7 +67,7 @@ void shrinkWorkScaleByte9AndWordPair40And44ThenOnZeroHandOffToByte2Handler4BossB
     D_1F800044[0x48] = 0;
     func_8014DD3C(0x83);
     func_8014D6B8(0);
-    accumulateEnemyHalfwordsAndResetScratch();
+    accumulateEnemyHalfwordsScratch();
     D_1F800044[0] &= 0xBF;
     D_1F800044[1] = 6;
     D_1F800044[2] = 4;

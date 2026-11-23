@@ -1,5 +1,5 @@
 clearWorkFlags = 0x80196070;
-callStateTable3World03 = 0x801F2C04;
+dispatchStateByte1Table3e68World03Area14413_801F2C04 = 0x801F2C04;
 latchIntoBuildCue = 0x801F2C48;
 statePlayNoRan = 0x801F2CA4;
 stateNoCallbackRan = 0x801F2CFC;

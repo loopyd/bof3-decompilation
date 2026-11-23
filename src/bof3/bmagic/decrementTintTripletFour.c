@@ -19,7 +19,7 @@ extern u8 func_8014DAEC(void); /* @source 0x8014DAEC */
  * @behavior Per-frame work-handler step of this overlay, the ninth handler of the
  *           ten-word code pointer run at 0x801EF8BC whose word 8 (0x801EF8DC)
  *           holds this address, reached through the state-byte-1 dispatcher
- *           callStateTablef8Bmagic, which indexes
+ *           dispatchStateByte1Tablef8bcBmagicMagic11503_801EF054, which indexes
  *           that run with the work object's byte 1 scaled by four. It reads the
  *           scratchpad work-object pointer cell at 0x1F800044 and decrements the
  *           object's unsigned tint-channel bytes 0x5D, 0x5E and 0x5F by four in

@@ -39,7 +39,7 @@ segments:
     - func_801F2E10
   - - 748
     - c
-    - callStateTable4World04
+    - dispatchStateByte1Table4df4World04Area18813_801F2EEC
     - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 816
     - c

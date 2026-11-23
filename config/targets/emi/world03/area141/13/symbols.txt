@@ -1,4 +1,4 @@
-callStateTable47World03 = 0x801F2CE8;
+dispatchStateByte2Table47e8World03Area14113_801F2CE8 = 0x801F2CE8;
 func_801F2D2C = 0x801F2D2C;
 stateHalfword36GateSatisfied = 0x801F2F14;
 stampShapeAttachEighteen = 0x801F2FE4;

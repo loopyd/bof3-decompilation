@@ -39,7 +39,7 @@ segments:
     - func_801F2C84
   - - 288
     - c
-    - callHelperArgHelper
+    - invokeHelperArgThenHelperWorld04Area17213_801F2D20
   - - 328
     - asm
     - func_801F2D48

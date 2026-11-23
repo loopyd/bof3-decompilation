@@ -43,7 +43,7 @@ segments:
     - '@behavior: Overwrites the shared battle kind halfword 0x136 with 0x53 while the shared battle state byte is not four, then returns zero.'
   - - 1288
     - c
-    - callStateTable0Bmagic
+    - dispatchStateByte1Table0eecBmagicMagic08303_801EF108
     - '@source: src/bof3/bmagic/magic08303DispatchTables.c'
   - - 1356
     - asm

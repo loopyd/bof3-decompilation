@@ -39,7 +39,7 @@ segments:
     - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic06903_801EEE30.c'
   - - 656
     - c
-    - callStateTable04Bmagic
+    - dispatchStateByte1Table04f8BmagicMagic06903_801EEE90
     - '@source: src/bof3/bmagic/magic06903DispatchTables.c'
   - - 724
     - asm

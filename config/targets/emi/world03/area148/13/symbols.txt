@@ -1,5 +1,5 @@
 D_8014933B = 0x8014933B;
-callStateTable4World03 = 0x801F2C5C;
+dispatchStateByte2Table4fc4World03Area14813_801F2C5C = 0x801F2C5C;
 stateTablesCameraInside = 0x801F2CA0;
 func_801F2E64 = 0x801F2E64;
 stateAdvanceDrawMode = 0x801F2FA4;

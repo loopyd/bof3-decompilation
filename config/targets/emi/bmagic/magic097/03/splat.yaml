@@ -37,7 +37,7 @@ segments:
     - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic09703_801EEF38.c'
   - - 900
     - c
-    - callStateTable0Bmagic
+    - dispatchStateByte1Table0ac0BmagicMagic09703_801EEF84
     - '@source: src/bof3/bmagic/magic09703DispatchTables.c'
   - - 968
     - c

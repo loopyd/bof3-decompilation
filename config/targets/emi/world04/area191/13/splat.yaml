@@ -30,7 +30,7 @@ segments:
   subsegments:
   - - 128
     - c
-    - callStateTable3World04
+    - dispatchStateByte1Table3c54World04Area19113_801F2C80
     - '@source: src/bof3/world/area19113DispatchTables.c'
   - - 196
     - c

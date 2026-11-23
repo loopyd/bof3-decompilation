@@ -1,6 +1,6 @@
 D_1F800044 = 0x1F800044;
 paletteStageSerial = 0x80145988;
-callStateTable3World04 = 0x801F2C04;
+dispatchStateByte2Table3dfcWorld04Area19813_801F2C04 = 0x801F2C04;
 stateAfterScalePass = 0x801F2C48;
 stateWorkScenarioProgress0 = 0x801F2C80;
 stateRescaleBlocksUnity = 0x801F2CB8;

@@ -12,7 +12,7 @@ typedef struct World04Area16513WorkStepRow35c0 {
 } World04Area16513WorkStepRow35c0;
 
 /* @source 0x801F35C0 @kind table */
-extern World04Area16513WorkStepRow35c0 workStepRowTable35c0World04Area16513[];
+extern World04Area16513WorkStepRow35c0 workStepRowTable35[];
 
 /* @source 0x801F345C
  * @behavior State handler for the work record published at the scratchpad
@@ -39,8 +39,8 @@ void loadWorkStepRowResetWorkFieldsAndAdvanceState2World04Area16513_801F345C(
   index = *(s16*)(work + 0x36);
   *(u8*)(work + 8) = (*(s16*)(work + 0x3A) == 0);
   next = D_1F800044;
-  *(u16*)(next + 0x36) = workStepRowTable35c0World04Area16513[index].field_00;
-  *(u16*)(next + 0x3A) = workStepRowTable35c0World04Area16513[index].field_01;
+  *(u16*)(next + 0x36) = workStepRowTable35[index].field_00;
+  *(u16*)(next + 0x3A) = workStepRowTable35[index].field_01;
   *(s16*)(next + 0x3E) = -0x80;
   *(u16*)(next + 0x30) = 0x100;
   next[2]++;

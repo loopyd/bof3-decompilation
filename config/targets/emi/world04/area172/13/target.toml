@@ -23,7 +23,7 @@ support_sources = [
     "src/bof3/world/area17213DispatchTables.c",
     "src/bof3/world/claimStoreOwnerIndex.c",
     "src/bof3/world/invokeHelperArgsWorld04Area17213_801F4E68.c",
-    "src/bof3/world/callHelperArgHelper.c",
+    "src/bof3/world/invokeHelperArgThenHelperWorld04Area17213_801F2D20.c",
     "src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c",
     "src/bof3/world/queueSharedUiElement9.c",
     "src/bof3/support/area172_13_psyq.c",
