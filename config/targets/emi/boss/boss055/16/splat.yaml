@@ -140,8 +140,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte2LocalPairBossBoss05516_800C29E8.c'
     - '@behavior: Overlay step dispatch that seeds a local two-entry handler array with 0x800C2A40 and 0x800C2AA8 and calls the entry selected by the state byte at +2 of the work record published at scratchpad cell 0x1F800044.'
   - - 4672
-    - asm
-    - func_800C2A40
+    - c
+    - applyMainLookupRecord30CClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2A40
+    - '@source: src/bof3/boss/applyMainLookupRecord30CClearWorkByte48Byte24AndWord3CCallPairEntry1ThenAdvanceWorkByte2BossBoss05516_800C2A40.c'
+    - '@behavior: Entry 0 body of this overlay local two-entry handler pair, the pair dispatchStateByte2LocalPairBossBoss05516_800C29E8 seeds with 0x800C2A40 then 0x800C2AA8 and selects with work byte +2: it applies main lookup record 0x30C through the shared helper 0x8014DD3C, clears the work record published at scratchpad pointer cell 0x1F800044 at byte +0x48, byte +0x24 and word +0x3C, calls the pair entry 1 body 0x800C2AA8 directly, then re-reads the cell and advances work byte +2 by one.'
   - - 4776
     - c
     - copyTemplateRecordThenRequestByteAtIndexedByBattleHalfwordWhenGlobalWorkByteBSetAndRefreshWorkBossBoss05516_800C2AA8

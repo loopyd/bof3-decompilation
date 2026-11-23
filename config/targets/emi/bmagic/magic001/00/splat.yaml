@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF01C
   - - 1256
-    - asm
-    - func_801EF0E8
+    - c
+    - invokeActingEnemyScriptThenCopyRecordByte27ClearByte9AndByteAThenAdvanceWorkByte2BmagicMagic00100_801EF0E8
+    - '@source: src/bof3/bmagic/invokeActingEnemyScriptThenCopyRecordByte27ClearByte9AndByteAThenAdvanceWorkByte2BmagicMagic00100_801EF0E8.c'
+    - '@behavior: Overlay work handler, word 3 of the leading 24-word code pointer run at 0x801EEC04. Runs the shared enemy script helper 0x801E257C with the acting battler byte 0x80146374 as the enemy work index and 0xA as the script byte selector, copies byte 0x27 of the shared battle work record read through 0x801EB4E0 into byte 0x27 of the scratchpad work object read through the pointer cell 0x1F800044, clears work bytes 9 and 0xA, then advances work byte 2. The 0x18-byte frame only keeps $ra across the helper call.'
   - - 1380
     - c
     - invokeBattleHelpersSeedWorkWordsAndAdvanceWorkByte2WhenHelperReadyBmagicMagic00100_801EF164

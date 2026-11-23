@@ -32,8 +32,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04.c'
     - '@behavior: First per-frame step dispatcher of the overlay step-handler run at 0x801D3918: loads the work-record pointer from the scratchpad pointer cell 0x1F800044, takes that record unsigned byte 0x1, scales it by four and invokes that entry of the overlay-local code-pointer run at 0x801D3918 with no arguments and no result consumed, creating its 0x18-byte frame only to keep the return address across the indirect call. It does not bound the index before the scaled table load, reads nothing else and writes no state.'
   - - 72
-    - asm
-    - func_801D0C48
+    - c
+    - seedWorkOriginTripleFromSharedPositionArmCountdown8ClearHalfword2EDispatchCue523AndAdvanceWorkByte1ScenarioSce15ef100_801D0C48
+    - '@source: src/bof3/scenario/seedWorkOriginTripleFromSharedPositionArmCountdown8ClearHalfword2EDispatchCue523AndAdvanceWorkByte1ScenarioSce15ef100_801D0C48.c'
+    - '@behavior: Entry 0 of the overlay step-handler code-pointer run at 0x801D3918: copies the shared position triple at 0x80145EC4/0x80145EC8/0x80145ECC into the scratchpad work object origin words at +0x64/+0x68/+0x6C with the third word lifted by 0x800000, arms the countdown byte at +0x9 with 8, clears the halfword at +0x2E, re-reads the pointer cell 0x1F800044, advances work byte +0x1 through that reloaded pointer and dispatches sound cue 0x20B, which moves the dispatcher func_801D0C04 on to entry 1 on the next frame.'
   - - 192
     - c
     - advanceWorkHalfword2EThenInvokeOriginHelperTickCountdownReload64AndAdvanceWorkByte1ScenarioSce15ef100_801D0CC0

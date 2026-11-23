@@ -41,6 +41,7 @@ sources = [
     "src/bof3/scenario/drawBeamSliverPairBetweenHeadAndTrailPointThenSteppedTrailSegmentsWhileHeadXLagsStepXScenarioSce15ef100_801D1678.c",
     "src/bof3/scenario/drawTranslucentGouraudRingOfThirtyTwoQuadsAroundProjectedPointBetweenTwoRadiiFadingFromOrangeToBlackScenarioSce15ef100_801D36BC.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D0C04.c",
+    "src/bof3/scenario/seedWorkOriginTripleFromSharedPositionArmCountdown8ClearHalfword2EDispatchCue523AndAdvanceWorkByte1ScenarioSce15ef100_801D0C48.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2B64.c",
 ]
 support_sources = [

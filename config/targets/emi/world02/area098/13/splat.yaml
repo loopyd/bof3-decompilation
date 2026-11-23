@@ -50,8 +50,10 @@ segments:
     - dispatchStateByte1Table5f7cWorld02Area09813_801F34FC
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 2368
-    - asm
-    - func_801F3540
+    - c
+    - resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540
+    - '@source: src/bof3/world/resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540.c'
+    - '@behavior: Overlay progress step handler, entry 0 of the twelve-word handler row based at 0x801F5F7C: calls the work-table reset 0x801F40A4, which clears the lead byte of each of the 0x18 records of the 0x38-byte-stride table at 0x800E4800, then reads the work record through the scratchpad pointer cell 0x1F800044 and stores 0xFF into its byte at +0x09, zero into +0x0A and 0x10 into +0x06, each store through its own fresh read of the cell; a fourth read advances the state byte at +0x01, which hands the record to entry 1 of the row, and the body queues cue 0x204 through 0x8015DF18.'
   - - 2480
     - c
     - spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0

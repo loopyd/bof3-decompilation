@@ -54,8 +54,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table1b6cBossBoss04016_800C18FC.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044 once, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of the twelve-pointer handler run based at 0x800C1B6C with no arguments. The original does not bound the index before the scaled table load, and the slots after the index byte, after the table load and in the return delay slot stay nops. It writes no state and returns whatever the called handler leaves in $v0; the pointer-cell load precedes frame creation and the 0x18-byte frame only keeps $ra at 0x10 across the indirect call. Entry 0 of that run is the installer at 0x800C1940 and the following eleven entries are main-executable handlers. No word of this payload holds 0x800C18FC, no jal reaches it and no lui/addiu pair materializes its address, so the overlay loader enters it from outside the payload'
   - - 320
-    - asm
-    - func_800C1940
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04016_800C1940
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04016_800C1940.c'
+    - '@behavior: Second step-setup publisher of this overlay: loads the work record pointer from 0x801EB4E8 and writes the data row pointer 0x800C1B1C into +0xEC, the byte-indexed dispatcher 0x800C19A4 into +0xE4, the slot the earlier installer at 0x800C1848 filled with the 0x800C18AC dispatcher, and the in-row pointer 0x800C1B28 into +0xE8, then raises flag bit 0x8 of the word at +0x104, stores 2 into work byte 1 of the record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978. The only in-image word naming this span is 0x800C1B6C, entry 0 of the twelve-pointer run that the 0x800C18FC dispatcher of this payload indexes with that same work byte, so writing 2 moves the next such dispatch to entry 2, the shared handler 0x801E35D8; no jal reaches this span and no lui/addiu pair materializes its address, so the overlay loader enters it from outside the payload'
   - - 420
     - c
     - dispatchIndexedHandlerBossBoss04016_800C19A4

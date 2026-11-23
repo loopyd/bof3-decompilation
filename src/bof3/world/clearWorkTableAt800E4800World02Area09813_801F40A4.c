@@ -6,9 +6,11 @@
  *           area this overlay shares with the world and scenario overlays),
  *           walking the table with an unsigned byte counter in a bottom-tested
  *           loop; it takes no arguments, returns nothing and touches no other
- *           state. Its only caller inside this payload is func_801F3540 at
- *           0x801F3540, a state handler that clears this table before seeding
- *           the scratchpad work object at 0x1F800044 and queuing cue 0x204. The
+ *           state. Its only caller inside this payload is the state-0 progress
+ *           handler of the row at 0x801F5F7C,
+ *           resetWorkTableArmSpawnIntervalClearSpawnProgressArmCountdownAdvanceStateAndQueueCue204World02Area09813_801F3540
+ *           at 0x801F3540, which clears this table before seeding the scratchpad
+ *           work object at 0x1F800044 and queuing cue 0x204. The
  *           44 bytes are byte-identical to the already-exact
  *           clearWorkTableAt800E4800World02Area08213_801F3910 lift in
  *           emi/world02/area082/13 (same base and loop shape; stride 0x14 and

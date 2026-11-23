@@ -90,8 +90,10 @@ segments:
     - '@source: src/bof3/boss/dispatchStateByte1Table273cBossBoss03416_800C1DB0.c'
     - '@behavior: Overlay state dispatch on work-record byte 1: loads the work-record pointer published at the scratchpad pointer cell 0x1F800044, takes that record unsigned byte at offset 1, scales it by four and calls the matching entry of this overlay handler run based at the interior word 0x800C273C of the reviewed row D_800C26B8, with no arguments. The payload holds no word or jal naming 0x800C1DB0, so its caller is outside this overlay.'
   - - 1524
-    - asm
-    - func_800C1DF4
+    - c
+    - publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4
+    - '@source: src/bof3/boss/publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss03416_800C1DF4.c'
+    - '@behavior: Step setup of this overlay byte-1 work state machine, entry 0 of the handler run based at 0x800C273C that the byte-1 dispatcher dispatchStateByte1Table273cBossBoss03416_800C1DB0 indexes with the work-record byte at offset 1: publishes three words into the record loaded from 0x801EB4E8 - the data row pointer 0x800C26B8 into +0xEC, the indexed step dispatcher dispatchIndexedHandlerBossBoss03416_800C1E58 into +0xE4 and the in-row record word 0x800C26C4 into +0xE8 - raises bit 0x8 of the +0x104 flag word, stores 2 into the state byte at offset 1 of the work record the main program publishes at the scratchpad pointer cell 0x1F800044 and calls func_8014D978, so the next byte-1 dispatch reaches that run entry 2, 0x801E35D8. No jal names 0x800C1DF4; its only in-image word is the run entry at 0x800C273C.'
   - - 1624
     - c
     - dispatchIndexedHandlerBossBoss03416_800C1E58

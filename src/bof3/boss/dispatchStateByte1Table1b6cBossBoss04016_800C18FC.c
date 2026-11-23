@@ -5,12 +5,14 @@
  * reviewed Splat layout places it whole, so only the entry base this dispatcher
  * indexes is named here. From 0x800C1B6C the run holds twelve handler pointers,
  * read from this payload's own bytes: 0x800C1940 (this overlay's second
- * installer, still an asm row), 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980,
- * 0x801E3A00, 0x801E3B68, 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and
- * 0x801E5288, which ends the run immediately before the indexed handler table at
- * 0x800C1B9C that the byte-indexed dispatcher 0x800C19A4 selects from. The
- * generated undefined_syms_auto.txt row for D_800C1B6C already binds the word the
- * scaled index is added to, so this declaration needs no map row.
+ * installer, published here as
+ * publishWorkStepHandlerAndDataThenSetWorkFlag8AndStateTo2BossBoss04016_800C1940),
+ * 0x801E52E8, 0x801E35D8, 0x801E3638, 0x801E3980, 0x801E3A00, 0x801E3B68,
+ * 0x801E4AE8, 0x801E4D8C, 0x801E4F64, 0x801E52E8 and 0x801E5288, which ends the
+ * run immediately before the indexed handler table at 0x800C1B9C that the
+ * byte-indexed dispatcher 0x800C19A4 selects from. The generated
+ * undefined_syms_auto.txt row for D_800C1B6C already binds the word the scaled
+ * index is added to, so this declaration needs no map row.
  */
 extern void (*D_800C1B6C[])(void); /* @source 0x800C1B6C @kind data */
 
