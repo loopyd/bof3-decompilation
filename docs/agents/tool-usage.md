@@ -242,11 +242,19 @@ bin/harness source symbols psyq-bindings --write          # regenerate manifest-
 bin/harness source symbols psyq-report TARGET             # which SDK symbols the code references
 ```
 
-The SDK maps live in `config/sdk/psyq-{slus,logo}.txt`; a target selects its
-space via the manifest `[psyq] space` key (default `slus`). `import-psyq` writes
-reviewed exact candidates into the space's SDK map; `psyq-bindings` regenerates
-the compiled manifest-owned `psyq_source` (e.g. `src/bof3/support/slus_psyq.c`)
-from it. Nothing edits maps without `--write`.
+The SDK map lives in `config/sdk/psyq.txt`. One line per symbol lists every
+verified location:
+
+```
+rand = exe/slus_004_22@0x8017E3D4, emi/bmagic/magic216/00@0x801EF03C
+```
+
+`import-psyq` appends the proposing target's own `target@address`; `psyq-bindings`
+projects the map to the image it describes, keeping a target-local copy over the
+resident one, and rewrites the manifest-owned `psyq_source` (e.g.
+`src/bof3/support/slus_psyq.c`). Splat receives the same projection from the
+adapter, so reviewed `splat.yaml` lists only the shared and target maps. Nothing
+edits the map without `--write`.
 
 ### 3b. Target analysis (freshness → rebuild → query)
 

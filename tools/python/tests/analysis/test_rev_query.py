@@ -120,7 +120,9 @@ def test_candidate_exclusions_are_reported_without_ranking(tmp_path) -> None:
     )
     sdk = tmp_path / "config/sdk"
     sdk.mkdir(parents=True)
-    (sdk / "psyq-slus.txt").write_text("SdkFn = 0x80100000;\n", encoding="utf-8")
+    (sdk / "psyq.txt").write_text(
+        "SdkFn = exe/slus_004_22@0x80100000\n", encoding="utf-8"
+    )
 
     def row(address: int) -> dict[str, object]:
         return {
@@ -569,7 +571,9 @@ def test_mission_composes_sdk_callees_callers_and_risk(
     )
     sdk = tmp_path / "config" / "sdk"
     sdk.mkdir(parents=True)
-    (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
+    (sdk / "psyq.txt").write_text(
+        "PadInit = exe/slus_004_22@0x80174668\n", encoding="utf-8"
+    )
 
     connection = sqlite3.connect(":memory:")
     connection.row_factory = sqlite3.Row

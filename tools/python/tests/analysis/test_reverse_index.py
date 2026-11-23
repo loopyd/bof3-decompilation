@@ -58,7 +58,7 @@ def _manifest(root: Path) -> tuple[Path, Path]:
     symbols.write_text(
         "func_80100000 = 0x80100000;\nD_80100010 = 0x80100010;\n", encoding="utf-8"
     )
-    sdk = root / "config/sdk/psyq-slus.txt"
+    sdk = root / "config/sdk/psyq.txt"
     sdk.parent.mkdir(parents=True, exist_ok=True)
     sdk.write_text("", encoding="utf-8")
     return binary, config
@@ -604,7 +604,7 @@ def test_connect_modes_reject_missing_required_map(
     _seed_index(tmp_path)
     paths = {
         "target-map": tmp_path / "config/targets/emi/test/archive/00/symbols.txt",
-        "sdk-map": tmp_path / "config/sdk/psyq-slus.txt",
+        "sdk-map": tmp_path / "config/sdk/psyq.txt",
     }
     paths[kind].unlink()
     opener = connect_status if status else connect
@@ -622,7 +622,7 @@ def test_connect_modes_reject_escaping_required_map(
     _seed_index(tmp_path)
     paths = {
         "target-map": tmp_path / "config/targets/emi/test/archive/00/symbols.txt",
-        "sdk-map": tmp_path / "config/sdk/psyq-slus.txt",
+        "sdk-map": tmp_path / "config/sdk/psyq.txt",
     }
     path = paths[kind]
     outside = tmp_path.parent / f"{tmp_path.name}-{kind}.txt"
@@ -641,7 +641,7 @@ def test_connect_modes_allow_in_repo_required_map_symlink(
     binary, _ = _manifest(tmp_path)
     paths = {
         "target-map": tmp_path / "config/targets/emi/test/archive/00/symbols.txt",
-        "sdk-map": tmp_path / "config/sdk/psyq-slus.txt",
+        "sdk-map": tmp_path / "config/sdk/psyq.txt",
     }
     path = paths[kind]
     alternate = path.with_name(f"owned-{path.name}")
@@ -743,9 +743,9 @@ def test_real_battle15_splat_selects_owned_symbol_maps() -> None:
     layout = parse_splat_layout(
         root / "config/targets/emi/battle/battle/15/splat.yaml", 0x80096800
     )
+    # The combined SDK map is injected by the Splat adapter, not named here.
     assert layout.symbol_map_paths == (
         "config/targets/shared/symbols.txt",
-        "config/sdk/psyq-slus.txt",
         "config/targets/emi/battle/battle/15/symbols.txt",
     )
 

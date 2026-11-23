@@ -15,7 +15,6 @@ options:
   asset_path: out/splat/exe/logo/assets
   symbol_addrs_path:
   - config/targets/shared/symbols.txt
-  - config/sdk/psyq-logo.txt
   - config/targets/exe/logo/symbols.txt
 segments:
   - [0x0, bin, pre_runtime_stub]

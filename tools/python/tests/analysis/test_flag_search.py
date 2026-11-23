@@ -331,7 +331,9 @@ class TestResolveBindings:
         )
         sdk = root / "config/sdk"
         sdk.mkdir(parents=True)
-        (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
+        (sdk / "psyq.txt").write_text(
+            "PadInit = exe/slus_004_22@0x80174668\n", encoding="utf-8"
+        )
         return source
 
     def test_uses_claimed_support_binding_source(self, tmp_path: Path) -> None:

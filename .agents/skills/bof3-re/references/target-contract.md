@@ -11,7 +11,7 @@ Original bytes/PS-X header/reviewed configuration outrank analyzer output.
 | Reviewed layout | Target `splat.yaml` |
 | Execution options | `config/splat.yaml` |
 | Local map | Target `symbols.txt` |
-| SDK maps | `config/sdk/psyq-{slus,logo}.txt` |
+| SDK maps | `config/sdk/psyq.txt` (one line per symbol, every verified target@address) |
 | Reviewed analysis | Target `reviewed.rz` |
 | Authored C | Manifest-owned metadata-tagged `src/bof3/` |
 

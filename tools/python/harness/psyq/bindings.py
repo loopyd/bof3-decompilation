@@ -8,13 +8,16 @@ import re
 from typing import Any
 
 from ..domain.ids import FUNCTION_ID_FORMAT, normalize_target_id
+from ..domain.sdk_map import (
+    SdkSymbol,
+    load_sdk_map,
+    project_symbols,
+    sdk_map_path,
+    write_sdk_map,
+)
 from ..domain.symbols import (
     MapSymbol,
-    format_map,
-    load_map,
-    sdk_map_path,
     weak_bindings_c,
-    write_map,
 )
 
 
@@ -74,67 +77,56 @@ def apply_psyq_provenance(
     *,
     write: bool,
 ) -> tuple[bool, list[str]]:
-    """Apply reviewed exact PsyQ provenance to the shared SDK maps.
+    """Apply reviewed exact PsyQ provenance to the combined SDK map.
 
-    PsyQ symbols are owned by the SDK space (slus/logo), not by one target, so
-    candidates are grouped by the proposing target's space and written to
-    config/sdk/psyq-<space>.txt where every target in that space picks them up.
-    Returns (changed, display messages).
+    Each symbol line lists every verified ``target@address`` location, so an
+    overlay that carries its own copy of a library routine records that copy
+    beside the resident executable's. One name may not hold two addresses inside
+    the same target, and a semantic name is never replaced at an occupied
+    location.
     """
-    by_space: dict[str, list[dict[str, object]]] = {}
+    path = sdk_map_path(root)
+    existing = load_sdk_map(path) if path.is_file() else []
+    by_location = {(symbol.target, symbol.address): symbol for symbol in existing}
+    by_name_target = {(symbol.name, symbol.target): symbol for symbol in existing}
+    added: list[SdkSymbol] = []
+    changed = False
     for row in selected:
         target = normalize_target_id(str(row["target"])).value
         if target not in manifests:
             raise ValueError(f"proposal names an unknown target: {target}")
-        by_space.setdefault(manifests[target].psyq_space, []).append(row)
-    changed = False
-    messages: list[str] = []
-    for space, rows in sorted(by_space.items()):
-        path = sdk_map_path(root, space)
-        existing = load_map(path)
-        by_address = {symbol.address: symbol for symbol in existing}
-        by_name = {symbol.canonical_name: symbol for symbol in existing}
-        replacement: dict[int, MapSymbol] = {}
-        for row in sorted(
-            rows, key=lambda item: (str(item["address"]), str(item["name"]))
-        ):
-            address = int(str(row["address"]), 16)
-            candidate = MapSymbol(address, str(row["name"]))
-            current = by_address.get(address)
-            same_name = by_name.get(candidate.canonical_name)
-            if same_name is not None and same_name.address != address:
-                raise ValueError(
-                    f"{space}: PsyQ name already belongs to "
-                    f"0x{same_name.address:08X}: {candidate.canonical_name}"
-                )
-            if (
-                current is not None
-                and current.canonical_name == candidate.canonical_name
-            ):
-                continue
-            if current is not None and not current.is_raw:
-                raise ValueError(
-                    f"{space}: address 0x{address:08X} already has semantic name "
-                    f"{current.canonical_name}"
-                )
-            replacement[address] = candidate
-            by_address[address] = candidate
-            by_name[candidate.canonical_name] = candidate
-        if not replacement:
-            messages.append(f"unchanged {path.relative_to(root)}")
+        address = int(str(row["address"]), 16)
+        name = str(row["name"])
+        current = by_location.get((target, address))
+        same_name = by_name_target.get((name, target))
+        if same_name is not None and same_name.address != address:
+            raise ValueError(
+                f"{target}: PsyQ name already belongs to "
+                f"0x{same_name.address:08X}: {name}"
+            )
+        if current is not None and current.name == name:
             continue
+        if current is not None and not MapSymbol(address, current.name).is_raw:
+            raise ValueError(
+                f"{target}: address 0x{address:08X} already has semantic name "
+                f"{current.name}"
+            )
+        if current is not None:
+            existing = [
+                symbol
+                for symbol in existing
+                if (symbol.target, symbol.address) != (target, address)
+            ]
+        added.append(SdkSymbol(name, target, address))
+        by_location[(target, address)] = SdkSymbol(name, target, address)
+        by_name_target[(name, target)] = SdkSymbol(name, target, address)
         changed = True
-        updated = [replacement.get(symbol.address, symbol) for symbol in existing]
-        for address, symbol in replacement.items():
-            if not any(old.address == address for old in existing):
-                updated.append(symbol)
-        format_map(updated)
-        if write:
-            write_map(path, updated)
-            messages.append(f"wrote {path.relative_to(root)}")
-        else:
-            messages.append(f"would write {path.relative_to(root)}")
-    return changed, messages
+    if not changed:
+        return False, [f"unchanged {path.relative_to(root)}"]
+    if write:
+        write_sdk_map(path, existing + added)
+        return True, [f"wrote {path.relative_to(root)}"]
+    return True, [f"would write {path.relative_to(root)}"]
 
 
 def sdk_weak_bindings(root: Path, manifest: Any) -> str:
@@ -143,8 +135,13 @@ def sdk_weak_bindings(root: Path, manifest: Any) -> str:
     Every target must declare ``psyq_source``; the output path is never
     guessed from ``source_dir`` or a filename stem.
     """
-    space = manifest.psyq_space
-    content = weak_bindings_c(load_map(sdk_map_path(root, space)))
+    content = weak_bindings_c(
+        project_symbols(
+            load_sdk_map(sdk_map_path(root)),
+            target=manifest.id.value,
+            space=manifest.psyq_space,
+        )
+    )
     if not manifest.psyq_source:
         raise ValueError(
             f"target {manifest.id.value} must declare psyq_source in its manifest"
@@ -162,7 +159,7 @@ def sdk_references(
     """
     manifest = manifests[target]
     space = manifest.psyq_space
-    sdk = load_map(sdk_map_path(root, space))
+    sdk = project_symbols(load_sdk_map(sdk_map_path(root)), target=target, space=space)
     source_dir = root / manifest.source_dir
     from ..domain.claims import (
         collect_manifest_source_addresses,

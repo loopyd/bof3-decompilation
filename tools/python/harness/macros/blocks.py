@@ -17,7 +17,7 @@ from harness.domain.psx import (
     reviewed_range_digest,
     validate_psx_header,
 )
-from harness.domain.symbols import load_map, sdk_map_path
+from harness.domain.sdk_map import load_sdk_map, project_symbols, sdk_map_path
 from harness.macros.facts import _GENERATED
 from harness.macros.repeats import repeated_intervals
 
@@ -56,11 +56,15 @@ def _corpus(connection: sqlite3.Connection, root: Path, minimum: int):
                 binary,
                 payload_for(binary, manifest.load_address, binary_name=manifest.binary),
                 parse_splat_layout(root / manifest.splat, manifest.load_address),
-                {
+                frozenset(
                     symbol.address
-                    for symbol in load_map(sdk_map_path(root, manifest.psyq_space))
+                    for symbol in project_symbols(
+                        load_sdk_map(sdk_map_path(root)),
+                        target=target,
+                        space=manifest.psyq_space,
+                    )
                     if not symbol.is_raw
-                },
+                ),
             )
         binary, payload, layout, sdk = contexts[target]
         boundary = layout.find_boundary_at(address)

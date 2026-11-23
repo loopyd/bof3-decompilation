@@ -15,15 +15,32 @@ from harness.common.cli import add_example_argument, add_root_argument, run_main
 from ..domain.layout import parse_splat_layout
 from ..domain.registry import lookup_target_manifest
 from ..domain.sources import LiftMetadataError, lift_metadata
-from ..domain.symbols import parse_map
+from ..domain.sdk_map import (
+    SDK_MAP,
+    load_sdk_map,
+    project_symbols,
+    sdk_map_path,
+)
+from ..domain.symbols import format_map, parse_map
 from ..io import repo_layout
 from ..toolchain.splat import SplatToolchain
 
 
 def _project_symbol_maps(root: Path, manifest, output: Path) -> Path:
-    """Keep address owners in Splat maps; aliases remain in linker bindings."""
+    """Project the reviewed Splat maps into this target's address space.
+
+    Two projections are needed. Same-map aliases stay in the linker bindings, so
+    Splat receives only address owners. The combined SDK map is filtered to one
+    address per name for this image: the target's own PsyQ copy when it has one,
+    else the resident executable's.
+    """
     reviewed = root / manifest.splat
     layout = parse_splat_layout(reviewed, manifest.load_address)
+    sdk = project_symbols(
+        load_sdk_map(sdk_map_path(root)),
+        target=manifest.id.value,
+        space=manifest.psyq_space,
+    )
     projected_maps: dict[str, str] = {}
     for relative in layout.symbol_map_paths:
         source = root / relative
@@ -44,15 +61,22 @@ def _project_symbol_maps(root: Path, manifest, output: Path) -> Path:
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_text("".join(lines), encoding="utf-8")
         projected_maps[relative] = str(destination)
-    if not projected_maps:
-        return reviewed
     document = yaml.safe_load(reviewed.read_text(encoding="utf-8"))
+    if not isinstance(document, dict) or "options" not in document:
+        return reviewed
     options = document["options"]
     options["base_path"] = str(
         (reviewed.parent / options.get("base_path", ".")).resolve()
     )
+    sdk_map = output / "symbol-maps" / SDK_MAP
+    sdk_map.parent.mkdir(parents=True, exist_ok=True)
+    sdk_map.write_text(format_map(sdk), encoding="utf-8")
     options["symbol_addrs_path"] = [
-        projected_maps.get(relative, relative) for relative in layout.symbol_map_paths
+        *(
+            projected_maps.get(relative, relative)
+            for relative in layout.symbol_map_paths
+        ),
+        str(sdk_map),
     ]
     projected = output / "splat.yaml"
     projected.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
@@ -195,13 +219,14 @@ def _sdk_slot_report(root: Path, manifest) -> list[dict]:
     different build - which is recorded rather than treated as a failure.
     """
 
-    layout_text = (root / manifest.splat).read_text(encoding="utf-8")
-    sdk_map: dict[int, str] = {}
-    for entry in re.findall(r"^\s*- (config/sdk/\S+\.txt)\s*$", layout_text, re.M):
-        for line in (root / entry).read_text(encoding="utf-8").splitlines():
-            match = re.match(r"\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;", line)
-            if match:
-                sdk_map[int(match.group(2), 16)] = match.group(1)
+    sdk_map = {
+        symbol.address: symbol.name
+        for symbol in project_symbols(
+            load_sdk_map(sdk_map_path(root)),
+            target=manifest.id.value,
+            space=manifest.psyq_space,
+        )
+    }
     if not sdk_map:
         return []
     # Claimed members are a reviewed sample, not every object the slot may come

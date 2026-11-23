@@ -9,7 +9,8 @@ from ..domain.manifests import load_target_manifests
 from ..domain.ids import parse_function_id
 from ..domain.claims import resolve_manifest_source_for_address
 from ..domain.layout import parse_splat_layout
-from ..domain.symbols import load_map, load_target_symbols, sdk_map_path
+from ..domain.sdk_map import load_sdk_map, project_symbols, sdk_map_path
+from ..domain.symbols import load_target_symbols
 from .graph import enrich_graph, function_metrics
 from .index import connect, rows
 
@@ -70,7 +71,9 @@ def mission_brief(root: Path, function_selector: str) -> dict[str, Any]:
         connection.close()
     sdk_by_address = {
         symbol.address: symbol.canonical_name
-        for symbol in load_map(sdk_map_path(root, space))
+        for symbol in project_symbols(
+            load_sdk_map(sdk_map_path(root)), target=target, space=space
+        )
     }
     sdk_callees = []
     for callee in callees:

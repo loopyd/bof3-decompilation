@@ -210,10 +210,6 @@ def shared_map_path(root: Path) -> Path:
     return root / "config" / "targets" / "shared" / "symbols.txt"
 
 
-def sdk_map_path(root: Path, space: str) -> Path:
-    return root / "config" / "sdk" / f"psyq-{space}.txt"
-
-
 def load_target_symbols(
     root: Path,
     target: str,
@@ -221,7 +217,7 @@ def load_target_symbols(
     psyq_space: str | None = None,
     read_file: Callable[[Path], bytes | None] | None = None,
 ) -> list[MapSymbol]:
-    """Compose shared base + PSX SDK (by target space) + target-local symbols.
+    """Compose shared base + PSX SDK (projected for this target) + local symbols.
 
     Local wins on conflict. Bulk callers pass the already-loaded PsyQ space.
     """
@@ -232,7 +228,9 @@ def load_target_symbols(
         psyq_space = manifests[target].psyq_space if target in manifests else "slus"
     space = psyq_space
     shared = load_map(shared_map_path(root), read_file=read_file)
-    sdk = load_map(sdk_map_path(root, space), read_file=read_file)
+    from .sdk_map import load_sdk_map, project_symbols, sdk_map_path
+
+    sdk = project_symbols(load_sdk_map(sdk_map_path(root)), target=target, space=space)
     local = load_map(map_path(root, target), read_file=read_file)
     # Compose by NAME, not by address: one address may legitimately carry more than one
     # name (a base symbol plus its same-map aliases), and collapsing by address would

@@ -10,7 +10,7 @@ from ..domain.sources import CompiledSymbolError
 from ..domain.manifests import load_target_manifests
 from ..domain.layout import parse_splat_layout
 from ..domain.sources import reviewed_function_name
-from ..domain.symbols import load_map, sdk_map_path
+from ..domain.sdk_map import load_sdk_map, project_symbols, sdk_map_path
 from .graph import dominates, enrich_graph, function_metrics
 
 
@@ -84,14 +84,18 @@ def load_candidate_context(
         return manifest, None, None, frozenset(), None
     if sdk_cache is None:
         sdk_cache = {}
-    sdk_addresses = sdk_cache.get(manifest.psyq_space)
+    sdk_addresses = sdk_cache.get(target)
     if sdk_addresses is None:
         sdk_addresses = frozenset(
             symbol.address
-            for symbol in load_map(sdk_map_path(root, manifest.psyq_space))
+            for symbol in project_symbols(
+                load_sdk_map(sdk_map_path(root)),
+                target=target,
+                space=manifest.psyq_space,
+            )
             if not symbol.is_raw
         )
-        sdk_cache[manifest.psyq_space] = sdk_addresses
+        sdk_cache[target] = sdk_addresses
     return (
         manifest,
         binary.stat().st_size,

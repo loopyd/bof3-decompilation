@@ -25,10 +25,10 @@ from harness.commands.next_lift import (
     _surviving_rows,
 )
 from harness.common.commands import command_at
+from harness.domain.sdk_map import load_sdk_map, sdk_map_path
 
 _HEAD_WORDS = 7
 _HEAD_POINTERS = 3
-_SDK_MAPS = ("config/sdk/psyq-slus.txt", "config/sdk/psyq-logo.txt")
 
 
 def _targets(root: Path, limit: int) -> list[str]:
@@ -61,22 +61,8 @@ def _targets(root: Path, limit: int) -> list[str]:
 
 
 def _sdk_addresses(root: Path) -> set[int]:
-    addresses: set[int] = set()
-    for name in _SDK_MAPS:
-        path = root / name
-        if not path.is_file():
-            continue
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if "=" not in line:
-                continue
-            _, _, value = line.partition("=")
-            value = value.strip().rstrip(";")
-            if value.startswith("0x"):
-                try:
-                    addresses.add(int(value, 16))
-                except ValueError:
-                    continue
-    return addresses
+    """Addresses the combined SDK map assigns inside any target image."""
+    return {symbol.address for symbol in load_sdk_map(sdk_map_path(root))}
 
 
 def _is_data_head(root: Path, target: str, address: int) -> bool:

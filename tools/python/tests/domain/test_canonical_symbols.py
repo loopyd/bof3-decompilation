@@ -72,7 +72,7 @@ def test_symbols_check_accepts_nested_lift_provenance(tmp_path: Path, capsys) ->
         "", encoding="utf-8"
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
+    (tmp_path / "config" / "sdk" / "psyq.txt").write_text("", encoding="utf-8")
     _write_check_target(tmp_path, "exe/keep")
     (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
         "initSelectionState = 0x80100000;\n", encoding="utf-8"
@@ -97,7 +97,7 @@ def test_symbols_check_rejects_nested_lift_without_matching_address(
         "", encoding="utf-8"
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
+    (tmp_path / "config" / "sdk" / "psyq.txt").write_text("", encoding="utf-8")
     _write_check_target(tmp_path, "exe/keep")
     (tmp_path / "config" / "targets" / "exe" / "keep" / "symbols.txt").write_text(
         "initSelectionState = 0x80100000;\n", encoding="utf-8"
@@ -122,7 +122,7 @@ def test_symbols_check_target_scope(tmp_path: Path, capsys) -> None:
         "", encoding="utf-8"
     )
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text("", encoding="utf-8")
+    (tmp_path / "config" / "sdk" / "psyq.txt").write_text("", encoding="utf-8")
     (tmp_path / "config" / "symbol-naming-baseline.json").write_text(
         '{"raw_function_files": [], "invalid_semantic_files": [], '
         '"raw_functions": ["emi/battle/keep/15:func_80200004", '

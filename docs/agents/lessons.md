@@ -123,13 +123,13 @@ is data everywhere — else bogus contains-data functions appear.
 - Exclude a data blob from Rizin's function list with `Cd <size> @ <addr>` in
 the target's `reviewed.rz`; `af-` does not survive the replay (`aa`
 re-creates it).
-- Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding to a
+- Check the combined SDK map (`config/sdk/psyq.txt`) before adding to a
 target-local map: Splat composes both and a duplicate name aborts `bin/harness source splat`;
 keep each symbol in exactly one map.
 - PsyQ/BIOS runtime SDK spaces, maps, and binding addresses: AGENTS.md
   §Source and symbols (always loaded above); keep verified names/addresses in
-  `config/sdk/psyq-<space>.txt`, record the verified archive member in the
-  target manifest's `[psyq.libraries]`.
+  `config/sdk/psyq.txt` against the target and address that were verified, and
+  record the verified archive member in the target manifest's `[psyq.libraries]`.
 - Replace analyzer aliases only after behavior and signature are proven; raw
   `func_XXXXXXXX`/`D_XXXXXXXX` names go straight to the reviewed semantic
   name, no compatibility aliases. Functions: verb-led camelCase, role-first,

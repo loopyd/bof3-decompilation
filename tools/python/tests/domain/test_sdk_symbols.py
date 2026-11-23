@@ -4,11 +4,15 @@ from pathlib import Path
 
 import pytest
 
+from harness.domain.sdk_map import (
+    SdkSymbol,
+    load_sdk_map,
+    project_symbols,
+    sdk_map_path,
+)
 from harness.domain.symbols import (
     MapSymbol,
-    load_map,
     load_target_symbols,
-    sdk_map_path,
 )
 from harness.commands.symbols import main as symbols_main
 from harness.domain.manifests import load_target_manifests
@@ -48,15 +52,14 @@ def _write_target(
     manifest.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _write_sdk(root: Path, space: str, text: str) -> None:
+def _write_sdk(root: Path, *lines: str) -> None:
     sdk = root / "config" / "sdk"
     sdk.mkdir(parents=True, exist_ok=True)
-    (sdk / f"psyq-{space}.txt").write_text(text, encoding="utf-8")
+    (sdk / "psyq.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def test_sdk_map_path_is_space_qualified() -> None:
-    assert sdk_map_path(Path("/r"), "slus") == Path("/r/config/sdk/psyq-slus.txt")
-    assert sdk_map_path(Path("/r"), "logo") == Path("/r/config/sdk/psyq-logo.txt")
+def test_sdk_map_is_one_combined_file() -> None:
+    assert sdk_map_path(Path("/r")) == Path("/r/config/sdk/psyq.txt")
 
 
 def test_psyq_space_defaults_to_slus(tmp_path: Path) -> None:
@@ -70,15 +73,31 @@ def test_psyq_space_rejects_unknown(tmp_path: Path) -> None:
         load_target_manifests(tmp_path)
 
 
-def test_load_target_symbols_composes_sdk_by_space(tmp_path: Path) -> None:
+def test_load_target_symbols_composes_sdk_for_the_image(tmp_path: Path) -> None:
     _write_target(tmp_path, "exe/logo", space="logo")
-    _write_sdk(tmp_path, "logo", "PadInit = 0x801CEE7C;\n")
-    _write_sdk(tmp_path, "slus", "PadInit = 0x80174668;\n")
+    _write_sdk(
+        tmp_path,
+        "PadInit = exe/logo@0x801CEE7C, exe/slus_004_22@0x80174668",
+    )
 
     symbols = load_target_symbols(tmp_path, "exe/logo")
 
     assert MapSymbol(0x801CEE7C, "PadInit") in symbols
     assert MapSymbol(0x80174668, "PadInit") not in symbols
+
+
+def test_project_symbols_prefers_a_target_local_copy() -> None:
+    symbols = [
+        SdkSymbol("rand", "exe/slus_004_22", 0x8017E3D4),
+        SdkSymbol("rand", "emi/bmagic/magic216/00", 0x801EF03C),
+    ]
+
+    projected = project_symbols(symbols, target="emi/bmagic/magic216/00", space="slus")
+    resident = project_symbols(symbols, target="emi/battle/battle/15", space="slus")
+
+    assert MapSymbol(0x801EF03C, "rand") in projected
+    assert MapSymbol(0x8017E3D4, "rand") not in projected
+    assert MapSymbol(0x8017E3D4, "rand") in resident
 
 
 def test_psyq_bindings_generator_writes_sdk_bindings(tmp_path: Path) -> None:
@@ -89,7 +108,7 @@ def test_psyq_bindings_generator_writes_sdk_bindings(tmp_path: Path) -> None:
         support_sources=("src/bof3/support/logo_psyq.c",),
         psyq_source="src/bof3/support/logo_psyq.c",
     )
-    _write_sdk(tmp_path, "logo", "PadInit = 0x801CEE7C;\n")
+    _write_sdk(tmp_path, "PadInit = exe/logo@0x801CEE7C")
     support = tmp_path / "src/bof3/support/logo_psyq.c"
     support.parent.mkdir(parents=True)
     support.write_text("", encoding="utf-8")
@@ -115,7 +134,7 @@ def test_psyq_bindings_without_psyq_source_errors(tmp_path: Path) -> None:
         + 'support_sources = ["src/bof3/support/test_psyq.c"]\n',
         encoding="utf-8",
     )
-    _write_sdk(tmp_path, "slus", "PadInit = 0x80174668;\n")
+    _write_sdk(tmp_path, "PadInit = exe/slus_004_22@0x80174668")
 
     assert (
         symbols_main(
@@ -138,7 +157,7 @@ def test_psyq_bindings_generator_writes_claimed_support_path(tmp_path: Path) -> 
         + 'psyq_source = "src/bof3/support/test_psyq.c"\n',
         encoding="utf-8",
     )
-    _write_sdk(tmp_path, "slus", "PadInit = 0x80174668;\n")
+    _write_sdk(tmp_path, "PadInit = exe/slus_004_22@0x80174668")
 
     assert (
         symbols_main(
@@ -177,7 +196,9 @@ def _migrated_binding_target(root: Path, binding_text: str) -> None:
     )
     sdk = root / "config/sdk"
     sdk.mkdir(parents=True)
-    (sdk / "psyq-slus.txt").write_text("PadInit = 0x80174668;\n", encoding="utf-8")
+    (sdk / "psyq.txt").write_text(
+        "PadInit = exe/slus_004_22@0x80174668\n", encoding="utf-8"
+    )
 
 
 def test_symbols_check_validates_relocated_binding_file(tmp_path: Path) -> None:
@@ -229,11 +250,13 @@ def test_psyq_source_must_be_canonical_path(tmp_path: Path) -> None:
         load_target_manifests(tmp_path)
 
 
-def test_real_sdk_maps_are_space_consistent() -> None:
+def test_real_sdk_map_lists_each_image() -> None:
     root = repo_layout().root
-    slus = load_map(sdk_map_path(root, "slus"))
-    logo = load_map(sdk_map_path(root, "logo"))
+    symbols = load_sdk_map(sdk_map_path(root))
     logo_base = 0x801CE000
+
+    slus = [symbol for symbol in symbols if symbol.target == "exe/slus_004_22"]
+    logo = [symbol for symbol in symbols if symbol.target == "exe/logo"]
 
     assert slus and logo
     assert all(symbol.address < logo_base for symbol in slus)

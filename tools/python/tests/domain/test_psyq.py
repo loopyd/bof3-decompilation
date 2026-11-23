@@ -67,8 +67,8 @@ def _write_check_target(root: Path, target: str) -> None:
 def test_psyq_report_scans_nested_lift(tmp_path: Path, capsys) -> None:
     """psyq-report sees SDK calls from relocated (nested) lift sources."""
     (tmp_path / "config" / "sdk").mkdir(parents=True)
-    (tmp_path / "config" / "sdk" / "psyq-slus.txt").write_text(
-        "SomeSdkCall = 0x80010000;\n", encoding="utf-8"
+    (tmp_path / "config" / "sdk" / "psyq.txt").write_text(
+        "SomeSdkCall = exe/slus_004_22@0x80010000\n", encoding="utf-8"
     )
     _write_check_target(tmp_path, "exe/keep")
     nested = tmp_path / "src" / "exe" / "keep" / "runtime" / "nested.c"
@@ -178,9 +178,9 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
         "load_address = 0x801CE000\n",
         encoding="utf-8",
     )
-    sdk_map = tmp_path / "config" / "sdk" / "psyq-slus.txt"
+    sdk_map = tmp_path / "config" / "sdk" / "psyq.txt"
     sdk_map.parent.mkdir(parents=True, exist_ok=True)
-    sdk_map.write_text("func_801CE758 = 0x801CE758;\n", encoding="utf-8")
+    sdk_map.write_text("func_801CE758 = exe/logo@0x801CE758\n", encoding="utf-8")
     proposal = tmp_path / "proposal.json"
     proposal.write_text(
         '{"schema":"bof3.psyq-find/v1","matches":['
@@ -200,7 +200,7 @@ def test_symbols_import_psyq_requires_write_and_replaces_raw_name(
     assert symbols_main(args) == 1
     assert "func_801CE758" in sdk_map.read_text(encoding="utf-8")
     assert symbols_main([*args, "--write"]) == 0
-    assert sdk_map.read_text(encoding="utf-8") == "CdInit = 0x801CE758;\n"
+    assert sdk_map.read_text(encoding="utf-8") == "CdInit = exe/logo@0x801CE758\n"
 
 
 def _signature_fixture(root: Path) -> None:

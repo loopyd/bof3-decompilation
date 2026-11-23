@@ -85,7 +85,7 @@ def bootstrap_plan(
         f"  asset_path: out/splat/emi/{slug}/assets\n"
         "  symbol_addrs_path:\n"
         "  - config/targets/shared/symbols.txt\n"
-        "  - config/sdk/psyq-slus.txt\n"
+        "  - config/sdk/psyq.txt\n"
         f"  - {symbols}\n"
         f"segments:\n- [0x0, bin]\n- [0x{entry['size']:X}]\n"
     )

@@ -43,7 +43,7 @@ another.
 | Path | Contents | Tracked? |
 | --- | --- | --- |
 | `config/targets/` | Target identity, layout, symbols, analysis | Yes |
-| `config/sdk/` | Shared PsyQ SDK symbol maps (slus/logo) | Yes |
+| `config/sdk/` | Combined PsyQ SDK symbol map | Yes |
 | `src/`, `include/` | Authored C89 (`src/bof3/` semantic root; metadata and manifest claims own target identity) | Yes |
 | `docs/specs/` | Reviewed BOF3 runtime, format and data knowledge | Yes |
 | `docs/agents/` | Agent/tooling contracts and matching workflows | Yes |
@@ -84,7 +84,7 @@ never cite them as durable facts or commit their generated contents.
 | Reviewed layout | `config/targets/<target>/splat.yaml` |
 | Shared Splat execution options | `config/splat.yaml` |
 | Target-local symbols | `config/targets/<target>/symbols.txt` |
-| Shared SDK symbol maps | `config/sdk/psyq-{slus,logo}.txt` |
+| Combined SDK symbol map | `config/sdk/psyq.txt` |
 | Reviewed Rizin annotations | `config/targets/<target>/reviewed.rz` |
 | Authored lifts | Metadata-resolved source under `src/bof3/` |
 | Macro opportunity policy and tool reference | `docs/agents/macros.md` |

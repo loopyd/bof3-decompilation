@@ -207,7 +207,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         # Target and selected PsyQ maps are manifest-owned inputs. Reviewed
         # Splat composition independently owns every selected symbol map.
         paths.add(target_config / "symbols.txt")
-        paths.add(root / "config/sdk" / f"psyq-{manifest.psyq_space}.txt")
+        paths.add(root / "config/sdk/psyq.txt")
         reviewed = target_config / "reviewed.rz"
         optional_paths.add(reviewed)
         snapshot = snapshot_path(root, target)

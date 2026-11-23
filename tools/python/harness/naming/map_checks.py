@@ -23,13 +23,13 @@ from harness.domain.sources import (
     SourceAddressCollision,
     expected_lift_sources,
 )
+from harness.domain.sdk_map import load_sdk_map, project_symbols, sdk_map_path
 from harness.domain.symbols import (
     format_map,
     load_map,
     load_target_symbols,
     map_path,
     parse_weak_symbol_bindings,
-    sdk_map_path,
     shared_map_path,
 )
 from harness.domain.tags import (
@@ -38,6 +38,15 @@ from harness.domain.tags import (
     parse_declaration_source_tag,
 )
 from .debt import collect_naming_debt, load_naming_baseline, naming_debt_regressions
+
+
+def _sdk_symbols(root: Path, manifest) -> list[MapSymbol]:
+    """Project the combined SDK map onto this target's image."""
+    return project_symbols(
+        load_sdk_map(sdk_map_path(root)),
+        target=manifest.id.value,
+        space=manifest.psyq_space,
+    )
 
 
 def duplicate_name_findings(maps: dict[str, list[MapSymbol]]) -> list[str]:
@@ -88,7 +97,7 @@ def symbol_findings(
             duplicate_name_findings(
                 {
                     "shared": load_map(shared_map_path(root)),
-                    "sdk": load_map(sdk_map_path(root, manifest.psyq_space)),
+                    "sdk": _sdk_symbols(root, manifest),
                     "local": symbols,
                 }
             )
@@ -179,9 +188,7 @@ def symbol_findings(
         # needs a definition carrying its origin address: a lift file with a
         # matching @source tag, a tagged header declaration, or a matching
         # WEAK_SYMBOL_AT binding.
-        sdk_names = {
-            s.canonical_name for s in load_map(sdk_map_path(root, manifest.psyq_space))
-        }
+        sdk_names = {symbol.canonical_name for symbol in _sdk_symbols(root, manifest)}
         header = source_dir / "internal.h"
         header_text = header.read_text(encoding="utf-8") if header.is_file() else ""
         owned = symbols
@@ -275,7 +282,7 @@ def symbol_findings(
             )
             layers = {
                 "shared": load_map(shared_map_path(root)),
-                "sdk": load_map(sdk_map_path(root, manifest.psyq_space)),
+                "sdk": _sdk_symbols(root, manifest),
                 "local": load_map(map_path(root, target)),
             }
             errors.extend(
