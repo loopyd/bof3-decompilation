@@ -57,8 +57,10 @@ segments:
     - c
     - seedQuadSizeAndAnchorThenDrawRotatedQuadAndAdvanceStateBossBoss03416_800C1A78
   - - 832
-    - asm
-    - func_800C1B40
+    - c
+    - accumulateSpinAngleShrinkQuadThenDrawAndAdvanceStateAtSpinDelta64BossBoss03416_800C1B40
+    - '@source: src/bof3/boss/accumulateSpinAngleShrinkQuadThenDrawAndAdvanceStateAtSpinDelta64BossBoss03416_800C1B40.c'
+    - '@behavior: Overlay state 3 handler, entry 3 of the handler run based at 0x800C2714 that the byte-3 dispatcher dispatchStateByte3Table2714BossBoss03416_800C18FC indexes with work-record byte 3, so no jal names this span. It loads the work record published at the scratchpad pointer cell 0x1F800044 and adds that record''s byte 0x0A, the per-frame spin step the preceding step seeded with 1, into its accumulated spin word 0x20. While the record word 0x0C is at least 0x29 it decrements that word, so it settles at 0x28, and on bit 0 of the shared frame counter D_80143E6C it also increments word 0x1C, the second of the two position words the draw pass adds to each quad corner. It then re-reads the cell and decrements word 0x10 under the same 0x29 bound with no frame-parity gate. It re-reads the cell a third time for the drawn angle, takes the accumulated spin word as a 16-bit value and runs this overlay''s rotated-quad draw pass at 0x800C23D4. While any of the low three bits of D_80143E6C is set it re-reads the cell and increments the spin step byte 0x0A, so the spin accelerates on seven frames of eight, and it then re-reads the cell once more to test that byte against 0x40: at 0x40 and above it increments the record''s state byte 0x03, which moves the byte-3 dispatch on to 0x800C1C44. The payload holds no jal naming 0x800C1B40; the one pointer word that names it is 0x800C2720, entry 3 of the run based at 0x800C2714.'
   - - 1092
     - asm
     - func_800C1C44

@@ -110,8 +110,10 @@ segments:
     - decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784
     - '@source: src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World02Area08713_801F3784.c'
   - - 3164
-    - asm
-    - func_801F385C
+    - c
+    - advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08713_801F385C
+    - '@source: src/bof3/world/advanceWorkByte9To0x5aAndIncrementByteBThenAdvanceState3WhenGatedThenDrawHalfword30World02Area08713_801F385C.c'
+    - '@behavior: Entry 2 of the four-entry work-byte-3 handler run based at 0x801F5760, whose third pointer word 0x801F5768 names this address and which the byte-3 dispatcher 0x801F36C0 indexes with record byte 0x03 of the work record published at the scratchpad pointer cell 0x1F800044. While record byte 0x0B is zero it increments record byte 0x09 and, once that byte re-read through the pointer cell reaches 0x5A, increments record byte 0x0B. It then increments state byte 0x03 through another read of the cell when the shared mode byte 0x801454F2 is nonzero and record byte 0x0B is nonzero, or the phase byte 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, and finally reads the cell once more to pass 0x5C and the signed halfword at 0x30 to the local emitter 0x801F40F8. No arguments, no return value.'
   - - 3420
     - c
     - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World02Area08713_801F395C

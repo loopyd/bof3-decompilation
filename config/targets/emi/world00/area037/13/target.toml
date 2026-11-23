@@ -24,6 +24,7 @@ sources = [
     "src/bof3/world/setStatus9CAndModeIndex6IfGateElse9AWorld00Area03713_801F3728.c",
     "src/bof3/world/setStatus9CAndModeIndex6IfGateElseFFFFWorld00Area03713_801F376C.c",
     "src/bof3/world/setStatus9CAndModeIndex6IfGateElseFFFFCloneWorld00Area03713_801F37B0.c",
+    "src/bof3/world/seedWorkVectorFromCoordinateRunsThenDrawWhenFocusNearPointWorld00Area03713_801F2C04.c",
 ]
 support_sources = [
     "src/bof3/support/area037_13_psyq.c",

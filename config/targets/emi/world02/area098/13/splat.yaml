@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801F3540
   - - 2480
-    - asm
-    - func_801F35B0
+    - c
+    - spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0
+    - '@source: src/bof3/world/spawnRecordOnShrinkingIntervalRunDrawPassAndArmMotionOnSharedStateMatchWorld02Area09813_801F35B0.c'
+    - '@behavior: Overlay progress step handler, entry 1 of the twelve-word handler row based at 0x801F5F7C: compares the work record byte at +0x0A with its frame interval byte at +0x06 and, while they differ, advances +0x0A and leaves through the tail; on the frame they are equal it calls the record spawn 0x801F40D0, subtracts 2 from the interval at +0x06 and clears +0x0A, so the interval between spawns shrinks by two frames per spawn until it reaches zero. Either path runs the draw pass 0x801F42E8 and, when the shared state byte 0x80143BB0 does not read 2 and the shared status halfword 0x801490A8 reads 0x12 and the shared byte 0x80146875 reads 0xC, clears the countdown byte at +0x09, stores 0xA000 and 0xB000 into the motion words at +0x0C and +0x10, clears the offset words at +0x18 and +0x1C and advances the state byte at +0x01, which hands the record to entry 2 of the row.'
   - - 2720
     - asm
     - func_801F36A0

@@ -23,6 +23,7 @@ sources = [
     "src/bof3/scenario/runSubstateLadderQueueFrontEndCuesSetFlagBitsSeedSelectorContextThenReleaseScenarioScena0200_801F9BD0.c",
     "src/bof3/scenario/runSubstateLadderClaimFrontEndRecordsSeedSelectorContextsThenResetScenarioScena0200_801FAC54.c",
     "src/bof3/scenario/runSubstateLadderSeedFrontEndRowsThenToggleModeFlagsAndReleaseScenarioScena0200_801F8C78.c",
+    "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC46C.c",
 ]
 support_sources = [
     "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19ScenarioScena0200_801FD5A8.c",

@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/dispatchWorkByte1Tableec04ThenPublishEachOccupiedRecordAndRunItsStepBmagicMagic16203_801EEC28.c",
     "src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow5BmagicMagic16203_801EF158.c",
     "src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte1OnZeroBmagicMagic16203_801EF048.c",
+    "src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C.c",
 ]
 support_sources = [
     "src/bof3/support/magic162_03_psyq.c",

@@ -27,8 +27,10 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - seedWorkVectorFromCoordinateRunsThenDrawWhenFocusNearPointWorld00Area03713_801F2C04
+    - '@source: src/bof3/world/seedWorkVectorFromCoordinateRunsThenDrawWhenFocusNearPointWorld00Area03713_801F2C04.c'
+    - '@behavior: Loads the work record from the scratchpad pointer cell 0x1F800044. While the work state byte at offset 0x02 is zero it copies the low byte of the work halfword at offset 0x36 into work byte 0x0B, reloads the record, and writes the work vector triple from the three coordinate runs of this payload tail at that index: word 0x34 becomes (run34[index] - 0x80) << 7 plus 0x38, word 0x38 becomes (run38[index] - 0x80) << 7, word 0x3C becomes the signed halfword run3C[index], and work byte 0x02 increments so the seeding step runs once. On later ticks, while bit 2 of the shared gate byte 0x8014832E is set, it reloads the record and calls the record drawer 0x801F2D44 only when both shared focus halfwords 0x8014930A plus 6 and 0x8014930E plus 6 lie within 11 of run34[index] and run38[index].'
   - - 324
     - asm
     - func_801F2D44

@@ -64,8 +64,10 @@ segments:
     - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16203_801EF338.c'
     - '@behavior: Handler dispatch of the bmagic frame loop. Reads the work record pointer from the cell at 0x801F17B0 before reserving its 0x18-byte frame, loads the record unsigned byte at offset 0x1, scales it by four and calls the entry of the handler table based at 0x801F01AC that the byte selects, passing no arguments; the only table word on disc sits at index 0 and holds 0x801EF37C. Reads no other state, writes none, and keeps only $ra in the frame. Its 68-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF338.'
   - - 1916
-    - asm
-    - func_801EF37C
+    - c
+    - dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte2HandlerThenInvokeDrawHelpersBmagicMagic16203_801EF37C.c'
+    - '@behavior: Entry handler of the bmagic work record. Reads the record pointer cell at 0x801F17B0 before reserving its 0x28-byte frame, copies the three-word step table at 0x801EEC1C into the frame, scales the record unsigned byte at offset 2 by four and calls the selected copy with no arguments; the only record bytes the table covers are 0, 1 and 2, holding 0x801EF478, 0x801EF678 and 0x801EF728. While the reloaded record byte 0 has bit 0 set and byte 2 is non-zero it runs the eight-triangle draw at 0x801EFCD8, and while the reloaded record unsigned halfword at 0xC has either low bit set it runs the four-spoke draw at 0x801EF80C with half of the shared frame counter at 0x80143E6C narrowed to 16 bits and record byte 6, then func_801EFA40 with that halved counter plus four and with record byte 6 added to half itself. Takes no arguments, returns nothing, writes no state, and keeps only $ra and the copied table in the frame. Its 252-byte body is byte-identical to emi/bmagic/magic168/03 0x801EF37C.'
   - - 2168
     - c
     - decrementWorkByte5ThenLoadRecordMotionFieldsApplyRandomMotionPairRearmByte5AndAdvanceByte2BmagicMagic16203_801EF478
