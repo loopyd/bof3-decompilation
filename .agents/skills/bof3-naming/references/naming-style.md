@@ -22,9 +22,10 @@ Different spelling at same address can be deliberate typed alias, not silent dri
 
 Shared-map data claims that address as data in every composing target. Keep local
 unless recursive address/content/runtime-role proof holds. Equal overlay addresses
-or PsyQ roles never prove ownership. Check shared SDK maps before target row;
-Splat composes both, each symbol one map. Record verified archive member in
-`[psyq.libraries]`. Reviewed data exclusion uses `Cd SIZE @ ADDRESS`; `af-` alone
+or PsyQ roles never prove ownership. Check the combined SDK map
+(`config/sdk/psyq.txt`) before target row; the Splat adapter composes the shared,
+target and projected SDK maps, each symbol in one map. Record verified archive
+member in `[psyq.libraries]`. Reviewed data exclusion uses `Cd SIZE @ ADDRESS`; `af-` alone
 is recreated by replay `aa`.
 
 Splat stubs use boundary name, not authored `@source` basename. Collision-renamed

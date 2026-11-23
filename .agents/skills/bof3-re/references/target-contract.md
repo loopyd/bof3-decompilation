@@ -26,6 +26,11 @@ when multiple targets or external contract justify them. Header order: guard,
 includes, types, extern data, prototypes, macros/helpers. PsyQ signatures identify
 objects/addresses; official headers supply declarations, Rizin supplies sites;
 none replaces others. Keep SDK external, verified archive members in manifest.
+`config/sdk/psyq.txt` writes one line per SDK symbol with every verified
+`target@address`, so an overlay that carries its own copy records that address
+beside the resident executable's. Splat and the weak bindings receive a per-image
+projection that prefers the target-local copy, so reviewed `splat.yaml` lists only
+the shared and target maps.
 Sorted maps use `name = 0xADDRESS;`, uppercase address digits.
 
 Generated `out/`, build products and analysis are disposable, not reviewed truth.

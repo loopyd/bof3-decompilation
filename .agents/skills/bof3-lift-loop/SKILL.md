@@ -57,8 +57,15 @@ disposition before successor starts.
    boundaries and existing partials that still carry a named residual. Exclude
    duplicates, accepted/owned work and unresolved shared effects; read independent
    inputs in parallel. Bulk template/carve/clean-C-requeue levers are measured
-   exhausted. Fresh work comes from `bin/harness lift next`, shortest surviving
-   boundaries first. A partial is selected from its measured `@status partial`
+   exhausted. Fresh work comes from `bin/harness lift batch --limit 10 --json`,
+   which returns disjoint lanes ordered by surviving boundary size and already
+   applies the screens `lift next` applies per target: claimed addresses, `div`/`break`
+   traps, in-payload pointer-run heads and SDK-mapped addresses. Its `skipped` reasons
+   are follow-ups, not lanes: `data_head` needs a boundary split, `sdk_address` is
+   already owned. Validate every returned ref with `bin/harness lift m2c` before the
+   lane runs, and pass `--exclude SELECTOR` for refs that only ever measured partial so
+   they stop consuming rounds. A single lane with a supplied selector still starts from
+   `bin/harness lift next TARGET`. A partial is selected from its measured `@status partial`
    source. Mark each partial lane `kind: "partial"` so it enters the workflow on the
    strong rung instead of relearning its own residual on the cheap one; its carried
    ledger closes the shapes already measured, and the strong rung gets its own attempts

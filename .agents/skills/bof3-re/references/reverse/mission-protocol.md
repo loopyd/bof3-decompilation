@@ -103,6 +103,11 @@ the staleness instead of citing the earlier pass.
 
 ## Ranking fallback
 
+Cross-target selection is `bin/harness lift batch --limit N --json`: it ranks the
+unlifted quick-wins pool, keeps one candidate per target, and rejects claimed
+addresses, `div`/`break` traps, in-payload pointer-run heads (`data_head`) and
+SDK-mapped addresses (`sdk_address`). A returned lane is still validated with
+`bin/harness lift m2c SELECTOR` before work starts. For one target:
 `bin/harness analysis query --json quick-wins --target TARGET --unlifted --limit 8`.
 Stale snapshot/index: rank tracked Splat `asm` boundaries minus every claimed
 `@source` address by resolved calls, decisions, instructions; screen original
@@ -121,4 +126,4 @@ Return tool counts, wall time, method and measured outcomes in mission result.
 | Gate once | Use the gate batch above after all owned edits; never duplicate native checks for the same candidate. |
 | Iterate with the sweeper | Use `bin/harness lift sweep SELECTOR SOURCE [--keep-best] VARIANTS...` for evidence-backed alternatives; record every variant/outcome and residual class. |
 | Prefill once | ONE `bin/harness agent context reverse SELECTOR`, without head/tail pipes. If clipped, read the saved output remainder rather than rerunning the command: the clip notice names a saved source id and its byte count, so read that record, while redirecting the same command into a file renders the brief twice and is a deviation the return must declare. With no reachable remainder, which includes a clip notice that names only a search tool the lane lacks, do not rerun either: the skill and reference bodies sit at their authored paths, and the target's declarations come from `out/index`, `out/splat/<target>/asm`, the per-target analysis snapshot at `out/reverse/snapshots/` with the target's slashes spelled `--`, when the parent has written one, and the payload bytes; that route still reached a first-gate exact match. Record the substitution in `history_gaps`. A clipped excerpt is never the file it came from: writing one back drops the rows it omitted, and the gate's symbols check then reports claimed sources with no map address, so edit only a whole file and re-derive committed rows with `git show HEAD:<path>` rather than regenerating. |
-| Pick once | ONE `bin/harness lift next TARGET` (ranking + `div`/`break` screen in one call). |
+| Pick once | ONE `bin/harness lift next TARGET` (ranking + `div`/`break` screen in one call). A parent-selected lane starts from its supplied refs and validates them with `bin/harness lift m2c SELECTOR`. |

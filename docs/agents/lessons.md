@@ -124,8 +124,9 @@ is data everywhere — else bogus contains-data functions appear.
 the target's `reviewed.rz`; `af-` does not survive the replay (`aa`
 re-creates it).
 - Check the combined SDK map (`config/sdk/psyq.txt`) before adding to a
-target-local map: Splat composes both and a duplicate name aborts `bin/harness source splat`;
-keep each symbol in exactly one map.
+target-local map: the Splat adapter composes the shared, target and projected SDK
+maps, and a duplicate name aborts `bin/harness source splat`; keep each symbol in
+exactly one map.
 - PsyQ/BIOS runtime SDK spaces, maps, and binding addresses: AGENTS.md
   §Source and symbols (always loaded above); keep verified names/addresses in
   `config/sdk/psyq.txt` against the target and address that were verified, and

@@ -972,9 +972,10 @@ Cherry-picked from `LESSONS.md` Level 5. These are directive material — fold t
 - **Shared-map `D_*`**: a `config/targets/shared/symbols.txt` entry claims data at that VRAM in EVERY
   target; keep it in the owning target's local map unless it is data everywhere, or bogus
   contains-data functions appear.
-- **SDK maps and Splat**: check `config/sdk/psyq-*.txt` before adding to a target map — Splat composes
-  both and a duplicate name aborts `bin/harness source splat`, so exactly one map owns a symbol;
-  record the verified archive member in the manifest's `[psyq.libraries]`. Splat regenerates root
+- **SDK map and Splat**: check `config/sdk/psyq.txt` before adding to a target map — the adapter
+  injects the projected SDK names beside the shared and target maps, so a duplicate name aborts
+  `bin/harness source splat` and exactly one map owns a symbol; record the verified archive member in
+  the manifest's `[psyq.libraries]`. Splat regenerates root
   stubs keyed by the **boundary name**, never the authored `@source` basename: after a collision
   rename, stub projection must look for `source_dir/<boundary-name>.c` or regenerated stubs are left
   behind.

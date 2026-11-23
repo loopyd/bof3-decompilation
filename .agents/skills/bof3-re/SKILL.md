@@ -73,9 +73,10 @@ parent disposable audits; report map/Splat-caused Rizin/index staleness to paren
 
 ## Scope + evidence
 
-1. Honor selected function/group. None supplied: rank
-   `bin/harness analysis query <quick-wins|leafs|duplicates|hotspots|pareto> --unlifted --detail minimal --limit 5`,
-   then wait.
+1. Honor selected function/group. None supplied: `bin/harness lift batch --limit 5 --json`
+   returns disjoint screened lanes for campaign work, and
+   `bin/harness analysis query <quick-wins|leafs|duplicates|hotspots|pareto> --unlifted --detail minimal --limit 5`
+   ranks one target. Either way, wait for the parent to choose.
 2. Brief once; validate identity/boundary/load/payload. Query `calls`/`duplicates`
    only for missing ABI/duplicate evidence.
 3. Before declarations, search target `internal.h`/`symbols.txt`, `include/`, PsyQ

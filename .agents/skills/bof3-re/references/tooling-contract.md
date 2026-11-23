@@ -26,6 +26,8 @@ Read before changing Python harness, CLI or skill scripts. Source lifting follow
 - `opportunities.py` discovers/describes leads; `cli.py` adapts arguments. Discovery
   is not ranking, evidence closure or edit authority. Cross-domain queries dispatch
   to owners. One concern skill owns its modes; route references separate authority.
+  Candidate ranking and screening live in `analysis/candidates.py`; `commands/next_lift.py`
+  and `commands/lift_batch.py` only adapt arguments, so no command imports another.
 - Dependencies flow toward owners. No cycles hidden by facades, compatibility
   re-exports, `x as x` or `# noqa: F401` shims. Package initializers stay inert.
 - Replace superseded behavior and migrate its callers. Remove legacy parsers,

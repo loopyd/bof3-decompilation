@@ -1,9 +1,24 @@
 # Target-local lane protocol
 
+## Selection
+
+Assemble a wave with `bin/harness lift batch --limit 10 --json`. It returns
+`{key, target, refs}` lanes over disjoint targets, ordered by surviving boundary
+size, and applies the screens a per-target `lift next` cannot: claimed
+addresses, `div`/`break` traps, in-payload pointer-run heads and SDK-mapped
+addresses. Validate every returned ref with `bin/harness lift m2c SELECTOR`
+before the wave launches. Treat its `skipped` list as follow-ups rather than
+candidates: `data_head` needs a boundary split under the target contract, and
+`sdk_address` belongs to the combined SDK map. Pass `--exclude SELECTOR` for a
+ref that only ever measured partial, so a closed dead end stops taking a lane.
+
+A lane with a supplied selector does not re-select: it starts from that ref.
+
 ## Launch
 
 Use [workflow file](../../../../.pi/workflows/bof3-lift-lanes.js), never a session-built
-lane loop. Each invocation runs one wave of at most eight stages. Lift, review,
+lane loop. Aim for ten lanes per batch; each invocation runs one wave of at most
+eight stages, so the remainder arrives on the next wave. Lift, review,
 repair, naming and harvest continue across waves with per-lane failure isolation.
 
 ```js
