@@ -19,6 +19,7 @@ from harness.decomp.consumers import identifier_consumers
 from harness.domain.claims import manifest_header_paths, manifest_source_paths
 from harness.domain.ids import normalize_target_id
 from harness.domain.manifests import load_target_manifests
+from harness.domain.tags import count_function_metadata
 from harness.domain.symbols import load_map, map_path, shared_map_path
 from harness.match.asm_diff import match_target_source
 
@@ -139,7 +140,13 @@ def _collect_files(plan: RenamePlan, root: Path, manifest) -> None:
         if path.is_file() and boundary.search(path.read_text(encoding="utf-8")):
             plan.files.append(path)
 
-    if plan.source is not None and plan.source.stem == plan.old:
+    if (
+        plan.source is not None
+        and plan.source.stem == plan.old
+        and count_function_metadata(plan.source.read_text(encoding="utf-8")) <= 1
+    ):
+        # A grouped unit keeps its filename: the name follows its first function,
+        # and one rename must not churn the unit that other functions use.
         plan.renames.append((plan.source, plan.source.with_name(plan.new + ".c")))
         # Per-object flags and compiler ids are keyed by the unit's own path.
         flags = root / CONFIGURATION_PATH
@@ -215,10 +222,12 @@ def apply_report(root: Path, target: str, old: str, new: str) -> dict:
 
 
 def _source_after(plan: RenamePlan) -> Path | None:
+    """The unit's path after the rename: only a renamed unit moves."""
     if plan.source is None:
         return None
-    if plan.source.stem == plan.old:
-        return plan.source.with_name(plan.new + ".c")
+    for before, after in plan.renames:
+        if before == plan.source:
+            return after
     return plan.source
 
 
@@ -226,8 +235,11 @@ def _measure(plan: RenamePlan, source: Path | None) -> dict:
     """Measure one source; a rename must leave this result identical."""
     if source is None or plan.address is None:
         return {"selector": None, "data": True}
+    # The manifest lists claimed unit paths, so it must describe the tree as it
+    # is now: a rename has already moved the file this measurement reads.
+    manifest = load_target_manifests(plan.root).get(plan.target) or plan.manifest
     payload = match_target_source(
-        plan.root, plan.manifest, plan.address, source, diagnostics=False
+        plan.root, manifest, plan.address, source, diagnostics=False
     )
     return {
         "selector": f"{plan.target}@0x{plan.address:08X}",
